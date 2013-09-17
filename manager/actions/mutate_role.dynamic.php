@@ -24,8 +24,11 @@ switch((int) $_REQUEST['a'])
 
 $role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
+$tbl_active_users = $modx->getFullTableName('active_users');
+$tbl_user_roles   = $modx->getFullTableName('user_roles');
+
 // check to see the role editor isn't locked
-$rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=35 and id='{$role}'");
+$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=35 and id='{$role}'");
 $total = $modx->db->getRecordCount($rs);
 if($total>1) {
 	for ($i=0;$i<$total;$i++) {
@@ -43,7 +46,7 @@ if($total>1) {
 
 if($_REQUEST['a']=='35')
 {
-	$rs = $modx->db->select('*','[+prefix+]user_roles',"id='{$role}'");
+	$rs = $modx->db->select('*',$tbl_user_roles, "id='{$role}'");
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1) {
 		echo "More than one role returned!<p>";

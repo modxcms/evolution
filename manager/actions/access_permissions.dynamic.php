@@ -15,7 +15,7 @@ $tbl_membergroup_names   = $modx->getFullTableName('membergroup_names');
 $tbl_site_content        = $modx->getFullTableName('site_content');
 
 // find all document groups, for the select :)
-$rs = $modx->db->select('*','[+prefix+]documentgroup_names','','name');
+$rs = $modx->db->select('*',$tbl_documentgroup_names,'','name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector = '[no groups to add]';
 } else {
@@ -26,7 +26,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector .= "</select>\n";
 }
 
-$rs = $modx->db->select('*','[+prefix+]membergroup_names','','name');
+$rs = $modx->db->select('*',$tbl_membergroup_names,'','name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$usrgroupselector = '[no user groups]';
 } else {

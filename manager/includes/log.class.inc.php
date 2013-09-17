@@ -48,7 +48,8 @@ class logHandler {
     // writes it to the logging table
     function writeToLog() {
         global $modx;
-
+        $tbl_manager_log = $modx->getFullTableName('manager_log');
+        
         if($this->entry['internalKey'] == "") {
             $this->logError("internalKey not set.");
             return;
@@ -73,7 +74,7 @@ class logHandler {
         $fields['itemid']      = $this->entry['itemId'];
         $fields['itemname']    = $modx->db->escape($this->entry['itemName']);
         $fields['message']     = $modx->db->escape($this->entry['msg']);
-        $insert_id = $modx->db->insert($fields,'[+prefix+]manager_log');
+        $insert_id = $modx->db->insert($fields,$tbl_manager_log);
         if(!$insert_id) {
             $this->logError("Couldn't save log to table! ".$modx->db->getLastError());
             return true;

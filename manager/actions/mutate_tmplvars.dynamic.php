@@ -12,6 +12,11 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
 else                       $id = 0;
 
+$tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
+$tbl_site_templates         = $modx->getFullTableName('site_templates');
+$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+$tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
+
 // check to see the variable editor isn't locked
 $tbl_active_users = $modx->getFullTableName('active_users');
 $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
@@ -41,7 +46,7 @@ global $content;
 $content = array();
 if(isset($_GET['id']))
 {
-	$rs = $modx->db->select('*','[+prefix+]site_tmplvars',"id={$id}");
+	$rs = $modx->db->select('*',$tbl_site_tmplvars,"id='{$id}'");
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1)
 	{
@@ -411,7 +416,7 @@ function decode(s){
 	</style>
 <table>
 	<?php
-	    $from = '[+prefix+]site_templates as tpl LEFT JOIN [+prefix+]site_tmplvar_templates as stt ON stt.templateid=tpl.id AND stt.tmplvarid='.$id;
+	    $from = "{$tbl_site_templates} as tpl LEFT JOIN {$tbl_site_tmplvar_templates} as stt ON stt.templateid=tpl.id AND stt.tmplvarid='{$id}'";
 	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
 ?>
   <tr>
@@ -486,7 +491,7 @@ function decode(s){
 <?php
 		}
 		$chk ='';
-		$rs = $modx->db->select('name, id','[+prefix+]documentgroup_names');
+		$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
 		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
