@@ -142,7 +142,7 @@ function ParseCommand($binding_string)
         if(strpos($binding_string,'@'.$cmd)===0)
         {
             $code = substr($binding_string,strlen($cmd)+1);
-            $binding_array = array($cmd,$code);
+            $binding_array = array($cmd,trim($code));
             break;
         }
     }
