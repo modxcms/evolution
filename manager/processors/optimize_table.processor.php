@@ -10,10 +10,8 @@ if(($_REQUEST['t']=="" || !isset($_REQUEST['t'])) && ($_REQUEST['u']=="" || !iss
 		$e->dumpError();
 }
 
-if (isset($_REQUEST['t'])) $sql = "OPTIMIZE TABLE $dbase.".$_REQUEST['t'].";";
-elseif (isset($_REQUEST['u'])) $sql = "TRUNCATE TABLE $dbase.".$_REQUEST['u'].";";
-
-if($sql) $rs = $modx->db->query($sql);
+if (isset($_REQUEST['t']))     $modx->db->optimize($_REQUEST['t']);
+elseif (isset($_REQUEST['u'])) $modx->db->truncate($_REQUEST['u']);
 
 $mode = intval($_REQUEST['mode']);
 $header="Location: index.php?a=".$mode."&s=4";
