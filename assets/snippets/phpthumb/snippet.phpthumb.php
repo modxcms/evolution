@@ -13,8 +13,8 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   $path_parts=pathinfo($input);
   require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
   $phpThumb = new phpthumb();
-  $phpThumb->setSourceFilename($input);
-  
+  $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
+
   $options = explode("&", $options);
   foreach ($options as $value) {
     $thumb = explode("=", $value);
@@ -35,6 +35,12 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   
   $fname=$folder."/".$op['w']."x".$op['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($options)),0,3).".".$op['f'];
   $outputFilename =MODX_BASE_PATH.$fname;
-  if (!file_exists($outputFilename)) if ($phpThumb->GenerateThumbnail()) $phpThumb->RenderToFile($outputFilename) ;
+  if (!file_exists($outputFilename)) {
+	  if ($phpThumb->GenerateThumbnail()) {
+		  $phpThumb->RenderToFile($outputFilename);
+	  } else {
+		  $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
+	  }
+  }
   return $fname;
 ?>
