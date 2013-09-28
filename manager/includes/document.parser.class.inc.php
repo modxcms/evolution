@@ -2354,7 +2354,7 @@ class DocumentParser {
     }
 
     /**
-     * Returns the ClipperCMS version information as version, branch, release date and full application name.
+     * Returns the MODX version information as version, branch, release date and full application name.
      *
      * @return array
      */
