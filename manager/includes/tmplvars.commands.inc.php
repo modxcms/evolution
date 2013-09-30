@@ -120,15 +120,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
 function ProcessFile($file) {
     // get the file
-    if (file_exists($file) && @ $handle = fopen($file, "r")) {
-        $buffer = "";
-        while (!feof($handle)) {
-            $buffer .= fgets($handle, 4096);
-        }
-        fclose($handle);
-    } else {
-        $buffer = " Could not retrieve document '$file'.";
-    }
+	$buffer = @file_get_contents($file);
+	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 

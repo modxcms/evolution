@@ -1480,16 +1480,10 @@ class DocumentParser {
     function executeParser() {
 
         //error_reporting(0);
-        if (version_compare(phpversion(), "5.0.0", ">="))
             set_error_handler(array (
                 & $this,
                 "phpError"
             ), E_ALL);
-        else
-            set_error_handler(array (
-                & $this,
-                "phpError"
-            ));
 
         $this->db->connect();
 
