@@ -346,7 +346,7 @@ class Qm {
                         //$docID = $this->modx->documentIdentifier;
                         $doc = $this->modx->getDocument($docID);
                         
-                        $controls .= '<li id="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
+                        $controls .= '<li class="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
 
                         // Edit button
                         
@@ -638,7 +638,7 @@ class Qm {
                 // If there is Qm call, add control buttons and modify to edit document page
                 if (intval($_REQUEST['quickmanager']) == 1) {
                 
-                    global $content;
+                    global $content, $_style;
                     
                     // Set template for new document, action = 4
                     if(intval($_GET['a']) == 4) {    
@@ -710,8 +710,6 @@ class Qm {
                     // Hide default manager action buttons
                     $mc->addLine('$("#actions").hide();');
     
-                    // Get MODx theme
-					$qm_theme = $this->modx->config['manager_theme'];
 					
 					// Get doc id
 					$doc_id = intval($_REQUEST['id']);
