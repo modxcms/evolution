@@ -165,6 +165,12 @@
     outline: none !important;
 }
 
+#qmId {
+	font-size: 20px;
+	line-height:25px;
+	color: black;
+}
+
 #qmEditor, #qmEditorClosed
 {
 	font-family: Arial, Helvetica, sans-serif !important;
