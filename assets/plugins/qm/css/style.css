@@ -207,13 +207,11 @@
 	border: 0;
 }
 
-/* add by Segr */
 #qmEditor .qmId {
 	font-size: 20px;
 	line-height: 25px;
 	color: black;
 }
-/* add by Segr */
 
 #qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
 {

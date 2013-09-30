@@ -346,6 +346,7 @@ class Qm {
                         //$docID = $this->modx->documentIdentifier;
                         $doc = $this->modx->getDocument($docID);
                         
+                        // Add ID
                         $controls .= '<li class="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
 
                         // Edit button
