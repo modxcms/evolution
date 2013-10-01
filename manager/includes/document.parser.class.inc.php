@@ -643,9 +643,6 @@ class DocumentParser {
         $stats = $this->getTimerStats($this->tstart);
         
         $out =& $this->documentOutput;
-        if ($this->dumpSQL) {
-            $out .= $this->queryCode;
-        }
         $out= str_replace("[^q^]", $stats['queries'] , $out);
         $out= str_replace("[^qt^]", $stats['queryTime'] , $out);
         $out= str_replace("[^p^]", $stats['phpTime'] , $out);
@@ -664,6 +661,8 @@ class DocumentParser {
         }
 
         echo $this->documentOutput;
+
+        if ($this->dumpSQL) echo $this->queryCode;
         if ($this->dumpSnippets) {
             $sc = "";
             $tt = 0;
