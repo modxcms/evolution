@@ -3665,13 +3665,14 @@ class DocumentParser {
     }
     
 	function nicesize($size) {
-		$a = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
-		$pos = 0;
-		while ($size >= 1024) {
-			   $size /= 1024;
-			   $pos++;
+		$sizes = array('Tb'=>1099511627776, 'Gb'=>1073741824, 'Mb'=>1048576, 'Kb'=>1024, 'b'=>1);
+		$precisions = count($sizes)-1;
+		foreach ($sizes as $unit=>$bytes) {
+			if ($size>=$bytes)
+				return number_format($size/$bytes, $precisions).' '.$unit;
+			$precisions--;
 		}
-		return round($size,2).' '.$a[$pos];
+		return '0 b';
 	}
 
 	function getIdFromAlias($alias)
