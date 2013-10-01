@@ -80,7 +80,7 @@ class Document{
 		}
 		if(is_array($this->tvs)) $this->saveTVs();
     if ($clearcache == 1) {
-      $modx->clearCache();
+      $modx->clearCache('full');
     }
 	}
 
