@@ -59,7 +59,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('web_users').' AS users ON users.id = groups.webuser '.
 		'ORDER BY groupnames.name';
 ?>
-	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
+	<table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_user_group'] ?></b></td></tr>
 		</thead>
@@ -67,7 +67,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_user_group" />
-				<input type="text" value="" name="newusergroup" />&nbsp;
+				<input type="text" value="" name="newusergroup" size="200" />&nbsp;
 				<input type="submit" value="<?php echo $_lang['submit'] ?>" />
 			</form>
 		</td></tr>
@@ -89,7 +89,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_user_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" />&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'" />&nbsp;'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&usergroup='.$row['id'].'&operation=delete_user_group\';" />'."\n".
 				'</form>';
@@ -132,7 +132,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('site_content').' AS sc ON sc.id = dg.document '.
 		'ORDER BY dgnames.name, sc.id';
 ?>
-	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
+	<table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td></tr>
 		</thead>
@@ -140,7 +140,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_document_group" />
-				<input type="text" value="" name="newdocgroup" />&nbsp;
+				<input type="text" value="" name="newdocgroup" size="200" />&nbsp;
 				<input type="submit" value="<?php echo $_lang['submit'] ?>" />
 			</form>
 		</td></tr>
@@ -164,7 +164,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'">&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200">&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'">'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
 				'</form>';
