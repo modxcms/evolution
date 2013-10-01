@@ -287,7 +287,7 @@ if(!$modx->hasPermission('logs')) {
 			for ($i = 0; $i < $limit; $i++) {
 				$activeusers = $modx->db->getRow($rs);
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
-				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user'>":"";
+				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='".$_style["tree_globe"]."' alt='Web user'>":"";
 				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
 			}
 		}

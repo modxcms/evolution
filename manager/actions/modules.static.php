@@ -5,7 +5,6 @@ if(!($modx->hasPermission('new_module')||$modx->hasPermission('edit_module')||$m
 	$e->setError(3);
 	$e->dumpError();
 }
-$theme = $manager_theme ? "$manager_theme/":"";
 
 // initialize page view state - the $_PAGE object
 $modx->manager->initPageViewState();

@@ -7,10 +7,6 @@ else    $id = 0;
 
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 $url = $modx->config['site_url'];
 
 // Get table names (alphabetical)
@@ -337,9 +333,9 @@ function movedocument() {
 			<tr><td><?php echo $_lang['resource_opt_show_menu']?>: </td>
 				<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_web_access']?>: </td>
-				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 			<tr><td><?php echo $_lang['page_data_mgr_access']?>: </td>
-				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 		<tr><td colspan="2">&nbsp;</td>	</tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_markup']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_template']?>: </td>

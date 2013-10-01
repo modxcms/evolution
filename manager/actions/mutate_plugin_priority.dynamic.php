@@ -5,12 +5,6 @@ if(!$modx->hasPermission('save_plugin')) {
 	$e->dumpError();
 }
 
-if($manager_theme) {
-    $useTheme = $manager_theme . '/';
-} else {
-    $useTheme = '';
-}
-
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
@@ -74,7 +68,7 @@ $header = '
 <head>
 	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 
 	<style type="text/css">
@@ -106,7 +100,7 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-			background-image: url("media/style/'.$useTheme.'images/misc/fade.gif");
+			background-image: url("'.$_style['fade'].'");
 			background-repeat: repeat-x;
 		}
 

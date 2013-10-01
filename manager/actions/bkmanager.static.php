@@ -207,7 +207,7 @@ else
 	<input type="hidden" name="mode" value="" />
 	<p><?php echo $_lang['table_hoverinfo']?></p>
 
-	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="media/style/<?php echo $modx->config['manager_theme'];?>/images/misc/ed_save.gif" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
+	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="<?php echo $_style['ed_save'];?>" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
 	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		<thead><tr>

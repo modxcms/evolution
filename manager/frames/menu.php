@@ -4,7 +4,6 @@ if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mo
 	$modx->config['mail_check_timeperiod'] = 5;
 }
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
-if ($manager_theme) $manager_theme .= '/';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -12,7 +11,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript" src="media/script/session.js"></script>

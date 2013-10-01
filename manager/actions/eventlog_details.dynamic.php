@@ -67,11 +67,10 @@ $date = $modx->toDateFormat($content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];
 else if($content["type"]==2) $msgtype = $_lang["warning"];
 else if($content["type"]==3) $msgtype = $_lang["error"];
-$useTheme = $manager_theme ? "$manager_theme/":"";
 echo <<<HTML
 	<table border="0" width="100%">
 	  <tr><td colspan="4">
-		<div class="warning"><img src="media/style/{$useTheme}images/icons/event{$content["type"]}.png" align="absmiddle" /> {$msgtype}</div><br />
+		<div class="warning"><img src="{$_style["icons_event{$content["type"]}"]}" align="absmiddle" /> {$msgtype}</div><br />
 	  </td></tr>
 	  <tr>
 		<td width="25%" valign="top">{$_lang["event_id"]}:</td>
