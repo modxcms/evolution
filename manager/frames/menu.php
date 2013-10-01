@@ -335,7 +335,10 @@ if($modx->hasPermission('settings')) {
 // Reports Menu
 $reportsmenu = array();
 // site-sched
-$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+if($modx->hasPermission('view_eventlog')) {
+	// eventlog
+	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+}	
 if($modx->hasPermission('view_eventlog')) {
 	// eventlog
 	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=114" target="main">'.$_lang['eventlog_viewer'].'</a></li>';
