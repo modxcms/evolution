@@ -24,7 +24,7 @@ $proteted_path = array();
 if($_SESSION['mgrRole']!=1)
 {
 */
-        $proteted_path[] = $modx->config['modx_manager_path'];
+        $proteted_path[] = $modx->config['site_manager_path'];
 	$proteted_path[] = $modx->config['base_path'] . 'temp/backup';
 	$proteted_path[] = $modx->config['base_path'] . 'assets/backup';
 	

@@ -265,7 +265,7 @@ class DocumentParser {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
             }
             if (!$included || !is_array($this->config) || empty ($this->config)) {
-                include_once MODX_MANAGER_PATH . "processors/cache_sync.class.processor.php";
+                include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
                 $cache->setCachepath(MODX_BASE_PATH . "assets/cache/");
                 $cache->setReport(false);
@@ -699,21 +699,7 @@ class DocumentParser {
             }
 
             // clear the cache
-            $basepath= $this->config["base_path"] . "assets/cache/";
-            if ($handle= opendir($basepath)) {
-                $filesincache= 0;
-                $deletedfilesincache= 0;
-                while (false !== ($file= readdir($handle))) {
-                    if ($file != "." && $file != "..") {
-                        $filesincache += 1;
-                        if (preg_match("/\.pageCache/", $file)) {
-                            $deletedfilesincache += 1;
-                            while (!unlink($basepath . "/" . $file));
-                        }
-                    }
-                }
-                closedir($handle);
-            }
+            $modx->clearCache();
 
             // update publish time file
             $timesArr= array ();
@@ -1600,7 +1586,7 @@ class DocumentParser {
                     $this->sendErrorPage();
                 } else {
                     // Inculde the necessary files to check document permissions
-                    include_once ($this->config['site_manager_path'] . 'processors/user_documents_permissions.class.php');
+                    include_once (MODX_MANAGER_PATH . 'processors/user_documents_permissions.class.php');
                     $udperms= new udperms();
                     $udperms->user= $this->getLoginUserID();
                     $udperms->document= $this->documentIdentifier;
@@ -2227,25 +2213,24 @@ class DocumentParser {
      *
      * @return boolean 
      */
-    function clearCache() {
-        $basepath= $this->config["base_path"] . "assets/cache";
-        if (@ $handle= opendir($basepath)) {
-            $filesincache= 0;
-            $deletedfilesincache= 0;
-            while (false !== ($file= readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    $filesincache += 1;
-                    if (preg_match("/\.pageCache/", $file)) {
-                        $deletedfilesincache += 1;
-                        unlink($basepath . "/" . $file);
-                    }
-                }
-            }
-            closedir($handle);
-            return true;
-        } else {
-            return false;
-        }
+    function clearCache($type='', $report=false) {
+		if ($type=='full') {
+		include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
+		$sync = new synccache();
+		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
+		$sync->setReport($report);
+		$sync->emptyCache();
+		} else {
+			$files = glob(MODX_BASE_PATH . 'assets/cache/*');
+			$deletedfiles = array();
+			while ($file = array_shift($files)) {
+				$name = basename($file);
+				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
+					$deletedfiles[] = $name;
+					unlink($file);
+				}
+			}
+		}
     }
 
     /**

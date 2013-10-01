@@ -57,7 +57,7 @@ switch ($_POST['mode']) {
 			$content['category'] = $_POST['categoryid'];
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_htmlsnippet.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_htmlsnippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -82,11 +82,7 @@ switch ($_POST['mode']) {
 									));
 
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
 			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
@@ -122,11 +118,7 @@ switch ($_POST['mode']) {
 									));
 
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
 
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

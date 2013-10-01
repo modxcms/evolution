@@ -106,11 +106,7 @@ else {
 }
 
 // empty cache
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache();
+$modx->clearCache('full');
 
 $header="Location: index.php?a=81";
 header($header);
