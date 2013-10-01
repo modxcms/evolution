@@ -37,7 +37,7 @@ if(!$rs) {
 		// empty cache
 		include_once "cache_sync.class.processor.php";
 		$sync = new synccache();
-		$sync->setCachepath("../assets/cache/");
+		$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
 		$sync->setReport(false);
 		$sync->emptyCache(); // first empty the cache		
 		// finished emptying cache - redirect

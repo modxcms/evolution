@@ -20,7 +20,6 @@ $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 
-$basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
@@ -40,7 +39,7 @@ if(isset($_POST['listSubmitted'])) {
     // empty cache
     include_once (MODX_MANAGER_PATH.'processors/cache_sync.class.processor.php');
     $sync = new synccache();
-    $sync->setCachepath($basePath.'/assets/cache/');
+    $sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
     $sync->setReport(false);
     $sync->emptyCache(); // first empty the cache
 }

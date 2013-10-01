@@ -699,21 +699,11 @@ class DocumentParser {
             }
 
             // clear the cache
-            $basepath= $this->config["base_path"] . "assets/cache/";
-            if ($handle= opendir($basepath)) {
-                $filesincache= 0;
-                $deletedfilesincache= 0;
-                while (false !== ($file= readdir($handle))) {
-                    if ($file != "." && $file != "..") {
-                        $filesincache += 1;
-                        if (preg_match("/\.pageCache/", $file)) {
-                            $deletedfilesincache += 1;
-                            while (!unlink($basepath . "/" . $file));
-                        }
-                    }
-                }
-                closedir($handle);
-            }
+            include_once "cache_sync.class.processor.php";
+            $sync = new synccache();
+            $sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
+            $sync->setReport(false);
+            $sync->emptyCache();
 
             // update publish time file
             $timesArr= array ();

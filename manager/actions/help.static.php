@@ -11,7 +11,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             tp = new WebFXTabPane( document.getElementById( "helpPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
         </script>
 <?php
-if ($handle = opendir('../assets/templates/help')) {
+if ($handle = opendir(MODX_BASE_PATH . 'assets/templates/help')) {
     while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != ".." && $file != ".svn") {
             $help[] = $file;

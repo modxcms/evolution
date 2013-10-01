@@ -64,7 +64,7 @@ switch(true){
 if($emptyCache) {
     include_once dirname(dirname(__FILE__)) . "/processors/cache_sync.class.processor.php";
     $sync = new synccache();
-    $sync->setCachepath("../assets/cache/");
+	$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
     $sync->setReport(false);
     $sync->emptyCache();
 }

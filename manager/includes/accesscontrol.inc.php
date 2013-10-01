@@ -11,14 +11,13 @@ if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 }
 
 // andrazk 20070416 - if installer is running, destroy active sessions
-$pth = dirname(__FILE__);
-if (file_exists($pth.'/../../assets/cache/installProc.inc.php')) {
-	include_once($pth.'/../../assets/cache/installProc.inc.php');
+if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
+	include_once(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
 	if (isset($installStartTime)) {
 		if ((time() - $installStartTime) > 5 * 60) { // if install flag older than 5 minutes, discard
 			unset($installStartTime);
-			@ chmod($pth.'/../../assets/cache/installProc.inc.php', 0755);
-			unlink($pth.'/../../assets/cache/installProc.inc.php');
+			@ chmod(MODX_BASE_PATH . 'assets/cache/installProc.inc.php', 0755);
+			unlink(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
 		} 
 		else {
 			if ($_SERVER['REQUEST_METHOD'] != 'POST') {

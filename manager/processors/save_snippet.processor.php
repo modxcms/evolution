@@ -69,7 +69,7 @@ switch ($_POST['mode']) {
 			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_snippet.dynamic.php');
+			include(MODX_BASE_PATH.'actions/mutate_snippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -98,7 +98,7 @@ switch ($_POST['mode']) {
 			// empty cache
 			include_once "cache_sync.class.processor.php";
 			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
+			$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
 			$sync->setReport(false);
 			$sync->emptyCache(); // first empty the cache		
 			// finished emptying cache - redirect
@@ -137,7 +137,7 @@ switch ($_POST['mode']) {
 			// empty cache
 			include_once "cache_sync.class.processor.php";
 			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
+			$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
 			$sync->setReport(false);
 			$sync->emptyCache(); // first empty the cache
 			if($_POST['runsnippet']) run_snippet($snippet);

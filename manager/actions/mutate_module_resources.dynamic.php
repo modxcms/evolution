@@ -106,7 +106,7 @@ switch ($_REQUEST['op']) {
 				// reset cache
 				include_once MODX_MANAGER_PATH."processors/cache_sync.class.processor.php";
 				$sync = new synccache();
-				$sync->setCachepath("../assets/cache/");
+				$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
 				$sync->setReport(false);
 				$sync->emptyCache(); // first empty the cache
 			}

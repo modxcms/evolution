@@ -1075,7 +1075,7 @@ class Qm {
         // Clear cache
         include_once $this->modx->config['site_manager_path']."processors/cache_sync.class.processor.php";
         $sync = new synccache();
-        $sync->setCachepath($this->modx->config['base_path']."assets/cache/");
+        $sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
         $sync->setReport(false);
         $sync->emptyCache();    
 	}
