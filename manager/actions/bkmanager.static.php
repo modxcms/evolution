@@ -334,7 +334,6 @@ if(isset($_SESSION['last_result']) || !empty($_SESSION['last_result']))
 	$last_result = $_SESSION['last_result'];
 	unset($_SESSION['last_result']);
 	if(count($last_result)<1) $result = '';
-	elseif(count($last_result)==1) echo $last_result[0];
 	else
 	{
 		$last_result = array_merge(array(), array_diff($last_result, array('')));

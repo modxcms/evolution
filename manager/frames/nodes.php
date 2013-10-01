@@ -80,7 +80,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     function makeHTML($indent,$parent,$expandAll,$theme) {
         global $modx;
-        global $icons, $iconsPrivate, $theme, $_style;
+        global $icons, $iconsPrivate, $_style;
         global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
 
         $pad = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

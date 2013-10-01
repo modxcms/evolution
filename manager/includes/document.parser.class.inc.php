@@ -2842,25 +2842,6 @@ class DocumentParser {
     }
 
     /**
-     * Returns true, install or interact when inside manager.
-     *
-     * @deprecated
-     * @return string
-     */
-    function insideManager() {
-        $m= false;
-        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
-            $m= true;
-            if (defined('SNIPPET_INTERACTIVE_MODE') && SNIPPET_INTERACTIVE_MODE == 'true')
-                $m= "interact";
-            else
-                if (defined('SNIPPET_INSTALL_MODE') && SNIPPET_INSTALL_MODE == 'true')
-                    $m= "install";
-        }
-        return $m;
-    }
-
-    /**
      * Returns current user id.
      *
      * @param string $context. Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
@@ -3039,18 +3020,6 @@ class DocumentParser {
             }
         }
     }
-
-    /**
-     * Change current web user's password
-     *
-     * @deprecated
-     * @param string $o
-     * @param string $n
-     * @return string|boolean
-     */
-    function changePassword($o, $n) {
-        return changeWebUserPassword($o, $n);
-    } // deprecated
 
     /**
      * Returns true if the current web user is a member the specified groups
