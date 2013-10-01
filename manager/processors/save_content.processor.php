@@ -291,7 +291,7 @@ if ($actionToTake != "new") {
 // check to see if the user is allowed to save the document in the place he wants to save it in
 if ($use_udperms == 1) {
 	if ($existingDocument['parent'] != $parent) {
-		include_once "./processors/user_documents_permissions.class.php";
+		include_once MODX_MANAGER_PATH ."processors/user_documents_permissions.class.php";
 		$udperms = new udperms();
 		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $parent;
