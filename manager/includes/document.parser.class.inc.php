@@ -54,6 +54,9 @@ class DocumentParser {
     var $documentMap;
     var $forwards= 3;
     var $error_reporting;
+    var $dumpPlugins;
+    var $pluginsCode;
+    var $pluginsTime=array();
     var $aliasListing;
     private $version=array();
 
@@ -671,6 +674,17 @@ class DocumentParser {
             echo "<fieldset><legend><b>Snippets</b> (".count($this->snippetsTime)." / ".sprintf("%2.2f ms", $tt*1000).")</legend>{$sc}</fieldset><br />";
             echo $this->snippetsCode;
         }
+        if ($this->dumpPlugins) {
+            $ps = "";
+            $tc = 0;
+            foreach ($this->pluginsTime as $s=>$t) {
+                $ps .= "$s (".sprintf("%2.2f ms", $t*1000).")<br>";
+                $tt += $t;
+            }
+            echo "<fieldset><legend><b>Plugins</b> (".count($this->pluginsTime)." / ".sprintf("%2.2f ms", $tt*1000).")</legend>{$ps}</fieldset><br />";
+            echo $this->pluginsCode;
+        }
+
         ob_end_flush();
     }
 
@@ -3274,6 +3288,7 @@ class DocumentParser {
         $numEvents= count($el);
         if ($numEvents > 0)
             for ($i= 0; $i < $numEvents; $i++) { // start for loop
+                if ($this->dumpPlugins == 1) $eventtime = $this->getMicroTime();
                 $pluginName= $el[$i];
                 $pluginName = stripslashes($pluginName);
                 // reset event object
@@ -3306,6 +3321,13 @@ class DocumentParser {
 
                 // eval plugin
                 $this->evalPlugin($pluginCode, $parameter);
+                if ($this->dumpPlugins == 1) {
+                    $eventtime = $this->getMicroTime() - $eventtime;
+                    $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
+                    foreach ($parameter as $k=>$v) $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
+                    $this->pluginsCode .= '</fieldset><br />';
+                    $this->pluginsTime["$evtName / $pluginName"] += $eventtime;
+                }
                 if ($e->_output != "")
                     $results[]= $e->_output;
                 if ($e->_propagate != true)
