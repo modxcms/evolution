@@ -57,7 +57,7 @@ if(isset($_GET['id'])) {
         exit;
     }
     if($limit<1) {
-        header("Location: /index.php?id=".$site_start);
+        header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];

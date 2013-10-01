@@ -66,7 +66,7 @@ switch ($_POST['mode']) {
 			$content['sysevents'] = $sysevents;
 
 			include 'header.inc.php';
-			include(MODX_BASE_PATH.'actions/mutate_plugin.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_plugin.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;

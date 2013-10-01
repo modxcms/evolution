@@ -688,7 +688,7 @@ switch ($actionToTake) {
 		}
 		
 		if ($_POST['refresh_preview'] == '1')
-			$header = "Location: ../index.php?id=$id&z=manprev";
+			$header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
 		else {
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];

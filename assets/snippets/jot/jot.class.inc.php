@@ -315,7 +315,7 @@ class CJot {
 		if ($this->config["placeholders"]) $this->setPlaceholders($this->config,"jot");
 		
 		// Include stylesheet if needed
-		$src = '<link rel="stylesheet" type="text/css" href="'.$modx->config["base_url"].$this->config["css"]["file"].'" />';
+		$src = '<link rel="stylesheet" type="text/css" href="'.$modx->config["site_url"].$this->config["css"]["file"].'" />';
 		if ($this->config["css"]["include"]) $modx->regClientCSS($src);
 		
 		return $output;

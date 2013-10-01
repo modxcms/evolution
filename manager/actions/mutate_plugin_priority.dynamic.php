@@ -11,7 +11,6 @@ if($manager_theme) {
     $useTheme = '';
 }
 
-$basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';

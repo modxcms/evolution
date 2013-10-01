@@ -53,7 +53,7 @@ switch ($_POST['mode']) {
 			$_POST['category'] = $categoryid;
 			$_GET['stay'] = $_POST['stay'];
 			include 'header.inc.php';
-			include(MODX_BASE_PATH.'actions/mutate_templates.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -117,7 +117,7 @@ switch ($_POST['mode']) {
 			$_POST['category'] = $categoryid;
 			$_GET['stay'] = $_POST['stay'];
 			include 'header.inc.php';
-			include(MODX_BASE_PATH.'actions/mutate_templates.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;

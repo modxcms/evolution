@@ -69,7 +69,7 @@ switch ($_POST['mode']) {
 			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
 
 			include 'header.inc.php';
-			include(MODX_BASE_PATH.'actions/mutate_snippet.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_snippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;

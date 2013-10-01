@@ -276,7 +276,7 @@ class EXPORT_SITE
 
     function clearCache()
     {
-		include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
+		include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
 		$sync = new synccache();
 		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
 		$sync->setReport(false);
