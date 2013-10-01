@@ -38,6 +38,9 @@ class DocumentParser {
     var $entrypage;
     var $documentListing;
     var $dumpSnippets;
+    var $snippetsCode;
+    var $snippetsCount=array();
+    var $snippetsTime=array();
     var $chunkCache;
     var $snippetCache;
     var $contentTypes;
@@ -658,6 +661,16 @@ class DocumentParser {
         }
 
         echo $this->documentOutput;
+        if ($this->dumpSnippets) {
+            $sc = "";
+            $tt = 0;
+            foreach ($this->snippetsTime as $s=>$t) {
+                $sc .= "$s: ".$this->snippetsCount[$s]." (".sprintf("%2.2f ms", $t*1000).")<br>";
+                $tt += $t;
+            }
+            echo "<fieldset><legend><b>Snippets</b> (".count($this->snippetsTime)." / ".sprintf("%2.2f ms", $tt*1000).")</legend>{$sc}</fieldset><br />";
+            echo $this->snippetsCode;
+        }
         ob_end_flush();
     }
 
@@ -1062,6 +1075,7 @@ class DocumentParser {
     
     private function _get_snip_result($piece)
     {
+        if ($this->dumpSnippets == 1) $sniptime = $this->getMicroTime();
         $snip_call        = $this->_split_snip_call($piece);
         $snip_name        = $snip_call['name'];
         $except_snip_call = $snip_call['except_snip_call'];
@@ -1137,7 +1151,15 @@ class DocumentParser {
         
         if($this->dumpSnippets == 1)
         {
-            $this->snipCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b></legend><textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea></fieldset>';
+            $sniptime = $this->getMicroTime() - $sniptime;
+            $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
+            if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
+            if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
+            foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
+            $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
+            $this->snippetsCode .= '</fieldset><br />';
+            $this->snippetsCount[$snippetObject['name']]++;
+            $this->snippetsTime[$snippetObject['name']] += $sniptime;
         }
         return $value . $except_snip_call;
     }
@@ -1415,7 +1437,7 @@ class DocumentParser {
             if ($i == ($passes -1))
                 $st= strlen($source);
             if ($this->dumpSnippets == 1) {
-                echo "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i +1) . "</b></legend>The following snippets (if any) were parsed during this pass.<div style='width:100%' align='center'>";
+                $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i +1) . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
             }
 
             // invoke OnParseDocument event
@@ -1443,7 +1465,7 @@ class DocumentParser {
             $source = $this->mergeSettingsContent($source);
             
             if ($this->dumpSnippets == 1) {
-                echo "</div></fieldset><br />";
+                $this->snippetsCode .= "</fieldset><br />";
             }
             if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
                 // check if source length was changed
