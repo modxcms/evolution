@@ -148,11 +148,17 @@
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
 									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
@@ -204,11 +210,17 @@
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
 									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
