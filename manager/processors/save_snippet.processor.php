@@ -96,11 +96,8 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 									));
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache();
+			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "22&id=$newid":"23";
@@ -135,11 +132,8 @@ switch ($_POST['mode']) {
 										"id"	=> $id
 									));	
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache
+			$modx->clearCache();
+
 			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

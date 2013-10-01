@@ -49,11 +49,7 @@ if(!$rs){
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
 
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache
+$modx->clearCache();
 
 //$header="Location: index.php?r=1&id=$id&a=7";
 

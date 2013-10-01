@@ -176,11 +176,6 @@ class resourse {
 	
 	public function clearCache($fire_events = null){
 		$this->modx->clearCache();
-		include_once (MODX_MANAGER_PATH . '/processors/cache_sync.class.processor.php');
-		$sync = new synccache();
-		$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-		$sync->setReport(false);
-		$sync->emptyCache();
 		$this->invokeEvent('OnSiteRefresh',array(),$fire_events);
 	}
 	

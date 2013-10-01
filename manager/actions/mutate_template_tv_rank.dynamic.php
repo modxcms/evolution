@@ -37,11 +37,7 @@ if(isset($_POST['listSubmitted'])) {
         }
     }
     // empty cache
-    include_once (MODX_MANAGER_PATH.'processors/cache_sync.class.processor.php');
-    $sync = new synccache();
-    $sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
-    $sync->setReport(false);
-    $sync->emptyCache(); // first empty the cache
+    $modx->clearCache();
 }
 
 $sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.templatename '.
