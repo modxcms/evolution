@@ -28,7 +28,7 @@ if(!$rs) {
 								));
 
 		// empty cache
-		$modx->clearCache();
+		$modx->clearCache('full');
 		
 		// finished emptying cache - redirect
 

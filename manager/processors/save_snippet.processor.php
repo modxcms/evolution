@@ -96,7 +96,7 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 									));
 			// empty cache
-			$modx->clearCache();
+			$modx->clearCache('full');
 			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
@@ -132,7 +132,7 @@ switch ($_POST['mode']) {
 										"id"	=> $id
 									));	
 			// empty cache
-			$modx->clearCache();
+			$modx->clearCache('full');
 
 			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect	

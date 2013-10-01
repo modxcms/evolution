@@ -175,7 +175,7 @@ class resourse {
 	}
 	
 	public function clearCache($fire_events = null){
-		$this->modx->clearCache();
+		$this->modx->clearCache('full');
 		$this->invokeEvent('OnSiteRefresh',array(),$fire_events);
 	}
 	

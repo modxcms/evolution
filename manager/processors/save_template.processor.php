@@ -79,7 +79,7 @@ switch ($_POST['mode']) {
 								));				
 
 			// empty cache
-			$modx->clearCache();
+			$modx->clearCache('full');
 			
 			// finished emptying cache - redirect		
 			if($_POST['stay']!='') {
@@ -135,7 +135,7 @@ switch ($_POST['mode']) {
 								));	    		
 
 			// first empty the cache		
-			$modx->clearCache();
+			$modx->clearCache('full');
 
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

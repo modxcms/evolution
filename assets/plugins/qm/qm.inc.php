@@ -104,7 +104,7 @@ class Qm {
             		secureMgrDocument($key);
                     
                     // Clear cache
-                    $this->modx->clearCache();
+                    $this->modx->clearCache('full');
                     
                     // Different doc to be refreshed than the one we are editing?
                     if (isset($_POST['qmrefresh'])) {
@@ -1065,7 +1065,7 @@ class Qm {
             $this->modx->invokeEvent('OnDocFormSave', array('mode'=>'upd', 'id'=>$pageId));
             
             // Clear cache
-            $this->modx->clearCache();
+            $this->modx->clearCache('full');
         }   
     }
 	

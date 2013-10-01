@@ -2213,12 +2213,24 @@ class DocumentParser {
      *
      * @return boolean 
      */
-    function clearCache($report=false) {
+    function clearCache($type='', $report=false) {
+		if ($type=='full') {
 		include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
 		$sync = new synccache();
 		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
 		$sync->setReport($report);
 		$sync->emptyCache();
+		} else {
+			$files = glob(MODX_BASE_PATH . 'assets/cache/*');
+			$deletedfiles = array();
+			while ($file = array_shift($files)) {
+				$name = basename($file);
+				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
+					$deletedfiles[] = $name;
+					unlink($file);
+				}
+			}
+		}
     }
 
     /**

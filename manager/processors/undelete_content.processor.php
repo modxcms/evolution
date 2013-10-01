@@ -93,7 +93,7 @@ if(!$rs) {
 	exit;
 } else {
 	// empty cache
-	$modx->clearCache();
+	$modx->clearCache('full');
 	// finished emptying cache - redirect
 	//$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 

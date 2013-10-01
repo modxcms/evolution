@@ -49,7 +49,7 @@ if(!$rs){
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
 
-$modx->clearCache();
+$modx->clearCache('full');
 
 //$header="Location: index.php?r=1&id=$id&a=7";
 

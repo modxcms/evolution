@@ -105,8 +105,9 @@ switch ($_POST['mode']) {
 								));	    	
 								
 			// empty cache
-			$modx->clearCache();
+			$modx->clearCache('full');
 			
+			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "301&id=$newid":"300";
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
@@ -156,7 +157,7 @@ switch ($_POST['mode']) {
 								));	 
 
 			// empty cache
-			$modx->clearCache();
+			$modx->clearCache('full');
 
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

@@ -62,7 +62,7 @@ switch(true){
 }
 
 if($emptyCache) {
-	$modx->clearCache();
+	$modx->clearCache('full');
 }
 
 echo $str;

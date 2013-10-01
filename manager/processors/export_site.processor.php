@@ -37,7 +37,7 @@ if($ignore_ids!==$_POST['ignore_ids']
  ||$includenoncache!==$_POST['includenoncache']
  ||$repl_before!==$_POST['repl_before']
  ||$repl_after !==$_POST['repl_after']) {
-	$modx->clearCache();
+	$modx->clearCache('full');
 }
 
 $total = $modx->export->getTotal($_POST['ignore_ids'], $modx->config['export_includenoncache']);

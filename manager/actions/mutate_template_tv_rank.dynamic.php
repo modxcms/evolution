@@ -37,7 +37,7 @@ if(isset($_POST['listSubmitted'])) {
         }
     }
     // empty cache
-    $modx->clearCache();
+    $modx->clearCache('full');
 }
 
 $sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.templatename '.

@@ -33,7 +33,7 @@ if(isset($_POST['listSubmitted'])) {
     	}
     }
     // empty cache
-    $modx->clearCache();
+    $modx->clearCache('full');
 }
 
 $sql = "

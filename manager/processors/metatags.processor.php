@@ -106,7 +106,7 @@ else {
 }
 
 // empty cache
-$modx->clearCache();
+$modx->clearCache('full');
 
 $header="Location: index.php?a=81";
 header($header);

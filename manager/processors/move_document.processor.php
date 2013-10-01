@@ -106,7 +106,7 @@ if (!array_search($newParentID, $children)) {
 	}
 
 	// empty cache & sync site
-	$modx->clearCache();
+	$modx->clearCache('full');
 
 	$header="Location: index.php?r=1&id=$id&a=7";
 	header($header);
