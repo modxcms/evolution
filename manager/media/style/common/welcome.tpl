@@ -22,7 +22,7 @@
                   </tr>
                   <tr>
                     <td width="100" align="right">
-                        <img src="media/style/common/images/misc/logo.png" alt="[+logo_slogan+]" />
+                        <img src="media/style/[+theme+]/images/misc/logo.png" alt="[+logo_slogan+]" />
                         <br /><br />
                     </td>
                     <td valign="top">
@@ -46,7 +46,7 @@
 			<script type="text/javascript"> if('[+config_display+]'=='block') tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
 			<div class="sectionHeader">[+configcheck_title+]</div>
 			<div class="sectionBody">
-				<img src="media/style/common/images/icons/error.png" />
+				<img src="media/style/[+theme+]/images/icons/error.png" />
 				[+config_check_results+]
 			</div>
 		</div>

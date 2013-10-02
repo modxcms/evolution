@@ -1797,8 +1797,8 @@ function get_lang_options($key=null, $selected_lang=null) {
 }
 
 function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
-	if($checked)  $checked  = ' checked="checked"';
-	if($disabled) $disabled = ' disabled';
+	if($checked)  $checked  = ' checked="checked"'; else $checked = '';
+	if($disabled) $disabled = ' disabled'; else $disabled = '';
 	if($add)     $add = ' ' . $add;
 	return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
 }

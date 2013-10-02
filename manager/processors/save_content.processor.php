@@ -703,17 +703,6 @@ switch ($actionToTake) {
 		exit;
 }
 
-/**
- * Format alias to be URL-safe
- *
- * @deprecated Use $modx->stripAlias()
- * @param string Alias to be formatted
- * @return string Safe alias
- */
-function stripAlias($alias) {
-   return $GLOBALS['modx']->stripAlias($alias);
-}
-
 // -- Save META Keywords --
 function saveMETAKeywords($id) {
 	global $modx, $keywords, $metatags,

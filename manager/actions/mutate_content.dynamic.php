@@ -45,10 +45,6 @@ if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
 $tbl_categories                 = $modx->getFullTableName('categories');

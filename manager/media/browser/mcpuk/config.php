@@ -27,8 +27,8 @@ $_CONFIG = array(
 	
     'theme' => "oxygen",
 
-    'uploadURL' => $settings['rb_base_url'],
-    'uploadDir' => $settings['rb_base_dir'],
+    'uploadURL' => rtrim($settings['rb_base_url'],'/'),
+    'uploadDir' => rtrim($settings['rb_base_dir'],'/'),
     'siteURL' => $site_url,
 	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
     'dirPerms' => intval($settings['new_folder_permissions'],8),

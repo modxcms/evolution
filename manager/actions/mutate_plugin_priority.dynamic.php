@@ -5,12 +5,6 @@ if(!$modx->hasPermission('save_plugin')) {
 	$e->dumpError();
 }
 
-if($manager_theme) {
-    $useTheme = $manager_theme . '/';
-} else {
-    $useTheme = '';
-}
-
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
@@ -37,11 +31,10 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $sql = "
-	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority
+	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority, plugs.disabled
 	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
 	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
 	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
-	WHERE plugs.disabled=0
 	ORDER BY sysevt.name,pe.priority
 ";
 
@@ -61,7 +54,7 @@ if($limit>1) {
             $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
             $insideUl = 1;
         }
-        $evtLists .= '<li id="item_'.$plugins['pluginid'].'">'.$plugins['name'].'</li>';
+        $evtLists .= '<li id="item_'.$plugins['pluginid'].'"'.($plugins['disabled']?' style="color:#AAA"':'').'>'.$plugins['name'].($plugins['disabled']?' (hide)':'').'</li>';
         $preEvt = $plugins['evtid'];
     }
 }
@@ -74,7 +67,7 @@ $header = '
 <head>
 	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 
 	<style type="text/css">
@@ -106,7 +99,7 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-			background-image: url("media/style/'.$useTheme.'images/misc/fade.gif");
+			background-image: url("'.$_style['fade'].'");
 			background-repeat: repeat-x;
 		}
 

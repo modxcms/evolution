@@ -124,6 +124,7 @@ $modx->minParserPasses = 1; // min number of parser recursive loops or passes
 $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
+$modx->dumpPlugins = false;
 $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 
