@@ -34,7 +34,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
-                $chunk = $modx->getChunk($param);
+                $chunk = $modx->getChunk(trim($param));
                 $output = $chunk;
                 break;
 
