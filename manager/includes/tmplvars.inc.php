@@ -10,6 +10,10 @@
 
 		$field_html ='';
 		$field_value = ($field_value!="" ? $field_value : $default_text);
+		if(substr($field_value, 0, 5) == "@EVAL") {
+	     	$eval_str = trim(substr($field_value, 6));
+	    	$field_value = eval($eval_str);
+	    }
 
 		switch ($field_type) {
 

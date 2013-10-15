@@ -402,10 +402,7 @@ function decode(s){
     <td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
 </table>
-    	</div>
 
-<!-- TemplateVar Info -->
-<div class="tab-page" id="tabInfo">
 <h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
 <script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>

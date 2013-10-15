@@ -19,6 +19,11 @@ $tbl_site_keywords         = $modx->getFullTableName('site_keywords');
 $tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
+$parent = $id ? ($modx->db->getValue("SELECT parent FROM " . $tbl_site_content . " WHERE id=$id LIMIT 1")) : 0;
+$isfolder = $parent ? ($modx->db->getValue("SELECT isfolder FROM " . $tbl_site_content . " WHERE id=$id LIMIT 1")) : 0;
+if (!$isfolder) {$id=$_REQUEST['id']=$parent;}
+
+
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
