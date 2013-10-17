@@ -170,7 +170,7 @@ $_dfnMaxlength = 6;
 				//remove empty values
 				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
-				if ($allowhtml || $formats[$name][2]=='html') {
+				if ($allowhtml && $formats[$name][2]=='html') {
 					$fields[$name] = stripslashes($value);
 				} else {
 					$fields[$name] = strip_tags(stripslashes($value));
@@ -676,6 +676,10 @@ function formMerge($docText, $docFields, $vClasses='') {
 				if($datatype=="listbox" && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","selected='selected'",$docText);
 				if(($datatype=="checkbox"||$datatype=="radio") && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
+		}
+		// prevent XSS for fields with no html type
+		if (isset($fld) && $formats[$listName][2] != 'html') {
+		    $value = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
 		}
 		if(strpos($name,":")===false) $docText = str_replace("[+$name+]",$value,$docText);
 		else {
