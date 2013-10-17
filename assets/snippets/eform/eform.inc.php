@@ -677,8 +677,8 @@ function formMerge($docText, $docFields, $vClasses='') {
 				if(($datatype=="checkbox"||$datatype=="radio") && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
 		}
-		// prevent XSS for fields with no html type
-		if (isset($fld) && $formats[$listName][2] != 'html') {
+		// prevent XSS for formfields
+		if (isset($fld)) {
 		    $value = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
 		}
 		if(strpos($name,":")===false) $docText = str_replace("[+$name+]",$value,$docText);
