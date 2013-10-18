@@ -561,7 +561,7 @@ class Wayfinder {
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
 		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(substr($tpl, 6));
+			$template = file_get_contents(substr($tpl, 6));
 		} else if(substr($tpl, 0, 6) == "@CODE:") {
 			$template = substr($tpl, 6);
 		} else {
@@ -570,28 +570,14 @@ class Wayfinder {
 		return $template;
 	}
 
-	function get_file_contents($filename) {
-		// Function written at http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
-		// Returns the contents of file name passed
-		if (!function_exists('file_get_contents')) {
-			$fhandle = fopen($filename, "r");
-			$fcontents = fread($fhandle, filesize($filename));
-			fclose($fhandle);
-		} else	{
-			$fcontents = file_get_contents($filename);
-		}
-		return $fcontents;
-	}
 	
 	function findTemplateVars($tpl) {
-		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
-		$cnt = count($matches[1]);
-				
-		$tvnames = array ();
-		for ($i = 0; $i < $cnt; $i++) {
-			if (strpos($matches[1][$i], "wf.") === FALSE) {
-				$tvnames[] =  $matches[1][$i];
-			}
+		preg_match_all('~\[\+([^:]*?)(:|\+\])~', $tpl, $matches);
+		$TVs = array();
+		foreach($matches[1] as $tv) {
+			if (strpos(strtolower($tv), 'phx')===0) continue;
+			if (strpos(strtolower($tv), 'wf.')===0) continue;
+			$tvnames[] = $tv;
 		}
 
 		if (count($tvnames) >= 1) {

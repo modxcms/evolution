@@ -96,6 +96,10 @@ $_style['icons_unpublish_resource'] = $style_path.'icons/clock_stop.png';
 $_style['icons_user']               = $style_path.'icons/user.gif';
 $_style['icons_weblink']            = $style_path.'icons/world_link.png';
 $_style['icons_working']            = $style_path.'icons/exclamation.png'; // top bar
+$_style['icons_event1']             = $style_path.'icons/event1.png';
+$_style['icons_event2']             = $style_path.'icons/event2.png';
+$_style['icons_event3']             = $style_path.'icons/event3.png';
+$_style['icons_secured']            = $style_path.'icons/secured.gif';
 
 // Tabs
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png';
@@ -116,4 +120,7 @@ $_style['icons_webusers_large']     = $style_path.'icons/web_users.gif';
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';
 $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/circlerightarrow.gif';
+$_style['fade']                     = $style_path.'misc/fade.gif';
+$_style['ed_save']                  = $style_path.'misc/ed_save.gif';
+
 ?>

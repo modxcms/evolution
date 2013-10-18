@@ -10,17 +10,10 @@ if (!is_numeric($_REQUEST['id'])) {
     exit;
 }
 
-if ($manager_theme) {
-    $manager_theme .= '/';
-} else  {
-    $manager_theme  = '';
-}
-
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 
-$basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
@@ -38,11 +31,7 @@ if(isset($_POST['listSubmitted'])) {
         }
     }
     // empty cache
-    include_once (MODX_MANAGER_PATH.'processors/cache_sync.class.processor.php');
-    $sync = new synccache();
-    $sync->setCachepath($basePath.'/assets/cache/');
-    $sync->setReport(false);
-    $sync->emptyCache(); // first empty the cache
+    $modx->clearCache('full');
 }
 
 $sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.templatename '.
@@ -70,7 +59,7 @@ $header = '
 <head>
     <title>MODx</title>
     <meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-    <link rel="stylesheet" type="text/css" href="media/style/'.$manager_theme.'style.css" />
+    <link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
     <script type="text/javascript" src="media/script/mootools/mootools.js"></script>';
 
 $header .= '
@@ -99,7 +88,7 @@ $header .= '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-            background-image: url("media/style/'.$manager_theme.'images/misc/fade.gif");
+            background-image: url("'.$_style['fade'].'");
             background-repeat: repeat-x;
         }
     </style>

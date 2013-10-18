@@ -34,7 +34,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
-                $chunk = $modx->getChunk($param);
+                $chunk = $modx->getChunk(trim($param));
                 $output = $chunk;
                 break;
 
@@ -120,15 +120,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
 function ProcessFile($file) {
     // get the file
-    if (file_exists($file) && @ $handle = fopen($file, "r")) {
-        $buffer = "";
-        while (!feof($handle)) {
-            $buffer .= fgets($handle, 4096);
-        }
-        fclose($handle);
-    } else {
-        $buffer = " Could not retrieve document '$file'.";
-    }
+	$buffer = @file_get_contents($file);
+	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 
@@ -142,7 +135,7 @@ function ParseCommand($binding_string)
         if(strpos($binding_string,'@'.$cmd)===0)
         {
             $code = substr($binding_string,strlen($cmd)+1);
-            $binding_array = array($cmd,$code);
+            $binding_array = array($cmd,trim($code));
             break;
         }
     }

@@ -179,7 +179,7 @@ $modx->manager->initPageViewState();
 		$grd->columns=$_lang["delete"]." ,".$_lang["name"]." ,".$_lang["tag"]." ,".$_lang["value"];
 		$grd->colWidths="40";
 		$grd->colAligns="center";
-		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/style/".$manager_theme."/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
+		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/>||".
 					   "template:<a href='#' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script type=\"text/javascript\"> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
 		echo $grd->render();
 	?>

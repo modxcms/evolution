@@ -338,6 +338,9 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <th><?php echo $_lang['new_category']; ?>:</th>
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
+       <tr>
+        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
+      </tr>
 <?php if($modx->hasPermission('save_role')):?>
       <tr>
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
@@ -363,9 +366,6 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
       <tr>
-        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
-      </tr>
-          <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>

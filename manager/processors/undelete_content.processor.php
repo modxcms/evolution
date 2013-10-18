@@ -21,7 +21,7 @@ $add_path=$sd.$sb.$pg;
 
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
@@ -93,11 +93,7 @@ if(!$rs) {
 	exit;
 } else {
 	// empty cache
-	include_once "cache_sync.class.processor.php";
-	$sync = new synccache();
-	$sync->setCachepath("../assets/cache/");
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
+	$modx->clearCache('full');
 	// finished emptying cache - redirect
 	//$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 

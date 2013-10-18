@@ -291,7 +291,7 @@ if ($actionToTake != "new") {
 // check to see if the user is allowed to save the document in the place he wants to save it in
 if ($use_udperms == 1) {
 	if ($existingDocument['parent'] != $parent) {
-		include_once "./processors/user_documents_permissions.class.php";
+		include_once MODX_MANAGER_PATH ."processors/user_documents_permissions.class.php";
 		$udperms = new udperms();
 		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $parent;
@@ -443,11 +443,7 @@ switch ($actionToTake) {
 
 		if ($syncsite == 1) {
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache();
+			$modx->clearCache('full');
 		}
 
 		// redirect/stay options
@@ -680,15 +676,11 @@ switch ($actionToTake) {
 
 		if ($syncsite == 1) {
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache();
+			$modx->clearCache('full');
 		}
 		
 		if ($_POST['refresh_preview'] == '1')
-			$header = "Location: ../index.php?id=$id&z=manprev";
+			$header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
 		else {
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];
@@ -709,17 +701,6 @@ switch ($actionToTake) {
 	default :
 		header("Location: index.php?a=7");
 		exit;
-}
-
-/**
- * Format alias to be URL-safe
- *
- * @deprecated Use $modx->stripAlias()
- * @param string Alias to be formatted
- * @return string Safe alias
- */
-function stripAlias($alias) {
-   return $GLOBALS['modx']->stripAlias($alias);
 }
 
 // -- Save META Keywords --

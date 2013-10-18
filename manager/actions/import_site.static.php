@@ -86,7 +86,7 @@ if(!isset($_POST['import'])) {
 else
 {
 	run();
-	clearCache();
+	$modx->clearCache('full');
 ?>
 <ul class="actionButtons">
     <li><a href="#" onclick="document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
@@ -467,12 +467,4 @@ function convertLink()
 		$f['content'] = $modx->db->escape($content);
 		$modx->db->update($f,$tbl_site_content,"id='{$id}'");
 	}
-}
-function clearCache()
-{
-	include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
-	$sync = new synccache();
-	$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
-	$sync->setReport(false);
-	$sync->emptyCache();
 }

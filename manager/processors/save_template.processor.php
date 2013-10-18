@@ -53,7 +53,7 @@ switch ($_POST['mode']) {
 			$_POST['category'] = $categoryid;
 			$_GET['stay'] = $_POST['stay'];
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_templates.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -79,11 +79,8 @@ switch ($_POST['mode']) {
 								));				
 
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+			
 			// finished emptying cache - redirect		
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "16&id=$newid":"19";
@@ -117,7 +114,7 @@ switch ($_POST['mode']) {
 			$_POST['category'] = $categoryid;
 			$_GET['stay'] = $_POST['stay'];
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_templates.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -138,11 +135,8 @@ switch ($_POST['mode']) {
 								));	    		
 
 			// first empty the cache		
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); 		
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "16&id=$id":"19";
