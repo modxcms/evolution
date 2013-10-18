@@ -3,7 +3,7 @@
  * Language file for eForm
  *
  * Language:       Dutch
- * Encoding:       Latin 1
+ * Encoding:       UTF-8
  * Translated by:  -
  * Date:           22.11.2006
  */

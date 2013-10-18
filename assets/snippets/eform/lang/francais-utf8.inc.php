@@ -1,9 +1,13 @@
 <?php
 /**
-* snippets/eform/francais-utf8.inc.php
-* Fichier langue en français pour eForm - Corrigé le 26/10/09
-*
-*/
+ * Language file for eForm
+ *
+ * Language:       French
+ * Encoding:       UTF-8
+ * Translated by:  -
+ * Date:           26.10.2009
+ */
+
 $_lang["ef_thankyou_message"] = '<h3>Merci!</h3><p>Vos informations ont été correctement transmises.</p>';
 $_lang["ef_no_doc"] = 'Ressource ou Chunk introuvable pour le Modèle ID=';
 $_lang["ef_validation_message"] = '<div class="errors"><strong>Des erreurs ont été détectées dans le formulaire:</strong><br />[+ef_wrapper+]</div>';
@@ -37,8 +41,8 @@ $_lang['ef_mail_abuse_message'] = '<p>Un formulaire de votre site web a peut-êt
 $_lang['ef_mail_abuse_error'] = '<strong>Des entrées invalides ou dangereuses ont été détectées dans votre formulaire</strong>.';
 $_lang['ef_eval_deprecated'] = 'La règle #EVAL est obsolète et ne devrait plus fonctionner dans les versions futures. Utilisez #FUNCTION à la place.';
 $_lang['ef_multiple_submit'] = '<p>Ce formulaire a déjà été soumis avec succès. Il est inutile de soumettre le même formulaire à plusieurs reprises.</p>';
-$_lang['ef_submit_time_limit'] = '<p>Ce formulaire a déjà été soumis avec succès. La soumission du formulaire est bloquée pour ".($submitLimit/60)." minutes.</p>';
-$_lang['ef_version_error'] = '<strong>ATTENTION!</strong> La version du Snippet eForm (version:&nbsp;$version) est différente de celle des fichiers eForm présents sur votre serveur (version:&nbsp;$fileVersion). Pensez à mettre à jour les fichiers lorsque vous mettez à jour le Snippet.';
+$_lang['ef_submit_time_limit'] = '<p>Ce formulaire a déjà été soumis avec succès. La soumission du formulaire est bloquée pour [+submitLimitMinutes+] minutes.</p>';
+$_lang['ef_version_error'] = '<strong>ATTENTION!</strong> La version du Snippet eForm (version:&nbsp;[+version+]) est différente de celle des fichiers eForm présents sur votre serveur (version:&nbsp;[+fileVersion+]). Pensez à mettre à jour les fichiers lorsque vous mettez à jour le Snippet.';
 $_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang['ef_date_format'] = '%d-%b-%Y %H:%M:%S';
 $_lang['ef_mail_error'] = 'Le serveur mail est incapable d\'expédier l\'email';
