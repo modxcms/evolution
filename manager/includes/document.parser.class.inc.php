@@ -2427,17 +2427,53 @@ class DocumentParser {
     function getChunk($chunkName) {
         return isset($this->chunkCache[$chunkName]) ? $this->chunkCache[$chunkName] : null;
     }
-
-    function parseChunk($chunkName, $chunkArr, $prefix= "{", $suffix= "}") {
-        if (!is_array($chunkArr)) {
-            return false;
-        }
-        $chunk= $this->getChunk($chunkName);
-        foreach ($chunkArr as $key => $value) {
-            $chunk= str_replace($prefix . $key . $suffix, $value, $chunk);
-        }
-        return $chunk;
-    }
+	
+    /**
+     * parseText
+     * @version 1.0 (2013-10-17)
+     * 
+     * @desc Replaces placeholders in text with required values.
+     * 
+     * @param $chunk {string} - String to parse. @required
+     * @param $chunkArr {array} - Array of values. Key — placeholder name, value — value. @required
+     * @param $prefix {string} - Placeholders prefix. Default: '[+'.
+     * @param $suffix {string} - Placeholders suffix. Default: '+]'.
+     * 
+     * @return {string} - Parsed text.
+     */
+	function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
+		if (!is_array($chunkArr)){
+			return $chunk;
+		}
+		
+		foreach ($chunkArr as $key => $value){
+			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
+		}
+		
+		return $chunk;
+	}
+	
+	/**
+	 * parseChunk
+	 * @version 1.1 (2013-10-17)
+	 * 
+	 * @desc Replaces placeholders in a chunk with required values.
+	 * 
+	 * @param $chunkName {string} - Name of chunk to parse. @required
+	 * @param $chunkArr {array} - Array of values. Key — placeholder name, value — value. @required
+	 * @param $prefix {string} - Placeholders prefix. Default: '{'.
+	 * @param $suffix {string} - Placeholders suffix. Default: '}'.
+	 * 
+	 * @return {string; false} - Parsed chunk or false if $chunkArr is not array.
+	 */
+	function parseChunk($chunkName, $chunkArr, $prefix = '{', $suffix = '}'){
+		//TODO: Wouldn't it be more practical to return the contents of a chunk instead of false?
+		if (!is_array($chunkArr)){
+			return false;
+		}
+		
+		return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
+	}
     
     /**
      * Returns the timestamp in the date format defined in $this->config['datetime_format']
