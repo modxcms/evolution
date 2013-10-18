@@ -398,7 +398,7 @@ $_dfnMaxlength = 6;
 			# added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0){
 				if( time()<$submitLimit+$_SESSION[$formid.'_limit'] ){
-					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes', $submitLimit / 60));
+					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes' => $submitLimit / 60));
 				}
 				else unset($_SESSION[$formid.'_limit'], $_SESSION[$formid.'_hash']); //time expired
 			}
