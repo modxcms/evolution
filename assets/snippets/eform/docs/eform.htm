@@ -146,23 +146,11 @@ font-size:14pt;
 		<div class="qe_level_1"><a name="whatsnew"></a>
 <h2>What's New</h2>
 			<div class="qe_level_2">
-			<h3>Version 1.4.4.1 - 1.4.4.8</h3>
+			<h3>Version 1.4.4.9</h3>
 			<ul>
-				<li>eForm now retains default values for check boxes and radio buttons</li>
-				<li>text input fields now retain default value set in form template</li>
-				<li>Added pixelchutes' phx workaround (use (()) instead of [++] in snippet call)</li>
-				<li>Added proper ef_validation_message language string</li>
-				<li>FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation</li>
-				<li>bugfix: &amp;jScript parameter doesn't accept chunks, only a link to a JS file if more than one chunk is declared (eg &amp;jScript=`chunk1,chunk2)</li>
-				<li>bugfix: &amp;protectSubmit creates hash for all fields instead of fields declared in &amp;protectSubmit</li>
-				<li>bugfix: Auto respond email didn't honour the &amp;sendAsText parameter</li>
-				<li>bugfix: The #FUNCTION validation rule for select boxes never calls the function</li>
-				<li>bugfix: Validation css class isn't being added to labels.</li>
-				<li>Work around for setting required class on check &amp; radio labels</li>
-				<li>bugfix: If eform attibute is set on multiple check boxes only the last value is set in values list</li>
-                <li>Security fix: Additional sanitization applied after stripslashes is used on fields</li>
-                <li>Security fix: Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.</li>
-                <li>Added: Multiple event functions separated by comma.</li>
+                <li>Updated language files.</li>
+                <li>Security fix: Posting of html only allowed if &allowhtml=`1` and eform field type is html.</li>
+				<li>Security fix: Prevent XSS by executing htmlspecialchars during formMerge on all form fields.</li>
 			</ul>
 		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
