@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.8 - Electronic Form Snippet
+# eForm 1.4.4.9 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -74,7 +74,7 @@ $_dfnMaxlength = 6;
 
 	//check version differences
 	if( $version != $fileVersion )
-		return $_lang['ef_version_error'];
+		return formMerge($_lang['ef_version_error'], array('version' => $version, 'fileVersion' => $fileVersion));
 
 	# check for valid form key - moved to below fetching form template to allow id coming from form template
 
@@ -398,7 +398,7 @@ $_dfnMaxlength = 6;
 			# added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0){
 				if( time()<$submitLimit+$_SESSION[$formid.'_limit'] ){
-					return formMerge($_lang['ef_submit_time_limit'],$fields);
+					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes' => $submitLimit / 60));
 				}
 				else unset($_SESSION[$formid.'_limit'], $_SESSION[$formid.'_hash']); //time expired
 			}
