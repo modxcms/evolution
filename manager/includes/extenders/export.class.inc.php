@@ -48,7 +48,7 @@ class EXPORT_SITE
 		{
 			$modx->config['friendly_urls']  = 1;
 			$modx->config['use_alias_path'] = 1;
-			$this->clearCache();
+			$modx->clearCache('full');
 		}
 		$modx->config['make_folders'] = '1';
 	}
@@ -274,12 +274,4 @@ class EXPORT_SITE
     	return $tpl;
     }
 
-    function clearCache()
-    {
-		include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
-		$sync = new synccache();
-		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
-		$sync->setReport(false);
-		$sync->emptyCache();
-    }
 }

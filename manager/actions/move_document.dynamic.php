@@ -13,7 +13,7 @@ if(isset($_REQUEST['id'])) {
 }
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;

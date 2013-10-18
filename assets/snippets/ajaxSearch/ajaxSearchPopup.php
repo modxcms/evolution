@@ -26,7 +26,7 @@ if (isset($_POST['search'])) {
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
-    require_once (MODX_MANAGER_PATH . '/includes/protect.inc.php');
+    require_once (MODX_MANAGER_PATH . 'includes/protect.inc.php');
     if (!isset($_POST['as_version']) || (strip_tags($_POST['as_version']) != AS_VERSION)) {
         $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODx manager.";
     }
@@ -34,7 +34,7 @@ if (isset($_POST['search'])) {
         include_once AS_PATH . "classes/ajaxSearch.class.inc.php";
 
         define('MODX_API_MODE', true);
-        include_once (MODX_MANAGER_PATH . '/includes/document.parser.class.inc.php');
+        include_once (MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
         $modx = new DocumentParser;
         $modx->db->connect();
         $modx->getSettings();

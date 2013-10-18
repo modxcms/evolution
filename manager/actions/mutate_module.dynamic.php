@@ -23,10 +23,6 @@ if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_membergroup_names  = $modx->getFullTableName('membergroup_names');
@@ -316,7 +312,7 @@ function SetUrl(url, width, height, alt) {
 }
 </script>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css?<?php echo $theme_refresher?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?<?php echo $theme_refresher?>" />
 
 <form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
 <?php
@@ -359,7 +355,7 @@ function SetUrl(url, width, height, alt) {
     </div>
     <!-- end #actions -->
 
-<div class="sectionBody"><p><img class="icon" src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
+<div class="sectionBody"><p><img class="icon" src="<?php echo $_style["icons_modules_large"]?>" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
     <script type="text/javascript">

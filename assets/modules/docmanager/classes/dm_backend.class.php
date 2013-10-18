@@ -118,7 +118,7 @@ class DocManagerBackend {
 		}
 		$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_tpl_results_message'];
 										
-		$this->modx->clearCache();
+		$this->modx->clearCache('full');
 		$this->logDocumentChange('template');
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}

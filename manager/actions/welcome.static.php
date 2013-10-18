@@ -28,7 +28,7 @@ JS;
 $modx->regClientScript($script);
 
 // set placeholders
-$modx->setPlaceholder('theme',$manager_theme ? $manager_theme : '');
+$modx->setPlaceholder('theme',$modx->config['manager_theme']);
 $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
@@ -177,7 +177,7 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
         for ($i = 0; $i < $limit; $i++) {
             $activeusers = $modx->db->getRow($rs);
             $currentaction = getAction($activeusers['action'], $activeusers['id']);
-            $webicon = ($activeusers['internalKey']<0)? "<img src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user' />":"";
+            $webicon = ($activeusers['internalKey']<0)? "<img src='".$_style["tree_globe"]."' alt='Web user' />":"";
             $html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
         }
         $html.= '

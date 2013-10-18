@@ -378,7 +378,7 @@ class AjaxSearchOutput {
                 unset($varPaging);
                 $chkPaging->CleanVars();
             }
-            else if (($pagingType == 1) && (($nbrs >= $nbMax) || showPagingAlways)) {
+            else if (($pagingType == 1) && (($nbrs >= $nbMax) || $showPagingAlways)) {
 
                 $tplPaging = $this->asCfg->cfg['tplPaging1'];
                 if ($tplPaging == '') $tplPaging = "@FILE:" . AS_SPATH . 'templates/paging1.tpl.html';

@@ -24,7 +24,7 @@ $proteted_path = array();
 if($_SESSION['mgrRole']!=1)
 {
 */
-        $proteted_path[] = $modx->config['modx_manager_path'];
+        $proteted_path[] = $modx->config['site_manager_path'];
 	$proteted_path[] = $modx->config['base_path'] . 'temp/backup';
 	$proteted_path[] = $modx->config['base_path'] . 'assets/backup';
 	
@@ -103,6 +103,9 @@ else $webstart_path = '../'.$webstart_path;
 
 <div id="actions">
   <ul class="actionButtons">
+<?php if($_REQUEST['mode']=="edit") :?>
+	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
+<?php endif; ?>
 <?php
 if(isset($_GET['mode'])&&$_GET['mode']!=='drill') $href= 'a=31&path=' . urlencode($_REQUEST['path']);
 else $href='a=2';
@@ -427,15 +430,6 @@ if($buffer===false) {
 }
 
 ?>
-<?php
-
-if($_REQUEST['mode']=="edit") {
-?>
-<ul class="actionButtons">
-	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
-	<li><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-</ul>
-<?php } ?>
 <form action="index.php" method="post" name="editFile">
 <input type="hidden" name="a" value="31" />
 <input type="hidden" name="mode" value="save" />

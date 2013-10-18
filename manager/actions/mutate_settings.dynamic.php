@@ -1016,7 +1016,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["smtp_password_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
+            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtppw" value="<?php echo isset($smtppw) ? $smtppw : "******" ; ?>" autocomplete="off" /></td>
           </tr>
            <tr>
             <td colspan="2"><div class="split"></div></td>
@@ -1797,8 +1797,8 @@ function get_lang_options($key=null, $selected_lang=null) {
 }
 
 function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
-	if($checked)  $checked  = ' checked="checked"';
-	if($disabled) $disabled = ' disabled';
+	if($checked)  $checked  = ' checked="checked"'; else $checked = '';
+	if($disabled) $disabled = ' disabled'; else $disabled = '';
 	if($add)     $add = ' ' . $add;
 	return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
 }

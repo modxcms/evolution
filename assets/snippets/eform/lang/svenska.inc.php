@@ -1,12 +1,12 @@
 <?php
 /**
-* snippets/eform/lang/svenska.inc.php
-* Swedish language file for eForm 1.4.4
-*
-* Translation: Pontus Ågren (Pont)
-* Date: 2007-04-18
-*/
-
+ * Language file for eForm
+ *
+ * Language:       Swedish
+ * Encoding:       Latin 1
+ * Translated by:  Pontus Ågren
+ * Date:           18.04.2007
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan problem.</p>";
 $_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas för mall-ID: ";

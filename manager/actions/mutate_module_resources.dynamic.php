@@ -10,10 +10,6 @@ if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  ='';
-
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_content       = $modx->getFullTableName('site_content');
@@ -104,11 +100,7 @@ switch ($_REQUEST['op']) {
 				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
 				if ($cs) $modx->db->query('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
 				// reset cache
-				include_once MODX_MANAGER_PATH."processors/cache_sync.class.processor.php";
-				$sync = new synccache();
-				$sync->setCachepath("../assets/cache/");
-				$sync->setReport(false);
-				$sync->emptyCache(); // first empty the cache
+				$modx->clearCache('full');
 			}
 		}
 		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';

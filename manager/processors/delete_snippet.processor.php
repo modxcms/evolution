@@ -28,11 +28,8 @@ if(!$rs) {
 								));
 
 		// empty cache
-		include_once "cache_sync.class.processor.php";
-		$sync = new synccache();
-		$sync->setCachepath("../assets/cache/");
-		$sync->setReport(false);
-		$sync->emptyCache(); // first empty the cache
+		$modx->clearCache('full');
+		
 		// finished emptying cache - redirect
 
 	$header="Location: index.php?a=76&r=2";

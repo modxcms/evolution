@@ -29,22 +29,19 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 			}
 		}
 	}
-	else
+	elseif(is_file($sample_htaccess))
 	{
-		if(is_file($sample_htaccess))
+		if(!@rename($sample_htaccess,$htaccess))
+        {
+        	$warnings[] = $_lang["settings_friendlyurls_alert"];
+		}
+		elseif($modx->config['base_url']!=='/')
 		{
-			if(!@rename($sample_htaccess,$htaccess))
-            {
-            	$warnings[] = $_lang["settings_friendlyurls_alert"];
-			}
-			elseif($modx->config['base_url']!=='/')
+			$_ = file_get_contents($htaccess);
+			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
+			if(!@file_put_contents($htaccess,$_))
 			{
-				$_ = file_get_contents($htaccess);
-				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
-				if(!@file_put_contents($htaccess,$_))
-				{
-					$warnings[] = $_lang["settings_friendlyurls_alert2"];
-				}
+				$warnings[] = $_lang["settings_friendlyurls_alert2"];
 			}
 		}
 	}
@@ -126,11 +123,7 @@ if (isset($data) && count($data) > 0) {
 	}
 	
 	// empty cache
-	include_once "cache_sync.class.processor.php";
-	$sync = new synccache();
-	$sync->setCachepath("../assets/cache/");
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache
+	$modx->clearCache('full');
 }
 $header="Location: index.php?a=7&r=10";
 header($header);

@@ -74,7 +74,7 @@ switch ($_POST['mode']) {
 
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_module.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_module.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -104,11 +104,8 @@ switch ($_POST['mode']) {
 									"id"	=> $newid
 								));
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "108&id=$newid":"107";
@@ -146,11 +143,8 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 								));	
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "108&id=$id":"107";

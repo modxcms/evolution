@@ -104,7 +104,7 @@ class Qm {
             		secureMgrDocument($key);
                     
                     // Clear cache
-                    $this->clearCache();
+                    $this->modx->clearCache('full');
                     
                     // Different doc to be refreshed than the one we are editing?
                     if (isset($_POST['qmrefresh'])) {
@@ -346,11 +346,14 @@ class Qm {
                         //$docID = $this->modx->documentIdentifier;
                         $doc = $this->modx->getDocument($docID);
                         
+                        // Add ID
+                        $controls .= '<li class="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
+
                         // Edit button
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_manager_url'].'/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><span> '.$_lang['edit_resource'].'</span></a>
+                        <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><span> '.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         
@@ -364,7 +367,7 @@ class Qm {
                             // Add button
                             $addButton = '
                             <li class="qmAdd">
-                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><span>'.$_lang['create_resource_here'].'</span></a>
+                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><span>'.$_lang['create_resource_here'].'</span></a>
                             </li>
                             ';
                             
@@ -424,7 +427,7 @@ class Qm {
                                         case 'new':
                                             $customButton = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'/index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><span>'.$buttonTitle.'</span></a>
                                             </li>
                                             ';
                                         break;
@@ -454,14 +457,14 @@ class Qm {
                         if ($this->managerbutton == 'true') {
                             $managerButton  = '
                             <li class="qmManager">
-                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'/" ><span>'.$_lang['manager'].'</span></a>
+                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'" ><span>'.$_lang['manager'].'</span></a>
                             </li>
                             ';
                             $controls .= $managerButton;
                         }
                         
                         // Logout button
-                        $logout = $this->modx->config['site_manager_url'].'/index.php?a=8&amp;quickmanager=logout&amp;logoutid='.$docID;
+                        $logout = $this->modx->config['site_manager_url'].'index.php?a=8&amp;quickmanager=logout&amp;logoutid='.$docID;
                         $logoutButton  = '
                         <li class="qmLogout">
                         <a id="qmLogout" class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><span>'.$_lang['logout'].'</span></a>
@@ -557,7 +560,7 @@ class Qm {
                                     $'.$jvar.'("html").css({"overflow":"auto"});
                                     $'.$jvar.'("#qmEditor").css({"display":"block"});
                                     // Remove manager lock by going to home page
-                                    $'.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_manager_url'].'/index.php?a=2" });
+                                    $'.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_manager_url'].'index.php?a=2" });
                                 });                  
                                                             						                            
                                 // Hide QM+ if cookie found
@@ -607,12 +610,12 @@ class Qm {
                         
                         // Search and create edit buttons in to the content
                         if ($this->editbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_manager_url'].'/index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
                         if ($this->newbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_manager_url'].'/index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
@@ -636,7 +639,7 @@ class Qm {
                 // If there is Qm call, add control buttons and modify to edit document page
                 if (intval($_REQUEST['quickmanager']) == 1) {
                 
-                    global $content;
+                    global $content, $_style;
                     
                     // Set template for new document, action = 4
                     if(intval($_GET['a']) == 4) {    
@@ -708,8 +711,6 @@ class Qm {
                     // Hide default manager action buttons
                     $mc->addLine('$("#actions").hide();');
     
-                    // Get MODx theme
-					$qm_theme = $this->modx->config['manager_theme'];
 					
 					// Get doc id
 					$doc_id = intval($_REQUEST['id']);
@@ -720,7 +721,7 @@ class Qm {
 					
 					// Add action buttons
                     $url = $this->modx->makeUrl($doc_id,'','','full');
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"'.$_style["icons_save"].'\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"'.$_style["icons_cancel"].'\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
@@ -1064,20 +1065,9 @@ class Qm {
             $this->modx->invokeEvent('OnDocFormSave', array('mode'=>'upd', 'id'=>$pageId));
             
             // Clear cache
-            $this->clearCache();
+            $this->modx->clearCache('full');
         }   
     }
-    
-    // Clear cache
-	//_____________________________________________________
-	function clearCache() {
-        // Clear cache
-        include_once $this->modx->config['site_manager_path']."/processors/cache_sync.class.processor.php";
-        $sync = new synccache();
-        $sync->setCachepath($this->modx->config['base_path']."assets/cache/");
-        $sync->setReport(false);
-        $sync->emptyCache();    
-	}
 	
 }
 }

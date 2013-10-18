@@ -436,7 +436,7 @@ class asPHxParser {
         if ($modx->getChunk($tpl) != "") {
             $template = $modx->getChunk($tpl);
         } else if (substr($tpl, 0, 6) == "@FILE:") {
-            $template = $this->get_file_contents($modx->config['base_path'] . substr($tpl, 6));
+            $template = file_get_contents($modx->config['base_path'] . substr($tpl, 6));
         } else if (substr($tpl, 0, 6) == "@CODE:") {
             $template = substr($tpl, 6);
         } else {
@@ -445,16 +445,4 @@ class asPHxParser {
         return $template;
     }
 
-    function get_file_contents($filename) {
-        // Returns the contents of file name passed
-        if (!function_exists('file_get_contents')) {
-            $fhandle = fopen($filename, "r");
-            $fcontents = fread($fhandle, filesize($filename));
-            fclose($fhandle);
-        } else {
-            $fcontents = file_get_contents($filename);
-        }
-        return $fcontents;
-    }
-}
 ?>

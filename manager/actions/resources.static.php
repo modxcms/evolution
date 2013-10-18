@@ -1,8 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-$theme = $manager_theme ? "$manager_theme/":"";
-
 $tablePre = $dbase . '.`' . $table_prefix;
 
 function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name') {

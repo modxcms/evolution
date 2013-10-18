@@ -118,7 +118,7 @@ if (!function_exists('checkSiteCache')) {
     }
 }
 
-if (!is_writable("../assets/cache/")) {
+if (!is_writable(MODX_BASE_PATH . "assets/cache/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_cache']);
 }
@@ -128,7 +128,7 @@ if (!checkSiteCache()) {
     $warnings[]= array($lang['configcheck_sitecache_integrity']);
 }
 
-if (!is_writable("../assets/images/")) {
+if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_images']);
 }

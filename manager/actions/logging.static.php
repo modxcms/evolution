@@ -142,14 +142,14 @@ window.addEvent('domready', function() {
     <td><b><?php echo $_lang["mgrlog_datefr"]; ?></b></td>
         <td align="right">
         	<input type="text" id="datefrom" name="datefrom" class="DatePicker" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>" />
-		  	<a onclick="document.logging.datefrom.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date" /></a>
+		  	<a onclick="document.logging.datefrom.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="No date" /></a>
 	  </td>
   </tr>
   <tr bgcolor="#ffffff">
     <td><b><?php echo $_lang["mgrlog_dateto"]; ?></b></td>
     <td align="right">
 		  <input type="text" id="dateto" name="dateto" class="DatePicker" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>" />
-		  <a onclick="document.logging.dateto.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date" /></a>
+		  <a onclick="document.logging.dateto.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="No date" /></a>
 		 </td>
   </tr>
   <tr bgcolor="#eeeeee">

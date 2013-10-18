@@ -1,10 +1,12 @@
 <?php
 /**
-* snippets/eform/finnish.inc.php
-* Finnish language file for eForm
-* local revision: $Id: finnish.inc.php,v 1.1 2007/4/22 14:47:54 doze Exp $
-*/
-
+ * Language file for eForm
+ *
+ * Language:       English
+ * Encoding:       UTF-8
+ * Translated by:  -
+ * Date:           22.04.2007
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>Kiitos!</h3><p>Viestisi on l&auml;hetetty onnistuneesti.</p>";
 $_lang["ef_no_doc"] = "Dokumenttia tai palasta ei l&ouml;ytynyt id:lle";
@@ -39,8 +41,8 @@ $_lang['ef_mail_abuse_message'] = '<p>Lomake internetsivustoillasi on saattanut 
 $_lang['ef_mail_abuse_error'] = '<strong>Viestist&auml;si l&ouml;ydettiin virheellisi&auml; tai turvattomia tietoja</strong>.';
 $_lang['ef_eval_deprecated'] = "#EVAL m&auml;&auml;ritys on vanhentunut ja ei ehk&auml; toimi tulevissa versioissa. K&auml;yt&auml; #FUNCTION m&auml;&auml;rityst&auml; sen sijaan.";
 $_lang['ef_multiple_submit'] = "<p>T&auml;m&auml; lomake on jo l&auml;hetetty onnistuneesti. Uutta l&auml;hetyst&auml; ei toimitettu.</p>";
-$_lang['ef_submit_time_limit'] = "<p>T&auml;m&auml; lomake on jo l&auml;hetetty onnistuneesti. Uudelleen l&auml;hetys on estetty ".($submitLimit/60)." minuutiksi.</p>";
-$_lang['ef_version_error'] = "<strong>VAROITUS!</strong> eForm snippetin versio (versio:&nbsp;$version) on eri kuin sis&auml;llytetty eForm kirjasto (versio:&nbsp;$fileVersion). Varmista ett&auml; k&auml;yt&auml;t molemmista samaa versiota.";
+$_lang['ef_submit_time_limit'] = "<p>T&auml;m&auml; lomake on jo l&auml;hetetty onnistuneesti. Uudelleen l&auml;hetys on estetty [+submitLimitMinutes+] minuutiksi.</p>";
+$_lang['ef_version_error'] = "<strong>VAROITUS!</strong> eForm snippetin versio (versio:&nbsp;[+version+]) on eri kuin sis&auml;llytetty eForm kirjasto (versio:&nbsp;[+fileVersion+]). Varmista ett&auml; k&auml;yt&auml;t molemmista samaa versiota.";
 $_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang['ef_date_format'] = '%d.%m.%Y %H:%M:%S';
 $_lang['ef_mail_error'] = 'S&auml;hk&ouml;postin l&auml;hetys ep&auml;onnistui';

@@ -1,14 +1,14 @@
 <?php
 /**
- * EForm Snippet - language strings for use in the snippet
+ * Language file for eForm
  *
- * Filename:       assets/snippets/eform/lang/russian.inc.php
  * Language:       Russian
  * Encoding:       Windows-1251
  * Translated by:  Jaroslav Sidorkin
- * Date:           27 July 2009
- * Version:        1.4.4.6
-*/
+ * Date:           27.07.2009
+ * Version:        1.4.4.x
+ */
+
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Отладочная информация: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">Внимание - включена отладка</span> <br />Не забудьте выключить отладку перед публикацией этой формы для реального использования!</p>";
@@ -39,10 +39,10 @@ $_lang["ef_required_message"] = " Необходимо заполнить следующие поля: {fields}<
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Ошибка!</span> Не выполнено правило [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Успешно выполнено правило [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " без проблем прошел проверку. <span style=\"color:red;\"> SQL-запрос не возвратил никаких результатов!</span> ";
-$_lang["ef_submit_time_limit"] = "<p>Данные были УЖЕ успешно отправлены. Повторная отправка данных невозможна втечение ".($submitLimit/60)." минут.</p>";
+$_lang["ef_submit_time_limit"] = "<p>Данные были УЖЕ успешно отправлены. Повторная отправка данных невозможна втечение $submitLimitMinutes минут.</p>";
 $_lang["ef_tamper_attempt"] = "Выявлена попытка подделки!";
 $_lang["ef_thankyou_message"] = "<h3>Спасибо!</h3><p>Ваша информация успешно отправлена.</p>";
-$_lang["ef_thousands_separator"] = ""; //leave empty to use (php) locale, only needed if you want to overide locale setting!
+$_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": ошибка при загрузке файла.";
 $_lang["ef_upload_exceeded"] = " превышает допустимый лимит объема загрузки.";
 $_lang["ef_validation_message"] = "<div class=\"errors\"><strong>В вашей форме обнаружены следующие ошибки:</strong><br />[+ef_wrapper+]</div>";

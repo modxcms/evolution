@@ -21,10 +21,6 @@ switch((int) $_REQUEST['a']) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 // Get table Names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
@@ -57,7 +53,7 @@ if(isset($_GET['id'])) {
         exit;
     }
     if($limit<1) {
-        header("Location: /index.php?id=".$site_start);
+        header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
@@ -283,12 +279,12 @@ function decode(s){
               </li>
               <?php
                 if ($_GET['a'] == '22') { ?>
-              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>/images/icons/copy.gif" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } else { ?>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/stop.png" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -296,7 +292,7 @@ function decode(s){
 
 <div class="sectionBody">
 <?php echo $_lang['snippet_msg']?>
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
     <script type="text/javascript">
