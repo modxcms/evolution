@@ -1,21 +1,18 @@
 <?php
 //group comment_top
-//Роль «Редакторы»
+//role Editor
 $editorsRole = 2;
-//Роль «Оптимизаторы»
+//role SEO
 $seoRole = 4;
-// Для всех ролей
-mm_renameField("description","Описание (meta «description»)");
-mm_renameField("longtitle","Расширенный заголовок (meta «title»)");
-mm_renameField("menuindex","Позиция");
-mm_renameField("show_in_menu","Отображать");
+// for all Roles
+mm_renameField("show_in_menu","Show in menu");
 mm_hideFields("link_attributes,content_dispo");
 mm_requireFields("pagetitle");
 mm_moveFieldsToTab("published", "general");
 mm_widget_showimagetvs(); // Always give a preview of Image TVs
 
 //group comment_bottom
-//Системный шаблон
+//system templates
 $systemTpl = 4;
 mm_default("show_in_menu", 0, "", $systemTpl);
 mm_default("is_richtext", 0, "", $systemTpl);
@@ -25,14 +22,14 @@ mm_hideFields("longtitle,description,introtext,menutitle,show_in_menu,isfolder,i
 mm_createTab("Backup", "backup", "1", $systemTpl);
 mm_moveFieldsToTab("backupField", "backup", "1", $systemTpl);
 mm_hideFields("content_type", "", "!$systemTpl");
-// Для всех, кроме администраторов
+// For all exept Admin
 // mm_hideFields("loginName ", "!1");
 mm_hideFields("template,parent,is_folder,is_richtext,log,searchable,cacheable,clear_cache,inheritTpl", "!1");
 mm_hideTabs("settings", "!1");
-// Для всех, кроме редакторов
-mm_createTab("SEO", "seoTab", "!$editorsRole", "!$systemTpl", "<p>Здесь вы можете отредактировать всё, что касается поисковой оптимизации.</p>");
+// For all exept Editors
+mm_createTab("SEO", "seoTab", "!$editorsRole", "!$systemTpl", "<p>All for SEO optimization.</p>");
 mm_moveFieldsToTab("longtitle,description,ddkeywords,sitemap_changefreq,sitemap_priority", "seoTab", "!$editorsRole");
-//Для редакторов
+//For Editors
 mm_hideFields("longtitle,description", "$editorsRole");
 
 ?>
