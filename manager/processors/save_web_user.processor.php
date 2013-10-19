@@ -22,14 +22,14 @@ $id                   = intval($input['id']);
 $esc_id               = $modx->db->escape($id);
 $oldusername          = $input['oldusername'];
 $newusername          = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
-$esc_newusername      = $modx->db->escape($newusername);
+    $esc_newusername = $modx->db->escape($newusername);
 $fullname             = $input['fullname'];
 $genpassword          = $input['newpassword'];
 $passwordgenmethod    = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
 $specifiedpassword    = $input['specifiedpassword'];
 $email                = $input['email'];
-$esc_email            = $modx->db->escape($email);
+    $esc_email = $modx->db->escape($email);
 $oldemail             = $input['oldemail'];
 $phone                = $input['phone'];
 $mobilephone          = $input['mobilephone'];
@@ -258,12 +258,8 @@ switch ($_POST['mode']) {
 
 		// check if the email address already exists
 		$rs = $modx->db->select('internalKey', $tbl_web_user_attributes, "email='{$esc_email}'");
-		if (!$rs) {
-			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
-			exit;
-		}
-		$total = $modx->db->getRecordCount($rs);
-		if ($total > 0) {
+		$limit = $modx->db->getRecordCount($rs);
+		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
 				webAlert("Email is already in use!");
