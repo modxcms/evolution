@@ -125,7 +125,17 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 					$output .= '$j("input[name=isfoldercheck]").removeAttr("checked"); '."\n";
 				}
 			break;
-			
+
+			case 'alias_visible':
+				$new_value = ($value)?'1':'0';
+				$output .= '$j("input[name=alias_visible]").val("'.$new_value.'"); '."\n";
+				if ($value) {
+					$output .= '$j("input[name=alias_visible_check]").attr("checked", "checked"); '."\n";
+				} else {
+					$output .= '$j("input[name=alias_visible_check]").removeAttr("checked"); '."\n";
+				}
+			break;
+
 			case 'is_richtext':
 			case 'richtext':
 				$new_value = ($value)?'1':'0';
