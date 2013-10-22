@@ -340,6 +340,7 @@ function mm_requireFields($fields, $roles='', $templates=''){
 				case 'show_in_menu':
 				case 'parent':
 				case 'is_folder':
+				case 'alias_visible':
 				case 'is_richtext':
 				case 'log':
 				case 'searchable':
