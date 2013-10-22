@@ -194,17 +194,20 @@ $_dfnMaxlength = 6;
 		}
 
 		# sanitize the values with slashes stripped to avoid remote execution of Snippets
-		modx_sanitize_gpc($fields, array (
-			'@<script[^>]*?>.*?</script>@si',
-			'@&#(\d+);@e',
-			'@\[\~(.*?)\~\]@si',
-			'@\[\((.*?)\)\]@si',
-			'@{{(.*?)}}@si',
-			'@\[\+(.*?)\+\]@si',
-			'@\[\*(.*?)\*\]@si',
-			'@\[\[(.*?)\]\]@si',
-			'@\[!(.*?)!\]@si'
-		));
+		$version = $modx->getVersionData();
+		if (version_compare($version['version'], '1.0.9', '<=')) {
+			modx_sanitize_gpc($fields, array(
+				'@<script[^>]*?>.*?</script>@si',
+				'@&#(\d+);@e',
+				'@\[\~(.*?)\~\]@si',
+				'@\[\((.*?)\)\]@si',
+				'@{{(.*?)}}@si',
+				'@\[\+(.*?)\+\]@si',
+				'@\[\*(.*?)\*\]@si',
+				'@\[\[(.*?)\]\]@si',
+				'@\[!(.*?)!\]@si'
+			));
+		}
 
 		# validate fields
 		foreach($fields as $name => $value) {
