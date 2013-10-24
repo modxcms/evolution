@@ -4,9 +4,9 @@
  * Function:       Russian language file.
  * Encoding:       UTF8
  * Author:         Russian MODX community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
- * Date:           30 December 2010
- * Version:        2.0.5
- * MODX version:   Evolution 1.0.10
+ * Date:           24 October 2013
+ * Version:        2.0.6
+ * MODX version:   Evolution 1.0.13
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';

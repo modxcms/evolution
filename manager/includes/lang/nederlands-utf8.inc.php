@@ -1195,6 +1195,8 @@ $_lang['smtp_port_title'] = 'SMTP poort';
 $_lang["setting_resource_tree_node_name"] = 'De hoofdnaam van de boomstructuur';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificeer het paginaveld om gebruik te maken van de hoofdnaam in de boomstructuur bij het renderen. Standaard staat deze op Pagina Titel, hoewel elk Pagina veld kan worden gebruikt, zoals menutitel en alias.';
 
+$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Gepubliceerd';
 $_lang["docid_incrmnt_method_title"] = 'Optellende methode van de pagina ID';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
@@ -1228,3 +1230,7 @@ $_lang["export_site.static.php4"] = 'Vervang string (voor)';
 $_lang["export_site.static.php5"] = 'Vervang string (na)';
 $_lang["export_site.static.php6"] = 'Doel';
 $_lang["export_site.static.php7"] = 'Bestanden kunnen niet worden aangepast naar [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
