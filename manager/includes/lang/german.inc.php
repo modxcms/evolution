@@ -1163,7 +1163,7 @@ $_lang["bkmgr_run_sql_result"] = 'Ergebnis';
 $_lang["bkmgr_snapshot_title"] = 'Wiederherstellungspunkt speichern und laden';
 $_lang["bkmgr_snapshot_msg"] = '<p>Der Inhalt der Datenbank wird in einer Datei gespeichert und kann von dort wiederhergestellt werden.<br />Speicherplatz: [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Wiederherstellungspunkt hinzufügen';
-$_lang["bkmgr_snapshot_list_title"] = 'Liste der of Wiederherstellungspunkte';
+$_lang["bkmgr_snapshot_list_title"] = 'Liste der Wiederherstellungspunkte';
 $_lang["bkmgr_restore_submit"] = 'Diesen Wiederherstellungspunkt zurückspielen';
 $_lang["bkmgr_snapshot_nothing"] = 'Keine Wiederherstellungspunkte vorhanden';
 
@@ -1175,17 +1175,17 @@ $_lang["not_readable_dir"] = 'Das Verzeichnis kann nicht gelesen werden.';
 $_lang["confirm_delete_dir"] = 'Wollen sie dieses Verzeichnis wirklich löschen?';
 $_lang["confirm_delete_dir_recursive"] = 'Wollen sie dieses Verzeichnis wirklich löschen?\n\nAlle Dateien und Verzeichnisse innerhalb dieses Verzeichnisses werden ebenfalls gelöscht.';
 
-$_lang["make_folders_title"] = 'Container mit abschließenden Schrägstrich';
+$_lang["make_folders_title"] = 'Container URL mit abschließendem Schrägstrich';
 $_lang["make_folders_message"] = 'Die URL einer Container-Ressource wird mit einem abschließenden Schrägstrich ausgegeben.';
 
 $_lang["check_files_onlogin_title"] = 'Systemdateien überwachen';
 $_lang["check_files_onlogin_message"] = 'Die Dateien in dieser Liste werden bei jedem einloggen auf Veränderungen überprüft. Diese Überprüfung garantiert keine absolute Sicherheit, kann Sie aber nach einem erfolgreichen Angriff auf ein kompromittiertes System aufmerksam machen.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Wichtige Systemdateien wurden geändert.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'MODX wurde so konfiguriert, dass wichtige Systemdateien überwacht werden, um mögliche Angriffsversuche frühzeitig zu entdecken. Änderungen an diesen Systemdateien bedeuten nicht zwingend, dass die MODX Installation erfolgreich angegriffen wurde. Aber Sie sollten die überwachten Dateien (siehe in MODX-Konfiguration -> Benutzer -> Check core files on login) überprüfen. Wenn die Dateien unverändert sind oder ein Systemverantwortlicher sie geändert hat, dann speichern Sie die MODX-Konfiguration erneut ab, um diese Meldung zu deaktivieren.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'MODX wurde so konfiguriert, dass wichtige Systemdateien überwacht werden, um mögliche Angriffsversuche frühzeitig zu entdecken. Änderungen an diesen Systemdateien bedeuten nicht zwingend, dass die MODX Installation erfolgreich angegriffen wurde. Aber Sie sollten die überwachten Dateien (siehe in MODX-Konfiguration -> Benutzerverwaltung -> Systemdateien überwachen) überprüfen. Wenn die Dateien unverändert sind oder ein Systemverantwortlicher sie geändert hat, dann speichern Sie die MODX-Konfiguration erneut ab, um diese Meldung zu deaktivieren.';
 
 $_lang['email_method_title'] = 'Sendmail Methode';
-$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
@@ -1196,7 +1196,7 @@ $_lang['smtp_port_title'] = 'SMTP Port';
 $_lang["setting_resource_tree_node_name"] = 'Titel eines Knotens im Ressourcen-Baum';
 $_lang["setting_resource_tree_node_name_desc"] = 'Wählen Sie das Ressourcen-Feld, welches als Titel eines Knotens ausgegeben wird, wenn der Ressourcen-Baum dargestellt wird.';
 
-$_lang["resource_opt_alvisibled"] = 'Alias in URL ausgeben';
+$_lang["resource_opt_alvisibled"] = 'Alias im Alias-Pfad ausgeben';
 $_lang["resource_opt_alvisibled_help"] = 'Den Alias dieser Ressource im generierten Alias-Pfad ausgeben.';
 $_lang['resource_opt_is_published'] = 'Veröffentlicht';
 $_lang["docid_incrmnt_method_title"] = 'Vergabe einer neuen Ressourcen-ID ';
