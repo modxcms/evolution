@@ -89,7 +89,7 @@ if (isset($data) && count($data) > 0) {
                 }
 				break;
 			case 'smtppw':
-				if ($v !== '********************') {
+				if ($v !== '********************' && $v !== '') {
 					$v = trim($v);
 					$v = base64_encode($v) . substr(str_shuffle('abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 7);
 					$v = str_replace('=','%',$v);
