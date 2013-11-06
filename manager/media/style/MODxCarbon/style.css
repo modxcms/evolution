@@ -1,5 +1,6 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
-html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
+* html { overflow-x :hidden; overflow-y: auto;} /* for IE6 */
+*+html { overflow-x :hidden; overflow-y: auto;} /* for IE7 */
 html, body, form, fieldset,img {
 	margin: 0;
 	padding: 0;
@@ -1348,7 +1349,7 @@ ul.actionButtons {
 	box-shadow:  none;
 	-webkit-transition: none;
 }
-.actionButtons .and{
+.actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
 	font-weight: bold;

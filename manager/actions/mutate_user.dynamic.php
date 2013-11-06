@@ -245,7 +245,7 @@ if (is_array($evtOut))
     			<a href="#" onclick="documentDirty=false; document.userform.save.click();">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
     			</a>
-    			  <span class="and"> + </span>				
+    			  <span class="plus"> + </span>
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
