@@ -1492,7 +1492,7 @@ ul.actionButtons {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
-.actionButtons .and{
+.actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
 	font-weight: bold;

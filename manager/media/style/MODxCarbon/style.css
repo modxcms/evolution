@@ -1348,7 +1348,7 @@ ul.actionButtons {
 	box-shadow:  none;
 	-webkit-transition: none;
 }
-.actionButtons .and{
+.actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
 	font-weight: bold;
