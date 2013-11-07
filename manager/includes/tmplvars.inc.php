@@ -154,14 +154,14 @@
 									var c = document.getElementById(lastFileCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    $(c).change();
+									    \$(c).change();
 									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.getElementById(lastImageCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    $(c).change();
+									    \$(c).change();
 									}
 									lastImageCtrl = '';
 								} else {
@@ -216,14 +216,14 @@
 									var c = document.getElementById(lastFileCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    $(c).change();
+									    \$(c).change();
 									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.getElementById(lastImageCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    $(c).change();
+									    \$(c).change();
 									}
 									lastImageCtrl = '';
 								} else {
