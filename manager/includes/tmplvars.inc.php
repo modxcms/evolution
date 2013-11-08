@@ -23,6 +23,8 @@
 			case "number": // handles the input of numbers
 				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 				break;
+			case "textareamini": // handler for textarea mini boxes
+				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
 			case "htmlarea": // handler for textarea boxes (deprecated)
