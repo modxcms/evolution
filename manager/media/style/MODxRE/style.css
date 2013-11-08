@@ -363,12 +363,6 @@ input[type="button"] {
 	width: auto !important;
 	cursor:pointer;cursor:hand;
 }
-input.checkbox,
-input.radio,
-input[type="checkbox"],
-input[type="radio"] {
-	vertical-align: -2px;
-}
 select {
 	border: 1px solid #c3c3c3 !important;
 	border: 0;
