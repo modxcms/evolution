@@ -226,7 +226,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 		
 		// Make sure the new tab exists in the DOM
 		$output .= "if ( \$j('#tab".$newtab."').length > 0) { \n";
-		$output .= 'var ruleHtml = \'<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>\'; ';
+		$output .= 'var rulerHtml = \'<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>\'; ';
 		
 		// Try and identify any URL type TVs
 		$output .= '$j("select[id$=_prefix]").each( function() { $j(this).parents("tr:first").addClass("urltv"); }  ); ';
@@ -254,13 +254,13 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 				case 'pub_date':
 					$output .= 'var helpline = $j("input[name=pub_date]").parents("tr").next("tr").appendTo("#tab'.$newtab.'>table:first"); ' . "\n";
 					$output .= '$j(helpline).before($j("input[name=pub_date]").parents("tr")); ' . "\n";
-					$output .= 'helpline.after(ruleHtml); '. "\n";
+					$output .= 'helpline.after(rulerHtml); '. "\n";
 				break;
 
 				case 'unpub_date':
 					$output .= 'var helpline = $j("input[name=unpub_date]").parents("tr").next("tr").appendTo("#tab'.$newtab.'>table:first"); ' . "\n";
 					$output .= '$j(helpline).before($j("input[name=unpub_date]").parents("tr")); ' . "\n";
-					$output .= 'helpline.after(ruleHtml); '. "\n";
+					$output .= 'helpline.after(rulerHtml); '. "\n";
 				break;
 			
 				
@@ -271,13 +271,12 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$output .= '
 						var toMove = $j(":input[name=\''.$fieldname.'\']").parents("tr:not(.urltv)"); // Identify the table row to move
+						var toMoveRuler = toMove.next("tr").find("td[colspan=2]").parents("tr"); // The ruler after this table row
 						toMove.find("script").remove();
-						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
-						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
-						movedTV.after(ruleHtml); // Insert a rule after 
+						toMove.appendTo("#tab'.$newtab.'>table:first").after(toMoveRuler); // Move the table row
 						$j("[name=\''.$fieldname.'\']:first").parents("td").removeAttr( "style" );  // This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
 						';
-					}	
+					}
 								
 						
 				break;
@@ -340,6 +339,7 @@ function mm_requireFields($fields, $roles='', $templates=''){
 				case 'show_in_menu':
 				case 'parent':
 				case 'is_folder':
+				case 'alias_visible':
 				case 'is_richtext':
 				case 'log':
 				case 'searchable':

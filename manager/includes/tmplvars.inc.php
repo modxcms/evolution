@@ -10,6 +10,10 @@
 
 		$field_html ='';
 		$field_value = ($field_value!="" ? $field_value : $default_text);
+		if(substr($field_value, 0, 5) == "@EVAL") {
+	     	$eval_str = trim(substr($field_value, 6));
+	    	$field_value = eval($eval_str);
+	    }
 
 		switch ($field_type) {
 
@@ -23,6 +27,9 @@
 			case "number": // handles the input of numbers
 				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 				break;
+			case "textareamini": // handler for textarea mini boxes
+				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+				break;
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
 			case "htmlarea": // handler for textarea boxes (deprecated)
@@ -33,7 +40,7 @@
 				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
                 if($field_value=='') $field_value=0;
 				$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="No date"></a>';
+				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="'.$_style["icons_cal_nodate"].'" border="0" alt="No date"></a>';
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
@@ -147,12 +154,18 @@
 							
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
-									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastFileCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+									    \$(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
-									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastImageCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+									    \$(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
@@ -203,12 +216,18 @@
 							
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
-									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastFileCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+									    \$(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
-									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastImageCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+									    \$(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;

@@ -1,16 +1,13 @@
 <?php
 /**
- * MODx language File for Eform
+ * Language file for eForm
  *
- * @author Henrik Nielsen
- * @package Eform 1.4.4.6
- * @date 27/12/10 17.57
- * @version 1.0.1
- * 
- * Filename:       /assets/snippets/eform/lang/danish.inc.php
  * Language:       Danish
  * Encoding:       UTF-8
+ * Translated by:  Henrik Nielsen
+ * Date:           27.12.2010
  */
+ 
 $_lang["ef_date_format"] = "%d.%b.%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug information: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">ADVARSEL - DEBUGGING ER AKTIVERET</span> <br />Husk at deaktivere debug funktionen inden dette website bliver offentliggjort!</p>";
@@ -41,12 +38,12 @@ $_lang["ef_required_message"] = " Følgende påkrævede felt eller felter mangle
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Fejl</span> ved brug af regler [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Gennemført med brug af reglen [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " blev i stilhed valideret. <span style=\"color:red;\"> SQL returnerede ingen resultater!</span> ";
-$_lang["ef_submit_time_limit"] = "<p>Indholdet af denne formular er allerede afsendt. Afsendelse fra formularen er derfor deaktiveret i ".($submitLimit/60)." minutter.</p>";
+$_lang["ef_submit_time_limit"] = "<p>Indholdet af denne formular er allerede afsendt. Afsendelse fra formularen er derfor deaktiveret i [+submitLimitMinutes+] minutter.</p>";
 $_lang["ef_tamper_attempt"] = "Et forsøg på manipulation er blevet opdaget! ";
 $_lang["ef_thankyou_message"] = "<h3>Tak!</h3><p>De indtastede oplysninger er nu blevet modtaget.</p>";
 $_lang["ef_thousands_separator"] = ""; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang["ef_upload_error"] = ": fejl ved fil upload. ";
 $_lang["ef_upload_exceeded"] = " har overskredet den maksimale upload størrelse. ";
 $_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Følgende fejl blev opdaget i det indtastede:</strong><br />[+ef_wrapper+]</div>";
-$_lang["ef_version_error"] = "<strong>Advarsel!</strong> Denne version af eForm (version:&nbsp;$version) er forskellig fra den inkluderede fil version. (Version:&nbsp;$fileVersion). Kontroller at du bruger samme version af begge. ";
+$_lang["ef_version_error"] = "<strong>Advarsel!</strong> Denne version af eForm (version:&nbsp;[+version+]) er forskellig fra den inkluderede fil version. (Version:&nbsp;[+fileVersion+]). Kontroller at du bruger samme version af begge. ";
 ?>

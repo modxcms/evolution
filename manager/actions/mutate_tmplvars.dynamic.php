@@ -269,7 +269,7 @@ function decode(s){
     		  <li id="Button1">
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-    			</a><span class="and"> + </span>				
+    			</a><span class="plus"> + </span>
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -402,10 +402,7 @@ function decode(s){
     <td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
 </table>
-    	</div>
 
-<!-- TemplateVar Info -->
-<div class="tab-page" id="tabInfo">
 <h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
 <script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>

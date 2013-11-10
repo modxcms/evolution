@@ -112,7 +112,13 @@ font-size:14pt;
 .new{ 
 	color:#c00;
 	font-weight:bold;
-}</style>
+}
+.caution{
+	background: #c00;
+	color: #fff;
+	padding: 0 3px;
+}
+</style>
 </head>
 <body>
 	<div class="qe_box"><h1>eForm - The Electronic Form Snippet </h1><img id="qe_logo" src="logo.png" alt="logo" border="0" title="" />
@@ -140,23 +146,11 @@ font-size:14pt;
 		<div class="qe_level_1"><a name="whatsnew"></a>
 <h2>What's New</h2>
 			<div class="qe_level_2">
-			<h3>Version 1.4.4.1 - 1.4.4.8</h3>
+			<h3>Version 1.4.4.9</h3>
 			<ul>
-				<li>eForm now retains default values for check boxes and radio buttons</li>
-				<li>text input fields now retain default value set in form template</li>
-				<li>Added pixelchutes' phx workaround (use (()) instead of [++] in snippet call)</li>
-				<li>Added proper ef_validation_message language string</li>
-				<li>FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation</li>
-				<li>bugfix: &amp;jScript parameter doesn't accept chunks, only a link to a JS file if more than one chunk is declared (eg &amp;jScript=`chunk1,chunk2)</li>
-				<li>bugfix: &amp;protectSubmit creates hash for all fields instead of fields declared in &amp;protectSubmit</li>
-				<li>bugfix: Auto respond email didn't honour the &amp;sendAsText parameter</li>
-				<li>bugfix: The #FUNCTION validation rule for select boxes never calls the function</li>
-				<li>bugfix: Validation css class isn't being added to labels.</li>
-				<li>Work around for setting required class on check &amp; radio labels</li>
-				<li>bugfix: If eform attibute is set on multiple check boxes only the last value is set in values list</li>
-                <li>Security fix: Additional sanitization applied after stripslashes is used on fields</li>
-                <li>Security fix: Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.</li>
-                <li>Added: Multiple event functions separated by comma.</li>
+                <li>Updated language files.</li>
+                <li>Security fix: Posting of html only allowed if &allowhtml=`1` and eform field type is html.</li>
+				<li>Security fix: Prevent XSS by executing htmlspecialchars during formMerge on all form fields.</li>
 			</ul>
 		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
@@ -178,7 +172,7 @@ font-size:14pt;
 		<div class="qe_level_2"><h4>Required parameters</h4>
 			<ul class="qe_param_list">
 				<li><strong>&amp;formid</strong><br/>This is a unique id used to identity a form during postbacks. This is useful in cases where more than one form exists on a page. 
-			Your form template should either have a hidden field with the same formid
+			Your form template should either have a hidden field with the same formid.
 			<code>&lt;input type="hidden" name="formid" value="formName" /&gt;</code> or (from eForm 1.4.x) you can set the the id in the form tag itself:
 			<code>&lt;form id="formName"...&gt</code>;</li>
 				<li><strong>&amp;tpl</strong><br/>chunk name (non-numeric) or document id (numeric) to use as a form template <span class="new">(new in 1.4.4)</span> You can now also use a snippet as the template source. No parameters are forwarded to the snippet call in this version.
@@ -186,78 +180,78 @@ font-size:14pt;
 			[+validationmessage+], [+postdate+],[+verimageurl+] &amp; [+debugText+]. You should have the [+validatiomessage+] placeholder in all your forms. The others you may need depending on other parameters.</li>
 				<li><strong>&amp;report</strong><br/>chunk name (non-numeric) or document id (numeric) to use when generating reports. 
 			Tags: Same as for
-			<code>&amp;tpl</code>plus [+fieldname+], where fieldname stands for the name of each form field you wish to include.</li>
+			<code>&amp;tpl</code> plus [+fieldname+], where fieldname stands for the name of each form field you wish to include.</li>
 			</ul><h4>Optional parameters</h4>
 			<ul class="qe_param_list">
-				<li><strong>&amp;to</strong> (Optional)<br/>Email address to send eForm information to
-	For multiple recipients separate emails with a comma (,)
-	If omitted the site settings email address will be used</li>
-				<li><strong>&amp;from</strong> (Optional)<br/>Sets the email address to appear in the From section of the email</li>
-				<li><strong>&amp;fromname</strong> (Optional)<br/>Sets the name of the sender in the From section of the email</li>
-				<li><strong>&amp;replyto</strong>  (Optional)<br/>Email address or fieldname containing email address
-	Sets the email address to appear in the ReplyTo section of the email</li>
+				<li><strong>&amp;to</strong> (Optional)<br/>Email address to send eForm information to.
+	For multiple recipients separate emails with a comma (,).
+	If omitted the site settings email address will be used.</li>
+				<li><strong>&amp;from</strong> (Optional)<br/>Sets the email address to appear in the From section of the email.</li>
+				<li><strong>&amp;fromname</strong> (Optional)<br/>Sets the name of the sender in the From section of the email.</li>
+				<li><strong>&amp;replyto</strong>  (Optional)<br/>Email address or fieldname containing email address.
+	Sets the email address to appear in the ReplyTo section of the email.</li>
 				<li><strong>&amp;sendirect</strong> (Optional)<br/>This will use the form field called email to supply the
 	email address to send the message to.
-	Set to 1 to activate send direct. Defaults to 0</li>
+	Set to 1 to activate send direct. Defaults to 0.</li>
 				<li><strong>&amp;cc</strong> (Optional)<br/>Same as
-			<code>&amp;email</code>but for Cc:</li>
+			<code>&amp;email</code> but for Cc:</li>
 				<li><strong>&amp;bcc</strong> (Optional)<br/>Same as
-			<code>&amp;email</code>but for Bcc:</li>
-				<li><strong>&amp;ccsender</strong> (Optional)<br/>Set to 1 to send the user a copy of the submitted form. Defaults to 0
-	eForm will look for the user's email address inside a field called email.</li>
-				<li><strong>&amp;subject</strong> (Optional)<br/>Subject to appear in email
-	Can include ((form fields)). E.g. Purcase Order for ((firstname)) ((lastname))</li>
-				<li><strong>&amp;noemail</strong> (Optional)<br/>Prevents eform from sending emails e.g. no-reply@mydomain.com
-	Set to 1 to disable emails. Defaults to 0</li>
+			<code>&amp;email</code> but for Bcc:</li>
+				<li><strong>&amp;ccsender</strong> (Optional)<br/>Set to 1 to send the user a copy of the submitted form.
+	eForm will look for the user's email address inside a field called email. Defaults to 0.
+	</li>
+				<li><strong>&amp;subject</strong> (Optional)<br/>Subject to appear in email.
+	Can include ((form fields)). E.g. <code>&amp;subject=`Purcase Order for ((firstname)) ((lastname))`</code>.</li>
+				<li><strong>&amp;noemail</strong> (Optional)<br/>Prevents eform from sending emails e.g. no-reply@mydomain.com.
+	Set to 1 to disable emails. Defaults to 0.</li>
 				<li><strong>&amp;mailselector</strong> (Optional)<br/>Sets the name of the form field to use as a selector to select a single email from the comma (,) delimited emails assigned
 	the
 			<code>&amp;to</code>parameter. This selector field will act like a numeric
 	index to select an email. It will start at 1 for the first email
 	and ends at N for the last email in the list.<br/><br/>For example:
-			<code>&amp;to =`sales@me.com,support@me.com,billing@me.com`
+			<code>&amp;to=`sales@me.com,support@me.com,billing@me.com`
 			<code>&amp;mailselector</code>=`topic`</code><br/><br/>On the web form the topic fields is actually a dropdown menu. when the user selects a topic from the list the value 1,2 or 3 will
-	be sent to eForm which will then be used to select one of the	three emails assigned to the
+	be sent to eForm which will then be used to select one of the three emails assigned to the
 			<code>&amp;to</code>parameter. This email address will be the address used to send the email to.</li>
 				<li><strong>&amp;mobile</strong> (Optional)<br/>Mobile email address. This email is used to send a short notification message to a mobile device.</li>
-				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device Can include ((form fields)). E.g. Order for
-			<code>((firstname))</code></li>
-				<li><strong>&amp;thankyou</strong>  (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit. 
+				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device. Can include ((form fields)). E.g. <code>&amp;mobiletext=`Order for
+			((firstname))`</code>.</li>
+				<li><strong>&amp;thankyou</strong> (Optional)<br/>Chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit.
 	Tags: same as for
 			<code>&amp;tpl</code></li>
-				<li><strong>&amp;gotoid</strong> (Optional)<br/>document id to load after sending message. See also
+				<li><strong>&amp;gotoid</strong> (Optional)<br/>Document id to load after sending message. See also
 			<code>&amp;thankyou</code></li>
 				<li><strong>&amp;category</strong> (Optional)<br/>Category ID or name used to categorize eForms.
 	If category is not found a new category will be created.
-	This will appear in the subject of the email sent to the user</li>
-				<li><strong>&amp;keywords</strong> (Optional)<br/>Comma delimited keywords or [+formfields+] used when searching databank
+	This will appear in the subject of the email sent to the user.</li>
+				<li><strong>&amp;keywords</strong> (Optional)<br/>Comma delimited keywords or [+formfields+] used when searching databank.
 	E.g. [+firstname+], [+lastname+], [+email+]</li>
-				<li><strong>&amp;autosender</strong> (Optional)<br/>email to display as sender of the auto-respond message
+				<li><strong>&amp;autosender</strong> (Optional)<br/>Email to display as sender of the auto-respond message.
 	e.g. no-reply@mydomain.com</li>
-				<li><strong>&quot;autoSenderName</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />Name to display as sender of the auto-respond message.</li>
-				<li><strong>&amp;automessage</strong> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as an auto-responder message
-	Can include [+form fields+]. E.g. [+firstname+]
-	- tags: [form_fields],[postdate]
-	- note: eForm will send the auto-respond message to the email address specified
-	inside the [email] form field.</li>
-				<li><strong>&amp;allowhtml</strong> (Optional)<br/>Set to 1 to allow user to enter html tags. Defaults to 0</li>
-				<li><strong>&amp;language</strong>  (Optional)<br/>Support for multilingual validation and error messages. Uses same language
+				<li><strong>&amp;autoSenderName</strong> <span class="new">(new in 1.4.4)</span> (Optional)<br />Name to display as sender of the auto-respond message.</li>
+				<li><strong>&amp;automessage</strong> (Optional)<br/>Chunk name (non-numeric) or document id (numeric) to use as an auto-responder message.
+	Tags: same as for
+			<code>&amp;tpl</code>.
+				eForm will send the auto-respond message to the email address specified in a field called email.</li>
+				<li><strong>&amp;allowhtml</strong> (Optional)<br/>Set to 1 to allow user to enter html tags. <span class="caution">XSS could be possible i.e. in thankyou chunk if allowed.</span> Defaults to 0.</li>
+				<li><strong>&amp;language</strong> (Optional)<br/>Support for multilingual validation and error messages. Uses same language
 	names as MODx.</li>
 				<li><strong>&amp;vericode</strong> (Optional)<br/>Enables verification code. The template contain a vericode
-	field and a [+vericode+] placeholder</li>
-				<li><strong>&amp;debug</strong>  (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
+	field and a [+vericode+] placeholder.</li>
+				<li><strong>&amp;debug</strong> (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
 	#LIST and #SELECT validation.</li>
-				<li><strong>&amp;sendAsHtml</strong>  (optional)<br/>Force email messages to be in Html.
-				Possible values: &amp;sendAsHTML=`1`- send all messages as html, &amp;sendAsHTML=`report,autotext,mobile`- send specified messages as html</li>
-				<li><strong>&amp;sendAsText</strong>  (optional)<br/>Force email message to be in plain text.	
-				Possible values: &amp;sendAsText=`1`- send all messages as text only, &amp;sendAsText=`report,autotext,mobile`- send specified messages as text only</li>
-				<li><strong>&amp;sessionVars</strong>  (optional)<br/>Comma delimited list of $_SESSION variable names.  These will be added to the list of field values before the form is displayed and can for instance be used to populate (hidden) fields.
-				When using this parameter make sure you are not disclosing sensitive information from the session!! (a hidden field is not all that hidden afterall)<br/>As eForm does not parse the complete form 1st time around you will have to have the same placeholders in the form template so the form can receive the values. So for example:
-			<code>[!eForm &amp;sessionVars=`jobID` ... !]</code>and
+				<li><strong>&amp;sendAsHtml</strong> (Optional)<br/>Force email messages to be in html.
+					Possible values: <code>&amp;sendAsHTML=`1`</code>: Send all messages as html, <code>&amp;sendAsHTML=`report,autotext,mobile`</code>: Send specified messages as html</li>
+				<li><strong>&amp;sendAsText</strong> (Optional)<br/>Force email message to be in plain text.
+					Possible values: <code>&amp;sendAsText=`1`</code>: Send all messages as text only, <code>&amp;sendAsText=`report,autotext,mobile`</code>: send specified messages as text only</li>
+				<li><strong>&amp;sessionVars</strong> (Optional)<br/>Comma delimited list of $_SESSION variable names. These will be added to the list of field values before the form is displayed and can for instance be used to populate (hidden) fields.
+				When using this parameter make sure you are not disclosing sensitive information from the session!! A hidden field is not all that hidden afterall.<br/>As eForm does not parse the complete form 1st time around you will have to have the same placeholders in the form template so the form can receive the values. So for example:
+			<code>[!eForm &amp;sessionVars=`jobID` ... !]</code> and
 			<code>&lt;input type="hidden" value="[+jobID+]" /&gt;</code></li>
-				<li><strong>&amp;postOverides</strong>  (optional)<br/>Used in combination of
-			<code>&amp;sessionVars</code>. Normally session variables will overide posted values. By setting &amp;postOverides=`1` posted values will take precedence.</li>
-				<li><strong>&amp;reportAbuse</strong>  (optional)<br/>Setting &amp;reportAbuse=`1` will send an email to the system specified email address if email injection attempts are noticed by eForm. (Use sparingly...)</li>
-				<li><a name="142new" id="142new"></a><strong>&amp;cssStyle</strong> (optional)<br />
+				<li><strong>&amp;postOverides</strong> (Optional)<br/>Used in combination of
+					<code>&amp;sessionVars</code>. Normally session variables will overide posted values. By setting <code>&amp;postOverides=`1`</code> posted values will take precedence.</li>
+				<li><strong>&amp;reportAbuse</strong>  (Optional)<br/>Setting <code>&amp;reportAbuse=`1`</code> will send an email to the system specified email address if email injection attempts are noticed by eForm. (Use sparingly...)</li>
+				<li><a name="142new" id="142new"></a><strong>&amp;cssStyle</strong> (Optional)<br />
 				Adds a style declaration to the &lt;head&gt; section of the page when either the form is displayed or the thank you page is displayed (only if the <code>&thankyou</code> parameter is set).  Values can be a document id (numeric), chunk name or (relative or absolute) url to css file. Multiple values can be separated by a comma (in fact all three values can be mixed).<br />examples:<br /><code>[!eForm &amp;cssStyle=`assets/site/forms.css,chunkName` ... !]</code><br />
 <code>[!eForm &amp;cssStyle=`chunkName` ... !]</code><br />
 <code>[!eForm &amp;cssStyle=`http://mysite.com/assets/styles/forms.css` ... !]</code><br />
@@ -268,24 +262,24 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 	<li>a comma separated list of urls, eg. <code>assets/site/forms.css,assets/site/more.css,assets/site/gone_overboard.css</code></li>
 </ol>
 				</li>
-				<li><strong>&amp;jScript</strong> (optional)<br />Similar to <code>&amp;cssStyle</code> but for adding javascript to the &lt;head&gt; of the page document. Currently Javascript is only added when the form is displayed. </li>
-				<li><strong>&amp;protectSubmit</strong>(optional) defaults to 1 (on)<br />
+				<li><strong>&amp;jScript</strong> (Optional)<br />Similar to <code>&amp;cssStyle</code> but for adding javascript to the &lt;head&gt; of the page document. Currently Javascript is only added when the form is displayed. </li>
+				<li><strong>&amp;protectSubmit</strong>(Optional) defaults to 1 (on)<br />
 				Protects against submitting a form multiple times with the same data. Submitting the form becomes disabled after the first successful submit while the value from key form fields remains the same. This is achieved by setting (and comparing) a session variable with an md5 hash from these key fields. Which fields are compared depends on the value of <code>&amp;protectSubmit</code>.Possible values are <strong>0</strong> (off), <strong>1</strong> (all 'required' fields are used) or you can set a comma separated list of field names. To ensure that the session variable works separatedly for different forms the session variable name is based on <code>&amp;formid</code> ({formid}_hash).
 				</li>
-				<li><strong>&amp;submitLimit</strong> (optional) off (0) by default<br />
+				<li><strong>&amp;submitLimit</strong> (Optional) off (0) by default<br />
 				Enforces a time limit (in minutes) between form submits. After the form has been submitted successfully it can not be submitted again for <code>&amp;submitLimit</code> minutes irrespective of the form data. When used in combination with <code>&amp;protectSubmit</code> <code>submitLimit</code> takes precedence, meaning that when the time limit has expired the form can be submitted again regardless of the setting of <code>&amp;protectSubmit</code> (it will unset the session variable). As with <code>&amp;protectSubmit</code> this parameter uses a session variable with a variable name based on &amp;formid. 
 				</li>
-			<li><a name="classparams"></a><strong>&amp;requiredClass</strong> (optional)<br />
+			<li><a name="classparams"></a><strong>&amp;requiredClass</strong> (Optional)<br />
 			Css class name. Will add class in (empty) required form fields on validation. Existing classes will be preserved.<br />
 			<em>If you have already set a class for a field or label and you get unexpected css results check the order in which you have declared the classes. The <code>&requiredClass</code> is added to the beginning of any classes already set.</em>
 			</li>
-			<li><strong>&amp;invalidClass</strong> (optional)<br />
+			<li><strong>&amp;invalidClass</strong> (Optional)<br />
 			Css class name. Will add class in invalid form fields on validation. Existing classes will be preserved.
 			</li>
-			<li><strong>&amp;runSnippet</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />
+			<li><strong>&amp;runSnippet</strong> <span class="new">(new in 1.4.4)</span> (Optional)<br />
 			Expects a snippet name. Snippet will be run before any eForm handling. One parameter, the &amp;&formid will be passed to the snippet. Any return value from the snippet is discarded. This can be used to insert functions as an alternative to declaring a separate snippet in the document.  Sadly eForm will silently ignore a snippet that does not exist due to the way $modx->runSnippet handles snippet return values.
 			</li>
-			<li><strong>&amp;snipFolder</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />
+			<li><strong>&amp;snipFolder</strong> <span class="new">(new in 1.4.4)</span> (Optional)<br />
 			For those that want to keep different versions of eForm active. You can now save all of eForm's files in a different directory and set the &amp;snipFolder accordingly. You can for instance save version 1.4.4 in the 'assets/snippets/eform/1.4.4' folder and set <code>&amp;snipFolder=`eform/1.4.4`</code>. The value of &amp;snipFolder is added to the basic snippets folder 'assets/snippets/'.It should not include a closing slash (/)!</li>
 			</ul>
 			
@@ -295,25 +289,25 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 			<h4>PHP Event Functions:</h4>
 <p>The eForm event functions are now incorporated into the parameters. They are:</p>
 			<ul class="qe_param_list">
-				<li><strong>&amp;eFormOnBeforeMailSent</strong> (optional)<br/>Expects a list of comma separated function names. These functions will be called after the form has been validated and before the report and thankyou templates have been parsed and any emails have been sent out.
+				<li><strong>&amp;eFormOnBeforeMailSent</strong> (Optional)<br/>Expects a list of comma separated function names. These functions will be called after the form has been validated and before the report and thankyou templates have been parsed and any emails have been sent out.
 				See <a href="eform_example_events.htm">this example</a> on how to use the events.
 				<ul>
 					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 				</ul></li>
-				<li><strong>&amp;eFormOnMailSent</strong> (optional)<br/>Expects a list of comma separated function names. These functions are called after all templates have been parsed and any emails were sent.
+				<li><strong>&amp;eFormOnMailSent</strong> (Optional)<br/>Expects a list of comma separated function names. These functions are called after all templates have been parsed and any emails were sent.
 				<ul>
 					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 				</ul></li>
-				<li><strong>&amp;eformOnBeforeFormParse</strong> (optional)<br/>Expects a list of comma separated function names. These functions are called after the templates are loaded and the formid is found valid. The function should accomodate the following parameter:
+				<li><strong>&amp;eformOnBeforeFormParse</strong> (Optional)<br/>Expects a list of comma separated function names. These functions are called after the templates are loaded and the formid is found valid. The function should accomodate the following parameter:
 				<ul>
 					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 					<li>&amp;$templates - (as reference) an associative array of loaded templates with indexes 'tpl', 'report','thankyou' &amp; 'autotext'. Be aware that the latter three will only have a value if the form has been posted!</li>
 				</ul></li>
-				<li><strong>&amp;eFormOnBeforeFormMerge</strong> (optional)<br/>Expects a list of comma separated function names. These functions will <strong>only</strong> be called whenever the form is displayed and just before all placeholders are merged. The function should accomodate the following parameter:
+				<li><strong>&amp;eFormOnBeforeFormMerge</strong> (Optional)<br/>Expects a list of comma separated function names. These functions will <strong>only</strong> be called whenever the form is displayed and just before all placeholders are merged. The function should accomodate the following parameter:
 				<ul>
 					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 				</ul></li>
-				<li><strong>&amp;eFormOnValidate</strong>  (optional)<br/>Expects a function name. This function will be called directly after the form validation has taken place. You can use this event to add your own extra validation logic. The function should accomodate the following parameters
+				<li><strong>&amp;eFormOnValidate</strong> (Optional)<br/>Expects a function name. This function will be called directly after the form validation has taken place. You can use this event to add your own extra validation logic. The function should accomodate the following parameters
 				<ul>
 					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 					<li>&amp;$vMsg - (as reference) a numeric array of validation error messages.</li>
@@ -360,13 +354,13 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 (radio &amp; checkbox as they are, string for textbox and listbox for select)</p>
 <p>Standard validation: All fields that are required will be checked if they are left empty.</p>
 				<ul class="qe_param_list">
-					<li><strong>string</strong>  - No specific validation besides checking if it's empty if the field is required.</li>
+					<li><strong>string</strong> - No specific validation besides checking if it's empty if the field is required.</li>
 					<li><strong>date</strong> - Checks if it is a valid date (based on php's strtotime() function)</li>
 					<li><strong>integer</strong> - Checks if it is a number (does not check if it is in fact an integer)</li>
 					<li><strong>float</strong> - Checks if it is a number</li>
 					<li><strong>email</strong> - Checks if it's a valid email address using a simple regular expression</li>
 					<li><strong>file</strong> - (for file upload input) - checks if a size error occurs, does not currently check file type</li>
-					<li><strong>html</strong> - Same as string except that it converts line endings (\n) to &lt;br /&gt; tags</li>
+					<li><strong>html</strong> - Same as string except that it converts line endings (\n) to &lt;br /&gt; tags. In combination with <code>&amp;allowhtml=`1`</code> no html tags will be stripped.</li>
 				</ul>
 <p>The listbox, checkbox and radio fields do normally not require the datatype to be set. eForm will recognize these automatically. It will validate the values against the list of values placed in the form.</p>
 			</div>
@@ -387,7 +381,7 @@ between 1 and 10 (inclusive). Handles negative as well as positive numbers<br/>e
 The query should only return a single column of values (the function only checks
 against the first returned column). You can use the
 				<code>{DBASE}</code>
-				<code>{PREFIX}</code>tags which will be replaced by the MODx database name and table prefix respectively.<br/>example:
+				<code>{PREFIX}</code> tags which will be replaced by the MODx database name and table prefix respectively.<br/>example:
 				<code>#SELECT keyword FROM {PREFIX}site_keywords</code></li>
 					<li><strong>#EVAL</strong> - string of php code. Should return either true or false<br/><span style="color:#c00">deprecated</span>Although #EVAL still works in eForm 1.4 this rule will very likely no longer be supported in future versions. Use #FUNCTION instead.<br/></li>
 					<li><strong>#FUNCTION</strong> - Name of a function. The function should expect one parameter (the posted value) and return either TRUE or FALSE. 

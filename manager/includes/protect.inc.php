@@ -33,10 +33,11 @@ if (!function_exists('modx_sanitize_gpc')) {
             if (is_array($value)) {
                 $count++;
                 if(10 < $count) {
-                    echo 'too many nested array';
+                    echo 'GPC Array nested too deep!';
                     exit;
                 }
                 modx_sanitize_gpc($value, $count);
+				$count--;
             }
             else {
                 $value = str_replace($brackets,$r,$value);
@@ -44,7 +45,6 @@ if (!function_exists('modx_sanitize_gpc')) {
                 $value = preg_replace('/&#(\d+);/', 'sanitized_by_modx& #$1', $value);
                 $target[$key] = $value;
             }
-            $count=0;
         }
         return $target;
     }

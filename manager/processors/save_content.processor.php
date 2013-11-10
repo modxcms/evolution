@@ -353,10 +353,44 @@ switch ($actionToTake) {
 		$publishedon = ($published ? $currentdate : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
-		$sql = "INSERT INTO $tbl_site_content (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu, alias_visible)
-						VALUES('" . $introtext . "','" . $content . "', '" . $pagetitle . "', '" . $longtitle . "', '" . $type . "', '" . $description . "', '" . $alias . "', '" . $link_attributes . "', '" . $isfolder . "', '" . $richtext . "', '" . $published . "', '" . $parent . "', '" . $template . "', '" . $menuindex . "', '" . $searchable . "', '" . $cacheable . "', '" . $modx->getLoginUserID() . "', " . $currentdate . ", '" . $modx->getLoginUserID() . "', " . $currentdate . ", " . $publishedby . ", " . $publishedon . ", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu', '$aliasvisible')";
+		$dbInsert = array
+        (
+            "introtext"        => $introtext ,
+            "content"          => $content ,
+            "pagetitle"        => $pagetitle ,
+            "longtitle"        => $longtitle ,
+            "type"             => $type ,
+            "description"      => $description ,
+            "alias"            => $alias ,
+            "link_attributes"  => $link_attributes ,
+            "isfolder"         => $isfolder ,
+            "richtext"         => $richtext ,
+            "published"        => $published ,
+            "parent"           => $parent ,
+            "template"         => $template ,
+            "menuindex"        => $menuindex ,
+            "searchable"       => $searchable ,
+            "cacheable"        => $cacheable ,
+            "createdby"        => $modx->getLoginUserID() ,
+            "createdon"        => $currentdate ,
+            "editedby"         => $modx->getLoginUserID() ,
+            "editedon"         => $currentdate ,
+            "publishedby"      => $publishedby ,
+            "publishedon"      => $publishedon ,
+            "pub_date"         => $pub_date ,
+            "unpub_date"       => $unpub_date ,
+            "contentType"      => $contentType ,
+            "content_dispo"    => $contentdispo ,
+            "donthit"          => $donthit ,
+            "menutitle"        => $menutitle ,
+            "hidemenu"         => $hidemenu ,
+            "alias_visible"    => $aliasvisible
+        );
 
-		$rs = $modx->db->query($sql);
+        if ($id != '')
+            $dbInsert["id"] = $id;
+
+        $rs = $modx->db->insert( $dbInsert, $tbl_site_content);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
 			echo "An error occured while attempting to save the new document: " . $modx->db->getLastError();

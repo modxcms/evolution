@@ -19,6 +19,9 @@ $tbl_site_keywords         = $modx->getFullTableName('site_keywords');
 $tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
+
+
+
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);

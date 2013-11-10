@@ -9,17 +9,15 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   $input = 'assets/snippets/phpthumb/noimage.png';
 }
 
-  $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
+  $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
   $path_parts=pathinfo($input);
   require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
   $phpThumb = new phpthumb();
   $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
 
-  $options = explode("&", $options);
-  foreach ($options as $value) {
-    $thumb = explode("=", $value);
-    $phpThumb->setParameter($thumb[0], $thumb[1]);
-    $op[$thumb[0]]=$thumb[1];
+  parse_str($options, $params);
+  foreach ($params as $key => $value) {
+    $phpThumb->setParameter($key, $value);
   }
 
   $tmp=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
@@ -33,7 +31,7 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
     if(!is_dir(MODX_BASE_PATH.$folder)) mkdir(MODX_BASE_PATH.$folder);
   }
   
-  $fname=$folder."/".$op['w']."x".$op['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($options)),0,3).".".$op['f'];
+  $fname=$folder."/".$params['w']."x".$params['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($params)),0,3).".".$params['f'];
   $outputFilename =MODX_BASE_PATH.$fname;
   if (!file_exists($outputFilename)) {
 	  if ($phpThumb->GenerateThumbnail()) {

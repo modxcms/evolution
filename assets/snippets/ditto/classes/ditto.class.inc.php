@@ -256,7 +256,7 @@ class ditto {
 	// Render the document output
 	// ---------------------------------------------------
 	
-	function render($resource, $template, $removeChunk,$dateSource,$dateFormat,$ph=array(),$phx=1,$x=0,$stop) {
+	function render($resource, $template, $removeChunk,$dateSource,$dateFormat,$ph=array(),$phx=1,$x=0,$stop=1) {
 		global $modx,$ditto_lang;
 
 		if (!is_array($resource)) {

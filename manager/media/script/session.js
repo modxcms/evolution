@@ -12,4 +12,4 @@ function keepMeAlive(imgName) {
         }
     }).request();
 }
-window.setInterval("keepMeAlive()", 1000 * 60);
+window.setInterval("keepMeAlive()", 1000 * 600);

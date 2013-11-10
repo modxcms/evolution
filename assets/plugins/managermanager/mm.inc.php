@@ -94,6 +94,7 @@ $mm_fields = array(
 	'hide_menu' => array('fieldtype'=>'input', 'fieldname'=>'hidemenucheck', 'dbname'=>'hidemenu', 'tv'=>false), // synonym for show_in_menu
 	'parent' => array('fieldtype'=>'input', 'fieldname'=>'parent', 'dbname'=>'parent', 'tv'=>false),
 	'is_folder' => array('fieldtype'=>'input', 'fieldname'=>'isfoldercheck', 'dbname'=>'isfolder', 'tv'=>false),
+	'alias_visible' => array('fieldtype'=>'input', 'fieldname'=>'alias_visible_check', 'dbname'=>'alias_visible', 'tv'=>false),
 	'is_richtext' => array('fieldtype'=>'input', 'fieldname'=>'richtextcheck','dbname'=>'richtext',  'tv'=>false),
 	'log' => array('fieldtype'=>'input', 'fieldname'=>'donthitcheck', 'dbname'=>'donthit', 'tv'=>false),
 	'published' => array('fieldtype'=>'input', 'fieldname'=>'publishedcheck','dbname'=>'published',  'tv'=>false),

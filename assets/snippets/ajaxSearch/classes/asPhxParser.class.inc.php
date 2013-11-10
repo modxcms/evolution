@@ -444,5 +444,5 @@ class asPHxParser {
         }
         return $template;
     }
-
+}
 ?>

@@ -18,10 +18,10 @@
  *					Piotr Łukańko - piotr.lukanko@gmail.com
  *                	Łukasz Kowalczyk - lukasz@pixeligence.com
  *
- * Date:           15 Feb 2012
+ * Date:           24 October 2013
 
- * Version:        1.5
- * MODx version:   Evolution 1.0.11
+ * Version:        1.6
+ * MODx version:   Evolution 1.0.13
 */
 
 $modx_lang_attribute = 'pl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -1146,16 +1146,20 @@ $_lang["yourinfo_role"] = 'Twoja rola to:';
 $_lang["yourinfo_title"] = 'Twoje info';
 $_lang["yourinfo_total_logins"] = 'Całkowita ilość logowań:';
 $_lang["yourinfo_username"] = 'Jesteś zalogowany jako:';
+
 $_lang["a17_error_reporting_title"] = 'Poziom wykrywania błędów PHP';
 $_lang["a17_error_reporting_msg"] = 'Ustaw poziom wykrywania błędów PHP.';
 $_lang["a17_error_reporting_opt0"] = 'Ignoruj wszystko';
 $_lang["a17_error_reporting_opt1"] = 'Ignoruj ostrzeżenia niskiego poziomu (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Wykrywaj wszystkie błędy poza E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Wykrywaj wszystko';
+
 $_lang["pwd_hash_algo_title"] = 'Algorytm haszowania';
 $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
-$_lang["enable_bindings_title"]  = 'Włącz komendy @Bindings';
+
+$_lang["enable_bindings_title"] = 'Włącz komendy @Bindings';
 $_lang["enable_bindings_message"] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
+
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
 $_lang["bkmgr_restore_title"] = 'Przywróć';
@@ -1171,6 +1175,7 @@ $_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
 $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
+
 $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
 $_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
 $_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
@@ -1178,10 +1183,13 @@ $_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
 $_lang["not_readable_dir"] = 'Nie można odczytać katalogu.';
 $_lang["confirm_delete_dir"] = 'Czy na pewno chcesz usunąć ten katalog?';
 $_lang["confirm_delete_dir_recursive"] = 'Czy na pewno chcesz usunąć ten katalog?\n\nWszystkie jego pliki również zostaną usunięte.';
+
 $_lang["make_folders_title"] = 'Dodawaj ukośnik na końcach folderów';
 $_lang["make_folders_message"] = 'Ukośnik będzie dodany do dokumentów oznaczonych jako foldery, gdy używa się przyjaznych URL.';
+
 $_lang["check_files_onlogin_title"] = 'Sprawdzaj ważne pliki przy logowaniu';
 $_lang["check_files_onlogin_message"] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Ważne pliki systemowe zostały zmienione.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
 
@@ -1197,6 +1205,8 @@ $_lang['smtp_port_title'] = 'Port SMTP';
 $_lang["setting_resource_tree_node_name"] = 'Nazwa węzła drzewa zasobów';
 $_lang["setting_resource_tree_node_name_desc"] = 'Określ pole zasobu, które zostanie użyte w czasie renderowania węzłów w drzewie zasobów. Domyślnie to pagetitle, jednakże każde pole zasobu może zostać wykorzystane np. menutitle, alias.';
 
+$_lang["resource_opt_alvisibled"] = 'in URL';
+$_lang["resource_opt_alvisibled_help"] = 'alias in url';
 $_lang['resource_opt_is_published'] = 'Published';
 $_lang["docid_incrmnt_method_title"] = 'Increment method Resource ID';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
@@ -1208,8 +1218,10 @@ $_lang["cache_type_1"] = 'Cache bazuje tylko na id dokumentu (domyślne)';
 $_lang["cache_type_2"] = 'Cache bazuje na id dokumentu oraz parametrach $_GET';
 $_lang["seostrict_title"] = 'Używaj SEO Strict URLs';
 $_lang["seostrict_message"] = 'Jeśli potrzeba, wymuś używanie strict URLs aby zapobiec duplikowaniu treści';
+
 $_lang["settings_friendlyurls_alert"] = 'Wymagana jest zmiana nazwy pliku ht.access na .htaccess aby używać przyjaznych adresów.';
 $_lang["settings_friendlyurls_alert2"] = 'Ponieważ serwis zainstalowany został w podkatalogu, wymagana jest zmiana zawartości pliku .htaccess.';
+
 $_lang["user_street"] = 'Ulica';
 $_lang["user_city"] = 'Miasto';
 $_lang["user_other"] = 'Inne';
@@ -1228,3 +1240,7 @@ $_lang["export_site.static.php4"] = 'Replace string (before)';
 $_lang["export_site.static.php5"] = 'Replace string (after)';
 $_lang["export_site.static.php6"] = 'Target';
 $_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'email notifies system error.';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'It notifies to [(emailsender)]([+emailsender+]) at the time of error generating. The details of the contents of the error should check an event log.';
