@@ -78,6 +78,9 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 								));				
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $templatename;
+
 			// empty cache
 			$modx->clearCache('full');
 			
@@ -133,6 +136,9 @@ switch ($_POST['mode']) {
 										"mode"	=> "upd",
 										"id"	=> $id
 								));	    		
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $templatename;
 
 			// first empty the cache		
 			$modx->clearCache('full');

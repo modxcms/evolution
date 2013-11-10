@@ -24,6 +24,9 @@ $modx->invokeEvent("OnBeforeWUsrFormDelete",
 						"id"	=> $id
 					));
 
+// Set the item name for logger
+$_SESSION['itemname'] = $username;
+
 // delete the user.
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id=".$id.";";
 $rs = $modx->db->query($sql);

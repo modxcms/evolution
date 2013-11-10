@@ -27,6 +27,10 @@ if(!$rs) {
 									"id"	=> $id
 								));
 
+		// Set the item name for logger
+		$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$id}'"));
+		$_SESSION['itemname'] = $name;
+
 		// empty cache
 		$modx->clearCache('full');
 		

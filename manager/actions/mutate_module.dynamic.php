@@ -86,7 +86,7 @@ if (isset($_GET['id'])) {
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname'] = 'New Module';
+    $_SESSION['itemname'] = $_lang["new_module"];
     $content['wrap'] = '1';
 }
 

@@ -34,6 +34,10 @@ else {
 	exit;
 }
 
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
+
 // finish duplicating - redirect to new chunk
 $header="Location: index.php?r=2&a=78&id=$newid";
 header($header);

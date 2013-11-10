@@ -62,7 +62,7 @@ if(isset($_GET['id'])) {
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname']="New snippet";
+    $_SESSION['itemname']=$_lang["new_snippet"];
 }
 ?>
 <script type="text/javascript">

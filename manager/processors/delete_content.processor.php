@@ -109,23 +109,25 @@ $rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to set the document to deleted status...";
 	exit;
-} else {
-	// invoke OnDocFormDelete event
-	$modx->invokeEvent("OnDocFormDelete",
-							array(
-								"id"=>$id,
-								"children"=>$children
-							));
+}
+// invoke OnDocFormDelete event
+$modx->invokeEvent("OnDocFormDelete",
+						array(
+							"id"=>$id,
+							"children"=>$children
+						));
 
-	// empty cache
-	$modx->clearCache('full');
-	// finished emptying cache - redirect
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
+
+// empty cache
+$modx->clearCache('full');
+// finished emptying cache - redirect
 //	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 
-	//новый путь
-	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
-	
-	
-	header($header);
-}
+//новый путь
+$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
+
+
+header($header);
 ?>

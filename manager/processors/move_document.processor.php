@@ -105,6 +105,10 @@ if (!array_search($newParentID, $children)) {
 		}
 	}
 
+	// Set the item name for logger
+	$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+	$_SESSION['itemname'] = $pagetitle;
+
 	// empty cache & sync site
 	$modx->clearCache('full');
 

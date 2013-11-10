@@ -83,7 +83,7 @@ if ($_REQUEST['a'] == '12') {
 	$userdata = array ();
 	$usersettings = array ();
 	$usernamedata = array ();
-	$_SESSION['itemname'] = "New user";
+	$_SESSION['itemname'] = $_lang["new_user"];
 }
 
 // restore saved form

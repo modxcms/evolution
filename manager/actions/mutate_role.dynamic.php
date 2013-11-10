@@ -60,7 +60,7 @@ if($_REQUEST['a']=='35')
 	$_SESSION['itemname']=$roledata['name'];
 } else {
 	$roledata = 0;
-	$_SESSION['itemname']="New role";
+	$_SESSION['itemname']=$_lang["new_role"];
 }
 
 

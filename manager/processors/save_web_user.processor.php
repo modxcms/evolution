@@ -154,6 +154,9 @@ switch ($_POST['mode']) {
 			"id" => $internalKey
 		));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
+
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!

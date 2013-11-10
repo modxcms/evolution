@@ -103,6 +103,10 @@ switch ($_POST['mode']) {
 									"mode"	=> "new",
 									"id"	=> $newid
 								));
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
 			$modx->clearCache('full');
 
@@ -142,6 +146,10 @@ switch ($_POST['mode']) {
 									"mode"	=> "upd",
 									"id"	=> $id
 								));	
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
 			$modx->clearCache('full');
 

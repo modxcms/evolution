@@ -62,7 +62,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname'] = 'New Chunk';
+    $_SESSION['itemname'] = $_lang["new_htmlsnippet"];
 }
 
 if (isset($_POST['which_editor']))

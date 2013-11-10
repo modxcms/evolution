@@ -90,6 +90,10 @@ if(!$rs){
 	exit;
 }
 
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_modules'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
+
 // finish duplicating - redirect to new module
 $header="Location: index.php?r=2&a=108&id=$newid";
 header($header);

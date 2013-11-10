@@ -26,6 +26,11 @@ if(!$udperms->checkPermissions()) {
     include("footer.inc.php");
     exit;
 }
+
+// Set the item name for logger
+$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$_SESSION['itemname'] = $pagetitle;
+
 ?>
 
 <script language="javascript">
