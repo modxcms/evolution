@@ -145,27 +145,34 @@
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
 							}
-							
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
 							}
-							
-							function SetUrl(url, width, height, alt){
+							function SetUrlChange(el) {
+								if ('createEvent' in document) {
+									var evt = document.createEvent('HTMLEvents');
+									evt.initEvent('change', false, true);
+									el.dispatchEvent(evt);
+								} else {
+									el.fireEvent('onchange');
+								}
+							}
+							function SetUrl(url, width, height, alt) {
 								if(lastFileCtrl) {
 									var c = document.getElementById(lastFileCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    \$(c).change();
+										SetUrlChange(c);
 									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.getElementById(lastImageCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    \$(c).change();
+										SetUrlChange(c);
 									}
 									lastImageCtrl = '';
 								} else {
@@ -186,7 +193,6 @@
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
 				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
 					$field_html .="
-					<script type=\"text/javascript\">
 						/* <![CDATA[ */
 							var lastImageCtrl;
 							var lastFileCtrl;
@@ -202,34 +208,40 @@
 
 								var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
 							}
-							
-								function BrowseServer(ctrl) {
+							function BrowseServer(ctrl) {
 								lastImageCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
 							}
-										
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
 							}
-							
-							function SetUrl(url, width, height, alt){
+							function SetUrlChange(el) {
+								if ('createEvent' in document) {
+									var evt = document.createEvent('HTMLEvents');
+									evt.initEvent('change', false, true);
+									el.dispatchEvent(evt);
+								} else {
+									el.fireEvent('onchange');
+								}
+							}
+							function SetUrl(url, width, height, alt) {
 								if(lastFileCtrl) {
 									var c = document.getElementById(lastFileCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    \$(c).change();
+										SetUrlChange(c);
 									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.getElementById(lastImageCtrl);
 									if(c && c.value != url) {
 									    c.value = url;
-									    \$(c).change();
+										SetUrlChange(c);
 									}
 									lastImageCtrl = '';
 								} else {
