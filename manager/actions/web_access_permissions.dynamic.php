@@ -59,7 +59,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('web_users').' AS users ON users.id = groups.webuser '.
 		'ORDER BY groupnames.name';
 ?>
-	<table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
+	<table class="permissiongroup">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_user_group'] ?></b></td></tr>
 		</thead>
@@ -78,7 +78,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
-		echo "<ul>\n";
+		echo "<ul class=\"permissiongroups\">\n";
 		$pid = '';
 		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] !== $pid) {
@@ -132,7 +132,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('site_content').' AS sc ON sc.id = dg.document '.
 		'ORDER BY dgnames.name, sc.id';
 ?>
-	<table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
+	<table class="permissiongroup">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td></tr>
 		</thead>
@@ -151,7 +151,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
-		echo '<table width="600" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">'."\n".
+		echo '<table class="permissiongroup">'."\n".
 		'	<thead>'."\n".
 		'	<tr><td><b>'.$_lang['access_permissions_resource_groups'].'</b></td></tr>'."\n".
 		'	</thead>'."\n";
@@ -164,7 +164,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200">&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'">'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
 				'</form>';
@@ -208,7 +208,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {
 		?>
-		<table border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
+		<table class="permissiongroup">
 			<thead>
 			<tr><td><b><?php echo $_lang["access_permissions_group_link"] ?></b></td></tr>
 			</thead>
@@ -228,7 +228,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 		</table>
 		<br />
 		<?php
-		echo "<ul>\n";
+		echo "<ul class=\"permissiongroups\">\n";
 		$pid = '';
 		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] != $pid) {
