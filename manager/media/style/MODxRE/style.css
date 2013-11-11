@@ -1791,17 +1791,20 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
     text-align:left;
 	vertical-align: top;
 }
-.sectionBody .displayparams {
+.sectionBody .displayparams, .sectionBody .permissiongroup {
 	margin-bottom: 3px;
 	background-color: #eee;
 	border-collapse: separate;
-	border-spacing: 1px
+	border-spacing: 1px;
 }
 .sectionBody .displayparams th, .sectionBody .displayparams td {
 	padding: 2px 4px;
 }
-.sectionBody .displayparams thead td {
+.sectionBody .displayparams thead td, .sectionBody .permissiongroup thead td {
 	border-top: none;
+}
+.sectionBody .permissiongroup input, .sectionBody .permissiongroups input {
+	width: 200px;
 }
 
 /* replace warning red color in tabs */
