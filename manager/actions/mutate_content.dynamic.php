@@ -625,8 +625,6 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         }
                         echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
                         $closeOptGroup = true;
-                    } else {
-                        $closeOptGroup = false;
                     }
                     if (isset($_REQUEST['newtemplate'])) {
                         $selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
