@@ -1789,6 +1789,8 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
+	vertical-align: top;
+}
 }
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
