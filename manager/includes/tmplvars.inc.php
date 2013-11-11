@@ -40,7 +40,7 @@
 				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
                 if($field_value=='') $field_value=0;
 				$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="'.$_style["icons_cal_nodate"].'" border="0" alt="No date"></a>';
+				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="'.$_style["icons_cal_nodate"].'" border="0" alt="No date" /></a>';
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
@@ -124,6 +124,7 @@
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 					$field_html .="
 					<script type=\"text/javascript\">
+						/* <![CDATA[ */
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -171,6 +172,7 @@
 									return;
 								}
 							}
+						/* ]]> */
 					</script>";
 					$ResourceManagerLoaded  = true;					
 				} 
@@ -185,6 +187,7 @@
 				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
 					$field_html .="
 					<script type=\"text/javascript\">
+						/* <![CDATA[ */
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -233,6 +236,7 @@
 									return;
 								}
 							}
+						/* ]]> */
 					</script>";
 					$ResourceManagerLoaded  = true;					
 				} 
