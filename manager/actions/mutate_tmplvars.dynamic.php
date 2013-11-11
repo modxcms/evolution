@@ -67,7 +67,7 @@ if(isset($_GET['id']))
 }
 else
 {
-	$_SESSION['itemname']="New Template Variable";
+    $_SESSION['itemname']=$_lang["new_tmplvars"];
 }
 
 // get available RichText Editors

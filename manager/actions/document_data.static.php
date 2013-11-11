@@ -64,7 +64,7 @@ $rs = $modx->db->query('SELECT templatename FROM '.$tbl_site_templates.' WHERE i
 if ($row = $modx->db->getRow($rs))
 	$templatename = $row['templatename'];
 
-// Set the item name for logging
+// Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
 // Get list of current keywords for this document

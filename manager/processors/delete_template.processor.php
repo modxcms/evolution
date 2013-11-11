@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_template')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 
@@ -33,6 +31,10 @@ $modx->invokeEvent("OnBeforeTempFormDelete",
 							"id"	=> $id
 						));
 						
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
+
 //ok, delete the document.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id=".$id.";";
 $rs = $modx->db->query($sql);

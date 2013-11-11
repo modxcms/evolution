@@ -78,7 +78,7 @@ if($_REQUEST['a']=='88') {
 	$userdata = array();
 	$usersettings = array();
 	$usernamedata = array();
-	$_SESSION['itemname']="New web user";
+	$_SESSION['itemname'] = $_lang["new_web_user"];
 }
 
 // restore saved form

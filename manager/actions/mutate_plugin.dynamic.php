@@ -66,7 +66,7 @@ if(isset($_GET['id']))
 }
 else
 {
-    $_SESSION['itemname']='New Plugin';
+    $_SESSION['itemname']=$_lang["new_plugin"];
 }
 ?>
 <script language="JavaScript">

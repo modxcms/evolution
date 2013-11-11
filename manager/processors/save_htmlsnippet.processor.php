@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_chunk')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $snippet = $modx->db->escape($_POST['post']);
@@ -81,6 +79,9 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 									));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
 			$modx->clearCache('full');
 			
@@ -116,6 +117,9 @@ switch ($_POST['mode']) {
 										"mode"	=> "upd",
 										"id"	=> $id
 									));
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
 
 			// empty cache
 			$modx->clearCache('full');

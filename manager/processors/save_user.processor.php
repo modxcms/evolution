@@ -145,6 +145,9 @@ switch ($_POST['mode']) {
 		// Save User Settings
 		saveUserSettings($internalKey);
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
+
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (
 			"mode" => "new",
@@ -320,6 +323,9 @@ switch ($_POST['mode']) {
 
 		// Save user settings
 		saveUserSettings($id);
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
 
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (

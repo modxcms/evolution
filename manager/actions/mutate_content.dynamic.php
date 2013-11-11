@@ -123,8 +123,10 @@ if (!empty ($id)) {
         $e->dumpError();
     }
     $content = $modx->db->getRow($rs);
+    $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
+    $_SESSION['itemname'] = $_lang["new_resource"];
 }
 
 // restore saved form

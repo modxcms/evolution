@@ -8,8 +8,8 @@ if(!$modx->hasPermission('delete_document')) {
 $id=$_REQUEST['id'];
 
 /************ webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
-$pid=($pid==0?$id:$pid);
+$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
 $sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
@@ -92,6 +92,9 @@ if(!$rs) {
 	echo "Something went wrong while trying to set the document to undeleted status...";
 	exit;
 } else {
+	// Set the item name for logger
+	$_SESSION['itemname'] = $content['pagetitle'];
+
 	// empty cache
 	$modx->clearCache('full');
 	// finished emptying cache - redirect

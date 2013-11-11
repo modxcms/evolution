@@ -4,8 +4,6 @@ if(!$modx->hasPermission('new_module')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id=$_GET['id'];
 
@@ -89,6 +87,10 @@ if(!$rs){
 	echo "A database error occured while trying to duplicate module user group access: <br /><br />".$modx->db->getLastError();
 	exit;
 }
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_modules'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new module
 $header="Location: index.php?r=2&a=108&id=$newid";

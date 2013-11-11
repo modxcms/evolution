@@ -63,7 +63,7 @@ if(!empty($id)) {
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname']="New template";
+    $_SESSION['itemname']=$_lang["new_template"];
 }
 
 $content = array_merge($content, $_POST);
