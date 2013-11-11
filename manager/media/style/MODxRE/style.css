@@ -1789,7 +1789,21 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
+	vertical-align: top;
 }
+.sectionBody .displayparams {
+	margin-bottom: 3px;
+	background-color: #eee;
+	border-collapse: separate;
+	border-spacing: 1px
+}
+.sectionBody .displayparams th, .sectionBody .displayparams td {
+	padding: 2px 4px;
+}
+.sectionBody .displayparams thead td {
+	border-top: none;
+}
+
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
 	color: yellow !important;

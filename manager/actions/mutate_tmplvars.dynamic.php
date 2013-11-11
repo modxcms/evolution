@@ -143,7 +143,7 @@ function showParameters(ctrl) {
     dp = (widgetParams[df]) ? widgetParams[df].split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -335,6 +335,9 @@ function decode(s){
   </tr>
 <?php endif;?>
   <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
     <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
 	            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
@@ -359,11 +362,11 @@ function decode(s){
     </td>
   </tr>
   <tr>
-	<th valign="top"><?php echo $_lang['tmplvars_elements']; ?>:  </th>
+	<th><?php echo $_lang['tmplvars_elements']; ?>:  </th>
 	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
-    <th valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
     <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
@@ -394,17 +397,17 @@ function decode(s){
     </td>
   </tr>
   <tr id="displayparamrow">
-    <th valign="top"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></th>
+    <th><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></th>
     <td id="displayparams">&nbsp;</td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</th>
     <td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
 </table>
-
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
