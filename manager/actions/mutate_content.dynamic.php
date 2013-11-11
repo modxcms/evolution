@@ -531,14 +531,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
-
-<!------------- добавляем параметры сортировки------------------>
 <input type="hidden" name="dir" value="<?php echo $dir;?>" />
 <input type="hidden" name="sort" value="<?php echo $sort;?>" />
 <input type="hidden" name="page" value="<?php echo $page;?>" />
-<!-------------- --------------->
-
-
 
 <fieldset id="create_edit">
     <h1><?php if ($_REQUEST['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
