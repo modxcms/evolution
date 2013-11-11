@@ -105,9 +105,9 @@ switch ($modx->event->name)
         $output = '
 <script type="text/javascript">
 mE1   = new Element("tr");
-mE11  = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
+mE11  = new Element("th",{"align":"left","styles":{"padding-top":"14px"}});
 mE12  = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
-mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"45","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px","margin-left":"14px"},"events":{"change":function(){documentDirty=true;}}});
+mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"45","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px"},"events":{"change":function(){documentDirty=true;}}});
 
 mE11.appendText("' . _lang('Static file path') . ':");
 mE11.inject(mE1);
