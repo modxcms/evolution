@@ -1650,6 +1650,19 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
     text-align:left;
 	vertical-align: top;
 }
+.sectionBody .displayparams {
+	margin-bottom: 3px;
+	background-color: #eee;
+	border-collapse: separate;
+	border-spacing: 1px
+}
+.sectionBody .displayparams th, .sectionBody .displayparams td {
+	padding: 2px 4px;
+}
+.sectionBody .displayparams thead td {
+	border-top: none;
+}
+
 /* modx-ja
 ---------------------------------------------------------- */
 a#button7 {margin:7px 3px;border:1px solid #ccc;background-color:#eee;text-decoration:none;cursor:pointer;padding: 2px 4px;color:#333;}
