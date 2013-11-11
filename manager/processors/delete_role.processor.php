@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_role')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id=$_GET['id'];
 

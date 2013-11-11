@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_snippet')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 

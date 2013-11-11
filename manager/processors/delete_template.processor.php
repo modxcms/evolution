@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_template')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 

@@ -34,7 +34,7 @@ $mysqlVerOk = (version_compare($modx->db->getVersion(),"4.0.14")>=0);
 $id = duplicateDocument($id);
 
 // Set the item name for logger
-$name = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"));
+$name = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 // finish cloning - redirect

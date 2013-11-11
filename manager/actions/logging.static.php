@@ -40,11 +40,8 @@ function convertdate($date) {
 	return $timestamp;
 }
 
-$sql = 'SELECT DISTINCT internalKey, username, action, itemid, itemname FROM '.$modx->getFullTableName('manager_log');
-$rs = $modx->db->query($sql);
-
-$logs = array();
-while ($row = $modx->db->getRow($rs)) $logs[] = $row;
+$rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
+$logs = $modx->db->makeArray($rs);
 
 ?>
 <script type="text/javascript" src="media/calendar/datepicker.js"></script>
@@ -204,16 +201,10 @@ if(isset($_REQUEST['log_submit'])) {
 
 	// build the sql
 	$limit = $num_rows = $modx->db->getValue(
-	           'SELECT COUNT(*) FROM '.$modx->getFullTableName('manager_log').
-               (!empty($sqladd) ? ' WHERE '.implode(' AND ', $sqladd) : '')
+	    $modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''))
     );
         
-	$sql = 'SELECT * FROM '.$modx->getFullTableName('manager_log').
-		(!empty($sqladd) ? ' WHERE '.implode(' AND ', $sqladd) : '').
-		' ORDER BY timestamp DESC'.
-		' LIMIT '.$int_cur_position.', '.$int_num_result;
-
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC', "{$int_cur_position}, {$int_num_result}");
 	if($limit<1) {
 		echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>';
 	} else {

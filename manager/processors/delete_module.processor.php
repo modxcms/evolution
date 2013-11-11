@@ -4,8 +4,7 @@ if(!$modx->hasPermission('delete_module')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
+
 $id=intval($_GET['id']);
 
 // invoke OnBeforeModFormDelete event
