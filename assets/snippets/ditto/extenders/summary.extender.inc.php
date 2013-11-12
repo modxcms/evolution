@@ -224,6 +224,8 @@ if (!class_exists('truncate')){
 			
 			if(($breakpoint = mb_strrpos($string, $break)) !== false){
 				$string = mb_substr($string, 0, $breakpoint + 1);
+			}else if(($breakpoint = mb_strrpos($string, ' ')) !== false){
+				$string = mb_substr($string, 0, $breakpoint + 1);
 			}
 			
 			return $string;
