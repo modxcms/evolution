@@ -254,7 +254,7 @@ if (!class_exists('truncate')){
 					$tag = trim($openTags[1][$i]);
 					
 					if (mb_strstr($tag, ' ')){
-						$tag = mb_substr($tag, 0, strpos($tag, ' '));
+						$tag = mb_substr($tag, 0, mb_strpos($tag, ' '));
 					}
 					if ($debug == 1){
 						echo $tag.'=='.$closeTags[1][$c]."\n";
@@ -278,7 +278,7 @@ if (!class_exists('truncate')){
 					$tag = trim($tag);
 					
 					if (mb_strstr($tag, ' ')){
-						$tag = mb_substr($tag, 0, strpos($tag, ' '));
+						$tag = mb_substr($tag, 0, mb_strpos($tag, ' '));
 					}
 					if (!mb_stristr($tag, 'br') && !mb_stristr($tag, 'img') && !empty ($tag)){
 						$endTags .= '</'.$tag.'>';
