@@ -360,7 +360,7 @@ class DocumentParser {
      */
     function getDocumentMethod() {
         // function to test the query and find the retrieval method
-        if (isset ($_REQUEST['q'])) {
+        if (!empty ($_REQUEST['q'])) { //LANG
             return "alias";
         }
         elseif (isset ($_REQUEST['id'])) {
@@ -1313,14 +1313,21 @@ class DocumentParser {
         if(strpos($_SERVER['REQUEST_URI'],'?'))
         	list($url_path,$url_query_string) = explode('?', $_SERVER['REQUEST_URI'],2);
         else $url_path = $_SERVER['REQUEST_URI'];
+		$url_path = $_GET['q'];//LANG
+			
+		
         if(substr($url_path,0,$len_base_url)===$this->config['base_url'])
         	$url_path = substr($url_path,$len_base_url);
+			
         $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
+				
         if(substr($strictURL,0,$len_base_url)===$this->config['base_url'])
         	$strictURL = substr($strictURL,$len_base_url);
         $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . $_SERVER['REQUEST_URI'];
+        $requestedURL = "{$scheme}://{$http_host}" . '/'.$_GET['q']; //LANG
+		
         $site_url = $this->config['site_url'];
+		
         if ($this->documentIdentifier == $this->config['site_start']){
             if ($requestedURL != $this->config['site_url']){
                 // Force redirect of site start
@@ -1328,12 +1335,17 @@ class DocumentParser {
                 $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string) : ''; // Strip conflicting id/q from query string
                 if ($qstring) $url = "{$site_url}?{$qstring}";
                 else          $url = $site_url;
+                if (empty($_POST)){
+	                if (('/?'.$qstring) != $_SERVER['REQUEST_URI']) {
                 $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
                 exit(0);
-            }
+                   }
+                }
+             }
         }elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']){
              // Force page redirect
         	//$strictURL = ltrim($strictURL,'/');
+			
             if(!empty($url_query_string))
             	$qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string);  // Strip conflicting id/q from query string
             if ($qstring) $url = "{$site_url}{$strictURL}?{$qstring}";
@@ -1558,6 +1570,7 @@ class DocumentParser {
         if ($this->documentMethod == "none") {
             $this->documentMethod= "id"; // now we know the site_start, change the none method to id
         }
+
         if ($this->documentMethod == "alias") {
             $this->documentIdentifier= $this->cleanDocumentIdentifier($this->documentIdentifier);
 
@@ -1575,6 +1588,7 @@ class DocumentParser {
             }
             $this->documentMethod= 'id';
         }
+		
 		//$this->_fixURI();
         // invoke OnWebPageInit event
         $this->invokeEvent("OnWebPageInit");

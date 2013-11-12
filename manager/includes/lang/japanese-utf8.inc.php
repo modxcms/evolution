@@ -6,9 +6,9 @@
  * Author:         eastbind
  * Author:         MEGU              - http://modx.liolion.net/
  * Author:         yamamoto          - http://kyms.jp
- * Date:           2013/04/06
- * Version:        1.0.10
- * MODX version:   Evolution 1.0.0 - 1.0.10
+ * Date:           2013/10/24
+ * Version:        1.0.13
+ * MODX version:   Evolution 1.0.0 - 1.0.13
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
@@ -280,7 +280,7 @@ $_lang["existing_category"] = '既存のカテゴリー';
 $_lang["expand_tree"] = 'リソースツリーを展開';
 $_lang["export_site"] = 'エクスポート';
 $_lang["export_site_cacheable"] = '非キャッシュリソースを含む';
-$_lang["export_site_exporting_document"] = 'エクスポートファイル <strong>%s</strong>個 (<strong>%s</strong>個中)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'スキップ';
 $_lang["export_site_failed_no_open"] = 'ファイルを開けません:';
 $_lang["export_site_failed_no_retrieve"] = '非公開リソースのためエクスポートしません。';
@@ -587,7 +587,7 @@ $_lang["no_docs_pending_publishing"] = '公開を予定しているリソース�
 $_lang["no_docs_pending_pubunpub"] = 'イベントはありません';
 $_lang["no_docs_pending_unpublishing"] = '公開取り消しを予定しているリソースはありません。';
 $_lang["no_edits_creates"] = '最近作成または編集したリソースはありません。';
-$_lang["no_groups_found"] = '';
+$_lang["no_groups_found"] = 'グループが存在しません。';
 $_lang["no_keywords_found"] = 'キーワードはありません';
 $_lang["no_records_found"] = 'レコードはありません。';
 $_lang["no_results"] = '何もありません';
@@ -859,13 +859,13 @@ $_lang["saving"] = '更新中です。お待ちください';
 $_lang["search"] = '検索';
 $_lang["search_criteria"] = '検索 条件';
 $_lang["search_criteria_content"] = '本文で検索';
-$_lang["search_criteria_content_msg"] = '';
+$_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'IDで検索';
-$_lang["search_criteria_id_msg"] = '';
+$_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
 $_lang["search_criteria_longtitle"] = 'タイトルで検索';
-$_lang["search_criteria_longtitle_msg"] = '';
+$_lang["search_criteria_longtitle_msg"] = 'Find all Resources with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'リソース名で検索';
-$_lang["search_criteria_title_msg"] = '';
+$_lang["search_criteria_title_msg"] = 'Find all Resources with the entered text in their title.';
 $_lang["search_empty"] = '指定したデータが見つかりませんでした。検索範囲を広げて再度検索してください。';
 $_lang["search_item_deleted"] = 'このアイテムは削除されています';
 $_lang["search_results"] = '検索結果';
@@ -1142,16 +1142,20 @@ $_lang["yourinfo_role"] = '所属ロール(役割)';
 $_lang["yourinfo_title"] = 'あなたの情報';
 $_lang["yourinfo_total_logins"] = '合計ログイン回数';
 $_lang["yourinfo_username"] = 'ログイン名';
+
 $_lang["a17_error_reporting_title"] = 'PHPエラーの検出レベル';
 $_lang["a17_error_reporting_msg"] = 'PHPエラーの検出レベルを設定します。';
 $_lang["a17_error_reporting_opt0"] = '全て無視する';
 $_lang["a17_error_reporting_opt1"] = '通知レベルの軽度の警告を無視する(<a href="https://www.google.com/search?hl=ja&q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'E_NOTICE 以外の全てのエラーを検出';
 $_lang["a17_error_reporting_opt99"] = '全て検出する';
+
 $_lang["pwd_hash_algo_title"] = 'ハッシュ生成アルゴリズム';
 $_lang["pwd_hash_algo_message"] = 'パスワード文字列はここで設定したアルゴリズムによって解読困難な文字列に変換され、DBに保存されます。これにより、悪意の第三者がDBデータからパスワードを取得することを防ぐことができます。上から順にセキュアなアルゴリズムです。UNCRYPT以外はサーバによっては利用できないことがあるため、サーバ移管の際は注意してください。';
+
 $_lang["enable_bindings_title"] = '@Bindingsを有効にする';
 $_lang["enable_bindings_message"] = '<a href="http://www.google.com/cse?cx=007286147079563201032%3Aigbcdgg0jyo&q=Bindings" target="_blank">@Bindings機能</a>を有効にします。この機能は、投稿画面上の入力フィールド(テンプレート変数)に任意のコマンドを記述し、実行するものです。PHP文の実行などが可能なため、複数メンバーでサイトを運用する場合、当機能の運用には注意が必要です。';
+
 $_lang["bkmgr_alert_mkdir"] = 'ディレクトリにファイルを作成できません。[+snapshot_path+]のパーミッションを確認してください。';
 $_lang["bkmgr_restore_msg"] = '<p>「バックアップ」で取得したSQLファイルを用いて、サイトをリストアできます。<br />※SQL文を実行するだけなので、他の用途にも使えます(拡張機能のインストールなど)。</p>';
 $_lang["bkmgr_restore_title"] = 'リストア';
@@ -1167,6 +1171,7 @@ $_lang["bkmgr_snapshot_submit"] = 'スナップショットを追加する';
 $_lang["bkmgr_snapshot_list_title"] = 'スナップショットの一覧';
 $_lang["bkmgr_restore_submit"] = 'このデータに戻す';
 $_lang["bkmgr_snapshot_nothing"] = 'スナップショットはありません。';
+
 $_lang["files.dynamic.php1"] = 'テキストファイルを新規作成';
 $_lang["files.dynamic.php2"] = 'このディレクトリは参照できません';
 $_lang["files.dynamic.php3"] = 'ファイル名が不正です。';
@@ -1174,33 +1179,64 @@ $_lang["files.dynamic.php4"] = 'テキストファイルを作成しました。
 $_lang["not_readable_dir"] = 'ディレクトリが存在しないか、PHPスクリプトがこのディレクトリにアクセスする権限がありません。';
 $_lang["confirm_delete_dir"] = 'このディレクトリを削除してもよろしいですか?';
 $_lang["confirm_delete_dir_recursive"] = 'ディレクトリ内にファイルが存在します。\nこのディレクトリを削除してもよろしいですか?';
+
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
+
+$_lang['email_method_title'] = 'Sendmail method';
+$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_smtp'] = 'SMTP サーバ';
+$_lang['smtp_auth_title'] = 'SMTP-AUTH';
+$_lang['smtp_host_title'] = 'SMTP ホスト';
+$_lang['smtp_username_title'] = 'SMTP ユーザ名';
+$_lang['smtp_password_title'] = 'SMTP パスワード';
+$_lang['smtp_port_title'] = 'SMTP ポート';
+
 $_lang["setting_resource_tree_node_name"] = 'リソースツリーのノード名';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+
+$_lang["resource_opt_alvisibled"] = 'in URL';
+$_lang["resource_opt_alvisibled_help"] = 'alias in url';
+$_lang['resource_opt_is_published'] = 'Published';
+$_lang["docid_incrmnt_method_title"] = 'Increment method Resource ID';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID+1';
+
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
 $_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+
 $_lang["user_street"] = '番地';
 $_lang["user_city"] = '市区町村';
 $_lang["user_other"] = 'その他';
 
-$_lang["mutate_settings.dynamic.php6"] = 'システムエラーを<br />メールで通知する';
-$_lang["mutate_settings.dynamic.php7"] = '通知しない';
-$_lang["mutate_settings.dynamic.php8"] = 'エラー発生時に[(emailsender)]([+emailsender+])に通知します。エラーの内容の詳細は<a href="index.php?a=114">イベントログ</a>を確認してください。';
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree, all IDs are initialize.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = '&lt;body&gt;&lt;/body&gt; only';
+$_lang["import_site.static.php5"] = 'File contain all';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs(comma separate)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited resources';
+$_lang["export_site.static.php3"] = 'All resources';
+$_lang["export_site.static.php4"] = 'Replace string (before)';
+$_lang["export_site.static.php5"] = 'Replace string (after)';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'email notifies system error.';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'It notifies to [(emailsender)]([+emailsender+]) at the time of error generating. The details of the contents of the error should check an event log.';

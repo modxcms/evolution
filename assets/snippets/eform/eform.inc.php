@@ -194,17 +194,20 @@ $_dfnMaxlength = 6;
 		}
 
 		# sanitize the values with slashes stripped to avoid remote execution of Snippets
-		modx_sanitize_gpc($fields, array (
-			'@<script[^>]*?>.*?</script>@si',
-			'@&#(\d+);@e',
-			'@\[\~(.*?)\~\]@si',
-			'@\[\((.*?)\)\]@si',
-			'@{{(.*?)}}@si',
-			'@\[\+(.*?)\+\]@si',
-			'@\[\*(.*?)\*\]@si',
-			'@\[\[(.*?)\]\]@si',
-			'@\[!(.*?)!\]@si'
-		));
+		$version = $modx->getVersionData();
+		if (version_compare($version['version'], '1.0.9', '<=')) {
+			modx_sanitize_gpc($fields, array(
+				'@<script[^>]*?>.*?</script>@si',
+				'@&#(\d+);@e',
+				'@\[\~(.*?)\~\]@si',
+				'@\[\((.*?)\)\]@si',
+				'@{{(.*?)}}@si',
+				'@\[\+(.*?)\+\]@si',
+				'@\[\*(.*?)\*\]@si',
+				'@\[\[(.*?)\]\]@si',
+				'@\[!(.*?)!\]@si'
+			));
+		}
 
 		# validate fields
 		foreach($fields as $name => $value) {
@@ -388,6 +391,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->Body		= $body;
 					AddAddressToMailer($modx->mail,"to",$modx->config['emailsender']);
 					$modx->mail->send(); //ignore mail errors in this case
+					$modx->mail->ClearAllRecipients();
 				}
 				//return empty form with error message
 				//register css and/or javascript
@@ -496,6 +500,8 @@ $_dfnMaxlength = 6;
 					AddAddressToMailer($modx->mail,"bcc",$bcc);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send user a copy of the report
@@ -508,6 +514,8 @@ $_dfnMaxlength = 6;
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send auto-respond email
@@ -522,6 +530,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->Body		= $autotext;
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
 				}
 
 				//defaults to text - test for sendAsHtml
@@ -536,6 +545,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->Body		= $mobiletext;
 					AddAddressToMailer($modx->mail,"to",$mobile);
 					$modx->mail->send();
+					$modx->mail->ClearAllRecipients();
 				}
 
 			}//end test nomail

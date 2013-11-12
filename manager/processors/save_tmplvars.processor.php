@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_template')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $name = $modx->db->escape(trim($_POST['name']));				
@@ -104,6 +102,9 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 								));	    	
 								
+		// Set the item name for logger
+		$_SESSION['itemname'] = $caption;
+
 			// empty cache
 			$modx->clearCache('full');
 			
@@ -155,6 +156,9 @@ switch ($_POST['mode']) {
 										"mode"	=> "upd",
 										"id"	=> $id
 								));	 
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $caption;
 
 			// empty cache
 			$modx->clearCache('full');

@@ -172,14 +172,14 @@ function unzipFile(file) {
 
 function getFolderName(a){
 	var f;
-	f=window.prompt('Enter New Folder Name:','')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
 
 function getFileName(a){
 	var f;
-	f=window.prompt('Enter New File Name:','')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }

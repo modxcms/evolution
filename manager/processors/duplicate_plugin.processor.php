@@ -1,6 +1,5 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('new_plugin')) {	
 	$e->setError(3);
 	$e->dumpError();	
@@ -55,6 +54,10 @@ if (!$rs) {
 	echo "A database error occured while trying to duplicate plugin events: <br /><br />".$modx->db->getLastError();
 	exit;
 }
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_plugins'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new plugin
 $header="Location: index.php?r=2&a=102&id=$newid";

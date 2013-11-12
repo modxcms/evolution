@@ -4,8 +4,6 @@ if(!$modx->hasPermission('new_chunk')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=$_GET['id'];
 
@@ -33,6 +31,10 @@ else {
 	echo "A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError();
 	exit;
 }
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new chunk
 $header="Location: index.php?r=2&a=78&id=$newid";

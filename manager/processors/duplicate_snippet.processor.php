@@ -4,8 +4,6 @@ if(!$modx->hasPermission('new_snippet')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=$_GET['id'];
 
@@ -34,6 +32,9 @@ else {
 	exit;
 }
 
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$newid}'"));
+$_SESSION['itemname'] = $name;
 
 // finish duplicating - redirect to new snippet
 $header="Location: index.php?r=2&a=22&id=$newid";

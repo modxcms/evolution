@@ -5,15 +5,36 @@ if(!($modx->hasPermission('settings') && ($modx->hasPermission('logs')||$modx->h
 	$e->dumpError();	
 }
 
-if(($_REQUEST['t']=="" || !isset($_REQUEST['t'])) && ($_REQUEST['u']=="" || !isset($_REQUEST['u']))) {
+if (isset($_REQUEST['t'])) {
+
+	if (empty($_REQUEST['t'])) {
 		$e->setError(10);
 		$e->dumpError();
+	}
+
+	// Set the item name for logger
+	$_SESSION['itemname'] = $_REQUEST['t'];
+
+	$modx->db->optimize($_REQUEST['t']);
+
+} elseif (isset($_REQUEST['u'])) {
+
+	if (empty($_REQUEST['u'])) {
+		$e->setError(10);
+		$e->dumpError();
+	}
+
+	// Set the item name for logger
+	$_SESSION['itemname'] = $_REQUEST['u'];
+
+	$modx->db->truncate($_REQUEST['u']);
+
+} else {
+	$e->setError(10);
+	$e->dumpError();
 }
 
-if (isset($_REQUEST['t']))     $modx->db->optimize($_REQUEST['t']);
-elseif (isset($_REQUEST['u'])) $modx->db->truncate($_REQUEST['u']);
-
 $mode = intval($_REQUEST['mode']);
-$header="Location: index.php?a=".$mode."&s=4";
+$header="Location: index.php?a={$mode}&s=4";
 header($header);
 ?>

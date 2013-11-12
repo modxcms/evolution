@@ -9,8 +9,8 @@ $id = $_REQUEST['id'];
 
 
 /************webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
-$pid=($pid==0?$id:$pid);
+$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'");
+$pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
 $sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
@@ -49,6 +49,9 @@ if(!$rs){
 
 // invoke OnDocPublished  event
 $modx->invokeEvent("OnDocPublished",array("docid"=>$id));	
+
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
 
 $modx->clearCache('full');
 
