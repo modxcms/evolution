@@ -419,7 +419,7 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td>
 				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onclick="document.userform.blockeduntil.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
+				<a onclick="document.userform.blockeduntil.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
 		  <tr>
@@ -427,7 +427,7 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td>
 				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onclick="document.userform.blockedafter.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
+				<a onclick="document.userform.blockedafter.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
 		<?php
