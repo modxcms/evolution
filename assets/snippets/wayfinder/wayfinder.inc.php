@@ -573,7 +573,7 @@ class Wayfinder {
 	
 	function findTemplateVars($tpl) {
 		preg_match_all('~\[\+([^:]*?)(:|\+\])~', $tpl, $matches);
-		$TVs = array();
+		$tvnames = array();
 		foreach($matches[1] as $tv) {
 			if (strpos(strtolower($tv), 'phx')===0) continue;
 			if (strpos(strtolower($tv), 'wf.')===0) continue;
