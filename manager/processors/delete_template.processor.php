@@ -32,7 +32,7 @@ $modx->invokeEvent("OnBeforeTempFormDelete",
 						));
 						
 // Set the item name for logger
-$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
 //ok, delete the document.
