@@ -320,7 +320,12 @@ $_dfnMaxlength = 6;
 			}
 
 			#set validation message
-			$tmp = (count($rMsg)>0)?str_replace("{fields}", implode(", ",$rMsg),$_lang['ef_required_message']):"";
+			if (count($rMsg) > 0) {
+			    $rMsg = "<ul><li>" . implode("</li><li>",$rMsg) . "</li></ul>";
+			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
+			} else {
+			    $tmp = "";
+			}
 			$tmp .= implode("<br />",$vMsg);
 			if(!strstr($tpl,'[+validationmessage+]'))
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
