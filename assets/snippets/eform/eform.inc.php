@@ -298,7 +298,7 @@ $_dfnMaxlength = 6;
 
 			//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 			foreach($rClass as $n => $class){
-				$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
+				$fields[$n . '_class'] = $fields[$n . '_class'] ? ' ' . $fields[$n . '_class'] . ' ' . $class : ' ' . $class;
 				$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
 				//work around for checkboxes
 				if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
@@ -786,10 +786,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		#skip vericode field - updated in 1.4.4
 		#special case. We need to set the class placeholder but forget about the rest
 		if($name=="vericode"){
-			if(isset($tagAttributes['class'])){
-				$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+			if (isset($tagAttributes['class'])) {
+				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+			} else {
+				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 			}
-			$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 			$tagAttributes['value'] = '';
 			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
 			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -813,10 +814,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		unset($tagAttributes[$optionsName]);
 
 		//added in 1.4.2 - add placeholder to class attribute
-		if(isset($tagAttributes['class'])){
-			$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+		if (isset($tagAttributes['class'])) {
+			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+		} else {
+			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 		}
-		$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 
 		switch($type){
 			case "select":
