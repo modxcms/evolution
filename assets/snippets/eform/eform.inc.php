@@ -321,7 +321,7 @@ $_dfnMaxlength = 6;
 
 			#set validation message
 			if (count($rMsg) > 0) {
-			    $rMsg = "<ul><li>" . implode("</li><li>",$rMsg) . "</li></ul>";
+			    $rMsg = "<span>" . implode("</span><span>",$rMsg) . "</span>";
 			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
 			} else {
 			    $tmp = "";
