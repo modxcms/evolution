@@ -235,6 +235,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 		?>
 		</ul>
 	</div>
-
+<?php
+    if (is_numeric($_GET['resourcesPane'])) {
+        echo '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['resourcesPane'].' );</script>';
+    }
+?>
 </div>
 </div>
