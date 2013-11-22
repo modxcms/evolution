@@ -76,7 +76,13 @@ class modxDebugConsole{
 			$query = array();
 			foreach ($_GET as $param=>$value) {
 				if ($param != 'id' && $param != 'q') {
-					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);					
+					if (!is_array($value)) {
+						$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+					} else {
+						foreach ($value as $k => $v) {
+							$value[$k] = htmlspecialchars($v, ENT_QUOTES);
+						}
+					}
 				}
 			}
 			if (!is_array($args)) {
