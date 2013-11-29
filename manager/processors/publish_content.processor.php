@@ -9,7 +9,7 @@ $id = $_REQUEST['id'];
 
 
 /************webber ********/
-$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'");
+$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
 $pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/

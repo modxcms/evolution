@@ -438,6 +438,11 @@ else
 </div>
 
 <?php
+
+if (is_numeric($_GET['tab'])) {
+    echo '<script type="text/javascript">tpDBM.setSelectedIndex( '.$_GET['tab'].' );</script>';
+}
+
 	include_once "footer.inc.php"; // send footer
 ?>
 
