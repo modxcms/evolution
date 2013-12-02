@@ -295,7 +295,6 @@ class DocumentParser {
             $this->config['base_url']= MODX_BASE_URL;
             $this->config['base_path']= MODX_BASE_PATH;
             $this->config['site_url']= MODX_SITE_URL;
-            $this->config['valid_hostnames']= MODX_SITE_HOSTNAMES;
             $this->config['site_manager_url']=MODX_MANAGER_URL;
             $this->config['site_manager_path']=MODX_MANAGER_PATH;
 

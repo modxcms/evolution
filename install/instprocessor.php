@@ -270,13 +270,6 @@ $site_url .= $_SERVER[\'HTTP_HOST\'];
 if ($_SERVER[\'SERVER_PORT\'] != 80)
     $site_url= str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $site_url); // remove port from HTTP_HOST  
 $site_url .= ($_SERVER[\'SERVER_PORT\'] == 80 || (isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'\' : \':\' . $_SERVER[\'SERVER_PORT\'];
-
-// check for valid hostnames
-$site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
-if (count($site_hostnames) && !in_array($site_url, $site_hostnames)) {
-    $site_url = $site_hostnames[0];
-}
-
 $site_url .= $base_url;
 
 if (!defined(\'MODX_BASE_PATH\')) define(\'MODX_BASE_PATH\', $base_path);
