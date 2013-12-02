@@ -59,6 +59,8 @@ $mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
 $base_path = str_replace($mgr_dir . '/index.php','',$self);
 $site_mgr_path = $base_path . 'assets/cache/siteManager.php';
 if(is_file($site_mgr_path)) include_once($site_mgr_path);
+$site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
+if(is_file($site_hostnames_path)) include_once($site_hostnames_path);
 if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 	$src = "<?php\n";
 	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
