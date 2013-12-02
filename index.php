@@ -49,6 +49,10 @@ if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
 if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
 	define('MGR_DIR','manager');
+if(is_file($base_path . 'assets/cache/siteHostnames.php'))
+    include_once($base_path . 'assets/cache/siteHostnames.php');
+if(!defined('MODX_SITE_HOSTNAMES'))
+	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
