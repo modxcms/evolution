@@ -232,6 +232,7 @@ $lastInstallTime = '.time().';
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
+if(!defined(\'MGR_DIR\'))
 '.$mgrdir.'
 
 // automatically assign base_path and base_url
