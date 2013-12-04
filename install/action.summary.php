@@ -245,7 +245,7 @@ if ($errors > 0) {
 ?>
       <p>
       <?php
-      echo $_lang['setup_cannot_continue'];
+      echo $_lang['setup_cannot_continue'] . ' ';
       echo $errors > 1 ? $errors." " : "";
       if ($errors > 1) echo $_lang['errors'];
       else echo $_lang['error'];
