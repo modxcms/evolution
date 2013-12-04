@@ -268,6 +268,14 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
 
 // check for valid hostnames
 $site_hostname = str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $_SERVER[\'HTTP_HOST\']);
+if (!defined(\'MODX_SITE_HOSTNAMES\')) {
+	$site_hostnames_path = $base_path . \'assets/cache/siteHostnames.php\';
+	if (is_file($site_hostnames_path)) {
+		include_once($site_hostnames_path);
+	} else {
+		define(\'MODX_SITE_HOSTNAMES\', \'\');
+	}
+}
 $site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
 if (count($site_hostnames) && !in_array($site_hostname, $site_hostnames)) {
     $site_hostname = $site_hostnames[0];
