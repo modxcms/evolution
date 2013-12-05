@@ -15,8 +15,8 @@ class PHxParser {
 		global $modx;
 		$this->name = "PHx";
 		$this->version = "2.1.2";
-		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
-		$this->user["usrid"] = intval($_SESSION['webInternalKey']);
+		$this->user["mgrid"] = intval(isset($_SESSION['mgrInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
+		$this->user["usrid"] = intval(isset($_SESSION['webInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 		$this->cache["cm"] = array();
 		$this->cache["ui"] = array();
