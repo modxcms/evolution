@@ -978,11 +978,11 @@ class DocumentParser {
 
 	function detectError($error) {
 		$detected = FALSE;
-		if (($error) && $this->config['error_reporting'] == 99)
+		if ($this->config['error_reporting'] == 99 && $error)
 			$detected = TRUE;
-		if (($error & ~E_NOTICE) && $this->config['error_reporting'] == 2)
+		elseif ($this->config['error_reporting'] == 2 && ($error & ~E_NOTICE))
 			$detected = TRUE;
-		if (($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT) && $this->config['error_reporting'] == 1)
+		elseif ($this->config['error_reporting'] == 1 && ($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT))
 			$detected = TRUE;
 		return $detected;
 	}
