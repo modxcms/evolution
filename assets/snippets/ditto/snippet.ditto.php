@@ -206,8 +206,9 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
-    $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
-        // create a new Ditto instance in the specified format and language with the requested debug level
+	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
+	$ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
+	// create a new Ditto instance in the specified format and language with the requested debug level
 } else {
     $modx->logEvent(1,3,$_lang['invalid_class'],"Ditto ".$ditto_version);
     return $_lang['invalid_class'];
@@ -702,12 +703,12 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-    "default" => "@CODE".$_lang['default_template'],
-    "base" => $tpl,
-    "alt" => $tplAlt,
-    "first" => $tplFirst,
-    "last" => $tplLast,
-    "current" => $tplCurrentDocument
+	"default" => "@CODE" . $_lang['default_template'],
+	"base" => (isset($tpl)) ? $tpl : NULL,
+	"alt" => (isset($tplAlt)) ? $tplAlt : NULL,
+	"first" => (isset($tplFirst)) ? $tplFirst : NULL,
+	"last" => (isset($tplLast)) ? $tplLast : NULL,
+	"current" => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
