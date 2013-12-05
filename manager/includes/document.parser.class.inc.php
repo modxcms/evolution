@@ -969,6 +969,24 @@ class DocumentParser {
         return $content;
     }
 
+	/**
+	 * Detect PHP error according to MODX error level
+	 *
+	 * @param integer $error PHP error level
+	 * @return boolean Error detected
+	 */
+
+	function detectError($error) {
+		$detected = FALSE;
+		if (($error) && $this->config['error_reporting'] == 99)
+			$detected = TRUE;
+		if (($error & ~E_NOTICE) && $this->config['error_reporting'] == 2)
+			$detected = TRUE;
+		if (($error & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT) && $this->config['error_reporting'] == 1)
+			$detected = TRUE;
+		return $detected;
+	}
+
     /**
      * Run a plugin
      *
@@ -976,32 +994,30 @@ class DocumentParser {
      * @param array $params
      */
     function evalPlugin($pluginCode, $params) {
-        $etomite= $modx= & $this;
-        $modx->event->params= & $params; // store params inside event object
-        if (is_array($params)) {
-            extract($params, EXTR_SKIP);
-        }
-        ob_start();
-        eval ($pluginCode);
-        $msg= ob_get_contents();
-        ob_end_clean();
-		if ($msg && isset ($php_errormsg)) {
+		$etomite = $modx = & $this;
+		$modx->event->params = & $params; // store params inside event object
+		if (is_array($params)) {
+			extract($params, EXTR_SKIP);
+		}
+		ob_start();
+		eval($pluginCode);
+		$msg = ob_get_contents();
+		ob_end_clean();
+		if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
 			$error_info = error_get_last();
-			if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
-			else                                                         $error_type = 3;
-			if(1<$this->config['error_reporting'] || 2<$error_type) {
+			if ($this->detectError($error_info['type'])) {
 				extract($error_info);
-				if($msg===false) $msg = 'ob_get_contents() error';
+				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
 				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
 				if ($this->isBackend()) {
 					$this->event->alert("An error occurred while loading. Please see the event log for more information.<p>{$msg}</p>");
 				}
 			}
-        } else {
-            echo $msg;
-        }
-        unset ($modx->event->params);
-    }
+		} else {
+			echo $msg;
+		}
+		unset($modx->event->params);
+	}
 
     /**
      * Run a snippet
@@ -1011,39 +1027,34 @@ class DocumentParser {
      * @return string
      */
     function evalSnippet($snippet, $params) {
-        $etomite= $modx= & $this;
-
-        $modx->event->params= & $params; // store params inside event object
-        if (is_array($params)) {
-            extract($params, EXTR_SKIP);
-        }
-        ob_start();
-        $snip= eval ($snippet);
-        $msg= ob_get_contents();
-        ob_end_clean();
-        if ((0<$this->config['error_reporting']) && isset($php_errormsg))
-        {
-            $error_info = error_get_last();
-            if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
-            else                                                         $error_type = 3;
-            if(1<$this->config['error_reporting'] || 2<$error_type)
-            {
-                extract($error_info);
-                if($msg===false) $msg = 'ob_get_contents() error';
-                $result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
-                if ($this->isBackend())
-                {
-                    $this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}{$snip}</p>");
-                }
-            }
-        }
-        unset ($modx->event->params);
-        $this->currentSnippet = '';
-        if(is_array($snip) || is_object($snip))
-            return $snip;
-        else
-            return $msg . $snip;
-    }
+		$etomite = $modx = & $this;
+		$modx->event->params = & $params; // store params inside event object
+		if (is_array($params)) {
+			extract($params, EXTR_SKIP);
+		}
+		ob_start();
+		$snip = eval($snippet);
+		$msg = ob_get_contents();
+		ob_end_clean();
+		if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
+			$error_info = error_get_last();
+			if ($this->detectError($error_info['type'])) {
+				extract($error_info);
+				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
+				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
+				if ($this->isBackend()) {
+					$this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}{$snip}</p>");
+				}
+			}
+		}
+		unset($modx->event->params);
+		$this->currentSnippet = '';
+		if (is_array($snip) || is_object($snip)) {
+			return $snip;
+		} else {
+			return $msg . $snip;
+		}
+	}
 
     /**
      * Run snippets as per the tags in $documentSource and replace the tags with the returned values.
