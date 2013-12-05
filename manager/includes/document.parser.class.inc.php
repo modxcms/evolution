@@ -3052,7 +3052,7 @@ class DocumentParser {
         } else
             if ($this->isBackend() && isset ($_SESSION['mgrDocgroups']) && isset ($_SESSION['mgrValidated'])) {
                 $dg= $_SESSION['mgrDocgroups'];
-                $dgn= $_SESSION['mgrDocgrpNames'];
+                $dgn= isset ($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
             } else {
                 $dg= '';
             }
