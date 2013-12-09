@@ -13,7 +13,7 @@ $base_path = str_replace($self,'',str_replace('\\','/', __FILE__));
 require_once("{$base_path}install/functions.php");
 
 // set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 if (is_file("{$base_path}assets/cache/siteManager.php")) {
 	include_once("{$base_path}assets/cache/siteManager.php");
