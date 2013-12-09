@@ -826,17 +826,19 @@ class DocumentParser {
                 $safecount++;
                 if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
                 if(1000<$safecount) break;
-                $temp_hash[$i] .= array_shift($hash);
+                $remain = array_shift($hash);
+                $remain = explode($right,$remain);
+                foreach($remain as $v)
+            	{
+            		if($close < $open)
+                	{
+                		$close++;
+                		$temp_hash[$i] .= $v . $right;
+            		}
+            		else break;
+                }
                 $count = count($hash);
-                if($i===0) {
-                    $i++;
-                    continue;
-                }
-                if(strpos($temp_hash[$i],$right)===false) $open++;
-                else {
-                    $right_count = substr_count($temp_hash[$i],$right);
-                    $close += $right_count;
-                }
+                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
             }
             $i++;
         }
