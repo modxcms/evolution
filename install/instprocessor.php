@@ -279,7 +279,6 @@ if (!defined(\'MODX_SITE_HOSTNAMES\')) {
 $site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
 if (count($site_hostnames) && !in_array($site_hostname, $site_hostnames)) {
     $site_hostname = $site_hostnames[0];
-} else {
 }
 
 // assign site_url
