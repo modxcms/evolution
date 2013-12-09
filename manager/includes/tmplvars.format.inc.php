@@ -13,7 +13,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
     $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $value = ProcessTVCommand($value, $name, $docid);
 
-    $param = array();
+    $params = array();
     if($paramstring){
         $cp = explode("&",$paramstring);
         foreach($cp as $p => $v){
