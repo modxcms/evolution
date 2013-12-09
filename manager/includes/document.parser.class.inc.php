@@ -860,86 +860,87 @@ class DocumentParser {
      * @return string
      */
     function mergeDocumentContent($content) {
-        if(strpos($content,'[*')===false) return $content;
-        $replace= array ();
-        $matches = $this->getTagsFromContent($content,'[*','*]');
-		if($matches){
-        $variableCount= count($matches[1]);
-        $basepath= MODX_MANAGER_PATH . "includes";
-        for ($i= 0; $i < $variableCount; $i++) {
-            $key= $matches[1][$i];
-            $key= substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
-            $value= $this->documentObject[$key];
-            if (is_array($value)) {
-                include_once $basepath . "/tmplvars.format.inc.php";
-                include_once $basepath . "/tmplvars.commands.inc.php";
-                $w= "100%";
-                $h= "300";
-                $value= getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-            }
-            $replace[$i]= $value;
-        }
-        $content= str_replace($matches[0], $replace, $content);
+        if (strpos($content, '[*') === false)
+			return $content;
+		$replace = array();
+		$matches = $this->getTagsFromContent($content, '[*', '*]');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				if ($matches[1][$i]) {
+					$key = $matches[1][$i];
+					$key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
+					$value = $this->documentObject[$key];
+					if (is_array($value)) {
+						include_once MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php';
+						include_once MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
+						$value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+					}
+					$replace[$i] = $value;
+				}
+			}
+			$content = str_replace($matches[0], $replace, $content);
 		}
-        return $content;
-    }
-    
-    /**
+		return $content;
+	}
+
+	/**
      * Merge system settings
      *
      * @param string $template
      * @return string
      */
     function mergeSettingsContent($content) {
-        if(strpos($content,'[(')===false) return $content;
-        $replace= array ();
-        $matches = $this->getTagsFromContent($content,'[(',')]');
-        if($matches) {
-            $settingsCount= count($matches[1]);
-            for ($i= 0; $i < $settingsCount; $i++) {
-                if (array_key_exists($matches[1][$i], $this->config))
-                    $replace[$i]= $this->config[$matches[1][$i]];
-            }
+        if (strpos($content, '[(') === false)
+			return $content;
+		$replace = array();
+		$matches = $this->getTagsFromContent($content, '[(', ')]');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config))
+					$replace[$i] = $this->config[$matches[1][$i]];
+			}
 
-            $content= str_replace($matches[0], $replace, $content);
-        }
-        return $content;
-    }
-    
-    /**
+			$content = str_replace($matches[0], $replace, $content);
+		}
+		return $content;
+	}
+
+	/**
      * Merge chunks
      *
      * @param string $content
      * @return string
      */
     function mergeChunkContent($content) {
-        if(strpos($content,'{{')===false) return $content;
-        $replace= array ();
-        $matches = $this->getTagsFromContent($content,'{{','}}');
-        if ($matches) {
-            $settingsCount= count($matches[1]);
-            for ($i= 0; $i < $settingsCount; $i++) {
-                if (isset ($this->chunkCache[$matches[1][$i]])) {
-                    $replace[$i]= $this->chunkCache[$matches[1][$i]];
-                } else {
-                    $sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
-                    $result= $this->db->query($sql);
-                    $limit= $this->db->getRecordCount($result);
-                    if ($limit < 1) {
-                        $this->chunkCache[$matches[1][$i]]= "";
-                        $replace[$i]= "";
-                    } else {
-                        $row= $this->db->getRow($result);
-                        $this->chunkCache[$matches[1][$i]]= $row['snippet'];
-                        $replace[$i]= $row['snippet'];
-                    }
-                }
-            }
-            $content= str_replace($matches[0], $replace, $content);
-            $content=$this->mergeSettingsContent($content);
-        }
-        return $content;
-    }
+		if (strpos($content, '{{') === false)
+			return $content;
+		$replace = array();
+		$matches = $this->getTagsFromContent($content, '{{', '}}');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				if ($matches[1][$i]) {
+					if (isset($this->chunkCache[$matches[1][$i]])) {
+						$replace[$i] = $this->chunkCache[$matches[1][$i]];
+					} else {
+						$sql = 'SELECT `snippet` FROM ' . $this->getFullTableName('site_htmlsnippets') . ' WHERE ' . $this->getFullTableName('site_htmlsnippets') . '.`name`="' . $this->db->escape($matches[1][$i]) . '";';
+						$result = $this->db->query($sql);
+						$limit = $this->db->getRecordCount($result);
+						if ($limit < 1) {
+							$this->chunkCache[$matches[1][$i]] = '';
+							$replace[$i] = '';
+						} else {
+							$row = $this->db->getRow($result);
+							$this->chunkCache[$matches[1][$i]] = $row['snippet'];
+							$replace[$i] = $row['snippet'];
+						}
+					}
+				}
+			}
+			$content = str_replace($matches[0], $replace, $content);
+			$content = $this->mergeSettingsContent($content);
+		}
+		return $content;
+	}
 
     /**
      * Merge placeholder values
@@ -954,8 +955,7 @@ class DocumentParser {
 		$content = $this->mergeSettingsContent($content);
 		$matches = $this->getTagsFromContent($content, '[+', '+]');
 		if ($matches) {
-			$cnt = count($matches[1]);
-			for ($i = 0; $i < $cnt; $i++) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
 				$v = '';
 				$key = $matches[1][$i];
 				if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
@@ -1011,7 +1011,7 @@ class DocumentParser {
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
 				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
 				if ($this->isBackend()) {
-					$this->event->alert("An error occurred while loading. Please see the event log for more information.<p>{$msg}</p>");
+					$this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
 				}
 			}
 		} else {
@@ -1044,7 +1044,7 @@ class DocumentParser {
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
 				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
 				if ($this->isBackend()) {
-					$this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}{$snip}</p>");
+					$this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $msg . $snip . '</p>');
 				}
 			}
 		}

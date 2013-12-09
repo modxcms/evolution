@@ -2,8 +2,6 @@
 	// DISPLAY FORM ELEMENTS
 	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='', $row = array()) {
 		global $modx;
-		global $base_url;
-		global $rb_base_url;
 		global $_style;
 		global $_lang;
 		global $content;

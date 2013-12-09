@@ -369,7 +369,6 @@ function parseInput($src, $delim="||", $type="string", $columns=true) { // type 
     if (is_resource($src)) {
         // must be a recordset
         $rows = array();
-        $nc = $modx->db->numFields($src);
         while ($cols = $modx->db->getRow($src,'num')) $rows[] = ($columns)? $cols : implode(" ",$cols);
         return ($type=="array")? $rows : implode($delim,$rows);
     }
