@@ -957,7 +957,7 @@ class DocumentParser {
             for ($i= 0; $i < $cnt; $i++) {
                 $v= '';
                 $key= $matches[1][$i];
-                if (if ($key) && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
+                if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
                     $v= $this->placeholders[$key];
                 if ($v === '')
                     unset ($matches[0][$i]); // here we'll leave empty placeholders for last.
