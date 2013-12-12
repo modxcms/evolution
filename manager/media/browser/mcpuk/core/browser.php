@@ -712,23 +712,24 @@ class browser extends uploader {
             return $return;
 
         foreach ($files as $file) {
-            $size = @getimagesize($file);
-            if (is_array($size) && count($size)) {
-                $thumb_file = "$thumbDir/" . basename($file);
-                if (!is_file($thumb_file))
-                    $this->makeThumb($file, false);
-                $smallThumb =
-                    ($size[0] <= $this->config['thumbWidth']) &&
-                    ($size[1] <= $this->config['thumbHeight']) &&
-                    in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
-            } else
-                $smallThumb = false;
-
+            $ext = file::getExtension($file);
+            $smallThumb = false;
+            if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
+				$size = @getimagesize($file);
+				if (is_array($size) && count($size)) {
+					$thumb_file = "$thumbDir/" . basename($file);
+					if (!is_file($thumb_file))
+						$this->makeThumb($file, false);
+					$smallThumb =
+						($size[0] <= $this->config['thumbWidth']) &&
+						($size[1] <= $this->config['thumbHeight']) &&
+						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
+				}
+            }
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
 			if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
-            $ext = file::getExtension($file);
             $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
             $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
             $thumb = file_exists("$thumbDir/$name");

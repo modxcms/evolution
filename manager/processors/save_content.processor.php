@@ -291,7 +291,7 @@ if ($actionToTake != "new") {
 // check to see if the user is allowed to save the document in the place he wants to save it in
 if ($use_udperms == 1) {
 	if ($existingDocument['parent'] != $parent) {
-		include_once "./processors/user_documents_permissions.class.php";
+		include_once MODX_MANAGER_PATH ."processors/user_documents_permissions.class.php";
 		$udperms = new udperms();
 		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $parent;
@@ -353,10 +353,44 @@ switch ($actionToTake) {
 		$publishedon = ($published ? $currentdate : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
-		$sql = "INSERT INTO $tbl_site_content (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu, alias_visible)
-						VALUES('" . $introtext . "','" . $content . "', '" . $pagetitle . "', '" . $longtitle . "', '" . $type . "', '" . $description . "', '" . $alias . "', '" . $link_attributes . "', '" . $isfolder . "', '" . $richtext . "', '" . $published . "', '" . $parent . "', '" . $template . "', '" . $menuindex . "', '" . $searchable . "', '" . $cacheable . "', '" . $modx->getLoginUserID() . "', " . $currentdate . ", '" . $modx->getLoginUserID() . "', " . $currentdate . ", " . $publishedby . ", " . $publishedon . ", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu', '$aliasvisible')";
+		$dbInsert = array
+        (
+            "introtext"        => $introtext ,
+            "content"          => $content ,
+            "pagetitle"        => $pagetitle ,
+            "longtitle"        => $longtitle ,
+            "type"             => $type ,
+            "description"      => $description ,
+            "alias"            => $alias ,
+            "link_attributes"  => $link_attributes ,
+            "isfolder"         => $isfolder ,
+            "richtext"         => $richtext ,
+            "published"        => $published ,
+            "parent"           => $parent ,
+            "template"         => $template ,
+            "menuindex"        => $menuindex ,
+            "searchable"       => $searchable ,
+            "cacheable"        => $cacheable ,
+            "createdby"        => $modx->getLoginUserID() ,
+            "createdon"        => $currentdate ,
+            "editedby"         => $modx->getLoginUserID() ,
+            "editedon"         => $currentdate ,
+            "publishedby"      => $publishedby ,
+            "publishedon"      => $publishedon ,
+            "pub_date"         => $pub_date ,
+            "unpub_date"       => $unpub_date ,
+            "contentType"      => $contentType ,
+            "content_dispo"    => $contentdispo ,
+            "donthit"          => $donthit ,
+            "menutitle"        => $menutitle ,
+            "hidemenu"         => $hidemenu ,
+            "alias_visible"    => $aliasvisible
+        );
 
-		$rs = $modx->db->query($sql);
+        if ($id != '')
+            $dbInsert["id"] = $id;
+
+        $rs = $modx->db->insert( $dbInsert, $tbl_site_content);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
 			echo "An error occured while attempting to save the new document: " . $modx->db->getLastError();
@@ -441,13 +475,12 @@ switch ($actionToTake) {
 		include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($key);
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $pagetitle;
+		
 		if ($syncsite == 1) {
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache();
+			$modx->clearCache('full');
 		}
 
 		// redirect/stay options
@@ -678,17 +711,16 @@ switch ($actionToTake) {
 		include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($id);
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $pagetitle;
+
 		if ($syncsite == 1) {
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache();
+			$modx->clearCache('full');
 		}
 		
 		if ($_POST['refresh_preview'] == '1')
-			$header = "Location: ../index.php?id=$id&z=manprev";
+			$header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
 		else {
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];
@@ -709,17 +741,6 @@ switch ($actionToTake) {
 	default :
 		header("Location: index.php?a=7");
 		exit;
-}
-
-/**
- * Format alias to be URL-safe
- *
- * @deprecated Use $modx->stripAlias()
- * @param string Alias to be formatted
- * @return string Safe alias
- */
-function stripAlias($alias) {
-   return $GLOBALS['modx']->stripAlias($alias);
 }
 
 // -- Save META Keywords --

@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_template')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 	$id = isset($_GET['id'])? intval($_GET['id']):0;
 	$forced = isset($_GET['force'])? $_GET['force']:0;
@@ -54,6 +52,10 @@ if(!$modx->hasPermission('delete_template')) {
 								"id"	=> $id
 							));
 						
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_tmplvars'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
+
 	// delete variable
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
 	$rs = $modx->db->query($sql);

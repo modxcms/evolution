@@ -69,7 +69,7 @@ switch ($_POST['mode']) {
 			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_snippet.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_snippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -95,12 +95,13 @@ switch ($_POST['mode']) {
 										"mode"	=> "new",
 										"id"	=> $newid
 									));
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "22&id=$newid":"23";
@@ -134,12 +135,13 @@ switch ($_POST['mode']) {
 										"mode"	=> "upd",
 										"id"	=> $id
 									));	
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache
+			$modx->clearCache('full');
+
 			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

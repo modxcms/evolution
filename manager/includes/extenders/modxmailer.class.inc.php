@@ -91,7 +91,7 @@ class MODxMailer extends PHPMailer
 			mb_language($this->mb_language);
 			mb_internal_encoding($modx->config['modx_charset']);
 		}
-		$exconf = $modx->config['base_path'] . 'manager/includes/controls/phpmailer/config.inc.php';
+		$exconf = MODX_MANAGER_PATH . 'includes/controls/phpmailer/config.inc.php';
 		if(is_file($exconf)) include_once($exconf);
 	}
 	

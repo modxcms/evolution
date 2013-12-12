@@ -206,8 +206,9 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
-    $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
-        // create a new Ditto instance in the specified format and language with the requested debug level
+	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
+	$ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
+	// create a new Ditto instance in the specified format and language with the requested debug level
 } else {
     $modx->logEvent(1,3,$_lang['invalid_class'],"Ditto ".$ditto_version);
     return $_lang['invalid_class'];
@@ -702,12 +703,12 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-    "default" => "@CODE".$_lang['default_template'],
-    "base" => $tpl,
-    "alt" => $tplAlt,
-    "first" => $tplFirst,
-    "last" => $tplLast,
-    "current" => $tplCurrentDocument
+	"default" => "@CODE" . $_lang['default_template'],
+	"base" => (isset($tpl)) ? $tpl : NULL,
+	"alt" => (isset($tplAlt)) ? $tplAlt : NULL,
+	"first" => (isset($tplFirst)) ? $tplFirst : NULL,
+	"last" => (isset($tplLast)) ? $tplLast : NULL,
+	"current" => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
@@ -1063,7 +1064,7 @@ if ($count > 0) {
 // ---------------------------------------------------
 
 if ($debug == 1) {
-    $ditto_params =& $modx->event_params;
+    $ditto_params =& $modx->event->params;
     if (!isset($_GET["ditto_".$dittoID."debug"])) {
     $_SESSION["ditto_debug_$dittoID"] = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params, $documentIDs, array("db"=>$dbFields,"tv"=>$TVs), $display, $templates, $orderBy, $start, $stop, $total,$filter,$resource);
     }
@@ -1080,14 +1081,10 @@ if ($debug == 1) {
         $output = $ditto->debug->render_link($dittoID,$ditto_base).$output;
     }
 }
-//outerTpl by Dmi3yy
-if ($outerTpl && $resource) { 
-  if ($modx->getChunk($outerTpl) != "") {
-                        $outerTpl = $modx->getChunk($outerTpl);
-        } else if(substr($outerTpl, 0, 5) == "@CODE") {
-                        $outerTpl = trim(substr($outerTpl, 6));
-        } 
-  $output = str_replace('[+ditto+]',$output,$outerTpl);
+// outerTpl by Dmi3yy & Jako
+if (isset($outerTpl) && $resource) {
+	$outerTpl = $ditto->template->fetch($outerTpl);
+	$output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
 }
 
 return ($save != 3) ? $output : "";

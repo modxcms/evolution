@@ -16,6 +16,7 @@ global $moduleSnippets;
 global $modulePlugins;
 global $moduleModules;
 global $moduleTVs;
+global $moduleDependencies;
 
 global $errors;
 
@@ -225,13 +226,13 @@ $database_connection_charset = \'' . $database_connection_charset . '\';
 $database_connection_method = \'' . $database_connection_method . '\';
 $dbase = \'`' . str_replace("`", "", $dbase) . '`\';
 $table_prefix = \'' . $table_prefix . '\';
-error_reporting(E_ALL & ~E_NOTICE);
 
 $lastInstallTime = '.time().';
 
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
+if(!defined(\'MGR_DIR\'))
 '.$mgrdir.'
 
 // automatically assign base_path and base_url
@@ -248,10 +249,10 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     elseif(strpos($script_name,\'/assets/\')!==false)
         $separator = \'assets\';
     else $separator = \'\';
-    
+
     if($separator!==\'\') $a= explode(\'/\'.$separator, $script_name);
     else $a = array($script_name);
-    
+
     if (count($a) > 1)
         array_pop($a);
     $url= implode($separator, $a);
@@ -264,9 +265,25 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
     $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
 }
+
+// check for valid hostnames
+$site_hostname = str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $_SERVER[\'HTTP_HOST\']);
+if (!defined(\'MODX_SITE_HOSTNAMES\')) {
+	$site_hostnames_path = $base_path . \'assets/cache/siteHostnames.php\';
+	if (is_file($site_hostnames_path)) {
+		include_once($site_hostnames_path);
+	} else {
+		define(\'MODX_SITE_HOSTNAMES\', \'\');
+	}
+}
+$site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
+if (!empty($site_hostnames[0]) && !in_array($site_hostname, $site_hostnames)) {
+    $site_hostname = $site_hostnames[0];
+}
+
 // assign site_url
 $site_url= ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'https://\' : \'http://\';
-$site_url .= $_SERVER[\'HTTP_HOST\'];
+$site_url .= $site_hostname;
 if ($_SERVER[\'SERVER_PORT\'] != 80)
     $site_url= str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $site_url); // remove port from HTTP_HOST  
 $site_url .= ($_SERVER[\'SERVER_PORT\'] == 80 || (isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'\' : \':\' . $_SERVER[\'SERVER_PORT\'];
@@ -714,6 +731,55 @@ if ($installData && $moduleSQLDataFile) {
     } else {
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
+}
+
+// Install Dependencies
+foreach ($moduleDependencies as $dependency) {
+	$ds = @mysql_query('SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		$row = @mysql_fetch_assoc($ds);
+		$moduleId = $row["id"];
+		$moduleGuid = $row["guid"];
+	}
+	// get extra id
+	$ds = @mysql_query('SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		$row = @mysql_fetch_assoc($ds);
+		$extraId = $row["id"];
+	}
+	// setup extra as module dependency
+	$ds = @mysql_query('SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		if (@mysql_num_rows($ds) === 0) {
+			@mysql_query('INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')', $sqlParser->conn);
+			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_create'] . '</span></p>';
+		} else {
+			@mysql_query('UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'], $sqlParser->conn);
+			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_update'] . '</span></p>';
+		}
+		if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+			// set extra guid for plugins and snippets
+			$ds = @mysql_query('SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1', $sqlParser->conn);
+			if (!$ds) {
+				echo "<p>" . mysql_error() . "</p>";
+				return;
+			} else {
+				if (@mysql_num_rows($ds) != 0) {
+					@mysql_query('UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId, $sqlParser->conn);
+					echo '<p>&nbsp;&nbsp;' . $dependency['name'] . ': <span class="ok">' . $_lang['guid_set'] . '</span></p>';
+				}
+			}
+		}
+	}
 }
 
 // call back function

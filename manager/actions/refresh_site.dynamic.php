@@ -22,11 +22,7 @@ $num_rows_unpub = $modx->db->getAffectedRows($modxDBConn);
 <?php printf("<p>".$_lang["refresh_published"]."</p>", $num_rows_pub) ?>
 <?php printf("<p>".$_lang["refresh_unpublished"]."</p>", $num_rows_unpub) ?>
 <?php
-include_once "./processors/cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(true);
-$sync->emptyCache();
+$modx->clearCache('full', true);
 
 // invoke OnSiteRefresh event
 $modx->invokeEvent("OnSiteRefresh");

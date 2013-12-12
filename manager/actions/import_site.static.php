@@ -86,7 +86,7 @@ if(!isset($_POST['import'])) {
 else
 {
 	run();
-	clearCache();
+	$modx->clearCache('full');
 ?>
 <ul class="actionButtons">
     <li><a href="#" onclick="document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
@@ -105,6 +105,8 @@ top.mainMenu.reloadtree();
 function run()
 {
 	global $modx;
+	$tbl_site_content = $modx->getFullTableName('site_content');
+	
 	$output = '';
 	
 	$maxtime = $_POST['maxtime'];
@@ -116,8 +118,7 @@ function run()
 	
 	if ($_POST['reset']=='on')
 	{
-		$tbl_site_content = $modx->getFullTableName('site_content');
-		$modx->db->delete('[+prefix+]site_content');
+		$modx->db->truncate($tbl_site_content);
 		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
 	}
 	
@@ -137,7 +138,7 @@ function run()
 	// import files
 	if(0 < count($files))
 	{
-		$rs = $modx->db->update(array('isfolder'=>1),'[+prefix+]site_content',"id={$parent}");
+		$rs = $modx->db->update(array('isfolder'=>1),$tbl_site_content,"id={$parent}");
 		importFiles($parent,$filedir,$files,'root');
 	}
 	
@@ -156,6 +157,9 @@ function importFiles($parent,$filedir,$files,$mode) {
     global $_lang, $allowedfiles;
     global $search_default, $cache_default, $publish_default;
     
+	$tbl_site_content    = $modx->getFullTableName('site_content');
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
+	
     $createdon = time();
     $createdby = $modx->getLoginUserID();
     if (!is_array($files)) return;
@@ -205,7 +209,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 					$field['content'] = $modx->db->escape($content);
 					$field['createdon'] = $date;
 					$field['editedon'] = $date;
-					$newid = $modx->db->insert($field,'[+prefix+]site_content');
+					$newid = $modx->db->insert($field, $tbl_site_content);
 					if($newid)
 					{
 						$find = true;
@@ -228,7 +232,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				$field['createdon'] = $date;
 				$field['editedon'] = $date;
 				$field['hidemenu'] = '1';
-				$newid = $modx->db->insert($field,'[+prefix+]site_content');
+				$newid = $modx->db->insert($field, $tbl_site_content);
 				if($newid)
 				{
 					$find = true;
@@ -280,7 +284,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				$field['editedon'] = $date;
 				$field['isfolder'] = 0;
 				$field['menuindex'] = ($alias=='index') ? 0 : 2;
-				$newid = $modx->db->insert($field,'[+prefix+]site_content');
+				$newid = $modx->db->insert($field, $tbl_site_content);
 				if($newid)
 				{
 					echo ' - <span class="success">'.$_lang['import_site_success'] . '</span><br />' . "\n";
@@ -296,8 +300,8 @@ function importFiles($parent,$filedir,$files,$mode) {
 				if($filename == 'index.html') $is_site_start = true;
 				if($is_site_start==true && $_POST['reset']=='on')
 				{
-					$modx->db->update("setting_value={$newid}",'[+prefix+]system_settings',"setting_name='site_start'");
-					$modx->db->update('menuindex=0','[+prefix+]site_content',"id='{$newid}'");
+					$modx->db->update(array('setting_value'=>$newid),$tbl_system_settings,"setting_name='site_start'");
+					$modx->db->update('menuindex=0',$tbl_site_content,"id='{$newid}'");
 				}
 			}
 		}
@@ -414,8 +418,9 @@ function treatContent($src,$filename,$alias)
 function convertLink()
 {
 	global $modx;
+	$tbl_site_content = $modx->getFullTableName('site_content');
 	
-	$rs = $modx->db->select('id,content','[+prefix+]site_content');
+	$rs = $modx->db->select('id,content', $tbl_site_content);
 	while($row=$modx->db->getRow($rs))
 	{
 		$id = $row['id'];
@@ -460,14 +465,6 @@ function convertLink()
 		}
 		$content = join('',$array);
 		$f['content'] = $modx->db->escape($content);
-		$modx->db->update($f,'[+prefix+]site_content',"id='{$id}'");
+		$modx->db->update($f,$tbl_site_content,"id='{$id}'");
 	}
-}
-function clearCache()
-{
-	include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
-	$sync = new synccache();
-	$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
-	$sync->setReport(false);
-	$sync->emptyCache();
 }

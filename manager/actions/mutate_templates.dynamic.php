@@ -19,10 +19,13 @@ switch((int) $_REQUEST['a']) {
     $e->dumpError();
 }
 
+$tbl_active_users   = $modx->getFullTableName('active_users');
+$tbl_site_templates = $modx->getFullTableName('site_templates');
+
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
-    $rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=16 AND id='{$id}'");
+    $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=16 AND id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         for ($i=0;$i<$limit;$i++) {
@@ -41,7 +44,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 $content = array();
 if(!empty($id)) {
-    $rs = $modx->db->select('*','[+prefix+]site_templates',"id='{$id}'");
+    $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, something went terribly wrong...<p>";
@@ -60,7 +63,7 @@ if(!empty($id)) {
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname']="New template";
+    $_SESSION['itemname']=$_lang["new_template"];
 }
 
 $content = array_merge($content, $_POST);
@@ -101,7 +104,7 @@ function deletedocument() {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>

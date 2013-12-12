@@ -1,9 +1,12 @@
 <?php
 /**
-* snippets/eform/english.inc.php
-* English language file for eForm
-*/
-
+ * Language file for eForm
+ *
+ * Language:       Polish
+ * Encoding:       UTF-8
+ * Translated by:  -
+ * Date:           -
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>Thank You!</h3><p>Your information was successfully submitted.</p>";
 $_lang["ef_no_doc"] = "Document or chunk not found for template id=";

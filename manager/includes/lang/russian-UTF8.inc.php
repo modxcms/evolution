@@ -4,9 +4,9 @@
  * Function:       Russian language file.
  * Encoding:       UTF8
  * Author:         Russian MODX community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
- * Date:           30 December 2010
- * Version:        2.0.5
- * MODX version:   Evolution 1.0.10
+ * Date:           24 October 2013
+ * Version:        2.0.6
+ * MODX version:   Evolution 1.0.13
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
@@ -509,19 +509,19 @@ $_lang["mgrlog_action"] = 'Действие:';
 $_lang["mgrlog_actionid"] = 'ID действия:';
 $_lang["mgrlog_anyall"] = 'Любое / Все';
 $_lang["mgrlog_datecheckfalse"] = 'Функция checkdate() вернула значение false.';
-$_lang["mgrlog_datefr"] = 'Начиная с даты:';
+$_lang["mgrlog_datefr"] = 'Начиная с даты';
 $_lang["mgrlog_dateinvalid"] = 'Ошибочный формат даты.';
-$_lang["mgrlog_dateto"] = 'Заканчивая датой:';
+$_lang["mgrlog_dateto"] = 'Заканчивая датой';
 $_lang["mgrlog_emptysrch"] = 'По вашему запросу ничего не найдено (нет записей, соответствующих заданным критериям).';
 $_lang["mgrlog_field"] = 'Поле';
-$_lang["mgrlog_itemid"] = 'ID ресурса:';
-$_lang["mgrlog_itemname"] = 'Название ресурса:';
-$_lang["mgrlog_msg"] = 'Сообщение:';
+$_lang["mgrlog_itemid"] = 'ID ресурса';
+$_lang["mgrlog_itemname"] = 'Название ресурса';
+$_lang["mgrlog_msg"] = 'Сообщение';
 $_lang["mgrlog_noquery"] = 'Вы не ввели запрос. Укажите критерии запроса.';
 $_lang["mgrlog_qresults"] = 'Результаты запроса';
 $_lang["mgrlog_query"] = 'Протокол запросов к базе';
 $_lang["mgrlog_query_msg"] = 'Пожалуйста, задайте критерии просмотра записей.</p><p><b>ВНИМАНИЕ:</b> указанный диапазон дат не включает результаты за дату, указанную в поле \'Заканчивая датой\'. Например, чтобы сделать выборку за 03-12-2009, укажите в поле \'Начиная с даты\' значение 03-12-2009, а в поле \'Заканчивая датой\' - значение 03-12-2009.</p><p>Сообщение и действие обычно одинаковы. Если вы хотите найти какое-то конкретное сообщение, обычно лучше всего установить действие \'Любое / Все\'.';
-$_lang["mgrlog_results"] = 'Отображать результаты порциями по:';
+$_lang["mgrlog_results"] = 'Отображать результаты порциями по';
 $_lang["mgrlog_searchlogs"] = 'Найти записи протокола';
 $_lang["mgrlog_sortinst"] = 'Вы можете отсортировать таблицу, выбрав мышью заголовок любой колонки. Если записей станет слишком много, вы можете <a href="index.php?a=55">очистить протокол</a>. <i>ВНИМАНИЕ: это приведёт к удалению всех записей протокола по сегодняшний момент!</i>';
 $_lang["mgrlog_time"] = 'Время';
@@ -565,13 +565,14 @@ $_lang["new_htmlsnippet"] = 'Новый чанк';
 $_lang["new_keyword"] = 'Добавить ключевое слово:';
 $_lang["new_module"] = 'Новый модуль';
 $_lang["new_parent"] = 'Новый родительский ресурс';
-$_lang["new_plugin"] = 'Создать плагин';
-$_lang["new_role"] = 'Создать новую роль';
+$_lang["new_plugin"] = 'Новый плагин';
+$_lang["new_role"] = 'Новая роль';
 $_lang["new_snippet"] = 'Новый сниппет';
 $_lang["new_template"] = 'Новый шаблон';
 $_lang["new_tmplvars"] = 'Новый параметр (TV)';
 $_lang["new_user"] = 'Новый пользователь';
-$_lang["new_web_user"] = 'Создать веб-пользователя';
+$_lang["new_web_user"] = 'Новый веб-пользователь';
+$_lang["new_resource"] = 'Новый ресурс';
 $_lang["no"] = 'Нет';
 $_lang["no_active_users_found"] = 'Не найдено активных пользователей.';
 $_lang["no_activity_message"] = 'Вы не создали или не отредактировали ни одного ресурса.';
@@ -1111,8 +1112,8 @@ $_lang["websignupemail_message"] = 'Здесь вы можете создать 
 $_lang["websignupemail_title"] = 'Регистрация веб-пользователя:';
 $_lang["wednesday"] = 'Среда';
 $_lang["welcome_messages"] = 'В вашем ящике <strong>%d</strong> сообщений, из которых <strong>%s</strong> не прочитаны.';
-$_lang["welcome_title"] = 'Добро пожаловать в систему управления сайтом MODX';
-$_lang["which_editor_message"] = 'Выберите HTML-редактор. вы также можете загрузить и установить редакторы из списка доступных на сайте MODX.';
+$_lang["welcome_title"] = 'Добро пожаловать в систему управления сайтом MODX Evolution';
+$_lang["which_editor_message"] = 'Выберите HTML-редактор. Вы также можете загрузить и установить редакторы из списка доступных на сайте MODX.';
 $_lang["which_editor_title"] = 'Редактор:';
 $_lang["working"] = 'Обработка данных...';
 $_lang["wrap_lines"] = 'Переносить строки по ширине окна';
@@ -1136,13 +1137,13 @@ $_lang["pwd_hash_algo_title"] = 'Алгоритм шифрования';
 $_lang["pwd_hash_algo_message"] = 'Алгоритм шифрования паролей.';
 $_lang["enable_bindings_title"] = 'Разрешить @-привязки';
 $_lang["enable_bindings_message"] = 'Предотвращает исполнение PHP-кода через использование @-привязок в TV-параметрах. Требуется, если у вас есть пользователи, которые не должны иметь возможность создавать PHP-код, но но могут создавать или редактировать TV-параметры. Вывод любого TV-параметра @-привязкой будет "@-привязки запрещены".';
-$_lang["bkmgr_alert_mkdir"] = 'Файл не может быть создан.  Праверьте права на папку assets/backup';
+$_lang["bkmgr_alert_mkdir"] = 'Файл не может быть создан. Проверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановлен с помощью файла SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Восстановить';
 $_lang["bkmgr_import_ok"] = 'SQL восстановление было выполнено нормально.';
 $_lang["bkmgr_snapshot_ok"] = 'Резервная копия была сохранена.';
 $_lang["bkmgr_run_sql_file_label"] = 'Выполнить SQL файл';
-$_lang["bkmgr_run_sql_direct_label"] = 'Выполнить произвольную комманду SQL';
+$_lang["bkmgr_run_sql_direct_label"] = 'Выполнить произвольную команду SQL';
 $_lang["bkmgr_run_sql_submit"] = 'Отправить';
 $_lang["bkmgr_run_sql_result"] = 'Результат';
 $_lang["bkmgr_snapshot_title"] = 'Резервное копирование';

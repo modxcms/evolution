@@ -186,7 +186,12 @@ class DBAPI {
          $totaltime = $tend - $tstart;
          $modx->queryTime = $modx->queryTime + $totaltime;
          if ($modx->dumpSQL) {
-            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($this->executedQueries + 1) . " - " . sprintf("%2.4f s", $totaltime) . "</legend>" . $sql . "</fieldset><br />";
+            $debug = debug_backtrace();
+            array_shift($debug);	
+            $debug_path = array();
+            foreach ($debug as $line) $debug_path[] = $line['function'];
+            $debug_path = implode('>',$debug_path);
+            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . " ".$debug_path."</legend>" . $sql . "</fieldset><br />";
          }
          $modx->executedQueries = $modx->executedQueries + 1;
          return $result;
@@ -519,7 +524,6 @@ class DBAPI {
     *
     */
    function getHTMLGrid($dsq, $params) {
-      global $base_path;
       if (!is_resource($dsq))
          $dsq = $this->query($dsq);
       if ($dsq) {
@@ -615,9 +619,14 @@ class DBAPI {
    
    function optimize($table_name)
    {
-       $table_name = str_replace('[+prefix+]', $this->config['table_prefix'], $table_name);
-       $rs = $this->query("OPTIMIZE TABLE `{$table_name}`");
-       if($rs) $rs = $this->query("ALTER TABLE `{$table_name}`");
+       $rs = $this->query("OPTIMIZE TABLE {$table_name}");
+       if($rs) $rs = $this->query("ALTER TABLE {$table_name}");
+       return $rs;
+   }
+   
+   function truncate($table_name)
+   {
+       $rs = $this->query("TRUNCATE {$table_name}");
        return $rs;
    }
 }

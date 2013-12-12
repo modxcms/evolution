@@ -59,6 +59,8 @@ $mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
 $base_path = str_replace($mgr_dir . '/index.php','',$self);
 $site_mgr_path = $base_path . 'assets/cache/siteManager.php';
 if(is_file($site_mgr_path)) include_once($site_mgr_path);
+$site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
+if(is_file($site_hostnames_path)) include_once($site_hostnames_path);
 if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 	$src = "<?php\n";
 	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
@@ -85,9 +87,6 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
-
-// set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
 
 // check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
 $php_ver_comp =  version_compare(phpversion(), "5.0.0");

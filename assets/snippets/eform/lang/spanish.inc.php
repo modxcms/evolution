@@ -1,11 +1,12 @@
 <?php
 /**
-* No borrar estas lineas por favor
-* snippets/eform/spanish.inc.php
-* Archivo de eForm en español
-* Traducido por "alconpez" y "ARES1983" de forma separada y adjuntada.
-*/
-
+ * Language file for eForm
+ *
+ * Language:       Spanish
+ * Encoding:       Latin 1
+ * Translated by:  "alconpez" y "ARES1983"
+ * Date:           -
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>¡Gracias!</h3><p>Su información ha sido enviada con éxito.</p>";
 $_lang["ef_no_doc"] = "No se encontró el documento o el Chunk para la plantilla id=";

@@ -1,5 +1,6 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
-html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
+* html { overflow-x :hidden; overflow-y: auto;} /* for IE6 */
+*+html { overflow-x :hidden; overflow-y: auto;} /* for IE7 */
 html, body, form, fieldset,img {
 	margin: 0;
 	padding: 0;
@@ -362,12 +363,6 @@ input[type="button"] {
 	width: auto !important;
 	cursor:pointer;cursor:hand;
 }
-input.checkbox,
-input.radio,
-input[type="checkbox"],
-input[type="radio"] {
-	vertical-align: -2px;
-}
 select {
 	border: 1px solid #c3c3c3 !important;
 	border: 0;
@@ -491,7 +486,7 @@ input.submit {
 	color: #777;
 	margin: 0 15px;
 	padding: 5px 3px 5px;
-	overflow:hidden;zoom:1;
+	zoom:1;
 	font-weight: bold;
 	font-size: 1.2em;
 	border: 1px solid #ccc;
@@ -1492,7 +1487,7 @@ ul.actionButtons {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
-.actionButtons .and{
+.actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
 	font-weight: bold;
@@ -1794,7 +1789,24 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
+	vertical-align: top;
 }
+.sectionBody .displayparams, .sectionBody .permissiongroup {
+	margin-bottom: 3px;
+	background-color: #eee;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+.sectionBody .displayparams th, .sectionBody .displayparams td {
+	padding: 2px 4px;
+}
+.sectionBody .displayparams thead td, .sectionBody .permissiongroup thead td {
+	border-top: none;
+}
+.sectionBody .permissiongroup input, .sectionBody .permissiongroups input {
+	width: 200px;
+}
+
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
 	color: yellow !important;

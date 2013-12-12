@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.8 - Electronic Form Snippet
+# eForm 1.4.4.9 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -74,7 +74,7 @@ $_dfnMaxlength = 6;
 
 	//check version differences
 	if( $version != $fileVersion )
-		return $_lang['ef_version_error'];
+		return formMerge($_lang['ef_version_error'], array('version' => $version, 'fileVersion' => $fileVersion));
 
 	# check for valid form key - moved to below fetching form template to allow id coming from form template
 
@@ -170,7 +170,7 @@ $_dfnMaxlength = 6;
 				//remove empty values
 				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
-				if ($allowhtml || $formats[$name][2]=='html') {
+				if ($allowhtml && $formats[$name][2]=='html') {
 					$fields[$name] = stripslashes($value);
 				} else {
 					$fields[$name] = strip_tags(stripslashes($value));
@@ -194,17 +194,20 @@ $_dfnMaxlength = 6;
 		}
 
 		# sanitize the values with slashes stripped to avoid remote execution of Snippets
-		modx_sanitize_gpc($fields, array (
-			'@<script[^>]*?>.*?</script>@si',
-			'@&#(\d+);@e',
-			'@\[\~(.*?)\~\]@si',
-			'@\[\((.*?)\)\]@si',
-			'@{{(.*?)}}@si',
-			'@\[\+(.*?)\+\]@si',
-			'@\[\*(.*?)\*\]@si',
-			'@\[\[(.*?)\]\]@si',
-			'@\[!(.*?)!\]@si'
-		));
+		$version = $modx->getVersionData();
+		if (version_compare($version['version'], '1.0.9', '<=')) {
+			modx_sanitize_gpc($fields, array(
+				'@<script[^>]*?>.*?</script>@si',
+				'@&#(\d+);@e',
+				'@\[\~(.*?)\~\]@si',
+				'@\[\((.*?)\)\]@si',
+				'@{{(.*?)}}@si',
+				'@\[\+(.*?)\+\]@si',
+				'@\[\*(.*?)\*\]@si',
+				'@\[\[(.*?)\]\]@si',
+				'@\[!(.*?)!\]@si'
+			));
+		}
 
 		# validate fields
 		foreach($fields as $name => $value) {
@@ -295,7 +298,7 @@ $_dfnMaxlength = 6;
 
 			//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 			foreach($rClass as $n => $class){
-				$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
+				$fields[$n . '_class'] = $fields[$n . '_class'] ? ' ' . $fields[$n . '_class'] . ' ' . $class : ' ' . $class;
 				$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
 				//work around for checkboxes
 				if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
@@ -317,7 +320,12 @@ $_dfnMaxlength = 6;
 			}
 
 			#set validation message
-			$tmp = (count($rMsg)>0)?str_replace("{fields}", implode(", ",$rMsg),$_lang['ef_required_message']):"";
+			if (count($rMsg) > 0) {
+			    $rMsg = "<span>" . implode("</span><span>",$rMsg) . "</span>";
+			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
+			} else {
+			    $tmp = "";
+			}
 			$tmp .= implode("<br />",$vMsg);
 			if(!strstr($tpl,'[+validationmessage+]'))
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
@@ -388,6 +396,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->Body		= $body;
 					AddAddressToMailer($modx->mail,"to",$modx->config['emailsender']);
 					$modx->mail->send(); //ignore mail errors in this case
+					$modx->mail->ClearAllRecipients();
 				}
 				//return empty form with error message
 				//register css and/or javascript
@@ -398,7 +407,7 @@ $_dfnMaxlength = 6;
 			# added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0){
 				if( time()<$submitLimit+$_SESSION[$formid.'_limit'] ){
-					return formMerge($_lang['ef_submit_time_limit'],$fields);
+					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes' => $submitLimit / 60));
 				}
 				else unset($_SESSION[$formid.'_limit'], $_SESSION[$formid.'_hash']); //time expired
 			}
@@ -489,13 +498,15 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"replyto",$replyto);
 					AddAddressToMailer($modx->mail,"to",$to);
 					AddAddressToMailer($modx->mail,"cc",$cc);
 					AddAddressToMailer($modx->mail,"bcc",$bcc);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send user a copy of the report
@@ -504,10 +515,12 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send auto-respond email
@@ -519,9 +532,10 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= ($autosender)? $autosender:$from;
 					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $autotext;
+					$modx->mail->Body		= ($isHtml) ? $autotext : htmlspecialchars_decode($autotext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
 				}
 
 				//defaults to text - test for sendAsHtml
@@ -533,9 +547,10 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $mobiletext;
+					$modx->mail->Body		= ($isHtml) ? $mobiletext : htmlspecialchars_decode($mobiletext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$mobile);
 					$modx->mail->send();
+					$modx->mail->ClearAllRecipients();
 				}
 
 			}//end test nomail
@@ -677,6 +692,10 @@ function formMerge($docText, $docFields, $vClasses='') {
 				if(($datatype=="checkbox"||$datatype=="radio") && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
 		}
+		// prevent XSS for formfields
+		if (isset($fld)) {
+		    $value = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
+		}
 		if(strpos($name,":")===false) $docText = str_replace("[+$name+]",$value,$docText);
 		else {
 			// this might be a listbox item.
@@ -772,10 +791,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		#skip vericode field - updated in 1.4.4
 		#special case. We need to set the class placeholder but forget about the rest
 		if($name=="vericode"){
-			if(isset($tagAttributes['class'])){
-				$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+			if (isset($tagAttributes['class'])) {
+				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+			} else {
+				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 			}
-			$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 			$tagAttributes['value'] = '';
 			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
 			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -799,10 +819,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		unset($tagAttributes[$optionsName]);
 
 		//added in 1.4.2 - add placeholder to class attribute
-		if(isset($tagAttributes['class'])){
-			$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+		if (isset($tagAttributes['class'])) {
+			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+		} else {
+			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 		}
-		$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 
 		switch($type){
 			case "select":

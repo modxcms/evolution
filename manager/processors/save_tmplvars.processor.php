@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_template')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $name = $modx->db->escape(trim($_POST['name']));				
@@ -75,7 +73,7 @@ switch ($_POST['mode']) {
 			$content['category'] = $_POST['categoryid'];
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_tmplvars.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_tmplvars.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -104,12 +102,12 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 								));	    	
 								
+		// Set the item name for logger
+		$_SESSION['itemname'] = $caption;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "301&id=$newid":"300";
@@ -159,12 +157,12 @@ switch ($_POST['mode']) {
 										"id"	=> $id
 								));	 
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $caption;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "301&id=$id":"300";

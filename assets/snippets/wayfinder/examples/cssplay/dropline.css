@@ -13,7 +13,7 @@
 .menu ul li:hover ul li a.hide {background:#bd8d5e url(drop2.gif) bottom right no-repeat; color:#fff;}
 .menu ul li:hover ul li:hover a.hide {background:#b3ab79; color:#fff;}
 .menu ul li:hover ul li ul {display: none;}
-.menu ul li:hover ul li a {display:block; background:##b3ab79; color:#fff;}
+.menu ul li:hover ul li a {display:block; background:#b3ab79; color:#fff;}
 .menu ul li:hover ul li a:hover {background:#dfc184; color:#000;}
 .menu ul li:hover ul li:hover ul {display:block; position:absolute; left:0; top:30px; color:#000; background:#dfc184;}
 .menu ul li:hover ul.right li {float:right;}

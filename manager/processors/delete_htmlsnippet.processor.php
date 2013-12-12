@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_snippet')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 
@@ -21,21 +19,21 @@ $rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the htmlsnippet...";
 	exit;
-} else {
-	// invoke OnChunkFormDelete event
-	$modx->invokeEvent("OnChunkFormDelete",
-							array(
-								"id"	=> $id
-							));
-
-	// empty cache
-	include_once "cache_sync.class.processor.php";
-	$sync = new synccache();
-	$sync->setCachepath("../assets/cache/");
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache
-	// finished emptying cache - redirect
-	$header="Location: index.php?a=76&r=2";
-	header($header);
 }
+// invoke OnChunkFormDelete event
+$modx->invokeEvent("OnChunkFormDelete",
+						array(
+							"id"	=> $id
+						));
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
+
+// empty cache
+$modx->clearCache('full');
+
+// finished emptying cache - redirect
+$header="Location: index.php?a=76&r=2";
+header($header);
 ?>

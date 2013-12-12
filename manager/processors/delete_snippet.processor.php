@@ -27,12 +27,13 @@ if(!$rs) {
 									"id"	=> $id
 								));
 
+		// Set the item name for logger
+		$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$id}'"));
+		$_SESSION['itemname'] = $name;
+
 		// empty cache
-		include_once "cache_sync.class.processor.php";
-		$sync = new synccache();
-		$sync->setCachepath("../assets/cache/");
-		$sync->setReport(false);
-		$sync->emptyCache(); // first empty the cache
+		$modx->clearCache('full');
+		
 		// finished emptying cache - redirect
 
 	$header="Location: index.php?a=76&r=2";

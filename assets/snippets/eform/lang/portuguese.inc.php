@@ -1,9 +1,12 @@
 <?php
 /**
-* snippets/eform/portuguese.inc.php
-* Portuguese language file for eForm
-* last revision 08/01/2007
-*/
+ * Language file for eForm
+ *
+ * Language:       Portuguese
+ * Encoding:       UTF-8
+ * Translated by:  -
+ * Date:           08.01.2007
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>Obrigado!</h3><p>As suas informações foram submetidas com sucesso.</p>";
 $_lang["ef_no_doc"] = "Documento ou Chunk não encontrado para o template com id=";
@@ -33,6 +36,6 @@ $_lang['ef_mail_abuse_message'] = '<p>Um formulário no seu site poderá ter sid
 $_lang['ef_mail_abuse_error'] = '<strong>Entradas inválidas ou não seguras foram detectadas no formulário</strong>.';
 $_lang['ef_eval_deprecated'] = "A regra #EVAL foi depreciada e poderá não fncionar em futuras versões. Em alternativa use #FUNCTION.";
 $_lang['ef_multiple_submit'] = "<p class=\"invalid\">Este formulário já foi submetido com sucesso. Não há necessidade de submeter o formulário múltiplas vezes.</p>";
-$_lang['ef_submit_time_limit'] = "<p>Este formulário já foi submetido. O reenvio do formulário está desactivado por ".($submitLimit/60)." minutos.</p>";
-$_lang['ef_version_error'] = "<strong>ATENÇÃO!</strong> A versão do snippet eForm (versão:&nbsp;$version) é diferente da incluída no ficheiro eForm (versão:&nbsp;$fileVersion). Por favor certifique-se de que usa a mesma versão em ambos.";
+$_lang['ef_submit_time_limit'] = "<p>Este formulário já foi submetido. O reenvio do formulário está desactivado por [+submitLimitMinutes+] minutos.</p>";
+$_lang['ef_version_error'] = "<strong>ATENÇÃO!</strong> A versão do snippet eForm (versão:&nbsp;[+version+]) é diferente da incluída no ficheiro eForm (versão:&nbsp;[+fileVersion+]). Por favor certifique-se de que usa a mesma versão em ambos.";
 ?>

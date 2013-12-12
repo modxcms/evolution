@@ -183,8 +183,10 @@ class uploader {
             preg_match('/^[^\.]+$/', $_SERVER['HTTP_HOST'])
         )
             $this->config['cookieDomain'] = "";
-        elseif (!strlen($this->config['cookieDomain']))
-            $this->config['cookieDomain'] = $_SERVER['HTTP_HOST'];
+        elseif (!strlen($this->config['cookieDomain'])){
+            $tmp = explode(":", $_SERVER['HTTP_HOST'], 2);
+            $this->config['cookieDomain'] =  $tmp[0];
+        }
         if (!strlen($this->config['cookiePath']))
             $this->config['cookiePath'] = "/";
 

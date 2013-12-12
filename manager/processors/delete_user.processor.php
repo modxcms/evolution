@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_user')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 
@@ -28,6 +26,9 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 						array(
 							"id"	=> $id
 						));
+
+// Set the item name for logger
+$_SESSION['itemname'] = $username;
 
 //ok, delete the user.
 $sql = "DELETE FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id=".$id.";";

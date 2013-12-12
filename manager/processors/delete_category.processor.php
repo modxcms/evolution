@@ -10,6 +10,11 @@ if($modx->hasPermission('save_plugin') ||
 
 if ($hasPermission) {
     $catId = intval($_GET['catId']);
+
+    // Set the item name for logger
+    $name = $modx->db->getValue($modx->db->select('category', $modx->getFullTableName('categories'), "id='{$catId}'"));
+    $_SESSION['itemname'] = $name;
+
     include_once "categories.inc.php";
     deleteCategory($catId);
 }

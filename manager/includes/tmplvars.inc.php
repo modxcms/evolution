@@ -2,14 +2,16 @@
 	// DISPLAY FORM ELEMENTS
 	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='', $row = array()) {
 		global $modx;
-		global $base_url;
-		global $rb_base_url;
-		global $manager_theme;
+		global $_style;
 		global $_lang;
 		global $content;
 
 		$field_html ='';
 		$field_value = ($field_value!="" ? $field_value : $default_text);
+		if(substr($field_value, 0, 5) == "@EVAL") {
+	     	$eval_str = trim(substr($field_value, 6));
+	    	$field_value = eval($eval_str);
+	    }
 
 		switch ($field_type) {
 
@@ -23,6 +25,9 @@
 			case "number": // handles the input of numbers
 				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 				break;
+			case "textareamini": // handler for textarea mini boxes
+				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+				break;
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
 			case "htmlarea": // handler for textarea boxes (deprecated)
@@ -33,7 +38,7 @@
 				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
                 if($field_value=='') $field_value=0;
 				$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/'.($manager_theme ? "$manager_theme/":"").'images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="'.$_style["icons_cal_nodate"].'" border="0" alt="No date" /></a>';
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
@@ -117,6 +122,7 @@
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 					$field_html .="
 					<script type=\"text/javascript\">
+						/* <![CDATA[ */
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -137,27 +143,41 @@
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
 							}
-							
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
 							}
-							
-							function SetUrl(url, width, height, alt){
+							function SetUrlChange(el) {
+								if ('createEvent' in document) {
+									var evt = document.createEvent('HTMLEvents');
+									evt.initEvent('change', false, true);
+									el.dispatchEvent(evt);
+								} else {
+									el.fireEvent('onchange');
+								}
+							}
+							function SetUrl(url, width, height, alt) {
 								if(lastFileCtrl) {
-									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastFileCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+										SetUrlChange(c);
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
-									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastImageCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+										SetUrlChange(c);
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
 								}
 							}
+						/* ]]> */
 					</script>";
 					$ResourceManagerLoaded  = true;					
 				} 
@@ -172,6 +192,7 @@
 				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
 					$field_html .="
 					<script type=\"text/javascript\">
+						/* <![CDATA[ */
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -186,34 +207,47 @@
 
 								var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
 							}
-							
-								function BrowseServer(ctrl) {
+							function BrowseServer(ctrl) {
 								lastImageCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
 							}
-										
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.5;
 								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
 							}
-							
-							function SetUrl(url, width, height, alt){
+							function SetUrlChange(el) {
+								if ('createEvent' in document) {
+									var evt = document.createEvent('HTMLEvents');
+									evt.initEvent('change', false, true);
+									el.dispatchEvent(evt);
+								} else {
+									el.fireEvent('onchange');
+								}
+							}
+							function SetUrl(url, width, height, alt) {
 								if(lastFileCtrl) {
-									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastFileCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+										SetUrlChange(c);
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
-									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									var c = document.getElementById(lastImageCtrl);
+									if(c && c.value != url) {
+									    c.value = url;
+										SetUrlChange(c);
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
 								}
 							}
+						/* ]]> */
 					</script>";
 					$ResourceManagerLoaded  = true;					
 				} 

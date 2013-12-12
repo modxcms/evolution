@@ -7,10 +7,6 @@ else    $id = 0;
 
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 $url = $modx->config['site_url'];
 
 // Get table names (alphabetical)
@@ -22,6 +18,9 @@ $tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
 $tbl_site_keywords         = $modx->getFullTableName('site_keywords');
 $tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
+
+
+
 
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
@@ -65,7 +64,7 @@ $rs = $modx->db->query('SELECT templatename FROM '.$tbl_site_templates.' WHERE i
 if ($row = $modx->db->getRow($rs))
 	$templatename = $row['templatename'];
 
-// Set the item name for logging
+// Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
 // Get list of current keywords for this document
@@ -268,7 +267,7 @@ function movedocument() {
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
-			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('../index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>
@@ -337,9 +336,9 @@ function movedocument() {
 			<tr><td><?php echo $_lang['resource_opt_show_menu']?>: </td>
 				<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_web_access']?>: </td>
-				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 			<tr><td><?php echo $_lang['page_data_mgr_access']?>: </td>
-				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 		<tr><td colspan="2">&nbsp;</td>	</tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_markup']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_template']?>: </td>
@@ -398,6 +397,6 @@ function movedocument() {
 <?php if ($show_preview==1) { ?>
 <div class="sectionHeader"><?php echo $_lang['preview']?></div>
 <div class="sectionBody" id="lyr2">
-	<iframe src="../index.php?id=<?php echo $id?>&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
+	<iframe src="<?php echo MODX_SITE_URL; ?>index.php?id=<?php echo $id?>&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
 </div>
 <?php }

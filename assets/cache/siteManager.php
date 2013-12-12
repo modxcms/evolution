@@ -1,2 +1,2 @@
 <?php
-define("MGR_DIR", "manager");
+define('MGR_DIR', 'manager');

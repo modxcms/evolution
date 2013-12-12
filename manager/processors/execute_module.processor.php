@@ -83,6 +83,9 @@ if($content['disabled']) {
 	exit;
 }
 
+// Set the item name for logger
+$_SESSION['itemname'] = $content['name'];
+
 // load module configuration
 $parameter = array();
 if(!empty($content["properties"])){

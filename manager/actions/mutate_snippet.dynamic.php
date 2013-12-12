@@ -21,10 +21,6 @@ switch((int) $_REQUEST['a']) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 // Get table Names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
@@ -57,7 +53,7 @@ if(isset($_GET['id'])) {
         exit;
     }
     if($limit<1) {
-        header("Location: /index.php?id=".$site_start);
+        header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
@@ -66,7 +62,7 @@ if(isset($_GET['id'])) {
         $e->dumpError();
     }
 } else {
-    $_SESSION['itemname']="New snippet";
+    $_SESSION['itemname']=$_lang["new_snippet"];
 }
 ?>
 <script type="text/javascript">
@@ -111,7 +107,7 @@ function showParameters(ctrl) {
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -274,7 +270,7 @@ function decode(s){
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -283,12 +279,12 @@ function decode(s){
               </li>
               <?php
                 if ($_GET['a'] == '22') { ?>
-              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>/images/icons/copy.gif" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } else { ?>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/stop.png" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -296,7 +292,7 @@ function decode(s){
 
 <div class="sectionBody">
 <?php echo $_lang['snippet_msg']?>
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
     <script type="text/javascript">
@@ -343,8 +339,8 @@ function decode(s){
         <!-- PHP text editor start -->
         <div class="section">
             <div class="sectionHeader">
-                <span style="float:left;padding:3px"><?php echo $_lang['snippet_code']?></span>
                 <span style="float:right;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+                <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
             <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
@@ -379,7 +375,7 @@ function decode(s){
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td valign="top" style="padding-left:1.3em;"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
+            <td valign="top"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
           </tr>
           <tr>
             <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>

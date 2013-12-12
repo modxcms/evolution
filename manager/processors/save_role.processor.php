@@ -97,6 +97,9 @@ switch ($_POST['mode']) {
             echo "An error occured while attempting to save the new role.<p>";
             exit;
         }
+        // Set the item name for logger
+        $_SESSION['itemname'] = $name;
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;
@@ -107,6 +110,9 @@ switch ($_POST['mode']) {
             echo "An error occured while attempting to update the role. <br />" . $modx->db->getLastError();
             exit;
         }
+        // Set the item name for logger
+        $_SESSION['itemname'] = $name;
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;

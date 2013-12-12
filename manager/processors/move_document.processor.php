@@ -105,12 +105,13 @@ if (!array_search($newParentID, $children)) {
 		}
 	}
 
+	// Set the item name for logger
+	$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+	$_SESSION['itemname'] = $pagetitle;
+
 	// empty cache & sync site
-	include_once "cache_sync.class.processor.php";
-	$sync = new synccache();
-	$sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache
+	$modx->clearCache('full');
+
 	$header="Location: index.php?r=1&id=$id&a=7";
 	header($header);
 } else {

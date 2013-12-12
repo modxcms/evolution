@@ -2,12 +2,7 @@
 include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
-// set the include_once path
-if(version_compare(phpversion(), "4.3.0")>=0) {
     set_include_path(get_include_path() . PATH_SEPARATOR . "../includes/");
-} else {
-    ini_set("include_path", "../includes/"); // include path the old way
-}
 
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
@@ -48,6 +43,10 @@ $e = new errorHandler;
 // initiate the content manager class
  // for backward compatibility
 
+$tbl_user_settings   = $modx->getFullTableName('user_settings');
+$tbl_manager_users   = $modx->getFullTableName('manager_users');
+$tbl_user_attributes = $modx->getFullTableName('user_attributes');
+
 $username = $modx->db->escape($_REQUEST['username']);
 $givenPassword = $modx->db->escape($_REQUEST['password']);
 $captcha_code = $_REQUEST['captcha_code'];
@@ -61,9 +60,10 @@ $modx->invokeEvent("OnBeforeManagerLogin",
                             "userpassword"  => $givenPassword,
                             "rememberme"    => $rememberme
                         ));
-
-$sql = "SELECT $dbase.`".$table_prefix."manager_users`.*, $dbase.`".$table_prefix."user_attributes`.* FROM $dbase.`".$table_prefix."manager_users`, $dbase.`".$table_prefix."user_attributes` WHERE BINARY $dbase.`".$table_prefix."manager_users`.username = '".$username."' and $dbase.`".$table_prefix."user_attributes`.internalKey=$dbase.`".$table_prefix."manager_users`.id;";
-$rs = $modx->db->query($sql);
+$fields = 'mu.*, ua.*';
+$from   = "{$tbl_manager_users} mu, {$tbl_user_attributes} ua";
+$where  = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
+$rs = $modx->db->select($fields, $from,$where);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit==0 || $limit>1) {
@@ -87,13 +87,13 @@ $fullname               = $row['fullname'];
 $email                  = $row['email'];
 
 // get the user settings from the database
-$rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
+$rs = $modx->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_value!=''");
 while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
-    $modx->db->update('blocked=1','[+prefix+]user_attributes',"internalKey='{$internalKey}'");
+    $modx->db->update('blocked=1',$tbl_user_attributes,"internalKey='{$internalKey}'");
     @session_destroy();
     session_unset();
     jsAlert($e->errors[902]);
@@ -101,9 +101,11 @@ if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
 }
 
 // blocked due to number of login errors, but get to try again
-if($failedlogins>=$failed_allowed && $blockeduntildate<time()) { 
-    $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-    $rs = $modx->db->query($sql);
+if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
+	$fields = array();
+	$fields['failedlogincount'] = '0';
+	$fields['blockeduntil']     = time()-1;
+    $rs = $modx->db->update($fields,$tbl_user_attributes,"internalKey='{$internalKey}'");
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -311,8 +313,7 @@ $modx->invokeEvent("OnManagerLogin",
                         ));
 
 // check if we should redirect user to a web page
-$tbl = $modx->getFullTableName("user_settings");
-$id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
+$id = $modx->db->getValue("SELECT setting_value FROM {$tbl_user_settings} WHERE user='{$internalKey}' AND setting_name='manager_login_startup'");
 if(isset($id) && $id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;

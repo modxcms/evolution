@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_role')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id=$_GET['id'];
 
@@ -33,9 +31,12 @@ $rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the role...";
 	exit;
-} else {		
-	$header="Location: index.php?a=86";
-	header($header);
 }
 
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('user_roles'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
+
+$header="Location: index.php?a=86";
+header($header);
 ?>

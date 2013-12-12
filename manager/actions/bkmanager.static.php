@@ -207,7 +207,7 @@ else
 	<input type="hidden" name="mode" value="" />
 	<p><?php echo $_lang['table_hoverinfo']?></p>
 
-	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="media/style/<?php echo $modx->config['manager_theme'];?>/images/misc/ed_save.gif" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
+	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="<?php echo $_style['ed_save'];?>" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
 	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		<thead><tr>
@@ -334,7 +334,6 @@ if(isset($_SESSION['last_result']) || !empty($_SESSION['last_result']))
 	$last_result = $_SESSION['last_result'];
 	unset($_SESSION['last_result']);
 	if(count($last_result)<1) $result = '';
-	elseif(count($last_result)==1) echo $last_result[0];
 	else
 	{
 		$last_result = array_merge(array(), array_diff($last_result, array('')));
@@ -439,6 +438,11 @@ else
 </div>
 
 <?php
+
+if (is_numeric($_GET['tab'])) {
+    echo '<script type="text/javascript">tpDBM.setSelectedIndex( '.$_GET['tab'].' );</script>';
+}
+
 	include_once "footer.inc.php"; // send footer
 ?>
 
@@ -611,8 +615,9 @@ class Mysqldumper {
 function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
+	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('*','[+prefix+]active_users',"action='27'");
+	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
 	if(0 < $modx->db->getRecordCount($rs))
 	{
 		include_once "header.inc.php";  // start normal header
@@ -672,8 +677,9 @@ function snapshot(&$dumpstring) {
 function getSettings()
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
-	$rs = $modx->db->select('setting_name, setting_value','[+prefix+]system_settings');
+	$rs = $modx->db->select('setting_name, setting_value',$tbl_system_settings);
 	
 	$settings = array();
 	while ($row = $modx->db->getRow($rs))
@@ -694,10 +700,11 @@ function getSettings()
 function restoreSettings($settings)
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
 	foreach($settings as $k=>$v)
 	{
-		$modx->db->update(array('setting_value'=>$v),'[+prefix+]system_settings',"setting_name='{$k}'");
+		$modx->db->update(array('setting_value'=>$v),$tbl_system_settings,"setting_name='{$k}'");
 	}
 }
 

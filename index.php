@@ -49,6 +49,10 @@ if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
 if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
 	define('MGR_DIR','manager');
+if(is_file($base_path . 'assets/cache/siteHostnames.php'))
+    include_once($base_path . 'assets/cache/siteHostnames.php');
+if(!defined('MODX_SITE_HOSTNAMES'))
+	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
@@ -65,7 +69,6 @@ session_cache_limiter('');
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 header('Cache-Control: private, must-revalidate');
 ob_start();
-error_reporting(E_ALL & ~E_NOTICE);
 
 /**
  *	Filename: index.php
@@ -124,6 +127,7 @@ $modx->minParserPasses = 1; // min number of parser recursive loops or passes
 $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
+$modx->dumpPlugins = false;
 $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 

@@ -10,7 +10,7 @@ $id=$_GET['id'];
 $children = array();
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
@@ -32,6 +32,10 @@ $mysqlVerOk = (version_compare($modx->db->getVersion(),"4.0.14")>=0);
 
 // Run the duplicator
 $id = duplicateDocument($id);
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
 
 // finish cloning - redirect
 $header="Location: index.php?r=1&a=3&id=$id";

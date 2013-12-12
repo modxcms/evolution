@@ -19,6 +19,7 @@ $_lang['mce_editor_css_selectors_title'] = 'CSS selectors:';
 $_lang['mce_editor_css_selectors_message'] = "Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />'displayName=selectorName;displayName2=selectorName2'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />'Monospaced text=mono;Small text=smallText'<br />Note that the last entry should not have a semi-colon after it.";
 $_lang['mce_settings'] = 'TinyMCE Settings';
 $_lang['mce_theme_simple'] = 'Simple';
+$_lang['mce_theme_full'] = 'Full';
 $_lang['mce_theme_advanced'] = 'Advanced';
 $_lang['mce_theme_editor'] = 'MODX style';
 $_lang['mce_theme_custom'] = 'Custom';

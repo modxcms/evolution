@@ -8,8 +8,8 @@ if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_docume
 $id = $_REQUEST['id'];
 
 /************ Webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
-$pid=($pid==0?$id:$pid);
+$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$pid=($content['parent']==0?$id:$content['parent']);
 
 /************** Webber *************/
 $sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
@@ -22,7 +22,7 @@ $add_path=$sd.$sb.$pg;
 
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
@@ -49,11 +49,11 @@ if(!$rs){
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
 
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
+
+// empty cache
+$modx->clearCache('full');
 
 //$header="Location: index.php?r=1&id=$id&a=7";
 
