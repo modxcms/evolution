@@ -44,6 +44,7 @@ $modulePlugins = array (); // plugins - array : name, description, type - 0:file
 $moduleModules = array (); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
 $moduleTVs = array (); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
+$moduleDependencies = array(); // module depedencies - array : module, table, column, type, name
 
 $errors= 0;
 
