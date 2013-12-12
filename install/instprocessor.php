@@ -16,6 +16,7 @@ global $moduleSnippets;
 global $modulePlugins;
 global $moduleModules;
 global $moduleTVs;
+global $moduleDependencies;
 
 global $errors;
 
@@ -730,6 +731,55 @@ if ($installData && $moduleSQLDataFile) {
     } else {
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
+}
+
+// Install Dependencies
+foreach ($moduleDependencies as $dependency) {
+	$ds = @mysql_query('SELECT id, guid FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_modules` WHERE name="' . $dependency['module'] . '"', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		$row = @mysql_fetch_assoc($ds);
+		$moduleId = $row["id"];
+		$moduleGuid = $row["guid"];
+	}
+	// get extra id
+	$ds = @mysql_query('SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE ' . $dependency['column'] . '="' . $dependency['name'] . '"', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		$row = @mysql_fetch_assoc($ds);
+		$extraId = $row["id"];
+	}
+	// setup extra as module dependency
+	$ds = @mysql_query('SELECT module FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'] . ' LIMIT 1', $sqlParser->conn);
+	if (!$ds) {
+		echo "<p>" . mysql_error() . "</p>";
+		return;
+	} else {
+		if (@mysql_num_rows($ds) === 0) {
+			@mysql_query('INSERT INTO ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` (module, resource, type) VALUES(' . $moduleId . ',' . $extraId . ',' . $dependency['type'] . ')', $sqlParser->conn);
+			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_create'] . '</span></p>';
+		} else {
+			@mysql_query('UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_module_depobj` SET module = ' . $moduleId . ', resource = ' . $extraId . ', type = ' . $dependency['type'] . ' WHERE module=' . $moduleId . ' AND resource=' . $extraId . ' AND type=' . $dependency['type'], $sqlParser->conn);
+			echo '<p>&nbsp;&nbsp;' . $dependency['module'] . ' Module: <span class="ok">' . $_lang['depedency_update'] . '</span></p>';
+		}
+		if ($dependency['type'] == 30 || $dependency['type'] == 40) {
+			// set extra guid for plugins and snippets
+			$ds = @mysql_query('SELECT id FROM ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` WHERE id=' . $extraId . ' LIMIT 1', $sqlParser->conn);
+			if (!$ds) {
+				echo "<p>" . mysql_error() . "</p>";
+				return;
+			} else {
+				if (@mysql_num_rows($ds) != 0) {
+					@mysql_query('UPDATE ' . $dbase . '`' . $sqlParser->prefix . 'site_' . $dependency['table'] . '` SET moduleguid = ' . $moduleGuid . ' WHERE id=' . $extraId, $sqlParser->conn);
+					echo '<p>&nbsp;&nbsp;' . $dependency['name'] . ': <span class="ok">' . $_lang['guid_set'] . '</span></p>';
+				}
+			}
+		}
+	}
 }
 
 // call back function
