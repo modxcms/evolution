@@ -1395,7 +1395,7 @@ class DocumentParser {
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
         // get document
-        $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
+        $access=  "1='" . $_SESSION['mgrRole'] . "'" . ($this->isFrontend() ? " OR sc.privateweb=0" : " OR sc.privatemgr=0") .
          (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
         $sql= "SELECT sc.*
               FROM $tblsc sc
