@@ -5,32 +5,10 @@ if (!$modx->hasPermission('save_user')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
-// Web alert -  sends an alert to web browser
-function webAlert($msg) {
-	global $id, $modx;
-	global $dbase, $table_prefix;
-	$mode = $_POST['mode'];
-	$url = "index.php?a=$mode" . ($mode == '12' ? "&id=" . $id : "");
-	$modx->manager->saveFormValues($mode);
-	include_once "header.inc.php";
-	$modx->webAlert($msg, $url);
-	include_once "footer.inc.php";
-}
-
-// Generate password
-function generate_password($length = 10) {
-	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-	$ps_len = strlen($allowable_characters);
-	mt_srand((double) microtime() * 1000000);
-	$pass = "";
-	for ($i = 0; $i < $length; $i++) {
-		$pass .= $allowable_characters[mt_rand(0, $ps_len -1)];
-	}
-	return $pass;
-}
+$tbl_manager_users   = $modx->getFullTableName('manager_users');
+$tbl_user_attributes = $modx->getFullTableName('user_attributes');
+$tbl_member_groups   = $modx->getFullTableName('member_groups');
 
 if(isset($_POST['id'])) $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
@@ -47,6 +25,8 @@ $mobilephone = $modx->db->escape($_POST['mobilephone']);
 $fax = $modx->db->escape($_POST['fax']);
 $dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
 $country = $_POST['country'];
+$street = $modx->db->escape($_POST['street']);
+$city   = $modx->db->escape($_POST['city']);
 $state = $modx->db->escape($_POST['state']);
 $zip = $modx->db->escape($_POST['zip']);
 $gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
@@ -79,11 +59,10 @@ if ($_SESSION['mgrRole'] != 1) {
 		exit;
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$sql = "SELECT role FROM $dbase.`" . $table_prefix . "user_attributes` AS mua WHERE internalKey = $id";
-	if ($rs = $modx->db->query($sql)) {
-		if ($rsQty = mysql_num_rows($rs)) {
+	if ($rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'")) {
+		if ($rsQty = $modx->db->getRecordCount($rs)) {
 			// There should only be one if there is one
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['role'] == 1) {
 				webAlert("You cannot alter an administrative user.");
 				exit;
@@ -96,25 +75,24 @@ if ($_SESSION['mgrRole'] != 1) {
 switch ($_POST['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		if (!$rs = $modx->db->select('id', '[+prefix+]manager_users', "username='{$newusername}'")) {
+		if (!$rs = $modx->db->select('id', $tbl_manager_users, "username='{$newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			webAlert("User name is already in use!");
 			exit;
 		}
 
 		// check if the email address already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "user_attributes` WHERE email='$email'";
-		if (!$rs = $modx->db->select('id', '[+prefix+]user_attributes', "email='{$email}'")) {
+		if (!$rs = $modx->db->select('id', $tbl_user_attributes, "email='{$email}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -147,18 +125,18 @@ switch ($_POST['mode']) {
 		));
 
 		// build the SQL
-		$internalKey = $modx->db->insert(array('username'=>$newusername), '[+prefix+]manager_users');
+		$internalKey = $modx->db->insert(array('username'=>$newusername), $tbl_manager_users);
 		if (!$internalKey) {
 			webAlert("An error occurred while attempting to save the user.");
 			exit;
 		}
 
 		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
-		$modx->db->update($field,'[+prefix+]manager_users',"id='{$internalKey}'");
+		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
 		$field = array();
-		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
-		$rs = $modx->db->insert($field,'[+prefix+]user_attributes');
+		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+		$rs = $modx->db->insert($field, $tbl_user_attributes);
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
@@ -166,6 +144,9 @@ switch ($_POST['mode']) {
 
 		// Save User Settings
 		saveUserSettings($internalKey);
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
 
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (
@@ -193,7 +174,7 @@ switch ($_POST['mode']) {
 					$f = array();
 					$f['user_group'] = intval($user_groups[$i]);
 					$f['member']     = $internalKey;
-					$rs = $modx->db->insert($f, '[+prefix+]member_groups');
+					$rs = $modx->db->insert($f, $tbl_member_groups);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.");
 						exit;
@@ -230,7 +211,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -239,6 +220,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
@@ -273,14 +255,13 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the username already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
-		if (!$rs = $modx->db->query($sql)) {
+		if (!$rs = $modx->db->select('id', $tbl_manager_users, "username='{$newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("User name is already in use!");
 				exit;
@@ -288,14 +269,13 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		$sql = "SELECT internalKey FROM $dbase.`" . $table_prefix . "user_attributes` WHERE email='$email'";
-		if (!$rs = $modx->db->query($sql)) {
+		if (!$rs = $modx->db->select('internalKey', $tbl_user_attributes, "email='{$email}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -309,13 +289,13 @@ switch ($_POST['mode']) {
 		));
 
 		// update user name and password
-		$sql = "UPDATE $dbase.`" . $table_prefix . "manager_users` SET username='$newusername'" . $updatepasswordsql . " WHERE id=$id";
+		$sql = "UPDATE {$tbl_manager_users} SET username='{$newusername}' {$updatepasswordsql} WHERE id='{$id}'";
 		if (!$rs = $modx->db->query($sql)) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
 
-		$sql = "UPDATE $dbase.`" . $table_prefix . "user_attributes` SET
+		$sql = "UPDATE {$tbl_user_attributes} SET
 					fullname='" . $fullname . "',
 					role='$role',
 					email='$email',
@@ -323,6 +303,8 @@ switch ($_POST['mode']) {
 					mobilephone='$mobilephone',
 					fax='$fax',
 					zip='$zip' ,
+					street='$street',
+					city='$city',
 					state='$state',
 					country='$country',
 					gender='$gender',
@@ -341,6 +323,9 @@ switch ($_POST['mode']) {
 
 		// Save user settings
 		saveUserSettings($id);
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
 
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (
@@ -421,7 +406,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -430,6 +415,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 			
 			include_once "footer.inc.php";
@@ -462,10 +448,10 @@ function save_user_quoted_printable($string) {
 
 // Send an email to the user
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	global $signupemail_message;
+	global $modx,$_lang,$signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
-	$manager_url = $site_url . "manager/";
+	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
@@ -476,22 +462,14 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $manager_url, $message);
 
-	$headers = "From: " . $emailsender . "\r\n";
-	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
-	$headers .= "\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
-	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
-	$subject = "=?UTF-8?Q?".$emailsubject."?=";
-	$message = save_user_quoted_printable($message);
-
-	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
-			webAlert("$email - {$_lang['error_sending_email']}");
-			exit;
-		}
-	} elseif (!mail($email, $subject, $message, $headers)) {
-		webAlert("$email - {$_lang['error_sending_email']}");
+	$param = array();
+	$param['from']    = "{$site_name}<{$emailsender}>";
+	$param['subject'] = $emailsubject;
+	$param['body']    = $message;
+	$param['to']      = $email;
+	$rs = $modx->sendmail($param);
+	if (!$rs) {
+		webAlert("{$email} - {$_lang['error_sending_email']}");
 		exit;
 	}
 }
@@ -500,12 +478,6 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 function saveUserSettings($id) {
 	global $modx;
 
-	//$config = array();
-	//$rs = $modx->db->query('SELECT * FROM '.$modx->getFullTableName('system_settings'));
-	//while ($row = $modx->db->getRow($rs, 'num'))
-	//	$config[$row[0]] = $row[1];
-
-	// array of post values to ignore in this function
 	$ignore = array(
 		'id',
 		'oldusername',
@@ -524,6 +496,8 @@ function saveUserSettings($id) {
 		'fax',
 		'dob',
 		'country',
+		'street',
+		'city',
 		'state',
 		'zip',
 		'gender',
@@ -569,7 +543,7 @@ function saveUserSettings($id) {
 
 	$usrTable = $modx->getFullTableName('user_settings');
 
-	mysql_query('DELETE FROM '.$usrTable.' WHERE user='.$id);
+	$modx->db->query('DELETE FROM '.$usrTable.' WHERE user='.$id);
 
 	$savethese = array();
 	foreach ($settings as $k => $v) {
@@ -590,4 +564,27 @@ function ConvertDate($date) {
 	if ($date == "") {return "0";}
 	else {}          {return $modx->toTimeStamp($date);}
 }
-?>
+
+// Web alert -  sends an alert to web browser
+function webAlert($msg) {
+	global $id, $modx;
+	global $dbase, $table_prefix;
+	$mode = $_POST['mode'];
+	$url = "index.php?a=$mode" . ($mode == '12' ? "&id=" . $id : "");
+	$modx->manager->saveFormValues($mode);
+	include_once "header.inc.php";
+	$modx->webAlert($msg, $url);
+	include_once "footer.inc.php";
+}
+
+// Generate password
+function generate_password($length = 10) {
+	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+	$ps_len = strlen($allowable_characters);
+	mt_srand((double) microtime() * 1000000);
+	$pass = "";
+	for ($i = 0; $i < $length; $i++) {
+		$pass .= $allowable_characters[mt_rand(0, $ps_len -1)];
+	}
+	return $pass;
+}

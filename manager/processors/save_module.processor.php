@@ -1,11 +1,9 @@
 <?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_module')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $name = $modx->db->escape(trim($_POST['name']));
@@ -74,7 +72,7 @@ switch ($_POST['mode']) {
 
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_module.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_module.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -89,7 +87,7 @@ switch ($_POST['mode']) {
 		} 
 		else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
@@ -103,12 +101,13 @@ switch ($_POST['mode']) {
 									"mode"	=> "new",
 									"id"	=> $newid
 								));
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "108&id=$newid":"107";
@@ -132,7 +131,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited module not saved!".mysql_error();
+			echo "\$rs not set! Edited module not saved!".$modx->db->getLastError();
 			exit;
 		} 
 		else {	
@@ -145,12 +144,13 @@ switch ($_POST['mode']) {
 									"mode"	=> "upd",
 									"id"	=> $id
 								));	
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "108&id=$id":"107";

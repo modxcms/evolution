@@ -7,7 +7,7 @@ class CJotDataDb {
 	
 	function CJotDataDb() {
 		global $modx;
-		$this->tbl["check"] = $GLOBALS['table_prefix']."jot_fields";
+		$this->tbl["check"] = $modx->getFullTableName('jot_fields');
 		$this->tbl["content"] = $modx->getFullTableName('jot_content');
 		$this->tbl["subscriptions"] = $modx->getFullTableName('jot_subscriptions');
 		$this->tbl["fields"] = $modx->getFullTableName('jot_fields');

@@ -3,7 +3,7 @@
  * mutate_settings.ajax.php
  * 
  */
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
  
 require_once(dirname(__FILE__) . '/protect.inc.php');
 
@@ -62,11 +62,7 @@ switch(true){
 }
 
 if($emptyCache) {
-    include_once dirname(dirname(__FILE__)) . "/processors/cache_sync.class.processor.php";
-    $sync = new synccache();
-    $sync->setCachepath("../assets/cache/");
-    $sync->setReport(false);
-    $sync->emptyCache();
+	$modx->clearCache('full');
 }
 
 echo $str;

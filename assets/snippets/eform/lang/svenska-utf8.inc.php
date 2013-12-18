@@ -1,12 +1,12 @@
 <?php
 /**
-* snippets/eform/lang/svenska-utf8.inc.php
-* Swedish language file for eForm 1.4.4
-*
-* Translation: Pontus Ågren (Pont)
-* Date: 2007-04-18
-*/
-
+ * Language file for eForm
+ *
+ * Language:       Swedish
+ * Encoding:       UTF-8
+ * Translated by:  Pontus Ågren
+ * Date:           18.04.2007
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan problem.</p>";
 $_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas för mall-ID: ";
@@ -41,8 +41,8 @@ $_lang['ef_mail_abuse_message'] = '<p>Ett formulär på din webbplats kan vara f
 $_lang['ef_mail_abuse_error'] = '<strong>Felaktiga eller osäkra värden upptäcktes i ditt formulär</strong>.';
 $_lang['ef_eval_deprecated'] = "#EVAL-regeln används inte längre och kommer kanske inte att fungera i framtida versioner. Använd #FUNCTION istället.";
 $_lang['ef_multiple_submit'] = "<p>Det här formuläret har redan skickats utan problem. Du behöver inte skicka din information flera gånger.</p>";
-$_lang['ef_submit_time_limit'] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  ".($submitLimit/60)." minuter.</p>";
-$_lang['ef_version_error'] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;$version) skiljer sig från den inkluderade eForm-filen (version:&nbsp;$fileVersion). Kontrollera att du använder samma version på båda.";
+$_lang['ef_submit_time_limit'] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  [+submitLimitMinutes+] minuter.</p>";
+$_lang['ef_version_error'] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;[+version+]) skiljer sig från den inkluderade eForm-filen (version:&nbsp;[+fileVersion+]). Kontrollera att du använder samma version på båda.";
 $_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang['ef_date_format'] = '%Y-%b-%d %H:%M:%S';
 $_lang['ef_mail_error'] = 'Mailscriptet kunde inte skicka eposten';

@@ -1,9 +1,9 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($modx->config['mail_check_timeperiod'])) {
 	$modx->config['mail_check_timeperiod'] = 5;
 }
-if ($manager_theme) $manager_theme .= '/';
+$modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -11,7 +11,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript" src="media/script/session.js"></script>
@@ -35,7 +35,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			return false;
 		} catch(oException) {
 			// Delay first run until we're ready...
-			xx=updateMail.delay(1000,'',true);
+			xx=updateMail.delay(1000 * 60,'',true);
 		}
 	};
 
@@ -136,7 +136,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			y=window.setTimeout('reloadtree()',500);
 		}
 		if(rFrame==10) {
-			window.top.location.href = "../manager";
+			window.top.location.href = "../<?php echo MGR_DIR;?>";
 		}
 	}
 
@@ -335,7 +335,10 @@ if($modx->hasPermission('settings')) {
 // Reports Menu
 $reportsmenu = array();
 // site-sched
-$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+if($modx->hasPermission('view_eventlog')) {
+	// eventlog
+	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+}	
 if($modx->hasPermission('view_eventlog')) {
 	// eventlog
 	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=114" target="main">'.$_lang['eventlog_viewer'].'</a></li>';

@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
@@ -11,14 +11,13 @@ if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 }
 
 // andrazk 20070416 - if installer is running, destroy active sessions
-$pth = dirname(__FILE__);
-if (file_exists($pth.'/../../assets/cache/installProc.inc.php')) {
-	include_once($pth.'/../../assets/cache/installProc.inc.php');
+if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
+	include_once(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
 	if (isset($installStartTime)) {
 		if ((time() - $installStartTime) > 5 * 60) { // if install flag older than 5 minutes, discard
 			unset($installStartTime);
-			@ chmod($pth.'/../../assets/cache/installProc.inc.php', 0755);
-			unlink($pth.'/../../assets/cache/installProc.inc.php');
+			@ chmod(MODX_BASE_PATH . 'assets/cache/installProc.inc.php', 0755);
+			unlink(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
 		} 
 		else {
 			if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -53,8 +52,6 @@ if (isset($lastInstallTime)) {
 }
 
 if(!isset($_SESSION['mgrValidated'])){
-	include_once("browsercheck.inc.php");
-
 	if(isset($manager_language)) {
 		// establish fallback to English default
 		include_once "lang/english.inc.php";
@@ -74,6 +71,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormPrerender',$html);
 
 	$modx->setPlaceholder('site_name',$site_name);
+	$modx->setPlaceholder('manager_path',MGR_DIR);
 	$modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 	$modx->setPlaceholder('login_message',$_lang["login_message"]);
 	$modx->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
@@ -92,7 +90,7 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	if($use_captcha==1)  {
 		$modx->setPlaceholder('login_captcha_message',$_lang["login_captcha_message"]);
-		$modx->setPlaceholder('captcha_image','<a href="'.MODX_MANAGER_URL.'" class="loginCaptcha"><img id="captcha_image" src="'.$modx->getManagerPath().'includes/veriword.php?rand='.rand().'" alt="'.$_lang["login_captcha_message"].'" /></a>');
+		$modx->setPlaceholder('captcha_image','<a href="'.MODX_MANAGER_URL.'" class="loginCaptcha"><img id="captcha_image" src="'.MODX_MANAGER_URL.'includes/veriword.php?rand='.rand().'" alt="'.$_lang["login_captcha_message"].'" /></a>');
 		$modx->setPlaceholder('captcha_input','<label>'.$_lang["captcha_code"].'</label> <input type="text" name="captcha_code" tabindex="3" value="" />');
 	}
 
@@ -191,8 +189,8 @@ if(!isset($_SESSION['mgrValidated'])){
 			$itemid == null ? var_export(null, true) : $itemid,
 			$ip
 		);
-		if(!$rs = mysql_query($sql)) {
-			echo "error replacing into active users! SQL: ".$sql."\n".mysql_error();
+		if(!$rs=$modx->db->query($sql)) {
+			echo "error replacing into active users! SQL: ".$sql."\n".$modx->db->getLastError();
 			exit;
 		}
 	}

@@ -44,14 +44,22 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-define("MGR_DIR", "manager");
+$base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
+if(is_file($base_path . 'assets/cache/siteManager.php'))
+    include_once($base_path . 'assets/cache/siteManager.php');
+if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
+	define('MGR_DIR','manager');
+if(is_file($base_path . 'assets/cache/siteHostnames.php'))
+    include_once($base_path . 'assets/cache/siteHostnames.php');
+if(!defined('MODX_SITE_HOSTNAMES'))
+	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
 
 // harden it
-require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
+require_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/protect.inc.php');
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
@@ -61,7 +69,6 @@ session_cache_limiter('');
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 header('Cache-Control: private, must-revalidate');
 ob_start();
-error_reporting(E_ALL & ~E_NOTICE);
 
 /**
  *	Filename: index.php
@@ -88,7 +95,7 @@ $base_path = '';
 
 // get the required includes
 if($database_user=="") {
-	$rt = @include_once(dirname(__FILE__).'/manager/includes/config.inc.php');
+	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
 	echo "
@@ -111,7 +118,7 @@ a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 
 startCMSSession();
 
 // initiate a new document parser
-include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
+include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 
@@ -120,6 +127,7 @@ $modx->minParserPasses = 1; // min number of parser recursive loops or passes
 $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
+$modx->dumpPlugins = false;
 $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 

@@ -7,6 +7,8 @@ class synccache{
     var $deletedfiles = array();
     var $aliases = array();
     var $parents = array();
+    var $aliasVisible = array();
+	
 
     function setCachepath($path) {
         $this->cachePath = $path;
@@ -31,24 +33,27 @@ class synccache{
     function getParents($id, $path = '') { // modx:returns child's parent
         global $modx;
         if(empty($this->aliases)) {
-            $sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
+            //$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
+            $sql = "SELECT id, IF(alias='', id, alias) AS alias, parent, alias_visible FROM ".$modx->getFullTableName('site_content');
+			
             $qh = $modx->db->query($sql);
             if ($qh && $modx->db->getRecordCount($qh) > 0)  {
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
                     $this->parents[$row['id']] = $row['parent'];
+					$this->aliasVisible[$row['id']] = $row['alias_visible'];
                 }
             }
         }
         if (isset($this->aliases[$id])) {
-            $path = $this->aliases[$id] . ($path != '' ? '/' : '') . $path;
+            $path = ($this->aliasVisible[$id] == 1 ? $this->aliases[$id] . ($path != '' ? '/' : '') . $path : $path);
             return $this->getParents($this->parents[$id], $path);
         }
         return $path;
     }
 
     function emptyCache($modx = null) {
-        if((function_exists('is_a') && is_a($modx, 'DocumentParser') === false) || get_class($modx) !== 'DocumentParser') {
+        if(is_a($modx, 'DocumentParser') === false || get_class($modx) !== 'DocumentParser') {
             $modx = $GLOBALS['modx'];
         }
         if(!isset($this->cachePath)) {
@@ -57,7 +62,7 @@ class synccache{
         }
         $filesincache = 0;
         $deletedfilesincache = 0;
-        if (function_exists('glob')) {
+
             // New and improved!
             $files = glob(realpath($this->cachePath).'/*');
             $filesincache = count($files);
@@ -70,30 +75,6 @@ class synccache{
                     unlink($file);
                 }
             }
-        } else {
-            // Old way of doing it (no glob function available)
-            if ($handle = opendir($this->cachePath)) {
-                // Initialize deleted per round counter
-                $deletedThisRound = 1;
-                while ($deletedThisRound){
-                    if(!$handle) $handle = opendir($this->cachePath);
-                    $deletedThisRound = 0;
-                    while (false !== ($file = readdir($handle))) {
-                        if ($file != "." && $file != "..") {
-                            $filesincache += 1;
-                            if ( preg_match("/\.pageCache/", $file) && (!is_array($deletedfiles) || !array_search($file,$deletedfiles)) ) {
-                                $deletedfilesincache += 1;
-                                $deletedThisRound++;
-                                $deletedfiles[] = $file;
-                                unlink($this->cachePath.$file);
-                            } // End if
-                        } // End if
-                    } // End while
-                    closedir($handle);
-                    $handle = '';
-                } // End while ($deletedThisRound)
-            }
-        }
 
         $this->buildCache($modx);
 

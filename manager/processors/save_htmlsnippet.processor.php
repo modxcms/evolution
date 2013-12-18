@@ -1,11 +1,9 @@
 <?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_chunk')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $snippet = $modx->db->escape($_POST['post']);
@@ -57,7 +55,7 @@ switch ($_POST['mode']) {
 			$content['category'] = $_POST['categoryid'];
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_htmlsnippet.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_htmlsnippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -69,7 +67,7 @@ switch ($_POST['mode']) {
 			echo "\$rs not set! New Chunk not saved!";
 		} else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
@@ -81,12 +79,11 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 									));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
 			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
@@ -121,12 +118,11 @@ switch ($_POST['mode']) {
 										"id"	=> $id
 									));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
 
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

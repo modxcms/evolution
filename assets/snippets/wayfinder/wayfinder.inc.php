@@ -178,8 +178,12 @@ class Wayfinder {
             $useId = '';
         }
 		//Load row values into placholder array
-        $charset = $modx->config['modx_charset'];	
-        $phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlentities($resource['title'], ENT_COMPAT, $charset),htmlentities($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlentities($resource['introtext'], ENT_COMPAT, $charset),htmlentities($resource['description'], ENT_COMPAT, $charset),$numChildren);
+        $charset = $modx->config['modx_charset'];
+		if ($this->_config['entityEncode']) {
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset),$numChildren);
+		} else {
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
+		}
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
 			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
@@ -377,9 +381,9 @@ class Wayfinder {
 	        $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
 			$sql = "SELECT DISTINCT {$fields} FROM {$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id WHERE sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id ORDER BY {$sort} {$this->_config['sortOrder']} {$sqlLimit};";
 			//run the query
-			$result = $modx->dbQuery($sql);
+			$result = $modx->db->query($sql);
 	        $resourceArray = array();
-			$numResults = @$modx->recordCount($result);
+			$numResults = @$modx->db->getRecordCount($result);
 			$level = 1;
 			$prevParent = -1;
 			//Setup startlevel for determining each items level
@@ -392,7 +396,7 @@ class Wayfinder {
 			$resultIds = array();
 			//loop through the results
 			for($i=0;$i<$numResults;$i++)  {
-				$tempDocInfo = $modx->fetchRow($result);
+				$tempDocInfo = $modx->db->getRow($result);
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
@@ -459,7 +463,7 @@ class Wayfinder {
 	function appendTV($tvname,$docIDs){
 		global $modx;
 		
-		$baspath= $modx->config["base_path"] . "manager/includes";
+		$baspath= MODX_MANAGER_PATH."includes";
 	    include_once $baspath . "/tmplvars.format.inc.php";
 	    include_once $baspath . "/tmplvars.commands.inc.php";
 
@@ -473,7 +477,7 @@ class Wayfinder {
 		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
 		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->fetchRow($rs);
+			$row = @$modx->db->getRow($rs);
 			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 		}
 
@@ -482,7 +486,7 @@ class Wayfinder {
 			$query .= " FROM $tb2";
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
-			$row = @$modx->fetchRow($rs);
+			$row = @$modx->db->getRow($rs);
 			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type']);
 			foreach ($docIDs as $id) {
 				if (!isset($resourceArray["#{$id}"])) {
@@ -557,7 +561,7 @@ class Wayfinder {
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
 		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(substr($tpl, 6));
+			$template = file_get_contents(substr($tpl, 6));
 		} else if(substr($tpl, 0, 6) == "@CODE:") {
 			$template = substr($tpl, 6);
 		} else {
@@ -566,28 +570,14 @@ class Wayfinder {
 		return $template;
 	}
 
-	function get_file_contents($filename) {
-		// Function written at http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
-		// Returns the contents of file name passed
-		if (!function_exists('file_get_contents')) {
-			$fhandle = fopen($filename, "r");
-			$fcontents = fread($fhandle, filesize($filename));
-			fclose($fhandle);
-		} else	{
-			$fcontents = file_get_contents($filename);
-		}
-		return $fcontents;
-	}
 	
 	function findTemplateVars($tpl) {
-		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
-		$cnt = count($matches[1]);
-				
-		$tvnames = array ();
-		for ($i = 0; $i < $cnt; $i++) {
-			if (strpos($matches[1][$i], "wf.") === FALSE) {
-				$tvnames[] =  $matches[1][$i];
-			}
+		preg_match_all('~\[\+([^:]*?)(:|\+\])~', $tpl, $matches);
+		$tvnames = array();
+		foreach($matches[1] as $tv) {
+			if (strpos(strtolower($tv), 'phx')===0) continue;
+			if (strpos(strtolower($tv), 'wf.')===0) continue;
+			$tvnames[] = $tv;
 		}
 
 		if (count($tvnames) >= 1) {

@@ -118,7 +118,7 @@ class DocManagerBackend {
 		}
 		$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_tpl_results_message'];
 										
-		$this->modx->clearCache();
+		$this->modx->clearCache('full');
 		$this->logDocumentChange('template');
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
@@ -567,7 +567,7 @@ class DocManagerBackend {
 	}
 	
 	function logDocumentChange($action) {
-		include_once MODX_BASE_PATH.'manager/includes/log.class.inc.php';
+		include_once MODX_MANAGER_PATH.'includes/log.class.inc.php';
 		$log = new logHandler;
 	
 		switch ($action) {

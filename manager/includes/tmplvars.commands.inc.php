@@ -34,7 +34,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
-                $chunk = $modx->getChunk($param);
+                $chunk = $modx->getChunk(trim($param));
                 $output = $chunk;
                 break;
 
@@ -120,30 +120,24 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
 function ProcessFile($file) {
     // get the file
-    if (file_exists($file) && @ $handle = fopen($file, "r")) {
-        $buffer = "";
-        while (!feof($handle)) {
-            $buffer .= fgets($handle, 4096);
-        }
-        fclose($handle);
-    } else {
-        $buffer = " Could not retrieve document '$file'.";
-    }
+	$buffer = @file_get_contents($file);
+	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 
 // ParseCommand - separate @ cmd from params
-function ParseCommand($binding_string) {
+function ParseCommand($binding_string)
+{
     global $BINDINGS;
-    $match = array ();
-    $regexp = '/@(' . implode('|', $BINDINGS) . ')\s*(.*)/im'; // Split binding on whitespace
-    if (preg_match($regexp, $binding_string, $match)) {
-        // We can't return the match array directly because the first element is the whole string
-        $binding_array = array (
-            strtoupper($match[1]),
-            $match[2]
-        ); // Make command uppercase
-        return $binding_array;
+    $binding_array = array();
+    foreach($BINDINGS as $cmd)
+    {
+        if(strpos($binding_string,'@'.$cmd)===0)
+        {
+            $code = substr($binding_string,strlen($cmd)+1);
+            $binding_array = array($cmd,trim($code));
+            break;
+        }
     }
+    return $binding_array;
 }
-?>

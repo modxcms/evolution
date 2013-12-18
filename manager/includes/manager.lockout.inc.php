@@ -1,10 +1,10 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     
     $homeurl = $modx->makeUrl($manager_login_startup>0 ? $manager_login_startup:$site_start);
-    $logouturl = './index.php?a=8';
+    $logouturl = MODX_MANAGER_URL.'index.php?a=8';
 
     $modx->setPlaceholder('modx_charset',$modx_manager_charset);
     $modx->setPlaceholder('theme',$manager_theme);

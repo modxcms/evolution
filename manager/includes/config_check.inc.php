@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 $warningspresent = 0;
 
@@ -118,7 +118,7 @@ if (!function_exists('checkSiteCache')) {
     }
 }
 
-if (!is_writable("../assets/cache/")) {
+if (!is_writable(MODX_BASE_PATH . "assets/cache/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_cache']);
 }
@@ -128,13 +128,13 @@ if (!checkSiteCache()) {
     $warnings[]= array($lang['configcheck_sitecache_integrity']);
 }
 
-if (!is_writable("../assets/images/")) {
+if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_images']);
 }
 
 if (count($_lang)!=$length_eng_lang) {
-    $warningspresent = 1;
+    $warningspresent = 0;
     $warnings[] = array($_lang['configcheck_lang_difference']);
 }
 
@@ -143,17 +143,18 @@ clearstatcache();
 
 if ($warningspresent==1) {
 
+if(!isset($modx->config['send_errormail'])) $modx->config['send_errormail']='3';
 $config_check_results = "<h3>".$_lang['configcheck_notok']."</h3>";
 
 for ($i=0;$i<count($warnings);$i++) {
     switch ($warnings[$i][0]) {
         case $_lang['configcheck_configinc'];
             $warnings[$i][1] = $_lang['configcheck_configinc_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_configinc']);
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_configinc']);
             break;
         case $_lang['configcheck_installer'] :
             $warnings[$i][1] = $_lang['configcheck_installer_msg'];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_installer']);
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_installer']);
             break;
         case $_lang['configcheck_cache'] :
             $warnings[$i][1] = $_lang['configcheck_cache_msg'];
@@ -165,7 +166,7 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_sysfiles_mod']:
             $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_sysfiles_mod']);
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];

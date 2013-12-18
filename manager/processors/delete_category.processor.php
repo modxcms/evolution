@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 $hasPermission = 0;
 if($modx->hasPermission('save_plugin') ||
    $modx->hasPermission('save_snippet') ||
@@ -10,6 +10,11 @@ if($modx->hasPermission('save_plugin') ||
 
 if ($hasPermission) {
     $catId = intval($_GET['catId']);
+
+    // Set the item name for logger
+    $name = $modx->db->getValue($modx->db->select('category', $modx->getFullTableName('categories'), "id='{$catId}'"));
+    $_SESSION['itemname'] = $name;
+
     include_once "categories.inc.php";
     deleteCategory($catId);
 }

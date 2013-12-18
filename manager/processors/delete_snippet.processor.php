@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_snippet')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -16,7 +16,7 @@ $modx->invokeEvent("OnBeforeSnipFormDelete",
 
 //ok, delete the snippet.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_snippets` WHERE $dbase.`".$table_prefix."site_snippets`.id=".$id.";";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the snippet...";
 	exit;
@@ -27,12 +27,13 @@ if(!$rs) {
 									"id"	=> $id
 								));
 
+		// Set the item name for logger
+		$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$id}'"));
+		$_SESSION['itemname'] = $name;
+
 		// empty cache
-		include_once "cache_sync.class.processor.php";
-		$sync = new synccache();
-		$sync->setCachepath("../assets/cache/");
-		$sync->setReport(false);
-		$sync->emptyCache(); // first empty the cache
+		$modx->clearCache('full');
+		
 		// finished emptying cache - redirect
 
 	$header="Location: index.php?a=76&r=2";

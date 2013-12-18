@@ -4,9 +4,9 @@
 * -----------------------------------------------------------------------------
 * ajaxSearchPopup.php
 *
-* @author       Coroico - www.modx.wangba.fr
-* @version      1.9.2
-* @date         05/12/2010
+* @author       Coroico - www.evo.wangba.fr
+* @version      1.9.3b
+* @date         20/11/2012
 *
 */
 
@@ -22,11 +22,11 @@ if (!function_exists('parseUserConfig')) {
 
 if (isset($_POST['search'])) {
 
-    define('AS_VERSION', '1.9.2');
+    define('AS_VERSION', '1.9.3');
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
-    require_once (MODX_MANAGER_PATH . '/includes/protect.inc.php');
+    require_once (MODX_MANAGER_PATH . 'includes/protect.inc.php');
     if (!isset($_POST['as_version']) || (strip_tags($_POST['as_version']) != AS_VERSION)) {
         $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODx manager.";
     }
@@ -34,7 +34,7 @@ if (isset($_POST['search'])) {
         include_once AS_PATH . "classes/ajaxSearch.class.inc.php";
 
         define('MODX_API_MODE', true);
-        include_once (MODX_MANAGER_PATH . '/includes/document.parser.class.inc.php');
+        include_once (MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
         $modx = new DocumentParser;
         $modx->db->connect();
         $modx->getSettings();
@@ -48,7 +48,8 @@ if (isset($_POST['search'])) {
         $config = parseUserConfig((strip_tags($_POST['ucfg'])));
         // Load the custom functions of the custom configuration file if needed
         if ($config) {
-            $lconfig = (substr($config, 0, 6) != "@FILE:") ? AS_PATH . "configs/$config.config.php" : $modx->config['base_path'] . trim(substr($config, 6, strlen($config)-6));
+            if (substr($config, 0, 6) != "@FILE:") $lconfig = AS_PATH . "configs/{$config}.config.php";
+			else return "<h3>AjaxSearch error: @FILE: prefix not allowed !<br />Check your config parameter or your config file name!</h3>";
             if (file_exists($lconfig)) include $lconfig;
             else return "<h3>AjaxSearch error: " . $lconfig . " not found !<br />Check your config parameter or your config file name!</h3>";
         }

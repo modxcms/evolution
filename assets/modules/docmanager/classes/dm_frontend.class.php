@@ -7,7 +7,7 @@ class DocManagerFrontend {
     function DocManagerFrontend(&$dm, &$modx) {
     	$this->dm = &$dm;
     	$this->modx = &$modx;
-    	include (MODX_BASE_PATH.'manager/includes/controls/datagrid.class.php');
+    	include (MODX_MANAGER_PATH.'includes/controls/datagrid.class.php');
     }
     
     function getViews() {
@@ -84,6 +84,8 @@ class DocManagerFrontend {
 	
 	function renderMisc() {
 		$this->dm->ph['view.misc'] = $this->dm->parseTemplate('misc.tpl', $this->dm->ph);
+        $this->dm->ph['view.tab'] = (is_numeric($_GET['tab'])) ? '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['tab'].' );</script>' : '';
+
 	}
 	
 	function renderChangeAuthors() {

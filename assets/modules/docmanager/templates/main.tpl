@@ -69,7 +69,6 @@
                 <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style[+theme+]/images/icons/stop.png" /> [+lang.DM_close+]</a></li>
             </ul>
         </div>        
-	    <div class="sectionHeader">[+lang.DM_action_title+]</div>
 	    <div class="sectionBody"> 
 	        <div class="tab-pane" id="docManagerPane"> 
 	        <script type="text/javascript"> 
@@ -109,5 +108,6 @@
 	    </div>
 	</div>
 	[+view.documents+]
+    [+view.tab+]
     </body>
 </html>

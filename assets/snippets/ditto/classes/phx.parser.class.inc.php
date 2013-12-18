@@ -15,8 +15,8 @@ class PHxParser {
 		global $modx;
 		$this->name = "PHx";
 		$this->version = "2.1.2";
-		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
-		$this->user["usrid"] = intval($_SESSION['webInternalKey']);
+		$this->user["mgrid"] = intval(isset($_SESSION['mgrInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
+		$this->user["usrid"] = intval(isset($_SESSION['webInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 		$this->cache["cm"] = array();
 		$this->cache["ui"] = array();
@@ -288,9 +288,9 @@ class PHxParser {
 					default:
 						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
 							$sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $modifier_cmd[$i] . "';";
-			             	$result = $modx->dbQuery($sql);
-			             	if ($modx->recordCount($result) == 1) {
-								$row = $modx->fetchRow($result);
+			             	$result = $modx->db->query($sql);
+			             	if ($modx->db->getRecordCount($result) == 1) {
+								$row = $modx->db->getRow($result);
 						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
 						 		$this->Log("  |--- DB -> Custom Modifier");
 						 	}

@@ -1,5 +1,5 @@
 <?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_snippet')) {
 	$e->setError(3);
 	$e->dumpError();	
@@ -69,7 +69,7 @@ switch ($_POST['mode']) {
 			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_snippet.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_snippet.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -84,7 +84,7 @@ switch ($_POST['mode']) {
 		} 
 		else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
@@ -95,12 +95,13 @@ switch ($_POST['mode']) {
 										"mode"	=> "new",
 										"id"	=> $newid
 									));
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "22&id=$newid":"23";
@@ -134,12 +135,13 @@ switch ($_POST['mode']) {
 										"mode"	=> "upd",
 										"id"	=> $id
 									));	
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache
+			$modx->clearCache('full');
+
 			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {

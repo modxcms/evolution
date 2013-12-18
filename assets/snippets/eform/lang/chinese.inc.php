@@ -4,7 +4,14 @@
 * English language file for eForm
 * local revision: $Id: english.inc.php,v 1.2 2006/11/22 14:47:54 jelle Exp $
 */
-
+/**
+ * Language file for eForm
+ *
+ * Language:       Chinese
+ * Encoding:       UTF-8
+ * Translated by:  -
+ * Date:           22.11.2006
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>多谢!</h3><p>您的信息已提交.</p>";
 $_lang["ef_no_doc"] = "Document or chunk not found for template id=";
@@ -41,8 +48,8 @@ $_lang['ef_mail_abuse_message'] = '<p>A form on your website may have been the s
 $_lang['ef_mail_abuse_error'] = '<strong>Invalid or insecure entries were detected in your form</strong>.';
 $_lang['ef_eval_deprecated'] = "The #EVAL rule is deprecated and may not work in future versions. Use #FUNCTION instead.";
 $_lang['ef_multiple_submit'] = "<p>This form was already submitted succesfully. There is no need to submit your information multiple times.</p>";
-$_lang['ef_submit_time_limit'] = "<p>This form was already submitted succesfully. Re-submission of the form is disabled for ".($submitLimit/60)." minutes.</p>";
-$_lang['ef_version_error'] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;$version) is different from the included eForm file (version:&nbsp;$fileVersion). Please make sure you use the same version for both.";
+$_lang['ef_submit_time_limit'] = "<p>This form was already submitted succesfully. Re-submission of the form is disabled for [+submitLimitMinutes+] minutes.</p>";
+$_lang['ef_version_error'] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
 $_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang['ef_date_format'] = '%d-%b-%Y %H:%M:%S';
 $_lang['ef_mail_error'] = 'Mailer was unable to send mail';

@@ -1,6 +1,6 @@
 <?php
 if (IN_MANAGER_MODE != "true")
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_role')) {
     $e->setError(3);
     $e->dumpError();
@@ -97,16 +97,22 @@ switch ($_POST['mode']) {
             echo "An error occured while attempting to save the new role.<p>";
             exit;
         }
+        // Set the item name for logger
+        $_SESSION['itemname'] = $name;
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
         $rs = $modx->db->update($fields, $tbl, "id=$id");
-        if (!$rs = mysql_query($sql)) {
-            echo "An error occured while attempting to update the role. <br />" . mysql_error();
+        if (!$rs = $modx->db->query($sql)) {
+            echo "An error occured while attempting to update the role. <br />" . $modx->db->getLastError();
             exit;
         }
+        // Set the item name for logger
+        $_SESSION['itemname'] = $name;
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;

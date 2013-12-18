@@ -1,5 +1,5 @@
 <?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if(!$modx->hasPermission('save_plugin')) {  
     $e->setError(3);
@@ -66,7 +66,7 @@ switch ($_POST['mode']) {
 			$content['sysevents'] = $sysevents;
 
 			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_plugin.dynamic.php');
+			include(MODX_MANAGER_PATH.'actions/mutate_plugin.dynamic.php');
 			include 'footer.inc.php';
 			
 			exit;
@@ -94,12 +94,12 @@ switch ($_POST['mode']) {
                                         "id"    => $newid
                                     ));
             
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
             // empty cache
-            include_once "cache_sync.class.processor.php";
-            $sync = new synccache();
-            $sync->setCachepath("../assets/cache/");
-            $sync->setReport(false);
-            $sync->emptyCache(); // first empty the cache       
+            $modx->clearCache('full');
+
             // finished emptying cache - redirect
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$newid":"101";
@@ -137,12 +137,12 @@ switch ($_POST['mode']) {
                                         "id"    => $id
                                     ));
             
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
             // empty cache
-            include_once "cache_sync.class.processor.php";
-            $sync = new synccache();
-            $sync->setCachepath("../assets/cache/");
-            $sync->setReport(false);
-            $sync->emptyCache(); // first empty the cache
+            $modx->clearCache('full');
+
             // finished emptying cache - redirect   
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$id":"101";

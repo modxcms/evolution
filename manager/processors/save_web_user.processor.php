@@ -1,12 +1,14 @@
 <?php
 if (IN_MANAGER_MODE != "true")
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_web_user')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
+
+$tbl_web_users           = $modx->getFullTableName('web_users');
+$tbl_web_user_attributes = $modx->getFullTableName('web_user_attributes');
+$tbl_web_groups          = $modx->getFullTableName('web_groups');
 
 $input = $_POST;
 foreach($input as $k=>$v) {
@@ -17,7 +19,7 @@ foreach($input as $k=>$v) {
 }
 
 $id                   = intval($input['id']);
-    $esc_id = $modx->db->escape($id);
+$esc_id               = $modx->db->escape($id);
 $oldusername          = $input['oldusername'];
 $newusername          = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
     $esc_newusername = $modx->db->escape($newusername);
@@ -34,6 +36,8 @@ $mobilephone          = $input['mobilephone'];
 $fax                  = $input['fax'];
 $dob                  = !empty ($input['dob']) ? ConvertDate($input['dob']) : 0;
 $country              = $input['country'];
+$street               = $input['street'];
+$city                 = $input['city'];
 $state                = $input['state'];
 $zip                  = $input['zip'];
 $gender               = !empty($input['gender']) ? $input['gender'] : 0;
@@ -61,7 +65,7 @@ if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $
 switch ($_POST['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		if (!$rs = $modx->db->select('id','[+prefix+]web_users',"username='{$esc_newusername}'")) {
+		if (!$rs = $modx->db->select('id',$tbl_web_users,"username='{$esc_newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username {$newusername}.");
 			exit;
 		}
@@ -72,7 +76,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exist
-		if (!$rs = $modx->db->select('id','[+prefix+]web_user_attributes', "email='{$esc_email}'")) {
+		if (!$rs = $modx->db->select('id',$tbl_web_user_attributes, "email='{$esc_email}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
 			exit;
 		}
@@ -116,16 +120,16 @@ switch ($_POST['mode']) {
 		$f['username'] = $newusername;
 		$f['password'] = md5($newpassword);
 		$f = $modx->db->escape($f);
-		$internalKey = $modx->db->insert($f, '[+prefix+]web_users');
+		$internalKey = $modx->db->insert($f, $tbl_web_users);
 		if (!$internalKey) {
 			webAlert("An error occurred while attempting to save the user.");
 			exit;
 		}
 
         $f = array();
-        $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+        $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $f = $modx->db->escape($f);
-		$rs = $modx->db->insert($f, '[+prefix+]web_user_attributes');
+		$rs = $modx->db->insert($f, $tbl_web_user_attributes);
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
@@ -150,6 +154,9 @@ switch ($_POST['mode']) {
 			"id" => $internalKey
 		));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
+
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
@@ -160,7 +167,7 @@ switch ($_POST['mode']) {
 					$f['webgroup'] = intval($user_groups[$i]);
 					$f['webuser']  = $internalKey;
 					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, '[+prefix+]web_groups');
+					$rs = $modx->db->insert($f, $tbl_web_groups);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a web group.");
 						exit;
@@ -197,7 +204,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-			
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -206,6 +213,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
@@ -238,7 +246,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the username already exist
-		if (!$rs = $modx->db->select('id', '[+prefix+]web_users', "username='{$esc_newusername}'")) {
+		if (!$rs = $modx->db->select('id', $tbl_web_users, "username='{$esc_newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
@@ -252,12 +260,8 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('internalKey', '[+prefix+]web_user_attributes', "email='{$esc_email}'");
+		$rs = $modx->db->select('internalKey', $tbl_web_user_attributes, "email='{$esc_email}'");
 		$limit = $modx->db->getRecordCount($rs);
-		if (!$limit) {
-			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
-			exit;
-		}
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
@@ -278,14 +282,14 @@ switch ($_POST['mode']) {
 		if($genpassword == 1)
 		    $f['password'] = md5($newpassword);
 		$f = $modx->db->escape($f);
-		if (!$rs = $modx->db->update($f, '[+prefix+]web_users', "id='{$esc_id}'")) {
+		if (!$rs = $modx->db->update($f, $tbl_web_users, "id='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
 		$f = array();
-		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
+		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$f = $modx->db->escape($f);
-		if (!$rs = $modx->db->update($f, '[+prefix+]web_user_attributes', "internalKey='{$esc_id}'")) {
+		if (!$rs = $modx->db->update($f, $tbl_web_user_attributes, "internalKey='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's attributes.");
 			exit;
 		}
@@ -323,7 +327,7 @@ switch ($_POST['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$rs = $modx->db->delete('[+prefix+]web_groups', "webuser='{$esc_id}'");
+			$rs = $modx->db->delete($tbl_web_groups, "webuser='{$esc_id}'");
 			if (!$rs) {
 				webAlert("An error occurred while attempting to delete previous user_groups entries.");
 				exit;
@@ -334,7 +338,7 @@ switch ($_POST['mode']) {
 					$f['webgroup'] = intval($user_groups[$i]);
 					$f['webuser']  = $id;
 					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, '[+prefix+]web_groups');
+					$rs = $modx->db->insert($f, $tbl_web_groups);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
 						exit;
@@ -362,13 +366,14 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-			
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 				<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?></p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
@@ -401,7 +406,7 @@ function save_user_quoted_printable($string) {
 
 // Send an email to the user
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	global $websignupemail_message;
+	global $modx,$_lang,$websignupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
@@ -414,22 +419,14 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $site_url, $message);
 	
-	$headers = "From: " . $emailsender . "\r\n";
-	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
-	$headers .= "\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
-	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
-	$subject = "=?UTF-8?Q?".$emailsubject."?=";
-	$message = save_user_quoted_printable($message);
-
-	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
-			webAlert("$email - {$_lang['error_sending_email']}");
-			exit;
-		}
-	} elseif (!mail($email, $subject, $message, $headers)) {
-		webAlert("$email - {$_lang['error_sending_email']}");
+	$param = array();
+	$param['from']    = "{$site_name}<{$emailsender}>";
+	$param['subject'] = $emailsubject;
+	$param['body']    = $message;
+	$param['to']      = $email;
+	$rs = $modx->sendmail($param);
+	if (!$rs) {
+		webAlert("{$email} - {$_lang['error_sending_email']}");
 		exit;
 	}
 }
@@ -437,8 +434,9 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 
 // Save User Settings
 function saveUserSettings($id) {
-	global $modx, $dbase, $table_prefix;
-
+	global $modx;
+    $tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
+    
 	$settings = array (
 		"login_home",
 		"allowed_ip",
@@ -446,7 +444,7 @@ function saveUserSettings($id) {
 	);
 
     $esc_id = $modx->db->escape($id);
-	$modx->db->delete('[+prefix+]web_user_settings',"webuser='{$esc_id}'");
+	$modx->db->delete($tbl_web_user_settings,"webuser='{$esc_id}'");
 
 	for ($i = 0; $i < count($settings); $i++) {
 		$n = $settings[$i];
@@ -459,7 +457,7 @@ function saveUserSettings($id) {
 		    $f['setting_name']  = $n;
 		    $f['setting_value'] = $vl;
 		    $f = $modx->db->escape($f);
-		    $modx->db->insert($f, '[+prefix+]web_user_settings');
+		    $modx->db->insert($f, $tbl_web_user_settings);
 		}
 	}
 }
@@ -474,9 +472,8 @@ function ConvertDate($date) {
 // Web alert -  sends an alert to web browser
 function webAlert($msg) {
 	global $id, $modx;
-	global $dbase, $table_prefix;
 	$mode = $_POST['mode'];
-	$url = "index.php?a=$mode" . ($mode == '88' ? "&id={$id}" : '');
+	$url = "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : '');
 	$modx->manager->saveFormValues($mode);
 	include_once "header.inc.php";
 	$modx->webAlert($msg, $url);

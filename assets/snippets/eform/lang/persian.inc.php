@@ -1,10 +1,12 @@
 <?php
 /**
- * Persian language file for eForm.
- * Path:         assets/snippets/eform/lang/
- * Translation:  Mohsen (MotSmart ~ www.modxcms.ir)
- * Date:         11/04/2007
-*/
+ * Language file for eForm
+ *
+ * Language:       Persian
+ * Encoding:       UTF-8
+ * Translated by:  Mohsen (MotSmart ~ www.modxcms.ir)
+ * Date:           11.04.2007
+ */
 
 $_lang["ef_thankyou_message"] = "<h3>از شما متشکریم!</h3><p>اطلاعات شما باموفقیت ارسال شد.</p>";
 $_lang["ef_no_doc"] = "پرونده یا چانکی برای پوسته یا قالبی با شناسه ی مقابل پیدا نشد=";
@@ -41,8 +43,8 @@ $_lang['ef_mail_abuse_message'] = '<p>فرمهای وبگاه شما امکان 
 $_lang['ef_mail_abuse_error'] = '<strong>مقادیر ورودی غلط یا نامطمئنی در داخل فرم شما پیدا شده است</strong>.';
 $_lang['ef_eval_deprecated'] = "مشخصه ی #EVAL دیگر فعال نیست و در نسخه های بعدی کارایی نخواهد داشت. به جای آن از #FUNCTION استفاده کنید.";
 $_lang['ef_multiple_submit'] = "<p>این فرم قبلا با موفقیت ارسال شده. نیازی به ارسال چند باره ی اطلاعات نیست.</p>";
-$_lang['ef_submit_time_limit'] = "<p>این فرم قبلا با موفقیت ارسال شده. امکان ارسال مجدد فرم به مدت ".($submitLimit/60)." دقیقه نمی باشد.</p>";
-$_lang['ef_version_error'] = "<strong>خطر!</strong> نسخه ی اسنیپت eForm (نسخه:&nbsp;$version) متفاوت از فایل موجود eForm است (نسخه:&nbsp;$fileVersion). لطفا توجه کنید که نسخه ی هر دوی آنها یکی باشد.";
+$_lang['ef_submit_time_limit'] = "<p>این فرم قبلا با موفقیت ارسال شده. امکان ارسال مجدد فرم به مدت [+submitLimitMinutes+] دقیقه نمی باشد.</p>";
+$_lang['ef_version_error'] = "<strong>خطر!</strong> نسخه ی اسنیپت eForm (نسخه:&nbsp;[+version+]) متفاوت از فایل موجود eForm است (نسخه:&nbsp;[+fileVersion+]). لطفا توجه کنید که نسخه ی هر دوی آنها یکی باشد.";
 $_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
 $_lang['ef_date_format'] = '%d-%b-%Y %H:%M:%S';
 $_lang['ef_mail_error'] = 'سیستم موفق به ارسال ایمیل نشد';

@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document')) {
     $e->setError(3);
     $e->dumpError();
@@ -13,7 +13,7 @@ if(isset($_REQUEST['id'])) {
 }
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
@@ -26,6 +26,11 @@ if(!$udperms->checkPermissions()) {
     include("footer.inc.php");
     exit;
 }
+
+// Set the item name for logger
+$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$_SESSION['itemname'] = $pagetitle;
+
 ?>
 
 <script language="javascript">
@@ -74,7 +79,7 @@ function checkParentChildRelation(pId, pName) {
 	</ul>
 </div>
 
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_resource_message']; ?><p />
 <form method="post" action="index.php" name='newdocumentparent'>
@@ -86,4 +91,5 @@ function checkParentChildRelation(pId, pName) {
 <br />
 <input type='save' value="Move" style="display:none">
 </form>
+</div>
 </div>
