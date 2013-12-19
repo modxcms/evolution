@@ -7,7 +7,9 @@ defined('IN_PARSER_MODE') or die();
 
 # load tpl
 if(is_numeric($tpl)) $tpl = ($doc=$modx->getDocuments($tpl)) ? $doc['content']:"Document '$tpl' not found.";
-else if($tpl) $tpl = ($chunk=$modx->getChunk($tpl)) ? $chunk:"Chunk '$tpl' not found.";
+else if($tpl)
+    $tpl = (((substr(strtolower($tpl), 0, 5) == "@file") && ($chunk=file_get_contents(MODX_BASE_PATH.trim(substr($tpl, 6))))) || ($chunk=$modx->getChunk($tpl))) ? $chunk:"Chunk '$tpl' not found.";
+
 if(!$tpl) $tpl = getWebLogintpl();
 
 // extract declarations
@@ -36,7 +38,7 @@ if(!isset($_SESSION['webValidated'])){
             if (!o && d.all) o = d.all[id];
             return o;
         }
-    
+
         function webLoginShowForm(i){
             var a = getElementById('WebLoginLayer0');
             var b = getElementById('WebLoginLayer2');
@@ -47,13 +49,13 @@ if(!isset($_SESSION['webValidated'])){
             }
             else if(i==2 && a && b) {
                 a.style.display="none";
-                b.style.display="block";    
+                b.style.display="block";
                 document.forms['loginreminder'].txtpwdrem.value = 1;
             }
-        };        
+        };
         function webLoginCheckRemember () {
             if(document.loginfrm.rememberme.value==1) {
-                document.loginfrm.rememberme.value=0;    
+                document.loginfrm.rememberme.value=0;
             } else {
                 document.loginfrm.rememberme.value=1;
             }
@@ -62,11 +64,11 @@ if(!isset($_SESSION['webValidated'])){
             if(event && event.keyCode == 13) {
                 if(nextfield.name=='cmdweblogin') {
                     document.loginfrm.submit();
-                    return false; 
+                    return false;
                 }
                 else {
                     nextfield.focus();
-                    return false; 
+                    return false;
                 }
             } else {
                 return true;
@@ -75,16 +77,16 @@ if(!isset($_SESSION['webValidated'])){
     //--><!]]>
     </script>
     <?php
-        
+
         // display login
         $ref = isset($_REQUEST["refurl"]) ? array("refurl" => urlencode($_REQUEST["refurl"])) : array();
         $tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
         $tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
         $tpl = str_replace("[+action+]",preserveUrl($modx->documentIdentifier,"",$ref),$tpl);
-        $tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);    
-        $tpl = str_replace("[+username+]",$uid,$tpl);    
+        $tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);
+        $tpl = str_replace("[+username+]",$uid,$tpl);
         $tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
-        $tpl = str_replace("[+logintext+]",$loginText,$tpl);    
+        $tpl = str_replace("[+logintext+]",$loginText,$tpl);
         echo $tpl;
     ?>
     <script type="text/javascript">
@@ -97,14 +99,14 @@ if(!isset($_SESSION['webValidated'])){
     $output= '';
     $dbase = $modx->dbConfig['dbase'];
     $table_prefix = $modx->dbConfig['table_prefix'];
-    
+
     if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
     else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
     else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");
     else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
-    
+
     $itemid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
-    
+
     if($a!=1) {
         $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
         if(!$rs = $modx->db->query($sql)) {
@@ -112,13 +114,13 @@ if(!isset($_SESSION['webValidated'])){
             return;
         }
     }
-    
+
     // display logout
     $tpl = $tpls[1];
     $url = preserveUrl($modx->documentObject['id']);
     $url = $url.((strpos($url,"?")===false) ? "?":"&amp;")."webloginmode=lo";
-    $tpl = str_replace("[+action+]",$url,$tpl);    
-    $tpl = str_replace("[+logouttext+]",$logoutText,$tpl);    
+    $tpl = str_replace("[+action+]",$url,$tpl);
+    $tpl = str_replace("[+logouttext+]",$logoutText,$tpl);
     $output .= $tpl;
 }
 
@@ -126,10 +128,10 @@ if(!isset($_SESSION['webValidated'])){
 function getWebLogintpl(){
     ob_start();
     ?>
-    <!-- #declare:separator <hr> --> 
+    <!-- #declare:separator <hr> -->
     <!-- login form section-->
-    <form method="post" name="loginfrm" action="[+action+]" style="margin: 0px; padding: 0px;"> 
-    <input type="hidden" value="[+rememberme+]" name="rememberme" /> 
+    <form method="post" name="loginfrm" action="[+action+]" style="margin: 0px; padding: 0px;">
+    <input type="hidden" value="[+rememberme+]" name="rememberme" />
     <table border="0" cellspacing="0" cellpadding="0">
     <tr>
     <td>
@@ -148,7 +150,7 @@ function getWebLogintpl(){
         <table width="100%"  border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td valign="top"><input type="checkbox" id="chkbox" name="chkbox" tabindex="4" size="1" value="" [+checkbox+] onclick="webLoginCheckRemember()" /></td>
-            <td align="right">                                    
+            <td align="right">
             <input type="submit" value="[+logintext+]" name="cmdweblogin" /></td>
           </tr>
         </table>
@@ -182,7 +184,7 @@ function getWebLogintpl(){
         </tr>
       </table>
     </form>
-    <?php 
+    <?php
     $t = ob_get_contents();
     ob_end_clean();
     return $t;
