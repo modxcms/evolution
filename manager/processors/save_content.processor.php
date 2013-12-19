@@ -511,13 +511,13 @@ switch ($actionToTake) {
 		$row = $modx->db->getRow($rs);
 		$oldparent = $row['parent'];
 		$doctype = $row['type'];
-
+		$today= time();
 		if ($id == $site_start && $published == 0) {
 			$modx->manager->saveFormValues(27);
 			echo "Document is linked to site_start variable and cannot be unpublished!";
 			exit;
 		}
-		if ($id == $site_start && ($pub_date != "0" || $unpub_date != "0")) {
+		if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
 			$modx->manager->saveFormValues(27);
 			echo "Document is linked to site_start variable and cannot have publish or unpublish dates set!";
 			exit;
