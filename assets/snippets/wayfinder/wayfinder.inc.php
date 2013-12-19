@@ -184,10 +184,10 @@ class Wayfinder {
 		} else {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		}
-        //Add document TVs
-        foreach ($resource as $tvName => $tvVal) {
-            $this->placeHolders['rowLevel'][] = "[+".$tvName."+]";
-            $phArray[] = $tvVal;
+        //Add document variables to the placeholder array
+        foreach ($resource as $dvName => $dvVal) {
+            $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
+            $phArray[] = $dvVal;
         }
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
@@ -493,19 +493,19 @@ class Wayfinder {
 			$rs = $modx->db->query($query);
 			$row = @$modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
-				foreach ($docIDs as $id) {
-					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
-					if (!isset($resourceArray["#".$id])) {
-						$resourceArray["#$id"][$tvname] = $defaultOutput;
-					}
-				}
+			    foreach ($docIDs as $id) {
+				    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
 			} else {
-				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
-				foreach ($docIDs as $id) {
-					if (!isset($resourceArray["#".$id])) {
-						$resourceArray["#$id"][$tvname] = $defaultOutput;
-					}
-				}
+			    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
+			    foreach ($docIDs as $id) {
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
 			}
 		}
 		return $resourceArray;
