@@ -184,6 +184,11 @@ class Wayfinder {
 		} else {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		}
+        //Add document variables to the placeholder array
+        foreach ($resource as $dvName => $dvVal) {
+            $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
+            $phArray[] = $dvVal;
+        }
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
 			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
@@ -268,12 +273,12 @@ class Wayfinder {
 
         return $returnClass;
     }
-	
+
 	//determine "you are here"
     function isHere($did) {
         return in_array($did,$this->parentTree);
     }
-	
+
 	//Add the specified css & javascript chunks to the page
     function regJsCss() {
         global $modx;
@@ -281,7 +286,7 @@ class Wayfinder {
         if ($this->_config['debug']) {
             $jsCssDebug = array('js' => 'None Specified.', 'css' => 'None Specified.');
         }
-        //Check and load the CSS 
+        //Check and load the CSS
         if ($this->_config['cssTpl']) {
 			$cssChunk = $this->fetch($this->_config['cssTpl']);
             if ($cssChunk) {
@@ -304,7 +309,7 @@ class Wayfinder {
 		//Debug
 		if ($this->_config['debug']) {$this->addDebugInfo("settings","JSCSS","JS/CSS Includes","Results of CSS & Javascript includes.",$jsCssDebug);}
     }
-	
+
 	//Get all of the documents from the database
 	function getData() {
 		global $modx;
@@ -374,7 +379,7 @@ class Wayfinder {
 				// modify field names to use sc. table reference
 				$sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$this->_config['sortBy'])));
 			}
-			
+
 	        // get document groups for current user
 	        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 	        // build query
@@ -454,15 +459,15 @@ class Wayfinder {
 		//return final docs
         return $resourceArray;
 	}
-	
+
 	// ---------------------------------------------------
 	// Function: appendTV taken from Ditto (thanks Mark)
 	// Apeend a TV to the documents array
-	// ---------------------------------------------------	
-		
+	// ---------------------------------------------------
+
 	function appendTV($tvname,$docIDs){
 		global $modx;
-		
+
 		$baspath= MODX_MANAGER_PATH."includes";
 	    include_once $baspath . "/tmplvars.format.inc.php";
 	    include_once $baspath . "/tmplvars.commands.inc.php";
@@ -478,7 +483,7 @@ class Wayfinder {
 		$resourceArray = array();
 		for($i=0;$i<$tot;$i++)  {
 			$row = @$modx->db->getRow($rs);
-			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
+			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 		}
 
 		if ($tot != count($docIDs)) {
@@ -487,11 +492,20 @@ class Wayfinder {
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
 			$row = @$modx->db->getRow($rs);
-			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type']);
-			foreach ($docIDs as $id) {
-				if (!isset($resourceArray["#{$id}"])) {
-					$resourceArray["#{$id}"][$tvname] = $defaultOutput;
-				}
+			if (strtoupper($row['default_text']) == '@INHERIT') {
+			    foreach ($docIDs as $id) {
+				    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
+			} else {
+			    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
+			    foreach ($docIDs as $id) {
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
 			}
 		}
 		return $resourceArray;
@@ -500,7 +514,7 @@ class Wayfinder {
 	// ---------------------------------------------------
 	// Get a list of all available TVs
 	// ---------------------------------------------------
-		
+
 	function getTVList() {
 		global $modx;
 		$table = $modx->getFullTableName("site_tmplvars");
@@ -511,7 +525,7 @@ class Wayfinder {
 			$dbfields[] = $dbfield['name'];
 		return $dbfields;
 	}
-	
+
 	//debugging to check for valid chunks
     function checkTemplates() {
         global $modx;
@@ -537,9 +551,9 @@ class Wayfinder {
 					$nonWayfinderFields = array_merge($check, $nonWayfinderFields);
 				}
 				if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"Template Found.",array($n => $this->_templates[$n])); }
-            }			
+            }
         }
-		
+
 		if (!empty($nonWayfinderFields)) {
 			$nonWayfinderFields = array_unique($nonWayfinderFields);
 			$allTvars = $this->getTVList();
@@ -553,7 +567,7 @@ class Wayfinder {
 			if ($this->_config['debug']) { $this->addDebugInfo('tvars','tvs','Template Variables',"The following template variables were found in your templates.",$this->tvList); }
 		}
     }
-	
+
 	function fetch($tpl){
 		// based on version by Doze at http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
 		global $modx;
@@ -570,7 +584,7 @@ class Wayfinder {
 		return $template;
 	}
 
-	
+
 	function findTemplateVars($tpl) {
 		preg_match_all('~\[\+([^:]*?)(:|\+\])~', $tpl, $matches);
 		$tvnames = array();
@@ -586,12 +600,12 @@ class Wayfinder {
 			return false;
 		}
 	}
-	
+
 	function addDebugInfo($group,$groupkey,$header,$message,$info) {
 		$infoString = '<table border="1" cellpadding="3px">';
 		$numInfo = count($info);
 		$count = 0;
-		
+
 		foreach ($info as $key => $value) {
 			$key = $this->modxPrep($key);
 			if ($value === TRUE || $value === FALSE) {
@@ -604,16 +618,16 @@ class Wayfinder {
 			$value = empty($value) ? '&nbsp;' : $value;
 			$infoString .= "<td><strong>{$key}</strong></td><td>{$value}</td>";
 			$count++;
-		}	
+		}
 		$infoString .= '</tr></table>';
-	
+
 		$this->debugInfo[$group][$groupkey] = array(
 			'header' => $this->modxPrep($header),
 			'message' => $this->modxPrep($message),
 			'info' => $infoString,
 		);
 	}
-	
+
 	function renderDebugOutput() {
 		$output = '<table border="1" cellpadding="3px" width="100%">';
 		foreach ($this->debugInfo as $group => $item) {
@@ -628,13 +642,13 @@ class Wayfinder {
 					break;
 				case 'wrapper':
 					$output .= "<tr><th style=\"background:#C3D9FF;font-size:200%;\">Document Processing</th></tr>";
-					
+
 					foreach ($item as $parentId => $info) {
 						$output .= "<tr><table border=\"1\" cellpadding=\"3px\" style=\"margin-bottom: 10px;\" width=\"100%\">
 									<tr style=\"background:#336699;color:#fff;\"><th>{$info['header']} - <span style=\"font-weight:normal;\">{$info['message']}</span></th></tr>
 									<tr><td>{$info['info']}</td></tr>
 									<tr style=\"background:#336699;color:#fff;\"><th>Documents included in this wrapper:</th></tr>";
-															
+
 						foreach ($this->debugInfo['row'] as $key => $value) {
 							$keyParts = explode(':',$key);
 							if ($parentId == $keyParts[0]) {
@@ -642,10 +656,10 @@ class Wayfinder {
 									<tr><td><div style=\"float:left;margin-right:1%;\">{$value['message']}<br />{$value['info']}</div><div style=\"float:left;\">{$this->debugInfo['rowdata'][$key]['message']}<br />{$this->debugInfo['rowdata'][$key]['info']}</div></td></tr>";
 							}
 						}
-						
+
 						$output .= '</table></tr>';
 					}
-					
+
 					break;
 				case 'settings':
 					$output .= "<tr><th style=\"background:#C3D9FF;font-size:200%;\">Settings</th></tr>";
@@ -656,14 +670,14 @@ class Wayfinder {
 					}
 					break;
 				default:
-				
+
 					break;
 			}
 		}
 		$output .= '</table>';
 		return $output;
 	}
-	
+
 	function modxPrep($value) {
 		$value = (strpos($value,"<") !== FALSE) ? htmlentities($value) : $value;
 		$value = str_replace("[","&#091;",$value);
