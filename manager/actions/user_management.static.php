@@ -114,6 +114,7 @@ echo $cm->render();
 		rname.name AS role,
 		mua.fullname,
 		mua.email,
+		mua.thislogin,
 		IF(mua.gender=1,'".$_lang['user_male']."',IF(mua.gender=2,'".$_lang['user_female']."','-')) AS gender,
 		IF(mua.blocked,'".$_lang['yes']."','-') as blocked " .
 		"FROM ".$modx->getFullTableName('manager_users')." AS mu ".
@@ -128,23 +129,33 @@ echo $cm->render();
 	} else {
 	    $sql .= (!empty($sqlQuery) ? "WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%') ":"");
 	}
-	$sql .= "ORDER BY username";
+	$sql .= "ORDER BY mua.blocked ASC, mua.thislogin DESC";
 
 	$ds = $modx->db->query($sql);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
-	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
+	$grd = new DataGrid('',$ds,$modx->config['number_of_results']); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];
 	$grd->cssClass="grid";
 	$grd->columnHeaderClass="gridHeader";
 	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
-	$grd->fields="id,username,fullname,role,email,gender,blocked";
-	$grd->columns=$_lang["icon"].",".$_lang["name"].",".$_lang["user_full_name"].",".$_lang['role'].",".$_lang["email"].",".$_lang["user_gender"].",".$_lang["user_block"];
-	$grd->colWidths="34,,,,,40,34";
+	$grd->fields            = "id,username,fullname,role,email,gender,blocked,thislogin";
+	$grd->columns           = join(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
+	                                          $_lang["email"],$_lang["user_gender"],$_lang["user_block"],$_lang["login_button"]));
 	$grd->colAligns="center,,,,,center,center";
-	$grd->colTypes='template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="'.$_style["icons_user"].'" /></a>||template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>';
-	if($listmode=='1') $grd->pageSize=0;
-	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
+	$grd->colTypes          = join('||',array(
+	                          'template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="'.$_style['icons_user'] .'" /></a>',
+	                          'template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>',
+	                          'template:[+fullname+]',
+	                          'template:[+role+]',
+	                          'template:[+email+]',
+	                          'template:[+gender+]',
+	                          'template:[+blocked+]',
+	                          'date: ' . $modx->toDateFormat(null, 'formatOnly') . ' %H:%M'));
+	if($listmode=='1')
+	  $grd->pageSize=0;
+	if($_REQUEST['op']=='reset')
+	  $grd->pageNumber = 1;
 	// render grid
 	echo $grd->render();
 	?>
