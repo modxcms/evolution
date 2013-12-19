@@ -56,6 +56,7 @@ if (isset($_POST['search'])) {
 		if ($dcfg['version'] != AS_VERSION) return "<h3>AjaxSearch error: Version number mismatch. Check the content of the default configuration file!</h3>";
         $as = new AjaxSearch();
         $output = $as->run($tstart, $dcfg);
+        header("Content-type: text/html; charset=".$modx->getConfig('modx_charset'));
     }
     echo $output;
 }
