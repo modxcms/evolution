@@ -283,7 +283,7 @@ class synccache{
 
         // Write $somecontent to our opened file.
         if (fwrite($handle, $somecontent) === FALSE) {
-           echo 'Cannot write main MODx cache file! Make sure the assets/cache directory is writable!';
+           echo 'Cannot write main MODX cache file! Make sure the assets/cache directory is writable!';
            exit;
         }
         fclose($handle);
