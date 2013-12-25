@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Title: MODx Debug Console
+ * Title: MODX Debug Console
  * Purpose:
  *  	A class designed to help developers impliment a debug console
  * 		like to the one in Ditto 2
@@ -119,7 +119,7 @@ class modxDebugConsole{
 
 	// ---------------------------------------------------
 	// Function: makeMODxSafe
-	// Make all MODx tags safe for the output
+	// Make all MODX tags safe for the output
 	// ---------------------------------------------------
 	function makeMODxSafe($value) {
 		global $modx;
