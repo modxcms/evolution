@@ -1,7 +1,55 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.12 (Sep 12, 2013)
+MODX Evolution 1.0.13 (Dec 31, 2013)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#10073] define in php < 5.3
+* [#10076] Undefined variable in manager panel
+* [#10173] mm_rules hide tv needs to hide split too
+* [#10177] Add - Ditto language entry
+* [#10192] 500 error with save setting if install in subfolder
+* [#10195] lost tinyMCE theme full
+* [#10196] [+prefix+] -> $modx->getFullTableName($tableName);
+* [#10198] Codemirror template
+* [#10200] Translation on transifex not possible
+* [#10203] @Binding does not work the same
+* [#10212] Version 1.0.12 doesn't seem to work with Reflect
+* [#10225] Increment method Resource ID - Incomplete?
+* [#10235] Webuser can't change Email
+* [#10236] [phpthumb] source filename bug
+* [#10239] mm_rules.inc.php in russian
+* [#10240] Improve onchange trigger for file/image input
+* [#10266] error if start_page have get
+* [#10273] TinyMCE compatibility with IE11
+* [#10283] modx_sanitize_gpc problem
+* [#10284] modx_sanitize_gpc breaks eForm
+* [#10293] eForm: when using ccsender, 'to' address is visible
+* [#10308] easy2gallery menu not visible
+* [#10309] Don't save SMTP password if field was emptied manually
+* [#10336] eForm sendAsText and htmlspecialchars
+* [#10339] eForm: retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [#10348] Ditto Debug issues
+* [#10356] Closing chunk tag confuses the parser
+* [#10357] Ditto does not work in @EVAL
+* [#10358] FCKEditor && $_SERVER['HTTP_HOST'] with port
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [#10278] Update ManagerManager built-in fields for 1.0.12
+* [#10178] Set permission to config.inc.php when install
+* [#10208] Improvement several text strings
+* [#10271] Modify save button position in file manager
+* [#10300] Allow array parameter in phpthumb snippet
+* [#10349] FirstChildRedirect options
+
+
+
+
+MODX Evolution 1.0.12 (Sep 12, 2013)
 ===================================
 --------------------------------------------
 Bugfixes:
@@ -9,7 +57,7 @@ Bugfixes:
 * [#10190] fix lang (spanish, russian, nederlands)
 
 
-MODx Evolution 1.0.11 (Sep 11, 2013)
+MODX Evolution 1.0.11 (Sep 11, 2013)
 ===================================
 --------------------------------------------
 Security:
@@ -157,7 +205,7 @@ Refactor:
 
 
 
-MODx Evolution 1.0.10 (Apr 18, 2013)
+MODX Evolution 1.0.10 (Apr 18, 2013)
 ===================================
 --------------------------------------------
 Security:
@@ -244,7 +292,7 @@ Additional Improvements & Updates:
 * [#9837] Indicate inheritanced template variable
 
 
-MODx Evolution 1.0.9 (Mar 19, 2013)
+MODX Evolution 1.0.9 (Mar 19, 2013)
 ===================================
 --------------------------------------------
 Security:
@@ -307,14 +355,14 @@ Additional Improvements & Updates:
 
 
 
-MODx Evolution 1.0.8 (Jan 08, 2013)
+MODX Evolution 1.0.8 (Jan 08, 2013)
 ===================================
 --------------------------------------------
 Security:
 --------------------------------------------
 * [#9391] Prevent hash array exploit in Forgot Manager Login plugin
 
-MODx Evolution 1.0.7 (Nov 26, 2012)
+MODX Evolution 1.0.7 (Nov 26, 2012)
 ===================================
 --------------------------------------------
 Security:
@@ -323,7 +371,7 @@ Security:
 * [#9175] Escape $hash in Forgot Manager Login plugin
 
 
-MODx Evolution 1.0.6 (Mar 08, 2012)
+MODX Evolution 1.0.6 (Mar 08, 2012)
 ===================================
 --------------------------------------------
 Security:
@@ -344,7 +392,7 @@ Additional Improvements & Updates:
 * Update minimum PHP version for manager to 4.3.3
 
 
-MODx Evolution 1.0.5 (Jan 19, 2011)
+MODX Evolution 1.0.5 (Jan 19, 2011)
 ===================================
 --------------------------------------------
 Security:
@@ -430,7 +478,7 @@ Additional Improvements & Updates:
 * [#3543] Personalize updated to 2.1
 
 
-MODx Evolution 1.0.4 (Jun 8, 2010)
+MODX Evolution 1.0.4 (Jun 8, 2010)
 ===================================
 --------------------------------------------
 Security:
@@ -489,7 +537,7 @@ Additional Improvements & Updates:
 * [#MODX-1977] When previewing, use friendly URLs (if enabled)
 * [#MODX-2009] Clean up handling of 'a' variable in Manager (and related type casting changes)
 
-MODx Evolution 1.0.3 (Apr 1, 2010)
+MODX Evolution 1.0.3 (Apr 1, 2010)
 ===================================
 --------------------------------------------
 Security:
@@ -593,7 +641,7 @@ Additional Improvements & Updates:
 
 
 
-MODx Evolution 1.0.2 (Nov 4, 2009)
+MODX Evolution 1.0.2 (Nov 4, 2009)
 ===================================
 --------------------------------------------
 Security:
@@ -634,7 +682,7 @@ Additional Improvements & Updates:
 * [#MODX-948]  Parser: Snippet calls no longer break with blank characters or when broken across multiple lines
 
 
-MODx Evolution 1.0.1 (rev 5946 - October 22, 2009)
+MODX Evolution 1.0.1 (rev 5946 - October 22, 2009)
 ===================================
 --------------------------------------------
 Security:
@@ -706,7 +754,7 @@ Additional Improvements & Updates:
 * [#MDOX-1307] Update styling on QM+ to improve usability
 
 
-MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
+MODX Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
