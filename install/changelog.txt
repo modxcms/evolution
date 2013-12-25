@@ -46,6 +46,13 @@ Refactor:
 * [#10300] Allow array parameter in phpthumb snippet
 * [#10349] FirstChildRedirect options
 
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [gitHub] Wayfinder: ability to use all document fields like [+longtitle+] or [+pagetitle+]
+* [gitHub] Wayfinder: ability to @INHERIT custom TVs
+
+
 
 
 
