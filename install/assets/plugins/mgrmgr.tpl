@@ -2,7 +2,7 @@
 /**
  * ManagerManager
  *
- * Customize the MODx Manager to offer bespoke admin functions for end users.
+ * Customize the MODX Manager to offer bespoke admin functions for end users.
  *
  * @category plugin
  * @version 	0.3.11
