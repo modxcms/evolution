@@ -74,7 +74,7 @@ var $errors = array();
 ?>
 	<html>
 	<head>
-	<title>MODx :: Error</title>
+	<title>MODX :: Error</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>">
 	<script>
 		function showError(){
