@@ -36,6 +36,10 @@ Bugfixes:
 * [#10357] Ditto does not work in @EVAL
 * [#10358] FCKEditor && $_SERVER['HTTP_HOST'] with port
 
+* [gitHub] AjaxSearch: Adding charset header in Ajax Mode
+* [gitHub] $key could be empty if the placeholder tag is not closed or if it is directly closed
+* [gitHub] Fix for not set $_SESSION key
+
 --------------------------------------------
 Refactor:
 --------------------------------------------
@@ -46,13 +50,30 @@ Refactor:
 * [#10300] Allow array parameter in phpthumb snippet
 * [#10349] FirstChildRedirect options
 
+* [#3137] save_content.processor.php site_start save condition tune. (not old-date set)
+* [#3159] $_lang['install'] button is changed to $_lang['btnnext_value'] button.
+* [#3154] Datebase name default value should be empty.
+
+* [gitHub] The item of "Update" is concealed at a new installation.
+* [gitHub] Manager Users - List item tuning. Many user env useful.
+* [gitHub] View manager logs - grid view tune
+* [gitHub] Reformatted indents and changed double quotes to single quotes in merge functions
+* [gitHub] Reworked eval snippets/plugin functions and MODX error level detection
+
+
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
 * [gitHub] Wayfinder: ability to use all document fields like [+longtitle+] or [+pagetitle+]
 * [gitHub] Wayfinder: ability to @INHERIT custom TVs
+* [gitHub] WebLogin: @FILE ability for &tpl
+* [gitHub] Manager with role = 1 can see all documents in frontend and backend
+* [gitHub] Setup module depedencies
 
-
+--------------------------------------------
+Security:
+--------------------------------------------
+* [gitHub] Prevent XSS exploits misusing the site_url system setting
 
 
 
