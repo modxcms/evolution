@@ -6,7 +6,7 @@
  * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) et Coroico pour Evolution 1.0.4 / 1.0.5
  * Date:           30 decembre 2010
  * Version:        2.0.5
- * MODx version:   Evolution 1.0.5
+ * MODX version:   Evolution 1.0.5
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langages
 $modx_lang_attribute = 'fr'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1

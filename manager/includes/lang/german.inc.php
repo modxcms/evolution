@@ -3,12 +3,12 @@
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
- * Author:         The MODx Project Team
- *                 Anpassungen für MODx 0.9.5 durch Rainer Bachmaier und Marc Hinse
- *                 Anpassungen für MODx 0.9.6.3 durch Bogdan Günther
- *                 Anpassungen für MODx 1.0 durch Bogdan Günther
- *                 Anpassungen für MODx 1.0.5 durch Anselm Hannemann
- *                 Anpassungen für MODx 1.0.11 durch Thomas Jakobi
+ * Author:         The MODX Project Team
+ *                 Anpassungen für MODX 0.9.5 durch Rainer Bachmaier und Marc Hinse
+ *                 Anpassungen für MODX 0.9.6.3 durch Bogdan Günther
+ *                 Anpassungen für MODX 1.0 durch Bogdan Günther
+ *                 Anpassungen für MODX 1.0.5 durch Anselm Hannemann
+ *                 Anpassungen für MODX 1.0.11 durch Thomas Jakobi
  * Date:           24 October 2013
  * Version:        2.0.6
  * MODX version:   Evolution 1.0.13

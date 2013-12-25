@@ -3,10 +3,10 @@
  * Filename:       includes/lang/portuguese-br.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
- * Author:         MODxCMS.com.br
+ * Author:         MODXCMS.com.br
  * Date:           17 Aug 2009
  * Version:        1.2
- * MODx version:   1.0.0
+ * MODX version:   1.0.0
 */
 $modx_lang_attribute = 'pt-br';
 $modx_manager_charset = 'UTF-8';

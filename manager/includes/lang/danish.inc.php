@@ -1,9 +1,9 @@
 <?php
 /**
- * MODx language File
+ * MODX language File
  *
  * @author Henrik Nielsen - Proofreading: Mads Vestmar
- * @package MODx Evolution 1.0.5
+ * @package MODX Evolution 1.0.5
  * @date 27/12/10 18.10
  * @version 1.0.4
  * 

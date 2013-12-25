@@ -3,15 +3,15 @@
  * Filename:       includes/lang/polish-utf8.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
- * Author:         The MODx Project Team
+ * Author:         The MODX Project Team
  * 
  * Translation and revision for MODX v. 1.0.10 by:
  *					Piotr Matysiak - web@pm-fx.com
  * 
- * Translation and revision for MODx v. 1.0.4 by:
+ * Translation and revision for MODX v. 1.0.4 by:
  *					Radosław Włodkowski - radoslaw@wlodkowski.net
  * 
- * Translation for MODx v. 1.0 by:
+ * Translation for MODX v. 1.0 by:
  *					Piotr Grzeszykowski - piotrek@gawinet.pl 
  *
  * based on v. 0.9.1/0.9.5 translation by:
@@ -21,7 +21,7 @@
  * Date:           24 October 2013
 
  * Version:        1.6
- * MODx version:   Evolution 1.0.13
+ * MODX version:   Evolution 1.0.13
 */
 
 $modx_lang_attribute = 'pl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1

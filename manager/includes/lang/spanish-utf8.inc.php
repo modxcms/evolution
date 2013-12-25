@@ -2,10 +2,10 @@
 /**
  * Filename:       includes/lang/spanish.inc.php
  * Function:       Language file.
- * Author:         The MODx Project Team
+ * Author:         The MODX Project Team
  * Date:           28 Julio 2009
  * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * MODX version:   Evolution 1.0
  *
 */
 $modx_lang_attribute = 'es'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1

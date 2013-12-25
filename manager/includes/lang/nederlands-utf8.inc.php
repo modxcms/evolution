@@ -2,7 +2,7 @@
 /**
  * Filename:       includes/lang/nederlands.inc.php
  * Function:       Dutch language file.
- * Author:         The MODx Project Team
+ * Author:         The MODX Project Team
  *                 Stefan van Zanden (21-03-2009 Update to 0.9.6.3 + large amount of typo / consistency / translation fixes)
  *                 Stefan van Zanden (23-06-2009 Update to Evolution 1.0.0rc1)
  *                 Gauke Pieter Sietzema - Sterc.nl (25-06-2009 typo's and naming of features)
@@ -13,7 +13,7 @@
  *                 Stefan van Zanden (30-07-2009 Added 2 missing datetime fields)
  * Date:           30 July 2009
  * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * MODX version:   Evolution 1.0
 */
 $modx_lang_attribute = 'nl'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';

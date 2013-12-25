@@ -6,7 +6,7 @@
  * Author:         The MODX Project Team
  * Date:           24 October 2013
  * Version:        2.0.6
- * MODx version:   Evolution 1.0.13
+ * MODX version:   Evolution 1.0.13
  * Translation:    Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif 
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages

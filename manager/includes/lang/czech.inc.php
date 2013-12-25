@@ -1,9 +1,9 @@
 <?php
 /**
- * MODx language File
+ * MODX language File
  *
  * @author modxcms.cz
- * @package MODx
+ * @package MODX
  * @version 1.5
  * @updated 2010-12-11
  *

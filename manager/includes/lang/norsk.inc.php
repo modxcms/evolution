@@ -3,10 +3,10 @@
  * Filename:       includes/lang/norsk.inc.php
  * Function:       Language file.
  * Encoding:       ?
- * Author:         The MODx Project Team
+ * Author:         The MODX Project Team
  * Date:           03 Oct 2006
  * Version:        2.01
- * MODx version:   0.9.5
+ * MODX version:   0.9.5
 */
 $_lang["about_msg"] = 'MODX er et <a href="http://modx.com/" target="_blank">PHP applikasjonsrammeverk og system for innholdshåndtering</a> som er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
 $_lang["about_title"] = 'Om MODX';

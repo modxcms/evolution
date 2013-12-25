@@ -6,7 +6,7 @@
  * Author:         modx.cn leepoooo@163.com
  * Date:           Jun 8, 2009
  * Version:        0.1 (from English Ver1.6)
- * MODx version:   Evoltuion 1.0
+ * MODX version:   Evoltuion 1.0
 */
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'utf-8';

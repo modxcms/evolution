@@ -6,7 +6,7 @@
  * Author:         Mikko Lammi, www.maagit.fi
  * Date:           17.5.2010
  * Version:        -
- * MODx version:   Evolution 1.0.4
+ * MODX version:   Evolution 1.0.4
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'fi';
