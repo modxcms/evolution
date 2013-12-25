@@ -322,7 +322,7 @@ function someFunction( <strong>&amp;</strong>$fields ){ ... }</pre>
 	}	
 </pre></div>
 
-<p>All very well that we've written a function but how do we get it into MODx? I'm sure there's multiple ways of doing that but I've simply created an extra snippet called eFormEvent with the 'createJobNumber' function as the only content. That way it's only loaded when using the form. To make it available to eForm we place a call to this snippet on the same page, just before we call the eForm snippet (It needs to be first as otherwise it's not parsed by the time eFrom needs it).</p>
+<p>All very well that we've written a function but how do we get it into MODX? I'm sure there's multiple ways of doing that but I've simply created an extra snippet called eFormEvent with the 'createJobNumber' function as the only content. That way it's only loaded when using the form. To make it available to eForm we place a call to this snippet on the same page, just before we call the eForm snippet (It needs to be first as otherwise it's not parsed by the time eFrom needs it).</p>
 
 <p>All that remains is to add the <code>&eformOnBeforeMailSent</code> parameter to the eform snippet call with the function name. To finish this example off here are the eFormEvent snippet and both snippet calls that need to reside on the form page.</p>
 
