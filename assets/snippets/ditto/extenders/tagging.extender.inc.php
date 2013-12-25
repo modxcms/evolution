@@ -19,10 +19,10 @@ $landing = isset($tagDocumentID) ? $tagDocumentID : $modx->documentObject['id'];
  	ID for tag links to point to
 
 	Options:
-	Any MODx document with a Ditto call setup to receive the tags
+	Any MODX document with a Ditto call setup to receive the tags
 	
 	Default:
-	Current MODx Document
+	Current MODX Document
 */
 $source = isset($tagData) ? $tagData : "";
 /*
@@ -32,7 +32,7 @@ $source = isset($tagData) ? $tagData : "";
  	Field to get the tags from
 
 	Options:
-	Comma separated list of MODx fields or TVs
+	Comma separated list of MODX fields or TVs
 	
 	Default:
 	[NULL]

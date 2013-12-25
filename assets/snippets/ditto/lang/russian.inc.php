@@ -4,7 +4,7 @@
  * Filename:       assets/snippets/ditto/lang/russian.inc.php
  * Language:       Russian
  * Encoding:       Windows-1251
- * Translated by:  Russian MODx community, Jaroslav Sidorkin, based on translation by modx.ru
+ * Translated by:  Russian MODX community, Jaroslav Sidorkin, based on translation by modx.ru
  * Date:           9 May 2010
  * Version:        2.1.0
 */
@@ -13,93 +13,93 @@ $_lang['language'] = "russian";
 
 $_lang['abbr_lang'] = "ru";
 
-$_lang['file_does_not_exist'] = "не существует. Пожалуйста, проверьте файл.";
+$_lang['file_does_not_exist'] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.";
 
-$_lang['extender_does_not_exist'] = "- данное расширение отсутствует. Пожалуйста, проверьте его.";
+$_lang['extender_does_not_exist'] = "- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.";
 
 $_lang['default_template'] = <<<TPL
 
     <div class="ditto_item" id="ditto_item_[+id+]">
         <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
-        <div class="ditto_documentInfo">Автор: <strong>[+author+]</strong> от [+date+]</div>
+        <div class="ditto_documentInfo">пїЅпїЅпїЅпїЅпїЅ: <strong>[+author+]</strong> пїЅпїЅ [+date+]</div>
         <div class="ditto_introText">[+introtext+]</div>
     </div>
 
 TPL;
-$_lang['missing_placeholders_tpl'] = 'В одном из шаблонов Ditto (чанков) недостает тегов, проверьте следующий шаблон: <br /><br /><hr /><br /><br />';
+$_lang['missing_placeholders_tpl'] = 'пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Ditto (пїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: <br /><br /><hr /><br /><br />';
 
-$_lang["bad_tpl"] = "<p>&[+tpl+] или не содержит каких-либо плейсхолдеров, или является неверным названием чанка, блоком кода или именем файла. Пожалуйста, проверьте его.</p>";
+$_lang["bad_tpl"] = "<p>&[+tpl+] пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.</p>";
 
-$_lang['no_documents'] = '<p>Записей не найдено.</p>';
+$_lang['no_documents'] = '<p>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</p>';
 
-$_lang['resource_array_error'] = 'Ошибка массива ресурсов';
+$_lang['resource_array_error'] = 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ';
  
-$_lang['prev'] = "&lt; назад";
+$_lang['prev'] = "&lt; пїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['next'] = "далее &gt;";
+$_lang['next'] = "пїЅпїЅпїЅпїЅпїЅ &gt;";
 
 $_lang['button_splitter'] = "|";
 
 $_lang['default_copyright'] = "[(site_name)] 2009";
 
-$_lang['invalid_class'] = "Неверный класс Ditto. Пожалуйста, проверьте его.";
+$_lang['invalid_class'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Ditto. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.";
 
-$_lang['none'] = "Нет";
+$_lang['none'] = "пїЅпїЅпїЅ";
 
-$_lang['edit'] = "Редактировать";
+$_lang['edit'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
 $_lang['dateFormat'] = "%d.%b.%y %H:%M";
 
 // Debug Tab Names
 
-$_lang['info'] = "Информация";
+$_lang['info'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "MODX";
 
-$_lang['fields'] = "Поля";
+$_lang['fields'] = "пїЅпїЅпїЅпїЅ";
 
-$_lang['templates'] = "Шаблоны";
+$_lang['templates'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['filters'] = "Фильтры";
+$_lang['filters'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['prefetch_data'] = "Предварительные данные";
+$_lang['prefetch_data'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['retrieved_data'] = "Полученные данные";
+$_lang['retrieved_data'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
 
 // Debug Text
 
-$_lang['placeholders'] = "Плейсхолдеры";
+$_lang['placeholders'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['params'] = "Параметры";
+$_lang['params'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['basic_info'] = "Основная информация";
+$_lang['basic_info'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['document_info'] = "Информация о ресурсе";
+$_lang['document_info'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['debug'] = "Отладка";
+$_lang['debug'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['version'] = "Версия";
+$_lang['version'] = "пїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['summarize'] = "Число выводимых записей (summarize):";
+$_lang['summarize'] = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (summarize):";
 
-$_lang['total'] = "Всего в базе данных:";
+$_lang['total'] = "пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ:";
 
-$_lang['sortBy'] = "Сортировать по (sortBy):";
+$_lang['sortBy'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (sortBy):";
 
-$_lang['sortDir'] = "Порядок сортировки (sortDir):";
+$_lang['sortDir'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (sortDir):";
 
-$_lang['start'] = "Начать с";
+$_lang['start'] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ";
 	 
-$_lang['stop'] = "Закончить на";
+$_lang['stop'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ";
 
 $_lang['ditto_IDs'] = "ID";
 
-$_lang['ditto_IDs_selected'] = "Выбранные ID";
+$_lang['ditto_IDs_selected'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ID";
 
-$_lang['ditto_IDs_all'] = "Все ID";
+$_lang['ditto_IDs_all'] = "пїЅпїЅпїЅ ID";
 
-$_lang['open_dbg_console'] = "Открыть консоль отладки";
+$_lang['open_dbg_console'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
-$_lang['save_dbg_console'] = "Скачать отчет отладки";
+$_lang['save_dbg_console'] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
 
 ?>

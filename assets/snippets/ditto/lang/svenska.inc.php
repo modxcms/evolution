@@ -8,7 +8,7 @@
  * Note:
  *      New language keys should added at the bottom of this page
  *
- * Translation: Pontus Ågren (Pont)
+ * Translation: Pontus ï¿½gren (Pont)
  * Date: 2007-03-07
  */
 
@@ -30,21 +30,21 @@ $_lang['default_template'] = <<<TPL
 
 TPL;
 
-$_lang["bad_tpl"] = "<p>&[+tpl+] innehåller inga platshållare eller också är det ett ogiltigt chunk-namn, kodblock eller filnamn. Kontrollera det.</p>";
+$_lang["bad_tpl"] = "<p>&[+tpl+] innehï¿½ller inga platshï¿½llare eller ocksï¿½ ï¿½r det ett ogiltigt chunk-namn, kodblock eller filnamn. Kontrollera det.</p>";
 
 $_lang['no_documents'] = '<p>Inga dokument hittades.</p>';
 
-$_lang['resource_array_error'] = 'Fel i resursfältet';
+$_lang['resource_array_error'] = 'Fel i resursfï¿½ltet';
 
-$_lang['prev'] = "&lt; Föregående";
+$_lang['prev'] = "&lt; Fï¿½regï¿½ende";
 
-$_lang['next'] = "Nästa &gt;";
+$_lang['next'] = "Nï¿½sta &gt;";
 
 $_lang['button_splitter'] = "|";
 
 $_lang['default_copyright'] = "[(site_name)] 2007";	
 
-$_lang['invalid_class'] = "Ditto-klassen är ogiltig. Kontrollera den.";
+$_lang['invalid_class'] = "Ditto-klassen ï¿½r ogiltig. Kontrollera den.";
 
 $_lang['none'] = "Inga";
 
@@ -56,25 +56,25 @@ $_lang['dateFormat'] = "%y-%b-%d %H:%M";
 
 $_lang['info'] = "Information";
 
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "MODX";
 
-$_lang['fields'] = "Fält";
+$_lang['fields'] = "Fï¿½lt";
 
 $_lang['templates'] = "Mallar";
 
 $_lang['filters'] = "Filter";
 
-$_lang['prefetch_data'] = "Förhämtad data";
+$_lang['prefetch_data'] = "Fï¿½rhï¿½mtad data";
 
-$_lang['retrieved_data'] = "Hämtad data";
+$_lang['retrieved_data'] = "Hï¿½mtad data";
 
 // Debug Text
 
-$_lang['placeholders'] = "Platshållare";
+$_lang['placeholders'] = "Platshï¿½llare";
 
 $_lang['params'] = "Parametrar";
 
-$_lang['basic_info'] = "Grundläggande information";
+$_lang['basic_info'] = "Grundlï¿½ggande information";
 
 $_lang['document_info'] = "Dokumentinformation";
 
@@ -100,7 +100,7 @@ $_lang['ditto_IDs_selected'] = "Valda IDn";
 
 $_lang['ditto_IDs_all'] = "Alla IDn";
 
-$_lang['open_dbg_console'] = "Öppna Debugkonsolen";
+$_lang['open_dbg_console'] = "ï¿½ppna Debugkonsolen";
 
 $_lang['save_dbg_console'] = "Spara Debugkonsolen";
 

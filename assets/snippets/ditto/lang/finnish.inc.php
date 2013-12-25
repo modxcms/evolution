@@ -53,7 +53,7 @@ $_lang['dateFormat'] = "%d.%m.%Y %H:%M";
 
 $_lang['info'] = "Tiedot";
 
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "MODX";
 
 $_lang['fields'] = "Kent&auml;t";
 
