@@ -105,11 +105,12 @@ elseif ($mode=='snapshot')
 			$tables[] = $db_status['Name'];
 		}
 	}
-	$today = $modx->toDateFormat(time());
-	$today = str_replace(array('/',' '), '-', $today);
-	$today = str_replace(':', '', $today);
-	$today = strtolower($today);
-	global $path;
+	//$today = $modx->toDateFormat(time());
+	//$today = str_replace(array('/',' '), '-', $today);
+	//$today = str_replace(':', '', $today);
+	//$today = strtolower($today);
+    $today = date('Y-m-d_H-i-s');
+    global $path;
 	$path = "{$modx->config['snapshot_path']}{$today}.sql";
 	
 	@set_time_limit(120); // set timeout limit to 2 minutes
