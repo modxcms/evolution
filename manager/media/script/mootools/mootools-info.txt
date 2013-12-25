@@ -1,4 +1,4 @@
-This MODx distribution contains Mootools 1.12, compressed by the YUI 
+This MODX distribution contains Mootools 1.12, compressed by the YUI
 compressor. It has been stripped of whitespace and comments, but is otherwise 
 unaffected in theory. It does make it hard to read the source though. If you 
 need documentation, support or source code, please visit the links below:
