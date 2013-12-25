@@ -1,6 +1,6 @@
 <?php
 /**
- * MODx Installer
+ * MODX Installer
  */
 // do a little bit of environment cleanup if possible
 if (version_compare(phpversion(), "5.3") < 0) {

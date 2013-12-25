@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Multilanguage functions for MODx Installer
+ * Multilanguage functions for MODX Installer
  *
  * @author davaeron
- * @package MODx
+ * @package MODX
  * @version 1.0
  * 
  * Filename:       /install/lang.php

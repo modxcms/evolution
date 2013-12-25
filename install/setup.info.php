@@ -1,5 +1,5 @@
 <?php
-//:: MODx Installer Setup file 
+//:: MODX Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
 if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
     include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
