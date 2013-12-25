@@ -3,8 +3,8 @@
  * Document Manager Module - polish.inc.php
  * 
  * Purpose: Contains the language strings for use in the module.
- * Author: £ukasz Kowalczyk // www.pixeligence.pl
- * For: MODx CMS (www.modxcms.com)
+ * Author: ï¿½ukasz Kowalczyk // www.pixeligence.pl
+ * For: MODX CMS (www.modx.com)
  * Date:10/12/2006 Version: 0.9.5
  * 
  */
@@ -12,103 +12,103 @@
 //-- POLISH LANGUAGE FILE
  
 //-- titles
-$_lang['DM_module_title'] = 'Mened¿er dokumentów';
-$_lang['DM_action_title'] = 'Wybierz akcjê';
-$_lang['DM_range_title'] = 'Podaj zakres ID dokumentów';
+$_lang['DM_module_title'] = 'Menedï¿½er dokumentï¿½w';
+$_lang['DM_action_title'] = 'Wybierz akcjï¿½';
+$_lang['DM_range_title'] = 'Podaj zakres ID dokumentï¿½w';
 $_lang['DM_tree_title'] = 'Wybierz dokumenty z drzewa';
-$_lang['DM_update_title'] = 'Update zakoñczony';
-$_lang['DM_sort_title'] = 'Edytor indeksów menu';
+$_lang['DM_update_title'] = 'Update zakoï¿½czony';
+$_lang['DM_sort_title'] = 'Edytor indeksï¿½w menu';
 
 //-- tabs
-$_lang['DM_doc_permissions'] = 'Uprawnienia dokumentów';
+$_lang['DM_doc_permissions'] = 'Uprawnienia dokumentï¿½w';
 $_lang['DM_template_variables'] = 'Zmienne szablonu';
 $_lang['DM_sort_menu'] = 'Sortuj pozycje menu';
-$_lang['DM_change_template'] = 'Zmieñ szablon';
+$_lang['DM_change_template'] = 'Zmieï¿½ szablon';
 $_lang['DM_publish'] = 'Publikuj/Niepublikuj';
-$_lang['DM_other'] = 'Inne w³a¶ciwo¶ci';
+$_lang['DM_other'] = 'Inne wï¿½aï¿½ciwoï¿½ci';
  
 //-- buttons
-$_lang['DM_close'] = 'Zamknij Mened¿era Dokumentów';
-$_lang['DM_cancel'] = 'Powrót';
+$_lang['DM_close'] = 'Zamknij Menedï¿½era Dokumentï¿½w';
+$_lang['DM_cancel'] = 'Powrï¿½t';
 $_lang['DM_go'] = 'Wykonaj';
 $_lang['DM_save'] = 'Zapisz';
 $_lang['DM_sort_another'] = 'Sortuj inne';
 
 //-- templates tab
 $_lang['DM_tpl_desc'] = '
-Wybierz szablon z poni¿szej tabeli i podaj ID dokumentów, do których chcesz zastosowaæ zmiany. Mo¿esz to zrobiæ przez wpisanie zakresu ID lub u¿ywaj±c opcji Drzewa poni¿ej.';
-$_lang['DM_tpl_no_templates'] = 'Nie znaleziono szablonów';
+Wybierz szablon z poniï¿½szej tabeli i podaj ID dokumentï¿½w, do ktï¿½rych chcesz zastosowaï¿½ zmiany. Moï¿½esz to zrobiï¿½ przez wpisanie zakresu ID lub uï¿½ywajï¿½c opcji Drzewa poniï¿½ej.';
+$_lang['DM_tpl_no_templates'] = 'Nie znaleziono szablonï¿½w';
 $_lang['DM_tpl_column_id'] = 'ID';
 $_lang['DM_tpl_column_name'] = 'Nazwa';
 $_lang['DM_tpl_column_description'] ='Opis';
 $_lang['DM_tpl_blank_template'] = 'Pusty szablon';
 
-$_lang['DM_tpl_results_message']= 'U¿yj przycisku Powrót je¶li musisz wprowadziæ wiêcej zmian. Cache strony zosta³ automatycznie wyczyszczony.';
+$_lang['DM_tpl_results_message']= 'Uï¿½yj przycisku Powrï¿½t jeï¿½li musisz wprowadziï¿½ wiï¿½cej zmian. Cache strony zostaï¿½ automatycznie wyczyszczony.';
 
 //-- template variables tab
-$_lang['DM_tv_desc'] = 'Wybierz szablon z poni¿szej tabeli i podaj ID dokumentów, do których chcesz zastosowaæ zmiany. Mo¿esz to zrobiæ przez wpisanie zakresu ID lub u¿ywaj±c opcji Drzewa poni¿ej. Potem wybierz szablon z tabeli i przypisane zmienne szablonu zostan± za³adowane. Wprowad¼ po¿±dane warto¶ci Zmiennych Szablonu i wy¶lij do przetwarzania.';
-$_lang['DM_tv_template_mismatch'] = 'Ten dokument nie u¿ywa wybranego szablonu.';
-$_lang['DM_tv_doc_not_found'] = 'Ten dokument nie zosta³ znaleziony w bazie danych.';
-$_lang['DM_tv_no_tv'] = 'Nie znaleziono ¿adnych Zmiennych Szablonu.';
-$_lang['DM_tv_no_docs'] = 'Nie wybrano ¿adnego dokumentu do zmiany.';
-$_lang['DM_tv_no_template_selected'] = '¯aden szablon nie zosta³ wybrany.';
-$_lang['DM_tv_loading'] = '£adowanie Zmiennych Szablonu...';
-$_lang['DM_tv_ignore_tv'] = 'Ignoruj te Zmienne Szablonu (warto¶ci oddziel przecinkiem):';
+$_lang['DM_tv_desc'] = 'Wybierz szablon z poniï¿½szej tabeli i podaj ID dokumentï¿½w, do ktï¿½rych chcesz zastosowaï¿½ zmiany. Moï¿½esz to zrobiï¿½ przez wpisanie zakresu ID lub uï¿½ywajï¿½c opcji Drzewa poniï¿½ej. Potem wybierz szablon z tabeli i przypisane zmienne szablonu zostanï¿½ zaï¿½adowane. Wprowadï¿½ poï¿½ï¿½dane wartoï¿½ci Zmiennych Szablonu i wyï¿½lij do przetwarzania.';
+$_lang['DM_tv_template_mismatch'] = 'Ten dokument nie uï¿½ywa wybranego szablonu.';
+$_lang['DM_tv_doc_not_found'] = 'Ten dokument nie zostaï¿½ znaleziony w bazie danych.';
+$_lang['DM_tv_no_tv'] = 'Nie znaleziono ï¿½adnych Zmiennych Szablonu.';
+$_lang['DM_tv_no_docs'] = 'Nie wybrano ï¿½adnego dokumentu do zmiany.';
+$_lang['DM_tv_no_template_selected'] = 'ï¿½aden szablon nie zostaï¿½ wybrany.';
+$_lang['DM_tv_loading'] = 'ï¿½adowanie Zmiennych Szablonu...';
+$_lang['DM_tv_ignore_tv'] = 'Ignoruj te Zmienne Szablonu (wartoï¿½ci oddziel przecinkiem):';
 $_lang['DM_tv_ajax_insertbutton'] = 'Wstaw';
 
 //-- document permissions tab
-$_lang['DM_doc_desc'] = 'Wybierz grupê dokumentów z poni¿szej tabeli. Nastêpnie podaj ID dokumentów, które chcesz zmieniæ.	Mo¿esz to zrobiæ przez wpisanie zakresu ID lub u¿ywaj±c opcji Drzewa poni¿ej.';
-$_lang['DM_doc_no_docs'] = 'Nie znaleziono grup dokumentów';
+$_lang['DM_doc_desc'] = 'Wybierz grupï¿½ dokumentï¿½w z poniï¿½szej tabeli. Nastï¿½pnie podaj ID dokumentï¿½w, ktï¿½re chcesz zmieniï¿½.	Moï¿½esz to zrobiï¿½ przez wpisanie zakresu ID lub uï¿½ywajï¿½c opcji Drzewa poniï¿½ej.';
+$_lang['DM_doc_no_docs'] = 'Nie znaleziono grup dokumentï¿½w';
 $_lang['DM_doc_column_id'] = 'ID';
 $_lang['DM_doc_column_name'] = 'Nazwa';
-$_lang['DM_doc_radio_add'] = 'Dodaj grupê dokumentów';
-$_lang['DM_doc_radio_remove'] = 'Usuñ grupê dokumentów';
+$_lang['DM_doc_radio_add'] = 'Dodaj grupï¿½ dokumentï¿½w';
+$_lang['DM_doc_radio_remove'] = 'Usuï¿½ grupï¿½ dokumentï¿½w';
 
 $_lang['DM_doc_skip_message1'] = 'Dokument z ID';
-$_lang['DM_doc_skip_message2'] = 'ju¿ nale¿y do wybranej grupy (pomijanie)';
+$_lang['DM_doc_skip_message2'] = 'juï¿½ naleï¿½y do wybranej grupy (pomijanie)';
 
 //-- sort menu tab
-$_lang['DM_sort_pick_item'] = 'Proszê klikn±æ korzeñ strony albo dokument nadrzêdny z g³ównego drzewa dokumentów, który chcesz posortowaæ.'; 
+$_lang['DM_sort_pick_item'] = 'Proszï¿½ kliknï¿½ï¿½ korzeï¿½ strony albo dokument nadrzï¿½dny z gï¿½ï¿½wnego drzewa dokumentï¿½w, ktï¿½ry chcesz posortowaï¿½.'; 
 $_lang['DM_sort_updating'] = 'Zmieniam...';
-$_lang['DM_sort_updated'] = 'Zakoñczono';
-$_lang['DM_sort_nochildren'] = 'Dokument nie ma ¿adnych dokumentów podrzêdnych';
-$_lang['DM_sort_noid']='Nie wybrano ¿adnego dokumentu. Proszê wróciæ i wybraæ dokument.';
+$_lang['DM_sort_updated'] = 'Zakoï¿½czono';
+$_lang['DM_sort_nochildren'] = 'Dokument nie ma ï¿½adnych dokumentï¿½w podrzï¿½dnych';
+$_lang['DM_sort_noid']='Nie wybrano ï¿½adnego dokumentu. Proszï¿½ wrï¿½ciï¿½ i wybraï¿½ dokument.';
 
 //-- other tab
-$_lang['DM_other_header'] = 'Inne ustawienia dokumentów';
-$_lang['DM_misc_label'] = 'Dostêpne ustawienia:';
-$_lang['DM_misc_desc'] = 'Proszê wybraæ ustawienie z listy rozwijalnej, a potem wybraæ ¿±dan± opcjê. Mo¿e zostaæ zmienione tylko jedno ustawienie naraz.';
+$_lang['DM_other_header'] = 'Inne ustawienia dokumentï¿½w';
+$_lang['DM_misc_label'] = 'Dostï¿½pne ustawienia:';
+$_lang['DM_misc_desc'] = 'Proszï¿½ wybraï¿½ ustawienie z listy rozwijalnej, a potem wybraï¿½ ï¿½ï¿½danï¿½ opcjï¿½. Moï¿½e zostaï¿½ zmienione tylko jedno ustawienie naraz.';
 
 $_lang['DM_other_dropdown_publish'] = 'Publikuj/Niepublikuj';
-$_lang['DM_other_dropdown_show'] = 'Ukryj/Poka¿ w menu';
+$_lang['DM_other_dropdown_show'] = 'Ukryj/Pokaï¿½ w menu';
 $_lang['DM_other_dropdown_search'] = 'Przeszukiwalny/Nieprzeszukiwalny';
 $_lang['DM_other_dropdown_cache'] = 'Cache-owalny/Nie-cache-owalny';
 $_lang['DM_other_dropdown_richtext'] = 'Edytor/Brak edytora';
-$_lang['DM_other_dropdown_delete'] = 'Usuniêty/Nie usuniêty';
+$_lang['DM_other_dropdown_delete'] = 'Usuniï¿½ty/Nie usuniï¿½ty';
 
 //-- radio button text
 $_lang['DM_other_publish_radio1'] = 'Publikuj'; 
 $_lang['DM_other_publish_radio2'] = 'Niepublikuj';
 $_lang['DM_other_show_radio1'] = 'Schowaj w menu'; 
-$_lang['DM_other_show_radio2'] = 'Poka¿ w menu';
+$_lang['DM_other_show_radio2'] = 'Pokaï¿½ w menu';
 $_lang['DM_other_search_radio1'] = 'Przeszukiwalny'; 
 $_lang['DM_other_search_radio2'] = 'Nieprzeszukiwalny';
 $_lang['DM_other_cache_radio1'] = 'Cache-owalny'; 
 $_lang['DM_other_cache_radio2'] = 'Nie-cache-owalny';
 $_lang['DM_other_richtext_radio1'] = 'Edytor WYSIWYG'; 
 $_lang['DM_other_richtext_radio2'] = 'Brak edytora';
-$_lang['DM_other_delete_radio1'] = 'Usuniêty'; 
-$_lang['DM_other_delete_radio2'] = 'Nie usuniêty';
+$_lang['DM_other_delete_radio1'] = 'Usuniï¿½ty'; 
+$_lang['DM_other_delete_radio2'] = 'Nie usuniï¿½ty';
 
 //-- adjust dates 
-$_lang['DM_adjust_dates_header'] = 'Ustaw daty dokumentów';
-$_lang['DM_adjust_dates_desc'] = 'Wszystkie poni¿sze ustawienia dat dokumentów mog± zostaæ zmienione. U¿yj kalendarza, aby ustawiæ daty.';
-$_lang['DM_view_calendar'] = 'Poka¿ kalendarz';
-$_lang['DM_clear_date'] = 'Wyczy¶æ datê';
+$_lang['DM_adjust_dates_header'] = 'Ustaw daty dokumentï¿½w';
+$_lang['DM_adjust_dates_desc'] = 'Wszystkie poniï¿½sze ustawienia dat dokumentï¿½w mogï¿½ zostaï¿½ zmienione. Uï¿½yj kalendarza, aby ustawiï¿½ daty.';
+$_lang['DM_view_calendar'] = 'Pokaï¿½ kalendarz';
+$_lang['DM_clear_date'] = 'Wyczyï¿½ï¿½ datï¿½';
 
 //-- adjust authors
-$_lang['DM_adjust_authors_header'] = 'Ustaw autorów';
-$_lang['DM_adjust_authors_desc'] = 'U¿yj listy rozwijalnej aby przypisaæ nowych autorów do dokumentu.';
+$_lang['DM_adjust_authors_header'] = 'Ustaw autorï¿½w';
+$_lang['DM_adjust_authors_desc'] = 'Uï¿½yj listy rozwijalnej aby przypisaï¿½ nowych autorï¿½w do dokumentu.';
 $_lang['DM_adjust_authors_createdby'] = 'Stworzony przez:';
 $_lang['DM_adjust_authors_editedby'] = 'Edytowany przez:';
 $_lang['DM_adjust_authors_noselection'] = 'Bez zmian';
@@ -122,40 +122,40 @@ $_lang['DM_date_editedon'] = 'Data edycji:';
 
 $_lang['DM_date_notset'] = ' (nie ustawione)';
 //deprecated
-$_lang['DM_date_dateselect_label'] = 'Wybierz datê: ';
+$_lang['DM_date_dateselect_label'] = 'Wybierz datï¿½: ';
 
 //-- document select section
-$_lang['DM_select_submit'] = 'Wy¶lij';
-$_lang['DM_select_range'] = 'Powrót do wybierania ID dokumentów';
+$_lang['DM_select_submit'] = 'Wyï¿½lij';
+$_lang['DM_select_range'] = 'Powrï¿½t do wybierania ID dokumentï¿½w';
 $_lang['DM_select_range_text'] = '<p><strong>Klucz (gdzie n jest numerem ID dokumentu):</strong><br /><br />
-							  n* - Zmieñ ustawienia tego dokumentu i dokumentów bezpo¶rednio podrzêdnych<br /> 
-							  n** - Zmieñ ustawienia dla tego dokumentu i wszystkich dokumentów podrzêdnych<br /> 
-							  n-n2 - Zmieñ ustawienia dla dokumentów z podanego zakresu<br /> 
-							  n - Zmieñ ustawienia dla pojedyñczego dokumentu</p> 
-							  <p>Przyk³ad: 1*,4**,2-20,25 - To zmieni ustawienia dla dokumentu nr 1 i jego dokumentów podrzêdnych, dokumentu nr 4 i wszystkich jego dokumentów podrzêdnych, dokumentu od 2 do 20 oraz dla dokumentu nr 25.</p>';
-$_lang['DM_select_tree'] ='Przejrzyj i wybierz dokumenty u¿ywaj±c drzewa dokumentów';
+							  n* - Zmieï¿½ ustawienia tego dokumentu i dokumentï¿½w bezpoï¿½rednio podrzï¿½dnych<br /> 
+							  n** - Zmieï¿½ ustawienia dla tego dokumentu i wszystkich dokumentï¿½w podrzï¿½dnych<br /> 
+							  n-n2 - Zmieï¿½ ustawienia dla dokumentï¿½w z podanego zakresu<br /> 
+							  n - Zmieï¿½ ustawienia dla pojedyï¿½czego dokumentu</p> 
+							  <p>Przykï¿½ad: 1*,4**,2-20,25 - To zmieni ustawienia dla dokumentu nr 1 i jego dokumentï¿½w podrzï¿½dnych, dokumentu nr 4 i wszystkich jego dokumentï¿½w podrzï¿½dnych, dokumentu od 2 do 20 oraz dla dokumentu nr 25.</p>';
+$_lang['DM_select_tree'] ='Przejrzyj i wybierz dokumenty uï¿½ywajï¿½c drzewa dokumentï¿½w';
 
 //-- process tree/range messages
 $_lang['DM_process_noselection'] = 'Nic nie wybrano. ';
-$_lang['DM_process_novalues'] = 'Nie podano ¿adnych warto¶ci.';
-$_lang['DM_process_limits_error'] = 'Zakres górny mniejszy ni¿ zakres dolny:';
-$_lang['DM_process_invalid_error'] = 'Nieprawid³owe warto¶ci:';
-$_lang['DM_process_update_success'] = 'Zmiany zosta³y dokonane bez b³êdów.';
-$_lang['DM_process_update_error'] = 'Zmiany zosta³y dokonane, ale wyst±pi³y b³êdy:';
-$_lang['DM_process_back'] = 'Powrót';
+$_lang['DM_process_novalues'] = 'Nie podano ï¿½adnych wartoï¿½ci.';
+$_lang['DM_process_limits_error'] = 'Zakres gï¿½rny mniejszy niï¿½ zakres dolny:';
+$_lang['DM_process_invalid_error'] = 'Nieprawidï¿½owe wartoï¿½ci:';
+$_lang['DM_process_update_success'] = 'Zmiany zostaï¿½y dokonane bez bï¿½ï¿½dï¿½w.';
+$_lang['DM_process_update_error'] = 'Zmiany zostaï¿½y dokonane, ale wystï¿½piï¿½y bï¿½ï¿½dy:';
+$_lang['DM_process_back'] = 'Powrï¿½t';
 
 //-- manager access logging
-$_lang['DM_log_template'] = 'Mened¿er dokumentów: szablony zmienione';
-$_lang['DM_log_templatevariables'] = 'Mened¿er dokumentów: zmienne szablonu zmienione.';
-$_lang['DM_log_docpermissions'] ='Mened¿er dokumentów: uprawnienia zmienione.';
-$_lang['DM_log_sortmenu']='Mened¿er dokumentów: indeksowanie menu zakoñczone.';
-$_lang['DM_log_publish']='Mened¿er dokumentów: ustawienia publikowania zmienione.';
-$_lang['DM_log_hidemenu']='Mened¿er dokumentów: ustawienia pokazywania w menu zmienione.';
-$_lang['DM_log_search']='Mened¿er dokumentów: ustawienia przeszukiwania zmienione.';
-$_lang['DM_log_cache']='Mened¿er dokumentów: ustawienia cachowanie zmienione.';
-$_lang['DM_log_richtext']='Mened¿er dokumentów: ustawienia u¿ycia edytora zmienione.';
-$_lang['DM_log_delete']='Mened¿er dokumentów: ustawienia usuwania zmienione.';
-$_lang['DM_log_dates']='Mened¿er dokumentów: daty dokumentów zmienione.';
-$_lang['DM_log_authors']='Mened¿er dokumentów: ustawienia autorów zmienione.';
+$_lang['DM_log_template'] = 'Menedï¿½er dokumentï¿½w: szablony zmienione';
+$_lang['DM_log_templatevariables'] = 'Menedï¿½er dokumentï¿½w: zmienne szablonu zmienione.';
+$_lang['DM_log_docpermissions'] ='Menedï¿½er dokumentï¿½w: uprawnienia zmienione.';
+$_lang['DM_log_sortmenu']='Menedï¿½er dokumentï¿½w: indeksowanie menu zakoï¿½czone.';
+$_lang['DM_log_publish']='Menedï¿½er dokumentï¿½w: ustawienia publikowania zmienione.';
+$_lang['DM_log_hidemenu']='Menedï¿½er dokumentï¿½w: ustawienia pokazywania w menu zmienione.';
+$_lang['DM_log_search']='Menedï¿½er dokumentï¿½w: ustawienia przeszukiwania zmienione.';
+$_lang['DM_log_cache']='Menedï¿½er dokumentï¿½w: ustawienia cachowanie zmienione.';
+$_lang['DM_log_richtext']='Menedï¿½er dokumentï¿½w: ustawienia uï¿½ycia edytora zmienione.';
+$_lang['DM_log_delete']='Menedï¿½er dokumentï¿½w: ustawienia usuwania zmienione.';
+$_lang['DM_log_dates']='Menedï¿½er dokumentï¿½w: daty dokumentï¿½w zmienione.';
+$_lang['DM_log_authors']='Menedï¿½er dokumentï¿½w: ustawienia autorï¿½w zmienione.';
 
 ?>
