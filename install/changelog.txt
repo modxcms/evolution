@@ -39,6 +39,10 @@ Bugfixes:
 * [gitHub] AjaxSearch: Adding charset header in Ajax Mode
 * [gitHub] $key could be empty if the placeholder tag is not closed or if it is directly closed
 * [gitHub] Fix for not set $_SESSION key
+* [gitHub] Ditto: Fix outerTpl
+* [gitHub] Fix - Save button in file manager
+* [gitHub] Fix missing calendar icon
+* [gitHub] Bugfix for closing opt group tag
 
 --------------------------------------------
 Refactor:
@@ -59,6 +63,10 @@ Refactor:
 * [gitHub] View manager logs - grid view tune
 * [gitHub] Reformatted indents and changed double quotes to single quotes in merge functions
 * [gitHub] Reworked eval snippets/plugin functions and MODX error level detection
+* [gitHub] Eform: Retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [gitHub] Eform: validation messages with span (for better styling with css)
+* [gitHub] Trigger change event for file/image inputs
+* [gitHub] Add css class to displayparams table, removed inline style
 
 
 --------------------------------------------
@@ -69,6 +77,7 @@ Additional Improvements & Updates:
 * [gitHub] WebLogin: @FILE ability for &tpl
 * [gitHub] Manager with role = 1 can see all documents in frontend and backend
 * [gitHub] Setup module depedencies
+* [gitHub] in manager now can go to selected tab from url with &tab=#
 
 --------------------------------------------
 Security:
