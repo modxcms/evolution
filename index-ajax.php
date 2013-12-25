@@ -22,7 +22,7 @@ $base_path = "";
 // get the required includes
 if($database_user=='') {
         if (!$rt = @include_once MGR_DIR."/includes/config.inc.php") {
-           exit('Could not load MODx configuration file!');
+           exit('Could not load MODX configuration file!');
         }
 }
 
