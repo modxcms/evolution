@@ -6,7 +6,7 @@
  * Credit:         icons by Mark James of FamFamFam http://www.famfamfam.com/lab/icons/
  * Date:           18-Mar-2010
  * Version:        1.1
- * MODx version:   1.0.3
+ * MODX version:   1.0.3
 */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 
