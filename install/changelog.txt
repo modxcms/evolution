@@ -43,6 +43,12 @@ Bugfixes:
 * [gitHub] Fix - Save button in file manager
 * [gitHub] Fix missing calendar icon
 * [gitHub] Bugfix for closing opt group tag
+* [gitHub] restored textareamini
+* [gitHub] Don't save SMTP password if field was emptied manually
+* [gitHub] Codemirror: matchBrekers fix and turn on by default
+* [gitHub] Full request url in messageQuit
+* [gitHub] fix SQL error when calling optimize method
+* [gitHub] fix backup format file Y-m-d_H-i-s - now new always top
 
 --------------------------------------------
 Refactor:
@@ -67,7 +73,15 @@ Refactor:
 * [gitHub] Eform: validation messages with span (for better styling with css)
 * [gitHub] Trigger change event for file/image inputs
 * [gitHub] Add css class to displayparams table, removed inline style
-
+* [gitHub] Use same tags and styles as other fields in manager.
+* [gitHub] Netbeans doesn't like 'and' as classname
+* [gitHub] Updated language files
+* [gitHub] Change nicesize
+* [gitHub] Change snippetsCode out
+* [gitHub] Change input size in access permissions
+* [gitHub] Correct preview link
+* [gitHub] Restore view_eventlog permission on site_shedule
+* [gitHub] Make one point to clearCache and add params
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -78,6 +92,14 @@ Additional Improvements & Updates:
 * [gitHub] Manager with role = 1 can see all documents in frontend and backend
 * [gitHub] Setup module depedencies
 * [gitHub] in manager now can go to selected tab from url with &tab=#
+* [gitHub] CodeMirror: new shorts for emmet
+* [gitHub] the method “$modx->parseText” which parses a text has been added.
+* [gitHub] Improve file/image set url for inputs that are not direct children of the form (i.e. in a colorbox)
+* [gitHub] Add backtrace info to dumpSql
+* [gitHub] Add dumpPlugins & pluginsCode out
+* [gitHub] Add hide plugin in sort
+* [gitHub] Patch findTemplateVars for compatibility with HPx
+* [gitHub] Add ID in QM+ toolbar.
 
 --------------------------------------------
 Security:
