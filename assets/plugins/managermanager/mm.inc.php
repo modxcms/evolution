@@ -3,7 +3,7 @@
  * @name ManagerManager
  * @version 0.3.11 (2012-02-15)
  * 
- * @for MODx Evolution 1.0.x
+ * @for MODX Evolution 1.0.x
  * 
  * @author Nick Crossland - www.rckt.co.uk, studio DivanDesign - www.DivanDesign.biz
  * 
