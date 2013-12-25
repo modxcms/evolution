@@ -6,7 +6,7 @@
  * Author:         Hansek, COEX (hansek@coex.cz)
  * Date:           2013/03/10
  * Version:        3.5.8
- * MODx version:   0.9.5-1.0.9
+ * MODX version:   0.9.5-1.0.9
 */
 
 include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions

@@ -73,7 +73,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
 	Source of the [+date+] placeholder
 
 	Options:
-	# - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+	# - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
 	
 	Default:
 	"createdon"

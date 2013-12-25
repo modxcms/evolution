@@ -52,7 +52,7 @@ class Qm {
     //_______________________________________________________
     function Run() {
         
-        // Include MODx manager language file
+        // Include MODX manager language file
         global $_lang;
 		
 		// Get manager language
@@ -633,7 +633,7 @@ class Qm {
                 
                 break;
             
-            // Edit document in ThickBox frame (MODx manager frame)
+            // Edit document in ThickBox frame (MODX manager frame)
             case 'OnDocFormPrerender':
                                         
                 // If there is Qm call, add control buttons and modify to edit document page
