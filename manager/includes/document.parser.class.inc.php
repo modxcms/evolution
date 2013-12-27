@@ -506,7 +506,7 @@ class DocumentParser {
            if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
            $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
         }else{
-        $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
+           $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
         }
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;

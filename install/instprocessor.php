@@ -2,7 +2,7 @@
 if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
     include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
 }else{
-define('MGR_DIR', 'manager');
+    define('MGR_DIR', 'manager');
 }
 
 global $moduleName;
@@ -209,7 +209,7 @@ if ($moduleSQLBaseFile) {
 if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
     $mgrdir = 'include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");';
 }else{
-$mgrdir = 'define(\'MGR_DIR\', \'manager\');';
+    $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
 }
 
 // write the config.inc.php file if new installation
