@@ -1,14 +1,16 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
  * @author davaeron
- * @package MODX
- * @version 1.0
- * 
- * Filename:       /install/lang/english/nederlands-utf8.inc.php
- * Language:       Dutch
- * Encoding:       utf-8
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Dutch
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Ik ga akkoord met de voorwaarden en installeer';
 $_lang["alert_database_test_connection"] = 'U moet een database aanmaken of test de selectie van uw database!';
@@ -45,7 +47,7 @@ $_lang["checking_mysql_strict_mode"] = 'Controleren MySQL voor strikte sql_mode:
 $_lang["checking_mysql_version"] = 'Versie van MYSQL nakijken:';
 $_lang["checking_php_version"] = 'PHP versie nakijken:';
 $_lang["checking_registerglobals"] = 'Kijken of Register_Globals uit staat geschakeld:';
-$_lang["checking_registerglobals_note"] = 'Deze configuratie maakt uw site veel gevoeliger voor Site Scripting (XSS) Cross aanvallen. U moet uw host informeren over het uitschakelen van deze instelling, meestal door een van de drie manieren: het wijzigen van de globale php.ini bestand, het toevoegen van regels om een .htaccess bestand in de root van je MODX installatie, of het toevoegen van aangepaste php.ini bestanden. Elke map op uw installatie (en er zijn er veel van hen). U zult nog steeds in staat zijn om MODX installeren, maar beschouw jezelf gewaarschuwd.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Deze configuratie maakt uw site veel gevoeliger voor Site Scripting (XSS) Cross aanvallen. U moet uw host informeren over het uitschakelen van deze instelling, meestal door een van de drie manieren: het wijzigen van de globale php.ini bestand, het toevoegen van regels om een .htaccess bestand in de root van je MODX installatie, of het toevoegen van aangepaste php.ini bestanden. Elke map op uw installatie (en er zijn er veel van hen). U zult nog steeds in staat zijn om MODX installeren, maar beschouw jezelf gewaarschuwd.';
 $_lang["checking_sessions"] = 'Controleren of sessies correct zijn geconfigureerd:';
 $_lang["checking_table_prefix"] = 'Controleren tabel voorvoegsel `';
 $_lang["chunks"] = 'Chunks';
@@ -79,17 +81,20 @@ $_lang["database_use_failed"] = 'Database kon niet worden geselecteerd!';
 $_lang["database_use_failed_note"] = 'Controleer de database machtigingen voor de opgegeven gebruiker en probeer het opnieuw.';
 $_lang["default_language"] = 'Standaard Manager taal';
 $_lang["default_language_description"] = 'Dit is de standaard taal die gebruikt zal worden in de MODX Manager (back-end).';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = 'tijdens de uitvoering van de SQL-statement';
-$_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["encoding"] = 'iso-8859-1';
 $_lang["error"] = 'fout';
 $_lang["errors"] = 'fouten';
 $_lang["failed"] = 'MISLUKT!';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://forums.modx.com/';
-$_lang["help_title"] = 'Installatie hulp in de MODX forums';
-$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
-$_lang["install"] = 'Installatie';
-$_lang["install_overwrite"] = 'Installatie/Overschrijven';
+$_lang["help_title"] = 'Hulp bij installeren via in de MODX forums';
+$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</ a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
+$_lang["install"] = 'Installeer';
+$_lang["install_overwrite"] = 'Installeer/Overschrijven';
 $_lang["install_results"] = 'Installatie resultaten';
 $_lang["install_update"] = 'Installeer/Updaten';
 $_lang["installation_error_occured"] = 'De volgende fouten hebben plaatsgevonden tijdens de installatie';
@@ -103,12 +108,12 @@ $_lang["installation_upgrade_advanced"] = 'Geavanceerde installatie';
 $_lang["installation_upgrade_advanced_note"] = 'Voor geavanceerde database administrators of verhuizen naar servers met een andere database connectie tekenset.<br /><b>U moet uw volledige database naam, gebruikersnaam, wachtwoord en connectie / coalitie details weten.</b>';
 $_lang["installation_upgrade_existing"] = 'Upgraden bestaande installatie';
 $_lang["installation_upgrade_existing_note"] = 'Upgrade uw huidige bestanden en database.';
-$_lang["installed"] = 'Geïnstalleerd';
+$_lang["installed"] = 'Geinstalleerd';
 $_lang["installing_demo_site"] = 'Installeer demo site:';
-$_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'en';
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
 $_lang["modx_requires_php"] = ', en MODX heeft PHP 4.2.0 of nieuwer nodig';
@@ -118,7 +123,7 @@ $_lang["mysql_version_is"] = 'Uw MySQL versie is:';
 $_lang["no"] = 'Nee';
 $_lang["none"] = 'Geen';
 $_lang["not_found"] = 'niet gevonden';
-$_lang["ok"] = 'Oké!';
+$_lang["ok"] = 'OK!';
 $_lang["optional_items"] = 'Opties';
 $_lang["optional_items_note"] = 'Kies uw installatie-opties en klikt u op Installeren:';
 $_lang["php_security_notice"] = '<legend>Beveiliging mededeling</legend><p>Terwijl MODX zal werken op uw PHP versie, gebruik van MODX op deze versie wordt niet aanbevolen. Uw versie van PHP is kwetsbaar voor tal van gaten in de beveiliging. Upgrade naar PHP versie 4.3.8 of hoger, waarbij deze de gaten dicht. Het is raadzaam te upgraden voor de veiligheid van uw eigen website.</p>';
@@ -146,7 +151,7 @@ $_lang["setup_database_create_connection_failed_note"] = 'Controleer de database
 $_lang["setup_database_creating_tables"] = 'Database tabellen maken:';
 $_lang["setup_database_creation"] = 'Maken database `';
 $_lang["setup_database_creation_failed"] = 'Database maken mislukt!';
-$_lang["setup_database_creation_failed_note"] = '- Installatie kan de database niet aanmaken!';
+$_lang["setup_database_creation_failed_note"] = '- Kan de database niet aanmaken!';
 $_lang["setup_database_creation_failed_note2"] = 'Installatie kan de database niet aanmaken, en geen bestaande database met dezelfde naam werd gevonden. Het is waarschijnlijk dat de beveiliging van uw hosting provider niet toe staat dat externe scripts om een database te maken gebruikt worden. Maak een database volgens de procedure van uw hosting provider en voer de installatie opnieuw uit.';
 $_lang["setup_database_selection"] = 'Selecteer database `';
 $_lang["setup_database_selection_failed"] = 'Database selectie mislukt...';
@@ -159,9 +164,9 @@ $_lang["status_failed"] = 'mislukt!';
 $_lang["status_failed_could_not_create_database"] = 'mislukt - kan database niet aanmaken';
 $_lang["status_failed_database_collation_does_not_match"] = 'mislukt - database coalitie klopt niet; gebruik SET NAMES of kies% s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'mislukt - tabel prefix is al in gebruik!';
-$_lang["status_passed"] = 'overgeslagen - database geselecteerd';
-$_lang["status_passed_database_created"] = 'passed - database aangemaakt';
-$_lang["status_passed_server"] = 'overgeslagen - coalitie nu beschikbaar';
+$_lang["status_passed"] = 'gelukt - database geselecteerd';
+$_lang["status_passed_database_created"] = 'gelukt - database is aangemaakt';
+$_lang["status_passed_server"] = 'gelukt - coalitie nu beschikbaar';
 $_lang["strict_mode"] = 'MySQL server strict sql_mode staan aan!';
 $_lang["strict_mode_error"] = 'Bepaalde functies van MODX werken niet goed, tenzij de STRICT_TRANS_TABLES sql_mode is uitgeschakeld. U kunt de MySQL-modus instellen door het my.cnf bestand te bewerken of neem contact op met de serverbeheerder.';
 $_lang["summary_setup_check"] = 'De installatie heeft een aantal controles verricht om te zien of alles klaar is om de installatie te starten.';
@@ -188,7 +193,7 @@ $_lang["warning"] = 'WAARSCHUWING!';
 $_lang["welcome_message_start"] = 'Kies eerst het type installatie om uit te voeren:';
 $_lang["welcome_message_text"] = 'Dit programma zal u door de rest van de installatie begeleiden.';
 $_lang["welcome_message_welcome"] = 'Welkom bij het MODX installatieprogramma.';
-$_lang["writing_config_file"] = 'Schrijven configuratiebestand:';
+$_lang["writing_config_file"] = 'Configuratiebestand aanmaken:';
 $_lang["yes"] = 'Ja';
 $_lang["you_running_php"] = '- U werkt met PHP';
 ?>

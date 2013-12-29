@@ -1,14 +1,16 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author        Anssi Rajakallio
- * @package       MODX
- * @version       1.0
- * 
- * Filename:      /install/lang/finnish/finnish.inc.php
- * Language:      Finnish
- * Encoding:      UTF-8
+ * @author Anssi Rajakallio
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Finnish
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Hyväksy lisenssi ehdot ja asenna';
 $_lang["alert_database_test_connection"] = 'Sinun täytyy luoda tietokanta tai testata tietokantasi valintaa!';
@@ -45,7 +47,7 @@ $_lang["checking_mysql_strict_mode"] = 'Tarkistetaan MySQL palvelimen "strict sq
 $_lang["checking_mysql_version"] = 'Tarkistetaan MySQL pavelimen versio: ';
 $_lang["checking_php_version"] = 'Tarkistetaan PHP:n versio: ';
 $_lang["checking_registerglobals"] = 'Tarkistetaan onko PHP:n Register_Globals asetus pois: ';
-$_lang["checking_registerglobals_note"] = 'Tämä asetus tekee sivustostasi alttiimman XSS hyökkäyksille (Cross Site Scripting). Sinun tulisi kehottaa palveluntarjoajaasi kytkemään tämä asetus pois käytöstä. Useimmiten tämän asetuksen voi kytkeä pois muokkaamalla palvelimen php.ini tiedostoa. Jos se ei ole mahdollista, voit koittaa kytkeä sen pois .htaccess tiedostossa, joka sijaitsee MODX asennuksen juuri kansiossa. Jos tämäkään ei ole mahdollista, voit viimeisenä vaihtoehtona koittaa asettaa jokaiseen MODX asennuksen sisällä olevaan kansioon muokatun php.ini tiedoston, joka yliajaa asetukset palvelimen jaetusta php.ini tiedostosta, mutta kansioita MODX asennuksessa on tosin huomattava määrä. Voit kuitenkin asentaa MODX järjestelmän tästä asetuksesta huolimatta, mutta sinua on varoitettu.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Tämä asetus tekee sivustostasi alttiimman XSS hyökkäyksille (Cross Site Scripting). Sinun tulisi kehottaa palveluntarjoajaasi kytkemään tämä asetus pois käytöstä. Useimmiten tämän asetuksen voi kytkeä pois muokkaamalla palvelimen php.ini tiedostoa. Jos se ei ole mahdollista, voit koittaa kytkeä sen pois .htaccess tiedostossa, joka sijaitsee MODX asennuksen juuri kansiossa. Jos tämäkään ei ole mahdollista, voit viimeisenä vaihtoehtona koittaa asettaa jokaiseen MODX asennuksen sisällä olevaan kansioon muokatun php.ini tiedoston, joka yliajaa asetukset palvelimen jaetusta php.ini tiedostosta, mutta kansioita MODX asennuksessa on tosin huomattava määrä. Voit kuitenkin asentaa MODX järjestelmän tästä asetuksesta huolimatta, mutta sinua on varoitettu.';
 $_lang["checking_sessions"] = 'Tarkistetaan onko palvelinistunnot asetettu toimimaan oikein: ';
 $_lang["checking_table_prefix"] = 'Tarkistetaan tietokannan taulujen etuliite `';
 $_lang["chunks"] = 'HTML-palaset';
@@ -79,11 +81,14 @@ $_lang["database_use_failed"] = 'Tietokantaa ei voitu valita!';
 $_lang["database_use_failed_note"] = 'Ole hyvä ja tarkista tietokannan käyttöoikeudet määritetylle käyttäjälle ja yritä uudelleen.';
 $_lang["default_language"] = 'Kieli';
 $_lang["default_language_description"] = 'Tämä asetetaan MODX ylläpidon oletus kieleksi.';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' SQL lauseen suorituksen aikana ';
-$_lang["encoding"] = 'UTF-8';	//charset encoding for html header
+$_lang["encoding"] = 'UTF-8';
 $_lang["error"] = 'virhe';
 $_lang["errors"] = 'virheet';
 $_lang["failed"] = 'EPÄONNISTUI!';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Tuki';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Asennustukea MODX keskustelufoorumilla';
@@ -105,7 +110,7 @@ $_lang["installation_upgrade_existing"] = 'Päivitä asennus';
 $_lang["installation_upgrade_existing_note"] = 'Päivitä nykyiset tiedostosi, sekä tietokannan tiedot.';
 $_lang["installed"] = 'Asennettu';
 $_lang["installing_demo_site"] = 'Asennetaan demo sivustoa: ';
-$_lang["language_code"] = 'fi';	// for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'fi';
 $_lang["loading"] = 'Ladataan...';
 $_lang["modules"] = 'Moduulit';
 $_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODX on lisensoitu GNU GPL lisenssillä.';
@@ -115,6 +120,7 @@ $_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version 4.2.0 tai uudem
 $_lang["mysql_5051"] = ' MySQL palvelimen versio on 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL 5.0.51 versiolla on havaittu järjestelmän toiminnassa ongelmia. On suositeltavaa, että päivität MySQL version uudempaan ennen asennuksen jatkamista.';
 $_lang["mysql_version_is"] = ' Sinun MySQL palvelimen versio on: ';
+$_lang["no"] = 'No';
 $_lang["none"] = 'Ei mitään';
 $_lang["not_found"] = 'Ei löytynyt';
 $_lang["ok"] = 'OK!';
@@ -125,6 +131,9 @@ $_lang["please_correct_error"] = '. Ole hyvä ja korjaa seuraava virhe';
 $_lang["please_correct_errors"] = '. Ole hyvä ja korjaa seuraavat virheet';
 $_lang["plugins"] = 'Liitännäiset';
 $_lang["preinstall_validation"] = 'Ennen asennusta suoritettava tarkastus';
+$_lang["recommend_setting_change_title"] = 'Suositeltava asetusten muutos';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'Sivustolla ei ole käytössä ylläpidon HTTP_REFERER tunnisteiden tarkistusta. On suositeltavaa ottaa tarkistus käyttöön CSFR-verkkohyökkäysten (Cross Site Request Forgery) estämiseksi.';
 $_lang["remove_install_folder_auto"] = 'Poista asennuskansio, sekä asennustiedostot sivutilastani<br />&nbsp;(Tämä toiminto vaatii, että kansioon /install on tiedostojen sekä ko. kansion poisto-oikeudet).';
 $_lang["remove_install_folder_manual"] = 'Muista poistaa &quot;<b>install</b>&quot; kansio ennen kuin kirjaudut järjestelmään.';
 $_lang["retry"] = 'Yritä uudelleen';
@@ -132,7 +141,7 @@ $_lang["running_database_updates"] = 'Suoritetaan tietokannan päivityksiä: ';
 $_lang["sample_web_site"] = 'Demo sivusto';
 $_lang["sample_web_site_note"] = 'Ota huomioon, että tämä <b style=\"color:#CC0000\">ylikirjoittaa</b> olemassaolevat sivut ja resurssit.';
 $_lang["session_problem"] = 'Palvelinistuntojen hallinnassa havaittu ongelmia. Ole hyvä ja ota yhteyttä palvelun ylläpitäjään ongelman korjaamiseksi.';
-$_lang["session_problem_try_again"] = 'Yritä uudelleen?'; 
+$_lang["session_problem_try_again"] = 'Yritä uudelleen?';
 $_lang["setup_cannot_continue"] = 'Valitettavasti asennusta ei voi jatkaa ylläolevista syistä ';
 $_lang["setup_couldnt_install"] = 'MODX asennus ei voinut asentaa/muokata joitain tietokannan tauluja.';
 $_lang["setup_database"] = 'Asennus yrittää luoda tietokantaa:<br />';
@@ -161,6 +170,8 @@ $_lang["status_passed_server"] = 'onnistui - merkistöt ovat nyt käytettäviss�
 $_lang["strict_mode"] = ' MySQL palvelimen "strict sql_mode" asetus on päällä!';
 $_lang["strict_mode_error"] = 'Tietyt MODX:n toiminnot ei toimi oikein jos "STRICT_TRANS_TABLES sql_mode" ei kytketä pois käytöstä. Voit asettaa kyseisen MySQL asetuksen muokkaamalla my.cnf tiedostoa tai ottamalla yhteyttä palveluntarjoajaasi.';
 $_lang["summary_setup_check"] = 'Asennus on tarkistanut erinäiset tiedot tarkastaakseen, että kaikki on kunnossa asennusta varten.';
+$_lang["system_configuration"] = 'Järjestelmän asetukset';
+$_lang["system_configuration_validate_referer_description"] = 'The <strong>Validate HTTP_REFERER headers</strong> setting is recommended and can protect your site from CSRF attacks, but in some server configurations, can make your manager inaccessible.';
 $_lang["table_prefix_already_inuse"] = ' - Tietokannan taulujen etuliite on jo käytössä tässä tietokannassa!';
 $_lang["table_prefix_already_inuse_note"] = 'Asennusohjelma ei voinut asentaa valittuun tietokantaan, koska se sisältää jo tauluja asetetulla etuliitteellä. Ole hyvä ja valitse uusi etuliite ja yritä uudelleen.';
 $_lang["table_prefix_not_exist"] = ' - Tietokannan taulujen etuliitettä ei löydetty tästä tietokannasta!';
@@ -168,6 +179,7 @@ $_lang["table_prefix_not_exist_note"] = 'Asennusohjelma ei voinut asentaa valitt
 $_lang["templates"] = 'Sivupohjat';
 $_lang["to_log_into_content_manager"] = 'Kirjautuaksesi sisällönhallintajärjestelmään ([+MGR_DIR+]/index.php) napsauta `Sulje` painiketta.';
 $_lang["toggle"] = 'Vastakkaiset';
+$_lang['tvs'] = 'Sivupohjan muuttujat';
 $_lang["unable_install_chunk"] = 'HTML-palasta ei voitu asentaa.  Tiedosto';
 $_lang["unable_install_module"] = 'Moduulia ei voitu asentaa.  Tiedosto';
 $_lang["unable_install_plugin"] = 'Liitännäistä ei voitu asentaa.  Tiedosto';
@@ -175,11 +187,13 @@ $_lang["unable_install_snippet"] = 'PHP-palasta ei voitu asentaa.  Tiedosto';
 $_lang["unable_install_template"] = 'Sivupohjaa ei voitu asentaa.  Tiedosto';
 $_lang["upgrade_note"] = '<strong>HUOMIO:</strong> Ennen sivustojen käyttöä, sinun tulisi kirjautua järjestelmän hallintaan pääkäyttäjätunnuksella ja tarkistaa, sekä tallentaa järjestelmän asetukset.';
 $_lang["upgraded"] = 'Päivitetty';
+$_lang["validate_referer_title"] = 'Tarkasta HTTP_REFERER tunnisteet?';
 $_lang["visit_forum"] = ', vieraile <a href="http://forums.modx.com/" target="_blank">MODX keskustelufoorumilla</a>.';
 $_lang["warning"] = 'VAROITUS!';
 $_lang["welcome_message_start"] = 'Valitse aluksi suoritettavan asennuksen tyyppi:';
 $_lang["welcome_message_text"] = 'Tämä ohjelma ohjaa sinut suorittamaan järjestelmän asennuksen.';
 $_lang["welcome_message_welcome"] = 'Tervetuloa MODX asennusohjelmaan.';
 $_lang["writing_config_file"] = 'Kirjoitetaan asetuksia tiedostoon: ';
+$_lang["yes"] = 'Kyllä';
 $_lang["you_running_php"] = ' - Käytössä on PHP versio ';
 ?>

@@ -1,16 +1,18 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author davaeron
- * @package MODX
- * @version 1.0.1
- * 
- * Filename:       /install/lang/russian-utf8.inc.php
- * Language:       Russian
- * Encoding:       UTF-8
- * Translated by:  Pertsev Dmitriy, Safronovich Victor, Russian MODX Community
- * Date:           15 october 2009
+ * @author Pertsev Dmitriy
+ * @author Safronovich Victor
+ * @author Russian MODX Community
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Russian
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 $_lang["agree_to_terms"] = 'Согласиться с условиями лицензии и приступить к установке';
@@ -82,11 +84,14 @@ $_lang["database_use_failed"] = 'Невозможно выбрать базу д
 $_lang["database_use_failed_note"] = 'Проверьте, есть ли у вас необходимые права на доступ к базе данных.';
 $_lang["default_language"] = 'Язык по умолчанию менеджера';
 $_lang["default_language_description"] = 'Это язык, который будет по умолчанию использоваться менеджером в административной панели MODX.';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' во время выполнения SQL запроса ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'ошибки';
 $_lang["errors"] = 'ошибок';
 $_lang["failed"] = 'ОШИБКА!';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Помощь!';
 $_lang["help_link"] = 'http://forums.modx.com/board/230/russian';
 $_lang["help_title"] = 'Помощь в установке на форумах MODX';
@@ -177,7 +182,7 @@ $_lang["table_prefix_not_exist_note"] = 'Продолжение установк
 $_lang["templates"] = 'Шаблоны';
 $_lang["to_log_into_content_manager"] = 'Чтобы войти в панель управления ([+MGR_DIR+]/index.php) нажмите на кнопку `Закрыть`.';
 $_lang["toggle"] = 'Переключить';
-$_lang["tvs"] = 'Параметры (TV)';
+$_lang['tvs'] = 'Параметры (TV)';
 $_lang["unable_install_chunk"] = 'Невозможно установить чанк. Файл';
 $_lang["unable_install_module"] = 'Невозможно установить модуль. Файл';
 $_lang["unable_install_plugin"] = 'Невозможно установить плагин. Файл';

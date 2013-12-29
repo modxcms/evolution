@@ -1,15 +1,18 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
  * @author Daniel Miguel de Melo
- * @package MODX installer
- * @version 1.0
- * @translation
- * Filename:       /install/lang/portuguese-br/portuguese-br.inc.php
- * Language:       Português do Brasil
- * Encoding:       utf-8
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Português do Brasil
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
+$_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
 $_lang["alert_database_test_connection"] = 'Você prescisa criar uma base de dados ou testar a seleção de sua base de dados!';
 $_lang["alert_database_test_connection_failed"] = 'O teste de seleção/conexão da Base de Dados falhou!';
 $_lang["alert_enter_adminconfirm"] = 'A senha e a confirmação de senha não são iguais!';
@@ -32,26 +35,29 @@ $_lang["cant_write_config_file"] = 'MODX não pode escrever o arquivo de configu
 $_lang["cant_write_config_file_note"] = 'Assim que isto for feito, você pode acessar o MODX Admin por apontar seu navegador para NomeDoSeuSite.com/manager/.';
 $_lang["checkbox_select_options"] = 'Selecionar:';
 $_lang["checking_if_cache_exist"] = 'Checando se o diretório <span class=\"mono\">assets/cache</span> existe: ';
-$_lang["checking_if_cache_file2_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> está liberado pra escrita: ';
 $_lang["checking_if_cache_file_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/siteCache.idx.php</span> está liberado pra escrita: ';
+$_lang["checking_if_cache_file2_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> está liberado pra escrita: ';
 $_lang["checking_if_cache_writable"] = 'Checando se o diretório <span class=\"mono\">assets/cache</span> está liberado pra escrita: ';
 $_lang["checking_if_config_exist_and_writable"] = 'Checando se o arquivo <span class=\"mono\">manager/includes/config.inc.php</span> existe e está liberado pra escrita: ';
 $_lang["checking_if_export_exists"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> está liberado pra escrita: ';
 $_lang["checking_if_images_exist"] = 'Checando se o diretório <span class=\"mono\">assets/images</span> existe: ';
 $_lang["checking_if_images_writable"] = 'Checando se o diretório <span class=\"mono\">assets/images</span> está liberado pra escrita: ';
+$_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
+$_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checando versão do PHP: ';
 $_lang["checking_registerglobals"] = 'Checando se Register_Globals está desligado: ';
-$_lang["checking_registerglobals_note"] = 'Este script faz com que seu site seja muito mais propenso à ataques de Cross Site Scripting (XSS). Você deveria entrar em contato com seu Host para mudar esta configuração, geralmente há três modos de desabilitar: modificando o arquivo global php.ini, adicionando regras para um arquivo .htaccess na raiz da pasta da instalação do MODX, ou adicionando um php.ini sobre cada arquivo em cada pasta de sua instação (e tem um muitos deles). Ou você poderá instalar o MODX, mas considere-se avisado.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Este script faz com que seu site seja muito mais propenso à ataques de Cross Site Scripting (XSS). Você deveria entrar em contato com seu Host para mudar esta configuração, geralmente há três modos de desabilitar: modificando o arquivo global php.ini, adicionando regras para um arquivo .htaccess na raiz da pasta da instalação do MODX, ou adicionando um php.ini sobre cada arquivo em cada pasta de sua instação (e tem um muitos deles). Ou você poderá instalar o MODX, mas considere-se avisado.';
 $_lang["checking_sessions"] = 'Checando se as seções estão configuradas apropiadamente: ';
 $_lang["checking_table_prefix"] = 'Verificando Prefixo de Tabela `';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Para novas instalações de Linux/Unix, crie um arquivo vazio chamado <span class=\"mono\">config.inc.php</span> no diretório <span class=\"mono\">manager/includes/</span> com as permissões de 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
-$_lang["connection_screen_connection_information"] = 'Informação de Conexão';
+$_lang["connection_screen_connection_method"] = 'Connection method:';
 $_lang["connection_screen_database_connection_information"] = 'Informação da Base de Dados.';
 $_lang["connection_screen_database_connection_note"] = 'Entre com o nome da base de dados que você criou para o MODX. Se você ainda não criou uma base de dados, a instalação irá tentar criar uma base para você. Isto pode falhar dependendo das configurações MySQL das permissões de usuário de seu domínio/instalação.';
 $_lang["connection_screen_database_host"] = 'Servidor da Base de Dados:';
+$_lang["connection_screen_database_info"] = 'Informação da Base de Dados.';
 $_lang["connection_screen_database_login"] = 'Login da Base de Dados:';
 $_lang["connection_screen_database_name"] = 'Nome da Base de Dados:';
 $_lang["connection_screen_database_pass"] = 'Senha da Base de Dados:';
@@ -62,6 +68,7 @@ $_lang["connection_screen_default_admin_note"] = 'Agora você ira digitar os dad
 $_lang["connection_screen_default_admin_password"] = 'Senha do Administrador:';
 $_lang["connection_screen_default_admin_password_confirm"] = 'Confirme a Senha:';
 $_lang["connection_screen_default_admin_user"] = 'Usuário Admin Padrão';
+$_lang["connection_screen_defaults"] = 'Default Manager Settings';
 $_lang["connection_screen_server_connection_information"] = 'Informações de Conexão com o servidor e de login';
 $_lang["connection_screen_server_connection_note"] = 'Por favor insira o nome do seu servidor, seu login e senha e depois teste a conexão.';
 $_lang["connection_screen_server_test_connection"] = 'Clique aqui para testar a conexão com o servidor e veja as collations disponíveis.';
@@ -72,11 +79,19 @@ $_lang["database_connection_failed"] = 'Conexão com a Base de Dados Falhou!';
 $_lang["database_connection_failed_note"] = 'Verifique os detalhes de login e senha da base e tente novamente.';
 $_lang["database_use_failed"] = 'Base de Dados não pode ser selecionada!';
 $_lang["database_use_failed_note"] = 'Verifique se há permissão na Base de Dados para o usuário e tente novamente.';
+$_lang["default_language"] = 'Default Manager Language';
+$_lang["default_language_description"] = 'This is the default language that will be used in the MODX Manager back end control panel.';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' durante uma execução do SQL statement ';
 $_lang["encoding"] = 'iso-8859-1';
 $_lang["error"] = 'erro';
 $_lang["errors"] = 'erros';
 $_lang["failed"] = 'Falhou!';
+$_lang["guid_set"] = 'GUID set';
+$_lang["help"] = 'Ajuda!';
+$_lang["help_link"] = 'http://forums.modx.com/';
+$_lang["help_title"] = 'Installation assistance in the MODX forums';
 $_lang["iagree_box"] = 'Eu Concordo com os termos da licensa.';
 $_lang["install"] = 'Instalar';
 $_lang["install_overwrite"] = 'Instalar/Sobre-escrever';
@@ -95,6 +110,7 @@ $_lang["installation_upgrade_existing"] = 'Atualizando Instalação já existent
 $_lang["installation_upgrade_existing_note"] = 'Upgrade dos arquivos atuais e bases de dados.';
 $_lang["installed"] = 'Instalado';
 $_lang["installing_demo_site"] = 'Instalando site de exemplo: ';
+$_lang["language_code"] = 'pt';
 $_lang["loading"] = 'Carregando...';
 $_lang["modules"] = 'Modulos';
 $_lang["modx_footer1"] = '&copy; 2005-2013 o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODX é licensiado pela GNU GPL.';
@@ -102,6 +118,9 @@ $_lang["modx_footer2"] = 'MODX é um software livre.  Nós indicamos o uso do MO
 $_lang["modx_install"] = 'MODX &raquo; Instalação';
 $_lang["modx_requires_php"] = ', e o MODX requer PHP 4.1.0 ou mais recente';
 $_lang["mysql_5051"] = 'Aviso : Versão do MySQL no servidor é 5.0.51';
+$_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
+$_lang["mysql_version_is"] = ' Your MySQL version is: ';
+$_lang["no"] = 'No';
 $_lang["none"] = 'Nenhuma';
 $_lang["not_found"] = 'não encontrado';
 $_lang["ok"] = 'OK!';
@@ -112,12 +131,17 @@ $_lang["please_correct_error"] = '. Por favor, corriga o erro';
 $_lang["please_correct_errors"] = '. Por favor, corriga os erros';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Validação de Pré Instalação';
+$_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the Manager. We strongly recommend enabling this setting to reduce the risk of a CSRF (Cross Site Request Forgery) attack.';
 $_lang["remove_install_folder_auto"] = 'Remova o diretório e arquivos de instalação do site <br />&nbsp;(É necessário permissões para apagar arquivos).';
 $_lang["remove_install_folder_manual"] = 'Por favor, lembre-se de remover o diretório &quot;<b>install</b>&quot; antes de entrar no Gerenciador de Conteúdo.';
 $_lang["retry"] = 'Tentar Novamente';
 $_lang["running_database_updates"] = 'Rodando atualizações na Base de Dados: ';
 $_lang["sample_web_site"] = 'Web Site Exemplo';
 $_lang["sample_web_site_note"] = 'Atenção: Está irá <b style=\"color:#CC0000\">Sobre-Escrever</b> documentos e recursos existentes.';
+$_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
+$_lang["session_problem_try_again"] = 'Try again?'; 
 $_lang["setup_cannot_continue"] = 'Infelizmente o Setup não pode continuar pelos motivos acima citados ';
 $_lang["setup_couldnt_install"] = 'A instalação não pode inserir/modificar algumas tabelas na Base de Dados selecionada.';
 $_lang["setup_database"] = 'O Setup agora irá tentar configurar a Base de dados.:<br />';
@@ -138,12 +162,16 @@ $_lang["status_checking_database"] = 'Checando Base de Dados: ';
 $_lang["status_connecting"] = ' Conexão ao servidor: ';
 $_lang["status_failed"] = 'falhou!';
 $_lang["status_failed_could_not_create_database"] = 'falhou - não foi possível criar a base de dadose';
+$_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'falhou - o table prefix já está em uso!';
 $_lang["status_passed"] = 'sucesso - Base de Dados selecionada';
 $_lang["status_passed_database_created"] = 'sucesso - Base de Dados criada';
 $_lang["status_passed_server"] = 'sucesso - collations agora disponíveis';
 $_lang["strict_mode"] = 'Aviso : Serviodr de MySQL está no modo strict';
+$_lang["strict_mode_error"] = 'Certain features of MODX may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
 $_lang["summary_setup_check"] = 'O setup carregou um número de checkagens para verificar se está pronto para iniciar o setup.';
+$_lang["system_configuration"] = 'Configuração do Sistema';
+$_lang["system_configuration_validate_referer_description"] = 'The <strong>Validate HTTP_REFERER headers</strong> setting is recommended and can protect your site from CSRF attacks, but in some server configurations, can make your manager inaccessible.';
 $_lang["table_prefix_already_inuse"] = ' - Prefixo de Tabela já está em usa nesta base de dados!';
 $_lang["table_prefix_already_inuse_note"] = 'Setup não pode instalar porque, a base já possui o prefixo de tabela selecionado. Selecione outro prefixo de tabela e inicie o setup novamente.';
 $_lang["table_prefix_not_exist"] = ' - Prefixo de Table não existe nesta Base de Dados!';
@@ -151,6 +179,7 @@ $_lang["table_prefix_not_exist_note"] = 'Não foi possível instalar na base de 
 $_lang["templates"] = 'Templates';
 $_lang["to_log_into_content_manager"] = 'Para logar no gerenciador de conteúdo (manager/index.php) você pode clicar no botão Fechar.';
 $_lang["toggle"] = 'Detalhar';
+$_lang['tvs'] = 'Variáveis de Template';
 $_lang["unable_install_chunk"] = 'Não foi possivel instalar o chunk.  Arquivo';
 $_lang["unable_install_module"] = 'Não foi possivel instalar o module.  Arquivo';
 $_lang["unable_install_plugin"] = 'Não foi possivel instalar o plugin.  Arquivo';
@@ -158,9 +187,13 @@ $_lang["unable_install_snippet"] = 'Não foi possivel instalar o snippet.  Arqui
 $_lang["unable_install_template"] = 'Não foi possivel instalar o template.  Arquivo';
 $_lang["upgrade_note"] = '<strong>Nota:</strong> Antes de navegar em seu site você deve acessar o Gerenciador usando uma conta de Administrador, e depois revisar e gravar suas Configurações de Sistema.';
 $_lang["upgraded"] = 'Atualizado';
+$_lang["validate_referer_title"] = 'Validar cabeçálios HTTP_REFERER?';
 $_lang["visit_forum"] = ', visite o <a href="http://forums.modx.com/" target="_blank">Operation MODX Forums</a>.';
+$_lang["warning"] = 'WARNING!';
+$_lang["welcome_message_start"] = 'First, choose the type of installation to perform:';
 $_lang["welcome_message_text"] = 'Este programa irá te guiar pelo resto da instalação do pacote.';
 $_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do MODX.';
 $_lang["writing_config_file"] = 'Escrevendo arquivo de configuração: ';
+$_lang["yes"] = 'Sim';
 $_lang["you_running_php"] = ' - Você está rodando no PHP ';
 ?>

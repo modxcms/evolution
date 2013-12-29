@@ -1,14 +1,16 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
  * @author davaeron
- * @package MODX
- * @version 1.0
- * 
- * Filename:       /install/lang/english/english.inc.php
- * Language:       English
- * Encoding:       iso-8859-1
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language English
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
 $_lang["alert_database_test_connection"] = 'You need to create your database or test the selection of your database!';
@@ -45,7 +47,7 @@ $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
 $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
-$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.';
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
 $_lang["chunks"] = 'Chunks';
@@ -82,7 +84,7 @@ $_lang["default_language_description"] = 'This is the default language that will
 $_lang["depedency_create"] = 'Depedency created';
 $_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
-$_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["encoding"] = 'iso-8859-1';
 $_lang["error"] = 'error';
 $_lang["errors"] = 'errors';
 $_lang["failed"] = 'FAILED!';
@@ -108,7 +110,7 @@ $_lang["installation_upgrade_existing"] = 'Upgrade Existing Install';
 $_lang["installation_upgrade_existing_note"] = 'Upgrade your current files and database.';
 $_lang["installed"] = 'Installed';
 $_lang["installing_demo_site"] = 'Installing demo site: ';
-$_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'en';
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
 $_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
@@ -139,7 +141,7 @@ $_lang["running_database_updates"] = 'Running database updates: ';
 $_lang["sample_web_site"] = 'Sample Web Site';
 $_lang["sample_web_site_note"] = 'Please note that this will <b>overwrite</b> existing documents and resources.';
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Try again?'; 
+$_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
 $_lang["setup_couldnt_install"] = 'MODX setup couldn\'t install/alter some tables inside the selected database.';
 $_lang["setup_database"] = 'Setup will now attempt to setup the database:<br />';
