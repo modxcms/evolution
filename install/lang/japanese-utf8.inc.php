@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
  * @version 1.0.13

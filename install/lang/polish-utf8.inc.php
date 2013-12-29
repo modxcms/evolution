@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author Radosław Włodkowski, radoslaw@wlodkowski.net
  * @author Natalia Łubniewska

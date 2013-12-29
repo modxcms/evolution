@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author Marc Hinse
  * @author Bogdan Günther

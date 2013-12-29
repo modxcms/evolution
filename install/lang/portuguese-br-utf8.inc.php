@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author Daniel Miguel de Melo
  * @version 1.0.13

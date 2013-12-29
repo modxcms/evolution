@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
  * @author davaeron
  * @package MODX

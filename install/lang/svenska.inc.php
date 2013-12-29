@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author Pontus Ågren (Pont)
  * @author Thomas Djärv (Beryl)

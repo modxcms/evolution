@@ -1,6 +1,6 @@
 <?php
 /**
- * MODX Installer language File
+ * MODX Installer language file
  *
  * @author Mohsen Zare (MotSmart), MotSmart@Gmail.com, www.modxcms.ir
  * @author AliAqua
