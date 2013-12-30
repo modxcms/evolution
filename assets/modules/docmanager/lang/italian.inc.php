@@ -4,7 +4,7 @@
  *
  * Purpose: Contains the language strings for use in the module.
  * Author: Garry Nutting
- * For: MODx CMS (www.modxcms.com)
+ * For: MODX CMS (www.modx.com)
  * Date:2/01/2009 Version: 1.6.1
  * Translation: Nicola Lambathakis (banzai), luigif   
  */

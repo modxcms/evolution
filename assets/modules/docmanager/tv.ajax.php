@@ -1,6 +1,6 @@
 <?php
 /**
- * This file includes slightly modified code from the MODx core distribution.
+ * This file includes slightly modified code from the MODX core distribution.
  */
 
 include_once("../../cache/siteManager.php");

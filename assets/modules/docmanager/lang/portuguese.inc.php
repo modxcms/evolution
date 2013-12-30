@@ -4,7 +4,7 @@
  * 
  * Purpose: Contains the language strings for use in the module.
  * Author: João Peixoto
- * For: MODx CMS (www.modxcms.com)
+ * For: MODX CMS (www.modx.com)
  * Date: 06/04/2007 - updated file to utf-8 encoding
  * Version: 1.6
  * 

@@ -4,7 +4,7 @@
  * Title: Debug Class
  * Purpose:
  *  	The Debug class contains all functions relating to Ditto's 
- * 		implimentation of the MODx debug console
+ * 		implimentation of the MODX debug console
 */
 
 class debug extends modxDebugConsole {

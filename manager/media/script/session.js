@@ -1,5 +1,5 @@
 /*
- * Small script to keep session alive in MODx
+ * Small script to keep session alive in MODX
  */
 function keepMeAlive(imgName) {
     var sessionJSON = new Ajax('includes/session_keepalive.php?tok=' + document.getElementById('sessTokenInput').value + '&o=' + Math.random(), {

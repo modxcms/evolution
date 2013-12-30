@@ -28,7 +28,7 @@ if (isset($_POST['search'])) {
 
     require_once (MODX_MANAGER_PATH . 'includes/protect.inc.php');
     if (!isset($_POST['as_version']) || (strip_tags($_POST['as_version']) != AS_VERSION)) {
-        $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODx manager.";
+        $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODX manager.";
     }
     else {
         include_once AS_PATH . "classes/ajaxSearch.class.inc.php";

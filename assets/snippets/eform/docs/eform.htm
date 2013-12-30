@@ -235,7 +235,7 @@ font-size:14pt;
 				eForm will send the auto-respond message to the email address specified in a field called email.</li>
 				<li><strong>&amp;allowhtml</strong> (Optional)<br/>Set to 1 to allow user to enter html tags. <span class="caution">XSS could be possible i.e. in thankyou chunk if allowed.</span> Defaults to 0.</li>
 				<li><strong>&amp;language</strong> (Optional)<br/>Support for multilingual validation and error messages. Uses same language
-	names as MODx.</li>
+	names as MODX.</li>
 				<li><strong>&amp;vericode</strong> (Optional)<br/>Enables verification code. The template contain a vericode
 	field and a [+vericode+] placeholder.</li>
 				<li><strong>&amp;debug</strong> (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
@@ -381,7 +381,7 @@ between 1 and 10 (inclusive). Handles negative as well as positive numbers<br/>e
 The query should only return a single column of values (the function only checks
 against the first returned column). You can use the
 				<code>{DBASE}</code>
-				<code>{PREFIX}</code> tags which will be replaced by the MODx database name and table prefix respectively.<br/>example:
+				<code>{PREFIX}</code> tags which will be replaced by the MODX database name and table prefix respectively.<br/>example:
 				<code>#SELECT keyword FROM {PREFIX}site_keywords</code></li>
 					<li><strong>#EVAL</strong> - string of php code. Should return either true or false<br/><span style="color:#c00">deprecated</span>Although #EVAL still works in eForm 1.4 this rule will very likely no longer be supported in future versions. Use #FUNCTION instead.<br/></li>
 					<li><strong>#FUNCTION</strong> - Name of a function. The function should expect one parameter (the posted value) and return either TRUE or FALSE. 

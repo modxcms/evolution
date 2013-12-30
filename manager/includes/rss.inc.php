@@ -1,14 +1,14 @@
 <?php
  /*
- *  MODx Manager Home Page Implmentation by pixelchutes (www.pixelchutes.com)
+ *  MODX Manager Home Page Implmentation by pixelchutes (www.pixelchutes.com)
  *  Based on kudo's kRSS Module v1.0.72
  *
  *  Written by: kudo, based on MagpieRSS
  *  Contact: kudo@kudolink.com
  *  Created: 11/05/2006 (November 5)
- *  For: MODx cms (modxcms.com)
+ *  For: MODX cms (modxcms.com)
  *  Name: kRSS
- *  Version (MODx Module): 1.0.72
+ *  Version (MODX Module): 1.0.72
  *  Version (Magpie): 0.72
  */
 

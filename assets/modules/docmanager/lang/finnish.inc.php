@@ -4,7 +4,7 @@
  * 
  * Purpose: Contains the language strings for use in the module.
  * Author: doze
- * For: MODx CMS (www.modxcms.com)
+ * For: MODX CMS (www.modx.com)
  * Date:19/04/2007 Version: 1.0
  * 
  */

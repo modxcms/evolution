@@ -9,7 +9,7 @@
  * 
  * This snippet redirects to the first child document of a folder in which this
  * snippet is included within the content (e.g. [!FirstChildRedirect!]).  This
- * allows MODx folders to emulate the behavior of real folders since MODx
+ * allows MODX folders to emulate the behavior of real folders since MODX
  * usually treats folders as actual documents with their own content.
  * 
  * Modified to make Doc ID a required parameter... now defaults to the current 

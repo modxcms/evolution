@@ -36,14 +36,14 @@ class PHxParser {
 		$modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
 	}
 	
-	// Plugin event hook for MODx
+	// Plugin event hook for MODX
 	function OnParseDocument() {
 		global $modx;
-		// Get document output from MODx
+		// Get document output from MODX
 		$template = $modx->documentOutput;
 		// To the parse cave .. let's go! *insert batman tune here*
 		$template = $this->Parse($template);
-		// Set processed document output in MODx
+		// Set processed document output in MODX
 		$modx->documentOutput = $template;
 	}
 	
@@ -58,7 +58,7 @@ class PHxParser {
 		$template = preg_replace($this->safetags[0],$this->safetags[1],$template);
 		// To the parse mobile.. let's go! *insert batman tune here*
 		$template = $this->ParseValues($template);
-		// clean up unused placeholders that have modifiers attached (MODx can't clean them)
+		// clean up unused placeholders that have modifiers attached (MODX can't clean them)
 		preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s', $template, $matches);
     	if ($matches[0]) {
 			$template = str_replace($matches[0], '', $template);
@@ -89,11 +89,11 @@ class PHxParser {
 		//$this->LogSource($template);
 		$this->LogPass();
 						
-		// MODx Chunks
-		$this->Log("MODx Chunks -> Merging all chunk tags");
+		// MODX Chunks
+		$this->Log("MODX Chunks -> Merging all chunk tags");
 		$template = $modx->mergeChunkContent($template);
 		
-		// MODx Snippets
+		// MODX Snippets
 		//if ( preg_match_all('~\[(\[|!)([^\[]*?)(!|\])\]~s',$template, $matches)) {
 		if ( preg_match_all('~\[(\[)([^\[]*?)(\])\]~s',$template, $matches)) {
 				$count = count($matches[0]);
@@ -103,9 +103,9 @@ class PHxParser {
 				// for each detected snippet
 				for($i=0; $i<$count; $i++) {
 					$snippet = $matches[2][$i]; // snippet call
-					$this->Log("MODx Snippet -> ".$snippet);
+					$this->Log("MODX Snippet -> ".$snippet);
 					
-					// Let MODx evaluate snippet
+					// Let MODX evaluate snippet
 					$replace = $modx->evalSnippets("[[".$snippet."]]");
 					$this->LogSnippet($replace);
 					
@@ -117,7 +117,7 @@ class PHxParser {
 				$template = str_replace($var_search, $var_replace, $template);
 		}
 		
-		// PHx / MODx Tags
+		// PHx / MODX Tags
 		if ( preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s',$template, $matches)) {
 
 			//$matches[0] // Complete string that's need to be replaced
@@ -140,19 +140,19 @@ class PHxParser {
 					switch($type) {
 						// Document / Template Variable eXtended
 						case "*":
-							$this->Log("MODx TV/DV: " . $input);
+							$this->Log("MODX TV/DV: " . $input);
 							$input = $modx->mergeDocumentContent("[*".$input."*]");
 							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Setting eXtended
+						// MODX Setting eXtended
 						case "(":
-							$this->Log("MODx Setting variable: " . $input);
+							$this->Log("MODX Setting variable: " . $input);
 							$input = $modx->mergeSettingsContent("[(".$input.")]");
 							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Placeholder eXtended
+						// MODX Placeholder eXtended
 						default:
-							$this->Log("MODx / PHx placeholder variable: " . $input);
+							$this->Log("MODX / PHx placeholder variable: " . $input);
 							// Check if placeholder is set
 							if ( !array_key_exists($input, $this->placeholders) && !array_key_exists($input, $modx->placeholders) ) {
 								// not set so try again later.
@@ -322,7 +322,7 @@ class PHxParser {
 		}
 	}
 	
-	// Returns a cleaned string escaping the HTML and special MODx characters
+	// Returns a cleaned string escaping the HTML and special MODX characters
 	function LogClean($string) {
 		$string = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", htmlspecialchars($string));
 		$string = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$string);
@@ -394,7 +394,7 @@ class PHxParser {
 		return false;
 	 }
 	 
-	// Returns the value of a PHx/MODx placeholder.
+	// Returns the value of a PHx/MODX placeholder.
     function getPHxVariable($name) {
         global $modx;
 		// Check if this variable is created by PHx 
@@ -402,7 +402,7 @@ class PHxParser {
 			// Return the value from PHx
 			return $this->placeholders[$name];
 		} else {
-			// Return the value from MODx
+			// Return the value from MODX
 			return $modx->getPlaceholder($name);
 		}  
     }

@@ -3,10 +3,10 @@
 /**
  * Filename:       assets/snippets/ditto/english.inc.php
  * Function:       Default English language file for Ditto.
- * Author:         The MODx Project
+ * Author:         The MODX Project
  * Date:           2006/07/2
  * Version:        1.0.2
- * MODx version:   0.9.2.1
+ * MODX version:   0.9.2.1
 */
 
 // NOTE: New language keys should added at the bottom of this page
@@ -76,6 +76,6 @@ $_lang['invalid_class'] = "The Ditto class is invalid. Please check it.";
 
 $_lang['tvs'] = "TVs:";
 
-$_lang['api'] = "Using the new MODx 0.9.2.1 API";
+$_lang['api'] = "Using the new MODX 0.9.2.1 API";
 
 ?>

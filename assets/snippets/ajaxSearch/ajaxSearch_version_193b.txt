@@ -29,15 +29,15 @@ See http://bugs.modx.com/issues/3698
 
 Previous versions :
  - 1.9.3 delivered the 26th of september 2012
- - 1.9.2 delivered the 5th of December 2010 (provided with MODx 1.0.4)
+ - 1.9.2 delivered the 5th of December 2010 (provided with MODX 1.0.4)
  - 1.9.1 delivered the 30th of August 2010
- - 1.9.0 delivered the 18th of May 2010 (provided with MODx 1.0.4)
- - 1.8.5 delivered the 20th of March 2010 (provided with MODx 1.0.3)
- - 1.8.4 delivered the 20th of October 2009 (provided with MODx1.0.1)
- - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
+ - 1.9.0 delivered the 18th of May 2010 (provided with MODX 1.0.4)
+ - 1.8.5 delivered the 20th of March 2010 (provided with MODX 1.0.3)
+ - 1.8.4 delivered the 20th of October 2009 (provided with MODX 1.0.1)
+ - 1.8.3a delivered the 12th of July 2009 (provided with MODX 1.0.0)
  - 1.8.3 delivered the 08th June 2009
  - 1.8.2 delivered the 21th April 2009
- - 1.8.1 delivered the 13th October 2008 (provided with MODx0.9.6.3)
+ - 1.8.1 delivered the 13th October 2008 (provided with MODX 0.9.6.3)
 
 
 ======================= CHANGES (since 1.8.5) ==================================
@@ -90,7 +90,7 @@ Previous versions :
 ==== Accented characters - search html entities too
 
     The html entity version of the search terms are also searched.
-    e.g: "ph&eactute;nom&egrave;ne" and "phénomène" are searched when "phénomène" is searched.
+    e.g: "ph&eactute;nom&egrave;ne" and "phï¿½nomï¿½ne" are searched when "phï¿½nomï¿½ne" is searched.
 
 
 ==== advSearch - exactphrase
@@ -146,7 +146,7 @@ Previous versions :
 
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
 
-    Where tvname is the MODx name of a TV
+    Where tvname is the MODX name of a TV
 
     [+as.tvname+] is the HTML output of your TV
     [+as.tvnameShow+] = 1 if the TV is not NULL
@@ -176,7 +176,7 @@ Previous versions :
 
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
 
-    Where tvname is the MODx name of a TV
+    Where tvname is the MODX name of a TV
 
     [+as.tvname+] is the HTML output of your TV
     [+as.tvnameShow+] = 1 if the TV is not NULL
@@ -295,7 +295,7 @@ Previous versions :
     &category [ tv_name | '']
     Any combination of characters a-z, underscores, and numbers 0-9
     This is case sensitive. Default = empty string
-    Name of a TV. The category of a MODx document is provided by this TV content
+    Name of a TV. The category of a MODX document is provided by this TV content
 
     e.g: &category=`category`
     And the "category" tv value of a document could contain for instance Music, Arts, ...

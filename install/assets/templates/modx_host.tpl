@@ -1,7 +1,7 @@
 /**
  * MODxHost
  *
- * Legacy MODx Host template including dropdown menu
+ * Legacy MODX Host template including dropdown menu
  *
  * @category	template
  * @version 	1.0

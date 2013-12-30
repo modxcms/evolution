@@ -1,39 +1,39 @@
 <?php
 /*
 *************************************************************************
-    MODx Content Management System and PHP Application Framework
+    MODX Content Management System and PHP Application Framework
     Managed and maintained by Raymond Irving, Ryan Thrash and the
-    MODx community
+    MODX community
 *************************************************************************
-    MODx is an opensource PHP/MySQL content management system and content
+    MODX is an opensource PHP/MySQL content management system and content
     management framework that is flexible, adaptable, supports XHTML/CSS
     layouts, and works with most web browsers, including Safari.
 
-    MODx is distributed under the GNU General Public License
+    MODX is distributed under the GNU General Public License
 *************************************************************************
 
-    MODx CMS and Application Framework ("MODx")
+    MODX CMS and Application Framework ("MODX")
     Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
     All rights reserved.
 
     This file and all related or dependant files distributed with this filie
-    are considered as a whole to make up MODx.
+    are considered as a whole to make up MODX.
 
-    MODx is free software; you can redistribute it and/or modify
+    MODX is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    MODx is distributed in the hope that it will be useful,
+    MODX is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with MODx (located in "/assets/docs/"); if not, write to the Free Software
+    along with MODX (located in "/assets/docs/"); if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-    For more information on MODx please visit http://modxcms.com/
+    For more information on MODX please visit http://modxcms.com/
 
 **************************************************************************
     Originally based on Etomite by Alex Butter
@@ -43,7 +43,7 @@
 
 /**
  *  Filename: index.php
- *  Function: This file is the main root file for MODx. It is
+ *  Function: This file is the main root file for MODX. It is
  *          only file that will be directly requested, and
  *          depending on the request, will branch different
  *          content
@@ -122,7 +122,7 @@ define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
     echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the MODx <a href='../install'>install utility</a>";
+    echo "Please run the MODX <a href='../install'>install utility</a>";
     exit;
 }
 

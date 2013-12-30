@@ -112,9 +112,9 @@ class AjaxSearchConfig {
                 $valid = true;
             }
         } elseif (!isset($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODX config file";
         } elseif (!strlen($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODX config file";
         } else {
             // if you get this message, simply update the $pageCharset array in search.class.inc.php file
             // with the appropriate mapping between Mysql Charset and Html charset

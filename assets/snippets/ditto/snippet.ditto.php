@@ -6,7 +6,7 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
  *      collections, and more,with full support for templating.
  * 
  * Author: 
- *      Mark Kaplan for MODx CMF
+ *      Mark Kaplan for MODX CMF
 */
 
 //---Core Settings---------------------------------------------------- //
@@ -86,7 +86,7 @@ $config = (isset($config)) ? $config : "default";
 
     Options:
     "default" - default blank config file
-    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODX base path via @FILE
 
     Default:
     "default"
@@ -133,7 +133,7 @@ $extenders = isset($extenders) ? explode(",",$extenders) : array();
     Load an extender which adds functionality to Ditto
 
     Options:
-    Any extender in the extenders folder or in any folder within the MODx base path via @FILE
+    Any extender in the extenders folder or in any folder within the MODX base path via @FILE
 
     Default:
     [NULL]
@@ -260,10 +260,10 @@ $parents = isset($parents) ? $ditto->cleanIDs($parents) : $modx->documentIdentif
     IDs of containers for Ditto to retrieve their children to &depth depth
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
-    Current MODx Document
+    Current MODX Document
 
     Related:
     - <documents>
@@ -277,7 +277,7 @@ $documents = isset($documents) ? $ditto->cleanIDs($documents) : false;
     IDs of documents for Ditto to retrieve
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
     None
@@ -335,7 +335,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
     Source of the [+date+] placeholder
 
     Options:
-    # - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+    # - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
     
     Default:
     "createdon"
@@ -560,7 +560,7 @@ $hiddenFields = isset($hiddenFields) ? explode(",",$hiddenFields) : false;
     Allow Ditto to retrieve fields its template parser cannot handle such as nested placeholders and [*fields*]
 
     Options:
-    Any valid MODx fieldnames or TVs comma separated
+    Any valid MODX fieldnames or TVs comma separated
 
     Default:
     [NULL]
@@ -642,7 +642,7 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     11 - checks leading character of the field
     
     @EVAL:
-        @EVAL in filters works the same as it does in MODx exect it can only be used 
+        @EVAL in filters works the same as it does in MODX exect it can only be used
         with basic filtering, not custom filtering (tagging, etc). Make sure that
         you return the value you wish Ditto to filter by and that the code is valid PHP.
 
@@ -680,7 +680,7 @@ $randomize = (isset($randomize))? $randomize : 0;
     Options:
     0 - off
     1 - on
-    Any MODx field or TV for weighted random
+    Any MODX field or TV for weighted random
     
     Default:
     0 - off

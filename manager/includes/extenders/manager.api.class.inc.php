@@ -1,6 +1,6 @@
 <?php
 /*
- * MODx Manager API Class
+ * MODX Manager API Class
  * Written by Raymond Irving 2005
  *
  */
