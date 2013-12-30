@@ -1,22 +1,28 @@
 <?php
 /**
- * Filename:       includes/lang/italian.inc.php
- * Function:       Language file.
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * Date:           24 October 2013
- * Version:        2.0.6
- * MODX version:   Evolution 1.0.13
- * Translation:    Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif 
-*/
-//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author Nicola Lambathakis (Banzai)
+ * @author Kudolink
+ * @author Diego Meozzi
+ * @author Luigif
+ *
+ * @language Italian
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'it'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX è un <a href="http://modx.com/" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Cos\'è MODX';
 $_lang["access_permission_denied"] = 'Non avete i permessi per accedere alla Risorsa.';
-$_lang["access_permission_parent_denied"] = 'Non avete il permesso di creare o spostare qui una Risorsa! Scegliete un\'altra destinazione';
+$_lang["access_permission_parent_denied"] = 'Non avete il permesso di creare o spostare qui una Risorsa! Scegliete un\'altra destinazione.';
 $_lang["access_permissions"] = 'Permessi di accesso';
 $_lang["access_permissions_add_resource_group"] = 'Crea un nuovo Gruppo di Risorse';
 $_lang["access_permissions_add_user_group"] = 'Crea un nuovo Gruppo di Utenti';
@@ -92,7 +98,7 @@ $_lang["change_password"] = 'Cambia password';
 $_lang["change_password_confirm"] = 'Conferma password';
 $_lang["change_password_message"] = 'Inserite la nuova password e successivamente riscrivetela per conferma. La password deve essere compresa fra 6 e 15 caratteri.';
 $_lang["change_password_new"] = 'Nuova password';
-$_lang["charset_message"] = 'Selezionate la codifica caratteri che intendete usare nel Manager. Da notare che MODX è stato testato con numerose codifiche, ma non con tutte. Per la maggior parte delle lingue, la codifica ISO-8859-1 impostata di default è sufficiente.';
+$_lang["charset_message"] = 'Selezionate la codifica caratteri per la variabile di sistema [(modx_charset)]. Questa impostaizione non ha impatto sul Manager.';
 $_lang["charset_title"] = 'Codifica carattere:';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Codice del Chunk (HTML)';
@@ -123,10 +129,10 @@ $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning
 $_lang["configcheck_images"] = 'Impossibile scrivere nella directory delle immagini';
 $_lang["configcheck_images_msg"] = 'La cartella immagini non è scrivibile o non esiste. Questo significa che il sistema di gestione immagini dell\'editor non funzionerà!';
 $_lang["configcheck_installer"] = 'L\'Installer è ancora presente';
-$_lang["configcheck_installer_msg"] = 'La cartella install/ contiene l\'installer di MODX. Immaginate cosa potrebbe accadere se un malintenzionato trovasse questa cartella ed eseguisse l\'installer! Probabilmente non andrebbe troppo lontano perchè dovrebbe fornire alcune informazioni per la connessione database, ma è sempre meglio rimuovere questa cartella dal server.';
+$_lang["configcheck_installer_msg"] = 'La directory /install contiene il programma di installazione di MODX. Immaginate cosa potrebbe succedere se un malintenzionato trovasse questa directory ed eseguisse l\'installazione. Forse non riuscirebbe a fare molto visto che gli servirebbe anche la password per la connessione al database, ma è decisamente meglio cancellare questa directory dal server.';
 $_lang["configcheck_lang_difference"] = 'Numero errato di voci nel file di lingua';
 $_lang["configcheck_lang_difference_msg"] = 'La lingua correntemente selezionata ha un differente numero di voci rispetto alla lingua di default. Pur non essendo necessariamente un problema, questo significa che il file di lingua richiede un aggiornamento.';
-$_lang["configcheck_notok"] = 'Uno o più dettagli della configurazione vanno verificati: ';
+$_lang["configcheck_notok"] = 'Verificare alcuni dettagli della configurazione: ';
 $_lang["configcheck_ok"] = 'Controllo OK - nessun avviso da segnalare.';
 $_lang["configcheck_php_gdzip"] = 'Le estensioni PHP GD e/o Zip non sono state trovate';
 $_lang["configcheck_php_gdzip_msg"] = 'MODX richiede le estensioni PHP GD e Zip. MODX funziona anche senza, ma non potrete utilizzare File Manager, Image Editor e Captcha.';
@@ -140,7 +146,7 @@ $_lang["configcheck_templateswitcher_present_msg"] = 'Il Plugin TemplateSwitcher
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'La pagina Non Autorizzato del vostro sito non esiste o non è stata pubblicata.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Ciò significa che la pagina di Non Autorizzato non esiste o non è accessibile da parte dei normali visitatori web. Questo fatto generare un loop ricorsivo e scrivere numerosi errori nel log del vostro sito. Verificate che non ci siano Gruppi di Utenti Web assegnati a questa pagina.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'La pagina Non Autorizzato del vostro sito non è stata pubblicata.';
-$_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Ciò significa che la pagina di Non Autorizzato non è accessibile ai visitatori. Publicate la pagina o selezionate una Risorsa esistente nella struttura ad albero del vostro sito dal menu Strumenti -> Configurazione.';
+$_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Ciò significa che la pagina di Non Autorizzato non è accessibile ai visitatori. Pubblicate la pagina o selezionate una Risorsa esistente nella struttura ad albero del vostro sito dal menu Strumenti -> Configurazione.';
 $_lang["configcheck_validate_referer"] = 'Avviso di Sicurezza: Validazione headers HTTP';
 $_lang["configcheck_validate_referer_msg"] = 'L\'opzione di <strong>Validazione degli headers HTTP_REFERER?</strong> non è attivata. Raccomandiamo di attivarla. <a href="index.php?a=17">Vai alle Opzioni di Configurazione</a>';
 $_lang["configcheck_warning"] = 'Avviso di configurazione:';
@@ -165,8 +171,8 @@ $_lang["confirm_empty_trash"] = 'Volete rimuovere permanentemente tutte le Risor
 $_lang["confirm_load_depends"] = 'Siete sicuri di voler caricare la finestra di Impostazione Dipendenze senza salvare le modifiche?';
 $_lang["confirm_name_change"] = 'Cambiare nome utente può avere effetto su altre applicazioni collegate al Sistema di Gestione dei Contenuti. \n\n Siete sicuri di voler cambiare il nome utente?';
 $_lang["confirm_publish"] = '\n\nPubblicando ora la Risorsa rimuoverete ogni data di pubblicazione o ritiro che potreste aver impostato. Se invece volete cambiare o mantenere le date di pubblicazione/ritiro, allora scegliete la \'modifica\' della Risorsa.\n\nProcedere?';
-$_lang["confirm_remove_locks"] = 'Gli utenti a volte chiudono il browser mentre stanno modificando Risorse, Templates o Snippets lasciando con ogni probabilità tali oggetti in stato di blocco.\nPremendo OK rimuoverete TUTTI i blocchi attualmente presenti.\n\nProcedere?';
-$_lang["confirm_resource_duplicate"] = 'Siete sicuri di voler duplicare questa Risorsa/Cartella? Anche le Cartelle e Risorse che contiene saranno duplicate.';
+$_lang["confirm_remove_locks"] = 'Gli utenti a volte chiudono il browser mentre stanno modificando Risorse, Templates o Snippets lasciando con ogni probabilità questi oggetti in stato di blocco.\nPremendo OK rimuoverete TUTTI i blocchi attualmente presenti.\n\nProcedere?';
+$_lang["confirm_resource_duplicate"] = 'Siete sicuri di voler duplicare questa Risorsa/Cartella? Saranno anche duplicate tutte le Risorse/Catelle che contiene.';
 $_lang["confirm_setting_language_change"] = 'Avete modificato il valore di default e si perderanno le modifiche. Procedere?';
 $_lang["confirm_unblock"] = 'Siete sicuri di voler sbloccare l\'utente?';
 $_lang["confirm_undelete"] = '\n\nTutte le Risorse eliminate insieme alla Risorsa genitore potranno essere recuperate, ma non quelle eliminate in precedenza.';
@@ -187,7 +193,7 @@ $_lang["database_collation"] = 'Collation del Database';
 $_lang["database_name"] = 'Nome del Database';
 $_lang["database_overhead"] = '<b style=\'color:#990033\'>Nota:</b> L\'Overhead è lo spazio inutilizzato riservato da MySQL. Per liberare questo spazio, cliccate sulla cifra overhead della tabella.';
 $_lang["database_server"] = 'Server del Database';
-$_lang["database_table_clickbackup"] = 'Fai una copia di backup e scarica le tabelle selezionate';
+$_lang["database_table_clickbackup"] = 'Effettua il backup e scarica le tabelle selezionate';
 $_lang["database_table_clickhere"] = 'Cliccate qui';
 $_lang["database_table_datasize"] = 'Dimensione dei dati';
 $_lang["database_table_droptablestatements"] = 'Genera dichiarazioni DROP TABLE.';
@@ -207,7 +213,7 @@ $_lang["datepicker_offset_message"] = 'Il numero di anni nel passato da mostrare
 $_lang["datetime_format"] = 'Formato Data:';
 $_lang["datetime_format_message"] = 'Il formato delle date nel Manager.';
 $_lang["default"] = 'Default:';
-$_lang["defaultcache_message"] = 'Selezionate \'Si\' se volete che di default tutte le nuove Risorse siano salvate nella cache.';
+$_lang["defaultcache_message"] = 'Selezionate \'Si\' se volete che di default tutte le nuove Risorse possano essere salvate nella cache.';
 $_lang["defaultcache_title"] = 'Inserisci in cache di default:';
 $_lang["defaultmenuindex_message"] = 'Selezionate \'Si\' per attivare di default l\'incremento automatico dell\'indice dei menu.';
 $_lang["defaultmenuindex_title"] = 'Incremento automatico indice dei Menu:';
@@ -233,7 +239,7 @@ $_lang["disabled"] = 'Disabilitati';
 $_lang["doc_data_title"] = 'Visualizza dati della Risorsa';
 $_lang["duplicate"] = 'Duplica';
 $_lang["duplicate_alias_found"] = 'La Risorsa \'%s\' utilizza già l\'alias \'%s\'. Inserire un altro alias.';
-$_lang["duplicate_alias_message"] = 'Qui potete selezionare \'Si\' per permettere gli alias duplicati. <b>NOTA: Questa opzione deve essere usata con l\'opzione \'Percorso URL semplici\' attiva per evitare problemi di riferimenti alle Risorse.</b>';
+$_lang["duplicate_alias_message"] = 'Qui potete selezionare \'Si\' per permettere gli alias duplicati. <b>NOTA: Questa opzione deve essere usata con l\'opzione \'Percorso URL Semplici\' attiva per evitare problemi di riferimenti alle Risorse.</b>';
 $_lang["duplicate_alias_title"] = 'Permetti alias duplicati:';
 $_lang["duplicate_name_found_general"] = 'E\' già presente un %s chiamato \'%s\'. Inserite un nome univoco.';
 $_lang["duplicate_name_found_module"] = 'E\' già presente un Modulo chiamato \'%s\'. Inserite un nome univoco.';
@@ -268,7 +274,7 @@ $_lang["enable_sharedparams_msg"] = '<b>NOTA:</b> L\'id unico globale (GUID) sar
 $_lang["enabled"] = 'Abilitati';
 $_lang["error"] = 'Errore';
 $_lang["error_sending_email"] = 'Errore invio mail';
-$_lang["errorpage_message"] = 'Inserite l\'ID della Risorsa da mostrare agli utenti che hanno richiesto una Risorsa che in realtà potrebbe non esistere. <b>NOTA: assicuratevi che l\'ID inserito appartenga a una Risorsa esistente e che sia stata pubblicata!</b>';
+$_lang["errorpage_message"] = 'Inserite l\'ID della Risorsa da mostrare agli utenti che hanno richiesto una Risorsa che non esiste. <b>NOTA: assicuratevi che l\'ID inserito appartenga a una Risorsa esistente e che sia stata pubblicata!</b>';
 $_lang["errorpage_title"] = 'Pagina di errore:';
 $_lang["event_id"] = 'ID Evento';
 $_lang["eventlog"] = 'Log degli Eventi';
@@ -287,7 +293,7 @@ $_lang["export_site_failed_no_write"] = 'Impossibile scrivere il file.';
 $_lang["export_site_html"] = 'Esporta sito in HTML';
 $_lang["export_site_maxtime"] = 'Tempo massimo di esportazione:';
 $_lang["export_site_maxtime_message"] = 'Qui potete specificare il numero massimo di secondi che MODX può impiegare per esportare il sito (escludendo le impostazioni PHP). Inserite 0 per un tempo illimitato. Da notare che non è consigliabile impostare 0 o un numero troppo alto di secondi in quanto ciò potrebbe causare effetti indesiderati sul server.';
-$_lang["export_site_message"] = '<p>Usando questa funzione potete esportare l\'intero sito in HTML. Considerate che così facendo perderete molte funzionalità di MODX:</p><ul><li>Gli accessi alle pagine dei files esportati non saranno registrati.</li><li>Gli Snippets interattivi NON funzionano nei file esportati.</li><li>Solo le normali Risorse saranno esportate, i Link Web non lo saranno.</li><li>Il processo di esportazione potrebbe fallire se le Risorse contengono Snippets che inviano headers HTTP di redirezione.</li><li>A seconda di come avete scritto i documenti, i fogli di stile e le immagini, il layout del sito potrebbe rompersi. Per sistemarlo, potete provare a salvare/spostare i file esportati nella stessa cartella dove risiede il file index.php di MODX.</li></ul><p>Compilate il form e premete \'Avvia esportazione\' per avviare il processo. I file creati saranno salvati nel punto specificato usando, ove possibile, gli alias dei documenti come nomi dei file. Nell\'esportare il sito, sarebbe meglio aver attivato gli \'URL semplici\' nella configurazione di MODX. In base alla dimensione del sito, l\'esportazione potrebbe impiegare un po\' di tempo.</p><p><b>Ogni file già esistente sarà sovrascritto dai nuovi file se hanno gli stessi nomi!</b></p>';
+$_lang["export_site_message"] = '<p>Usando questa funzione potete esportare l\'intero sito in HTML. Considerate che così facendo perderete molte funzionalità di MODX:</p><ul><li>Gli accessi alle pagine dei files esportati non saranno registrati.</li><li>Gli Snippets interattivi NON funzionano nei file esportati.</li><li>Solo le normali Risorse saranno esportate, i Link Web non lo saranno.</li><li>Il processo di esportazione potrebbe fallire se le Risorse contengono Snippets che inviano headers HTTP di redirezione.</li><li>A seconda di come avete scritto i documenti, i fogli di stile e le immagini, il layout del sito potrebbe rompersi. Per sistemarlo, potete provare a salvare/spostare i file esportati nella stessa cartella dove risiede il file index.php di MODX.</li></ul><p>Compilate il form e premete \'Avvia esportazione\' per avviare il processo. I file creati saranno salvati nel punto specificato usando, ove possibile, gli alias dei documenti come nomi dei file. Nell\'esportare il sito, sarebbe meglio aver attivato gli \'URL Semplici\' nella configurazione di MODX. In base alla dimensione del sito, l\'esportazione potrebbe impiegare un po\' di tempo.</p><p><b>Ogni file già esistente sarà sovrascritto dai nuovi file se hanno gli stessi nomi!</b></p>';
 $_lang["export_site_numberdocs"] = '<p><b>Trovate %s Risorse da esportare...</b></p>';
 $_lang["export_site_prefix"] = 'Prefisso file:';
 $_lang["export_site_start"] = 'Avvia esportazione';
@@ -355,14 +361,14 @@ $_lang["forgot_password_email_intro"] = 'E\' stata fatta una richiesta per cambi
 $_lang["forgot_password_email_link"] = 'Fate clic qui per completare il processo.';
 $_lang["forgot_your_password"] = 'Hai dimenticato la Password?';
 $_lang["friday"] = 'Venerdì';
-$_lang["friendly_alias_message"] = 'Se state usando gli URL semplici, e la Risorsa ha un alias, quest\'ultimo avrà sempre precedenza sull\'URL semplice. Impostando questa opzione su \'Si\', il prefisso e il suffisso dell\'URL semplice saranno anche applicati all\'alias. Per esempio, se la Risorsa con l\'ID 1 ha per alias `introduction`, e voi avete impostato un prefisso come `` e un suffisso come `.html`, settando questa opzione su `si` sarà generato `introduction.html`. Se non ci sono alias, MODX genererà `1.html` come link.';
-$_lang["friendly_alias_title"] = 'Usa alias semplici:';
-$_lang["friendlyurls_message"] = 'L\'opzione permette di usare gli URL semplici per i motori di ricerca con MODX. Notate che l\'opzione ha effetto solo per le installazioni di MODX su Apache e che avrete anche bisogno di scrivere un file .htaccess perchè possa funzionare. Per maggiori informazioni, guardate il file .htaccess incluso nella distribuzione.';
-$_lang["friendlyurls_title"] = 'Usa URL semplici:';
+$_lang["friendly_alias_message"] = 'Se state usando gli URL Semplici, e la Risorsa ha un alias, quest\'ultimo avrà sempre precedenza sull\'URL Semplice. Impostando questa opzione su \'Si\', il prefisso e il suffisso dell\'URL Semplice saranno anche applicati all\'alias. Per esempio, se la Risorsa con l\'ID 1 ha per alias `introduction` e voi avete impostato un prefisso come `` e un suffisso come `.html`, settando questa opzione su `Si` sarà generato `introduction.html`. Se non ci sono alias, MODX genererà `1.html` come link.';
+$_lang["friendly_alias_title"] = 'Usa URL Semplici';
+$_lang["friendlyurls_message"] = 'L\'opzione permette di usare gli URL Semplici per i motori di ricerca con MODX. Notate che l\'opzione ha effetto solo per le installazioni di MODX su Apache e che avrete anche bisogno di scrivere un file .htaccess perchè possa funzionare. Per maggiori informazioni, guardate il file .htaccess incluso nella distribuzione.';
+$_lang["friendlyurls_title"] = 'Usa URL Semplici:';
 $_lang["friendlyurlsprefix_message"] = 'Qui potete specificare il prefisso da usare con gli URL semplici. Ad esempio, un prefisso impostato su \'pagina\' trasformerà l\'URL /index.php?id=2 nell\'URL semplice /pagina2.html (assumendo che il suffisso sia impostato su .html). In questo modo potete specificare cosa gli utenti (e i motori di ricerca) vedranno per i links nel sito.';
-$_lang["friendlyurlsprefix_title"] = 'Prefisso per gli URL semplici:';
+$_lang["friendlyurlsprefix_title"] = 'Prefisso per gli URL Semplici:';
 $_lang["friendlyurlsuffix_message"] = 'Qui potete specificare il suffisso degli URL semplici. Specificando \'.html\' sarà aggiunto .html a tutti gli URL semplici.';
-$_lang["friendlyurlsuffix_title"] = 'Suffisso per gli URL semplici:';
+$_lang["friendlyurlsuffix_title"] = 'Suffisso per gli URL Semplici:';
 $_lang["functionnotimpl"] = 'Spiacente!';
 $_lang["functionnotimpl_message"] = 'Questa funzione non è ancora stata implementata.';
 $_lang["go"] = 'Vai';
@@ -395,7 +401,7 @@ $_lang["import_site_html"] = 'Importa sito da HTML';
 $_lang["import_site_importing_document"] = 'Importazione in corso <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Tempo massimo importazione:';
 $_lang["import_site_maxtime_message"] = 'Qui potete specificare il numero di secondi che il sistema può impiegare per importare il sito (ignorando le impostazioni PHP). Inserite 0 per un tempo illimitato. Attenzione, un\'impostazione 0 o molto alta può causare un timeout del server, quindi non è raccomandata.';
-$_lang["import_site_message"] = '<p>Usando questa funzione potete importare nel database un intero sito HTML. Da notare che ci sarà bisogno di copiare i vostri file HTML nella cartella assets/import.</p><p>Compilate il form per avviare il processo di importazione. Gli archivi importati saranno salvati nella posizione selezionata, usando - dove possibile - i nomi dei file come alias della Risorsa, il titolo della pagina come titolo della Risorsa.</p>';
+$_lang["import_site_message"] = '<p>Usando questa funzione potete importare nel database un intero sito HTML. Da notare che ci sarà poi bisogno di copiare i vostri file html nella cartella assets/import.</p><p>Compilate il form per avviare il processo di importazione. I files importati saranno salvati nella posizione selezionata, usando dove possibile i nomi dei files come alias delle Risorse, il titolo della Risorsa come titolo della pagina.</p>';
 $_lang["import_site_skip"] = '<span style=\'color:#990000\'>Saltato!</span>';
 $_lang["import_site_start"] = 'Avvia importazione';
 $_lang["import_site_success"] = '<span style=\'color:#009900\'>Effettuato!</span>';
@@ -417,7 +423,7 @@ $_lang["maxImageWidth_message"] = 'Se la risoluzione dell\'immagine caricata sup
 $_lang["maxImageHeight_message"] = 'Se la risoluzione dell\'immagine caricata supera questa impostazione verrà automaticamente ridimensionata. Impostare 0 per disabilitare.';
 $_lang["thumbWidth_message"] = 'Larghezza massima della miniatura.';
 $_lang["thumbHeight_message"] = 'Altezza massima della miniatura.';
-$_lang["thumbsDir_message"] = 'Il nome della cartella delle anteprime.';
+$_lang["thumbsDir_message"] = 'Il nome della directory delle miniature';
 $_lang["jpegQuality_message"] = 'Qualità della compressione JPEG delle miniature ridimensionate.';
 $_lang["showHiddenFiles"] = 'Mostra i file nascosti nel File Browser:';
 $_lang["keyword"] = 'Parola chiave';
@@ -545,7 +551,7 @@ $_lang["module_resource_title"] = 'Dipendenze Moduli';
 $_lang["module_title"] = 'Crea/modifica Moduli';
 $_lang["module_viewdepend_msg"] = 'Qui potete vedere gli Elementi dai quali dipende il Modulo. Cliccate sul pulsante \'Configurazione Dipendenze\' per modificare le dipendenze';
 $_lang["modules"] = 'Moduli';
-$_lang["modx_news"] = 'MODX News Notices';
+$_lang["modx_news"] = 'Ultime Notizie MODX';
 $_lang["modx_news_tab"] = 'Novità MODX';
 $_lang["modx_news_title"] = 'Novità MODX';
 $_lang["modx_security_notices"] = 'Avvisi di Protezione MODX';
@@ -553,7 +559,7 @@ $_lang["modx_version"] = 'Versione MODX';
 $_lang["monday"] = 'Lunedì';
 $_lang["move"] = 'Sposta';
 $_lang["move_resource"] = 'Sposta Risorsa';
-$_lang["move_resource_message"] = 'Potete spostare una Risorsa e tutti i suoi sottodocumenti selezionando un nuovo genitore nella struttura ad albero. Se selezionate una Risorsa che non è una cartella, essa sarà trasformato in cartella. Cliccate sulla nuova Risorsa genitore nella struttura ad albero delle Risorse.';
+$_lang["move_resource_message"] = 'Potete spostare una Risorsa e tutti i suoi sottodocumenti selezionando un nuovo genitore nella struttura ad albero. Se selezionate una Risorsa che non è una cartella, essa sarà trasformata in cartella. Fate clic sulla nuova Risorsa genitore nella struttura ad albero delle Risorse.';
 $_lang["move_resource_new_parent"] = 'Vi preghiamo di selezionare una nuova Risorsa genitore nella struttura ad albero delle Risorse.';
 $_lang["move_resource_title"] = 'Sposta Risorsa';
 $_lang["name"] = 'Nome';
@@ -567,12 +573,13 @@ $_lang["new_keyword"] = 'Aggiungi nuova parola chiave:';
 $_lang["new_module"] = 'Nuovo Modulo';
 $_lang["new_parent"] = 'Nuova Risorsa genitore';
 $_lang["new_plugin"] = 'Nuovo Plugin';
-$_lang["new_role"] = 'Crea un nuovo Ruolo';
+$_lang["new_role"] = 'Nuovo Ruolo';
 $_lang["new_snippet"] = 'Nuovo Snippet';
 $_lang["new_template"] = 'Nuovo Template';
 $_lang["new_tmplvars"] = 'Nuova Variabile di Template';
 $_lang["new_user"] = 'Nuovo utente';
 $_lang["new_web_user"] = 'Nuovo utente Web';
+$_lang["new_resource"] = 'Nuova Risorsa';
 $_lang["no"] = 'No';
 $_lang["no_active_users_found"] = 'Non sono stati trovati utenti attivi.';
 $_lang["no_activity_message"] = 'Non avete ancora creato o modificato alcuna Risorsa.';
@@ -677,14 +684,14 @@ $_lang["public"] = 'Pubblico';
 $_lang["publish_date"] = 'Data di pubblicazione';
 $_lang["publish_events"] = 'Eventi di pubblicazione';
 $_lang["publish_resource"] = 'Pubblica Risorsa';
-$_lang["rb_base_dir_message"] = 'Inserite il percorso fisico alla directory delle Risorse. Questa impostazione è generata automaticamente. Se state usando IIS, tuttavia, MODX potrebbe non riuscire ad impostare il percorso corretto, inducendo il browser delle Risorse a mostrare un errore. In quel caso, qui potete correggere il percorso alla cartella delle immagini  (il percorso che vedete in Windows Explorer). <b>NOTA:</b> La directory delle Risorse deve contenere le sottocartelle images, files, flash e media affinchè funzioni correttamente con il Browser di Risorse.';
+$_lang["rb_base_dir_message"] = 'Inserite il percorso fisico alla directory del File Browser. Questa impostazione di solito è generata automaticamente. Se state usando IIS, tuttavia, MODX potrebbe non riuscire ad impostare il percorso corretto e il File Browser mostrerà un errore. In questo caso potete correggere il percorso alla cartella delle immagini (il percorso come lo vedreste in Windows Explorer). <b>NOTA:</b> La directory del File Browser, per funzionare correttamente, deve contenere le sottocartelle images, files, flash e media.';
 $_lang["rb_base_dir_title"] = 'Percorso delle Risorse:';
-$_lang["rb_base_url_message"] = 'Inserite il percorso virtuale alla directory delle Risorse. Questa impostazione è generata automaticamente. Se state usando IIS, tuttavia, MODX potrebbe non riuscire ad impostare il percorso corretto, inducendo il browser delle Risorse a mostrare un errore. In quel caso, qui potete correggere il percorso alla cartella delle immagini  (l\'URL che vedete in Internet Explorer).';
-$_lang["rb_base_url_title"] = 'URL Risorse:';
-$_lang["rb_message"] = 'Selezionate Si se volete abilitare il Browser di Risorse. Questo permetterà agli utenti di cercare e caricare sul server immagini, file flash e media.';
-$_lang["rb_title"] = 'Abilita Browser di Risorse:';
-$_lang["rb_webuser_message"] = 'Volete consentire ad un Utente Web di usare il Browser di Risorse? <b>ATTENZIONE:</b> Consentire agli Utenti Web di usare il Browser di Risorse rende visibili i files di gestione degli utenti.  Usare questa opzione solo per utenti affidabili.';
-$_lang["rb_webuser_title"] = 'Gli Utenti Web usano il Browser di Risorse:';
+$_lang["rb_base_url_message"] = 'Inserite il percorso virtuale alla directory del File Browser. Questo percorso in genere è generato automaticamente. Se state usando IIS, tuttavia, MODX potrebbe non riuscire ad impostare il percorso corretto e il File Browser potrebbe mostrare un errore. In questo caso potete inserire qui il percorso corretto alla cartella delle immagini  (l\'URL che inserireste in Internet Explorer).';
+$_lang["rb_base_url_title"] = 'URL del File Browser:';
+$_lang["rb_message"] = 'Selezionate Si se volete abilitare il File Browser. Questo permetterà agli utenti di cercare e caricare sul server immagini, file flash e media.';
+$_lang["rb_title"] = 'Abilita File Browser:';
+$_lang["rb_webuser_message"] = 'Volete consentire ad un Utente Web di usare il File Browser? <b>ATTENZIONE:</b> Consentire agli Utenti Web di usare il File Browser rende visibili i files di gestione degli utenti.  Usare questa opzione solo per utenti affidabili.';
+$_lang["rb_webuser_title"] = 'Gli Utenti Web usano il File Browser:';
 $_lang["recent_docs"] = 'Risorse recenti';
 $_lang["recommend_setting_change_title"] = 'Modifiche consigliate';
 $_lang["recommend_setting_change_description"] = 'Il vostro sito non è configurato per validare gli headers HTTP_REFERER per l\'accesso al Manager. Vi raccomandiamo di abilitare questa impostazione per ridurre i rischi di un attacco CSRF (Cross Site Request Forgery).';
@@ -710,7 +717,7 @@ $_lang["reset"] = 'Resetta';
 $_lang["reset_failedlogins"] = 'reset';
 $_lang["resource"] = 'Risorsa';
 $_lang["resource_alias"] = 'Alias Risorsa';
-$_lang["resource_alias_help"] = 'Qui potete inserire un alias per la Risorsa. Questo renderà la Risorsa accessibile come http://vostrosito.it/alias. Funziona solo se state usando gli URL semplici.';
+$_lang["resource_alias_help"] = 'Qui potete inserire un alias per la Risorsa. Questo renderà la Risorsa accessibile come http://vostrosito.it/alias. Funziona solo se state usando gli URL Semplici.';
 $_lang["resource_content"] = 'Contenuto della Risorsa';
 $_lang["resource_description"] = 'Descrizione';
 $_lang["resource_description_help"] = 'Qui potete inserire una  descrizione opzionale della Risorsa.';
@@ -718,7 +725,7 @@ $_lang["resource_duplicate"] = 'Duplica Risorsa';
 $_lang["resource_long_title_help"] = 'Qui potete inserire un titolo esteso per la Risorsa. Questo è utile per i motori di ricerca e potrebbe descrivere meglio la Risorsa.';
 $_lang["resource_metatag_help"] = 'Selezionate i META tag e le parole chiave che volete assegnare alla Risorsa. Tenete premuto il tasto control per selezionare più tag o parole.';
 $_lang["resource_opt_contentdispo"] = 'Pubblicazione del contenuto';
-$_lang["resource_opt_contentdispo_help"] = 'Utilizzate il campo Pubblicazione del Contenuto per stabilire come il browser avrà accesso al contenuto della Risorsa. Per files da scaricare selezionare l\'opzione Allegato.';
+$_lang["resource_opt_contentdispo_help"] = 'Utilizzate il campo Pubblicazione del Contenuto per stabilire come questa Risorsa verrà inviata al browser. Per files da scaricare selezionare l\'opzione Allegato.';
 $_lang["resource_opt_emptycache"] = 'Svuota cache';
 $_lang["resource_opt_emptycache_help"] = 'Lasciando questo campo selezionato permetterete a MODX di svuotare la cache dopo che avrete salvato la Risorsa. Così i visitatori non vedranno più la vecchia versione della Risorsa.';
 $_lang["resource_opt_folder"] = 'Cartella';
@@ -881,7 +888,7 @@ $_lang["settings_after_install"] = 'Dato che questa è una nuova installazione, 
 $_lang["settings_config"] = 'Configurazione';
 $_lang["settings_dependencies"] = 'Dipendenze';
 $_lang["settings_events"] = 'Eventi di Sistema';
-$_lang["settings_furls"] = 'Impostazioni URL semplici';
+$_lang["settings_furls"] = 'Impostazioni URL Semplici';
 $_lang["settings_general"] = 'Informazioni Generali';
 $_lang["settings_misc"] = 'Impostazioni varie';
 $_lang["settings_KC"] = 'File Browser';
@@ -889,8 +896,8 @@ $_lang["settings_page_settings"] = 'Impostazioni Pagina';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Proprietà';
 $_lang["settings_site"] = 'Impostazioni sito';
-$_lang["settings_strip_image_paths_message"] = 'Se questo valore è impostato su \'No\', MODX imposterà come assoluti gli URL del Browser di Risorse (immagini, file, flash, ecc.). Impostando su \'Si\' si avranno degli URL relativi (non assoluti), utili se dovete spostare l\'installazione di MODX (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciate impostato su \'Si\'.';
-$_lang["settings_strip_image_paths_title"] = 'Riscrivere gli URL del Browser di Risorse:';
+$_lang["settings_strip_image_paths_message"] = 'Se questo valore è impostato su \'No\', MODX imposterà come assoluti gli URL di quello che caricate col File Browser (immagini, file, flash, ecc.). Impostando su \'Si\' si avranno degli URL relativi (non assoluti), utili se dovete spostare l\'installazione di MODX (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciate impostato su \'Si\'.';
+$_lang["settings_strip_image_paths_title"] = 'Riscrivere gli URL del Browser:';
 $_lang["settings_templvars"] = 'Variabili di Template';
 $_lang["settings_title"] = 'Impostazioni MODX';
 $_lang["settings_ui"] = 'Impostazioni editor & interfaccia';
@@ -997,7 +1004,7 @@ $_lang["track_visitors_title"] = 'Registra visite (statistiche):';
 $_lang["tree_page_click"] = 'Azione del click su una pagina:';
 $_lang["tree_page_click_message"] = 'Cosa succede facendo click su una pagina nell\'albero del sito.';
 $_lang["tree_show_protected"] = 'Mostra pagine protette:';
-$_lang["tree_show_protected_message"] = 'Se è selezionato "No" le pagine protette (e tutte le pagine figlie) non appariranno nell\'albero delle Risorse. "No" è l\'impostazione di default di MODX.';
+$_lang["tree_show_protected_message"] = 'Se è selezionato \'No\' le pagine protette (e tutte le pagine figlie) non appariranno nell\'albero delle Risorse. \'No\' è l\'impostazione di default di MODX.';
 $_lang["truncate_table"] = 'Cliccate qui per troncare questa tabella';
 $_lang["tuesday"] = 'Martedì';
 $_lang["tv"] = 'TV';
@@ -1021,13 +1028,13 @@ $_lang["update_params"] = 'Aggiorna parametri di visualizzazione';
 $_lang["update_settings_from_language"] = 'Sostituire con:';
 $_lang["upload_maxsize_message"] = 'Qui potete inserire le dimensioni massime dei file che si possono caricare tramite il sistema di gestione file. Le dimensioni  devo essere impostate in bytes. <b>NOTA: File troppo grandi impiegano molto tempo a caricare!</b>';
 $_lang["upload_maxsize_title"] = 'Massima dimensione caricamento:';
-$_lang["uploadable_files_message"] = 'Qui potete inserire una lista di file che si possono caricare tramite il sistema di gestione file. Inserite le estensioni per i tipi di file separate da virgole.';
+$_lang["uploadable_files_message"] = 'Qui potete inserire la lista dei tipi di file che si possono caricare nella cartella assets/files con il File Browser. Inserite le estensioni per i vari tipi di file separate da virgole.';
 $_lang["uploadable_files_title"] = 'Tipi di file caricabili:';
-$_lang["uploadable_flash_message"] = 'Qui potete inserire una lista di file che si possono caricare tramite il sistema di gestione file nella cartella \'assets/flash/\'. Inserite le estensioni per i tipi di Flash separate da virgole.';
+$_lang["uploadable_flash_message"] = 'Qui potete inserire la lista dei tipi di file che si possono caricare con il File Browser nella cartella \'assets/flash/\'. Inserite le estensioni per i tipi di file Flash separate da virgole.';
 $_lang["uploadable_flash_title"] = 'Tipi di Flash caricabili:';
-$_lang["uploadable_images_message"] = 'Qui potete inserire una lista di file che si possono caricare tramite il sistema di gestione file nella cartella \'assets/images/\'. Inserite le estensioni per i tipi di immagine separate da virgole.';
+$_lang["uploadable_images_message"] = 'Qui potete inserire la lista dei tipi di file che si possono caricare con il File browser nella cartella \'assets/images/\'. Inserite le estensioni per i tipi di immagine separate da virgole.';
 $_lang["uploadable_images_title"] = 'Tipi di immagini caricabili:';
-$_lang["uploadable_media_message"] = 'Qui potete inserire una lista di file che si possono caricare tramite il sistema di gestione file nella cartella \'assets/flash/\'. Inserite le estensioni per i tipi di media separate da virgole.';
+$_lang["uploadable_media_message"] = 'Qui potete inserire una lista dei tipi di file che si possono caricare con il File Manager nella cartella \'assets/media/\'. Inserite le estensioni per i tipi di media separate da virgole.';
 $_lang["uploadable_media_title"] = 'Tipi di media caricabili:';
 $_lang["use_alias_path_message"] = 'Abilitando questa opzione verrà generato un percorso virtuale per la Risorsa. Ad esempio, se la Risorsa "figlio.html" sta dentro la Risorsa Cartella "genitore" il percorso completo sarà "/genitore/figlio.html".';
 $_lang["use_alias_path_title"] = 'Usa percorso completo per l\'alias:';
@@ -1066,6 +1073,8 @@ $_lang["user_use_config"] = 'Usare le Impostazioni di Sistema';
 $_lang["user_zip"] = 'CAP';
 $_lang["username"] = 'Nome utente';
 $_lang["users"] = 'Sicurezza';
+$_lang["valid_hostnames_message"] = 'Inserendo una lista di nomi di host consentiti per questa installazione di MODX è possibile prevenire che con un attacco XSS si possa falsificare l\'impostazione di sistema site_url. Può essere importante farlo per alcuni tipi di server condivisi o altri server direttamente accessibili da un indirizzo IP. Il primo nome di host della lista verà usato quando HTTP_HOST non corrisponde ad alcun nome di host valido.';
+$_lang["valid_hostnames_title"] = 'Nomi di host consentiti';
 $_lang["validate_referer_message"] = 'Validare gli headers HTTP_REFERER per ridurre il rischio di essere vittime di un attacco CSRF (Cross Site Request Forgery). Alcune configurazioni possono non essere in grado di gestire questa opzione se il server non invia gli headers HTTP_REFERER.';
 $_lang["validate_referer_title"] = 'Validazione degli headers HTTP_REFERER:';
 $_lang["value"] = 'Valore';
@@ -1108,10 +1117,10 @@ $_lang["yourinfo_title"] = 'Le vostre informazioni';
 $_lang["yourinfo_total_logins"] = 'Numero totale di connessioni:';
 $_lang["yourinfo_username"] = 'Siete autenticati come:';
 
-$_lang["a17_error_reporting_title"] = '<b>Livello degli errori PHP rilevati:</b>';
+$_lang["a17_error_reporting_title"] = 'Livello di rilevamento degli errori PHP';
 $_lang["a17_error_reporting_msg"] = 'Imposta il livello di rilevamento degli errori PHP.';
 $_lang["a17_error_reporting_opt0"] = 'Ignora tutti gli errori';
-$_lang["a17_error_reporting_opt1"] = 'Ignora gli avvisi di minore importanza (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt1"] = 'Ingora gli avvisi di basso livello (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Rileva tutti gli errori eccetto E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Rileva tutti gli errori';
 
@@ -1122,37 +1131,40 @@ $_lang["enable_bindings_title"] = '<b>Abilita comandi @Bindings:</b>';
 $_lang["enable_bindings_message"] = 'Impedisce l\'esecuzione di funzioni PHP attraverso Variabili di Template di tipo @Bindings. Utile se avete utenti del manager che non devono poter creare codice PHP, ma che possono creare o modificare le Variabili di Template. L\'output di qualsiasi Variabile di Template @Bindings risulta "@Bindings disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'Non è possibile creare un file nella cartella. Controlla i permessi di scrittura di [+snapshot_path+]';
-$_lang["bkmgr_restore_msg"] = '<p>Un sito può essere ripristinato usando un file SQL di backup.</p>';
+$_lang["bkmgr_restore_msg"] = '<p>Tabelle del database che potrebbero essere recuperate dall\'SQL:</p>';
 $_lang["bkmgr_restore_title"] = 'Ripristina';
 $_lang["bkmgr_import_ok"] = 'Riristino SQL eseguito correttamente.';
 $_lang["bkmgr_snapshot_ok"] = 'Lo snapshot è stato salvato con successo.';
-$_lang["bkmgr_run_sql_file_label"] = 'Eseguire da file sql';
+$_lang["bkmgr_run_sql_file_label"] = 'Eseguire da file SQL';
 $_lang["bkmgr_run_sql_direct_label"] = 'Eseguire direttamente le stringhe SQL';
 $_lang["bkmgr_run_sql_submit"] = 'Eseguire ripristino';
 $_lang["bkmgr_run_sql_result"] = 'Risultati';
 $_lang["bkmgr_snapshot_title"] = 'Salvataggio e recupero snapshots';
-$_lang["bkmgr_snapshot_msg"] = '<p>I contenuti del database possono essere salvati e ripristinati.<br />Destinazione del salvataggio : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
-$_lang["bkmgr_snapshot_submit"] = 'Salva uno snapshot';
-$_lang["bkmgr_snapshot_list_title"] = 'Lista degli snapshots archiviati';
+$_lang["bkmgr_snapshot_msg"] = '<p>I Contenuti del database vengono salvati e ripristinati da una directory del server.<br />Destinazione di salvataggio : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Aggiungi uno snapshot';
+$_lang["bkmgr_snapshot_list_title"] = 'Lista degli snapshots';
 $_lang["bkmgr_restore_submit"] = 'Ripristina questi dati';
-$_lang["bkmgr_snapshot_nothing"] = 'Nessuno snapshot';
+$_lang["bkmgr_snapshot_nothing"] = 'Nessuno snapshot disponibile';
 
-$_lang["files.dynamic.php1"] = 'Crea un file di testo';
+$_lang["files.dynamic.php1"] = 'Nuovo file di testo';
 $_lang["files.dynamic.php2"] = 'Questa cartella non può essere mostrata.';
 $_lang["files.dynamic.php3"] = 'C\'è un problema con il nome del file';
 $_lang["files.dynamic.php4"] = 'File di testo creato.';
+$_lang["files_dynamic_new_folder_name"] = 'Inserire il nome della nuova directory:';
+$_lang["files_dynamic_new_file_name"] = 'Inserire il nome del nuovo file:';
 $_lang["not_readable_dir"] = 'Non posso accedere a questa cartella.';
 $_lang["confirm_delete_dir"] = 'Sei sicuro di voler cancellare questa cartella?';
-$_lang["confirm_delete_dir_recursive"] = 'Sei sicuro di voler cabncellare questa cartella?\n\n<tutti i file contenuti saranno cancellati.';
+$_lang["confirm_delete_dir_recursive"] = 'Siete sicuri di voler cancellare questa directory?\n\nAnche tutti i file che contiene saranno cancellati.';
 
-$_lang["make_folders_title"] = '<b>Metti uno slash al termine degli URL dei contenitori:</b>';
-$_lang["make_folders_message"] = 'Quando si utilizzano gli URL semplici viene aggiunto / al percorso delle risorse impostate come cartella.';
+$_lang["make_folders_title"] = 'Terminare l\'URL del Container con slash (/)';
+$_lang["make_folders_message"] = 'Aggiunge uno slash (/) all\'URL delle Risorse che sono impostate come cartelle quando si usano gli Url Semplici.';
 
 $_lang["check_files_onlogin_title"] = '<b>Controllo dei file di sistema al login:</b>';
 $_lang["check_files_onlogin_message"] = 'Attivando questa opzione, i file di sistema più importanti saranno controllati e sarete avvisati nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Pur non essendo una garanzia infallibile, può essere utile per capire quando è stato compromesso un file di sistema MODX e/o il sito web.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Importanti File di Sistema sono stati modificati.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'E\' stata attivata l\'impostazione per controllare i file di sistema importanti per rilevare eventuali attacchi di script al sito. Questo non significa necessariamente che il sito sia stato compromesso, tuttavia, è necessario esaminare i file modificati.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["configcheck_sysfiles_mod_msg"] = 'E\' stata attivata l\'opzione per verificare i file di sistema più importanti e avvisare nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Se vi arriva un avviso non è detto che il sistema sia stato compromesso, ma può essere utile verificare i files importanti (impostati in Configurazione di Sistema -> Utente -> Verifica Files Importanti).
+Se i files non sono stati modificati o li ha modificati un amministratore di sistema potete eliminare l\'avviso andando su  Configurazione di Sistema e salvando nuovamente le impostazioni.';
 
 $_lang['email_method_title'] = 'Metodo di invio mail:';
 $_lang['email_method_mail'] = 'Funzione mail() di PHP';
@@ -1163,45 +1175,45 @@ $_lang['smtp_username_title'] = 'Utente SMTP:';
 $_lang['smtp_password_title'] = 'Password SMTP:';
 $_lang['smtp_port_title'] = 'Porta SMTP:';
 
-$_lang["setting_resource_tree_node_name"] = '<b>Nome dei nodi nell\'albero delle Risorse:</b>';
-$_lang["setting_resource_tree_node_name_desc"] = 'Specificare il campo da utilizzare per il nome dei nodi dell\'albero delle risorse. Il predefinito è pagetitle, ma puo essere usato qualsiasi atro campo, come menutitle, alias ecc.';
+$_lang["setting_resource_tree_node_name"] = 'Mostra il Nome nell\'albero delle Risorse';
+$_lang["setting_resource_tree_node_name_desc"] = 'Selezionare quale proprietà della Risorsa sarà mostrata nell\'albero come nome della Risorsa. Di default è pagetitle.';
 
-$_lang["resource_opt_alvisibled"] = 'Compare nell\'URL';
-$_lang["resource_opt_alvisibled_help"] = 'Stabilisce se l\'alias di questa risorsa comparirà negli URL. Se avete una pagina "vostrosito.it/folder1/folder2/folder3/pagina.html" potreste voler nascondere alcune cartelle per ottenere un URL più semplice come ad esempio "vostrosito.it/folder2/pagina.html"';
+$_lang["resource_opt_alvisibled"] = 'Usa l\'alias attuale nel percorso';
+$_lang["resource_opt_alvisibled_help"] = 'L\'alias di questa risora è inserito nel percorso degli Url Semplici';
 $_lang['resource_opt_is_published'] = 'Published';
-$_lang["docid_incrmnt_method_title"] = 'Metodo di incremento dell\'ID delle Risorse:';
+$_lang["docid_incrmnt_method_title"] = 'Metodo di incremento per l\'ID della Risorsa';
 $_lang["docid_incrmnt_method_0"] = 'Incremento automatico DB';
 $_lang["docid_incrmnt_method_1"] = 'ID libero più basso';
-$_lang["docid_incrmnt_method_2"] = 'ID più alto + 1';
+$_lang["docid_incrmnt_method_2"] = 'ID più grande + 1';
 
 $_lang["cache_type_title"] = 'Tipologia della cache dei documenti:';
-$_lang["cache_type_1"] = 'Cache basata solo sull\'ID del documento (standard)';
-$_lang["cache_type_2"] = 'Cache basata  sull\'ID del documento e sui parametri $_GET';
+$_lang["cache_type_1"] = 'La cache si basa solo sull\'ID della Risorsa (standard)';
+$_lang["cache_type_2"] = 'La cache si basa sull\'ID della risorsa e sui parametri $_GET';
 $_lang["seostrict_title"] = '<b>Usa URL univoci:</b>';
-$_lang["seostrict_message"] = 'Forza l\'uso di URL univoci per prevenire contenuti duplicati.';
+$_lang["seostrict_message"] = 'Forza l\'uso di URL SEO univoche per prevenire contenuti duplicati (se necessario)';
 
-$_lang["settings_friendlyurls_alert"] = 'E\' necessario rinominare il file ht.access presente nella root dell\'installazione di MODX in .htaccess per poter utilizzare gli URL semplici.';
-$_lang["settings_friendlyurls_alert2"] = 'Essendo installato in una sottodirectory è necessario modificare il contenuto del file .htaccess.';
+$_lang["settings_friendlyurls_alert"] = 'E\' necessario rinominare il file ht.access presente nella root dell\'installazione di MODX in .htaccess per poter utilizzare gli URL Semplici.';
+$_lang["settings_friendlyurls_alert2"] = 'Dasto che MODX è installato in una sottodirectory è necessario modificare di conseguenza il file .htaccess.';
 
 $_lang["user_street"] = 'Strada';
 $_lang["user_city"] = 'Città';
 $_lang["user_other"] = 'Altro';
 
 $_lang["import_site.static.php1"] = 'Resetta l\'albero delle Risorse';
-$_lang["import_site.static.php2"] = 'Resetta l\'albero delle Risorse, anche tutti gli ID sono inizializzati.';
+$_lang["import_site.static.php2"] = 'Resetta l\'albero e inizializza tutti gli ID delle Risorse.';
 $_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Il file contiene soltanto &lt;body&gt;&lt;/body&gt;';
-$_lang["import_site.static.php5"] = 'Il file contiene tutto';
+$_lang["import_site.static.php4"] = 'Soltanto la parte &lt;body&gt;&lt;/body&gt;';
+$_lang["import_site.static.php5"] = 'Tutto il contenuto del file';
 
-$_lang["a83_ignore_ids_title"] = 'ID da ignorare (separati da virgola)';
+$_lang["a83_ignore_ids_title"] = 'Ignora questi ID (separati da virgola)';
 $_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Solo le risorse modificate';
+$_lang["export_site.static.php2"] = 'Soltanto le Risorse modificate';
 $_lang["export_site.static.php3"] = 'Tutte le Risorse';
-$_lang["export_site.static.php4"] = 'Sostituisci stringa (prima)';
-$_lang["export_site.static.php5"] = 'Sostituisci stringa (dopo)';
+$_lang["export_site.static.php4"] = 'Cerca ';
+$_lang["export_site.static.php5"] = 'Sostituisci con';
 $_lang["export_site.static.php6"] = 'Target';
-$_lang["export_site.static.php7"] = 'I files non possono essere scritti su [+rb_base_url+]';
+$_lang["export_site.static.php7"] = 'Impossibile salvare i files su [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = '<b>Notifica via email degli errori di sistema:</b>';
+$_lang["mutate_settings.dynamic.php6"] = 'Invia una mail per gli errori MODX';
 $_lang["mutate_settings.dynamic.php7"] = 'non notificare';
-$_lang["mutate_settings.dynamic.php8"] = 'Invia una notifica all\'indirizzo email configurato ([+emailsender+]) in caso di errore. Per conoscere i dettagli dell\'errore occorrerà verificare il log.';
+$_lang["mutate_settings.dynamic.php8"] = 'Verrà inviata una mail con la descrizione dell\'errore MODX a [(emailsender)] ([+emailsender+]). Si potranno vedere i dettagli dell\'errore dal Log Eventi.';

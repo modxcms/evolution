@@ -1,17 +1,21 @@
 <?php
 /**
- * Filename:       includes/lang/japanese-utf8.inc.php
- * Function:       Japanese language file.
- * Encoding:       UTF8
- * Author:         eastbind
- * Author:         MEGU              - http://modx.liolion.net/
- * Author:         yamamoto          - http://kyms.jp
- * Date:           2013/10/24
- * Version:        1.0.13
- * MODX version:   Evolution 1.0.0 - 1.0.13
-*/
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author eastbind
+ * @author MEGU
+ * @author yamamoto
+ *
+ * @language Japanese
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
-$modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
+$modx_lang_attribute = 'ja'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = '<p>MODX(モドエックスまたはモッドエックス)は <a href="http://ja.wikipedia.org/wiki/MODX" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。GPL に基づいて使用が許諾されます。</p>';
@@ -573,12 +577,13 @@ $_lang["new_keyword"] = 'キーワードを追加';
 $_lang["new_module"] = 'モジュールを作成';
 $_lang["new_parent"] = '移動先の親リソース';
 $_lang["new_plugin"] = 'プラグインを作成';
-$_lang["new_role"] = 'ロールを作成';
+$_lang["new_role"] = 'New Role';
 $_lang["new_snippet"] = 'スニペットを作成';
 $_lang["new_template"] = 'テンプレートを作成';
 $_lang["new_tmplvars"] = 'テンプレート変数を作成';
 $_lang["new_user"] = 'ユーザーを作成';
 $_lang["new_web_user"] = 'ウェブユーザーを作成';
+$_lang["new_resource"] = 'New Resource';
 $_lang["no"] = 'いいえ';
 $_lang["no_active_users_found"] = '管理画面にログインしているメンバーはいません。';
 $_lang["no_activity_message"] = 'まだリソースを作成または編集していません。';
@@ -1101,6 +1106,8 @@ $_lang["user_use_config"] = 'グローバル設定を使用';
 $_lang["user_zip"] = '郵便番号';
 $_lang["username"] = 'ログイン名';
 $_lang["users"] = '権限管理';
+$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
+$_lang["valid_hostnames_title"] = 'Valid hostnames';
 $_lang["validate_referer_message"] = 'リファラチェック(参照元チェック)を行い、<a href="http://www.google.com/search?hl=ja&q=csrf" target="_blank">(CSRF=Cross Site Request Forgery)</a>をある程度回避できます。万全ではありませんので、管理画面にログイン中は不用意に外部サイトを閲覧しない・こまめにログアウトするなどを習慣づけてください。';
 $_lang["validate_referer_title"] = '管理画面操作のリファラチェック';
 $_lang["value"] = '値';
@@ -1176,6 +1183,8 @@ $_lang["files.dynamic.php1"] = 'テキストファイルを新規作成';
 $_lang["files.dynamic.php2"] = 'このディレクトリは参照できません';
 $_lang["files.dynamic.php3"] = 'ファイル名が不正です。';
 $_lang["files.dynamic.php4"] = 'テキストファイルを作成しました。';
+$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
+$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
 $_lang["not_readable_dir"] = 'ディレクトリが存在しないか、PHPスクリプトがこのディレクトリにアクセスする権限がありません。';
 $_lang["confirm_delete_dir"] = 'このディレクトリを削除してもよろしいですか?';
 $_lang["confirm_delete_dir_recursive"] = 'ディレクトリ内にファイルが存在します。\nこのディレクトリを削除してもよろしいですか?';
