@@ -1,14 +1,16 @@
 <?php
 /**
- * Filename:       includes/lang/errormsg/nederlands.inc.php
- * Function:       Dutch language file.
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * Date:           2013-08-05
- * Version:        1.0.11
- * MODX version:   Evolution 1.0.11
-*/
-
+ * MODX error messages language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Dutch
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_lang["No errors occured."] = "Er zijn geen fouten.";
 $_lang["An error occured!"] = "Er is een fout opgetreden!";
 $_lang["You don't have enough privileges for this action!"] = "Je hebt niet genoeg rechten hebt voor deze actie!";

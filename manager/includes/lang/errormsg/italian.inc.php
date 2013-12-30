@@ -1,18 +1,20 @@
 <?php
 /**
- * Filename:       includes/lang/errormsg/english.inc.php
- * Function:       Italian language file.
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * Date:           2013-08-05
- * Version:        1.0.11
- * MODX version:   Evolution 1.0.11
-*/
-
+ * MODX error messages language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Italian
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_lang["No errors occured."] = "Nessun errore.";
 $_lang["An error occured!"] = "Si è verificato un errore!";
-$_lang["You don't have enough privileges for this action!"] = "Non si possiedono i diritti necessari ad effettuare questa operazione!";
-$_lang["ID passed in request is NaN!"] = "L'ID della richiesta è Nan!";
+$_lang["You don't have enough privileges for this action!"] = "Non si possiedono i diritti necessari per effettuare questa operazione!";
+$_lang["ID passed in request is NaN!"] = "L'ID della richiesta è NaN!";
 $_lang["The document is locked!"] = "Il documento è bloccato!";
 $_lang["Too many results returned from database!"] = "Sono stati trovati troppi risultati nel database!";
 $_lang["Not enough/ no results returned from database!"] = "Sono stati trovati pochi risultati (o nessuno) nel database!";
@@ -21,8 +23,8 @@ $_lang["Logging error!"] = "Errore nell'accesso!";
 $_lang["Table to optimise not found in request!"] = "Impossibile trovare la tabella da ottimizzare!";
 $_lang["No settings found in request!"] = "La richiesta non contiene impostazioni!";
 $_lang["The document must have a title!"] = "Il documento deve avere un titolo!";
-$_lang["No user selected as recipient of this message!"] = "Non è stato selezionato l'utente destinatario di questo messaggio!";
-$_lang["No group selected as recipient of this message!"] = "Non è stato selezionato il gruppo destinatario di questo messaggio!";
+$_lang["No user selected as recipient of this message!"] = "Non è stato selezionato l'utente a cui inviare questo messaggio!";
+$_lang["No group selected as recipient of this message!"] = "Non è stato selezionato il gruppo a cui inviare questo messaggio!";
 $_lang["The document was not found!"] = "Impossibile trovare il documento!";
 $_lang["Double action (GET & POST) posted!"] = "E' stata inviata una doppia azione (GET e POST)!";
 $_lang["Document cannot be it's own parent!"] = "Il documento non può essere genitore di se stesso!";
