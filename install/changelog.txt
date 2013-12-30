@@ -49,6 +49,7 @@ Bugfixes:
 * [gitHub] Full request url in messageQuit
 * [gitHub] fix SQL error when calling optimize method
 * [gitHub] fix backup format file Y-m-d_H-i-s - now new always top
+* [gitHub] clean filenames with KCFinder
 
 --------------------------------------------
 Refactor:
@@ -83,6 +84,7 @@ Refactor:
 * [gitHub] Restore view_eventlog permission on site_shedule
 * [gitHub] Make one point to clearCache and add params
 * [gitHub] rename MODx to MODX
+* [gitHub] Language files for core and core snippets are now handled by Transifex
 
 --------------------------------------------
 Additional Improvements & Updates:
