@@ -41,7 +41,7 @@ $_lang['button_splitter'] = "|";
 
 $_lang['default_copyright'] = "[(site_name)] 2007";
 
-$_lang['invalid_class'] = "La classe di Ditto non è valida. Per favore controllala.";
+$_lang['invalid_class'] = "La classe di Ditto non Ã¨ valida. Per favore controllala.";
 
 $_lang['none'] = "Nessuno";
 
