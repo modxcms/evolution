@@ -5,9 +5,8 @@
  * Language:       Dutch
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           22.11.2006
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">WAARSCHUWING - DEBUGGING STAAT AAN</span> <br />Zorg ervoor dat debugging is uitgeschakeld voordat u het formulier beschikbaar maakt!</p>";

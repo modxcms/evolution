@@ -5,9 +5,8 @@
  * Language:       English
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           -
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">WARNING - DEBUGGING IS ON</span> <br />Make sure you turn debugging off before making this form live!</p>";
