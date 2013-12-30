@@ -1,4 +1,16 @@
 <?php
+/**
+ * MODX error messages language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Japanese
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_lang["No errors occured."] = "No errors occured.";
 $_lang["An error occured!"] = "An error occured!";
 $_lang["You don't have enough privileges for this action!"] = "この操作を行なう権限がありません。";
