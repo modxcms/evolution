@@ -3,8 +3,8 @@
  * Document Manager Module
  * 
  * Purpose: Contains the language strings for use in the module.
- * Author: João Peixoto
- * Language: Portuguese
+ * Author: Garry Nutting
+ * Language: Brazilian Portuguese
  * Date: 2013/12/31
  */
 // titles
