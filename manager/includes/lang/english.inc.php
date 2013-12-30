@@ -1,14 +1,18 @@
 <?php
 /**
- * Filename:       includes/lang/english.inc.php
- * Function:       English language file.
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * Date:           24 October 2013
- * Version:        2.0.6
- * MODX version:   Evolution 1.0.13
-*/
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author The MODX Project Team
+ *
+ * @language English
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 

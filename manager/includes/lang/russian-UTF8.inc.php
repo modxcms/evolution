@@ -1,13 +1,22 @@
 <?php
 /**
- * Filename:       includes/lang/russian-UTF8.inc.php
- * Function:       Russian language file.
- * Encoding:       UTF8
- * Author:         Russian MODX community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
- * Date:           24 October 2013
- * Version:        2.0.6
- * MODX version:   Evolution 1.0.13
-*/
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author Russian MODX community
+ * @author gabdullin
+ * @author Jaroslav Sidorkin
+ * @author Safronovich Victor
+ * @author MARDEN
+ *
+ * @language Russian
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
@@ -404,7 +413,7 @@ $_lang["info"] = 'Информация';
 $_lang["information"] = 'Информация';
 $_lang["inline"] = 'Отображаемое';
 $_lang["insert"] = 'Вставить';
-$_lang["maxImageWidth"]= 'Максимальная ширина изображения';
+$_lang["maxImageWidth"] = 'Максимальная ширина изображения';
 $_lang["maxImageHeight"] = 'Максимальная высота изображения';
 $_lang["thumbWidth"] = 'Максимальная ширина превью';
 $_lang["thumbHeight"] = 'Максимальная высота превью';
@@ -1086,6 +1095,8 @@ $_lang["user_use_config"] = 'Использовать системные нас�
 $_lang["user_zip"] = 'Почтовый индекс';
 $_lang["username"] = 'Пользователь';
 $_lang["users"] = 'Пользователи';
+$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
+$_lang["valid_hostnames_title"] = 'Valid hostnames';
 $_lang["validate_referer_message"] = 'Проверять серверные заголовки HTTP_REFERER для защиты от уязвимостей CSRF (Cross Site Request Forgery). Если сервер не использует заголовки HTTP_REFERER данная функция не будет работать.';
 $_lang["validate_referer_title"] = 'Проверять серверные заголовки HTTP_REFERER?';
 $_lang["value"] = 'Значение';
@@ -1127,16 +1138,20 @@ $_lang["yourinfo_role"] = 'Ваша роль:';
 $_lang["yourinfo_title"] = 'Информация о вас';
 $_lang["yourinfo_total_logins"] = 'Всего авторизаций:';
 $_lang["yourinfo_username"] = 'Вы авторизованы как:';
+
 $_lang["a17_error_reporting_title"] = 'Обнаружение уровня ошибки РНР';
 $_lang["a17_error_reporting_msg"] = 'Набор обнаружения уровня ошибок РНР';
 $_lang["a17_error_reporting_opt0"] = 'Игнорировать все';
 $_lang["a17_error_reporting_opt1"] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Обнаружить все ошибки кроме E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Обнаружить все';
+
 $_lang["pwd_hash_algo_title"] = 'Алгоритм шифрования';
 $_lang["pwd_hash_algo_message"] = 'Алгоритм шифрования паролей.';
+
 $_lang["enable_bindings_title"] = 'Разрешить @-привязки';
 $_lang["enable_bindings_message"] = 'Предотвращает исполнение PHP-кода через использование @-привязок в TV-параметрах. Требуется, если у вас есть пользователи, которые не должны иметь возможность создавать PHP-код, но но могут создавать или редактировать TV-параметры. Вывод любого TV-параметра @-привязкой будет "@-привязки запрещены".';
+
 $_lang["bkmgr_alert_mkdir"] = 'Файл не может быть создан. Проверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановлен с помощью файла SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Восстановить';
@@ -1152,17 +1167,23 @@ $_lang["bkmgr_snapshot_submit"] = 'Создать резервную копию'
 $_lang["bkmgr_snapshot_list_title"] = 'Список резервных копий';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет резервных копий';
+
 $_lang["files.dynamic.php1"] = 'Создать PHP-файл';
 $_lang["files.dynamic.php2"] = 'files.dynamic.php2';
 $_lang["files.dynamic.php3"] = 'files.dynamic.php3';
 $_lang["files.dynamic.php4"] = 'files.dynamic.php4';
+$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
+$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
 $_lang["not_readable_dir"] = 'Директория недоступна для записи';
 $_lang["confirm_delete_dir"] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
 $_lang["confirm_delete_dir_recursive"] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+
 $_lang["make_folders_title"] = 'Добавлять слэш к контейнеру';
 $_lang["make_folders_message"] = 'При использовании дружественных URL к ресурсу, который является контейнером, добавляется слэш.';
+
 $_lang["check_files_onlogin_title"] = 'Проверять системные файлы на наличие изменений';
 $_lang["check_files_onlogin_message"] = 'При включении этой опции, важные системные файлы будут проверяться на наличие изменений, типичных для взломанных сайтов. Это не гарантирует полную защиту, но может помочь в предотвращении взлома.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Системные файлы были изменены.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'Вы включили проверку системных файлов на наличие изменений, характерных для взломанных сайтов. Это не значит, что сайт был взломан, но желательно просмотреть измененные файлы.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
 
@@ -1178,10 +1199,9 @@ $_lang['smtp_port_title'] = 'SMTP порт';
 $_lang["setting_resource_tree_node_name"] = 'Название ресурса в дереве';
 $_lang["setting_resource_tree_node_name_desc"] = 'Выберите поле ресурса, которое будет использоваться в качестве названия ресурса в дереве. По умолчанию используется поле "заголовок"; можно использовать любое другое поле, например, "пункт меню", "псевдоним".';
 
-$_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
+$_lang["resource_opt_alvisibled"] = 'Участвует в URL';
 $_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
-$_lang["resource_opt_is_published"] = 'Опубликован';
-
+$_lang['resource_opt_is_published'] = 'Опубликован';
 $_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
@@ -1192,13 +1212,29 @@ $_lang["cache_type_1"] = 'Только с учетом ID (стандартны�
 $_lang["cache_type_2"] = 'C учетом ID и $_GET';
 $_lang["seostrict_title"] = 'Использовать SEO Strict URLs';
 $_lang["seostrict_message"] = 'использование strict URLs удаляет дубли страниц по разным ссылкам';
+
 $_lang["settings_friendlyurls_alert"] = 'Для использования дружественных URL, необходимо сменить имя файла ht.access в папке, в которую установлен MODX, на .htaccess.';
 $_lang["settings_friendlyurls_alert2"] = 'При установке MODX в подпапку необходимо внести изменения в файл .htaccess.';
+
 $_lang["user_street"] = 'Улица';
 $_lang["user_city"] = 'Город';
 $_lang["user_other"] = 'Другое';
 
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
+$_lang["import_site.static.php5"] = 'Whole file content';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited Resources';
+$_lang["export_site.static.php3"] = 'All Resources';
+$_lang["export_site.static.php4"] = 'Search for';
+$_lang["export_site.static.php5"] = 'Replace with';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+
 $_lang["mutate_settings.dynamic.php6"] = 'Уведомления о системных ошибках';
 $_lang["mutate_settings.dynamic.php7"] = 'Не уведомлять';
 $_lang["mutate_settings.dynamic.php8"] = 'Уведомления приходят на [(emailsender)]([+emailsender+]) в момент генериции ошибки. Детали можно увидеть в журнале ошибок.';
-

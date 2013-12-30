@@ -1,20 +1,22 @@
 <?php
 /**
- * Filename:       includes/lang/german.inc.php
- * Function:       Language file.
- * Encoding:       UTF8
- * Author:         The MODx Project Team
- *                 Anpassungen für MODx 0.9.5 durch Rainer Bachmaier und Marc Hinse
- *                 Anpassungen für MODx 0.9.6.3 durch Bogdan Günther
- *                 Anpassungen für MODx 1.0 durch Bogdan Günther
- *                 Anpassungen für MODx 1.0.5 durch Anselm Hannemann
- *                 Anpassungen für MODx 1.0.11 durch Thomas Jakobi
- * Date:           24 October 2013
- * Version:        2.0.6
- * MODX version:   Evolution 1.0.13
- * Translation:    Rainer Bachmaier, Marc Hinse, Bogdan Günther, Anselm Hannemann, Thomas Jakobi
-*/
-//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author Rainer Bachmaier
+ * @author Marc Hinse
+ * @author Bogdan Günther
+ * @author Anselm Hannemann
+ * @author Thomas Jakobi
+ *
+ * @language German
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'de'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
@@ -360,7 +362,7 @@ $_lang["forgot_password_email_intro"] = 'Es wurde ein neues Kennwort für Ihren 
 $_lang["forgot_password_email_link"] = 'Klicken Sie hier, um ein neues Kennwort zu erstellen.';
 $_lang["forgot_your_password"] = 'Kennwort vergessen?';
 $_lang["friday"] = 'Freitag';
-$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und die Ressource einen Alias-Eintrag hat, wird das Alias als benutzerfreundliche URL verwendet.  Falls Sie keine benutzerfreundliche URLs verwenden verwenden, generiert MODX den Link mit einer durchlaufenden Nummerierung.';
+$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und die Ressource einen Alias-Eintrag hat, wird das Alias als benutzerfreundliche URL verwendet. Falls Sie keine benutzerfreundlichen URLs verwenden, generiert MODX den Link mit einer durchlaufenden Nummerierung.';
 $_lang["friendly_alias_title"] = 'Aliasnamen:';
 $_lang["friendlyurls_message"] = 'Diese Option erlaubt Ihnen die Benutzung benutzerfreundlicher URLs auf Apache-Webservern mit aktiviertem mod_rewrite oder auf dem IIS-Webserver mit entsprechenden Modulen. Öffnen sie bei MODX enthaltene .htaccess-Datei im Root-Verzeichnis für mehr Informationen.';
 $_lang["friendlyurls_title"] = 'Benutzerfreundliche URLs nutzen:';
@@ -578,6 +580,7 @@ $_lang["new_template"] = 'Neues Template';
 $_lang["new_tmplvars"] = 'Neue Template-Variable';
 $_lang["new_user"] = 'Neuer Benutzer';
 $_lang["new_web_user"] = 'Neuer Web-Benutzer';
+$_lang["new_resource"] = 'Neue Ressource';
 $_lang["no"] = 'Nein';
 $_lang["no_active_users_found"] = 'Keine aktiven Benutzer gefunden.';
 $_lang["no_activity_message"] = 'Sie haben bis jetzt noch keine Ressourcen bearbeitet oder erstellt.';
@@ -692,7 +695,7 @@ $_lang["rb_webuser_message"] = 'Soll ein Web-Benutzer den Datei-Browser verwende
 $_lang["rb_webuser_title"] = 'Web-Benutzer?';
 $_lang["recent_docs"] = 'Kürzlich bearbeitete Ressourcen';
 $_lang["recommend_setting_change_title"] = 'Empfohlene Änderung der Konfiguration';
-$_lang["recommend_setting_change_description"] = 'Ihre Seite überprüft momentan nicht die HTTP_REFERER von eingehenden Requests. Wir empfehlen dringend, diese Einstellung vorzunehmen, um das Risiko von CSFR-Attacken (Cross Site Request Forgery) zu reduzieren.';
+$_lang["recommend_setting_change_description"] = 'Ihre Seite überprüft momentan nicht die HTTP_REFERER von eingehenden Requests. Wir empfehlen dringend, diese Einstellung vorzunehmen, um das Risiko von CSRF-Attacken (Cross Site Request Forgery) zu reduzieren.';
 $_lang["refresh_cache"] = 'Cache: <b>%s</b> Dateien wurden im Cache-Verzeichnis gefunden. Gelöschte Dateien <b>%d</b>.<p>Der Cache wird erneuert, sobald die Seiten das erste mal aufgerufen werden.';
 $_lang["refresh_published"] = '<b>%s</b> Ressourcen wurden veröffentlicht.';
 $_lang["refresh_site"] = 'Cache leeren';
@@ -1096,6 +1099,8 @@ $_lang["user_use_config"] = 'Einstellungen der Systemkonfiguration benutzen';
 $_lang["user_zip"] = 'PLZ';
 $_lang["username"] = 'Benutzername';
 $_lang["users"] = 'Sicherheit';
+$_lang["valid_hostnames_message"] = 'Verhindern Sie den Missbrauch der site_url Systemeinstellung für eine XSS-Attacke (Cross Site Scripting), indem sie eine durch Kommata getrennte Liste von gültigen Hostnamen für diese Installation angeben. Diese Attacken sind bei bestimmten Shared Host Konfiguationen und bei direkt über eine IP zugänglichen Hosts möglich. Es wird der erste Hostname in der Liste verwendet, wenn der HTTP_HOST keinem gültigen Hostnamen entspricht.';
+$_lang["valid_hostnames_title"] = 'Gültige Hostnamen';
 $_lang["validate_referer_message"] = 'Die HTTP_REFERER-Header können überprüft werden um das Risiko zu verringern, dass Inhaltsredakteure Opfer eines CSRF-Angriffs (Cross Site Request Forgery) werden und unbeabsichtigte Aktionen im Manager durchführen. Einige Konfigurationen unterstützen diese Option nicht, wenn der Server keine HTTP_REFERER-Header sendet.';
 $_lang["validate_referer_title"] = 'HTTP_REFERER-Header überprüfen?';
 $_lang["value"] = 'Wert';
@@ -1171,6 +1176,8 @@ $_lang["files.dynamic.php1"] = 'Textdatei erstellen';
 $_lang["files.dynamic.php2"] = 'Dieses Verzeichnis kann nicht dargestellt werden.';
 $_lang["files.dynamic.php3"] = 'Es ist ein Problem mit einem Dateinamen aufgetreten.';
 $_lang["files.dynamic.php4"] = 'Die Textdatei wurde erstellt.';
+$_lang["files_dynamic_new_folder_name"] = 'Name des neuen Verzeichnisses:';
+$_lang["files_dynamic_new_file_name"] = 'Name der neuen Datei:';
 $_lang["not_readable_dir"] = 'Das Verzeichnis kann nicht gelesen werden.';
 $_lang["confirm_delete_dir"] = 'Wollen sie dieses Verzeichnis wirklich löschen?';
 $_lang["confirm_delete_dir_recursive"] = 'Wollen sie dieses Verzeichnis wirklich löschen?\n\nAlle Dateien und Verzeichnisse innerhalb dieses Verzeichnisses werden ebenfalls gelöscht.';
