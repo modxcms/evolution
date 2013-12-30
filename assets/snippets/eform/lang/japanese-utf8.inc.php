@@ -5,15 +5,14 @@
  * Language:       Japanese
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           -
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%Y-%m-%d %H:%M:%S";
 $_lang["ef_debug_info"] = "デバッグ情報: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">警告 - デバッグモードが有効</span><br />このフォームを公開する前にデバッグモードを無効にしてください！</p>";
 $_lang["ef_error_filter_rule"] = "テキストフィルターが認識されていません。";
 $_lang["ef_error_formid"] = "フォームIDまたはフォーム名が無効です";
-$_lang["ef_error_list_rule"] = "入力データが不正です。 #LIST rule declared but no list values Found: ";
+$_lang["ef_error_list_rule"] = "入力データが不正です。 #LIST rule declared but no list values found: ";
 $_lang["ef_error_validation_rule"] = "ルールが正しくありません";
 $_lang["ef_eval_deprecated"] = "#EVALルールは将来のバージョンで動作しなくなる可能性があります。代わりに#FUNCTIONを使用してください。";
 $_lang["ef_failed_default"] = "無効な値です";
