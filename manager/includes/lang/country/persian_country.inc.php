@@ -1,13 +1,19 @@
 <?php
 /**
-* Country List Language File
-* Version: 1.0
-* Date: 13/12/2006
-* Translation: Mohsen (MotSmart ~ www.modxcms.ir)
-* Array keys refer to the ID number that is saved in the database
-*
-*/
-
+ * MODX Country list language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ * @author Mohsen (MotSmart), www.modxcms.ir
+ *
+ * @language Persian
+ * @package modx
+ * @subpackage installer
+ *
+ * Array keys refer to the ID number that is saved in the database
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_country_lang["1"] = 'افغانستان'; // Afghanistan
 $_country_lang["2"] = 'آلبانی'; // Albania
 $_country_lang["3"] = 'الجزیره'; // Algeria
@@ -59,7 +65,7 @@ $_country_lang["48"] = 'کامرون'; // Comoros
 $_country_lang["49"] = 'جمهوری کنگو'; // Congo
 $_country_lang["50"] = 'جزایر کوک'; // Cook Islands
 $_country_lang["51"] = 'کاستاریکا'; // Costa Rica
-$_country_lang["52"] = 'کوت د و یور'; // Cote D&#39;Ivoire
+$_country_lang["52"] = 'کوت د و یور'; // Cote D’Ivoire
 $_country_lang["53"] = 'کرواسی'; // Croatia
 $_country_lang["54"] = 'کوبا'; // Cuba
 $_country_lang["55"] = 'قبرس'; // Cyprus
@@ -111,7 +117,7 @@ $_country_lang["100"] = 'اندونزی'; // Indonesia
 $_country_lang["101"] = 'جمهوری اسلامی ایران'; // Iran (Islamic Republic of)
 $_country_lang["102"] = 'عراق'; // Iraq
 $_country_lang["103"] = 'ایرلند'; // Ireland
-$_country_lang["104"] = 'فلسطین'; // Occupied Palestine
+$_country_lang["104"] = 'فلسطین'; // Israel
 $_country_lang["105"] = 'ایتالیا'; // Italy
 $_country_lang["106"] = 'جامائیکا'; // Jamaica
 $_country_lang["107"] = 'ژاپن'; // Japan
@@ -119,11 +125,11 @@ $_country_lang["108"] = 'اردن'; // Jordan
 $_country_lang["109"] = 'قزاقستان'; // Kazakhstan
 $_country_lang["110"] = 'کنیا'; // Kenya
 $_country_lang["111"] = 'کیریباتی'; // Kiribati
-$_country_lang["112"] = 'جمهوی خلق کره'; // Korea, Democratic People&#39;s Republic of
+$_country_lang["112"] = 'جمهوی خلق کره'; // Korea, Democratic People’s Republic of
 $_country_lang["113"] = 'جمهوری کره'; // Korea, Republic of
 $_country_lang["114"] = 'کویت'; // Kuwait
 $_country_lang["115"] = 'قرقیزستان'; // Kyrgyzstan
-$_country_lang["116"] = 'جمهوری خلق لائو'; // Lao People&#39;s Democratic Republic
+$_country_lang["116"] = 'جمهوری خلق لائو'; // Lao People’s Democratic Republic
 $_country_lang["117"] = 'لاتویا'; // Latvia
 $_country_lang["118"] = 'لبنان'; // Lebanon
 $_country_lang["119"] = 'لسوتو'; // Lesotho
@@ -150,7 +156,6 @@ $_country_lang["139"] = 'ایالت فدرال میکرونسیا'; // Micronesi
 $_country_lang["140"] = 'جمهوری مولدوا'; // Moldova, Republic of
 $_country_lang["141"] = 'موناکو'; // Monaco
 $_country_lang["142"] = 'مغولستان'; // Mongolia
-$_country_lang["241"] = 'مونته نگرو'; //Montenegro
 $_country_lang["143"] = 'مونسترات'; // Montserrat
 $_country_lang["144"] = 'مراکش'; // Morocco
 $_country_lang["145"] = 'موزامبیک'; // Mozambique
@@ -194,7 +199,6 @@ $_country_lang["182"] = 'سن مارینو'; // San Marino
 $_country_lang["183"] = 'سائو تام و پرینسیپ'; // Sao Tome and Principe
 $_country_lang["184"] = 'عربستان سعودی'; // Saudi Arabia
 $_country_lang["185"] = 'سنگال'; // Senegal
-$_country_lang["240"] = 'صربستان'; //Serbia
 $_country_lang["186"] = 'سچیلس'; // Seychelles
 $_country_lang["187"] = 'سیرالئون'; // Sierra Leone
 $_country_lang["188"] = 'سنگاپور'; // Singapore
@@ -249,4 +253,6 @@ $_country_lang["236"] = 'صربستان و مونته نگرو'; // DEPRECATED: 
 $_country_lang["237"] = 'جمهوری دموکراتیک کونگو'; // Congo, Democratic Republic of the
 $_country_lang["238"] = 'زامبیا'; // Zambia
 $_country_lang["239"] = 'زیمبابوه'; // Zimbabwe
+$_country_lang["240"] = 'صربستان'; // Serbia
+$_country_lang["241"] = 'مونته نگرو'; // Montenegro
 ?>

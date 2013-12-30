@@ -1,13 +1,18 @@
 <?php
 /**
-* Country List Language File
-* Version: 1.0
-* Date: 19/12/2006
-*
-* Array keys refer to the ID number that is saved in the database
-*
-*/
-
+ * MODX Country list language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Brazilian Portuguese
+ * @package modx
+ * @subpackage installer
+ *
+ * Array keys refer to the ID number that is saved in the database
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_country_lang["1"] = 'Afeganistão'; // Afghanistan
 $_country_lang["2"] = 'Albânia'; // Albania
 $_country_lang["3"] = 'Argélia'; // Algeria
@@ -59,7 +64,7 @@ $_country_lang["48"] = 'Comores'; // Comoros
 $_country_lang["49"] = 'República Democrática do Congo'; // Congo
 $_country_lang["50"] = 'Ilhas Cook'; // Cook Islands
 $_country_lang["51"] = 'Costa Rica'; // Costa Rica
-$_country_lang["52"] = 'Costa do Marfim'; // Cote D&#39;Ivoire
+$_country_lang["52"] = 'Costa do Marfim'; // Cote D’Ivoire
 $_country_lang["53"] = 'Croácia'; // Croatia
 $_country_lang["54"] = 'Cuba'; // Cuba
 $_country_lang["55"] = 'Chipre'; // Cyprus
@@ -119,11 +124,11 @@ $_country_lang["108"] = 'Jordânia'; // Jordan
 $_country_lang["109"] = 'Cazaquistão'; // Kazakhstan
 $_country_lang["110"] = 'Quénia'; // Kenya
 $_country_lang["111"] = 'Kiribati'; // Kiribati
-$_country_lang["112"] = 'Coreia do Norte'; // Korea, Democratic People&#39;s Republic of
+$_country_lang["112"] = 'Coreia do Norte'; // Korea, Democratic People’s Republic of
 $_country_lang["113"] = 'Coreia do Sul'; // Korea, Republic of
 $_country_lang["114"] = 'Koweit'; // Kuwait
 $_country_lang["115"] = 'Quirziguistão'; // Kyrgyzstan
-$_country_lang["116"] = 'Laos'; // Lao People&#39;s Democratic Republic
+$_country_lang["116"] = 'Laos'; // Lao People’s Democratic Republic
 $_country_lang["117"] = 'Letónia'; // Latvia
 $_country_lang["118"] = 'Líbano'; // Lebanon
 $_country_lang["119"] = 'Lesoto'; // Lesotho
@@ -150,7 +155,6 @@ $_country_lang["139"] = 'Estados Federados da Micronésia'; // Micronesia, Feder
 $_country_lang["140"] = 'Moldávia'; // Moldova, Republic of
 $_country_lang["141"] = 'Mónaco'; // Monaco
 $_country_lang["142"] = 'Mongólia'; // Mongolia
-$_country_lang["241"] = 'Montenegro'; //Montenegro
 $_country_lang["143"] = 'Montserrat'; // Montserrat
 $_country_lang["144"] = 'Marrocos'; // Morocco
 $_country_lang["145"] = 'Moçambique'; // Mozambique
@@ -194,7 +198,6 @@ $_country_lang["182"] = 'São Marino'; // San Marino
 $_country_lang["183"] = 'São Tomé e Príncipe'; // Sao Tome and Principe
 $_country_lang["184"] = 'Arábia Saudita'; // Saudi Arabia
 $_country_lang["185"] = 'Senegal'; // Senegal
-$_country_lang["240"] = 'Sérvia'; //Serbia
 $_country_lang["186"] = 'Seicheles'; // Seychelles
 $_country_lang["187"] = 'Serra Leoa'; // Sierra Leone
 $_country_lang["188"] = 'Singapura'; // Singapore
@@ -249,4 +252,6 @@ $_country_lang["236"] = 'Sérvia e Montenegro'; // DEPRECATED: kept for backward
 $_country_lang["237"] = 'República Democrática do Congo'; // Congo, Democratic Republic of the
 $_country_lang["238"] = 'Zâmbia'; // Zambia
 $_country_lang["239"] = 'Zimbabué'; // Zimbabwe
+$_country_lang["240"] = 'Sérvia'; // Serbia
+$_country_lang["241"] = 'Montenegro'; // Montenegro
 ?>
