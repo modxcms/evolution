@@ -6,12 +6,12 @@ MODX Evolution 1.0.13 (Dec 31, 2013)
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
-* [#10073] define in php < 5.3
+* [#10073] Define in php < 5.3
 * [#10076] Undefined variable in manager panel
 * [#10173] mm_rules hide tv needs to hide split too
 * [#10177] Add - Ditto language entry
 * [#10192] 500 error with save setting if install in subfolder
-* [#10195] lost tinyMCE theme full
+* [#10195] Lost tinyMCE theme full
 * [#10196] [+prefix+] -> $modx->getFullTableName($tableName);
 * [#10198] Codemirror template
 * [#10200] Translation on transifex not possible
@@ -22,7 +22,7 @@ Bugfixes:
 * [#10236] [phpthumb] source filename bug
 * [#10239] mm_rules.inc.php in russian
 * [#10240] Improve onchange trigger for file/image input
-* [#10266] error if start_page have get
+* [#10266] Error if start_page have get
 * [#10273] TinyMCE compatibility with IE11
 * [#10283] modx_sanitize_gpc problem
 * [#10284] modx_sanitize_gpc breaks eForm
@@ -43,13 +43,13 @@ Bugfixes:
 * [gitHub] Fix - Save button in file manager
 * [gitHub] Fix missing calendar icon
 * [gitHub] Bugfix for closing opt group tag
-* [gitHub] restored textareamini
+* [gitHub] Restored textareamini
 * [gitHub] Don't save SMTP password if field was emptied manually
 * [gitHub] Codemirror: matchBrekers fix and turn on by default
 * [gitHub] Full request url in messageQuit
-* [gitHub] fix SQL error when calling optimize method
-* [gitHub] fix backup format file Y-m-d_H-i-s - now new always top
-* [gitHub] clean filenames with KCFinder
+* [gitHub] Fix SQL error when calling optimize method
+* [gitHub] Fix backup format file Y-m-d_H-i-s - now new always top
+* [gitHub] Clean filenames with KCFinder - use of TransAlias class and plugin settings
 
 --------------------------------------------
 Refactor:
@@ -70,8 +70,8 @@ Refactor:
 * [gitHub] View manager logs - grid view tune
 * [gitHub] Reformatted indents and changed double quotes to single quotes in merge functions
 * [gitHub] Reworked eval snippets/plugin functions and MODX error level detection
-* [gitHub] Eform: Retain classes for checkboxes (and other form fields that have a name attribute with an array)
-* [gitHub] Eform: validation messages with span (for better styling with css)
+* [gitHub] eForm: Retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [gitHub] eForm: validation messages with span (for better styling with css)
 * [gitHub] Trigger change event for file/image inputs
 * [gitHub] Add css class to displayparams table, removed inline style
 * [gitHub] Use same tags and styles as other fields in manager.
@@ -83,7 +83,7 @@ Refactor:
 * [gitHub] Correct preview link
 * [gitHub] Restore view_eventlog permission on site_shedule
 * [gitHub] Make one point to clearCache and add params
-* [gitHub] rename MODx to MODX
+* [gitHub] Rename MODx to MODX
 * [gitHub] Language files for core and core snippets are now handled by Transifex
 
 --------------------------------------------
