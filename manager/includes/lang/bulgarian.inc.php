@@ -4,7 +4,7 @@
  *
  * @version 1.0.13
  * @date 31/12/2013
- * @author The MODx Project Team
+ * @author The MODX Project Team
  *
  * @language Bulgarian
  * @package modx
