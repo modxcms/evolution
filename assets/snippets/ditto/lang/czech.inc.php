@@ -32,7 +32,7 @@ $_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
 // Debug Tab Names
 $_lang['info'] = "Info";
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "MODX";
 $_lang['fields'] = "Pole";
 $_lang['templates'] = "Šablony";
 $_lang['filters'] = "Filtry";
