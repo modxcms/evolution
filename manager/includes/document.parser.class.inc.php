@@ -1,6 +1,6 @@
 <?php
 /**
- *	MODx Document Parser
+ *	MODX Document Parser
  *	Function: This class contains the main document parsing functions
  *
  */
@@ -260,7 +260,7 @@ class DocumentParser {
     }
     
     /**
-     * Get MODx settings including, but not limited to, the system_settings table
+     * Get MODX settings including, but not limited to, the system_settings table
      */
     function getSettings() {
         $tbl_system_settings   = $this->getFullTableName('system_settings');
@@ -1462,7 +1462,7 @@ class DocumentParser {
     /**
      * Parse a source string.
      *
-     * Handles most MODx tags. Exceptions include:
+     * Handles most MODX tags. Exceptions include:
      *   - uncached snippet tags [!...!]
      *   - URL tags [~...~]
      *
