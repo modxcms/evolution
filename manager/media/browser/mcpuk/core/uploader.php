@@ -311,10 +311,17 @@ class uploader {
 	protected function getTransaliasSettings() {
 		global $modx;
 
-		$res = $modx->db->select('*', $modx->getFullTableName('site_plugins'), 'name="TransAlias"');
-		if ($modx->db->getRecordCount($res)) {
-			$row = $modx->db->getRow($res);
-			$properties = $modx->parseProperties($row['properties']);
+		// Cleaning uploaded filename?
+		$setting = $modx->db->select('*', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
+		if ($modx->db->getRecordCount($setting)) {
+			// Transalias plugin active?
+			$res = $modx->db->select('*', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
+			if ($modx->db->getRecordCount($res)) {
+				$row = $modx->db->getRow($res);
+				$properties = $modx->parseProperties($row['properties']);
+			} else {
+				$properties = NULL;
+			}
 		} else {
 			$properties = NULL;
 		}
@@ -322,13 +329,12 @@ class uploader {
 	}
 
 	protected function normalizeFilename($filename) {
-		global $modx;
 
 		if ($transaliasSettings = $this->getTransaliasSettings()) {
 			if (!class_exists('TransAlias')) {
 				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
 			}
-			$trans = new TransAlias($modx);
+			$trans = new TransAlias();
 			$trans->loadTable($transaliasSettings['table_name']);
 			$filename = $trans->stripAlias($filename, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
 		} else {
