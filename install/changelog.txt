@@ -101,6 +101,7 @@ Additional Improvements & Updates:
 * [gitHub] Add hide plugin in sort
 * [gitHub] Patch findTemplateVars for compatibility with HPx
 * [gitHub] Add ID in QM+ toolbar.
+* [gitHub] add lib MODxAPI by Agel_Nash
 
 --------------------------------------------
 Security:
