@@ -1,14 +1,16 @@
 <?php
 /**
- * Filename:       includes/lang/errormsg/english.inc.php
- * Function:       English language file.
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * Date:           2013-08-05
- * Version:        1.0.11
- * MODX version:   Evolution 1.0.11
-*/
-
+ * MODX error messages language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language English
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_lang["No errors occured."] = "No errors occured.";
 $_lang["An error occured!"] = "An error occured!";
 $_lang["You don't have enough privileges for this action!"] = "You don't have enough privileges for this action!";

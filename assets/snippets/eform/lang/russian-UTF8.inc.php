@@ -3,12 +3,10 @@
  * Language file for eForm
  *
  * Language:       Russian
- * Encoding:       Windows-1251
+ * Encoding:       UTF-8
  * Translated by:  Jaroslav Sidorkin
- * Date:           27.07.2009
- * Version:        1.4.4.x
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Отладочная информация: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">Внимание - включена отладка</span> <br />Не забудьте выключить отладку перед публикацией этой формы для реального использования!</p>";

@@ -2,7 +2,7 @@
 /**
  * Language file for eForm
  *
- * Language:       Portuguese
+ * Language:       Brazilian Portuguese
  * Encoding:       UTF-8
  * Translated by:  -
  * Date:           2013/12/31

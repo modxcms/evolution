@@ -2,12 +2,11 @@
 /**
  * Language file for eForm
  *
- * Language:       English
+ * Language:       German
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           31.03-2007
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%d. %b. %Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debuginformationen: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">WARNUNG – DEBUGGING IST EINGESCHALTET</span> <br />Stellen Sie sicher, dass es ausgeschaltet wird, bevor die Seite live geht!</p>";

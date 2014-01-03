@@ -5,9 +5,8 @@
  * Language:       Czech
  * Encoding:       UTF-8
  * Translated by:  modxcms.cz
- * Date:           28.12.2010
+ * Date:           2013/12/31
  */
-
 $_lang["ef_date_format"] = "%d. %b. %Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">VAROVÁNÍ - REŽIM LADĚNÍ (DEBUG) JE AKTIVNÍ</span> <br />Ujistitěte se o jeho deaktivací předtím než dojde k oživení!</p>";
@@ -41,10 +40,9 @@ $_lang["ef_sql_no_result"] = " tiše prošlá validace. <span style=\"color:red;
 $_lang["ef_submit_time_limit"] = "<p>Tento formulář byl již úspěšně odeslán. Znovu odeslání je znemožneno na následujích [+submitLimitMinutes+] minut.</p>";
 $_lang["ef_tamper_attempt"] = "Detekován pokus o \"tampering\"!";
 $_lang["ef_thankyou_message"] = "<h3>Děkujeme!</h3><p>Vaše informace byly úspěšně odeslány.</p>";
-$_lang["ef_thousands_separator"] = ""; //leave empty to use (php) locale, only needed if you want to overide locale setting!
+$_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": chyba v nahrávaném souboru.";
 $_lang["ef_upload_exceeded"] = " byl vyčerpán maximální limit pro nahrátí souboru.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Ve formuláři se vyskytly chyby:</strong><br />[+ef_wrapper+]</div>"; //changed
+$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Ve formuláři se vyskytly chyby:</strong><br />[+ef_wrapper+]</div>";
 $_lang["ef_version_error"] = "<strong>VAROVÁNÍ!</strong> Tato verze eForm snippetu (verze:&nbsp;[+version+]) je rozdílná než inkludovaný eForm soubor (verze:&nbsp;[+fileVersion+]). Prosím ujistěte se, že jsou obě verze totožné.";
-
 ?>

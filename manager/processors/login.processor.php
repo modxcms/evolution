@@ -301,7 +301,7 @@ if($rememberme == '1') {
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODx");
+$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODX");
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",

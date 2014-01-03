@@ -122,7 +122,7 @@ var DatePicker = new Class({
         var date = new Date();
         
         /* create the date object */
-        if (dp.month && dp.year) {
+        if ((dp.month >=0) && dp.year) {
             date.setFullYear(dp.year, dp.month, 1);
         } else {
             dp.month = date.getMonth();

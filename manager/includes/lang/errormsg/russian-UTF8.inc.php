@@ -1,22 +1,24 @@
 <?php
 /**
- * Filename:       includes/lang/errormsg/russian-UTF8.inc.php
- * Function:       Russian language file.
- * Encoding:       UTF8
- * Author:         ***
- * Date:           2013-08-05
- * Version:        1.0.11
- * MODX version:   Evolution 1.0.11
-*/
-
-$_lang["No errors occured."] = "No errors occured.";
-$_lang["An error occured!"] = "An error occured!";
-$_lang["You don't have enough privileges for this action!"] = "You don't have enough privileges for this action!";
-$_lang["ID passed in request is NaN!"] = "ID passed in request is NaN!";
-$_lang["The document is locked!"] = "The document is locked!";
-$_lang["Too many results returned from database!"] = "Too many results returned from database!";
-$_lang["Not enough/ no results returned from database!"] = "Not enough/ no results returned from database!";
-$_lang["Couldn't find parent document's name!"] = "Couldn't find parent document's name!";
+ * MODX error messages language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Russian
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+$_lang["No errors occured."] = "Ошибок не было";
+$_lang["An error occured!"] = "Произошла ошибка!";
+$_lang["You don't have enough privileges for this action!"] = "У вас нет соответствующих прав для выполнения данного действия.";
+$_lang["ID passed in request is NaN!"] = "ID переданного запроса пуст!";
+$_lang["The document is locked!"] = "Документ заблокирован!";
+$_lang["Too many results returned from database!"] = "Слишком много результатов возвращается из базы данных!";
+$_lang["Not enough/ no results returned from database!"] = "Результаты из базы данных не вернулись или вернулись не полностью! ";
+$_lang["Couldn't find parent document's name!"] = "Не удалось найти имя родительского документа!";
 $_lang["Logging error!"] = "Logging error!";
 $_lang["Table to optimise not found in request!"] = "Table to optimise not found in request!";
 $_lang["No settings found in request!"] = "No settings found in request!";
