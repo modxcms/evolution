@@ -17,7 +17,7 @@ $_lang['default_template'] = '
     </div>
 ';
 $_lang["bad_tpl"] = "<p>&[+tpl+] bevat geen placeholders of is een ongeldige chunk naam, code blok, of bestandsnaam. Controleer dit a.u.b.</p>";
-$_lang['missing_placeholders_tpl'] = 'One of your Ditto templates are missing placeholders, please check the template below:';
+$_lang['missing_placeholders_tpl'] = 'In een van je Ditto templates ontbreken placeholders, bekijk de onderstaande template om dit te corrigeren:';
 $_lang['no_documents'] = '<p>Geen documenten gevonden.</p>';
 $_lang['resource_array_error'] = 'Resource Array Error';
 $_lang['prev'] = "&lt; Vorige";
