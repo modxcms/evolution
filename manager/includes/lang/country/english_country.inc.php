@@ -7,7 +7,7 @@
  *
  * @language English
  * @package modx
- * @subpackage installer
+ * @subpackage manager
  *
  * Array keys refer to the ID number that is saved in the database
  *

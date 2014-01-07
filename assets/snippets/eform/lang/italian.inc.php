@@ -4,7 +4,7 @@
  *
  * Language:       Italian
  * Encoding:       UTF-8
- * Translated by:  Diego Meozzi, Nicola Lambathaki (Banzai)
+ * Translated by:  Diego Meozzi, Nicola Lambathaki (Banzai), luigif
  * Date:           2013/12/31
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";

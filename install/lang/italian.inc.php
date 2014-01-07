@@ -2,7 +2,7 @@
 /**
  * MODX Installer language file
  *
- * @author Luigif
+ * @author luigif
  * @version 1.0.13
  * @date 31/12/2013
  *
@@ -31,9 +31,9 @@ $_lang["begin"] = 'Inizio';
 $_lang["btnback_value"] = 'Indietro';
 $_lang["btnclose_value"] = 'Chiudi';
 $_lang["btnnext_value"] = 'Avanti';
-$_lang["cant_write_config_file"] = 'MODX non ha potuto salvare il file di configurazione. Vi preghiamo di copiare il seguente testo nel file ';
+$_lang["cant_write_config_file"] = 'MODX non è riuscito a salvare il file di configurazione. Vi preghiamo di copiare il seguente testo nel file ';
 $_lang["cant_write_config_file_note"] = 'Una volta completata l\'operazione potrete accedere a MODX inserendo nel browser l\'indirizzo vostrosito.it/[+MGR_DIR+]/.';
-$_lang["checkbox_select_options"] = 'Checkbox select options:';
+$_lang["checkbox_select_options"] = 'Opzioni Checkbox:';
 $_lang["checking_if_cache_exist"] = 'Verifico se esistono le directories <span class="mono">/assets/cache</span> e <span class="mono">/assets/cache/rss</span> : ';
 $_lang["checking_if_cache_file_writable"] = 'Controllo i permessi di scrittura sul file <span class="mono">/assets/cache/siteCache.idx.php</span> : ';
 $_lang["checking_if_cache_file2_writable"] = 'Controllo i permessi di scrittura sul file <span class="mono">/assets/cache/sitePublishing.idx.php</span> : ';
@@ -47,7 +47,7 @@ $_lang["checking_mysql_strict_mode"] = 'Controllo la modalità strict sql_mode d
 $_lang["checking_mysql_version"] = 'Controllo la versione di MySQL: ';
 $_lang["checking_php_version"] = 'Controllo la versione di PHP: ';
 $_lang["checking_registerglobals"] = 'Controllo se Register_Globals è disattivato: ';
-$_lang["checking_registerglobals_note"] = 'Con questa configurazione il vostro sito può essere vittima di attacchi Cross Site Scripting (XSS). Per disabilitare Register_Globals ci sono diverse alternative: modificare il file php.ini globale, modificare il file .htaccess nella root della vostra installazione MODX, oppure aggiungere dei files php.ini in ogni directory della vostra installazione MODX (ma ci sono molte directories). Potete continuare con l\'installazione, ma non dite che non vi abbiamo avvertito.';
+$_lang["checking_registerglobals_note"] = 'Con questa configurazione il vostro sito potrebbe essere vittima di attacchi Cross Site Scripting (XSS). Per disabilitare Register_Globals ci sono diverse alternative: modificare il file php.ini globale, modificare il file .htaccess nella root della vostra installazione MODX, oppure aggiungere dei files php.ini in ogni directory della vostra installazione MODX (ma ci sono molte directories). Potete continuare con l\'installazione, ma non dite che non vi abbiamo avvertito.';
 $_lang["checking_sessions"] = 'Controllo se le sessioni sono configurate correttamente: ';
 $_lang["checking_table_prefix"] = 'Controllo il prefisso per le tabelle `';
 $_lang["chunks"] = 'Chunks';
@@ -61,7 +61,7 @@ $_lang["connection_screen_database_info"] = 'Informazioni sul Database';
 $_lang["connection_screen_database_login"] = 'Nome utente del Database:';
 $_lang["connection_screen_database_name"] = 'Nome del Database:';
 $_lang["connection_screen_database_pass"] = 'Password del Database:';
-$_lang["connection_screen_database_test_connection"] = 'Crea Database o verifica il Database selezionato.';
+$_lang["connection_screen_database_test_connection"] = 'Crea un Database o verifica il Database selezionato.';
 $_lang["connection_screen_default_admin_email"] = 'Indirizzo email dell\'Amministratore:';
 $_lang["connection_screen_default_admin_login"] = 'Username dell\'Amministratore:';
 $_lang["connection_screen_default_admin_note"] = 'Ora occorre inserire alcuni dettagli per l\'account dell\'Amministratore. Dovete inserire il vostro nome e scegliere una password. Una volta terminata l\'installazione questi dati vi serviranno per accedere al sistema.';
@@ -81,14 +81,14 @@ $_lang["database_use_failed"] = 'Impossibile selezionare il Database!';
 $_lang["database_use_failed_note"] = 'Vi preghiamo di controllare i permessi dell\'utente specificato e riprovare.';
 $_lang["default_language"] = 'Lingua di default per il Manager';
 $_lang["default_language_description"] = 'Questa è la lingua che verrà usata nel Manager di MODX.';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
+$_lang["depedency_create"] = 'Dipendenza creata';
+$_lang["depedency_update"] = 'Dipendenza aggiornata';
 $_lang["during_execution_of_sql"] = ' durante l\'esecuzione del comando SQL ';
 $_lang["encoding"] = 'iso-8859-1';
 $_lang["error"] = 'errore';
 $_lang["errors"] = 'errori';
 $_lang["failed"] = 'FALLITA!';
-$_lang["guid_set"] = 'GUID set';
+$_lang["guid_set"] = 'GUID impostata';
 $_lang["help"] = 'Aiuto!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Assistenza per l\'installazione nei forums MODX';
@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Esecuzione degli aggiornamenti del databas
 $_lang["sample_web_site"] = 'Sito Web di Esempio';
 $_lang["sample_web_site_note"] = 'Vi preghiamo di notare che questo <b>cancellerà</b> i documenti e le risorse esistenti.';
 $_lang["session_problem"] = 'E\' stato riscontrato un problema cone le sessioni del vostro server. Contattare un amministratore di sistema per risolvere il problema.';
-$_lang["session_problem_try_again"] = 'Riprovare?'; 
+$_lang["session_problem_try_again"] = 'Riprovare?';
 $_lang["setup_cannot_continue"] = 'Sfortunatamente il programma di Installazione non può continuare, perchè; ';
 $_lang["setup_couldnt_install"] = 'MODX non è riuscito ad installare/modificare alcune tabelle del database selezionato.';
 $_lang["setup_database"] = 'MODX tenterà ora di configurare il database:<br />';

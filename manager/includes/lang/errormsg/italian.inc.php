@@ -13,8 +13,8 @@
  */
 $_lang["No errors occured."] = "Nessun errore.";
 $_lang["An error occured!"] = "Si è verificato un errore!";
-$_lang["You don't have enough privileges for this action!"] = "Non si possiedono i diritti necessari per effettuare questa operazione!";
-$_lang["ID passed in request is NaN!"] = "L'ID della richiesta è NaN!";
+$_lang["You don't have enough privileges for this action!"] = "Non avete i diritti necessari per effettuare questa operazione!";
+$_lang["ID passed in request is NaN!"] = "L'ID passato nella richiesta è NaN!";
 $_lang["The document is locked!"] = "Il documento è bloccato!";
 $_lang["Too many results returned from database!"] = "Sono stati trovati troppi risultati nel database!";
 $_lang["Not enough/ no results returned from database!"] = "Sono stati trovati pochi risultati (o nessuno) nel database!";
