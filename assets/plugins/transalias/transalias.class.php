@@ -148,6 +148,10 @@ class TransAlias {
         $alias = preg_replace('/&#x([0-9a-f]{1,7});/ei', 'chr(hexdec("\\1"))', $alias);
         $alias = preg_replace('/&#([0-9]{1,7});/e', 'chr("\\1")', $alias);
         
+        if (class_exists('Normalizer')) {
+            $alias = Normalizer::normalize($alias);
+        }
+
         if (!empty($this->_useTable)) {
             $alias = strtr($alias, $this->_tables[$this->_useTable]);
         }
