@@ -4,6 +4,7 @@
  *
  * @author Radosław Włodkowski, radoslaw@wlodkowski.net
  * @author Natalia Łubniewska
+ * @author Witek Galecki
  * @version 1.0.13
  * @date 31/12/2013
  *
@@ -82,14 +83,14 @@ $_lang["database_use_failed"] = 'Baza danych nie może być użyta!';
 $_lang["database_use_failed_note"] = 'Sprawdź prawa dostępu do bazy danych dla wybranego użytkownika i spróbuj ponownie.';
 $_lang["default_language"] = 'Domyślny język Menedżera';
 $_lang["default_language_description"] = 'Domyślny język dla Menedżera MODXa.';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
+$_lang["depedency_create"] = 'Zależność utworzona';
+$_lang["depedency_update"] = 'Zależność uaktualniona';
 $_lang["during_execution_of_sql"] = ' podczas wykonywania zapytania SQL ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'błąd';
 $_lang["errors"] = 'błędy';
 $_lang["failed"] = 'NIE POWIODŁO SIĘ!';
-$_lang["guid_set"] = 'GUID set';
+$_lang["guid_set"] = 'GUID ustawiony';
 $_lang["help"] = 'Pomoc!';
 $_lang["help_link"] = 'http://modxcms.com/forums/';
 $_lang["help_title"] = 'Pomoc dotyczącą instalacji można uzyskać na forum MODXa';
@@ -142,7 +143,7 @@ $_lang["running_database_updates"] = 'Wykonywanie aktualizacji bazy danych: ';
 $_lang["sample_web_site"] = 'Przykładowa strona internetowa';
 $_lang["sample_web_site_note"] = 'Pamiętaj, że ta operacja <b>nadpisze</b> istniejące już dokumenty i zasoby.';
 $_lang["session_problem"] = 'Wystąpił problem z obsługą sesji przez serwer. Proszę skonsultuj się z administratorem aby usunąć ten problem.';
-$_lang["session_problem_try_again"] = 'Ponowić próbę?'; 
+$_lang["session_problem_try_again"] = 'Ponowić próbę?';
 $_lang["setup_cannot_continue"] = 'Z powodów wymienionych powyżej instalacja nie może być kontynuowana';
 $_lang["setup_couldnt_install"] = 'Instalator MODXa nie mógł zainstalować/zmodyfikować niektórych tabel w wybranej bazie danych.';
 $_lang["setup_database"] = 'Instalator spróbuje teraz skonfigurować bazę danych:<br />';
