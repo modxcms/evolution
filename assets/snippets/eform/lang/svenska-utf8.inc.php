@@ -37,12 +37,12 @@ $_lang["ef_required_message"] = " De följande, nödvändiga, fält(en) saknas: 
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Misslyckades</span> med regeln [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Utfördes med regeln [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " klarade valideringen i smyg. <span style=\"color:red;\"> SQL returnerade inget resultat!</span> ";
-$_lang["ef_submit_time_limit"] = "<p>This form was already submitted succesfully. Re-submission of the form is disabled for [+submitLimitMinutes+] minutes.</p>";
+$_lang["ef_submit_time_limit"] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  [+submitLimitMinutes+] minuter.</p>";
 $_lang["ef_tamper_attempt"] = "Manipuleringsförsök upptäckt!";
 $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan problem.</p>";
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": fel vid uppladdning av fil.";
 $_lang["ef_upload_exceeded"] = " har överskridit den maximala uppladdningsstorleken.";
 $_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Några fel upptäcktes i ditt formulär:</strong><br />[+ef_wrapper+]</div>";
-$_lang["ef_version_error"] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
+$_lang["ef_version_error"] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;[+version+]) skiljer sig från den inkluderade eForm-filen (version:&nbsp;[+fileVersion+]). Kontrollera att du använder samma version på båda.";
 ?>

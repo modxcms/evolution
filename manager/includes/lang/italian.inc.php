@@ -7,7 +7,7 @@
  * @author Nicola Lambathakis (Banzai)
  * @author Kudolink
  * @author Diego Meozzi
- * @author Luigif
+ * @author luigif
  *
  * @language Italian
  * @package modx
@@ -15,8 +15,8 @@
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
-$modx_lang_attribute = 'it'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
+$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX è un <a href="http://modx.com/" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
