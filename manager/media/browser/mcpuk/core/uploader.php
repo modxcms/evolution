@@ -329,7 +329,6 @@ class uploader {
 	}
 
 	protected function normalizeFilename($filename) {
-
 		if ($transaliasSettings = $this->getTransaliasSettings()) {
 			if (!class_exists('TransAlias')) {
 				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
