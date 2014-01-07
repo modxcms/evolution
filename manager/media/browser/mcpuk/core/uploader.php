@@ -350,7 +350,7 @@ class uploader {
 			if (!class_exists('TransAlias')) {
 				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
 			}
-			$trans = new TransAlias($modx);
+			$trans = new TransAlias();
 			$trans->loadTable($transaliasSettings['table_name']);
 			$dirname = $trans->stripAlias($dirname, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
 		} else {
