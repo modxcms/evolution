@@ -1,7 +1,7 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODX Evolution 1.0.13 (Dec 31, 2013)
+MODX Evolution 1.0.13 (Jan 08, 2014)
 ===================================
 --------------------------------------------
 Bugfixes:
