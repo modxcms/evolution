@@ -354,7 +354,7 @@ function movedocument() {
 	<!-- View Children -->
 	<div class="tab-page" id="tabChildren">
 		<h2 class="tab"><?php echo $_lang['view_child_resources_in_container']?></h2>
-		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );docSettings.setSelectedIndex(1);</script>
+		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
 			<ul class="actionButtons">
