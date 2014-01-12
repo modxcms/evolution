@@ -762,7 +762,7 @@ ALTER TABLE `{PREFIX}web_user_attributes`
  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
-ALTER TABLE  `{PREFIX}site_content` ADD COLUMN `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1';
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
 # ]]upgrade-able
 
