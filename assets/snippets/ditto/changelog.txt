@@ -98,7 +98,7 @@
 [CHANGED] #ID keys are now preserved in the getDocuments function
 [NEW] rel="tags" to tag links
 [NEW] local and global filter delimiter parameters for customization
-[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://modxcms.com/forums/index.php/topic,12007.msg80206.html#msg80206)
+[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://forums.modx.com/thread/27666/ditto-2-0-beta-3#dis-post-147124)
 [FIXED] ;; in source code removed
 [CHANGED] = to == in filter source
 [REMOVED] debug->stored references

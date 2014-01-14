@@ -569,7 +569,7 @@ class Wayfinder {
     }
 
 	function fetch($tpl){
-		// based on version by Doze at http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
+		// based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
 		global $modx;
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {

@@ -186,7 +186,7 @@ $_lang["create_resource_title"] = 'Ressource erstellen';
 $_lang["create_weblink_here"] = 'Web-Link hier erstellen';
 $_lang["createdon"] = 'Erstellungsdatum';
 $_lang["credits"] = 'Danksagungen';
-$_lang["credits_shouts_msg"] = '<p>Informationen zum MODX-Team und zur Geschichte und Weiterentwicklung von MODX finden Sie unter: <a href="http://modx.com/" target="_blank">modxcms.com/about/</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX wird auf <a href="http://modx.com/" target="_blank">modx.com</a> weiterentwickelt und gepflegt.</p>';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Inhalts-Typen hinzufügen. Geben Sie hierzu den Typ ein und klicken dann auf hinzufügen.';
 $_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen:';
 $_lang["database_charset"] = 'Datenbank-Zeichensatz';

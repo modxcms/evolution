@@ -2,14 +2,14 @@
 /**
  * MODX Installer language file
  *
- * @author davaeron
- * @package MODX
- * @version 1.0
- * 
- * Filename:       /install/lang/english/english.inc.php
- * Language:       English
- * Encoding:       iso-8859-1
- * 
+ * @author MODX Team
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Bulgarian
+ * @package modx
+ * @subpackage installer
+ *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Обновяване на БД: ';
 $_lang["sample_web_site"] = 'Примерен Уеб Сайт';
 $_lang["sample_web_site_note"] = 'Моля, имайте предвид, че това ще <b style=\"color:#CC0000\">презапише</b> съществуващите документи и ресурси.';
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Try again?'; 
+$_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'За съжаление Инсталаторът не може да продължи в момента поради ';
 $_lang["setup_couldnt_install"] = 'Инсталаторът на MODX не може да инсталира/промени някои таблици вътре в избраната БД.';
 $_lang["setup_database"] = 'Инсталаторът ще направи опит да конфигирира БД:<br />';

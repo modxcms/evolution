@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Kj&oslash;r oppdateringer for databasen: '
 $_lang["sample_web_site"] = 'Pr&oslash;ve-data';
 $_lang["sample_web_site_note"] = 'V&aelig;r klar over at dette kommer til &aring; <b style="color:#CC0000;">skrive over</b> eksisterende dokumenter og ressurser.';
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Try again?'; 
+$_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'Installasjonsprogrammet kan desverre ikke fortsette p&aring; grunn av ovenforst&aring;ende ';
 $_lang["setup_couldnt_install"] = 'MODX installasjonsprogramet kunne ikke legge til/endre noen tabeller i den valgte databasen.';
 $_lang["setup_database"] = 'Installasjonsprogrammet kommer n&aring; til &aring; fors&oslash;ke &aring; konfigurere databasen:<br />';

@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Rodando atualizações na Base de Dados: '
 $_lang["sample_web_site"] = 'Web Site Exemplo';
 $_lang["sample_web_site_note"] = 'Atenção: Está irá <b style=\"color:#CC0000\">Sobre-Escrever</b> documentos e recursos existentes.';
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Try again?'; 
+$_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'Infelizmente o Setup não pode continuar pelos motivos acima citados ';
 $_lang["setup_couldnt_install"] = 'A instalação não pode inserir/modificar algumas tabelas na Base de Dados selecionada.';
 $_lang["setup_database"] = 'O Setup agora irá tentar configurar a Base de dados.:<br />';

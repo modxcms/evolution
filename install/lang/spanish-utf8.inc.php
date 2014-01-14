@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Actualizando la base de datos: ';
 $_lang["sample_web_site"] = 'Sitio de Muestra';
 $_lang["sample_web_site_note"] = 'Favor de notar que esto va a <b style="color:#CC0000">sobreescribir</b> los documentos y recursos existentes.';
 $_lang["session_problem"] = 'Un problema fue detectado con tus sesiones de servidor.  Por favor consulta con tu admin de servidor para corregir este problema.';
-$_lang["session_problem_try_again"] = '¿Intentar nuevamente?'; 
+$_lang["session_problem_try_again"] = '¿Intentar nuevamente?';
 $_lang["setup_cannot_continue"] = 'Desafortunadamente, el configurador no puede continuar en este momento, debido a lo anterior ';
 $_lang["setup_couldnt_install"] = 'El configurador de MODX no pudo instalar/alterar algunas tablas dentro de la base de datos seleccionada.';
 $_lang["setup_database"] = 'El configurador intentará ahora configurar la base de datos:<br />';

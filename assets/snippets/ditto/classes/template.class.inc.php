@@ -192,7 +192,7 @@ class template{
 	// Function: fetch
 	// Get a template, based on version by Doze
 	// 
-	// http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
+	// http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
 	// ---------------------------------------------------
 	function fetch($tpl){
 		global $modx;

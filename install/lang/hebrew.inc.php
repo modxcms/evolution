@@ -2,7 +2,7 @@
 /**
  * MODX Installer language file
  *
- * @author davaeron
+ * @author MODX Team
  * @version 1.0.13
  * @date 31/12/2013
  *
@@ -141,7 +141,7 @@ $_lang["running_database_updates"] = 'Running database updates: ';
 $_lang["sample_web_site"] = 'אתר אינטרנט לדוגמא';
 $_lang["sample_web_site_note"] = 'יש לקחת בחשבון כי פעולה זו <b style=\"color:#CC0000\">דורסת</b> מסמכים ומשאבים קיימים.';
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Try again?'; 
+$_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
 $_lang["setup_couldnt_install"] = 'MODX setup couldn\'t install/alter some tables inside the selected database.';
 $_lang["setup_database"] = 'מערכת ההתקנה תנסה כעת להתקין את מסד הנתונים:<br />';

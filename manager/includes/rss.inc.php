@@ -6,7 +6,7 @@
  *  Written by: kudo, based on MagpieRSS
  *  Contact: kudo@kudolink.com
  *  Created: 11/05/2006 (November 5)
- *  For: MODX cms (modxcms.com)
+ *  For: MODX cms (modx.com)
  *  Name: kRSS
  *  Version (MODX Module): 1.0.72
  *  Version (Magpie): 0.72

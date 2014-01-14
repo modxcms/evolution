@@ -589,7 +589,6 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
 ---- &filter : exclude unwanted documents      (optional)
         &filter runs as the &filter Ditto 2.1 parameter.
-        (see http://ditto.modxcms.com/tutorials/basic_filtering.html)
 
         &filter=`field,criterion,mode`
 
@@ -1683,12 +1682,10 @@ Install it as the search highlight plugin.
 
     Modx Community forum >> support >> Repository Items Support >> support/comments for ajaxSearch
 
-    http://modxcms.com/AjaxSearch-490.html
+    http://forums.modx.com/forums/thread/39223/support-comments-for-ajaxsearch-1-9-2b-finale#dis-post-226189
 
-
-2. Documentation : http://wiki.modxcms.com/index.php/AjaxSearch
+2. Documentation : http://rtfm.modx.com/extras/evo/ajaxsearch
 
 3. Demo site : http://www.evo.wangba.fr
 
-4. Bugs & features : http://svn.modxcms.com/jira/browse/AJAXSEARCH
-   Don't hesitate to signup for an account to post an issue or a new feature
+4. Bugs & features : https://github.com/modxcms/AjaxSearch

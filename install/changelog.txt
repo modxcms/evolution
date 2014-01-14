@@ -920,7 +920,7 @@ Bugfixes & Feature Requests:
 * [#MODX-734] Typo in language file it's->its
 * [#MODX-410] access permissions will be inherited from parent when user creates new child but and does not have role permission for access permissions
 * [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
-* [#MODX-394] Update Russian installation file per http://modxcms.com/forums/index.php/topic,34998.msg212346/topicseen.html#msg212346
+* [#MODX-394] Update Russian installation file per http://forums.modx.com/thread/1294/fixes-what-can-i-do-to-be-heard
 * [#MODX-715] Fix .jp lang file for incorrect hard-coded link
 * [#MODX-541] Fix the include statement in getUserData() method
 * [#MODX-650] bad reference to csshover.htc (now csshover2.htc)
@@ -970,4 +970,4 @@ Additional Improvements & Updates:
 	- Updated RSS feeds to more manageable number of entries for welcome page.
  	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
 
-For earlier changelog entries, please see the /install/changelog.txt file included with the MODX 0.9.6.3 distribution: http://modxcms.com/download/#legacy
+For earlier changelog entries, please see the /install/changelog.txt file included with the MODX 0.9.6.3 distribution
