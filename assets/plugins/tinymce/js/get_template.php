@@ -70,7 +70,7 @@ else
 			$ph['title']       = ($docs[$i]['menutitle']!=='') ? $docs[$i]['menutitle'] : $docs[$i]['pagetitle'];
 			$ph['target']      = 'docid=' . $docs[$i]['id'];
 			$ph['description'] = $docs[$i]['description'];
-			$list[] = parsePlaceholder($tpl,$ph);
+			$list[] = $modx->parseText($tpl,$ph);
 		}
 	}
 	
@@ -101,7 +101,7 @@ else
 			$ph['title']       = $row['name'];
 			$ph['target']      = 'chunk=' . $row['id'];
 			$ph['description'] = $row['description'];
-			$list[] = parsePlaceholder($tpl,$ph);
+			$list[] = $modx->parseText($tpl,$ph);
 		}
 	}
 	
