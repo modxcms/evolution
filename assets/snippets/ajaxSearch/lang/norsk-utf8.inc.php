@@ -1,17 +1,10 @@
 <?php
-
 /*
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+english.inc.php - for AjaxSearch 1.9.3b
+Created by: Bjørn Erik Sandbakk (Sylvaticus)
+Created on: 01/22/07, Modified on 12/31/13
 Description: Language strings for AjaxSearch
-
-norsk.inc.php - Norwegian language file for AjaxSearch 1.8
-Translation: Bjørn Erik Sandbakk (Sylvaticus)
-Date: 2009-03-02
-
-
 */
-
 $_lang['as_resultsIntroFailure'] = 'Søket ditt ga ingen resultat. Prøv på nytt med en litt annen formulering.';
 $_lang['as_searchButtonText'] = 'Søk!';
 $_lang['as_boxText'] = 'Søk her...';
@@ -34,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Fant du det du søkte etter? Legg til kommentar 
 $_lang['as_cmtSubmitText'] = 'Send';
 $_lang['as_cmtResetText'] = 'Tøm';
 $_lang['as_cmtThksMessage'] = 'Takk for din kommentar.';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

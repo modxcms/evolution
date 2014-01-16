@@ -37,12 +37,12 @@ $_lang["ef_required_message"] = " فیلدهای ضروری زیر پر نشده
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">ناموفق</span> در استفاده از مختصات [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "توسط مختصات [+rule+] (input=\"[+input+]\") انجام شد.";
 $_lang["ef_sql_no_result"] = " یواشکی تایید شده!. <span style=\"color:red;\"> SQL هیچ تنیجه ای را دربرندارد!</span> ";
-$_lang["ef_submit_time_limit"] = "<p>This form was already submitted succesfully. Re-submission of the form is disabled for [+submitLimitMinutes+] minutes.</p>";
+$_lang["ef_submit_time_limit"] = "<p>این فرم قبلا با موفقیت ارسال شده. امکان ارسال مجدد فرم به مدت [+submitLimitMinutes+] دقیقه نمی باشد.</p>";
 $_lang["ef_tamper_attempt"] = "دسترسی بیش از اندازه!";
 $_lang["ef_thankyou_message"] = "<h3>از شما متشکریم!</h3><p>اطلاعات شما باموفقیت ارسال شد.</p>";
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": بروز خطا در آپلود فایل.";
 $_lang["ef_upload_exceeded"] = " نهایت مقدار مجاز حجم آپلود پر شده است";
 $_lang["ef_validation_message"] = "<strong>مشکلاتی در فرم پیدا شده است:</strong><br />";
-$_lang["ef_version_error"] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
+$_lang["ef_version_error"] = "<strong>خطر!</strong> نسخه ی اسنیپت eForm (نسخه:&nbsp;[+version+]) متفاوت از فایل موجود eForm است (نسخه:&nbsp;[+fileVersion+]). لطفا توجه کنید که نسخه ی هر دوی آنها یکی باشد.";
 ?>

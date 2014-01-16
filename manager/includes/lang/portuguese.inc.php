@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Criar Weblink aqui';
 $_lang["createdon"] = 'Data de criação';
 $_lang["credits"] = 'Créditos';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Fundadores do projecto</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Arquitectura do Núcleo da aplicação e Design</li><li><b>João Peixoto</b> pela tradução para Português ;-)</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX é gerenciado e mantido em <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Aqui pode adicionar tipos de conteúdos personalizados para usar nos seus documentos. Para adicionar uma nova entrada, digite o tipo de conteúdo na caixa de texto e clique no botão \'Adicionar\'.';
 $_lang["custom_contenttype_title"] = 'Tipos de conteúdos personalizados:';
 $_lang["database_charset"] = 'Database Charset';

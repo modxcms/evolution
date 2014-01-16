@@ -1,10 +1,8 @@
 <?php
 /*
-finnish.inc.php - for AjaxSearch 1.8
-Created by: doze, 
-Modified by: Mikko Lammi, www.maagit.fi 
-Created on: 19.04.2007
-Modified on: 4.3.2009
+finnish.inc.php - for AjaxSearch 1.9.3b
+Created by: doze, Modified by: Mikko Lammi, www.maagit.fi
+Created on: 01/22/07, Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Yht&auml;&auml;n hakutulosta ei l&ouml;ytynyt.';
@@ -29,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'L&ouml;ysitk&ouml; etsim&auml;si? J&auml;t&auml;
 $_lang['as_cmtSubmitText'] = 'L&auml;het&auml;';
 $_lang['as_cmtResetText'] = 'Tyhjenn&auml;';
 $_lang['as_cmtThksMessage'] = 'Kiitos kommentistasi!';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

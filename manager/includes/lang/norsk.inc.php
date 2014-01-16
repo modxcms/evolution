@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Opprett weblink her';
 $_lang["createdon"] = 'Dato opprettet';
 $_lang["credits"] = 'Anerkjennelser';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Prosjektets grunnlegger</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Indre arkitektur &amp; Design</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Her kan du legge til egne innholdstyper som kan brukes i dine dokumenter. Skriv inn innholdstypen i det øvre feltet og klikk på \'Legg til\' for å legg til en ny. Marker den innholdstypen i det nedre feltet som du vil fjerne og klikk på \'Fjern\'.';
 $_lang["custom_contenttype_title"] = 'Egne innholdstyper';
 $_lang["database_charset"] = 'Database Charset';

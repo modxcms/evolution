@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Създайте препратка тук';
 $_lang["createdon"] = 'Дата на създаване';
 $_lang["credits"] = 'Екипът на MODX';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - основатели на проекта</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Архитектура на ядрото &amp; Дизайн</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Тук можете да добавите типовете потребителско съдържание, които могат да бъдат използвани във Вашите документи. За да добавите нов запис, въведете типа на съдържанието в текстовото поле и след това щракнете на бутона \'Добавяне\'.';
 $_lang["custom_contenttype_title"] = 'Потребителски типове съдържание:';
 $_lang["database_charset"] = 'Кодова таблица на базата от данни';

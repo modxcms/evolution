@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'ایجاد وب لینک در اینجا';
 $_lang["createdon"] = 'تاریخ ایجاد';
 $_lang["credits"] = 'امکانات و قابلیتهای استفاده شده';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - بنیانگذاران پروژه</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - طراحی و مهندسی هسته ی مرکزی</li><li><b>Mohsen(MotSmart)</b> - Persian Support, پشتیبانی فارسی</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'در اینجا شما میتوانید انواع مختلف و مخصوص از محتوا را اضافه کنید تا در پرونده های شما از آنها استفاده شوند. برای اضافه کردن ورودی جدید, نوع محتوا را در جعبه ی متنی وارد کنید و سپس روی گزینه ی \'اضافه کردن\' کلیک کنید.';
 $_lang["custom_contenttype_title"] = 'انواع مختلف محتوا:';
 $_lang["database_charset"] = 'کارست بانک اطلاعات';

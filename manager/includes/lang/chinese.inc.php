@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = '在这里建立连接';
 $_lang["createdon"] = '建立日期';
 $_lang["credits"] = 'Credits';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Here you can add custom content types to be used in your documents. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = '定制内容类型:';
 $_lang["database_charset"] = 'Database Charset';

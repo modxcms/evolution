@@ -1,12 +1,10 @@
 <?php
 /*
-portuguese-br.inc.php - for AjaxSearch 1.8
-Original by: Joeindio (joeindio@gmail.com)
-Adapted to pt-br by: dev_cw (shane sponagle)
-Updated on: 03/02/09
+portuguese-br.inc.php - for AjaxSearch 1.9.3b
+Created by: Joeindio (joeindio@gmail.com), Modified by dev_cw (shane sponagle)
+Created on: 01/22/07, Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
-
 $_lang['as_resultsIntroFailure'] = 'Não foram encontrados resultados para a busca. Por favor tente utilizar termos mais gerais para obter mais resultados.';
 $_lang['as_searchButtonText'] = 'Buscar!';
 $_lang['as_boxText'] = 'Buscando...';
@@ -29,5 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Encontrou o que você estava buscando? Deixe o s
 $_lang['as_cmtSubmitText'] = 'Enviar';
 $_lang['as_cmtResetText'] = 'Limpar';
 $_lang['as_cmtThksMessage'] = 'Obrigado pelo seu comentário!';
-
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

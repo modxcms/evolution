@@ -184,7 +184,7 @@ $_lang["create_resource_title"] = 'リソースを投稿';
 $_lang["create_weblink_here"] = 'ウェブリンクを作成';
 $_lang["createdon"] = '作成日時';
 $_lang["credits"] = '著作権表示/謝辞';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://www.modx.com/company/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'リソースが使用するコンテントタイプに独自のタイプを追加できます。新しいタイプを追加するにはテキストボックスに入力して「追加」ボタンをクリックします。';
 $_lang["custom_contenttype_title"] = 'カスタムコンテントタイプ';
 $_lang["database_charset"] = 'データベース文字コード';

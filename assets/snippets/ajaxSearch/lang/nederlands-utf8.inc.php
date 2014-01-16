@@ -1,13 +1,10 @@
 <?php
-
 /*
-nederlands.inc.php - for AjaxSearch 1.8
-Dutch language file
+nederlands-utf8.inc.php - for AjaxSearch 1.9.3b
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+Created on: 01/22/07, Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
-
 $_lang['as_resultsIntroFailure'] = 'Er zijn geen zoekresultaten. Probeer algemenere zoekwoorden te gebruiken voor meer resultaten.';
 $_lang['as_searchButtonText'] = 'Zoek!';
 $_lang['as_boxText'] = 'Zoek hier...';
@@ -30,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Heeft u gevonden wat u zocht? Geef hier uw comme
 $_lang['as_cmtSubmitText'] = 'Verzenden';
 $_lang['as_cmtResetText'] = 'Wissen';
 $_lang['as_cmtThksMessage'] = 'Bedankt voor uw commentaar!';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

@@ -1,9 +1,9 @@
 <?php
 /*
-english.inc.php - for AjaxSearch 1.9.0
-Created by: KyleJ (kjaebker@muddydogpaws.com), Modified by Coroico
-Created on: 01/22/07, Modified on 16/05/10
-Description: Language strings for AjaxSearch Translation: Nicola Lambathakis (Banzai), Luigif
+italian.inc.php - for AjaxSearch 1.9.3b
+Created by: Nicola Lambathakis (Banzai), Luigif
+Created on: 01/22/07, Modified on 12/31/13
+Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Non ci sono risultati per la ricerca. Prova con un termine pi&ugrave; generico.';
 $_lang['as_searchButtonText'] = 'Cerca!';
