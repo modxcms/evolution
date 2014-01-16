@@ -1,6 +1,7 @@
 <?php
-if (IN_MANAGER_MODE != "true")
+if (IN_MANAGER_MODE != "true") {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+}
 if (!$modx->hasPermission('save_user')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -10,37 +11,47 @@ $tbl_manager_users   = $modx->getFullTableName('manager_users');
 $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 $tbl_member_groups   = $modx->getFullTableName('member_groups');
 
-if(isset($_POST['id'])) $id = intval($_POST['id']);
-$oldusername = $_POST['oldusername'];
-$newusername = !empty ($_POST['newusername']) ? trim($_POST['newusername']) : "New User";
-$fullname = $modx->db->escape($_POST['fullname']);
-$genpassword = $_POST['newpassword'];
-$passwordgenmethod = $_POST['passwordgenmethod'];
-$passwordnotifymethod = $_POST['passwordnotifymethod'];
-$specifiedpassword = $_POST['specifiedpassword'];
-$email = $modx->db->escape($_POST['email']);
-$oldemail = $_POST['oldemail'];
-$phone = $modx->db->escape($_POST['phone']);
-$mobilephone = $modx->db->escape($_POST['mobilephone']);
-$fax = $modx->db->escape($_POST['fax']);
-$dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
-$country = $_POST['country'];
-$street = $modx->db->escape($_POST['street']);
-$city   = $modx->db->escape($_POST['city']);
-$state = $modx->db->escape($_POST['state']);
-$zip = $modx->db->escape($_POST['zip']);
-$gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
-$photo = $modx->db->escape($_POST['photo']);
-$comment = $modx->db->escape($_POST['comment']);
-$role = !empty ($_POST['role']) ? $_POST['role'] : 0;
-$failedlogincount = $_POST['failedlogincount'];
-$blocked = !empty ($_POST['blocked']) ? $_POST['blocked'] : 0;
-$blockeduntil = !empty ($_POST['blockeduntil']) ? ConvertDate($_POST['blockeduntil']) : 0;
-$blockedafter = !empty ($_POST['blockedafter']) ? ConvertDate($_POST['blockedafter']) : 0;
-$user_groups = $_POST['user_groups'];
+$input = $_POST;
+foreach($input as $k=>$v) {
+    if($k!=='comment') {
+        $v = sanitize($v);
+    }
+    $input[$k] = $v;
+}
+
+$id                   = intval($input['id']);
+$oldusername          = $input['oldusername'];
+$newusername          = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
+$esc_newusername      = $modx->db->escape($newusername);
+$fullname             = $input['fullname'];
+$genpassword          = $input['newpassword'];
+$passwordgenmethod    = $input['passwordgenmethod'];
+$passwordnotifymethod = $input['passwordnotifymethod'];
+$specifiedpassword    = $input['specifiedpassword'];
+$email                = $input['email'];
+$esc_email            = $modx->db->escape($email);
+$oldemail             = $input['oldemail'];
+$phone                = $input['phone'];
+$mobilephone          = $input['mobilephone'];
+$fax                  = $input['fax'];
+$dob                  = !empty ($input['dob']) ? ConvertDate($input['dob']) : 0;
+$country              = $input['country'];
+$street               = $input['street'];
+$city                 = $input['city'];
+$state                = $input['state'];
+$zip                  = $input['zip'];
+$gender               = !empty($input['gender']) ? $input['gender'] : 0;
+$photo                = $input['photo'];
+$comment              = $input['comment'];
+$role                 = !empty($input['role']) ? $input['role'] : 0;
+$failedlogincount     = !empty($input['failedlogincount']) ? $input['failedlogincount'] : 0;
+$blocked              = !empty($input['blocked']) ? $input['blocked'] : 0;
+$blockeduntil         = !empty($input['blockeduntil']) ? ConvertDate($input['blockeduntil']) : 0;
+$blockedafter         = !empty($input['blockedafter']) ? ConvertDate($input['blockedafter']) : 0;
+$user_groups          = $input['user_groups'];
 
 // verify password
-if ($passwordgenmethod == "spec" && $_POST['specifiedpassword'] != $_POST['confirmpassword']) {
+if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
 	webAlert("Password typed is mismatched");
 	exit;
 }
@@ -59,8 +70,10 @@ if ($_SESSION['mgrRole'] != 1) {
 		exit;
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	if ($rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'")) {
-		if ($rsQty = $modx->db->getRecordCount($rs)) {
+	$rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'");
+	if ($rs) {
+		$limit = $modx->db->getRecordCount($rs);
+		if ($limit > 0) {
 			// There should only be one if there is one
 			$row = $modx->db->getRow($rs);
 			if ($row['role'] == 1) {
@@ -72,13 +85,10 @@ if ($_SESSION['mgrRole'] != 1) {
 
 }
 
-switch ($_POST['mode']) {
+switch ($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		if (!$rs = $modx->db->select('id', $tbl_manager_users, "username='{$newusername}'")) {
-			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
-			exit;
-		}
+		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			webAlert("User name is already in use!");
@@ -86,10 +96,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exist
-		if (!$rs = $modx->db->select('id', $tbl_user_attributes, "email='{$email}'")) {
-			webAlert("An error occurred while attempting to retrieve all users with email $email.");
-			exit;
-		}
+		$rs = $modx->db->select('id', $tbl_user_attributes, "email='{$esc_email}'");
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
@@ -124,8 +131,11 @@ switch ($_POST['mode']) {
 			"mode" => "new",
 		));
 
-		// build the SQL
-		$internalKey = $modx->db->insert(array('username'=>$newusername), $tbl_manager_users);
+		// create the user account
+		$field = array();
+		$field['username'] = $newusername;
+		$field = $modx->db->escape($field);
+		$internalKey = $modx->db->insert($field, $tbl_manager_users);
 		if (!$internalKey) {
 			webAlert("An error occurred while attempting to save the user.");
 			exit;
@@ -134,19 +144,16 @@ switch ($_POST['mode']) {
 		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
 		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
-		$field = array();
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+        $f = $modx->db->escape($f);
 		$rs = $modx->db->insert($field, $tbl_user_attributes);
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
 		}
 
-		// Save User Settings
+		// Save user settings
 		saveUserSettings($internalKey);
-
-		// Set the item name for logger
-		$_SESSION['itemname'] = $newusername;
 
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (
@@ -165,6 +172,9 @@ switch ($_POST['mode']) {
 			"id" => $internalKey
 		));
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
+
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
@@ -174,6 +184,7 @@ switch ($_POST['mode']) {
 					$f = array();
 					$f['user_group'] = intval($user_groups[$i]);
 					$f['member']     = $internalKey;
+					$f = $modx->db->escape($f);
 					$rs = $modx->db->insert($f, $tbl_member_groups);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.");
@@ -186,18 +197,18 @@ switch ($_POST['mode']) {
 
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
-			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "12&id=$id" : "11";
-				$header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			if ($input['stay'] != '') {
+				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
+				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
 			} else {
 				$header = "Location: index.php?a=75&r=2";
 				header($header);
 			}
 		} else {
-			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "12&id=$internalKey" : "11";
-				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			if ($input['stay'] != '') {
+				$a = ($input['stay'] == '2') ? "12&id={$internalKey}" : "11";
+				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
 				$stayUrl = "index.php?a=75&r=2";
 			}
@@ -248,17 +259,13 @@ switch ($_POST['mode']) {
 				webAlert("No password generation method specified!");
 				exit;
 			}
-			$updatepasswordsql = ", password='" . $modx->manager->genHash($newpassword, $id) . "' ";
 		}
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 		}
 
 		// check if the username already exist
-		if (!$rs = $modx->db->select('id', $tbl_manager_users, "username='{$newusername}'")) {
-			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
-			exit;
-		}
+		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
@@ -269,10 +276,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		if (!$rs = $modx->db->select('internalKey', $tbl_user_attributes, "email='{$email}'")) {
-			webAlert("An error occurred while attempting to retrieve all users with email $email.");
-			exit;
-		}
+		$rs = $modx->db->select('internalKey', $tbl_user_attributes, "email='{$esc_email}'");
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
@@ -289,34 +293,22 @@ switch ($_POST['mode']) {
 		));
 
 		// update user name and password
-		$sql = "UPDATE {$tbl_manager_users} SET username='{$newusername}' {$updatepasswordsql} WHERE id='{$id}'";
-		if (!$rs = $modx->db->query($sql)) {
+		$field = array();
+		$field['username'] = $newusername;
+		$field = $modx->db->escape($field);
+		if($genpassword == 1) {
+		    $field['password'] = $modx->manager->genHash($newpassword, $id);
+		}
+		$rs = $modx->db->update($field, $tbl_manager_users, "id='{$id}'");
+		if (!$rs) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
-
-		$sql = "UPDATE {$tbl_user_attributes} SET
-					fullname='" . $fullname . "',
-					role='$role',
-					email='$email',
-					phone='$phone',
-					mobilephone='$mobilephone',
-					fax='$fax',
-					zip='$zip' ,
-					street='$street',
-					city='$city',
-					state='$state',
-					country='$country',
-					gender='$gender',
-					dob='$dob',
-					photo='$photo',
-					comment='$comment',
-					failedlogincount='$failedlogincount',
-					blocked=$blocked,
-					blockeduntil='$blockeduntil',
-					blockedafter='$blockedafter'
-					WHERE internalKey=$id";
-		if (!$rs = $modx->db->query($sql)) {
+		$field = array();
+		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
+		$field = $modx->db->escape($field);
+		$rs = $modx->db->update($field, $tbl_user_attributes, "internalKey='{$id}'");
+		if (!$rs) {
 			webAlert("An error occurred while attempting to update the user's attributes.");
 			exit;
 		}
@@ -340,12 +332,13 @@ switch ($_POST['mode']) {
 		) ? $oldusername : ""), "olduseremail" => (($oldemail != $email) ? $oldemail : "")));
 
 		// invoke OnManagerChangePassword event
-		if ($updatepasswordsql)
-			$modx->invokeEvent("OnManagerChangePassword", array (
+		if ($genpassword == 1) {
+			$modx->invokeEvent("OnManagerChangePassword", array(
 				"userid" => $id,
 				"username" => $newusername,
 				"userpassword" => $newpassword
 			));
+		}
 
 		// invoke OnUserFormSave event
 		$modx->invokeEvent("OnUserFormSave", array (
@@ -358,16 +351,18 @@ switch ($_POST['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$sql = "DELETE FROM $dbase.`" . $table_prefix . "member_groups` WHERE member=$id;";
-			$rs = $modx->db->query($sql);
+			$rs = $modx->db->delete($tbl_member_groups, "member='{$id}'");
 			if (!$rs) {
 				webAlert("An error occurred while attempting to delete previous user_groups entries.");
 				exit;
 			}
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase.`" . $table_prefix . "member_groups` (user_group, member) values(" . intval($user_groups[$i]) . ", $id)";
-					$rs = $modx->db->query($sql);
+					$f = array();
+					$f['user_group'] = intval($user_groups[$i]);
+					$f['member']  = $id;
+					$f = $modx->db->escape($f);
+					$rs = $modx->db->insert($f, $tbl_member_groups);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
 						exit;
@@ -390,9 +385,9 @@ switch ($_POST['mode']) {
 			exit;
 		}
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
-			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "12&id=$id" : "11";
-				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			if ($input['stay'] != '') {
+				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
+				$stayUrl = "index.php?a={$a}&r=2&stay=" . $input['stay'];
 			} else {
 				$stayUrl = "index.php?a=75&r=2";
 			}
@@ -410,19 +405,17 @@ switch ($_POST['mode']) {
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
-			<p>
-			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword).(($id == $modx->getLoginUserID()) ? ' '.$_lang['user_changeddata'] : ''); ?>
-			</p>
+				<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword).(($id == $modx->getLoginUserID()) ? ' '.$_lang['user_changeddata'] : ''); ?></p>
 			</div>
 			</div>
             </div>
 		<?php
-			
+
 			include_once "footer.inc.php";
 		} else {
-			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "12&id=$id" : "11";
-				$header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			if ($input['stay'] != '') {
+				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
+				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
 			} else {
 				$header = "Location: index.php?a=75&r=2";
@@ -451,7 +444,6 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
-	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
@@ -460,7 +452,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+sname+]", $site_name, $message);
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $manager_url, $message);
+	$message = str_replace("[+surl+]", MODX_MANAGER_URL, $message);
 
 	$param = array();
 	$param['from']    = "{$site_name}<{$emailsender}>";
@@ -477,6 +469,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 // Save User Settings
 function saveUserSettings($id) {
 	global $modx;
+    $tbl_user_settings = $modx->getFullTableName('user_settings');
 
 	$ignore = array(
 		'id',
@@ -528,9 +521,6 @@ function saveUserSettings($id) {
 	$settings= array ();
 	foreach ($_POST as $n => $v) {
 		if (in_array($n, $ignore) || (!in_array($n, $defaults) && trim($v) == '')) continue; // ignore blacklist and empties
-
-		//if ($config[$n] == $v) continue; // ignore commonalities in base config
-
 		$settings[$n] = $v; // this value should be saved
 	}
 
@@ -541,20 +531,25 @@ function saveUserSettings($id) {
 		unset($settings['default_'.$k]);
 	}
 
-	$usrTable = $modx->getFullTableName('user_settings');
+    $esc_id = $modx->db->escape($id);
+	$modx->db->delete($tbl_user_settings,"user='{$esc_id}'");
 
-	$modx->db->query('DELETE FROM '.$usrTable.' WHERE user='.$id);
-
-	$savethese = array();
-	foreach ($settings as $k => $v) {
-	    if(is_array($v)) $v = implode(',', $v);
-	    $savethese[] = '('.$id.', \''.$k.'\', \''.$modx->db->escape($v).'\')';
-	}
-
-	$sql = 'INSERT INTO '.$usrTable.' (user, setting_name, setting_value)
-		VALUES '.implode(', ', $savethese);
-	if (!@$rs = $modx->db->query($sql)) {
-		die('Failed to update user settings!');
+	foreach ($settings as $n => $vl) {
+		if (is_array($vl)) {
+			$vl = implode(",", $vl);
+		}
+		if ($vl != '') {
+		    $f = array();
+		    $f['user']          = $id;
+		    $f['setting_name']  = $n;
+		    $f['setting_value'] = $vl;
+		    $f = $modx->db->escape($f);
+		    $rs = $modx->db->insert($f, $tbl_user_settings);
+			if (!$rs) {
+				webAlert("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$v'");
+				exit;
+			}
+		}
 	}
 }
 
@@ -569,8 +564,8 @@ function ConvertDate($date) {
 function webAlert($msg) {
 	global $id, $modx;
 	global $dbase, $table_prefix;
-	$mode = $_POST['mode'];
-	$url = "index.php?a=$mode" . ($mode == '12' ? "&id=" . $id : "");
+	$mode = intval($_POST['mode']);
+	$url = "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : '');
 	$modx->manager->saveFormValues($mode);
 	include_once "header.inc.php";
 	$modx->webAlert($msg, $url);
@@ -587,4 +582,22 @@ function generate_password($length = 10) {
 		$pass .= $allowable_characters[mt_rand(0, $ps_len -1)];
 	}
 	return $pass;
+}
+
+function sanitize($str='',$safecount=0) {
+	global $modx;
+	$safecount++;
+	if (1000 < $safecount) {
+		exit("error too many loops '{$safecount}'");
+	}
+	if(is_array($str)) {
+		foreach($str as $i=>$v) {
+			$str[$i] = sanitize($v,$safecount);
+		}
+	}
+	else {
+		$str = strip_tags($str);
+		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
+	}
+	return $str;
 }
