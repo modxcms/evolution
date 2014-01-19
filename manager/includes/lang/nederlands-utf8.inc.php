@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Nieuw Element';
 $_lang["create_weblink_here"] = 'Nieuwe Weblink';
 $_lang["createdon"] = 'Datum aangemaakt';
 $_lang["credits"] = 'Dankwoord';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX wordt beheerd en onderhouden via <a href="http://modx.com/" target="_blank">modx.com</ a>.</ p>';
 $_lang["custom_contenttype_message"] = 'Voeg eigen \'content types\' toe. Vul een nieuw type in en klik op de knop \'Toevoegen\' om een nieuw type toe te voegen';
 $_lang["custom_contenttype_title"] = 'Toegevoegde \'content types\':';
 $_lang["database_charset"] = 'Database Karakterset';
