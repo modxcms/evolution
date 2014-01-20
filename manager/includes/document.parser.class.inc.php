@@ -726,7 +726,7 @@ class DocumentParser {
             }
 
             // clear the cache
-            $modx->clearCache();
+            $this->clearCache();
 
             // update publish time file
             $timesArr= array ();
