@@ -27,10 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Heeft u gevonden wat u zocht? Geef hier uw comme
 $_lang['as_cmtSubmitText'] = 'Verzenden';
 $_lang['as_cmtResetText'] = 'Wissen';
 $_lang['as_cmtThksMessage'] = 'Bedankt voor uw commentaar!';
-$_lang['as_resultsTextSingle'] = '%d result found.';
-$_lang['as_resultsTextMultiple'] = '%d results found.';
-$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
-$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_resultsTextSingle'] = '%d resultaten gevonden.';
+$_lang['as_resultsTextMultiple'] = '%d resultaten gevonden.';
+$_lang['as_grpResultsDisplayedText'] = '(Getoond %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Getoond: %d';
 $_lang['as_paging1Text'] = '%d - %d / %d';
-$_lang['as_paging2Text'] = 'Show more %d results';
+$_lang['as_paging2Text'] = 'Toon meer %d resultaten';
 ?>
