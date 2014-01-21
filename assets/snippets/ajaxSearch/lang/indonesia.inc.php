@@ -1,10 +1,9 @@
 <?php
 /*
-indonesia.inc.php - for AjaxSearch 1.9
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+indonesia.inc.php - for AjaxSearch 1.9.3b
+Created by: goldsky
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
-Translator: goldsky
 */
 $_lang['as_resultsIntroFailure'] = 'Tidak ada hasil. Silahkan coba menggunakan kata-kata yang lebih umum.';
 $_lang['as_searchButtonText'] = 'Cari!';
