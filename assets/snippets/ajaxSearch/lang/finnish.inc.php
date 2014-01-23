@@ -2,7 +2,7 @@
 /*
 finnish.inc.php - for AjaxSearch 1.9.3b
 Created by: doze, Modified by: Mikko Lammi, www.maagit.fi
-Created on: 01/22/07, Modified on 12/31/13
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Yht&auml;&auml;n hakutulosta ei l&ouml;ytynyt.';

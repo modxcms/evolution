@@ -1,8 +1,8 @@
 <?php
 /*
-english.inc.php - for AjaxSearch 1.9.3b
+norsk.inc.php - for AjaxSearch 1.9.3b
 Created by: Bjørn Erik Sandbakk (Sylvaticus)
-Created on: 01/22/07, Modified on 12/31/13
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Søket ditt ga ingen resultat. Prøv på nytt med en litt annen formulering.';
@@ -27,10 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Fant du det du søkte etter? Legg til kommentar 
 $_lang['as_cmtSubmitText'] = 'Send';
 $_lang['as_cmtResetText'] = 'Tøm';
 $_lang['as_cmtThksMessage'] = 'Takk for din kommentar.';
-$_lang['as_resultsTextSingle'] = '%d result found.';
-$_lang['as_resultsTextMultiple'] = '%d results found.';
-$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
-$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_resultsTextSingle'] = '%d resultat funnet.';
+$_lang['as_resultsTextMultiple'] = '%d resultater funnet.';
+$_lang['as_grpResultsDisplayedText'] = '(Viser %d - %d av %d)';
+$_lang['as_resultsDisplayed'] = 'Vist: %d';
 $_lang['as_paging1Text'] = '%d - %d / %d';
-$_lang['as_paging2Text'] = 'Show more %d results';
+$_lang['as_paging2Text'] = 'Flere enn %d resultater';
 ?>

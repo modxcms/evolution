@@ -1,9 +1,8 @@
 <?php
 /*
-spanish.inc.php - for AjaxSearch 1.8
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
-Modified: 21/07/08 Translated to spanish by Luciano A. Ferrer & Coroico
+spanish-utf8.inc.php - for AjaxSearch 1.9.3b
+Created by: Luciano A. Ferrer & Coroico
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'No hay resultados. Intente utilizando términos más generales para obtener más resultados.';
@@ -16,13 +15,22 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Páginas de resultado: ';
 $_lang['as_moreResultsText'] = 'Presione aquí para ver todos los resultados.';
 $_lang['as_moreResultsTitle'] = 'Más resultados';
+$_lang['as_maxWords'] = 'A maximum of %d words is allowed for your search';
 $_lang['as_minChars'] = 'Para la búsqueda se necessita entrar por lo menos %d letras ';
+$_lang['as_maxChars'] = 'A maximum of %d characters is allowed for your search term';
 $_lang['oneword'] = 'Una palabra';
 $_lang['allwords'] = 'Todas las palabras';
 $_lang['exactphrase'] = 'Frasé exacta';
 $_lang['nowords'] = 'ninguna palabra';
+$_lang['as_cmtHiddenFieldIntro'] = 'Este campo debe quedarse vacio. <br />No entrar ningún texto.';
 $_lang['as_cmtIntroMessage'] = '¿Encontró lo que estaba buscando?  ¡Deje un comentario aquí!';
 $_lang['as_cmtSubmitText'] = 'enviar';
 $_lang['as_cmtResetText'] = 'borrar';
 $_lang['as_cmtThksMessage'] = 'Gracias por su comentario';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

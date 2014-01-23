@@ -1,9 +1,9 @@
 <?php
 /*
-francais.inc.php - for AjaxSearch 1.9.0
-Created by: KyleJ (kjaebker@muddydogpaws.com), Translated by: David Mollière, Corrected by: Jean-Christophe Brebion
-Created on: 01/22/07  Translated on: 04/10/07  Corrected on: 18/05/10
-Description: Latin1 French Language file for AjaxSearch
+francais.inc.php - for AjaxSearch 1.9.3b
+Created by: David Mollière, Corrected by: Jean-Christophe Brebion
+Last Modified on 12/31/13
+Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Aucun résultat de recherche. Élargissez votre requête pour obtenir plus de résultats.';
 $_lang['as_searchButtonText'] = 'rechercher!';

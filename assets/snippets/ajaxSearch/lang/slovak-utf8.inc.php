@@ -1,8 +1,8 @@
 <?php
 /*
-slovak-utf8.inc.php - for AjaxSearch 1.9.0
+slovak-utf8.inc.php - for AjaxSearch 1.9.3b
 Created by: KyleJ (kjaebker@muddydogpaws.com), Modified by sNop (snop3@seznam.cz)
-Created on: 01/22/07, Modified on 19/07/10
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Hľadaný výraz nebol nájdený. Prosím skúste použiť všeobecnejšie pojmy pre získanie viacerých výsledkov.';

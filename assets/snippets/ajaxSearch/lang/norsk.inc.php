@@ -1,17 +1,10 @@
 <?php
-
 /*
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+norsk.inc.php - for AjaxSearch 1.9.3b
+Created by: Bjørn Erik Sandbakk (Sylvaticus)
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
-
-norsk.inc.php - Norwegian language file for AjaxSearch 1.8
-Translation: Bjørn Erik Sandbakk (Sylvaticus)
-Date: 2009-03-02
-
-
 */
-
 $_lang['as_resultsIntroFailure'] = 'Søket ditt ga ingen resultat. Prøv på nytt med en litt annen formulering.';
 $_lang['as_searchButtonText'] = 'Søk!';
 $_lang['as_boxText'] = 'Søk her...';

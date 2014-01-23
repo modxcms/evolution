@@ -2,7 +2,7 @@
 /*
 chinese.inc.php - for AjaxSearch 1.9.3b
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+Last Modified on 12/31/13
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = '没有搜索到相关的内容，请尝试输另外的关键词';
