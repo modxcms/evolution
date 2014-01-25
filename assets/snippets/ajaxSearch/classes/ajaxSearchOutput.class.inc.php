@@ -5,8 +5,8 @@
 * @package  AjaxSearchOutput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchOutput class contains all functions and data used to display output

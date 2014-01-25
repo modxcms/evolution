@@ -5,8 +5,8 @@
 * ajaxSearchPopup.php
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3b
-* @date         20/11/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 */
 
@@ -22,7 +22,7 @@ if (!function_exists('parseUserConfig')) {
 
 if (isset($_POST['search'])) {
 
-    define('AS_VERSION', '1.9.3');
+    define('AS_VERSION', '1.10.0');
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 

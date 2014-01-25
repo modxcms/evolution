@@ -1,5 +1,5 @@
 
-AjaxSearch Readme version 1.9.3b
+AjaxSearch Readme version 1.10.0
 
 ---------------------------------------------------------------
 :: Snippet: AjaxSearch
@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.9.3b
         Ajax-driven & Flexible Search form
 
   Version:
-        1.9.3b  - 20/11/2012
+        1.10.0 - 27/03/2013
 
   Created by:  Coroico - (coroico@wangba.fr)
   
@@ -45,6 +45,9 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 ----------------------------------------------------------------
 :: Changelog:  for more details see www.evo.wangba.fr
 ----------------------------------------------------------------
+  27-march-13 (1.10.0)
+    -- security/bug fixes    
+
   26-september-12 (1.9.3)
     -- Bug fixing
 	-- Removed ajaxsearch's own striptags functions and substituted the use of $modx->stripTags

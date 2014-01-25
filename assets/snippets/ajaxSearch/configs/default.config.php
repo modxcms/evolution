@@ -1,9 +1,9 @@
 <?php
 
-// Default configuration file - AjaxSearch 1.9.3
+// Default configuration file - AjaxSearch 1.10.0
 // Keep care all these values are required
 
-$dcfg['version'] = '1.9.3';
+$dcfg['version'] = '1.10.0';
 $dcfg['config'] = '';
 $dcfg['debug'] = 0;
 $dcfg['timeLimit'] = 60;
