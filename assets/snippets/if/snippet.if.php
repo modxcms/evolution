@@ -43,7 +43,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 * [[if? &is=`[+ditto_iteration+]*2` &math=`on`]]
 *
 * Operator:
-* (is,=) , (not,!=) , (>,gt) , (<,lt) , (>=,gte) , (lte,<=) , (isempty,empty) , (not_empty,!empty)
+* (is,=) , (not,!=) , (gt,>) , (lt,<) , (gte,>=) , (<=,lte) , (isempty,empty) , (not_empty,!empty)
 * (null, is_null) , (in_array, inarray, in) , (not_in,!in)
 *
 * More samples
