@@ -177,7 +177,7 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
 		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
 			$dependencies = explode(',', $dependencies);
 			foreach ($dependencies as $dependency) {
-				$dependency = explode(':', $templatePath);
+				$dependency = explode(':', $dependency);
 				switch (trim($dependency[0])) {
 					case 'template':
 						$mdp[] = array(
