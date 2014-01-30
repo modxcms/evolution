@@ -27,10 +27,10 @@ $_lang['as_cmtIntroMessage'] = '探し物は見つかりましたか？コメン
 $_lang['as_cmtSubmitText'] = '送信';
 $_lang['as_cmtResetText'] = '消去';
 $_lang['as_cmtThksMessage'] = 'コメントをありがとうございました。';
-$_lang['as_resultsTextSingle'] = '%d result found.';
-$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_resultsTextSingle'] = '%d件見つかりました。';
+$_lang['as_resultsTextMultiple'] = '%d件見つかりました。';
 $_lang['as_grpResultsDisplayedText'] = '%d件 から %d件 までを表示(全%d件)';
 $_lang['as_resultsDisplayed'] = '最初の%d件を表示します。';
 $_lang['as_paging1Text'] = '%d - %d / %d';
-$_lang['as_paging2Text'] = 'Show more %d results';
+$_lang['as_paging2Text'] = '次の%d件';
 ?>
