@@ -103,6 +103,7 @@ Additional Improvements & Updates:
 * [gitHub] Add hide plugin in sort
 * [gitHub] Patch findTemplateVars for compatibility with HPx
 * [gitHub] Add ID in QM+ toolbar.
+* [gitHub] update ManagerManager to 0.6.1.
 
 
 --------------------------------------------
