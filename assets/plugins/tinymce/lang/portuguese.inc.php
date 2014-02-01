@@ -1,31 +1,32 @@
 <?php
-/*
+/**
  * Filename:       assets/plugins/tinymce/lang/portuguese.inc.php
  * Function:       Portuguese language file for TinyMCE
  * Encoding:       UTF-8
  * Author:         Jeff Whitfield - translation João Peixoto (joeindio@gmail.com)
- * Date:           2013-03-10
- * Version:        3.5.8
- * MODX version:   0.9.5-1.0.9
+ * Date:           2014/02/01
+ * Version:        3.5.10
+ * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = "Tema:";
-$_lang['mce_editor_theme_message'] = "Aqui pode seleccionar que tema ou capa deseja utilizar com o editor.";
-$_lang['mce_editor_custom_plugins_title'] = "Plugins personalizados:";
+$_lang['mce_editor_theme_title'] = 'Tema:';
+$_lang['mce_editor_theme_message'] = 'Aqui pode seleccionar que tema ou capa deseja utilizar com o editor.';
+$_lang['mce_editor_custom_plugins_title'] = 'Plugins personalizados:';
 $_lang['mce_editor_custom_plugins_message'] = "Indique os plugins a utilizar com o tema personalizado, numa lista separada por vírgulas.<br />Default : template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table";
-$_lang['mce_editor_custom_buttons_title'] = "Botões personalizados:";
+$_lang['mce_editor_custom_buttons_title'] = 'Botões personalizados:';
 $_lang['mce_editor_custom_buttons_message'] = "Indique os botões a utilizar para o tema personalizado, numa lista separada por vírgulas para cada linha. Assegure-se de que cada botão tem o plugin requerido activado na opção 'Plugins Personalizados'.";
-$_lang['mce_editor_css_selectors_title'] = "Selectores CSS:";
+$_lang['mce_editor_css_selectors_title'] = 'Selectores CSS:';
 $_lang['mce_editor_css_selectors_message'] = "Aqui pode indicar uma lista dos selectores que deverão estar disponíveis no editor. Indique-os da seguinte forma:<br />'nomeMostrado=nomeSelector;nomeMostrado2=nomeSelector2'<br />Por exemplo, se tiver os selectores <b>.mono</b> e <b>.texto Pequeno</b> no seu ficheiro CSS, pode adicioná-los aqui como:<br />'Texto com espaçamento simples=mono;Texto Pequeno=textoPequeno'<br />Note que a última entrada não deverá ter ponto e vírgula a segui-la.";
-$_lang['mce_settings'] = "Opções TinyMCE";
-$_lang['mce_theme_simple'] = "Simples";
-$_lang['mce_theme_advanced'] = "Avançado";
-$_lang['mce_theme_editor'] = "Editor de Conteúdo";
-$_lang['mce_theme_custom'] = "Personalizar";
+$_lang['mce_settings'] = 'Opções TinyMCE';
+$_lang['mce_theme_simple'] = 'Simples';
+$_lang['mce_theme_full'] = 'Full';
+$_lang['mce_theme_advanced'] = 'Avançado';
+$_lang['mce_theme_editor'] = 'Editor de Conteúdo';
+$_lang['mce_theme_custom'] = 'Personalizar';
 $_lang['mce_theme_creative'] = 'Creative';
 $_lang['mce_theme_logic'] = 'xhtml';
 $_lang['mce_theme_legacy'] = 'legacy style';
-$_lang['mce_theme_global_settings'] = "Use a configuração global";
+$_lang['mce_theme_global_settings'] = 'Use a configuração global';
 $_lang['mce_editor_skin_title'] = 'Skin';
 $_lang['mce_editor_skin_message'] = 'Design of toolbar. see tinymce/tiny_mce/themes/advanced/skins/<br />';
 $_lang['mce_editor_entermode_title'] = 'Enter key mode';

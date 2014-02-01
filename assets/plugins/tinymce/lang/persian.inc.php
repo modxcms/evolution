@@ -1,32 +1,32 @@
 <?php
-/*
+/**
  * Filename:       assets/plugins/tinymce/lang/persian.inc.php
- * Function:       Persian language file for TinyMCE By: Mohsen (MotSmart ~ www.modxcms.ir)
+ * Function:       Persian language file for TinyMCE
  * Encoding:       UTF-8
- * Author:         Jeff Whitfield
- * Date:           2013-03-10
- * Version:        3.5.8
- * MODX version:   0.9.5-1.0.9
+ * Author:         Jeff Whitfield and Mohsen (MotSmart ~ www.modxcms.ir)
+ * Date:           2014/02/01
+ * Version:        3.5.10
+ * MODX version:   0.9.5-1.0.13
 */
 
-include_once(dirname(__FILE__).'/english.inc.php');
-$_lang['mce_editor_theme_title'] = "پوسته:";
-$_lang['mce_editor_theme_message'] = "در اینجا میتوانید پوسته ی مورد نظر را برای ویرایشگر انتخاب کنید.";
-$_lang['mce_editor_custom_plugins_title'] = "پلاگینهای مخصوص:";
+$_lang['mce_editor_theme_title'] = 'پوسته:';
+$_lang['mce_editor_theme_message'] = 'در اینجا میتوانید پوسته ی مورد نظر را برای ویرایشگر انتخاب کنید.';
+$_lang['mce_editor_custom_plugins_title'] = 'پلاگینهای مخصوص:';
 $_lang['mce_editor_custom_plugins_message'] = "پلاگینهای مورد نظر را در لیستی که با کاما از همدیگر جدا شده برای استفاده در پوسته ی مخصوص وارد کنید.";
-$_lang['mce_editor_custom_buttons_title'] = "دکمه مخصوص:";
+$_lang['mce_editor_custom_buttons_title'] = 'دکمه مخصوص:';
 $_lang['mce_editor_custom_buttons_message'] = "برای پوسته ی مخصوص دکمه ها را به صورت فهرستی که با کاما از هم در ستون جدا شده وارد کنید. از این مسئله اطمینان حاصل کنید که هر کلید پلاگین لازم خود را در تنظیمات  پلاگینهای مخصوص فراهم دارد.";
-$_lang['mce_editor_css_selectors_title'] = "انتخابگرهای CSS:";
+$_lang['mce_editor_css_selectors_title'] = 'انتخابگرهای CSS:';
 $_lang['mce_editor_css_selectors_message'] = "در اینجا شما میتوانید فهرستی از انتخابگرها را که بایستی در ویرایشگر موجود باشد را وارد کنید. آنها را اینگونه وارد کنید:<br />'displayName=selectorName;displayName2=selectorName2'<br />به نحو دیگر, فرض کنید که <b>.mono</b> و <b>.smallText</b> را در انتخابگرهای فایل CSS خود دارید, شما میتوانید آنها را در اینجا با این عنوان وارد کنید:<br />'Monospaced text=mono;Small text=smallText'<br />توجه که در انتخای متن آخر نباید سمی-کالن یا نقطه کاما باشد.";
-$_lang['mce_settings'] = "تنظیمات TinyMCE";
-$_lang['mce_theme_simple'] = "ساده";
-$_lang['mce_theme_advanced'] = "پیشرفته";
-$_lang['mce_theme_editor'] = "ویرایشگر متن";
-$_lang['mce_theme_custom'] = "مخصوص";
+$_lang['mce_settings'] = 'تنظیمات TinyMCE';
+$_lang['mce_theme_simple'] = 'ساده';
+$_lang['mce_theme_full'] = 'Full';
+$_lang['mce_theme_advanced'] = 'پیشرفته';
+$_lang['mce_theme_editor'] = 'ویرایشگر متن';
+$_lang['mce_theme_custom'] = 'مخصوص';
 $_lang['mce_theme_creative'] = 'Creative';
 $_lang['mce_theme_logic'] = 'xhtml';
 $_lang['mce_theme_legacy'] = 'legacy style';
-$_lang['mce_theme_global_settings'] = "با استفاده از محیط های جهانی";
+$_lang['mce_theme_global_settings'] = 'با استفاده از محیط های جهانی';
 $_lang['mce_editor_skin_title'] = 'Skin';
 $_lang['mce_editor_skin_message'] = 'Design of toolbar. see tinymce/tiny_mce/themes/advanced/skins/<br />';
 $_lang['mce_editor_entermode_title'] = 'Enter key mode';

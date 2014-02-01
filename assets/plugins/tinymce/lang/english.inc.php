@@ -1,12 +1,12 @@
 <?php
-/*
+/**
  * Filename:       assets/plugins/tinymce/lang/english.inc.php
  * Function:       English language file for TinyMCE
  * Encoding:       ISO-Latin-1
  * Author:         Jeff Whitfield and yama
- * Date:           2012/09/29
- * Version:        3.5.7
- * MODX version:   0.9.5-1.0.6
+ * Date:           2014/02/01
+ * Version:        3.5.10
+ * MODX version:   0.9.5-1.0.13
 */
 
 $_lang['mce_editor_theme_title'] = 'Theme:';
