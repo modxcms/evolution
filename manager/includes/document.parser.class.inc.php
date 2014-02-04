@@ -1601,7 +1601,11 @@ class DocumentParser {
                     $this->sendErrorPage();
                 }
             } else {
-                $this->documentIdentifier= $this->documentListing[$this->documentIdentifier];
+                if (isset($this->documentListing[$this->documentIdentifier])) {
+                    $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
+				} else {
+					$this->documentIdentifier = (int) $this->documentIdentifier;
+				}
             }
             $this->documentMethod= 'id';
         }
