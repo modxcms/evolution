@@ -3,7 +3,7 @@
  * Filename:       assets/plugins/tinymce/lang/german.inc.php
  * Function:       German language file for TinyMCE
  * Encoding:       UTF-8
- * Author:         Jeff Whitfield and Marc Hinse
+ * Author:         Jeff Whitfield, Marc Hinse & Thomas Jakobi
  * Date:           2014/02/01
  * Version:        3.5.10
  * MODX version:   0.9.5-1.0.13
@@ -12,11 +12,11 @@
 $_lang['mce_editor_theme_title'] = 'Template:';
 $_lang['mce_editor_theme_message'] = 'Hier können Sie ein Template aussuchen, das im TinyMCE verwendet werden soll. Es handelt sich nicht um das Aussehen, sondern um die Anzahl an Plugins/Funktionen (wie Bilder hochladen, Links einfügen etc.), die für den Nutzer verfügbar sein sollen.';
 $_lang['mce_editor_custom_plugins_title'] = 'Individuelle Plugins:';
-$_lang['mce_editor_custom_plugins_message'] = 'Geben Sie die Plugins an, die Sie bei Auswahl des \'individuellen\' Templates verwenden wollen. Bitte Plugins durch Komma trennen.';
+$_lang['mce_editor_custom_plugins_message'] = 'Geben Sie die Plugins an, die Sie bei Auswahl des \\'individuellen\\' Templates verwenden wollen. Bitte Plugins durch Komma trennen.';
 $_lang['mce_editor_custom_buttons_title'] = 'Individuelle Buttons:';
-$_lang['mce_editor_custom_buttons_message'] = 'Geben Sie die Buttons an, die Sie bei Auswahl des \'individuellen\' Templates verwenden wollen. Bitte Buttons für jede Reihe durch Komma trennen.Stellen Sie sicher, dass die für Buttons benötigten Plugins aktiviert sind unter \'Individuelle Plugins\'.';
+$_lang['mce_editor_custom_buttons_message'] = 'Geben Sie die Buttons an, die Sie bei Auswahl des \\'individuellen\\' Templates verwenden wollen. Bitte Buttons für jede Reihe durch Komma trennen.Stellen Sie sicher, dass die für Buttons benötigten Plugins aktiviert sind unter \\'Individuelle Plugins\\'.';
 $_lang['mce_editor_css_selectors_title'] = 'CSS Selektoren:';
-$_lang['mce_editor_css_selectors_message'] = 'Hier können Sie eine Auswahl an Selektoren definieren, die im TinyMCE verfügbar sein sollen. Bitte so eintragen:<br />'displayName=selectorName;displayName2=selectorName2'<br />Zum Beispiel mit <b>.mono</b> und <b>.smallText</b> als Selektoren in der CSS Datei, tragen Sie diese ein als:<br />'Monospaced text=mono;Small text=smallText'<br />Bitte achten Sie darauf, dass der letzte Eintrag nicht mit Semikolon abgeschlossen werden darf.';
+$_lang['mce_editor_css_selectors_message'] = 'Hier können Sie eine Auswahl an Selektoren definieren, die im TinyMCE verfügbar sein sollen. Bitte in dieser Form eintragen:<br />\'displayName=selectorName;displayName2=selectorName2\'<br />Beispiel: Sie wollen <b>.mono</b> und <b>.smallText</b> als Selektoren in Ihrer CSS Datei benutzen, dann erstellen Sie folgenden Eintrag:<br />\'Monospaced text=mono;Small text=smallText\'<br />Bitte achten Sie darauf, dass der letzte Eintrag nicht mit einem Semikolon abgeschlossen werden darf.';
 $_lang['mce_settings'] = 'TinyMCE Einstellungen';
 $_lang['mce_theme_simple'] = 'Wenige Plugins';
 $_lang['mce_theme_full'] = 'Komplett';
@@ -42,7 +42,7 @@ $_lang['mce_schema_message'] = 'Mit dieser Einstellung können Sie zwischen dem 
 $_lang['mce_toolbar1_msg'] = 'Standard-Einstellung: undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
 $_lang['mce_toolbar2_msg'] = 'Standard-Einstellung: image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
 
-$_lang['mce_tpl_title'] = 'Template button';
-$_lang['mce_tpl_msg'] = 'You can insert the HTML block which you registered beforehand from toolbar. You make HTML block as resource or a chunk, and can appoint plural number with a comma.';
-$_lang['mce_tpl_docid'] = 'Resource IDs';
-$_lang['mce_tpl_chunkname'] = 'Chunk names';
+$_lang['mce_tpl_title'] = 'Template Button';
+$_lang['mce_tpl_msg'] = 'Hier können Sie Templates auf Chunk und Ressourcen-Basis für die Template Schaltfläche im TinyMCE definieren (diese wird standardmäßig nicht angezeigt). Der Chunk- bzw. Ressourcen-Inhalt wird dann an der Cursor-Position als HTML Code im TinyMCE eingefügt. Mehrere Chunk-Namen bzw. Ressourcen-IDs können kommasepariert angegeben werden.';
+$_lang['mce_tpl_docid'] = 'Ressource-IDs';
+$_lang['mce_tpl_chunkname'] = 'Chunk-Namen';

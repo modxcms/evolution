@@ -1,13 +1,18 @@
 <?php
 /**
-* Country List Language File
-* Version: 1.0
-* Date: 31/10/2006
-*
-* Array keys refer to the ID number that is saved in the database
-*
-*/
-
+ * MODX Country list language file
+ *
+ * @version 1.0.13
+ * @date 31/12/2013
+ *
+ * @language Russian
+ * @package modx
+ * @subpackage manager
+ *
+ * Array keys refer to the ID number that is saved in the database
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 $_country_lang["1"] = 'Афганистан'; // Afghanistan
 $_country_lang["2"] = 'Албания'; // Albania
 $_country_lang["3"] = 'Алжир'; // Algeria
@@ -59,7 +64,7 @@ $_country_lang["48"] = 'Коморские Острова'; // Comoros
 $_country_lang["49"] = 'Конго, Республика'; // Congo
 $_country_lang["50"] = 'Кука, Острова'; // Cook Islands
 $_country_lang["51"] = 'Коста-Рика'; // Costa Rica
-$_country_lang["52"] = 'Кот-Д’Ивуар'; // Cote D’Ivoire
+$_country_lang["52"] = 'Кот-Д’Ивуар'; // Cote D'Ivoire
 $_country_lang["53"] = 'Хорватия'; // Croatia
 $_country_lang["54"] = 'Куба'; // Cuba
 $_country_lang["55"] = 'Кипр'; // Cyprus

@@ -64,7 +64,7 @@ $_country_lang["48"] = 'Коморски Острови'; // Comoros
 $_country_lang["49"] = 'Конго, Република'; // Congo
 $_country_lang["50"] = 'Острови Кук'; // Cook Islands
 $_country_lang["51"] = 'Коста Рика'; // Costa Rica
-$_country_lang["52"] = 'Кот Д’Ивоар'; // Cote D’Ivoire
+$_country_lang["52"] = 'Кот Д’Ивоар'; // Cote D'Ivoire
 $_country_lang["53"] = 'Хърватия'; // Croatia
 $_country_lang["54"] = 'Куба'; // Cuba
 $_country_lang["55"] = 'Кипър'; // Cyprus
@@ -252,6 +252,6 @@ $_country_lang["236"] = 'Сърбия и Черна гора'; // DEPRECATED: ke
 $_country_lang["237"] = 'Конго, Демократична република'; // Congo, Democratic Republic of the
 $_country_lang["238"] = 'Замбия'; // Zambia
 $_country_lang["239"] = 'Зимбабве'; // Zimbabwe
-$_country_lang["240"] = 'Сърбия'; //Serbia
-$_country_lang["241"] = 'Черна гора'; //Montenegro
+$_country_lang["240"] = 'Сърбия'; // Serbia
+$_country_lang["241"] = 'Черна гора'; // Montenegro
 ?>

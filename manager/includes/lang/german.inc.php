@@ -20,7 +20,7 @@
 $modx_lang_attribute = 'de'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX ist ein unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlichtes <a href="http://modx.com/software/open-source-cms/modx-evolution/" target="_blank">PHP-Framework und Content Management System</a>.';
+$_lang["about_msg"] = 'MODX ist ein unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlichtes <a href="http://modx.com/" target="_blank">PHP-Framework und Content Management System</a>.';
 $_lang["about_title"] = 'Über MODX';
 $_lang["access_permission_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung für diese Ressource.';
 $_lang["access_permission_parent_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung, um eine Ressource an dieser Stelle zu erstellen oder hierher zu verschieben.';

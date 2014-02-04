@@ -6,7 +6,7 @@
  * Author: INFORMATOR Team /www.informator.org/
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
-*/
+ */
 $_lang['language'] = "bulgarian";
 $_lang['abbr_lang'] = "bg";
 $_lang['file_does_not_exist'] = "не съществува. Моля, проверете файла.";
