@@ -42,7 +42,7 @@ $_lang['mce_schema_message'] = 'The schema option enables you to switch between 
 $_lang['mce_toolbar1_msg'] = 'Default : undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
 $_lang['mce_toolbar2_msg'] = 'Default : image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
 
-$_lang['mce_tpl_title'] = 'Template button';
-$_lang['mce_tpl_msg'] = 'You can insert the HTML block which you registered beforehand from toolbar. You make HTML block as resource or a chunk, and can appoint plural number with a comma.';
+$_lang['mce_tpl_title'] = 'Template Button';
+$_lang['mce_tpl_msg'] = 'You could define templates on chunk or ressource base for the template button in TinyMCE (won\'t be displayed by default). The content of the chunk/of the resource will be inserted at the cursor position as html code in TinyMCE. Multiple chunk names or ressource IDs have to be separated by comma.';
 $_lang['mce_tpl_docid'] = 'Resource IDs';
-$_lang['mce_tpl_chunkname'] = 'Chunk names';
+$_lang['mce_tpl_chunkname'] = 'Chunk Names';
