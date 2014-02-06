@@ -19,7 +19,8 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($hideOn) ) ? $hideOn : $hideOn = '';
 ( isset($hideUnder) ) ? $hideUnder : $hideUnder = '';
 ( isset($stopIds) ) ? $stopIds : $stopIds = '';
-( isset($ignoreIds) ) ? $ignoreids : $ignoreids = '';
+( isset($ignoreIds) ) ? $ignoreIds : $ignoreIds = '';
+( isset($ignoreTemplates) ) ? $ignoreTemplates : $ignoreTemplates = '0';
 ( isset($crumbSeparator) ) ? $separator = $crumbSeparator : $separator = ' &raquo; ';
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
 $templates = array(
@@ -80,6 +81,8 @@ $linkDescField = str_replace(' ','',$linkDescField);
 $linkDescField = explode(',',$linkDescField);
 $ignoreIds = str_replace(' ','',$ignoreIds);
 $ignoreIds = explode(',',$ignoreIds);
+$ignoreTemplates = str_replace(' ','',$ignoreTemplates);
+$ignoreTemplates = explode(',',$ignoreTemplates);
 
 /* $crumbs
  * Crumb elements are: id, parent, pagetitle, longtitle, menutitle, description,
@@ -115,12 +118,11 @@ $loopSafety = 0;
 while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 {
     // Get next crumb
-    $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu");
-
+    $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu,template");
     // Check for include conditions & add to crumbs
     if (
-        $tempCrumb['published'] &&
-        ( !$tempCrumb['hidemenu'] || !$respectHidemenu ) &&
+        $tempCrumb['published'] && !in_array($tempCrumb['template'],$ignoreTemplates) &&
+        ( !$tempCrumb['hidemenu'] || !$respectHidemenu) &&
         !in_array($tempCrumb['id'],$ignoreIds)
     )
     {
