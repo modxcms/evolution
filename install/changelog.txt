@@ -104,7 +104,9 @@ Additional Improvements & Updates:
 * [gitHub] Patch findTemplateVars for compatibility with HPx
 * [gitHub] Add ID in QM+ toolbar.
 * [gitHub] update ManagerManager to 0.6.1.
-
+* [gitHub] Breadcrumbs 1.0.4 (option to hide pages with certain templates from crumbs list)
+* [gitHub] phpthumb 1.2 (not include phpthumb class if have resized images)
+* [gitHub] KCFinder - Remove superfluous update check from kcfinder
 
 --------------------------------------------
 Security:
