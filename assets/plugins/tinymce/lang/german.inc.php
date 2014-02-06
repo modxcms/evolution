@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'Template:';
+$_lang['mce_editor_theme_title'] = 'Template';
 $_lang['mce_editor_theme_message'] = 'Hier können Sie ein Template aussuchen, das im TinyMCE verwendet werden soll. Es handelt sich nicht um das Aussehen, sondern um die Anzahl an Plugins/Funktionen (wie Bilder hochladen, Links einfügen etc.), die für den Nutzer verfügbar sein sollen.';
-$_lang['mce_editor_custom_plugins_title'] = 'Individuelle Plugins:';
-$_lang['mce_editor_custom_plugins_message'] = 'Geben Sie die Plugins an, die Sie bei Auswahl des \\'individuellen\\' Templates verwenden wollen. Bitte Plugins durch Komma trennen.';
-$_lang['mce_editor_custom_buttons_title'] = 'Individuelle Buttons:';
-$_lang['mce_editor_custom_buttons_message'] = 'Geben Sie die Buttons an, die Sie bei Auswahl des \\'individuellen\\' Templates verwenden wollen. Bitte Buttons für jede Reihe durch Komma trennen.Stellen Sie sicher, dass die für Buttons benötigten Plugins aktiviert sind unter \\'Individuelle Plugins\\'.';
-$_lang['mce_editor_css_selectors_title'] = 'CSS Selektoren:';
+$_lang['mce_editor_custom_plugins_title'] = 'Individuelle Plugins';
+$_lang['mce_editor_custom_plugins_message'] = 'Geben Sie die Plugins an, die Sie bei Auswahl des \'individuellen\' Templates verwenden wollen. Bitte Plugins durch Komma trennen.<br />Standard: template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table';
+$_lang['mce_editor_custom_buttons_title'] = 'Individuelle Buttons';
+$_lang['mce_editor_custom_buttons_message'] = 'Geben Sie die Buttons an, die Sie bei Auswahl des \'individuellen\' Templates verwenden wollen. Bitte Buttons für jede Reihe durch Komma trennen.Stellen Sie sicher, dass die für Buttons benötigten Plugins aktiviert sind unter \'Individuelle Plugins\'.';
+$_lang['mce_editor_css_selectors_title'] = 'CSS Selektoren';
 $_lang['mce_editor_css_selectors_message'] = 'Hier können Sie eine Auswahl an Selektoren definieren, die im TinyMCE verfügbar sein sollen. Bitte in dieser Form eintragen:<br />\'displayName=selectorName;displayName2=selectorName2\'<br />Beispiel: Sie wollen <b>.mono</b> und <b>.smallText</b> als Selektoren in Ihrer CSS Datei benutzen, dann erstellen Sie folgenden Eintrag:<br />\'Monospaced text=mono;Small text=smallText\'<br />Bitte achten Sie darauf, dass der letzte Eintrag nicht mit einem Semikolon abgeschlossen werden darf.';
 $_lang['mce_settings'] = 'TinyMCE Einstellungen';
 $_lang['mce_theme_simple'] = 'Wenige Plugins';

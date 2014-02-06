@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'Teema:';
+$_lang['mce_editor_theme_title'] = 'Teema';
 $_lang['mce_editor_theme_message'] = 'Valitse editorille haluamasi teema/ulkoasu.';
-$_lang['mce_editor_custom_plugins_title'] = 'Valinnaiset pluginit:';
+$_lang['mce_editor_custom_plugins_title'] = 'Valinnaiset pluginit';
 $_lang['mce_editor_custom_plugins_message'] = 'Anna tähän pilkuilla eroteltuina ne pluginit, joita käytät kustomoidussa teemassa.';
-$_lang['mce_editor_custom_buttons_title'] = 'Valinnaiset painikkeet:';
+$_lang['mce_editor_custom_buttons_title'] = 'Valinnaiset painikkeet';
 $_lang['mce_editor_custom_buttons_message'] = 'Anna tähän pilkuilla eroteltuina joka riville ne painikkeet, joita käytät kustomoidussa teemassa. Varmista, että jokaiselle painikkeelle on asetettu plugin \'Valinnaiset pluginit\'-kohdassa.';
-$_lang['mce_editor_css_selectors_title'] = 'CSS-valitsimet:';
+$_lang['mce_editor_css_selectors_title'] = 'CSS-valitsimet';
 $_lang['mce_editor_css_selectors_message'] = 'Anna tähän css-valitsimet, joita haluat käyttää editorissa. Syötä ne näin:<br />\'näyttöNimi=valitsimenNimi;näyttöNimi2=valitsimenNimi2\'<br />Jos sinulla on esim. <b>.leipateksti</b> ja <b>.otsikko</b> valitsimina css-tiedostossasi, lisää ne listaan näin:<br />\'Leipis=leipateksti;Otsikko=otsikko\'<br />Huomaa, ettei viimeisen kohdan jälkeen le puolipistettä.';
 $_lang['mce_settings'] = 'TinyMCE:n asetukset';
 $_lang['mce_theme_simple'] = 'Yksinkertaistettu';

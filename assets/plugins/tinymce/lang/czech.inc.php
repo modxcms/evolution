@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'Téma:';
+$_lang['mce_editor_theme_title'] = 'Téma';
 $_lang['mce_editor_theme_message'] = 'Zde si můžete vybrat téma nebo skin, který se použije v editoru.';
-$_lang['mce_editor_custom_plugins_title'] = 'Uživatelské Pluginy:';
+$_lang['mce_editor_custom_plugins_title'] = 'Uživatelské Pluginy';
 $_lang['mce_editor_custom_plugins_message'] = 'Zadejte pluginy, které se použijí pro \'uživatelské\' téma jako čárkou dělený seznam.';
-$_lang['mce_editor_custom_buttons_title'] = 'Uživatelská tlačítka:';
+$_lang['mce_editor_custom_buttons_title'] = 'Uživatelská tlačítka';
 $_lang['mce_editor_custom_buttons_message'] = 'Zadejte tlačítka, oddělená čárkou, která se použijí v tématu \'custom\' pro každý řádek. Ujistěte se, že každé tlačítko má aktivní Plugin v nastavení \'Uživatelské Pluginy\'.';
-$_lang['mce_editor_css_selectors_title'] = 'CSS selectory:';
+$_lang['mce_editor_css_selectors_title'] = 'CSS selectory';
 $_lang['mce_editor_css_selectors_message'] = 'Na tomto místě můžete vydefinovat třídy, které následně budete moci použít v editoru. Vkládejte je v následujícím tvaru:<br />\'zobrazovanéJméno=jmenoSelektoru;zobrazovanéJméno2=jmenoSelektoru2\'<br />Například řekněme, že chceme mít třídy <b>.mono</b> a <b>.smallText</b> v našem CSS souboru, můžeme je přidat zde ve tvaru:<br />\'Monospaced text=mono;Small text=smallText\'<br />Pozor na to, že poslední výraz nesmí být ukončen středníkem.';
 $_lang['mce_settings'] = 'TinyMCE nastavení';
 $_lang['mce_theme_simple'] = 'Simple';

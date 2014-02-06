@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'Тема WYSIWYG-редактора:';
+$_lang['mce_editor_theme_title'] = 'Тема WYSIWYG-редактора';
 $_lang['mce_editor_theme_message'] = 'Выберите какую тему или шаблон вы будете использовать для WYSIWYG-редактора.';
-$_lang['mce_editor_custom_plugins_title'] = 'Индивидуальные плагины:';
+$_lang['mce_editor_custom_plugins_title'] = 'Индивидуальные плагины';
 $_lang['mce_editor_custom_plugins_message'] = 'Введите, через запятую, плагины для &laquo;Индивидуальной&raquo; темы.';
-$_lang['mce_editor_custom_buttons_title'] = 'Индивидуальные кнопки:';
+$_lang['mce_editor_custom_buttons_title'] = 'Индивидуальные кнопки';
 $_lang['mce_editor_custom_buttons_message'] = 'Введите, через запятую, кнопки для &laquo;Индивидуальной&raquo; темы. Убедитесь что дополнения, к которым относятся данные кнопки, прописанны в настройке &laquo;Индивидуальные плагины&raquo;.';
-$_lang['mce_editor_css_selectors_title'] = 'Селекторы CSS:';
+$_lang['mce_editor_css_selectors_title'] = 'Селекторы CSS';
 $_lang['mce_editor_css_selectors_message'] = 'Введите список селекторов, который будет доступен в WYSIWYG-редакторе. Введите их следующим образом:<br />&laquo;имя, которое будет показано в WYSIWYG-редакторе&raquo;=&laquo;имя селектора&raquo;;displayName2=selectorName2<br />Например, в вашем CSS файле есть <b>.mono</b> и <b>.smallText</b> селекторы, чтобы их добавить надо прописать:<br />\'Монохромный текст=mono;Мелкий текст=smallText\'<br />NB: не ставьте точку с запятой(;) после последней записи.';
 $_lang['mce_settings'] = 'Настройки TinyMCE';
 $_lang['mce_theme_simple'] = 'Простая';

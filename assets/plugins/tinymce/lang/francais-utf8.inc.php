@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'Thème:';
+$_lang['mce_editor_theme_title'] = 'Thème';
 $_lang['mce_editor_theme_message'] = 'Vous pouvez sélectionner quel thème ou template utiliser avec la barre d\'outils TinyMCE.';
-$_lang['mce_editor_custom_plugins_title'] = 'Plugins:';
+$_lang['mce_editor_custom_plugins_title'] = 'Plugins';
 $_lang['mce_editor_custom_plugins_message'] = 'Indiquez les Plugins à utiliser pour le thème \'personnalisé\', en les séparant par une virgule.';
-$_lang['mce_editor_custom_buttons_title'] = 'Boutons:';
+$_lang['mce_editor_custom_buttons_title'] = 'Boutons';
 $_lang['mce_editor_custom_buttons_message'] = 'Indiquez les boutons à utiliser pour le thème \'personnalisé\', en les séparant par une virgule. Chaque champ correspond à une ligne dans la barre d\'outils. Assurez-vous que pour chacun des boutons sélectionnés, le plugin correspondant est indiqué dans le champ de saisie \'Plugins\'.';
-$_lang['mce_editor_css_selectors_title'] = 'Sélecteurs CSS:';
+$_lang['mce_editor_css_selectors_title'] = 'Sélecteurs CSS';
 $_lang['mce_editor_css_selectors_message'] = 'Vous pouvez spécifier une liste de sélecteurs disponibles depuis la barre d\'outils. Définissez-les de la manière suivante :<br /> \'Nom de la classe 1=class1;Nom de la classe 2=class2\'<br />Prenons l\'exemple de la classe <b>.mono</b> et <b>.smallText</b> dans votre feuille de style. Vous pouvez les appeler de la façon suivante: <br />\'Monospaced text=mono;Small text=smallText\'<br />La dernière entrée de la ligne ne doit pas être suivie du point-virgule ( ; ).';
 $_lang['mce_settings'] = 'Configuration de TinyMCE';
 $_lang['mce_theme_simple'] = 'Simple';

@@ -9,13 +9,13 @@
  * MODX version:   0.9.5-1.0.13
 */
 
-$_lang['mce_editor_theme_title'] = 'テーマ:';
+$_lang['mce_editor_theme_title'] = 'テーマ';
 $_lang['mce_editor_theme_message'] = 'テーマを選択し、ツールバーアイコンのセットおよびエディタのデザインを変更できます。';
-$_lang['mce_editor_custom_plugins_title'] = 'カスタムテーマのプラグイン設定:';
+$_lang['mce_editor_custom_plugins_title'] = 'カスタムテーマのプラグイン設定';
 $_lang['mce_editor_custom_plugins_message'] = 'カスタムテーマを選択したときに利用するプラグインをカンマ（,）で区切って記述します。<br />デフォルト値 : template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table';
-$_lang['mce_editor_custom_buttons_title'] = 'カスタムボタン:';
+$_lang['mce_editor_custom_buttons_title'] = 'カスタムボタン';
 $_lang['mce_editor_custom_buttons_message'] = 'カスタムテーマを選択したときに利用するボタンをカンマ（,）で区切ってそれぞれの行に記述します。セパレータは「separator」または「|」と記述します。プラグインによって機能が提供されるボタンは、プラグイン指定も必要です。詳細については<a href="http://wiki.moxiecode.com/index.php/TinyMCE:Index" target="_blank">TinyMCE開発元の公式ドキュメント</a>の<a href="http://wiki.moxiecode.com/index.php/TinyMCE:Control_reference" target="_blank">Control reference</a>のページをご確認ください。';
-$_lang['mce_editor_css_selectors_title'] = 'CSSスタイルセレクタ:';
+$_lang['mce_editor_css_selectors_title'] = 'CSSスタイルセレクタ';
 $_lang['mce_editor_css_selectors_message'] = 'class=xxxxxという形で任意のタグに割り当てる「CSSクラス」をここで設定できます。<br />書式：本のタイトル=booktitle;著者=author<br />上記のように、複数のクラスをセミコロンで区切って指定します。';
 $_lang['mce_settings'] = 'TinyMCEの設定';
 $_lang['mce_theme_simple'] = 'シンプル';
