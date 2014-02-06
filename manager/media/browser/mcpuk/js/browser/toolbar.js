@@ -57,8 +57,6 @@ browser.initToolbar = function() {
     $('#toolbar a[href="kcact:about"]').click(function() {
         var html = '<div class="box about">' +
             '<div class="head"><a href="http://kcfinder.sunhater.com" target="_blank">KCFinder</a> ' + browser.version + '</div>';
-        if (browser.support.check4Update)
-            html += '<div id="checkver"><span class="loading"><span>' + browser.label("Checking for new version...") + '</span></span></div>';
         html +=
             '<div>' + browser.label("Licenses:") + ' GPLv2 & LGPLv2</div>' +
             '<div>Copyright &copy;2010, 2011 Pavel Tzonkov</div>' +
@@ -72,36 +70,6 @@ browser.initToolbar = function() {
             browser.unshadow();
         }
         $('#dialog button').click(close);
-        var span = $('#checkver > span');
-        setTimeout(function() {
-            $.ajax({
-                dataType: 'json',
-                url: browser.baseGetData('check4Update'),
-                async: true,
-                success: function(data) {
-                    if (!$('#dialog').html().length)
-                        return;
-                    span.removeClass('loading');
-                    if (!data.version) {
-                        span.html(browser.label("Unable to connect!"));
-                        browser.showDialog();
-                        return;
-                    }
-                    if (browser.version < data.version)
-                        span.html('<a href="http://kcfinder.sunhater.com/download" target="_blank">' + browser.label("Download version {version} now!", {version: data.version}) + '</a>');
-                    else
-                        span.html(browser.label("KCFinder is up to date!"));
-                    browser.showDialog();
-                },
-                error: function() {
-                    if (!$('#dialog').html().length)
-                        return;
-                    span.removeClass('loading');
-                    span.html(browser.label("Unable to connect!"));
-                    browser.showDialog();
-                }
-            });
-        }, 1000);
         $('#dialog').unbind();
 
         return false;

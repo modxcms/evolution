@@ -77,7 +77,6 @@ $_CONFIG = array(
 
     'disabled' => false,
     'denyZipDownload' => $settings['denyZipDownload'],
-    'denyUpdateCheck' => true,
     'denyExtensionRename' => $settings['denyExtensionRename'],
 	'showHiddenFiles' => $settings['showHiddenFiles'],
 	
