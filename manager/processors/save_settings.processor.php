@@ -99,7 +99,8 @@ if (isset($data) && count($data) > 0) {
 				break;
             case 'valid_hostnames':
 				$v = str_replace(array(' ,', ', '), ',', $v);
-				if ($v !== '' && $v !== ',' && $v !== 'MODX_SITE_HOSTNAMES') {
+				if ($v !== ',') {
+					$v = ($v != 'MODX_SITE_HOSTNAMES') ? $v : '';
 					$configString = '<?php' . "\n" . 'define(\'MODX_SITE_HOSTNAMES\', \'' . $v . '\');' . "\n";
 					@file_put_contents(MODX_BASE_PATH . 'assets/cache/siteHostnames.php', $configString);
 				}
