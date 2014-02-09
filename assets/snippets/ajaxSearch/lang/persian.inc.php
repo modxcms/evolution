@@ -1,8 +1,8 @@
 <?php
 /*
-persian.inc.php - for AjaxSearch 1.9.3b
+persian.inc.php - for AjaxSearch 1.10.0
 Created by: Mohsen (MotSmart ~ www.modxcms.ir)
-Last Modified on 12/31/13
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'جستجو حاصلی در بر نداشت. لطفا جستجوی کلی تری برای کسب نتایج بیشتر بکار ببرید.';

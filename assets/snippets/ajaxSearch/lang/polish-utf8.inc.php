@@ -1,8 +1,8 @@
 <?php
 /*
-polish-utf8.inc.php - for AjaxSearch 1.9.3b
+polish-utf8.inc.php - for AjaxSearch 1.10.0
 Created by: Radosław Włodkowski (radoslaw@artengine.pl)
-Last Modified on 12/31/13
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Niczego nie znaleziono. Spróbuj użyć innego wyrażenia.';

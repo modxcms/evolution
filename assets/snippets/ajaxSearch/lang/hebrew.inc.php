@@ -1,8 +1,8 @@
 <?php
 /*
-hebrew.inc.php - for AjaxSearch 1.9.3b
+hebrew.inc.php - for AjaxSearch 1.10.0
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Last Modified on 12/31/13
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'לא נמצאו תוצאות לחיפוש זה.';

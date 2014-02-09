@@ -1,8 +1,8 @@
 <?php
 /*
-russian-utf8.inc.php - for AjaxSearch 1.9.3b
+russian-utf8.inc.php - for AjaxSearch 1.10.0
 Created by: AKots (mailtokots@gmail.com)
-Last Modified on 12/31/13
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'По вашему запросу ничего не найдено. Попробуйте ввести похожие по смыслу слова, чтобы получить лучший результат.';

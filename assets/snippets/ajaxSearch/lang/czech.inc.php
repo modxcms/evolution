@@ -1,8 +1,8 @@
 <?php
 /*
-czech.inc.php - for AjaxSearch 1.9.3b
+czech.inc.php - for AjaxSearch 1.10.0
 Created by: jakub Havranek (jakub@media-form.cz), Modified by: modxcms.cz
-Last Modified on 12/31/13
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Nic nebylo nalezeno. Prosím zkuste zadat obecnější pojem pro získání většího počtu výsledků.';
