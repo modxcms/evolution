@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.9.3');
+define('AS_VERSION', '1.10.0');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file
