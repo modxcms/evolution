@@ -1140,8 +1140,8 @@ $_lang["files.dynamic.php1"] = 'create text file';
 $_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
 $_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
 $_lang["files.dynamic.php4"] = 'The text file was created.';
-$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
-$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
+$_lang["files_dynamic_new_folder_name"] = 'Digite o novo nome do diretório: ';
+$_lang["files_dynamic_new_file_name"] = 'Digite o novo nome do arquivo:';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
@@ -1169,10 +1169,10 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Publicado';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_0"] = 'DB auto incremento';
+$_lang["docid_incrmnt_method_1"] = 'Minima perda de ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
 
 $_lang["cache_type_title"] = 'Document caching type';
@@ -1188,21 +1188,21 @@ $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
 
-$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php1"] = 'Redefinição de árvore de recursos';
 $_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php3"] = 'Alvo';
 $_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
 $_lang["import_site.static.php5"] = 'Whole file content';
 
 $_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php1"] = 'Alvo';
 $_lang["export_site.static.php2"] = 'Only edited Resources';
 $_lang["export_site.static.php3"] = 'All Resources';
 $_lang["export_site.static.php4"] = 'Search for';
 $_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php6"] = 'Alvo';
 $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
 
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
-$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php7"] = 'Não notificar';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
