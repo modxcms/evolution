@@ -244,6 +244,17 @@ if (('none' == $rte) && $mode) {
 			localStorage['history_{$object_id}'] = JSON.stringify(history);
 			documentDirty=true;
 		});
+
+		(function() {
+			var tId = setInterval(function() {
+				if (document.readyState == "complete")
+					onComplete();
+			}, 11);
+			function onComplete() {
+				clearInterval(tId);
+				myCodeMirror.refresh();
+			};
+		})();
     </script>
 HEREDOC;
     $modx->Event->output($output);
