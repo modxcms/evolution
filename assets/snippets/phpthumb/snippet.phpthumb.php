@@ -9,6 +9,11 @@ if(empty($input) || !file_exists(MODX_BASE_PATH . $input)){
     $input = isset($noImage) ? $noImage : 'assets/snippets/phpthumb/noimage.png';
 }
 
+// allow read in phpthumb cache folder
+if (strpos($cacheFolder, 'assets/cache/') === 0 && $cacheFolder != 'assets/cache/' && !is_file(MODX_BASE_PATH . $cacheFolder . '/.htaccess')) {
+	file_put_contents(MODX_BASE_PATH . $cacheFolder . '/.htaccess', "order deny,allow\nallow from all\n");
+}
+
 $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
 parse_str($options, $params);
 
