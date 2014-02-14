@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.9 - Electronic Form Snippet
+# eForm 1.4.5 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -54,7 +54,7 @@ $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.4';
+	$fileVersion = '1.4.5';
 	$version = isset($version)?$version:'prior to 1.4.2';
 
 	#include default language file
@@ -321,7 +321,7 @@ $_dfnMaxlength = 6;
 
 			#set validation message
 			if (count($rMsg) > 0) {
-			    $rMsg = "<span class=\"requiredlist\"><span>" . implode(" </span><span>",$rMsg) . " </span></span>";
+			    $rMsg = "<span class=\"requiredlist\"><span>" . implode("</span><span>",$rMsg) . "</span></span>";
 			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
 			} else {
 			    $tmp = "";
@@ -458,6 +458,17 @@ $_dfnMaxlength = 6;
 			$keywords	= ($keywords)? formMerge($keywords,$fields):"";
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
+
+			# added in 1.4.5 - Use a field for attachments
+			if ($attachmentField != '' && isset($fields[$attachmentField]) && !empty($fields[$attachmentField])) {
+				$attachmentPath = realpath(MODX_BASE_PATH . $attachmentPath) . '/';
+				$filenames = explode(',', $fields[$attachmentField]);
+				foreach ($filenames as $filename) {
+					if (file_exists($attachmentPath . $filename)) {
+						$attachments[count($attachments)] = $attachmentPath . $filename;
+					}
+				}
+			}
 
 			$to = formMerge($to,$fields);
 			if(empty($to) || !strpos($to,'@')) $nomail=1;
