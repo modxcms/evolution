@@ -33,13 +33,6 @@ function record_sort($array, $key) {
 	return $records;
 }
 
-// function to check date and convert to us date
-function convertdate($date) {
-	global $_lang, $modx;
-	$timestamp = $modx->toTimeStamp($date);
-	return $timestamp;
-}
-
 $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
 $logs = $modx->db->makeArray($rs);
 
@@ -181,8 +174,8 @@ if(isset($_REQUEST['log_submit'])) {
 	if($_REQUEST['itemname']!='0')	$sqladd[] = "itemname='".$modx->db->escape($_REQUEST['itemname'])."'";
 	if($_REQUEST['message']!="")	$sqladd[] = "message LIKE '%".$modx->db->escape($_REQUEST['message'])."%'";
 	// date stuff
-	if($_REQUEST['datefrom']!="")	$sqladd[] = "timestamp>".convertdate($_REQUEST['datefrom']);
-	if($_REQUEST['dateto']!="")	$sqladd[] = "timestamp<".convertdate($_REQUEST['dateto']);
+	if($_REQUEST['datefrom']!="")	$sqladd[] = "timestamp>".$modx->toTimeStamp($_REQUEST['datefrom']);
+	if($_REQUEST['dateto']!="")	$sqladd[] = "timestamp<".$modx->toTimeStamp($_REQUEST['dateto']);
 
 	// If current position is not set, set it to zero
 	if( !isset( $_REQUEST['int_cur_position'] ) || $_REQUEST['int_cur_position'] == 0 ){

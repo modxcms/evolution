@@ -1,6 +1,5 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('edit_module')) {
 	$e->setError(3);
 	$e->dumpError();

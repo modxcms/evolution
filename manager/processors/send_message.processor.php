@@ -5,9 +5,6 @@ if(!$modx->hasPermission('messages')) {
 	$e->dumpError();
 }
 
-//$db->debug = true;
-
-
 $sendto = $_REQUEST['sendto'];
 $userid = $_REQUEST['user'];
 $groupid = $_REQUEST['group'];
@@ -59,9 +56,6 @@ if($sendto=='a') {
 		}
 	}
 }
-
-//exit;
-
 
 $header = "Location: index.php?a=10";
 header($header);

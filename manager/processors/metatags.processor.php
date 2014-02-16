@@ -1,6 +1,5 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('manage_metatags')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -27,10 +26,10 @@ else if($opcode=="edttag") {
 	$id = intval($_POST["id"]);
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => $modx->db->escape($_POST["tagname"]),
-		tag => $modx->db->escape($tag),
-		tagvalue => $modx->db->escape($_POST["tagvalue"]),
-		http_equiv => intval($http_equiv)
+		'name' => $modx->db->escape($_POST["tagname"]),
+		'tag' => $modx->db->escape($tag),
+		'tagvalue' => $modx->db->escape($_POST["tagvalue"]),
+		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='$id'");

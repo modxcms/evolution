@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch((int) $_REQUEST['a']) {
   case 88:
@@ -87,20 +87,12 @@ if($modx->manager->hasFormValues()) {
 	$modx->manager->loadFormValues();
 	// restore post values
 	$userdata = array_merge($userdata,$_POST);
-	$userdata['dob'] = ConvertDate($userdata['dob']);
+	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
 	$usersettings = array_merge($usersettings,$userdata);
-	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",$_POST['allowed_days']):"";
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
 	extract($usersettings, EXTR_OVERWRITE);
-}
-
-// converts date format dd-mm-yyyy to php date
-function ConvertDate($date) {
-	global $modx;
-	if ($date == "") {return "0";}
-        //else {}          {return $modx->toTimeStamp($date);}
-        else          {return $modx->toTimeStamp($date);}
 }
 
 // include the country list language file

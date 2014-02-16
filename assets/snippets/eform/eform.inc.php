@@ -1011,7 +1011,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 						$range = array($p,$p); //yes,.. I know - cheating :)
 
 					if($isDebug && (!is_numeric($range[0]) || !is_numeric($range[1])) )
-						$modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
+						$modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
 					sort($range);
 					if( $value>=$range[0] && $value<=$range[1] ) break 2; //valid
 				}
@@ -1030,7 +1030,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 
 				if( $isDebug && count($vlist)==1 && empty($vlist[0])  ){
 					 //if debugging bail out big time
-					 $modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
+					 $modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
 				}elseif(!in_array(strtolower($value),$vlist))
 					$errMsg = ($fld[2]=='file')? $_lang["ef_failed_upload"]: $_lang['ef_failed_list'];
 				break;

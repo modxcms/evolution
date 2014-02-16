@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_password')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id = $_POST['id'];
 $pass1 = $_POST['pass1'];

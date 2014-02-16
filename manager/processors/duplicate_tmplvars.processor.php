@@ -4,8 +4,6 @@ if(!$modx->hasPermission('edit_template')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=$_GET['id'];
 

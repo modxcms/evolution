@@ -92,19 +92,12 @@ if ($modx->manager->hasFormValues()) {
 	$modx->manager->loadFormValues();
 	// restore post values
 	$userdata = array_merge($userdata, $_POST);
-	$userdata['dob'] = ConvertDate($userdata['dob']);
+	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
 	$usersettings = array_merge($usersettings, $userdata);
 	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
 	extract($usersettings, EXTR_OVERWRITE);
-}
-
-// converts date format dd-mm-yyyy to php date
-function ConvertDate($date) {
-	global $modx;
-	if ($date == "") { return "0"; }
-	else             { return $modx->toTimeStamp($date); }
 }
 
 // include the country list language file

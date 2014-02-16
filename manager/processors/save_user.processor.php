@@ -1,7 +1,5 @@
 <?php
-if (IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-}
+if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_user')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -34,7 +32,7 @@ $oldemail             = $input['oldemail'];
 $phone                = $input['phone'];
 $mobilephone          = $input['mobilephone'];
 $fax                  = $input['fax'];
-$dob                  = !empty ($input['dob']) ? ConvertDate($input['dob']) : 0;
+$dob                  = !empty ($input['dob']) ? $modx->toTimeStamp($input['dob']) : 0;
 $country              = $input['country'];
 $street               = $input['street'];
 $city                 = $input['city'];
@@ -46,8 +44,8 @@ $comment              = $input['comment'];
 $role                 = !empty($input['role']) ? $input['role'] : 0;
 $failedlogincount     = !empty($input['failedlogincount']) ? $input['failedlogincount'] : 0;
 $blocked              = !empty($input['blocked']) ? $input['blocked'] : 0;
-$blockeduntil         = !empty($input['blockeduntil']) ? ConvertDate($input['blockeduntil']) : 0;
-$blockedafter         = !empty($input['blockedafter']) ? ConvertDate($input['blockedafter']) : 0;
+$blockeduntil         = !empty($input['blockeduntil']) ? $modx->toTimeStamp($input['blockeduntil']) : 0;
+$blockedafter         = !empty($input['blockedafter']) ? $modx->toTimeStamp($input['blockedafter']) : 0;
 $user_groups          = $input['user_groups'];
 
 // verify password
@@ -551,13 +549,6 @@ function saveUserSettings($id) {
 			}
 		}
 	}
-}
-
-// converts date format dd-mm-yyyy to php date
-function ConvertDate($date) {
-	global $modx;
-	if ($date == "") {return "0";}
-	else {}          {return $modx->toTimeStamp($date);}
 }
 
 // Web alert -  sends an alert to web browser
