@@ -26,10 +26,10 @@ else if($opcode=="edttag") {
 	$id = intval($_POST["id"]);
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => $modx->db->escape($_POST["tagname"]),
-		tag => $modx->db->escape($tag),
-		tagvalue => $modx->db->escape($_POST["tagvalue"]),
-		http_equiv => intval($http_equiv)
+		'name' => $modx->db->escape($_POST["tagname"]),
+		'tag' => $modx->db->escape($tag),
+		'tagvalue' => $modx->db->escape($_POST["tagvalue"]),
+		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='$id'");
