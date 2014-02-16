@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_snippet')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $name = $modx->db->escape(trim($_POST['name']));

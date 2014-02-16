@@ -4,8 +4,6 @@ if(!$modx->hasPermission('delete_eventlog')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
 
 $id=intval($_GET['id']);
 $clearlog = ($_GET['cls']==1 ? true:false);
