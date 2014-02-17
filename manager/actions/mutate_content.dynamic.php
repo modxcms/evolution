@@ -538,7 +538,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="page" value="<?php echo $page;?>" />
 
 <fieldset id="create_edit">
-    <h1><?php if ($_REQUEST['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
+    <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
 
 <div id="actions">
       <ul class="actionButtons">
