@@ -1239,3 +1239,25 @@ $_lang["export_site.static.php7"] = 'Filer kunde inte sparas till [+rb_base_url+
 $_lang["mutate_settings.dynamic.php6"] = 'Skicka mail vid fel i MODX';
 $_lang["mutate_settings.dynamic.php7"] = 'Avisera inte';
 $_lang["mutate_settings.dynamic.php8"] = 'Om ett fel inträffar i MODX kommer ett mail med felkällan att skickas till [(emailsender)] ([+emailsender+]). Detaljerna kring felet kan kan ses i MODX logg för systemhändelser.';
+
+$_lang["error_no_privileges"]         = "Du har inte tillräckliga rättigheter för den här aktionen!";
+$_lang["error_no_optimise_tablename"] = "Tabellen som ska optimeras finns inte i anropet!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Dubbla aktioner i anropet (GET & POST)!";
+$_lang["error_no_id"]                 = "Dokumentets ID angavs inte i anropet!";
+$_lang["error_id_nan"]                = "ID:t i anroppet är inte ett nummer!";
+$_lang["error_no_parent"]             = "Kunde inte hitta föräldradokumentets namn!";
+$_lang["error_many_results"]          = "Databasen returnerade för många resultat!";
+$_lang["error_no_results"]            = "Databasen returnerade inte tillräckligt många eller inga resultat alls!";
+$_lang["error_no_user_selected"]      = "Ingen användare vald som mottagare av detta meddelande!";
+$_lang["error_no_group_selected"]     = "Inga grupp vald som mottagare av detta meddelande!";
+$_lang["error_movedocument1"]         = "Ett dokument kan inte vara sin egen förälder!";
+$_lang["error_movedocument2"]         = "Dokumentets ID angavs inte i anropet!";
+$_lang["error_movedocument3"]         = "Ingen ny förälder angavs i anropet!";
+
+$_lang["login_processor_unknown_user"]       = "Felaktigt användarnamn eller lösenord angivet!";
+$_lang["login_processor_wrong_password"]     = "Felaktigt användarnamn eller lösenord angivet!";
+$_lang["login_processor_many_failed_logins"] = "Du har blivit blockerad på grund av för många felaktiga inloggningsförsök!";
+$_lang["login_processor_blocked1"]           = "Du är blockerad och kan inte logga in!";
+$_lang["login_processor_blocked2"]           = "Du är blockerad och kan inte logga in! Försök igen senare.";
+$_lang["login_processor_bad_code"]           = "Säkerhetskoden du angav var inte korrekt! Försök att logga in en gång till.";
