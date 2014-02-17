@@ -16,8 +16,7 @@ $modx->invokeEvent("OnBeforeChunkFormDelete",
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE $dbase.`".$table_prefix."site_htmlsnippets`.id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the htmlsnippet...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the htmlsnippet...");
 }
 // invoke OnChunkFormDelete event
 $modx->invokeEvent("OnChunkFormDelete",

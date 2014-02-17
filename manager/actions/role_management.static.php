@@ -26,9 +26,7 @@ $sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` o
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
-	echo "The request returned no roles!</div>";
-	exit;
-	include_once "footer.inc.php";
+	$modx->webAlertAndQuit("The request returned no roles!");
 }
 for($i=0; $i<$limit; $i++) {
 	$row = $modx->db->getRow($rs);

@@ -27,8 +27,7 @@ else {
 }
 if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
-	echo "A database error occured while trying to duplicate TV: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -51,8 +50,7 @@ else {
 	}
 }
 if (!$rs) {
-	echo "A database error occured while trying to duplicate TV template access: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV template access: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -75,8 +73,7 @@ else {
 	}
 }
 if (!$rs) {
-	echo "A database error occured while trying to duplicate TV Acess Permissions: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV Acess Permissions: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

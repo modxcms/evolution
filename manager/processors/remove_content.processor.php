@@ -39,8 +39,7 @@ $modx->db->query($sql);
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to remove deleted documents!";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to remove deleted documents!");
 } else {
 	// invoke OnEmptyTrash event
 	$modx->invokeEvent("OnEmptyTrash",

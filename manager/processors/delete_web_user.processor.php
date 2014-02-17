@@ -28,22 +28,19 @@ $_SESSION['itemname'] = $username;
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the web user...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user...");
 }
 // delete user groups
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_groups` WHERE $dbase.`".$table_prefix."web_groups`.webuser=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the web user's access permissions...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user's access permissions...");
 }
 // delete the attributes
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the web user attributes...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user attributes...");
 } else {
 	// invoke OnWebDeleteUser event
 	$modx->invokeEvent("OnWebDeleteUser",

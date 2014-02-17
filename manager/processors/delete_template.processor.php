@@ -20,8 +20,7 @@ if($limit>0) {
 }
 
 if($id==$default_template) {
-	echo "This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.<br />";
-	exit;
+	$modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.<br />");
 }
 
 // invoke OnBeforeTempFormDelete event
@@ -38,8 +37,7 @@ $_SESSION['itemname'] = $name;
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the template...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the template...");
 } else {
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE $dbase.`".$table_prefix."site_tmplvar_templates`.templateid=".$id.";";
 	$rs = $modx->db->query($sql);

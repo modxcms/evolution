@@ -34,8 +34,7 @@ if($total>1)
 // make sure the id's a number
 if(!is_numeric($id))
 {
-    echo 'Passed ID is NaN!';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 global $content;
@@ -46,8 +45,7 @@ if(isset($_GET['id']))
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1)
 	{
-		echo 'Oops, Multiple variables sharing same unique id. Not good.';
-		exit;
+		$modx->webAlertAndQuit($_lang["error_many_results"]);
 	}
 	if($total<1)
 	{

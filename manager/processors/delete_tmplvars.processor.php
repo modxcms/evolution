@@ -59,8 +59,7 @@ $_SESSION['itemname'] = $name;
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
 	$rs = $modx->db->query($sql);
 	if(!$rs) {
-		echo "Something went wrong while trying to delete the field...";
-		exit;
+		$modx->webAlertAndQuit("Something went wrong while trying to delete the field...");
 	} else {		
 		$header="Location: index.php?a=76&r=2";
 		header($header);

@@ -58,8 +58,7 @@ if ($limit > 1) {
 
 // make sure the id's a number
 if (!is_numeric($id)) {
-    echo 'Passed ID is NaN!';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 if (isset($_GET['id'])) {
@@ -67,12 +66,10 @@ if (isset($_GET['id'])) {
     $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
-        echo '<p>Multiple modules sharing same unique id. Not good.<p>';
-        exit;
+        $modx->webAlertAndQuit("Multiple modules sharing same unique id. Not good.");
     }
     if ($limit < 1) {
-        echo '<p>No record found for id: '.$id.'.</p>';
-        exit;
+        $modx->webAlertAndQuit("Module not found for id '{$id}'.");
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];

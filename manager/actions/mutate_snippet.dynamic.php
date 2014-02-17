@@ -45,8 +45,7 @@ if(isset($_GET['id'])) {
     $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
-        echo "Oops, Multiple snippets sharing same unique id. Not good.<p>";
-        exit;
+        $modx->webAlertAndQuit("Oops, Multiple snippets sharing same unique id. Not good.");
     }
     if($limit<1) {
         header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);

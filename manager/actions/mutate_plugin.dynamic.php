@@ -44,8 +44,7 @@ if(isset($_GET['id']))
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1)
     {
-        echo "Multiple plugins sharing same unique id. Not good.<p>";
-        exit;
+        $modx->webAlertAndQuit("Multiple plugins sharing same unique id. Not good.");
     }
     if($limit<1)
     {

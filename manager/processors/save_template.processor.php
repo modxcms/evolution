@@ -60,12 +60,11 @@ switch ($_POST['mode']) {
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New template not saved!";
+			$modx->webAlertAndQuit("\$rs not set! New template not saved!");
 		} else {
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 
 			// invoke OnTempFormSave event
@@ -124,7 +123,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_templates` SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited template not saved!";
+			$modx->webAlertAndQuit("\$rs not set! Edited template not saved!");
 		} else {
 
 			// invoke OnTempFormSave event

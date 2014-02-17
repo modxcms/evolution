@@ -12,8 +12,7 @@ if(isset($_GET['id'])) {
 
 // make sure the id's a number
 if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+	$modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 // check if user has access permission, except admins
@@ -41,12 +40,7 @@ if($_SESSION['mgrRole']!=1){
 	}
 
 	if($permissionAccessInt==0) {
-		echo "<script type='text/javascript'>" .
-		"function jsalert(){ alert('You do not sufficient privileges to execute this module.');" .
-		"window.location.href='index.php?a=106';}".
-		"setTimeout('jsalert()',100)".
-		"</script>";
-		exit;
+		$modx->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
 	}
 }
 
@@ -57,29 +51,14 @@ $sql = "SELECT * " .
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('Multiple modules sharing same unique id $id. Please contact the Site Administrator');" .
-			"window.location.href='index.php?a=106';}".
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
+	$modx->webAlertAndQuit($_lang["error_many_results"], "index.php?a=106");
 }
 if($limit<1) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('No record found for id $id');" .
-			"window.location.href='index.php?a=106';}" .
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
+	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
 }
 $content = $modx->db->getRow($rs);
 if($content['disabled']) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('This module is disabled and cannot be executed.');" .
-			"window.location.href='index.php?a=106';}" .
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
+	$modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
 }
 
 // Set the item name for logger

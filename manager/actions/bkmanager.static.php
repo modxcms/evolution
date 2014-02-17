@@ -47,10 +47,7 @@ elseif ($mode=='backup')
 	$tables = isset($_POST['chk']) ? $_POST['chk'] : '';
 	if (!is_array($tables))
 	{
-		echo '<html><body>'.
-		     '<script type="text/javascript">alert(\'Please select a valid table from the list below\');</script>'.
-		     '</body></html>';
-		exit;
+		$modx->webAlertAndQuit("Please select a valid table from the list below.");
 	}
 
 	/*
@@ -88,8 +85,7 @@ elseif ($mode=='snapshot')
 	}
 	if(!is_writable(rtrim($modx->config['snapshot_path'],'/')))
 	{
-		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path']));
-		exit;
+		$modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path'])));
 	}
 	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
 	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";

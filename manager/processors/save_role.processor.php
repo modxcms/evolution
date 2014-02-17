@@ -9,8 +9,7 @@ foreach ($_POST as $n => $v)
 extract($_POST);
 
 if ($name == '' || !isset ($name)) {
-    echo "Please enter a name for this role!";
-    exit;
+	$modx->webAlertAndQuit("Please enter a name for this role!", "index.php?a={$mode}".($mode=35?"&id={$id}":""));
 }
 
 // setup fields
@@ -92,8 +91,7 @@ switch ($_POST['mode']) {
         $tbl = $modx->getFullTableName("user_roles");
         $rs = $modx->db->insert($fields, $tbl);
         if (!$rs) {
-            echo "An error occured while attempting to save the new role.<p>";
-            exit;
+            $modx->webAlertAndQuit("An error occured while attempting to save the new role.<p>");
         }
         // Set the item name for logger
         $_SESSION['itemname'] = $name;
@@ -105,8 +103,7 @@ switch ($_POST['mode']) {
         $tbl = $modx->getFullTableName("user_roles");
         $rs = $modx->db->update($fields, $tbl, "id=$id");
         if (!$rs = $modx->db->query($sql)) {
-            echo "An error occured while attempting to update the role. <br />" . $modx->db->getLastError();
-            exit;
+            $modx->webAlertAndQuit("An error occured while attempting to update the role. <br />" . $modx->db->getLastError());
         }
         // Set the item name for logger
         $_SESSION['itemname'] = $name;
@@ -115,7 +112,6 @@ switch ($_POST['mode']) {
         header($header);
         break;
     default :
-    	echo "Erm... You supposed to be here now?";
-        exit;
+    	$modx->webAlertAndQuit("Erm... You supposed to be here now?");
 }
 ?>

@@ -76,14 +76,12 @@ switch ($_POST['mode']) {
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."', '".$categoryid."');";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New snippet not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! New snippet not saved!");
 		} 
 		else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 
 			// invoke OnSnipFormSave event
@@ -122,8 +120,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_snippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category='".$categoryid."'  WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited snippet not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! Edited snippet not saved!");
 		} 
 		else {		
 			// invoke OnSnipFormSave event

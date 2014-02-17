@@ -39,8 +39,7 @@ if($limit>1) {
 
 // make sure the id's a number
 if(!is_numeric($id)) {
-	echo "Passed ID is not a valid number!";
-	exit;
+	$modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 // take action
@@ -110,12 +109,10 @@ $sql = "SELECT * FROM ".$tbl_site_modules." WHERE id = $id;";
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
-	echo "<p>Multiple modules sharing same unique id. Please contact the Site Administrator.<p>";
-	exit;
+	$modx->webAlertAndQuit("Multiple modules sharing same unique id. Please contact the Site Administrator.");
 }
 if($limit<1) {
-	echo "<p>Module not found for id '$id'.</p>";
-	exit;
+	$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 }
 $content = $modx->db->getRow($rs);
 $_SESSION['itemname']=$content['name'];

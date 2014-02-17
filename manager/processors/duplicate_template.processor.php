@@ -36,8 +36,7 @@ if($rs) {
 		}
 	}
 } else {
-	echo "A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

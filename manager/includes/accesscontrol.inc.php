@@ -190,8 +190,7 @@ if(!isset($_SESSION['mgrValidated'])){
 			$ip
 		);
 		if(!$rs=$modx->db->query($sql)) {
-			echo "error replacing into active users! SQL: ".$sql."\n".$modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("Error replacing into active users! SQL: ".$sql."\n".$modx->db->getLastError());
 		}
 	}
 }

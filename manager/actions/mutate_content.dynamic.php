@@ -69,15 +69,7 @@ if ($action == 27) {
     $udperms->role = $_SESSION['mgrRole'];
 
     if (!$udperms->checkPermissions()) {
-?>
-<br /><br />
-<div class="sectionHeader"><?php echo $_lang['access_permissions']?></div>
-<div class="sectionBody">
-    <p><?php echo $_lang['access_permission_denied']?></p>
-</div>
-<?php
-    include(MODX_MANAGER_PATH.'includes/footer.inc.php');
-    exit;
+        $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
 }
 

@@ -26,7 +26,7 @@ if ($limit > 1) {
 	for ($i = 0; $i < $limit; $i++) {
 		$lock = $modx->db->getRow($rs);
 		if ($lock['internalKey'] != $modx->getLoginUserID()) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $lock['username'], "user"));
 		}
 	}
 }
@@ -38,12 +38,10 @@ if ($_REQUEST['a'] == '12') {
 	$rs = $modx->db->query($sql);
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
-		echo "More than one user returned!<p>";
-		exit;
+		$modx->webAlertAndQuit("No user returned!");
 	}
 	if ($limit < 1) {
-		echo "No user returned!<p>";
-		exit;
+		$modx->webAlertAndQuit("No user returned!");
 	}
 	$userdata = $modx->db->getRow($rs);
 
@@ -65,12 +63,10 @@ if ($_REQUEST['a'] == '12') {
 	$rs = $modx->db->query($sql);
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
-		echo "More than one user returned while getting username!<p>";
-		exit;
+		$modx->webAlertAndQuit("More than one user returned while getting username!");
 	}
 	if ($limit < 1) {
-		echo "No user returned while getting username!<p>";
-		exit;
+		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
 	$usernamedata = $modx->db->getRow($rs);
 	$_SESSION['itemname'] = $usernamedata['username'];

@@ -14,8 +14,7 @@ else {
 
 // make sure the id's a number
 if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+	$modx->webAlertAndQuit("Passed ID is NaN!");
 }
 
 
@@ -26,8 +25,7 @@ $sql = "SELECT el.*, IFNULL(wu.username,mu.username) as 'username' " .
 		" WHERE el.id=$id";			
 $ds = $modx->db->query($sql);
 if(!$ds) {
-	echo "Error while load event log";
-	exit;
+	$modx->webAlertAndQuit("Error while load event log");
 }
 else{
 	$content = $modx->db->getRow($ds);	

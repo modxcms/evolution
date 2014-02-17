@@ -16,8 +16,7 @@ $modx->invokeEvent("OnBeforeModFormDelete",
 $sql = "DELETE FROM ".$modx->getFullTableName("site_modules")." WHERE id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the module...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the module...");
 }
 
 //ok, delete the module dependencies.

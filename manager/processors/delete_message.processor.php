@@ -11,20 +11,17 @@ $sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$t
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
-	echo "Wrong number of messages returned!";
-	exit;
+	$modx->webAlertAndQuit("Wrong number of messages returned!");
 } else {
 	$message=$modx->db->getRow($rs);
 	if($message['recipient']!=$modx->getLoginUserID()) {
-		echo "You are not allowed to delete this message!";
-		exit;
+		$modx->webAlertAndQuit("You are not allowed to delete this message!");
 	} else {
 		// delete message
 		$sql = "DELETE FROM $dbase.`".$table_prefix."user_messages` WHERE id=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs) {
-			echo "Something went wrong while trying to delete the message!";
-			exit;
+			$modx->webAlertAndQuit("Something went wrong while trying to delete the message!");
 		} 
 	}
 }

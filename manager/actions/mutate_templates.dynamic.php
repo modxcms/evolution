@@ -42,14 +42,10 @@ if(!empty($id)) {
     $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "More results returned than expected. Which sucks. <p>Aborting.";
-        exit;
+        $modx->webAlertAndQuit("More results returned than expected. Which sucks.");
     }
     if($limit<1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "No database record has been found for this template. <p>Aborting.";
-        exit;
+        $modx->webAlertAndQuit("No database record has been found for this template.");
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['templatename'];

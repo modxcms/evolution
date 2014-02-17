@@ -63,12 +63,11 @@ switch ($_POST['mode']) {
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New Chunk not saved!";
+			$modx->webAlertAndQuit("\$rs not set! New Chunk not saved!");
 		} else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 
 			// invoke OnChunkFormSave event
@@ -108,7 +107,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited htmlsnippet not saved!";
+			$modx->webAlertAndQuit("\$rs not set! Edited htmlsnippet not saved!");
 		} else {		
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",

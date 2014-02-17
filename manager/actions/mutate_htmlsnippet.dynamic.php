@@ -43,12 +43,10 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
     $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
-        echo '<p>Error: Multiple Chunk sharing same unique ID.</p>';
-        exit;
+        $modx->webAlertAndQuit("Error: Multiple Chunk sharing same unique ID.");
     }
     if ($limit < 1) {
-        echo '<p>Chunk doesn\'t exist.</p>';
-        exit;
+        $modx->webAlertAndQuit("Chunk not found for id '{$id}'.");
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];

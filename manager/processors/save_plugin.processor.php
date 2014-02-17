@@ -74,12 +74,11 @@ switch ($_POST['mode']) {
         $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
         $rs = $modx->db->query($sql);
         if(!$rs){
-            echo "\$rs not set! New plugin not saved!";
+            $modx->webAlertAndQuit("\$rs not set! New plugin not saved!");
         } else {    
             // get the id
             if(!$newid=$modx->db->getInsertId()) {
-                echo "Couldn't get last insert key!";
-                exit;
+                $modx->webAlertAndQuit("Couldn't get last insert key!");
             }
             
             // save event listeners
@@ -122,7 +121,7 @@ switch ($_POST['mode']) {
         $sql = "UPDATE {$tblSitePlugins} SET name='{$name}', description='{$description}', plugincode='{$plugincode}', disabled={$disabled}, moduleguid='{$moduleguid}', locked={$locked}, properties='{$properties}', category={$categoryid}  WHERE id={$id}";
         $rs = $modx->db->query($sql);
         if(!$rs){
-            echo "\$rs not set! Edited plugin not saved!";
+            $modx->webAlertAndQuit("\$rs not set! Edited plugin not saved!");
         } 
         else {      
             // save event listeners

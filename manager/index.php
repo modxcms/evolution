@@ -228,16 +228,13 @@ if (isset($modx->config['validate_referer']) && intval($modx->config['validate_r
 
         if (!empty($referer)) {
             if (!preg_match('/^'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
-                echo "A possible CSRF attempt was detected from referer: {$referer}.";
-                exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected from referer: {$referer}.", "index.php");
             }
         } else {
-            echo "A possible CSRF attempt was detected. No referer was provided by the client.";
-            exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the client.", "index.php");
         }
     } else {
-        echo "A possible CSRF attempt was detected. No referer was provided by the server.";
-        exit();
+        $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the server.", "index.php");
     }
 }
 

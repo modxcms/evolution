@@ -49,14 +49,12 @@ $user_groups          = $input['user_groups'];
 
 // verify password
 if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
-	webAlert("Password typed is mismatched");
-	exit;
+	webAlertAndQuit("Password typed is mismatched");
 }
 
 // verify email
 if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
-	webAlert("E-mail address doesn't seem to be valid!");
-	exit;
+	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
 switch ($input['mode']) {
@@ -65,8 +63,7 @@ switch ($input['mode']) {
 		$rs = $modx->db->select('id', $tbl_web_users, "username='{$esc_newusername}'");
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			webAlert("User name is already in use!");
-			exit;
+			webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exist
@@ -75,29 +72,25 @@ switch ($input['mode']) {
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
-				webAlert("Email is already in use!");
-				exit;
+				webAlertAndQuit("Email is already in use!");
 			}
 		}
 
 		// generate a new password for this user
 		if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
 			if (strlen($specifiedpassword) < 6) {
-				webAlert("Password is too short!");
-				exit;
+				webAlertAndQuit("Password is too short!");
 			} else {
 				$newpassword = $specifiedpassword;
 			}
 		}
 		elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-			webAlert("You didn't specify a password for this user!");
-			exit;
+			webAlertAndQuit("You didn't specify a password for this user!");
 		}
 		elseif ($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
-			webAlert("No password generation method specified!");
-			exit;
+			webAlertAndQuit("No password generation method specified!");
 		}
 
 		// invoke OnBeforeWUsrFormSave event
@@ -113,16 +106,14 @@ switch ($input['mode']) {
 		$field['password'] = md5($newpassword);
 		$internalKey = $modx->db->insert($field, $tbl_web_users);
 		if (!$internalKey) {
-			webAlert("An error occurred while attempting to save the user.");
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to save the user.");
 		}
 
         $field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $field = $modx->db->escape($field);
 		$rs = $modx->db->insert($field, $tbl_web_user_attributes);
 		if (!$rs) {
-			webAlert("An error occurred while attempting to save the user's attributes.");
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to save the user's attributes.");
 		}
 
 		// Save user settings
@@ -159,8 +150,7 @@ switch ($input['mode']) {
 					$f = $modx->db->escape($f);
 					$rs = $modx->db->insert($f, $tbl_web_groups);
 					if (!$rs) {
-						webAlert("An error occurred while attempting to add the user to a web group.");
-						exit;
+						$modx->webAlertAndQuit("An error occurred while attempting to add the user to a web group.");
 					}
 				}
 			}
@@ -215,21 +205,18 @@ switch ($input['mode']) {
 		if ($genpassword == 1) {
 			if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
 				if (strlen($specifiedpassword) < 6) {
-					webAlert("Password is too short!");
-					exit;
+					webAlertAndQuit("Password is too short!");
 				} else {
 					$newpassword = $specifiedpassword;
 				}
 			}
 			elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-				webAlert("You didn't specify a password for this user!");
-				exit;
+				webAlertAndQuit("You didn't specify a password for this user!");
 			}
 			elseif ($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
-				webAlert("No password generation method specified!");
-				exit;
+				webAlertAndQuit("No password generation method specified!");
 			}
 		}
 		if ($passwordnotifymethod == 'e') {
@@ -242,8 +229,7 @@ switch ($input['mode']) {
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
-				webAlert("User name is already in use!");
-				exit;
+				webAlertAndQuit("User name is already in use!");
 			}
 		}
 
@@ -253,8 +239,7 @@ switch ($input['mode']) {
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
-				webAlert("Email is already in use!");
-				exit;
+				$modx->webAlertAndQuit("Email is already in use!");
 			}
 		}
 
@@ -273,16 +258,14 @@ switch ($input['mode']) {
 		}
 		$rs = $modx->db->update($field, $tbl_web_users, "id='{$id}'");
 		if (!$rs) {
-			webAlert("An error occurred while attempting to update the user's data.");
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to update the user's data.");
 		}
 		$field = array();
 		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$field = $modx->db->escape($field);
 		$rs = $modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
 		if (!$rs) {
-			webAlert("An error occurred while attempting to update the user's attributes.");
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to update the user's attributes.");
 		}
 
 		// Save user settings
@@ -324,8 +307,7 @@ switch ($input['mode']) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$rs = $modx->db->delete($tbl_web_groups, "webuser='{$id}'");
 			if (!$rs) {
-				webAlert("An error occurred while attempting to delete previous user_groups entries.");
-				exit;
+				$modx->webAlertAndQuit("An error occurred while attempting to delete previous user_groups entries.");
 			}
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
@@ -335,8 +317,7 @@ switch ($input['mode']) {
 					$f = $modx->db->escape($f);
 					$rs = $modx->db->insert($f, $tbl_web_groups);
 					if (!$rs) {
-						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
-						exit;
+						$modx->webAlertAndQuit("An error occurred while attempting to add the user to a user_group.<br />$sql;");
 					}
 				}
 			}
@@ -384,8 +365,7 @@ switch ($input['mode']) {
 		}
 		break;
 	default :
-		webAlert("Unauthorized access");
-		exit;
+		webAlertAndQuit("Unauthorized access");
 }
 
 // in case any plugins include a quoted_printable function
@@ -421,8 +401,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		webAlert("{$email} - {$_lang['error_sending_email']}");
-		exit;
+		$modx->webAlertAndQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
 
@@ -453,23 +432,18 @@ function saveUserSettings($id) {
 		    $f = $modx->db->escape($f);
 		    $rs = $modx->db->insert($f, $tbl_web_user_settings);
 			if (!$rs) {
-				webAlert("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$vl'");
-				exit;
+				$modx->webAlertAndQuit("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$vl'");
 			}
 		}
 	}
 }
 
 // Web alert -  sends an alert to web browser
-function webAlert($msg) {
+function webAlertAndQuit($msg) {
 	global $id, $modx;
-	global $dbase, $table_prefix;
-	$mode = intval($_POST['mode']);
-	$url = "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : '');
+	$mode = $_POST['mode'];
 	$modx->manager->saveFormValues($mode);
-	include_once "header.inc.php";
-	$modx->webAlert($msg, $url);
-	include_once "footer.inc.php";
+	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '88' ? "&id={$id}" : ''));
 }
 
 // Generate password

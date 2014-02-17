@@ -45,12 +45,10 @@ if($_REQUEST['a']=='35')
 	$rs = $modx->db->select('*',$tbl_user_roles, "id='{$role}'");
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1) {
-		echo "More than one role returned!<p>";
-		exit;
+		$modx->webAlertAndQuit("More than one role returned!");
 	}
 	if($total<1) {
-		echo "No role returned!<p>";
-		exit;
+		$modx->webAlertAndQuit("No role returned!");
 	}
 	$roledata = $modx->db->getRow($rs);
 	$_SESSION['itemname']=$roledata['name'];

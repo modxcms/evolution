@@ -82,12 +82,11 @@ switch ($_POST['mode']) {
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New variable not saved!";
+			$modx->webAlertAndQuit("\$rs not set! New variable not saved!");
 		} else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}			
 			
 			// save access permissions
@@ -142,7 +141,7 @@ switch ($_POST['mode']) {
         $sql .= " WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited variable not saved!";
+			$modx->webAlertAndQuit("\$rs not set! Edited variable not saved!");
 		} else {		
 
 			// save access permissions
@@ -220,16 +219,14 @@ function saveDocumentAccessPermissons(){
 		$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "An error occurred while attempting to delete previous template variable access permission entries.";
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to delete previous template variable access permission entries.");
 		}	
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
 				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";
 				$rs = $modx->db->query($sql);
 				if(!$rs){
-					echo "An error occured while attempting to save template variable acess permissions.";
-					exit;
+					$modx->webAlertAndQuit("An error occured while attempting to save template variable acess permissions.");
 				}
 			}
 		}

@@ -17,13 +17,7 @@ $udperms->role = $_SESSION['mgrRole'];
 $udperms->duplicateDoc = true;
 
 if(!$udperms->checkPermissions()) {
-	include "header.inc.php";
-	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
-	<div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include("footer.inc.php");
-	exit;
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // check for MySQL 4.0.14

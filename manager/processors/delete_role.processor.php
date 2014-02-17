@@ -7,29 +7,25 @@ if(!$modx->hasPermission('delete_role')) {
 $id=$_GET['id'];
 
 if($id==1){
-	echo "The role you are trying to delete is the admin role. This role cannot be deleted!";
-	exit;
+	$modx->webAlertAndQuit("The role you are trying to delete is the admin role. This role cannot be deleted!");
 }
 
 
 $sql = "SELECT count(*) FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to find users with this role...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to find users with this role...");
 } 
 $row=$modx->db->getRow($rs);
 if($row['count(*)']>0){
-	echo "There are users with this role. It can't be deleted.";
-	exit;
+	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");
 }
 
 // delete the attributes
 $sql = "DELETE FROM $dbase.`".$table_prefix."user_roles` WHERE $dbase.`".$table_prefix."user_roles`.id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the role...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the role...");
 }
 
 // Set the item name for logger

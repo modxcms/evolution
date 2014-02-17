@@ -5,8 +5,7 @@ if(!$modx->hasPermission('save_template')) {
 }
 
 if (!is_numeric($_REQUEST['id'])) {
-    echo 'Template ID is NaN';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 $tbl_site_templates         = $modx->getFullTableName('site_templates');

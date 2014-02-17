@@ -36,8 +36,7 @@ else {
 }
 if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
-	echo "A database error occured while trying to duplicate module: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -60,8 +59,7 @@ else {
 	}	
 }
 if(!$rs){
-	echo "A database error occured while trying to duplicate module dependencies: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module dependencies: <br /><br />".$modx->db->getLastError());
 }
 
 // duplicate module user group access
@@ -83,8 +81,7 @@ else {
 	}	
 }
 if(!$rs){
-	echo "A database error occured while trying to duplicate module user group access: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module user group access: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

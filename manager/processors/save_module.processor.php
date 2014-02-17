@@ -81,14 +81,12 @@ switch ($_POST['mode']) {
 		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New module not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! New module not saved!");
 		} 
 		else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 			
 			// save user group access permissions
@@ -130,8 +128,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited module not saved!".$modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! Edited module not saved!".$modx->db->getLastError());
 		} 
 		else {	
 			// save user group access permissions
@@ -182,16 +179,14 @@ function saveUserGroupAccessPermissons(){
 		$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "An error occured while attempting to delete previous module user access permission entries.";
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to delete previous module user access permission entries.");
 		}	
 		if(is_array($usrgroups)) {
 			foreach ($usrgroups as $ugkey=>$value) {
 				$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module,usergroup) values($id,".stripslashes($value).")";
 				$rs = $modx->db->query($sql);
 				if(!$rs){
-					echo "An error occured while attempting to save module user acess permissions.";
-					exit;
+					$modx->webAlertAndQuit("An error occured while attempting to save module user acess permissions.");
 				}
 			}
 		}

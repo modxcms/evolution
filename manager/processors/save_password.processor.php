@@ -9,13 +9,11 @@ $pass1 = $_POST['pass1'];
 $pass2 = $_POST['pass2'];
 
 if($pass1!=$pass2){
-	echo "passwords don't match!";
-	exit;
+	$modx->webAlertAndQuit("Passwords don't match!");
 }
 
 if(strlen($pass1)<6){
-	echo "Password is too short. Please specify a password of at least 6 characters.";
-	exit;
+	$modx->webAlertAndQuit("Password is too short. Please specify a password of at least 6 characters.");
 }
 
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
@@ -23,8 +21,7 @@ if(strlen($pass1)<6){
 	$f['password'] = $modx->manager->genHash($pass1, $uid);
 	$rs = $modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
 	if(!$rs){
-	echo "An error occured while attempting to save the new password.";
-	exit;
+	$modx->webAlertAndQuit("An error occured while attempting to save the new password.");
 }
     
 	// invoke OnManagerChangePassword event

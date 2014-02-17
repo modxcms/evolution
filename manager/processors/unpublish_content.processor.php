@@ -28,13 +28,7 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	include "header.inc.php";
-	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
-	<div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include "footer.inc.php";
-	exit;
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // update the document
@@ -42,7 +36,7 @@ $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=0, pub_date=
 
 $rs = $modx->db->query($sql);
 if(!$rs){
-	echo "An error occured while attempting to unpublish the document.";
+	$modx->webAlertAndQuit("An error occured while attempting to unpublish the document.");
 }
 
 // invoke OnDocUnPublished  event

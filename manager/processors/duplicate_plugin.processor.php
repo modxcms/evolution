@@ -27,8 +27,7 @@ else {
 }
 if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
-	echo "A database error occured while trying to duplicate plugin: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate plugin: <br /><br />".$modx->db->getLastError());
 }
 
 // duplicate Plugin Event Listeners
@@ -50,8 +49,7 @@ else {
 	}
 }
 if (!$rs) {
-	echo "A database error occured while trying to duplicate plugin events: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate plugin events: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger
