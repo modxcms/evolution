@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('settings')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $data = $_POST;
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
@@ -118,8 +117,7 @@ if (isset($data) && count($data) > 0) {
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
 	if(!@$rs = $modx->db->query($sql)) {
-		echo "Failed to update setting value!";
-		exit;
+		$modx->webAlertAndQuit("Failed to update setting value!");
 	}
 	
 	// Reset Template Pages

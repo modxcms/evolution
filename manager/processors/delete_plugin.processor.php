@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_plugin')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=intval($_GET['id']);
@@ -17,16 +16,14 @@ $modx->invokeEvent("OnBeforePluginFormDelete",
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_plugins` WHERE $dbase.`".$table_prefix."site_plugins`.id=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the plugin...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the plugin...");
 }		
 
 // delete the plugin events.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_plugin_events` WHERE $dbase.`".$table_prefix."site_plugin_events`.pluginid=".$id.";";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to delete the plugin events...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to delete the plugin events...");
 }
 
 // invoke OnPluginFormDelete event

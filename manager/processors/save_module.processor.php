@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_module')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -51,45 +50,20 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_module'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['a'] = '107';
-			$_GET['a'] = '107';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['wrap'] = $wrap;
-			$content['disabled'] = $disabled;
-			$content['locked'] = $locked;
-			$content['plugincode'] = $_POST['post'];
-			$content['category'] = $_POST['categoryid'];
-			$content['properties'] = $_POST['properties'];
-			$content['modulecode'] = $_POST['post'];
-			$content['enable_resource'] = $enable_resource;
-			$content['enable_sharedparams'] = $enable_sharedparams;
-			$content['usrgroups'] = $_POST['usrgroups'];
-
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_module.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(107);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
 		}
 
 		// save the new module
 		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New module not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! New module not saved!");
 		} 
 		else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 			
 			// save user group access permissions
@@ -131,8 +105,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited module not saved!".$modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! Edited module not saved!".$modx->db->getLastError());
 		} 
 		else {	
 			// save user group access permissions
@@ -183,16 +156,14 @@ function saveUserGroupAccessPermissons(){
 		$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "An error occured while attempting to delete previous module user access permission entries.";
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to delete previous module user access permission entries.");
 		}	
 		if(is_array($usrgroups)) {
 			foreach ($usrgroups as $ugkey=>$value) {
 				$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module,usergroup) values($id,".stripslashes($value).")";
 				$rs = $modx->db->query($sql);
 				if(!$rs){
-					echo "An error occured while attempting to save module user acess permissions.";
-					exit;
+					$modx->webAlertAndQuit("An error occured while attempting to save module user acess permissions.");
 				}
 			}
 		}

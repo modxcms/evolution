@@ -1783,25 +1783,34 @@ class DocumentParser {
     }
 
     /**
-     * Displays a javascript alert message in the web browser
+     * Displays a javascript alert message in the web browser and quit
      *
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    function webAlert($msg, $url= "") {
-        $msg= addslashes($this->db->escape($msg));
+    function webAlertAndQuit($msg, $url= "") {
+        global $modx_manager_charset;
         if (substr(strtolower($url), 0, 11) == "javascript:") {
-            $act= "__WebAlert();";
-            $fnc= "function __WebAlert(){" . substr($url, 11) . "};";
+            $fnc = substr($url, 11);
+        } elseif ($url) {
+            $fnc = "window.location.href='" . addslashes($url) . "';";
         } else {
-            $act= ($url ? "window.location.href='" . addslashes($url) . "';" : "");
+            $fnc = "history.back(-1);";
         }
-        $html= "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
-        if ($this->isFrontend())
-            $this->regClientScript($html);
-        else {
-            echo $html;
-        }
+        echo "<html><head>
+            <title>MODX :: Alert</title>
+            <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
+            <script>
+                function __alertQuit() {
+                    alert('" . addslashes($msg) . "');
+                    {$fnc}
+                }
+                window.setTimeout('__alertQuit();',100);
+            </script>
+            </head><body>
+            <p>{$msg}</p>
+            </body></html>";
+            exit;
     }
 
     /**

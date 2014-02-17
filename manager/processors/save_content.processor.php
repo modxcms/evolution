@@ -1,8 +1,7 @@
 <?php
 if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // preprocess POST values
@@ -112,18 +111,10 @@ if ($friendly_urls) {
 		if ($docid > 0) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
 			}
 		}
 	}
@@ -136,18 +127,10 @@ if ($friendly_urls) {
                 if ($docid > 0) {
                         if ($actionToTake == 'edit') {
                                 $modx->manager->saveFormValues(27);
-                                $url = "index.php?a=27&id=" . $id;
-                                include_once "header.inc.php";
-                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-                                include_once "footer.inc.php";
-                                exit;
+                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
                         } else {
                                 $modx->manager->saveFormValues(4);
-                                $url = "index.php?a=4";
-                                include_once "header.inc.php";
-                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-                                include_once "footer.inc.php";
-                                exit;
+                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
                         }
                 }
         //end webber        
@@ -202,18 +185,10 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 		if($count == 0) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=4");
 			}
 		}
 	}
@@ -276,12 +251,10 @@ if ($actionToTake != "new") {
 	$rs = $modx->db->select('*', $tbl_site_content, 'id='.$id);
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
-		$e->setError(6);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_many_results"]);
 	}
 	if ($limit < 1) {
-		$e->setError(7);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	}
 	$existingDocument = $modx->db->getRow($rs);
 }
@@ -298,18 +271,10 @@ if ($use_udperms == 1) {
 		if (!$udperms->checkPermissions()) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=4");
 			}
 		}
 	}
@@ -391,14 +356,12 @@ switch ($actionToTake) {
         $rs = $modx->db->insert( $dbInsert, $tbl_site_content);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
-			echo "An error occured while attempting to save the new document: " . $modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to save the new document: " . $modx->db->getLastError());
 		}
 
 		if (!$key = $modx->db->getInsertId()) {
 			$modx->manager->saveFormValues(27);
-			echo "Couldn't get last insert key!";
-			exit;
+			$modx->webAlertAndQuit("Couldn't get last insert key!");
 		}
 
 		$tvChanges = array();
@@ -442,8 +405,7 @@ switch ($actionToTake) {
 		}
 		if ($docgrp_save_attempt && !$saved) {
 			$modx->manager->saveFormValues(27);
-			echo "An error occured while attempting to add the document to a document_group.";
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to add the document to a document_group.");
 		}
 
 
@@ -452,7 +414,7 @@ switch ($actionToTake) {
 			$fields = array('isfolder' => 1);
 			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$_REQUEST['parent']);
 			if (!$rs) {
-				echo "An error occured while attempting to change the document's parent to a folder.";
+				$modx->webAlertAndQuit("An error occured while attempting to change the document's parent to a folder.");
 			}
 		}
 
@@ -502,8 +464,7 @@ switch ($actionToTake) {
 		$rs = $modx->db->select('parent', $tbl_site_content, 'id='.$_REQUEST['id']);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
-			echo "An error occured while attempting to find the document's current parent.";
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to find the document's current parent.");
 		}
 		
 		$row = $modx->db->getRow($rs);
@@ -512,26 +473,22 @@ switch ($actionToTake) {
 
 		if ($id == $site_start && $published == 0) {
 			$modx->manager->saveFormValues(27);
-			echo "Document is linked to site_start variable and cannot be unpublished!";
-			exit;
+			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
 		}
 		$today = time();
 		if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
 			$modx->manager->saveFormValues(27);
-			echo "Document is linked to site_start variable and cannot have publish or unpublish dates set!";
-			exit;
+			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
 		}
 		if ($parent == $id) {
 			$modx->manager->saveFormValues(27);
-			echo "Document can not be it's own parent!";
-			exit;
+			$modx->webAlertAndQuit("Document can not be it's own parent!");
 		}
 		// check to see document is a folder
 		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='. $_REQUEST['id']);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
-			echo "An error occured while attempting to find the document's children.";
-			exit;
+			$modx->webAlertAndQuit("An error occured while attempting to find the document's children.");
 		}
 		$row = $modx->db->getRow($rs);
 		if ($row['COUNT(id)'] > 0) {
@@ -574,7 +531,7 @@ switch ($actionToTake) {
 
 		$rs = $modx->db->query($sql);
 		if (!$rs) {
-			echo "An error occured while attempting to save the edited document. The generated SQL is: <i> $sql </i>.";
+			$modx->webAlertAndQuit("An error occured while attempting to save the edited document. The generated SQL is: <i> $sql </i>.");
 		}
 
 		// update template variables
@@ -663,8 +620,7 @@ switch ($actionToTake) {
 			}
 			if (!$saved) {
 				$modx->manager->saveFormValues(27);
-				echo "An error occured while saving document groups.";
-				exit;
+				$modx->webAlertAndQuit("An error occured while saving document groups.");
 			}
 		}
 
@@ -673,14 +629,14 @@ switch ($actionToTake) {
 			$fields = array('isfolder' => 1);
 			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$_REQUEST['parent']);
 			if (!$rs) {
-				echo "An error occured while attempting to change the new parent to a folder.";
+				$modx->webAlertAndQuit("An error occured while attempting to change the new parent to a folder.");
 			}
 		}
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder
 		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='.$oldparent);
 		if (!$rs) {
-			echo "An error occured while attempting to find the old parents' children.";
+			$modx->webAlertAndQuit("An error occured while attempting to find the old parents' children.");
 		}
 		$row = $modx->db->getRow($rs);
 		$limit = $row['COUNT(id)'];
@@ -689,7 +645,7 @@ switch ($actionToTake) {
 			$fields = array('isfolder' => 0);
 			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$oldparent);
 			if (!$rs) {
-				echo "An error occured while attempting to change the old parent to a regular document.";
+				$modx->webAlertAndQuit("An error occured while attempting to change the old parent to a regular document.");
 			}
 		}
 

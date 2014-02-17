@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('messages')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $sendto = $_REQUEST['sendto'];
@@ -16,8 +15,7 @@ $postdate = time();
 
 if($sendto=='u') {
 	if($userid==0) {
-		$e->setError(13);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_user_selected"]);
 	}
 	$sql = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
 			values($userid, ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 1);";
@@ -26,8 +24,7 @@ if($sendto=='u') {
 
 if($sendto=='g') {
 	if($groupid==0) {
-		$e->setError(14);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_group_selected"]);
 	}
 	$sql = "SELECT internalKey FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=$groupid";
 	$rs = $modx->db->query($sql);

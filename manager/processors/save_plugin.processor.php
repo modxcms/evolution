@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_plugin')) {  
-    $e->setError(3);
-    $e->dumpError();    
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -48,39 +47,19 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['a'] = '101';
-			$_GET['a'] = '101';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $locked;
-			$content['plugincode'] = $_POST['post'];
-			$content['category'] = $_POST['categoryid'];
-			$content['disabled'] = $disabled;
-			$content['properties'] = $properties;
-			$content['moduleguid'] = $moduleguid;
-			$content['sysevents'] = $sysevents;
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_plugin.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(101);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=101");
 		}
 
 		//do stuff to save the new plugin
         $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
         $rs = $modx->db->query($sql);
         if(!$rs){
-            echo "\$rs not set! New plugin not saved!";
+            $modx->webAlertAndQuit("\$rs not set! New plugin not saved!");
         } else {    
             // get the id
             if(!$newid=$modx->db->getInsertId()) {
-                echo "Couldn't get last insert key!";
-                exit;
+                $modx->webAlertAndQuit("Couldn't get last insert key!");
             }
             
             // save event listeners
@@ -123,7 +102,7 @@ switch ($_POST['mode']) {
         $sql = "UPDATE {$tblSitePlugins} SET name='{$name}', description='{$description}', plugincode='{$plugincode}', disabled={$disabled}, moduleguid='{$moduleguid}', locked={$locked}, properties='{$properties}', category={$categoryid}  WHERE id={$id}";
         $rs = $modx->db->query($sql);
         if(!$rs){
-            echo "\$rs not set! Edited plugin not saved!";
+            $modx->webAlertAndQuit("\$rs not set! Edited plugin not saved!");
         } 
         else {      
             // save event listeners

@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_template')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 	$id = isset($_GET['id'])? intval($_GET['id']):0;
@@ -60,8 +59,7 @@ $_SESSION['itemname'] = $name;
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
 	$rs = $modx->db->query($sql);
 	if(!$rs) {
-		echo "Something went wrong while trying to delete the field...";
-		exit;
+		$modx->webAlertAndQuit("Something went wrong while trying to delete the field...");
 	} else {		
 		$header="Location: index.php?a=76&r=2";
 		header($header);

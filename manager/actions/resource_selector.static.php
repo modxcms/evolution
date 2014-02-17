@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_module')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
@@ -186,8 +185,7 @@ if($_SESSION['browser']==='legacy_IE') {
 		<?php
 			$ds = $modx->db->query($sql);
 			if (!$ds){
-				echo "An error occured while loading records.";
-				exit;
+				$modx->webAlertAndQuit("An error occured while loading records.");
 			}
 			else {
 				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
