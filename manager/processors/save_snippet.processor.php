@@ -51,25 +51,8 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang["snippet"], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$_REQUEST['id'] = 0;
-			$_REQUEST['a'] = '23';
-			$_GET['a'] = '23';
-			$content = array();
-			$content['id'] = 0;
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
-			$content['category'] = $_POST['categoryid'];
-			$content['snippet'] = preg_replace("/^\s*\<\?php/m", '', $_POST['post']);
-			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_snippet.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(23);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
 		}
 
 		//do stuff to save the new doc

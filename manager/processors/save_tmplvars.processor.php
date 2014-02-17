@@ -49,34 +49,16 @@ switch ($_POST['mode']) {
 		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_tmplvars` WHERE name = '{$name}'";
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
-        $nameerror = false;
 		if($count > 0) {
-            $nameerror = true;
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name));
-        }
+			$modx->manager->saveFormValues(300);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=300");
+		}
         // disallow reserved names
         if(in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'donthit', 'haskeywords', 'hasmetatags', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu','alias_visible'))) {
-            $nameerror = true;
-            $_POST['name'] = '';
-			$modx->event->alert(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name));
+		$_POST['name'] = '';
+		$modx->manager->saveFormValues(300);
+		$modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=300");
         }
-        if($nameerror) {
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['id'] = 0;
-			$content['id'] = 0;
-			$_GET['a'] = '300';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
-			$content['category'] = $_POST['categoryid'];
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_tmplvars.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
-		}
 
 		// Add new TV
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";

@@ -47,27 +47,8 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['a'] = '101';
-			$_GET['a'] = '101';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $locked;
-			$content['plugincode'] = $_POST['post'];
-			$content['category'] = $_POST['categoryid'];
-			$content['disabled'] = $disabled;
-			$content['properties'] = $properties;
-			$content['moduleguid'] = $moduleguid;
-			$content['sysevents'] = $sysevents;
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_plugin.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(101);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=101");
 		}
 
 		//do stuff to save the new plugin

@@ -42,18 +42,8 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename));
-
-			// prepare a few request/post variables for form redisplay...
-			$_REQUEST['a'] = '19';
-			$_POST['locked'] = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
-			$_POST['category'] = $categoryid;
-			$_GET['stay'] = $_POST['stay'];
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(19);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=19");
 		}
 
 		//do stuff to save the new doc
@@ -105,18 +95,8 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename));
-
-			// prepare a few request/post variables for form redisplay...
-			$_REQUEST['a'] = '16';
-			$_POST['locked'] = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
-			$_POST['category'] = $categoryid;
-			$_GET['stay'] = $_POST['stay'];
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_templates.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(16);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=16&id={$id}");
 		}
 							
 		//do stuff to save the edited doc
