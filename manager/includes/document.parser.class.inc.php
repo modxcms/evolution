@@ -1805,6 +1805,37 @@ class DocumentParser {
     }
 
     /**
+     * Displays a javascript alert message in the web browser and quit
+     *
+     * @param string $msg Message to show
+     * @param string $url URL to redirect to
+     */
+    function webAlertAndQuit($msg, $url= "") {
+        global $modx_manager_charset;
+        if (substr(strtolower($url), 0, 11) == "javascript:") {
+            $fnc = substr($url, 11);
+        } elseif ($url) {
+            $fnc = "window.location.href='" . addslashes($url) . "';";
+        } else {
+            $fnc = "history.back(-1);";
+        }
+        echo "<html><head>
+            <title>MODX :: Alert</title>
+            <meta http-equiv=\"Content-Type\" content=\"text/html; charset={$modx_manager_charset};\">
+            <script>
+                function __alertQuit() {
+                    alert('" . addslashes($msg) . "');
+                    {$fnc}
+                }
+                window.setTimeout('__alertQuit();',100);
+            </script>
+            </head><body>
+            <p>{$msg}</p>
+            </body></html>";
+            exit;
+    }
+
+    /**
      * Returns true if user has the currect permission
      *
      * @param string $pm Permission name
