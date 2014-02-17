@@ -636,6 +636,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         } else {
                             $default_template = getDefaultTemplate();
                             $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
+                            $content['template'] = $default_template;
                         }
                     }
                     echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
