@@ -1,24 +1,20 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // ok, two things to check.
 // first, document cannot be moved to itself
 // second, new parent must be a folder. If not, set it to folder.
 if($_REQUEST['id']==$_REQUEST['new_parent']) {
-		$e->setError(600);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument1"]);
 }
 if($_REQUEST['id']=="") {
-		$e->setError(601);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument2"]);
 }
 if($_REQUEST['new_parent']=="") {
-		$e->setError(602);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument2"]);
 }
 
 $sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";

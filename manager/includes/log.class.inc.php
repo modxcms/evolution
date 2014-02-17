@@ -17,11 +17,8 @@ class logHandler {
     var $entry = array();
 
     function logError($msg) {
-        include_once dirname(__FILE__)."/error.class.inc.php";
-        $e = new errorHandler;
-        $e->setError(9, "Logging error: ".$msg);
-        $e->dumpError();
-        return;
+		global $modx;
+		$modx->webAlertAndQuit("Logging error: ".$msg);
     }
 
     function initAndWriteLog($msg="", $internalKey="", $username="", $action="", $itemid="", $itemname="") {

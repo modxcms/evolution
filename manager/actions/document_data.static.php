@@ -41,8 +41,7 @@ if ($limit > 1) {
 	     "<p><strong>Aborting...</strong></p>";
 	exit;
 } elseif ($limit == 0) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 $content = $modx->db->getRow($rs);
 
@@ -143,10 +142,7 @@ if ($numRecords > 0) {
 	'</select></p>';
 	if (!$rs = $modx->db->query($sql)) {
 		// sql error
-		$e->setError(1);
-		$e->dumpError();
-		include($modx->config['site_manager_path'].'includes/footer.inc.php');
-		exit;
+		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	} else {
 		$resource = array();
 		while($row = $modx->db->getRow($rs)){

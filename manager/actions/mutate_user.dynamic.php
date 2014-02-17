@@ -4,19 +4,16 @@ if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Ple
 switch((int) $_REQUEST['a']) {
   case 12:
     if (!$modx->hasPermission('edit_user')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 11:
     if (!$modx->hasPermission('new_user')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();  
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -29,9 +26,7 @@ if ($limit > 1) {
 	for ($i = 0; $i < $limit; $i++) {
 		$lock = $modx->db->getRow($rs);
 		if ($lock['internalKey'] != $modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"], $lock['username'], "user");
-			$e->setError(5, $msg);
-			$e->dumpError();
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
 		}
 	}
 }

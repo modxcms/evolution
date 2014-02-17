@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('bk_manager')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $dbase = trim($dbase,'`');
@@ -70,9 +69,7 @@ elseif ($mode=='backup')
 	}
 	else
 	{
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 
 	// MySQLdumper class can be found below
@@ -137,9 +134,7 @@ elseif ($mode=='snapshot')
 		header("Location: index.php?a=93");
 		exit;
 	} else {
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 }
 else
@@ -621,10 +616,7 @@ function import_sql($source,$result_code='import_ok')
 	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
 	if(0 < $modx->db->getRecordCount($rs))
 	{
-		include_once "header.inc.php";  // start normal header
-		$e->setError(5, 'Resource is edit now by any user');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit("Resource is edit now by any user.");
 	}
 	
 	$settings = getSettings();

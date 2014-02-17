@@ -12,16 +12,14 @@ $add_path=$sd.$sb.$pg;
 switch ($_REQUEST['a']) {
     case 27:
         if (!$modx->hasPermission('edit_document')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 85:
     case 72:
     case 4:
         if (!$modx->hasPermission('new_document')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         } elseif(isset($_REQUEST['pid']) && $_REQUEST['pid'] != '0') {
             // check user has permissions for parent
             include_once(MODX_MANAGER_PATH.'processors/user_documents_permissions.class.php');
@@ -30,14 +28,12 @@ switch ($_REQUEST['a']) {
             $udperms->document = empty($_REQUEST['pid']) ? 0 : $_REQUEST['pid'];
             $udperms->role = $_SESSION['mgrRole'];
             if (!$udperms->checkPermissions()) {
-                $e->setError(3);
-                $e->dumpError();
+                $modx->webAlertAndQuit($_lang["access_permission_denied"]);
             }
         }
         break;
     default:
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 
@@ -93,9 +89,7 @@ if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
         $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'], $lock['username'], 'document');
-            $e->setError(5, $msg);
-            $e->dumpError();
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'document'));
         }
     }
 }
@@ -115,12 +109,10 @@ if (!empty ($id)) {
     $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
-        $e->setError(6);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_many_results"]);
     }
     if ($limit < 1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['pagetitle'];
@@ -690,8 +682,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     $rs = $modx->db->query($sql);
                     $limit = $modx->db->getRecordCount($rs);
                     if ($limit != 1) {
-                        $e->setError(8);
-                        $e->dumpError();
+                        $modx->webAlertAndQuit($_lang["error_no_parent"]);
                     }
                     $parentrs = $modx->db->getRow($rs);
                     $parentname = $parentrs['pagetitle'];

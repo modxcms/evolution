@@ -4,19 +4,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 switch((int) $_REQUEST['a']) {
   case 102:
     if(!$modx->hasPermission('edit_plugin')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 101:
     if(!$modx->hasPermission('new_plugin')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -35,9 +32,7 @@ if($limit>1)
     {
         if($lock['internalKey']!=$modx->getLoginUserID())
         {
-            $msg = sprintf($_lang["lock_msg"],$lock['username'],$_lang['plugin']);
-            $e->setError(5, $msg);
-            $e->dumpError();
+            $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['plugin']));
         }
     }
 }
@@ -60,8 +55,7 @@ if(isset($_GET['id']))
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
     {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 }
 else

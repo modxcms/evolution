@@ -1,8 +1,7 @@
 <?php
 if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // preprocess POST values
@@ -276,12 +275,10 @@ if ($actionToTake != "new") {
 	$rs = $modx->db->select('*', $tbl_site_content, 'id='.$id);
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
-		$e->setError(6);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_many_results"]);
 	}
 	if ($limit < 1) {
-		$e->setError(7);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	}
 	$existingDocument = $modx->db->getRow($rs);
 }

@@ -4,19 +4,16 @@ if (IN_MANAGER_MODE != 'true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Ple
 switch ((int) $_REQUEST['a']) {
     case 78:
         if (!$modx->hasPermission('edit_chunk')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 77:
         if (!$modx->hasPermission('new_chunk')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     default:
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if (isset($_REQUEST['id']))
@@ -35,9 +32,7 @@ if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
         $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']);
-            $e->setError(5, $msg);
-            $e->dumpError();
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']));
         }
     }
 }
@@ -58,8 +53,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
     $_SESSION['itemname'] = $_lang["new_htmlsnippet"];

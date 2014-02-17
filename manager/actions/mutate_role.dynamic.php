@@ -6,20 +6,17 @@ switch((int) $_REQUEST['a'])
 	case 35:
 		if(!$modx->hasPermission('edit_role'))
 		{
-			$e->setError(3);
-			$e->dumpError();
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;
 	case 38:
 		if(!$modx->hasPermission('new_role'))
 		{
-			$e->setError(3);
-			$e->dumpError();
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;
 	default:
-		$e->setError(3);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -35,8 +32,7 @@ if($total>1) {
 		$lock = $modx->db->getRow($rs);
 		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']);
-			$e->setError(5, $msg);
-			$e->dumpError();
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']));
 		}
 	}
 }
