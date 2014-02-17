@@ -134,7 +134,9 @@ else if ($isPostBack){
     // add user to web groups
     if(count($groups)>0) {
         $ds = $modx->db->query("SELECT id FROM ".$modx->getFullTableName("webgroup_names")." WHERE name IN ('".implode("','",$groups)."')");
-        if(!$ds) return $modx->webAlert('An error occured while attempting to update user\'s web groups');
+        if(!$ds) {
+			$output = webLoginAlert('An error occured while attempting to update user\'s web groups');
+			return;
         else {
             while ($row = $modx->db->getRow($ds)) {
                 $wg = $row["id"];

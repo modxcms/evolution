@@ -111,18 +111,10 @@ if ($friendly_urls) {
 		if ($docid > 0) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
 			}
 		}
 	}
@@ -135,18 +127,10 @@ if ($friendly_urls) {
                 if ($docid > 0) {
                         if ($actionToTake == 'edit') {
                                 $modx->manager->saveFormValues(27);
-                                $url = "index.php?a=27&id=" . $id;
-                                include_once "header.inc.php";
-                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-                                include_once "footer.inc.php";
-                                exit;
+                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
                         } else {
                                 $modx->manager->saveFormValues(4);
-                                $url = "index.php?a=4";
-                                include_once "header.inc.php";
-                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
-                                include_once "footer.inc.php";
-                                exit;
+                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
                         }
                 }
         //end webber        
@@ -201,18 +185,10 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 		if($count == 0) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=4");
 			}
 		}
 	}
@@ -295,18 +271,10 @@ if ($use_udperms == 1) {
 		if (!$udperms->checkPermissions()) {
 			if ($actionToTake == 'edit') {
 				$modx->manager->saveFormValues(27);
-				$url = "index.php?a=27&id=" . $id;
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=27&id={$id}");
 			} else {
 				$modx->manager->saveFormValues(4);
-				$url = "index.php?a=4";
-				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), $url);
-				include_once "footer.inc.php";
-				exit;
+				$modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=4");
 			}
 		}
 	}
