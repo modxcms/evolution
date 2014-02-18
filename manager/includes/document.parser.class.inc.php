@@ -2106,67 +2106,77 @@ class DocumentParser {
         return $resourceArray;
     }
 
-    /**
-     * Returns multiple documents/resources
-     *
-     * @category API-Function
-     * @param array $ids Documents to fetch by docid
-     *                   Default: Empty array
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param string $where Where condition in SQL style. Should include a leading 'AND '.
-     *                      Default: Empty string
-     * @param type $sort Should be a comma-separated list of field names on which to sort
-     *                    Default: menuindex
-     * @param string $dir Sort direction, ASC and DESC is possible
-     *                    Default: ASC
-     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
-     *                          Default: Empty string (no limit)
-     * @return array|boolean Result array with documents, or false
-     */
-    function getDocuments($ids= array (), $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
-        if(is_string($ids))
-        {
-            if(strpos($ids,',')!==false)
-                $ids = explode(',', $ids);
-            else
-                $ids = array($ids);
-        }
-        if (count($ids) == 0) {
-            return false;
-        } else {
-            $limit= ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
-            $tblsc= $this->getFullTableName("site_content");
-            $tbldg= $this->getFullTableName("document_groups");
-            // modify field names to use sc. table reference
-            $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-            $sort= ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
-            if ($where != '')
-                $where= 'AND ' . $where;
-            // get document groups for current user
-            if ($docgrp= $this->getUserDocGroups())
-                $docgrp= implode(",", $docgrp);
-            $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
-             (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $sql= "SELECT DISTINCT $fields FROM $tblsc sc
-                    LEFT JOIN $tbldg dg on dg.document = sc.id
-                    WHERE (sc.id IN (" . implode(",",$ids) . ") AND sc.published=$published AND sc.deleted=$deleted $where)
-                    AND ($access)
-                    GROUP BY sc.id " .
-             ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
-            $result= $this->db->query($sql);
-            $resourceArray= array ();
-            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-                array_push($resourceArray, @ $this->db->getRow($result));
-            }
-            return $resourceArray;
-        }
-    }
-
+	/**
+	 * getDocuments
+	 * @version 1.1 (2013-02-18)
+	 * 
+	 * @desc Returns required documents (their fields).
+	 * 
+	 * @param $ids {array; comma separated string} - Documents Ids to get. @required
+	 * @param $published {0; 1; 'all'} - Documents publication status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are published or they are not. Default: 1.
+	 * @param $deleted {0; 1; 'all'} - Documents removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
+	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
+	 * @param $where {string} - SQL WHERE clause. Default: ''.
+	 * @param $sort {comma separated string} - A comma-separated list of field names to sort by. Default: 'menuindex'.
+	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
+	 * @param $limit {string} - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
+	 * 
+	 * @return {array; false} - Result array with documents, or false.
+	 */
+	function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+		if(is_string($ids)){
+			if(strpos($ids, ',') !== false){
+				$ids = explode(',', $ids);
+			}else{
+				$ids = array($ids);
+			}
+		}
+		
+		if (count($ids) == 0){
+			return false;
+		}else{
+			// LIMIT capabilities - rad14701
+			$limit = ($limit != '') ? 'LIMIT '.$limit : '';
+			
+			$tblsc = $this->getFullTableName('site_content');
+			$tbldg = $this->getFullTableName('document_groups');
+			
+			// modify field names to use sc. table reference
+			$fields = 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
+			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			
+			if ($where != ''){
+				$where = 'AND '.$where;
+			}
+			
+			$published = ($published != 'all') ? 'AND sc.published = '.$published : '';
+			$deleted = ($deleted != 'all') ? 'AND sc.deleted = '.$deleted : '';
+			
+			// get document groups for current user
+			if ($docgrp = $this->getUserDocGroups()){
+				$docgrp = implode(',', $docgrp);
+			}
+			
+			$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
+			
+			$sql = "
+				SELECT DISTINCT $fields FROM $tblsc sc
+				LEFT JOIN $tbldg dg on dg.document = sc.id
+				WHERE (sc.id IN (".implode(',', $ids).") $published $deleted $where) AND ($access)
+				GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir" : '')." $limit
+			";
+			
+			$result = $this->db->query($sql);
+			$resourceArray = array();
+			
+			for ($i = 0; $i < @$this->db->getRecordCount($result); $i++){
+				array_push($resourceArray, @$this->db->getRow($result));
+			}
+			
+			return $resourceArray;
+		}
+	}
+	
      /**
      * Returns one document/resource
      *
