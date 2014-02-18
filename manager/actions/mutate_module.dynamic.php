@@ -518,9 +518,7 @@ if (!$ds) {
     $chk = '';
     $sql = "SELECT name, id FROM ".$tbl_membergroup_names;
     $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    for ($i = 0; $i < $limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    while ($row = $modx->db->getRow($rs)) {
         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
         $checked = in_array($row['id'], $groupsarray);
         if($modx->hasPermission('access_permissions')) {

@@ -430,8 +430,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     $rs = $modx->db->select('*',$tbl_system_eventnames,'','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
-    else for ($i=0; $i<$limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    else while ($row = $modx->db->getRow($rs)) {
         // display records
         if($srv!=$row['service']){
             $srv=$row['service'];

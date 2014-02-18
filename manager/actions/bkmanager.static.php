@@ -213,10 +213,9 @@ else
 			<?php
 $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-for ($i = 0; $i < $limit; $i++) {
-	$db_status = $modx->db->getRow($rs);
-	$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+$i = 0;
+while ($db_status = $modx->db->getRow($rs)) {
+	$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 
 	if (isset($tables))
 		$table_string = implode(',', $table);

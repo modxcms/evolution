@@ -28,8 +28,7 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle']?></a></td>
@@ -69,8 +68,7 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
@@ -110,8 +108,7 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 ?>
     <tr class="<?php echo ($i % 2 ? 'even' : '')?>">
 	<td><a href="index.php?a=3&id=<?php echo $row['id']?>"><?php echo $row['pagetitle']?></a></td>

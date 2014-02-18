@@ -48,17 +48,16 @@ function getChildren($parent) {
 	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
 		// the document has children documents, we'll need to delete those too
-		for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
-			if($row['id']==$site_start) {
-				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.");
+		while ($childid=$modx->db->getValue($rs)) {
+			if($childid==$site_start) {
+				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.");
 			}
-			if($row['id']==$site_unavailable_page) {
-				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as the 'Site unavailable page' document, and cannot be deleted. Please assign another document as your 'Site unavailable page' document and try again.");
+			if($childid==$site_unavailable_page) {
+				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site unavailable page' document, and cannot be deleted. Please assign another document as your 'Site unavailable page' document and try again.");
 			}
-			$children[] = $row['id'];
-			getChildren($row['id']);
-			//echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
+			$children[] = $childid;
+			getChildren($childid);
+			//echo "Found childNode of parentNode $parent: ".$childid."<br />";
 		}
 	}
 }

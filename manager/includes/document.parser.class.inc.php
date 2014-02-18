@@ -282,8 +282,8 @@ class DocumentParser {
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
-                    while ($row= $this->db->getRow($result, 'both')) {
-                        $this->config[$row[0]]= $row[1];
+                    while ($row= $this->db->getRow($result)) {
+                        $this->config[$row['setting_name']]= $row['setting_value'];
                     }
                 }
             }
@@ -325,8 +325,8 @@ class DocumentParser {
                     	$where = "user='{$id}'";
                     }
                     $result= $this->db->select('setting_name, setting_value', $from, $where);
-                    while ($row= $this->db->getRow($result, 'both'))
-                        $usrSettings[$row[0]]= $row[1];
+                    while ($row= $this->db->getRow($result))
+                        $usrSettings[$row['setting_name']]= $row['setting_value'];
                     if (isset ($usrType))
                         $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
                 }
@@ -337,8 +337,8 @@ class DocumentParser {
                     $musrSettings= & $_SESSION['mgrUsrConfigSet'];
                 } else {
                     if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
-                        while ($row= $this->db->getRow($result, 'both')) {
-                            $usrSettings[$row[0]]= $row[1];
+                        while ($row= $this->db->getRow($result)) {
+                            $usrSettings[$row['setting_name']]= $row['setting_value'];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
                     }
@@ -1443,8 +1443,7 @@ class DocumentParser {
         $rs= $this->db->query($sql);
         $rowCount= $this->db->getRecordCount($rs);
         if ($rowCount > 0) {
-            for ($i= 0; $i < $rowCount; $i++) {
-                $row= $this->db->getRow($rs);
+            while ($row= $this->db->getRow($rs)) {
                 $tmplvars[$row['name']]= array (
                     $row['name'],
                     $row['value'],

@@ -749,9 +749,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
-                    for ($i = 0; $i < $limit; $i++) {
+                    $i = 0;
+                    while ($row = $modx->db->getRow($rs)) {
                         // Go through and display all Template Variables
-                        $row = $modx->db->getRow($rs);
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                             // Add richtext editor to the list
                             if (is_array($replace_richtexteditor)) {
@@ -765,7 +765,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                             }
                         }
                         // splitter
-                        if ($i > 0 && $i < $limit)
+                        if ($i++ > 0)
                             echo "\t\t",'<tr><td colspan="2"><div class="split"></div></td></tr>',"\n";
 
                         // post back value
@@ -949,8 +949,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
     $ds = $modx->db->select('*', $tbl_site_keywords, '', 'keyword ASC');
     $limit = $modx->db->getRecordCount($ds);
     if ($limit > 0) {
-        for ($i = 0; $i < $limit; $i++) {
-            $row = $modx->db->getRow($ds);
+        while ($row = $modx->db->getRow($ds)) {
             $keywords[$row['id']] = $row['keyword'];
         }
     }
@@ -960,8 +959,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
         $ds = $modx->db->select('keyword_id', $tbl_keyword_xref, 'content_id=\''.$content['id'].'\'');
         $limit = $modx->db->getRecordCount($ds);
         if ($limit > 0) {
-            for ($i = 0; $i < $limit; $i++) {
-                $row = $modx->db->getRow($ds);
+            while ($row = $modx->db->getRow($ds)) {
                 $keywords_selected[$row['keyword_id']] = ' selected="selected"';
             }
         }
@@ -972,8 +970,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
     $ds = $modx->db->select('*', $tbl_site_metatags);
     $limit = $modx->db->getRecordCount($ds);
     if ($limit > 0) {
-        for ($i = 0; $i < $limit; $i++) {
-            $row = $modx->db->getRow($ds);
+        while ($row = $modx->db->getRow($ds)) {
             $metatags[$row['id']] = $row['name'];
         }
     }
@@ -983,8 +980,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
         $ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, 'content_id=\''.$content['id'].'\'');
         $limit = $modx->db->getRecordCount($ds);
         if ($limit > 0) {
-            for ($i = 0; $i < $limit; $i++) {
-                $row = $modx->db->getRow($ds);
+            while ($row = $modx->db->getRow($ds)) {
                 $metatags_selected[$row['metatag_id']] = ' selected="selected"';
             }
         }
@@ -1001,10 +997,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             <td><span class="warning"><?php echo $_lang['keywords']?></span><br />
                 <select name="keywords[]" multiple="multiple" size="16" class="inputBox" style="width: 200px;" onchange="documentDirty=true;">
                 <?php
-                    $keys = array_keys($keywords);
-                    for ($i = 0; $i < count($keys); $i++) {
-                        $key = $keys[$i];
-                        $value = $keywords[$key];
+                    foreach ($keywords as $key=>$value) {
                         $selected = $keywords_selected[$key];
                         echo "\t\t\t\t".'<option value="'.$key.'"'.$selected.'>'.$value."</option>\n";
                     }
@@ -1016,10 +1009,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             <td><span class="warning"><?php echo $_lang['metatags']?></span><br />
                 <select name="metatags[]" multiple="multiple" size="16" class="inputBox" style="width: 220px;" onchange="documentDirty=true;">
                 <?php
-                    $keys = array_keys($metatags);
-                    for ($i = 0; $i < count($keys); $i++) {
-                        $key = $keys[$i];
-                        $value = $metatags[$key];
+                    foreach ($metatags as $key=>$value) {
                         $selected = $metatags_selected[$key];
                         echo "\t\t\t\t".'<option value="'.$key.'"'.$selected.'>'.$value."</option>\n";
                     }
@@ -1067,7 +1057,6 @@ if ($use_udperms == 1) {
 
     // Query the permissions and names from above
     $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
 
     $isManager = $modx->hasPermission('access_permissions');
     $isWeb     = $modx->hasPermission('web_access_permissions');
@@ -1084,8 +1073,7 @@ if ($use_udperms == 1) {
     $permissions_no = 0; // count permissions the current mgr user doesn't have
 
     // Loop through the permissions list
-    for ($i = 0; $i < $limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    while ($row = $modx->db->getRow($rs)) {
 
         // Create an inputValue pair (group ID and group link (if it exists))
         $inputValue = $row['id'].','.($row['link_id'] ? $row['link_id'] : 'new');

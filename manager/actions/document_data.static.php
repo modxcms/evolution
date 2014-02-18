@@ -71,8 +71,7 @@ $sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.'
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 		$keywords[$i] = $row['keyword'];
 	}
 }
@@ -86,8 +85,7 @@ $sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
 }

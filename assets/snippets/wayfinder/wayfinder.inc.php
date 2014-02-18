@@ -388,7 +388,6 @@ class Wayfinder {
 			//run the query
 			$result = $modx->db->query($sql);
 	        $resourceArray = array();
-			$numResults = @$modx->db->getRecordCount($result);
 			$level = 1;
 			$prevParent = -1;
 			//Setup startlevel for determining each items level
@@ -400,8 +399,7 @@ class Wayfinder {
 			}
 			$resultIds = array();
 			//loop through the results
-			for($i=0;$i<$numResults;$i++)  {
-				$tempDocInfo = $modx->db->getRow($result);
+			while ($tempDocInfo = $modx->db->getRow($result))  {
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
@@ -479,10 +477,8 @@ class Wayfinder {
 		$query .= " FROM ".$tb1." stc LEFT JOIN ".$tb2." stv ON stv.id=stc.tmplvarid ";
 		$query .= " WHERE stv.name='".$tvname."' AND stc.contentid IN (".implode($docIDs,",").") ORDER BY stc.contentid ASC;";
 		$rs = $modx->db->query($query);
-		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
-		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->db->getRow($rs);
+		while ($row = $modx->db->getRow($rs))  {
 			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 		}
 

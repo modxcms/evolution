@@ -485,12 +485,10 @@ function decode(s){
 		}
 		$chk ='';
 		$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
-		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
 		    }
-		    for($i=0; $i<$limit; $i++) {
-		        $row=$modx->db->getRow($rs);
+		    while ($row=$modx->db->getRow($rs)) {
 		        $checked = in_array($row['id'], $groupsarray);
 		        if($modx->hasPermission('access_permissions')) {
 		            if($checked) $notPublic = true;

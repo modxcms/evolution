@@ -792,9 +792,7 @@ if (is_array($evtOut))
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
 		$sql = "SELECT * FROM $dbase.`" . $table_prefix . "member_groups` where member=" . $_GET['id'] . "";
 		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs);
-		for ($i = 0; $i < $limit; $i++) {
-			$currentgroup = $modx->db->getRow($rs);
+		while ($currentgroup=$modx->db->getRow($rs)) {
 			$groupsarray[$i] = $currentgroup['user_group'];
 		}
 	}
@@ -814,9 +812,7 @@ if (is_array($evtOut))
 	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
 	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row=$modx->db->getRow($rs)) {
 		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}
 ?>
