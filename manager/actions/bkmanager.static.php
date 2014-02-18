@@ -93,10 +93,7 @@ elseif ($mode=='snapshot')
 	$tables = array();
 	if(0<$modx->db->getRecordCount($rs))
 	{
-		while($db_status = $modx->db->getRow($rs))
-		{
-			$tables[] = $db_status['Name'];
-		}
+		$tables = $modx->db->getColumn('Name', $rs);
 	}
 	//$today = $modx->toDateFormat(time());
 	//$today = str_replace(array('/',' '), '-', $today);

@@ -7,12 +7,8 @@ if(!$modx->hasPermission('delete_document')) {
 $sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
-$ids = array();
 if($limit>0) {
-	for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
-		array_push($ids, @$row['id']);
-	}
+	$ids = $modx->db->getColumn('id', $rs); 
 }
 
 // invoke OnBeforeEmptyTrash event

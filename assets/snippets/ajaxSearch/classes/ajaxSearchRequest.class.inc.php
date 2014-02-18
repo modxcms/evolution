@@ -752,8 +752,7 @@ class AjaxSearchRequest {
     function _getDocTvs($docid, $tvNames_array) {
         global $modx;
         $results = array();
-        $idnames = array();
-
+        
         if (count($tvNames_array)) $where = " AND name in ('" . implode("','",$tvNames_array) . "')";
         else $where = '';
 
@@ -764,9 +763,7 @@ class AjaxSearchRequest {
         $sql .= "WHERE tvc.contentid = '" . $docid . "'" . $where;
         $rs= $modx->db->query($sql);
         if ($modx->db->getRecordCount($rs)) {
-            while($row = $modx->db->getRow($rs)){
-                array_push($idnames,$row['id']);
-            }
+            $idnames = $modx->db->getColumn('id', $rs);
             $results = $modx->getTemplateVarOutput($idnames,$docid);
             if (!$results) $results = array();
         }

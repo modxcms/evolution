@@ -39,9 +39,7 @@ class ditto {
 		$table = $modx->getFullTableName("site_tmplvars");
 		$tvs = $modx->db->select("name", $table);
 			// TODO: make it so that it only pulls those that apply to the current template
-		$dbfields = array();
-		while ($dbfield = $modx->db->getRow($tvs))
-			$dbfields[] = $dbfield['name'];
+		$dbfields = $modx->db->getColumn('name', $tvs);
 		return $dbfields;
 	}
 	
