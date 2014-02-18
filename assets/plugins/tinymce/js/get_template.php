@@ -18,7 +18,7 @@ $limit               = 0;
 
 /* That's it to config! */
 define('MODX_API_MODE', true);
-define('IN_MANAGER_MODE', true);
+define('IN_MANAGER_MODE', "true");
 $self = 'assets/plugins/tinymce/js/get_template.php';
 $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
 include_once("{$base_path}index.php");
