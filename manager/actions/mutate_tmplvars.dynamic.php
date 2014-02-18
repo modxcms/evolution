@@ -447,13 +447,9 @@ function decode(s){
 	    $groupsarray = array();
 
 	    // fetch permissions for the variable
-	    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
+	    $sql = "SELECT documentgroup FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
 	    $rs = $modx->db->query($sql);
-	    $limit = $modx->db->getRecordCount($rs);
-	    for ($i = 0; $i < $limit; $i++) {
-	        $currentgroup=$modx->db->getRow($rs);
-	        $groupsarray[$i] = $currentgroup['documentgroup'];
-	    }
+	    $groupsarray = $modx->db->getColumn('documentgroup', $rs);
 
 ?>
 <?php if($modx->hasPermission('access_permissions')) { ?>
@@ -485,12 +481,10 @@ function decode(s){
 		}
 		$chk ='';
 		$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
-		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
 		    }
-		    for($i=0; $i<$limit; $i++) {
-		        $row=$modx->db->getRow($rs);
+		    while ($row=$modx->db->getRow($rs)) {
 		        $checked = in_array($row['id'], $groupsarray);
 		        if($modx->hasPermission('access_permissions')) {
 		            if($checked) $notPublic = true;

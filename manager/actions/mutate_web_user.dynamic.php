@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch((int) $_REQUEST['a']) {
   case 88:
@@ -518,9 +518,7 @@ $groupsarray = array();
 if($_GET['a']=='88') { // only do this bit if the user is being edited
 	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_groups` where webuser=".$_GET['id']."";
 	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for ($i = 0; $i < $limit; $i++) {
-		$currentgroup=$modx->db->getRow($rs);
+	while ($currentgroup=$modx->db->getRow($rs)) {
 		$groupsarray[$i] = $currentgroup['webgroup'];
 	}
 }
@@ -537,9 +535,7 @@ if(is_array($_POST['user_groups'])) {
     echo '<p>'. $_lang['access_permissions_user_message'] . '</p>';
 	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
 	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for($i=0; $i<$limit; $i++) {
-	   $row=$modx->db->getRow($rs);
+	while ($row=$modx->db->getRow($rs)) {
            echo '<input type="checkbox" name="user_groups[]" value="'.$row['id'].'"'.(in_array($row['id'], $groupsarray) ? ' checked="checked"' : '').' />'.$row['name'].'<br />';
 	}
     

@@ -45,8 +45,7 @@ $preEvt = '';
 $evtLists = '';
 $sortables = array();
 if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $plugins = $modx->db->getRow($rs);
+    while ($plugins = $modx->db->getRow($rs)) {
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
             $evtLists .= $insideUl? '</ul><br />': '';
@@ -56,9 +55,9 @@ if($limit>1) {
         $evtLists .= '<li id="item_'.$plugins['pluginid'].'"'.($plugins['disabled']?' style="color:#AAA"':'').'>'.$plugins['name'].($plugins['disabled']?' (hide)':'').'</li>';
         $preEvt = $plugins['evtid'];
     }
+    if ($insideUl) $evtLists .= '</ul>';
 }
 
-$evtLists .= '</ul>';
 
 $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">

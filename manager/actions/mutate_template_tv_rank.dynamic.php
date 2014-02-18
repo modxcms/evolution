@@ -42,14 +42,14 @@ $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $row = $modx->db->getRow($rs);
-        if ($i == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
+    $i = 0;
+    while ($row = $modx->db->getRow($rs)) {
+        if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
         $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
     }
+    $evtLists .= '</ul>';
 }
 
-$evtLists .= '</ul>';
 
 $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">

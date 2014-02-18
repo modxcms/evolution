@@ -93,10 +93,7 @@ elseif ($mode=='snapshot')
 	$tables = array();
 	if(0<$modx->db->getRecordCount($rs))
 	{
-		while($db_status = $modx->db->getRow($rs))
-		{
-			$tables[] = $db_status['Name'];
-		}
+		$tables = $modx->db->getColumn('Name', $rs);
 	}
 	//$today = $modx->toDateFormat(time());
 	//$today = str_replace(array('/',' '), '-', $today);
@@ -216,10 +213,9 @@ else
 			<?php
 $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-for ($i = 0; $i < $limit; $i++) {
-	$db_status = $modx->db->getRow($rs);
-	$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+$i = 0;
+while ($db_status = $modx->db->getRow($rs)) {
+	$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 
 	if (isset($tables))
 		$table_string = implode(',', $table);
@@ -630,10 +626,7 @@ function import_sql($source,$result_code='import_ok')
 	$modx->clearCache();
 	if(0 < $modx->db->getRecordCount($rs))
 	{
-		while($row = $modx->db->getRow($rs))
-		{
-			$_SESSION['last_result'][] = $row;
-		}
+		$_SESSION['last_result'] = $modx->db->makeArray($rs);
 	}
 	
 	$_SESSION['result_msg'] = $result_code;

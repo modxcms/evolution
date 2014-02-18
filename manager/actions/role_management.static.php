@@ -26,10 +26,9 @@ $sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` o
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
-	$modx->webAlertAndQuit("The request returned no roles!");
+	echo "<p>The request returned no roles!</p>";
 }
-for($i=0; $i<$limit; $i++) {
-	$row = $modx->db->getRow($rs);
+while ($row = $modx->db->getRow($rs)) {
 	if($row['id']==1) {
 ?>
 	<li><span style="width: 200px"><i><?php echo $row['name']; ?></i></span> - <i><?php echo $_lang['administrator_role_message']; ?></i></li>

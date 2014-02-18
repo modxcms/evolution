@@ -287,10 +287,7 @@ class CJotDataDb {
 		global $modx;
 		$tbl = $this->tbl["subscriptions"];
 		$rs = $modx->db->query("select userid from $tbl where uparent = $docid and tagid = '$tagid'");	
-		$subscriptions = array();
-		while ($row = $modx->db->getRow($rs)) {
-			$subscriptions[] = $row;
-		}
+		$subscriptions = $modx->db->makeArray($rs);
 		return $subscriptions;
 	}
 	

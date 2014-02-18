@@ -9,7 +9,7 @@ require_once(MODX_MANAGER_PATH.'/includes/config.inc.php');
 startCMSSession();
 
 if ($_SESSION['mgrValidated']){
-	define('IN_MANAGER_MODE', true);
+	define('IN_MANAGER_MODE', "true");
 	require_once(MODX_MANAGER_PATH.'/includes/protect.inc.php');
 	//Setup the MODx API
 	define('MODX_API_MODE', true);

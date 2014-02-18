@@ -34,8 +34,7 @@ if(!$modx->hasPermission('delete_template')) {
 		<?php
 			echo "<p>".$_lang['tmplvar_inuse']."</p>";
 			echo "<ul>";
-			for($i=0;$i<$count;$i++) {
-				$row = $modx->db->getRow($drs);
+			while ($row = $modx->db->getRow($drs)) {
 				echo '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&a=27">'.$row['pagetitle'].'</a></span>'.($row['description']!='' ? ' - '.$row['description'] : '').'</li>';
 			}
 			echo "</ul>";

@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
@@ -71,8 +71,7 @@ $sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.'
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 		$keywords[$i] = $row['keyword'];
 	}
 }
@@ -86,8 +85,7 @@ $sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+	while ($row = $modx->db->getRow($rs)) {
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
 }
@@ -141,10 +139,7 @@ if ($numRecords > 0) {
 		// sql error
 		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	} else {
-		$resource = array();
-		while($row = $modx->db->getRow($rs)){
-			$resource[] = $row;
-		}
+		$resource = $modx->db->makeArray($rs);
 
 		// CSS style for table
 		$tableClass = 'grid';

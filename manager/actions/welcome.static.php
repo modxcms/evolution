@@ -1,4 +1,5 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+<?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
@@ -105,11 +106,9 @@ $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     $html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
-    for ($i = 0; $i < $limit; $i++) {
-        $content = $modx->db->getRow($rs);
-        if($i==0) {
-            $syncid = $content['id'];
-        }
+    $syncid = 0;
+    while ($content = $modx->db->getRow($rs)) {
+        if ($syncid == 0) $syncid = $content['id'];
         $html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
     }
 }
@@ -174,8 +173,7 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
                   </thead>
                   <tbody>
         ';
-        for ($i = 0; $i < $limit; $i++) {
-            $activeusers = $modx->db->getRow($rs);
+        while ($activeusers = $modx->db->getRow($rs)) {
             $currentaction = getAction($activeusers['action'], $activeusers['id']);
             $webicon = ($activeusers['internalKey']<0)? "<img src='".$_style["tree_globe"]."' alt='Web user' />":"";
             $html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";

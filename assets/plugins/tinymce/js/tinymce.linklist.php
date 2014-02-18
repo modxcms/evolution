@@ -285,11 +285,7 @@ class LINKLIST
 		// Connecting, selecting database
 		
 		$result = $modx->db->query($sql);
-		$resourceArray = array();
-		while($par = $modx->db->getRow($result))
-		{
-			$resourceArray[] = $par;
-		}
+		$resourceArray = $modx->db->makeArray($result);
 		
 		return $resourceArray;
 	}

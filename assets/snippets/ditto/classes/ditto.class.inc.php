@@ -39,9 +39,7 @@ class ditto {
 		$table = $modx->getFullTableName("site_tmplvars");
 		$tvs = $modx->db->select("name", $table);
 			// TODO: make it so that it only pulls those that apply to the current template
-		$dbfields = array();
-		while ($dbfield = $modx->db->getRow($tvs))
-			$dbfields[] = $dbfield['name'];
+		$dbfields = $modx->db->getColumn('name', $tvs);
 		return $dbfields;
 	}
 	
@@ -989,10 +987,7 @@ class ditto {
 	                AND ($access)
 	                GROUP BY sc.id ";
 	        $result= $modx->db->query($sql);
-	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->db->getRow($result));
-	        }
+	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }
 	}

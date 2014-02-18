@@ -402,13 +402,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 
     // get selected events
     if(is_numeric($id) && $id > 0) {
-        $evts = array();
-        $rs = $modx->db->select('*',$tbl_site_plugin_events,"pluginid='{$id}'");
-        $limit = $modx->db->getRecordCount($rs);
-        for ($i=0; $i<$limit; $i++) {
-            $row = $modx->db->getRow($rs);
-            $evts[] = $row['evtid'];
-        }
+        $rs = $modx->db->select('evtid',$tbl_site_plugin_events,"pluginid='{$id}'");
+        $evts = $modx->db->getColumn('evtid', $rs);
     } else {
         if(isset($content['sysevents']) && is_array($content['sysevents'])) {
             $evts = $content['sysevents'];
@@ -430,8 +425,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     $rs = $modx->db->select('*',$tbl_system_eventnames,'','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
-    else for ($i=0; $i<$limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    else while ($row = $modx->db->getRow($rs)) {
         // display records
         if($srv!=$row['service']){
             $srv=$row['service'];

@@ -19,9 +19,7 @@ $modx->manager->initPageViewState();
 	<?php 
 		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
 		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs); 
-		for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
+		while ($row=$modx->db->getRow($rs)) {
 		?>
 
 		if(document.getElementById('delete<?php echo $row['id']; ?>').checked==true) {

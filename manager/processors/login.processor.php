@@ -285,8 +285,7 @@ $sql = "SELECT uga.documentgroup
         INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
         WHERE ug.member =".$internalKey;
 $rs = $modx->db->query($sql);
-while ($row = $modx->db->getRow($rs,'num')) $dg[$i++]=$row[0];
-$_SESSION['mgrDocgroups'] = $dg;
+$_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
 
 if($rememberme == '1') {
     $_SESSION['modx.mgr.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);

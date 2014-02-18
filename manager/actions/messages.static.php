@@ -164,8 +164,7 @@ $dotablestuff = 1;
     </thead>
     <tbody>
 <?php
-        for ($i = 0; $i < $limit; $i++) {
-            $message = $modx->db->getRow($rs);
+        while ($message = $modx->db->getRow($rs)) {
             $sender = $message['sender'];
             if($sender==0) {
                 $sendername = "[System]";

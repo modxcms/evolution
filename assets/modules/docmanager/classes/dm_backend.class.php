@@ -45,9 +45,7 @@ class DocManagerBackend {
 				return false;
 			}
 		
-			while ($row = $this->modx->db->getRow($rs)) {
-				$resource[] = $row;
-			}
+			$resource = $this->modx->db->makeArray($rs);
 		} elseif ($id == '') {
 			$noId = true;
 			$this->dm->ph['sort.disable_tree_select'] = 'true';

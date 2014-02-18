@@ -577,8 +577,9 @@ class DBAPI {
    function makeArray($rs=''){
       if(!$rs) return false;
       $rsArray = array();
-      $qty = $this->getRecordCount($rs);
-      for ($i = 0; $i < $qty; $i++) $rsArray[] = $this->getRow($rs);
+      while ($row = $this->getRow($rs)) {
+            $rsArray[] = $row;
+      }
       return $rsArray;
    }
    

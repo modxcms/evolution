@@ -54,13 +54,9 @@ if ( $hideOn || $hideUnder )
     // Get more hide pages based on parents if needed
     if ( $hideUnder )
     {
-        $hiddenKids = array();
         // Get child pages to hide
         $hideKidsQuery = $modx->db->select('id',$modx->getFullTableName("site_content"),"parent IN ($hideUnder)");
-        while ( $hideKid = $modx->db->getRow($hideKidsQuery) )
-        {
-            $hiddenKids[] = $hideKid['id'];
-        }
+		$hiddenKids = $modx->db->getColumn('id', $hideKidsQuery); 
         // Merge with hideOn pages
         $hideOn = array_merge($hideOn,$hiddenKids);
     }

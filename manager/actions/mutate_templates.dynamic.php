@@ -189,9 +189,8 @@ $limit = $modx->db->getRecordCount($rs);
 $tvList = '';
 
 if($limit>0) {
-    for ($i=0;$i<$limit;$i++) {
-        $row = $modx->db->getRow($rs);
-        if ($i == 0 ) $tvList .= '<br /><ul>';
+    $tvList .= '<br /><ul>';
+    while ($row = $modx->db->getRow($rs)) {
         $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
     }
     $tvList .= '</ul>';

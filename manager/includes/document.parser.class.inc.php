@@ -282,8 +282,8 @@ class DocumentParser {
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
-                    while ($row= $this->db->getRow($result, 'both')) {
-                        $this->config[$row[0]]= $row[1];
+                    while ($row= $this->db->getRow($result)) {
+                        $this->config[$row['setting_name']]= $row['setting_value'];
                     }
                 }
             }
@@ -325,8 +325,8 @@ class DocumentParser {
                     	$where = "user='{$id}'";
                     }
                     $result= $this->db->select('setting_name, setting_value', $from, $where);
-                    while ($row= $this->db->getRow($result, 'both'))
-                        $usrSettings[$row[0]]= $row[1];
+                    while ($row= $this->db->getRow($result))
+                        $usrSettings[$row['setting_name']]= $row['setting_value'];
                     if (isset ($usrType))
                         $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
                 }
@@ -337,8 +337,8 @@ class DocumentParser {
                     $musrSettings= & $_SESSION['mgrUsrConfigSet'];
                 } else {
                     if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
-                        while ($row= $this->db->getRow($result, 'both')) {
-                            $usrSettings[$row[0]]= $row[1];
+                        while ($row= $this->db->getRow($result)) {
+                            $usrSettings[$row['setting_name']]= $row['setting_value'];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
                     }
@@ -1443,8 +1443,7 @@ class DocumentParser {
         $rs= $this->db->query($sql);
         $rowCount= $this->db->getRecordCount($rs);
         if ($rowCount > 0) {
-            for ($i= 0; $i < $rowCount; $i++) {
-                $row= $this->db->getRow($rs);
+            while ($row= $this->db->getRow($rs)) {
                 $tmplvars[$row['name']]= array (
                     $row['name'],
                     $row['value'],
@@ -2010,10 +2009,7 @@ class DocumentParser {
               GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2048,10 +2044,7 @@ class DocumentParser {
               GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2099,10 +2092,7 @@ class DocumentParser {
               GROUP BY sc.id " .
          ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2159,10 +2149,7 @@ class DocumentParser {
                     GROUP BY sc.id " .
              ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
             $result= $this->db->query($sql);
-            $resourceArray= array ();
-            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-                array_push($resourceArray, @ $this->db->getRow($result));
-            }
+            $resourceArray = $this->db->makeArray($result);
             return $resourceArray;
         }
     }
@@ -2637,7 +2624,6 @@ class DocumentParser {
             $docCount= count($docs);
             for ($i= 0; $i < $docCount; $i++) {
 
-                $tvs= array ();
                 $docRow= $docs[$i];
                 $docid= $docRow['id'];
 
@@ -2649,10 +2635,7 @@ class DocumentParser {
                 if ($tvsort)
                     $sql .= " ORDER BY $tvsort $tvsortdir ";
                 $rs= $this->db->query($sql);
-                $limit= @ $this->db->getRecordCount($rs);
-                for ($x= 0; $x < $limit; $x++) {
-                    array_push($tvs, @ $this->db->getRow($rs));
-                }
+                $tvs = $this->db->makeArray($rs);
 
                 // get default/built-in template variables
                 ksort($docRow);
@@ -2754,7 +2737,6 @@ class DocumentParser {
         if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
             return false;
         } else {
-            $result= array ();
 
             // get document record
             if ($docid == "") {
@@ -2781,9 +2763,7 @@ class DocumentParser {
             if ($sort)
                 $sql .= " ORDER BY $sort $dir ";
             $rs= $this->db->query($sql);
-            for ($i= 0; $i < @ $this->db->getRecordCount($rs); $i++) {
-                array_push($result, @ $this->db->getRow($rs));
-            }
+            $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
             ksort($docRow);

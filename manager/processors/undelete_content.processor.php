@@ -57,8 +57,7 @@ function getChildren($parent) {
 	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
 		// the document has children documents, we'll need to delete those too
-		for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
+		while ($row=$modx->db->getRow($rs)) {
 			$children[] = $row['id'];
 			getChildren($row['id']);
 			//echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
