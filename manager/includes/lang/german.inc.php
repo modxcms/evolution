@@ -1245,7 +1245,7 @@ $_lang["mutate_settings.dynamic.php8"] = '[(emailsender)] ([+emailsender+]) wird
 
 $_lang["error_no_privileges"]         = "Sie haben nicht genügend Rechte, um diese Aktion auszuführen!";
 $_lang["error_no_optimise_tablename"] = "Die zu optimierende Tabelle wurde nicht gefunden!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Die zu leerende Tabelle wurde nicht gefunden!";
 $_lang["error_double_action"]         = "Doppelte Aktion (GET & POST) angeben!";
 $_lang["error_no_id"]                 = "Es wurde keine Ressourcen ID in der Abfrage angegeben!";
 $_lang["error_id_nan"]                = "Die übergebene ID ist nicht numerisch!";

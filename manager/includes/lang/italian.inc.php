@@ -4,12 +4,9 @@
  *
  * @version 1.0.13
  * @date 31/12/2013
- * @author Nicola Lambathakis (Banzai)
- * @author Kudolink
- * @author Diego Meozzi
- * @author luigif
+ * @author The MODX Project Team
  *
- * @language Italian
+ * @language English
  * @package modx
  * @subpackage manager
  *
