@@ -1,30 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // ok, two things to check.
 // first, document cannot be moved to itself
 // second, new parent must be a folder. If not, set it to folder.
 if($_REQUEST['id']==$_REQUEST['new_parent']) {
-		$e->setError(600);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument1"]);
 }
 if($_REQUEST['id']=="") {
-		$e->setError(601);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument2"]);
 }
 if($_REQUEST['new_parent']=="") {
-		$e->setError(602);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_movedocument2"]);
 }
 
 $sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";
 $rs = $modx->db->query($sql);
 if(!$rs){
-	echo "An error occured while attempting to find the document's current parent.";
+	$modx->webAlertAndQuit("An error occured while attempting to find the document's current parent.");
 }
 
 $row = $modx->db->getRow($rs);
@@ -42,13 +38,7 @@ if ($oldparent != $newParentID) {
 		$udperms->role = $_SESSION['mgrRole'];
 
 		 if (!$udperms->checkPermissions()) {
-		 include ("header.inc.php");
-		 ?><script type="text/javascript">parent.tree.ca = '';</script>
-		 <br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-        <p><?php echo $_lang['access_permission_parent_denied']; ?></p>
-        <?php
-        include ("footer.inc.php");
-        exit;
+			$modx->webAlertAndQuit($_lang["access_permission_parent_denied"]);
 		 }
 	}
 }
@@ -58,7 +48,7 @@ function allChildren($currDocID) {
 	$children= array();
 	$sql = "SELECT id FROM ".$modx->getFullTableName('site_content')." WHERE parent = $currDocID;";
 	if(!$rs = $modx->db->query($sql)) {
-		echo "An error occured while attempting to find all of the document's children.";
+		$modx->webAlertAndQuit("An error occured while attempting to find all of the document's children.");
 	} else {
 		if ($numChildren= $modx->db->getRecordCount($rs)) {
 			while ($child= $modx->db->getRow($rs)) {
@@ -79,20 +69,20 @@ if (!array_search($newParentID, $children)) {
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
 	$rs = $modx->db->query($sql);
 	if(!$rs){
-		echo "An error occured while attempting to change the new parent to a folder.";
+		$modx->webAlertAndQuit("An error occured while attempting to change the new parent to a folder.");
 	}
 
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
 	$rs = $modx->db->query($sql);
 	if(!$rs){
-		echo "An error occured while attempting to move the document to the new parent.";
+		$modx->webAlertAndQuit("An error occured while attempting to move the document to the new parent.");
 	}
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
 	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
 	$rs = $modx->db->query($sql);
 	if(!$rs){
-		echo "An error occured while attempting to find the old parents' children.";
+		$modx->webAlertAndQuit("An error occured while attempting to find the old parents' children.");
 	}
 	$row = $modx->db->getRow($rs);
 	$limit = $row['count(*)'];
@@ -101,7 +91,7 @@ if (!array_search($newParentID, $children)) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "An error occured while attempting to change the old parent to a regular document.";
+			$modx->webAlertAndQuit("An error occured while attempting to change the old parent to a regular document.");
 		}
 	}
 
@@ -115,6 +105,6 @@ if (!array_search($newParentID, $children)) {
 	$header="Location: index.php?r=1&id=$id&a=7";
 	header($header);
 } else {
-	echo "You cannot move a document to a child document!";
+	$modx->webAlertAndQuit("You cannot move a document to a child document!");
 }
 ?>

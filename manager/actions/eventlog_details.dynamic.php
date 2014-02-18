@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('view_eventlog')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get id
@@ -15,8 +14,7 @@ else {
 
 // make sure the id's a number
 if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+	$modx->webAlertAndQuit("Passed ID is NaN!");
 }
 
 
@@ -27,8 +25,7 @@ $sql = "SELECT el.*, IFNULL(wu.username,mu.username) as 'username' " .
 		" WHERE el.id=$id";			
 $ds = $modx->db->query($sql);
 if(!$ds) {
-	echo "Error while load event log";
-	exit;
+	$modx->webAlertAndQuit("Error while load event log");
 }
 else{
 	$content = $modx->db->getRow($ds);	

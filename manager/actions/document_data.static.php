@@ -36,13 +36,9 @@ $sql = 'SELECT DISTINCT sc.* '.
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
-	echo "<p>Internal System Error...</p>",
-	     "<p>More results returned than expected. </p>",
-	     "<p><strong>Aborting...</strong></p>";
-	exit;
+	$modx->webAlertAndQuit("More results returned than expected.");
 } elseif ($limit == 0) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 $content = $modx->db->getRow($rs);
 
@@ -143,10 +139,7 @@ if ($numRecords > 0) {
 	'</select></p>';
 	if (!$rs = $modx->db->query($sql)) {
 		// sql error
-		$e->setError(1);
-		$e->dumpError();
-		include($modx->config['site_manager_path'].'includes/footer.inc.php');
-		exit;
+		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	} else {
 		$resource = array();
 		while($row = $modx->db->getRow($rs)){
@@ -250,7 +243,7 @@ function movedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
-	<h1><?php echo $_lang['doc_data_title']?></h1>
+	<h1><?php echo $_lang['doc_data_title'] . ' <small>('. $_REQUEST['id'].')</small>';  ?></h1>
 	
 	<div id="actions">	
 	  <ul class="actionButtons">

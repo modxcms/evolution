@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_document')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=$_REQUEST['id'];
@@ -28,13 +27,7 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	include "header.inc.php";
-	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
-	<div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include("footer.inc.php");
-	exit;	
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // get the timestamp on which the document was deleted.
@@ -42,8 +35,7 @@ $sql = "SELECT deletedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbas
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
-	echo "Couldn't find document to determine it's date of deletion!";
-	exit;
+	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
 } else {
 	$row=$modx->db->getRow($rs);
 	$deltime = $row['deletedon'];
@@ -81,16 +73,14 @@ if(count($children)>0) {
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
 	$rs = @$modx->db->query($sql);
 	if(!$rs) {
-		echo "Something went wrong while trying to set the document's children to undeleted status...";
-		exit;
+		$modx->webAlertAndQuit("Something went wrong while trying to set the document's children to undeleted status...");
 	}
 }
 //'undelete' the document.
 $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to set the document to undeleted status...";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to set the document to undeleted status...");
 } else {
 	// Set the item name for logger
 	$_SESSION['itemname'] = $content['pagetitle'];

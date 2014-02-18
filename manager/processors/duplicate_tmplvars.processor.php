@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_template')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=$_GET['id'];
@@ -28,8 +27,7 @@ else {
 }
 if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
-	echo "A database error occured while trying to duplicate TV: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -52,8 +50,7 @@ else {
 	}
 }
 if (!$rs) {
-	echo "A database error occured while trying to duplicate TV template access: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV template access: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -76,8 +73,7 @@ else {
 	}
 }
 if (!$rs) {
-	echo "A database error occured while trying to duplicate TV Acess Permissions: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate TV Acess Permissions: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

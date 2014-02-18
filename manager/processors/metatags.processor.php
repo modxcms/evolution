@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('manage_metatags')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get op code
@@ -55,8 +54,7 @@ else {
 			$rs = $modx->db->query($sql);
 			$limit = $modx->db->getRecordCount($rs);
 			if($limit > 0) {
-				echo "  - This keyword has already been defined!";
-				exit;
+				$modx->webAlertAndQuit("Keyword '{$rename_keywords[$key]}' already been defined!");
 			} else {
 				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
 				$rs = $modx->db->query($sql);
@@ -74,15 +72,13 @@ else {
 		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
 		$rs = $modx->db->query($sql);
 		if(!$rs) {
-			echo "Failure on deletion of xref keys: ".$modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("Failure on deletion of xref keys: ".$modx->db->getLastError());
 		}
 
 		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
 		$rs = $modx->db->query($sql);
 		if(!$rs) {
-			echo "Failure on deletion of keywords ".$modx->db->getLastError();
-			exit;
+			$modx->webAlertAndQuit("Failure on deletion of keywords ".$modx->db->getLastError());
 		}
 
 	}
@@ -95,8 +91,7 @@ else {
 		$rs = $modx->db->query($sql);
 		$limit = $modx->db->getRecordCount($rs);
 		if($limit > 0) {
-			echo "Keyword $nk already exists!";
-			exit;
+			$modx->webAlertAndQuit("Keyword '{$nk}' already exists!");
 		} else {
 			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
 			$rs = $modx->db->query($sql);

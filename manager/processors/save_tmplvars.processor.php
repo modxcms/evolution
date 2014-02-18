@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_template')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -50,45 +49,26 @@ switch ($_POST['mode']) {
 		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_tmplvars` WHERE name = '{$name}'";
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
-        $nameerror = false;
 		if($count > 0) {
-            $nameerror = true;
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name));
-        }
+			$modx->manager->saveFormValues(300);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=300");
+		}
         // disallow reserved names
         if(in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'donthit', 'haskeywords', 'hasmetatags', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu','alias_visible'))) {
-            $nameerror = true;
-            $_POST['name'] = '';
-			$modx->event->alert(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name));
+		$_POST['name'] = '';
+		$modx->manager->saveFormValues(300);
+		$modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=300");
         }
-        if($nameerror) {
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['id'] = 0;
-			$content['id'] = 0;
-			$_GET['a'] = '300';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
-			$content['category'] = $_POST['categoryid'];
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_tmplvars.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
-		}
 
 		// Add new TV
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New variable not saved!";
+			$modx->webAlertAndQuit("\$rs not set! New variable not saved!");
 		} else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}			
 			
 			// save access permissions
@@ -143,7 +123,7 @@ switch ($_POST['mode']) {
         $sql .= " WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited variable not saved!";
+			$modx->webAlertAndQuit("\$rs not set! Edited variable not saved!");
 		} else {		
 
 			// save access permissions
@@ -221,16 +201,14 @@ function saveDocumentAccessPermissons(){
 		$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=$id;";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "An error occurred while attempting to delete previous template variable access permission entries.";
-			exit;
+			$modx->webAlertAndQuit("An error occurred while attempting to delete previous template variable access permission entries.");
 		}	
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
 				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";
 				$rs = $modx->db->query($sql);
 				if(!$rs){
-					echo "An error occured while attempting to save template variable acess permissions.";
-					exit;
+					$modx->webAlertAndQuit("An error occured while attempting to save template variable acess permissions.");
 				}
 			}
 		}

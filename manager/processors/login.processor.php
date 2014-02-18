@@ -26,6 +26,18 @@ include_once "settings.inc.php";
  * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
  */
 
+// include_once the language file
+if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+    $manager_language = "english"; // if not set, get the english language file.
+}
+$_lang = array();
+include_once "lang/english.inc.php";
+$length_eng_lang = count($_lang);
+
+if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+    include_once "lang/".$manager_language.".inc.php";
+}
+
 // include the logger
 include_once "log.class.inc.php";
 
@@ -35,10 +47,6 @@ include_once "crypt.class.inc.php";
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
-
-// include_once the error handler
-include_once "error.class.inc.php";
-$e = new errorHandler;
 
 // initiate the content manager class
  // for backward compatibility
@@ -67,7 +75,7 @@ $rs = $modx->db->select($fields, $from,$where);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit==0 || $limit>1) {
-    jsAlert($e->errors[900]);
+    jsAlert($_lang["login_processor_unknown_user"]);
     return;
 }
 
@@ -96,7 +104,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
     $modx->db->update('blocked=1',$tbl_user_attributes,"internalKey='{$internalKey}'");
     @session_destroy();
     session_unset();
-    jsAlert($e->errors[902]);
+    jsAlert($_lang["login_processor_many_failed_logins"]);
     return;
 }
 
@@ -112,7 +120,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
 if($blocked=="1") { 
     @session_destroy();
     session_unset();
-    jsAlert($e->errors[903]);
+    jsAlert($_lang["login_processor_blocked1"]);
     return;
 }
 
@@ -120,7 +128,7 @@ if($blocked=="1") {
 if($blockeduntildate>time()) {
     @session_destroy();
     session_unset();
-    jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert($_lang["login_processor_blocked2"]);
     return;
 }
 
@@ -185,7 +193,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 		
 		if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
 		{
-			jsAlert($e->errors[901]);
+			jsAlert($_lang["login_processor_wrong_password"]);
 			$newloginerror = 1;
 		}
 		elseif(isset($bk_pwd_hash_algo))
@@ -200,7 +208,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 	{
 		if($dbasePassword != md5($givenPassword))
 		{
-			jsAlert($e->errors[901]);
+			jsAlert($_lang["login_processor_wrong_password"]);
 			$newloginerror = 1;
 		}
 		else
@@ -218,7 +226,7 @@ if($use_captcha==1) {
 		return;
 	}
 	elseif ($_SESSION['veriword'] != $captcha_code) {
-        jsAlert($e->errors[905]);
+        jsAlert($_lang["login_processor_bad_code"]);
         $newloginerror = 1;
     }
 }

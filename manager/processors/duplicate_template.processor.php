@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('new_template')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=$_GET['id'];
@@ -37,8 +36,7 @@ if($rs) {
 		}
 	}
 } else {
-	echo "A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

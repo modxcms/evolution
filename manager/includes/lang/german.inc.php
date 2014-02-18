@@ -1242,3 +1242,25 @@ $_lang["export_site.static.php7"] = 'Dateien können nicht in [+rb_base_url+] ge
 $_lang["mutate_settings.dynamic.php6"] = 'E-Mail Benachrichtigung bei MODX Fehlern';
 $_lang["mutate_settings.dynamic.php7"] = 'Nicht benachrichtigen';
 $_lang["mutate_settings.dynamic.php8"] = '[(emailsender)] ([+emailsender+]) wird bei einem MODX Systemfehler per E-Mail benachrichtigt. Die Details zur jeweiligen Fehlermeldung können im MODX Systemereignisprotokoll angeschaut werden.';
+
+$_lang["error_no_privileges"]         = "Sie haben nicht genügend Rechte, um diese Aktion auszuführen!";
+$_lang["error_no_optimise_tablename"] = "Die zu optimierende Tabelle wurde nicht gefunden!";
+$_lang["error_no_truncate_tablename"] = "Die zu leerende Tabelle wurde nicht gefunden!";
+$_lang["error_double_action"]         = "Doppelte Aktion (GET & POST) angeben!";
+$_lang["error_no_id"]                 = "Es wurde keine Ressourcen ID in der Abfrage angegeben!";
+$_lang["error_id_nan"]                = "Die übergebene ID ist nicht numerisch!";
+$_lang["error_no_parent"]             = "Konnte den Namen der Eltern-Ressource nicht finden!";
+$_lang["error_many_results"]          = "Es wurden zu viele Ergebnisse aus der Datenbank zurückgegeben!";
+$_lang["error_no_results"]            = "Es wurden zu wenige/keine Ergebnisse aus der Datenbank zurückgegeben!";
+$_lang["error_no_user_selected"]      = "Es wurde kein Benutzer als Empfänger der Nachricht ausgewählt!";
+$_lang["error_no_group_selected"]     = "Es wurde keine Benutzergruppe als Empfänger der Nachricht ausgewählt!";
+$_lang["error_movedocument1"]         = "Eine Ressource kann nicht ihre eigene Elternressource sein!";
+$_lang["error_movedocument2"]         = "Es wurde keine Ressourcen ID in der Abfrage angegeben!";
+$_lang["error_movedocument3"]         = "Es wurde keine Elternressource in der Abfrage angegeben!";
+
+$_lang["login_processor_unknown_user"]       = "Benutzername oder Passwort falsch eingegeben!";
+$_lang["login_processor_wrong_password"]     = "Benutzername oder Passwort falsch eingegeben!";
+$_lang["login_processor_many_failed_logins"] = "Aufgrund von zu vielen fehlerhaften Anmeldeversuchen wurden Sie gesperrt!";
+$_lang["login_processor_blocked1"]           = "Sie wurden gesperrt und können sich nicht anmelden!";
+$_lang["login_processor_blocked2"]           = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
+$_lang["login_processor_bad_code"]           = "Der Sicherheitscode stimmt nicht überein! Bitte loggen Sie sich erneut ein!";

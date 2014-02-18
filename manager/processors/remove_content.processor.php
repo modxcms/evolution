@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
@@ -40,8 +39,7 @@ $modx->db->query($sql);
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
 $rs = $modx->db->query($sql);
 if(!$rs) {
-	echo "Something went wrong while trying to remove deleted documents!";
-	exit;
+	$modx->webAlertAndQuit("Something went wrong while trying to remove deleted documents!");
 } else {
 	// invoke OnEmptyTrash event
 	$modx->invokeEvent("OnEmptyTrash",

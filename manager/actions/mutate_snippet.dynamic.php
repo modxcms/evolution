@@ -4,19 +4,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 switch((int) $_REQUEST['a']) {
   case 22:
     if(!$modx->hasPermission('edit_snippet')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 23:
     if(!$modx->hasPermission('new_snippet')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -36,8 +33,7 @@ if($limit>1) {
         $lock = $modx->db->getRow($rs);
         if($lock['internalKey']!=$modx->getLoginUserID()) {
             $msg = sprintf($_lang['lock_msg'],$lock['username'],$_lang['snippet']);
-            $e->setError(5, $msg);
-            $e->dumpError();
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lock['username'],$_lang['snippet']));
         }
     }
 }
@@ -49,8 +45,7 @@ if(isset($_GET['id'])) {
     $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
-        echo "Oops, Multiple snippets sharing same unique id. Not good.<p>";
-        exit;
+        $modx->webAlertAndQuit("Oops, Multiple snippets sharing same unique id. Not good.");
     }
     if($limit<1) {
         header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
@@ -58,8 +53,7 @@ if(isset($_GET['id'])) {
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
     $_SESSION['itemname']=$_lang["new_snippet"];

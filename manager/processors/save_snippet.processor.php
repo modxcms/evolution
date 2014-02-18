@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_snippet')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -52,39 +51,20 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang["snippet"], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$_REQUEST['id'] = 0;
-			$_REQUEST['a'] = '23';
-			$_GET['a'] = '23';
-			$content = array();
-			$content['id'] = 0;
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
-			$content['category'] = $_POST['categoryid'];
-			$content['snippet'] = preg_replace("/^\s*\<\?php/m", '', $_POST['post']);
-			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_snippet.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(23);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
 		}
 
 		//do stuff to save the new doc
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."', '".$categoryid."');";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New snippet not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! New snippet not saved!");
 		} 
 		else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 
 			// invoke OnSnipFormSave event
@@ -123,8 +103,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_snippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category='".$categoryid."'  WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited snippet not saved!";
-			exit;
+			$modx->webAlertAndQuit("\$rs not set! Edited snippet not saved!");
 		} 
 		else {		
 			// invoke OnSnipFormSave event

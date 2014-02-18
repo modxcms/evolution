@@ -1,12 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_template') && $_REQUEST['a']=='301') {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
@@ -27,9 +25,7 @@ if($total>1)
 	{
 		if($row['internalKey']!=$modx->getLoginUserID())
 		{
-			$msg = sprintf($_lang['lock_msg'], $row['username'], ' template variable');
-			$e->setError(5, $msg);
-			$e->dumpError();
+			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $row['username'], 'template variable'));
 		}
 	}
 }
@@ -38,8 +34,7 @@ if($total>1)
 // make sure the id's a number
 if(!is_numeric($id))
 {
-    echo 'Passed ID is NaN!';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 global $content;
@@ -50,8 +45,7 @@ if(isset($_GET['id']))
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1)
 	{
-		echo 'Oops, Multiple variables sharing same unique id. Not good.';
-		exit;
+		$modx->webAlertAndQuit($_lang["error_many_results"]);
 	}
 	if($total<1)
 	{
@@ -61,8 +55,7 @@ if(isset($_GET['id']))
 	$_SESSION['itemname'] = $content['caption'];
 	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
 	{
-		$e->setError(3);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 	}
 }
 else

@@ -4,19 +4,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 switch((int) $_REQUEST['a']) {
   case 16:
     if(!$modx->hasPermission('edit_template')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 19:
     if(!$modx->hasPermission('new_template')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $tbl_active_users   = $modx->getFullTableName('active_users');
@@ -31,9 +28,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
         for ($i=0;$i<$limit;$i++) {
             $lock = $modx->db->getRow($rs);
             if($lock['internalKey']!=$modx->getLoginUserID()) {
-                $msg = sprintf($_lang["lock_msg"],$lock['username'],"template");
-                $e->setError(5, $msg);
-                $e->dumpError();
+                $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'template'));
             }
         }
     }
@@ -47,20 +42,15 @@ if(!empty($id)) {
     $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "More results returned than expected. Which sucks. <p>Aborting.";
-        exit;
+        $modx->webAlertAndQuit("More results returned than expected. Which sucks.");
     }
     if($limit<1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "No database record has been found for this template. <p>Aborting.";
-        exit;
+        $modx->webAlertAndQuit("No database record has been found for this template.");
     }
     $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['templatename'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
     $_SESSION['itemname']=$_lang["new_template"];

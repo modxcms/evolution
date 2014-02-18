@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('new_module')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=$_GET['id'];
@@ -37,8 +36,7 @@ else {
 }
 if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
-	echo "A database error occured while trying to duplicate module: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module: <br /><br />".$modx->db->getLastError());
 }
 
 
@@ -61,8 +59,7 @@ else {
 	}	
 }
 if(!$rs){
-	echo "A database error occured while trying to duplicate module dependencies: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module dependencies: <br /><br />".$modx->db->getLastError());
 }
 
 // duplicate module user group access
@@ -84,8 +81,7 @@ else {
 	}	
 }
 if(!$rs){
-	echo "A database error occured while trying to duplicate module user group access: <br /><br />".$modx->db->getLastError();
-	exit;
+	$modx->webAlertAndQuit("A database error occured while trying to duplicate module user group access: <br /><br />".$modx->db->getLastError());
 }
 
 // Set the item name for logger

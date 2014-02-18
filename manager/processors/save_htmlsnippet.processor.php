@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_chunk')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -43,33 +42,18 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['id'] = 0;
-			$_REQUEST['a'] = '77';
-			$_GET['stay'] = $_POST['stay'];
-			$content['id'] = 0;
-			$content['locked'] = $_POST['locked'] == 'on' ? 1 : 0;
-			$content['category'] = $_POST['categoryid'];
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_htmlsnippet.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(77);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
 		}
 		//do stuff to save the new doc
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! New Chunk not saved!";
+			$modx->webAlertAndQuit("\$rs not set! New Chunk not saved!");
 		} else {	
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
+				$modx->webAlertAndQuit("Couldn't get last insert key!");
 			}
 
 			// invoke OnChunkFormSave event
@@ -109,7 +93,7 @@ switch ($_POST['mode']) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
 		$rs = $modx->db->query($sql);
 		if(!$rs){
-			echo "\$rs not set! Edited htmlsnippet not saved!";
+			$modx->webAlertAndQuit("\$rs not set! Edited htmlsnippet not saved!");
 		} else {		
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",

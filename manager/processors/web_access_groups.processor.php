@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('web_access_permissions')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // web access group processor.
@@ -22,13 +21,11 @@ switch ($operation) {
 	case "add_user_group" :
 		$newgroup = $_REQUEST['newusergroup'];
 		if(empty($newgroup)) {
-			echo "no group name specified";
-			exit;
+			$modx->webAlertAndQuit("No group name specified.");
 		} else {
 			$sql = 'INSERT INTO '.$tbl_webgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Failed to insert new group. Possible duplicate group name?";
-				exit;
+				$modx->webAlertAndQuit("Failed to insert new group. Possible duplicate group name?");
 			}
 
 			// get new id
@@ -44,13 +41,11 @@ switch ($operation) {
 	case "add_document_group" :
 		$newgroup = $_REQUEST['newdocgroup'];
 		if(empty($newgroup)) {
-			echo "no group name specified";
-			exit;
+			$modx->webAlertAndQuit("No group name specified.");
 		} else {
 			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Failed to insert new group. Possible duplicate group name?";
-				exit;
+				$modx->webAlertAndQuit("Failed to insert new group. Possible duplicate group name?");
 			}
 
 			// get new id
@@ -67,81 +62,67 @@ switch ($operation) {
 		$updategroupaccess = true;
 		$usergroup = intval($_REQUEST['usergroup']);
 		if(empty($usergroup)) {
-			echo "No user group name specified for deletion";
-			exit;
+			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
 			$sql = 'DELETE FROM '.$tbl_webgroup_names.' WHERE id='.$usergroup;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete group. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete group. SQL failed.");
 			}
 			$sql = 'DELETE FROM '.$tbl_webgroup_access.' WHERE webgroup='.$usergroup;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete group from access table. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete group from access table. SQL failed.");
 			}
 			$sql = 'DELETE FROM '.$tbl_web_groups.' WHERE webuser='.$usergroup;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete user-group links. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete user-group links. SQL failed.");
 			}
 		}
 	break;
 	case "delete_document_group" :
 		$group = intval($_REQUEST['documentgroup']);
 		if(empty($group)) {
-			echo "No document group name specified for deletion";
-			exit;
+			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
 			$sql = 'DELETE FROM '.$tbl_documentgroup_names.' WHERE id='.$group;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete group. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete group. SQL failed.");
 			}
 			$sql = 'DELETE FROM '.$tbl_webgroup_access.' WHERE documentgroup='.$group;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete group from access table. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete group from access table. SQL failed.");
 			}
 			$sql = 'DELETE FROM '.$tbl_document_groups.' WHERE document_group='.$group;
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Unable to delete document-group links. SQL failed.";
-				exit;
+				$modx->webAlertAndQuit("Unable to delete document-group links. SQL failed.");
 			}
 		}
 	break;
 	case "rename_user_group" :
 		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
 		if(empty($newgroupname)) {
-			echo "no group name specified";
-			exit;
+			$modx->webAlertAndQuit("No group name specified.");
 		}
 		$groupid = intval($_REQUEST['groupid']);
 		if(empty($groupid)) {
-			echo "No group id specified";
-			exit;
+			$modx->webAlertAndQuit("No user group id specified for rename.");
 		}
 		$sql = 'UPDATE '.$tbl_webgroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
 		if(!$rs = $modx->db->query($sql)) {
-			echo "Failed to update group name. Possible duplicate group name?";
-			exit;
+			$modx->webAlertAndQuit("Failed to update group name. Possible duplicate group name?");
 		}
 	break;
 	case "rename_document_group" :
 		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
 		if(empty($newgroupname)) {
-			echo "no group name specified";
-			exit;
+			$modx->webAlertAndQuit("No group name specified.");
 		}
 		$groupid = intval($_REQUEST['groupid']);
 		if(empty($groupid)) {
-			echo "No group id specified";
-			exit;
+			$modx->webAlertAndQuit("No document group id specified for rename.");
 		}
 		$sql = 'UPDATE '.$tbl_documentgroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
 		if(!$rs = $modx->db->query($sql)) {
-			echo "Failed to update group name. Possible duplicate group name?";
-			exit;
+			$modx->webAlertAndQuit("Failed to update group name. Possible duplicate group name?");
 		}
 	break;
 	case "add_document_group_to_user_group" :
@@ -153,8 +134,7 @@ switch ($operation) {
 		if($limit<=0) {
 			$sql = 'INSERT INTO '.$tbl_webgroup_access.' (webgroup, documentgroup) VALUES('.$usergroup.', '.$docgroup.')';
 			if(!$rs = $modx->db->query($sql)) {
-				echo "Failed to link document group to user group";
-				exit;
+				$modx->webAlertAndQuit("Failed to link document group to user group");
 			}
 		} else {
 			//alert user that coupling already exists?
@@ -165,13 +145,11 @@ switch ($operation) {
 		$coupling = intval($_REQUEST['coupling']);
 		$sql = 'DELETE FROM '.$tbl_webgroup_access.' WHERE id='.$coupling;
 		if(!$rs = $modx->db->query($sql)) {
-			echo "Failed to remove document group from user group";
-			exit;
+			$modx->webAlertAndQuit("Failed to remove document group from user group");
 		}
 	break;
 	default :
-		echo "No operation set in request.";
-		exit;
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // secure web documents - flag as private

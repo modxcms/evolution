@@ -1249,3 +1249,25 @@ $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "この操作を行なう権限がありません。";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "データベースからの返り値が多過ぎます。内部処理に問題があります。";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "自分自身を親として指定することはできません。";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "ログイン名またはパスワードが間違っています。";
+$_lang["login_processor_wrong_password"]     = "ログイン名またはパスワードが間違っています。";
+$_lang["login_processor_many_failed_logins"] = "ログインを数回失敗したため、一時的にアクセスが制限されています。";
+$_lang["login_processor_blocked1"]           = "ログインをブロックされています。";
+$_lang["login_processor_blocked2"]           = "ログインをブロックされています。しばらくたってから再び試してください。";
+$_lang["login_processor_bad_code"]           = "入力されたセキュリティコードが間違っています。";

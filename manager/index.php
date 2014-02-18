@@ -196,16 +196,12 @@ if(isset($allow_manager_access) && $allow_manager_access==0) {
     include_once "manager.lockout.inc.php";
 }
 
-// include_once the error handler
-include_once "error.class.inc.php";
-$e = new errorHandler;
-
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
 // first we check to see if this is a frameset request
-if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0) && !isset($_POST['updateMsgCount'])) {
+if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
     // this looks to be a top-level frameset request, so let's serve up a frameset
     include_once "frames/1.php";
     exit;
@@ -213,12 +209,7 @@ if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0) && !isset($_
 
 // OK, let's retrieve the action directive from the request
 if(isset($_GET['a']) && isset($_POST['a'])) {
-    $e->setError(100);
-    $e->dumpError();
-    // set $e to a corresponding errorcode
-    // we know that if an error occurs here, something's wrong,
-    // so we dump the error, thereby stopping the script.
-
+    $modx->webAlertAndQuit($_lang["error_double_action"]);
 } else {
     $action= isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : null;
 }
@@ -237,16 +228,13 @@ if (isset($modx->config['validate_referer']) && intval($modx->config['validate_r
 
         if (!empty($referer)) {
             if (!preg_match('/^'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
-                echo "A possible CSRF attempt was detected from referer: {$referer}.";
-                exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected from referer: {$referer}.", "index.php");
             }
         } else {
-            echo "A possible CSRF attempt was detected. No referer was provided by the client.";
-            exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the client.", "index.php");
         }
     } else {
-        echo "A possible CSRF attempt was detected. No referer was provided by the server.";
-        exit();
+        $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the server.", "index.php");
     }
 }
 
