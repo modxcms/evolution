@@ -447,13 +447,9 @@ function decode(s){
 	    $groupsarray = array();
 
 	    // fetch permissions for the variable
-	    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
+	    $sql = "SELECT documentgroup FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
 	    $rs = $modx->db->query($sql);
-	    $limit = $modx->db->getRecordCount($rs);
-	    for ($i = 0; $i < $limit; $i++) {
-	        $currentgroup=$modx->db->getRow($rs);
-	        $groupsarray[$i] = $currentgroup['documentgroup'];
-	    }
+	    $groupsarray = $modx->db->getColumn('documentgroup', $rs);
 
 ?>
 <?php if($modx->hasPermission('access_permissions')) { ?>
