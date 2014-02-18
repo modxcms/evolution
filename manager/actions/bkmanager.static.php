@@ -630,10 +630,7 @@ function import_sql($source,$result_code='import_ok')
 	$modx->clearCache();
 	if(0 < $modx->db->getRecordCount($rs))
 	{
-		while($row = $modx->db->getRow($rs))
-		{
-			$_SESSION['last_result'][] = $row;
-		}
+		$_SESSION['last_result'] = $modx->db->makeArray($rs);
 	}
 	
 	$_SESSION['result_msg'] = $result_code;

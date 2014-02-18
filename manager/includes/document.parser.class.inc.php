@@ -2010,10 +2010,7 @@ class DocumentParser {
               GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2048,10 +2045,7 @@ class DocumentParser {
               GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2099,10 +2093,7 @@ class DocumentParser {
               GROUP BY sc.id " .
          ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
         $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
+        $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
 
@@ -2159,10 +2150,7 @@ class DocumentParser {
                     GROUP BY sc.id " .
              ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
             $result= $this->db->query($sql);
-            $resourceArray= array ();
-            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-                array_push($resourceArray, @ $this->db->getRow($result));
-            }
+            $resourceArray = $this->db->makeArray($result);
             return $resourceArray;
         }
     }
@@ -2637,7 +2625,6 @@ class DocumentParser {
             $docCount= count($docs);
             for ($i= 0; $i < $docCount; $i++) {
 
-                $tvs= array ();
                 $docRow= $docs[$i];
                 $docid= $docRow['id'];
 
@@ -2649,10 +2636,7 @@ class DocumentParser {
                 if ($tvsort)
                     $sql .= " ORDER BY $tvsort $tvsortdir ";
                 $rs= $this->db->query($sql);
-                $limit= @ $this->db->getRecordCount($rs);
-                for ($x= 0; $x < $limit; $x++) {
-                    array_push($tvs, @ $this->db->getRow($rs));
-                }
+                $tvs = $this->db->makeArray($rs);
 
                 // get default/built-in template variables
                 ksort($docRow);
@@ -2754,7 +2738,6 @@ class DocumentParser {
         if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
             return false;
         } else {
-            $result= array ();
 
             // get document record
             if ($docid == "") {
@@ -2781,9 +2764,7 @@ class DocumentParser {
             if ($sort)
                 $sql .= " ORDER BY $sort $dir ";
             $rs= $this->db->query($sql);
-            for ($i= 0; $i < @ $this->db->getRecordCount($rs); $i++) {
-                array_push($result, @ $this->db->getRow($rs));
-            }
+            $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
             ksort($docRow);

@@ -141,10 +141,7 @@ if ($numRecords > 0) {
 		// sql error
 		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	} else {
-		$resource = array();
-		while($row = $modx->db->getRow($rs)){
-			$resource[] = $row;
-		}
+		$resource = $modx->db->makeArray($rs);
 
 		// CSS style for table
 		$tableClass = 'grid';

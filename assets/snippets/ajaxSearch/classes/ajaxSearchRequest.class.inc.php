@@ -722,10 +722,9 @@ class AjaxSearchRequest {
         global $modx;
         $tvNames_array = array();
         $tvs_array = array();
-        $records = array();
 
         if (!$this->cfg['tvPhx']) {
-             while($row = $modx->db->getRow($rs)) $records[] = $row;
+             $records[] = $modx->db->makeArray($rs);
         }
         else {
             if (isset($this->cfg['withTvs']) && ($this->cfg['withTvs'])) {

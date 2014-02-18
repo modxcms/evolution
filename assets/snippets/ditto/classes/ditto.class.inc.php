@@ -989,10 +989,7 @@ class ditto {
 	                AND ($access)
 	                GROUP BY sc.id ";
 	        $result= $modx->db->query($sql);
-	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->db->getRow($result));
-	        }
+	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }
 	}
