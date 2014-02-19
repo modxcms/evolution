@@ -2685,41 +2685,65 @@ class DocumentParser {
             return $result;
         }
     }
-
-    /**
-     * Get the TV outputs of a document's children.
-     * 
-     * Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput()
-     *
-     * Ignores deleted children. Gets all children - there is no where clause available.
-     *
-     * @param int $parentid The parent docid
-     *                        Default: 0 (site root)
-     * @param array $tvidnames. Which TVs to fetch. In the form expected by getTemplateVarOutput().
-     *                        Default: Empty array
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $docsort How to sort the result array (field)
-     *                        Default: menuindex
-     * @param ASC $docsortdir How to sort the result array (direction)
-     *                        Default: ASC
-     * @return boolean|array
-     */
-    function getDocumentChildrenTVarOutput($parentid= 0, $tvidnames= array (), $published= 1, $docsort= "menuindex", $docsortdir= "ASC") {
-        $docs= $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
-        if (!$docs)
-            return false;
-        else {
-            $result= array ();
-            for ($i= 0; $i < count($docs); $i++) {
-                $tvs= $this->getTemplateVarOutput($tvidnames, $docs[$i]["id"], $published);
-                if ($tvs)
-                    $result[$docs[$i]['id']]= $tvs; // Use docid as key - netnoise 2006/08/14
-            }
-            return $result;
-        }
-    }
-
+	
+	/**
+	 * getDocumentChildrenTVarOutput
+	 * @version 1.1 (2014-02-19)
+	 * 
+	 * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
+	 * 
+	 * @param $parentid {integer} - Id of parent document. Default: 0 (site root).
+	 * @param $tvidnames {array; '*'} - Which TVs to fetch. In the form expected by getTemplateVarOutput(). Default: array().
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sortBy {string} - How to sort the result array (field). Default: 'menuindex'.
+	 * @param $sortDir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
+	 * @param $where {string} - SQL WHERE condition (use only document fields, not TV). Default: ''.
+	 * @param $resultKey {string; false} - Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
+		$docs = $this->getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
+		
+		if (!$docs){
+			return false;
+		}else{
+			$result = array();
+			
+			$unsetResultKey = false;
+			
+			if ($resultKey !== false){
+				if (is_array($tvidnames)){
+					if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)){
+						$tvidnames[] = $resultKey;
+						$unsetResultKey = true;
+					}
+				}else if ($tvidnames != '*' && $tvidnames != $resultKey){
+					$tvidnames = array($tvidnames, $resultKey);
+					$unsetResultKey = true;
+				}
+			}
+			
+			for ($i = 0; $i < count($docs); $i++){
+				$tvs = $this->getTemplateVarOutput($tvidnames, $docs[$i]['id'], $published);
+				
+				if ($tvs){
+					if ($resultKey !== false && array_key_exists($resultKey, $tvs)){
+						$result[$tvs[$resultKey]] = $tvs;
+						
+						if ($unsetResultKey){
+							unset($result[$tvs[$resultKey]][$resultKey]);
+						}
+					}else{
+						$result[] = $tvs;
+					}
+				}
+			}
+			
+			return $result;
+		}
+	}
+	
     /**
      * Modified by Raymond for TV - Orig Modified by Apodigm - DocVars
      * Returns a single site_content field or TV record from the db.
