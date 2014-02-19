@@ -2177,34 +2177,33 @@ class DocumentParser {
 		}
 	}
 	
-     /**
-     * Returns one document/resource
-     *
-     * @category API-Function
-     * @param int $id docid
-     *                Default: 0 (no documents)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @return boolean|string
-     */
-    function getDocument($id= 0, $fields= "*", $published= 1, $deleted= 0) {
-        if ($id == 0) {
-            return false;
-        } else {
-            $tmpArr[]= $id;
-            $docs= $this->getDocuments($tmpArr, $published, $deleted, $fields, "", "", "", 1);
-            if ($docs != false) {
-                return $docs[0];
-            } else {
-                return false;
-            }
-        }
-    }
-
+	/**
+	 * getDocument
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns required fields of a document.
+	 * 
+	 * @param $id {integer} - Id of a document which data has to be gained. @required
+	 * @param $fields {comma separated string; '*'} - Comma separated list of document fields to get. Default: '*'.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: false.
+	 * @param $deleted {0; 1; 'all'} - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
+	 * 
+	 * @return {array; false} - Result array with fields or false.
+	 */
+	function getDocument($id = 0, $fields = '*', $published = 1, $deleted = 0){
+		if ($id == 0){
+			return false;
+		}else{
+			$docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
+			
+			if ($docs != false){
+				return $docs[0];
+			}else{
+				return false;
+			}
+		}
+	}
+	
     /**
      * Returns the page information as database row, the type of result is
      * defined with the parameter $rowMode
