@@ -2737,77 +2737,86 @@ class DocumentParser {
             return ($result != false) ? $result[0] : false;
         }
     }
-
-    /**
-     * Returns an array of site_content field fields and/or TV records from the db
-     *
-     * Elements representing a site content field consist of an associative array of 'name' and 'value'.
-     *
-     * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
-     *
-     * @param array $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
-     *                                               or the TV names (array elements should be names only)
-     *                        Default: Empty array
-     * @param string $fields Fields to fetch from site_tmplvars.
-     *                        Default: *
-     * @param string $docid Docid. Defaults to empty string which indicates the current document.
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $sort How to sort the result array (field)
-     *                        Default: rank
-     * @param string $dir How to sort the result array (direction)
-     *                        Default: ASC
-     * @return boolean|array
-     */
-    function getTemplateVars($idnames= array (), $fields= "*", $docid= "", $published= 1, $sort= "rank", $dir= "ASC") {
-        if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
-            return false;
-        } else {
-            $result= array ();
-
-            // get document record
-            if ($docid == "") {
-                $docid= $this->documentIdentifier;
-                $docRow= $this->documentObject;
-            } else {
-                $docRow= $this->getDocument($docid, '*', $published);
-                if (!$docRow)
-                    return false;
-            }
-
-            // get user defined template variables
-            $fields= ($fields == "") ? "tv.*" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $fields)));
-            $sort= ($sort == "") ? "" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $sort)));
-            if ($idnames == "*")
-                $query= "tv.id<>0";
-            else
-                $query= (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
-            $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-            $sql .= "FROM " . $this->getFullTableName('site_tmplvars')." tv ";
-            $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
-            $sql .= "LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
-            $sql .= "WHERE " . $query . " AND tvtpl.templateid = " . $docRow['template'];
-            if ($sort)
-                $sql .= " ORDER BY $sort $dir ";
-            $rs= $this->db->query($sql);
-            for ($i= 0; $i < @ $this->db->getRecordCount($rs); $i++) {
-                array_push($result, @ $this->db->getRow($rs));
-            }
-
-            // get default/built-in template variables
-            ksort($docRow);
-            foreach ($docRow as $key => $value) {
-                if ($idnames == "*" || in_array($key, $idnames))
-                    array_push($result, array (
-                        "name" => $key,
-                        "value" => $value
-                    ));
-            }
-
-            return $result;
-        }
-    }
-
+	
+	/**
+	 * getTemplateVars
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns an array of site_content field fields and/or TV records from the db.
+	 * Elements representing a site content field consist of an associative array of 'name' and 'value'.
+	 * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
+	 * 
+	 * @param $idnames {array; '*'} - Which TVs to fetch. Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
+	 * @param $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'
+	 * @param $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
+	 * @param $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
+		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
+			return false;
+		}else{
+			$result = array();
+			
+			// get document record
+			if ($docid == ''){
+				$docid = $this->documentIdentifier;
+				$docRow = $this->documentObject;
+			}else{
+				$docRow = $this->getDocument($docid, '*', $published);
+				
+				if (!$docRow){
+					return false;
+				}
+			}
+			
+			// get user defined template variables
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $fields)));
+			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			
+			if ($idnames == '*'){
+				$query = 'tv.id<>0';
+			}else{
+				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name')." IN ('".implode("','", $idnames)."')";
+			}
+			
+			$sql = "
+				SELECT $fields, IF(tvc.value != '', tvc.value, tv.default_text) as value
+				FROM ".$this->getFullTableName('site_tmplvars')." tv
+				INNER JOIN ".$this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id
+				LEFT JOIN ".$this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '".$docid."'
+				WHERE ".$query." AND tvtpl.templateid = ".$docRow['template']."
+			";
+			
+			if ($sort){
+				$sql .= " ORDER BY $sort $dir ";
+			}
+			
+			$rs = $this->db->query($sql);
+			
+			for ($i= 0; $i < @$this->db->getRecordCount($rs); $i++){
+				array_push($result, @$this->db->getRow($rs));
+			}
+			
+			// get default/built-in template variables
+			ksort($docRow);
+			
+			foreach ($docRow as $key => $value){
+				if ($idnames == '*' || in_array($key, $idnames)){
+					array_push($result, array(
+						'name' => $key,
+						'value' => $value
+					));
+				}
+			}
+			
+			return $result;
+		}
+	}
+	
     /**
      * Returns an associative array containing TV rendered output values.
      *
