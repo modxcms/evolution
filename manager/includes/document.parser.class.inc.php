@@ -2054,58 +2054,64 @@ class DocumentParser {
         }
         return $resourceArray;
     }
-
-    /**
-     * Returns the children of the selected document/folder.
-     *
-     * @param int $parentid The parent document identifier
-     *                      Default: 0 (site root)
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param string $where Where condition in SQL style. Should include a leading 'AND '
-     *                      Default: Empty string
-     * @param type $sort Should be a comma-separated list of field names on which to sort
-     *                    Default: menuindex
-     * @param string $dir Sort direction, ASC and DESC is possible
-     *                    Default: ASC
-     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
-     *                          Default: Empty string (no limit)
-     * @return array
-     */
-    function getDocumentChildren($parentid= 0, $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
-        $limit= ($limit != "") ? "LIMIT $limit" : "";
-        $tblsc= $this->getFullTableName("site_content");
-        $tbldg= $this->getFullTableName("document_groups");
-        // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
-        if ($where != '')
-            $where= 'AND ' . $where;
-        // get document groups for current user
-        if ($docgrp= $this->getUserDocGroups())
-            $docgrp= implode(",", $docgrp);
-        // build query
-        $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
-         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $sql= "SELECT DISTINCT $fields
-              FROM $tblsc sc
-              LEFT JOIN $tbldg dg on dg.document = sc.id
-              WHERE sc.parent = '$parentid' AND sc.published=$published AND sc.deleted=$deleted $where
-              AND ($access)
-              GROUP BY sc.id " .
-         ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
-        $result= $this->db->query($sql);
-        $resourceArray= array ();
-        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-            array_push($resourceArray, @ $this->db->getRow($result));
-        }
-        return $resourceArray;
-    }
-
+	
+	/**
+	 * getDocumentChildren
+	 * @version 1.1 (2014-02-19)
+	 * 
+	 * @desc Returns the children of the selected document/folder as an associative array.
+	 * 
+	 * @param $parentid {integer} - The parent document identifier. Default: 0 (site root).
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $deleted {0; 1; 'all'} - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
+	 * @param $fields {comma separated string; '*'} - Comma separated list of document fields to get. Default: '*' (all fields).
+	 * @param $where {string} - Where condition in SQL style. Should include a leading 'AND '. Default: ''.
+	 * @param $sort {comma separated string} - Should be a comma-separated list of field names on which to sort. Default: 'menuindex'.
+	 * @param $dir {'ASC'; 'DESC'} - Sort direction, ASC and DESC is possible. Default: 'ASC'.
+	 * @param $limit {string} - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+    function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+		$published = ($published != 'all') ? 'AND sc.published = '.$published : '';
+		$deleted = ($deleted != 'all') ? 'AND sc.deleted = '.$deleted : '';
+		
+		if ($where != ''){
+			$where = 'AND '.$where;
+		}
+		
+		$limit = ($limit != '') ? 'LIMIT '.$limit : '';
+		
+		// modify field names to use sc. table reference
+		$fields = 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
+		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+		
+		// get document groups for current user
+		if ($docgrp = $this->getUserDocGroups()){
+			$docgrp = implode(',', $docgrp);
+		}
+		
+		// build query
+		$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
+		
+		$sql = "
+			SELECT DISTINCT $fields
+			FROM ".$this->getFullTableName('site_content')." sc
+			LEFT JOIN ".$this->getFullTableName('document_groups')." dg on dg.document = sc.id
+			WHERE sc.parent = '$parentid' $published $deleted $where AND ($access)
+			GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir " : "")." $limit
+		";
+		
+		$result = $this->db->query($sql);
+		$resourceArray = array();
+		
+		for ($i= 0; $i < @$this->db->getRecordCount($result); $i++){
+			array_push($resourceArray, @$this->db->getRow($result));
+		}
+		
+		return $resourceArray;
+	}
+	
 	/**
 	 * getDocuments
 	 * @version 1.1 (2013-02-18)
