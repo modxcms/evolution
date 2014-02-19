@@ -2057,7 +2057,7 @@ class DocumentParser {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.1 (2014-02-19)
+	 * @version 1.1.1 (2014-02-19)
 	 * 
 	 * @desc Returns the children of the selected document/folder as an associative array.
 	 * 
@@ -2073,8 +2073,8 @@ class DocumentParser {
 	 * @return {array; false} - Result array, or false.
 	 */
     function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
-		$published = ($published != 'all') ? 'AND sc.published = '.$published : '';
-		$deleted = ($deleted != 'all') ? 'AND sc.deleted = '.$deleted : '';
+		$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+		$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
 		
 		if ($where != ''){
 			$where = 'AND '.$where;
@@ -2114,7 +2114,7 @@ class DocumentParser {
 	
 	/**
 	 * getDocuments
-	 * @version 1.1 (2013-02-18)
+	 * @version 1.1.1 (2013-02-19)
 	 * 
 	 * @desc Returns required documents (their fields).
 	 * 
@@ -2155,8 +2155,8 @@ class DocumentParser {
 				$where = 'AND '.$where;
 			}
 			
-			$published = ($published != 'all') ? 'AND sc.published = '.$published : '';
-			$deleted = ($deleted != 'all') ? 'AND sc.deleted = '.$deleted : '';
+			$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+			$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
 			
 			// get document groups for current user
 			if ($docgrp = $this->getUserDocGroups()){
