@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_requireFields
- * @version 1.2.4 (2013-10-18)
+ * @version 1.2.5 (2014-02-13)
  * 
  * @desc A widget for ManagerManager plugin that allows document fields (or TVs) to become required. The widget appends a red asterisk to a field to indicate it is required, and alerts users if they save the document without completing all required fields.
  * 
@@ -15,9 +15,9 @@
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles).
  * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates).
  * 
- * @link http://code.divandesign.biz/modx/mm_requirefields/1.2.4
+ * @link http://code.divandesign.biz/modx/mm_requirefields/1.2.5
  * 
- * @copyright 2013
+ * @copyright 2014
  */
 
 function mm_requireFields($fields, $roles = '', $templates = ''){
@@ -54,6 +54,7 @@ function mm_requireFields($fields, $roles = '', $templates = ''){
 				case 'show_in_menu':
 				case 'parent':
 				case 'is_folder':
+				case 'alias_visible':
 				case 'is_richtext':
 				case 'log':
 				case 'searchable':
@@ -62,7 +63,7 @@ function mm_requireFields($fields, $roles = '', $templates = ''){
 				case 'content_type':
 				case 'content_dispo':
 				case 'which_editor':
-					$output .='';
+					$output .= '';
 				break;
 
 				// Pub/unpub dates don't have a type attribute on their input tag in 1.0.2, so add this. Won't do any harm to other versions

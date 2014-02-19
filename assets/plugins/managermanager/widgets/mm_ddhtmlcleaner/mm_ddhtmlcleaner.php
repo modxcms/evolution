@@ -1,9 +1,9 @@
 <?php
 /**
  * mm_ddHTMLCleaner
- * @version 1.0.1 (2013-12-10)
+ * @version 1.0.2 (2014-02-14)
  * 
- * A widget for the plugin ManagerManager. It removes forbidden HTML attributes and styles from document fields and TVs when required.
+ * @desc A widget for the plugin ManagerManager. It removes forbidden HTML attributes and styles from document fields and TVs when required.
  * 
  * @uses ManagerManager plugin 0.6.
  * 
@@ -17,15 +17,17 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.1
+ * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.2
  * 
- * @copyright 2013, DivanDesign
+ * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 
 function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForAllTags = 'title,class', $validStyles = 'word-spacing', $validAttrs = '{"img":"src,alt,width,height","a":"href,target"}'){
-	global $modx, $mm_fields;
+	global $modx, $mm_fields, $content;
 	$e = &$modx->Event;
+	
+	if ($content['contentType'] != 'text/html'){return;}
 	
 	if (!useThisRule($roles, $templates)){return;}
 	

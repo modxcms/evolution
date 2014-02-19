@@ -2047,141 +2047,158 @@ class DocumentParser {
         $resourceArray = $this->db->makeArray($result);
         return $resourceArray;
     }
-
-    /**
-     * Returns the children of the selected document/folder.
-     *
-     * @param int $parentid The parent document identifier
-     *                      Default: 0 (site root)
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param string $where Where condition in SQL style. Should include a leading 'AND '
-     *                      Default: Empty string
-     * @param type $sort Should be a comma-separated list of field names on which to sort
-     *                    Default: menuindex
-     * @param string $dir Sort direction, ASC and DESC is possible
-     *                    Default: ASC
-     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
-     *                          Default: Empty string (no limit)
-     * @return array
-     */
-    function getDocumentChildren($parentid= 0, $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
-        $limit= ($limit != "") ? "LIMIT $limit" : "";
-        $tblsc= $this->getFullTableName("site_content");
-        $tbldg= $this->getFullTableName("document_groups");
-        // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
-        if ($where != '')
-            $where= 'AND ' . $where;
-        // get document groups for current user
-        if ($docgrp= $this->getUserDocGroups())
-            $docgrp= implode(",", $docgrp);
-        // build query
-        $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
-         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-        $sql= "SELECT DISTINCT $fields
-              FROM $tblsc sc
-              LEFT JOIN $tbldg dg on dg.document = sc.id
-              WHERE sc.parent = '$parentid' AND sc.published=$published AND sc.deleted=$deleted $where
-              AND ($access)
-              GROUP BY sc.id " .
-         ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
-        $result= $this->db->query($sql);
-        $resourceArray = $this->db->makeArray($result);
-        return $resourceArray;
-    }
-
-    /**
-     * Returns multiple documents/resources
-     *
-     * @category API-Function
-     * @param array $ids Documents to fetch by docid
-     *                   Default: Empty array
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param string $where Where condition in SQL style. Should include a leading 'AND '.
-     *                      Default: Empty string
-     * @param type $sort Should be a comma-separated list of field names on which to sort
-     *                    Default: menuindex
-     * @param string $dir Sort direction, ASC and DESC is possible
-     *                    Default: ASC
-     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
-     *                          Default: Empty string (no limit)
-     * @return array|boolean Result array with documents, or false
-     */
-    function getDocuments($ids= array (), $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
-        if(is_string($ids))
-        {
-            if(strpos($ids,',')!==false)
-                $ids = explode(',', $ids);
-            else
-                $ids = array($ids);
-        }
-        if (count($ids) == 0) {
-            return false;
-        } else {
-            $limit= ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
-            $tblsc= $this->getFullTableName("site_content");
-            $tbldg= $this->getFullTableName("document_groups");
-            // modify field names to use sc. table reference
-            $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-            $sort= ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
-            if ($where != '')
-                $where= 'AND ' . $where;
-            // get document groups for current user
-            if ($docgrp= $this->getUserDocGroups())
-                $docgrp= implode(",", $docgrp);
-            $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
-             (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $sql= "SELECT DISTINCT $fields FROM $tblsc sc
-                    LEFT JOIN $tbldg dg on dg.document = sc.id
-                    WHERE (sc.id IN (" . implode(",",$ids) . ") AND sc.published=$published AND sc.deleted=$deleted $where)
-                    AND ($access)
-                    GROUP BY sc.id " .
-             ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
-            $result= $this->db->query($sql);
-            $resourceArray = $this->db->makeArray($result);
-            return $resourceArray;
-        }
-    }
-
-     /**
-     * Returns one document/resource
-     *
-     * @category API-Function
-     * @param int $id docid
-     *                Default: 0 (no documents)
-     * @param string $fields List of fields
-     *                       Default: * (all fields)
-     * @param int $published Whether published or unpublished documents are in the result
-     *                      Default: 1
-     * @param int $deleted Whether deleted or undeleted documents are in the result
-     *                      Default: 0 (undeleted)
-     * @return boolean|string
-     */
-    function getDocument($id= 0, $fields= "*", $published= 1, $deleted= 0) {
-        if ($id == 0) {
-            return false;
-        } else {
-            $tmpArr[]= $id;
-            $docs= $this->getDocuments($tmpArr, $published, $deleted, $fields, "", "", "", 1);
-            if ($docs != false) {
-                return $docs[0];
-            } else {
-                return false;
-            }
-        }
-    }
-
+	
+	/**
+	 * getDocumentChildren
+	 * @version 1.1.1 (2014-02-19)
+	 * 
+	 * @desc Returns the children of the selected document/folder as an associative array.
+	 * 
+	 * @param $parentid {integer} - The parent document identifier. Default: 0 (site root).
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $deleted {0; 1; 'all'} - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
+	 * @param $fields {comma separated string; '*'} - Comma separated list of document fields to get. Default: '*' (all fields).
+	 * @param $where {string} - Where condition in SQL style. Should include a leading 'AND '. Default: ''.
+	 * @param $sort {comma separated string} - Should be a comma-separated list of field names on which to sort. Default: 'menuindex'.
+	 * @param $dir {'ASC'; 'DESC'} - Sort direction, ASC and DESC is possible. Default: 'ASC'.
+	 * @param $limit {string} - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+    function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+		$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+		$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
+		
+		if ($where != ''){
+			$where = 'AND '.$where;
+		}
+		
+		$limit = ($limit != '') ? 'LIMIT '.$limit : '';
+		
+		// modify field names to use sc. table reference
+		$fields = 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
+		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+		
+		// get document groups for current user
+		if ($docgrp = $this->getUserDocGroups()){
+			$docgrp = implode(',', $docgrp);
+		}
+		
+		// build query
+		$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
+		
+		$sql = "
+			SELECT DISTINCT $fields
+			FROM ".$this->getFullTableName('site_content')." sc
+			LEFT JOIN ".$this->getFullTableName('document_groups')." dg on dg.document = sc.id
+			WHERE sc.parent = '$parentid' $published $deleted $where AND ($access)
+			GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir " : "")." $limit
+		";
+		
+		$result = $this->db->query($sql);
+		$resourceArray = array();
+		
+		for ($i= 0; $i < @$this->db->getRecordCount($result); $i++){
+			array_push($resourceArray, @$this->db->getRow($result));
+		}
+		
+		return $resourceArray;
+	}
+	
+	/**
+	 * getDocuments
+	 * @version 1.1.1 (2013-02-19)
+	 * 
+	 * @desc Returns required documents (their fields).
+	 * 
+	 * @param $ids {array; comma separated string} - Documents Ids to get. @required
+	 * @param $published {0; 1; 'all'} - Documents publication status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are published or they are not. Default: 1.
+	 * @param $deleted {0; 1; 'all'} - Documents removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
+	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
+	 * @param $where {string} - SQL WHERE clause. Default: ''.
+	 * @param $sort {comma separated string} - A comma-separated list of field names to sort by. Default: 'menuindex'.
+	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
+	 * @param $limit {string} - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
+	 * 
+	 * @return {array; false} - Result array with documents, or false.
+	 */
+	function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+		if(is_string($ids)){
+			if(strpos($ids, ',') !== false){
+				$ids = explode(',', $ids);
+			}else{
+				$ids = array($ids);
+			}
+		}
+		if (count($ids) == 0){
+			return false;
+		}else{
+			// LIMIT capabilities - rad14701
+			$limit = ($limit != '') ? 'LIMIT '.$limit : '';
+			$tblsc = $this->getFullTableName('site_content');
+			$tbldg = $this->getFullTableName('document_groups');
+			// modify field names to use sc. table reference
+			$fields = 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
+			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			if ($where != ''){
+				$where = 'AND '.$where;
+			}
+			
+			$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+			$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
+			
+			// get document groups for current user
+			if ($docgrp = $this->getUserDocGroups()){
+				$docgrp = implode(',', $docgrp);
+			}
+			
+			$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
+			
+			$sql = "
+				SELECT DISTINCT $fields FROM $tblsc sc
+				LEFT JOIN $tbldg dg on dg.document = sc.id
+				WHERE (sc.id IN (".implode(',', $ids).") $published $deleted $where) AND ($access)
+				GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir" : '')." $limit
+			";
+			
+			$result = $this->db->query($sql);
+			$resourceArray = array();
+			
+			for ($i = 0; $i < @$this->db->getRecordCount($result); $i++){
+				array_push($resourceArray, @$this->db->getRow($result));
+			}
+			
+			return $resourceArray;
+		}
+	}
+	
+	/**
+	 * getDocument
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns required fields of a document.
+	 * 
+	 * @param $id {integer} - Id of a document which data has to be gained. @required
+	 * @param $fields {comma separated string; '*'} - Comma separated list of document fields to get. Default: '*'.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: false.
+	 * @param $deleted {0; 1; 'all'} - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are deleted or they are not. Default: 0.
+	 * 
+	 * @return {array; false} - Result array with fields or false.
+	 */
+	function getDocument($id = 0, $fields = '*', $published = 1, $deleted = 0){
+		if ($id == 0){
+			return false;
+		}else{
+			$docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
+			
+			if ($docs != false){
+				return $docs[0];
+			}else{
+				return false;
+			}
+		}
+	}
+	
     /**
      * Returns the page information as database row, the type of result is
      * defined with the parameter $rowMode
@@ -2653,41 +2670,65 @@ class DocumentParser {
             return $result;
         }
     }
-
-    /**
-     * Get the TV outputs of a document's children.
-     * 
-     * Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput()
-     *
-     * Ignores deleted children. Gets all children - there is no where clause available.
-     *
-     * @param int $parentid The parent docid
-     *                        Default: 0 (site root)
-     * @param array $tvidnames. Which TVs to fetch. In the form expected by getTemplateVarOutput().
-     *                        Default: Empty array
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $docsort How to sort the result array (field)
-     *                        Default: menuindex
-     * @param ASC $docsortdir How to sort the result array (direction)
-     *                        Default: ASC
-     * @return boolean|array
-     */
-    function getDocumentChildrenTVarOutput($parentid= 0, $tvidnames= array (), $published= 1, $docsort= "menuindex", $docsortdir= "ASC") {
-        $docs= $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
-        if (!$docs)
-            return false;
-        else {
-            $result= array ();
-            for ($i= 0; $i < count($docs); $i++) {
-                $tvs= $this->getTemplateVarOutput($tvidnames, $docs[$i]["id"], $published);
-                if ($tvs)
-                    $result[$docs[$i]['id']]= $tvs; // Use docid as key - netnoise 2006/08/14
-            }
-            return $result;
-        }
-    }
-
+	
+	/**
+	 * getDocumentChildrenTVarOutput
+	 * @version 1.1 (2014-02-19)
+	 * 
+	 * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
+	 * 
+	 * @param $parentid {integer} - Id of parent document. Default: 0 (site root).
+	 * @param $tvidnames {array; '*'} - Which TVs to fetch. In the form expected by getTemplateVarOutput(). Default: array().
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sortBy {string} - How to sort the result array (field). Default: 'menuindex'.
+	 * @param $sortDir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
+	 * @param $where {string} - SQL WHERE condition (use only document fields, not TV). Default: ''.
+	 * @param $resultKey {string; false} - Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
+		$docs = $this->getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
+		
+		if (!$docs){
+			return false;
+		}else{
+			$result = array();
+			
+			$unsetResultKey = false;
+			
+			if ($resultKey !== false){
+				if (is_array($tvidnames)){
+					if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)){
+						$tvidnames[] = $resultKey;
+						$unsetResultKey = true;
+					}
+				}else if ($tvidnames != '*' && $tvidnames != $resultKey){
+					$tvidnames = array($tvidnames, $resultKey);
+					$unsetResultKey = true;
+				}
+			}
+			
+			for ($i = 0; $i < count($docs); $i++){
+				$tvs = $this->getTemplateVarOutput($tvidnames, $docs[$i]['id'], $published);
+				
+				if ($tvs){
+					if ($resultKey !== false && array_key_exists($resultKey, $tvs)){
+						$result[$tvs[$resultKey]] = $tvs;
+						
+						if ($unsetResultKey){
+							unset($result[$tvs[$resultKey]][$resultKey]);
+						}
+					}else{
+						$result[] = $tvs;
+					}
+				}
+			}
+			
+			return $result;
+		}
+	}
+	
     /**
      * Modified by Raymond for TV - Orig Modified by Apodigm - DocVars
      * Returns a single site_content field or TV record from the db.
@@ -2711,111 +2752,132 @@ class DocumentParser {
             return ($result != false) ? $result[0] : false;
         }
     }
-
-    /**
-     * Returns an array of site_content field fields and/or TV records from the db
-     *
-     * Elements representing a site content field consist of an associative array of 'name' and 'value'.
-     *
-     * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
-     *
-     * @param array $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
-     *                                               or the TV names (array elements should be names only)
-     *                        Default: Empty array
-     * @param string $fields Fields to fetch from site_tmplvars.
-     *                        Default: *
-     * @param string $docid Docid. Defaults to empty string which indicates the current document.
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $sort How to sort the result array (field)
-     *                        Default: rank
-     * @param string $dir How to sort the result array (direction)
-     *                        Default: ASC
-     * @return boolean|array
-     */
-    function getTemplateVars($idnames= array (), $fields= "*", $docid= "", $published= 1, $sort= "rank", $dir= "ASC") {
-        if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
-            return false;
-        } else {
-
-            // get document record
-            if ($docid == "") {
-                $docid= $this->documentIdentifier;
-                $docRow= $this->documentObject;
-            } else {
-                $docRow= $this->getDocument($docid, '*', $published);
-                if (!$docRow)
-                    return false;
-            }
-
-            // get user defined template variables
-            $fields= ($fields == "") ? "tv.*" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $fields)));
-            $sort= ($sort == "") ? "" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $sort)));
-            if ($idnames == "*")
-                $query= "tv.id<>0";
-            else
-                $query= (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
-            $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-            $sql .= "FROM " . $this->getFullTableName('site_tmplvars')." tv ";
-            $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
-            $sql .= "LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
-            $sql .= "WHERE " . $query . " AND tvtpl.templateid = " . $docRow['template'];
-            if ($sort)
-                $sql .= " ORDER BY $sort $dir ";
-            $rs= $this->db->query($sql);
-            $result = $this->db->makeArray($rs);
-
-            // get default/built-in template variables
-            ksort($docRow);
-            foreach ($docRow as $key => $value) {
-                if ($idnames == "*" || in_array($key, $idnames))
-                    array_push($result, array (
-                        "name" => $key,
-                        "value" => $value
-                    ));
-            }
-
-            return $result;
-        }
-    }
-
-    /**
-     * Returns an associative array containing TV rendered output values.
-     *
-     * @param type $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
-     *                                               or the TV names (array elements should be names only)
-     *                        Default: Empty array
-     * @param string $docid Docid. Defaults to empty string which indicates the current document.
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $sep
-     * @return boolean|array
-     */
-    function getTemplateVarOutput($idnames= array (), $docid= "", $published= 1, $sep='') {
-        if (count($idnames) == 0) {
-            return false;
-        } else {
-            $output= array ();
-            $vars= ($idnames == '*' || is_array($idnames)) ? $idnames : array ($idnames);
-            $docid= intval($docid) ? intval($docid) : $this->documentIdentifier;
-            $result= $this->getTemplateVars($vars, "*", $docid, $published, "", "", $sep); // remove sort for speed
-            if ($result == false)
-                return false;
-            else {
-                $baspath= MODX_MANAGER_PATH . "includes";
-		include_once $baspath . "/tmplvars.format.inc.php";
-		include_once $baspath . "/tmplvars.commands.inc.php";
-		for ($i= 0; $i < count($result); $i++) {
-			$row= $result[$i];
-			if (!$row['id'])
-				$output[$row['name']]= $row['value'];
-			else	$output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+	
+	/**
+	 * getTemplateVars
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns an array of site_content field fields and/or TV records from the db.
+	 * Elements representing a site content field consist of an associative array of 'name' and 'value'.
+	 * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
+	 * 
+	 * @param $idnames {array; '*'} - Which TVs to fetch. Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
+	 * @param $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'
+	 * @param $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
+	 * @param $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
+		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
+			return false;
+		}else{
+			$result = array();
+			
+			// get document record
+			if ($docid == ''){
+				$docid = $this->documentIdentifier;
+				$docRow = $this->documentObject;
+			}else{
+				$docRow = $this->getDocument($docid, '*', $published);
+				
+				if (!$docRow){
+					return false;
+				}
+			}
+			
+			// get user defined template variables
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $fields)));
+			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			
+			if ($idnames == '*'){
+				$query = 'tv.id<>0';
+			}else{
+				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name')." IN ('".implode("','", $idnames)."')";
+			}
+			
+			$sql = "
+				SELECT $fields, IF(tvc.value != '', tvc.value, tv.default_text) as value
+				FROM ".$this->getFullTableName('site_tmplvars')." tv
+				INNER JOIN ".$this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id
+				LEFT JOIN ".$this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '".$docid."'
+				WHERE ".$query." AND tvtpl.templateid = ".$docRow['template']."
+			";
+			
+			if ($sort){
+				$sql .= " ORDER BY $sort $dir ";
+			}
+			
+			$rs = $this->db->query($sql);
+			
+			for ($i= 0; $i < @$this->db->getRecordCount($rs); $i++){
+				array_push($result, @$this->db->getRow($rs));
+			}
+			
+			// get default/built-in template variables
+			ksort($docRow);
+			
+			foreach ($docRow as $key => $value){
+				if ($idnames == '*' || in_array($key, $idnames)){
+					array_push($result, array(
+						'name' => $key,
+						'value' => $value
+					));
+				}
+			}
+			
+			return $result;
 		}
-		return $output;
-            }
-        }
-    }
-
+	}
+	
+	/**
+	 * getTemplateVarOutput
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns an associative array containing TV rendered output values.
+	 * 
+	 * @param $idnames {array; '*'} - Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
+	 * @param $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sep {string} - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = ''){
+		if (count($idnames) == 0){
+			return false;
+		}else{
+			$output = array();
+			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
+			
+			$docid = intval($docid) ? intval($docid) : $this->documentIdentifier;
+			// remove sort for speed
+			$result = $this->getTemplateVars($vars, '*', $docid, $published, '', '');
+			
+			if ($result == false){
+				return false;
+			}else{
+				$baspath = MODX_MANAGER_PATH.'includes';
+				include_once $baspath.'/tmplvars.format.inc.php';
+				include_once $baspath.'/tmplvars.commands.inc.php';
+				
+				for ($i= 0; $i < count($result); $i++){
+					$row = $result[$i];
+					
+					if (!$row['id']){
+						$output[$row['name']] = $row['value'];
+					}else{
+						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+					}
+				}
+				
+				return $output;
+			}
+		}
+	}
+	
     /**
      * Returns the full table name based on db settings
      *
