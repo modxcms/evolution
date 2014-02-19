@@ -2817,43 +2817,52 @@ class DocumentParser {
 		}
 	}
 	
-    /**
-     * Returns an associative array containing TV rendered output values.
-     *
-     * @param type $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
-     *                                               or the TV names (array elements should be names only)
-     *                        Default: Empty array
-     * @param string $docid Docid. Defaults to empty string which indicates the current document.
-     * @param int $published Whether published or unpublished documents are in the result
-     *                        Default: 1
-     * @param string $sep
-     * @return boolean|array
-     */
-    function getTemplateVarOutput($idnames= array (), $docid= "", $published= 1, $sep='') {
-        if (count($idnames) == 0) {
-            return false;
-        } else {
-            $output= array ();
-            $vars= ($idnames == '*' || is_array($idnames)) ? $idnames : array ($idnames);
-            $docid= intval($docid) ? intval($docid) : $this->documentIdentifier;
-            $result= $this->getTemplateVars($vars, "*", $docid, $published, "", "", $sep); // remove sort for speed
-            if ($result == false)
-                return false;
-            else {
-                $baspath= MODX_MANAGER_PATH . "includes";
-		include_once $baspath . "/tmplvars.format.inc.php";
-		include_once $baspath . "/tmplvars.commands.inc.php";
-		for ($i= 0; $i < count($result); $i++) {
-			$row= $result[$i];
-			if (!$row['id'])
-				$output[$row['name']]= $row['value'];
-			else	$output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+	/**
+	 * getTemplateVarOutput
+	 * @version 1.0.1 (2014-02-19)
+	 * 
+	 * @desc Returns an associative array containing TV rendered output values.
+	 * 
+	 * @param $idnames {array; '*'} - Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only) or the TV names (array elements should be names only). @required
+	 * @param $docid {integer; ''} - Id of a document to get. Default: an empty string which indicates the current document.
+	 * @param $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
+	 * @param $sep {string} - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
+	 * 
+	 * @return {array; false} - Result array, or false.
+	 */
+	function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = ''){
+		if (count($idnames) == 0){
+			return false;
+		}else{
+			$output = array();
+			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
+			
+			$docid = intval($docid) ? intval($docid) : $this->documentIdentifier;
+			// remove sort for speed
+			$result = $this->getTemplateVars($vars, '*', $docid, $published, '', '');
+			
+			if ($result == false){
+				return false;
+			}else{
+				$baspath = MODX_MANAGER_PATH.'includes';
+				include_once $baspath.'/tmplvars.format.inc.php';
+				include_once $baspath.'/tmplvars.commands.inc.php';
+				
+				for ($i= 0; $i < count($result); $i++){
+					$row = $result[$i];
+					
+					if (!$row['id']){
+						$output[$row['name']] = $row['value'];
+					}else{
+						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+					}
+				}
+				
+				return $output;
+			}
 		}
-		return $output;
-            }
-        }
-    }
-
+	}
+	
     /**
      * Returns the full table name based on db settings
      *
