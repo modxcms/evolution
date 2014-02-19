@@ -1241,7 +1241,7 @@ $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be s
 
 $_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
 $_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Tabel voor truncate niet gevonden!";
 $_lang["error_double_action"]         = "Dubbele actie (GET & POST) geplaatst!";
 $_lang["error_no_id"]                 = "Document ID niet doorgegeven in aanvraag!";
 $_lang["error_id_nan"]                = "Doorgegeven ID is NaN!";
