@@ -1241,9 +1241,9 @@ $_lang["mutate_settings.dynamic.php8"] = 'Уведомления приходя�
 
 $_lang["error_no_privileges"]         = "У вас нет соответствующих прав для выполнения данного действия.";
 $_lang["error_no_optimise_tablename"] = "Нет таблиц требующих оптимизации!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Таблица для очистки не найдена!";
 $_lang["error_double_action"]         = "Двойное действие (GET & POST) отправленно!";
-$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_no_id"]                 = "Не верно указан ID в вашем запросе!";
 $_lang["error_id_nan"]                = "ID переданного запроса пуст!";
 $_lang["error_no_parent"]             = "Не удалось найти имя родительского документа!";
 $_lang["error_many_results"]          = "Слишком много результатов возвращается из базы данных!";
@@ -1254,8 +1254,8 @@ $_lang["error_movedocument1"]         = "Документ не может быт
 $_lang["error_movedocument2"]         = "ID документа не прошел в запросе!";
 $_lang["error_movedocument3"]         = "Новый родитель не указан!";
 
-$_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
-$_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";
+$_lang["login_processor_unknown_user"]       = "Неверно указан логин или пароль!";
+$_lang["login_processor_wrong_password"]     = "Неверно указан логин или пароль!";
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";

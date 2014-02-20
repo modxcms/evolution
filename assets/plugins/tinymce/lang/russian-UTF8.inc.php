@@ -43,7 +43,7 @@ $_lang['mce_schema_message'] = 'Эта настройка позволяет в�
 $_lang['mce_toolbar1_msg'] = 'По умолчанию : undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
 $_lang['mce_toolbar2_msg'] = 'По умолчанию : image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
 
-$_lang['mce_tpl_title'] = 'Template button';
-$_lang['mce_tpl_msg'] = 'You can insert the HTML block which you registered beforehand from toolbar. You make HTML block as resource or a chunk, and can appoint plural number with a comma.';
+$_lang['mce_tpl_title'] = 'Кнопка шаблона';
+$_lang['mce_tpl_msg'] = 'Вы можете вставить HTML блок, который вы создали заранее из панели инструментов. HTML блоки можно создавать из документов или из чанков, так же можно создать сразу несколько разделяя их запятыми';
 $_lang['mce_tpl_docid'] = 'Список ID ресурсов';
 $_lang['mce_tpl_chunkname'] = 'Название чанка';
