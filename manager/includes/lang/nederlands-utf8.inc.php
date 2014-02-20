@@ -1199,7 +1199,7 @@ $_lang['smtp_port_title'] = 'SMTP poort';
 $_lang["setting_resource_tree_node_name"] = 'De hoofdnaam van de boomstructuur';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificeer het paginaveld om gebruik te maken van de hoofdnaam in de boomstructuur bij het renderen. Standaard staat deze op Pagina Titel, hoewel elk Pagina veld kan worden gebruikt, zoals menutitel en alias.';
 
-$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled"] = 'Gebruik huidige alias als alias pad';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Gepubliceerd';
 $_lang["docid_incrmnt_method_title"] = 'Optellende methode van de pagina ID';
