@@ -23,11 +23,7 @@ switch ($operation) {
 		if(empty($newgroup)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
-			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			$modx->db->query($sql);
-
-			// get new id
-			$id = $modx->db->getInsertId();
+			$id = $modx->db->insert(array('name' => $modx->db->escape($newgroup)), $tbl_membergroup_names);
 
 			// invoke OnManagerCreateGroup event
 			$modx->invokeEvent('OnManagerCreateGroup', array(
@@ -41,11 +37,7 @@ switch ($operation) {
 		if(empty($newgroup)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
-			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			$modx->db->query($sql);
-
-			// get new id
-			$id = $modx->db->getInsertId();
+			$id = $modx->db->insert(array('name' => $modx->db->escape($newgroup)), $tbl_documentgroup_names);
 
 			// invoke OnCreateDocGroup event
 			$modx->invokeEvent('OnCreateDocGroup', array(
@@ -110,8 +102,7 @@ switch ($operation) {
 		$sql = 'SELECT count(*) FROM '.$tbl_membergroup_access.' WHERE membergroup='.$usergroup.' AND documentgroup='.$docgroup;
 		$limit = $modx->db->getValue($sql);
 		if($limit<=0) {
-			$sql = 'INSERT INTO '.$tbl_membergroup_access.' (membergroup, documentgroup) VALUES('.$usergroup.', '.$docgroup.')';
-			$modx->db->query($sql);
+			$modx->db->insert(array('membergroup' => $usergroup, 'documentgroup' => $docgroup), $tbl_membergroup_access);
 		} else {
 			//alert user that coupling already exists?
 		}

@@ -463,6 +463,11 @@ class resourse {
 		foreach($fld as $key=>$value){
 			if ($value=='') continue;
  			if ($this->tv[$key]!=''){
+				$fields = array(
+					'tmplvarid' => $this->tv[$key],
+					'contentid' => $this->id,
+					'value'     => $this->modx->db->escape($value),
+					);
 				$rc = $this->query("SELECT value FROM {$this->_table['site_tmplvar_contentvalues']} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
 				$row = mysql_fetch_assoc($rc);
 				if (is_array($row)) {
@@ -470,7 +475,7 @@ class resourse {
 						$result = $this->query("UPDATE {$this->_table['site_tmplvar_contentvalues']} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
 				    }
 				}else{	
-					$result = $this->query("INSERT into {$this->_table['site_tmplvar_contentvalues']} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
+					$this->modx->db->insert($fields, $this->_table['site_tmplvar_contentvalues']);
 				}
 			}
 		}

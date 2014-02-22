@@ -46,12 +46,14 @@ switch ($_POST['mode']) {
 			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
 		}
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'name'    => $name,
+				'description' => $description,
+				'snippet' => $snippet,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'));
 
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",

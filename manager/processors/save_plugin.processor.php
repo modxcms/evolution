@@ -52,12 +52,17 @@ switch ($_POST['mode']) {
 		}
 
 		//do stuff to save the new plugin
-        $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
-        $modx->db->query($sql);
-            // get the id
-            if(!$newid=$modx->db->getInsertId()) {
-                $modx->webAlertAndQuit("Couldn't get last insert key!");
-            }
+		$newid = $modx->db->insert(
+			array(
+				'name'       => $name,
+				'description' => $description,
+				'plugincode'  => $plugincode,
+				'disabled'    => $disabled,
+				'moduleguid'  => $moduleguid,
+				'locked'      => $locked,
+				'properties'  => $properties,
+				'category'    => $categoryid,
+			), $tblSitePlugins);
             
             // save event listeners
             saveEventListeners($newid,$sysevents,$_POST['mode']);
@@ -135,7 +140,7 @@ function saveEventListeners($id,$sysevents,$mode) {
     global $modx;
     // save selected system events
     $tblSitePluginEvents = $modx->getFullTableName('site_plugin_events');
-    $sql = "INSERT INTO {$tblSitePluginEvents} (pluginid,evtid,priority) VALUES ";
+    $insert_sysevents = array();
     for($i=0;$i<count($sysevents);$i++){
         if ($mode == '101') {
             $prioritySql = "select max(priority) as priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]}";
@@ -149,11 +154,12 @@ function saveEventListeners($id,$sysevents,$mode) {
         } else {
             $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] : 1;
         }
-        if($i>0) $sql.=",";
-        $sql.= "(".$id.",".$sysevents[$i].",".$priority.")";
+        $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$sysevents[$i],'priority'=>$priority);
     }
     $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
-    if (count($sysevents)>0) $modx->db->query($sql);
+    foreach ($insert_sysevents as $insert_sysevent) {
+        $modx->db->insert($insert_sysevent, $tblSitePluginEvents);
+    }
 }
 
 ?>

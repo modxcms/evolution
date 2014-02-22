@@ -17,9 +17,16 @@ if($sendto=='u') {
 	if($userid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_user_selected"]);
 	}
-	$sql = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
-			values($userid, ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 1);";
-	$modx->db->query($sql);
+	$modx->db->insert(
+		array(
+			'recipient' => $userid,
+			'sender'    => $modx->getLoginUserID(),
+			'subject'   => $subject,
+			'message'   => $message,
+			'postdate'  => $postdate,
+			'type'      => 'Message',
+			'private'   => 1,
+		), $modx->getFullTableName('user_messages'));
 }
 
 if($sendto=='g') {
@@ -30,9 +37,16 @@ if($sendto=='g') {
 	$rs = $modx->db->query($sql);
 	while ($row=$modx->db->getRow($rs)) {
 		if($row['internalKey']!=$modx->getLoginUserID()) {
-			$sql2 = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
-					values(".$row['internalKey'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
-			$modx->db->query($sql2);
+		$modx->db->insert(
+			array(
+				'recipient' => $row['internalKey'],
+				'sender'    => $modx->getLoginUserID(),
+				'subject'   => $subject,
+				'message'   => $message,
+				'postdate'  => $postdate,
+				'type'      => 'Message',
+				'private'   => 0,
+			), $modx->getFullTableName('user_messages'));
 		}
 	}
 }
@@ -43,9 +57,16 @@ if($sendto=='a') {
 	$rs = $modx->db->query($sql);
 	while ($row=$modx->db->getRow($rs)) {
 		if($row['id']!=$modx->getLoginUserID()) {
-			$sql2 = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
-					values(".$row['id'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
-			$modx->db->query($sql2);
+		$modx->db->insert(
+			array(
+				'recipient' => $row['id'],
+				'sender'    => $modx->getLoginUserID(),
+				'subject'   => $subject,
+				'message'   => $message,
+				'postdate'  => $postdate,
+				'type'      => 'Message',
+				'private'   => 0,
+			), $modx->getFullTableName('user_messages'));
 		}
 	}
 }

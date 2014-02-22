@@ -121,22 +121,16 @@ switch ($input['mode']) {
 
 		// create the user account
 		$field = array();
-		$field['username'] = $newusername;
-		$field = $modx->db->escape($field);
+		$field['username'] = $esc_newusername;
 		$internalKey = $modx->db->insert($field, $tbl_manager_users);
-		if (!$internalKey) {
-			webAlertAndQuit("An error occurred while attempting to save the user.");
-		}
 
+		$field = array();
 		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
 		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
-        $f = $modx->db->escape($f);
-		$rs = $modx->db->insert($field, $tbl_user_attributes);
-		if (!$rs) {
-			webAlertAndQuit("An error occurred while attempting to save the user's attributes.");
-		}
+		$field = $modx->db->escape($field);
+		$modx->db->insert($field, $tbl_user_attributes);
 
 		// Save user settings
 		saveUserSettings($internalKey);
@@ -170,11 +164,7 @@ switch ($input['mode']) {
 					$f = array();
 					$f['user_group'] = intval($user_groups[$i]);
 					$f['member']     = $internalKey;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_member_groups);
-					if (!$rs) {
-						webAlertAndQuit("An error occurred while attempting to add the user to a user_group.");
-					}
+					$modx->db->insert($f, $tbl_member_groups);
 				}
 			}
 		}
@@ -332,14 +322,10 @@ switch ($input['mode']) {
 			$modx->db->delete($tbl_member_groups, "member='{$id}'");
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$f = array();
-					$f['user_group'] = intval($user_groups[$i]);
-					$f['member']  = $id;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_member_groups);
-					if (!$rs) {
-						webAlertAndQuit("An error occurred while attempting to add the user to a user_group.<br />$sql;");
-					}
+					$field = array();
+					$field['user_group'] = intval($user_groups[$i]);
+					$field['member']  = $id;
+					$modx->db->insert($field, $tbl_member_groups);
 				}
 			}
 		}
@@ -505,10 +491,7 @@ function saveUserSettings($id) {
 		    $f['setting_name']  = $n;
 		    $f['setting_value'] = $vl;
 		    $f = $modx->db->escape($f);
-		    $rs = $modx->db->insert($f, $tbl_user_settings);
-			if (!$rs) {
-				webAlertAndQuit("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$v'");
-			}
+		    $modx->db->insert($f, $tbl_user_settings);
 		}
 	}
 }

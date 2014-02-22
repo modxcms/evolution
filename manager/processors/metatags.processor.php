@@ -85,8 +85,10 @@ else {
 		if($limit > 0) {
 			$modx->webAlertAndQuit("Keyword '{$nk}' already exists!");
 		} else {
-			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
-			$rs = $modx->db->query($sql);
+			$modx->db->insert(
+				array(
+					'keyword' => $modx->db->escape($nk),
+				), $modx->getFullTableName('site_keywords'));
 		}
 	}
 }

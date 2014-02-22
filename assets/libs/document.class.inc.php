@@ -197,17 +197,20 @@ class Document{
 			$this->oldTVs = array();
 			
 		$tvc = $modx->getFullTableName('site_tmplvar_contentvalues');
-		$id=$this->fields['id'];
 		foreach($this->tvs as $tv=>$value)
 		if(isset($this->tvNames[$tv])){
-			$tmplvarid=$this->tvNames[$tv];		
+			$fields = array(
+				'tmplvarid' => $this->tvNames[$tv],
+				'contentid' => $this->fields['id'],
+				'value'     => $value,
+				);
+			$fields = $modx->db->escape($fields);
 			if(isset($this->oldTVs[$tv])){
 				if($this->oldTVs[$tv]==$this->tvNames[$tv]) continue;
-				$sql="UPDATE $tvc SET value='$value' WHERE tmplvarid=$tmplvarid AND contentid=$id";
+				$sql="UPDATE $tvc SET value='$value' WHERE tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['id']}'";
 			}
 			else
-				$sql="INSERT INTO $tvc (tmplvarid,value,contentid) VALUES ($tmplvarid,'$value',$id)";
-			$modx->db->query($sql);
+				$modx->db->insert($fields, $tvc);
 		}
 	}
 	

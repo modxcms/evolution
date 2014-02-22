@@ -101,20 +101,13 @@ switch ($input['mode']) {
 
 		// create the user account
 		$field = array();
-		$field['username'] = $newusername;
-		$field = $modx->db->escape($field);
+		$field['username'] = $esc_newusername;
 		$field['password'] = md5($newpassword);
 		$internalKey = $modx->db->insert($field, $tbl_web_users);
-		if (!$internalKey) {
-			$modx->webAlertAndQuit("An error occurred while attempting to save the user.");
-		}
 
         $field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $field = $modx->db->escape($field);
-		$rs = $modx->db->insert($field, $tbl_web_user_attributes);
-		if (!$rs) {
-			$modx->webAlertAndQuit("An error occurred while attempting to save the user's attributes.");
-		}
+		$modx->db->insert($field, $tbl_web_user_attributes);
 
 		// Save user settings
 		saveUserSettings($internalKey);
@@ -147,11 +140,7 @@ switch ($input['mode']) {
 					$f = array();
 					$f['webgroup'] = intval($user_groups[$i]);
 					$f['webuser']  = $internalKey;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_web_groups);
-					if (!$rs) {
-						$modx->webAlertAndQuit("An error occurred while attempting to add the user to a web group.");
-					}
+					$modx->db->insert($f, $tbl_web_groups);
 				}
 			}
 		}
@@ -311,11 +300,7 @@ switch ($input['mode']) {
 					$f = array();
 					$f['webgroup'] = intval($user_groups[$i]);
 					$f['webuser']  = $id;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_web_groups);
-					if (!$rs) {
-						$modx->webAlertAndQuit("An error occurred while attempting to add the user to a user_group.<br />$sql;");
-					}
+					$modx->db->insert($f, $tbl_web_groups);
 				}
 			}
 		}
@@ -426,10 +411,7 @@ function saveUserSettings($id) {
 		    $f['setting_name']  = $n;
 		    $f['setting_value'] = $vl;
 		    $f = $modx->db->escape($f);
-		    $rs = $modx->db->insert($f, $tbl_web_user_settings);
-			if (!$rs) {
-				$modx->webAlertAndQuit("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$vl'");
-			}
+		    $modx->db->insert($f, $tbl_web_user_settings);
 		}
 	}
 }

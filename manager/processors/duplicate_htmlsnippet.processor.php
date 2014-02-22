@@ -7,23 +7,14 @@ if(!$modx->hasPermission('new_chunk')) {
 $id=$_GET['id'];
 
 // duplicate htmlsnippet
-if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, category)
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, category
-			FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE id=$id;";
-	$modx->db->query($sql);
-}
-else {
-	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet
-			FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE id=$id;";
-	$rs = $modx->db->query($sql);
-		$row = $modx->db->getRow($rs);
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets`
-				(name, description, snippet, category) VALUES
-				('".$modx->db->escape($row['name'])."', '".$modx->db->escape($row['description'])."','".$modx->db->escape($row['snippet'])."', ".$modx->db->escape($row['category']).");";
-		$modx->db->query($sql);
-}
-$newid = $modx->db->getInsertId(); // get new id
+$newid = $modx->db->insert(
+	array(
+		'name'=>'',
+		'description'=>'',
+		'snippet'=>'',
+		'category'=>'',
+		), $modx->getFullTableName('site_htmlsnippets'), // Insert into
+	"CONCAT('Duplicate of ',name) AS name, description, snippet, category", $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"); // Copy from
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$newid}'"));

@@ -16,62 +16,41 @@ function createGUID(){
 }
 
 // duplicate module
-if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {	
-	$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) 
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' as 'guid', enable_sharedparams, properties, modulecode 
-			FROM ".$modx->getFullTableName("site_modules")." WHERE id=$id;";
-	$modx->db->query($sql);
-}
-else {
-	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode 
-			FROM ".$modx->getFullTableName("site_modules")." WHERE id=$id;";
-	$rs = $modx->db->query($sql);
-		$row = $modx->db->getRow($rs);
-		$sql ="INSERT INTO ".$modx->getFullTableName("site_modules")." 
-				(name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) VALUES 
-				('".$modx->db->escape($row['name'])."', '".$modx->db->escape($row['description'])."', ".$row['disabled'].", '".$row['category']."', '".$row['wrap']."', '".$modx->db->escape($row['icon'])."', '".$modx->db->escape($row['enable_resource'])."', '".$modx->db->escape($row['resourcefile'])."', '".$row['createdon']."', '".$row['editedon']."', '".createGuid()."', '".$modx->db->escape($row['enable_sharedparams'])."', '".$modx->db->escape($row['properties'])."', '".$modx->db->escape($row['modulecode'])."');";
-		$modx->db->query($sql);
-}
-$newid = $modx->db->getInsertId(); // get new id
-
+$newid = $modx->db->insert(
+	array(
+		'name'=>'',
+		'description'=>'',
+		'disabled'=>'',
+		'category'=>'',
+		'wrap'=>'',
+		'icon'=>'',
+		'enable_resource'=>'',
+		'resourcefile'=>'',
+		'createdon'=>'',
+		'editedon'=>'',
+		'guid'=>'',
+		'enable_sharedparams'=>'',
+		'properties'=>'',
+		'modulecode'=>'',
+		), $modx->getFullTableName('site_modules'), // Insert into
+	"CONCAT('Duplicate of ',name) AS name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' as guid, enable_sharedparams, properties, modulecode", $modx->getFullTableName('site_modules'), "id='{$id}'"); // Copy from
 
 // duplicate module dependencies
-if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {	
-	$sql = "INSERT INTO ".$modx->getFullTableName("site_module_depobj")." (module, resource, type)
-			SELECT  '$newid', resource, type  
-			FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module=$id;";
-	$modx->db->query($sql);
-}
-else {
-	$sql = "SELECT $newid as 'newid', resource, type 
-			FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module=$id;";
-	$ds = $modx->db->query($sql);
-	while($row = $modx->db->getRow($ds)) {
-		$sql ="INSERT INTO ".$modx->getFullTableName("site_module_depobj")." 
-				(module,resource,type) VALUES 
-				('".$modx->db->escape($row['newid'])."', '".$modx->db->escape($row['resource'])."', '".$modx->db->escape($row['type'])."');";
-		$modx->db->query($sql);
-	}	
-}
+$modx->db->insert(
+	array(
+		'module'=>'',
+		'resource'=>'',
+		'type'=>'',
+		), $modx->getFullTableName('site_module_depobj'), // Insert into
+	"'{$newid}', resource, type", $modx->getFullTableName('site_module_depobj'), "module='{$id}'"); // Copy from
 
 // duplicate module user group access
-if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {	
-	$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module, usergroup)
-			SELECT  '$newid', usergroup  
-			FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
-	$modx->db->query($sql);
-}
-else {
-	$sql = "SELECT $newid as 'newid', usergroup 
-			FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
-	$ds = $modx->db->query($sql);
-	while($row = $modx->db->getRow($ds)) {
-		$sql ="INSERT INTO ".$modx->getFullTableName("site_module_access")." 
-				(module,usergroup) VALUES 
-				('".$modx->db->escape($row['newid'])."', '".$modx->db->escape($row['usergroup'])."');";
-		$modx->db->query($sql);
-	}	
-}
+$modx->db->insert(
+	array(
+		'module'=>'',
+		'usergroup'=>'',
+		), $modx->getFullTableName('site_module_access'), // Insert into
+	"'{$newid}', usergroup", $modx->getFullTableName('site_module_access'), "module='{$id}'"); // Copy from
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_modules'), "id='{$newid}'"));

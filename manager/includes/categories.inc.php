@@ -6,13 +6,11 @@
 function newCategory($newCat) {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'insert into ' . $useTable . ' (category) values (\''.$modx->db->escape($newCat).'\')';
-    $modx->db->query($sql);
-        if(!$newCatid=$modx->db->getInsertId()) {
-            $categoryId = 0;
-		} else {
-            $categoryId = $newCatid;
-        }
+    $categoryId = $modx->db->insert(
+        array(
+            'category' => $modx->db->escape($newCat),
+        ), $useTable);
+    if (!$categoryId) $categoryId = 0;
     return $categoryId;
 }
 //check if new category already exists

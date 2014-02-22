@@ -56,12 +56,16 @@ switch ($_POST['mode']) {
 		}
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."', '".$categoryid."');";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'name'  => $name,
+				'description' => $description,
+				'snippet' => $snippet,
+				'moduleguid' => $moduleguid,
+				'locked' => $locked,
+				'properties' => $properties,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_snippets'));
 
 			// invoke OnSnipFormSave event
 			$modx->invokeEvent("OnSnipFormSave",

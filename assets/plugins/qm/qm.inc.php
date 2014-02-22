@@ -1015,6 +1015,11 @@ class Qm {
         
         // Save TV
         if ($tvId != '') {
+            $fields = array(
+                'tmplvarid' => $tvId,
+                'contentid' => $pageId,
+                'value'     => $tvContent,
+                );
             $sql = "SELECT id
                     FROM {$tmplvarContentValuesTable}
                     WHERE `tmplvarid` = '{$tvId}'
@@ -1032,8 +1037,7 @@ class Qm {
         
             // TV does not exist, create new TV   
             else {
-                $sql = "INSERT INTO {$tmplvarContentValuesTable} (tmplvarid, contentid, value)
-                         VALUES('{$tvId}', '{$pageId}', '{$tvContent}');";        
+                $this->modx->db->insert($fields, $tmplvarContentValuesTable);
             }
             
             // Page edited by

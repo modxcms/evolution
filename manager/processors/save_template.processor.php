@@ -47,12 +47,14 @@ switch ($_POST['mode']) {
 		}
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'templatename'  => $templatename,
+				'description' => $description,
+				'content' => $template,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_templates'));
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",

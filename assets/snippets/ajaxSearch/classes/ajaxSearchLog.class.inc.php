@@ -102,18 +102,16 @@ class AjaxSearchLog {
     function setLogRecord($rs) {
         global $modx;
         if ($this->_purge) $this->_purgeLogs();
-        $asString = $modx->db->escape($rs['searchString']);
-        $asNbResults = $rs['nbResults'];
-        $asResults = trim($rs['results']);
-        $asCmt = '';
-        $asCall = $rs['asCall'];
-        $asSelect = $rs['asSelect'];
-        $asIp = $_SERVER['REMOTE_ADDR'];
-        $INSERT_RECORD = "INSERT INTO " . $this->_tbName . " (
-            searchstring, nb_results, results, comment, as_call, as_select, ip
-            ) VALUES ('$asString','$asNbResults','$asResults','$asCmt','$asCall','$asSelect','$asIp')";
-        $modx->db->query($INSERT_RECORD);
-        $lastid = $modx->db->getInsertId();
+        $lastid = $modx->db->insert(
+			array(
+				'searchstring' => $modx->db->escape($rs['searchString']),
+				'nb_results' => $rs['nbResults'],
+				'results' => trim($rs['results']),
+				'comment' => '',
+				'as_call' => $rs['asCall'],
+				'as_select' => $rs['asSelect'],
+				'ip' => $_SERVER['REMOTE_ADDR'],
+			), $this->_tbName);
         return $lastid;
     }
     /*

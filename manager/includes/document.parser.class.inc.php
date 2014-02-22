@@ -1841,10 +1841,15 @@ class DocumentParser {
 		$type = intval($type);
 		if ($type < 1) $type= 1; // Types: 1 = information, 2 = warning, 3 = error
 		if (3 < $type) $type= 3;
-        $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
-	"VALUES($evtid,$type," . time() . ",'$source','$msg','" . $LoginUserID . "')";
-        $ds= @$this->db->query($sql);
-        if(!$this->db->conn) $source = 'DB connect error';
+	$this->db->insert(
+		array(
+			'eventid'     => $evtid,
+			'type'        => $type,
+			'createdon'   => time(),
+			'source'      => $esc_source,
+			'description' => $msg,
+			'user'        => $LoginUserID,
+		), $this->getFullTableName('event_log'));
         if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
         {
             if($this->config['send_errormail'] <= $type)
@@ -1852,10 +1857,6 @@ class DocumentParser {
                 $subject = 'Error mail from ' . $this->config['site_name'];
                 $this->sendmail($subject,$source);
             }
-        }
-        if (!$ds) {
-            echo "Error while inserting event log into database.";
-            exit();
         }
     }
 
@@ -2977,8 +2978,17 @@ class DocumentParser {
             }
         }
         // insert a new message into user_messages
-        $sql= "INSERT INTO " . $this->getFullTableName("user_messages") . " ( id , type , subject , message , sender , recipient , private , postdate , messageread ) VALUES ( '', '$type', '$subject', '$msg', '$from', '$to', '$private', '" . time() . "', '0' );";
-        $rs= $this->db->query($sql);
+        $this->db->insert(
+            array(
+                'type'        => $type,
+                'subject'     => $subject,
+                'message'     => $msg,
+                'sender'      => $from,
+                'recipient'   => $to,
+                'private'     => $private,
+                'postdate'    => time(),
+                'messageread' => 0,
+            ), $this->getFullTableName('user_messages'));
     }
 
     /**

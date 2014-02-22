@@ -89,10 +89,8 @@ $fields = array (
 switch ($_POST['mode']) {
     case '38' :
         $tbl = $modx->getFullTableName("user_roles");
-        $rs = $modx->db->insert($fields, $tbl);
-        if (!$rs) {
-            $modx->webAlertAndQuit("An error occured while attempting to save the new role.<p>");
-        }
+        $modx->db->insert($fields, $tbl);
+
         // Set the item name for logger
         $_SESSION['itemname'] = $name;
 

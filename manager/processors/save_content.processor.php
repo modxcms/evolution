@@ -353,16 +353,7 @@ switch ($actionToTake) {
         if ($id != '')
             $dbInsert["id"] = $id;
 
-        $rs = $modx->db->insert( $dbInsert, $tbl_site_content);
-		if (!$rs) {
-			$modx->manager->saveFormValues(27);
-			$modx->webAlertAndQuit("An error occured while attempting to save the new document: " . $modx->db->getLastError());
-		}
-
-		if (!$key = $modx->db->getInsertId()) {
-			$modx->manager->saveFormValues(27);
-			$modx->webAlertAndQuit("Couldn't get last insert key!");
-		}
+        $key = $modx->db->insert( $dbInsert, $tbl_site_content);
 
 		$tvChanges = array();
 		foreach ($tmplvars as $field => $value) {
@@ -374,12 +365,11 @@ switch ($actionToTake) {
 		}
 		if (!empty($tvChanges)) {
 			foreach ($tvChanges as $tv) {
-				$rs = $modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
+				$modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
 			}
 		}
 
 		// document access permissions
-		$docgrp_save_attempt = false;
 		if ($use_udperms == 1 && is_array($document_groups)) {
 			$new_groups = array();
 			foreach ($document_groups as $value_pair) {
@@ -389,23 +379,20 @@ switch ($actionToTake) {
 			}
 			$saved = true;
 			if (!empty($new_groups)) {
-				$sql = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '. implode(',', $new_groups);
-				$saved = $modx->db->query($sql) ? $saved : false;
-				$docgrp_save_attempt = true;
+				$modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $new_groups));
 			}
 		} else {
 			$isManager = $modx->hasPermission('access_permissions');
 			$isWeb     = $modx->hasPermission('web_access_permissions');
 			if($use_udperms && !($isManager || $isWeb) && $parent != 0) {
 				// inherit document access permissions
-				$sql = "INSERT INTO $tbl_document_groups (document_group, document) SELECT document_group, $key FROM $tbl_document_groups WHERE document = $parent";
-				$saved = $modx->db->query($sql);
-				$docgrp_save_attempt = true;
+				$modx->db->insert(
+					array(
+						'document_group' =>'',
+						'document'       =>''
+						), $tbl_document_groups, // Insert into
+					"document_group, {$key}", $tbl_document_groups, "document = '{$parent}'"); // Copy from
 			}
-		}
-		if ($docgrp_save_attempt && !$saved) {
-			$modx->manager->saveFormValues(27);
-			$modx->webAlertAndQuit("An error occured while attempting to add the document to a document_group.");
 		}
 
 
@@ -605,8 +592,7 @@ switch ($actionToTake) {
 				}
 			}
 			if (!empty($insertions)) {
-				$sql_insert = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '.implode(',', $insertions);
-				$modx->db->query($sql_insert);
+				$modx->db->query("INSERT INTO {$tbl_document_groups} (document_group, document) VALUES ".implode(',', $insertions));
 			}
 			if (!empty($old_groups)) {
 				$modx->db->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");

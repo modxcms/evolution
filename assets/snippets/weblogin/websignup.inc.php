@@ -106,16 +106,22 @@ else if ($isPostBack){
     }
 
     // create the user account
-    $sql = "INSERT INTO ".$modx->getFullTableName("web_users")." (username, password) 
-            VALUES('".$username."', md5('".$password."'));";
-    $modx->db->query($sql);
-    // now get the id
-    $key=$modx->db->getInsertId();
+    $key = $modx->db->insert(
+		array(
+			'username' => $username,
+			'password' => md5($password),
+		), $modx->getFullTableName("web_users"));
 
     // save user attributes
-    $sql = "INSERT INTO ".$modx->getFullTableName("web_user_attributes")." (internalKey, fullname, email, zip, state, country) 
-            VALUES($key, '$fullname', '$email', '$zip', '$state', '$country');";
-    $modx->db->query($sql);
+    $modx->db->insert(
+		array(
+			'internalKey' => $key,
+			'fullname'    => $fullname,
+			'email'       => $email,
+			'zip'         => $zip,
+			'state'       => $state,
+			'country'     => $country,
+		), $modx->getFullTableName("web_users"));
 
     // add user to web groups
     if(count($groups)>0) {

@@ -266,8 +266,11 @@ class DocManagerBackend {
 							$sqlResult = $this->modx->db->query($sql);
 							$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
 							if ($NotAMember) {
-								$sql = "INSERT INTO " . $this->modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
-								$this->modx->db->query($sql);
+								$this->modx->db->insert(
+									array(
+										'document_group' => $docgroup,
+										'document'       => $value,
+									), $this->modx->getFullTableName('document_groups'));
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsAdded += 1;
