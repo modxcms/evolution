@@ -1199,7 +1199,7 @@ $_lang['smtp_port_title'] = 'SMTP poort';
 $_lang["setting_resource_tree_node_name"] = 'De hoofdnaam van de boomstructuur';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificeer het paginaveld om gebruik te maken van de hoofdnaam in de boomstructuur bij het renderen. Standaard staat deze op Pagina Titel, hoewel elk Pagina veld kan worden gebruikt, zoals menutitel en alias.';
 
-$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled"] = 'Gebruik huidige alias als alias pad';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Gepubliceerd';
 $_lang["docid_incrmnt_method_title"] = 'Optellende methode van de pagina ID';
@@ -1241,10 +1241,10 @@ $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be s
 
 $_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
 $_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Tabel voor truncate niet gevonden!";
 $_lang["error_double_action"]         = "Dubbele actie (GET & POST) geplaatst!";
 $_lang["error_no_id"]                 = "Document ID niet doorgegeven in aanvraag!";
-$_lang["error_id_nan"]                = "doorgegeven ID is NaN!";
+$_lang["error_id_nan"]                = "Doorgegeven ID is NaN!";
 $_lang["error_no_parent"]             = "Kon naam bovenliggende document niet vinden!";
 $_lang["error_many_results"]          = "Te veel resultaten uit de database!";
 $_lang["error_no_results"]            = "Te weinig / geen resultaten terug van database!";

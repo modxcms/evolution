@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE != 'true') die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 /********************/
 $sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
@@ -522,7 +522,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="page" value="<?php echo $page;?>" />
 
 <fieldset id="create_edit">
-    <h1><?php if ($_REQUEST['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
+    <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
 
 <div id="actions">
       <ul class="actionButtons">
@@ -620,6 +620,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         } else {
                             $default_template = getDefaultTemplate();
                             $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
+                            $content['template'] = $default_template;
                         }
                     }
                     echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";

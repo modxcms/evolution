@@ -21,12 +21,6 @@ source_file = manager/includes/lang/english.inc.php
 source_lang = en
 type = PHP_ALT_ARRAY
 
-[modx-evolution.error-message]
-file_filter = manager/includes/lang/errormsg/<lang>.inc.php
-source_file = manager/includes/lang/errormsg/english.inc.php
-source_lang = en
-type = PHP_ALT_ARRAY
-
 [modx-evolution.ditto]
 file_filter = assets/snippets/ditto/lang/<lang>.inc.php
 source_file = assets/snippets/ditto/lang/english.inc.php

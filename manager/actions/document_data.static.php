@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
@@ -238,7 +238,7 @@ function movedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
-	<h1><?php echo $_lang['doc_data_title']?></h1>
+	<h1><?php echo $_lang['doc_data_title'] . ' <small>('. $_REQUEST['id'].')</small>';  ?></h1>
 	
 	<div id="actions">	
 	  <ul class="actionButtons">

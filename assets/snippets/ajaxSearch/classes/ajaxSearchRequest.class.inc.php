@@ -724,7 +724,7 @@ class AjaxSearchRequest {
         $tvs_array = array();
 
         if (!$this->cfg['tvPhx']) {
-             $records[] = $modx->db->makeArray($rs);
+             $records = $modx->db->makeArray($rs);
         }
         else {
             if (isset($this->cfg['withTvs']) && ($this->cfg['withTvs'])) {

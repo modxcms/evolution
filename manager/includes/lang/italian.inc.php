@@ -4,12 +4,9 @@
  *
  * @version 1.0.13
  * @date 31/12/2013
- * @author Nicola Lambathakis (Banzai)
- * @author Kudolink
- * @author Diego Meozzi
- * @author luigif
+ * @author The MODX Project Team
  *
- * @language Italian
+ * @language English
  * @package modx
  * @subpackage manager
  *
@@ -1220,7 +1217,7 @@ $_lang["mutate_settings.dynamic.php8"] = 'Verrà inviata una mail con la descriz
 
 $_lang["error_no_privileges"]         = "Non avete i diritti necessari per effettuare questa operazione!";
 $_lang["error_no_optimise_tablename"] = "Impossibile trovare la tabella da ottimizzare!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Impossibile trovare la tabella da troncare!";
 $_lang["error_double_action"]         = "E' stata inviata una doppia azione (GET e POST)!";
 $_lang["error_no_id"]                 = "Nella richiesta manca l'ID del documento!";
 $_lang["error_id_nan"]                = "L'ID passato nella richiesta è NaN!";

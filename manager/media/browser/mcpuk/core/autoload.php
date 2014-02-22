@@ -29,7 +29,7 @@ startCMSSession();
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
-define('IN_MANAGER_MODE',true);
+define('IN_MANAGER_MODE', "true");
 // Get system settings and override them with managers'
 include_once('../../../includes/settings.inc.php');
 include_once('../../../includes/user_settings.inc.php');
