@@ -261,27 +261,35 @@ class DBAPI {
     * @desc:  returns either last id inserted or the result from the query
     */
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+      global $modx;
       if (!$intotable)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::insert().");
       else {
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $keys = array_keys($fields);
-            $values = array_values($fields);
-            $flds = "(" . implode(",", $keys) . ") " .
-             (!$fromtable && $values ? "VALUES('" . implode("','", $values) . "')" : "");
-            if ($fromtable) {
-               $fromtable = $this->replaceFullTableName($fromtable);
-               $where = ($where != "") ? "WHERE $where" : "";
-               $limit = ($limit != "") ? "LIMIT $limit" : "";
-               $sql = "SELECT $fromfields FROM $fromtable $where $limit";
+         $intotable = $this->replaceFullTableName($intotable);
+         if (!is_array($fields)) {
+            $query = $this->query("INSERT INTO {$intotable} {$fields}");
+         } else {
+            if (empty($fromtable)) {
+               $fields = "(`".implode("`, `", array_keys($fields))."`) VALUES('".implode("', '", array_values($fields))."')";
+               $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+            } else {
+               if (version_compare($this->getVersion(),"4.0.14")>=0) {
+                  $fromtable = $this->replaceFullTableName($fromtable);
+                  $fields = "(".implode(",", array_keys($fields)).")";
+                  $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+                  $limit = !empty($limit) ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
+               } else {
+                  $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
+                  while ($row = $this->getRow($ds)) {
+                     $fields = "(".implode(",", array_keys($fields)).") VALUES('".implode("', '", $row)."')";
+                     $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+                  }
+               }
             }
          }
-         $intotable = $this->replaceFullTableName($intotable);
-         $rt = $this->query("INSERT INTO $intotable $flds $sql");
-         $lid = $this->getInsertId();
-         return $lid ? $lid : $rt;
+         if (($lid = $this->getInsertId())===false) $modx->messageQuit("Couldn't get last insert key!");
+         return $lid;
       }
    }
    /**
