@@ -2088,11 +2088,8 @@ class DocumentParser {
 		";
 		
 		$result = $this->db->query($sql);
-		$resourceArray = array();
 		
-		for ($i= 0; $i < @$this->db->getRecordCount($result); $i++){
-			array_push($resourceArray, @$this->db->getRow($result));
-		}
+		$resourceArray = $this->db->makeArray($result);
 		
 		return $resourceArray;
 	}
@@ -2154,11 +2151,8 @@ class DocumentParser {
 			";
 			
 			$result = $this->db->query($sql);
-			$resourceArray = array();
 			
-			for ($i = 0; $i < @$this->db->getRecordCount($result); $i++){
-				array_push($resourceArray, @$this->db->getRow($result));
-			}
+			$resourceArray = $this->db->makeArray($result);
 			
 			return $resourceArray;
 		}
@@ -2766,7 +2760,6 @@ class DocumentParser {
 		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
 			return false;
 		}else{
-			$result = array();
 			
 			// get document record
 			if ($docid == ''){
@@ -2804,9 +2797,7 @@ class DocumentParser {
 			
 			$rs = $this->db->query($sql);
 			
-			for ($i= 0; $i < @$this->db->getRecordCount($rs); $i++){
-				array_push($result, @$this->db->getRow($rs));
-			}
+			$result = $this->db->makeArray($rs);
 			
 			// get default/built-in template variables
 			ksort($docRow);
