@@ -558,18 +558,18 @@ switch ($actionToTake) {
 		}
 
 		if (!empty($tvDeletions)) {
-			$rs = $modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
+			$modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
 		}
 			
 		if (!empty($tvAdded)) {
 			foreach ($tvAdded as $tv) {
-				$rs = $modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
+				$modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
 			}
 		}
 		
 		if (!empty($tvChanges)) {
 			foreach ($tvChanges as $tv) {
-				$rs = $modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, 'id='.$tv[1]['id']);
+				$modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, 'id='.$tv[1]['id']);
 			}
 		}
 
@@ -604,23 +604,16 @@ switch ($actionToTake) {
 					$insertions[] = '('.(int)$group.','.$id.')';
 				}
 			}
-			$saved = true;
 			if (!empty($insertions)) {
 				$sql_insert = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '.implode(',', $insertions);
-				$saved = $modx->db->query($sql_insert) ? $saved : false;
+				$modx->db->query($sql_insert);
 			}
 			if (!empty($old_groups)) {
-				$sql_delete = 'DELETE FROM '.$tbl_document_groups.' WHERE id IN ('.implode(',', $old_groups).')';
-				$saved = $modx->db->query($sql_delete) ? $saved : false;
+				$modx->db->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");
 			}
 			// necessary to remove all permissions as document is public
 			if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
-				$sql_delete = 'DELETE FROM '.$tbl_document_groups.' WHERE document='.$id;
-				$saved = $modx->db->query($sql_delete) ? $saved : false;
-			}
-			if (!$saved) {
-				$modx->manager->saveFormValues(27);
-				$modx->webAlertAndQuit("An error occured while saving document groups.");
+				$modx->db->delete($tbl_document_groups, "document='{$id}'");
 			}
 		}
 
@@ -707,7 +700,7 @@ function saveMETAKeywords($id) {
 
 	if ($modx->hasPermission('edit_doc_metatags')) {
 		// keywords - remove old keywords first
-		$modx->db->delete($tbl_keyword_xref, "content_id=$id");
+		$modx->db->delete($tbl_keyword_xref, "content_id='{$id}'");
 		for ($i = 0; $i < count($keywords); $i++) {
 			$kwid = $keywords[$i];
 			$flds = array (
@@ -717,7 +710,7 @@ function saveMETAKeywords($id) {
 			$modx->db->insert($flds, $tbl_keyword_xref);
 		}
 		// meta tags - remove old tags first
-		$modx->db->delete($tbl_site_content_metatags, "content_id=$id");
+		$modx->db->delete($tbl_site_content_metatags, "content_id='{$id}'");
 		for ($i = 0; $i < count($metatags); $i++) {
 			$kwid = $metatags[$i];
 			$flds = array (

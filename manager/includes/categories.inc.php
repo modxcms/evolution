@@ -7,16 +7,12 @@ function newCategory($newCat) {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
     $sql = 'insert into ' . $useTable . ' (category) values (\''.$modx->db->escape($newCat).'\')';
-    $catrs = $modx->db->query($sql);
-    if(!$catrs) {
-        $categoryId = 0;
-    } else {
+    $modx->db->query($sql);
         if(!$newCatid=$modx->db->getInsertId()) {
             $categoryId = 0;
 		} else {
             $categoryId = $newCatid;
         }
-    }
     return $categoryId;
 }
 //check if new category already exists
@@ -25,7 +21,7 @@ function checkCategory($newCat = '') {
     $useTable = $modx->getFullTableName('categories');
     $sql = 'select * from ' . $useTable . ' order by category';
     $cats = $modx->db->query($sql);
-    if($cats) while($row = $modx->db->getRow($cats)) {
+    while($row = $modx->db->getRow($cats)) {
         if ($row['category'] == $newCat) {
             return $row['id'];
         }
@@ -39,7 +35,7 @@ function getCategories() {
     $sql = 'select id, category from ' . $useTable . ' order by category';
     $cats = $modx->db->query($sql);
     $resourceArray = array();
-    if($cats) while($row = $modx->db->getRow($cats)) {
+    while($row = $modx->db->getRow($cats)) {
         array_push($resourceArray,array( 'id' => $row['id'], 'category' => stripslashes( $row['category'] ) )); // pixelchutes
     }
     return $resourceArray;
@@ -55,8 +51,7 @@ function deleteCategory($catId=0) {
             $modx->db->query($sql);
         }
         $catTable = $modx->getFullTableName('categories');
-        $sql = 'delete from ' . $catTable . ' where id=' . $catId;
-        $modx->db->query($sql);
+        $modx->db->delete($catTable, "id='{$catId}'");
     }
 }
 

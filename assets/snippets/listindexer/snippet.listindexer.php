@@ -289,10 +289,7 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
       // If there are results, put them in an array
       $tempValidArray = false;
       if ($countTempParents){
-        for ($i=0;$i<$countTempParents;$i++){
-          $tempId = $modx->db->getRow($rsTempParents);
-          $tempValidArray[] = $tempId['id'];
-        } // end while
+        $tempValidArray = $modx->db->getColumn('id', $rsTempParents);
       } // end if
 
     // populate next level of array 

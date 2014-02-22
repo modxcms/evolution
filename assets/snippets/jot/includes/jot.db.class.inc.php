@@ -158,7 +158,7 @@ class CJotDataDb {
 		global $modx;
 		if($this->isNew) return;
 		$id=$this->fields['id'];
-		$modx->db->delete($this->tbl["content"],"id=$id");
+		$modx->db->delete($this->tbl["content"],"id='{$id}'");
 		$this->isNew=true;
 	}
 	

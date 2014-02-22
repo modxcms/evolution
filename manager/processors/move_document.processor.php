@@ -19,9 +19,6 @@ if($_REQUEST['new_parent']=="") {
 
 $sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";
 $rs = $modx->db->query($sql);
-if(!$rs){
-	$modx->webAlertAndQuit("An error occured while attempting to find the document's current parent.");
-}
 
 $row = $modx->db->getRow($rs);
 $oldparent = $row['parent'];
@@ -47,9 +44,7 @@ function allChildren($currDocID) {
 	global $modx;
 	$children= array();
 	$sql = "SELECT id FROM ".$modx->getFullTableName('site_content')." WHERE parent = $currDocID;";
-	if(!$rs = $modx->db->query($sql)) {
-		$modx->webAlertAndQuit("An error occured while attempting to find all of the document's children.");
-	} else {
+	$rs = $modx->db->query($sql);
 		if ($numChildren= $modx->db->getRecordCount($rs)) {
 			while ($child= $modx->db->getRow($rs)) {
 				$children[]= $child['id'];
@@ -58,7 +53,6 @@ function allChildren($currDocID) {
 				$children= array_merge($children, $nextgen);
 			}
 		}
-	}
 	return $children;
 }
 
@@ -67,32 +61,20 @@ $children= allChildren($_REQUEST['id']);
 if (!array_search($newParentID, $children)) {
 
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
-	$rs = $modx->db->query($sql);
-	if(!$rs){
-		$modx->webAlertAndQuit("An error occured while attempting to change the new parent to a folder.");
-	}
+	$modx->db->query($sql);
 
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
-	$rs = $modx->db->query($sql);
-	if(!$rs){
-		$modx->webAlertAndQuit("An error occured while attempting to move the document to the new parent.");
-	}
+	$modx->db->query($sql);
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
 	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
 	$rs = $modx->db->query($sql);
-	if(!$rs){
-		$modx->webAlertAndQuit("An error occured while attempting to find the old parents' children.");
-	}
 	$row = $modx->db->getRow($rs);
 	$limit = $row['count(*)'];
 
 	if(!$limit>0) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			$modx->webAlertAndQuit("An error occured while attempting to change the old parent to a regular document.");
-		}
+		$modx->db->query($sql);
 	}
 
 	// Set the item name for logger

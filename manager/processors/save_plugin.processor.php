@@ -53,10 +53,7 @@ switch ($_POST['mode']) {
 
 		//do stuff to save the new plugin
         $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
-        $rs = $modx->db->query($sql);
-        if(!$rs){
-            $modx->webAlertAndQuit("\$rs not set! New plugin not saved!");
-        } else {    
+        $modx->db->query($sql);
             // get the id
             if(!$newid=$modx->db->getInsertId()) {
                 $modx->webAlertAndQuit("Couldn't get last insert key!");
@@ -87,7 +84,6 @@ switch ($_POST['mode']) {
                 $header="Location: index.php?a=76&r=2";
                 header($header);
             }
-        }       
         break;
     case '102':
 
@@ -100,11 +96,7 @@ switch ($_POST['mode']) {
      
         //do stuff to save the edited plugin    
         $sql = "UPDATE {$tblSitePlugins} SET name='{$name}', description='{$description}', plugincode='{$plugincode}', disabled={$disabled}, moduleguid='{$moduleguid}', locked={$locked}, properties='{$properties}', category={$categoryid}  WHERE id={$id}";
-        $rs = $modx->db->query($sql);
-        if(!$rs){
-            $modx->webAlertAndQuit("\$rs not set! Edited plugin not saved!");
-        } 
-        else {      
+        $modx->db->query($sql);
             // save event listeners
             saveEventListeners($id,$sysevents,$_POST['mode']);
 
@@ -130,7 +122,6 @@ switch ($_POST['mode']) {
                 $header="Location: index.php?a=76&r=2";
                 header($header);
             }
-        }       
         break;
     default:
     ?>  
@@ -161,7 +152,7 @@ function saveEventListeners($id,$sysevents,$mode) {
         if($i>0) $sql.=",";
         $sql.= "(".$id.",".$sysevents[$i].",".$priority.")";
     }
-    $modx->db->query("DELETE FROM {$tblSitePluginEvents} WHERE pluginid={$id}");
+    $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
     if (count($sysevents)>0) $modx->db->query($sql);
 }
 

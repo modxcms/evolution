@@ -57,7 +57,7 @@ else {
 				$modx->webAlertAndQuit("Keyword '{$rename_keywords[$key]}' already been defined!");
 			} else {
 				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
-				$rs = $modx->db->query($sql);
+				$modx->db->query($sql);
 			}
 		}
 	}
@@ -69,17 +69,9 @@ else {
 			$keywords_array[] = $key;
 		}
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
-		if(!$rs) {
-			$modx->webAlertAndQuit("Failure on deletion of xref keys: ".$modx->db->getLastError());
-		}
+		$modx->db->delete($modx->getFullTableName('keyword_xref'), "keyword_id IN(".implode(",", $keywords_array).")");
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
-		if(!$rs) {
-			$modx->webAlertAndQuit("Failure on deletion of keywords ".$modx->db->getLastError());
-		}
+		$modx->db->delete($modx->getFullTableName('site_keywords'), "id IN(".implode(",", $keywords_array).")");
 
 	}
 

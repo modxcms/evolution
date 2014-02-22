@@ -305,10 +305,7 @@ switch ($input['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$rs = $modx->db->delete($tbl_web_groups, "webuser='{$id}'");
-			if (!$rs) {
-				$modx->webAlertAndQuit("An error occurred while attempting to delete previous user_groups entries.");
-			}
+			$modx->db->delete($tbl_web_groups, "webuser='{$id}'");
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
@@ -416,8 +413,7 @@ function saveUserSettings($id) {
 		"allowed_days"
 	);
 
-    $esc_id = $modx->db->escape($id);
-	$modx->db->delete($tbl_web_user_settings,"webuser='{$esc_id}'");
+	$modx->db->delete($tbl_web_user_settings,"webuser='{$id}'");
 
 	foreach ($settings as $n) {
 		$vl = $_POST[$n];

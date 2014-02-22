@@ -715,15 +715,11 @@ class DocumentParser {
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
             $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date <= $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0 AND published=0";
-            if (@ !$result= $this->db->query($sql)) {
-                $this->messageQuit("Execution of a query to the database failed", $sql);
-            }
+            $result = $this->db->query($sql);
 
             // now, check for documents that need un-publishing
             $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date <= $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0 AND published=1";
-            if (@ !$result= $this->db->query($sql)) {
-                $this->messageQuit("Execution of a query to the database failed", $sql);
-            }
+            $result = $this->db->query($sql);
 
             // clear the cache
             $this->clearCache();
@@ -731,9 +727,7 @@ class DocumentParser {
             // update publish time file
             $timesArr= array ();
             $sql= "SELECT MIN(pub_date) AS minpub FROM " . $this->getFullTableName("site_content") . " WHERE pub_date>$timeNow";
-            if (@ !$result= $this->db->query($sql)) {
-                $this->messageQuit("Failed to find publishing timestamps", $sql);
-            }
+            $result= $this->db->query($sql);
             $tmpRow= $this->db->getRow($result);
             $minpub= $tmpRow['minpub'];
             if ($minpub != NULL) {
@@ -741,9 +735,7 @@ class DocumentParser {
             }
 
             $sql= "SELECT MIN(unpub_date) AS minunpub FROM " . $this->getFullTableName("site_content") . " WHERE unpub_date>$timeNow";
-            if (@ !$result= $this->db->query($sql)) {
-                $this->messageQuit("Failed to find publishing timestamps", $sql);
-            }
+            $result= $this->db->query($sql);
             $tmpRow= $this->db->getRow($result);
             $minunpub= $tmpRow['minunpub'];
             if ($minunpub != NULL) {
@@ -2096,11 +2088,8 @@ class DocumentParser {
 		";
 		
 		$result = $this->db->query($sql);
-		$resourceArray = array();
 		
-		for ($i= 0; $i < @$this->db->getRecordCount($result); $i++){
-			array_push($resourceArray, @$this->db->getRow($result));
-		}
+		$resourceArray = $this->db->makeArray($result);
 		
 		return $resourceArray;
 	}
@@ -2162,11 +2151,8 @@ class DocumentParser {
 			";
 			
 			$result = $this->db->query($sql);
-			$resourceArray = array();
 			
-			for ($i = 0; $i < @$this->db->getRecordCount($result); $i++){
-				array_push($resourceArray, @$this->db->getRow($result));
-			}
+			$resourceArray = $this->db->makeArray($result);
 			
 			return $resourceArray;
 		}
@@ -2774,7 +2760,6 @@ class DocumentParser {
 		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
 			return false;
 		}else{
-			$result = array();
 			
 			// get document record
 			if ($docid == ''){
@@ -2812,9 +2797,7 @@ class DocumentParser {
 			
 			$rs = $this->db->query($sql);
 			
-			for ($i= 0; $i < @$this->db->getRecordCount($rs); $i++){
-				array_push($result, @$this->db->getRow($rs));
-			}
+			$result = $this->db->makeArray($rs);
 			
 			// get default/built-in template variables
 			ksort($docRow);

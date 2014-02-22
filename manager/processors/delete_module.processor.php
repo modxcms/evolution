@@ -13,19 +13,13 @@ $modx->invokeEvent("OnBeforeModFormDelete",
 						));
 
 //ok, delete the module.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_modules")." WHERE id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the module...");
-}
+$modx->db->delete($modx->getFullTableName("site_modules"), "id='{$id}'");
 
 //ok, delete the module dependencies.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module='".$id."';";
-$rs = $modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName("site_module_depobj"), "module='{$id}'");
 
 //ok, delete the module user group access.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module='".$id."';";
-$rs = $modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 
 // invoke OnModFormDelete event
 $modx->invokeEvent("OnModFormDelete",

@@ -55,27 +55,23 @@ $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('s
 $_SESSION['itemname'] = $name;
 
 	// delete variable
-	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
-	$rs = $modx->db->query($sql);
-	if(!$rs) {
-		$modx->webAlertAndQuit("Something went wrong while trying to delete the field...");
-	} else {		
-		$header="Location: index.php?a=76&r=2";
-		header($header);
-	}
+	$modx->db->delete($modx->getFullTableName('site_tmplvars'), "id='{$id}'");
 
 	// delete variable's content values
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE tmplvarid=".$id.";");
+	$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'), "tmplvarid='{$id}'");
 	
 	// delete variable's template access
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE tmplvarid=".$id.";");
+	$modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "tmplvarid='{$id}'");
 	
 	// delete variable's access permissions
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=".$id.";");
+	$modx->db->delete($modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
 
 	// invoke OnTVFormDelete event
 	$modx->invokeEvent("OnTVFormDelete",
 							array(
 								"id"	=> $id
 							));								
+
+	$header="Location: index.php?a=76&r=2";
+	header($header);
 ?>

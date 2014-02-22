@@ -27,10 +27,10 @@ $dm->getTheme();
 		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
-		for ($i=0; $i<$limit; $i++) {
- 			$row = $modx->db->getRow($rs);
+		$i = 0;
+		while ($row = $modx->db->getRow($rs)) {
 
-				if($i>0 && $i<$limit) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
+				if($i++>0) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
 				
 				$output.='<tr style="height: 24px;">
 				<td align="left" valign="top" width="200">

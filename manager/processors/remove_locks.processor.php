@@ -5,11 +5,8 @@ if(!$modx->hasPermission('remove_locks')) {
 }
 
 // Remove locks
-$sql = "TRUNCATE $dbase.`".$table_prefix."active_users`";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to remove the locks!");
-}
+$modx->db->truncate($modx->getFullTableName('active_users'));
+
 $header="Location: index.php?a=7";
 	header($header);
 ?>

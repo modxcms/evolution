@@ -702,7 +702,7 @@ class AjaxSearchRequest {
         $tblName = $modx->getFullTableName('site_tmplvars');
         $sql = 'SELECT GROUP_CONCAT( DISTINCT name SEPARATOR "," ) AS list FROM ' . $tblName . ' WHERE type=\'text\'';
         $rs = $modx->db->query($sql);
-        if ($rs) $row = $modx->db->getRow($rs);
+        $row = $modx->db->getRow($rs);
         if ($row) $tvs_array = explode(',',$row['list']);
         return $tvs_array;
     }

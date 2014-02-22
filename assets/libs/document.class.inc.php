@@ -165,8 +165,8 @@ class Document{
 		if($this->isNew) return;
 		global $modx;
 		$id=$this->fields['id'];
-		$modx->db->delete($modx->getFullTableName('site_content'),"id=$id");
-		$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'),"contentid=$id");
+		$modx->db->delete($modx->getFullTableName('site_content'),"id='{$id}'");
+		$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'),"contentid='{$id}'");
 		$this->isNew=true;
 	}
 	

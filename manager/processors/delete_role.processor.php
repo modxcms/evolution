@@ -13,20 +13,13 @@ if($id==1){
 
 $sql = "SELECT count(*) FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=".$id.";";
 $rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to find users with this role...");
-} 
 $row=$modx->db->getRow($rs);
 if($row['count(*)']>0){
 	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");
 }
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_roles` WHERE $dbase.`".$table_prefix."user_roles`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the role...");
-}
+$modx->db->delete($modx->getFullTableName('user_roles'), "id='{$id}'");
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('user_roles'), "id='{$id}'"));

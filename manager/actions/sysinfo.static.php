@@ -144,8 +144,8 @@ if(!$modx->hasPermission('logs')) {
 		if($limit<1) {
 			echo "<p>".$_lang["no_edits_creates"]."</p>";
 		} else {
-			for ($i = 0; $i < $limit; $i++) {
-				$content = $modx->db->getRow($rs);
+			$i = 0;
+			while ($content = $modx->db->getRow($rs)) {
 				$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=".$content['editedby'];
 				$rs2 = $modx->db->query($sql);
 				$limit2 = $modx->db->getRecordCount($rs2);
@@ -154,7 +154,7 @@ if(!$modx->hasPermission('logs')) {
 					$r = $modx->db->getRow($rs2);
 					$user = $r['username'];
 				}
-				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}

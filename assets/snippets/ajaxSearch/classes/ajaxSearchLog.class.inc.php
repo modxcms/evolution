@@ -79,9 +79,7 @@ class AjaxSearchLog {
           `ip` varchar(255) NOT NULL,
           PRIMARY KEY  (`id`)
           ) ENGINE=MyISAM;";
-            if (!$modx->db->query($SQL_CREATE_TABLE)) {
-                return false;
-            }
+            $modx->db->query($SQL_CREATE_TABLE);
             return true;
         }
     }
@@ -131,7 +129,7 @@ class AjaxSearchLog {
 
         if ($nbLogs + 1 > $this->_purge) {
             $sql = "DELETE LOW_PRIORITY FROM " . $this->_tbName;
-            $rs = $modx->db->query($sql);
+            $modx->db->query($sql);
         }
     }
     /*

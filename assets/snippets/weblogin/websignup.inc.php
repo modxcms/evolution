@@ -52,10 +52,7 @@ else if ($isPostBack){
     }
     else {
         $sql = "SELECT id FROM ".$modx->getFullTableName("web_users")." WHERE username='$username'";
-        if(!$rs = $modx->db->query($sql)){
-            $output = webLoginAlert("An error occured while attempting to retreive all users with username $username.").$tpl;
-            return;
-        } 
+        $rs = $modx->db->query($sql);
         $limit = $modx->db->getRecordCount($rs);
         if($limit>0) {
             $output = webLoginAlert("Username is already in use!").$tpl;
@@ -71,10 +68,7 @@ else if ($isPostBack){
 
     // check for duplicate email address
     $sql = "SELECT internalKey FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
-    if(!$rs = $modx->db->query($sql)){
-        $output = webLoginAlert("An error occured while attempting to retreive all users with email $email.").$tpl;
-        return;
-    } 
+    $rs = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($rs);
     if($limit>0) {
         $row=$modx->db->getRow($rs);
@@ -114,35 +108,22 @@ else if ($isPostBack){
     // create the user account
     $sql = "INSERT INTO ".$modx->getFullTableName("web_users")." (username, password) 
             VALUES('".$username."', md5('".$password."'));";
-    $rs = $modx->db->query($sql);
-    if(!$rs){
-        $output = webLoginAlert("An error occured while attempting to save the user.").$tpl;
-        return;
-    }         
+    $modx->db->query($sql);
     // now get the id
     $key=$modx->db->getInsertId();
 
     // save user attributes
     $sql = "INSERT INTO ".$modx->getFullTableName("web_user_attributes")." (internalKey, fullname, email, zip, state, country) 
             VALUES($key, '$fullname', '$email', '$zip', '$state', '$country');";
-    $rs = $modx->db->query($sql);
-    if(!$rs){
-        $output = webLoginAlert("An error occured while attempting to save the user's attributes.").$tpl;
-        return;
-    }
+    $modx->db->query($sql);
 
     // add user to web groups
     if(count($groups)>0) {
         $ds = $modx->db->query("SELECT id FROM ".$modx->getFullTableName("webgroup_names")." WHERE name IN ('".implode("','",$groups)."')");
-        if(!$ds) {
-			$output = webLoginAlert('An error occured while attempting to update user\'s web groups');
-			return;
-        else {
             while ($row = $modx->db->getRow($ds)) {
                 $wg = $row["id"];
                 $modx->db->query("REPLACE INTO ".$modx->getFullTableName("web_groups")." (webgroup,webuser) VALUES('$wg','$key')");
             }
-        }
     }
             
     // invoke OnWebSaveUser event

@@ -109,10 +109,7 @@ if(!isset($_SESSION['webValidated'])){
 
     if($a!=1) {
         $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
-        if(!$rs = $modx->db->query($sql)) {
-            $output = "error replacing into active users! SQL: ".$sql;
-            return;
-        }
+        $modx->db->query($sql);
     }
 
     // display logout

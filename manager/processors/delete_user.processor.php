@@ -14,10 +14,8 @@ if($id==$modx->getLoginUserID()) {
 // get user name
 $sql = "SELECT * FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id='".$id."' LIMIT 1;";
 $rs = $modx->db->query($sql);
-if($rs) {
 	$row = $modx->db->getRow($rs);
 	$username = $row['username'];
-}
 
 // invoke OnBeforeUserFormDelete event
 $modx->invokeEvent("OnBeforeUserFormDelete",
@@ -29,31 +27,16 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 $_SESSION['itemname'] = $username;
 
 //ok, delete the user.
-$sql = "DELETE FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the user...");
-}
+$modx->db->delete($modx->getFullTableName('manager_users'), "id='{$id}'");
 
-$sql = "DELETE FROM $dbase.`".$table_prefix."member_groups` WHERE $dbase.`".$table_prefix."member_groups`.member=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the user's access permissions...");
-}
+$modx->db->delete($modx->getFullTableName('member_groups'), "member='{$id}'");
 
 // delete user settings
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_settings` WHERE $dbase.`".$table_prefix."user_settings`.user=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the user's settings...");
-}
+$modx->db->delete($modx->getFullTableName('user_settings'), "user='{$id}'");
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.internalKey=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the user attributes...");
-} else {
+$modx->db->delete($modx->getFullTableName('user_attributes'), "internalKey='{$id}'");
+
 	// invoke OnManagerDeleteUser event
 	$modx->invokeEvent("OnManagerDeleteUser",
 						array(
@@ -69,5 +52,4 @@ if(!$rs) {
 
 	$header="Location: index.php?a=75";
 	header($header);
-}
 ?>

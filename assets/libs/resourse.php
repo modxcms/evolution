@@ -210,7 +210,7 @@ class resourse {
 				if(is_scalar($tpl)){
 					$sql = "SELECT id FROM {$this->_table['site_templates']} WHERE templatename = '{$tpl}'";
 					$rs = $this->query($sql);
-					if(!$rs || $this->modx->db->getRecordCount($rs) <= 0) throw new Exception("Template {$tpl} is not exists");
+					if($this->modx->db->getRecordCount($rs) <= 0) throw new Exception("Template {$tpl} is not exists");
 					$tpl = $this->modx->db->getValue($rs);
 				} else throw new Exception("Invalid template name: ".print_r($tpl,1));
 			}catch(Exception $e){
@@ -297,8 +297,8 @@ class resourse {
 				),$fire_events);
 		
 				$id = $this->sanitarIn($_ids);
-				$this->query("DELETE from {$this->_table['site_content']} where id IN ({$id})");
-				$this->query("DELETE from {$this->_table['site_tmplvar_contentvalues']} where contentid IN ({$id})");
+				$this->delete($this->_table['site_content'], "id IN ({$id})");
+				$this->delete($this->_table['site_tmplvar_contentvalues'], "contentid IN ({$id})");
 				
 				$this->invokeEvent('OnEmptyTrash',array(
 					"ids"=>$_ids

@@ -62,10 +62,7 @@ switch ($_POST['mode']) {
 
 		// Add new TV
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			$modx->webAlertAndQuit("\$rs not set! New variable not saved!");
-		} else {	
+		$modx->db->query($sql);
 			// get the id
 			if(!$newid=$modx->db->getInsertId()) {
 				$modx->webAlertAndQuit("Couldn't get last insert key!");
@@ -97,7 +94,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}		
         break;
     case '301':	 	
 		// invoke OnBeforeTVFormSave event
@@ -121,10 +117,7 @@ switch ($_POST['mode']) {
         $sql .= "locked='".$locked."', ";
         $sql .= "category=".$categoryid;
         $sql .= " WHERE id='".$id."';";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			$modx->webAlertAndQuit("\$rs not set! Edited variable not saved!");
-		} else {		
+		$modx->db->query($sql);
 
 			// save access permissions
 			saveTemplateAccess();			
@@ -152,7 +145,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}				
 		
         break;
     default:
@@ -181,7 +173,7 @@ function saveTemplateAccess() {
     }
    
 	
-	$modx->db->query("DELETE FROM $tbl WHERE tmplvarid = $id");
+	$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
 	for($i=0;$i<count($templates);$i++){
 	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
 		$modx->db->query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
@@ -198,18 +190,11 @@ function saveDocumentAccessPermissons(){
 	// check for permission update access
 	if($use_udperms==1) {
 		// delete old permissions on the tv
-		$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=$id;";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			$modx->webAlertAndQuit("An error occurred while attempting to delete previous template variable access permission entries.");
-		}	
+		$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
 				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";
-				$rs = $modx->db->query($sql);
-				if(!$rs){
-					$modx->webAlertAndQuit("An error occured while attempting to save template variable acess permissions.");
-				}
+				$modx->db->query($sql);
 			}
 		}
 	}

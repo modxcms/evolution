@@ -6,10 +6,7 @@ if(!$modx->hasPermission('delete_document')) {
 
 $sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>0) {
-	$ids = $modx->db->getColumn('id', $rs); 
-}
+$ids = $modx->db->getColumn('id', $rs); 
 
 // invoke OnBeforeEmptyTrash event
 $modx->invokeEvent("OnBeforeEmptyTrash",
@@ -18,25 +15,22 @@ $modx->invokeEvent("OnBeforeEmptyTrash",
 						));
 
 // remove the document groups link.
-$sql = "DELETE $dbase.`".$table_prefix."document_groups`
-		FROM $dbase.`".$table_prefix."document_groups`
-		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."document_groups`.document
-		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
-@$modx->db->query($sql);
+$sql = "DELETE ".$modx->getFullTableName('document_groups')."
+		FROM ".$modx->getFullTableName('document_groups')." AS document_groups
+		INNER JOIN ".$modx->getFullTableName('site_content')." AS site_content ON site_content.id = document_groups.document
+		WHERE site_content.deleted=1";
+$modx->db->query($sql);
 
 // remove the TV content values.
-$sql = "DELETE $dbase.`".$table_prefix."site_tmplvar_contentvalues`
-		FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues`
-		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."site_tmplvar_contentvalues`.contentid
-		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
+$sql = "DELETE ".$modx->getFullTableName('site_tmplvar_contentvalues')."
+		FROM ".$modx->getFullTableName('site_tmplvar_contentvalues')." AS site_tmplvar_contentvalues
+		INNER JOIN ".$modx->getFullTableName('site_content')." AS site_content ON site_content.id = site_tmplvar_contentvalues.contentid
+		WHERE site_content.deleted=1";
 $modx->db->query($sql);
 
 //'undelete' the document.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to remove deleted documents!");
-} else {
+$modx->db->delete($modx->getFullTableName('site_content'), "deleted=1");
+
 	// invoke OnEmptyTrash event
 	$modx->invokeEvent("OnEmptyTrash",
 						array(
@@ -49,5 +43,4 @@ if(!$rs) {
 	// finished emptying cache - redirect
 	$header="Location: index.php?r=1&a=7";
 	header($header);
-}
 ?>

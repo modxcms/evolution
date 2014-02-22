@@ -24,12 +24,7 @@ $sql = "SELECT el.*, IFNULL(wu.username,mu.username) as 'username' " .
 		"LEFT JOIN ".$modx->getFullTableName("web_users")." wu ON wu.id=el.user AND el.usertype=1 ".
 		" WHERE el.id=$id";			
 $ds = $modx->db->query($sql);
-if(!$ds) {
-	$modx->webAlertAndQuit("Error while load event log");
-}
-else{
 	$content = $modx->db->getRow($ds);	
-}
 
 ?>
 

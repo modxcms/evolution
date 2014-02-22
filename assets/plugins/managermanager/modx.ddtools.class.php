@@ -513,11 +513,8 @@ class ddTools {
 			";
 			
 			$result = $modx->db->query($sql);
-			$resourceArray = array();
-			
-			for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++){
-				array_push($resourceArray, @ $modx->db->getRow($result));
-			}
+
+			$resourceArray = $modx->db->makeArray($result);
 			
 			return $resourceArray;
 		}
@@ -620,9 +617,7 @@ class ddTools {
 			
 			$rs = $modx->db->query($sql);
 			
-			for ($i= 0; $i < @ $modx->db->getRecordCount($rs); $i++){
-				array_push($result, @ $modx->db->getRow($rs));
-			}
+			$result = $modx->db->makeArray($rs);
 			
 			// get default/built-in template variables
 			ksort($docRow);
@@ -744,11 +739,8 @@ class ddTools {
 				GROUP BY sc.id ".($sortBy ? " ORDER BY $sortBy $sortDir " : "")." $limit ";
 		
 		$result = $modx->db->query($sql);
-		$resourceArray = array();
 		
-		for ($i = 0; $i < @$modx->db->getRecordCount($result); $i++){
-			array_push($resourceArray, @$modx->db->getRow($result));
-		}
+		$resourceArray = $modx->db->makeArray($result);
 		
 		return $resourceArray;
 	}

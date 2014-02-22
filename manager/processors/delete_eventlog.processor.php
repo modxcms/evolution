@@ -8,13 +8,9 @@ $id=intval($_GET['id']);
 $clearlog = ($_GET['cls']==1 ? true:false);
 
 // delete event log
-$sql = "DELETE FROM ".$modx->getFullTableName("event_log").(!$clearlog ? " WHERE id=".$id.";":"");
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the event log...");
-} else {
+$modx->db->delete($modx->getFullTableName("event_log"), ($clearlog ? '' : "id='{$id}'"));
+
 	$header="Location: index.php?a=114";
 	header($header);
-}
 
 ?>

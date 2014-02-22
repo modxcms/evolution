@@ -13,11 +13,8 @@ $modx->invokeEvent("OnBeforeSnipFormDelete",
 						));
 
 //ok, delete the snippet.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_snippets` WHERE $dbase.`".$table_prefix."site_snippets`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the snippet...");
-} else {
+$modx->db->delete($modx->getFullTableName('site_snippets'), "id='{$id}'");
+
 		// invoke OnSnipFormDelete event
 		$modx->invokeEvent("OnSnipFormDelete",
 								array(
@@ -35,6 +32,5 @@ if(!$rs) {
 
 	$header="Location: index.php?a=76&r=2";
 	header($header);
-}
 
 ?>

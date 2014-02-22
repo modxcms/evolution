@@ -11,21 +11,18 @@ if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {
 	$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, category)
 			SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
 			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
-	$rs = $modx->db->query($sql);
+	$modx->db->query($sql);
 }
 else {
 	$sql = "SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
 			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
 	$rs = $modx->db->query($sql);
-	if($rs) {
 		$row = $modx->db->getRow($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates`
 				(templatename, description, content, category) VALUES
 				('".$modx->db->escape($row['templatename'])."', '".$modx->db->escape($row['description'])."','".$modx->db->escape($row['content'])."', ".$modx->db->escape($row['category']).");";
 		$rs = $modx->db->query($sql);
-	}
 }
-if($rs) {
 	$newid = $modx->db->getInsertId(); // get new id
 	// duplicate TV values
 	$tvs = $modx->db->select('*', $modx->getFullTableName('site_tmplvar_templates'), 'templateid='.$id);
@@ -35,9 +32,6 @@ if($rs) {
 			$modx->db->insert($row, $modx->getFullTableName('site_tmplvar_templates'));
 		}
 	}
-} else {
-	$modx->webAlertAndQuit("A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError());
-}
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$newid}'"));
