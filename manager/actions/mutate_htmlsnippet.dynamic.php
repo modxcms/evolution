@@ -164,11 +164,8 @@ if (is_array($evtOut))
             <option>&nbsp;</option>
 <?php
 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
-$ds = getCategories();
-if ($ds) {
-foreach ($ds as $n => $v) {
+foreach (getCategories() as $n => $v) {
     echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-}
 }
 ?>
         </select></td>

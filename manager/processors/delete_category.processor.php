@@ -10,7 +10,7 @@ if(!$modx->hasPermission('save_plugin') && !$modx->hasPermission('save_snippet')
     $name = $modx->db->getValue($modx->db->select('category', $modx->getFullTableName('categories'), "id='{$catId}'"));
     $_SESSION['itemname'] = $name;
 
-    include_once "categories.inc.php";
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
     deleteCategory($catId);
 
 $header="Location: index.php?a=76";

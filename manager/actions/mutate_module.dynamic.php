@@ -451,12 +451,9 @@ $ds = $modx->db->query($sql);
             <select name="categoryid" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
 <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if ($ds) {
-                    foreach($ds as $n => $v) {
-                        echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-                    }
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n => $v) {
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
                 }
 ?>
             </select></td></tr>
