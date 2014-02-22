@@ -836,7 +836,7 @@ class Qm {
 		if(empty($this->aliases)) {
 			$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
 			$qh = $modx->db->query($sql);
-			if ($qh && $modx->db->getRecordCount($qh) > 0)	{
+			if ($modx->db->getRecordCount($qh) > 0)	{
 				while ($row = $modx->db->getRow($qh)) {
 					$this->aliases[$row['id']] = $row['alias'];
 					$this->parents[$row['id']] = $row['parent'];

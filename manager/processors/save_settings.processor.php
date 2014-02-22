@@ -116,9 +116,7 @@ if (isset($data) && count($data) > 0) {
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
-	if(!@$rs = $modx->db->query($sql)) {
-		$modx->webAlertAndQuit("Failed to update setting value!");
-	}
+	$modx->db->query($sql);
 	
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {

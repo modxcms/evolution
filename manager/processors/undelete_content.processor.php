@@ -70,17 +70,11 @@ getChildren($id);
 if(count($children)>0) {
 	$docs_to_undelete = implode(" ,", $children);
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
-	$rs = @$modx->db->query($sql);
-	if(!$rs) {
-		$modx->webAlertAndQuit("Something went wrong while trying to set the document's children to undeleted status...");
-	}
+	$modx->db->query($sql);
 }
 //'undelete' the document.
 $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to set the document to undeleted status...");
-} else {
+$modx->db->query($sql);
 	// Set the item name for logger
 	$_SESSION['itemname'] = $content['pagetitle'];
 
@@ -92,5 +86,4 @@ if(!$rs) {
 // webber
 	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
 	header($header);
-}
 ?>

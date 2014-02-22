@@ -19,10 +19,7 @@ if($limit!=1) {
 	} else {
 		// delete message
 		$sql = "DELETE FROM $dbase.`".$table_prefix."user_messages` WHERE id=$id;";
-		$rs = $modx->db->query($sql);
-		if(!$rs) {
-			$modx->webAlertAndQuit("Something went wrong while trying to delete the message!");
-		} 
+		$modx->db->query($sql);
 	}
 }
 

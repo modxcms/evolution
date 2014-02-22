@@ -31,16 +31,15 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $sql="UPDATE $dbase.`".$table_prefix."web_users`
                   SET password = '".$newpwd."', cachepwd=''
                   WHERE id=".$row['id'];
-            $ds = $modx->db->query($sql);
+            $modx->db->query($sql);
 
             // unblock user by resetting "blockeduntil"
             $sql="UPDATE $dbase.`".$table_prefix."web_user_attributes`
                   SET blockeduntil = '0'
                   WHERE internalKey=".$row['id'];
-            $ds2 = $modx->db->query($sql);
+            $modx->db->query($sql);
 
             // invoke OnWebChangePassword event
-            if(!$ds || !$ds2)
                 $modx->invokeEvent("OnWebChangePassword",
                                 array(
                                     "userid"        => $id,
@@ -241,7 +240,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
     if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate<time()) {    // blocked due to number of login errors, but get to try again
         $sql = "UPDATE $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-        $ds = $modx->db->query($sql);
+        $modx->db->query($sql);
     }
 
     if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
@@ -314,10 +313,10 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $failedlogins += $newloginerror;
         if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blocked=1, blockeduntil='".(time()+($modx->config['blocked_minutes']*60))."' where internalKey=$internalKey";
-            $ds = $modx->db->query($sql);
+            $modx->db->query($sql);
         } else { //increment the failed login counter
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-            $ds = $modx->db->query($sql);
+            $modx->db->query($sql);
         }
         session_destroy();
         session_unset();
@@ -328,7 +327,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
     if(!isset($_SESSION['webValidated'])) {
         $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-        $ds = $modx->db->query($sql);
+        $modx->db->query($sql);
     }
 
     $_SESSION['webShortname']=$username;
@@ -391,10 +390,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         if($a!=1) {
             // web users are stored with negative id
             $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
-            if(!$ds = $modx->db->query($sql)) {
-                $output = "error replacing into active users! SQL: ".$sql;
-                return;
-            }
+            $modx->db->query($sql);
         }
     }
 

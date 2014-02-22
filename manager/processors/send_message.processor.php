@@ -19,7 +19,7 @@ if($sendto=='u') {
 	}
 	$sql = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
 			values($userid, ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 1);";
-	$rs = $modx->db->query($sql);
+	$modx->db->query($sql);
 }
 
 if($sendto=='g') {

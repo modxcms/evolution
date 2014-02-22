@@ -14,10 +14,7 @@ $modx->invokeEvent("OnBeforeModFormDelete",
 
 //ok, delete the module.
 $sql = "DELETE FROM ".$modx->getFullTableName("site_modules")." WHERE id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the module...");
-}
+$modx->db->query($sql);
 
 //ok, delete the module dependencies.
 $sql = "DELETE FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module='".$id."';";

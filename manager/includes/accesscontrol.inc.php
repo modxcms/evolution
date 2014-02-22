@@ -189,9 +189,7 @@ if(!isset($_SESSION['mgrValidated'])){
 			$itemid == null ? var_export(null, true) : $itemid,
 			$ip
 		);
-		if(!$rs=$modx->db->query($sql)) {
-			$modx->webAlertAndQuit("Error replacing into active users! SQL: ".$sql."\n".$modx->db->getLastError());
-		}
+		$modx->db->query($sql);
 	}
 }
 ?>

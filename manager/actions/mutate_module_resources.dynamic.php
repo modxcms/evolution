@@ -62,13 +62,7 @@ switch ($_REQUEST['op']) {
 				$sql.="('$id',".$opids[$i].",$type)";
 			}
 			$modx->db->query('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
-			$ds = $modx->db->query($sql);
-			if(!$ds){
-				echo '<script type="text/javascript">'.
-				     'function jsalert(){ alert(\'An error occured while trying to update the database. \''.$modx->db->getLastError().');'.
-				     'setTimeout(\'jsalert()\',100)'.
-				     '</script>';
-			}
+			$modx->db->query($sql);
 		}
 		break;
 	case 'del':
@@ -78,19 +72,16 @@ switch ($_REQUEST['op']) {
 		}
 		// get resources that needs to be removed
 		$ds = $modx->db->query("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
-		if ($ds) {
 			// loop through resources and look for plugins and snippets
-			$i=0; $plids=array(); $snid=array();
+			$plids=array(); $snid=array();
 			while ($row=$modx->db->getRow($ds)){
 				if($row['type']=='30') $plids[$i]=$row['resource'];
 				if($row['type']=='40') $snids[$i]=$row['resource'];
 			}
 			// get guid
 			$ds = $modx->db->query("SELECT * FROM ".$tbl_site_modules." WHERE id='$id'");
-			if($ds) {
 				$row = $modx->db->getRow($ds);
 				$guid = $row['guid'];
-			}
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
 				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
@@ -98,7 +89,6 @@ switch ($_REQUEST['op']) {
 				// reset cache
 				$modx->clearCache('full');
 			}
-		}
 		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';
 		$modx->db->query($sql);
 		break;
@@ -223,10 +213,6 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 					"LEFT JOIN ".$tbl_site_tmplvars." sv ON sv.id = smd.resource AND smd.type = '60' ".
 					"WHERE smd.module=$id ORDER BY smd.type,name ";
 			$ds = $modx->db->query($sql);
-			if (!$ds){
-				echo "An error occured while loading module dependencies.";
-			}
-			else {
 				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$ds,0); // set page size to 0 t show all items
 				$grd->noRecordMsg = $_lang["no_records_found"];
@@ -238,7 +224,6 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 				$grd->colTypes = "template:<input type='checkbox' name='depid[]' value='[+id+]'> [+value+]";
 				$grd->fields="name,type";
 				echo $grd->render();
-			}
 		?>
 		</td>
 		<td valign="top" width="120" style="background-color:#eeeeee">

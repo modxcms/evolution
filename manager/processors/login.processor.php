@@ -235,11 +235,11 @@ if($newloginerror) {
 	//increment the failed login counter
     $failedlogins += 1;
     $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-    $rs = $modx->db->query($sql);
+    $modx->db->query($sql);
     if($failedlogins>=$failed_allowed) { 
 		//block user for too many fail attempts
         $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-        $rs = $modx->db->query($sql);
+        $modx->db->query($sql);
     } else {
 		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
@@ -267,13 +267,12 @@ $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
 $sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
 $rs = $modx->db->query($sql);
-$row = $modx->db->getRow($rs);
-$_SESSION['mgrPermissions'] = $row;
+$_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
 if(isset($_SESSION['mgrValidated'])) {
     $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-    $rs = $modx->db->query($sql);
+    $modx->db->query($sql);
 }
 
 // get user's document groups

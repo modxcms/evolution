@@ -184,10 +184,6 @@ if($_SESSION['browser']==='legacy_IE') {
 		<td valign="top" align="left">
 		<?php
 			$ds = $modx->db->query($sql);
-			if (!$ds){
-				$modx->webAlertAndQuit("An error occured while loading records.");
-			}
-			else {
 				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 				$grd->noRecordMsg = $_lang["no_records_found"];
@@ -201,7 +197,6 @@ if($_SESSION['browser']==='legacy_IE') {
 				$grd->fields="name,description";
 				if($_REQUEST['listmode']=='1') $grd->pageSize=0;
 				echo $grd->render();
-			}			
 		?>
 		</td>
 	  </tr>

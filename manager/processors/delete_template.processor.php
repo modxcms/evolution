@@ -35,12 +35,10 @@ $_SESSION['itemname'] = $name;
 
 //ok, delete the document.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the template...");
-} else {
+$modx->db->query($sql);
+
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE $dbase.`".$table_prefix."site_tmplvar_templates`.templateid=".$id.";";
-	$rs = $modx->db->query($sql);
+	$modx->db->query($sql);
 			
 	// invoke OnTempFormDelete event
 	$modx->invokeEvent("OnTempFormDelete",
@@ -54,5 +52,4 @@ if(!$rs) {
 	// finished emptying cache - redirect
 	$header="Location: index.php?a=76&r=2";
 	header($header);
-}
 ?>

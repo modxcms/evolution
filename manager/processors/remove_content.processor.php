@@ -33,10 +33,8 @@ $modx->db->query($sql);
 
 //'undelete' the document.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to remove deleted documents!");
-} else {
+$modx->db->query($sql);
+
 	// invoke OnEmptyTrash event
 	$modx->invokeEvent("OnEmptyTrash",
 						array(
@@ -49,5 +47,4 @@ if(!$rs) {
 	// finished emptying cache - redirect
 	$header="Location: index.php?r=1&a=7";
 	header($header);
-}
 ?>

@@ -370,7 +370,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                             "WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
                             "ORDER BY sm.name ";
                     $ds = $modx->db->query($sql);
-                    if($ds) while($row = $modx->db->getRow($ds)){
+                    while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
                     }
                 ?>

@@ -74,10 +74,7 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
 if(count($children)>0) {
 	$docs_to_delete = implode(" ,", $children);
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
-	$rs = $modx->db->query($sql);
-	if(!$rs) {
-		$modx->webAlertAndQuit("Something went wrong while trying to set the document's children to deleted status...");
-	}
+	$modx->db->query($sql);
 }
 
 if($site_start==$id){
@@ -90,10 +87,8 @@ if($site_unavailable_page==$id){
 
 //ok, 'delete' the document.
 $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id=$id;";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to set the document to deleted status...");
-}
+$modx->db->query($sql);
+
 // invoke OnDocFormDelete event
 $modx->invokeEvent("OnDocFormDelete",
 						array(

@@ -558,18 +558,18 @@ switch ($actionToTake) {
 		}
 
 		if (!empty($tvDeletions)) {
-			$rs = $modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
+			$modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
 		}
 			
 		if (!empty($tvAdded)) {
 			foreach ($tvAdded as $tv) {
-				$rs = $modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
+				$modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
 			}
 		}
 		
 		if (!empty($tvChanges)) {
 			foreach ($tvChanges as $tv) {
-				$rs = $modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, 'id='.$tv[1]['id']);
+				$modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, 'id='.$tv[1]['id']);
 			}
 		}
 

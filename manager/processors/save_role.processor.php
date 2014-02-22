@@ -102,9 +102,7 @@ switch ($_POST['mode']) {
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
         $rs = $modx->db->update($fields, $tbl, "id=$id");
-        if (!$rs = $modx->db->query($sql)) {
-            $modx->webAlertAndQuit("An error occured while attempting to update the role. <br />" . $modx->db->getLastError());
-        }
+        $modx->db->query($sql);
         // Set the item name for logger
         $_SESSION['itemname'] = $name;
 

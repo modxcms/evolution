@@ -56,13 +56,7 @@ $_SESSION['itemname'] = $name;
 
 	// delete variable
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
-	$rs = $modx->db->query($sql);
-	if(!$rs) {
-		$modx->webAlertAndQuit("Something went wrong while trying to delete the field...");
-	} else {		
-		$header="Location: index.php?a=76&r=2";
-		header($header);
-	}
+	$modx->db->query($sql);
 
 	// delete variable's content values
 	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE tmplvarid=".$id.";");
@@ -78,4 +72,7 @@ $_SESSION['itemname'] = $name;
 							array(
 								"id"	=> $id
 							));								
+
+	$header="Location: index.php?a=76&r=2";
+	header($header);
 ?>

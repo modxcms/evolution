@@ -84,11 +84,10 @@ if (!class_exists('MemberCheck')) {
 				$this->allGroups = array ();
 				$tableName = $modx->getFullTableName('webgroup_names');
 				$sql = "SELECT name FROM $tableName";
-				if ($rs = $modx->db->query($sql)) {
+				$rs = $modx->db->query($sql);
 					while ($row = $modx->db->getRow($rs)) {
 						array_push($this->allGroups, stripslashes($row['name']));
 					}
-				}
 			}
 		}
 

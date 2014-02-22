@@ -135,10 +135,7 @@ if ($numRecords > 0) {
 		'<option value="DESC"'.(($dir=='DESC') ? ' selected' : '').'>'.$_lang['sort_desc'].'</option>'.
 		'<option value="ASC"'.(($dir=='ASC') ? ' selected' : '').'>'.$_lang['sort_asc'].'</option>'.
 	'</select></p>';
-	if (!$rs = $modx->db->query($sql)) {
-		// sql error
-		$modx->webAlertAndQuit($_lang["error_no_results"]);
-	} else {
+	$rs = $modx->db->query($sql);
 		$resource = $modx->db->makeArray($rs);
 
 		// CSS style for table
@@ -210,7 +207,6 @@ $add_path=$sd.$sb.$pg;
 
 		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
 		$children_output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
-	}
 } else {
 	// No Child documents
 	$children_output = "<p>".$_lang['resources_in_container_no']."</p>";

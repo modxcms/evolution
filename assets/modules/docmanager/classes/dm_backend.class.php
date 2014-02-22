@@ -41,10 +41,7 @@ class DocManagerBackend {
 
     	if (is_numeric($id)) {
 			$query = 'SELECT id , pagetitle , parent , menuindex, published, hidemenu, deleted  FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
-			if (!$rs = $this->modx->db->query($query)) {
-				return false;
-			}
-		
+			$rs = $this->modx->db->query($query);
 			$resource = $this->modx->db->makeArray($rs);
 		} elseif ($id == '') {
 			$noId = true;
@@ -270,7 +267,7 @@ class DocManagerBackend {
 							$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
 							if ($NotAMember) {
 								$sql = "INSERT INTO " . $this->modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
-								$sqlResult = $this->modx->db->query($sql);
+								$this->modx->db->query($sql);
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsAdded += 1;
@@ -290,7 +287,7 @@ class DocManagerBackend {
 							$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
 							if ($AMember) {
 								$sql = "DELETE FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-								$sqlResult = $this->modx->db->query($sql);
+								$this->modx->db->query($sql);
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsRemoved += 1;

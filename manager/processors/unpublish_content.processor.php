@@ -34,10 +34,7 @@ if(!$udperms->checkPermissions()) {
 // update the document
 $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=0, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=0, publishedon=0 WHERE id=$id;";
 
-$rs = $modx->db->query($sql);
-if(!$rs){
-	$modx->webAlertAndQuit("An error occured while attempting to unpublish the document.");
-}
+$modx->db->query($sql);
 
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));

@@ -24,9 +24,7 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
 			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Failed to insert new group. Possible duplicate group name?");
-			}
+			$modx->db->query($sql);
 
 			// get new id
 			$id = $modx->db->getInsertId();
@@ -44,9 +42,7 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
 			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Failed to insert new group. Possible duplicate group name?");
-			}
+			$modx->db->query($sql);
 
 			// get new id
 			$id = $modx->db->getInsertId();
@@ -65,17 +61,14 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
 			$sql = 'DELETE FROM '.$tbl_membergroup_names.' WHERE id='.$usergroup;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete group. SQL failed.");
-			}
+			$modx->db->query($sql);
+
 			$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE membergroup='.$usergroup;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete group from access table. SQL failed.");
-			}
+			$modx->db->query($sql);
+
 			$sql = 'DELETE FROM '.$tbl_member_groups.' WHERE user_group='.$usergroup;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete user-group links. SQL failed.");
-			}
+			$modx->db->query($sql);
+
 		}
 	break;
 	case "delete_document_group" :
@@ -84,17 +77,13 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
 			$sql = 'DELETE FROM '.$tbl_documentgroup_names.' WHERE id='.$group;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete group. SQL failed.");
-			}
+			$modx->db->query($sql);
+
 			$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE documentgroup='.$group;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete group from access table. SQL failed.");
-			}
+			$modx->db->query($sql);
+
 			$sql = 'DELETE FROM '.$tbl_document_groups.' WHERE document_group='.$group;
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Unable to delete document-group links. SQL failed.");
-			}
+			$modx->db->query($sql);
 		}
 	break;
 	case "rename_user_group" :
@@ -107,9 +96,7 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
 		$sql = 'UPDATE '.$tbl_membergroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		if(!$rs = $modx->db->query($sql)) {
-			$modx->webAlertAndQuit("Failed to update group name. Possible duplicate group name?");
-		}
+		$modx->db->query($sql);
 	break;
 	case "rename_document_group" :
 		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
@@ -121,9 +108,7 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
 		$sql = 'UPDATE '.$tbl_documentgroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		if(!$rs = $modx->db->query($sql)) {
-			$modx->webAlertAndQuit("Failed to update group name. Possible duplicate group name?");
-		}
+		$modx->db->query($sql);
 	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
@@ -133,9 +118,7 @@ switch ($operation) {
 		$limit = $modx->db->getValue($sql);
 		if($limit<=0) {
 			$sql = 'INSERT INTO '.$tbl_membergroup_access.' (membergroup, documentgroup) VALUES('.$usergroup.', '.$docgroup.')';
-			if(!$rs = $modx->db->query($sql)) {
-				$modx->webAlertAndQuit("Failed to link document group to user group");
-			}
+			$modx->db->query($sql);
 		} else {
 			//alert user that coupling already exists?
 		}
@@ -144,9 +127,7 @@ switch ($operation) {
 		$updategroupaccess = true;
 		$coupling = intval($_REQUEST['coupling']);
 		$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE id='.$coupling;
-		if(!$rs = $modx->db->query($sql)) {
-			$modx->webAlertAndQuit("Failed to remove document group from user group");
-		}
+		$modx->db->query($sql);
 	break;
 	default :
 		$modx->webAlertAndQuit("No operation set in request.");
@@ -161,7 +142,7 @@ if($updategroupaccess==true){
 	$sql = 'UPDATE '.$tbl_documentgroup_names.' AS dgn '.
 	       'LEFT JOIN '.$tbl_membergroup_access.' AS mga ON mga.documentgroup = dgn.id '.
 	       'SET dgn.private_memgroup = (mga.membergroup IS NOT NULL)';
-	$rs = $modx->db->query($sql);
+	$modx->db->query($sql);
 }
 
 $header = "Location: index.php?a=40";

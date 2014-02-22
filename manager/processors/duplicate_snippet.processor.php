@@ -11,24 +11,19 @@ if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {
 	$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, properties, category)
 			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties, category
 			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
-	$rs = $modx->db->query($sql);
+	$modx->db->query($sql);
 }
 else {
 	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties, category
 			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
 	$rs = $modx->db->query($sql);
-	if($rs) {
 		$row = $modx->db->getRow($rs);
 		$sql ="INSERT INTO $dbase.`".$table_prefix."site_snippets`
 				(name, description, snippet, properties, category) VALUES
 				('".$modx->db->escape($row['name'])."', '".$modx->db->escape($row['description'])."', '".$modx->db->escape($row['snippet'])."', '".$modx->db->escape($row['properties'])."', ".$modx->db->escape($row['category']).");";
-		$rs = $modx->db->query($sql);
-	}
+		$modx->db->query($sql);
 }
-if($rs) $newid = $modx->db->getInsertId(); // get new id
-else {
-	$modx->webAlertAndQuit("A database error occured while trying to duplicate snippet: <br /><br />".$modx->db->getLastError());
-}
+$newid = $modx->db->getInsertId(); // get new id
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$newid}'"));

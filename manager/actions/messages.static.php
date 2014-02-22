@@ -83,7 +83,7 @@ if($limit!=1) {
 <?php
         // mark the message as read
         $sql = "UPDATE $dbase.`".$table_prefix."user_messages` SET $dbase.`".$table_prefix."user_messages`.messageread=1 WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
-        $rs = $modx->db->query($sql);
+        $modx->db->query($sql);
     }
 }
 ?>

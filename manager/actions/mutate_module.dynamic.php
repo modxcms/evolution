@@ -420,9 +420,6 @@ function SetUrl(url, width, height, alt) {
            'LEFT JOIN '.$tbl_site_tmplvars.' AS sv ON sv.id = smd.resource AND smd.type = 60 '.
            'WHERE smd.module=\''.$id.'\' ORDER BY smd.type,name';
 $ds = $modx->db->query($sql);
-if (!$ds) {
-    echo "An error occured while loading module dependencies.";
-} else {
     include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
     $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
     $grd->noRecordMsg = $_lang['no_records_found'];
@@ -433,7 +430,7 @@ if (!$ds) {
     $grd->columns = $_lang['element_name']." ,".$_lang['type'];
     $grd->fields = "name,type";
     echo $grd->render();
-} ?>
+?>
         </td></tr>
     </table>
     </div>

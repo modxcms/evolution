@@ -9,10 +9,8 @@ $id=intval($_GET['id']);
 // get user name
 $sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id='".$id."' LIMIT 1;";
 $rs = $modx->db->query($sql);
-if($rs) {
 	$row = $modx->db->getRow($rs);
 	$username = $row['username'];
-}
 
 
 // invoke OnBeforeWUsrFormDelete event
@@ -26,22 +24,16 @@ $_SESSION['itemname'] = $username;
 
 // delete the user.
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user...");
-}
+$modx->db->query($sql);
+
 // delete user groups
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_groups` WHERE $dbase.`".$table_prefix."web_groups`.webuser=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user's access permissions...");
-}
+$modx->db->query($sql);
+
 // delete the attributes
 $sql = "DELETE FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	$modx->webAlertAndQuit("Something went wrong while trying to delete the web user attributes...");
-} else {
+$modx->db->query($sql);
+
 	// invoke OnWebDeleteUser event
 	$modx->invokeEvent("OnWebDeleteUser",
 						array(
@@ -57,5 +49,4 @@ if(!$rs) {
 
 	$header="Location: index.php?a=99";
 	header($header);
-}
 ?>

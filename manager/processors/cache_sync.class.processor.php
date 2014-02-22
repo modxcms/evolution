@@ -37,7 +37,7 @@ class synccache{
             $sql = "SELECT id, IF(alias='', id, alias) AS alias, parent, alias_visible FROM ".$modx->getFullTableName('site_content');
 			
             $qh = $modx->db->query($sql);
-            if ($qh && $modx->db->getRecordCount($qh) > 0)  {
+            if ($modx->db->getRecordCount($qh) > 0)  {
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
                     $this->parents[$row['id']] = $row['parent'];
@@ -85,9 +85,7 @@ class synccache{
         // update publish time file
         $timesArr = array();
         $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.(time() + $modx->config['server_offset_time']);
-        if(@!$result = $modx->db->query($sql)) {
-            echo 'Couldn\'t determine next publish event!';
-        }
+        $result = $modx->db->query($sql);
 
         $tmpRow = $modx->db->getRow($result);
         $minpub = $tmpRow['minpub'];
@@ -96,9 +94,7 @@ class synccache{
         }
 
         $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.(time() + $modx->config['server_offset_time']);
-        if(@!$result = $modx->db->query($sql)) {
-            echo 'Couldn\'t determine next unpublish event!';
-        }
+        $result = $modx->db->query($sql);
         $tmpRow = $modx->db->getRow($result);
         $minunpub = $tmpRow['minunpub'];
         if($minunpub!=NULL) {
