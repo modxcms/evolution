@@ -475,14 +475,9 @@ $ds = $modx->db->query($sql);
 <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
-    $groupsarray = array();
-    $sql = 'SELECT * FROM '.$tbl_site_module_access.' WHERE module=\''.$id.'\'';
+    $sql = 'SELECT usergroup FROM '.$tbl_site_module_access.' WHERE module=\''.$id.'\'';
     $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    for ($i = 0; $i < $limit; $i++) {
-        $currentgroup = $modx->db->getRow($rs);
-        $groupsarray[$i] = $currentgroup['usergroup'];
-    }
+    $groupsarray = $modx->db->getColumn('usergroup', $rs);
 
     if($modx->hasPermission('access_permissions')) { ?>
 <!-- User Group Access Permissions -->

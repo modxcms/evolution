@@ -6,10 +6,7 @@ if(!$modx->hasPermission('delete_document')) {
 
 $sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>0) {
-	$ids = $modx->db->getColumn('id', $rs); 
-}
+$ids = $modx->db->getColumn('id', $rs); 
 
 // invoke OnBeforeEmptyTrash event
 $modx->invokeEvent("OnBeforeEmptyTrash",
