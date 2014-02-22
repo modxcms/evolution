@@ -786,8 +786,7 @@ class ditto {
 		$rs = $modx->db->query($query);
 		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
-		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->db->getRow($rs);
+		while ($row = $modx->db->getRow($rs)) {
 			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
@@ -796,7 +795,7 @@ class ditto {
 			$query .= " FROM $tb2";
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
-			$row = @$modx->db->getRow($rs);
+			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
 					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
@@ -922,7 +921,7 @@ class ditto {
 
 		$result= $modx->db->query($sql);
 		$resourceArray= array ();
-		$cnt = @$modx->db->getRecordCount($result);
+		$cnt = $modx->db->getRecordCount($result);
 		$TVData = array();
 		$TVIDs = array();
 		if ($cnt) {
