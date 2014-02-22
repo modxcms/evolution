@@ -61,12 +61,20 @@ switch ($_POST['mode']) {
         }
 
 		// Add new TV
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}			
+		$newid = $modx->db->insert(
+			array(
+				'name'           => $name,
+				'description'    => $description,
+				'caption'        => $caption,
+				'type'           => $type,
+				'elements'       => $elements,
+				'default_text'   => $default_text,
+				'display'        => $display,
+				'display_params' => $params,
+				'rank'           => $rank,
+				'locked'         => $locked,
+				'category'       => $categoryid,
+			), $tbl_site_tmplvars);
 			
 			// save access permissions
 			saveTemplateAccess();			
@@ -104,20 +112,20 @@ switch ($_POST['mode']) {
 							));	 
 
     	// update TV
-		$sql = "UPDATE $dbase.`".$table_prefix."site_tmplvars` SET ";
-        $sql .= "name='".$name."', ";
-		$sql .= "description='".$description."', ";
-        $sql .= "caption='".$caption."', ";
-        $sql .= "type='".$type."', ";
-        $sql .= "elements='".$elements."', ";
-        $sql .= "default_text='".$default_text."', ";
-        $sql .= "display='".$display."', "; 
-        $sql .= "display_params='".$params."', ";         
-        $sql .= "rank='".$rank."', ";
-        $sql .= "locked='".$locked."', ";
-        $sql .= "category=".$categoryid;
-        $sql .= " WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'           => $name,
+				'description'    => $description,
+				'caption'        => $caption,
+				'type'           => $type,
+				'elements'       => $elements,
+				'default_text'   => $default_text,
+				'display'        => $display, 
+				'display_params' => $params,         
+				'rank'           => $rank,
+				'locked'         => $locked,
+				'category'       => $categoryid,
+			), $tbl_site_tmplvars, "id='{$id}'");
 
 			// save access permissions
 			saveTemplateAccess();			
@@ -176,13 +184,20 @@ function saveTemplateAccess() {
 	$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
 	for($i=0;$i<count($templates);$i++){
 	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-		$modx->db->query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
+	    $modx->db->insert(
+	        array(
+	            'tmplvarid'  => $id,
+	            'templateid' => $templates[$i],
+	            'rank'       => $setRank,
+	        ), $tbl_site_tmplvar_templates);
 	}	
 }
 
 function saveDocumentAccessPermissons(){
 	global $id,$newid;
-	global $modx,$dbase,$table_prefix,$use_udperms;
+	global $modx,$use_udperms;
+
+	$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_access');
 
 	if($newid) $id = $newid;
 	$docgroups = $_POST['docgroups'];
@@ -193,8 +208,11 @@ function saveDocumentAccessPermissons(){
 		$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
-				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";
-				$modx->db->query($sql);
+				$modx->db->insert(
+					array(
+						'tmplvarid'  => $id,
+						'documentgroup' => stripslashes($value),
+					), $tbl_site_tmplvar_templates);
 			}
 		}
 	}

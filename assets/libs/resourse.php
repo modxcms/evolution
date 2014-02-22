@@ -463,14 +463,19 @@ class resourse {
 		foreach($fld as $key=>$value){
 			if ($value=='') continue;
  			if ($this->tv[$key]!=''){
+				$fields = array(
+					'tmplvarid' => $this->tv[$key],
+					'contentid' => $this->id,
+					'value'     => $this->modx->db->escape($value),
+					);
 				$rc = $this->query("SELECT value FROM {$this->_table['site_tmplvar_contentvalues']} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
 				$row = mysql_fetch_assoc($rc);
 				if (is_array($row)) {
 					if ($row[0] != $value) {
-						$result = $this->query("UPDATE {$this->_table['site_tmplvar_contentvalues']} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
+						$this->modx->db->update($fields, $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
 				    }
 				}else{	
-					$result = $this->query("INSERT into {$this->_table['site_tmplvar_contentvalues']} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
+					$this->modx->db->insert($fields, $this->_table['site_tmplvar_contentvalues']);
 				}
 			}
 		}

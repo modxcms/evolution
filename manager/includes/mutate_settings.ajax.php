@@ -40,9 +40,8 @@ switch(true){
         break;
     }
     case ($action == 'updateplugin' && (!empty($key) && !empty($lang) && !empty($value))):{
-        $sql = "UPDATE ".$modx->getFullTableName("site_plugins")." SET {$key}='{$value}' WHERE name = '{$lang}';";
+        $modx->db->update(array($key=>$value), $modx->getFullTableName("site_plugins"), "name = '{$lang}'");
         $str = "true";
-        $modx->db->query($sql);
         $emptyCache = true;
         break;
     }

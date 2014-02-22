@@ -47,12 +47,14 @@ switch ($_POST['mode']) {
 		}
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'templatename'  => $templatename,
+				'description' => $description,
+				'content' => $template,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_templates'));
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -96,8 +98,14 @@ switch ($_POST['mode']) {
 		}
 							
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_templates` SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'templatename' => $templatename,
+				'description'  => $description,
+				'content'      => $template,
+				'locked'       => $locked,
+				'category'     => $categoryid,
+			), $modx->getFullTableName('site_templates'), "id='{$id}'");
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",

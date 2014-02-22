@@ -46,12 +46,14 @@ switch ($_POST['mode']) {
 			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
 		}
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'name'    => $name,
+				'description' => $description,
+				'snippet' => $snippet,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'));
 
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
@@ -86,8 +88,15 @@ switch ($_POST['mode']) {
 								));
 		
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'        => $name,
+				'description' => $description,
+				'snippet'     => $snippet,
+				'locked'      => $locked,
+				'category'    => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
+
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
 									array(

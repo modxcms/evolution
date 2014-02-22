@@ -55,12 +55,22 @@ switch ($_POST['mode']) {
 		}
 
 		// save the new module
-		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
-		$modx->db->query($sql);
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				$modx->webAlertAndQuit("Couldn't get last insert key!");
-			}
+		$newid = $modx->db->insert(
+			array(
+				'name'                => $name,
+				'description'         => $description,
+				'disabled'            => $disabled,
+				'wrap'                => $wrap,
+				'locked'              => $locked,
+				'icon'                => $icon,
+				'resourcefile'        => $resourcefile,
+				'enable_resource'     => $enable_resource,
+				'category'            => $categoryid,
+				'enable_sharedparams' => $enable_sharedparams,
+				'guid'                => $guid,
+				'modulecode'          => $modulecode,
+				'guid'                => $properties,
+			), $modx->getFullTableName('site_modules'));
 			
 			// save user group access permissions
 			saveUserGroupAccessPermissons();
@@ -97,8 +107,23 @@ switch ($_POST['mode']) {
 							));	
 								
 		// save the edited module	
-		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'                => $name,
+				'description'         => $description,
+				'icon'                => $icon,
+				'enable_resource'     => $enable_resource,
+				'resourcefile'        => $resourcefile,
+				'disabled'            => $disabled,
+				'wrap'                => $wrap,
+				'locked'              => $locked,
+				'category'            => $categoryid,
+				'enable_sharedparams' => $enable_sharedparams,
+				'guid'                => $guid,
+				'modulecode'          => $modulecode,
+				'properties'          => $properties,
+			), $modx->getFullTableName('site_modules'), "id='{$id}'");
+
 			// save user group access permissions
 			saveUserGroupAccessPermissons();
 				
@@ -146,8 +171,11 @@ function saveUserGroupAccessPermissons(){
 		$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 		if(is_array($usrgroups)) {
 			foreach ($usrgroups as $ugkey=>$value) {
-				$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module,usergroup) values($id,".stripslashes($value).")";
-				$modx->db->query($sql);
+				$modx->db->insert(
+					array(
+						'module'    => $id,
+						'usergroup' => stripslashes($value),
+					), $modx->getFullTableName('site_module_access'));
 			}
 		}
 	}

@@ -979,7 +979,7 @@ class Qm {
     		);    
         }
 		
-		$where = 'internalKey = "' . $userId . '"';
+		$where = "internalKey = '{$userId}'";
 		
         $result = $this->modx->db->update($fields, $activeUsersTable, $where);
 	}
@@ -1006,15 +1006,16 @@ class Qm {
         
         // Handle checkboxes and other arrays, TV to be saved must be e.g. value1||value2||value3
         if (is_array($tvContent)) {
-            foreach($tvContent as $key => $value) {
-                $tvContentTemp .= $value . '||';
-            }
-            $tvContentTemp = substr($tvContentTemp, 0, -2);  // Remove last ||
-            $tvContent = $tvContentTemp;
+            $tvContent = implode("||", $tvContent);
         }
         
         // Save TV
         if ($tvId != '') {
+            $fields = array(
+                'tmplvarid' => $tvId,
+                'contentid' => $pageId,
+                'value'     => $tvContent,
+                );
             $sql = "SELECT id
                     FROM {$tmplvarContentValuesTable}
                     WHERE `tmplvarid` = '{$tvId}'
@@ -1023,50 +1024,37 @@ class Qm {
             
             // TV exists, update TV   
             if($this->modx->db->getRecordCount($result)) {
-            
-                $sql = "UPDATE {$tmplvarContentValuesTable}
-                     SET `value` = '{$tvContent}'
-                     WHERE `tmplvarid` = '{$tvId}'
-                     AND `contentid` = '{$pageId}';";
+                $this->modx->db->update($fields, $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             } 
         
             // TV does not exist, create new TV   
             else {
-                $sql = "INSERT INTO {$tmplvarContentValuesTable} (tmplvarid, contentid, value)
-                         VALUES('{$tvId}', '{$pageId}', '{$tvContent}');";        
+                $this->modx->db->insert($fields, $tmplvarContentValuesTable);
             }
             
             // Page edited by
-            $this->modx->db->update(array('editedon'=>$time, 'editedby'=>$user), $siteContentTable, 'id = "' . $pageId . '"');
+            $this->modx->db->update(
+                array(
+                    'editedon' => $time,
+                    'editedby' => $user
+                    ), $siteContentTable, "id = '{$pageId}'");
         } 
         
         // Save default field, e.g. pagetitle
         else {                
-            $sql = "UPDATE {$siteContentTable}
-                    SET 
-                    `{$tvName}` = '{$tvContent}',
-                    `editedon` = '{$time}',
-                    `editedby` = '{$user}'
-                    WHERE `id` = '{$pageId}';"; 
-                    
+            $this->modx->db->update(
+                array(
+                    $tvName    => $tvContent,
+                    'editedon' => $time,
+                    'editedby' => $user
+                    ), $siteContentTable, "id = '{$pageId}'");
         }
         
-        // Update TV
-        if($sql) { $result = $this->modx->db->query($sql); }
-        
-        // Log possible errors
-        if(!$result) {
-            $this->modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>{$sql}</pre>", 'QuickManager+');     
-        } 
-        
-        // No errors
-        else {
             // Invoke OnDocFormSave event
             $this->modx->invokeEvent('OnDocFormSave', array('mode'=>'upd', 'id'=>$pageId));
             
             // Clear cache
             $this->modx->clearCache('full');
-        }   
     }
 	
 }

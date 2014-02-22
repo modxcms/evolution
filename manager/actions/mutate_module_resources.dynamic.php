@@ -55,14 +55,15 @@ switch ($_REQUEST['op']) {
 			if ($rt == 'snip')  $type = 40;
 			if ($rt == 'tpl')   $type = 50;
 			if ($rt == 'tv')    $type = 60;
-			$sql = 'INSERT INTO '.$tbl_site_module_depobj.' (module, resource, type) VALUES ';
-			for($i=0;$i<count($opids);$i++) {
-				if ($i != 0) $sql .= ',';
-				$opids[$i] = intval($opids[$i]);
-				$sql.="('$id',".$opids[$i].",$type)";
-			}
 			$modx->db->delete($tbl_site_module_depobj, "module='{$id}' AND resource IN (".implode(',',$opids).") AND type='{$type}'");
-			$modx->db->query($sql);
+			foreach ($opids as $opid) {
+				$modx->db->insert(
+					array(
+						'module'   => $id,
+						'resource' => $opid,
+						'type'     => $type,
+					), $tbl_site_module_depobj);
+			}
 		}
 		break;
 	case 'del':
@@ -84,8 +85,8 @@ switch ($_REQUEST['op']) {
 				$guid = $row['guid'];
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
-				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
-				if ($cs) $modx->db->query('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
+				if ($cp) $modx->db->update(array('moduleguid'=>''), $tbl_site_plugins, "id IN (".implode(',', $plids).") AND moduleguid='{$guid}'");
+				if ($cs) $modx->db->update(array('moduleguid'=>''), $tbl_site_plugins, "id IN (".implode(',', $snids).") AND moduleguid='{$guid}'");
 				// reset cache
 				$modx->clearCache('full');
 			}

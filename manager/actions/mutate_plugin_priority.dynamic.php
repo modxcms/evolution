@@ -10,7 +10,7 @@ $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
-	$tbl = $dbase.'.`'.$table_prefix.'site_plugin_events`';
+	$tbl = $modx->getFullTableName('site_plugin_events');
 
 	foreach ($_POST as $listName=>$listValue) {
         if ($listName == 'listSubmitted') continue;
@@ -20,8 +20,7 @@ if(isset($_POST['listSubmitted'])) {
 	    	foreach($orderArray as $key => $item) {
 	    		if ($item == '') continue;
 	    		$pluginId = ltrim($item, 'item_');
-	    		$sql = "UPDATE $tbl set priority=".$key." WHERE pluginid=".$pluginId." and evtid=".$listName;
-	    		$modx->db->query($sql);
+	    		$modx->db->update(array('priority'=>$key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
 	    	}
     	}
     }

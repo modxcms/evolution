@@ -20,9 +20,6 @@ if(!$udperms->checkPermissions()) {
 	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
-// check for MySQL 4.0.14
-$mysqlVerOk = (version_compare($modx->db->getVersion(),"4.0.14")>=0);
-
 // Run the duplicator
 $id = duplicateDocument($id);
 
@@ -123,59 +120,38 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 
 // Duplicate Keywords
 function duplicateKeywords($oldid,$newid){
-	global $modx, $mysqlVerOk;
-	// global $dbase, $table_prefix;
+	global $modx;
 
 	$tblkw = $modx->getFullTableName('keyword_xref');
 
-	if($mysqlVerOk) {
-		$modx->db->insert(
-			array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
-			$newid.', keyword_id', $tblkw, 'content_id='.$oldid // Copy from
-		);
-	} else {
-		$ds = $modx->db->select('keyword_id', $tblkw, 'content_id='.$oldid);
-		while ($row = $modx->db->getRow($ds))
-			$modx->db->insert(array('content_id'=>$newid, 'keyword_id'=>$row['keyword_id']), $tblkw);
-	}
+	$modx->db->insert(
+		array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
+		"{$newid}, keyword_id", $tblkw, "content_id='{$oldid}'" // Copy from
+	);
 }
 
 // Duplicate Document TVs
 function duplicateTVs($oldid,$newid){
-	global $modx, $mysqlVerOk;
-	// global $dbase, $table_prefix;
+	global $modx;
 
 	$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 
-	if($mysqlVerOk) {
-		$modx->db->insert(
-			array('contentid'=>'', 'tmplvarid'=>'', 'value'=>''), $tbltvc, // Insert into
-			$newid.', tmplvarid, value', $tbltvc, 'contentid='.$oldid // Copy from
-		);
-	} else {
-		$ds = $modx->db->select('tmplvarid, value', $tbltvc, 'contentid='.$oldid);
-		while ($row = $modx->db->getRow($ds))
-			$modx->db->insert(array('contentid'=>$newid, 'tmplvarid'=>$row['tmplvarid'], 'value'=>$modx->db->escape($row['value'])), $tbltvc);
-	}
+	$modx->db->insert(
+		array('contentid'=>'', 'tmplvarid'=>'', 'value'=>''), $tbltvc, // Insert into
+		"{$newid}, tmplvarid, value", $tbltvc, "contentid='{$oldid}'" // Copy from
+	);
 }
 
 // Duplicate Document Access Permissions
 function duplicateAccess($oldid,$newid){
-	global $modx, $mysqlVerOk;
-	// global $dbase, $table_prefix;
+	global $modx;
 
 	$tbldg = $modx->getFullTableName('document_groups');
 
-	if($mysqlVerOk) {
-		$modx->db->insert(
-			array('document'=>'', 'document_group'=>''), $tbldg, // Insert into
-			$newid.', document_group', $tbldg, 'document='.$oldid // Copy from
-		);
-	} else {
-		$ds = $modx->db->select('document_group', $tbldg, 'document='.$oldid);
-		while ($row = $modx->db->getRow($ds))
-			$modx->db->insert(array('document'=>$newid, 'document_group'=>$row['document_group']), $tbldg);
-	}
+	$modx->db->insert(
+		array('document'=>'', 'document_group'=>''), $tbldg, // Insert into
+		"{$newid}, document_group", $tbldg, "document='{$oldid}'" // Copy from
+	);
 }
 
 ?>

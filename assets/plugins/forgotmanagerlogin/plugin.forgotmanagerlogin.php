@@ -105,8 +105,7 @@ EOD;
         function unblockUser($user_id) {
             global $modx, $_lang;
 
-            $pre = $modx->db->config['table_prefix'];
-            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
+            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), $modx->getFullTableName('user_attributes'), "internalKey = '{$user_id}'");
 
             if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
 

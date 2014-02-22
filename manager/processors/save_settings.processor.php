@@ -120,12 +120,12 @@ if (isset($data) && count($data) > 0) {
 	
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
-		$template = $data['default_template'];
-		$oldtemplate = $data['old_template'];
-		$tbl = $dbase.".`".$table_prefix."site_content`";
+		$newtemplate = intval($data['default_template']);
+		$oldtemplate = intval($data['old_template']);
+		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
-		if($reset==1) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE type='document'");
-		else if($reset==2) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
+		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
+		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
 	}
 	
 	// empty cache

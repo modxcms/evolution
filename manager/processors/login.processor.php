@@ -101,7 +101,7 @@ while ($row = $modx->db->getRow($rs)) {
 }
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
-    $modx->db->update('blocked=1',$tbl_user_attributes,"internalKey='{$internalKey}'");
+    $modx->db->update(array('blocked'=>1),$tbl_user_attributes,"internalKey='{$internalKey}'");
     @session_destroy();
     session_unset();
     jsAlert($_lang["login_processor_many_failed_logins"]);
@@ -113,7 +113,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
 	$fields = array();
 	$fields['failedlogincount'] = '0';
 	$fields['blockeduntil']     = time()-1;
-    $rs = $modx->db->update($fields,$tbl_user_attributes,"internalKey='{$internalKey}'");
+    $modx->db->update($fields,$tbl_user_attributes,"internalKey='{$internalKey}'");
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -201,7 +201,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 			$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
 			$field = array();
 			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
-			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
 		}
 	}
 	else
@@ -215,7 +215,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 		{
 			$field = array();
 			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
-			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
 		}
 	}
 }
@@ -234,13 +234,14 @@ if($use_captcha==1) {
 if($newloginerror) {
 	//increment the failed login counter
     $failedlogins += 1;
-    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-    $modx->db->query($sql);
-    if($failedlogins>=$failed_allowed) { 
-		//block user for too many fail attempts
-        $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-        $modx->db->query($sql);
-    } else {
+
+    $fields = array('failedlogincount' => $failedlogins);
+    if($failedlogins>=$failed_allowed) //block user for too many fail attempts
+        $fields['blockeduntil'] = time()+($blocked_minutes*60);
+
+    $modx->db->update($fields, $tbl_user_attributes, "internalKey='{$internalKey}'");
+
+    if($failedlogins<$failed_allowed) { 
 		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
         if($sleep>5) $sleep = 5;
@@ -271,8 +272,14 @@ $_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
 if(isset($_SESSION['mgrValidated'])) {
-    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-    $modx->db->query($sql);
+    $modx->db->update(
+		array(
+			'failedlogincount' => 0,
+			'logincount'       => 'logincount+1',
+			'lastlogin'        => 'thislogin',
+			'thislogin'        => time(),
+			'sessionid'        => $currentsessionid,
+		), $tbl_user_attributes, "internalKey='{$internalKey}'");
 }
 
 // get user's document groups

@@ -23,11 +23,7 @@ switch ($operation) {
 		if(empty($newgroup)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
-			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			$modx->db->query($sql);
-
-			// get new id
-			$id = $modx->db->getInsertId();
+			$id = $modx->db->insert(array('name' => $modx->db->escape($newgroup)), $tbl_membergroup_names);
 
 			// invoke OnManagerCreateGroup event
 			$modx->invokeEvent('OnManagerCreateGroup', array(
@@ -41,11 +37,7 @@ switch ($operation) {
 		if(empty($newgroup)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		} else {
-			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			$modx->db->query($sql);
-
-			// get new id
-			$id = $modx->db->getInsertId();
+			$id = $modx->db->insert(array('name' => $modx->db->escape($newgroup)), $tbl_documentgroup_names);
 
 			// invoke OnCreateDocGroup event
 			$modx->invokeEvent('OnCreateDocGroup', array(
@@ -80,7 +72,7 @@ switch ($operation) {
 		}
 	break;
 	case "rename_user_group" :
-		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
+		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
@@ -88,11 +80,11 @@ switch ($operation) {
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
-		$sql = 'UPDATE '.$tbl_membergroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		$modx->db->query($sql);
+
+		$modx->db->update(array('name' => $modx->db->escape($newgroupname)), $tbl_membergroup_names, "id='{$groupid}'");
 	break;
 	case "rename_document_group" :
-		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
+		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
@@ -100,8 +92,8 @@ switch ($operation) {
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
-		$sql = 'UPDATE '.$tbl_documentgroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		$modx->db->query($sql);
+
+		$modx->db->update(array('name' => $modx->db->escape($newgroupname)), $tbl_documentgroup_names, "id='{$groupid}'");
 	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
@@ -110,8 +102,7 @@ switch ($operation) {
 		$sql = 'SELECT count(*) FROM '.$tbl_membergroup_access.' WHERE membergroup='.$usergroup.' AND documentgroup='.$docgroup;
 		$limit = $modx->db->getValue($sql);
 		if($limit<=0) {
-			$sql = 'INSERT INTO '.$tbl_membergroup_access.' (membergroup, documentgroup) VALUES('.$usergroup.', '.$docgroup.')';
-			$modx->db->query($sql);
+			$modx->db->insert(array('membergroup' => $usergroup, 'documentgroup' => $docgroup), $tbl_membergroup_access);
 		} else {
 			//alert user that coupling already exists?
 		}
@@ -131,10 +122,9 @@ if($updategroupaccess==true){
 	secureMgrDocument();
 
 	// Update the private group column
-	$sql = 'UPDATE '.$tbl_documentgroup_names.' AS dgn '.
-	       'LEFT JOIN '.$tbl_membergroup_access.' AS mga ON mga.documentgroup = dgn.id '.
-	       'SET dgn.private_memgroup = (mga.membergroup IS NOT NULL)';
-	$modx->db->query($sql);
+	$modx->db->update(
+		'dgn.private_memgroup = (mga.membergroup IS NOT NULL)',
+		"{$tbl_documentgroup_names} AS dgn LEFT JOIN {$tbl_membergroup_access} AS mga ON mga.documentgroup = dgn.id");
 }
 
 $header = "Location: index.php?a=40";

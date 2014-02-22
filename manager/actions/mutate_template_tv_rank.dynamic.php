@@ -24,8 +24,7 @@ if(isset($_POST['listSubmitted'])) {
         foreach($orderArray as $key => $item) {
             if (strlen($item) == 0) continue; 
             $tmplvar = ltrim($item, 'item_');
-            $sql = 'UPDATE '.$tbl_site_tmplvar_templates.' SET rank='.$key.' WHERE tmplvarid='.$tmplvar.' AND templateid='.$_REQUEST['id'];
-            $modx->db->query($sql);
+            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$_REQUEST['id']}'");
         }
     }
     // empty cache

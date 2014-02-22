@@ -33,9 +33,16 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=1, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=".$modx->getLoginUserID().", publishedon=".time()." WHERE id=$id;";
-
-$modx->db->query($sql);
+$modx->db->update(
+	array(
+		'published'   => 1,
+		'pub_date'    => 0,
+		'unpub_date'  => 0,
+		'editedby'    => $modx->getLoginUserID(),
+		'editedon'    => time(),
+		'publishedby' => $modx->getLoginUserID(),
+		'publishedon' => time(),
+	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocPublished  event
 $modx->invokeEvent("OnDocPublished",array("docid"=>$id));	

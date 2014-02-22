@@ -60,11 +60,17 @@ $children= allChildren($_REQUEST['id']);
 
 if (!array_search($newParentID, $children)) {
 
-	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
-	$modx->db->query($sql);
+	$modx->db->update(
+		array(
+			'isfolder' => 1,
+		), $modx->getFullTableName('site_content'), "id='{$_REQUEST['new_parent']}'");
 
-	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
-	$modx->db->query($sql);
+	$modx->db->update(
+		array(
+			'parent'   => $_REQUEST['new_parent'],
+			'editedby' => $modx->getLoginUserID(),
+			'editedon' => time(),
+		), $modx->getFullTableName('site_content'), "id='{$_REQUEST['id']}'");
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
 	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
@@ -73,8 +79,10 @@ if (!array_search($newParentID, $children)) {
 	$limit = $row['count(*)'];
 
 	if(!$limit>0) {
-		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'isfolder' => 0,
+			), $modx->getFullTableName('site_content'), "id='{$oldparent}'");
 	}
 
 	// Set the item name for logger

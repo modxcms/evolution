@@ -714,12 +714,18 @@ class DocumentParser {
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
-            $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date <= $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0 AND published=0";
-            $result = $this->db->query($sql);
+            $this->db->update(
+                array(
+                    'published'   => 1,
+                    'publishedon' => time(),
+                ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
-            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date <= $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0 AND published=1";
-            $result = $this->db->query($sql);
+            $this->db->update(
+                array(
+                    'published'   => 0,
+                    'publishedon' => 0,
+                ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
 
             // clear the cache
             $this->clearCache();
@@ -1841,10 +1847,15 @@ class DocumentParser {
 		$type = intval($type);
 		if ($type < 1) $type= 1; // Types: 1 = information, 2 = warning, 3 = error
 		if (3 < $type) $type= 3;
-        $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
-	"VALUES($evtid,$type," . time() . ",'$source','$msg','" . $LoginUserID . "')";
-        $ds= @$this->db->query($sql);
-        if(!$this->db->conn) $source = 'DB connect error';
+	$this->db->insert(
+		array(
+			'eventid'     => $evtid,
+			'type'        => $type,
+			'createdon'   => time(),
+			'source'      => $esc_source,
+			'description' => $msg,
+			'user'        => $LoginUserID,
+		), $this->getFullTableName('event_log'));
         if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
         {
             if($this->config['send_errormail'] <= $type)
@@ -1852,10 +1863,6 @@ class DocumentParser {
                 $subject = 'Error mail from ' . $this->config['site_name'];
                 $this->sendmail($subject,$source);
             }
-        }
-        if (!$ds) {
-            echo "Error while inserting event log into database.";
-            exit();
         }
     }
 
@@ -2977,8 +2984,17 @@ class DocumentParser {
             }
         }
         // insert a new message into user_messages
-        $sql= "INSERT INTO " . $this->getFullTableName("user_messages") . " ( id , type , subject , message , sender , recipient , private , postdate , messageread ) VALUES ( '', '$type', '$subject', '$msg', '$from', '$to', '$private', '" . time() . "', '0' );";
-        $rs= $this->db->query($sql);
+        $this->db->insert(
+            array(
+                'type'        => $type,
+                'subject'     => $subject,
+                'message'     => $msg,
+                'sender'      => $from,
+                'recipient'   => $to,
+                'private'     => $private,
+                'postdate'    => time(),
+                'messageread' => 0,
+            ), $this->getFullTableName('user_messages'));
     }
 
     /**
@@ -3145,7 +3161,10 @@ class DocumentParser {
                     elseif ($newPwd == "") {
                         return "You didn't specify a password for this user!";
                     } else {
-                        $this->db->query("UPDATE $tbl SET password = md5('" . $this->db->escape($newPwd) . "') WHERE id='" . $this->getLoginUserID() . "'");
+                        $this->db->update(
+                            array(
+                                'password' => $this->db->escape($newPwd),
+                            ), $tbl, "id='".$this->getLoginUserID()."'");
                         // invoke OnWebChangePassword event
                         $this->invokeEvent("OnWebChangePassword", array (
                             "userid" => $row["id"],

@@ -6,13 +6,11 @@
 function newCategory($newCat) {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'insert into ' . $useTable . ' (category) values (\''.$modx->db->escape($newCat).'\')';
-    $modx->db->query($sql);
-        if(!$newCatid=$modx->db->getInsertId()) {
-            $categoryId = 0;
-		} else {
-            $categoryId = $newCatid;
-        }
+    $categoryId = $modx->db->insert(
+        array(
+            'category' => $modx->db->escape($newCat),
+        ), $useTable);
+    if (!$categoryId) $categoryId = 0;
     return $categoryId;
 }
 //check if new category already exists
@@ -47,8 +45,7 @@ function deleteCategory($catId=0) {
         $resetTables = array('site_plugins', 'site_snippets', 'site_htmlsnippets', 'site_templates', 'site_tmplvars', 'site_modules');
         foreach ($resetTables as $n=>$v) {
             $useTable = $modx->getFullTableName($v);
-            $sql = 'update ' . $useTable . ' set category=0 where category=' . $catId . '';
-            $modx->db->query($sql);
+            $modx->db->update(array('category'=>0), $useTable, "category='{$catId}'");
         }
         $catTable = $modx->getFullTableName('categories');
         $modx->db->delete($catTable, "id='{$catId}'");
