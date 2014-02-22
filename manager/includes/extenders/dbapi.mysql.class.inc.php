@@ -236,23 +236,18 @@ class DBAPI {
     *
     */
    function update($fields, $table, $where = "") {
+      global $modx;
       if (!$table)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::update().");
       else {
          $table = $this->replaceFullTableName($table);
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $flds = '';
-            foreach ($fields as $key => $value) {
-               if (!empty ($flds))
-                  $flds .= ",";
-               $flds .= $key . "=";
-               $flds .= "'" . $value . "'";
-            }
+         if (is_array($fields)) {
+            foreach ($fields as $key => $value)
+               $fields[$key] = "`{$key}` = '{$value}'";
+            $fields = implode(",", $fields);
          }
-         $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("UPDATE $table SET $flds $where");
+         $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
 
