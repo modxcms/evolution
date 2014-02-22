@@ -34,11 +34,9 @@ $name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTabl
 $_SESSION['itemname'] = $name;
 
 //ok, delete the document.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('site_templates'), "id='{$id}'");
 
-	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE $dbase.`".$table_prefix."site_tmplvar_templates`.templateid=".$id.";";
-	$modx->db->query($sql);
+	$modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
 			
 	// invoke OnTempFormDelete event
 	$modx->invokeEvent("OnTempFormDelete",

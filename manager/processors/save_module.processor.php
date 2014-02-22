@@ -143,8 +143,7 @@ function saveUserGroupAccessPermissons(){
 	// check for permission update access
 	if($use_udperms==1) {
 		// delete old permissions on the module
-		$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
-		$modx->db->query($sql);
+		$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 		if(is_array($usrgroups)) {
 			foreach ($usrgroups as $ugkey=>$value) {
 				$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module,usergroup) values($id,".stripslashes($value).")";

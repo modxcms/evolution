@@ -13,8 +13,7 @@ $modx->invokeEvent("OnBeforeChunkFormDelete",
 						));
 
 //ok, delete the chunk.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE $dbase.`".$table_prefix."site_htmlsnippets`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
 
 // invoke OnChunkFormDelete event
 $modx->invokeEvent("OnChunkFormDelete",

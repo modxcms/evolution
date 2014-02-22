@@ -23,16 +23,13 @@ $modx->invokeEvent("OnBeforeWUsrFormDelete",
 $_SESSION['itemname'] = $username;
 
 // delete the user.
-$sql = "DELETE FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('web_users'), "id='{$id}'");
 
 // delete user groups
-$sql = "DELETE FROM $dbase.`".$table_prefix."web_groups` WHERE $dbase.`".$table_prefix."web_groups`.webuser=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('web_groups'), "webuser='{$id}'");
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('web_user_attributes'), "internalKey='{$id}'");
 
 	// invoke OnWebDeleteUser event
 	$modx->invokeEvent("OnWebDeleteUser",

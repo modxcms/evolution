@@ -190,7 +190,7 @@ class DocManagerBackend {
                                             $noUpdate = true;
                                         }
                                         elseif (trim($tmplVars["$tvIndex"]) == '') {
-                                            $this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                            $this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), "contentid='{$docID}' AND tmplvarid='{$tvValue}'");
                                             $noUpdate = true;
                                         }
                                     }
@@ -286,8 +286,7 @@ class DocManagerBackend {
 							$sqlResult = $this->modx->db->query($sql);
 							$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
 							if ($AMember) {
-								$sql = "DELETE FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-								$this->modx->db->query($sql);
+								$this->modx->db->delete($this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsRemoved += 1;
@@ -524,7 +523,7 @@ class DocManagerBackend {
 					} elseif ($value == $row["default_text"]) {
 						$newSql = $this->modx->db->select("value", $this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentId);
 						if ($this->modx->db->getRecordCount($newSql) == 1) {
-							$this->modx->db->delete($this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentId);
+							$this->modx->db->delete($this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
 						}
 					}
 				}

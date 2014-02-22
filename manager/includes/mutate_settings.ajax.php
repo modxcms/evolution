@@ -34,9 +34,8 @@ switch(true){
         break;
     }
     case ($action == 'updateplugin' && ($key == '_delete_' && !empty($lang))):{
-        $sql = "DELETE FROM " . $modx->getFullTableName("site_plugins") . " WHERE name='{$lang}'";
+        $modx->db->delete($modx->getFullTableName("site_plugins"), "name='{$lang}'");
         $str = "true";
-        $modx->db->query($sql);
         $emptyCache = true;
         break;
     }

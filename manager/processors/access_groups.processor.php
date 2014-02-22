@@ -60,15 +60,11 @@ switch ($operation) {
 		if(empty($usergroup)) {
 			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
-			$sql = 'DELETE FROM '.$tbl_membergroup_names.' WHERE id='.$usergroup;
-			$modx->db->query($sql);
-
-			$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE membergroup='.$usergroup;
-			$modx->db->query($sql);
-
-			$sql = 'DELETE FROM '.$tbl_member_groups.' WHERE user_group='.$usergroup;
-			$modx->db->query($sql);
-
+			$modx->db->delete($tbl_membergroup_names, "id='{$usergroup}'");
+			
+			$modx->db->delete($tbl_membergroup_access, "membergroup='{$usergroup}'");
+			
+			$modx->db->delete($tbl_member_groups, "user_group='{$usergroup}'");
 		}
 	break;
 	case "delete_document_group" :
@@ -76,14 +72,11 @@ switch ($operation) {
 		if(empty($group)) {
 			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
-			$sql = 'DELETE FROM '.$tbl_documentgroup_names.' WHERE id='.$group;
-			$modx->db->query($sql);
-
-			$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE documentgroup='.$group;
-			$modx->db->query($sql);
-
-			$sql = 'DELETE FROM '.$tbl_document_groups.' WHERE document_group='.$group;
-			$modx->db->query($sql);
+			$modx->db->delete($tbl_documentgroup_names, "id='{$group}'");
+			
+			$modx->db->delete($tbl_membergroup_access, "documentgroup='{$group}'");
+			
+			$modx->db->delete($tbl_document_groups, "document_group='{$group}'");
 		}
 	break;
 	case "rename_user_group" :
@@ -126,8 +119,7 @@ switch ($operation) {
 	case "remove_document_group_from_user_group" :
 		$updategroupaccess = true;
 		$coupling = intval($_REQUEST['coupling']);
-		$sql = 'DELETE FROM '.$tbl_membergroup_access.' WHERE id='.$coupling;
-		$modx->db->query($sql);
+		$modx->db->delete($tbl_membergroup_access, "id='{$coupling}'");
 	break;
 	default :
 		$modx->webAlertAndQuit("No operation set in request.");

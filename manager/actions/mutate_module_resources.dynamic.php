@@ -61,7 +61,7 @@ switch ($_REQUEST['op']) {
 				$opids[$i] = intval($opids[$i]);
 				$sql.="('$id',".$opids[$i].",$type)";
 			}
-			$modx->db->query('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
+			$modx->db->delete($tbl_site_module_depobj, "module='{$id}' AND resource IN (".implode(',',$opids).") AND type='{$type}'");
 			$modx->db->query($sql);
 		}
 		break;
@@ -89,8 +89,7 @@ switch ($_REQUEST['op']) {
 				// reset cache
 				$modx->clearCache('full');
 			}
-		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';
-		$modx->db->query($sql);
+		$modx->db->delete($tbl_site_module_depobj, "id IN (".implode(',', $opids).")");
 		break;
 }
 

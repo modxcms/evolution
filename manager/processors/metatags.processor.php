@@ -69,11 +69,9 @@ else {
 			$keywords_array[] = $key;
 		}
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
-		$modx->db->query($sql);
+		$modx->db->delete($modx->getFullTableName('keyword_xref'), "keyword_id IN(".implode(",", $keywords_array).")");
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
-		$modx->db->query($sql);
+		$modx->db->delete($modx->getFullTableName('site_keywords'), "id IN(".implode(",", $keywords_array).")");
 
 	}
 

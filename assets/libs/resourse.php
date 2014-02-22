@@ -297,8 +297,8 @@ class resourse {
 				),$fire_events);
 		
 				$id = $this->sanitarIn($_ids);
-				$this->query("DELETE from {$this->_table['site_content']} where id IN ({$id})");
-				$this->query("DELETE from {$this->_table['site_tmplvar_contentvalues']} where contentid IN ({$id})");
+				$this->delete($this->_table['site_content'], "id IN ({$id})");
+				$this->delete($this->_table['site_tmplvar_contentvalues'], "contentid IN ({$id})");
 				
 				$this->invokeEvent('OnEmptyTrash',array(
 					"ids"=>$_ids

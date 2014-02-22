@@ -51,8 +51,7 @@ function deleteCategory($catId=0) {
             $modx->db->query($sql);
         }
         $catTable = $modx->getFullTableName('categories');
-        $sql = 'delete from ' . $catTable . ' where id=' . $catId;
-        $modx->db->query($sql);
+        $modx->db->delete($catTable, "id='{$catId}'");
     }
 }
 

@@ -13,12 +13,10 @@ $modx->invokeEvent("OnBeforePluginFormDelete",
 						));
 
 // delete the plugin.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_plugins` WHERE $dbase.`".$table_prefix."site_plugins`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('site_plugins'), "id='{$id}'");
 
 // delete the plugin events.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_plugin_events` WHERE $dbase.`".$table_prefix."site_plugin_events`.pluginid=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('site_plugins'), "pluginid='{$id}'");
 
 // invoke OnPluginFormDelete event
 $modx->invokeEvent("OnPluginFormDelete",

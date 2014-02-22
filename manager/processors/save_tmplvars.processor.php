@@ -173,7 +173,7 @@ function saveTemplateAccess() {
     }
    
 	
-	$modx->db->query("DELETE FROM $tbl WHERE tmplvarid = $id");
+	$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid = '{$id}'");
 	for($i=0;$i<count($templates);$i++){
 	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
 		$modx->db->query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
@@ -190,8 +190,7 @@ function saveDocumentAccessPermissons(){
 	// check for permission update access
 	if($use_udperms==1) {
 		// delete old permissions on the tv
-		$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=$id;";
-		$modx->db->query($sql);
+		$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
 				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";

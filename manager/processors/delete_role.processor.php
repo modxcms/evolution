@@ -19,8 +19,7 @@ if($row['count(*)']>0){
 }
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_roles` WHERE $dbase.`".$table_prefix."user_roles`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('user_roles'), "id='{$id}'");
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('user_roles'), "id='{$id}'"));

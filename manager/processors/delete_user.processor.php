@@ -27,19 +27,15 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 $_SESSION['itemname'] = $username;
 
 //ok, delete the user.
-$sql = "DELETE FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('manager_users'), "id='{$id}'");
 
-$sql = "DELETE FROM $dbase.`".$table_prefix."member_groups` WHERE $dbase.`".$table_prefix."member_groups`.member=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('member_groups'), "member='{$id}'");
 
 // delete user settings
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_settings` WHERE $dbase.`".$table_prefix."user_settings`.user=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('user_settings'), "user='{$id}'");
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.internalKey=".$id.";";
-$modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName('user_attributes'), "internalKey='{$id}'");
 
 	// invoke OnManagerDeleteUser event
 	$modx->invokeEvent("OnManagerDeleteUser",

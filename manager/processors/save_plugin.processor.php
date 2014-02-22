@@ -152,7 +152,7 @@ function saveEventListeners($id,$sysevents,$mode) {
         if($i>0) $sql.=",";
         $sql.= "(".$id.",".$sysevents[$i].",".$priority.")";
     }
-    $modx->db->query("DELETE FROM {$tblSitePluginEvents} WHERE pluginid={$id}");
+    $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
     if (count($sysevents)>0) $modx->db->query($sql);
 }
 
