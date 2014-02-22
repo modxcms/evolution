@@ -472,7 +472,7 @@ class resourse {
 				$row = mysql_fetch_assoc($rc);
 				if (is_array($row)) {
 					if ($row[0] != $value) {
-						$result = $this->query("UPDATE {$this->_table['site_tmplvar_contentvalues']} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
+						$this->modx->db->update($fields, $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
 				    }
 				}else{	
 					$this->modx->db->insert($fields, $this->_table['site_tmplvar_contentvalues']);

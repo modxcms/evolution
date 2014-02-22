@@ -240,22 +240,15 @@ switch ($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $newusername;
-		$field = $modx->db->escape($field);
+		$field['username'] = $esc_newusername;
 		if($genpassword == 1) {
 		    $field['password'] = md5($newpassword);
 		}
-		$rs = $modx->db->update($field, $tbl_web_users, "id='{$id}'");
-		if (!$rs) {
-			$modx->webAlertAndQuit("An error occurred while attempting to update the user's data.");
-		}
+		$modx->db->update($field, $tbl_web_users, "id='{$id}'");
 		$field = array();
 		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$field = $modx->db->escape($field);
-		$rs = $modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
-		if (!$rs) {
-			$modx->webAlertAndQuit("An error occurred while attempting to update the user's attributes.");
-		}
+		$modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
 
 		// Save user settings
 		saveUserSettings($id);

@@ -112,20 +112,20 @@ switch ($_POST['mode']) {
 							));	 
 
     	// update TV
-		$sql = "UPDATE $dbase.`".$table_prefix."site_tmplvars` SET ";
-        $sql .= "name='".$name."', ";
-		$sql .= "description='".$description."', ";
-        $sql .= "caption='".$caption."', ";
-        $sql .= "type='".$type."', ";
-        $sql .= "elements='".$elements."', ";
-        $sql .= "default_text='".$default_text."', ";
-        $sql .= "display='".$display."', "; 
-        $sql .= "display_params='".$params."', ";         
-        $sql .= "rank='".$rank."', ";
-        $sql .= "locked='".$locked."', ";
-        $sql .= "category=".$categoryid;
-        $sql .= " WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'           => $name,
+				'description'    => $description,
+				'caption'        => $caption,
+				'type'           => $type,
+				'elements'       => $elements,
+				'default_text'   => $default_text,
+				'display'        => $display, 
+				'display_params' => $params,         
+				'rank'           => $rank,
+				'locked'         => $locked,
+				'category'       => $categoryid,
+			), $tbl_site_tmplvars, "id='{$id}'");
 
 			// save access permissions
 			saveTemplateAccess();			

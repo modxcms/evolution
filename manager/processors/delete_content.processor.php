@@ -72,9 +72,12 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
 						));
 
 if(count($children)>0) {
-	$docs_to_delete = implode(" ,", $children);
-	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
-	$modx->db->query($sql);
+	$modx->db->update(
+		array(
+			'deleted'   => 1,
+			'deletedby' => $modx->getLoginUserID(),
+			'deletedon' => $deltime,
+		), $modx->getFullTableName('site_content'), "id IN (".implode(", ", $children).")");
 }
 
 if($site_start==$id){
@@ -86,8 +89,12 @@ if($site_unavailable_page==$id){
 }
 
 //ok, 'delete' the document.
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id=$id;";
-$modx->db->query($sql);
+$modx->db->update(
+	array(
+		'deleted'   => 1,
+		'deletedby' => $modx->getLoginUserID(),
+		'deletedon' => $deltime,
+	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocFormDelete event
 $modx->invokeEvent("OnDocFormDelete",

@@ -76,7 +76,7 @@ class Document{
 			$this->isNew = false;
 		} else {
 			$id=$this->fields['id'];
-			$modx->db->update($this->fields, $tablename, "id=$id");
+			$modx->db->update($this->fields, $tablename, "id='{$id}'");
 		}
 		if(is_array($this->tvs)) $this->saveTVs();
     if ($clearcache == 1) {

@@ -72,7 +72,7 @@ switch ($operation) {
 		}
 	break;
 	case "rename_user_group" :
-		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
+		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
@@ -80,11 +80,11 @@ switch ($operation) {
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
-		$sql = 'UPDATE '.$tbl_membergroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		$modx->db->query($sql);
+
+		$modx->db->update(array('name' => $modx->db->escape($newgroupname)), $tbl_membergroup_names, "id='{$groupid}'");
 	break;
 	case "rename_document_group" :
-		$newgroupname = $modx->db->escape($_REQUEST['newgroupname']);
+		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
@@ -92,8 +92,8 @@ switch ($operation) {
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
-		$sql = 'UPDATE '.$tbl_documentgroup_names.' SET name=\''.$newgroupname.'\' WHERE id='.$groupid.' LIMIT 1';
-		$modx->db->query($sql);
+
+		$modx->db->update(array('name' => $modx->db->escape($newgroupname)), $tbl_documentgroup_names, "id='{$groupid}'");
 	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
@@ -122,10 +122,9 @@ if($updategroupaccess==true){
 	secureMgrDocument();
 
 	// Update the private group column
-	$sql = 'UPDATE '.$tbl_documentgroup_names.' AS dgn '.
-	       'LEFT JOIN '.$tbl_membergroup_access.' AS mga ON mga.documentgroup = dgn.id '.
-	       'SET dgn.private_memgroup = (mga.membergroup IS NOT NULL)';
-	$modx->db->query($sql);
+	$modx->db->update(
+		'dgn.private_memgroup = (mga.membergroup IS NOT NULL)',
+		"{$tbl_documentgroup_names} AS dgn LEFT JOIN {$tbl_membergroup_access} AS mga ON mga.documentgroup = dgn.id");
 }
 
 $header = "Location: index.php?a=40";

@@ -79,8 +79,7 @@ class DocManagerBackend {
     		foreach ($items as $key => $value) {
     			$id = ltrim($value, 'item_');
     			if (is_numeric($id)) {
-	    			$sql = 'UPDATE '.$this->modx->getFullTableName('site_content') .' set menuindex=' . $key . ' WHERE id=' . $id;
-					$this->modx->db->query($sql);
+	    			$this->modx->db->update(array('menuindex'=>$key), $this->modx->getFullTableName('site_content'), "id='{$id}'");
     			}
     		}
     		$this->logDocumentChange('sortmenu');
@@ -200,7 +199,7 @@ class DocManagerBackend {
                                             'value' => $this->modx->db->escape($tmplVars["$tvIndex"])
                                         );
 
-                                        $this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                        $this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), "contentid='{$docID}' AND tmplvarid='{$tvValue}'");
                                         $updated = true;
                                     } elseif (!isset ($noUpdate) && ltrim($tmplVars["$tvIndex"]) !== '') {
 
@@ -543,9 +542,9 @@ class DocManagerBackend {
 									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "wga.id>0";
 		$ids = $this->modx->db->getColumn("id", $sql);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 1 WHERE id IN (" . implode(",", $ids) . ")");
+			$this->modx->db->update(array('privateweb'=>1), $this->modx->getFullTableName("site_content"), "id IN (" . implode(",", $ids) . ")");
 		} else {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privateweb = 1"));
+			$this->modx->db->update(array('privateweb'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privateweb = 1"));
 		}
 	}
 	
@@ -557,9 +556,9 @@ class DocManagerBackend {
 									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "mga.id>0";
 		$ids = $this->modx->db->getColumn("id", $sql);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 1 WHERE id IN (" . implode(",", $ids) . ")");
+			$this->modx->db->update(array('privatemgr'=>1), $this->modx->getFullTableName("site_content"), "id IN (" . implode(",", $ids) . ")");
 		} else {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privatemgr = 1"));
+			$this->modx->db->update(array('privatemgr'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privatemgr = 1"));
 		}
 	}
 	

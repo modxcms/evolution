@@ -85,8 +85,8 @@ switch ($_REQUEST['op']) {
 				$guid = $row['guid'];
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
-				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
-				if ($cs) $modx->db->query('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
+				if ($cp) $modx->db->update(array('moduleguid'=>''), $tbl_site_plugins, "id IN (".implode(',', $plids).") AND moduleguid='{$guid}'");
+				if ($cs) $modx->db->update(array('moduleguid'=>''), $tbl_site_plugins, "id IN (".implode(',', $snids).") AND moduleguid='{$guid}'");
 				// reset cache
 				$modx->clearCache('full');
 			}

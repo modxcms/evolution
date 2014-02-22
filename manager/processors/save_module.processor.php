@@ -107,8 +107,23 @@ switch ($_POST['mode']) {
 							));	
 								
 		// save the edited module	
-		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'                => $name,
+				'description'         => $description,
+				'icon'                => $icon,
+				'enable_resource'     => $enable_resource,
+				'resourcefile'        => $resourcefile,
+				'disabled'            => $disabled,
+				'wrap'                => $wrap,
+				'locked'              => $locked,
+				'category'            => $categoryid,
+				'enable_sharedparams' => $enable_sharedparams,
+				'guid'                => $guid,
+				'modulecode'          => $modulecode,
+				'properties'          => $properties,
+			), $modx->getFullTableName('site_modules'), "id='{$id}'");
+
 			// save user group access permissions
 			saveUserGroupAccessPermissons();
 				

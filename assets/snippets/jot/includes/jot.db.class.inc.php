@@ -138,7 +138,7 @@ class CJotDataDb {
 			$this->isNew = false;
 		} else {
 			$id=$this->fields['id'];
-			$modx->db->update($this->fields, $this->tbl["content"], "id=$id");
+			$modx->db->update($this->fields, $this->tbl["content"], "id='{$id}'");
 			
 			foreach($this->cfields as $n=>$v) { 
 				$update = array(
@@ -146,7 +146,7 @@ class CJotDataDb {
 					'label' => $n,
 					'content' => $modx->db->escape($v)
 				);
-				if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($update,$this->tbl["fields"]);
+				if (!$modx->db->update($update, $this->tbl["fields"], "id='{$id}' and label='{$update['label']}'")) $modx->db->insert($update,$this->tbl["fields"]);
 			}
 			
 			

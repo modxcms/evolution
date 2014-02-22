@@ -88,8 +88,15 @@ switch ($_POST['mode']) {
 								));
 		
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'        => $name,
+				'description' => $description,
+				'snippet'     => $snippet,
+				'locked'      => $locked,
+				'category'    => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
+
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
 									array(

@@ -68,13 +68,21 @@ function getChildren($parent) {
 getChildren($id);
 
 if(count($children)>0) {
-	$docs_to_undelete = implode(" ,", $children);
-	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
-	$modx->db->query($sql);
+	$modx->db->update(
+		array(
+			'deleted'   => 0,
+			'deletedby' => 0,
+			'deletedon' => 0,
+		), $modx->getFullTableName('site_content'), "id IN(".implode(", ", $children).")");
 }
 //'undelete' the document.
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
-$modx->db->query($sql);
+$modx->db->update(
+	array(
+		'deleted'   => 0,
+		'deletedby' => 0,
+		'deletedon' => 0,
+	), $modx->getFullTableName('site_content'), "id='{$id}'");
+
 	// Set the item name for logger
 	$_SESSION['itemname'] = $content['pagetitle'];
 

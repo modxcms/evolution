@@ -45,8 +45,7 @@ function deleteCategory($catId=0) {
         $resetTables = array('site_plugins', 'site_snippets', 'site_htmlsnippets', 'site_templates', 'site_tmplvars', 'site_modules');
         foreach ($resetTables as $n=>$v) {
             $useTable = $modx->getFullTableName($v);
-            $sql = 'update ' . $useTable . ' set category=0 where category=' . $catId . '';
-            $modx->db->query($sql);
+            $modx->db->update(array('category'=>0), $useTable, "category='{$catId}'");
         }
         $catTable = $modx->getFullTableName('categories');
         $modx->db->delete($catTable, "id='{$catId}'");

@@ -99,8 +99,8 @@ switch ($_POST['mode']) {
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
-        $rs = $modx->db->update($fields, $tbl, "id=$id");
-        $modx->db->query($sql);
+        $modx->db->update($fields, $tbl, "id='{$id}'");
+
         // Set the item name for logger
         $_SESSION['itemname'] = $name;
 

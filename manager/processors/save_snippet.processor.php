@@ -99,8 +99,17 @@ switch ($_POST['mode']) {
 								));	
 								
 		//do stuff to save the edited doc	
-		$sql = "UPDATE $dbase.`".$table_prefix."site_snippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category='".$categoryid."'  WHERE id='".$id."';";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'name'        => $name,
+				'description' => $description,
+				'snippet'     => $snippet,
+				'moduleguid'  => $moduleguid,
+				'locked'      => $locked,
+				'properties'  => $properties,
+				'category'    => $categoryid,
+			), $modx->getFullTableName('site_snippets'), "id='{$id}'");
+
 			// invoke OnSnipFormSave event
 			$modx->invokeEvent("OnSnipFormSave",
 									array(

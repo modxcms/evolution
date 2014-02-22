@@ -399,10 +399,7 @@ switch ($actionToTake) {
 		// update parent folder status
 		if ($parent != 0) {
 			$fields = array('isfolder' => 1);
-			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$_REQUEST['parent']);
-			if (!$rs) {
-				$modx->webAlertAndQuit("An error occured while attempting to change the document's parent to a folder.");
-			}
+			$modx->db->update($fields, $tbl_site_content, "id='{$_REQUEST['parent']}'");
 		}
 
 		// save META Keywords
@@ -512,14 +509,37 @@ switch ($actionToTake) {
 		));
 
 		// update the document
-		$sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes',
-				isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
-				searchable=$searchable, cacheable=$cacheable, editedby=" . $modx->getLoginUserID() . ", editedon=" . $currentdate . ", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu', alias_visible='$aliasvisible'  WHERE id=$id;";
-
-		$rs = $modx->db->query($sql);
-		if (!$rs) {
-			$modx->webAlertAndQuit("An error occured while attempting to save the edited document. The generated SQL is: <i> $sql </i>.");
-		}
+		$modx->db->update(
+			array(
+				'introtext'       => $introtext,
+				'content'         => $content,
+				'pagetitle'       => $pagetitle,
+				'longtitle'       => $longtitle,
+				'type'            => $type,
+				'description'     => $description,
+				'alias'           => $alias,
+				'link_attributes' => $link_attributes,
+				'isfolder'        => $isfolder,
+				'richtext'        => $richtext,
+				'published'       => $published,
+				'pub_date'        => $pub_date,
+				'unpub_date'      => $unpub_date,
+				'parent'          => $parent,
+				'template'        => $template,
+				'menuindex'       => $menuindex,
+				'searchable'      => $searchable,
+				'cacheable'       => $cacheable,
+				'editedby'        => $modx->getLoginUserID(),
+				'editedon'        => $currentdate,
+				'publishedon'     => $publishedon,
+				'publishedby'     => $publishedby,
+				'contentType'     => $contentType,
+				'content_dispo'   => $contentdispo,
+				'donthit'         => $donthit,
+				'menutitle'       => $menutitle,
+				'hidemenu'        => $hidemenu,
+				'alias_visible'   => $aliasvisible,
+			), $tbl_site_content, "id='{$id}'");
 
 		// update template variables
 		$rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, 'contentid='. $id);
@@ -556,7 +576,7 @@ switch ($actionToTake) {
 		
 		if (!empty($tvChanges)) {
 			foreach ($tvChanges as $tv) {
-				$modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, 'id='.$tv[1]['id']);
+				$modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, "id='{$tv[1]['id']}'");
 			}
 		}
 
@@ -606,10 +626,7 @@ switch ($actionToTake) {
 		// do the parent stuff
 		if ($parent != 0) {
 			$fields = array('isfolder' => 1);
-			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$_REQUEST['parent']);
-			if (!$rs) {
-				$modx->webAlertAndQuit("An error occured while attempting to change the new parent to a folder.");
-			}
+			$modx->db->update($fields, $tbl_site_content, "id='{$_REQUEST['parent']}'");
 		}
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder
@@ -622,10 +639,7 @@ switch ($actionToTake) {
 
 		if ($limit == 0) {
 			$fields = array('isfolder' => 0);
-			$rs = $modx->db->update($fields, $tbl_site_content, 'id='.$oldparent);
-			if (!$rs) {
-				$modx->webAlertAndQuit("An error occured while attempting to change the old parent to a regular document.");
-			}
+			$modx->db->update($fields, $tbl_site_content, "id='{$oldparent}'");
 		}
 
 		// save META Keywords
@@ -686,7 +700,7 @@ function saveMETAKeywords($id) {
 
 	if ($modx->hasPermission('edit_doc_metatags')) {
 		// keywords - remove old keywords first
-		$modx->db->delete($tbl_keyword_xref, "content_id='{$id}'");
+		$modx->db->delete($tbl_keyword_xref, "content_id=$id");
 		for ($i = 0; $i < count($keywords); $i++) {
 			$kwid = $keywords[$i];
 			$flds = array (
@@ -696,7 +710,7 @@ function saveMETAKeywords($id) {
 			$modx->db->insert($flds, $tbl_keyword_xref);
 		}
 		// meta tags - remove old tags first
-		$modx->db->delete($tbl_site_content_metatags, "content_id='{$id}'");
+		$modx->db->delete($tbl_site_content_metatags, "content_id=$id");
 		for ($i = 0; $i < count($metatags); $i++) {
 			$kwid = $metatags[$i];
 			$flds = array (
@@ -709,7 +723,7 @@ function saveMETAKeywords($id) {
 			'haskeywords' => (count($keywords) ? 1 : 0),
 			'hasmetatags' => (count($metatags) ? 1 : 0)
 		);
-		$modx->db->update($flds, $tbl_site_content, "id=$id");
+		$modx->db->update($flds, $tbl_site_content, "id='{$id}'");
 	}
 }
 

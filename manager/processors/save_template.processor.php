@@ -98,8 +98,14 @@ switch ($_POST['mode']) {
 		}
 							
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_templates` SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
-		$modx->db->query($sql);
+		$modx->db->update(
+			array(
+				'templatename' => $templatename,
+				'description'  => $description,
+				'content'      => $template,
+				'locked'       => $locked,
+				'category'     => $categoryid,
+			), $modx->getFullTableName('site_templates'), "id='{$id}'");
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",

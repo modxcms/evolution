@@ -19,11 +19,8 @@ if(strlen($pass1)<6){
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
 	$f['password'] = $modx->manager->genHash($pass1, $uid);
-	$rs = $modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
-	if(!$rs){
-		$modx->webAlertAndQuit("An error occured while attempting to save the new password.");
-	}
-    
+	$modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
+
 	// invoke OnManagerChangePassword event
 	$modx->invokeEvent('OnManagerChangePassword', array (
 		'userid' => $uid,

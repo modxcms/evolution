@@ -31,7 +31,7 @@ else if($opcode=="edttag") {
 		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
-		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='$id'");
+		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='{$id}'");
 	}
 }
 // delete
@@ -56,8 +56,10 @@ else {
 			if($limit > 0) {
 				$modx->webAlertAndQuit("Keyword '{$rename_keywords[$key]}' already been defined!");
 			} else {
-				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
-				$modx->db->query($sql);
+				$modx->db->update(
+					array(
+						'keyword' => $modx->db->escape($rename_keywords[$key]),
+					), $modx->getFullTableName('site_keywords'), "keyword='".$modx->db->escape($value)."'");
 			}
 		}
 	}
