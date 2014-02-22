@@ -413,8 +413,7 @@ function saveUserSettings($id) {
 		"allowed_days"
 	);
 
-    $esc_id = $modx->db->escape($id);
-	$modx->db->delete($tbl_web_user_settings,"webuser='{$esc_id}'");
+	$modx->db->delete($tbl_web_user_settings,"webuser='{$id}'");
 
 	foreach ($settings as $n) {
 		$vl = $_POST[$n];

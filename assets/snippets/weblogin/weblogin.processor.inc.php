@@ -351,7 +351,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
             WHERE ug.webuser =".$internalKey;
     $ds = $modx->db->query($sql);
-    $_SESSION['webDocgroups'] = $modx->db->getColumn('documentgroup', $rs);    
+    $_SESSION['webDocgroups'] = $modx->db->getColumn('documentgroup', $ds);    
 
     $tblwgn = $this->getFullTableName("webgroup_names");
     $tblwg = $this->getFullTableName("web_groups");

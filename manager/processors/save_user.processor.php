@@ -493,8 +493,7 @@ function saveUserSettings($id) {
 		unset($settings['default_'.$k]);
 	}
 
-    $esc_id = $modx->db->escape($id);
-	$modx->db->delete($tbl_user_settings,"user='{$esc_id}'");
+	$modx->db->delete($tbl_user_settings,"user='{$id}'");
 
 	foreach ($settings as $n => $vl) {
 		if (is_array($vl)) {

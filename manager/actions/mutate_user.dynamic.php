@@ -38,7 +38,7 @@ if ($_REQUEST['a'] == '12') {
 	$rs = $modx->db->query($sql);
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
-		$modx->webAlertAndQuit("No user returned!");
+		$modx->webAlertAndQuit("More than one user returned!");
 	}
 	if ($limit < 1) {
 		$modx->webAlertAndQuit("No user returned!");
