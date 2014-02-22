@@ -576,7 +576,7 @@ $_lang["new_template"] = 'תבנית עיצוב חדשה';
 $_lang["new_tmplvars"] = 'משתנה תבנית חדש';
 $_lang["new_user"] = 'משתמש חדש';
 $_lang["new_web_user"] = 'חבר חדש';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'מסמך חדש';
 $_lang["no"] = 'לא';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'עדיין לא יצרת או ערכת מסמכים.';
@@ -1201,7 +1201,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'פורסם?';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

@@ -577,7 +577,7 @@ $_lang["new_template"] = 'Ny skabelon';
 $_lang["new_tmplvars"] = 'Ny skabelon variabel';
 $_lang["new_user"] = 'Ny bruger';
 $_lang["new_web_user"] = 'Ny webbruger';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Tilføj ressource';
 $_lang["no"] = 'Nej';
 $_lang["no_active_users_found"] = 'Ingen aktive brugere blev fundet.';
 $_lang["no_activity_message"] = 'Du har endnu ikke oprettet eller redigeret nogle ressourcer.';
@@ -1204,7 +1204,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Publiceret';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

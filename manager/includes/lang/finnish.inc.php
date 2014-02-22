@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Uusi sivupohja';
 $_lang["new_tmplvars"] = 'Uusi sivupohjan muuttuja';
 $_lang["new_user"] = 'Uusi ylläpidon käyttäjä';
 $_lang["new_web_user"] = 'Uusi web-käyttäjä';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Uusi sivu';
 $_lang["no"] = 'Ei';
 $_lang["no_active_users_found"] = 'Ei aktiivisia käyttäjiä.';
 $_lang["no_activity_message"] = 'Ei luotu tai muokattu yhtään sivua.';
@@ -1200,7 +1200,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Julkaistu?';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

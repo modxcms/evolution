@@ -1242,7 +1242,7 @@ $_lang["mutate_settings.dynamic.php8"] = 'Om ett fel inträffar i MODX kommer et
 
 $_lang["error_no_privileges"]         = "Du har inte tillräckliga rättigheter för den här aktionen!";
 $_lang["error_no_optimise_tablename"] = "Tabellen som ska optimeras finns inte i anropet!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_no_truncate_tablename"] = "Tabellen som ska trunkeras finns inte i anropet!";
 $_lang["error_double_action"]         = "Dubbla aktioner i anropet (GET & POST)!";
 $_lang["error_no_id"]                 = "Dokumentets ID angavs inte i anropet!";
 $_lang["error_id_nan"]                = "ID:t i anroppet är inte ett nummer!";
