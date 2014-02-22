@@ -604,23 +604,16 @@ switch ($actionToTake) {
 					$insertions[] = '('.(int)$group.','.$id.')';
 				}
 			}
-			$saved = true;
 			if (!empty($insertions)) {
 				$sql_insert = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '.implode(',', $insertions);
-				$saved = $modx->db->query($sql_insert) ? $saved : false;
+				$modx->db->query($sql_insert);
 			}
 			if (!empty($old_groups)) {
-				$rs = $modx->db->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");
-				$saved = $rs ? $saved : false;
+				$modx->db->delete($tbl_document_groups, "id IN (".implode(',', $old_groups).")");
 			}
 			// necessary to remove all permissions as document is public
 			if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
-				$rs = $modx->db->delete($tbl_document_groups, "document='{$id}'");
-				$saved = $rs ? $saved : false;
-			}
-			if (!$saved) {
-				$modx->manager->saveFormValues(27);
-				$modx->webAlertAndQuit("An error occured while saving document groups.");
+				$modx->db->delete($tbl_document_groups, "document='{$id}'");
 			}
 		}
 
