@@ -440,11 +440,8 @@ switch ($actionToTake) {
 	case 'edit' :
 
 		// get the document's current parent
-		$rs = $modx->db->select('parent', $tbl_site_content, 'id='.$_REQUEST['id']);
-		
-		$row = $modx->db->getRow($rs);
-		$oldparent = $row['parent'];
-		$doctype = $row['type'];
+		$oldparent = $existingDocument['parent'];
+		$doctype = $existingDocument['type'];
 
 		if ($id == $site_start && $published == 0) {
 			$modx->manager->saveFormValues(27);
@@ -460,14 +457,14 @@ switch ($actionToTake) {
 			$modx->webAlertAndQuit("Document can not be it's own parent!");
 		}
 		// check to see document is a folder
-		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='. $_REQUEST['id']);
-		$row = $modx->db->getRow($rs);
-		if ($row['COUNT(id)'] > 0) {
+		$rs = $modx->db->select('count(id)', $tbl_site_content, "parent='{$id}'");
+		$count = $modx->db->getValue($rs);
+		if ($count > 0) {
 			$isfolder = 1;
 		}
 
 		// set publishedon and publishedby
-		$was_published = $modx->db->getValue($modx->db->select('published', $tbl_site_content, "id='{$id}'"));
+		$was_published = $existingDocument['published'];
 
 		// keep original publish state, if change is not permitted
 		if (!$modx->hasPermission('publish_document')) {
@@ -529,7 +526,7 @@ switch ($actionToTake) {
 			), $tbl_site_content, "id='{$id}'");
 
 		// update template variables
-		$rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, 'contentid='. $id);
+		$rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, "contentid='{$id}'");
 		$tvIds = array ();
 		while ($row = $modx->db->getRow($rs)) {
 			$tvIds[$row['tmplvarid']] = $row['id'];
@@ -617,9 +614,8 @@ switch ($actionToTake) {
 		}
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder
-		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='.$oldparent);
-		$row = $modx->db->getRow($rs);
-		$limit = $row['COUNT(id)'];
+		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, "parent='{$oldparent}'");
+		$limit = $modx->db->getValue($rs);
 
 		if ($limit == 0) {
 			$fields = array('isfolder' => 0);
