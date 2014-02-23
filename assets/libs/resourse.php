@@ -237,10 +237,6 @@ class resourse {
 		return $this->checkAlias($alias);
 	}
 	
-	private function query($SQL){
-		return $this->modx->db->query($SQL);
-	}
-	
 	public function get_TV(){
 		$result = $this->select('id,name', $this->_table['site_tmplvars']);
 		while($row = $this->modx->db->GetRow($result)) {
@@ -450,11 +446,10 @@ class resourse {
 		}
 		if (!empty($this->set)){
 			if($this->newDoc){
-				$SQL = "INSERT into {$this->_table['site_content']} SET ".implode(', ', $this->set);
+				$this->modx->db->insert($this->set, $this->_table['site_content']);
 			}else{
-				$SQL = "UPDATE {$this->_table['site_content']} SET ".implode(', ', $this->set)." WHERE id = ".$this->id;
+				$this->modx->db->update($this->set, $this->_table['site_content'], "id = '{$this->id}'");
 			}
-			$this->query($SQL);
 		}
 		
 		if($this->newDoc) $this->id = $this->modx->db->getInsertId();

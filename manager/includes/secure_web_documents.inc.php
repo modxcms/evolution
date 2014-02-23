@@ -13,7 +13,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 function secureWebDocument($docid='') {
 	global $modx;
 		
-	$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 0 WHERE ".($docid>0 ? "id='$docid'":"privateweb = 1"));
+	$modx->db->update('privateweb = 0', $modx->getFullTableName("site_content"), ($docid>0 ? "id='$docid'":"privateweb = 1"));
 	$rs = $modx->db->select(
 		'DISTINCT sc.id',
 		$modx->getFullTableName("site_content")." sc
@@ -23,7 +23,7 @@ function secureWebDocument($docid='') {
 		);
 	$ids = $modx->db->getColumn("id",$rs);
 	if(count($ids)>0) {
-		$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
+		$modx->db->update('privateweb = 1', $modx->getFullTableName("site_content"), "id IN (".implode(", ",$ids).")");	
 	}
 }
 ?>

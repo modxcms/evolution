@@ -780,10 +780,12 @@ class ditto {
 		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
 		$tb2 = $modx->getFullTableName("site_tmplvars");
 
-		$query = "SELECT stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value";
-		$query .= " FROM ".$tb1." stc LEFT JOIN ".$tb2." stv ON stv.id=stc.tmplvarid ";
-		$query .= " WHERE stv.name='".$tvname."' AND stc.contentid IN (".implode($docIDs,",").") ORDER BY stc.contentid ASC;";
-		$rs = $modx->db->query($query);
+		$rs= $modx->db->select(
+			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
+			"{$tb1} AS stc LEFT JOIN {$tb2} AS stv ON stv.id=stc.tmplvarid",
+			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
+			"stc.contentid ASC"
+			);
 		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
 		while ($row = $modx->db->getRow($rs)) {
@@ -791,10 +793,7 @@ class ditto {
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
 		if ($tot != count($docIDs)) {
-			$query = "SELECT name,type,display,display_params,default_text";
-			$query .= " FROM $tb2";
-			$query .= " WHERE name='".$tvname."' LIMIT 1";
-			$rs = $modx->db->query($query);
+			$rs = $modx->db->select("name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
@@ -881,7 +880,6 @@ class ditto {
 		return false;
 	} else {
 		sort($ids);
-		$limit= ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
 		$tblsc= $modx->getFullTableName("site_content");
 		$tbldg= $modx->getFullTableName("document_groups");
     $tbltvc = $modx->getFullTableName("site_tmplvar_contentvalues");
@@ -896,7 +894,7 @@ class ditto {
     //Added by Andchir (http://modx-shopkeeper.ru/)
 		if(substr($where, 0, 5)=="@SQL:"){
       $where = ($where == "") ? "" : substr(str_replace('@eq','=',$where), 5);
-      $left_join_tvc = "LEFT JOIN $tbltvc tvc ON sc.id = tvc.contentid";
+      $left_join_tvc = "LEFT JOIN $tbltvc AS tvc ON sc.id = tvc.contentid";
     }else{
 			$where= ($where == "") ? "" : 'AND sc.' . implode('AND sc.', preg_replace("/^\s/i", "", explode('AND', $where)));
       $left_join_tvc = '';
@@ -912,14 +910,13 @@ class ditto {
 		
 		$published = ($published) ? "AND sc.published=1" : ""; 
 		
-		//$sql = "SELECT DISTINCT $fields FROM $tblsc sc 
-    $sql = "SELECT DISTINCT $fields FROM $tblsc sc $left_join_tvc
-		LEFT JOIN $tbldg dg on dg.document = sc.id
-		WHERE sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=$deleted $where
-		".($public ? 'AND ('.$access.')' : '')." GROUP BY sc.id" .
-		($sort ? " ORDER BY $sort" : "") . " $limit ";
-
-		$result= $modx->db->query($sql);
+		$result= $modx->db->select(
+			"DISTINCT {$fields}",
+			"{$tblsc} AS sc {$left_join_tvc} LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"sc.id IN (" . implode(',', $ids) . ") {$published} AND sc.deleted='{$deleted}' {$where} ".($public ? 'AND ('.$access.')' : '')." GROUP BY sc.id",
+			$sort,
+			$limit
+			);
 		$resourceArray= array ();
 		$cnt = $modx->db->getRecordCount($result);
 		$TVData = array();
@@ -980,12 +977,7 @@ class ditto {
 	        $access= ($modx->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
 	         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 			$published = ($published) ? "AND sc.published=1" : "";         
-			$sql= "SELECT DISTINCT sc.id FROM $tblsc sc
-	                LEFT JOIN $tbldg dg on dg.document = sc.id
-	                WHERE (sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0)
-	                AND ($access)
-	                GROUP BY sc.id ";
-	        $result= $modx->db->query($sql);
+	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
 	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }

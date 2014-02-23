@@ -40,7 +40,7 @@ class CJotDataDb {
 	function FirstRun($path) {
 		global $modx;
 		$jot = $this->tbl["check"];
-		$rs = $modx->db->query("SHOW TABLES LIKE '".$jot."'");
+		$rs = $modx->db->query("SHOW TABLES LIKE '{$jot}'");
 		$count = $modx->db->getRecordCount($rs);
 		
 		if ($count==0) {

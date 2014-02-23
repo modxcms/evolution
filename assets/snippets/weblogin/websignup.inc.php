@@ -51,9 +51,8 @@ else if ($isPostBack){
         return;
     }
     else {
-        $sql = "SELECT id FROM ".$modx->getFullTableName("web_users")." WHERE username='$username'";
-        $rs = $modx->db->query($sql);
-        $limit = $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('count(id)', $modx->getFullTableName("web_users"), "username='{$username}'");
+        $limit = $modx->db->getValue($rs);
         if($limit>0) {
             $output = webLoginAlert("Username is already in use!").$tpl;
             return;
@@ -67,15 +66,11 @@ else if ($isPostBack){
     }
 
     // check for duplicate email address
-    $sql = "SELECT internalKey FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
+    $rs = $modx->db->select('count(internalKey)', $modx->getFullTableName("web_user_attributes"), "email='{$email}' AND internalKey!='{$id}'");
+    $limit = $modx->db->getValue($rs);
     if($limit>0) {
-        $row=$modx->db->getRow($rs);
-        if($row['internalKey']!=$id) {
             $output = webLoginAlert("Email is already in use!").$tpl;
             return;
-        }
     }
     
     // if there is no password, randomly generate a new one 	 
@@ -125,7 +120,7 @@ else if ($isPostBack){
 
     // add user to web groups
     if(count($groups)>0) {
-        $ds = $modx->db->query("SELECT id FROM ".$modx->getFullTableName("webgroup_names")." WHERE name IN ('".implode("','",$groups)."')");
+        $ds = $modx->db->select('id', $modx->getFullTableName("webgroup_names"), "name IN ('".implode("','",$groups)."')");
             while ($row = $modx->db->getRow($ds)) {
                 $wg = $row["id"];
                 $modx->db->query("REPLACE INTO ".$modx->getFullTableName("web_groups")." (webgroup,webuser) VALUES('$wg','$key')");
