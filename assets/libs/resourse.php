@@ -239,7 +239,7 @@ class resourse {
 	
 	public function get_TV(){
 		$result = $this->select('id,name', $this->_table['site_tmplvars']);
-		while($row = $this->modx->db->GetRow($result)) {
+		while($row = $this->modx->db->getRow($result)) {
 			$this->tv[$row['name']] = $row['id'];
 			$this->tvid[$row['id']] = $row['name'];
 		}

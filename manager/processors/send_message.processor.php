@@ -33,9 +33,8 @@ if($sendto=='g') {
 	if($groupid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_group_selected"]);
 	}
-	$rs = $modx->db->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}'");
+	$rs = $modx->db->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}' AND internalKey!='".$modx->getLoginUserID()."'");
 	while ($row=$modx->db->getRow($rs)) {
-		if($row['internalKey']!=$modx->getLoginUserID()) {
 		$modx->db->insert(
 			array(
 				'recipient' => $row['internalKey'],
@@ -46,15 +45,13 @@ if($sendto=='g') {
 				'type'      => 'Message',
 				'private'   => 0,
 			), $modx->getFullTableName('user_messages'));
-		}
 	}
 }
 
 
 if($sendto=='a') {
-	$rs = $modx->db->select('id', $modx->getFullTableName('manager_users'));
+	$rs = $modx->db->select('id', $modx->getFullTableName('manager_users'), "id!='".$modx->getLoginUserID()."'");
 	while ($row=$modx->db->getRow($rs)) {
-		if($row['id']!=$modx->getLoginUserID()) {
 		$modx->db->insert(
 			array(
 				'recipient' => $row['id'],
@@ -65,7 +62,6 @@ if($sendto=='a') {
 				'type'      => 'Message',
 				'private'   => 0,
 			), $modx->getFullTableName('user_messages'));
-		}
 	}
 }
 

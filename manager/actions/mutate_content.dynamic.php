@@ -74,11 +74,9 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=27 AND id='{$id}'");
-    while ($lock = $modx->db->getRow($rs)) {
-        if ($lock['internalKey'] != $modx->getLoginUserID()) {
+$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($lock = $modx->db->getRow($rs)) {
             $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'document'));
-        }
     }
 
 // get document groups for current user

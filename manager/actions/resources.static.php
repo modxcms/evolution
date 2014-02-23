@@ -30,8 +30,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $output = '<ul>';
     $preCat = '';
     $insideUl = 0;
-    for($i=0; $i<$limit; $i++) {
-		$row = $modx->db->getRow($rs);
+    while ($row = $modx->db->getRow($rs)) {
         $row['category'] = stripslashes($row['category']); //pixelchutes
         if ($preCat !== $row['category']) {
             $output .= $insideUl? '</ul>': '';

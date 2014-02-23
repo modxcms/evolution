@@ -16,13 +16,9 @@ $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
 
 // check to see the variable editor isn't locked
-$rs = $modx->db->select('internalKey,username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}'");
-	while($row = $modx->db->getRow($rs))
-	{
-		if($row['internalKey']!=$modx->getLoginUserID())
-		{
+$rs = $modx->db->select('internalKey,username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($row = $modx->db->getRow($rs)) {
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $row['username'], 'template variable'));
-		}
 	}
 // end check for lock
 

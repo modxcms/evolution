@@ -5,11 +5,9 @@ if(!$modx->hasPermission('settings')) {
 }
 
 // check to see the edit settings page isn't locked
-$rs = $modx->db->select(',internalKey,username', $modx->getFullTableName('active_users'), "action=17");
-	while ($lock = $modx->db->getRow($rs)) {
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
+$rs = $modx->db->select(',internalKey,username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($lock = $modx->db->getRow($rs)) {
 			$modx->webAlertAndQuit(sprintf($_lang["lock_settings_msg"],$lock['username']));
-		}
 	}
 // end check for lock
 

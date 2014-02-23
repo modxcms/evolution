@@ -22,11 +22,9 @@ $tbl_site_templates = $modx->getFullTableName('site_templates');
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
-    $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=16 AND id='{$id}'");
-        while ($lock = $modx->db->getRow($rs)) {
-            if($lock['internalKey']!=$modx->getLoginUserID()) {
+    $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+        if ($lock = $modx->db->getRow($rs)) {
                 $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'template'));
-            }
         }
     // end check for lock
 } else {
