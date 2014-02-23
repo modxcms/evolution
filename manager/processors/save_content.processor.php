@@ -247,14 +247,11 @@ while ($row = $modx->db->getRow($rs)) {
 // get the document, but only if it already exists
 if ($actionToTake != "new") {
 	$rs = $modx->db->select('*', $tbl_site_content, "id='{$id}'");
-	$limit = $modx->db->getRecordCount($rs);
-	if ($limit > 1) {
-		$modx->webAlertAndQuit($_lang["error_many_results"]);
-	}
-	if ($limit < 1) {
+	$existingDocument = $modx->db->getRow($rs);
+	if (!$existingDocument) {
 		$modx->webAlertAndQuit($_lang["error_no_results"]);
 	}
-	$existingDocument = $modx->db->getRow($rs);
+	
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in

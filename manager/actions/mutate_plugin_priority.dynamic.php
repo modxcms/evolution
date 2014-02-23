@@ -36,13 +36,11 @@ $rs = $modx->db->select(
 	'',
 	'sysevt.name,pe.priority'
 	);
-$limit = $modx->db->getRecordCount($rs);
 
 $insideUl = 0;
 $preEvt = '';
 $evtLists = '';
 $sortables = array();
-if($limit>1) {
     while ($plugins = $modx->db->getRow($rs)) {
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
@@ -54,11 +52,9 @@ if($limit>1) {
         $preEvt = $plugins['evtid'];
     }
     if ($insideUl) $evtLists .= '</ul>';
-}
 
 
-$header = '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+$header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<title>MODX</title>

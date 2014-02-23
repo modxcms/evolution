@@ -307,8 +307,7 @@ class asPHxParser {
                         if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
                             $phx_snippet_name = 'phx:' . $modx->db->escape($modifier_cmd[$i]);
                              $result = $modx->db->select('snippet', $modx->getFullTableName("site_snippets"), "name='{$phx_snippet_name}'");
-                             if ($modx->db->getRecordCount($result) == 1) {
-                                $row = $modx->db->getRow($result);
+                             if ($row = $modx->db->getRow($result)) {
                                  $cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
                              } else if ($modx->db->getRecordCount($result) == 0){ // If snippet not found, look in the modifiers folder
                                 $filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';

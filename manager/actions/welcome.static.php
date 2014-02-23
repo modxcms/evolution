@@ -105,9 +105,7 @@ $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     $html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
-    $syncid = 0;
     while ($content = $modx->db->getRow($rs)) {
-        if ($syncid == 0) $syncid = $content['id'];
         $html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
     }
 }

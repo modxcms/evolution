@@ -23,15 +23,11 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
     $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=16 AND id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        for ($i=0;$i<$limit;$i++) {
-            $lock = $modx->db->getRow($rs);
+        while ($lock = $modx->db->getRow($rs)) {
             if($lock['internalKey']!=$modx->getLoginUserID()) {
                 $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'template'));
             }
         }
-    }
     // end check for lock
 } else {
     $id='';
@@ -40,14 +36,11 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 $content = array();
 if(!empty($id)) {
     $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        $modx->webAlertAndQuit("More results returned than expected. Which sucks.");
-    }
-    if($limit<1) {
+    $content = $modx->db->getRow($rs);
+    if(!$content) {
         $modx->webAlertAndQuit("No database record has been found for this template.");
     }
-    $content = $modx->db->getRow($rs);
+    
     $_SESSION['itemname']=$content['templatename'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);

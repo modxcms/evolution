@@ -173,8 +173,7 @@ class DocManagerBackend {
 		
 			foreach ($pids as $docID) {
 				$tempSQL = $this->modx->db->select('template', $this->modx->getFullTableName('site_content'), "id='{$docID}'");
-				if ($this->modx->db->getRecordCount($tempSQL) > 0) {
-					$row = $this->modx->db->getRow($tempSQL);
+				if ($row = $this->modx->db->getRow($tempSQL)) {
 					if ($row['template'] == $_POST['template_id']) {
 						$tvID = $this->getTemplateVarIds($tmplVars,$docID);
 						if (count($tvID) > 0) {
@@ -455,14 +454,12 @@ class DocManagerBackend {
 				} else {
 					$pids .= '' . $column . '=\'' . $match . '\' OR ';
 				}
-				if ($this->modx->db->getRecordCount($group) > 0) {
 				while ($row = $this->modx->db->getRow($group)) {
 					if ($returnval == 0) {
 						$idarray[] = ($row['id']);
 					} else {
 						$pids .= '' . $column . '=\'' . $row['id'] . '\' OR ';
 					}
-				}
 				}
 			}
 			/* value is a group for ALL children */
@@ -473,11 +470,9 @@ class DocManagerBackend {
 				for ($i = 0; $i < count($idarray); $i++) {
 					$where = 'parent=' . $idarray[$i];
 					$rs = $this->modx->db->select('id', $this->modx->getFullTableName('site_content'), $where);
-					if ($this->modx->db->getRecordCount($rs) > 0) {
 						while ($row = $this->modx->db->getRow($rs)) {
 							$idarray[] = $row['id'];
 						}
-					}
 				}
 
 				for ($i = 0; $i < count($idarray); $i++) {
@@ -515,8 +510,7 @@ class DocManagerBackend {
 					continue;
 				}
 				$sql = $this->modx->db->select('id,default_text', $this->modx->getFullTableName('site_tmplvars'), "id='{$name}'");
-				if ($this->modx->db->getRecordCount($sql) > 0) {
-					$row = $this->modx->db->getRow($sql);
+				if ($row = $this->modx->db->getRow($sql)) {
 					if ($value !== $row['default_text'] || trim($value) == '') {
 						$output["$name"] = $row['id'];
 					} elseif ($value == $row["default_text"]) {

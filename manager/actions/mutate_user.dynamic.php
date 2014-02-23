@@ -20,28 +20,21 @@ $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
 $rs = $modx->db->select('internalKey,username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}'");
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-	for ($i = 0; $i < $limit; $i++) {
-		$lock = $modx->db->getRow($rs);
+	while ($lock = $modx->db->getRow($rs)) {
 		if ($lock['internalKey'] != $modx->getLoginUserID()) {
 			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $lock['username'], "user"));
 		}
 	}
-}
 // end check for lock
 
 if ($_REQUEST['a'] == '12') {
 	// get user attribute
 	$rs = $modx->db->select('*', $modx->getFullTableName('user_attributes'), "internalKey = '{$user}'");
-	$limit = $modx->db->getRecordCount($rs);
-	if ($limit > 1) {
-		$modx->webAlertAndQuit("More than one user returned!");
-	}
-	if ($limit < 1) {
+	$userdata = $modx->db->getRow($rs);
+	if (!$userdata) {
 		$modx->webAlertAndQuit("No user returned!");
 	}
-	$userdata = $modx->db->getRow($rs);
+	
 
 	// get user settings
 	$rs = $modx->db->select('*', $modx->getFullTableName('user_settings'), "user = '{$user}'");
@@ -57,14 +50,10 @@ if ($_REQUEST['a'] == '12') {
 	
 	// get user name
 	$rs = $modx->db->select('*', $modx->getFullTableName('manager_users'), "id = '{$user}'");
-	$limit = $modx->db->getRecordCount($rs);
-	if ($limit > 1) {
-		$modx->webAlertAndQuit("More than one user returned while getting username!");
-	}
-	if ($limit < 1) {
+	$usernamedata = $modx->db->getRow($rs);
+	if (!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
-	$usernamedata = $modx->db->getRow($rs);
 	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
 	$userdata = array ();

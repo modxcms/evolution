@@ -288,8 +288,7 @@ class PHxParser {
 					default:
 						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
 			             	$result = $modx->db->select('snippet', $modx->getFullTableName("site_snippets"), "name='phx:".$modifier_cmd[$i]."'");
-			             	if ($modx->db->getRecordCount($result) == 1) {
-								$row = $modx->db->getRow($result);
+			             	if ($row = $modx->db->getRow($result)) {
 						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
 						 		$this->Log("  |--- DB -> Custom Modifier");
 						 	}

@@ -62,9 +62,7 @@ EOD;
                     "",
                     1
                     );
-                    if($modx->db->getRecordCount($result)==1) {
                         $user = $modx->db->getRow($result);
-                    }
             }
 
             if($user == null) { $this->errors[] = $_lang['could_not_find_user']; }

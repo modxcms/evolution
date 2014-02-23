@@ -25,32 +25,22 @@ $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
 $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action='102' AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1)
-{
-    while($lock = $modx->db->getRow)
+    while($lock = $modx->db->getRow($rs))
     {
         if($lock['internalKey']!=$modx->getLoginUserID())
         {
             $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['plugin']));
         }
     }
-}
 // end check for lock
 
 if(isset($_GET['id']))
 {
     $rs = $modx->db->select('*',$tbl_site_plugins,"id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1)
-    {
-        $modx->webAlertAndQuit("Multiple plugins sharing same unique id. Not good.");
-    }
-    if($limit<1)
-    {
+    $content = $modx->db->getRow($rs);
+    if(!$content) {
         header("Location: {$modx->config['site_url']}");
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
     {

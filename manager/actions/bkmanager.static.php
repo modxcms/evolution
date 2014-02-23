@@ -90,11 +90,7 @@ elseif ($mode=='snapshot')
 	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
 	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";
 	$rs = $modx->db->query($sql);
-	$tables = array();
-	if(0<$modx->db->getRecordCount($rs))
-	{
 		$tables = $modx->db->getColumn('Name', $rs);
-	}
 	//$today = $modx->toDateFormat(time());
 	//$today = str_replace(array('/',' '), '-', $today);
 	//$today = str_replace(':', '', $today);
@@ -624,10 +620,8 @@ function import_sql($source,$result_code='import_ok')
 	restoreSettings($settings);
 	
 	$modx->clearCache();
-	if(0 < $modx->db->getRecordCount($rs))
-	{
-		$_SESSION['last_result'] = $modx->db->makeArray($rs);
-	}
+
+	$_SESSION['last_result'] = $modx->db->makeArray($rs);
 	
 	$_SESSION['result_msg'] = $result_code;
 }

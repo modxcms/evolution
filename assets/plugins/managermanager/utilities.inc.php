@@ -141,8 +141,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 		if ($resultKey !== false){
 			$rsArray = array();
 			
-			for ($i = 0; $i < $recordCount; $i++){
-				$row = $modx->db->getRow($result);
+			while ($modx->db->getRow($result)) {
 				
 				//If result contains the result key
 				if (array_key_exists($resultKey, $row)){

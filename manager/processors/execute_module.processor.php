@@ -46,14 +46,10 @@ if($_SESSION['mgrRole']!=1){
 
 // get module data
 $rs = $modx->db->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	$modx->webAlertAndQuit($_lang["error_many_results"], "index.php?a=106");
-}
-if($limit<1) {
+$content = $modx->db->getRow($rs);
+if(!$content) {
 	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
 }
-$content = $modx->db->getRow($rs);
 if($content['disabled']) {
 	$modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
 }

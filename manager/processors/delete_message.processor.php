@@ -8,18 +8,17 @@ $id=$_REQUEST['id'];
 
 // check the user is allowed to delete this message
 $rs = $modx->db->select('recipient', $modx->getFullTableName('user_messages'), "id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit!=1) {
+$message = $modx->db->getRow($rs);
+if(!$message) {
 	$modx->webAlertAndQuit("Wrong number of messages returned!");
-} else {
-	$message=$modx->db->getRow($rs);
+}
+	
 	if($message['recipient']!=$modx->getLoginUserID()) {
 		$modx->webAlertAndQuit("You are not allowed to delete this message!");
 	} else {
 		// delete message
 		$modx->db->delete($modx->getFullTableName('user_messages'), "id='{$id}'");
 	}
-}
 
 $header = "Location: index.php?a=10";
 header($header);

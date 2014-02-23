@@ -43,8 +43,6 @@ function getChildren($parent) {
 	//$db->debug = true;
 
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
-	$limit = $modx->db->getRecordCount($rs);
-	if($limit>0) {
 		// the document has children documents, we'll need to delete those too
 		while ($childid=$modx->db->getValue($rs)) {
 			if($childid==$site_start) {
@@ -57,7 +55,6 @@ function getChildren($parent) {
 			getChildren($childid);
 			//echo "Found childNode of parentNode $parent: ".$childid."<br />";
 		}
-	}
 }
 
 getChildren($id);

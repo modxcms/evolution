@@ -60,8 +60,7 @@ class Qm {
         
         // Individual user language setting (if set)
         $records = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$_SESSION['mgrInternalKey']}'");
-        if ($this->modx->db->getRecordCount($records) > 0) {
-            $record = $this->modx->db->getRow($records);
+        if ($record = $this->modx->db->getRow($records)) {
             $manager_language = $record['setting_value'];
         }
 	
@@ -831,12 +830,10 @@ class Qm {
     function getParents($id, $path = '') { // modx:returns child's parent
 		if(empty($this->aliases)) {
 			$qh = $this->modx->db->select("id, IF(alias='', id, alias) AS alias, parent", $this->modx->getFullTableName('site_content'));
-			if ($modx->db->getRecordCount($qh) > 0)	{
 				while ($row = $this->modx->db->getRow($qh)) {
 					$this->aliases[$row['id']] = $row['alias'];
 					$this->parents[$row['id']] = $row['parent'];
 				}
-			}
 		}
 		if (isset($this->aliases[$id])) {
 			$path = $this->aliases[$id] . ($path != '' ? '/' : '') . $path;

@@ -200,15 +200,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                     "",
                     "5,1"
                     );
-	        		$limit = $modx->db->getRecordCount($rs);
-                if($limit>0){
                     while ($row = $modx->db->getRow($rs)) {
                         $row['type'] = $v['name'];
                         $row['action'] = $v['action'];
                         if (empty($row['category'])) {$row['category'] = $_lang['no_category'];}
                         $finalInfo[] = $row;
                     }
-                }
             }
 
             foreach($finalInfo as $n => $v) {

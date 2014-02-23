@@ -34,13 +34,11 @@ class synccache{
         global $modx;
         if(empty($this->aliases)) {
             $qh = $modx->db->select('id, IF(alias=\'\', id, alias) AS alias, parent, alias_visible', $modx->getFullTableName('site_content'));
-            if ($modx->db->getRecordCount($qh) > 0)  {
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
                     $this->parents[$row['id']] = $row['parent'];
 					$this->aliasVisible[$row['id']] = $row['alias_visible'];
                 }
-            }
         }
         if (isset($this->aliases[$id])) {
             $path = ($this->aliasVisible[$id] == 1 ? $this->aliases[$id] . ($path != '' ? '/' : '') . $path : $path);

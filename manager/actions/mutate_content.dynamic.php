@@ -75,15 +75,11 @@ if ($action == 27) {
 
 // Check to see the document isn't locked
 $rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=27 AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
+    while ($lock = $modx->db->getRow($rs)) {
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
             $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'document'));
         }
     }
-}
 
 // get document groups for current user
 if ($_SESSION['mgrDocgroups']) {
@@ -98,14 +94,10 @@ if (!empty ($id)) {
 		"{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id",
 		"sc.id='{$id}' AND ({$access})"
 		);
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        $modx->webAlertAndQuit($_lang["error_many_results"]);
-    }
-    if ($limit < 1) {
+    $content = $modx->db->getRow($rs);
+    if (!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
@@ -675,11 +667,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 }
                 if($parentlookup !== false && is_numeric($parentlookup)) {
                     $rs = $modx->db->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
-                    $limit = $modx->db->getRecordCount($rs);
-                    if ($limit != 1) {
+                    $parentrs = $modx->db->getRow($rs);
+                    if (!$parentrs) {
                         $modx->webAlertAndQuit($_lang["error_no_parent"]);
                     }
-                    $parentrs = $modx->db->getRow($rs);
                     $parentname = $parentrs['pagetitle'];
                 }
                 ?>&nbsp;<img alt="tree_folder" name="plock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /> <b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b>
@@ -950,43 +941,31 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
     // get list of site keywords
     $keywords = array();
     $ds = $modx->db->select('id, keyword', $tbl_site_keywords, '', 'keyword ASC');
-    $limit = $modx->db->getRecordCount($ds);
-    if ($limit > 0) {
         while ($row = $modx->db->getRow($ds)) {
             $keywords[$row['id']] = $row['keyword'];
         }
-    }
     // get selected keywords using document's id
     if (isset ($content['id']) && count($keywords) > 0) {
         $keywords_selected = array();
         $ds = $modx->db->select('keyword_id', $tbl_keyword_xref, "content_id='{$content['id']}'");
-        $limit = $modx->db->getRecordCount($ds);
-        if ($limit > 0) {
             while ($row = $modx->db->getRow($ds)) {
                 $keywords_selected[$row['keyword_id']] = ' selected="selected"';
             }
-        }
     }
 
     // get list of site META tags
     $metatags = array();
     $ds = $modx->db->select('id, name', $tbl_site_metatags);
-    $limit = $modx->db->getRecordCount($ds);
-    if ($limit > 0) {
         while ($row = $modx->db->getRow($ds)) {
             $metatags[$row['id']] = $row['name'];
         }
-    }
     // get selected META tags using document's id
     if (isset ($content['id']) && count($metatags) > 0) {
         $metatags_selected = array();
         $ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, "content_id='{$content['id']}'");
-        $limit = $modx->db->getRecordCount($ds);
-        if ($limit > 0) {
             while ($row = $modx->db->getRow($ds)) {
                 $metatags_selected[$row['metatag_id']] = ' selected="selected"';
             }
-        }
     }
     ?>
     <!-- META Keywords -->

@@ -25,15 +25,11 @@ $modx->manager->initPageViewState();
 
 // check to see the  editor isn't locked
 $rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=108 AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-		$lock = $modx->db->getRow($rs);
+	while ($lock = $modx->db->getRow($rs)) {
 		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'module'));
 		}
 	}
-}
 // end check for lock
 
 // make sure the id's a number
@@ -95,14 +91,10 @@ switch ($_REQUEST['op']) {
 
 // load record
 $rs = $modx->db->select('*', $tbl_site_modules, "id = '{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	$modx->webAlertAndQuit("Multiple modules sharing same unique id. Please contact the Site Administrator.");
-}
-if($limit<1) {
+$content = $modx->db->getRow($rs);
+if(!$content) {
 	$modx->webAlertAndQuit("Module not found for id '{$id}'.");
 }
-$content = $modx->db->getRow($rs);
 $_SESSION['itemname']=$content['name'];
 if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);

@@ -17,9 +17,6 @@ $tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
 
 // check to see the variable editor isn't locked
 $rs = $modx->db->select('internalKey,username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}'");
-$total = $modx->db->getRecordCount($rs);
-if($total>1)
-{
 	while($row = $modx->db->getRow($rs))
 	{
 		if($row['internalKey']!=$modx->getLoginUserID())
@@ -27,7 +24,6 @@ if($total>1)
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $row['username'], 'template variable'));
 		}
 	}
-}
 // end check for lock
 
 // make sure the id's a number
@@ -41,16 +37,11 @@ $content = array();
 if(isset($_GET['id']))
 {
 	$rs = $modx->db->select('*',$tbl_site_tmplvars,"id='{$id}'");
-	$total = $modx->db->getRecordCount($rs);
-	if($total>1)
-	{
-		$modx->webAlertAndQuit($_lang["error_many_results"]);
-	}
-	if($total<1)
-	{
+	$content = $modx->db->getRow($rs);
+	if(!$content) {
 		header("Location: ".MODX_SITE_URL."index.php?id={$site_start}");
 	}
-	$content = $modx->db->getRow($rs);
+	
 	$_SESSION['itemname'] = $content['caption'];
 	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
 	{

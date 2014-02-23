@@ -757,8 +757,8 @@ class AjaxSearchRequest {
 				LEFT JOIN " . $modx->getFullTableName('site_tmplvar_contentvalues')." AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
 			"tvc.contentid = '{$docid}' {$where}"
 			);
-        if ($modx->db->getRecordCount($rs)) {
-            $idnames = $modx->db->getColumn('id', $rs);
+        $idnames = $modx->db->getColumn('id', $rs);
+        if ($idnames) {
             $results = $modx->getTemplateVarOutput($idnames,$docid);
             if (!$results) $results = array();
         }

@@ -109,10 +109,8 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// Start duplicating all the child documents that aren't deleted.
 	$_toplevel++;
 	$rs = $modx->db->select('id', $tblsc, "parent='{$docid}' AND deleted=0", 'id ASC');
-	if ($modx->db->getRecordCount($rs)) {
 		while ($row = $modx->db->getRow($rs))
 			duplicateDocument($row['id'], $newparent, $_toplevel);
-	}
 
 	// return the new doc id
 	return $newparent;

@@ -280,14 +280,9 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
 		$tblsc,
 		"isfolder=1 AND parent='{$p}' AND sc.deleted=0 " . ($seeThruUnpub ? '' : "AND sc.published=1")
 	    );
-      // Get number of results
-      $countTempParents = $modx->db->getRecordCount($rsTempParents);
 
       // If there are results, put them in an array
-      $tempValidArray = false;
-      if ($countTempParents){
         $tempValidArray = $modx->db->getColumn('id', $rsTempParents);
-      } // end if
 
     // populate next level of array 
     if ($tempValidArray){

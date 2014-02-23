@@ -26,27 +26,19 @@ $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 // Check to see the snippet editor isn't locked
 $rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=78 AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
+    while ($lock = $modx->db->getRow($rs)) {
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
             $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']));
         }
     }
-}
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
     $rs = $modx->db->select('*', $tbl_site_htmlsnippets, "id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        $modx->webAlertAndQuit("Error: Multiple Chunk sharing same unique ID.");
-    }
-    if ($limit < 1) {
+    $content = $modx->db->getRow($rs);
+    if (!$content) {
         $modx->webAlertAndQuit("Chunk not found for id '{$id}'.");
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);

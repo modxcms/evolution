@@ -34,13 +34,10 @@ $rs = $modx->db->select(
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
 	"sc.id ='{$id}' AND ({$access})"
 	);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-	$modx->webAlertAndQuit("More results returned than expected.");
-} elseif ($limit == 0) {
+$content = $modx->db->getRow($rs);
+if (!$content) {
 	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
-$content = $modx->db->getRow($rs);
 
 /**
  * "General" tab setup
@@ -68,12 +65,9 @@ $keywords = array();
 $rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
        "k.id = x.keyword_id AND x.content_id = '{$id}'",
        'k.keyword ASC');
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
 	while ($row = $modx->db->getRow($rs)) {
 		$keywords[$i] = $row['keyword'];
 	}
-}
 
 // Get list of selected site META tags for this document
 $metatags_selected = array();
@@ -83,12 +77,10 @@ $rs = $modx->db->select(
 		LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id",
 	"sc.content_id='{$content['id']}'"
 	);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
 	while ($row = $modx->db->getRow($rs)) {
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
-}
+
 
 /**
  * "View Children" tab setup

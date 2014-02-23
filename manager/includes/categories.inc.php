@@ -19,8 +19,8 @@ function checkCategory($newCat = '') {
     $useTable = $modx->getFullTableName('categories');
     $newCat = $modx->db->escape($newCat);
     $cats = $modx->db->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
-	if($modx->db->getRecordCount($cats)==1) {
-		return $modx->db->getValue($cats);
+	if($cat = $modx->db->getValue($cats)) {
+		return $cat;
 	}
     return 0;
 }

@@ -484,13 +484,12 @@ class Wayfinder {
 			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
 			"stc.contentid ASC"
 			);
-		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
 		while ($row = $modx->db->getRow($rs))  {
 			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 		}
 
-		if ($tot != count($docIDs)) {
+		if (count($resourceArray) != count($docIDs)) {
 			$rs = $modx->db->select('name,type,display,display_params,default_text', $tb2, "name='{$tvname}'", 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {

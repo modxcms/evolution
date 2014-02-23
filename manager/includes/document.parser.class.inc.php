@@ -920,14 +920,12 @@ class DocumentParser {
 						$replace[$i] = $this->chunkCache[$matches[1][$i]];
 					} else {
 						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
-						$limit = $this->db->getRecordCount($result);
-						if ($limit < 1) {
-							$this->chunkCache[$matches[1][$i]] = '';
-							$replace[$i] = '';
-						} else {
-							$row = $this->db->getRow($result);
+						if ($row = $this->db->getRow($result)) {
 							$this->chunkCache[$matches[1][$i]] = $row['snippet'];
 							$replace[$i] = $row['snippet'];
+						} else {
+							$this->chunkCache[$matches[1][$i]] = '';
+							$replace[$i] = '';
 						}
 					}
 				}
@@ -1240,17 +1238,13 @@ class DocumentParser {
             // get from db and store a copy inside cache
             $result= $this->db->select('name,snippet,properties',$tbl_snippets,"name='{$esc_snip_name}'");
             $added = false;
-            if($this->db->getRecordCount($result) == 1)
-            {
-                $row = $this->db->getRow($result);
-                if($row['name'] == $snip_name)
+                if($row = $this->db->getRow($result))
                 {
                     $snippetObject['name']       = $row['name'];
                     $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
                     $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
                     $added = true;
                 }
-            }
             if($added === false)
             {
                 $snippetObject['name']       = $snip_name;
@@ -1435,8 +1429,6 @@ class DocumentParser {
 				LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'",
 			"tvtpl.templateid = '{$documentObject['template']}'"
 			);
-        $rowCount= $this->db->getRecordCount($rs);
-        if ($rowCount > 0) {
             while ($row= $this->db->getRow($rs)) {
                 $tmplvars[$row['name']]= array (
                     $row['name'],
@@ -1447,7 +1439,6 @@ class DocumentParser {
                 );
             }
             $documentObject= array_merge($documentObject, $tmplvars);
-        }
 		}
         return $documentObject;
     }
@@ -1686,13 +1677,10 @@ class DocumentParser {
                 $this->documentContent= "[*content*]"; // use blank template
             else {
                 $result= $this->db->select('content', $this->getFullTableName("site_templates"), "id = '{$this->documentObject['template']}'");
-                $rowCount= $this->db->getRecordCount($result);
-                if ($rowCount > 1) {
-                    $this->messageQuit("Incorrect number of templates returned from database", $sql);
-                }
-                elseif ($rowCount == 1) {
-                    $row= $this->db->getRow($result);
+                if ($row= $this->db->getRow($result)) {
                     $this->documentContent= $row['content'];
+                } else {
+                    $this->messageQuit("Incorrect number of templates returned from database", $sql);
                 }
             }
 
@@ -2434,8 +2422,7 @@ class DocumentParser {
             $properties= $this->snippetCache[$snippetName . "Props"];
         } else { // not in cache so let's check the db
             $result= $this->db->select('name, snippet, properties', $this->getFullTableName("site_snippets"), "name='" . $this->db->escape($snippetName) . "'");
-            if ($this->db->getRecordCount($result) == 1) {
-                $row= $this->db->getRow($result);
+            if ($row= $this->db->getRow($result)) {
                 $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
                 $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
             } else {
@@ -2959,16 +2946,14 @@ class DocumentParser {
         if (!is_numeric($to)) {
             // Query for the To ID
             $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$to}'");
-            if ($this->db->getRecordCount($rs)) {
-                $rs= $this->db->getRow($rs);
+            if ($rs= $this->db->getRow($rs)) {
                 $to= $rs['id'];
             }
         }
         if (!is_numeric($from)) {
             // Query for the From ID
             $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$from}'");
-            if ($this->db->getRecordCount($rs)) {
-                $rs= $this->db->getRow($rs);
+            if ($rs= $this->db->getRow($rs)) {
                 $from= $rs['id'];
             }
         }
@@ -3051,9 +3036,7 @@ class DocumentParser {
                 INNER JOIN " . $this->getFullTableName("user_attributes") . " mua ON mua.internalkey=mu.id",
             "mu.id = '{$uid}'"
             );
-        $limit= $this->db->getRecordCount($rs);
-        if ($limit == 1) {
-            $row= $this->db->getRow($rs);
+        if ($row= $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
@@ -3074,9 +3057,7 @@ class DocumentParser {
             "wu.id='{$uid}'"
             );
         $rs= $this->db->query($sql);
-        $limit= $this->db->getRecordCount($rs);
-        if ($limit == 1) {
-            $row= $this->db->getRow($rs);
+        if ($row= $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
@@ -3137,9 +3118,7 @@ class DocumentParser {
         if ($_SESSION["webValidated"] == 1) {
             $tbl= $this->getFullTableName("web_users");
             $ds = $this->db->select('id, username, password', $tbl, "id='".$this->getLoginUserID()."'");
-            $limit= $this->db->getRecordCount($ds);
-            if ($limit == 1) {
-                $row= $this->db->getRow($ds);
+            if ($row= $this->db->getRow($ds)) {
                 if ($row["password"] == md5($oldPwd)) {
                     if (strlen($newPwd) < 6) {
                         return "Password is too short!";
@@ -3412,8 +3391,7 @@ class DocumentParser {
                     $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
                 } else {
                     $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-                    if ($this->db->getRecordCount($result) == 1) {
-                        $row= $this->db->getRow($result);
+                    if ($row= $this->db->getRow($result)) {
                         $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
                         $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
                     } else {

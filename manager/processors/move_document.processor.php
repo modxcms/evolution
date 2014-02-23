@@ -43,14 +43,12 @@ function allChildren($currDocID) {
 	global $modx;
 	$children= array();
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
-		if ($numChildren= $modx->db->getRecordCount($rs)) {
 			while ($child= $modx->db->getRow($rs)) {
 				$children[]= $child['id'];
 				$nextgen= array();
 				$nextgen= allChildren($child['id']);
 				$children= array_merge($children, $nextgen);
 			}
-		}
 	return $children;
 }
 

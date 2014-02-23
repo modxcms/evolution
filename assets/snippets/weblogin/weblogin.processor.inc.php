@@ -14,9 +14,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $pwdkey = $_REQUEST['wlk'];
 
         $ds = $modx->db->select('wu.*', $modx->getFullTableName('web_users'), "wu.id='".$modx->db->escape($id)."'");
-        $limit = $modx->db->getRecordCount($ds);
-        if($limit==1) {
-            $row = $modx->db->getRow($ds);
+        if($row = $modx->db->getRow($ds)) {
             $username = $row["username"];
             list($newpwd,$newpwdkey) = explode("|",$row['cachepwd']);
             if($newpwdkey!=$pwdkey) {
@@ -77,11 +75,10 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			'wu.*, wua.fullname',
 			$modx->getFullTableName('web_users')." AS wu INNER JOIN ".$modx->getFullTableName('web_user_attributes')." AS wua ON wua.internalkey=wu.id",
 			"wua.email='".$modx->db->escape($email)."'");
-        $limit = $modx->db->getRecordCount($ds);
-        if($limit==1) {
+        if($row = $modx->db->getRow($ds)) {
             $newpwd = webLoginGeneratePassword(8);
             $newpwdkey = webLoginGeneratePassword(8); // activation key
-            $row = $modx->db->getRow($ds);
+            
             //save new password
             $modx->db->update(
 				array(
@@ -207,14 +204,12 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		'wu.*, wua.fullname',
 		$modx->getFullTableName('web_users')." AS wu, ".$modx->getFullTableName('web_user_attributes')." AS wua",
 		"BINARY wu.username='{$username}' AND wua.internalKey=wu.id");
-    $limit = $modx->db->getRecordCount($ds);
+    $row = $modx->db->getRow($ds);
 
-    if($limit==0 || $limit>1) {
+    if(!$row) {
         $output = webLoginAlert("Incorrect username or password entered!");
         return;
     }
-
-    $row = $modx->db->getRow($ds);
 
     $internalKey             = $row['internalKey'];
     $dbasePassword             = $row['password'];

@@ -11,11 +11,10 @@ if(!$modx->hasPermission('messages')) {
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
 $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".(int)$_REQUEST['id']."'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit!=1) {
+$message=$modx->db->getRow($rs);
+if(!$message) {
     echo "Wrong number of messages returned!";
 } else {
-    $message=$modx->db->getRow($rs);
     if($message['recipient']!=$modx->getLoginUserID()) {
         echo $_lang['messages_not_allowed_to_read'];
     } else {
@@ -191,11 +190,10 @@ if($dotablestuff==1) { ?>
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
     $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".$_REQUEST['id']."'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit!=1) {
+    $message=$modx->db->getRow($rs);
+    if(!$message) {
         echo "Wrong number of messages returned!";
     } else {
-        $message=$modx->db->getRow($rs);
         if($message['recipient']!=$modx->getLoginUserID()) {
             echo $_lang['messages_not_allowed_to_read'];
         } else {

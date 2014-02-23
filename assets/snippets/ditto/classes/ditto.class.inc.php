@@ -786,13 +786,12 @@ class ditto {
 			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
 			"stc.contentid ASC"
 			);
-		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
 		while ($row = $modx->db->getRow($rs)) {
 			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
-		if ($tot != count($docIDs)) {
+		if (count($resourceArray) != count($docIDs)) {
 			$rs = $modx->db->select("name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
@@ -922,8 +921,7 @@ class ditto {
 		$TVData = array();
 		$TVIDs = array();
 		if ($cnt) {
-			for ($i= 0; $i < $cnt; $i++) {
-				$resource = $modx->db->getRow($result);
+			while ($resource = $modx->db->getRow($result)) {
 				if ($modx->config["server_offset_time"] != 0 && $dateSource !== false) {
 					$dateValue = (is_int($resource[$dateSource]) !== true) ? $resource[$dateSource] : strtotime($resource[$dateSource]);
 					$resource[$dateSource] = $dateValue + $modx->config["server_offset_time"];
