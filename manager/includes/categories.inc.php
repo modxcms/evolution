@@ -29,6 +29,7 @@ function getCategories() {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
     $cats = $modx->db->select('id, category', $modx->getFullTableName('categories'), '', 'category');
+	$resourceArray = array();
     while($row = $modx->db->getRow($cats)) {
         $row['category'] = stripslashes($row['category']);
         $resourceArray[] = $row;
