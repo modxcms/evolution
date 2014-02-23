@@ -74,9 +74,9 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($lock = $modx->db->getRow($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'document'));
+$rs = $modx->db->select('username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
     }
 
 // get document groups for current user
@@ -665,11 +665,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 }
                 if($parentlookup !== false && is_numeric($parentlookup)) {
                     $rs = $modx->db->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
-                    $parentrs = $modx->db->getRow($rs);
-                    if (!$parentrs) {
+                    $parentname = $modx->db->getValue($rs);
+                    if (!$parentname) {
                         $modx->webAlertAndQuit($_lang["error_no_parent"]);
                     }
-                    $parentname = $parentrs['pagetitle'];
                 }
                 ?>&nbsp;<img alt="tree_folder" name="plock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /> <b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b>
     &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />

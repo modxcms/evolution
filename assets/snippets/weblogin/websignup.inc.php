@@ -121,8 +121,7 @@ else if ($isPostBack){
     // add user to web groups
     if(count($groups)>0) {
         $ds = $modx->db->select('id', $modx->getFullTableName("webgroup_names"), "name IN ('".implode("','",$groups)."')");
-            while ($row = $modx->db->getRow($ds)) {
-                $wg = $row["id"];
+            while ($wg = $modx->db->getValue($ds)) {
                 $modx->db->query("REPLACE INTO ".$modx->getFullTableName("web_groups")." (webgroup,webuser) VALUES('$wg','$key')");
             }
     }

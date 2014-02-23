@@ -44,18 +44,15 @@ if (!$content) {
  */
 // Get Creator's username
 $rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['createdby']}'");
-if ($row = $modx->db->getRow($rs))
-	$createdbyname = $row['username'];
+$createdbyname = $modx->db->getValue($rs);
 
 // Get Editor's username
 $rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['editedby']}'");
-if ($row = $modx->db->getRow($rs))
-	$editedbyname = $row['username'];
+$editedbyname = $modx->db->getValue($rs);
 
 // Get Template name
 $rs = $modx->db->select('templatename',$tbl_site_templates, "id='{$content['template']}'");
-if ($row = $modx->db->getRow($rs))
-	$templatename = $row['templatename'];
+$templatename = $modx->db->getValue($rs);
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];

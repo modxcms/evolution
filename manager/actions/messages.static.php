@@ -24,9 +24,8 @@ if(!$message) {
         if($sender==0) {
             $sendername = $_lang['messages_system_user'];
         } else {
-            $rs = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'")
-            $row2 = $modx->db->getRow($rs2);
-            $sendername = $row2['username'];
+            $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'")
+            $sendername = $modx->db->getValue($rs2);
         }
 ?>
 <table width="600" border="0" cellspacing="0" cellpadding="0">
@@ -92,8 +91,7 @@ if(!$message) {
 <?php
 // Get  number of rows
 $rs = $modx->db->select('count(id)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
-$countrows = $modx->db->getRow($rs);
-$num_rows = $countrows['count(id)'];
+$num_rows = $modx->db->getValue($rs);
 
 // ==============================================================
 // Exemple Usage
@@ -164,8 +162,7 @@ $dotablestuff = 1;
                 $sendername = "[System]";
             } else {
                 $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                $row2 = $modx->db->getRow($rs2);
-                $sendername = $row2['username'];
+                $sendername = $modx->db->getValue($rs2);
             }
             $messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
 ?>
@@ -204,8 +201,7 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
                 $sendername = "[System]";
             } else {
                 $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
-                $row2 = $modx->db->getRow($rs2);
-                $sendername = $row2['username'];
+                $sendername = $modx->db->getValue($rs2);
             }
             $subjecttext = $_REQUEST['m']=='rp' ? "Re: " : "Fwd: ";
             $subjecttext .= $message['subject'];
@@ -314,11 +310,9 @@ function hideSpans(showSpan) {
 <?php
 // count messages again, as any action on the messages page may have altered the message count
 $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()." and messageread=0");
-$row = $modx->db->getRow($rs);
-$_SESSION['nrnewmessages'] = $row['count(*)'];
+$_SESSION['nrnewmessages'] = $modx->db->getValue($rs);
 $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
-$row = $modx->db->getRow($rs);
-$_SESSION['nrtotalmessages'] = $row['count(*)'];
+$_SESSION['nrtotalmessages'] = $modx->db->getValue($rs);
 $messagesallowed = $modx->hasPermission('messages');
 ?>
 <script type="text/javascript">

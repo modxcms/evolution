@@ -616,14 +616,14 @@ class AjaxSearchRequest {
         if ($mode == 'simple') {
             $i = 1;
             foreach($tvs_array as $tv) {
-                $rs = $modx->db->select("DISTINCT id, name", $this->_getShortTableName('site_tmplvars'), "name='{$tv}'");
-                $row = $modx->db->getRow($rs);
+                $rs = $modx->db->select("DISTINCT id", $this->_getShortTableName('site_tmplvars'), "name='{$tv}'");
+                $id = $modx->db->getValue($rs);
 
                 $alias = $abrev . $i;
                 $nm = ($name) ? $name : $tv;
                 $subselect = "SELECT DISTINCT ".$alias.".contentid , ".$alias.".value ";
                 $subselect.= "FROM " . $this->_getShortTableName('site_tmplvar_contentvalues') . " ".$alias." ";
-                $subselect.= "WHERE ".$alias.".tmplvarid = '" . $row['id'] . "'";
+                $subselect.= "WHERE ".$alias.".tmplvarid = '{$id}'";
 
                 $scTvs[] = array(
                     'tb_alias' => 'n'.$alias,
@@ -639,12 +639,12 @@ class AjaxSearchRequest {
         }
         else { // mode = concat
             $lstTvs = "'" . implode("','",$tvs_array) . "'";
-            $rs = $modx->db->select("GROUP_CONCAT( DISTINCT CAST(id AS CHAR) SEPARATOR \",\" ) AS {$abrev}_id", $this->_getShortTableName('site_tmplvars'), "name in ({$lstTvs})");
-            $row = $modx->db->getRow($rs);
+            $rs = $modx->db->select("GROUP_CONCAT( DISTINCT CAST(id AS CHAR) SEPARATOR \",\" ) AS ids", $this->_getShortTableName('site_tmplvars'), "name in ({$lstTvs})");
+            $ids = $modx->db->getValue($rs);
 
             $subselect = "SELECT DISTINCT " . $abrev . ".contentid , " . $abrev . ".value ";
             $subselect.= "FROM " . $this->_getShortTableName('site_tmplvar_contentvalues') . " " . $abrev . " ";
-            $subselect.= "WHERE " . $abrev . ".tmplvarid in (" . $row[$abrev.'_id'] . ")";
+            $subselect.= "WHERE " . $abrev . ".tmplvarid in (" . $ids . ")";
 
             $scTvs[] = array(
                 'tb_alias' => 'n'.$abrev,
@@ -696,8 +696,8 @@ class AjaxSearchRequest {
         $tvs_array = array();
         $tblName = $modx->getFullTableName('site_tmplvars');
         $rs = $modx->db->select("GROUP_CONCAT( DISTINCT name SEPARATOR "," ) AS list", $tblName, "type='text'");
-        $row = $modx->db->getRow($rs);
-        if ($row) $tvs_array = explode(',',$row['list']);
+        $list = $modx->db->getValue($rs);
+        if ($list) $tvs_array = explode(',',$list);
         return $tvs_array;
     }
     /*

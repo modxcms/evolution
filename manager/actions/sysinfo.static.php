@@ -74,8 +74,8 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
 	$sql1 = "show variables like 'character_set_database'";
     $res = $modx->db->query($sql1);
-    $charset = $modx->db->getRow($res, 'num');
-    echo $charset[1];
+    $charset = $modx->db->getValue($res);
+    echo $charset;
 			?></strong></td>
 		  </tr>
 		  <tr>
@@ -84,8 +84,8 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
     $sql2 = "show variables like 'collation_database'";
     $res = $modx->db->query($sql2);
-    $collation = $modx->db->getRow($res, 'num');
-    echo $collation[1];
+    $collation = $modx->db->getValue($res);
+    echo $collation;
             ?></strong></td>
 		  </tr>
 		  <tr>
@@ -146,14 +146,10 @@ if(!$modx->hasPermission('logs')) {
 			$i = 0;
 			while ($content = $modx->db->getRow($rs)) {
 				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'")
-				$limit2 = $modx->db->getRecordCount($rs2);
-				if($limit2==0) $user = '-';
-				else {
-					$r = $modx->db->getRow($rs2);
-					$user = $r['username'];
-				}
+				$content['user'] = $modx->db->getValue($rs2);
+				if(!$content['user']) $content['user'] = '-';
 				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
+				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$content['user']."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}
 		?>

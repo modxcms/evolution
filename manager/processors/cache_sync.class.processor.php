@@ -79,16 +79,12 @@ class synccache{
         // update publish time file
         $timesArr = array();
         $result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.(time() + $modx->config['server_offset_time']))
-        $tmpRow = $modx->db->getRow($result);
-        $minpub = $tmpRow['minpub'];
-        if($minpub!=NULL) {
+        if($minpub = $modx->db->getValue($result)) {
             $timesArr[] = $minpub;
         }
 
         $result = $modx->db->select('MIN(unpub_date) AS minunpub', $modx->getFullTableName('site_content'), 'unpub_date>'.(time() + $modx->config['server_offset_time']));
-        $tmpRow = $modx->db->getRow($result);
-        $minunpub = $tmpRow['minunpub'];
-        if($minunpub!=NULL) {
+        if($minunpub = $modx->db->getValue($result)) {
             $timesArr[] = $minunpub;
         }
 

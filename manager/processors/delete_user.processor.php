@@ -13,8 +13,7 @@ if($id==$modx->getLoginUserID()) {
 
 // get user name
 $rs = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$id}'");
-	$row = $modx->db->getRow($rs);
-	$username = $row['username'];
+	$username = $modx->db->getValue($rs);
 
 // invoke OnBeforeUserFormDelete event
 $modx->invokeEvent("OnBeforeUserFormDelete",

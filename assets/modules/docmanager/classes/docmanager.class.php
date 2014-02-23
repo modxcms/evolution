@@ -18,10 +18,9 @@ class DocManager {
 
 		$userId = $this->modx->getLoginUserID();
 		if (!empty($userId)) {
-			$lang = $this->modx->db->select('setting_name, setting_value', $this->modx->getFullTableName('user_settings'), 'setting_name=\'manager_language\' AND user='.$userId);
-	
-			if ($row = $this->modx->db->getRow($lang)) {
-	   	 		$managerLanguage = $row['setting_value'];
+			$lang = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$userId}'");
+			if ($lang = $this->modx->db->getValue($lang)) {
+	   	 		$managerLanguage = $lang;
 			}
 		}
 		
@@ -46,9 +45,9 @@ class DocManager {
     }
     
     function getTheme() {
-    	$rs = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), "setting_name='manager_theme'");
-		if ($theme = $this->modx->db->getRow($rs)) {
-			$this->theme = ($theme['setting_value'] <> '') ? '/' . $theme['setting_value'] : '';
+    	$theme = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), "setting_name='manager_theme'");
+		if ($theme = $this->modx->db->getValue($theme)) {
+			$this->theme = ($theme <> '') ? '/' . $theme : '';
 			return $this->theme;
 		} else {
 			return '';

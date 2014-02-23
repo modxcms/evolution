@@ -121,8 +121,7 @@ class AjaxSearchLog {
         global $modx;
 
         $rs = $modx->db->select('count(*) AS count', $this->_tbName);
-        $row = $modx->db->getRow($rs);
-        $nbLogs = $row['count'];
+        $nbLogs = $modx->db->getValue($rs);
 
         if ($nbLogs + 1 > $this->_purge) {
             $modx->db->delete($this->_tbName);

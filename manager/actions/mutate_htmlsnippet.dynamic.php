@@ -25,9 +25,9 @@ $tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 // Check to see the snippet editor isn't locked
-$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($lock = $modx->db->getRow($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']));
+$rs = $modx->db->select('username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['chunk']));
     }
 
 $content = array();

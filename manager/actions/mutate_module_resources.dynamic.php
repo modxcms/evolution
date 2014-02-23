@@ -24,9 +24,9 @@ $tbl_site_tmplvars      = $modx->getFullTableName('site_tmplvars');
 $modx->manager->initPageViewState();
 
 // check to see the  editor isn't locked
-$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($lock = $modx->db->getRow($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'module'));
+$rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'module'));
 	}
 // end check for lock
 
@@ -74,8 +74,7 @@ switch ($_REQUEST['op']) {
 			}
 			// get guid
 			$ds = $modx->db->select('guid', $tbl_site_modules, "id='{$id}'");
-				$row = $modx->db->getRow($ds);
-				$guid = $row['guid'];
+				$guid = $modx->db->getValue($ds);
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
 				if ($cp) $modx->db->update(array('moduleguid'=>''), $tbl_site_plugins, "id IN (".implode(',', $plids).") AND moduleguid='{$guid}'");

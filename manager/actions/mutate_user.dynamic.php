@@ -19,9 +19,9 @@ switch((int) $_REQUEST['a']) {
 $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
-$rs = $modx->db->select('internalKey,username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($lock = $modx->db->getRow($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $lock['username'], "user"));
+$rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "user"));
 	}
 // end check for lock
 

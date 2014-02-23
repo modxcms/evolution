@@ -25,9 +25,9 @@ $tbl_active_users = $modx->getFullTableName('active_users');
 $tbl_user_roles   = $modx->getFullTableName('user_roles');
 
 // check to see the role editor isn't locked
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=35 and id='{$role}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($lock = $modx->db->getRow($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']));
+$rs = $modx->db->select('username',$tbl_active_users,"action=35 and id='{$role}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['role']));
 	}
 // end check for lock
 

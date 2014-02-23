@@ -470,8 +470,7 @@ class ditto {
 		global $modx,$dittoID;
 		$table = $modx->getFullTableName("site_modules");
 		$idResult = $modx->db->select("id", $table,"name='QuickEdit'","id","1");
-		$id = $modx->db->getRow($idResult);
-		$id = $id["id"];
+		$id = $modx->db->getValue($idResult);
 		$custom = array("author","date","url","title");
 		$set = $modx->hasPermission('exec_module');
 		foreach ($fields as $dv) {

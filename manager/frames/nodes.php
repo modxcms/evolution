@@ -72,8 +72,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     // check for deleted documents on reload
     if ($expandAll==2) {
         $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_content'), 'deleted=1');
-        $row = $modx->db->getRow($rs,'num');
-        $count = $row[0];
+        $count = $modx->db->getValue($rs);
         if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
     }
 

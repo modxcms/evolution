@@ -60,8 +60,8 @@ class Qm {
         
         // Individual user language setting (if set)
         $records = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$_SESSION['mgrInternalKey']}'");
-        if ($record = $this->modx->db->getRow($records)) {
-            $manager_language = $record['setting_value'];
+        if ($record_manager_language = $this->modx->db->getValue($records)) {
+            $manager_language = $record_manager_language;
         }
 	
 		// Include_once the language file

@@ -19,8 +19,7 @@ if($_REQUEST['new_parent']=="") {
 
 $rs = $modx->db->select('parent', $modx->getFullTableName('site_content'), "id='{$_REQUEST['id']}'");
 
-$row = $modx->db->getRow($rs);
-$oldparent = $row['parent'];
+$oldparent = $modx->db->getValue($rs);
 $newParentID = $_REQUEST['new_parent'];
 
 // check user has permission to move document to chosen location
@@ -70,8 +69,7 @@ if (!array_search($newParentID, $children)) {
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
 	$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_content'), "parent='{$oldparent}'");
-	$row = $modx->db->getRow($rs);
-	$limit = $row['count(*)'];
+	$limit = $modx->db->getValue($rs);
 
 	if(!$limit>0) {
 		$modx->db->update(

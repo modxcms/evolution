@@ -732,16 +732,12 @@ class DocumentParser {
             // update publish time file
             $timesArr= array ();
             $result = $this->db->select('MIN(pub_date) AS minpub', $this->getFullTableName('site_content'), "pub_date>{$timeNow}");
-            $tmpRow= $this->db->getRow($result);
-            $minpub= $tmpRow['minpub'];
-            if ($minpub != NULL) {
+            if ($minpub = $this->db->getValue($result)) {
                 $timesArr[]= $minpub;
             }
 
             $result = $this->db->select('MIN(unpub_date) AS minunpub', $this->getFullTableName("site_content"), "unpub_date>{$timeNow}");
-            $tmpRow= $this->db->getRow($result);
-            $minunpub= $tmpRow['minunpub'];
-            if ($minunpub != NULL) {
+            if ($minunpub = $this->db->getValue($result)) {
                 $timesArr[]= $minunpub;
             }
 
@@ -920,9 +916,9 @@ class DocumentParser {
 						$replace[$i] = $this->chunkCache[$matches[1][$i]];
 					} else {
 						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
-						if ($row = $this->db->getRow($result)) {
-							$this->chunkCache[$matches[1][$i]] = $row['snippet'];
-							$replace[$i] = $row['snippet'];
+						if ($snippet = $this->db->getValue($result)) {
+							$this->chunkCache[$matches[1][$i]] = $snippet;
+							$replace[$i] = $snippet;
 						} else {
 							$this->chunkCache[$matches[1][$i]] = '';
 							$replace[$i] = '';
@@ -1237,20 +1233,16 @@ class DocumentParser {
             $esc_snip_name = $this->db->escape($snip_name);
             // get from db and store a copy inside cache
             $result= $this->db->select('name,snippet,properties',$tbl_snippets,"name='{$esc_snip_name}'");
-            $added = false;
                 if($row = $this->db->getRow($result))
                 {
                     $snippetObject['name']       = $row['name'];
                     $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
                     $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
-                    $added = true;
+                } else {
+                    $snippetObject['name']       = $snip_name;
+                    $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
+                    $snippetObject['properties'] = '';
                 }
-            if($added === false)
-            {
-                $snippetObject['name']       = $snip_name;
-                $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
-                $snippetObject['properties'] = '';
-            }
         }
         return $snippetObject;
     }
@@ -1677,8 +1669,8 @@ class DocumentParser {
                 $this->documentContent= "[*content*]"; // use blank template
             else {
                 $result= $this->db->select('content', $this->getFullTableName("site_templates"), "id = '{$this->documentObject['template']}'");
-                if ($row= $this->db->getRow($result)) {
-                    $this->documentContent= $row['content'];
+                if ($template_content = $this->db->getValue($result)) {
+                    $this->documentContent = $template_content;
                 } else {
                     $this->messageQuit("Incorrect number of templates returned from database", $sql);
                 }
@@ -2248,9 +2240,8 @@ class DocumentParser {
         if ($this->currentSnippet) {
             $tbl= $this->getFullTableName("site_snippets");
             $rs = $this->db->select('id', $tbl, "name='" . $this->db->escape($this->currentSnippet) . "'", '', 1);
-            $row=  $this->db->getRow($rs);
-            if ($row['id'])
-                return $row['id'];
+            if ($snippetId = $this->db->getValue($rs))
+                return $snippetId;
         }
         return 0;
     }
@@ -2946,16 +2937,12 @@ class DocumentParser {
         if (!is_numeric($to)) {
             // Query for the To ID
             $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$to}'");
-            if ($rs= $this->db->getRow($rs)) {
-                $to= $rs['id'];
-            }
+            $to = $this->db->getValue($rs);
         }
         if (!is_numeric($from)) {
             // Query for the From ID
             $rs = $this->db->select('id', $this->getFullTableName("manager_users"), "username='{$from}'");
-            if ($rs= $this->db->getRow($rs)) {
-                $from= $rs['id'];
-            }
+            $from = $this->db->getValue($rs);
         }
         // insert a new message into user_messages
         $this->db->insert(
@@ -3036,7 +3023,7 @@ class DocumentParser {
                 INNER JOIN " . $this->getFullTableName("user_attributes") . " mua ON mua.internalkey=mu.id",
             "mu.id = '{$uid}'"
             );
-        if ($row= $this->db->getRow($rs)) {
+        if ($row = $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
@@ -3057,7 +3044,7 @@ class DocumentParser {
             "wu.id='{$uid}'"
             );
         $rs= $this->db->query($sql);
-        if ($row= $this->db->getRow($rs)) {
+        if ($row = $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
@@ -3779,19 +3766,15 @@ class DocumentParser {
 				$alias = $this->db->escape($alias);
 				$rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
 				if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-				$row = $this->db->getRow($rs);
-				
-				if($row) $id = $row['id'];
-				else     $id = false;
+				$id = $this->db->getValue($rs);
+				if (!$id) $id = false;
 			}
 		}
 		else
 		{
 			$rs = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$alias}'", 'parent, menuindex');
-			$row = $this->db->getRow($rs);
-			
-			if($row) $id = $row['id'];
-			else     $id = false;
+			$id = $this->db->getValue($rs);
+			if (!$id) $id = false;
 		}
 		return $id;
 	}
