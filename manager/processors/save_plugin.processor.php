@@ -157,11 +157,11 @@ function saveEventListeners($id,$sysevents,$mode) {
         } else {
             $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}' and pluginid='{$id}'");
         }
-        $prevPriority = $modx->db->getRow($rs);
+        $prevPriority = $modx->db->getValue($rs);
         if ($mode == '101') {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] + 1 : 1;
+            $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
         } else {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] : 1;
+            $priority = isset($prevPriority) ? $prevPriority : 1;
         }
         $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$sysevents[$i],'priority'=>$priority);
     }

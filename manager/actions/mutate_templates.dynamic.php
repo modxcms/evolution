@@ -16,20 +16,17 @@ switch((int) $_REQUEST['a']) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+
 $tbl_active_users   = $modx->getFullTableName('active_users');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
-if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-    $id = (int) $_REQUEST['id'];
-    // check to see the template editor isn't locked
-    $rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-        if ($username = $modx->db->getValue($rs)) {
-                $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
-        }
-    // end check for lock
-} else {
-    $id='';
-}
+// check to see the template editor isn't locked
+$rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
+    }
+// end check for lock
 
 $content = array();
 if(!empty($id)) {

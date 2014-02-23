@@ -206,7 +206,7 @@ class Document{
 			$fields = $modx->db->escape($fields);
 			if(isset($this->oldTVs[$tv])){
 				if($this->oldTVs[$tv]==$this->tvNames[$tv]) continue;
-				$sql="UPDATE $tvc SET value='$value' WHERE tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['id']}'";
+				$modx->db->update($fields, $tvc, "tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['id']}'");
 			}
 			else
 				$modx->db->insert($fields, $tvc);
@@ -230,7 +230,7 @@ class Document{
 				INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tvs  ON tvs.id=tvc.tmplvarid WHERE tvc.contentid =".$this->fields['id'].""
 			);
 		$TVs = array();
-		while ($row = mysql_fetch_assoc($result)) $TVs[$row['name']] = $row['value'];
+		while ($row = $modx->db->getRow($result)) $TVs[$row['name']] = $row['value'];
 		return $TVs;
 	}
 	
@@ -241,7 +241,7 @@ class Document{
 		global $modx;
 		$this->tvNames = array();
 		$result = $modx->db->select('id, name', $modx->getFullTableName('site_tmplvars'));
-		while ($row = mysql_fetch_assoc($result)) $this->tvNames[$row['name']] = $row['id'];
+		while ($row = $modx->db->getRow($result)) $this->tvNames[$row['name']] = $row['id'];
 	}
 
   function setAlias ($alias = '') {

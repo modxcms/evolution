@@ -257,7 +257,7 @@ switch ($input['mode']) {
 
 		// invoke OnWebChangePassword event
 		if ($genpassword == 1) {
-			$modx->invokeEvent("OnWebChangePassword", array(
+			$modx->invokeEvent("OnWebChangePassword", array (
 				"userid" => $id,
 				"username" => $newusername,
 				"userpassword" => $newpassword
