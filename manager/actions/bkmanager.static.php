@@ -605,8 +605,8 @@ function import_sql($source,$result_code='import_ok')
 	global $modx,$e;
 	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
-	if(0 < $modx->db->getRecordCount($rs))
+	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
+	if(0 < $modx->db->getValue($rs))
 	{
 		$modx->webAlertAndQuit("Resource is edit now by any user.");
 	}

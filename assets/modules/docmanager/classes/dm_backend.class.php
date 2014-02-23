@@ -260,8 +260,8 @@ class DocManagerBackend {
 					if (count($doc_id) > 0) {
 						foreach ($doc_id as $value) {
 							$docsAdded = 0;
-							$sqlResult = $this->modx->db->select('*', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
-							$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
+							$sqlResult = $this->modx->db->select('count(*)', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
+							$NotAMember = ($this->modx->db->getValue($sqlResult) == 0);
 							if ($NotAMember) {
 								$this->modx->db->insert(
 									array(
@@ -282,8 +282,8 @@ class DocManagerBackend {
 					if (count($doc_id) > 0) {
 						foreach ($doc_id as $value) {
 							$docsRemoved = 0;
-							$sqlResult = $this->modx->db->select('*', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
-							$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
+							$sqlResult = $this->modx->db->select('count(*)', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
+							$AMember = ($this->modx->db->getValue($sqlResult) <> 0);
 							if ($AMember) {
 								$this->modx->db->delete($this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
 								$this->secureWebDocument($value);
@@ -520,8 +520,8 @@ class DocManagerBackend {
 					if ($value !== $row['default_text'] || trim($value) == '') {
 						$output["$name"] = $row['id'];
 					} elseif ($value == $row["default_text"]) {
-						$newSql = $this->modx->db->select("value", $this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
-						if ($this->modx->db->getRecordCount($newSql) == 1) {
+						$newSql = $this->modx->db->select("count(value)", $this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
+						if ($this->modx->db->getValue($newSql) == 1) {
 							$this->modx->db->delete($this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
 						}
 					}

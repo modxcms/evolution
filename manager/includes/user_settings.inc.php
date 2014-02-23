@@ -12,7 +12,6 @@ if (isset ($modx)) {
 if (!empty($user_id)) {
 	// Raymond: grab the user settings from the database.
 	$rs = $modx->db->select('setting_name, setting_value', $modx->getFullTableName('user_settings'), "user=".$modx->getLoginUserID());
-	$number_of_settings = $modx->db->getRecordCount($rs);
 	
 	while ($row = $modx->db->getRow($rs)) {
 		$settings[$row['setting_name']] = $row['setting_value'];

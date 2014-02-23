@@ -800,7 +800,7 @@ class Qm {
             
             // Check if current document is assigned to one or more doc groups
             $result = $this->modx->db->select('count(id)', $table, "document='{$docID}'");
-            $rowCount= $this->modx->db->getRecordCount($result);
+            $rowCount= $this->modx->db->getValue($result);
             
             // If document is assigned to one or more doc groups, check access
             if ($rowCount >= 1) {
@@ -812,7 +812,7 @@ class Qm {
                     
                     // Check if user has access to current document 
                     $result = $this->modx->db->select('count(id)', $table, "document = '{$docID}' AND document_group IN ({$docGroup})");
-                    $rowCount = $this->modx->db->getRecordCount($result);
+                    $rowCount = $this->modx->db->getValue($result);
                     
                     if ($rowCount >= 1) $access = TRUE;
                 }
@@ -891,15 +891,15 @@ class Qm {
 	    // Check permission to TV, is TV in document group?  
 	    if (!$access) {
 	        $result = $this->modx->db->select('count(id)', $table, "tmplvarid = '{$tvId}'");
-            $rowCount = $this->modx->db->getRecordCount($result);
+            $rowCount = $this->modx->db->getValue($result);
             // TV is not in any document group
             if ($rowCount == 0) { $access = TRUE; }    
 	    }
 	    
 	    // Check permission to TV, TV is in document group 
 	    if (!$access && $this->docGroup != '') {
-            $result = $this->modx->db->select('id', $table, "tmplvarid = '{$tvId}' AND documentgroup IN ({$this->docGroup})");
-            $rowCount = $this->modx->db->getRecordCount($result);
+            $result = $this->modx->db->select('count(id)', $table, "tmplvarid = '{$tvId}' AND documentgroup IN ({$this->docGroup})");
+            $rowCount = $this->modx->db->getValue($result);
             if ($rowCount >= 1) { $access = TRUE; }
         }    
         
@@ -934,9 +934,9 @@ class Qm {
 		$locked = TRUE;
 		$userId = $_SESSION['mgrInternalKey'];
 
-		$result = $this->modx->db->select('internalKey', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
+		$result = $this->modx->db->select('count(internalKey)', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
 
-		if ($this->modx->db->getRecordCount($result) === 0) {
+		if ($this->modx->db->getValue($result) === 0) {
 			$locked = FALSE;
 		}
 
@@ -1004,10 +1004,10 @@ class Qm {
                 'contentid' => $pageId,
                 'value'     => $tvContent,
                 );
-            $result = $this->modx->db->select('id', $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
+            $result = $this->modx->db->select('count(id)', $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             
             // TV exists, update TV   
-            if($this->modx->db->getRecordCount($result)) {
+            if($this->modx->db->getValue($result)) {
                 $this->modx->db->update($fields, $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             } 
         

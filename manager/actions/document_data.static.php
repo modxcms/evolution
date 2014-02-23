@@ -101,12 +101,12 @@ $childsTable = new makeTable();
 
 // Get child document count
 $rs = $modx->db->select(
-	'DISTINCT sc.id',
+	'count(DISTINCT sc.id)',
 	"{$tbl_site_content} AS sc
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
 	"sc.parent='{$content['id']}' AND ({$access})"
 	);
-$numRecords = $modx->db->getRecordCount($rs);
+$numRecords = $modx->db->getValue($rs);
 
 $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon' ;
 $dir = isset($_REQUEST['dir'])? $_REQUEST['dir']: 'DESC';

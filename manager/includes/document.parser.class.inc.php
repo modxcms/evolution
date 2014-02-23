@@ -534,9 +534,8 @@ class DocumentParser {
                     if (!$pass) {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
-                            $secrs= $this->db->select('id', $tbl_document_groups, "document='{$id}'", '', '1');
-                            if ($secrs)
-                                $seclimit= $this->db->getRecordCount($secrs);
+                            $secrs= $this->db->select('count(id)', $tbl_document_groups, "document='{$id}'", '', '1');
+                                $seclimit= $this->db->getValues($secrs);
                         }
                         if ($seclimit > 0) {
                             // match found but not publicly accessible, send the visitor to the unauthorized_page
@@ -920,8 +919,7 @@ class DocumentParser {
 					if (isset($this->chunkCache[$matches[1][$i]])) {
 						$replace[$i] = $this->chunkCache[$matches[1][$i]];
 					} else {
-						$sql = 'SELECT `snippet` FROM ' . $this->getFullTableName('site_htmlsnippets') . ' WHERE ' . $this->getFullTableName('site_htmlsnippets') . '.`name`="' . $this->db->escape($matches[1][$i]) . '";';
-						$result = $this->db->query($sql);
+						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
 						$limit = $this->db->getRecordCount($result);
 						if ($limit < 1) {
 							$this->chunkCache[$matches[1][$i]] = '';
@@ -1407,12 +1405,12 @@ class DocumentParser {
             if ($this->config['unauthorized_page']) {
                 // method may still be alias, while identifier is not full path alias, e.g. id not found above
                 if ($method === 'alias') {
-                    $secrs = $this->db->select('dg.id', "{$tbldg} as dg, {$tblsc} as sc", "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
+                    $secrs = $this->db->select('count(dg.id)', "{$tbldg} as dg, {$tblsc} as sc", "dg.document = sc.id AND sc.alias = '{$identifier}'", '', 1);
                 } else {
-                    $secrs = $this->db->select('id', $tbldg, "document = '{$identifier}'", '', 1);
+                    $secrs = $this->db->select('count(id)', $tbldg, "document = '{$identifier}'", '', 1);
                 }
                 // check if file is not public
-                    $seclimit= $this->db->getRecordCount($secrs);
+                    $seclimit= $this->db->getValue($secrs);
             }
             if ($seclimit > 0) {
                 // match found but not publicly accessible, send the visitor to the unauthorized_page

@@ -49,7 +49,7 @@ class DocManager {
     function getTheme() {
     	$rs = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), "setting_name='manager_theme'");
 		if ($this->modx->db->getRecordCount($rs)) {
-			$theme = $this->modx->db->getRow($theme);
+			$theme = $this->modx->db->getRow($rs);
 			$this->theme = ($theme['setting_value'] <> '') ? '/' . $theme['setting_value'] : '';
 			return $this->theme;
 		} else {

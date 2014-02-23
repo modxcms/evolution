@@ -312,8 +312,8 @@ class uploader {
 		global $modx;
 
 		// Cleaning uploaded filename?
-		$setting = $modx->db->select('*', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
-		if ($modx->db->getRecordCount($setting)) {
+		$setting = $modx->db->select('count(*)', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
+		if ($modx->db->getValue($setting)>0) {
 			// Transalias plugin active?
 			$res = $modx->db->select('*', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
 			if ($modx->db->getRecordCount($res)) {

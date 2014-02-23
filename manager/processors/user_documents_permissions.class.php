@@ -53,13 +53,13 @@ class udperms{
 			document group is not assigned to a web user group and visa versa.
 		 */
 		$rs = $modx->db->select(
-			'sc.id',
+			'count(sc.id)',
 			"{$tblsc} AS sc 
 				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
 				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
 			"sc.id='{$this->document}' AND (". ( (!$docgrp) ? null : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)"
 			);
-		$limit = $modx->db->getRecordCount($rs);
+		$limit = $modx->db->getValue($rs);
 		if($limit==1) $permissionsok = true;
 		
 		return $permissionsok;
