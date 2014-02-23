@@ -840,7 +840,7 @@ class AjaxSearchOutput {
         global $modx;
         $tbl = $modx->getFullTableName('site_snippets');
         $rs = $modx->db->select('count(*)', $tbl, "name='" . $modx->db->escape($snippetName) . "'");
-        return $modx->db->getValue($rs);
+        return ($modx->db->getValue($rs)>0);
     }
     /*
     * Get offset of other groups

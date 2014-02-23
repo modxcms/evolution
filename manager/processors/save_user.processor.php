@@ -64,7 +64,7 @@ if ($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!");
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$rs = $modx->db->select('count(role)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
+	$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 				webAlertAndQuit("You cannot alter an administrative user.");
@@ -82,7 +82,7 @@ switch ($input['mode']) {
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('count(id)', $tbl_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 				webAlertAndQuit("Email is already in use!");

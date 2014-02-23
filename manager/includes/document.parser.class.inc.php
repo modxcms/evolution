@@ -535,7 +535,7 @@ class DocumentParser {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
                             $secrs= $this->db->select('count(id)', $tbl_document_groups, "document='{$id}'", '', '1');
-                                $seclimit= $this->db->getValues($secrs);
+                                $seclimit= $this->db->getValue($secrs);
                         }
                         if ($seclimit > 0) {
                             // match found but not publicly accessible, send the visitor to the unauthorized_page

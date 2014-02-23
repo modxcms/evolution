@@ -324,8 +324,8 @@ $modx->invokeEvent("OnManagerLogin",
                         ));
 
 // check if we should redirect user to a web page
-$id = $modx->db->getValue($modx->db->select('setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_name='manager_login_startup'"));
-if(isset($id) && $id>0) {
+$id = intval($modx->db->getValue($modx->db->select('setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_name='manager_login_startup'")));
+if($id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;
     else header($header);
