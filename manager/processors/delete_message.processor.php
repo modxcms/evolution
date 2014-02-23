@@ -7,8 +7,7 @@ if(!$modx->hasPermission('messages')) {
 $id=$_REQUEST['id'];
 
 // check the user is allowed to delete this message
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=$id";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('recipient', $modx->getFullTableName('user_messages'), "id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
 	$modx->webAlertAndQuit("Wrong number of messages returned!");

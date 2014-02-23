@@ -47,8 +47,7 @@ switch ($_POST['mode']) {
 							));
 								
 		// disallow duplicate names for new modules
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_modules` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(107);

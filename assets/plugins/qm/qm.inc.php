@@ -59,8 +59,7 @@ class Qm {
         $manager_language = $this->modx->config['manager_language'];
         
         // Individual user language setting (if set)
-        $query = 'SELECT setting_name, setting_value FROM '.$this->modx->getFullTableName('user_settings').' WHERE setting_name=\'manager_language\' AND user='.$_SESSION['mgrInternalKey'];
-        $records = $this->modx->db->query($query);
+        $records = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$_SESSION['mgrInternalKey']}'");
         if ($this->modx->db->getRecordCount($records) > 0) {
             $record = $this->modx->db->getRow($records);
             $manager_language = $record['setting_value'];
@@ -800,8 +799,7 @@ class Qm {
             $table= $this->modx->getFullTableName("document_groups");
             
             // Check if current document is assigned to one or more doc groups
-            $sql= "SELECT id FROM {$table} WHERE document={$docID}";
-            $result= $this->modx->db->query($sql);
+            $result = $this->modx->db->select('count(id)', $table, "document='{$docID}'");
             $rowCount= $this->modx->db->getRecordCount($result);
             
             // If document is assigned to one or more doc groups, check access
@@ -813,8 +811,7 @@ class Qm {
                     $docGroup = implode(",", $mrgDocGroups); 
                     
                     // Check if user has access to current document 
-                    $sql= "SELECT id FROM {$table} WHERE document = {$docID} AND document_group IN ({$docGroup})";
-                    $result= $this->modx->db->query($sql);
+                    $result = $this->modx->db->select('count(id)', $table, "document = '{$docID}' AND document_group IN ({$docGroup})");
                     $rowCount = $this->modx->db->getRecordCount($result);
                     
                     if ($rowCount >= 1) $access = TRUE;
@@ -832,12 +829,10 @@ class Qm {
     // Function from: processors/cache_sync.class.processor.php 
     //_____________________________________________________
     function getParents($id, $path = '') { // modx:returns child's parent
-		global $modx;
 		if(empty($this->aliases)) {
-			$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
-			$qh = $modx->db->query($sql);
+			$qh = $this->modx->db->select("id, IF(alias='', id, alias) AS alias, parent", $this->modx->getFullTableName('site_content'));
 			if ($modx->db->getRecordCount($qh) > 0)	{
-				while ($row = $modx->db->getRow($qh)) {
+				while ($row = $this->modx->db->getRow($qh)) {
 					$this->aliases[$row['id']] = $row['alias'];
 					$this->parents[$row['id']] = $row['parent'];
 				}
@@ -895,8 +890,7 @@ class Qm {
 	    
 	    // Check permission to TV, is TV in document group?  
 	    if (!$access) {
-	        $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId}";
-            $result = $this->modx->db->query($sql);
+	        $result = $this->modx->db->select('count(id)', $table, "tmplvarid = '{$tvId}'");
             $rowCount = $this->modx->db->getRecordCount($result);
             // TV is not in any document group
             if ($rowCount == 0) { $access = TRUE; }    
@@ -904,8 +898,7 @@ class Qm {
 	    
 	    // Check permission to TV, TV is in document group 
 	    if (!$access && $this->docGroup != '') {
-            $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId} AND documentgroup IN ({$this->docGroup})";
-            $result = $this->modx->db->query($sql);
+            $result = $this->modx->db->select('id', $table, "tmplvarid = '{$tvId}' AND documentgroup IN ({$this->docGroup})");
             $rowCount = $this->modx->db->getRecordCount($result);
             if ($rowCount >= 1) { $access = TRUE; }
         }    
@@ -941,12 +934,7 @@ class Qm {
 		$locked = TRUE;
 		$userId = $_SESSION['mgrInternalKey'];
 
-		$sql = "SELECT `internalKey`
-    	          FROM {$activeUsersTable}
-    	          WHERE (`action` = 27)
-    	          AND `internalKey` != '{$userId}'
-    	          AND `id` = '{$pageId}';";
-		$result = $this->modx->db->query($sql);
+		$result = $this->modx->db->select('internalKey', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
 
 		if ($this->modx->db->getRecordCount($result) === 0) {
 			$locked = FALSE;
@@ -1016,11 +1004,7 @@ class Qm {
                 'contentid' => $pageId,
                 'value'     => $tvContent,
                 );
-            $sql = "SELECT id
-                    FROM {$tmplvarContentValuesTable}
-                    WHERE `tmplvarid` = '{$tvId}'
-                    AND `contentid` = '{$pageId}';";
-            $result = $this->modx->db->query($sql);
+            $result = $this->modx->db->select('id', $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             
             // TV exists, update TV   
             if($this->modx->db->getRecordCount($result)) {

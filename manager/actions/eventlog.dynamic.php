@@ -112,13 +112,14 @@ echo $cm->render();
 	<div>
 	<?php
 
-	$sql = "SELECT el.id, ELT(el.type , '".$_style['icons_event1']."' , '".$_style['icons_event2']."' , '".$_style['icons_event3']."' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as 'username' " .
-	       "FROM ".$tbl_event_log." el ".
-	       "LEFT JOIN ".$tbl_manager_users." mu ON mu.id=el.user AND el.usertype=0 ".
-	       "LEFT JOIN ".$tbl_web_users." wu ON wu.id=el.user AND el.usertype=1 ".
-	       ($sqlQuery ? " WHERE ".(is_numeric($sqlQuery)?"(eventid='$sqlQuery') OR ":'')."(source LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
-	       "ORDER BY createdon DESC";
-	$ds = $modx->db->query($sql);
+	$ds = $modx->db->select(
+		"el.id, ELT(el.type , '{$_style['icons_event1']}' , '{$_style['icons_event2']}' , '{$_style['icons_event3']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username",
+		"{$tbl_event_log} AS el 
+			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
+			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1",
+		($sqlQuery ? "".(is_numeric($sqlQuery)?"(eventid='{$sqlQuery}') OR ":'')."(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+		"createdon DESC"
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang['no_records_found'];

@@ -4,8 +4,7 @@ if(!$modx->hasPermission('delete_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "deleted=1");
 $ids = $modx->db->getColumn('id', $rs); 
 
 // invoke OnBeforeEmptyTrash event

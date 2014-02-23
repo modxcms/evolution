@@ -39,8 +39,7 @@ switch ($_POST['mode']) {
 								));
 
 		// disallow duplicate names for new chunks
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_htmlsnippets` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(77);

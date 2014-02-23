@@ -25,8 +25,7 @@ $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=22 AND id='.$id;
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=22 AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
     for ($i=0;$i<$limit;$i++) {
@@ -41,8 +40,7 @@ if($limit>1) {
 
 
 if(isset($_GET['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_snippets.' WHERE id='.$id;
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*', $tbl_site_snippets, "id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         $modx->webAlertAndQuit("Oops, Multiple snippets sharing same unique id. Not good.");
@@ -352,13 +350,14 @@ function decode(s){
             <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
-                    $sql = 'SELECT sm.id,sm.name,sm.guid '.
-                           'FROM '.$tbl_site_modules.' AS sm '.
-                           'INNER JOIN '.$tbl_site_module_depobj.' AS smd ON smd.module=sm.id AND smd.type=40 '.
-                           'INNER JOIN '.$tbl_site_snippets.' AS ss ON ss.id=smd.resource '.
-                           'WHERE smd.resource=\''.$id.'\' AND sm.enable_sharedparams=\'1\' '.
-                           'ORDER BY sm.name';
-                    $ds = $modx->db->query($sql);
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						"{$tbl_site_modules} AS sm 
+							INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
+							INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams=1",
+						'sm.name'
+						);
                     while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
                     }

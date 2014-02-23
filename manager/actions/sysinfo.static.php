@@ -138,16 +138,14 @@ if(!$modx->hasPermission('logs')) {
 			</thead>
 			<tbody>
 		<?php
-		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 ORDER BY editedon DESC LIMIT 20";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('id, pagetitle, editedby, editedon', $modx->getFullTableName('site_content'), 'deleted=0', 'editedon DESC', 20);
 		$limit = $modx->db->getRecordCount($rs);
 		if($limit<1) {
 			echo "<p>".$_lang["no_edits_creates"]."</p>";
 		} else {
 			$i = 0;
 			while ($content = $modx->db->getRow($rs)) {
-				$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=".$content['editedby'];
-				$rs2 = $modx->db->query($sql);
+				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'")
 				$limit2 = $modx->db->getRecordCount($rs2);
 				if($limit2==0) $user = '-';
 				else {
@@ -261,8 +259,7 @@ if(!$modx->hasPermission('logs')) {
 
 		include_once "actionlist.inc.php";
 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>$timetocheck ORDER BY username ASC";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>{$timetocheck}", 'username ASC');
 		$limit = $modx->db->getRecordCount($rs);
 		if($limit<1) {
 			$html = "<p>".$_lang['no_active_users_found']."</p>";

@@ -31,8 +31,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 // get the timestamp on which the document was deleted.
-$sql = "SELECT deletedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.id=".$id." AND deleted=1;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('deletedon', $modx->getFullTableName('site_content'), "id='{$id}' AND deleted=1");
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
 	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
@@ -45,15 +44,13 @@ $children = array();
 
 function getChildren($parent) {
 	
-	global $modx,$dbase;
-	global $table_prefix;
+	global $modx;
 	global $children;
 	global $deltime;
 	
 	$db->debug = true;
 	
-	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=1 AND deletedon=$deltime;";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
 	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
 		// the document has children documents, we'll need to delete those too

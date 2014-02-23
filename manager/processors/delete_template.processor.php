@@ -7,8 +7,7 @@ if(!$modx->hasPermission('delete_template')) {
 $id=intval($_GET['id']);
 
 // delete the template, but first check it doesn't have any documents using it
-$sql = "SELECT id, pagetitle FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.template=".$id." and $dbase.`".$table_prefix."site_content`.deleted=0;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('id, pagetitle,introtext', $modx->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>0) {
 	echo "This template is in use. Please set the documents using the template to another template. Documents using this template:<br />";

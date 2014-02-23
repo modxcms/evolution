@@ -65,7 +65,6 @@ if ($_SESSION['mgrRole'] != 1) {
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
 	$rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'");
-	if ($rs) {
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			// There should only be one if there is one
@@ -74,7 +73,6 @@ if ($_SESSION['mgrRole'] != 1) {
 				webAlertAndQuit("You cannot alter an administrative user.");
 			}
 		}
-	}
 
 }
 

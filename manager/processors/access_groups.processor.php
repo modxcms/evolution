@@ -99,8 +99,8 @@ switch ($operation) {
 		$updategroupaccess = true;
 		$usergroup = intval($_REQUEST['usergroup']);
 		$docgroup = intval($_REQUEST['docgroup']);
-		$sql = 'SELECT count(*) FROM '.$tbl_membergroup_access.' WHERE membergroup='.$usergroup.' AND documentgroup='.$docgroup;
-		$limit = $modx->db->getValue($sql);
+		$rs = $modx->db->select('COUNT(*)', $tbl_membergroup_access, "membergroup='{$usergroup}' AND documentgroup='{$docgroup}'");
+		$limit = $modx->db->getValue($rs);
 		if($limit<=0) {
 			$modx->db->insert(array('membergroup' => $usergroup, 'documentgroup' => $docgroup), $tbl_membergroup_access);
 		} else {

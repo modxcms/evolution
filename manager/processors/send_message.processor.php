@@ -33,8 +33,7 @@ if($sendto=='g') {
 	if($groupid==0) {
 		$modx->webAlertAndQuit($_lang["error_no_group_selected"]);
 	}
-	$sql = "SELECT internalKey FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=$groupid";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('internalKey', $modx->getFullTableName('user_attributes'), "role='{$groupid}'");
 	while ($row=$modx->db->getRow($rs)) {
 		if($row['internalKey']!=$modx->getLoginUserID()) {
 		$modx->db->insert(
@@ -53,8 +52,7 @@ if($sendto=='g') {
 
 
 if($sendto=='a') {
-	$sql = "SELECT id FROM $dbase.`".$table_prefix."manager_users`";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('id', $modx->getFullTableName('manager_users'));
 	while ($row=$modx->db->getRow($rs)) {
 		if($row['id']!=$modx->getLoginUserID()) {
 		$modx->db->insert(

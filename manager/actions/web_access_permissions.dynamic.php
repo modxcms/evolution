@@ -5,8 +5,7 @@ if(!$modx->hasPermission('web_access_permissions')) {
 }
 
 // find all document groups, for the select :)
-$sql = 'SELECT * FROM '.$modx->getFullTableName('documentgroup_names').' ORDER BY name';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*', $modx->getFullTableName('documentgroup_names'), '', 'name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector = "[no groups to add]";
 } else {
@@ -17,8 +16,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector .= "</select>\n";
 }
 
-$sql = 'SELECT * FROM '.$modx->getFullTableName('webgroup_names').' ORDER BY name';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*', $modx->getFullTableName('webgroup_names'), '', 'name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$usrgroupselector = '[no user groups]';
 } else {
@@ -49,14 +47,6 @@ if ($modx->db->getRecordCount($rs) < 1) {
 
 	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
 
-	$sql = 'SELECT '.
-		'groupnames.*, '.
-		'users.id AS user_id, '.
-		'users.username user_name '.
-		'FROM '.$modx->getFullTableName('webgroup_names').' AS groupnames '.
-		'LEFT JOIN '.$modx->getFullTableName('web_groups').' AS groups ON groups.webgroup = groupnames.id '.
-		'LEFT JOIN '.$modx->getFullTableName('web_users').' AS users ON users.id = groups.webuser '.
-		'ORDER BY groupnames.name';
 ?>
 	<table class="permissiongroup">
 		<thead>
@@ -73,7 +63,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		'groupnames.*, users.id AS user_id, users.username user_name ',
+		$modx->getFullTableName('webgroup_names')." AS groupnames
+			LEFT JOIN ".$modx->getFullTableName('web_groups')." AS groups ON groups.webgroup = groupnames.id
+			LEFT JOIN ".$modx->getFullTableName('web_users')." AS users ON users.id = groups.webuser",
+		'',
+		'groupnames.name'
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
@@ -121,15 +118,6 @@ if ($modx->db->getRecordCount($rs) < 1) {
 
 	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
 
-	$sql = 'SELECT '.
-		'dgnames.id, '.
-		'dgnames.name, '.
-		'sc.id AS doc_id, '.
-		'sc.pagetitle AS doc_title '.
-		'FROM '.$modx->getFullTableName('documentgroup_names').' AS dgnames '.
-		'LEFT JOIN '.$modx->getFullTableName('document_groups').' AS dg ON dg.document_group = dgnames.id '.
-		'LEFT JOIN '.$modx->getFullTableName('site_content').' AS sc ON sc.id = dg.document '.
-		'ORDER BY dgnames.name, sc.id';
 ?>
 	<table class="permissiongroup">
 		<thead>
@@ -146,7 +134,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		'dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title',
+		$modx->getFullTableName('documentgroup_names')." AS dgnames
+			LEFT JOIN ".$modx->getFullTableName('document_groups')." AS dg ON dg.document_group = dgnames.id
+			LEFT JOIN ".$modx->getFullTableName('site_content')." AS sc ON sc.id = dg.document",
+		'',
+		'dgnames.name, sc.id'
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
@@ -193,16 +188,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 
 	echo '<p>'.$_lang['access_permissions_links_tab'].'</p>';
 
-	$sql = "SELECT ".
-		"groupnames.*, ".
-		"groupacc.id AS link_id, ".
-		"dgnames.id AS dg_id, ".
-		"dgnames.name AS dg_name ".
-		"FROM ".$modx->getFullTableName('webgroup_names')." AS groupnames ".
-		"LEFT JOIN ".$modx->getFullTableName('webgroup_access')." AS groupacc ON groupacc.webgroup = groupnames.id ".
-		"LEFT JOIN ".$modx->getFullTableName('documentgroup_names')." AS dgnames ON dgnames.id = groupacc.documentgroup ".
-		"ORDER BY name";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		'groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name',
+		$modx->getFullTableName('webgroup_names')." AS groupnames
+			LEFT JOIN ".$modx->getFullTableName('webgroup_access')." AS groupacc ON groupacc.webgroup = groupnames.id
+			LEFT JOIN ".$modx->getFullTableName('documentgroup_names')." AS dgnames ON dgnames.id = groupacc.documentgroup",
+		'',
+		'name'
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {

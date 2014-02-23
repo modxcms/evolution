@@ -33,10 +33,7 @@ class synccache{
     function getParents($id, $path = '') { // modx:returns child's parent
         global $modx;
         if(empty($this->aliases)) {
-            //$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
-            $sql = "SELECT id, IF(alias='', id, alias) AS alias, parent, alias_visible FROM ".$modx->getFullTableName('site_content');
-			
-            $qh = $modx->db->query($sql);
+            $qh = $modx->db->select('id, IF(alias=\'\', id, alias) AS alias, parent, alias_visible', $modx->getFullTableName('site_content'));
             if ($modx->db->getRecordCount($qh) > 0)  {
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
@@ -57,8 +54,7 @@ class synccache{
             $modx = $GLOBALS['modx'];
         }
         if(!isset($this->cachePath)) {
-            echo "Cache path not set.";
-            exit;
+            $modx->messageQuit("Cache path not set.");
         }
         $filesincache = 0;
         $deletedfilesincache = 0;
@@ -72,7 +68,7 @@ class synccache{
                 if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
                     $deletedfilesincache++;
                     $deletedfiles[] = $name;
-                    unlink($file);
+                    @unlink($file);
                 }
             }
 
@@ -84,17 +80,14 @@ class synccache{
 
         // update publish time file
         $timesArr = array();
-        $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.(time() + $modx->config['server_offset_time']);
-        $result = $modx->db->query($sql);
-
+        $result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.(time() + $modx->config['server_offset_time']))
         $tmpRow = $modx->db->getRow($result);
         $minpub = $tmpRow['minpub'];
         if($minpub!=NULL) {
             $timesArr[] = $minpub;
         }
 
-        $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.(time() + $modx->config['server_offset_time']);
-        $result = $modx->db->query($sql);
+        $result = $modx->db->select('MIN(unpub_date) AS minunpub', $modx->getFullTableName('site_content'), 'unpub_date>'.(time() + $modx->config['server_offset_time']));
         $tmpRow = $modx->db->getRow($result);
         $minunpub = $tmpRow['minunpub'];
         if($minunpub!=NULL) {
@@ -155,8 +148,7 @@ class synccache{
         // SETTINGS & DOCUMENT LISTINGS CACHE
 
         // get settings
-        $sql = 'SELECT * FROM '.$modx->getFullTableName('system_settings');
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select('*', $modx->getFullTableName('system_settings'));
         $config = array();
         $tmpPHP .= '$c=&$this->config;'."\n";
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
@@ -170,8 +162,7 @@ class synccache{
         $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
         $tmpPHP .= '$d = &$this->documentListing;' . "\n";
         $tmpPHP .= '$m = &$this->documentMap;' . "\n";
-        $sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, parent, isfolder FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
                 $tmpPath = $this->getParents($tmp1['parent']);
@@ -188,26 +179,25 @@ class synccache{
 
 
         // get content types
-        $sql = 'SELECT id, contentType FROM '.$modx->getFullTableName('site_content')." WHERE contentType != 'text/html'";
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select('id, contentType', $modx->getFullTableName('site_content'), "contentType != 'text/html'");
         $tmpPHP .= '$c = &$this->contentTypes;' . "\n";
         while ($tmp1 = $modx->db->getRow($rs)) {
            $tmpPHP .= '$c['.$tmp1['id'].']'." = '".$tmp1['contentType']."';\n";
         }
 
         // WRITE Chunks to cache file
-        $sql = 'SELECT * FROM '.$modx->getFullTableName('site_htmlsnippets');
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'));
         $tmpPHP .= '$c = &$this->chunkCache;' . "\n";
         while ($tmp1 = $modx->db->getRow($rs)) {
            $tmpPHP .= '$c[\''.$modx->db->escape($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
         }
 
         // WRITE snippets to cache file
-        $sql = 'SELECT ss.*,sm.properties as `sharedproperties` '.
-                'FROM '.$modx->getFullTableName('site_snippets').' ss '.
-                'LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid';
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select(
+			'ss.*, sm.properties as sharedproperties',
+			$modx->getFullTableName('site_snippets').' ss
+				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid'
+			);
         $tmpPHP .= '$s = &$this->snippetCache;' . "\n";
         while ($tmp1 = $modx->db->getRow($rs)) {
            $tmpPHP .= '$s[\''.$modx->db->escape($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
@@ -217,11 +207,11 @@ class synccache{
         }
 
         // WRITE plugins to cache file
-        $sql = 'SELECT sp.*,sm.properties as `sharedproperties`'.
-                'FROM '.$modx->getFullTableName('site_plugins').' sp '.
-                'LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=sp.moduleguid '.
-                'WHERE sp.disabled=0';
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select(
+			'sp.*, sm.properties as sharedproperties',
+			$modx->getFullTableName('site_plugins').' sp
+				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=sp.moduleguid',
+			'sp.disabled=0');
         $tmpPHP .= '$p = &$this->pluginCache;' . "\n";
         while ($tmp1 = $modx->db->getRow($rs)) {
            $tmpPHP .= '$p[\''.$modx->db->escape($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['plugincode'])."';\n";
@@ -230,14 +220,15 @@ class synccache{
 
 
         // WRITE system event triggers
-        $sql = 'SELECT sysevt.name as `evtname`, pe.pluginid, plugs.name
-                FROM '.$modx->getFullTableName('system_eventnames').' sysevt
-                INNER JOIN '.$modx->getFullTableName('site_plugin_events').' pe ON pe.evtid = sysevt.id
-                INNER JOIN '.$modx->getFullTableName('site_plugins').' plugs ON plugs.id = pe.pluginid
-                WHERE plugs.disabled=0
-                ORDER BY sysevt.name,pe.priority';
         $events = array();
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select(
+			'sysevt.name as evtname, pe.pluginid, plugs.name',
+			$modx->getFullTableName('system_eventnames').' sysevt
+				INNER JOIN '.$modx->getFullTableName('site_plugin_events').' pe ON pe.evtid = sysevt.id
+				INNER JOIN '.$modx->getFullTableName('site_plugins').' plugs ON plugs.id = pe.pluginid',
+			'plugs.disabled=0',
+			'sysevt.name,pe.priority'
+			);
         $tmpPHP .= '$e = &$this->pluginEvent;' . "\n";
         while ($evt = $modx->db->getRow($rs)) {
             if(!$events[$evt['evtname']]) $events[$evt['evtname']] = array();

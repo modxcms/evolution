@@ -22,8 +22,7 @@ $sqlQuery = $modx->db->escape($query);
 <ul>
 <?php
 
-$sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` order by name";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
 	echo "<p>The request returned no roles!</p>";

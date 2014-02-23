@@ -44,8 +44,7 @@ switch ($_POST['mode']) {
                                 ));
     
 		// disallow duplicate names for new plugins
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_plugins` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(101);
@@ -154,11 +153,10 @@ function saveEventListeners($id,$sysevents,$mode) {
     $insert_sysevents = array();
     for($i=0;$i<count($sysevents);$i++){
         if ($mode == '101') {
-            $prioritySql = "select max(priority) as priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]}";
+            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}'");
         } else {
-            $prioritySql = "select priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]} and pluginid={$id}";
+            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}' and pluginid='{$id}'");
         }
-        $rs = $modx->db->query($prioritySql);
         $prevPriority = $modx->db->getRow($rs);
         if ($mode == '101') {
             $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] + 1 : 1;

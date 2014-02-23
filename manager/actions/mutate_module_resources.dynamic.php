@@ -24,8 +24,7 @@ $tbl_site_tmplvars      = $modx->getFullTableName('site_tmplvars');
 $modx->manager->initPageViewState();
 
 // check to see the  editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=108 AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
@@ -80,7 +79,7 @@ switch ($_REQUEST['op']) {
 				if($row['type']=='40') $snids[$i]=$row['resource'];
 			}
 			// get guid
-			$ds = $modx->db->query("SELECT * FROM ".$tbl_site_modules." WHERE id='$id'");
+			$ds = $modx->db->select('guid', $tbl_site_modules, "id='{$id}'");
 				$row = $modx->db->getRow($ds);
 				$guid = $row['guid'];
 			// reset moduleguid for deleted resources
@@ -95,8 +94,7 @@ switch ($_REQUEST['op']) {
 }
 
 // load record
-$sql = "SELECT * FROM ".$tbl_site_modules." WHERE id = $id;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*', $tbl_site_modules, "id = '{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
 	$modx->webAlertAndQuit("Multiple modules sharing same unique id. Please contact the Site Administrator.");
@@ -195,24 +193,25 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 	  <tr>
 		<td valign="top" align="left">
 		<?php
-			$sql = "SELECT smd.id,COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) as 'name'," .
-					"CASE smd.type " .
-					" WHEN 10 THEN 'Chunk' " .
-					" WHEN 20 THEN 'Document' " .
-					" WHEN 30 THEN 'Plugin' " .
-					" WHEN 40 THEN 'Snippet' " .
-					" WHEN 50 THEN 'Template' " .
-					" WHEN 60 THEN 'TV' " .
-					"END as 'type' " .
-					"FROM ".$tbl_site_module_depobj." smd ".
-					"LEFT JOIN ".$tbl_site_htmlsnippets." sc ON sc.id = smd.resource AND smd.type = '10' ".
-					"LEFT JOIN ".$tbl_site_content." sd ON sd.id = smd.resource AND smd.type = '20' ".
-					"LEFT JOIN ".$tbl_site_plugins." sp ON sp.id = smd.resource AND smd.type = '30' ".
-					"LEFT JOIN ".$tbl_site_snippets." ss ON ss.id = smd.resource AND smd.type = '40' ".
-					"LEFT JOIN ".$tbl_site_templates." st ON st.id = smd.resource AND smd.type = '50' ".
-					"LEFT JOIN ".$tbl_site_tmplvars." sv ON sv.id = smd.resource AND smd.type = '60' ".
-					"WHERE smd.module=$id ORDER BY smd.type,name ";
-			$ds = $modx->db->query($sql);
+			$ds = $modx->db->select(
+				"smd.id,COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) as name,
+				CASE smd.type
+					WHEN 10 THEN 'Chunk'
+					WHEN 20 THEN 'Document'
+					WHEN 30 THEN 'Plugin'
+					WHEN 40 THEN 'Snippet'
+					WHEN 50 THEN 'Template'
+					WHEN 60 THEN 'TV'
+				END as type",
+				"{$tbl_site_module_depobj} AS smd
+					LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = '10'
+					LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = '20'
+					LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = '30'
+					LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = '40'
+					LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = '50'
+					LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = '60'",
+				"smd.module={$id}",
+				"smd.type,name");
 				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$ds,0); // set page size to 0 t show all items
 				$grd->noRecordMsg = $_lang["no_records_found"];

@@ -149,8 +149,7 @@ class Document{
 		global $modx;
 		// Retrieve id of template if name is given
 		if(!is_numeric($tpl)) {
-			$tablename=$modx->getFullTableName('site_templates');
-			$tpl = $modx->db->getValue("SELECT id FROM $tablename WHERE templatename='$tpl' LIMIT 1");
+			$tpl = $modx->db->getValue($modx->db->select('id', $modx->getFullTableName('site_templates'), "templatename='{$tpl}'", '', 1));
 			if(empty($tpl)) return false;
 		}
 		
@@ -225,10 +224,11 @@ class Document{
     }
 		$tvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 		$tvs = $modx->getFullTableName('site_tmplvars');
-		$sql = 'SeLECT tvs.name as name, tvc.value as value '.
-		       "FROM $tvc tvc INNER JOIN $tvs tvs ".
-			   'ON tvs.id=tvc.tmplvarid WHERE tvc.contentid ='.$this->fields['id'];
-		$result = $modx->db->query($sql);
+		$result = $modx->db->select(
+			'tvs.name as name, tvc.value as value',
+			$modx->getFullTableName('site_tmplvar_contentvalues')." tvc
+				INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tvs  ON tvs.id=tvc.tmplvarid WHERE tvc.contentid =".$this->fields['id'].""
+			);
 		$TVs = array();
 		while ($row = mysql_fetch_assoc($result)) $TVs[$row['name']] = $row['value'];
 		return $TVs;

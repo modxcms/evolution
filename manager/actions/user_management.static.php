@@ -105,31 +105,19 @@ echo $cm->render();
 	</div>
 	<div>
 	<?php
-	$noAdminSql = ($_SESSION['mgrRole'] != 1)? 'mua.role != 1' : '' ;
-	$sql = "SELECT
-		mu.id,
-		mu.username,
-		rname.name AS role,
-		mua.fullname,
-		mua.email,
-		mua.thislogin,
-		IF(mua.gender=1,'".$_lang['user_male']."',IF(mua.gender=2,'".$_lang['user_female']."','-')) AS gender,
-		IF(mua.blocked,'".$_lang['yes']."','-') as blocked " .
-		"FROM ".$modx->getFullTableName('manager_users')." AS mu ".
-		"INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id ".
-		"LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id ";
-	if ($noAdminSql){
-	    if(!empty($sqlQuery)){
-	        $sql .= "WHERE ((mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%')) AND $noAdminSql ";
-	    } else {
-	        $sql .= "WHERE $noAdminSql ";
-	    }
-	} else {
-	    $sql .= (!empty($sqlQuery) ? "WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%') ":"");
-	}
-	$sql .= "ORDER BY mua.blocked ASC, mua.thislogin DESC";
-
-	$ds = $modx->db->query($sql);
+	$where = "";
+	if ($_SESSION['mgrRole'] != 1)
+		$where .= (empty($where)?"":" AND ") . "mua.role != 1";
+	if (!empty($sqlQuery))
+		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
+	$ds = $modx->db->select(
+		"mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked",
+		$modx->getFullTableName('manager_users')." AS mu 
+			INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id 
+			LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id",
+		$where,
+		'mua.blocked ASC, mua.thislogin DESC'
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$modx->config['number_of_results']); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];

@@ -362,13 +362,14 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
-                    $sql =    "SELECT sm.id,sm.name,sm.guid " .
-                            "FROM ".$modx->getFullTableName("site_modules")." sm ".
-                            "INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
-                            "INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
-                            "WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
-                            "ORDER BY sm.name ";
-                    $ds = $modx->db->query($sql);
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						$modx->getFullTableName("site_modules")." sm 
+							INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30
+							INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams='1'",
+						'sm.name'
+						);
                     while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
                     }

@@ -47,8 +47,7 @@ switch ($_POST['mode']) {
 							));	      	
 
 		// disallow duplicate names for new tvs
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_tmplvars` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(*)', $tbl_site_tmplvars, "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(300);
@@ -163,7 +162,6 @@ switch ($_POST['mode']) {
 }
 
 function saveTemplateAccess() {	
-	global $dbase,$table_prefix;
 	global $id,$newid;
 	global $modx;
 
@@ -171,11 +169,11 @@ function saveTemplateAccess() {
 	$templates =  $_POST['template']; // get muli-templates based on S.BRENNAN mod
 		
 	// update template selections
-	$tbl = "$dbase.`".$table_prefix."site_tmplvar_templates`";
+	$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 	
     $getRankArray = array();
 
-    $getRank = $modx->db->select("templateid, rank", $tbl, "tmplvarid=$id");
+    $getRank = $modx->db->select("templateid, rank", $tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 
     while( $row = $modx->db->getRow( $getRank ) ) {
     $getRankArray[$row['templateid']] = $row['rank'];

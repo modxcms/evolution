@@ -168,14 +168,14 @@ function deletedocument() {
     <input type="submit" name="save" style="display:none">
 
 <?php
-$sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
-    FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
-    INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
-    LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
-    WHERE tr.templateid='{$id}' ORDER BY tr.rank, tv.rank, tv.id";
-
-
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
+    $modx->getFullTableName('site_tmplvar_templates')." tr
+		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
+		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
+    "tr.templateid='{$id}'",
+	"tr.rank, tv.rank, tv.id"
+	);
 $limit = $modx->db->getRecordCount($rs);
 ?>
     </div>

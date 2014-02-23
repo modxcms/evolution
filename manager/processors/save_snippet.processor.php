@@ -48,8 +48,7 @@ switch ($_POST['mode']) {
 								));
 								
 		// disallow duplicate names for new snippets
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_snippets` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_snippets'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(23);

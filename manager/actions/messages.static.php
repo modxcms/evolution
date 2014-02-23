@@ -10,8 +10,7 @@ if(!$modx->hasPermission('messages')) {
 <div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".(int)$_REQUEST['id'];
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".(int)$_REQUEST['id']."'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
     echo "Wrong number of messages returned!";
@@ -26,8 +25,7 @@ if($limit!=1) {
         if($sender==0) {
             $sendername = $_lang['messages_system_user'];
         } else {
-            $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-            $rs2 = $modx->db->query($sql);
+            $rs = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'")
             $row2 = $modx->db->getRow($rs2);
             $sendername = $row2['username'];
         }
@@ -94,8 +92,7 @@ if($limit!=1) {
 <div class="sectionHeader"><?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
-$sql = "SELECT count(id) FROM $dbase.`".$table_prefix."user_messages` WHERE recipient=".$modx->getLoginUserID()."";
-$rs=$modx->db->query($sql);
+$rs = $modx->db->select('count(id)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
 $countrows = $modx->db->getRow($rs);
 $num_rows = $countrows['count(id)'];
 
@@ -141,8 +138,7 @@ $pager .=  $array_paging['next_link'] ."&gt;&gt;". (isset($array_paging['next_li
 // Of course you can now play with array_row_paging in order to print
 // only the results you would like...
 
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.recipient=".$modx->getLoginUserID()." ORDER BY postdate DESC LIMIT ".$int_cur_position.", ".$int_num_result;
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     echo $_lang['messages_no_messages'];
@@ -168,8 +164,7 @@ $dotablestuff = 1;
             if($sender==0) {
                 $sendername = "[System]";
             } else {
-                $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-                $rs2 = $modx->db->query($sql);
+                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
                 $row2 = $modx->db->getRow($rs2);
                 $sendername = $row2['username'];
             }
@@ -195,8 +190,7 @@ if($dotablestuff==1) { ?>
 <div class="sectionHeader"><?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".$_REQUEST['id']."'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit!=1) {
         echo "Wrong number of messages returned!";
@@ -211,8 +205,7 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
             if($sender==0) {
                 $sendername = "[System]";
             } else {
-                $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-                $rs2 = $modx->db->query($sql);
+                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
                 $row2 = $modx->db->getRow($rs2);
                 $sendername = $row2['username'];
             }
@@ -258,8 +251,7 @@ function hideSpans(showSpan) {
 <span id='userspan' style="display:block;"> <?php echo $_lang['messages_select_user']; ?>:&nbsp;
     <?php
     // get all usernames
-    $sql = "SELECT username, id FROM $dbase.`".$table_prefix."manager_users`";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('username, id', $modx->getFullTableName('manager_users'));
     ?>
     <select name="user" class="inputBox" style="width:150px">
     <?php
@@ -274,8 +266,7 @@ function hideSpans(showSpan) {
 <span id='groupspan' style="display:none;"> <?php echo $_lang['messages_select_group']; ?>:&nbsp;
     <?php
     // get all usernames
-    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."user_roles`";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('name, id', $modx->getFullTableName('user_roles'));
     ?>
     <select name="group" class="inputBox" style="width:150px">
     <?php
@@ -324,12 +315,10 @@ function hideSpans(showSpan) {
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()." and messageread=0;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()." and messageread=0");
 $row = $modx->db->getRow($rs);
 $_SESSION['nrnewmessages'] = $row['count(*)'];
-$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()."";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
 $row = $modx->db->getRow($rs);
 $_SESSION['nrtotalmessages'] = $row['count(*)'];
 $messagesallowed = $modx->hasPermission('messages');

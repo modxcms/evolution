@@ -19,8 +19,7 @@ switch((int) $_REQUEST['a']) {
 $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=12 AND $dbase.`" . $table_prefix . "active_users`.id=$user";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('internalKey,username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}'");
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
 	for ($i = 0; $i < $limit; $i++) {
@@ -34,8 +33,7 @@ if ($limit > 1) {
 
 if ($_REQUEST['a'] == '12') {
 	// get user attribute
-	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "user_attributes` WHERE $dbase.`" . $table_prefix . "user_attributes`.internalKey = " . $user . ";";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('*', $modx->getFullTableName('user_attributes'), "internalKey = '{$user}'");
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
 		$modx->webAlertAndQuit("More than one user returned!");
@@ -46,8 +44,7 @@ if ($_REQUEST['a'] == '12') {
 	$userdata = $modx->db->getRow($rs);
 
 	// get user settings
-	$sql = "SELECT us.* FROM $dbase.`" . $table_prefix . "user_settings` us WHERE us.user = " . $user . ";";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('*', $modx->getFullTableName('user_settings'), "user = '{$user}'");
 	$usersettings = array ();
 	while ($row = $modx->db->getRow($rs))
 		$usersettings[$row['setting_name']] = $row['setting_value'];
@@ -59,8 +56,7 @@ if ($_REQUEST['a'] == '12') {
 	}
 	
 	// get user name
-	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "manager_users` WHERE $dbase.`" . $table_prefix . "manager_users`.id = " . $user . ";";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('*', $modx->getFullTableName('manager_users'), "id = '{$user}'");
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
 		$modx->webAlertAndQuit("More than one user returned while getting username!");
@@ -321,9 +317,7 @@ if (is_array($evtOut))
 			<td>
 		<?php
 
-$notAdmin = ($_SESSION['mgrRole'] == 1) ? "" : "WHERE id != 1";
-$sql = "select name, id from $dbase.`" . $table_prefix . "user_roles` $notAdmin";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('name, id', $modx->getFullTableName('user_roles'), ($_SESSION['mgrRole'] == 1) ? '' : 'id != 1');
 ?>
 		<select name="role" class="inputBox" onchange='documentDirty=true;' style="width:300px">
 		<?php
@@ -790,8 +784,7 @@ if (is_array($evtOut))
 	$groupsarray = array ();
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
-		$sql = "SELECT * FROM $dbase.`" . $table_prefix . "member_groups` where member=" . $_GET['id'] . "";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('*', $modx->getFullTableName('member_groups'), "member='{$_GET['id']}'");
 		while ($currentgroup=$modx->db->getRow($rs)) {
 			$groupsarray[$i] = $currentgroup['user_group'];
 		}
@@ -810,8 +803,7 @@ if (is_array($evtOut))
     <div class="sectionBody">
 <?php
 	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
-	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('name, id', $modx->getFullTableName('membergroup_names'), '', 'name');
 	while ($row=$modx->db->getRow($rs)) {
 		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}

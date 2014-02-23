@@ -106,12 +106,13 @@ echo $cm->render();
 	<div>
 	<?php
 
-	$sql = "SELECT wu.id,wu.username,wua.fullname,wua.email,IF(wua.gender=1,'".$_lang['user_male']."',IF(wua.gender=2,'".$_lang['user_female']."','-')) as 'gender',IF(wua.blocked,'".$_lang['yes']."','-') as 'blocked'" .
-			"FROM ".$modx->getFullTableName("web_users")." wu ".
-			"INNER JOIN ".$modx->getFullTableName("web_user_attributes")." wua ON wua.internalKey=wu.id ".
-			($sqlQuery ? " WHERE (wu.username LIKE '$sqlQuery%') OR (wua.fullname LIKE '%$sqlQuery%') OR (wua.email LIKE '$sqlQuery%')":"")." ".
-			"ORDER BY username";
-	$ds = $modx->db->query($sql);
+	$ds = $modx->db->select(
+		"wu.id, wu.username, wua.fullname, wua.email, ELT(wua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'",
+		$modx->getFullTableName("web_users")." wu 
+			INNER JOIN ".$modx->getFullTableName("web_user_attributes")." wua ON wua.internalKey=wu.id",
+		($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '{$sqlQuery}%')":""),
+		'username'
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];

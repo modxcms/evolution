@@ -100,8 +100,7 @@ $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_n
 
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
-$sql = "SELECT id, pagetitle, description FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND ($dbase.`".$table_prefix."site_content`.editedby=".$modx->getLoginUserID()." OR $dbase.`".$table_prefix."site_content`.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('id, pagetitle, description', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     $html .= '<li>'.$_lang['no_activity_message'].'</li>';
@@ -154,8 +153,7 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
 
     include_once "actionlist.inc.php";
 
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>'$timetocheck' ORDER BY username ASC";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
     $limit = $modx->db->getRecordCount($rs);
     if($limit<1) {
         $html = "<p>".$_lang['no_active_users_found']."</p>";

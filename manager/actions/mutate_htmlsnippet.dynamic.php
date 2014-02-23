@@ -25,8 +25,7 @@ $tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 // Check to see the snippet editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=78 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('internalKey,username', $tbl_active_users, "action=78 AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
@@ -39,8 +38,7 @@ if ($limit > 1) {
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_htmlsnippets.' WHERE id=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*', $tbl_site_htmlsnippets, "id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
         $modx->webAlertAndQuit("Error: Multiple Chunk sharing same unique ID.");

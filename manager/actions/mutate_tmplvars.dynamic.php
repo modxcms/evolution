@@ -16,8 +16,7 @@ $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
 
 // check to see the variable editor isn't locked
-$tbl_active_users = $modx->getFullTableName('active_users');
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
+$rs = $modx->db->select('internalKey,username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}'");
 $total = $modx->db->getRecordCount($rs);
 if($total>1)
 {
@@ -443,11 +442,8 @@ function decode(s){
 <!-- Access Permissions -->
 	<?php
 	if($use_udperms==1) {
-	    $groupsarray = array();
-
 	    // fetch permissions for the variable
-	    $sql = "SELECT documentgroup FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
-	    $rs = $modx->db->query($sql);
+	    $rs = $modx->db->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
 	    $groupsarray = $modx->db->getColumn('documentgroup', $rs);
 
 ?>

@@ -14,12 +14,14 @@ function secureMgrDocument($docid='') {
 	global $modx;
 		
 	$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 0 WHERE ".($docid>0 ? "id='$docid'":"privatemgr = 1"));
-	$sql =  "SELECT DISTINCT sc.id 
-			 FROM ".$modx->getFullTableName("site_content")." sc
-			 LEFT JOIN ".$modx->getFullTableName("document_groups")." dg ON dg.document = sc.id
-			 LEFT JOIN ".$modx->getFullTableName("membergroup_access")." mga ON mga.documentgroup = dg.document_group
-			 WHERE ".($docid>0 ? " sc.id='$docid' AND ":"")."mga.id>0";
-	$ids = $modx->db->getColumn("id",$sql);
+	$rs = $modx->db->select(
+		'DISTINCT sc.id',
+		$modx->getFullTableName("site_content")." sc
+			LEFT JOIN ".$modx->getFullTableName("document_groups")." dg ON dg.document = sc.id
+			LEFT JOIN ".$modx->getFullTableName("membergroup_access")." mga ON mga.documentgroup = dg.document_group",
+		($docid>0 ? " sc.id='{$docid}' AND ":"")."mga.id>0"
+		);
+	$ids = $modx->db->getColumn("id",$rs);
 	if(count($ids)>0) {
 		$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
 	}

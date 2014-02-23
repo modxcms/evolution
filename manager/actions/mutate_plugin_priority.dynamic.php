@@ -28,15 +28,14 @@ if(isset($_POST['listSubmitted'])) {
     $modx->clearCache('full');
 }
 
-$sql = "
-	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority, plugs.disabled
-	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
-	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
-	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
-	ORDER BY sysevt.name,pe.priority
-";
-
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled",
+	$modx->getFullTableName('system_eventnames')." sysevt
+		INNER JOIN ".$modx->getFullTableName('site_plugin_events')." pe ON pe.evtid = sysevt.id
+		INNER JOIN ".$modx->getFullTableName('site_plugins')." plugs ON plugs.id = pe.pluginid",
+	'',
+	'sysevt.name,pe.priority'
+	);
 $limit = $modx->db->getRecordCount($rs);
 
 $insideUl = 0;

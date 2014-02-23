@@ -31,13 +31,14 @@ if(isset($_POST['listSubmitted'])) {
     $modx->clearCache('full');
 }
 
-$sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.templatename '.
-       'FROM '.$tbl_site_tmplvar_templates.' AS tr '.
-       'INNER JOIN '.$tbl_site_tmplvars.' AS tv ON tv.id = tr.tmplvarid '.
-       'INNER JOIN '.$tbl_site_templates.' AS tm ON tr.templateid = tm.id '.
-       'WHERE tr.templateid='.(int)$_REQUEST['id'].' ORDER BY tr.rank, tv.rank, tv.id';
-
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"tv.name AS name, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
+	"{$tbl_site_tmplvar_templates} AS tr
+		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
+		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
+	"tr.templateid='".(int)$_REQUEST['id']."'",
+	"tr.rank, tv.rank, tv.id"
+	);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit>1) {

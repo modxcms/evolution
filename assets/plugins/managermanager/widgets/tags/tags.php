@@ -67,9 +67,7 @@ function mm_widget_tags($fields, $delimiter = ',', $source = '', $display_count 
 			$sql_sources = implode(',', $source_tvs[0]);
 			
 			// Get the list of current values for this TV
-			$sql = 'SELECT `value` FROM '.$modx->getFullTableName('site_tmplvar_contentvalues').' WHERE tmplvarid IN ('.$sql_sources.')';
-			
-			$result = $modx->db->query($sql);
+			$result = $modx->db->select('value', $modx->getFullTableName('site_tmplvar_contentvalues'), "WHERE tmplvarid IN ({$sql_sources})");
 			$all_docs = $modx->db->makeArray($result);
 			
 			$foundTags = array();

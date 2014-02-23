@@ -17,8 +17,7 @@ $modx->manager->initPageViewState();
 		var requireConfirm=false;
 		var deleteList="";
 	<?php 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC')
 		while ($row=$modx->db->getRow($rs)) {
 		?>
 
@@ -161,10 +160,7 @@ $modx->manager->initPageViewState();
 	<div>
 	<?php
 
-		$sql = "SELECT * " .
-				"FROM ".$modx->getFullTableName("site_metatags")." st ".
-				"ORDER BY name";
-		$ds = $modx->db->query($sql);
+		$ds = $modx->db->select('*', $modx->getFullTableName("site_metatags"), '', 'name');
 		include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
@@ -197,8 +193,7 @@ $modx->manager->initPageViewState();
 <div class="sectionHeader"><?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-	$ds = $modx->db->query($sql);
+	$ds = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC');
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_keywords_found"];
 	$grd->cssClass="grid";

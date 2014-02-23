@@ -97,8 +97,8 @@ switch ($operation) {
 		$updategroupaccess = true;
 		$usergroup = intval($_REQUEST['usergroup']);
 		$docgroup = intval($_REQUEST['docgroup']);
-		$sql = 'SELECT count(*) FROM '.$tbl_webgroup_access.' WHERE webgroup='.$usergroup.' AND documentgroup='.$docgroup;
-		$limit = $modx->db->getValue($sql);
+		$rs = $modx->db->select('COUNT(*)', $tbl_webgroup_access, "webgroup='{$usergroup}' AND documentgroup='{$docgroup}'");
+		$limit = $modx->db->getValue($rs);
 		if($limit<=0) {
 			$modx->db->insert(array('webgroup'=>$usergroup, 'documentgroup'=>$docgroup), $tbl_webgroup_access);
 		} else {

@@ -75,10 +75,10 @@ if ($friendly_urls) {
 	if (!$alias && $automatic_alias) {
 		$alias = strtolower($modx->stripAlias(trim($pagetitle)));
 		if(!$allow_duplicate_alias) {
-			if ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias'") != 0) {
+			if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$alias'")) != 0) {
 				$cnt = 1;
 				$tempAlias = $alias;
-				while ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$tempAlias'") != 0) {
+				while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND alias='$tempAlias'")) != 0) {
 					$tempAlias = $alias;
 					$tempAlias .= $cnt;
 					$cnt++;
@@ -86,10 +86,10 @@ if ($friendly_urls) {
 				$alias = $tempAlias;
 			}
 		}else{
-                if ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$alias'") != 0) {
+                if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
                         $cnt = 1;
                         $tempAlias = $alias;
-                        while ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$tempAlias'") != 0) {
+                        while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
                                 $tempAlias = $alias;
                                 $tempAlias .= $cnt;
                                 $cnt++;
@@ -104,9 +104,9 @@ if ($friendly_urls) {
 		$alias = $modx->stripAlias($alias);
 		if ($use_alias_path) {
 			// only check for duplicates on the same level if alias_path is on
-			$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+			$docid = $modx->db->getValue($modx->db->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
 		} else {
-			$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' LIMIT 1");
+			$docid = $modx->db->getValue($modx->db->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias'", '', 1));
 		}
 		if ($docid > 0) {
 			if ($actionToTake == 'edit') {
@@ -123,7 +123,7 @@ if ($friendly_urls) {
 	elseif ($alias) {
 		$alias = $modx->stripAlias($alias);
 		//webber
-		$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+		$docid = $modx->db->getValue($modx->db->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
                 if ($docid > 0) {
                         if ($actionToTake == 'edit') {
                                 $modx->manager->saveFormValues(27);
@@ -176,11 +176,7 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 	$document_group_list = implode(',', $document_groups);
 	$document_group_list = implode(',', array_filter(explode(',',$document_group_list), 'is_numeric'));
 	if(!empty($document_group_list)) {
-		$sql = "SELECT COUNT(mg.id) FROM {$tbl_membergroup_access} mga, {$tbl_member_groups} mg
- WHERE mga.membergroup = mg.user_group
- AND mga.documentgroup IN({$document_group_list})
- AND mg.member = {$_SESSION['mgrInternalKey']};";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(mg.id)', "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg", "mga.membergroup = mg.user_group AND mga.documentgroup IN({$document_group_list}) AND mg.member = {$_SESSION['mgrInternalKey']}");
 		$count = $modx->db->getValue($rs);
 		if($count == 0) {
 			if ($actionToTake == 'edit') {
@@ -194,13 +190,15 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 	}
 }
 
-$sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-$sql .= "FROM $tbl_site_tmplvars AS tv ";
-$sql .= "INNER JOIN $tbl_site_tmplvar_templates AS tvtpl ON tvtpl.tmplvarid = tv.id ";
-$sql .= "LEFT JOIN $tbl_site_tmplvar_contentvalues AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
-$sql .= "LEFT JOIN $tbl_site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
-$sql .= "WHERE tvtpl.templateid = '" . $template . "' AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tv.rank;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+	"{$tbl_site_tmplvars} AS tv
+		INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
+		LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$id}'
+		LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
+	"tvtpl.templateid = '{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ")",
+	"tv.rank"
+	);
 while ($row = $modx->db->getRow($rs)) {
 	$tmplvar = '';
 	switch ($row['type']) {
@@ -248,7 +246,7 @@ while ($row = $modx->db->getRow($rs)) {
 
 // get the document, but only if it already exists
 if ($actionToTake != "new") {
-	$rs = $modx->db->select('*', $tbl_site_content, 'id='.$id);
+	$rs = $modx->db->select('*', $tbl_site_content, "id='{$id}'");
 	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
 		$modx->webAlertAndQuit($_lang["error_many_results"]);
@@ -446,10 +444,6 @@ switch ($actionToTake) {
 
 		// get the document's current parent
 		$rs = $modx->db->select('parent', $tbl_site_content, 'id='.$_REQUEST['id']);
-		if (!$rs) {
-			$modx->manager->saveFormValues(27);
-			$modx->webAlertAndQuit("An error occured while attempting to find the document's current parent.");
-		}
 		
 		$row = $modx->db->getRow($rs);
 		$oldparent = $row['parent'];
@@ -470,17 +464,13 @@ switch ($actionToTake) {
 		}
 		// check to see document is a folder
 		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='. $_REQUEST['id']);
-		if (!$rs) {
-			$modx->manager->saveFormValues(27);
-			$modx->webAlertAndQuit("An error occured while attempting to find the document's children.");
-		}
 		$row = $modx->db->getRow($rs);
 		if ($row['COUNT(id)'] > 0) {
 			$isfolder = 1;
 		}
 
 		// set publishedon and publishedby
-		$was_published = $modx->db->getValue("SELECT published FROM $tbl_site_content WHERE id='$id'");
+		$was_published = $modx->db->getValue($modx->db->select('published', $tbl_site_content, "id='{$id}'"));
 
 		// keep original publish state, if change is not permitted
 		if (!$modx->hasPermission('publish_document')) {
@@ -592,12 +582,12 @@ switch ($actionToTake) {
 			// grab the current set of permissions on this document the user can access
 			$isManager = $modx->hasPermission('access_permissions');
 			$isWeb     = $modx->hasPermission('web_access_permissions');
-			$sql = 'SELECT groups.id, groups.document_group FROM '.$tbl_document_groups.' AS groups '.
-			       'LEFT JOIN '.$tbl_documentgroup_names.' AS dgn ON dgn.id = groups.document_group '.
-			       'WHERE ((1='.(int)$isManager.' AND dgn.private_memgroup) '.
-			       'OR    (1='.(int)$isWeb.' AND dgn.private_webgroup))'.
-			       'AND groups.document = '.$id;
-			$rs = $modx->db->query($sql);
+			$rs = $modx->db->select(
+				'groups.id, groups.document_group',
+				"{$tbl_document_groups} AS groups
+					LEFT JOIN {$tbl_documentgroup_names} AS dgn ON dgn.id = groups.document_group",
+				"((1=".(int)$isManager." AND dgn.private_memgroup) OR (1=".(int)$isWeb." AND dgn.private_webgroup)) AND groups.document = '{$id}'"
+				);
 			$old_groups = array();
 			while ($row = $modx->db->getRow($rs)) $old_groups[$row['document_group']] = $row['id'];
 
@@ -631,9 +621,6 @@ switch ($actionToTake) {
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder
 		$rs = $modx->db->select('COUNT(id)', $tbl_site_content, 'parent='.$oldparent);
-		if (!$rs) {
-			$modx->webAlertAndQuit("An error occured while attempting to find the old parents' children.");
-		}
 		$row = $modx->db->getRow($rs);
 		$limit = $row['COUNT(id)'];
 

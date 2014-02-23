@@ -39,8 +39,7 @@ switch ($_POST['mode']) {
 							));	
 							
 		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(19);
@@ -89,9 +88,8 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 							));	   
 		
-		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}' AND id != '{$id}'";
-		$rs = $modx->db->query($sql);
+		// disallow duplicate names for templates
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(16);
