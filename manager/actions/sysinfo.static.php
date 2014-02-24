@@ -145,7 +145,7 @@ if(!$modx->hasPermission('logs')) {
 		} else {
 			$i = 0;
 			while ($content = $modx->db->getRow($rs)) {
-				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'")
+				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'");
 				$content['user'] = $modx->db->getValue($rs2);
 				if(!$content['user']) $content['user'] = '-';
 				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
