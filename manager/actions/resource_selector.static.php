@@ -54,38 +54,62 @@ if($_SESSION['browser']==='legacy_IE') {
 	switch($rt){
 		case "snip":
 			$title = $_lang["snippet"];
-			$sql="SELECT id,name,description FROM ".$modx->getFullTableName("site_snippets").
-			($sqlQuery ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ORDER BY name";
+			$ds = $modx->db->select(
+				'id,name,description',
+				$modx->getFullTableName("site_snippets"),
+				($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+				'name'
+				);
 			break;
 
 		case "tpl":
 			$title = $_lang["template"];
-			$sql="SELECT id,templatename as 'name',description FROM ".$modx->getFullTableName("site_templates").
-			($sqlQuery ? " WHERE (templatename LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ORDER BY templatename";
+			$ds = $modx->db->select(
+				'id,templatename as name,description',
+				$modx->getFullTableName("site_templates"),
+				($sqlQuery ? "(templatename LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+				'templatename'
+				);
 			break;
 
 		case("tv"):
 			$title = $_lang["tv"];
-			$sql="SELECT id,name,description FROM ".$modx->getFullTableName("site_tmplvars").
-			($sqlQuery ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ORDER BY name";
+			$ds = $modx->db->select(
+				'id,name,description',
+				$modx->getFullTableName("site_tmplvars"),
+				($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+				'name'
+				);
 			break;
 
 		case("chunk"):
 			$title = $_lang["chunk"];
-			$sql="SELECT id,name,description FROM ".$modx->getFullTableName("site_htmlsnippets").
-			($sqlQuery ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ORDER BY name";
+			$ds = $modx->db->select(
+				'id,name,description',
+				$modx->getFullTableName("site_htmlsnippets"),
+				($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+				'name'
+				);
 			break;
 
 		case("plug"):
 			$title = $_lang["plugin"];
-			$sql="SELECT id,name,description FROM ".$modx->getFullTableName("site_plugins").
-			($sqlQuery ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ORDER BY name";
+			$ds = $modx->db->select(
+				'id,name,description',
+				$modx->getFullTableName("site_plugins"),
+				($sqlQuery ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+				'name'
+				);
 			break;
 
 		case("doc"):
 			$title = $_lang["resource"];
-			$sql="SELECT id,pagetitle as 'name',longtitle as 'description' FROM ".$modx->getFullTableName("site_content").
-			($sqlQuery ? " WHERE (pagetitle LIKE '%$sqlQuery%') OR (longtitle LIKE '%$sqlQuery%')":"")." ORDER BY pagetitle";
+			$ds = $modx->db->select(
+				'id,pagetitle as name,longtitle as description',
+				$modx->getFullTableName("site_content"),
+				($sqlQuery ? "(pagetitle LIKE '%{$sqlQuery}%') OR (longtitle LIKE '%{$sqlQuery}%')":""),
+				'pagetitle'
+				);
 			break;
 			
 	}
@@ -183,7 +207,6 @@ if($_SESSION['browser']==='legacy_IE') {
 	  <tr>
 		<td valign="top" align="left">
 		<?php
-			$ds = $modx->db->query($sql);
 				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 				$grd->noRecordMsg = $_lang["no_records_found"];

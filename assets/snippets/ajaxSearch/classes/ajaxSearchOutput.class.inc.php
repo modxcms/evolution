@@ -839,9 +839,8 @@ class AjaxSearchOutput {
     function _snippet_exists($snippetName) {
         global $modx;
         $tbl = $modx->getFullTableName('site_snippets');
-        $select = "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
-        $rs = $modx->db->query($select);
-        return $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('count(*)', $tbl, "name='" . $modx->db->escape($snippetName) . "'");
+        return ($modx->db->getValue($rs)>0);
     }
     /*
     * Get offset of other groups

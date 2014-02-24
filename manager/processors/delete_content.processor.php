@@ -35,18 +35,14 @@ if(!$udperms->checkPermissions()) {
 
 function getChildren($parent) {
 
-	global $modx,$dbase;
-	global $table_prefix;
+	global $modx;
 	global $children;
 	global $site_start;
 	global $site_unavailable_page;
 
 	//$db->debug = true;
 
-	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=0;";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	if($limit>0) {
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
 		// the document has children documents, we'll need to delete those too
 		while ($childid=$modx->db->getValue($rs)) {
 			if($childid==$site_start) {
@@ -59,7 +55,6 @@ function getChildren($parent) {
 			getChildren($childid);
 			//echo "Found childNode of parentNode $parent: ".$childid."<br />";
 		}
-	}
 }
 
 getChildren($id);

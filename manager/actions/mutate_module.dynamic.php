@@ -43,17 +43,10 @@ function createGUID(){
 }
 
 // Check to see the editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
-        if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], $_lang['module']));
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getRow($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['module']));
     }
-}
 // end check for lock
 
 // make sure the id's a number
@@ -62,16 +55,11 @@ if (!is_numeric($id)) {
 }
 
 if (isset($_GET['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_modules.' WHERE id=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        $modx->webAlertAndQuit("Multiple modules sharing same unique id. Not good.");
-    }
-    if ($limit < 1) {
+    $rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
+    $content = $modx->db->getRow($rs);
+    if (!$content) {
         $modx->webAlertAndQuit("Module not found for id '{$id}'.");
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -402,24 +390,25 @@ function SetUrl(url, width, height, alt) {
         <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
     <tr><td valign="top" align="left">
 <?php
-    $sql = 'SELECT smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS `name`, '.
-           'CASE smd.type'.
-           ' WHEN 10 THEN \'Chunk\''.
-           ' WHEN 20 THEN \'Document\''.
-           ' WHEN 30 THEN \'Plugin\''.
-           ' WHEN 40 THEN \'Snippet\''.
-           ' WHEN 50 THEN \'Template\''.
-           ' WHEN 60 THEN \'TV\''.
-           'END AS `type` '.
-           'FROM '.$tbl_site_module_depobj.' AS smd '.
-           'LEFT JOIN '.$tbl_site_htmlsnippets.' AS sc ON sc.id = smd.resource AND smd.type = 10 '.
-           'LEFT JOIN '.$tbl_site_content.' AS sd ON sd.id = smd.resource AND smd.type = 20 '.
-           'LEFT JOIN '.$tbl_site_plugins.' AS sp ON sp.id = smd.resource AND smd.type = 30 '.
-           'LEFT JOIN '.$tbl_site_snippets.' AS ss ON ss.id = smd.resource AND smd.type = 40 '.
-           'LEFT JOIN '.$tbl_site_templates.' AS st ON st.id = smd.resource AND smd.type = 50 '.
-           'LEFT JOIN '.$tbl_site_tmplvars.' AS sv ON sv.id = smd.resource AND smd.type = 60 '.
-           'WHERE smd.module=\''.$id.'\' ORDER BY smd.type,name';
-$ds = $modx->db->query($sql);
+$ds = $modx->db->select(
+    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+	CASE smd.type
+		WHEN 10 THEN 'Chunk'
+		WHEN 20 THEN 'Document'
+		WHEN 30 THEN 'Plugin'
+		WHEN 40 THEN 'Snippet'
+		WHEN 50 THEN 'Template'
+		WHEN 60 THEN 'TV'
+	END AS type",
+	"{$tbl_site_module_depobj} AS smd 
+		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
+		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
+		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
+		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
+		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
+		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
+	"smd.module='{$id}'",
+	'smd.type,name');
     include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
     $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
     $grd->noRecordMsg = $_lang['no_records_found'];
@@ -451,12 +440,9 @@ $ds = $modx->db->query($sql);
             <select name="categoryid" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
 <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if ($ds) {
-                    foreach($ds as $n => $v) {
-                        echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-                    }
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n => $v) {
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
                 }
 ?>
             </select></td></tr>
@@ -475,8 +461,7 @@ $ds = $modx->db->query($sql);
 <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
-    $sql = 'SELECT usergroup FROM '.$tbl_site_module_access.' WHERE module=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
     $groupsarray = $modx->db->getColumn('usergroup', $rs);
 
     if($modx->hasPermission('access_permissions')) { ?>
@@ -508,8 +493,7 @@ $ds = $modx->db->query($sql);
 <?php
     }
     $chk = '';
-    $sql = "SELECT name, id FROM ".$tbl_membergroup_names;
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('name, id', $tbl_membergroup_names);
     while ($row = $modx->db->getRow($rs)) {
         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
         $checked = in_array($row['id'], $groupsarray);

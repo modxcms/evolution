@@ -24,33 +24,19 @@ $tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
 $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action='102' AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1)
-{
-    while($lock = $modx->db->getRow)
-    {
-        if($lock['internalKey']!=$modx->getLoginUserID())
-        {
-            $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['plugin']));
-        }
+$rs = $modx->db->select('username',$tbl_active_users,"action='102' AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getRow($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['plugin']));
     }
-}
 // end check for lock
 
 if(isset($_GET['id']))
 {
     $rs = $modx->db->select('*',$tbl_site_plugins,"id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1)
-    {
-        $modx->webAlertAndQuit("Multiple plugins sharing same unique id. Not good.");
-    }
-    if($limit<1)
-    {
+    $content = $modx->db->getRow($rs);
+    if(!$content) {
         header("Location: {$modx->config['site_url']}");
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
     {
@@ -318,9 +304,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
             <option>&nbsp;</option>
             <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n=>$v){
                     echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
                 }
             ?>
@@ -363,13 +348,14 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
-                    $sql =    "SELECT sm.id,sm.name,sm.guid " .
-                            "FROM ".$modx->getFullTableName("site_modules")." sm ".
-                            "INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
-                            "INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
-                            "WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
-                            "ORDER BY sm.name ";
-                    $ds = $modx->db->query($sql);
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						$modx->getFullTableName("site_modules")." sm 
+							INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30
+							INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams='1'",
+						'sm.name'
+						);
                     while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
                     }

@@ -64,37 +64,28 @@ if ($_SESSION['mgrRole'] != 1) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!");
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'");
-	if ($rs) {
-		$limit = $modx->db->getRecordCount($rs);
+	$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			// There should only be one if there is one
-			$row = $modx->db->getRow($rs);
-			if ($row['role'] == 1) {
 				webAlertAndQuit("You cannot alter an administrative user.");
-			}
 		}
-	}
 
 }
 
 switch ($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 			webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('id', $tbl_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
 				webAlertAndQuit("Email is already in use!");
-			}
 		}
 
 		// generate a new password for this user
@@ -237,23 +228,17 @@ switch ($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
 				webAlertAndQuit("User name is already in use!");
-			}
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('internalKey', $tbl_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['internalKey'] != $id) {
 				webAlertAndQuit("Email is already in use!");
-			}
 		}
 
 		// invoke OnBeforeUserFormSave event

@@ -82,11 +82,9 @@ if (!class_exists('MemberCheck')) {
 			$this->debug = $debug;
 			if ($debug) {
 				$this->allGroups = array ();
-				$tableName = $modx->getFullTableName('webgroup_names');
-				$sql = "SELECT name FROM $tableName";
-				$rs = $modx->db->query($sql);
+				$rs = $modx->db->select('name', $modx->getFullTableName('webgroup_names'));
 					while ($row = $modx->db->getRow($rs)) {
-						array_push($this->allGroups, stripslashes($row['name']));
+						$this->allGroups[] = stripslashes($row['name']);
 					}
 			}
 		}

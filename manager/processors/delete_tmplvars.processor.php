@@ -9,8 +9,12 @@ if(!$modx->hasPermission('delete_template')) {
 
 	// check for relations
 	if(!$forced) {
-		$sql="SELECT sc.id, sc.pagetitle,sc.description FROM $dbase.`".$table_prefix."site_content` sc INNER JOIN $dbase.`".$table_prefix."site_tmplvar_contentvalues` stcv ON stcv.contentid=sc.id WHERE stcv.tmplvarid=".$id.";";
-		$drs = $modx->db->query($sql);
+		$drs = $modx->db->select(
+			'sc.id, sc.pagetitle,sc.description',
+			$modx->getFullTableName('site_content')." AS sc
+				INNER JOIN ".$modx->getFullTableName('site_tmplvar_contentvalues')." AS stcv ON stcv.contentid=sc.id",
+			"stcv.tmplvarid='{$id}'"
+			);
 		$count = $modx->db->getRecordCount($drs);
 		if($count>0){
 			include_once "header.inc.php";

@@ -71,17 +71,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     // check for deleted documents on reload
     if ($expandAll==2) {
-        $sql = "SELECT COUNT(*) FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1";
-        $rs = $modx->db->query($sql);
-        $row = $modx->db->getRow($rs,'num');
-        $count = $row[0];
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_content'), 'deleted=1');
+        $count = $modx->db->getValue($rs);
         if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
     }
 
     function makeHTML($indent,$parent,$expandAll,$theme) {
         global $modx;
         global $icons, $iconsPrivate, $_style;
-        global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
+        global $output, $_lang, $opened, $opened2, $closed2; //added global vars
 
         $pad = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -101,9 +99,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     // Folder sorting gets special setup ;) Add menuindex and pagetitle
     if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
-        $tblsc = $dbase.".`".$table_prefix."site_content`";
-        $tbldg = $dbase.".`".$table_prefix."document_groups`";
-        $tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
+        $tblsc = $modx->getFullTableName('site_content');
+        $tbldg = $modx->getFullTableName('document_groups');
+        $tbldgn = $modx->getFullTableName('documentgroup_names');
         // get document groups for current user
     $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
         $showProtected= false;
@@ -115,15 +113,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
         }
-        $sql = "SELECT DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, template, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
-                MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access
-                FROM {$tblsc} AS sc
-                LEFT JOIN {$tbldg} dg on dg.document = sc.id
-                WHERE (parent={$parent})
-                $access
-                GROUP BY sc.id
-                ORDER BY {$orderby}";
-        $result = $modx->db->query($sql);
+        $result = $modx->db->select(
+			"DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, template, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+				MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access",
+			"{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"(parent={$parent}) {$access} GROUP BY sc.id",
+			$orderby
+			);
         if($modx->db->getRecordCount($result)==0) {
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }

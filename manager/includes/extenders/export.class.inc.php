@@ -74,10 +74,9 @@ class EXPORT_SITE
 		
 		$noncache = $include_noncache==1 ? '' : 'AND cacheable=1';
 		$where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-		$rs  = $modx->db->select('count(id) as total',$tbl_site_content,$where);
-		$row = $modx->db->getRow($rs);
-		$this->total = $row['total'];
-		return $row['total'];
+		$rs  = $modx->db->select('count(id)',$tbl_site_content,$where);
+		$this->total = $modx->db->getValue($rs);
+		return $this->total;
 	}
 	
 	function removeDirectoryAll($directory='')

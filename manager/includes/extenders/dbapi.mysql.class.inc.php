@@ -220,14 +220,15 @@ class DBAPI {
     *
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
+      global $modx;
       if (!$from)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where = ($where != "") ? "WHERE $where" : "";
-         $orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
-         $limit = ($limit != "") ? "LIMIT $limit" : "";
-         return $this->query("SELECT $fields FROM $from $where $orderby $limit");
+         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
 

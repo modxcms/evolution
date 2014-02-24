@@ -367,7 +367,7 @@ class Wayfinder {
 			}
 			//add the limit to the query
 			if ($this->_config['limit']) {
-				$sqlLimit = " LIMIT 0, {$this->_config['limit']}";
+				$sqlLimit = "0, {$this->_config['limit']}";
 			} else {
 				$sqlLimit = '';
 			}
@@ -384,9 +384,14 @@ class Wayfinder {
 	        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 	        // build query
 	        $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
-			$sql = "SELECT DISTINCT {$fields} FROM {$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id WHERE sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id ORDER BY {$sort} {$this->_config['sortOrder']} {$sqlLimit};";
 			//run the query
-			$result = $modx->db->query($sql);
+			$result = $modx->db->select(
+				"DISTINCT {$fields}",
+				"{$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id",
+				"sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id",
+				"{$sort} {$this->_config['sortOrder']}",
+				$sqlLimit
+				);
 	        $resourceArray = array();
 			$level = 1;
 			$prevParent = -1;
@@ -473,20 +478,19 @@ class Wayfinder {
 		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
 		$tb2 = $modx->getFullTableName("site_tmplvars");
 
-		$query = "SELECT stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value";
-		$query .= " FROM ".$tb1." stc LEFT JOIN ".$tb2." stv ON stv.id=stc.tmplvarid ";
-		$query .= " WHERE stv.name='".$tvname."' AND stc.contentid IN (".implode($docIDs,",").") ORDER BY stc.contentid ASC;";
-		$rs = $modx->db->query($query);
+		$rs = $modx->db->select(
+			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
+			"{$tb1} stc LEFT JOIN {$tb2} stv ON stv.id=stc.tmplvarid ",
+			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
+			"stc.contentid ASC"
+			);
 		$resourceArray = array();
 		while ($row = $modx->db->getRow($rs))  {
 			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 		}
 
-		if ($tot != count($docIDs)) {
-			$query = "SELECT name,type,display,display_params,default_text";
-			$query .= " FROM $tb2";
-			$query .= " WHERE name='".$tvname."' LIMIT 1";
-			$rs = $modx->db->query($query);
+		if (count($resourceArray) != count($docIDs)) {
+			$rs = $modx->db->select('name,type,display,display_params,default_text', $tb2, "name='{$tvname}'", 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 			    foreach ($docIDs as $id) {

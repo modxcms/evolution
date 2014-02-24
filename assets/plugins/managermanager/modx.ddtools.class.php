@@ -505,14 +505,14 @@ class ddTools {
 			
 			$access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 			
-			$sql = "
-				SELECT DISTINCT $fields FROM ".self::$tables['site_content']." sc
-				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id
-				WHERE (sc.id IN (".implode(",", $ids).") $published $deleted $where) AND ($access)
-				GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir" : "")." $limit 
-			";
-			
-			$result = $modx->db->query($sql);
+			$result = $modx->db->select(
+				"DISTINCT {$fields}",
+				self::$tables['site_content']." AS sc
+					LEFT JOIN ".self::$tables['document_groups']." AS dg on dg.document = sc.id",
+				"(sc.id IN (".implode(",", $ids).") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+				($sort ? "{$sort} {$dir}" : ""),
+				$limit
+				);
 
 			$resourceArray = $modx->db->makeArray($result);
 			
@@ -605,17 +605,14 @@ class ddTools {
 				$docgrp= implode(",", $docgrp);
 			}
 			
-			$sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-			$sql .= "FROM ".self::$tables['site_tmplvars']." tv ";
-			$sql .= "INNER JOIN ".self::$tables['site_tmplvar_templates']." tvtpl ON tvtpl.tmplvarid = tv.id ";
-			$sql .= "LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
-			$sql .= "WHERE ".$query." AND tvtpl.templateid = ".$docRow['template'];
-			
-			if ($sort){
-				$sql .= " ORDER BY $sort $dir ";
-			}
-			
-			$rs = $modx->db->query($sql);
+			$rs = $modx->db->select(
+				"{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+				self::$tables['site_tmplvars']." AS tv 
+					INNER JOIN ".self::$tables['site_tmplvar_templates']." AS tvtpl ON tvtpl.tmplvarid = tv.id
+					LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}' ",
+				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
+				($sort ? "{$sort} {$dir}"; "")
+				);
 			
 			$result = $modx->db->makeArray($rs);
 			
@@ -718,8 +715,6 @@ class ddTools {
 			$where = 'AND '.$where;
 		}
 		
-		$limit = ($limit != '') ? 'LIMIT '.$limit : '';
-		
 		// modify field names to use sc. table reference
 		$fields = 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
 		$sortBy = ($sortBy == "") ? "" : 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sortBy)));
@@ -732,13 +727,14 @@ class ddTools {
 		// build query
 		$access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 		
-		$sql = "SELECT DISTINCT $fields
-				FROM ".self::$tables['site_content']." sc
-				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id
-				WHERE sc.parent = '$parentid' $published $deleted $where AND ($access)
-				GROUP BY sc.id ".($sortBy ? " ORDER BY $sortBy $sortDir " : "")." $limit ";
-		
-		$result = $modx->db->query($sql);
+		$result = $modx->db->select(
+			"DISTINCT {$fields}",
+			self::$tables['site_content']." AS sc
+				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
+			"sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
+			($sortBy ? "{$sortBy} {$sortDir}" : ""),
+			$limit
+			);
 		
 		$resourceArray = $modx->db->makeArray($result);
 		

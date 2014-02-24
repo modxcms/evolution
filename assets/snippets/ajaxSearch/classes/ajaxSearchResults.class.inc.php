@@ -484,8 +484,8 @@ class AjaxSearchResults {
             $tvs = explode(',', $listTvs);
             $tblName = $modx->getFullTableName('site_tmplvars');
             foreach ($tvs as $tv) {
-                $tplRS = $modx->db->select('id', $tblName, 'name="' . $tv . '"');
-                if (!$modx->db->getRecordCount($tplRS)) {
+                $tplRS = $modx->db->select('count(id)', $tblName, "name='{$tv}'");
+                if (!$modx->db->getValue($tplRS)) {
                     $msgErr = "<br /><h3>AjaxSearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
                     return false;
                 }

@@ -60,20 +60,17 @@ if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $
 switch ($input['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('id', $tbl_web_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 			webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('id', $tbl_web_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_web_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
 				webAlertAndQuit("Email is already in use!");
-			}
 		}
 
 		// generate a new password for this user
@@ -213,23 +210,17 @@ switch ($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('id', $tbl_web_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_web_users, "username='{$esc_newusername}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
 				webAlertAndQuit("User name is already in use!");
-			}
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('internalKey', $tbl_web_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(internalKey)', $tbl_web_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['internalKey'] != $id) {
-				$modx->webAlertAndQuit("Email is already in use!");
-			}
+				webAlertAndQuit("Email is already in use!");
 		}
 
 		// invoke OnBeforeWUsrFormSave event
@@ -266,7 +257,7 @@ switch ($input['mode']) {
 
 		// invoke OnWebChangePassword event
 		if ($genpassword == 1) {
-			$modx->invokeEvent("OnWebChangePassword", array(
+			$modx->invokeEvent("OnWebChangePassword", array (
 				"userid" => $id,
 				"username" => $newusername,
 				"userpassword" => $newpassword

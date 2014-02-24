@@ -12,10 +12,8 @@ if($id==$modx->getLoginUserID()) {
 }
 
 // get user name
-$sql = "SELECT * FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id='".$id."' LIMIT 1;";
-$rs = $modx->db->query($sql);
-	$row = $modx->db->getRow($rs);
-	$username = $row['username'];
+$rs = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$id}'");
+	$username = $modx->db->getValue($rs);
 
 // invoke OnBeforeUserFormDelete event
 $modx->invokeEvent("OnBeforeUserFormDelete",

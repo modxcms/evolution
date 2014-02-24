@@ -120,14 +120,11 @@ class AjaxSearchLog {
     function _purgeLogs() {
         global $modx;
 
-        $sql = "SELECT COUNT(*) AS count FROM " . $this->_tbName;
-        $rs = $modx->db->query($sql);
-        $row = $modx->db->getRow($rs);
-        $nbLogs = $row['count'];
+        $rs = $modx->db->select('count(*) AS count', $this->_tbName);
+        $nbLogs = $modx->db->getValue($rs);
 
         if ($nbLogs + 1 > $this->_purge) {
-            $sql = "DELETE LOW_PRIORITY FROM " . $this->_tbName;
-            $modx->db->query($sql);
+            $modx->db->delete($this->_tbName);
         }
     }
     /*

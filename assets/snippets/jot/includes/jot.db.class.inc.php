@@ -40,7 +40,7 @@ class CJotDataDb {
 	function FirstRun($path) {
 		global $modx;
 		$jot = $this->tbl["check"];
-		$rs = $modx->db->query("SHOW TABLES LIKE '".$jot."'");
+		$rs = $modx->db->query("SHOW TABLES LIKE '{$jot}'");
 		$count = $modx->db->getRecordCount($rs);
 		
 		if ($count==0) {
@@ -70,7 +70,7 @@ class CJotDataDb {
 		} else {
 			$idstring = "'" . $id_values . "'";
 		}
-		$rs = $modx->db->query("select id, label, content from $tbl where id IN (" . $idstring . ")");
+		$rs = $modx->db->select('id, label, content', $tbl, "id IN ({$idstring})");
 		while ($row = $modx->db->getRow($rs)) {
 			$custom[$row['id']][$row['label']] = $row['content'];
 		}
@@ -84,7 +84,7 @@ class CJotDataDb {
 			
 			// Standard Fields
 			$tbl = $this->tbl["content"];
-			$rs = $modx->db->query("select * from $tbl where id = $id");
+			$rs = $modx->db->select('*', $tbl, "id = '{$id}'");
 			$this->fields = $modx->db->getRow($rs);
 			$this->fields['id'] = $id;		
 			
@@ -165,8 +165,8 @@ class CJotDataDb {
 	function hasPosted($interval,$user) {
 		global $modx;
 		$chktime = strtotime("-".$interval." seconds");
-		$sql = 'SELECT count(id) as post FROM '.$this->tbl["content"].' WHERE sechash = "'.$user['sechash'].'" AND createdon > '.$chktime;
-		$returnValue = intval($modx->db->getValue($sql));
+		$rs = $modx->db->select('count(id)', $this->tbl["content"], "sechash = '{$user['sechash']}' AND createdon > {$chktime}");
+		$returnValue = intval($modx->db->getValue($rs));
 		if ($returnValue > 0 ) { return true; } else { return false; }
 	}
 	
@@ -176,8 +176,8 @@ class CJotDataDb {
 		if (array_key_exists($key, $this->cache["userpostcount"])) {
 			$count = $this->cache["userpostcount"][$key];
 		} else {
-			$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE createdby = "'.$userid.'" AND uparent = "'.$docid.'" AND tagid = "' . $tagid . '"';			
-			$count = intval($modx->db->getValue($sql));
+			$rs = $modx->db->select('count(id)', $this->tbl["content"], "createdby = '{$userid}' AND uparent = '{$docid}' AND tagid = '{$tagid}'"));
+			$count = intval($modx->db->getValue($rs));
 			$this->cache["userpostcount"][$key] = $count;
 		}
 		return $count;
@@ -187,17 +187,18 @@ class CJotDataDb {
 		global $modx;
 		switch ($viewtype) {
 			case 2:
-				$where = " and published >= 0 "; // Mixed
+				$where = "published >= 0 "; // Mixed
 				break;
 			case 0:
-				$where = " and published = 0 "; // Unpublished
+				$where = "published = 0 "; // Unpublished
 				break;
 			case 1:
 			default:
-				$where = " and published = 1 "; // Published
+                        	$viewtype = 1;
+				$where = "published = 1 "; // Published
 		}
-		$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE uparent = '.$docid.' AND tagid = "' . $tagid .'"'.$where;
-		return intval($modx->db->getValue($sql));
+		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}'", $where);
+		return intval($modx->db->getValue($rs);
 	}
 			
 	function getOrderByDirection($dir = "a") {
@@ -277,8 +278,8 @@ class CJotDataDb {
 	
 	function hasSubscription($docid = 0,$tagid = '', $user = array()) {
 		global $modx;
-		$sql = 'SELECT count(id) as subscription FROM '.$this->tbl["subscriptions"].' WHERE userid = "'.$user['id'].'" AND uparent = "'.$docid.'" AND tagid = "'.$tagid.'"';
-		$returnValue = intval($modx->db->getValue($sql));
+		$rs = $modx->db->select('count(id)', $this->tbl["subscriptions"], "userid = '{$user['id']}' AND uparent = '{$docid}' AND tagid = '{$tagid}'");
+		$returnValue = intval($modx->db->getValue($rs));
 		if ($returnValue > 0 ) { return true; } else { return false; }
 	}
 	
@@ -286,7 +287,7 @@ class CJotDataDb {
 	function getSubscriptions($docid = 0,$tagid = '') {
 		global $modx;
 		$tbl = $this->tbl["subscriptions"];
-		$rs = $modx->db->query("select userid from $tbl where uparent = $docid and tagid = '$tagid'");	
+		$rs = $modx->db->select('userid', $tbl, "uparent = '{$docid}' and tagid = '{$tagid}'");	
 		$subscriptions = $modx->db->makeArray($rs);
 		return $subscriptions;
 	}
@@ -308,8 +309,8 @@ class CJotDataDb {
 	
 	function isValidComment($docid = 0,$tagid = '', $commentid = 0) {
 		global $modx;
-		$sql = 'select count(id) FROM '.$this->tbl["content"].' WHERE id = "'. $commentid .'" AND uparent = "'.$docid.'" AND tagid = "'.$tagid.'"';
-		return intval($modx->db->getValue($sql));
+		$rs = $modx->db->select('count(id)', $this->tbl["content"], "id = '{$commentid}' AND uparent = '{$docid}' AND tagid = '{$tagid}'");
+		return intval($modx->db->getValue($rs));
 	}
 	
 

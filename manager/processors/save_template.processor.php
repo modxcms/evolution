@@ -12,17 +12,18 @@ $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
+}
+if (empty($categoryid)) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 if($templatename=="") $templatename = "Untitled template";
@@ -38,8 +39,7 @@ switch ($_POST['mode']) {
 							));	
 							
 		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(19);
@@ -88,9 +88,8 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 							));	   
 		
-		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}' AND id != '{$id}'";
-		$rs = $modx->db->query($sql);
+		// disallow duplicate names for templates
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(16);

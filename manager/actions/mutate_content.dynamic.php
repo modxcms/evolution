@@ -74,17 +74,10 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=27 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
-        if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lock['username'], 'document'));
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
     }
-}
 
 // get document groups for current user
 if ($_SESSION['mgrDocgroups']) {
@@ -94,19 +87,15 @@ if ($_SESSION['mgrDocgroups']) {
 if (!empty ($id)) {
     $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" .
         (!$docgrp ? '' : " OR dg.document_group IN ($docgrp)");
-    $sql = 'SELECT DISTINCT sc.* '.
-           'FROM '.$tbl_site_content.' AS sc '.
-           'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document=sc.id '.
-           'WHERE sc.id=\''.$id.'\' AND ('.$access.')';
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        $modx->webAlertAndQuit($_lang["error_many_results"]);
-    }
-    if ($limit < 1) {
+	$rs = $modx->db->select(
+		'sc.*',
+		"{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id",
+		"sc.id='{$id}' AND ({$access})"
+		);
+    $content = $modx->db->getRow($rs);
+    if (!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
@@ -142,8 +131,8 @@ if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
 if (!isset ($_REQUEST['id'])) {
     if (!isset ($auto_menuindex) || $auto_menuindex) {
         $pid = intval($_REQUEST['pid']);
-        $sql = 'SELECT count(*) FROM '.$tbl_site_content.' WHERE parent=\''.$pid.'\'';
-        $content['menuindex'] = $modx->db->getValue($sql);
+        $rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
+        $content['menuindex'] = $modx->db->getValue($rs);
     } else {
         $content['menuindex'] = 0;
     }
@@ -596,9 +585,13 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 <td><select id="template" name="template" class="inputBox" onchange="templateWarning();" style="width:308px">
                     <option value="0">(blank)</option>
 <?php
-                $sql = 'SELECT t.templatename, t.id, c.category FROM '.$tbl_site_templates.' t LEFT JOIN '.$tbl_categories.' c ON t.category = c.id ORDER BY c.category, t.templatename ASC';
-                $rs = $modx->db->query($sql);
-
+                $rs = $modx->db->select(
+					"t.templatename, t.id, c.category",
+					"{$tbl_site_templates} AS t
+						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
+					'',
+					'c.category, t.templatename ASC'
+					);
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
                     $thisCategory = $row['category'];
@@ -671,14 +664,11 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     $content['parent'] = 0;
                 }
                 if($parentlookup !== false && is_numeric($parentlookup)) {
-                    $sql = 'SELECT pagetitle FROM '.$tbl_site_content.' WHERE id=\''.$parentlookup.'\'';
-                    $rs = $modx->db->query($sql);
-                    $limit = $modx->db->getRecordCount($rs);
-                    if ($limit != 1) {
+                    $rs = $modx->db->select('pagetitle', $tbl_site_content, "id='{$parentlookup}'");
+                    $parentname = $modx->db->getValue($rs);
+                    if (!$parentname) {
                         $modx->webAlertAndQuit($_lang["error_no_parent"]);
                     }
-                    $parentrs = $modx->db->getRow($rs);
-                    $parentname = $parentrs['pagetitle'];
                 }
                 ?>&nbsp;<img alt="tree_folder" name="plock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /> <b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b>
     &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
@@ -736,15 +726,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         $template = $content['template'];
                 }
 
-                $sql = 'SELECT DISTINCT tv.*, IF(tvc.value!=\'\',tvc.value,tv.default_text) as value '.
-                       'FROM '.$tbl_site_tmplvars.' AS tv '.
-                       'INNER JOIN '.$tbl_site_tmplvar_templates.' AS tvtpl ON tvtpl.tmplvarid = tv.id '.
-                       'LEFT JOIN '.$tbl_site_tmplvar_contentvalues.' AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid=\''.$id.'\' '.
-                       'LEFT JOIN '.$tbl_site_tmplvar_access.' AS tva ON tva.tmplvarid=tv.id '.
-                       'WHERE tvtpl.templateid=\''.$template.'\' AND (1=\''.$_SESSION['mgrRole'].'\' OR ISNULL(tva.documentgroup)'.
-                       (!$docgrp ? '' : ' OR tva.documentgroup IN ('.$docgrp.')').
-                       ') ORDER BY tvtpl.rank,tv.rank, tv.id';
-                $rs = $modx->db->query($sql);
+                $rs = $modx->db->select(
+                    "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
+                     "{$tbl_site_tmplvars} AS tv
+                         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
+                         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$id}'
+                         LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
+                     "tvtpl.templateid='{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)".(!$docgrp ? '' : " OR tva.documentgroup IN ({$docgrp})").")",
+                     'tvtpl.rank,tv.rank, tv.id'
+                     );
                 $limit = $modx->db->getRecordCount($rs);
                 if ($limit > 0) {
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
@@ -947,44 +937,32 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 <?php if ($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
     // get list of site keywords
     $keywords = array();
-    $ds = $modx->db->select('*', $tbl_site_keywords, '', 'keyword ASC');
-    $limit = $modx->db->getRecordCount($ds);
-    if ($limit > 0) {
+    $ds = $modx->db->select('id, keyword', $tbl_site_keywords, '', 'keyword ASC');
         while ($row = $modx->db->getRow($ds)) {
             $keywords[$row['id']] = $row['keyword'];
         }
-    }
     // get selected keywords using document's id
     if (isset ($content['id']) && count($keywords) > 0) {
         $keywords_selected = array();
-        $ds = $modx->db->select('keyword_id', $tbl_keyword_xref, 'content_id=\''.$content['id'].'\'');
-        $limit = $modx->db->getRecordCount($ds);
-        if ($limit > 0) {
+        $ds = $modx->db->select('keyword_id', $tbl_keyword_xref, "content_id='{$content['id']}'");
             while ($row = $modx->db->getRow($ds)) {
                 $keywords_selected[$row['keyword_id']] = ' selected="selected"';
             }
-        }
     }
 
     // get list of site META tags
     $metatags = array();
-    $ds = $modx->db->select('*', $tbl_site_metatags);
-    $limit = $modx->db->getRecordCount($ds);
-    if ($limit > 0) {
+    $ds = $modx->db->select('id, name', $tbl_site_metatags);
         while ($row = $modx->db->getRow($ds)) {
             $metatags[$row['id']] = $row['name'];
         }
-    }
     // get selected META tags using document's id
     if (isset ($content['id']) && count($metatags) > 0) {
         $metatags_selected = array();
-        $ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, 'content_id=\''.$content['id'].'\'');
-        $limit = $modx->db->getRecordCount($ds);
-        if ($limit > 0) {
+        $ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, "content_id='{$content['id']}'");
             while ($row = $modx->db->getRow($ds)) {
                 $metatags_selected[$row['metatag_id']] = ' selected="selected"';
             }
-        }
     }
     ?>
     <!-- META Keywords -->
@@ -1036,28 +1014,31 @@ if ($use_udperms == 1) {
     $documentId = ($_REQUEST['a'] == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
     if ($documentId > 0) {
         // Load up, the permissions from the parent (if new document) or existing document
-        $sql = 'SELECT id, document_group FROM '.$tbl_document_groups.' WHERE document=\''.$documentId.'\'';
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
         while ($currentgroup = $modx->db->getRow($rs))
             $groupsarray[] = $currentgroup['document_group'].','.$currentgroup['id'];
 
         // Load up the current permissions and names
-        $sql = 'SELECT dgn.*, groups.id AS link_id '.
-               'FROM '.$tbl_document_group_names.' AS dgn '.
-               'LEFT JOIN '.$tbl_document_groups.' AS groups ON groups.document_group = dgn.id '.
-               '  AND groups.document = '.$documentId.' '.
-               'ORDER BY name';
+	$rs = $modx->db->select(
+		'dgn.*, groups.id AS link_id',
+		"{$tbl_document_group_names} AS dgn
+			LEFT JOIN {$tbl_document_groups} AS groups ON groups.document_group = dgn.id  AND groups.document = '{$documentId}'",
+		'',
+		'name'
+		);
     } else {
         // Just load up the names, we're starting clean
-        $sql = 'SELECT *, NULL AS link_id FROM '.$tbl_document_group_names.' ORDER BY name';
+	$rs = $modx->db->select(
+		'*, NULL AS link_id',
+		$tbl_document_group_names,
+		'',
+		'name'
+		);
     }
 
     // retain selected doc groups between post
     if (isset($_POST['docgroups']))
         $groupsarray = array_merge($groupsarray, $_POST['docgroups']);
-
-    // Query the permissions and names from above
-    $rs = $modx->db->query($sql);
 
     $isManager = $modx->hasPermission('access_permissions');
     $isWeb     = $modx->hasPermission('web_access_permissions');
@@ -1102,11 +1083,11 @@ if ($use_udperms == 1) {
         $inputHTML = '<input '.implode(' ', $inputString).' />';
 
         // does user have this permission?
-        $sql = "SELECT COUNT(mg.id) FROM {$tbl_membergroup_access} mga, {$tbl_member_groups} mg
- WHERE mga.membergroup = mg.user_group
- AND mga.documentgroup = {$row['id']}
- AND mg.member = {$_SESSION['mgrInternalKey']};";
-        $rsp = $modx->db->query($sql);
+        $rsp = $modx->db->select(
+			'COUNT(mg.id)',
+			"{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg",
+			"mga.membergroup = mg.user_group AND mga.documentgroup = {$row['id']} AND mg.member = {$_SESSION['mgrInternalKey']}"
+			);
         $count = $modx->db->getValue($rsp);
         if($count > 0) {
             ++$permissions_yes;

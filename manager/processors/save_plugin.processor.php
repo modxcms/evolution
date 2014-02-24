@@ -16,17 +16,18 @@ $sysevents = $_POST['sysevents'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
-    $categoryid = '0';
+    $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
+}
+if (empty($categoryid)) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 if($name=="") $name = "Untitled plugin";
@@ -43,8 +44,7 @@ switch ($_POST['mode']) {
                                 ));
     
 		// disallow duplicate names for new plugins
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_plugins` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(101);
@@ -153,16 +153,15 @@ function saveEventListeners($id,$sysevents,$mode) {
     $insert_sysevents = array();
     for($i=0;$i<count($sysevents);$i++){
         if ($mode == '101') {
-            $prioritySql = "select max(priority) as priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]}";
+            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}'");
         } else {
-            $prioritySql = "select priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]} and pluginid={$id}";
+            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}' and pluginid='{$id}'");
         }
-        $rs = $modx->db->query($prioritySql);
-        $prevPriority = $modx->db->getRow($rs);
+        $prevPriority = $modx->db->getValue($rs);
         if ($mode == '101') {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] + 1 : 1;
+            $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
         } else {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] : 1;
+            $priority = isset($prevPriority) ? $prevPriority : 1;
         }
         $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$sysevents[$i],'priority'=>$priority);
     }

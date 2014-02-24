@@ -17,11 +17,9 @@ if($_REQUEST['new_parent']=="") {
 		$modx->webAlertAndQuit($_lang["error_movedocument2"]);
 }
 
-$sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('parent', $modx->getFullTableName('site_content'), "id='{$_REQUEST['id']}'");
 
-$row = $modx->db->getRow($rs);
-$oldparent = $row['parent'];
+$oldparent = $modx->db->getValue($rs);
 $newParentID = $_REQUEST['new_parent'];
 
 // check user has permission to move document to chosen location
@@ -43,16 +41,13 @@ if ($oldparent != $newParentID) {
 function allChildren($currDocID) {
 	global $modx;
 	$children= array();
-	$sql = "SELECT id FROM ".$modx->getFullTableName('site_content')." WHERE parent = $currDocID;";
-	$rs = $modx->db->query($sql);
-		if ($numChildren= $modx->db->getRecordCount($rs)) {
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
 			while ($child= $modx->db->getRow($rs)) {
 				$children[]= $child['id'];
 				$nextgen= array();
 				$nextgen= allChildren($child['id']);
 				$children= array_merge($children, $nextgen);
 			}
-		}
 	return $children;
 }
 
@@ -73,10 +68,8 @@ if (!array_search($newParentID, $children)) {
 		), $modx->getFullTableName('site_content'), "id='{$_REQUEST['id']}'");
 
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
-	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
-	$rs = $modx->db->query($sql);
-	$row = $modx->db->getRow($rs);
-	$limit = $row['count(*)'];
+	$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_content'), "parent='{$oldparent}'");
+	$limit = $modx->db->getValue($rs);
 
 	if(!$limit>0) {
 		$modx->db->update(

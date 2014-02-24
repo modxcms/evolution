@@ -25,17 +25,10 @@ $tbl_active_users = $modx->getFullTableName('active_users');
 $tbl_user_roles   = $modx->getFullTableName('user_roles');
 
 // check to see the role editor isn't locked
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=35 and id='{$role}'");
-$total = $modx->db->getRecordCount($rs);
-if($total>1) {
-	for ($i=0;$i<$total;$i++) {
-		$lock = $modx->db->getRow($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']);
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']));
-		}
+$rs = $modx->db->select('username',$tbl_active_users,"action=35 and id='{$role}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['role']));
 	}
-}
 // end check for lock
 
 
@@ -43,14 +36,10 @@ if($total>1) {
 if($_REQUEST['a']=='35')
 {
 	$rs = $modx->db->select('*',$tbl_user_roles, "id='{$role}'");
-	$total = $modx->db->getRecordCount($rs);
-	if($total>1) {
-		$modx->webAlertAndQuit("More than one role returned!");
-	}
-	if($total<1) {
+	$roledata = $modx->db->getRow($rs);
+	if(!$roledata) {
 		$modx->webAlertAndQuit("No role returned!");
 	}
-	$roledata = $modx->db->getRow($rs);
 	$_SESSION['itemname']=$roledata['name'];
 } else {
 	$roledata = 0;

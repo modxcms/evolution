@@ -31,38 +31,29 @@ if(!$udperms->checkPermissions()) {
 }
 
 // get the timestamp on which the document was deleted.
-$sql = "SELECT deletedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.id=".$id." AND deleted=1;";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit!=1) {
+$rs = $modx->db->select('deletedon', $modx->getFullTableName('site_content'), "id='{$id}' AND deleted=1");
+$deltime = $modx->db->getValue($rs);
+if(!$deltime) {
 	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
-} else {
-	$row=$modx->db->getRow($rs);
-	$deltime = $row['deletedon'];
 }
 
 $children = array();
 
 function getChildren($parent) {
 	
-	global $modx,$dbase;
-	global $table_prefix;
+	global $modx;
 	global $children;
 	global $deltime;
 	
 	$db->debug = true;
 	
-	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=1 AND deletedon=$deltime;";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	if($limit>0) {
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
 		// the document has children documents, we'll need to delete those too
 		while ($row=$modx->db->getRow($rs)) {
 			$children[] = $row['id'];
 			getChildren($row['id']);
 			//echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
 		}
-	}
 }
 
 getChildren($id);

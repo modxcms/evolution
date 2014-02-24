@@ -17,12 +17,12 @@ if(!is_numeric($id)) {
 
 // check if user has access permission, except admins
 if($_SESSION['mgrRole']!=1){
-	$sql = "SELECT sma.usergroup,mg.member " .
-		"FROM ".$modx->getFullTableName("site_module_access")." sma " .
-		"LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'".
-		"WHERE sma.module = '$id'";
-	$rs = $modx->db->query($sql);
-
+	$rs = $modx->db->select(
+		'sma.usergroup,mg.member',
+		$modx->getFullTableName("site_module_access")." sma
+			LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
+		"sma.module = '{$id}'"
+		);
 	//initialize permission to -1, if it stays -1 no permissions
 	//attached so permission granted
 	$permissionAccessInt = -1;
@@ -45,18 +45,11 @@ if($_SESSION['mgrRole']!=1){
 }
 
 // get module data
-$sql = "SELECT * " .
-		"FROM ".$modx->getFullTableName("site_modules")." " .
-		"WHERE id = $id;";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	$modx->webAlertAndQuit($_lang["error_many_results"], "index.php?a=106");
-}
-if($limit<1) {
+$rs = $modx->db->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
+$content = $modx->db->getRow($rs);
+if(!$content) {
 	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
 }
-$content = $modx->db->getRow($rs);
 if($content['disabled']) {
 	$modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
 }

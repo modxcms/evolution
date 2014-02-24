@@ -25,32 +25,19 @@ $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=22 AND id='.$id;
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $lock = $modx->db->getRow($rs);
-        if($lock['internalKey']!=$modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'],$lock['username'],$_lang['snippet']);
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lock['username'],$_lang['snippet']));
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$username,$_lang['snippet']));
     }
-}
 // end check for lock
 
 
 if(isset($_GET['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_snippets.' WHERE id='.$id;
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        $modx->webAlertAndQuit("Oops, Multiple snippets sharing same unique id. Not good.");
-    }
-    if($limit<1) {
+    $rs = $modx->db->select('*', $tbl_site_snippets, "id='{$id}'");
+    $content = $modx->db->getRow($rs);
+    if(!$content) {
         header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -311,9 +298,8 @@ function decode(s){
             <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
-                    include_once "categories.inc.php";
-                    $ds = getCategories();
-                    if($ds) foreach($ds as $n=>$v){
+                    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                    foreach(getCategories() as $n=>$v){
                         echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
                     }
                 ?>
@@ -353,13 +339,14 @@ function decode(s){
             <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
-                    $sql = 'SELECT sm.id,sm.name,sm.guid '.
-                           'FROM '.$tbl_site_modules.' AS sm '.
-                           'INNER JOIN '.$tbl_site_module_depobj.' AS smd ON smd.module=sm.id AND smd.type=40 '.
-                           'INNER JOIN '.$tbl_site_snippets.' AS ss ON ss.id=smd.resource '.
-                           'WHERE smd.resource=\''.$id.'\' AND sm.enable_sharedparams=\'1\' '.
-                           'ORDER BY sm.name';
-                    $ds = $modx->db->query($sql);
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						"{$tbl_site_modules} AS sm 
+							INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
+							INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams=1",
+						'sm.name'
+						);
                     while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
                     }

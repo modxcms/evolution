@@ -7,10 +7,8 @@ if(!$modx->hasPermission('delete_web_user')) {
 $id=intval($_GET['id']);
 
 // get user name
-$sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id='".$id."' LIMIT 1;";
-$rs = $modx->db->query($sql);
-	$row = $modx->db->getRow($rs);
-	$username = $row['username'];
+$rs = $modx->db->select('username', $modx->getFullTableName('web_users'), "id='{$id}'");
+	$username = $modx->db->getValue($rs);
 
 
 // invoke OnBeforeWUsrFormDelete event

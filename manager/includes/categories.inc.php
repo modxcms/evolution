@@ -17,24 +17,22 @@ function newCategory($newCat) {
 function checkCategory($newCat = '') {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'select * from ' . $useTable . ' order by category';
-    $cats = $modx->db->query($sql);
-    while($row = $modx->db->getRow($cats)) {
-        if ($row['category'] == $newCat) {
-            return $row['id'];
-        }
-    }
+    $newCat = $modx->db->escape($newCat);
+    $cats = $modx->db->select('id', $modx->getFullTableName('categories'), "category='{$newCat}'");
+	if($cat = $modx->db->getValue($cats)) {
+		return $cat;
+	}
     return 0;
 }
 //Get all categories
 function getCategories() {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'select id, category from ' . $useTable . ' order by category';
-    $cats = $modx->db->query($sql);
-    $resourceArray = array();
+    $cats = $modx->db->select('id, category', $modx->getFullTableName('categories'), '', 'category');
+	$resourceArray = array();
     while($row = $modx->db->getRow($cats)) {
-        array_push($resourceArray,array( 'id' => $row['id'], 'category' => stripslashes( $row['category'] ) )); // pixelchutes
+        $row['category'] = stripslashes($row['category']);
+        $resourceArray[] = $row;
     }
     return $resourceArray;
 }

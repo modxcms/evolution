@@ -306,11 +306,9 @@ class asPHxParser {
                     default:
                         if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
                             $phx_snippet_name = 'phx:' . $modx->db->escape($modifier_cmd[$i]);
-                            $sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $phx_snippet_name . "';";
-                             $result = $modx->db->query($sql);
-                             if ($modx->db->getRecordCount($result) == 1) {
-                                $row = $modx->db->getRow($result);
-                                 $cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
+                             $result = $modx->db->select('snippet', $modx->getFullTableName("site_snippets"), "name='{$phx_snippet_name}'");
+                             if ($snippet = $modx->db->getValue($result)) {
+                                 $cm = $this->cache["cm"][$modifier_cmd[$i]] = $snippet;
                              } else if ($modx->db->getRecordCount($result) == 0){ // If snippet not found, look in the modifiers folder
                                 $filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';
                                 if (@file_exists($filename)) {
@@ -368,8 +366,8 @@ class asPHxParser {
         if (!array_key_exists($userid, $this->cache["mo"])) {
             $tbl = $modx->getFullTableName("webgroup_names");
             $tbl2 = $modx->getFullTableName("web_groups");
-            $sql = "SELECT wgn.name FROM $tbl wgn INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wg.webuser='".$userid."'";
-            $this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$sql);
+			$rs = $modx->db->select('wgn.name', "$tbl AS wgn INNER JOIN $tbl2 AS wg ON wg.webgroup=wgn.id AND wg.webuser='{$userid}'");
+            $this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$rs);
         } else {
             $grpNames = $this->cache["mo"][$userid];
         }

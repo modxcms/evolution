@@ -5,25 +5,16 @@ if(!$modx->hasPermission('settings')) {
 }
 
 // check to see the edit settings page isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=17";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-        $lock = $modx->db->getRow($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_settings_msg"],$lock['username']));
-		}
+$rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getRow($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_settings_msg"],$username));
 	}
-}
 // end check for lock
 
 // reload system settings from the database.
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
-$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."system_settings`";
-$rs = $modx->db->query($sql);
-$number_of_settings = $modx->db->getRecordCount($rs);
+$rs = $modx->db->select('setting_name, setting_value', $modx->getFullTableName('system_settings'));
 while ($row = $modx->db->getRow($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 $settings['filemanager_path'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['filemanager_path']);
 $settings['rb_base_dir']      = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['rb_base_dir']);
@@ -374,8 +365,13 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_title"] ?></b></td>
             <td>
 			<?php
-				$sql = 'SELECT t.templatename, t.id, c.category FROM '.$table_prefix.'site_templates t LEFT JOIN '.$table_prefix.'categories c ON t.category = c.id ORDER BY c.category, t.templatename ASC';
-                        $rs = $modx->db->query($sql);
+				$rs = $modx->db->select(
+					't.templatename, t.id, c.category',
+					$modx->getFullTableName('site_templates')." AS t
+						LEFT JOIN ".$modx->getFullTableName('categories')." AS c ON t.category = c.id",
+					"",
+					'c.category, t.templatename ASC'
+					);
 			?>
 			  <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
 				<?php

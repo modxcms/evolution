@@ -21,17 +21,18 @@ $guid = $modx->db->escape($_POST['guid']);
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
+}
+if (empty($categoryid)) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 if($name=="") $name = "Untitled module";
@@ -46,8 +47,7 @@ switch ($_POST['mode']) {
 							));
 								
 		// disallow duplicate names for new modules
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_modules` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
 			$modx->manager->saveFormValues(107);

@@ -19,8 +19,12 @@ $dm->getTheme();
  $output = '';
  
  if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
- 	$sql = "SELECT * FROM ".$modx->getFullTableName('site_tmplvars')." tv LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." ON tv.id = ".$modx->getFullTableName('site_tmplvar_templates').".tmplvarid WHERE ".$modx->getFullTableName('site_tmplvar_templates').".templateid ='". $_POST['tplID']."'";
- 	$rs = $modx->db->query($sql);
+ 	$rs = $modx->db->select(
+		'*',
+		$modx->getFullTableName('site_tmplvars')." tv
+			LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS tvt ON tv.id = tvt.tmplvarid",
+		"tvt.templateid ='{$_POST['tplID']}'"
+		);
  	$limit = $modx->db->getRecordCount($rs);
  	
  	if ($limit > 0) {

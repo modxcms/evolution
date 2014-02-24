@@ -28,67 +28,56 @@ if($_SESSION['mgrDocgroups'])
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".(!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
 
 // Get the document content
-$sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.id =\''.$id.'\' '.
-       'AND ('.$access.')';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-	$modx->webAlertAndQuit("More results returned than expected.");
-} elseif ($limit == 0) {
+$rs = $modx->db->select(
+	'DISTINCT sc.*',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.id ='{$id}' AND ({$access})"
+	);
+$content = $modx->db->getRow($rs);
+if (!$content) {
 	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
-$content = $modx->db->getRow($rs);
 
 /**
  * "General" tab setup
  */
 // Get Creator's username
-$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['createdby'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$createdbyname = $row['username'];
+$rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['createdby']}'");
+$createdbyname = $modx->db->getValue($rs);
 
 // Get Editor's username
-$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['editedby'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$editedbyname = $row['username'];
+$rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['editedby']}'");
+$editedbyname = $modx->db->getValue($rs);
 
 // Get Template name
-$rs = $modx->db->query('SELECT templatename FROM '.$tbl_site_templates.' WHERE id=\''.$content['template'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$templatename = $row['templatename'];
+$rs = $modx->db->select('templatename',$tbl_site_templates, "id='{$content['template']}'");
+$templatename = $modx->db->getValue($rs);
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
 // Get list of current keywords for this document
 $keywords = array();
-$sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.' AS x '.
-       'WHERE k.id = x.keyword_id AND x.content_id = \''.$id.'\' '.
-       'ORDER BY k.keyword ASC';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
+$rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
+       "k.id = x.keyword_id AND x.content_id = '{$id}'",
+       'k.keyword ASC');
 	while ($row = $modx->db->getRow($rs)) {
 		$keywords[$i] = $row['keyword'];
 	}
-}
 
 // Get list of selected site META tags for this document
 $metatags_selected = array();
-$sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
-       'FROM '.$tbl_site_metatags.' AS meta '.
-       'LEFT JOIN '.$tbl_site_content_metatags.' AS sc ON sc.metatag_id = meta.id '.
-       'WHERE sc.content_id=\''.$content['id'].'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
+$rs = $modx->db->select(
+	'meta.id, meta.name, meta.tagvalue',
+	"{$tbl_site_metatags} AS meta
+		LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id",
+	"sc.content_id='{$content['id']}'"
+	);
 	while ($row = $modx->db->getRow($rs)) {
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
-}
+
 
 /**
  * "View Children" tab setup
@@ -100,25 +89,26 @@ if (!class_exists('makeTable')) include_once $modx->config['site_manager_path'].
 $childsTable = new makeTable();
 
 // Get child document count
-$sql = 'SELECT DISTINCT sc.id '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.parent=\''.$content['id'].'\' '.
-       'AND ('.$access.')';
-$rs = $modx->db->query($sql);
-$numRecords = $modx->db->getRecordCount($rs);
+$rs = $modx->db->select(
+	'count(DISTINCT sc.id)',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.parent='{$content['id']}' AND ({$access})"
+	);
+$numRecords = $modx->db->getValue($rs);
 
 $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon' ;
 $dir = isset($_REQUEST['dir'])? $_REQUEST['dir']: 'DESC';
 
 // Get child documents (with paging)
-$sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.parent=\''.$content['id'].'\' '.
-       'AND ('.$access.') '.
-	   'ORDER BY '.$sort.' '.$dir.
-       $childsTable->handlePaging(); // add limit clause
+$rs = $modx->db->select(
+	'DISTINCT sc.*',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.parent='{$content['id']}' AND ({$access})",
+	"{$sort} {$dir}",
+	$childsTable->handlePaging() // add limit clause
+	);
 $filter_sort='';
 $filter_dir='';
 if ($numRecords > 0) {
@@ -135,7 +125,6 @@ if ($numRecords > 0) {
 		'<option value="DESC"'.(($dir=='DESC') ? ' selected' : '').'>'.$_lang['sort_desc'].'</option>'.
 		'<option value="ASC"'.(($dir=='ASC') ? ' selected' : '').'>'.$_lang['sort_asc'].'</option>'.
 	'</select></p>';
-	$rs = $modx->db->query($sql);
 		$resource = $modx->db->makeArray($rs);
 
 		// CSS style for table
@@ -160,8 +149,6 @@ if ($numRecords > 0) {
 		);
 		$tbWidth = array('2%', '', '10%', '10%', '90', '150');
 		$childsTable->setColumnWidths($tbWidth);
-
-		$limitClause = $childsTable->handlePaging();
 
 $sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
 $sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';

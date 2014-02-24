@@ -16,19 +16,10 @@ $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
 
 // check to see the variable editor isn't locked
-$tbl_active_users = $modx->getFullTableName('active_users');
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
-$total = $modx->db->getRecordCount($rs);
-if($total>1)
-{
-	while($row = $modx->db->getRow($rs))
-	{
-		if($row['internalKey']!=$modx->getLoginUserID())
-		{
-			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $row['username'], 'template variable'));
-		}
+$rs = $modx->db->select('username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template variable'));
 	}
-}
 // end check for lock
 
 // make sure the id's a number
@@ -42,16 +33,11 @@ $content = array();
 if(isset($_GET['id']))
 {
 	$rs = $modx->db->select('*',$tbl_site_tmplvars,"id='{$id}'");
-	$total = $modx->db->getRecordCount($rs);
-	if($total>1)
-	{
-		$modx->webAlertAndQuit($_lang["error_many_results"]);
-	}
-	if($total<1)
-	{
+	$content = $modx->db->getRow($rs);
+	if(!$content) {
 		header("Location: ".MODX_SITE_URL."index.php?id={$site_start}");
 	}
-	$content = $modx->db->getRow($rs);
+	
 	$_SESSION['itemname'] = $content['caption'];
 	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
 	{
@@ -309,9 +295,8 @@ function decode(s){
     <td><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
         	<option>&nbsp;</option>
         <?php
-            include_once "categories.inc.php";
-            $ds = getCategories();
-            if($ds) foreach($ds as $n=>$v){
+            include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+            foreach(getCategories() as $n=>$v){
                 echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
             }
         ?>
@@ -444,11 +429,8 @@ function decode(s){
 <!-- Access Permissions -->
 	<?php
 	if($use_udperms==1) {
-	    $groupsarray = array();
-
 	    // fetch permissions for the variable
-	    $sql = "SELECT documentgroup FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
-	    $rs = $modx->db->query($sql);
+	    $rs = $modx->db->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
 	    $groupsarray = $modx->db->getColumn('documentgroup', $rs);
 
 ?>

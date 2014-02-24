@@ -50,9 +50,8 @@ else {
 	// do any renaming that has to be done
 	foreach($orig_keywords as $key => $value) {
 		if($rename_keywords[$key]!=$value) {
-			$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
-			$rs = $modx->db->query($sql);
-			$limit = $modx->db->getRecordCount($rs);
+			$rs = $modx->db->select('count(*)', $modx->getFullTableName('site_keywords'), "BINARY keyword='".$modx->db->escape($rename_keywords[$key])."'");
+			$limit = $modx->db->getValue($rs);
 			if($limit > 0) {
 				$modx->webAlertAndQuit("Keyword '{$rename_keywords[$key]}' already been defined!");
 			} else {
@@ -81,9 +80,8 @@ else {
 	if(!empty($_POST['new_keyword'])) {
 		$nk = $_POST['new_keyword'];
 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE keyword='".addslashes($nk)."'";
-		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(*)', $modx->getFullTableName('site_keywords'), "keyword='".$modx->db->escape($nk)."'");
+		$limit = $modx->db->getValue($rs);
 		if($limit > 0) {
 			$modx->webAlertAndQuit("Keyword '{$nk}' already exists!");
 		} else {
