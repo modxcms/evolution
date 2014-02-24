@@ -348,7 +348,7 @@
         </div>
     </form>
     <div class="loginLicense">
-    &copy; 2005-2013 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
+    &copy; 2005-2014 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
     </div>
 </div>
 <!-- close #mx_loginbox -->
