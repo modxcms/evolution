@@ -78,7 +78,7 @@ class synccache{
 
         // update publish time file
         $timesArr = array();
-        $result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.(time() + $modx->config['server_offset_time']))
+        $result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.(time() + $modx->config['server_offset_time']));
         if($minpub = $modx->db->getValue($result)) {
             $timesArr[] = $minpub;
         }
