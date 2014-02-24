@@ -277,7 +277,7 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
       // Get children who are parents (isfolder = 1)
       $rsTempParents = $modx->db->select(
 	    'id',
-		$tblsc,
+		$tblsc . ' sc',
 		"isfolder=1 AND parent='{$p}' AND sc.deleted=0 " . ($seeThruUnpub ? '' : "AND sc.published=1")
 	    );
 
