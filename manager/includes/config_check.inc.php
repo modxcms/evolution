@@ -46,7 +46,7 @@ if(!isset($modx->config['_hide_configcheck_templateswitcher_present']) || $modx-
     if(isset($_SESSION['mgrPermissions']['edit_plugin']) && $_SESSION['mgrPermissions']['edit_plugin'] == '1') {
         $rs = $modx->db->select('name, disabled', $modx->getFullTableName('site_plugins'), "name IN ('TemplateSwitcher', 'Template Switcher', 'templateswitcher', 'template_switcher', 'template switcher') OR plugincode LIKE '%TemplateSwitcher%'");
         $row = $modx->db->getRow($rs);
-        if($row['disabled'] == 0) {
+        if($row && $row['disabled'] == 0) {
             $warningspresent = 1;
             $warnings[] = array($_lang['configcheck_templateswitcher_present']);
             $tplName = $row['name'];
