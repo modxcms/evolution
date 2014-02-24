@@ -239,7 +239,7 @@ class DBAPI {
    function update($fields, $table, $where = "") {
       global $modx;
       if (!$table)
-         $modx->messageQuit("Empty \$from parameters in DBAPI::update().");
+         $modx->messageQuit("Empty \$table parameter in DBAPI::update().");
       else {
          $table = $this->replaceFullTableName($table);
          if (is_array($fields)) {
@@ -259,7 +259,7 @@ class DBAPI {
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
       global $modx;
       if (!$intotable)
-         $modx->messageQuit("Empty \$from parameters in DBAPI::insert().");
+         $modx->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
       else {
          $intotable = $this->replaceFullTableName($intotable);
          if (!is_array($fields)) {
