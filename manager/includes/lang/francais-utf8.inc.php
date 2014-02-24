@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Nicolas Martignoni (Nissai)
  * @author David Mollière (davidm)
  * @author Jean-Christophe Brebion (Fairytree)

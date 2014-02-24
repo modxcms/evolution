@@ -4,7 +4,7 @@
  *
  * @author modxcms.cz
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Czech
  * @package modx
@@ -113,7 +113,7 @@ $_lang["installing_demo_site"] = 'Instalovat ukázkový portál: ';
 $_lang["language_code"] = 'cs';
 $_lang["loading"] = 'Načítám...';
 $_lang["modules"] = 'Moduly';
-$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) projekt. Všechna práva vyhrazena. MODX je licencován pod GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) projekt. Všechna práva vyhrazena. MODX je licencován pod GNU GPL.';
 $_lang["modx_footer2"] = 'MODX je free software. Doporučujeme Vám být kreativní a používat MODX jak jen uznáte za vhodné. Pouze se ujistěte, že pokud uděláte nějaké změny a budete chtít upravený MODX distribuovat dál, musí být zdrojové kódy volně přístupné!!';
 $_lang["modx_install"] = 'MODX &raquo; Instalace';
 $_lang["modx_requires_php"] = ', a MODX vyžaduje PHP 4.2.0 nebo novější';

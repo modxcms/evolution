@@ -5,7 +5,7 @@
  * Purpose: Contains the language strings for use in the module.
  * Author: David Mollière, Jean-Christophe Brebion
  * Language: French
- * Date: 2013/12/31
+ * Date: 2014/02/24
  */
 // titles
 $_lang['DM_module_title'] = 'Doc Manager';

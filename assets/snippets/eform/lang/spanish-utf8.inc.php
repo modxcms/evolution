@@ -5,7 +5,7 @@
  * Language:       Spanish
  * Encoding:       UTF-8
  * Translated by:  "alconpez" y "ARES1983"
- * Date:           2013/12/31
+ * Date:           2014/02/24
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Información de eliminación de errores (Debug): ";

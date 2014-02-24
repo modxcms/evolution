@@ -6,7 +6,7 @@
  * @author Safronovich Victor
  * @author Russian MODX Community
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Russian
  * @package modx
@@ -116,7 +116,7 @@ $_lang["installing_demo_site"] = 'Установка примера веб-са�
 $_lang["language_code"] = 'ru';
 $_lang["loading"] = 'Загружается...';
 $_lang["modules"] = 'Модули';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
 $_lang["modx_footer2"] = 'MODX &mdash; свободное программное обеспечение. Мы поощряем вас быть творческими и использовать MODX как вы считаете целесообразным. Если вы внесете изменения и решите распространять ваш измененный вариант MODX, то должны сохранять и распространять исходный код бесплатно.';
 $_lang["modx_install"] = 'MODX &raquo; Установка';
 $_lang["modx_requires_php"] = ', а MODX необходим PHP 4.4.9 или более поздний';

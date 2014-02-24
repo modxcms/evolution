@@ -5,7 +5,7 @@
  * Language:       Swedish
  * Encoding:       UTF-8
  * Translated by:  Pontus Ågren
- * Date:           2013/12/31
+ * Date:           2014/02/24
  */
 $_lang["ef_date_format"] = "%Y-%b-%d %H:%M:%S";
 $_lang["ef_debug_info"] = "Debugg-info: ";
