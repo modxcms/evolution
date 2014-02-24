@@ -611,7 +611,7 @@ class ddTools {
 					INNER JOIN ".self::$tables['site_tmplvar_templates']." AS tvtpl ON tvtpl.tmplvarid = tv.id
 					LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}' ",
 				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
-				($sort ? "{$sort} {$dir}"; "")
+				($sort ? "{$sort} {$dir}" : "")
 				);
 			
 			$result = $modx->db->makeArray($rs);
