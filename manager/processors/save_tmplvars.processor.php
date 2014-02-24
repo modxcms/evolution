@@ -36,6 +36,9 @@ if($caption =="") {
 	$caption  = $name? $name: "Untitled variable";
 }
 
+// get table names
+$tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
+
 switch ($_POST['mode']) {
     case '300':
 
