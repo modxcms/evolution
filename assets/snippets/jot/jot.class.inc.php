@@ -712,7 +712,7 @@ class CJot {
 			
 			// What is the e-mail address of the article author?
 			$author_id = $this->config['authorid'];		
-			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), 'id = '.$author_id);
+			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), "id = '{$author_id}'");
 			$results_array = $modx->db->makeArray($res);
 			$user = $results_array[0]; // Assume there is only one result			
 			
@@ -856,14 +856,13 @@ class CJot {
 	// Returns an array containing webusers which are a member of the specified group(s).
 	function getMembersOfWebGroup($groupNames=array()) {
 		global $modx;
-		$usrIDs = array();
-		$tbl = $modx->getFullTableName("webgroup_names");
-		$tbl2 = $modx->getFullTableName("web_groups");
-		$sql = "SELECT distinct wg.webuser
-						FROM $tbl wgn
-						INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wgn.name IN ('" . implode("','",$groupNames) . "')";
-		$usrRows = $modx->db->getColumn("webuser", $sql);
-		foreach ($usrRows as $k => $v) $usrIDs[] = intval($v);
+		$rs = $modx->db->select(
+			'DISTINCT wg.webuser',
+			$modx->getFullTableName("webgroup_names")." wgn
+				INNER JOIN ".$modx->getFullTableName("web_groups")." wg ON wg.webgroup=wgn.id AND wgn.name IN ('" . implode("','",$groupNames) . "')"
+			);
+		$usrIDs = $modx->db->getColumn("webuser", $rs);
+		$usrIDs = array_filter(array_map('intval', $usrIDs));
 		return $usrIDs;
 	}	
 	
