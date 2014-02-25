@@ -2060,11 +2060,14 @@ class DocumentParser {
 		// build query
 		$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 		
+		$tblsc = $this->getFullTableName('site_content');
+		$tbldg = $this->getFullTableName('document_groups');
+		
 		$result= $this->db->select(
 			"DISTINCT {$fields}",
 			"{$tblsc} sc
 				LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-			"sc.parent = '{$parentid}' AND sc.published=$published AND sc.deleted=$deleted {$where} AND ({$access}) GROUP BY sc.id",
+			"sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
 			($sort ? "{$sort} {$dir}" : ""),
 			$limit
 			);
