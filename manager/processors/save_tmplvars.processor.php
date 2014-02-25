@@ -28,16 +28,13 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
         $categoryid = newCategory($_POST['newcategory']);
     }
 }
-if (empty($categoryid)) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
-}
 
 if($caption =="") {
 	$caption  = $name? $name: "Untitled variable";
 }
 
 // get table names
-$tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
+$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
 switch ($_POST['mode']) {
     case '300':

@@ -22,9 +22,6 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
         $categoryid = newCategory($_POST['newcategory']);
     }
 }
-if (empty($categoryid)) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
-}
 
 if($templatename=="") $templatename = "Untitled template";
 
