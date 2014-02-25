@@ -31,10 +31,10 @@ $_lang['edit'] = "Éditer";
 $_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
 // Debug Tab Names
-$_lang['info'] = "Info";
+$_lang['info'] = "Informations";
 $_lang['modx'] = "MODX";
 $_lang['fields'] = "Fields";
-$_lang['templates'] = "Templates";
+$_lang['templates'] = "Modèles";
 $_lang['filters'] = "Filters";
 $_lang['prefetch_data'] = "Prefetch Data";
 $_lang['retrieved_data'] = "Retreived Data";

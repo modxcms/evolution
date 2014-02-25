@@ -4,7 +4,7 @@
  *
  * @author davaeron
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Dutch
  * @package modx
@@ -113,7 +113,7 @@ $_lang["installing_demo_site"] = 'Installeer demo site:';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
 $_lang["modx_requires_php"] = ', en MODX heeft PHP 4.2.0 of nieuwer nodig';

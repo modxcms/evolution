@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author modxcms.cz
  *
  * @language Czech
@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Nová šablona';
 $_lang["new_tmplvars"] = 'Nová Template Variable';
 $_lang["new_user"] = 'Nový uživatel';
 $_lang["new_web_user"] = 'Nový návštěvník';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Nový dokument';
 $_lang["no"] = 'Ne';
 $_lang["no_active_users_found"] = 'Nenalezeni aktivní uživatelé.';
 $_lang["no_activity_message"] = 'Ještě jste nevytvořil ani neupravil žádný dokument.';
@@ -1205,7 +1205,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Publikovat';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

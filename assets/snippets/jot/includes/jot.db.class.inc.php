@@ -176,7 +176,7 @@ class CJotDataDb {
 		if (array_key_exists($key, $this->cache["userpostcount"])) {
 			$count = $this->cache["userpostcount"][$key];
 		} else {
-			$rs = $modx->db->select('count(id)', $this->tbl["content"], "createdby = '{$userid}' AND uparent = '{$docid}' AND tagid = '{$tagid}'"));
+			$rs = $modx->db->select('count(id)', $this->tbl["content"], "createdby = '{$userid}' AND uparent = '{$docid}' AND tagid = '{$tagid}'");
 			$count = intval($modx->db->getValue($rs));
 			$this->cache["userpostcount"][$key] = $count;
 		}
@@ -198,7 +198,7 @@ class CJotDataDb {
 				$where = "published = 1 "; // Published
 		}
 		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}'", $where);
-		return intval($modx->db->getValue($rs);
+		return intval($modx->db->getValue($rs));
 	}
 			
 	function getOrderByDirection($dir = "a") {

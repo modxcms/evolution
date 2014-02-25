@@ -5,7 +5,7 @@
  * Language:       Finnish
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2013/12/31
+ * Date:           2014/02/24
  */
 $_lang["ef_date_format"] = "%d.%m.%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug tietoa: ";

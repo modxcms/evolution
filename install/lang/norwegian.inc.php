@@ -4,7 +4,7 @@
  *
  * @author Bjørn Erik Sandbakk (Sylvaticus)
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Norsk
  * @package modx
@@ -113,14 +113,14 @@ $_lang["installing_demo_site"] = 'Installerer pr&oslash;ve-data: ';
 $_lang["language_code"] = 'no';
 $_lang["loading"] = 'Henter...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med enerett. MODX er lisensiert under GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med enerett. MODX er lisensiert under GNU GPL.';
 $_lang["modx_footer2"] = 'MODX er fri programvare. Vi oppmuntrer deg til &aring; v&aelig;re kreativ og bruke MODX p&aring; hvilken m&aring;te du vil. V&aelig;r bare n&oslash;ye med &aring; beholde kildekoden fri om du gj&oslash;r endringer og siden velger &aring; omdistribuere din modifiserte versjon av MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installasjon';
 $_lang["modx_requires_php"] = ', og MODX krever PHP 4.2.0 eller senere.';
 $_lang["mysql_5051"] = ' MySQL server versjon er 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Det er kjente problemer med MySQL 5.0.51. Det anbefales at du oppgraderer f&oslash;r du fortsetter.';
 $_lang["mysql_version_is"] = ' Din MySQL versjon er: ';
-$_lang["no"] = 'No';
+$_lang["no"] = 'Nei';
 $_lang["none"] = 'Ingen';
 $_lang["not_found"] = 'ble ikke funnet';
 $_lang["ok"] = 'OK!';

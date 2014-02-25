@@ -3,7 +3,7 @@
  * MODX Country list language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Danish
  * @package modx

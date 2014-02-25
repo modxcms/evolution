@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Nicolas Martignoni (Nissai)
  * @author David Mollière (davidm)
  * @author Jean-Christophe Brebion (Fairytree)
@@ -579,7 +579,7 @@ $_lang["new_template"] = 'Nouveau Modèle';
 $_lang["new_tmplvars"] = 'Nouvelle Variable de Modèle';
 $_lang["new_user"] = 'Nouvel Utilisateur';
 $_lang["new_web_user"] = 'Nouvel Utilisateur Web';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Nouvelle Ressource';
 $_lang["no"] = 'Non';
 $_lang["no_active_users_found"] = 'Aucun utilisateur actif trouvé.';
 $_lang["no_activity_message"] = 'Vous n\'avez pas encore créé ou modifié de Ressources.';
@@ -1171,7 +1171,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Publié';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

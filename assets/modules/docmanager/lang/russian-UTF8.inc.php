@@ -5,7 +5,7 @@
  * Purpose: Contains the language strings for use in the module.
  * Author: Jaroslav Sidorkin
  * Language: Russian
- * Date: 2013/12/31
+ * Date: 2014/02/24
  */
 // titles
 $_lang['DM_module_title'] = 'Менеджер ресурсов';

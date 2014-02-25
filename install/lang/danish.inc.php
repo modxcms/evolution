@@ -5,7 +5,7 @@
  * @author Henrik Nielsen
  * @author Mads Vestmar
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Danish
  * @package modx
@@ -114,7 +114,7 @@ $_lang["installing_demo_site"] = 'Installerer demo website: ';
 $_lang["language_code"] = 'da';
 $_lang["loading"] = 'Indlæser...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) projektet. Alle rettigheder forbeholdes. MODX er licenseret af GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) projektet. Alle rettigheder forbeholdes. MODX er licenseret af GNU GPL.';
 $_lang["modx_footer2"] = 'MODX er gratis software. Vi opfordrer dig til at være kreativ og at du bruger MODX som det passer dig. Men vær opmærksom på at hvis du ændrer i MODX og vælger at offenliggøre ændringerne skal kildekoden være tilgængelige og gratis for alle!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', og MODX kræver PHP 4.2.0 eller nyere';

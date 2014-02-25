@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author MODxCMS.com.br
  *
  * @language Brazilian Portuguese
@@ -577,7 +577,7 @@ $_lang["new_template"] = 'Novo Template';
 $_lang["new_tmplvars"] = 'Nova Variável de Template (TV)';
 $_lang["new_user"] = 'Novo usuário';
 $_lang["new_web_user"] = 'Novo Usuário Externo (Web)';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Novo Documento';
 $_lang["no"] = 'Não';
 $_lang["no_active_users_found"] = 'Não foi encontrado usuários ativos.';
 $_lang["no_activity_message"] = 'Até agora não foi criado ou editado nenhum documento.';

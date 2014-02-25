@@ -5,7 +5,7 @@
  * @author Marc Hinse
  * @author Bogdan Günther
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language German
  * @package modx
@@ -114,7 +114,7 @@ $_lang["installing_demo_site"] = 'Installiere Beispiel-Website: ';
 $_lang["language_code"] = 'de';
 $_lang["loading"] = 'Laden …';
 $_lang["modules"] = 'Module';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODX ist freie Software.  Wir ermutigen Sie, kreativ zu sein und MODX so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quellcodes und der Weiterverbreitung der modifizierten MODX-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', und MODX benötigt PHP 4.2.0 oder höher';

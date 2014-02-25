@@ -5,7 +5,7 @@
  * @author Mohsen Zare (MotSmart), MotSmart@Gmail.com, www.modxcms.ir
  * @author AliAqua
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Persian
  * @package modx
@@ -114,14 +114,14 @@ $_lang["installing_demo_site"] = 'نصب محتوای سایت پیشفرض (د�
 $_lang["language_code"] = 'fa';
 $_lang["loading"] = 'در حال بارگذاری ...';
 $_lang["modules"] = 'ماژولها';
-$_lang["modx_footer1"] = '&copy; 2005-2013 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
 $_lang["modx_footer2"] = 'مادایکس نرم افزاری رایگان است، ما شما را تشویق به خلاقیت می کنیم، شما می توانید به منظور هماهنگی مادایکس با نیازهای خود، هر تغییری را در آن اعمال کنید. چنانچه قصد ارائه نسخه مادایکس ویژه خود به دیگران را دارید حتما آن را رایگان ارائه کنید!';
 $_lang["modx_install"] = 'MODX &raquo; برنامه نصب';
 $_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 4.2.0 و یا بالاتر نیاز دار';
 $_lang["mysql_5051"] = ' نسخه MySQL سرور 5.0.51 می باشد!';
 $_lang["mysql_5051_warning"] = 'مشکلاتی با نسخه MySQL 5.0.51 کشف شده. پیشنهاد می کنیم نسخه MySQL خود را ارتقا دهید.';
 $_lang["mysql_version_is"] = ' نسخه MySQL شما: ';
-$_lang["no"] = 'No';
+$_lang["no"] = 'خیر';
 $_lang["none"] = 'هیچکدام';
 $_lang["not_found"] = 'پیدا نشد';
 $_lang["ok"] = ' مشکلی ندارد!';
@@ -180,7 +180,7 @@ $_lang["table_prefix_not_exist_note"] = 'صب و بروزرسانی با پیش�
 $_lang["templates"] = 'قالب ها';
 $_lang["to_log_into_content_manager"] = 'برای ورود به قسمت مدیریت ([+MGR_DIR+]/index.php) شما می توانید بر دکمه "ببند" کلیک کنید.';
 $_lang["toggle"] = 'دستور';
-$_lang['tvs'] = 'Template Variables';
+$_lang['tvs'] = 'متغیرهای قالب';
 $_lang["unable_install_chunk"] = 'نصب چانک با مشکل روبرو شد.  فایل';
 $_lang["unable_install_module"] = 'نصب ماژول با مشکل روبرو شد.  فایل';
 $_lang["unable_install_plugin"] = 'نصب پلاگین با مشکل روبرو شد.  فایل';
@@ -188,13 +188,13 @@ $_lang["unable_install_snippet"] = 'نصب اسنیپت با مشکل روبرو
 $_lang["unable_install_template"] = 'نصب قالب با مشکل روبرو شد.  فایل';
 $_lang["upgrade_note"] = '<strong>یادداشت:</strong> قبل از ورد به سایت شما می بایست به قسمت مدیریت بروید و پیکربندی را مرور و ویرایش کنید .';
 $_lang["upgraded"] = 'به روز شد';
-$_lang["validate_referer_title"] = 'Validate HTTP_REFERER headers?';
+$_lang["validate_referer_title"] = 'ارزیابی HTTP_REFERER انجام شود؟';
 $_lang["visit_forum"] = ', به <a href="http://forums.modx.com/" target="_blank">انجمن پشتیبانی مادایکس</a> بروید.';
 $_lang["warning"] = 'WARNING!';
 $_lang["welcome_message_start"] = 'First, choose the type of installation to perform:';
 $_lang["welcome_message_text"] = 'این برنامه تا آخرین مرحله ی نصب مادایکس راهنمای شماست.';
 $_lang["welcome_message_welcome"] = ' به برنامه ی نصب MODX فارسی خوش آمدید.';
 $_lang["writing_config_file"] = 'نگارش فایل پیکر بندی: ';
-$_lang["yes"] = 'Yes';
+$_lang["yes"] = 'بله';
 $_lang["you_running_php"] = ' -  نسخه فعلی PHP شما ';
 ?>

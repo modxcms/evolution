@@ -1,7 +1,7 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODX Evolution 1.0.13 (Jan 08, 2014)
+MODX Evolution 1.0.13 (Feb 23, 2014)
 ===================================
 --------------------------------------------
 Bugfixes:
@@ -35,7 +35,6 @@ Bugfixes:
 * [#10356] Closing chunk tag confuses the parser
 * [#10357] Ditto does not work in @EVAL
 * [#10358] FCKEditor && $_SERVER['HTTP_HOST'] with port
-
 * [gitHub] AjaxSearch: Adding charset header in Ajax Mode
 * [gitHub] $key could be empty if the placeholder tag is not closed or if it is directly closed
 * [gitHub] Fix for not set $_SESSION key
@@ -50,6 +49,7 @@ Bugfixes:
 * [gitHub] Fix SQL error when calling optimize method
 * [gitHub] Fix backup format file Y-m-d_H-i-s - now new always top
 * [gitHub] Clean filenames with KCFinder - use of TransAlias class and plugin settings
+* [gitHub] CodeMirror fails to refresh in QuickManager+
 
 --------------------------------------------
 Refactor:
@@ -60,11 +60,9 @@ Refactor:
 * [#10271] Modify save button position in file manager
 * [#10300] Allow array parameter in phpthumb snippet
 * [#10349] FirstChildRedirect options
-
 * [#3137] save_content.processor.php site_start save condition tune. (not old-date set)
 * [#3159] $_lang['install'] button is changed to $_lang['btnnext_value'] button.
 * [#3154] Datebase name default value should be empty.
-
 * [gitHub] The item of "Update" is concealed at a new installation.
 * [gitHub] Manager Users - List item tuning. Many user env useful.
 * [gitHub] View manager logs - grid view tune
@@ -85,6 +83,19 @@ Refactor:
 * [gitHub] Make one point to clearCache and add params
 * [gitHub] Rename MODx to MODX
 * [gitHub] Language files for core and core snippets are now handled by Transifex
+* [gitHub] Changed ConvertDate to direct call $modx->toTimeStamp
+* [gitHub] Change "event->alert"+"include mutate_*" to "manager->saveFormValues"+ webAlertAndMsg
+* [gitHub] Change webAlert() to webAlertAndQuit() and mode webAlert() to deprecated.functions.inc.php
+* [gitHub] Use while in db->makeArray()
+* [gitHub] Use db->makeArray(), db->getColumn() instead of loops
+* [gitHub] Change db loops style from for to while
+* [gitHub] Change nicesize() to $modx->nicesize()
+* [gitHub] update $modx->getDocuments 
+* [gitHub] update $modx->getTemplateVars 
+* [gitHub] update $modx->getTemplateVarOutput 
+* [gitHub] update $modx->getDocumentChildren
+* [gitHub] update $modx->getDocumentChildrenTVarOutput
+* [gitHub] update $modx->getDocumentChildren”
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -103,10 +114,15 @@ Additional Improvements & Updates:
 * [gitHub] Add hide plugin in sort
 * [gitHub] Patch findTemplateVars for compatibility with HPx
 * [gitHub] Add ID in QM+ toolbar.
+* [gitHub] add ID in title for edit document
 * [gitHub] update ManagerManager to 0.6.1.
+* [gitHub] update ajaxSearch to 1.10.0.
+* [gitHub] update Wayfinder to 2.0.2.
+* [gitHub] update Eform to 1.4.5.
 * [gitHub] Breadcrumbs 1.0.4 (option to hide pages with certain templates from crumbs list)
 * [gitHub] phpthumb 1.2 (not include phpthumb class if have resized images)
 * [gitHub] KCFinder - Remove superfluous update check from kcfinder
+* [gitHub] Automatic create .htaccess in cache folder if it is a subfolder of assets/cache
 
 --------------------------------------------
 Security:

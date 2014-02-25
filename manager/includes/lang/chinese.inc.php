@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author changkong.org rerbin@gmail.com
  * @author modx.cn leepoooo@163.com
  *
@@ -577,7 +577,7 @@ $_lang["new_template"] = '新模板';
 $_lang["new_tmplvars"] = '新的模板变量';
 $_lang["new_user"] = '新用户';
 $_lang["new_web_user"] = '新网站用户';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = '新文档';
 $_lang["no"] = '否';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'You have not yet created or edited any documents.';
@@ -1202,7 +1202,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = '发布吗？';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

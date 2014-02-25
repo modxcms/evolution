@@ -6,7 +6,7 @@
  * @author Natalia Łubniewska
  * @author Witek Galecki
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Polish
  * @package modx
@@ -115,7 +115,7 @@ $_lang["installing_demo_site"] = 'Instalowanie strony demo: ';
 $_lang["language_code"] = 'pl';
 $_lang["loading"] = 'Ładowanie...';
 $_lang["modules"] = 'Moduły';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX jest objęty licencją GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX jest objęty licencją GNU GPL.';
 $_lang["modx_footer2"] = 'MODX jest wolnym oprogramowaniem. Zachęcamy Cię, abyś kreatywnie wykorzystywał MODXa w jakikolwiek sposób, który uznasz za przydatny. Prosimy jedynie, abyś pozostawił kod źródłowy otwartym i darmowym w przypadku gdy zdecydujesz się na redystrybucję MODXa w zmodyfikowanej przez siebie wersji!';
 $_lang["modx_install"] = 'MODX &raquo; Instalacja';
 $_lang["modx_requires_php"] = ', MODX wymaga PHP w wersji 4.2.0 lub nowszej';

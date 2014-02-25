@@ -1421,6 +1421,7 @@ class DocumentParser {
 				LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$documentObject['id']}'",
 			"tvtpl.templateid = '{$documentObject['template']}'"
 			);
+			$tmplvars = array();
             while ($row= $this->db->getRow($rs)) {
                 $tmplvars[$row['name']]= array (
                     $row['name'],

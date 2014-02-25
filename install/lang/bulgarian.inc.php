@@ -4,7 +4,7 @@
  *
  * @author MODX Team
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Bulgarian
  * @package modx
@@ -113,14 +113,14 @@ $_lang["installing_demo_site"] = 'Инсталиране на демо сайт:
 $_lang["language_code"] = 'bg';
 $_lang["loading"] = 'Зареждане...';
 $_lang["modules"] = 'Модули';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) проект. Всички права запазени. MODX е лицензиран под GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) проект. Всички права запазени. MODX е лицензиран под GNU GPL.';
 $_lang["modx_footer2"] = 'MODX е свободен софтуер.  Бъдете креативни и свикнете да работите с MODX. Имайте предвид, че ако решите да правите промени и да предоставяте копие от вашия модифициран MODX, изходния код трябва да е свободен!';
 $_lang["modx_install"] = 'MODX &raquo; Инсталиране';
 $_lang["modx_requires_php"] = ', и MODX върви на PHP 4.2.0 или по-висока';
 $_lang["mysql_5051"] = ' MySQL версията на сървъра е 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Има известни спорни въпроси с MySQL 5.0.51. Препоръчително е да обновите преди да продължите.';
 $_lang["mysql_version_is"] = ' MySQL версията ви е: ';
-$_lang["no"] = 'No';
+$_lang["no"] = 'Не';
 $_lang["none"] = 'Никой';
 $_lang["not_found"] = 'не е намерен';
 $_lang["ok"] = 'ОК!';
