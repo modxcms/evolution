@@ -121,7 +121,7 @@ class CJotDataDb {
 	function Save(){
 		global $modx;
 		
-		foreach($this->fields as $n=>$v) { $this->fields[$n] = $modx->db->escape($v);}
+		$this->fields = $modx->db->escape($this->fields);
 			
 		if($this->isNew){
 

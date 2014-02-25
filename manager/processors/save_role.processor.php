@@ -4,8 +4,6 @@ if (!$modx->hasPermission('save_role')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-foreach ($_POST as $n => $v)
-    $_POST[$n] = $modx->db->escape($v); // escape post values 
 extract($_POST);
 
 if ($name == '' || !isset ($name)) {
@@ -86,13 +84,15 @@ $fields = array (
     'remove_locks' => $remove_locks
 );
 
+$fields = $modx->db->escape($fields);
+
 switch ($_POST['mode']) {
     case '38' :
         $tbl = $modx->getFullTableName("user_roles");
         $modx->db->insert($fields, $tbl);
 
         // Set the item name for logger
-        $_SESSION['itemname'] = $name;
+        $_SESSION['itemname'] = $_POST['name'];
 
         $header = "Location: index.php?a=86&r=2";
         header($header);
@@ -102,7 +102,7 @@ switch ($_POST['mode']) {
         $modx->db->update($fields, $tbl, "id='{$id}'");
 
         // Set the item name for logger
-        $_SESSION['itemname'] = $name;
+        $_SESSION['itemname'] = $_POST['name'];
 
         $header = "Location: index.php?a=86&r=2";
         header($header);

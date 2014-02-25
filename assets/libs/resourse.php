@@ -339,10 +339,7 @@ class resourse {
 		if(!is_array($data)){
 			$data=explode($sep,$data);
 		}
-		$out=array();
-		foreach($data as $item){
-			$out[]=$this->modx->db->escape($item);
-		}
+		$out = $this->modx->db->escape($data);
 		$out="'".implode("','",$out)."'";
 		return $out;
 	}

@@ -80,10 +80,7 @@ else
 		if(strpos($chunks,',')!==false)
 		{
 			$chunks = explode(',', $chunks);
-			foreach($chunks as $i=>$v)
-			{
-				$chunks[$i] = $modx->db->escape(trim($v));
-			}
+			$chunks = $modx->db->escape($chunks);
 			$chunks = join("','", $chunks);
 			$where  = "`name` IN ('{$chunks}')";
 			$orderby = "FIELD(name, '{$chunks}')";

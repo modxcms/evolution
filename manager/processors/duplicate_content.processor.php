@@ -85,12 +85,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
     $content['published'] = $content['pub_date'] = 0;
 
 	// Escape the proper strings
-	$content['pagetitle'] = $modx->db->escape($content['pagetitle']);
-	$content['longtitle'] = $modx->db->escape($content['longtitle']);
-	$content['description'] = $modx->db->escape($content['description']);
-	$content['introtext'] = $modx->db->escape($content['introtext']);
-	$content['content'] = $modx->db->escape($content['content']);
-	$content['menutitle'] = $modx->db->escape($content['menutitle']);
+	$content = $modx->db->escape($content);
 
 	// Duplicate the Document
 	$newparent = $modx->db->insert($content, $tblsc);

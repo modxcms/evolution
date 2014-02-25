@@ -38,7 +38,7 @@ else if($opcode=="edttag") {
 else if($opcode=="deltag") {
 	$f = $_POST["tag"];
 	if(is_array($f) && count($f)>0) {
-		for($i=0;$i<count($f);$i++) $f[$i]=$modx->db->escape($f[$i]);
+		$f = $modx->db->escape($f);
 		$modx->db->delete($modx->getFullTableName("site_metatags"),"id IN('".implode("','",$f)."')");
 	}
 }
