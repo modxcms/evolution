@@ -115,7 +115,7 @@ $mm_fields = array(
 );
 
 // Add in TVs to the list of available fields
-$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->db->config['table_prefix'].'site_tmplvars', '', 'name ASC'));
+$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
 foreach ($all_tvs as $thisTv){
 	// What is the field name?
 	$n = $thisTv['name'];
@@ -210,13 +210,13 @@ switch ($e->name){
 	case 'OnPluginFormRender':
 		// The ID of the plugin we're editing
 		$plugin_id_editing = $e->params['id'];
-		$result = $modx->db->select('name', $modx->db->config['table_prefix'].'site_plugins', "id='{$plugin_id_editing}'");
+		$result = $modx->db->select('name', $modx->getFullTableName('site_plugins'), "id='{$plugin_id_editing}'");
 		$plugin_editing_name = $modx->db->getValue($result);
 		
 		// if it's the right plugin
 		if (strtolower($plugin_editing_name) == 'managermanager'){
 			// Get all templates
-			$result = $modx->db->select('templatename, id, description', $modx->db->config['table_prefix'].'site_templates', '', 'templatename ASC');
+			$result = $modx->db->select('templatename, id, description', $modx->getFullTableName('site_templates'), '', 'templatename ASC');
 			$all_templates = $modx->db->makeArray($result);
 			
 			$template_table = '<table>';
@@ -235,7 +235,7 @@ switch ($e->name){
 			$template_table .= '</table>';
 			
 			// Get all tvs
-			$result = $modx->db->select('name,caption,id', $modx->db->config['table_prefix'].'site_tmplvars', '', 'name ASC');
+			$result = $modx->db->select('name,caption,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC');
 			$all_tvs = $modx->db->makeArray($result);
 			$tvs_table = '<table>';
 			$tvs_table .= '<tr><th class="gridHeader">TV name</th><th class="gridHeader">TV caption</th><th class="gridHeader">ID</th></tr>';
@@ -252,7 +252,7 @@ switch ($e->name){
 			$tvs_table .= '</table>';
 			
 			// Get all roles
-			$result = $modx->db->select('name, id', $modx->db->config['table_prefix'].'user_roles', '', 'name ASC');
+			$result = $modx->db->select('name, id', $modx->getFullTableName('user_roles'), '', 'name ASC');
 			$all_roles = $modx->db->makeArray($result);
 			
 			$roles_table = '<table>';

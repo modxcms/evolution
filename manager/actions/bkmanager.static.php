@@ -87,8 +87,7 @@ elseif ($mode=='snapshot')
 	{
 		$modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path'])));
 	}
-	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
-	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";
+	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%'";
 	$rs = $modx->db->query($sql);
 		$tables = $modx->db->getColumn('Name', $rs);
 	//$today = $modx->toDateFormat(time());
@@ -207,7 +206,7 @@ else
 		</tr></thead>
 		<tbody>
 			<?php
-$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
+$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%'";
 $rs = $modx->db->query($sql);
 $i = 0;
 while ($db_status = $modx->db->getRow($rs)) {
@@ -224,8 +223,8 @@ while ($db_status = $modx->db->getRow($rs)) {
 
 	// Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
 	$truncateable = array(
-		$table_prefix.'event_log',
-		$table_prefix.'manager_log',
+		$modx->db->config['table_prefix'].'event_log',
+		$modx->db->config['table_prefix'].'manager_log',
 	);
 	if($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
 		echo '<td dir="ltr" align="right">'.
@@ -505,11 +504,11 @@ class Mysqldumper {
 			{
 				switch($tblval)
 				{
-					case $table_prefix.'event_log':
-					case $table_prefix.'manager_log':
+					case $modx->db->config['table_prefix'].'event_log':
+					case $modx->db->config['table_prefix'].'manager_log':
 						continue 2;
 				}
-				if(!preg_match('@^'.$table_prefix.'@', $tblval)) continue;
+				if(!preg_match('@^'.$modx->db->config['table_prefix'].'@', $tblval)) continue;
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";
 			$output .= "#{$lf}# Table structure for table `{$tblval}`{$lf}";

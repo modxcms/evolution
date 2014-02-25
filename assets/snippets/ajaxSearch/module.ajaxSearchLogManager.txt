@@ -21,7 +21,6 @@ function getLogs($tb,$nb){
     $show = "SHOW TABLES FROM {$db} LIKE '{$name}'";
     $query = $modx->db->query($show);
     if ($modx->db->getRecordCount($query)) {
-        $tbLog = $modx->db->config['table_prefix']. $tb;
         $rs = $modx->db->select("searchstring,nb_results,results,comment,as_call,date,ip", $modx->getFullTableName($tb), '', 'id DESC', "0, $nb");
         return $rs;
     }
