@@ -62,9 +62,7 @@ $keywords = array();
 $rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
        "k.id = x.keyword_id AND x.content_id = '{$id}'",
        'k.keyword ASC');
-	while ($row = $modx->db->getRow($rs)) {
-		$keywords[$i] = $row['keyword'];
-	}
+	$keywords = $modx->db->getColumn('keyword', $rs);
 
 // Get list of selected site META tags for this document
 $metatags_selected = array();

@@ -65,10 +65,7 @@ else {
 
 	// delete any keywords that need to be deleted
 	if(count($delete_keywords)>0) {
-		$keywords_array = array();
-		foreach($delete_keywords as $key => $value) {
-			$keywords_array[] = $key;
-		}
+		$keywords_array = array_keys($delete_keywords);
 
 		$modx->db->delete($modx->getFullTableName('keyword_xref'), "keyword_id IN(".implode(",", $keywords_array).")");
 
