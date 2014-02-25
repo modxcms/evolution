@@ -71,12 +71,13 @@ class Document{
 	function Save($clearcache=1){
 		global $modx;
 		$tablename=$modx->getFullTableName('site_content');
+		$fields = $modx->db->escape($this->fields);
 		if($this->isNew){
-			$this->fields['id']=$modx->db->insert($this->fields, $tablename);
+			$this->fields['id']=$modx->db->insert($fields, $tablename);
 			$this->isNew = false;
 		} else {
 			$id=$this->fields['id'];
-			$modx->db->update($this->fields, $tablename, "id='{$id}'");
+			$modx->db->update($fields, $tablename, "id='{$id}'");
 		}
 		if(is_array($this->tvs)) $this->saveTVs();
     if ($clearcache == 1) {
