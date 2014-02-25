@@ -76,6 +76,7 @@ if($manager_language!="english" && file_exists($modx->config['site_manager_path'
     include_once "lang/country/english_country.inc.php";
 }
 
+$displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 ?>
 <script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
