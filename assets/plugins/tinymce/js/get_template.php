@@ -79,7 +79,7 @@ else
 		$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 		if(strpos($chunks,',')!==false)
 		{
-			$chunks = explode(',', $chunks);
+			$chunks = array_filter(array_map('trim', explode(',', $chunks)));
 			$chunks = $modx->db->escape($chunks);
 			$chunks = implode("','", $chunks);
 			$where  = "`name` IN ('{$chunks}')";

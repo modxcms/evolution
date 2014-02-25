@@ -1969,8 +1969,8 @@ class DocumentParser {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
         // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
+        $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
@@ -2004,8 +2004,8 @@ class DocumentParser {
         $tbldg= $this->getFullTableName("document_groups");
 
         // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
+        $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
@@ -2049,8 +2049,8 @@ class DocumentParser {
 		}
 		
 		// modify field names to use sc. table reference
-		$fields = 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
-		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+		$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 		
 		// get document groups for current user
 		if ($docgrp = $this->getUserDocGroups()){
@@ -2097,7 +2097,7 @@ class DocumentParser {
 	function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		if(is_string($ids)){
 			if(strpos($ids, ',') !== false){
-				$ids = explode(',', $ids);
+				$ids = array_filter(array_map('intval', explode(',', $ids)));
 			}else{
 				$ids = array($ids);
 			}
@@ -2106,8 +2106,8 @@ class DocumentParser {
 			return false;
 		}else{
 			// modify field names to use sc. table reference
-			$fields = 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
-			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			$fields = 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 			if ($where != ''){
 				$where = 'AND '.$where;
 			}
@@ -2188,7 +2188,7 @@ class DocumentParser {
             $tbldg= $this->getFullTableName("document_groups");
             $activeSql= $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
             // modify field names to use sc. table reference
-            $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
+            $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
             // get document groups for current user
             if ($docgrp= $this->getUserDocGroups())
                 $docgrp= implode(",", $docgrp);
@@ -2594,8 +2594,8 @@ class DocumentParser {
         else {
             $result= array ();
             // get user defined template variables
-            $fields= ($tvfields == "") ? "tv.*" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $tvfields)));
-            $tvsort= ($tvsort == "") ? "" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $tvsort)));
+            $fields= ($tvfields == "") ? "tv.*" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvfields))));
+            $tvsort= ($tvsort == "") ? "" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
             if ($tvidnames == "*")
                 $query= "tv.id<>0";
             else
@@ -2753,8 +2753,8 @@ class DocumentParser {
 			}
 			
 			// get user defined template variables
-			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $fields)));
-			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
 			
 			if ($idnames == '*'){
 				$query = 'tv.id<>0';

@@ -135,9 +135,8 @@ $_dfnMaxlength = 6;
 	# invoke onBeforeFormParse event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormParse) {
-		$eFormOnBeforeFormParse = explode(',', $eFormOnBeforeFormParse);
+		$eFormOnBeforeFormParse = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormParse)));
 		foreach ($eFormOnBeforeFormParse as $beforeFormParse) {
-			$beforeFormParse = trim($beforeFormParse);
 			if ($isDebug && !function_exists($beforeFormParse)) {
 				$fields['debug'] .= 'eFormOnBeforeFormParse event: Could not find the function ' . $beforeFormParse;
 			} else {
@@ -280,9 +279,8 @@ $_dfnMaxlength = 6;
 		// Changed in 1.4.4.5 - now expects 4 parameters
 		// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 		if ($eFormOnValidate) {
-			$eFormOnValidate = explode(',', $eFormOnValidate);
+			$eFormOnValidate = array_filter(array_map('trim', explode(',', $eFormOnValidate)));
 			foreach ($eFormOnValidate as $onValidate) {
-				$onValidate = trim($onValidate);
 				if ($isDebug && !function_exists($onValidate)) {
 					$fields['debug'] .= 'eformOnValidate event: Could not find the function ' . $onValidate;
 				} else {
@@ -415,9 +413,8 @@ $_dfnMaxlength = 6;
 			# invoke OnBeforeMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnBeforeMailSent) {
-				$eFormOnBeforeMailSent = explode(',', $eFormOnBeforeMailSent);
+				$eFormOnBeforeMailSent = array_filter(array_map('trim', explode(',', $eFormOnBeforeMailSent)));
 				foreach ($eFormOnBeforeMailSent as $beforeMailSent) {
-					$beforeMailSent = trim($beforeMailSent);
 					if ($isDebug && !function_exists($beforeMailSent)) {
 						$fields['debug'] .= 'eFormOnBeforeMailSent event: Could not find the function ' . $beforeMailSent;
 					} elseif ($beforeMailSent($fields) === false) {
@@ -574,9 +571,8 @@ $_dfnMaxlength = 6;
 			# invoke OnMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnMailSent) {
-				$eFormOnMailSent = explode(',', $eFormOnMailSent);
+				$eFormOnMailSent = array_filter(array_map('trim', explode(',', $eFormOnMailSent)));
 				foreach ($eFormOnMailSent as $mailSent) {
-					$mailSent = trim($mailSent);
 					if ($isDebug && !function_exists($mailSent)) {
 						$fields['debug'] .= 'eFormOnMailSent event: Could not find the function' . $mailSent;
 					} else {
@@ -640,10 +636,8 @@ $_dfnMaxlength = 6;
 
 	# get SESSION data - thanks to sottwell
 	if($sessionVars){
-		$sessionVars = (strpos($sessionVars,',',0))?explode(',',$sessionVars):array($sessionVars);
+		$sessionVars = (strpos($sessionVars,',',0))?array_filter(array_map('trim', explode(',', $sessionVars))):array($sessionVars);
 		foreach( $sessionVars as $varName ){
-			if( empty($varName) ) continue;
-			$varName = trim($varName);
 			if( isset($_SESSION[$varName]) && !empty($_SESSION[$varName]) )
 				$fields[$varName] = ( isset($fields[$varName]) && $postOverides )?$fields[$varName]:$_SESSION[$varName];
 		}
@@ -652,9 +646,8 @@ $_dfnMaxlength = 6;
 	# invoke OnBeforeFormMerge event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormMerge) {
-		$eFormOnBeforeFormMerge = explode(',', $eFormOnBeforeFormMerge);
+		$eFormOnBeforeFormMerge = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormMerge)));
 		foreach ($eFormOnBeforeFormMerge as $beforeFormMerge) {
-			$beforeFormMerge = trim($beforeFormMerge);
 			if ($isDebug && !function_exists($beforeFormMerge)) {
 				$fields['debug'] .= 'eFormOnBeforeFormMerge event: Could not find the function ' . $beforeFormMerge;
 			} else {
@@ -726,14 +719,12 @@ function formMerge($docText, $docFields, $vClasses='') {
 
 # Adds Addresses to Mailer
 function AddAddressToMailer(&$mail,$type,$addr){
-	$a = explode(",",$addr);
+	$a = array_filter(array_map('trim', explode(',', $addr)));
 	for($i=0;$i<count($a);$i++){
-		if(!empty($a[$i])) {
 			if ($type=="to") $mail->AddAddress($a[$i]);
 			elseif ($type=="cc") $mail->AddCC($a[$i]);
 			elseif ($type=="bcc") $mail->AddBCC($a[$i]);
 			elseif ($type=="replyto") $mail->AddReplyTo($a[$i]);
-		}
 	}
 }
 

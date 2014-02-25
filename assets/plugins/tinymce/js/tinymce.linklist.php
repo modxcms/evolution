@@ -198,10 +198,8 @@ class LINKLIST
 		global $modx;
 		
 		// modify field names to use sc. table reference
-		$fields = preg_replace('@\s*@','',$fields);
-		$fields = 'sc.'.implode(',sc.',explode(',',$fields));
-		$sort   = preg_replace('@\s*@','',$sort);
-		$sort   = 'sc.'.implode(',sc.',explode(',',$sort));
+		$fields = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $fields))));
+		$sort   = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $sort))));
 		
 		if($recent!==0 && preg_match('@^[0-9]+$@',$recent))
 		{

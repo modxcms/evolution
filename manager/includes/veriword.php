@@ -81,7 +81,7 @@ class VeriWord {
         // set default words
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
         $words = $modx->config['captcha_words'] ? $modx->config['captcha_words'] : $words;
-        $arr_words = explode(",", $words);
+        $arr_words = array_filter(array_map('trim', explode(',', $words)));
 
         /* pick one randomly for text verification */
         return (string) $arr_words[array_rand($arr_words)].rand(10,999);

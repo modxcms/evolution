@@ -205,7 +205,7 @@ class PHxParser {
 					case "lowerthan":	case "lt":$condition[] = intval(($output<$modifier_value[$i]));break;
 					case "isinrole": case "ir": case "memberof": case "mo": // Is Member Of  (same as inrole but this one can be stringed as a conditional)
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$condition[] = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					case "or":$condition[] = "||";break;
@@ -282,7 +282,7 @@ class PHxParser {
 						break;
 					case "inrole": // deprecated
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$output = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					default:

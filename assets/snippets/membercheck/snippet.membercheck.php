@@ -61,7 +61,7 @@ if (!isset ($chunk)) {
 }
 
 # turn comma-delimited list of groups into an array
-$groups = explode(',', $groups);
+$groups = array_filter(array_map('trim', explode(',', $groups)));
 
 if (!class_exists('MemberCheck')) {
 	class MemberCheck {
@@ -97,9 +97,8 @@ if (!class_exists('MemberCheck')) {
 			global $modx;
 			$o = '';
 			if (is_array($groups)) {
-				for ($i = 0; $i < count($groups); $i++) {
-					$groups[$i] = trim($groups[$i]);
-					if ($this->debug) {
+				if ($this->debug) {
+					for ($i = 0; $i < count($groups); $i++) {
 						if (!$this->isValidGroup($groups[$i])) {
 							return "<p>The group <strong>" . $groups[$i] . "</strong> could not be found...</p>";
 						}
