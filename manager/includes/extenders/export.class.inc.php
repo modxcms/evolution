@@ -66,7 +66,7 @@ class EXPORT_SITE
 				$v = $modx->db->escape(trim($v));
 				$ignore_ids[$i] = "'{$v}'";
 			}
-			$ignore_ids = join(',', $ignore_ids);
+			$ignore_ids = implode(',', $ignore_ids);
 			$ignore_ids = "AND NOT id IN ({$ignore_ids})";
 		}
 		
@@ -246,7 +246,7 @@ class EXPORT_SITE
 				$this->run($row['id']);
 			}
 		}
-		return join("\n", $this->output);
+		return implode("\n", $this->output);
 	}
 	
     function curl_get_contents($url, $timeout = 30 )

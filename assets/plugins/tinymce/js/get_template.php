@@ -81,7 +81,7 @@ else
 		{
 			$chunks = explode(',', $chunks);
 			$chunks = $modx->db->escape($chunks);
-			$chunks = join("','", $chunks);
+			$chunks = implode("','", $chunks);
 			$where  = "`name` IN ('{$chunks}')";
 			$orderby = "FIELD(name, '{$chunks}')";
 		}
@@ -102,7 +102,7 @@ else
 		}
 	}
 	
-	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . join(',',$list) . '];';
+	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . implode(',',$list) . '];';
 }
 
 if($output)

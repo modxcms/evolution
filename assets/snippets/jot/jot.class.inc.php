@@ -55,7 +55,7 @@ class CJot {
 		// Creates a unique hash / id
 		$id[] = $docid."&".$tagid."&";
 		foreach ($this->parameters as $n => $v) { $id[] = $n.'='.($v); }
-		return md5(join('&',$id));
+		return md5(implode('&',$id));
 	}
 
 	function Run() {
@@ -444,7 +444,7 @@ class CJot {
 					$comments[] = $tpl->Render();
 				}
 
-				$this->config["html"]["comments"] = $output_comments = join("",$comments);
+				$this->config["html"]["comments"] = $output_comments = implode("",$comments);
 				$this->config["html"]["navigation"] = $output_navigation;
 				$output_comments = $output_subscribe.$output_moderate.$output_navigation.$output_comments.$output_navigation;
 		}		
@@ -520,7 +520,7 @@ class CJot {
 			} // --	
 		
 		//-- Double Post Capture
-		$chkPost = md5(join('&',$chkPost));
+		$chkPost = md5(implode('&',$chkPost));
 		if ($_SESSION['JotLastPost'] == $chkPost) {
 			$this->form['error'] = 1;
 			$this->form['confirm'] = 0;
@@ -895,7 +895,7 @@ class CJot {
 			}
 		}
 		
-		$url = join('&',$urlstring);
+		$url = implode('&',$urlstring);
 		if ($suffix) {
 			if (empty($url)) { $url = "?"; }
 			 else { $url .= "&"; }

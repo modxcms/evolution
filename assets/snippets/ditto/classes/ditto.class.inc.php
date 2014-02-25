@@ -974,7 +974,7 @@ class ditto {
 	        $access= ($modx->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
 	         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 			$published = ($published) ? "AND sc.published=1" : "";         
-	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
+	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',', $ids) . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
 	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }

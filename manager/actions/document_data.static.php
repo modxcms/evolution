@@ -271,13 +271,13 @@ function movedocument() {
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
 				if(count($keywords) != 0)
-					echo join($keywords, ", ");
+					echo implode(', ', $keywords);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['metatags']?>: </td>
 				<td><?php // META Tags
 				if(count($metatags_selected) != 0)
-					echo join($metatags_selected, "<br /> ");
+					echo implode('<br />', $metatags_selected);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>

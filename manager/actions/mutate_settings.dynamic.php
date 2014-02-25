@@ -1201,7 +1201,7 @@ function confirmLangChange(el, lkey, elupd){
 		$r = array($v,$selected);
 		$output[] = str_replace($s,$r,$tpl);
 	}
-	echo join("\n",$output)
+	echo implode("\n",$output)
 ?>
 	</select><br />
 	
