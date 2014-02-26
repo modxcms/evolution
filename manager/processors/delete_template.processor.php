@@ -10,16 +10,28 @@ $id = isset($_GET['id'])? intval($_GET['id']) : 0;
 $rs = $modx->db->select('id, pagetitle,introtext', $modx->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>0) {
-	echo "This template is in use. Please set the documents using the template to another template. Documents using this template:<br />";
-	for ($i=0;$i<$limit;$i++) {
-		$row = $modx->db->getRow($rs);
-		echo $row['id']." - ".$row['pagetitle']."<br />\n";
-	}	
+	include "header.inc.php";
+	?><h1><?php echo $_lang['manage_templates']; ?></h1>
+	<div class="section"><div class="sectionHeader"><?php echo $_lang['manage_templates']; ?></div>
+	<div class="sectionBody">
+	<p>This template is in use.</p>
+	<p>Please set the documents using the template to another template.</p>
+	<p>Documents using this template:</p>
+	<ul>
+	<?php
+	while ($row = $modx->db->getRow($rs)) {
+		echo '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&a=27">'.$row['pagetitle'].'</a></span>'.($row['introtext']!='' ? ' - '.$row['introtext'] : '').'</li>';
+	}
+	?>
+	</ul>
+	</div></div>
+	<?php
+	include_once "footer.inc.php";
 	exit;
 }
 
 if($id==$default_template) {
-	$modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.<br />");
+	$modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.");
 }
 
 // Set the item name for logger
