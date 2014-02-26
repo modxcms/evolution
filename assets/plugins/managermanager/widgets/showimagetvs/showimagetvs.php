@@ -65,9 +65,8 @@ $j("#tv'.$tv['id'].'").addClass("imageField").bind("change load", function(){
 			';
 			
 			// If we have a PHPThumb URL
-			$thumbnailerCode = '';
 			if (!empty($thumbnailerUrl)){
-				$thumbnailerCode = 'url = "'.$thumbnailerUrl.'?src="+escape(url)+"&w='.$w.'&h='.$h.'"; ' . "\n";
+				$output .= 'url = "'.$thumbnailerUrl.'?src="+escape(url)+"&w='.$w.'&h='.$h.'"; ' . "\n";
 			}
 			
 			$output .= '
@@ -76,7 +75,6 @@ $j("#tv'.$tv['id'].'").addClass("imageField").bind("change load", function(){
 	
 	if (url != ""){
 		// Create a new preview
-		'.$thumbnailerCode.'	
 		$j("#tv'.$tv['id'].'").parents("td").append("<div class=\"tvimage\" id=\"tv'.$tv['id'].'PreviewContainer\"><img src=\""+url+"\" style=\""+'.$style.'+"\" id=\"tv'.$tv['id'].'Preview\"/></div>");
 		
 		// Attach a browse event to the picture, so it can trigger too
