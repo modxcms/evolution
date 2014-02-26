@@ -89,6 +89,14 @@ $fields = $modx->db->escape($fields);
 switch ($_POST['mode']) {
     case '38' :
         $tbl = $modx->getFullTableName("user_roles");
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(38);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=38");
+        }
+
         $modx->db->insert($fields, $tbl);
 
         // Set the item name for logger
@@ -99,6 +107,14 @@ switch ($_POST['mode']) {
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$fields['id']}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(35);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=35&id={$id}");
+        }
+
         $modx->db->update($fields, $tbl, "id='{$id}'");
 
         // Set the item name for logger

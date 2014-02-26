@@ -101,8 +101,15 @@ switch ($_POST['mode']) {
 							array(
 								"mode"	=> "upd",
 								"id"	=> $id
-							));	
-								
+							));
+
+		// disallow duplicate names for new modules
+		$rs = $modx->db->select('count(id)', $modx->getFullTableName('site_modules'), "name='{$name}' AND id!='{$id}'");
+		if ($modx->db->getValue($rs) > 0) {
+			$modx->manager->saveFormValues(108);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
+		}
+
 		// save the edited module	
 		$modx->db->update(
 			array(
