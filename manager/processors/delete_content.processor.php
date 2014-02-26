@@ -5,6 +5,9 @@ if(!$modx->hasPermission('delete_document')) {
 }
 
 $id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 /*******ищем родителя чтобы к нему вернуться********/
 $content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));

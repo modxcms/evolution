@@ -5,6 +5,9 @@ if(!$modx->hasPermission('save_plugin') && !$modx->hasPermission('save_snippet')
 }
 
 $id = isset($_GET['catId'])? intval($_GET['catId']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('category', $modx->getFullTableName('categories'), "id='{$id}'"));

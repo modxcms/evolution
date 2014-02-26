@@ -5,6 +5,10 @@ if(!$modx->hasPermission('delete_eventlog')) {
 }
 
 $id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
+
 $where = (isset($_GET['cls']) && $_GET['cls']==1) ? '' : "id='{$id}'";
 
 // delete event log

@@ -4,8 +4,10 @@ if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_docume
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = $_REQUEST['id'];
-
+$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 /************webber ********/
 $content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));

@@ -5,6 +5,9 @@ if(!$modx->hasPermission('delete_web_user')) {
 }
 
 $id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // Set the item name for logger
 $username = $modx->db->getValue($modx->db->select('username', $modx->getFullTableName('web_users'), "id='{$id}'"));

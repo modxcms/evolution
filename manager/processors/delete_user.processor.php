@@ -5,6 +5,9 @@ if(!$modx->hasPermission('delete_user')) {
 }
 
 $id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // delete the user, but first check if we are deleting our own record
 if($id==$modx->getLoginUserID()) {

@@ -4,8 +4,11 @@ if(!$modx->hasPermission('new_document') || !$modx->hasPermission('save_document
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-// check the document doesn't have any children
-$id=$_GET['id'];
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
+
 $children = array();
 
 // check permissions on the document

@@ -4,15 +4,9 @@ if(!$modx->hasPermission('exec_module')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if(isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-} else {
-	$id=0;
-}
-
-// make sure the id's a number
-if(!is_numeric($id)) {
-	$modx->webAlertAndQuit($_lang["error_id_nan"]);
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 // check if user has access permission, except admins

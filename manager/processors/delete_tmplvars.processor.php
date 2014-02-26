@@ -5,6 +5,10 @@ if(!$modx->hasPermission('delete_template')) {
 }
 
 $id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
+
 $forced = isset($_GET['force'])? $_GET['force'] : 0;
 
 // check for relations

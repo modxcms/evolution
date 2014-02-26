@@ -4,7 +4,10 @@ if(!$modx->hasPermission('messages')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // check the user is allowed to delete this message
 $rs = $modx->db->select('recipient', $modx->getFullTableName('user_messages'), "id='{$id}'");
