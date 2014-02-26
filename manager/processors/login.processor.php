@@ -148,7 +148,7 @@ if ($allowed_ip) {
             return;
           }
         }
-        if(!in_array($_SERVER['REMOTE_ADDR'], explode(',',str_replace(' ','',$allowed_ip)))) {
+        if(!in_array($_SERVER['REMOTE_ADDR'], array_filter(array_map('trim', explode(',', $allowed_ip))))) {
           jsAlert("You are not allowed to login from this location.");
           return;
         }

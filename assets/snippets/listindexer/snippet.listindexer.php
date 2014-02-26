@@ -225,7 +225,6 @@ if ($sortDir == '') $sortDir = ($sortBy == 'date')? 'DESC' : 'ASC' ;
 
 
 // Make useful variable shortcut for the content table
-//$tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
 $tblsc = $modx->getFullTableName("site_content");
 $tbldg = $modx->getFullTableName("document_groups");
 

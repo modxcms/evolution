@@ -461,7 +461,7 @@ function convertLink()
 			}
 			$c++;
 		}
-		$content = join('',$array);
+		$content = implode('',$array);
 		$f['content'] = $modx->db->escape($content);
 		$modx->db->update($f,$tbl_site_content,"id='{$id}'");
 	}

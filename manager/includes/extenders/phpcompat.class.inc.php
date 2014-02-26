@@ -13,7 +13,7 @@ class PHPCOMPAT
 		$ent_str = htmlspecialchars($str, $flags, $modx->config['modx_charset']);
 		if(!empty($str) && empty($ent_str))
 		{
-			$detect_order = join(',', mb_detect_order());
+			$detect_order = implode(',', mb_detect_order());
 			$ent_str = mb_convert_encoding($str,$modx->config['modx_charset'],$detect_order); 
 		}
 		return $ent_str;

@@ -377,7 +377,7 @@ class Wayfinder {
 				$dir = '';
 			} else {
 				// modify field names to use sc. table reference
-				$sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$this->_config['sortBy'])));
+				$sort = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $this->_config['sortBy']))));
 			}
 
 	        // get document groups for current user

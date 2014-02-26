@@ -97,8 +97,6 @@ if(!isset($_SESSION['webValidated'])){
     ob_end_clean();
 } else {
     $output= '';
-    $dbase = $modx->dbConfig['dbase'];
-    $table_prefix = $modx->dbConfig['table_prefix'];
 
     if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
     else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
@@ -108,7 +106,7 @@ if(!isset($_SESSION['webValidated'])){
     $itemid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
 
     if($a!=1) {
-        $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
+        $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id, ip) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
         $modx->db->query($sql);
     }
 

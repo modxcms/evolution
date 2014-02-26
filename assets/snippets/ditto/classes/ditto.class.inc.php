@@ -164,9 +164,8 @@ class ditto {
 		}
 
 		if (!is_null($orderBy['unparsed'])) {
-			$inputs = explode(',',$orderBy['unparsed']);
+			$inputs = array_filter(array_map('trim', explode(',', $orderBy['unparsed'])));
 			foreach ($inputs as $input) {
-				$input = trim($input);
 				$position = strrpos($input,' ');
 					// find last space
 				$sortBy = substr($input,0,$position);
@@ -414,24 +413,20 @@ class ditto {
 	
 			if(is_array($source)) {
 				if(strpos($source[0],",")!==false){
-					$fields = explode(",",$source[0]);
+					$fields = array_filter(array_map('trim', explode(',', $source[0])));
 					foreach ($fields as $field) {
-						if (!empty($field)) {
 							$this->addField($field,$source[1]);	
 							$this->customPlaceholdersMap[$name] = $field;	
-						}
 					}
 				} else {
 					$this->addField($source[0],$source[1]);	
 					$this->customPlaceholdersMap[$name] = $source[0];				
 				}	// TODO: Replace addField with addFields with callback
 			} else if(is_array($value)) {
-				$fields = explode(",",$source);
+				$fields = array_filter(array_map('trim', explode(',', $source)));
 				foreach ($fields as $field) {
-					if (!empty($field)) {
 						$this->addField($field,"display");
 						$this->customPlaceholdersMap[$name] = $field;
-					}
 				}
 			}
 
@@ -532,8 +527,7 @@ class ditto {
 	function customSort($data, $fields, $order) {
 		// Covert $fields string to array
 		// user contributed
-		foreach (explode(',', $fields) as $s)
-			$sortfields[] = trim($s);
+		$sortfields = array_filter(array_map('trim', explode(',', $fields)));
 
 		$code = "";
 		for ($c = 0; $c < count($sortfields); $c++)
@@ -894,7 +888,7 @@ class ditto {
       $where = ($where == "") ? "" : substr(str_replace('@eq','=',$where), 5);
       $left_join_tvc = "LEFT JOIN $tbltvc AS tvc ON sc.id = tvc.contentid";
     }else{
-			$where= ($where == "") ? "" : 'AND sc.' . implode('AND sc.', preg_replace("/^\s/i", "", explode('AND', $where)));
+			$where= ($where == "") ? "" : 'AND sc.' . implode(' AND sc.', array_filter(array_map('trim', explode('AND', $where))));
       $left_join_tvc = '';
     }
       
@@ -974,7 +968,7 @@ class ditto {
 	        $access= ($modx->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
 	         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 			$published = ($published) ? "AND sc.published=1" : "";         
-	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
+	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . implode(',', $ids) . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
 	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }

@@ -48,8 +48,7 @@ if ( !$showCrumbsAtHome && $homeId == $modx->documentObject['id'] )
 if ( $hideOn || $hideUnder )
 {
     // Create array of hide pages
-    $hideOn = str_replace(' ','',$hideOn);
-    $hideOn = explode(',',$hideOn);
+    $hideOn = array_filter(array_map('intval', explode(',', $hideOn)));
 
     // Get more hide pages based on parents if needed
     if ( $hideUnder )
@@ -69,16 +68,11 @@ if ( $hideOn || $hideUnder )
 }
 // Initialize ------------------------------------------------------------------
 // Put certain parameters in arrays
-$stopIds = str_replace(' ','',$stopIds);
-$stopIds = explode(',',$stopIds);
-$linkTextField = str_replace(' ','',$linkTextField);
-$linkTextField = explode(',',$linkTextField);
-$linkDescField = str_replace(' ','',$linkDescField);
-$linkDescField = explode(',',$linkDescField);
-$ignoreIds = str_replace(' ','',$ignoreIds);
-$ignoreIds = explode(',',$ignoreIds);
-$ignoreTemplates = str_replace(' ','',$ignoreTemplates);
-$ignoreTemplates = explode(',',$ignoreTemplates);
+$stopIds = array_filter(array_map('intval', explode(',', $stopIds)));
+$linkTextField = array_filter(array_map('trim', explode(',', $linkTextField)));
+$linkDescField = array_filter(array_map('trim', explode(',', $linkDescField)));
+$ignoreIds = array_filter(array_map('intval', explode(',', $ignoreIds)));
+$ignoreTemplates = array_filter(array_map('trim', explode(',', $ignoreTemplates)));
 
 /* $crumbs
  * Crumb elements are: id, parent, pagetitle, longtitle, menutitle, description,

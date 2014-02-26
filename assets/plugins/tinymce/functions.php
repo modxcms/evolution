@@ -91,7 +91,7 @@ class TinyMCE
 				}
 			}
 		}
-		return join("\n",$option);
+		return implode("\n",$option);
 	}
 	
 	function selected($cond = false)
@@ -454,7 +454,7 @@ class TinyMCE
 		{
 			$content_css[] = MODX_SITE_URL . $params['editor_css_path'];
 		}
-			$ph['content_css']         = join(',', $content_css);
+			$ph['content_css']         = implode(',', $content_css);
 		$ph['link_list']               = ($params['link_list']=='enabled') ? "'{$mce_url}js/tinymce.linklist.php'" : 'false';
 		
 		$ph['tpl_list']                = "{$mce_url}js/get_template.php";

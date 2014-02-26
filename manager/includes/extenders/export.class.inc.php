@@ -58,16 +58,10 @@ class EXPORT_SITE
 		global $modx;
 		$tbl_site_content = $modx->getFullTableName('site_content');
 		
-		if($ignore_ids !== '')
+		$ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
+		if(count($ignore_ids)>0)
 		{
-			$ignore_ids = explode(',', $ignore_ids);
-			foreach($ignore_ids as $i=>$v)
-			{
-				$v = $modx->db->escape(trim($v));
-				$ignore_ids[$i] = "'{$v}'";
-			}
-			$ignore_ids = join(',', $ignore_ids);
-			$ignore_ids = "AND NOT id IN ({$ignore_ids})";
+			$ignore_ids = "AND NOT id IN ('".implode("','", $ignore_ids)."')";
 		}
 		
 		$this->ignore_ids = $ignore_ids;
@@ -246,7 +240,7 @@ class EXPORT_SITE
 				$this->run($row['id']);
 			}
 		}
-		return join("\n", $this->output);
+		return implode("\n", $this->output);
 	}
 	
     function curl_get_contents($url, $timeout = 30 )

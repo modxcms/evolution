@@ -93,7 +93,6 @@ switch ($input['mode']) {
 		// invoke OnBeforeWUsrFormSave event
 		$modx->invokeEvent("OnBeforeWUsrFormSave", array (
 			"mode" => "new",
-			"id" => $id
 		));
 
 		// create the user account
@@ -106,7 +105,7 @@ switch ($input['mode']) {
         $field = $modx->db->escape($field);
 		$modx->db->insert($field, $tbl_web_user_attributes);
 
-		// Save user settings
+		// Save User Settings
 		saveUserSettings($internalKey);
 
 		// invoke OnWebSaveUser event
@@ -146,7 +145,7 @@ switch ($input['mode']) {
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 			if ($input['stay'] != '') {
-				$a = ($input['stay'] == '2') ? "88&id={$id}" : "87";
+				$a = ($input['stay'] == '2') ? "88&id={$internalKey}" : "87";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
 			} else {
@@ -185,7 +184,6 @@ switch ($input['mode']) {
 			include_once "footer.inc.php";
 		}
 		break;
-
 	case '88' : // edit user
 		// generate a new password for this user
 		if ($genpassword == 1) {
@@ -236,13 +234,15 @@ switch ($input['mode']) {
 		    $field['password'] = md5($newpassword);
 		}
 		$modx->db->update($field, $tbl_web_users, "id='{$id}'");
-		$field = array();
 		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$field = $modx->db->escape($field);
 		$modx->db->update($field, $tbl_web_user_attributes, "internalKey='{$id}'");
 
-		// Save user settings
+		// Save User Settings
 		saveUserSettings($id);
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $newusername;
 
 		// invoke OnWebSaveUser event
 		$modx->invokeEvent("OnWebSaveUser", array (
@@ -252,8 +252,9 @@ switch ($input['mode']) {
 			"userpassword" => $newpassword,
 			"useremail" => $email,
 			"userfullname" => $fullname,
-			"oldusername" => (($oldusername != $newusername
-		) ? $oldusername : ""), "olduseremail" => (($oldemail != $email) ? $oldemail : "")));
+			"oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
+			"olduseremail" => (($oldemail != $email) ? $oldemail : "")
+			));
 
 		// invoke OnWebChangePassword event
 		if ($genpassword == 1) {
@@ -270,9 +271,6 @@ switch ($input['mode']) {
 			"id" => $id
 		));
 
-		// Set the item name for logger
-		$_SESSION['itemname'] = $newusername;
-
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
@@ -281,10 +279,10 @@ switch ($input['mode']) {
 			$modx->db->delete($tbl_web_groups, "webuser='{$id}'");
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$f = array();
-					$f['webgroup'] = intval($user_groups[$i]);
-					$f['webuser']  = $id;
-					$modx->db->insert($f, $tbl_web_groups);
+					$field = array();
+					$field['webgroup'] = intval($user_groups[$i]);
+					$field['webuser']  = $id;
+					$modx->db->insert($field, $tbl_web_groups);
 				}
 			}
 		}
@@ -350,6 +348,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$websignupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
+	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
@@ -358,7 +357,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+sname+]", $site_name, $message);
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $site_url, $message);
+	$message = str_replace("[+surl+]", $manager_url, $message);
 
 	$param = array();
 	$param['from']    = "{$site_name}<{$emailsender}>";
@@ -367,7 +366,8 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		$modx->webAlertAndQuit("{$email} - {$_lang['error_sending_email']}");
+		$modx->manager->saveFormValues($mode);
+		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
 

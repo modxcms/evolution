@@ -208,7 +208,7 @@ class resourse {
 		if(!is_numeric($tpl) || $tpl != (int) $tpl) {
 			try{
 				if(is_scalar($tpl)){
-					$rs = $this->select('id', $this->_table['site_templates'], "templatename = '{$tpl}'");
+					$rs = $this->modx->db->select('id', $this->_table['site_templates'], "templatename = '{$tpl}'");
 					if($this->modx->db->getRecordCount($rs) <= 0) throw new Exception("Template {$tpl} is not exists");
 					$tpl = $this->modx->db->getValue($rs);
 				} else throw new Exception("Invalid template name: ".print_r($tpl,1));
@@ -238,7 +238,7 @@ class resourse {
 	}
 	
 	public function get_TV(){
-		$result = $this->select('id,name', $this->_table['site_tmplvars']);
+		$result = $this->modx->db->select('id,name', $this->_table['site_tmplvars']);
 		while($row = $this->modx->db->getRow($result)) {
 			$this->tv[$row['name']] = $row['id'];
 			$this->tvid[$row['id']] = $row['name'];
@@ -253,10 +253,10 @@ class resourse {
 	public function edit($id){
 		if(!$this->flag) $this->document($id);
 		
-		$result = $this->select('*', $this->_table['site_content'], "id=".(int)$id);
+		$result = $this->modx->db->select('*', $this->_table['site_content'], "id=".(int)$id);
 		$this->fromArray($this->modx->db->getRow($result));
 
-		$result = $this->select('*', $this->_table['site_tmplvar_contentvalues'], "contentid=".(int)$id);
+		$result = $this->modx->db->select('*', $this->_table['site_tmplvar_contentvalues'], "contentid=".(int)$id);
 		while ($row = $this->modx->db->getRow($result)){
 			$this->set($this->tvid[$row['tmplvarid']], $row['value']);
 		}
@@ -272,7 +272,7 @@ class resourse {
 			(int)$this->modx->config['unauthorized_page'],
 			(int)$this->modx->config['site_unavailable_page']
 		);
-		$data = $this->select('DISTINCT setting_value', $this->_table['web_user_settings'], "setting_name='login_home' AND setting_value!=''");
+		$data = $this->modx->db->select('DISTINCT setting_value', $this->_table['web_user_settings'], "setting_name='login_home' AND setting_value!=''");
 		$data = $this->modx->db->makeArray($data);
 		foreach($data as $item){
 			$ignore[]=(int)$item['setting_value'];
@@ -292,8 +292,8 @@ class resourse {
 				),$fire_events);
 		
 				$id = $this->sanitarIn($_ids);
-				$this->delete($this->_table['site_content'], "id IN ({$id})");
-				$this->delete($this->_table['site_tmplvar_contentvalues'], "contentid IN ({$id})");
+				$this->modx->db->delete($this->_table['site_content'], "id IN ({$id})");
+				$this->modx->db->delete($this->_table['site_tmplvar_contentvalues'], "contentid IN ({$id})");
 				
 				$this->invokeEvent('OnEmptyTrash',array(
 					"ids"=>$_ids
@@ -339,10 +339,7 @@ class resourse {
 		if(!is_array($data)){
 			$data=explode($sep,$data);
 		}
-		$out=array();
-		foreach($data as $item){
-			$out[]=$this->modx->db->escape($item);
-		}
+		$out = $this->modx->db->escape($data);
 		$out="'".implode("','",$out)."'";
 		return $out;
 	}
@@ -400,9 +397,9 @@ class resourse {
 			$flag = false;
 			$_alias = $this->modx->db->escape($alias);
 			if(!$this->modx->config['allow_duplicate_alias'] || ($this->modx->config['allow_duplicate_alias'] && $this->modx->conifg['use_alias_path'])){
-				$flag = $this->modx->db->getValue($this->select('id', $this->_table['site_content'], "alias='{$_alias}' AND parent={$this->get('parent')}", '', 1));
+				$flag = $this->modx->db->getValue($this->modx->db->select('id', $this->_table['site_content'], "alias='{$_alias}' AND parent={$this->get('parent')}", '', 1));
 			} else {
-				$flag = $this->modx->db->getValue($this->select('id', $this->_table['site_content'], "alias='{$_alias}'", '',  1));
+				$flag = $this->modx->db->getValue($this->modx->db->select('id', $this->_table['site_content'], "alias='{$_alias}'", '',  1));
 			}
 			if(($flag && $this->newDoc) || (!$this->newDoc && $flag && $this->id != $flag)){
 				$suffix = substr($alias, -2);
@@ -462,10 +459,9 @@ class resourse {
 					'contentid' => $this->id,
 					'value'     => $this->modx->db->escape($value),
 					);
-				$rc = $this->select('value', $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
-				$row = mysql_fetch_assoc($rc);
-				if (is_array($row)) {
-					if ($row[0] != $value) {
+				$rc = $this->modx->db->select('value', $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
+				if ($row = $this->modx->db->getRow($rs)) {
+					if ($row['value'] != $value) {
 						$this->modx->db->update($fields, $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
 				    }
 				}else{	

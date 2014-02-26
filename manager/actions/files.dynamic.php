@@ -245,7 +245,7 @@ else
 		else $pieces[$i] = trim($v,'/');
 		$count--;
 	}
-	$topic_path = join(' / ', $pieces);
+	$topic_path = implode(' / ', $pieces);
 }
 
 ?> <b><?php echo $topic_path; ?></b>

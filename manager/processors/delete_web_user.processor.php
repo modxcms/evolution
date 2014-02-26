@@ -4,21 +4,20 @@ if(!$modx->hasPermission('delete_web_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id=intval($_GET['id']);
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
-// get user name
-$rs = $modx->db->select('username', $modx->getFullTableName('web_users'), "id='{$id}'");
-	$username = $modx->db->getValue($rs);
-
+// Set the item name for logger
+$username = $modx->db->getValue($modx->db->select('username', $modx->getFullTableName('web_users'), "id='{$id}'"));
+$_SESSION['itemname'] = $username;
 
 // invoke OnBeforeWUsrFormDelete event
 $modx->invokeEvent("OnBeforeWUsrFormDelete",
-					array(
-						"id"	=> $id
-					));
-
-// Set the item name for logger
-$_SESSION['itemname'] = $username;
+	array(
+		"id"	=> $id
+	));
 
 // delete the user.
 $modx->db->delete($modx->getFullTableName('web_users'), "id='{$id}'");
@@ -29,19 +28,19 @@ $modx->db->delete($modx->getFullTableName('web_groups'), "webuser='{$id}'");
 // delete the attributes
 $modx->db->delete($modx->getFullTableName('web_user_attributes'), "internalKey='{$id}'");
 
-	// invoke OnWebDeleteUser event
-	$modx->invokeEvent("OnWebDeleteUser",
-						array(
-							"userid"		=> $id,
-							"username"		=> $username
-						));
+// invoke OnWebDeleteUser event
+$modx->invokeEvent("OnWebDeleteUser",
+	array(
+		"userid"		=> $id,
+		"username"		=> $username
+	));
 
-	// invoke OnWUsrFormDelete event
-	$modx->invokeEvent("OnWUsrFormDelete",
-						array(
-							"id"	=> $id
-						));
+// invoke OnWUsrFormDelete event
+$modx->invokeEvent("OnWUsrFormDelete",
+	array(
+		"id"	=> $id
+	));
 
-	$header="Location: index.php?a=99";
-	header($header);
+$header="Location: index.php?a=99";
+header($header);
 ?>

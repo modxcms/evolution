@@ -177,7 +177,7 @@ class MODxMailer extends PHPMailer
 			$to .= $this->AddrFormat($this->to[$i]);
 		}
 		
-		$toArr = explode(',', $to);
+		$toArr = array_filter(array_map('trim', explode(',', $to)));
 		
 		$params = sprintf("-oi -f %s", $this->Sender);
 		if ($this->Sender != '' && strlen(ini_get('safe_mode')) < 1)

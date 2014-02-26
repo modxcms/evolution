@@ -4,8 +4,6 @@ if (!$modx->hasPermission('save_role')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-foreach ($_POST as $n => $v)
-    $_POST[$n] = $modx->db->escape($v); // escape post values 
 extract($_POST);
 
 if ($name == '' || !isset ($name)) {
@@ -86,23 +84,41 @@ $fields = array (
     'remove_locks' => $remove_locks
 );
 
+$fields = $modx->db->escape($fields);
+
 switch ($_POST['mode']) {
     case '38' :
         $tbl = $modx->getFullTableName("user_roles");
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(38);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=38");
+        }
+
         $modx->db->insert($fields, $tbl);
 
         // Set the item name for logger
-        $_SESSION['itemname'] = $name;
+        $_SESSION['itemname'] = $_POST['name'];
 
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$fields['id']}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(35);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=35&id={$id}");
+        }
+
         $modx->db->update($fields, $tbl, "id='{$id}'");
 
         // Set the item name for logger
-        $_SESSION['itemname'] = $name;
+        $_SESSION['itemname'] = $_POST['name'];
 
         $header = "Location: index.php?a=86&r=2";
         header($header);

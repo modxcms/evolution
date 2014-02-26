@@ -11,10 +11,10 @@ $opcode = isset($_POST['op']) ? $_POST['op'] : "keys" ;
 if($opcode=="addtag") {
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => $modx->db->escape($_POST["tagname"]),
-		tag => $modx->db->escape($tag),
-		tagvalue => $modx->db->escape($_POST["tagvalue"]),
-		http_equiv => intval($http_equiv)
+		'name' => $modx->db->escape($_POST["tagname"]),
+		'tag' => $modx->db->escape($tag),
+		'tagvalue' => $modx->db->escape($_POST["tagvalue"]),
+		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->insert($f,$modx->getFullTableName("site_metatags"));
@@ -38,7 +38,7 @@ else if($opcode=="edttag") {
 else if($opcode=="deltag") {
 	$f = $_POST["tag"];
 	if(is_array($f) && count($f)>0) {
-		for($i=0;$i<count($f);$i++) $f[$i]=$modx->db->escape($f[$i]);
+		$f = $modx->db->escape($f);
 		$modx->db->delete($modx->getFullTableName("site_metatags"),"id IN('".implode("','",$f)."')");
 	}
 }
@@ -65,10 +65,7 @@ else {
 
 	// delete any keywords that need to be deleted
 	if(count($delete_keywords)>0) {
-		$keywords_array = array();
-		foreach($delete_keywords as $key => $value) {
-			$keywords_array[] = $key;
-		}
+		$keywords_array = array_keys($delete_keywords);
 
 		$modx->db->delete($modx->getFullTableName('keyword_xref'), "keyword_id IN(".implode(",", $keywords_array).")");
 

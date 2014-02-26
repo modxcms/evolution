@@ -771,10 +771,8 @@ if (is_array($evtOut))
 	$groupsarray = array ();
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
-		$rs = $modx->db->select('*', $modx->getFullTableName('member_groups'), "member='{$_GET['id']}'");
-		while ($currentgroup=$modx->db->getRow($rs)) {
-			$groupsarray[$i] = $currentgroup['user_group'];
-		}
+		$rs = $modx->db->select('user_group', $modx->getFullTableName('member_groups'), "member='{$_GET['id']}'");
+		$groupsarray = $modx->db->getColumn('user_group', $rs);
 	}
 
 	// retain selected doc groups between post

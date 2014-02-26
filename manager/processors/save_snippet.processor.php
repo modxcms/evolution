@@ -1,14 +1,14 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('save_snippet')) {
+if (!$modx->hasPermission('save_snippet')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
+$snippet = trim($modx->db->escape($_POST['post']));
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
-$snippet = trim($modx->db->escape($_POST['post']));
 // strip out PHP tags from snippets
 if ( strncmp($snippet, "<?", 2) == 0 ) {
     $snippet = substr($snippet, 2);
@@ -43,7 +43,7 @@ switch ($_POST['mode']) {
 									"mode"	=> "new",
 									"id"	=> $id
 								));
-								
+
 		// disallow duplicate names for new snippets
 		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_snippets'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
@@ -55,7 +55,7 @@ switch ($_POST['mode']) {
 		//do stuff to save the new doc
 		$newid = $modx->db->insert(
 			array(
-				'name'  => $name,
+				'name'    => $name,
 				'description' => $description,
 				'snippet' => $snippet,
 				'moduleguid' => $moduleguid,
@@ -93,9 +93,16 @@ switch ($_POST['mode']) {
 								array(
 									"mode"	=> "upd",
 									"id"	=> $id
-								));	
-								
-		//do stuff to save the edited doc	
+								));
+
+		// disallow duplicate names for snippets
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
+		if ($modx->db->getValue($rs) > 0) {
+			$modx->manager->saveFormValues(22);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=22&id={$id}");
+		}
+
+		//do stuff to save the edited doc
 		$modx->db->update(
 			array(
 				'name'        => $name,
@@ -112,7 +119,7 @@ switch ($_POST['mode']) {
 									array(
 										"mode"	=> "upd",
 										"id"	=> $id
-									));	
+									));
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $name;
@@ -132,8 +139,8 @@ switch ($_POST['mode']) {
 			}
         break;
     default:
-	?>	
-		Erm... You supposed to be here now? 	
+	?>
+	Erm... You supposed to be here now?
 	<?php
 }
 ?>

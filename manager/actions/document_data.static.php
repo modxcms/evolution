@@ -62,9 +62,7 @@ $keywords = array();
 $rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
        "k.id = x.keyword_id AND x.content_id = '{$id}'",
        'k.keyword ASC');
-	while ($row = $modx->db->getRow($rs)) {
-		$keywords[$i] = $row['keyword'];
-	}
+	$keywords = $modx->db->getColumn('keyword', $rs);
 
 // Get list of selected site META tags for this document
 $metatags_selected = array();
@@ -273,13 +271,13 @@ function movedocument() {
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
 				if(count($keywords) != 0)
-					echo join($keywords, ", ");
+					echo implode(', ', $keywords);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['metatags']?>: </td>
 				<td><?php // META Tags
 				if(count($metatags_selected) != 0)
-					echo join($metatags_selected, "<br /> ");
+					echo implode('<br />', $metatags_selected);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
