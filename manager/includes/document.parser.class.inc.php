@@ -2303,7 +2303,7 @@ class DocumentParser {
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
-            $this->messageQuit('`{$id}` is not numeric and may not be passed to makeUrl().');
+            $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
         }
         if ($args != '' && $this->config['friendly_urls'] == 1) {
             // add ? to $args if missing
