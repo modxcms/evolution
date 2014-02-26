@@ -38,8 +38,8 @@ function getChildren($parent) {
 	global $children;
 	global $site_start;
 	global $site_unavailable_page;
-
-	//$db->debug = true;
+	global $error_page;
+	global $unauthorized_page;
 
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
 		// the document has children documents, we'll need to delete those too
@@ -49,6 +49,12 @@ function getChildren($parent) {
 			}
 			if($childid==$site_unavailable_page) {
 				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site unavailable page' document, and cannot be deleted. Please assign another document as your 'Site unavailable page' document and try again.");
+			}
+			if($childid==$error_page) {
+				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site error page' document, and cannot be deleted. Please assign another document as your 'Site error page' document and try again.");
+			}
+			if($childid==$unauthorized_page) {
+				$modx->webAlertAndQuit("The document you are trying to delete is a folder containing document {$childid}. This document is registered as the 'Site unauthorized page' document, and cannot be deleted. Please assign another document as your 'Site unauthorized page' document and try again.");
 			}
 			$children[] = $childid;
 			getChildren($childid);
@@ -80,6 +86,14 @@ if($site_start==$id){
 
 if($site_unavailable_page==$id){
 	$modx->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be deleted!");
+}
+
+if($error_page==$id) {
+	$modx->webAlertAndQuit("Document is used as the 'Site error page' and cannot be deleted!");
+}
+
+if($unauthorized_page==$id){
+	$modx->webAlertAndQuit("Document is used as the 'Site unauthorized page' and cannot be deleted!");
 }
 
 // delete the document.
