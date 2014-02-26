@@ -1,10 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_template')) {	
+if(!$modx->hasPermission('delete_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id=intval($_GET['id']);
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
 
 // delete the template, but first check it doesn't have any documents using it
 $rs = $modx->db->select('id, pagetitle,introtext', $modx->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
@@ -22,31 +22,31 @@ if($id==$default_template) {
 	$modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.<br />");
 }
 
-// invoke OnBeforeTempFormDelete event
-$modx->invokeEvent("OnBeforeTempFormDelete",
-						array(
-							"id"	=> $id
-						));
-						
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
 $_SESSION['itemname'] = $name;
 
-//ok, delete the document.
+// invoke OnBeforeTempFormDelete event
+$modx->invokeEvent("OnBeforeTempFormDelete",
+	array(
+		"id"	=> $id
+	));
+
+// delete the document.
 $modx->db->delete($modx->getFullTableName('site_templates'), "id='{$id}'");
 
-	$modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
-			
-	// invoke OnTempFormDelete event
-	$modx->invokeEvent("OnTempFormDelete",
-							array(
-								"id"	=> $id
-							));
+$modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
 
-	// empty cache
-	$modx->clearCache('full');
-	
-	// finished emptying cache - redirect
-	$header="Location: index.php?a=76&r=2";
-	header($header);
+// invoke OnTempFormDelete event
+$modx->invokeEvent("OnTempFormDelete",
+	array(
+		"id"	=> $id
+	));
+
+// empty cache
+$modx->clearCache('full');
+
+// finished emptying cache - redirect
+$header="Location: index.php?a=76&r=2";
+header($header);
 ?>

@@ -4,8 +4,7 @@ if(!$modx->hasPermission('delete_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-// check the document doesn't have any children
-$id=intval($_GET['id']);
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
 
 /*******ищем родителя чтобы к нему вернуться********/
 $content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
@@ -83,7 +82,7 @@ if($site_unavailable_page==$id){
 	$modx->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be deleted!");
 }
 
-//ok, 'delete' the document.
+// delete the document.
 $modx->db->update(
 	array(
 		'deleted'   => 1,
@@ -93,22 +92,18 @@ $modx->db->update(
 
 // invoke OnDocFormDelete event
 $modx->invokeEvent("OnDocFormDelete",
-						array(
-							"id"=>$id,
-							"children"=>$children
-						));
+	array(
+		"id"=>$id,
+		"children"=>$children
+	));
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
 // empty cache
 $modx->clearCache('full');
+
 // finished emptying cache - redirect
-//	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
-
-//новый путь
 $header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
-
-
 header($header);
 ?>
