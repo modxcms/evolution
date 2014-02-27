@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * Ditto Extender: countDocs
  * Counts documents returned by Ditto

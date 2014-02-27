@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!function_exists('customsort')){
 	function customsort($a, $b){
 		$pos_a = array_search($a['id'], $GLOBALS['documents']);
