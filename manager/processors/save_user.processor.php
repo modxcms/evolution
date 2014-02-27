@@ -164,7 +164,7 @@ switch ($input['mode']) {
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 			if ($input['stay'] != '') {
-				$a = ($input['stay'] == '2') ? "12&id={$id}" : "11";
+				$a = ($input['stay'] == '2') ? "12&id={$internalKey}" : "11";
 				$header = "Location: index.php?a={$a}&r=2&stay=" . $input['stay'];
 				header($header);
 			} else {
@@ -203,7 +203,6 @@ switch ($input['mode']) {
 			include_once "footer.inc.php";
 		}
 		break;
-
 	case '12' : // edit user
 		// generate a new password for this user
 		if ($genpassword == 1) {
@@ -273,12 +272,13 @@ switch ($input['mode']) {
 			"useremail" => $email,
 			"userfullname" => $fullname,
 			"userroleid" => $role,
-			"oldusername" => (($oldusername != $newusername
-		) ? $oldusername : ""), "olduseremail" => (($oldemail != $email) ? $oldemail : "")));
+			"oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
+			"olduseremail" => (($oldemail != $email) ? $oldemail : "")
+			));
 
 		// invoke OnManagerChangePassword event
 		if ($genpassword == 1) {
-			$modx->invokeEvent("OnManagerChangePassword", array(
+			$modx->invokeEvent("OnManagerChangePassword", array (
 				"userid" => $id,
 				"username" => $newusername,
 				"userpassword" => $newpassword
@@ -350,7 +350,7 @@ switch ($input['mode']) {
 			}
 		}
 		break;
-	default :
+	default:
 		webAlertAndQuit("Unauthorized access");
 }
 
@@ -370,6 +370,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
+	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
@@ -378,7 +379,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+sname+]", $site_name, $message);
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", MODX_MANAGER_URL, $message);
+	$message = str_replace("[+surl+]", $manager_url, $message);
 
 	$param = array();
 	$param['from']    = "{$site_name}<{$emailsender}>";
@@ -387,7 +388,8 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		webAlertAndQuit("{$email} - {$_lang['error_sending_email']}");
+		$modx->manager->saveFormValues($mode);
+		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
 
@@ -478,7 +480,7 @@ function webAlertAndQuit($msg) {
 	global $id, $modx;
 	$mode = $_POST['mode'];
 	$modx->manager->saveFormValues($mode);
-	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ""));
+	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
 }
 
 // Generate password

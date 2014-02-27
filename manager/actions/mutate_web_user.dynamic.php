@@ -20,9 +20,9 @@ $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the snippet editor isn't locked
-$rs = $modx->db->select('internalKey, username', $modx->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($lock = $modx->db->getRow($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $lock['username'], "web user"));
+$rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getRow($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 	}
 // end check for lock
 
@@ -76,6 +76,7 @@ if($manager_language!="english" && file_exists($modx->config['site_manager_path'
     include_once "lang/country/english_country.inc.php";
 }
 
+$displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 ?>
 <script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
@@ -498,10 +499,8 @@ if($use_udperms==1) {
 $groupsarray = array();
 
 if($_GET['a']=='88') { // only do this bit if the user is being edited
-	$rs = $modx->db->select('*', $modx->getFullTableName('web_groups'), "webuser='{$_GET['id']}'");
-	while ($currentgroup=$modx->db->getRow($rs)) {
-		$groupsarray[$i] = $currentgroup['webgroup'];
-	}
+	$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$_GET['id']}'");
+	$groupsarray = $modx->db->getColumn('webgroup', $rs);
 }
 
 // retain selected user groups between post

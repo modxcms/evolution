@@ -198,10 +198,8 @@ class LINKLIST
 		global $modx;
 		
 		// modify field names to use sc. table reference
-		$fields = preg_replace('@\s*@','',$fields);
-		$fields = 'sc.'.implode(',sc.',explode(',',$fields));
-		$sort   = preg_replace('@\s*@','',$sort);
-		$sort   = 'sc.'.implode(',sc.',explode(',',$sort));
+		$fields = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $fields))));
+		$sort   = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $sort))));
 		
 		if($recent!==0 && preg_match('@^[0-9]+$@',$recent))
 		{
@@ -211,24 +209,22 @@ class LINKLIST
 		}
 		else $where_recent = '';
 		
-		if($limit!==0 && preg_match('@^[0-9]+$@',$limit))
+		if($limit===0 || !preg_match('@^[0-9]+$@',$limit))
 		{
-			$limit =  "LIMIT {$limit}";
-		}
-		else
-		{
-			$limit =  "LIMIT 2000";
+			$limit =  2000;
 		}
 		
 		$tblsc = $modx->getFullTableName('site_content');
 		$tbldg = $modx->getFullTableName('document_groups');
 	
-	    $sql = "SELECT DISTINCT $fields FROM $tblsc sc
-	      LEFT JOIN $tbldg dg on dg.document = sc.id
-	      WHERE sc.published=1 AND sc.deleted=0 {$where_recent}
-	      ORDER BY sc.editedon DESC, {$sort} {$dir}
-	      {$limit};";
-		$resourceArray = $this->doSql($sql);
+	    $result = $modx->db->select(
+	        "DISTINCT {$fields}",
+			"{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"sc.published=1 AND sc.deleted=0 {$where_recent}",
+			"sc.editedon DESC, {$sort} {$dir}",
+			$limit
+			);
+		$resourceArray = $modx->db->makeArray($result);
 		$count = count($resourceArray);
 		for($i=0; $i<$count; $i++)
 		{
@@ -267,11 +263,12 @@ class LINKLIST
 	    $tblsc = $modx->getFullTableName('site_content');
 	    $tbldg = $modx->getFullTableName('document_groups');
 	
-	    $sql = "SELECT sc.parent, sc.menutitle, sc.pagetitle, sc.menuindex, sc.published FROM $tblsc sc
-	      LEFT JOIN $tbldg dg on dg.document = sc.id
-	      WHERE sc.published=1 AND sc.deleted=0 AND sc.id=$doc_id;";
-		  
-		$resourceArray = $this->doSql($sql);
+	    $result = $modx->db->select(
+	        "sc.parent, sc.menutitle, sc.pagetitle, sc.menuindex, sc.published",
+			"{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"sc.published=1 AND sc.deleted=0 AND sc.id='{$doc_id}'",
+			);
+		$resourceArray = $modx->db->makeArray($result);
 		
 		// If we have got this far, it must not have been cached already, so lets do it now.
 		$page_cache[$doc_id] = $resourceArray[0];
@@ -279,14 +276,4 @@ class LINKLIST
 	    return $resourceArray[0];
 	}
 	
-	function doSql($sql)
-	{
-		global $modx;
-		// Connecting, selecting database
-		
-		$result = $modx->db->query($sql);
-		$resourceArray = $modx->db->makeArray($result);
-		
-		return $resourceArray;
-	}
 }

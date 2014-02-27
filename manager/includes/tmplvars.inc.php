@@ -316,7 +316,7 @@
 		$a = array();
 		if(is_array($v)) return $v;
 		else if(is_resource($v)) {
-			$a = $modx->db->makeArray($v);
+			while ($cols = $modx->db->getRow($v,'num')) $a[] = $cols;
 		}
 		else $a = explode("||", $v);
 		return $a;

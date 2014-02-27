@@ -57,8 +57,7 @@ $useCaptcha = isset($useCaptcha)? $useCaptcha : $modx->config['use_captcha'] ;
 if ($useCaptcha && !gd_info()) $useCaptcha = 0;
 
 # setup web groups
-$groups = isset($groups) ? explode(',',$groups):array();
-for($i=0;$i<count($groups);$i++) $groups[$i] = trim($groups[$i]);
+$groups = isset($groups) ? array_filter(array_map('trim', explode(',', $groups))):array();
 
 # System settings
 $isPostBack        = count($_POST) && isset($_POST['cmdwebsignup']);

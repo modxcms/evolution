@@ -1969,8 +1969,8 @@ class DocumentParser {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
         // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
+        $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
@@ -2004,8 +2004,8 @@ class DocumentParser {
         $tbldg= $this->getFullTableName("document_groups");
 
         // modify field names to use sc. table reference
-        $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-        $sort= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
+        $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+        $sort= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
         // get document groups for current user
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
@@ -2049,8 +2049,8 @@ class DocumentParser {
 		}
 		
 		// modify field names to use sc. table reference
-		$fields = 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
-		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+		$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 		
 		// get document groups for current user
 		if ($docgrp = $this->getUserDocGroups()){
@@ -2060,11 +2060,14 @@ class DocumentParser {
 		// build query
 		$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 		
+		$tblsc = $this->getFullTableName('site_content');
+		$tbldg = $this->getFullTableName('document_groups');
+		
 		$result= $this->db->select(
 			"DISTINCT {$fields}",
 			"{$tblsc} sc
 				LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-			"sc.parent = '{$parentid}' AND sc.published=$published AND sc.deleted=$deleted {$where} AND ({$access}) GROUP BY sc.id",
+			"sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
 			($sort ? "{$sort} {$dir}" : ""),
 			$limit
 			);
@@ -2094,7 +2097,7 @@ class DocumentParser {
 	function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		if(is_string($ids)){
 			if(strpos($ids, ',') !== false){
-				$ids = explode(',', $ids);
+				$ids = array_filter(array_map('intval', explode(',', $ids)));
 			}else{
 				$ids = array($ids);
 			}
@@ -2102,19 +2105,15 @@ class DocumentParser {
 		if (count($ids) == 0){
 			return false;
 		}else{
-			// LIMIT capabilities - rad14701
-			$limit = ($limit != '') ? 'LIMIT '.$limit : '';
-			$tblsc = $this->getFullTableName('site_content');
-			$tbldg = $this->getFullTableName('document_groups');
 			// modify field names to use sc. table reference
-			$fields = 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $fields)));
-			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			$fields = 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 			if ($where != ''){
 				$where = 'AND '.$where;
 			}
 			
-			$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
-			$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
+			$published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
+			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
 			// get document groups for current user
 			if ($docgrp = $this->getUserDocGroups()){
@@ -2123,14 +2122,17 @@ class DocumentParser {
 			
 			$access = ($this->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 			
-			$sql = "
-				SELECT DISTINCT $fields FROM $tblsc sc
-				LEFT JOIN $tbldg dg on dg.document = sc.id
-				WHERE (sc.id IN (".implode(',', $ids).") $published $deleted $where) AND ($access)
-				GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir" : '')." $limit
-			";
-			
-			$result = $this->db->query($sql);
+			$tblsc = $this->getFullTableName('site_content');
+			$tbldg = $this->getFullTableName('document_groups');
+
+			$result = $this->db->select(
+				"DISTINCT {$fields}",
+				"{$tblsc} sc
+					LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+				($sort ? "{$sort} {$dir}" : ""),
+				$limit
+				);
 			
 			$resourceArray = $this->db->makeArray($result);
 			
@@ -2186,7 +2188,7 @@ class DocumentParser {
             $tbldg= $this->getFullTableName("document_groups");
             $activeSql= $active == 1 ? "AND sc.published=1 AND sc.deleted=0" : "";
             // modify field names to use sc. table reference
-            $fields= 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
+            $fields= 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
             // get document groups for current user
             if ($docgrp= $this->getUserDocGroups())
                 $docgrp= implode(",", $docgrp);
@@ -2592,8 +2594,8 @@ class DocumentParser {
         else {
             $result= array ();
             // get user defined template variables
-            $fields= ($tvfields == "") ? "tv.*" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $tvfields)));
-            $tvsort= ($tvsort == "") ? "" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $tvsort)));
+            $fields= ($tvfields == "") ? "tv.*" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvfields))));
+            $tvsort= ($tvsort == "") ? "" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
             if ($tvidnames == "*")
                 $query= "tv.id<>0";
             else
@@ -2751,8 +2753,8 @@ class DocumentParser {
 			}
 			
 			// get user defined template variables
-			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $fields)));
-			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', preg_replace('/^\s/i', '', explode(',', $sort)));
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
 			
 			if ($idnames == '*'){
 				$query = 'tv.id<>0';
@@ -2760,19 +2762,14 @@ class DocumentParser {
 				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name')." IN ('".implode("','", $idnames)."')";
 			}
 			
-			$sql = "
-				SELECT $fields, IF(tvc.value != '', tvc.value, tv.default_text) as value
-				FROM ".$this->getFullTableName('site_tmplvars')." tv
-				INNER JOIN ".$this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id
-				LEFT JOIN ".$this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '".$docid."'
-				WHERE ".$query." AND tvtpl.templateid = ".$docRow['template']."
-			";
-			
-			if ($sort){
-				$sql .= " ORDER BY $sort $dir ";
-			}
-			
-			$rs = $this->db->query($sql);
+			$rs = $this->db->select(
+				"{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
+				$this->getFullTableName('site_tmplvars') . " tv
+					INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
+					LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
+				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
+				($sort ? "{$sort} {$dir}" : "")
+				);
 			
 			$result = $this->db->makeArray($rs);
 			
@@ -3044,7 +3041,6 @@ class DocumentParser {
                 INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id",
             "wu.id='{$uid}'"
             );
-        $rs= $this->db->query($sql);
         if ($row = $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "web";

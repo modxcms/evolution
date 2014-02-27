@@ -80,7 +80,7 @@
 			}
 		}
 	
-		$url = join('&',$urlstring);
+		$url = implode('&',$urlstring);
 		if ($suffix) {
 			if (empty($url)) {
 				$url = "?";

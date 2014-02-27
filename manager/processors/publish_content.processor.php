@@ -1,11 +1,13 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = $_REQUEST['id'];
-
+$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 /************webber ********/
 $content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
@@ -45,11 +47,12 @@ $modx->db->update(
 	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocPublished  event
-$modx->invokeEvent("OnDocPublished",array("docid"=>$id));	
+$modx->invokeEvent("OnDocPublished",array("docid"=>$id));
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
+// empty cache
 $modx->clearCache('full');
 
 //$header="Location: index.php?r=1&id=$id&a=7";

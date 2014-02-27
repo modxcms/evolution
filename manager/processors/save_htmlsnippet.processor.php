@@ -1,11 +1,11 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('save_chunk')) {
+if (!$modx->hasPermission('save_chunk')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
-$snippet = $modx->db->escape($_POST['post']);
+$snippet = trim($modx->db->escape($_POST['post']));
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
@@ -42,6 +42,7 @@ switch ($_POST['mode']) {
 			$modx->manager->saveFormValues(77);
 			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
 		}
+
 		//do stuff to save the new doc
 		$newid = $modx->db->insert(
 			array(
@@ -76,14 +77,20 @@ switch ($_POST['mode']) {
 			}
         break;
     case '78':
-
 		// invoke OnBeforeChunkFormSave event
 		$modx->invokeEvent("OnBeforeChunkFormSave",
 								array(
 									"mode"	=> "upd",
 									"id"	=> $id
 								));
-		
+
+		// disallow duplicate names for chunks
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}' AND id!='{$id}'");
+		if($modx->db->getValue($rs) > 0) {
+			$modx->manager->saveFormValues(78);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=78&id={$id}");
+		}
+
 		//do stuff to save the edited doc
 		$modx->db->update(
 			array(
@@ -116,9 +123,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-
-		
-		
         break;
     default:
 	?>

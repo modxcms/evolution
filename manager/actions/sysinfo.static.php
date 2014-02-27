@@ -56,7 +56,7 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td><?php echo $_lang['database_name']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo str_replace('`','',$dbase) ?></b></td>
+			<td><b><?php echo trim($dbase,'`') ?></b></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['database_server']?></td>
@@ -91,7 +91,7 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td><?php echo $_lang['table_prefix']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo $table_prefix ?></b></td>
+			<td><b><?php echo $modx->db->config['table_prefix'] ?></b></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['cfg_base_path']?></td>
@@ -177,7 +177,7 @@ if(!$modx->hasPermission('logs')) {
 		  <tbody>
 <?php
 
-	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '{$table_prefix}%';";
+	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%';";
 	$rs = $modx->db->query($sql);
 	$i = 0;
 	while ($log_status = $modx->db->getRow($rs)) {
@@ -188,10 +188,11 @@ if(!$modx->hasPermission('logs')) {
 			<td align="right"><?php echo $log_status['Rows']; ?></td>
 
 <?php
-	// enable record deletion for certain tables
-	// sottwell@sottwell.com
-	// 08-2005
-	if($modx->hasPermission('settings') && ($log_status['Name'] == "`".$table_prefix."event_log`" || $log_status['Name'] == "`".$table_prefix."log_access`" || $log_status['Name'] == "`".$table_prefix."log_hosts`" || $log_status['Name'] == "`".$table_prefix."log_visitors`" || $log_status['Name'] == "`".$table_prefix."manager_log`")) {
+	$truncateable = array(
+		$modx->db->config['table_prefix'].'event_log',
+		$modx->db->config['table_prefix'].'manager_log',
+	);
+	if($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
 		echo "<td dir='ltr' align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".$modx->nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
 		echo "</td>";

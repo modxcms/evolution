@@ -4,13 +4,19 @@ if(!$modx->hasPermission('delete_eventlog')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id=intval($_GET['id']);
-$clearlog = ($_GET['cls']==1 ? true:false);
+if (isset($_GET['cls']) && $_GET['cls']==1) {
+	$where = '';
+} else {
+	$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+	if($id==0) {
+		$modx->webAlertAndQuit($_lang["error_no_id"]);
+	}
+	$where = "id='{$id}'";
+}
 
 // delete event log
-$modx->db->delete($modx->getFullTableName("event_log"), ($clearlog ? '' : "id='{$id}'"));
+$modx->db->delete($modx->getFullTableName('event_log'), $where);
 
-	$header="Location: index.php?a=114";
-	header($header);
-
+$header="Location: index.php?a=114";
+header($header);
 ?>

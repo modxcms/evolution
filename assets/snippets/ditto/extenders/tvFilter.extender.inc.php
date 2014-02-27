@@ -24,12 +24,16 @@ if (!function_exists('tvFilter')) {
 			# do nothing (leave document within result set)
 			return 1;
 		}
-		$sql = "SELECT " . $modx->getFullTableName('site_tmplvars') . ".id " .
-		    "FROM " . $modx->getFullTableName('site_tmplvars') . " " .
-			"INNER JOIN " . $modx->getFullTableName('site_tmplvar_templates') . " " .
-				"ON " . $modx->getFullTableName('site_tmplvars') . ".id = " . $modx->getFullTableName('site_tmplvar_templates') . ".tmplvarid " .
-			"WHERE (" . $modx->getFullTableName('site_tmplvars') . ".name = '" . $GLOBALS['tvFilterBy'] . "') AND (" . $modx->getFullTableName('site_tmplvar_templates') . ".templateid = '" . $resource['template'] . "')";
-		return $GLOBALS['tvFilterMode'] ? !mysql_numrows(mysql_query($sql)) : mysql_numrows(mysql_query($sql));
+		$tmplvars = $modx->getFullTableName('site_tmplvars');
+		$tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+		$rs = $modx->db->select(
+			'count(tmplvars.id)',
+		    "{$tmplvars} AS tmplvars
+				INNER JOIN {$tmplvar_templates} AS tmplvar_templates ON tmplvars.id = tmplvar_templates.tmplvarid",
+			"(tmplvars.name = '{$GLOBALS['tvFilterBy']}') AND (tmplvar_templates.templateid = '{$resource['template']}')"
+			);
+		$count = $modx->db->getValue($rs);
+		return $GLOBALS['tvFilterMode'] ? !$count : $count;
 	}
 }
 

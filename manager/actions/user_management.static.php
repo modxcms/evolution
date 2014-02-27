@@ -126,10 +126,10 @@ echo $cm->render();
 	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
 	$grd->fields            = "id,username,fullname,role,email,gender,blocked,thislogin";
-	$grd->columns           = join(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
+	$grd->columns           = implode(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
 	                                          $_lang["email"],$_lang["user_gender"],$_lang["user_block"],$_lang["login_button"]));
 	$grd->colAligns="center,,,,,center,center";
-	$grd->colTypes          = join('||',array(
+	$grd->colTypes          = implode('||',array(
 	                          'template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="'.$_style['icons_user'] .'" /></a>',
 	                          'template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>',
 	                          'template:[+fullname+]',

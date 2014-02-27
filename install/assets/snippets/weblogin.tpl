@@ -68,7 +68,7 @@ if(isset($logoutid)) $logouthomeid = $logoutid;
 if(isset($template)) $tpl = $template;
 
 # Snippet customize settings
-$liHomeId	= isset($loginhomeid)? explode(",",$loginhomeid):array($modx->config['login_home'],$modx->documentIdentifier);
+$liHomeId	= isset($loginhomeid)? array_filter(array_map('intval', explode(',', $loginhomeid))):array($modx->config['login_home'],$modx->documentIdentifier);
 $loHomeId	= isset($logouthomeid)? $logouthomeid:$modx->documentIdentifier;
 $pwdReqId	= isset($pwdreqid)? $pwdreqid:0;
 $pwdActId	= isset($pwdactid)? $pwdactid:0;

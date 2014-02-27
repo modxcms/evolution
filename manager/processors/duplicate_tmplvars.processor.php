@@ -4,7 +4,10 @@ if(!$modx->hasPermission('edit_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id=$_GET['id'];
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // duplicate TV
 $newid = $modx->db->insert(

@@ -79,12 +79,9 @@ else
 		$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 		if(strpos($chunks,',')!==false)
 		{
-			$chunks = explode(',', $chunks);
-			foreach($chunks as $i=>$v)
-			{
-				$chunks[$i] = $modx->db->escape(trim($v));
-			}
-			$chunks = join("','", $chunks);
+			$chunks = array_filter(array_map('trim', explode(',', $chunks)));
+			$chunks = $modx->db->escape($chunks);
+			$chunks = implode("','", $chunks);
 			$where  = "`name` IN ('{$chunks}')";
 			$orderby = "FIELD(name, '{$chunks}')";
 		}
@@ -105,7 +102,7 @@ else
 		}
 	}
 	
-	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . join(',',$list) . '];';
+	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . implode(',',$list) . '];';
 }
 
 if($output)

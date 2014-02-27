@@ -38,7 +38,9 @@ if(!is_numeric($id)) {
 // take action
 switch ($_REQUEST['op']) {
 	case 'add':
-		$opids = explode(",",$_REQUEST['newids']);
+		// convert ids to numbers
+		$opids = array_filter(array_map('intval', explode(',', $_REQUEST['newids'])));
+
 		if (count($opids)>0){
 			// 1-snips, 2-tpls, 3-tvs, 4-chunks, 5-plugins, 6-docs
 			$rt = strtolower($_REQUEST["rt"]);
@@ -60,10 +62,9 @@ switch ($_REQUEST['op']) {
 		}
 		break;
 	case 'del':
-		$opids = $_REQUEST['depid'];
-		for($i=0;$i<count($opids);$i++) {
-			$opids[$i]=intval($opids[$i]); // convert ids to numbers
-		}
+		// convert ids to numbers
+		$opids = array_filter(array_map('intval', $_REQUEST['depid']));
+
 		// get resources that needs to be removed
 		$ds = $modx->db->select('*', $tbl_site_module_depobj, "id IN (".implode(",",$opids).")");
 			// loop through resources and look for plugins and snippets

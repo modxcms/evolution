@@ -5,9 +5,6 @@
 
 defined('IN_PARSER_MODE') or die();
 
-$dbase = $modx->dbConfig['dbase'];
-$table_prefix = $modx->dbConfig['table_prefix'];
-
 # process password activation
     if ($isPWDActivate==1){
         $id = $_REQUEST['wli'];
@@ -408,7 +405,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
         if($a!=1) {
             // web users are stored with negative id
-            $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
+            $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id, ip) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
             $modx->db->query($sql);
         }
     }
