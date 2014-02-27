@@ -488,8 +488,8 @@ class ddTools {
 		}else{
 			$limit = ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
 			// modify field names to use sc. table reference
-			$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-			$sort = ($sort == "") ? "" : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+			$fields = 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
+			$sort = ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
 			
 			if ($where != ''){
 				$where = 'AND '.$where;
@@ -592,8 +592,8 @@ class ddTools {
 			}
 			
 			// get user defined template variables
-			$fields = ($fields == "") ? "tv.*" : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
-			$sort = ($sort == "") ? "" : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
+			$fields = ($fields == "") ? "tv.*" : 'tv.'.implode(',tv.', preg_replace("/^\s/i", "", explode(',', $fields)));
+			$sort = ($sort == "") ? "" : 'tv.'.implode(',tv.', preg_replace("/^\s/i", "", explode(',', $sort)));
 			
 			if ($idnames == "*"){
 				$query = "tv.id<>0";
@@ -716,8 +716,8 @@ class ddTools {
 		}
 		
 		// modify field names to use sc. table reference
-		$fields = 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-		$sortBy = ($sortBy == "") ? "" : 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $sortBy))));
+		$fields = 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
+		$sortBy = ($sortBy == "") ? "" : 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sortBy)));
 		
 		// get document groups for current user
 		if ($docgrp = $modx->getUserDocGroups()){

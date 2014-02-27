@@ -2303,7 +2303,7 @@ class DocumentParser {
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
-            $this->messageQuit('`{$id}` is not numeric and may not be passed to makeUrl().');
+            $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
         }
         if ($args != '' && $this->config['friendly_urls'] == 1) {
             // add ? to $args if missing
@@ -2766,8 +2766,8 @@ class DocumentParser {
 				"{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
 				$this->getFullTableName('site_tmplvars') . " tv
 					INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
-					LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'"
-				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
+					LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'
+				    {$query} AND tvtpl.templateid = '{$docRow['template']}'",
 				($sort ? "{$sort} {$dir}" : "")
 				);
 			
