@@ -96,7 +96,7 @@ switch ($modx->event->name)
             else $content['file_binding'] = '';
             $_SESSION['itemname']=$content['name'];
         }
-        else $_SESSION['itemname']="New snippet";
+        //else $_SESSION['itemname']="New snippet";
         break;
     case 'OnSnipFormRender':
     case 'OnPluginFormRender':

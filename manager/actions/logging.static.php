@@ -196,7 +196,7 @@ if(isset($_REQUEST['log_submit'])) {
 	    $modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''))
     );
         
-	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC', "{$int_cur_position}, {$int_num_result}");
+	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 	if($limit<1) {
 		echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>';
 	} else {
