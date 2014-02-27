@@ -23,7 +23,7 @@ $modx->invokeEvent("OnBeforePluginFormDelete",
 $modx->db->delete($modx->getFullTableName('site_plugins'), "id='{$id}'");
 
 // delete the plugin events.
-$modx->db->delete($modx->getFullTableName('site_plugins'), "pluginid='{$id}'");
+$modx->db->delete($modx->getFullTableName('site_plugin_events'), "pluginid='{$id}'");
 
 // invoke OnPluginFormDelete event
 $modx->invokeEvent("OnPluginFormDelete",
