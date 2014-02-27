@@ -14,14 +14,14 @@ $modx->invokeEvent("OnBeforeEmptyTrash",
 						));
 
 // remove the document groups link.
-$sql = "DELETE ".$modx->getFullTableName('document_groups')."
+$sql = "DELETE document_groups
 		FROM ".$modx->getFullTableName('document_groups')." AS document_groups
 		INNER JOIN ".$modx->getFullTableName('site_content')." AS site_content ON site_content.id = document_groups.document
 		WHERE site_content.deleted=1";
 $modx->db->query($sql);
 
 // remove the TV content values.
-$sql = "DELETE ".$modx->getFullTableName('site_tmplvar_contentvalues')."
+$sql = "DELETE site_tmplvar_contentvalues
 		FROM ".$modx->getFullTableName('site_tmplvar_contentvalues')." AS site_tmplvar_contentvalues
 		INNER JOIN ".$modx->getFullTableName('site_content')." AS site_content ON site_content.id = site_tmplvar_contentvalues.contentid
 		WHERE site_content.deleted=1";
