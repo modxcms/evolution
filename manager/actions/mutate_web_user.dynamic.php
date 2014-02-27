@@ -42,7 +42,7 @@ if($_REQUEST['a']=='88') {
 
 	// get user name
 	$rs = $modx->db->select('*', $modx->getFullTableName('web_users'), "id = '{$user}'");
-	$usernamedata = $modx->db->getRow($rs)
+	$usernamedata = $modx->db->getRow($rs);
 	if(!$usernamedata) {
 		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
