@@ -2766,8 +2766,8 @@ class DocumentParser {
 				"{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
 				$this->getFullTableName('site_tmplvars') . " tv
 					INNER JOIN " . $this->getFullTableName('site_tmplvar_templates') . " tvtpl ON tvtpl.tmplvarid = tv.id
-					LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'
-				    {$query} AND tvtpl.templateid = '{$docRow['template']}'",
+					LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues') . " tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
+				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
 				($sort ? "{$sort} {$dir}" : "")
 				);
 			
@@ -3041,7 +3041,6 @@ class DocumentParser {
                 INNER JOIN " . $this->getFullTableName("web_user_attributes") . " wua ON wua.internalkey=wu.id",
             "wu.id='{$uid}'"
             );
-        $rs= $this->db->query($sql);
         if ($row = $this->db->getRow($rs)) {
             if (!$row["usertype"])
                 $row["usertype"]= "web";

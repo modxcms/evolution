@@ -63,7 +63,7 @@ switch ($_REQUEST['op']) {
 		break;
 	case 'del':
 		// convert ids to numbers
-		$opids = array_filter(array_map('intval', explode(',', $_REQUEST['depid']));
+		$opids = array_filter(array_map('intval', $_REQUEST['depid']));
 
 		// get resources that needs to be removed
 		$ds = $modx->db->select('*', $tbl_site_module_depobj, "id IN (".implode(",",$opids).")");

@@ -486,7 +486,6 @@ class ddTools {
 		if (count($ids) == 0){
 			return false;
 		}else{
-			$limit = ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
 			// modify field names to use sc. table reference
 			$fields = 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
 			$sort = ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
