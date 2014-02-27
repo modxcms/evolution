@@ -21,7 +21,7 @@ $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://e
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 
-$_lang["about_msg"] = 'MODX - это <a href="http://MODX.com/what-is-MODX.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX - это <a href="http://rtfm.modx.com/evolution/1.0/getting-started/what-is-modx" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODX';
 $_lang["access_permission_denied"] = 'У вас недостаточно прав для просмотра данного ресурса.';
 $_lang["access_permission_parent_denied"] = 'У вас недостаточно прав для создания ресурса в данном разделе';
@@ -377,7 +377,7 @@ $_lang["go"] = 'Перейти';
 $_lang["group_access_permissions"] = 'Доступ групп пользователей';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Помощь';
-$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://modx.com/documentation" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
+$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
 $_lang["help_title"] = 'Помощь';
 $_lang["hide_tree"] = 'Спрятать дерево';
 $_lang["home"] = 'Главная';

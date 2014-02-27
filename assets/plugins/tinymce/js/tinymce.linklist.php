@@ -266,7 +266,7 @@ class LINKLIST
 	    $result = $modx->db->select(
 	        "sc.parent, sc.menutitle, sc.pagetitle, sc.menuindex, sc.published",
 			"{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
-			"sc.published=1 AND sc.deleted=0 AND sc.id='{$doc_id}'",
+			"sc.published=1 AND sc.deleted=0 AND sc.id='{$doc_id}'"
 			);
 		$resourceArray = $modx->db->makeArray($result);
 		

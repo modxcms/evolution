@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 http://community.modx-cms.ru/blog/addons/6532.html
 мануал 

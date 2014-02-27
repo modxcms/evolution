@@ -373,7 +373,7 @@ $_lang["go"] = 'Start';
 $_lang["group_access_permissions"] = 'Groepstoegang';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
-$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://modx.com/documentation" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
+$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Website boomstructuur verbergen';
 $_lang["home"] = 'Start';

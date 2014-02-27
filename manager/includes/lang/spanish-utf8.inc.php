@@ -372,7 +372,7 @@ $_lang["go"] = 'Ir';
 $_lang["group_access_permissions"] = 'Acceso de grupo de usuarios';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ayuda';
-$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://modx.com/documentation" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
+$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
 $_lang["help_title"] = 'Ayuda';
 $_lang["hide_tree"] = 'Ocultar árbol';
 $_lang["home"] = 'Inicio';

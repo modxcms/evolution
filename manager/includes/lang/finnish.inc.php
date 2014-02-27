@@ -372,7 +372,7 @@ $_lang["go"] = 'OK';
 $_lang["group_access_permissions"] = 'Käyttäjäryhmän oikeudet';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ohjeet';
-$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://forums.modx.com" target="_blank">MODX:n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://modx.com/documentation" target="_blank">MODX:n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.modx.com/index.php/Main_Page" target="_blank">MODX Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen MODX-tuen tarjoaminen - ota <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
+$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://forums.modx.com" target="_blank">MODX:n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">MODX:n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.modx.com/index.php/Main_Page" target="_blank">MODX Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen MODX-tuen tarjoaminen - ota <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
 $_lang["help_title"] = 'Ohjeet';
 $_lang["hide_tree"] = 'Piilota sivukartta';
 $_lang["home"] = 'Alkuun';
