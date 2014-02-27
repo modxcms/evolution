@@ -950,7 +950,7 @@ class DocumentParser {
 				$key = $matches[1][$i];
 				if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
 					$v = $this->placeholders[$key];
-				elseif ($v === '')
+				if ($v === '')
 					unset($matches[0][$i]); // here we'll leave empty placeholders for last.
 				else
 					$replace[$i] = $v;
