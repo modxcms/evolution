@@ -113,23 +113,17 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 	$tv_table = $modx->getFullTableName('site_tmplvars');	
 	$rel_table = $modx->getFullTableName('site_tmplvar_templates');
 	
-	$where = array();
 	//Are we looking at specific TVs, or all?
-	if (!empty($fields)) $where[] = 'tvs.name IN ' . makeSqlList($fields);
+	$tvs_sql = !empty($fields) ? ' AND tvs.name IN ' . makeSqlList($fields) : '';
 	
 	//Are we looking at specific TV types, or all?
-	if (!empty($types)) $where[] = 'type IN ' . makeSqlList($types);
+	$types_sql = !empty($types) ? ' AND type IN ' . makeSqlList($types) : '';
 	
 	//Make the SQL for this template
-	if (!empty($tpl_id)) $where[] = 'rel.templateid = ' . $tpl_id;
+	$cur_tpl = !empty($tpl_id) ? ' AND rel.templateid = ' . $tpl_id : '';
 		
 	//Execute the SQL query
-	$result = $modx->db->select(
-		implode(',', $dbFields),
-		"{$tv_table} AS tvs
-			LEFT JOIN {$rel_table} AS rel ON rel.tmplvarid = tvs.id",
-		implode(' AND ', $where)
-		);
+	$result = $modx->db->query("SELECT ".implode(',', $dbFields)." FROM $tv_table tvs LEFT JOIN $rel_table rel ON rel.tmplvarid = tvs.id WHERE 1=1  $cur_tpl $tvs_sql $types_sql");
 	
 	$recordCount = $modx->db->getRecordCount($result);
 	
@@ -141,7 +135,8 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 		if ($resultKey !== false){
 			$rsArray = array();
 			
-			while ($modx->db->getRow($result)) {
+			for ($i = 0; $i < $recordCount; $i++){
+				$row = $modx->db->getRow($result);
 				
 				//If result contains the result key
 				if (array_key_exists($resultKey, $row)){
