@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Template nuevo';
 $_lang["new_tmplvars"] = 'Variable de template nueva';
 $_lang["new_user"] = 'Usuario nuevo';
 $_lang["new_web_user"] = 'Usuario Web nuevo ';
-$_lang["new_resource"] = 'Documento Nuevo';
+$_lang["new_resource"] = 'New Resource';
 $_lang["no"] = 'No';
 $_lang["no_active_users_found"] = 'No se encontraron usuarios activos.';
 $_lang["no_activity_message"] = 'No has creado o editado algún documento todavía.';
@@ -1201,7 +1201,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = '¿Publicado?';
+$_lang['resource_opt_is_published'] = 'Publicado';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
