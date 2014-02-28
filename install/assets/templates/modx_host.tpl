@@ -80,7 +80,7 @@
     <br style="clear:both;height:0;font-size: 1px" />
     <div id="footer">
       <p> <a href="http://modx.com" title="Ajax CMS and PHP Application Framework">Powered
-          by MODX</a> &nbsp;<a href="http://www.modx.com/" title="Template Designed by modXhost.com">Template &copy; 2006-2011
+          by MODX</a> &nbsp;<a href="http://modx.com/" title="Template Designed by modXhost.com">Template &copy; 2006-2011
           modXhost.com</a><br />
         Memory: [^m^], MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved
         from [^s^]. </p>
