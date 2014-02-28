@@ -83,7 +83,7 @@ switch ($operation) {
 		$modx->db->update(array('name' => $modx->db->escape($newgroupname)), $tbl_webgroup_names, "id='{$groupid}'");
 	break;
 	case "rename_document_group" :
-		$newgroupname = $_REQUEST['newgroupname']);
+		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}

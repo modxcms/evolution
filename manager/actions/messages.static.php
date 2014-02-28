@@ -24,7 +24,7 @@ if(!$message) {
         if($sender==0) {
             $sendername = $_lang['messages_system_user'];
         } else {
-            $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'")
+            $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
             $sendername = $modx->db->getValue($rs2);
         }
 ?>
