@@ -17,7 +17,7 @@ $modx->manager->initPageViewState();
 		var requireConfirm=false;
 		var deleteList="";
 	<?php 
-		$rs = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC')
+		$rs = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC');
 		while ($row=$modx->db->getRow($rs)) {
 		?>
 
