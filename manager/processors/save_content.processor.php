@@ -43,7 +43,7 @@ $add_path=$sd.$sb.$pg;
 
 
 
-if (trim($pagetitle == "")) {
+if (trim($pagetitle) == "") {
 	if ($type == "reference") {
 		$pagetitle = $_lang['untitled_weblink'];
 	} else {
