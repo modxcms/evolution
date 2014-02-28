@@ -7,7 +7,7 @@
  * @category plugin
  * @version 0.6.1
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal @properties &remove_deprecated_tv_types_pref=Remove deprecated TV types;list;yes,no;yes &config_chunk=Configuration Chunk;text;
+ * @internal @properties &remove_deprecated_tv_types_pref=Remove deprecated TV types;list;yes,no;yes &config_chunk=Configuration Chunk;text;mm_rules
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * @internal @installset base
