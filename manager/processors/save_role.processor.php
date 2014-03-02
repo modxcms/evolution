@@ -109,7 +109,7 @@ switch ($_POST['mode']) {
         $tbl = $modx->getFullTableName("user_roles");
 
         // disallow duplicate names for role
-        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$fields['id']}'");
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$id}'");
         if ($modx->db->getValue($rs) > 0) {
             $modx->manager->saveFormValues(35);
             $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=35&id={$id}");
