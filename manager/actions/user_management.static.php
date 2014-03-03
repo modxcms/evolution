@@ -1,11 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('edit_user')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$theme = $manager_theme ? "$manager_theme/":"";
 
 // initialize page view state - the $_PAGE object
 $modx->manager->initPageViewState();
@@ -29,8 +26,8 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH."includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["edit"],"js:menuAction(1)","media/style/$manager_theme/images/icons/logging.gif",(!$modx->hasPermission('edit_user') ? 1:0));
-$cm->addItem($_lang["delete"], "js:menuAction(2)","media/style/$manager_theme/images/icons/delete.gif",(!$modx->hasPermission('delete_user') ? 1:0));
+$cm->addItem($_lang["edit"],"js:menuAction(1)",$_style["icons_edit_document"],(!$modx->hasPermission('edit_user') ? 1:0));
+$cm->addItem($_lang["delete"], "js:menuAction(2)",$_style["icons_delete"],(!$modx->hasPermission('delete_user') ? 1:0));
 echo $cm->render();
 
 ?>
@@ -98,8 +95,8 @@ echo $cm->render();
 			<td nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#"  title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang['go']; ?></a></td>
-				<td><a href="#"  title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				<td><a href="#"  title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
+				<td><a href="#"  title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style["icons_refresh"]?>" /></a></td>
+				<td><a href="#"  title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style["icons_table"]?>" /></a></td>
 				</tr>
 				</table>
 			</td>
@@ -108,44 +105,43 @@ echo $cm->render();
 	</div>
 	<div>
 	<?php
-	$noAdminSql = ($_SESSION['mgrRole'] != 1)? 'mua.role != 1' : '' ;
-	$sql = "SELECT
-		mu.id,
-		mu.username,
-		rname.name AS role,
-		mua.fullname,
-		mua.email,
-		IF(mua.gender=1,'".$_lang['user_male']."',IF(mua.gender=2,'".$_lang['user_female']."','-')) AS gender,
-		IF(mua.blocked,'".$_lang['yes']."','-') as blocked " .
-		"FROM ".$modx->getFullTableName('manager_users')." AS mu ".
-		"INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id ".
-		"LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id ";
-	if ($noAdminSql){
-	    if(!empty($sqlQuery)){
-	        $sql .= "WHERE ((mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%')) AND $noAdminSql ";
-	    } else {
-	        $sql .= "WHERE $noAdminSql ";
-	    }
-	} else {
-	    $sql .= (!empty($sqlQuery) ? "WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%') ":"");
-	}
-	$sql .= "ORDER BY username";
-
-	$ds = $modx->db->query($sql);
+	$where = "";
+	if ($_SESSION['mgrRole'] != 1)
+		$where .= (empty($where)?"":" AND ") . "mua.role != 1";
+	if (!empty($sqlQuery))
+		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
+	$ds = $modx->db->select(
+		"mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked",
+		$modx->getFullTableName('manager_users')." AS mu 
+			INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id 
+			LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id",
+		$where,
+		'mua.blocked ASC, mua.thislogin DESC'
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
-	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
+	$grd = new DataGrid('',$ds,$modx->config['number_of_results']); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];
 	$grd->cssClass="grid";
 	$grd->columnHeaderClass="gridHeader";
 	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
-	$grd->fields="id,username,fullname,role,email,gender,blocked";
-	$grd->columns=$_lang["icon"].",".$_lang["name"].",".$_lang["user_full_name"].",".$_lang['role'].",".$_lang["email"].",".$_lang["user_gender"].",".$_lang["user_block"];
-	$grd->colWidths="34,,,,,40,34";
+	$grd->fields            = "id,username,fullname,role,email,gender,blocked,thislogin";
+	$grd->columns           = implode(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
+	                                          $_lang["email"],$_lang["user_gender"],$_lang["user_block"],$_lang["login_button"]));
 	$grd->colAligns="center,,,,,center,center";
-	$grd->colTypes='template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="media/style/'.$manager_theme.'/images/icons/user.gif" /></a>||template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>';
-	if($listmode=='1') $grd->pageSize=0;
-	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
+	$grd->colTypes          = implode('||',array(
+	                          'template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="'.$_style['icons_user'] .'" /></a>',
+	                          'template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>',
+	                          'template:[+fullname+]',
+	                          'template:[+role+]',
+	                          'template:[+email+]',
+	                          'template:[+gender+]',
+	                          'template:[+blocked+]',
+	                          'date: ' . $modx->toDateFormat(null, 'formatOnly') . ' %H:%M'));
+	if($listmode=='1')
+	  $grd->pageSize=0;
+	if($_REQUEST['op']=='reset')
+	  $grd->pageNumber = 1;
 	// render grid
 	echo $grd->render();
 	?>

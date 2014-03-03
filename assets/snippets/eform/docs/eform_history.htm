@@ -131,6 +131,23 @@ font-size:14pt;
 			</ul>
 		</div>
 		<div class="qe_level_1"><h2>Version History</h2>
+			<h3>Version 1.4.5</h3>
+			<ul>
+                <li>Updated language files.</li>
+                <li>Added &amp;attachmentField parameter.</li>
+                <li>Added &amp;attachmentPath parameter.</li>
+			</ul>
+			<h3>Version 1.4.4.9</h3>
+			<ul>
+                <li>Updated language files.</li>
+                <li>Security fix: Posting of html only allowed if &allowhtml=`1` and eform field type is html.</li>
+				<li>Security fix: Prevent XSS by executing htmlspecialchars during formMerge on all form fields.</li>
+			</ul>
+			<h3>Version 1.4.4.8</h3>
+			<ul>
+                <li>Security fix: Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.</li>
+                <li>Added: Multiple event functions separated by comma.</li>
+			</ul>
 			<h3>Version 1.4.4.1 - 1.4.4.8</h3>
 			<ul>
 				<li>eForm now retains default values for check boxes and radio buttons</li>
@@ -146,8 +163,6 @@ font-size:14pt;
 				<li>Work around for setting required class on check &amp; radio labels</li>
 				<li>bugfix: If eform attibute is set on multiple check boxes only the last value is set in values list</li>
                 <li>Security fix: Additional sanitization applied after stripslashes is used on fields</li>
-                <li>Security fix: Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.</li>
-                <li>Added: Multiple event functions separated by comma.</li>
 			</ul>
 					<h3>Version 1.4.4</h3>
 					<ul>
@@ -163,7 +178,7 @@ font-size:14pt;
 				    <li>&amp;invalidClass now also works for vericode field</li>
 				    <li>Added &amp;autoSenderName parameter</li>
 				    <li>Added &amp;runSnippet parameter - Call a snippet before main form processing. See parameter documentation for details.</li>
-						<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders. 
+						<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders.</li>
 						<li>Added $lang['ef_mail_error'] to the language file and a slightly improved error reporting when sending mail fails</li>
 						<li>Date formatting for report can now be set in language file: $_lang['ef_date_format']</li>
 						<li>Report output is now more locale aware as far as numbers are concerned. Added $_lang['ef_thousands_separator'] to the language file. If set to an empty string (default) the character defined in the current (php) locale will be used (if any).</li>

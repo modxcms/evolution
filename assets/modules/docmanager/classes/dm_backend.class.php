@@ -40,14 +40,8 @@ class DocManagerBackend {
     	$resource = array();
 
     	if (is_numeric($id)) {
-			$query = 'SELECT id , pagetitle , parent , menuindex, published, hidemenu, deleted  FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
-			if (!$rs = $this->modx->db->query($query)) {
-				return false;
-			}
-		
-			while ($row = $this->modx->db->getRow($rs)) {
-				$resource[] = $row;
-			}
+			$rs = $this->modx->db->select('id, pagetitle, parent, menuindex, published, hidemenu, deleted', $this->modx->getFullTableName('site_content'), "parent='{$id}'", 'menuindex ASC');
+			$resource = $this->modx->db->makeArray($rs);
 		} elseif ($id == '') {
 			$noId = true;
 			$this->dm->ph['sort.disable_tree_select'] = 'true';
@@ -84,8 +78,7 @@ class DocManagerBackend {
     		foreach ($items as $key => $value) {
     			$id = ltrim($value, 'item_');
     			if (is_numeric($id)) {
-	    			$sql = 'UPDATE '.$this->modx->getFullTableName('site_content') .' set menuindex=' . $key . ' WHERE id=' . $id;
-					$this->modx->db->query($sql);
+	    			$this->modx->db->update(array('menuindex'=>$key), $this->modx->getFullTableName('site_content'), "id='{$id}'");
     			}
     		}
     		$this->logDocumentChange('sortmenu');
@@ -118,7 +111,7 @@ class DocManagerBackend {
 		}
 		$this->dm->ph['update.message'] .= '<br />' . $this->dm->lang['DM_tpl_results_message'];
 										
-		$this->modx->clearCache();
+		$this->modx->clearCache('full');
 		$this->logDocumentChange('template');
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
@@ -149,7 +142,7 @@ class DocManagerBackend {
 					//if (strpos($key,'_prefix') !== false)
 					//	continue;
 					
-					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), 'id=' . $tvKeyName . '');
+					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), "id='{$tvKeyName}'");
 					$row = $this->modx->db->getRow($typeSQL);
 					if ($row['type'] == 'url') {
 						$tmplvar = $_POST["tv" . $row['id']];
@@ -179,15 +172,14 @@ class DocManagerBackend {
 			}
 		
 			foreach ($pids as $docID) {
-				$tempSQL = $this->modx->db->select('template', $this->modx->getFullTableName('site_content'), 'id=' . $docID);
-				if ($this->modx->db->getRecordCount($tempSQL) > 0) {
-					$row = $this->modx->db->getRow($tempSQL);
+				$tempSQL = $this->modx->db->select('template', $this->modx->getFullTableName('site_content'), "id='{$docID}'");
+				if ($row = $this->modx->db->getRow($tempSQL)) {
 					if ($row['template'] == $_POST['template_id']) {
 						$tvID = $this->getTemplateVarIds($tmplVars,$docID);
 						if (count($tvID) > 0) {
 							foreach ($tvID as $tvIndex => $tvValue) {
                                 if($_POST['update_tv_' . $tvIndex] == 'yes') {
-                                    $checkSQL = $this->modx->db->select('value', $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                    $checkSQL = $this->modx->db->select('value', $this->modx->getFullTableName('site_tmplvar_contentvalues'), "contentid='{$docID}' AND tmplvarid='{$tvValue}'");
                                     $checkCount = $this->modx->db->getRecordCount($checkSQL);
                                     if ($checkCount) {
                                         $checkRow = $this->modx->db->getRow($checkSQL);
@@ -195,7 +187,7 @@ class DocManagerBackend {
                                             $noUpdate = true;
                                         }
                                         elseif (trim($tmplVars["$tvIndex"]) == '') {
-                                            $this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                            $this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), "contentid='{$docID}' AND tmplvarid='{$tvValue}'");
                                             $noUpdate = true;
                                         }
                                     }
@@ -205,7 +197,7 @@ class DocManagerBackend {
                                             'value' => $this->modx->db->escape($tmplVars["$tvIndex"])
                                         );
 
-                                        $this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                        $this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), "contentid='{$docID}' AND tmplvarid='{$tvValue}'");
                                         $updated = true;
                                     } elseif (!isset ($noUpdate) && ltrim($tmplVars["$tvIndex"]) !== '') {
 
@@ -267,12 +259,14 @@ class DocManagerBackend {
 					if (count($doc_id) > 0) {
 						foreach ($doc_id as $value) {
 							$docsAdded = 0;
-							$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-							$sqlResult = $this->modx->db->query($sql);
-							$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
+							$sqlResult = $this->modx->db->select('count(*)', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
+							$NotAMember = ($this->modx->db->getValue($sqlResult) == 0);
 							if ($NotAMember) {
-								$sql = "INSERT INTO " . $this->modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
-								$sqlResult = $this->modx->db->query($sql);
+								$this->modx->db->insert(
+									array(
+										'document_group' => $docgroup,
+										'document'       => $value,
+									), $this->modx->getFullTableName('document_groups'));
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsAdded += 1;
@@ -287,12 +281,10 @@ class DocManagerBackend {
 					if (count($doc_id) > 0) {
 						foreach ($doc_id as $value) {
 							$docsRemoved = 0;
-							$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-							$sqlResult = $this->modx->db->query($sql);
-							$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
+							$sqlResult = $this->modx->db->select('count(*)', $this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
+							$AMember = ($this->modx->db->getValue($sqlResult) <> 0);
 							if ($AMember) {
-								$sql = "DELETE FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-								$sqlResult = $this->modx->db->query($sql);
+								$this->modx->db->delete($this->modx->getFullTableName('document_groups'), "document_group = '{$docgroup}' AND document = '{$value}'");
 								$this->secureWebDocument($value);
 								$this->secureMgrDocument($value);
 								$docsRemoved += 1;
@@ -455,21 +447,19 @@ class DocManagerBackend {
 			elseif (preg_match('/^[\d]+\*$/', trim($value), $match)) {
 				$match = rtrim($match[0], '*');
 	
-				$group = $this->modx->db->select('id', $this->modx->getFullTablename('site_content'), 'parent=' . $match);
+				$group = $this->modx->db->select('id', $this->modx->getFullTablename('site_content'), "parent='{$match}'");
 
 				if ($returnval == 0) {
 					$idarray[] = $match;
 				} else {
 					$pids .= '' . $column . '=\'' . $match . '\' OR ';
 				}
-				if ($this->modx->db->getRecordCount($group) > 0) {
 				while ($row = $this->modx->db->getRow($group)) {
 					if ($returnval == 0) {
 						$idarray[] = ($row['id']);
 					} else {
 						$pids .= '' . $column . '=\'' . $row['id'] . '\' OR ';
 					}
-				}
 				}
 			}
 			/* value is a group for ALL children */
@@ -480,11 +470,9 @@ class DocManagerBackend {
 				for ($i = 0; $i < count($idarray); $i++) {
 					$where = 'parent=' . $idarray[$i];
 					$rs = $this->modx->db->select('id', $this->modx->getFullTableName('site_content'), $where);
-					if ($this->modx->db->getRecordCount($rs) > 0) {
 						while ($row = $this->modx->db->getRow($rs)) {
 							$idarray[] = $row['id'];
 						}
-					}
 				}
 
 				for ($i = 0; $i < count($idarray); $i++) {
@@ -521,15 +509,14 @@ class DocManagerBackend {
 				if (in_array($name,$ignoreList)) {
 					continue;
 				}
-				$sql = $this->modx->db->select('id,default_text', $this->modx->getFullTableName('site_tmplvars'), 'id="' . $name . '"');
-				if ($this->modx->db->getRecordCount($sql) > 0) {
-					$row = $this->modx->db->getRow($sql);
+				$sql = $this->modx->db->select('id,default_text', $this->modx->getFullTableName('site_tmplvars'), "id='{$name}'");
+				if ($row = $this->modx->db->getRow($sql)) {
 					if ($value !== $row['default_text'] || trim($value) == '') {
 						$output["$name"] = $row['id'];
 					} elseif ($value == $row["default_text"]) {
-						$newSql = $this->modx->db->select("value", $this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentId);
-						if ($this->modx->db->getRecordCount($newSql) == 1) {
-							$this->modx->db->delete($this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentId);
+						$newSql = $this->modx->db->select("count(value)", $this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
+						if ($this->modx->db->getValue($newSql) == 1) {
+							$this->modx->db->delete($this->modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid='{$row['id']}' AND contentid='{$documentId}'");
 						}
 					}
 				}
@@ -539,30 +526,34 @@ class DocManagerBackend {
 	}
     
     function secureWebDocument($docId = '') {	
-		$sql = "SELECT DISTINCT sc.id
-									 FROM " . $this->modx->getFullTableName("site_content") . " sc
-									 LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
-									 LEFT JOIN " . $this->modx->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group
-									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "wga.id>0";
-		$ids = $this->modx->db->getColumn("id", $sql);
+		$rs = $this->modx->db->select(
+			'DISTINCT sc.id',
+			$this->modx->getFullTableName("site_content") . " sc
+				LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
+				LEFT JOIN " . $this->modx->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group",
+			($docId > 0 ? " sc.id={$docId} AND " : "") . "wga.id>0"
+			);
+		$ids = $this->modx->db->getColumn("id", $rs);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 1 WHERE id IN (" . implode(",", $ids) . ")");
+			$this->modx->db->update(array('privateweb'=>1), $this->modx->getFullTableName("site_content"), "id IN (" . implode(",", $ids) . ")");
 		} else {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privateweb = 1"));
+			$this->modx->db->update(array('privateweb'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privateweb = 1"));
 		}
 	}
 	
 	function secureMgrDocument($docId = '') {	
-		$sql = "SELECT DISTINCT sc.id
-									 FROM " . $this->modx->getFullTableName("site_content") . " sc
-									 LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
-									 LEFT JOIN " . $this->modx->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group
-									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "mga.id>0";
-		$ids = $this->modx->db->getColumn("id", $sql);
+		$rs = $this->modx->db->select(
+			'DISTINCT sc.id',
+			$this->modx->getFullTableName("site_content") . " sc
+				LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
+				LEFT JOIN " . $this->modx->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group",
+			($docId > 0 ? " sc.id={$docId} AND " : "") . "mga.id>0"
+			);
+		$ids = $this->modx->db->getColumn("id", $rs);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 1 WHERE id IN (" . implode(",", $ids) . ")");
+			$this->modx->db->update(array('privatemgr'=>1), $this->modx->getFullTableName("site_content"), "id IN (" . implode(",", $ids) . ")");
 		} else {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privatemgr = 1"));
+			$this->modx->db->update(array('privatemgr'=>0), $this->modx->getFullTableName("site_content"), ($docId > 0 ? "id='{$docId}'" : "privatemgr = 1"));
 		}
 	}
 	

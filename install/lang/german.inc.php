@@ -1,14 +1,17 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author davaeron, German translation by Marc Hinse and Bogdan Günther
- * @package MODX
- * @version 2.0
- * @translation
- * Filename:       /install/lang/german.inc.php
- * Language:       German
- * Encoding:       UTF-8
+ * @author Marc Hinse
+ * @author Bogdan Günther
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language German
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Lizenzbedingungen akzeptieren und installieren';
 $_lang["alert_database_test_connection"] = 'Sie müssen eine Datenbank erstellen oder die Datenbank-Verbindung testen!';
@@ -45,7 +48,7 @@ $_lang["checking_mysql_strict_mode"] = 'Überprüfe MySQL Strict-Mode: ';
 $_lang["checking_mysql_version"] = 'Überprüfe MySQL-Version: ';
 $_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';
 $_lang["checking_registerglobals"] = 'Überprüfe ob PHP register_globals ausgeschaltet sind: ';
-$_lang["checking_registerglobals_note"] = 'Diese Konfiguration macht Ihre Website angreifbarer für Cross Site Scripting (XSS) Attacken. Sie sollten mit Ihrem Provider sprechen, ob diese Einstellung geändert werden kann. Es gibt normalerweise drei Möglichkeiten: Ändern der globalen php.ini, Hinzufügen von Regeln zu der .htaccess-Datei im Root-Verzeichnis der MODX-Installation oder durch Hinzufügen einer angepassten php.ini in jedem Verzeichnis Ihrer MODX-Installation. Sie können MODX trotzdem installieren, aber Sie müssen sich den möglichen Sicherheitsrisiken bewusst sein.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Diese Konfiguration macht Ihre Website angreifbarer für Cross Site Scripting (XSS) Attacken. Sie sollten mit Ihrem Provider sprechen, ob diese Einstellung geändert werden kann. Es gibt normalerweise drei Möglichkeiten: Ändern der globalen php.ini, Hinzufügen von Regeln zu der .htaccess-Datei im Root-Verzeichnis der MODX-Installation oder durch Hinzufügen einer angepassten php.ini in jedem Verzeichnis Ihrer MODX-Installation. Sie können MODX trotzdem installieren, aber Sie müssen sich den möglichen Sicherheitsrisiken bewusst sein.';
 $_lang["checking_sessions"] = 'Überprüfe ob die Sessions sauber definiert sind: ';
 $_lang["checking_table_prefix"] = 'Überprüfe Tabellen-Präfix `';
 $_lang["chunks"] = 'Chunks';
@@ -79,11 +82,14 @@ $_lang["database_use_failed"] = 'Datenbank konnte nicht ausgewählt werden!';
 $_lang["database_use_failed_note"] = 'Bitte prüfen Sie den Datenbankzugang für den gewählten Benutzer und versuchen Sie es erneut.';
 $_lang["default_language"] = 'Manager Standard-Sprache';
 $_lang["default_language_description"] = 'Das ist die voreingestellte Sprache die im MODX-Manager (dem MODX-Adminbereich) verwendet wird.';
+$_lang["depedency_create"] = 'Abhängigkeit erstellt';
+$_lang["depedency_update"] = 'Abhängigkeit aktualisiert';
 $_lang["during_execution_of_sql"] = ' während des Ausführens des SQL-Statements ';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'Fehler';
 $_lang["errors"] = 'Fehler';
 $_lang["failed"] = 'fehlgeschlagen!';
+$_lang["guid_set"] = 'GUID gesetzt';
 $_lang["help"] = 'Hilfe!';
 $_lang["help_link"] = 'http://de.modx.com/forum/';
 $_lang["help_title"] = 'Unterstützung zur Installation finden Sie in den MODX-Foren';
@@ -105,10 +111,10 @@ $_lang["installation_upgrade_existing"] = 'Upgrade einer bestehenden Installatio
 $_lang["installation_upgrade_existing_note"] = 'Upgrade Ihrer Dateien und der Datenbank.';
 $_lang["installed"] = 'Installiert';
 $_lang["installing_demo_site"] = 'Installiere Beispiel-Website: ';
-$_lang["language_code"] = 'de';	// for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'de';
 $_lang["loading"] = 'Laden …';
 $_lang["modules"] = 'Module';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODX ist freie Software.  Wir ermutigen Sie, kreativ zu sein und MODX so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quellcodes und der Weiterverbreitung der modifizierten MODX-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', und MODX benötigt PHP 4.2.0 oder höher';
@@ -136,7 +142,7 @@ $_lang["running_database_updates"] = 'Führe Datenbank-Updates durch: ';
 $_lang["sample_web_site"] = 'Beispiel-Website';
 $_lang["sample_web_site_note"] = 'Beachten Sie, dass damit alle Dokumente und Ressourcen <b>überschrieben</b> werden.';
 $_lang["session_problem"] = 'Ein Problem mit Ihren Server-Sessions wurde festgestellt. Bitte kontaktieren Sie Ihren Server-Administator um dieses Problem zu beheben.';
-$_lang["session_problem_try_again"] = 'Erneut versuchen?'; 
+$_lang["session_problem_try_again"] = 'Erneut versuchen?';
 $_lang["setup_cannot_continue"] = 'Leider kann die Installation wegen oben aufgeführter Gründe nicht fortgesetzt werden.';
 $_lang["setup_couldnt_install"] = 'MODX konnte die Tabellen in der gewählten Datenbank nicht anlegen/ändern.';
 $_lang["setup_database"] = 'Die Installation wird nun versuchen die Datenbank einzurichten:<br />';
@@ -175,11 +181,11 @@ $_lang["templates"] = 'Templates';
 $_lang["to_log_into_content_manager"] = 'Um sich im Manager anzumelden ([+MGR_DIR+]/index.php), klicken Sie bitte auf den Schließen-Button.';
 $_lang["toggle"] = 'Umschalten';
 $_lang['tvs'] = 'Template-Variablen';
-$_lang["unable_install_chunk"] = 'Konnte Chunk nicht installieren.  Datei';
-$_lang["unable_install_module"] = 'Konnte Modul nicht installieren.  Datei';
-$_lang["unable_install_plugin"] = 'Konnte Plugin nicht installieren.  Datei';
-$_lang["unable_install_snippet"] = 'Konnte Snippet nicht installieren.  Datei';
-$_lang["unable_install_template"] = 'Konnte Template nicht installieren.  Datei';
+$_lang["unable_install_chunk"] = 'Konnte Chunk nicht installieren. Datei';
+$_lang["unable_install_module"] = 'Konnte Modul nicht installieren. Datei';
+$_lang["unable_install_plugin"] = 'Konnte Plugin nicht installieren. Datei';
+$_lang["unable_install_snippet"] = 'Konnte Snippet nicht installieren. Datei';
+$_lang["unable_install_template"] = 'Konnte Template nicht installieren. Datei';
 $_lang["upgrade_note"] = '<b>Achtung:</b> Nach dem Anmelden im Manager sollten Sie die Konfigurationseinstellungen unter <b>Werkzeuge &gt; Konfiguration</b> überprüfen und speichern bevor Sie Ihre Seite aufrufen.';
 $_lang["upgraded"] = 'Aktualisiert';
 $_lang["validate_referer_title"] = 'HTTP_REFERER-Header überprüfen?';

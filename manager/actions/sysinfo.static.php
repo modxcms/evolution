@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('logs')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 ?>
 <h1><?php echo $_lang["view_sysinfo"]; ?></h1>
@@ -57,7 +56,7 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td><?php echo $_lang['database_name']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo str_replace('`','',$dbase) ?></b></td>
+			<td><b><?php echo trim($dbase,'`') ?></b></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['database_server']?></td>
@@ -75,8 +74,8 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
 	$sql1 = "show variables like 'character_set_database'";
     $res = $modx->db->query($sql1);
-    $charset = $modx->db->getRow($res, 'num');
-    echo $charset[1];
+    $charset = $modx->db->getValue($res);
+    echo $charset;
 			?></strong></td>
 		  </tr>
 		  <tr>
@@ -85,14 +84,14 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
     $sql2 = "show variables like 'collation_database'";
     $res = $modx->db->query($sql2);
-    $collation = $modx->db->getRow($res, 'num');
-    echo $collation[1];
+    $collation = $modx->db->getValue($res);
+    echo $collation;
             ?></strong></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['table_prefix']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo $table_prefix ?></b></td>
+			<td><b><?php echo $modx->db->config['table_prefix'] ?></b></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['cfg_base_path']?></td>
@@ -139,24 +138,18 @@ if(!$modx->hasPermission('logs')) {
 			</thead>
 			<tbody>
 		<?php
-		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 ORDER BY editedon DESC LIMIT 20";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('id, pagetitle, editedby, editedon', $modx->getFullTableName('site_content'), 'deleted=0', 'editedon DESC', 20);
 		$limit = $modx->db->getRecordCount($rs);
 		if($limit<1) {
 			echo "<p>".$_lang["no_edits_creates"]."</p>";
 		} else {
-			for ($i = 0; $i < $limit; $i++) {
-				$content = $modx->db->getRow($rs);
-				$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=".$content['editedby'];
-				$rs2 = $modx->db->query($sql);
-				$limit2 = $modx->db->getRecordCount($rs2);
-				if($limit2==0) $user = '-';
-				else {
-					$r = $modx->db->getRow($rs2);
-					$user = $r['username'];
-				}
-				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
+			$i = 0;
+			while ($content = $modx->db->getRow($rs)) {
+				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'");
+				$content['user'] = $modx->db->getValue($rs2);
+				if(!$content['user']) $content['user'] = '-';
+				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
+				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$content['user']."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}
 		?>
@@ -184,55 +177,40 @@ if(!$modx->hasPermission('logs')) {
 		  <tbody>
 <?php
 
-	function nicesize($size) {
-		$a = array("B", "KB", "MB", "GB", "TB", "PB");
-
-		$pos = 0;
-		while ($size >= 1024) {
-			   $size /= 1024;
-			   $pos++;
-		}
-		if($size==0) {
-			return "-";
-		} else {
-			return round($size,2)." ".$a[$pos];
-		}
-	}
-
-	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '{$table_prefix}%';";
+	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%';";
 	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for ($i = 0; $i < $limit; $i++) {
-		$log_status = $modx->db->getRow($rs);
-		$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+	$i = 0;
+	while ($log_status = $modx->db->getRow($rs)) {
+		$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 ?>
 		  <tr bgcolor="<?php echo $bgcolor; ?>" title="<?php echo $log_status['Comment']; ?>" style="cursor:default">
 			<td><b style="color:#009933"><?php echo $log_status['Name']; ?></b></td>
 			<td align="right"><?php echo $log_status['Rows']; ?></td>
 
 <?php
-	// enable record deletion for certain tables
-	// sottwell@sottwell.com
-	// 08-2005
-	if($modx->hasPermission('settings') && ($log_status['Name'] == "`".$table_prefix."event_log`" || $log_status['Name'] == "`".$table_prefix."log_access`" || $log_status['Name'] == "`".$table_prefix."log_hosts`" || $log_status['Name'] == "`".$table_prefix."log_visitors`" || $log_status['Name'] == "`".$table_prefix."manager_log`")) {
+	$truncateable = array(
+		$modx->db->config['table_prefix'].'event_log',
+		$modx->db->config['table_prefix'].'manager_log',
+	);
+	if($modx->hasPermission('settings') && in_array($log_status['Name'], $truncateable)) {
 		echo "<td dir='ltr' align='right'>";
-		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
+		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".$modx->nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
 		echo "</td>";
 	}
 	else {
-		echo "<td dir='ltr' align='right'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</td>";
+		echo "<td dir='ltr' align='right'>".$modx->nicesize($log_status['Data_length']+$log_status['Data_free'])."</td>";
 	}
 
 	if($modx->hasPermission('settings')) {
-		echo  "<td align='right'>".($log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' ><span dir='ltr'>".nicesize($log_status['Data_free'])."</span></a>" : "-")."</td>";
+		echo  "<td align='right'>".($log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' ><span dir='ltr'>".$modx->nicesize($log_status['Data_free'])."</span></a>" : "-")."</td>";
 	}
 	else {
-		echo  "<td dir='ltr' align='right'>".($log_status['Data_free']>0 ? nicesize($log_status['Data_free']) : "-")."</td>";
+		echo  "<td dir='ltr' align='right'>".($log_status['Data_free']>0 ? $modx->nicesize($log_status['Data_free']) : "-")."</td>";
 	}
 ?>
-			<td dir='ltr' align="right"><?php echo nicesize($log_status['Data_length']-$log_status['Data_free']); ?></td>
-			<td dir='ltr' align="right"><?php echo nicesize($log_status['Index_length']); ?></td>
-			<td dir='ltr' align="right"><?php echo nicesize($log_status['Index_length']+$log_status['Data_length']+$log_status['Data_free']); ?></td>
+			<td dir='ltr' align="right"><?php echo $modx->nicesize($log_status['Data_length']-$log_status['Data_free']); ?></td>
+			<td dir='ltr' align="right"><?php echo $modx->nicesize($log_status['Index_length']); ?></td>
+			<td dir='ltr' align="right"><?php echo $modx->nicesize($log_status['Index_length']+$log_status['Data_length']+$log_status['Data_free']); ?></td>
 		  </tr>
 <?php
 		$total = $total+$log_status['Index_length']+$log_status['Data_length'];
@@ -242,9 +220,9 @@ if(!$modx->hasPermission('logs')) {
 		  <tr bgcolor="#CCCCCC">
 			<td valign="top"><b><?php echo $_lang['database_table_totals']; ?></b></td>
 			<td colspan="2">&nbsp;</td>
-			<td dir='ltr' align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".nicesize($totaloverhead)."</b><br />(".number_format($totaloverhead)." B)" : "-"; ?></td>
+			<td dir='ltr' align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".$modx->nicesize($totaloverhead)."</b><br />(".number_format($totaloverhead)." B)" : "-"; ?></td>
 			<td colspan="2">&nbsp;</td>
-			<td dir='ltr' align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br />(".number_format($total)." B)"; ?></td>
+			<td dir='ltr' align="right" valign="top"><?php echo "<b>".$modx->nicesize($total)."</b><br />(".number_format($total)." B)"; ?></td>
 		  </tr>
 		  </tbody>
 		</table>
@@ -278,16 +256,14 @@ if(!$modx->hasPermission('logs')) {
 
 		include_once "actionlist.inc.php";
 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>$timetocheck ORDER BY username ASC";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>{$timetocheck}", 'username ASC');
 		$limit = $modx->db->getRecordCount($rs);
 		if($limit<1) {
 			$html = "<p>".$_lang['no_active_users_found']."</p>";
 		} else {
-			for ($i = 0; $i < $limit; $i++) {
-				$activeusers = $modx->db->getRow($rs);
+			while ($activeusers = $modx->db->getRow($rs)) {
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
-				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user'>":"";
+				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='".$_style["tree_globe"]."' alt='Web user'>":"";
 				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
 			}
 		}

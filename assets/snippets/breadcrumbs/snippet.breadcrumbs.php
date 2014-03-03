@@ -19,7 +19,8 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($hideOn) ) ? $hideOn : $hideOn = '';
 ( isset($hideUnder) ) ? $hideUnder : $hideUnder = '';
 ( isset($stopIds) ) ? $stopIds : $stopIds = '';
-( isset($ignoreIds) ) ? $ignoreids : $ignoreids = '';
+( isset($ignoreIds) ) ? $ignoreIds : $ignoreIds = '';
+( isset($ignoreTemplates) ) ? $ignoreTemplates : $ignoreTemplates = '0';
 ( isset($crumbSeparator) ) ? $separator = $crumbSeparator : $separator = ' &raquo; ';
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
 $templates = array(
@@ -47,19 +48,14 @@ if ( !$showCrumbsAtHome && $homeId == $modx->documentObject['id'] )
 if ( $hideOn || $hideUnder )
 {
     // Create array of hide pages
-    $hideOn = str_replace(' ','',$hideOn);
-    $hideOn = explode(',',$hideOn);
+    $hideOn = array_filter(array_map('intval', explode(',', $hideOn)));
 
     // Get more hide pages based on parents if needed
     if ( $hideUnder )
     {
-        $hiddenKids = array();
         // Get child pages to hide
         $hideKidsQuery = $modx->db->select('id',$modx->getFullTableName("site_content"),"parent IN ($hideUnder)");
-        while ( $hideKid = $modx->db->getRow($hideKidsQuery) )
-        {
-            $hiddenKids[] = $hideKid['id'];
-        }
+		$hiddenKids = $modx->db->getColumn('id', $hideKidsQuery); 
         // Merge with hideOn pages
         $hideOn = array_merge($hideOn,$hiddenKids);
     }
@@ -72,14 +68,11 @@ if ( $hideOn || $hideUnder )
 }
 // Initialize ------------------------------------------------------------------
 // Put certain parameters in arrays
-$stopIds = str_replace(' ','',$stopIds);
-$stopIds = explode(',',$stopIds);
-$linkTextField = str_replace(' ','',$linkTextField);
-$linkTextField = explode(',',$linkTextField);
-$linkDescField = str_replace(' ','',$linkDescField);
-$linkDescField = explode(',',$linkDescField);
-$ignoreIds = str_replace(' ','',$ignoreIds);
-$ignoreIds = explode(',',$ignoreIds);
+$stopIds = array_filter(array_map('intval', explode(',', $stopIds)));
+$linkTextField = array_filter(array_map('trim', explode(',', $linkTextField)));
+$linkDescField = array_filter(array_map('trim', explode(',', $linkDescField)));
+$ignoreIds = array_filter(array_map('intval', explode(',', $ignoreIds)));
+$ignoreTemplates = array_filter(array_map('trim', explode(',', $ignoreTemplates)));
 
 /* $crumbs
  * Crumb elements are: id, parent, pagetitle, longtitle, menutitle, description,
@@ -115,12 +108,11 @@ $loopSafety = 0;
 while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 {
     // Get next crumb
-    $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu");
-
+    $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu,template");
     // Check for include conditions & add to crumbs
     if (
-        $tempCrumb['published'] &&
-        ( !$tempCrumb['hidemenu'] || !$respectHidemenu ) &&
+        $tempCrumb['published'] && !in_array($tempCrumb['template'],$ignoreTemplates) &&
+        ( !$tempCrumb['hidemenu'] || !$respectHidemenu) &&
         !in_array($tempCrumb['id'],$ignoreIds)
     )
     {

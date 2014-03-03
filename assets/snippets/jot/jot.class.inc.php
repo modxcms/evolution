@@ -6,7 +6,7 @@
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
 #	Date: Aug 04, 2008
 #
-# Latest Version: http://modxcms.com/Jot-998.html
+# Latest Version: http://modx.com/extras/package/jot
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
 # Documentation: http://wiki.modxcms.com/index.php/Jot (wiki)
 #
@@ -55,7 +55,7 @@ class CJot {
 		// Creates a unique hash / id
 		$id[] = $docid."&".$tagid."&";
 		foreach ($this->parameters as $n => $v) { $id[] = $n.'='.($v); }
-		return md5(join('&',$id));
+		return md5(implode('&',$id));
 	}
 
 	function Run() {
@@ -315,7 +315,7 @@ class CJot {
 		if ($this->config["placeholders"]) $this->setPlaceholders($this->config,"jot");
 		
 		// Include stylesheet if needed
-		$src = '<link rel="stylesheet" type="text/css" href="'.$modx->config["base_url"].$this->config["css"]["file"].'" />';
+		$src = '<link rel="stylesheet" type="text/css" href="'.$modx->config["site_url"].$this->config["css"]["file"].'" />';
 		if ($this->config["css"]["include"]) $modx->regClientCSS($src);
 		
 		return $output;
@@ -335,7 +335,7 @@ class CJot {
 		return implode("",$output);
 	}
 	
-	// Create placeholders in MODx from arrays
+	// Create placeholders in MODX from arrays
 	function setPlaceholders($value = '', $key = '', $path = '') {
 		global $modx;
 		$keypath = !empty($path) ? $path . "." . $key : $key;
@@ -444,7 +444,7 @@ class CJot {
 					$comments[] = $tpl->Render();
 				}
 
-				$this->config["html"]["comments"] = $output_comments = join("",$comments);
+				$this->config["html"]["comments"] = $output_comments = implode("",$comments);
 				$this->config["html"]["navigation"] = $output_navigation;
 				$output_comments = $output_subscribe.$output_moderate.$output_navigation.$output_comments.$output_navigation;
 		}		
@@ -520,7 +520,7 @@ class CJot {
 			} // --	
 		
 		//-- Double Post Capture
-		$chkPost = md5(join('&',$chkPost));
+		$chkPost = md5(implode('&',$chkPost));
 		if ($_SESSION['JotLastPost'] == $chkPost) {
 			$this->form['error'] = 1;
 			$this->form['confirm'] = 0;
@@ -712,7 +712,7 @@ class CJot {
 			
 			// What is the e-mail address of the article author?
 			$author_id = $this->config['authorid'];		
-			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), 'id = '.$author_id);
+			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), "id = '{$author_id}'");
 			$results_array = $modx->db->makeArray($res);
 			$user = $results_array[0]; // Assume there is only one result			
 			
@@ -856,18 +856,17 @@ class CJot {
 	// Returns an array containing webusers which are a member of the specified group(s).
 	function getMembersOfWebGroup($groupNames=array()) {
 		global $modx;
-		$usrIDs = array();
-		$tbl = $modx->getFullTableName("webgroup_names");
-		$tbl2 = $modx->getFullTableName("web_groups");
-		$sql = "SELECT distinct wg.webuser
-						FROM $tbl wgn
-						INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wgn.name IN ('" . implode("','",$groupNames) . "')";
-		$usrRows = $modx->db->getColumn("webuser", $sql);
-		foreach ($usrRows as $k => $v) $usrIDs[] = intval($v);
+		$rs = $modx->db->select(
+			'DISTINCT wg.webuser',
+			$modx->getFullTableName("webgroup_names")." wgn
+				INNER JOIN ".$modx->getFullTableName("web_groups")." wg ON wg.webgroup=wgn.id AND wgn.name IN ('" . implode("','",$groupNames) . "')"
+			);
+		$usrIDs = $modx->db->getColumn("webuser", $rs);
+		$usrIDs = array_filter(array_map('intval', $usrIDs));
 		return $usrIDs;
 	}	
 	
-	// MODx UserInfo enhanced
+	// MODX UserInfo enhanced
 	function getUserInfo($userid = 0,$field = NULL) {
 		global $modx;
 		if (intval($userid) < 0) {
@@ -879,7 +878,7 @@ class CJot {
 		return $user;
 	}	
 	
-	// MODx makeUrl enhanced: preserves querystring.
+	// MODX makeUrl enhanced: preserves querystring.
 	function preserveUrl($docid = '', $alias = '', $array_values = array(), $suffix = false) {
 		global $modx;
 		$array_get = $_GET;
@@ -895,7 +894,7 @@ class CJot {
 			}
 		}
 		
-		$url = join('&',$urlstring);
+		$url = implode('&',$urlstring);
 		if ($suffix) {
 			if (empty($url)) { $url = "?"; }
 			 else { $url .= "&"; }

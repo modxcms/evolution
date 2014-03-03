@@ -1,15 +1,11 @@
 <?php
-if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
-
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
 
 $url = $modx->config['site_url'];
 
@@ -23,79 +19,63 @@ $tbl_site_keywords         = $modx->getFullTableName('site_keywords');
 $tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
+
+
+
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".(!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
 
 // Get the document content
-$sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.id =\''.$id.'\' '.
-       'AND ('.$access.')';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-	echo "<p>Internal System Error...</p>",
-	     "<p>More results returned than expected. </p>",
-	     "<p><strong>Aborting...</strong></p>";
-	exit;
-} elseif ($limit == 0) {
-	$e->setError(3);
-	$e->dumpError();
-}
+$rs = $modx->db->select(
+	'DISTINCT sc.*',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.id ='{$id}' AND ({$access})"
+	);
 $content = $modx->db->getRow($rs);
+if (!$content) {
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
+}
 
 /**
  * "General" tab setup
  */
 // Get Creator's username
-$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['createdby'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$createdbyname = $row['username'];
+$rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['createdby']}'");
+$createdbyname = $modx->db->getValue($rs);
 
 // Get Editor's username
-$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['editedby'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$editedbyname = $row['username'];
+$rs = $modx->db->select('username', $tbl_manager_users, "id='{$content['editedby']}'");
+$editedbyname = $modx->db->getValue($rs);
 
 // Get Template name
-$rs = $modx->db->query('SELECT templatename FROM '.$tbl_site_templates.' WHERE id=\''.$content['template'].'\'');
-if ($row = $modx->db->getRow($rs))
-	$templatename = $row['templatename'];
+$rs = $modx->db->select('templatename',$tbl_site_templates, "id='{$content['template']}'");
+$templatename = $modx->db->getValue($rs);
 
-// Set the item name for logging
+// Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
 
 // Get list of current keywords for this document
 $keywords = array();
-$sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.' AS x '.
-       'WHERE k.id = x.keyword_id AND x.content_id = \''.$id.'\' '.
-       'ORDER BY k.keyword ASC';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
-		$keywords[$i] = $row['keyword'];
-	}
-}
+$rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
+       "k.id = x.keyword_id AND x.content_id = '{$id}'",
+       'k.keyword ASC');
+	$keywords = $modx->db->getColumn('keyword', $rs);
 
 // Get list of selected site META tags for this document
 $metatags_selected = array();
-$sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
-       'FROM '.$tbl_site_metatags.' AS meta '.
-       'LEFT JOIN '.$tbl_site_content_metatags.' AS sc ON sc.metatag_id = meta.id '.
-       'WHERE sc.content_id=\''.$content['id'].'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 0) {
-	for ($i = 0; $i < $limit; $i++) {
-		$row = $modx->db->getRow($rs);
+$rs = $modx->db->select(
+	'meta.id, meta.name, meta.tagvalue',
+	"{$tbl_site_metatags} AS meta
+		LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id",
+	"sc.content_id='{$content['id']}'"
+	);
+	while ($row = $modx->db->getRow($rs)) {
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
-}
+
 
 /**
  * "View Children" tab setup
@@ -107,25 +87,26 @@ if (!class_exists('makeTable')) include_once $modx->config['site_manager_path'].
 $childsTable = new makeTable();
 
 // Get child document count
-$sql = 'SELECT DISTINCT sc.id '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.parent=\''.$content['id'].'\' '.
-       'AND ('.$access.')';
-$rs = $modx->db->query($sql);
-$numRecords = $modx->db->getRecordCount($rs);
+$rs = $modx->db->select(
+	'count(DISTINCT sc.id)',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.parent='{$content['id']}' AND ({$access})"
+	);
+$numRecords = $modx->db->getValue($rs);
 
 $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon' ;
 $dir = isset($_REQUEST['dir'])? $_REQUEST['dir']: 'DESC';
 
 // Get child documents (with paging)
-$sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tbl_site_content.' AS sc '.
-       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
-       'WHERE sc.parent=\''.$content['id'].'\' '.
-       'AND ('.$access.') '.
-	   'ORDER BY '.$sort.' '.$dir.
-       $childsTable->handlePaging(); // add limit clause
+$rs = $modx->db->select(
+	'DISTINCT sc.*',
+	"{$tbl_site_content} AS sc
+		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
+	"sc.parent='{$content['id']}' AND ({$access})",
+	"{$sort} {$dir}",
+	$childsTable->handlePaging() // add limit clause
+	);
 $filter_sort='';
 $filter_dir='';
 if ($numRecords > 0) {
@@ -142,17 +123,7 @@ if ($numRecords > 0) {
 		'<option value="DESC"'.(($dir=='DESC') ? ' selected' : '').'>'.$_lang['sort_desc'].'</option>'.
 		'<option value="ASC"'.(($dir=='ASC') ? ' selected' : '').'>'.$_lang['sort_asc'].'</option>'.
 	'</select></p>';
-	if (!$rs = $modx->db->query($sql)) {
-		// sql error
-		$e->setError(1);
-		$e->dumpError();
-		include($modx->config['site_manager_path'].'includes/footer.inc.php');
-		exit;
-	} else {
-		$resource = array();
-		while($row = $modx->db->getRow($rs)){
-			$resource[] = $row;
-		}
+		$resource = $modx->db->makeArray($rs);
 
 		// CSS style for table
 		$tableClass = 'grid';
@@ -176,8 +147,6 @@ if ($numRecords > 0) {
 		);
 		$tbWidth = array('2%', '', '10%', '10%', '90', '150');
 		$childsTable->setColumnWidths($tbWidth);
-
-		$limitClause = $childsTable->handlePaging();
 
 $sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
 $sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';
@@ -223,7 +192,6 @@ $add_path=$sd.$sb.$pg;
 
 		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
 		$children_output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
-	}
 } else {
 	// No Child documents
 	$children_output = "<p>".$_lang['resources_in_container_no']."</p>";
@@ -251,7 +219,7 @@ function movedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
-	<h1><?php echo $_lang['doc_data_title']?></h1>
+	<h1><?php echo $_lang['doc_data_title'] . ' <small>('. $_REQUEST['id'].')</small>';  ?></h1>
 	
 	<div id="actions">	
 	  <ul class="actionButtons">
@@ -268,7 +236,7 @@ function movedocument() {
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
-			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('../index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>
@@ -303,13 +271,13 @@ function movedocument() {
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
 				if(count($keywords) != 0)
-					echo join($keywords, ", ");
+					echo implode(', ', $keywords);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['metatags']?>: </td>
 				<td><?php // META Tags
 				if(count($metatags_selected) != 0)
-					echo join($metatags_selected, "<br /> ");
+					echo implode('<br />', $metatags_selected);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -337,9 +305,9 @@ function movedocument() {
 			<tr><td><?php echo $_lang['resource_opt_show_menu']?>: </td>
 				<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_web_access']?>: </td>
-				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 			<tr><td><?php echo $_lang['page_data_mgr_access']?>: </td>
-				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
+				<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="'.$_style["icons_secured"].'" align="absmiddle" />'?></td></tr>
 		<tr><td colspan="2">&nbsp;</td>	</tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_markup']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_template']?>: </td>
@@ -355,7 +323,7 @@ function movedocument() {
 	<!-- View Children -->
 	<div class="tab-page" id="tabChildren">
 		<h2 class="tab"><?php echo $_lang['view_child_resources_in_container']?></h2>
-		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );docSettings.setSelectedIndex(1);</script>
+		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
 			<ul class="actionButtons">
@@ -398,6 +366,6 @@ function movedocument() {
 <?php if ($show_preview==1) { ?>
 <div class="sectionHeader"><?php echo $_lang['preview']?></div>
 <div class="sectionBody" id="lyr2">
-	<iframe src="../index.php?id=<?php echo $id?>&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
+	<iframe src="<?php echo MODX_SITE_URL; ?>index.php?id=<?php echo $id?>&z=manprev" frameborder="0" border="0" id="previewIframe"></iframe>
 </div>
 <?php }

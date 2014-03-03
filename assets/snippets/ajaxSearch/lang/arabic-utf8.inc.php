@@ -1,8 +1,8 @@
 <?php
 /*
-arabic-utf8.inc.php - for AjaxSearch 1.8
+arabic-utf8.inc.php - for AjaxSearch 1.10.0
 Created by: Robin North (www.phenotype.net)
-Created on: 10/06/09
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'ليس هناك أي نتائج للبحث. يرجي المحاولة باستخدام مصطلحات عامة أكثر من أجل الحصول على نتائج أكثر.';
@@ -27,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'هل عثرت على ما تبحث عنه؟ أك
 $_lang['as_cmtSubmitText'] = 'إرسال';
 $_lang['as_cmtResetText'] = 'مسح';
 $_lang['as_cmtThksMessage'] = 'شكرا على تعليقك!';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

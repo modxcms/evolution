@@ -77,7 +77,7 @@ tvPhx
 
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
 
-    Where tvname is the MODx name of a TV
+    Where tvname is the MODX name of a TV
 
     [+as.tvname+] is the HTML output of your TV
     [+as.tvnameShow+] = 1 if the TV is not NULL

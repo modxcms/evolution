@@ -1,35 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_password')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-?>
-<?php
 
 $id = $_POST['id'];
 $pass1 = $_POST['pass1'];
 $pass2 = $_POST['pass2'];
 
 if($pass1!=$pass2){
-	echo "passwords don't match!";
-	exit;
+	$modx->webAlertAndQuit("Passwords don't match!");
 }
 
 if(strlen($pass1)<6){
-	echo "Password is too short. Please specify a password of at least 6 characters.";
-	exit;
+	$modx->webAlertAndQuit("Password is too short. Please specify a password of at least 6 characters.");
 }
 
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
 	$f['password'] = $modx->manager->genHash($pass1, $uid);
-	$rs = $modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
-	if(!$rs){
-	echo "An error occured while attempting to save the new password.";
-	exit;
-}
-    
+	$modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
+
 	// invoke OnManagerChangePassword event
 	$modx->invokeEvent('OnManagerChangePassword', array (
 		'userid' => $uid,

@@ -1,32 +1,20 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('settings')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // check to see the edit settings page isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=17";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-        $lock = $modx->db->getRow($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_settings_msg"],$lock['username']);
-			$e->setError(5, $msg);
-			$e->dumpError();
-		}
+$rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=17 AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getRow($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_settings_msg"],$username));
 	}
-}
 // end check for lock
 
 // reload system settings from the database.
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
-$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."system_settings`";
-$rs = $modx->db->query($sql);
-$number_of_settings = $modx->db->getRecordCount($rs);
+$rs = $modx->db->select('setting_name, setting_value', $modx->getFullTableName('system_settings'));
 while ($row = $modx->db->getRow($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 $settings['filemanager_path'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['filemanager_path']);
 $settings['rb_base_dir']      = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['rb_base_dir']);
@@ -57,7 +45,7 @@ $settings['rb_base_url'] =  $rb_base_url = trim($settings['rb_base_url']) == '' 
 
 ?>
 <style type="text/css">
-	table th {text-align:left; vertical-align:top;}
+  table th {text-align:left; vertical-align:top;}
 </style>
 <script type="text/javascript">
 function checkIM() {
@@ -208,7 +196,7 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td nowrap class="warning"><b><?php echo htmlspecialchars($_lang["sitename_title"]) ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODX Site" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? htmlspecialchars($site_name) : "My MODX Site" ; ?>" /></td>
             </tr>
             <tr>
               <td width="200">&nbsp;</td>
@@ -377,8 +365,13 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_title"] ?></b></td>
             <td>
 			<?php
-				$sql = 'SELECT t.templatename, t.id, c.category FROM '.$table_prefix.'site_templates t LEFT JOIN '.$table_prefix.'categories c ON t.category = c.id ORDER BY c.category, t.templatename ASC';
-                        $rs = $modx->db->query($sql);
+				$rs = $modx->db->select(
+					't.templatename, t.id, c.category',
+					$modx->getFullTableName('site_templates')." AS t
+						LEFT JOIN ".$modx->getFullTableName('categories')." AS c ON t.category = c.id",
+					"",
+					'c.category, t.templatename ASC'
+					);
 			?>
 			  <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
 				<?php
@@ -506,9 +499,9 @@ function confirmLangChange(el, lkey, elupd){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["custom_contenttype_message"] ?></td>
           </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-           </tr> 
+<tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>		  
 <tr>
 	<td nowrap class="warning" valign="top"><b><?php echo $_lang["docid_incrmnt_method_title"] ?></b></td>
 	<td>
@@ -527,8 +520,8 @@ function confirmLangChange(el, lkey, elupd){
 <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>     
-           
-           <tr>
+
+<tr>
     <td nowrap class="warning"><b><?php echo $_lang["cache_type_title"] ?></b></td>
   <td>
       
@@ -590,6 +583,17 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td width="200">&nbsp;</td>
               <td class='comment'><?php echo $_lang["validate_referer_message"] ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["valid_hostnames_title"] ?></b></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="valid_hostnames" value="<?php echo isset($valid_hostnames) ? htmlspecialchars($valid_hostnames) : "" ; ?>" /></td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["valid_hostnames_message"] ?></td>
             </tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
@@ -670,21 +674,21 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
 <?php if(!isset($make_folders)) $make_folders = '0';?>
-<tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-  <th><?php echo $_lang['make_folders_title'] ?></th>
-  <td>
-    <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
-    <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
+  <tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+    <th><?php echo $_lang['make_folders_title'] ?></th>
+    <td>
+      <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
+      <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
 </td>
   </tr>
   <tr id='furlRow56' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["make_folders_message"] ?></td>
-</tr> 
-<tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-<td colspan="2"><div class='split'></div></td>
-</tr>
-      	
+          </tr>  
+  <tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <td colspan="2"><div class='split'></div></td>
+  </tr>
+      
   <?php if(!isset($seostrict)) $seostrict = '0';?>
   <tr id="furlRow53" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
     <th><?php echo $_lang['seostrict_title'] ?></th>
@@ -843,14 +847,14 @@ function confirmLangChange(el, lkey, elupd){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-		<tr>
-		<?php if(!isset($error_reporting)) $error_reporting = '1'; ?>
-		<th><?php echo $_lang['a17_error_reporting_title']; ?></th>
-		<td>
-			<?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0' , $error_reporting==='0'));?><br />
-			<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1' , $error_reporting==='1'));?><br />
-			<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2' , $error_reporting==='2'));?><br />
-			<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
+          <tr>
+    <?php if(!isset($error_reporting)) $error_reporting = '1'; ?>
+    <th><?php echo $_lang['a17_error_reporting_title']; ?></th>
+    <td>
+      <?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0' , $error_reporting==='0'));?><br />
+      <?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1' , $error_reporting==='1'));?><br />
+      <?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2' , $error_reporting==='2'));?><br />
+      <?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
    </td>
     </tr>
     <tr  class='row1' >
@@ -872,33 +876,33 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
-			<tr>
-			<th><?php echo $_lang["pwd_hash_algo_title"] ?></th>
-			<td>
-			<?php
-				$phm['sel']['BLOWFISH_Y'] = $pwd_hash_algo=='BLOWFISH_Y' ?  1 : 0;
-				$phm['sel']['BLOWFISH_A'] = $pwd_hash_algo=='BLOWFISH_A' ?  1 : 0;
-				$phm['sel']['SHA512']     = $pwd_hash_algo=='SHA512' ?  1 : 0;
-				$phm['sel']['SHA256']     = $pwd_hash_algo=='SHA256' ?  1 : 0;
-				$phm['sel']['MD5']        = $pwd_hash_algo=='MD5' ?  1 : 0;
-				$phm['sel']['UNCRYPT']    = $pwd_hash_algo=='UNCRYPT' ?  1 : 0;
-				if(!isset($pwd_hash_algo) || empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
-				$phm['e']['BLOWFISH_Y'] = $modx->manager->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
-				$phm['e']['BLOWFISH_A'] = $modx->manager->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
-				$phm['e']['SHA512']     = $modx->manager->checkHashAlgorithm('SHA512') ? 0:1;
-				$phm['e']['SHA256']     = $modx->manager->checkHashAlgorithm('SHA256') ? 0:1;
-				$phm['e']['MD5']        = $modx->manager->checkHashAlgorithm('MD5') ? 0:1;
-				$phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
-			?>
-				<?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_Y',$phm['sel']['BLOWFISH_Y'], '', $phm['e']['BLOWFISH_Y']));?><br />
-				<?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_A',$phm['sel']['BLOWFISH_A'], '', $phm['e']['BLOWFISH_A']));?><br />
-				<?php echo wrap_label('CRYPT_SHA512 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA512'    ,$phm['sel']['SHA512']    , '', $phm['e']['SHA512']));?><br />
-				<?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA256'    ,$phm['sel']['SHA256']    , '', $phm['e']['SHA256']));?><br />
-				<?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)'       ,form_radio('pwd_hash_algo','MD5'       ,$phm['sel']['MD5']       , '', $phm['e']['MD5']));?><br />
-				<?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)'   ,form_radio('pwd_hash_algo','UNCRYPT'   ,$phm['sel']['UNCRYPT']   , '', $phm['e']['UNCRYPT']));?><br />
+      <tr>
+      <th><?php echo $_lang["pwd_hash_algo_title"] ?></th>
+      <td>
+      <?php
+        $phm['sel']['BLOWFISH_Y'] = $pwd_hash_algo=='BLOWFISH_Y' ?  1 : 0;
+        $phm['sel']['BLOWFISH_A'] = $pwd_hash_algo=='BLOWFISH_A' ?  1 : 0;
+        $phm['sel']['SHA512']     = $pwd_hash_algo=='SHA512' ?  1 : 0;
+        $phm['sel']['SHA256']     = $pwd_hash_algo=='SHA256' ?  1 : 0;
+        $phm['sel']['MD5']        = $pwd_hash_algo=='MD5' ?  1 : 0;
+        $phm['sel']['UNCRYPT']    = $pwd_hash_algo=='UNCRYPT' ?  1 : 0;
+        if(!isset($pwd_hash_algo) || empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
+        $phm['e']['BLOWFISH_Y'] = $modx->manager->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
+        $phm['e']['BLOWFISH_A'] = $modx->manager->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
+        $phm['e']['SHA512']     = $modx->manager->checkHashAlgorithm('SHA512') ? 0:1;
+        $phm['e']['SHA256']     = $modx->manager->checkHashAlgorithm('SHA256') ? 0:1;
+        $phm['e']['MD5']        = $modx->manager->checkHashAlgorithm('MD5') ? 0:1;
+        $phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
+      ?>
+        <?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_Y',$phm['sel']['BLOWFISH_Y'], '', $phm['e']['BLOWFISH_Y']));?><br />
+        <?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_A',$phm['sel']['BLOWFISH_A'], '', $phm['e']['BLOWFISH_A']));?><br />
+        <?php echo wrap_label('CRYPT_SHA512 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA512'    ,$phm['sel']['SHA512']    , '', $phm['e']['SHA512']));?><br />
+        <?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA256'    ,$phm['sel']['SHA256']    , '', $phm['e']['SHA256']));?><br />
+        <?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)'       ,form_radio('pwd_hash_algo','MD5'       ,$phm['sel']['MD5']       , '', $phm['e']['MD5']));?><br />
+        <?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)'   ,form_radio('pwd_hash_algo','UNCRYPT'   ,$phm['sel']['UNCRYPT']   , '', $phm['e']['UNCRYPT']));?><br />
        
-			</td>
-			</tr>
+      </td>
+      </tr>
       <tr  class='row1' >
             <td width="200">&nbsp;</td>
             <td class='comment'>  <?php echo $_lang["pwd_hash_algo_message"]?></td>
@@ -906,14 +910,14 @@ function confirmLangChange(el, lkey, elupd){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-		<tr>
-			<th><?php echo $_lang["enable_bindings_title"] ?></th>
-			<td>
-				<?php echo wrap_label($_lang["yes"],form_radio('enable_bindings','1',$enable_bindings=='1' || !isset($enable_bindings)));?><br />
-				<?php echo wrap_label($_lang["no"], form_radio('enable_bindings','0',$enable_bindings=='0'));?><br />
+    <tr>
+      <th><?php echo $_lang["enable_bindings_title"] ?></th>
+      <td>
+        <?php echo wrap_label($_lang["yes"],form_radio('enable_bindings','1',$enable_bindings=='1' || !isset($enable_bindings)));?><br />
+        <?php echo wrap_label($_lang["no"], form_radio('enable_bindings','0',$enable_bindings=='0'));?><br />
        
-		</td>
-		</tr>
+    </td>
+    </tr>
           <tr  class='row1' >
             <td width="200">&nbsp;</td>
             <td class='comment'>  <?php echo $_lang["enable_bindings_message"] ?></td>
@@ -962,7 +966,7 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning"><b><?php echo $_lang["emailsender_title"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@example.com" ; ?>" /></td>
           </tr>
-          <tr>
+           <tr>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["emailsender_message"] ?></td>
           </tr>
@@ -1018,7 +1022,7 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning"><b><?php echo $_lang["smtp_password_title"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
           </tr>
-           <tr>
+          <tr>
             <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
@@ -1197,7 +1201,7 @@ function confirmLangChange(el, lkey, elupd){
 		$r = array($v,$selected);
 		$output[] = str_replace($s,$r,$tpl);
 	}
-	echo join("\n",$output)
+	echo implode("\n",$output)
 ?>
 	</select><br />
 	
@@ -1210,7 +1214,7 @@ function confirmLangChange(el, lkey, elupd){
 <tr>
   <td colspan="2"><div class='split'></div></td>
 </tr>
-            	<tr>
+             <tr>
       		   <td nowrap class="warning"><b><?php echo $_lang["tree_show_protected"] ?></b></td>
       		   <td> <input onchange="documentDirty=true;" type="radio" name="tree_show_protected" value="1" <?php echo (!isset($tree_show_protected) || $tree_show_protected=='0') ? '' : 'checked="checked" '; ?>/>
       			 <?php echo $_lang["yes"]?><br />
@@ -1732,6 +1736,10 @@ function confirmLangChange(el, lkey, elupd){
 </div>
 </form>
 <?php
+if (is_numeric($_GET['tab'])) {
+    echo '<script type="text/javascript">tpSettings.setSelectedIndex( '.$_GET['tab'].' );</script>';
+}
+
 /**
  * get_lang_keys
  * 
@@ -1797,14 +1805,14 @@ function get_lang_options($key=null, $selected_lang=null) {
 }
 
 function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
-	if($checked)  $checked  = ' checked="checked"';
-	if($disabled) $disabled = ' disabled';
-	if($add)     $add = ' ' . $add;
-	return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
+	if($checked)  $checked  = ' checked="checked"'; else $checked = '';
+	if($disabled) $disabled = ' disabled'; else $disabled = '';
+  if($add)     $add = ' ' . $add;
+  return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
 }
 
 function wrap_label($str='',$object) {
-	return "<label>{$object}\n{$str}</label>";
+  return "<label>{$object}\n{$str}</label>";
 }
 
 function parsePlaceholder($tpl='', $ph=array())

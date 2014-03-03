@@ -1,15 +1,17 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author Henrik Nielsen - Proofreading: Mads Vestmar
- * @package MODX Evolution 1.0.5
- * @date 27/12/10 18.02
- * @version 1.0.4
- * 
- * Filename:       /install/lang/danish.inc.php
- * Language:       Danish
- * Encoding:       UTF-8
+ * @author Henrik Nielsen
+ * @author Mads Vestmar
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language Danish
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Accept af licens regler, og installer';
 $_lang["alert_database_test_connection"] = 'Du er nødt til at oprette din database eller kontrollere den valgte database!';
@@ -46,7 +48,7 @@ $_lang["checking_mysql_strict_mode"] = 'Kontrollerer om MySQL håndterer strict 
 $_lang["checking_mysql_version"] = 'Kontrollerer MySQL versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerer PHP versionen: ';
 $_lang["checking_registerglobals"] = 'Kontrollerer om Register_Globals er slået fra: ';
-$_lang["checking_registerglobals_note"] = 'Denne konfiguration medfører at dit website kan blive mere udsat for Cross Site Scripting (XSS) angreb end normalt. Du bør bede dit hosting firma om at ændre denne indstilling. Normalt kan det gøres på een af følgende måder: Ændrer den globale php.ini fil, tilføje regler til en .htaccess fil i websitets rod, eller oprette specielle php.ini filer i alle mapperne i denne installation  - og dem er der mange af! Du kan stadigvæk installere MODX, men nu er du blevet advaret!'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Denne konfiguration medfører at dit website kan blive mere udsat for Cross Site Scripting (XSS) angreb end normalt. Du bør bede dit hosting firma om at ændre denne indstilling. Normalt kan det gøres på een af følgende måder: Ændrer den globale php.ini fil, tilføje regler til en .htaccess fil i websitets rod, eller oprette specielle php.ini filer i alle mapperne i denne installation  - og dem er der mange af! Du kan stadigvæk installere MODX, men nu er du blevet advaret!';
 $_lang["checking_sessions"] = 'Kontrollerer om sessions er korrekt konfigureret: ';
 $_lang["checking_table_prefix"] = 'Kontrollerer database tabellernes præfiks `';
 $_lang["chunks"] = 'Chunks';
@@ -80,11 +82,14 @@ $_lang["database_use_failed"] = 'Databasen kunne ikke vælges!';
 $_lang["database_use_failed_note"] = 'Kontroller databasens rettigheder for den angivne bruger og prøv igen.';
 $_lang["default_language"] = 'Standard sprog i CMS\'et';
 $_lang["default_language_description"] = 'Dette er standard sproget der vil blive brugt i CMS\'et.';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' under eksekvering af SQL kommandoen ';
-$_lang["encoding"] = 'utf-8';   //charset encoding for html header
+$_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'fejl';
 $_lang["errors"] = 'fejl';
 $_lang["failed"] = 'IKKE GENNEMFØRT!';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Hjælp!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Hjælp til installation i MODX\'s fora';
@@ -106,10 +111,10 @@ $_lang["installation_upgrade_existing"] = 'Opdater den eksisterende installation
 $_lang["installation_upgrade_existing_note"] = 'Dette opdatere dine nuværende filer samt databasen.';
 $_lang["installed"] = 'Installeret';
 $_lang["installing_demo_site"] = 'Installerer demo website: ';
-$_lang["language_code"] = 'da'; // for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'da';
 $_lang["loading"] = 'Indlæser...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) projektet. Alle rettigheder forbeholdes. MODX er licenseret af GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) projektet. Alle rettigheder forbeholdes. MODX er licenseret af GNU GPL.';
 $_lang["modx_footer2"] = 'MODX er gratis software. Vi opfordrer dig til at være kreativ og at du bruger MODX som det passer dig. Men vær opmærksom på at hvis du ændrer i MODX og vælger at offenliggøre ændringerne skal kildekoden være tilgængelige og gratis for alle!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', og MODX kræver PHP 4.2.0 eller nyere';
@@ -137,7 +142,7 @@ $_lang["running_database_updates"] = 'Gennemfører opdatering af databasen: ';
 $_lang["sample_web_site"] = 'Demo website';
 $_lang["sample_web_site_note"] = 'Vær opmærksom på at dette vil <b>overskrive</b> eksisterende dokumenter og ressourcer.';
 $_lang["session_problem"] = 'Der er fundet et problem med håndteringen af serverens sessions. Kontakt serverens administrator, for at få rettet fejlen.';
-$_lang["session_problem_try_again"] = 'Vil du prøve igen?'; 
+$_lang["session_problem_try_again"] = 'Vil du prøve igen?';
 $_lang["setup_cannot_continue"] = 'Desværre kan installationen ikke fortsætte på grund af ovenstående ';
 $_lang["setup_couldnt_install"] = 'Installationsprogrammet til MODX kunne ikke oprette/modificere nogle af tabellerne i den valgte database.';
 $_lang["setup_database"] = 'Installationsprogrammet vil nu prøve at oprette databasen samt indholdet i databasen:<br />';

@@ -3,8 +3,8 @@
 * -----------------------------------------------------------------------------
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    To display the content of the AjaxSearch Log table in the manager
@@ -18,12 +18,10 @@ function getLogs($tb,$nb){
     global $modx;
     $db = $modx->db->config['dbase'];
     $name = $modx->db->config['table_prefix'] . $tb;
-    $show = "SHOW TABLES FROM $db LIKE '" . $name . "';";
+    $show = "SHOW TABLES FROM {$db} LIKE '{$name}'";
     $query = $modx->db->query($show);
     if ($modx->db->getRecordCount($query)) {
-        $tbLog = $modx->db->config['table_prefix']. $tb;
-        $sql = "SELECT searchstring,nb_results,results,comment,as_call,date,ip FROM $tbLog ORDER BY id DESC LIMIT 0,$nb";
-        $rs = $modx->db->query($sql);
+        $rs = $modx->db->select("searchstring,nb_results,results,comment,as_call,date,ip", $modx->getFullTableName($tb), '', 'id DESC', "0, $nb");
         return $rs;
     }
     else return(0);
@@ -39,7 +37,7 @@ switch($opcode) {
     $output = <<<EOD
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="media/style/MODxRE/style.css" />
+<link rel="stylesheet" type="text/css" href="media/style/{$modx->config['manager_theme']}/style.css" />
 <style type="text/css">
 body { 
   color: #222; 

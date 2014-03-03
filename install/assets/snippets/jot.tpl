@@ -17,7 +17,7 @@
 #
 # Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
 #
-# Latest Version: http://modxcms.com/Jot-998.html
+# Latest Version: http://modx.com/extras/package/jot
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
 # Documentation: http://wiki.modxcms.com/index.php/Jot (wiki)
 #

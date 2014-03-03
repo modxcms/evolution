@@ -1,62 +1,67 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_template')) {	
-	$e->setError(3);
-	$e->dumpError();	
+if(!$modx->hasPermission('delete_template')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-?>
-<?php
 
-$id=intval($_GET['id']);
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 // delete the template, but first check it doesn't have any documents using it
-$sql = "SELECT id, pagetitle FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.template=".$id." and $dbase.`".$table_prefix."site_content`.deleted=0;";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('id, pagetitle,introtext', $modx->getFullTableName('site_content'), "template='{$id}' AND deleted=0");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>0) {
-	echo "This template is in use. Please set the documents using the template to another template. Documents using this template:<br />";
-	for ($i=0;$i<$limit;$i++) {
-		$row = $modx->db->getRow($rs);
-		echo $row['id']." - ".$row['pagetitle']."<br />\n";
-	}	
+	include "header.inc.php";
+	?><h1><?php echo $_lang['manage_templates']; ?></h1>
+	<div class="section"><div class="sectionHeader"><?php echo $_lang['manage_templates']; ?></div>
+	<div class="sectionBody">
+	<p>This template is in use.</p>
+	<p>Please set the documents using the template to another template.</p>
+	<p>Documents using this template:</p>
+	<ul>
+	<?php
+	while ($row = $modx->db->getRow($rs)) {
+		echo '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&a=27">'.$row['pagetitle'].'</a></span>'.($row['introtext']!='' ? ' - '.$row['introtext'] : '').'</li>';
+	}
+	?>
+	</ul>
+	</div></div>
+	<?php
+	include_once "footer.inc.php";
 	exit;
 }
 
 if($id==$default_template) {
-	echo "This template is set as the default template. Please choose a different default template in the MODx configuration before deleting this template.<br />";
-	exit;
+	$modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.");
 }
+
+// Set the item name for logger
+$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTempFormDelete event
 $modx->invokeEvent("OnBeforeTempFormDelete",
-						array(
-							"id"	=> $id
-						));
-						
-//ok, delete the document.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to delete the template...";
-	exit;
-} else {
-	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE $dbase.`".$table_prefix."site_tmplvar_templates`.templateid=".$id.";";
-	$rs = $modx->db->query($sql);
-			
-	// invoke OnTempFormDelete event
-	$modx->invokeEvent("OnTempFormDelete",
-							array(
-								"id"	=> $id
-							));
+	array(
+		"id"	=> $id
+	));
 
-	// empty cache
-	include_once "cache_sync.class.processor.php";
-	$sync = new synccache();
-	$sync->setCachepath("../assets/cache/");
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
-	// finished emptying cache - redirect
-	$header="Location: index.php?a=76&r=2";
-	header($header);
-}
+// delete the document.
+$modx->db->delete($modx->getFullTableName('site_templates'), "id='{$id}'");
+
+$modx->db->delete($modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'");
+
+// invoke OnTempFormDelete event
+$modx->invokeEvent("OnTempFormDelete",
+	array(
+		"id"	=> $id
+	));
+
+// empty cache
+$modx->clearCache('full');
+
+// finished emptying cache - redirect
+$header="Location: index.php?a=76&r=2";
+header($header);
 ?>

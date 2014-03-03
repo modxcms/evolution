@@ -1,9 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('save_plugin')) {  
-    $e->setError(3);
-    $e->dumpError();    
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -18,15 +16,13 @@ $sysevents = $_POST['sysevents'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
-    $categoryid = '0';
+    $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
 }
@@ -45,44 +41,25 @@ switch ($_POST['mode']) {
                                 ));
     
 		// disallow duplicate names for new plugins
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_plugins` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['a'] = '101';
-			$_GET['a'] = '101';
-			$_GET['stay'] = $_POST['stay'];
-			$content = array_merge($content, $_POST);
-			$content['locked'] = $locked;
-			$content['plugincode'] = $_POST['post'];
-			$content['category'] = $_POST['categoryid'];
-			$content['disabled'] = $disabled;
-			$content['properties'] = $properties;
-			$content['moduleguid'] = $moduleguid;
-			$content['sysevents'] = $sysevents;
-
-			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_plugin.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(101);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=101");
 		}
 
 		//do stuff to save the new plugin
-        $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
-        $rs = $modx->db->query($sql);
-        if(!$rs){
-            echo "\$rs not set! New plugin not saved!";
-        } else {    
-            // get the id
-            if(!$newid=$modx->db->getInsertId()) {
-                echo "Couldn't get last insert key!";
-                exit;
-            }
+		$newid = $modx->db->insert(
+			array(
+				'name'       => $name,
+				'description' => $description,
+				'plugincode'  => $plugincode,
+				'disabled'    => $disabled,
+				'moduleguid'  => $moduleguid,
+				'locked'      => $locked,
+				'properties'  => $properties,
+				'category'    => $categoryid,
+			), $tblSitePlugins);
             
             // save event listeners
             saveEventListeners($newid,$sysevents,$_POST['mode']);
@@ -94,12 +71,12 @@ switch ($_POST['mode']) {
                                         "id"    => $newid
                                     ));
             
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
             // empty cache
-            include_once "cache_sync.class.processor.php";
-            $sync = new synccache();
-            $sync->setCachepath("../assets/cache/");
-            $sync->setReport(false);
-            $sync->emptyCache(); // first empty the cache       
+            $modx->clearCache('full');
+
             // finished emptying cache - redirect
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$newid":"101";
@@ -109,7 +86,6 @@ switch ($_POST['mode']) {
                 $header="Location: index.php?a=76&r=2";
                 header($header);
             }
-        }       
         break;
     case '102':
 
@@ -120,13 +96,26 @@ switch ($_POST['mode']) {
                                     "id"    => $id
                                 ));
      
+		// disallow duplicate names for plugins
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}'");
+		if ($modx->db->getValue($rs) > 0) {
+			$modx->manager->saveFormValues(102);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
+		}
+
         //do stuff to save the edited plugin    
-        $sql = "UPDATE {$tblSitePlugins} SET name='{$name}', description='{$description}', plugincode='{$plugincode}', disabled={$disabled}, moduleguid='{$moduleguid}', locked={$locked}, properties='{$properties}', category={$categoryid}  WHERE id={$id}";
-        $rs = $modx->db->query($sql);
-        if(!$rs){
-            echo "\$rs not set! Edited plugin not saved!";
-        } 
-        else {      
+        $modx->db->update(
+            array(
+                'name'         => $name,
+                'description'  => $description,
+                'plugincode'   => $plugincode,
+                'disabled'     => $disabled,
+                'moduleguid'   => $moduleguid,
+                'locked'       => $locked,
+                'properties'   => $properties,
+                'category'     => $categoryid,
+            ), $tblSitePlugins, "id='{$id}'");
+
             // save event listeners
             saveEventListeners($id,$sysevents,$_POST['mode']);
 
@@ -137,12 +126,12 @@ switch ($_POST['mode']) {
                                         "id"    => $id
                                     ));
             
+		// Set the item name for logger
+		$_SESSION['itemname'] = $name;
+
             // empty cache
-            include_once "cache_sync.class.processor.php";
-            $sync = new synccache();
-            $sync->setCachepath("../assets/cache/");
-            $sync->setReport(false);
-            $sync->emptyCache(); // first empty the cache
+            $modx->clearCache('full');
+
             // finished emptying cache - redirect   
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$id":"101";
@@ -152,7 +141,6 @@ switch ($_POST['mode']) {
                 $header="Location: index.php?a=76&r=2";
                 header($header);
             }
-        }       
         break;
     default:
     ?>  
@@ -166,25 +154,25 @@ function saveEventListeners($id,$sysevents,$mode) {
     global $modx;
     // save selected system events
     $tblSitePluginEvents = $modx->getFullTableName('site_plugin_events');
-    $sql = "INSERT INTO {$tblSitePluginEvents} (pluginid,evtid,priority) VALUES ";
+    $insert_sysevents = array();
     for($i=0;$i<count($sysevents);$i++){
         if ($mode == '101') {
-            $prioritySql = "select max(priority) as priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]}";
+            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}'");
         } else {
-            $prioritySql = "select priority from {$tblSitePluginEvents} where evtid={$sysevents[$i]} and pluginid={$id}";
+            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}' and pluginid='{$id}'");
         }
-        $rs = $modx->db->query($prioritySql);
-        $prevPriority = $modx->db->getRow($rs);
+        $prevPriority = $modx->db->getValue($rs);
         if ($mode == '101') {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] + 1 : 1;
+            $priority = isset($prevPriority) ? $prevPriority + 1 : 1;
         } else {
-            $priority = isset($prevPriority['priority']) ? $prevPriority['priority'] : 1;
+            $priority = isset($prevPriority) ? $prevPriority : 1;
         }
-        if($i>0) $sql.=",";
-        $sql.= "(".$id.",".$sysevents[$i].",".$priority.")";
+        $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$sysevents[$i],'priority'=>$priority);
     }
-    $modx->db->query("DELETE FROM {$tblSitePluginEvents} WHERE pluginid={$id}");
-    if (count($sysevents)>0) $modx->db->query($sql);
+    $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
+    foreach ($insert_sysevents as $insert_sysevent) {
+        $modx->db->insert($insert_sysevent, $tblSitePluginEvents);
+    }
 }
 
 ?>

@@ -5,8 +5,8 @@
 * @package  AjaxSearchRequest
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchRequest class contains all functions and data used to manage the search SQL Request
@@ -616,16 +616,14 @@ class AjaxSearchRequest {
         if ($mode == 'simple') {
             $i = 1;
             foreach($tvs_array as $tv) {
-                $selectid = "SELECT DISTINCT id, name FROM " . $this->_getShortTableName('site_tmplvars');
-                $selectid .= " WHERE name = '" . $tv . "'";
-                $rs = $modx->db->query($selectid);
-                $row = $modx->db->getRow($rs);
+                $rs = $modx->db->select("DISTINCT id", $this->_getShortTableName('site_tmplvars'), "name='{$tv}'");
+                $id = $modx->db->getValue($rs);
 
                 $alias = $abrev . $i;
                 $nm = ($name) ? $name : $tv;
                 $subselect = "SELECT DISTINCT ".$alias.".contentid , ".$alias.".value ";
                 $subselect.= "FROM " . $this->_getShortTableName('site_tmplvar_contentvalues') . " ".$alias." ";
-                $subselect.= "WHERE ".$alias.".tmplvarid = '" . $row['id'] . "'";
+                $subselect.= "WHERE ".$alias.".tmplvarid = '{$id}'";
 
                 $scTvs[] = array(
                     'tb_alias' => 'n'.$alias,
@@ -641,15 +639,12 @@ class AjaxSearchRequest {
         }
         else { // mode = concat
             $lstTvs = "'" . implode("','",$tvs_array) . "'";
-            $selectid = "SELECT GROUP_CONCAT( DISTINCT CAST(id AS CHAR) SEPARATOR \",\" ) AS " . $abrev . "_id";
-            $selectid .= " FROM " . $this->_getShortTableName('site_tmplvars');
-            $selectid .= " WHERE name in (" . $lstTvs. ")";
-            $rs = $modx->db->query($selectid);
-            $row = $modx->db->getRow($rs);
+            $rs = $modx->db->select("GROUP_CONCAT( DISTINCT CAST(id AS CHAR) SEPARATOR \",\" ) AS ids", $this->_getShortTableName('site_tmplvars'), "name in ({$lstTvs})");
+            $ids = $modx->db->getValue($rs);
 
             $subselect = "SELECT DISTINCT " . $abrev . ".contentid , " . $abrev . ".value ";
             $subselect.= "FROM " . $this->_getShortTableName('site_tmplvar_contentvalues') . " " . $abrev . " ";
-            $subselect.= "WHERE " . $abrev . ".tmplvarid in (" . $row[$abrev.'_id'] . ")";
+            $subselect.= "WHERE " . $abrev . ".tmplvarid in (" . $ids . ")";
 
             $scTvs[] = array(
                 'tb_alias' => 'n'.$abrev,
@@ -700,10 +695,9 @@ class AjaxSearchRequest {
         global $modx;
         $tvs_array = array();
         $tblName = $modx->getFullTableName('site_tmplvars');
-        $sql = 'SELECT GROUP_CONCAT( DISTINCT name SEPARATOR "," ) AS list FROM ' . $tblName . ' WHERE type=\'text\'';
-        $rs = $modx->db->query($sql);
-        if ($rs) $row = $modx->db->getRow($rs);
-        if ($row) $tvs_array = explode(',',$row['list']);
+        $rs = $modx->db->select("GROUP_CONCAT( DISTINCT name SEPARATOR "," ) AS list", $tblName, "type='text'");
+        $list = $modx->db->getValue($rs);
+        if ($list) $tvs_array = explode(',',$list);
         return $tvs_array;
     }
     /*
@@ -722,10 +716,9 @@ class AjaxSearchRequest {
         global $modx;
         $tvNames_array = array();
         $tvs_array = array();
-        $records = array();
 
         if (!$this->cfg['tvPhx']) {
-             while($row = $modx->db->getRow($rs)) $records[] = $row;
+             $records = $modx->db->makeArray($rs);
         }
         else {
             if (isset($this->cfg['withTvs']) && ($this->cfg['withTvs'])) {
@@ -753,21 +746,19 @@ class AjaxSearchRequest {
     function _getDocTvs($docid, $tvNames_array) {
         global $modx;
         $results = array();
-        $idnames = array();
-
+        
         if (count($tvNames_array)) $where = " AND name in ('" . implode("','",$tvNames_array) . "')";
         else $where = '';
 
-        $sql  = "SELECT DISTINCT tv.id AS id ";
-        $sql .= "FROM " . $modx->getFullTableName('site_tmplvars')." tv ";
-        $sql .= "INNER JOIN " . $modx->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
-        $sql .= "LEFT JOIN " . $modx->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
-        $sql .= "WHERE tvc.contentid = '" . $docid . "'" . $where;
-        $rs= $modx->db->query($sql);
-        if ($modx->db->getRecordCount($rs)) {
-            while($row = $modx->db->getRow($rs)){
-                array_push($idnames,$row['id']);
-            }
+        $rs= $modx->db->select(
+			"DISTINCT tv.id AS id",
+			$modx->getFullTableName('site_tmplvars')." AS tv 
+				INNER JOIN " . $modx->getFullTableName('site_tmplvar_templates')." AS tvtpl ON tvtpl.tmplvarid = tv.id
+				LEFT JOIN " . $modx->getFullTableName('site_tmplvar_contentvalues')." AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
+			"tvc.contentid = '{$docid}' {$where}"
+			);
+        $idnames = $modx->db->getColumn('id', $rs);
+        if ($idnames) {
             $results = $modx->getTemplateVarOutput($idnames,$docid);
             if (!$results) $results = array();
         }

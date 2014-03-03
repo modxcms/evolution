@@ -1,6 +1,6 @@
 <?php
 /**
- * This file includes slightly modified code from the MODx core distribution.
+ * This file includes slightly modified code from the MODX core distribution.
  */
 
 include_once("../../cache/siteManager.php");
@@ -19,18 +19,22 @@ $dm->getTheme();
  $output = '';
  
  if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
- 	$sql = "SELECT * FROM ".$modx->getFullTableName('site_tmplvars')." tv LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." ON tv.id = ".$modx->getFullTableName('site_tmplvar_templates').".tmplvarid WHERE ".$modx->getFullTableName('site_tmplvar_templates').".templateid ='". $_POST['tplID']."'";
- 	$rs = $modx->db->query($sql);
+ 	$rs = $modx->db->select(
+		'*',
+		$modx->getFullTableName('site_tmplvars')." tv
+			LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS tvt ON tv.id = tvt.tmplvarid",
+		"tvt.templateid ='{$_POST['tplID']}'"
+		);
  	$limit = $modx->db->getRecordCount($rs);
  	
  	if ($limit > 0) {
 		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
-		for ($i=0; $i<$limit; $i++) {
- 			$row = $modx->db->getRow($rs);
+		$i = 0;
+		while ($row = $modx->db->getRow($rs)) {
 
-				if($i>0 && $i<$limit) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
+				if($i++>0) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
 				
 				$output.='<tr style="height: 24px;">
 				<td align="left" valign="top" width="200">
@@ -83,7 +87,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
             if($field_value=='') $field_value=0;
 			$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-			$field_html .=  ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/'.(!empty($dm->theme) ? $dm->theme."/":"").'images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+			$field_html .=  ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style'.$dm->theme.'/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
 
 			$field_html .=  '<script type="text/javascript">';
 			$field_html .=  '   	new DatePicker($(\'tv'.$field_id.'\'), {\'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
@@ -278,7 +282,7 @@ function ParseIntputOptions($v) {
 	$a = array();
 	if(is_array($v)) return $v;
 	else if(is_resource($v)) {
-		while ($cols = $modx->db->getRow($v)) $a[] = $cols;
+		$a = $modx->db->makeArray($v);
 	}
 	else $a = explode("||", $v);
 	return $a;

@@ -240,10 +240,6 @@ $lang = array(
 
     // SINCE 2.4
 
-    "Checking for new version..." => "Проверяем наличие обновлений...",
-    "Unable to connect!" => "Невозможно подключиться!",
-    "Download version {version} now!" => "Скачать версию {version} сейчас!",
-    "KCFinder is up to date!" => "Вы используете последнюю версию KCFinder'а!",
     "Licenses:" => "Лицензии:",
     "Attention" => "Внимание",
     "Question" => "Вопрос",

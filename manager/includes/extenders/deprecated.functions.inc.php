@@ -370,6 +370,28 @@ class OldFunctions {
         return $results;
     }
 
+    /**
+     * Displays a javascript alert message in the web browser
+     *
+     * @param string $msg Message to show
+     * @param string $url URL to redirect to
+     */
+    function webAlert($msg, $url= "") {
+        $msg= addslashes($this->db->escape($msg));
+        if (substr(strtolower($url), 0, 11) == "javascript:") {
+            $act= "__WebAlert();";
+            $fnc= "function __WebAlert(){" . substr($url, 11) . "};";
+        } else {
+            $act= ($url ? "window.location.href='" . addslashes($url) . "';" : "");
+        }
+        $html= "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
+        if ($this->isFrontend())
+            $this->regClientScript($html);
+        else {
+            echo $html;
+        }
+    }
+
     ########################################
     // END New database functions - rad14701
     ########################################

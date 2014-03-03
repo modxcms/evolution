@@ -239,10 +239,6 @@ $lang = array(
 
     // SINCE 2.4
 
-    "Checking for new version..." => "Zkontrolovat novou verzi...",
-    "Unable to connect!" => "Nelze připojit!",
-    "Download version {version} now!" => "Stáhnout verzi {version} nyní!",
-    "KCFinder is up to date!" => "KCFinder je aktuální!",
     "Licenses:" => "Licence:",
     "Attention" => "Upozornění",
     "Question" => "Otázka",

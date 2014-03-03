@@ -1,6 +1,6 @@
 <?php
 /*
- * MODx Manager API Class
+ * MODX Manager API Class
  * Written by Raymond Irving 2005
  *
  */
@@ -107,9 +107,8 @@ class ManagerAPI {
 	{
 		global $modx;
 		$tbl_manager_users = $modx->getFullTableName('manager_users');
-		$rs = $modx->db->select('*',$tbl_manager_users,"id='{$uid}'");
-		$row = $modx->db->getRow($rs);
-		$password = $row['password'];
+		$rs = $modx->db->select('password',$tbl_manager_users,"id='{$uid}'");
+		$password = $modx->db->getValue($rs);
 		
 		if(strpos($password,'>')===false) $algo = 'NOSALT';
 		else

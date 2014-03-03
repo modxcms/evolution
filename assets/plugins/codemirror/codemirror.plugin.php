@@ -6,10 +6,10 @@
  * @released    Jun 5, 2013
  * @CodeMirror  1.1
  *
- * @required    MODx 0.9.6.3+
+ * @required    MODX 0.9.6.3+
  *              CodeMirror  3.13 : pl
  *
- * @confirmed   MODx Evolution 1.10.0
+ * @confirmed   MODX Evolution 1.10.0
  *
  * @author      Mihanik71 
  *
@@ -100,7 +100,7 @@ if (('none' == $rte) && $mode) {
 	{$emmet}{$search}
 	
 	<script type="text/javascript">
-		// Add mode MODx for syntax highlighting. Dfsed on $mode
+		// Add mode MODX for syntax highlighting. Dfsed on $mode
 		CodeMirror.defineMode("MODx-{$mode}", function(config, parserConfig) {
 			var mustacheOverlay = {
 				token: function(stream, state) {
@@ -244,6 +244,17 @@ if (('none' == $rte) && $mode) {
 			localStorage['history_{$object_id}'] = JSON.stringify(history);
 			documentDirty=true;
 		});
+
+		(function() {
+			var tId = setInterval(function() {
+				if (document.readyState == "complete")
+					onComplete();
+			}, 11);
+			function onComplete() {
+				clearInterval(tId);
+				myCodeMirror.refresh();
+			};
+		})();
     </script>
 HEREDOC;
     $modx->Event->output($output);

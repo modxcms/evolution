@@ -239,10 +239,6 @@ $lang = array(
 
      // SINCE 2.4
 
-    "Checking for new version..." => "Ελεγχος για νέα έκδοση...",
-    "Unable to connect!" => "Αδύνατη η σύνδεση!",
-    "Download version {version} now!" => "Κατεβάστε την έκδοση {version} τώρα!",
-    "KCFinder is up to date!" => "Το KCFinder είναι ενημερωμένο με τη πιο πρόσφατη έκδοση!",
     "Licenses:" => "Άδειες:",
     "Attention" => "Προσοχή",
     "Question" => "Ερώτηση",

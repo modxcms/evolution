@@ -176,7 +176,7 @@ function toggleImage(i){
 <h2>Using eForm's eformOnBeforeMailSent event</h2>
 <h3>Prerequisites:</h3>
 <ul>
-<li>Works with <strong>eForm version 1.4</strong> and later. If you have an earlier version upgrade now at <a href="http://www.modxcms.com/downloads/">www.modxcms.com/downloads/</a></li>
+<li>Works with <strong>eForm version 1.4</strong> and later. If you have an earlier version upgrade now at <a href="http://modx.com/extras/package/eform">http://modx.com/extras/package/eform</a></li>
 <li>Be familiar with PHP programming, specifically with variable functions and variable references.</li>
 </ul>
 
@@ -322,7 +322,7 @@ function someFunction( <strong>&amp;</strong>$fields ){ ... }</pre>
 	}	
 </pre></div>
 
-<p>All very well that we've written a function but how do we get it into MODx? I'm sure there's multiple ways of doing that but I've simply created an extra snippet called eFormEvent with the 'createJobNumber' function as the only content. That way it's only loaded when using the form. To make it available to eForm we place a call to this snippet on the same page, just before we call the eForm snippet (It needs to be first as otherwise it's not parsed by the time eFrom needs it).</p>
+<p>All very well that we've written a function but how do we get it into MODX? I'm sure there's multiple ways of doing that but I've simply created an extra snippet called eFormEvent with the 'createJobNumber' function as the only content. That way it's only loaded when using the form. To make it available to eForm we place a call to this snippet on the same page, just before we call the eForm snippet (It needs to be first as otherwise it's not parsed by the time eFrom needs it).</p>
 
 <p>All that remains is to add the <code>&eformOnBeforeMailSent</code> parameter to the eform snippet call with the function name. To finish this example off here are the eFormEvent snippet and both snippet calls that need to reside on the form page.</p>
 

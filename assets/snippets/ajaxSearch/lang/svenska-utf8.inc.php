@@ -1,9 +1,9 @@
 <?php
 /*
-svenska-utf8.inc.php - Swedish language file for AjaxSearch 1.9
-Created by: KyleJ (kjaebker@muddydogpaws.com), Modified by Coroico
-Translation: Pontus Ågren (Pont)
-Date: 2010-05-20
+svenska-utf8.inc.php - for AjaxSearch 1.10.0
+Created by: Pontus Ågren (Pont)
+Last Modified on 2014-12-09
+Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Din sökning gav inga träffar. Pröva att använda mer allmänna sökord.';
 $_lang['as_searchButtonText'] = 'Sök!';

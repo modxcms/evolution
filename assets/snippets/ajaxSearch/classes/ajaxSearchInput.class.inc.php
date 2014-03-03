@@ -5,8 +5,8 @@
 * @package  AjaxSearchInput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchInput class contains all functions and data used to manage Input form
@@ -214,13 +214,14 @@ class AjaxSearchInput {
     * Default user StripInput function
     */
     function _defaultStripInput($searchString, $pgCharset = 'UTF-8') {
+        global $modx;
         if ($searchString !== '') {
 
             $searchString = stripslashes($searchString);
 
             $searchString = $this->_stripJscripts($searchString);
 
-            $searchString = $this->_stripTags($searchString);
+            $searchString = $modx->stripTags($searchString);
 
             $searchString = $this->_stripHtml($searchString);
 
@@ -354,22 +355,6 @@ class AjaxSearchInput {
             $searchString = str_replace(array_keys($tf), array_values($tf), $string);
         }
         return $string;
-    }
-    /*
-    *  stripTags : Remove MODx sensitive tags
-    */
-    function _stripTags($text) {
-
-        $modRegExArray[] = '~\[\[(.*?)\]\]~';
-        $modRegExArray[] = '~\[!(.*?)!\]~';
-        $modRegExArray[] = '!\[\~(.*?)\~\]!is';
-        $modRegExArray[] = '~\[\((.*?)\)\]~';
-        $modRegExArray[] = '~{{(.*?)}}~';
-        $modRegExArray[] = '~\[\*(.*?)\*\]~';
-        $modRegExArray[] = '~\[\+(.*?)\+\]~';
-
-        foreach ($modRegExArray as $mReg) $text = preg_replace($mReg, '', $text);
-        return $text;
     }
     /*
     *  stripJscript : Remove jscript

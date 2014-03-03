@@ -1,19 +1,18 @@
 <?php
 /**
- * Filename:       /install/lang/polish-utf8.inc.php
- * Function:       MODX language File
- * Encoding:       UTF8
- * Author:         The MODX Project Team
- * 
- * Translated by:
- *					Radosław Włodkowski - radoslaw@wlodkowski.net
- * 
- * Revised by:
- *					Natalia Łubniewska
+ * MODX Installer language file
  *
- * Date:           23 May 2010
- * Version:        1.0
- * MODX version:   Evolution 1.0.4
+ * @author Radosław Włodkowski, radoslaw@wlodkowski.net
+ * @author Natalia Łubniewska
+ * @author Witek Galecki
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language Polish
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Akceptuję warunki umowy licencyjnej';
 $_lang["alert_database_test_connection"] = 'Musisz utworzyć nową bazę danych lub sprawdzić czy wybrana przez Ciebie nazwa bazy jest poprawna!';
@@ -84,11 +83,14 @@ $_lang["database_use_failed"] = 'Baza danych nie może być użyta!';
 $_lang["database_use_failed_note"] = 'Sprawdź prawa dostępu do bazy danych dla wybranego użytkownika i spróbuj ponownie.';
 $_lang["default_language"] = 'Domyślny język Menedżera';
 $_lang["default_language_description"] = 'Domyślny język dla Menedżera MODXa.';
+$_lang["depedency_create"] = 'Zależność utworzona';
+$_lang["depedency_update"] = 'Zależność uaktualniona';
 $_lang["during_execution_of_sql"] = ' podczas wykonywania zapytania SQL ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'błąd';
 $_lang["errors"] = 'błędy';
 $_lang["failed"] = 'NIE POWIODŁO SIĘ!';
+$_lang["guid_set"] = 'GUID ustawiony';
 $_lang["help"] = 'Pomoc!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Pomoc dotyczącą instalacji można uzyskać na forum MODXa';
@@ -113,7 +115,7 @@ $_lang["installing_demo_site"] = 'Instalowanie strony demo: ';
 $_lang["language_code"] = 'pl';
 $_lang["loading"] = 'Ładowanie...';
 $_lang["modules"] = 'Moduły';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX jest objęty licencją GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX jest objęty licencją GNU GPL.';
 $_lang["modx_footer2"] = 'MODX jest wolnym oprogramowaniem. Zachęcamy Cię, abyś kreatywnie wykorzystywał MODXa w jakikolwiek sposób, który uznasz za przydatny. Prosimy jedynie, abyś pozostawił kod źródłowy otwartym i darmowym w przypadku gdy zdecydujesz się na redystrybucję MODXa w zmodyfikowanej przez siebie wersji!';
 $_lang["modx_install"] = 'MODX &raquo; Instalacja';
 $_lang["modx_requires_php"] = ', MODX wymaga PHP w wersji 4.2.0 lub nowszej';
@@ -188,7 +190,7 @@ $_lang["unable_install_template"] = 'Nie można zainstalować szablonów. Plik';
 $_lang["upgrade_note"] = '<strong>Uwaga:</strong> Przed rozpoczęciem przeglądania swojej strony zaloguj się jako administrator do Menedżera MODXa, a następnie sprawdź i zapisz konfigurację systemu.';
 $_lang["upgraded"] = 'Zaktualizowano';
 $_lang["validate_referer_title"] = 'Weryfikuj nagłówki HTTP_REFERER?';
-$_lang["visit_forum"] = ', odwiedź <a href="http://forums.modx.com/" target="_blank">Forum MODXa</a>.';
+$_lang["visit_forum"] = ', odwiedź <a href="http://www.modx.com/forums/" target="_blank">Forum MODXa</a>.';
 $_lang["warning"] = 'UWAGA!';
 $_lang["welcome_message_start"] = 'Najpierw wybierz typ instalacji: ';
 $_lang["welcome_message_text"] = 'Ten kreator przeprowadzi Cię przez proces instalacji.';

@@ -1,8 +1,8 @@
 <?php
 /*
-danish-uft8.inc.php - for AjaxSearch 1.9.0
+danish.inc.php - for AjaxSearch 1.10.0
 Created by: Henrik Nielsen
-Created on: 23 may 2010
+ * Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Der var ingen resultater for din søgning. Prøv at gentage din søgning men med mere generelle ord.';

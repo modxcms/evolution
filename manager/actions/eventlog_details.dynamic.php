@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('view_eventlog')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get id
@@ -15,24 +14,18 @@ else {
 
 // make sure the id's a number
 if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+	$modx->webAlertAndQuit("Passed ID is NaN!");
 }
 
 
-$sql = "SELECT el.*, IFNULL(wu.username,mu.username) as 'username' " .
-		"FROM ".$modx->getFullTableName("event_log")." el ".
-		"LEFT JOIN ".$modx->getFullTableName("manager_users")." mu ON mu.id=el.user AND el.usertype=0 ".
-		"LEFT JOIN ".$modx->getFullTableName("web_users")." wu ON wu.id=el.user AND el.usertype=1 ".
-		" WHERE el.id=$id";			
-$ds = $modx->db->query($sql);
-if(!$ds) {
-	echo "Error while load event log";
-	exit;
-}
-else{
+$ds = $modx->db->select(
+	'el.*, IFNULL(wu.username,mu.username) as username',
+	$modx->getFullTableName("event_log")." el 
+		LEFT JOIN ".$modx->getFullTableName("manager_users")." mu ON mu.id=el.user AND el.usertype=0
+		LEFT JOIN ".$modx->getFullTableName("web_users")." wu ON wu.id=el.user AND el.usertype=1",
+	"el.id='{$id}'"
+	);	
 	$content = $modx->db->getRow($ds);	
-}
 
 ?>
 
@@ -67,11 +60,10 @@ $date = $modx->toDateFormat($content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];
 else if($content["type"]==2) $msgtype = $_lang["warning"];
 else if($content["type"]==3) $msgtype = $_lang["error"];
-$useTheme = $manager_theme ? "$manager_theme/":"";
 echo <<<HTML
 	<table border="0" width="100%">
 	  <tr><td colspan="4">
-		<div class="warning"><img src="media/style/{$useTheme}images/icons/event{$content["type"]}.png" align="absmiddle" /> {$msgtype}</div><br />
+		<div class="warning"><img src="{$_style["icons_event{$content["type"]}"]}" align="absmiddle" /> {$msgtype}</div><br />
 	  </td></tr>
 	  <tr>
 		<td width="25%" valign="top">{$_lang["event_id"]}:</td>

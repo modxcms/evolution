@@ -22,7 +22,7 @@ if (isset($_SESSION['mgrValidated'])) {
     $show = TRUE;
 
     if ($disabled  != '') {
-        $arr = explode(",", $disabled );
+        $arr = array_filter(array_map('intval', explode(',', $disabled)));
         if (in_array($modx->documentIdentifier, $arr)) {
             $show = FALSE;
         }

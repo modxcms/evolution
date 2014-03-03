@@ -1,31 +1,24 @@
 <?php
-if(IN_MANAGER_MODE!='true') die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch ((int) $_REQUEST['a']) {
     case 107:
         if(!$modx->hasPermission('new_module')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 108:
         if(!$modx->hasPermission('edit_module')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     default:
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
-
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
 
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
@@ -50,47 +43,29 @@ function createGUID(){
 }
 
 // Check to see the editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
-        if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'], $lock['username'], $_lang['module']);
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getRow($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['module']));
     }
-}
 // end check for lock
 
 // make sure the id's a number
 if (!is_numeric($id)) {
-    echo 'Passed ID is NaN!';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 if (isset($_GET['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_modules.' WHERE id=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        echo '<p>Multiple modules sharing same unique id. Not good.<p>';
-        exit;
-    }
-    if ($limit < 1) {
-        echo '<p>No record found for id: '.$id.'.</p>';
-        exit;
-    }
+    $rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
     $content = $modx->db->getRow($rs);
+    if (!$content) {
+        $modx->webAlertAndQuit("Module not found for id '{$id}'.");
+    }
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
-    $_SESSION['itemname'] = 'New Module';
+    $_SESSION['itemname'] = $_lang["new_module"];
     $content['wrap'] = '1';
 }
 
@@ -145,7 +120,7 @@ function showParameters(ctrl) {
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter'];?></td><td width="50%"><?php echo $_lang['value'];?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter'];?></td><td width="50%"><?php echo $_lang['value'];?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -316,7 +291,7 @@ function SetUrl(url, width, height, alt) {
 }
 </script>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css?<?php echo $theme_refresher?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?<?php echo $theme_refresher?>" />
 
 <form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
 <?php
@@ -335,7 +310,7 @@ function SetUrl(url, width, height, alt) {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <?php if ($modx->hasPermission('new_module')) { ?>
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
@@ -359,7 +334,7 @@ function SetUrl(url, width, height, alt) {
     </div>
     <!-- end #actions -->
 
-<div class="sectionBody"><p><img class="icon" src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
+<div class="sectionBody"><p><img class="icon" src="<?php echo $_style["icons_modules_large"]?>" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
     <script type="text/javascript">
@@ -378,8 +353,8 @@ function SetUrl(url, width, height, alt) {
 
     <!-- PHP text editor start -->
         <div class="sectionHeader">
-            <span style="float:left; font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['module_code']?></span>
             <span style="float:right;><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox"<?php echo $content['wrap']== 1 ? ' checked="checked"' : ''?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+            <?php echo $_lang['module_code']?>
         </div>
         <div class="sectionBody">
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'])?></textarea>
@@ -415,27 +390,25 @@ function SetUrl(url, width, height, alt) {
         <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
     <tr><td valign="top" align="left">
 <?php
-    $sql = 'SELECT smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS `name`, '.
-           'CASE smd.type'.
-           ' WHEN 10 THEN \'Chunk\''.
-           ' WHEN 20 THEN \'Document\''.
-           ' WHEN 30 THEN \'Plugin\''.
-           ' WHEN 40 THEN \'Snippet\''.
-           ' WHEN 50 THEN \'Template\''.
-           ' WHEN 60 THEN \'TV\''.
-           'END AS `type` '.
-           'FROM '.$tbl_site_module_depobj.' AS smd '.
-           'LEFT JOIN '.$tbl_site_htmlsnippets.' AS sc ON sc.id = smd.resource AND smd.type = 10 '.
-           'LEFT JOIN '.$tbl_site_content.' AS sd ON sd.id = smd.resource AND smd.type = 20 '.
-           'LEFT JOIN '.$tbl_site_plugins.' AS sp ON sp.id = smd.resource AND smd.type = 30 '.
-           'LEFT JOIN '.$tbl_site_snippets.' AS ss ON ss.id = smd.resource AND smd.type = 40 '.
-           'LEFT JOIN '.$tbl_site_templates.' AS st ON st.id = smd.resource AND smd.type = 50 '.
-           'LEFT JOIN '.$tbl_site_tmplvars.' AS sv ON sv.id = smd.resource AND smd.type = 60 '.
-           'WHERE smd.module=\''.$id.'\' ORDER BY smd.type,name';
-$ds = $modx->db->query($sql);
-if (!$ds) {
-    echo "An error occured while loading module dependencies.";
-} else {
+$ds = $modx->db->select(
+    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+	CASE smd.type
+		WHEN 10 THEN 'Chunk'
+		WHEN 20 THEN 'Document'
+		WHEN 30 THEN 'Plugin'
+		WHEN 40 THEN 'Snippet'
+		WHEN 50 THEN 'Template'
+		WHEN 60 THEN 'TV'
+	END AS type",
+	"{$tbl_site_module_depobj} AS smd 
+		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
+		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
+		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
+		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
+		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
+		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
+	"smd.module='{$id}'",
+	'smd.type,name');
     include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
     $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
     $grd->noRecordMsg = $_lang['no_records_found'];
@@ -446,7 +419,7 @@ if (!$ds) {
     $grd->columns = $_lang['element_name']." ,".$_lang['type'];
     $grd->fields = "name,type";
     echo $grd->render();
-} ?>
+?>
         </td></tr>
     </table>
     </div>
@@ -467,12 +440,9 @@ if (!$ds) {
             <select name="categoryid" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
 <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if ($ds) {
-                    foreach($ds as $n => $v) {
-                        echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-                    }
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n => $v) {
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
                 }
 ?>
             </select></td></tr>
@@ -491,14 +461,8 @@ if (!$ds) {
 <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
-    $groupsarray = array();
-    $sql = 'SELECT * FROM '.$tbl_site_module_access.' WHERE module=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    for ($i = 0; $i < $limit; $i++) {
-        $currentgroup = $modx->db->getRow($rs);
-        $groupsarray[$i] = $currentgroup['usergroup'];
-    }
+    $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
+    $groupsarray = $modx->db->getColumn('usergroup', $rs);
 
     if($modx->hasPermission('access_permissions')) { ?>
 <!-- User Group Access Permissions -->
@@ -529,11 +493,8 @@ if (!$ds) {
 <?php
     }
     $chk = '';
-    $sql = "SELECT name, id FROM ".$tbl_membergroup_names;
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    for ($i = 0; $i < $limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    $rs = $modx->db->select('name, id', $tbl_membergroup_names);
+    while ($row = $modx->db->getRow($rs)) {
         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
         $checked = in_array($row['id'], $groupsarray);
         if($modx->hasPermission('access_permissions')) {

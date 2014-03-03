@@ -51,12 +51,8 @@ else if ($isPostBack){
         return;
     }
     else {
-        $sql = "SELECT id FROM ".$modx->getFullTableName("web_users")." WHERE username='$username'";
-        if(!$rs = $modx->db->query($sql)){
-            $output = webLoginAlert("An error occured while attempting to retreive all users with username $username.").$tpl;
-            return;
-        } 
-        $limit = $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('count(id)', $modx->getFullTableName("web_users"), "username='{$username}'");
+        $limit = $modx->db->getValue($rs);
         if($limit>0) {
             $output = webLoginAlert("Username is already in use!").$tpl;
             return;
@@ -70,18 +66,11 @@ else if ($isPostBack){
     }
 
     // check for duplicate email address
-    $sql = "SELECT internalKey FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
-    if(!$rs = $modx->db->query($sql)){
-        $output = webLoginAlert("An error occured while attempting to retreive all users with email $email.").$tpl;
-        return;
-    } 
-    $limit = $modx->db->getRecordCount($rs);
+    $rs = $modx->db->select('count(internalKey)', $modx->getFullTableName("web_user_attributes"), "email='{$email}' AND internalKey!='{$id}'");
+    $limit = $modx->db->getValue($rs);
     if($limit>0) {
-        $row=$modx->db->getRow($rs);
-        if($row['internalKey']!=$id) {
             $output = webLoginAlert("Email is already in use!").$tpl;
             return;
-        }
     }
     
     // if there is no password, randomly generate a new one 	 
@@ -112,35 +101,29 @@ else if ($isPostBack){
     }
 
     // create the user account
-    $sql = "INSERT INTO ".$modx->getFullTableName("web_users")." (username, password) 
-            VALUES('".$username."', md5('".$password."'));";
-    $rs = $modx->db->query($sql);
-    if(!$rs){
-        $output = webLoginAlert("An error occured while attempting to save the user.").$tpl;
-        return;
-    }         
-    // now get the id
-    $key=$modx->db->getInsertId();
+    $key = $modx->db->insert(
+		array(
+			'username' => $username,
+			'password' => md5($password),
+		), $modx->getFullTableName("web_users"));
 
     // save user attributes
-    $sql = "INSERT INTO ".$modx->getFullTableName("web_user_attributes")." (internalKey, fullname, email, zip, state, country) 
-            VALUES($key, '$fullname', '$email', '$zip', '$state', '$country');";
-    $rs = $modx->db->query($sql);
-    if(!$rs){
-        $output = webLoginAlert("An error occured while attempting to save the user's attributes.").$tpl;
-        return;
-    }
+    $modx->db->insert(
+		array(
+			'internalKey' => $key,
+			'fullname'    => $fullname,
+			'email'       => $email,
+			'zip'         => $zip,
+			'state'       => $state,
+			'country'     => $country,
+		), $modx->getFullTableName("web_users"));
 
     // add user to web groups
     if(count($groups)>0) {
-        $ds = $modx->db->query("SELECT id FROM ".$modx->getFullTableName("webgroup_names")." WHERE name IN ('".implode("','",$groups)."')");
-        if(!$ds) return $modx->webAlert('An error occured while attempting to update user\'s web groups');
-        else {
-            while ($row = $modx->db->getRow($ds)) {
-                $wg = $row["id"];
+        $ds = $modx->db->select('id', $modx->getFullTableName("webgroup_names"), "name IN ('".implode("','",$groups)."')");
+            while ($wg = $modx->db->getValue($ds)) {
                 $modx->db->query("REPLACE INTO ".$modx->getFullTableName("web_groups")." (webgroup,webuser) VALUES('$wg','$key')");
             }
-        }
     }
             
     // invoke OnWebSaveUser event

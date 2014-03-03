@@ -1,8 +1,7 @@
 <?php
-if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('file_manager')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $token_check = checkToken();
 $newToken = makeToken();
@@ -24,7 +23,7 @@ $proteted_path = array();
 if($_SESSION['mgrRole']!=1)
 {
 */
-        $proteted_path[] = $modx->config['modx_manager_path'];
+        $proteted_path[] = $modx->config['site_manager_path'];
 	$proteted_path[] = $modx->config['base_path'] . 'temp/backup';
 	$proteted_path[] = $modx->config['base_path'] . 'assets/backup';
 	
@@ -84,8 +83,7 @@ $startpath = rtrim($startpath,'/');
 
 if(!is_readable($startpath))
 {
-	echo $_lang["not_readable_dir"];
-	exit;
+	$modx->webAlertAndQuit($_lang["not_readable_dir"]);
 }
 
 // Raymond: get web start path for showing pictures
@@ -103,6 +101,9 @@ else $webstart_path = '../'.$webstart_path;
 
 <div id="actions">
   <ul class="actionButtons">
+<?php if($_POST['mode']=='save'||$_GET['mode']=='edit') :?>
+	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
+<?php endif; ?>
 <?php
 if(isset($_GET['mode'])&&$_GET['mode']!=='drill') $href= 'a=31&path=' . urlencode($_REQUEST['path']);
 else $href='a=2';
@@ -169,14 +170,14 @@ function unzipFile(file) {
 
 function getFolderName(a){
 	var f;
-	f=window.prompt('Enter New Folder Name:','')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
 
 function getFileName(a){
 	var f;
-	f=window.prompt('Enter New File Name:','')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
@@ -204,8 +205,7 @@ elseif($_REQUEST['mode']=='delete') echo delete_file();
 
 if(in_array($startpath,$proteted_path))
 {
-	echo $_lang['files.dynamic.php2'];
-	exit;
+	$modx->webAlertAndQuit($_lang["files.dynamic.php2"]);
 }
 
 $tpl = '<img src="[+style_path+]tree/[+image+]" align="absmiddle" alt="" />[+subject+] ';
@@ -245,18 +245,14 @@ else
 		else $pieces[$i] = trim($v,'/');
 		$count--;
 	}
-	$topic_path = join(' / ', $pieces);
+	$topic_path = implode(' / ', $pieces);
 }
 
 ?> <b><?php echo $topic_path; ?></b>
 <?php
 // check to see user isn't trying to move below the document_root
 if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower(str_replace('//','/',$filemanager_path.'/'))) {
-	echo $_lang['files_access_denied']?>
-</div>
-
-<?php
-	exit;
+	$modx->webAlertAndQuit($_lang["files_access_denied"]);
 }
 
 // Unzip .zip files - by Raymond
@@ -422,20 +418,10 @@ $buffer = file_get_contents($filename);
 // Log the change
 logFileChange('view', $filename);
 if($buffer===false) {
-	echo 'Error opening file for reading.';
-	exit;
+	$modx->webAlertAndQuit("Error opening file for reading.");
 }
 
 ?>
-<?php
-
-if($_REQUEST['mode']=="edit") {
-?>
-<ul class="actionButtons">
-	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
-	<li><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-</ul>
-<?php } ?>
 <form action="index.php" method="post" name="editFile">
 <input type="hidden" name="a" value="31" />
 <input type="hidden" name="mode" value="save" />

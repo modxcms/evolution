@@ -1,72 +1,48 @@
 <?php
-if (IN_MANAGER_MODE != 'true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch ((int) $_REQUEST['a']) {
     case 78:
         if (!$modx->hasPermission('edit_chunk')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 77:
         if (!$modx->hasPermission('new_chunk')) {
-            $e->setError(3);
-            $e->dumpError();
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     default:
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
-
 // Get table names (alphabetical)
 $tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 // Check to see the snippet editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=78 AND id=\''.$id.'\'';
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if ($limit > 1) {
-    for ($i = 0; $i < $limit; $i++) {
-        $lock = $modx->db->getRow($rs);
-        if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']);
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['chunk']));
     }
-}
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_htmlsnippets.' WHERE id=\''.$id.'\'';
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if ($limit > 1) {
-        echo '<p>Error: Multiple Chunk sharing same unique ID.</p>';
-        exit;
-    }
-    if ($limit < 1) {
-        echo '<p>Chunk doesn\'t exist.</p>';
-        exit;
-    }
+    $rs = $modx->db->select('*', $tbl_site_htmlsnippets, "id='{$id}'");
     $content = $modx->db->getRow($rs);
+    if (!$content) {
+        $modx->webAlertAndQuit("Chunk not found for id '{$id}'.");
+    }
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
-    $_SESSION['itemname'] = 'New Chunk';
+    $_SESSION['itemname'] = $_lang["new_htmlsnippet"];
 }
 
 if (isset($_POST['which_editor']))
@@ -132,7 +108,7 @@ if (is_array($evtOut))
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <?php if ($modx->hasPermission('new_chunk')) { ?>
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
@@ -176,11 +152,8 @@ if (is_array($evtOut))
             <option>&nbsp;</option>
 <?php
 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
-$ds = getCategories();
-if ($ds) {
-foreach ($ds as $n => $v) {
+foreach (getCategories() as $n => $v) {
     echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-}
 }
 ?>
         </select></td>

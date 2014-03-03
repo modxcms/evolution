@@ -1,14 +1,19 @@
 <?php
 /**
- * Filename:       includes/lang/persian.inc.php
- * Function:       Persian Language file
- * Author:         Mohsen Zare (MotSmart ~ www.modxcms.ir)
- * Date:           15 Oct 2008
- * Version:        3.13
- * MODx version:   0.9.6.3 RC-2
-*/
-$modx_textdir = 'rtl';
-$modx_lang_attribute = 'fa'; // Manager HTML and XML Language Attribute
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 2014/02/24
+ * @author Mohsen Zare (MotSmart), www.modxcms.ir
+ *
+ * @language Persian
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+$modx_lang_attribute = 'fa'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'مادایکس یک <a href="http://modx.com/" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
@@ -177,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'ایجاد وب لینک در اینجا';
 $_lang["createdon"] = 'تاریخ ایجاد';
 $_lang["credits"] = 'امکانات و قابلیتهای استفاده شده';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - بنیانگذاران پروژه</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - طراحی و مهندسی هسته ی مرکزی</li><li><b>Mohsen(MotSmart)</b> - Persian Support, پشتیبانی فارسی</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'در اینجا شما میتوانید انواع مختلف و مخصوص از محتوا را اضافه کنید تا در پرونده های شما از آنها استفاده شوند. برای اضافه کردن ورودی جدید, نوع محتوا را در جعبه ی متنی وارد کنید و سپس روی گزینه ی \'اضافه کردن\' کلیک کنید.';
 $_lang["custom_contenttype_title"] = 'انواع مختلف محتوا:';
 $_lang["database_charset"] = 'کارست بانک اطلاعات';
@@ -367,7 +372,7 @@ $_lang["go"] = 'برو';
 $_lang["group_access_permissions"] = 'سطح دسترسی گروه کاربری';
 $_lang["guid"] = 'شناسه ی خاص';
 $_lang["help"] = 'راهنمای استفاده';
-$_lang["help_msg"] = '<p>شما میتوانید بصورت رایگان  عضو <a href="http://forums.modx.com" target="_blank">انجمنهای رفع اشکال و راهنمایی مادایکس</a> شوید و به کمک سایر دوستان باتجربه در این زمینه پاسخ سوالات خود را در مورد مادایکس بیابید.<br />ضمنا میتوانید حجم بزرگی از <a href="http://modx.com/documentation" target="_blank">راهنمایی ها و نحوه استفاده و پشتیبانی مادایکس </a> را در بخش راهنمایی و پشتیبانی استفاده از مادایکس بیابید</p><p>شما با پرداخت هزینه میتوانید از پشتیبانی و راهنمای اختصاصی و حرفه ای برای وبگاه (سایت) خود بهرهمند شوید برای این منظور لطفا از طریق پست الکترونیک با آدرس زیر تماس حاصل کنید<br />support@vertexworks.com';
+$_lang["help_msg"] = '<p>شما میتوانید بصورت رایگان  عضو <a href="http://forums.modx.com" target="_blank">انجمنهای رفع اشکال و راهنمایی مادایکس</a> شوید و به کمک سایر دوستان باتجربه در این زمینه پاسخ سوالات خود را در مورد مادایکس بیابید.<br />ضمنا میتوانید حجم بزرگی از <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">راهنمایی ها و نحوه استفاده و پشتیبانی مادایکس </a> را در بخش راهنمایی و پشتیبانی استفاده از مادایکس بیابید</p><p>شما با پرداخت هزینه میتوانید از پشتیبانی و راهنمای اختصاصی و حرفه ای برای وبگاه (سایت) خود بهرهمند شوید برای این منظور لطفا از طریق پست الکترونیک با آدرس زیر تماس حاصل کنید<br />hello@modx.com';
 $_lang["help_title"] = ' راهنما و توضیحات';
 $_lang["hide_tree"] = 'مخفی کردن درختی';
 $_lang["home"] = 'منزل';
@@ -571,6 +576,7 @@ $_lang["new_template"] = 'پوسته یا قالب جدید';
 $_lang["new_tmplvars"] = 'متغیر جدید پوسته یا قالب';
 $_lang["new_user"] = 'کاربر جدید';
 $_lang["new_web_user"] = 'کاربر وب جدید';
+$_lang["new_resource"] = 'پرونده ی جدید';
 $_lang["no"] = 'خیر';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'شما تاکنون هیچ پرونده ای ایجاد و یا ویرایش نکرده اید.';
@@ -1089,6 +1095,8 @@ $_lang["user_use_config"] = 'حالت استفاده از تنظیمات عمو�
 $_lang["user_zip"] = 'کدپستی ';
 $_lang["username"] = 'نام کاربری ';
 $_lang["users"] = 'حراست';
+$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
+$_lang["valid_hostnames_title"] = 'Valid hostnames';
 $_lang["validate_referer_message"] = 'انجام ارزیابی HTTP_REFERER باعث کاهش خطر احتمال بروز رفتارهای ناخواسته ویراستارهای شما از بخش مدیریت به عنوان قربانیان حمله CSRF (Cross Site Request Forgery - جعل درخواست) شوید. اگر سرور HTTP_REFERER را ارسال نکند ممکن است برخی از تنظیمات قادر به استفاده از این حالت نباشد.';
 $_lang["validate_referer_title"] = 'ارزیابی HTTP_REFERER انجام شود؟';
 $_lang["value"] = 'Value';
@@ -1130,16 +1138,20 @@ $_lang["yourinfo_role"] = 'نقش کاربری :';
 $_lang["yourinfo_title"] = 'اطلاعات شما';
 $_lang["yourinfo_total_logins"] = 'مجموع دفعات ورود شما :';
 $_lang["yourinfo_username"] = 'شناسه ای که با آن وارد شده اید :';
+
 $_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
 $_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
 $_lang["a17_error_reporting_opt0"] = 'Ignore all';
 $_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Detect all';
+
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1155,36 +1167,96 @@ $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+
 $_lang["files.dynamic.php1"] = 'create text file';
 $_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
 $_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
 $_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
+$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
+
+$_lang['email_method_title'] = 'Sendmail method';
+$_lang['email_method_mail'] = 'mail() PHP function';
+$_lang['email_method_smtp'] = 'SMTP Server';
+$_lang['smtp_auth_title'] = 'SMTP－AUTH';
+$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_username_title'] = 'SMTP user name';
+$_lang['smtp_password_title'] = 'SMTP password';
+$_lang['smtp_port_title'] = 'SMTP port';
+
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+
+$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
+$_lang['resource_opt_is_published'] = 'انتشار یابد؟';
+$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
+
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
 $_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
+
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
+$_lang["import_site.static.php5"] = 'Whole file content';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited Resources';
+$_lang["export_site.static.php3"] = 'All Resources';
+$_lang["export_site.static.php4"] = 'Search for';
+$_lang["export_site.static.php5"] = 'Replace with';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "Too many results returned from database!";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
+$_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";
+$_lang["login_processor_many_failed_logins"] = "Due to too many failed logins, you have been blocked!";
+$_lang["login_processor_blocked1"]           = "You are blocked and cannot log in!";
+$_lang["login_processor_blocked2"]           = "You are blocked and cannot log in! Please try again later.";
+$_lang["login_processor_bad_code"]           = "The security code you entered didn't validate! Please try to login again!";

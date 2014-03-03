@@ -1,16 +1,18 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author davaeron
- * @package MODX
- * @version 1.0.1
- * 
- * Filename:       /install/lang/russian-utf8.inc.php
- * Language:       Russian
- * Encoding:       UTF-8
- * Translated by:  Pertsev Dmitriy, Safronovich Victor, Russian MODX Community
- * Date:           15 october 2009
+ * @author Pertsev Dmitriy
+ * @author Safronovich Victor
+ * @author Russian MODX Community
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language Russian
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 $_lang["agree_to_terms"] = 'Согласиться с условиями лицензии и приступить к установке';
@@ -82,11 +84,14 @@ $_lang["database_use_failed"] = 'Невозможно выбрать базу д
 $_lang["database_use_failed_note"] = 'Проверьте, есть ли у вас необходимые права на доступ к базе данных.';
 $_lang["default_language"] = 'Язык по умолчанию менеджера';
 $_lang["default_language_description"] = 'Это язык, который будет по умолчанию использоваться менеджером в административной панели MODX.';
+$_lang["depedency_create"] = 'Зависимости созданы ';
+$_lang["depedency_update"] = 'Зависимости обновлены';
 $_lang["during_execution_of_sql"] = ' во время выполнения SQL запроса ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'ошибки';
 $_lang["errors"] = 'ошибок';
 $_lang["failed"] = 'ОШИБКА!';
+$_lang["guid_set"] = 'GUID ключ';
 $_lang["help"] = 'Помощь!';
 $_lang["help_link"] = 'http://forums.modx.com/board/230/russian';
 $_lang["help_title"] = 'Помощь в установке на форумах MODX';
@@ -111,7 +116,7 @@ $_lang["installing_demo_site"] = 'Установка примера веб-са�
 $_lang["language_code"] = 'ru';
 $_lang["loading"] = 'Загружается...';
 $_lang["modules"] = 'Модули';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
 $_lang["modx_footer2"] = 'MODX &mdash; свободное программное обеспечение. Мы поощряем вас быть творческими и использовать MODX как вы считаете целесообразным. Если вы внесете изменения и решите распространять ваш измененный вариант MODX, то должны сохранять и распространять исходный код бесплатно.';
 $_lang["modx_install"] = 'MODX &raquo; Установка';
 $_lang["modx_requires_php"] = ', а MODX необходим PHP 4.4.9 или более поздний';
@@ -139,7 +144,7 @@ $_lang["running_database_updates"] = 'Обновление базы данных
 $_lang["sample_web_site"] = 'Пример веб-сайта';
 $_lang["sample_web_site_note"] = 'Осторожно! Установка этого параметра <b>перепишет</b> существующие ресурсы и элементы.';
 $_lang["session_problem"] = 'Была обнаружена проблема в сессии сервера. Свяжитесь, пожалуйста, с администратором сервера для ее устранения.';
-$_lang["session_problem_try_again"] = 'Повторить?'; 
+$_lang["session_problem_try_again"] = 'Повторить?';
 $_lang["setup_cannot_continue"] = 'К сожалению, установка не может быть продолжена из-за ';
 $_lang["setup_couldnt_install"] = 'Программа установки MODX не смогла установить/изменить некоторые таблицы базы данных.';
 $_lang["setup_database"] = 'Программа установки сейчас попробует установить базу данных:<br />';
@@ -177,7 +182,7 @@ $_lang["table_prefix_not_exist_note"] = 'Продолжение установк
 $_lang["templates"] = 'Шаблоны';
 $_lang["to_log_into_content_manager"] = 'Чтобы войти в панель управления ([+MGR_DIR+]/index.php) нажмите на кнопку `Закрыть`.';
 $_lang["toggle"] = 'Переключить';
-$_lang["tvs"] = 'Параметры (TV)';
+$_lang['tvs'] = 'Параметры (TV)';
 $_lang["unable_install_chunk"] = 'Невозможно установить чанк. Файл';
 $_lang["unable_install_module"] = 'Невозможно установить модуль. Файл';
 $_lang["unable_install_plugin"] = 'Невозможно установить плагин. Файл';

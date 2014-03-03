@@ -1,9 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('export_static'))
-{
-	$e->setError(3);
-	$e->dumpError();
+if(!$modx->hasPermission('export_static')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // figure out the base of the server, so we know where to get the documents in order to export them
@@ -32,7 +30,7 @@ tpExport = new WebFXTabPane(document.getElementById("exportPane"));
 
 if(isset($_POST['export']))
 {
-	$rs = include_once($modx->config['base_path'] . 'manager/processors/export_site.processor.php');
+	$rs = include_once(MODX_MANAGER_PATH . 'processors/export_site.processor.php');
 	echo $rs;
 }
 else

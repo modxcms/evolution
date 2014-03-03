@@ -364,9 +364,19 @@ class gd {
             if (is_null($src_h)) $src_h = $src_height - $src_y;
             imagealphablending($this->image, false);
             imagesavealpha($this->image,true);
+			
+			
+			
+			
+			/*** gif transparent fix - 1.10.2013 ***/
+			
 			$transindex = imagecolortransparent($src);
-			if($transindex >= 0) {
+			$palletsize = imagecolorstotal($src);
+			if($transindex >= 0 && $transindex < $palletsize) {
 				$transcol = imagecolorsforindex($src, $transindex);
+				
+			/*** end gif transparent fix ***/
+			
 				$transindex = imagecolorallocatealpha($this->image, $transcol['red'], $transcol['green'], $transcol['blue'], 127);
 				imagefilledrectangle($this->image, 0, 0, $dst_w, $dst_h, $transindex);
 				imagecopyresampled($this->image, $src, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);

@@ -5,8 +5,8 @@
 * @package  AjaxSearchResults
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchResults class contains all functions and data used to manage Results
@@ -484,8 +484,8 @@ class AjaxSearchResults {
             $tvs = explode(',', $listTvs);
             $tblName = $modx->getFullTableName('site_tmplvars');
             foreach ($tvs as $tv) {
-                $tplRS = $modx->db->select('id', $tblName, 'name="' . $tv . '"');
-                if (!$modx->db->getRecordCount($tplRS)) {
+                $tplRS = $modx->db->select('count(id)', $tblName, "name='{$tv}'");
+                if (!$modx->db->getValue($tplRS)) {
                     $msgErr = "<br /><h3>AjaxSearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
                     return false;
                 }
@@ -859,7 +859,7 @@ class AjaxSearchResults {
         return $Ids;
     }
     /*
-    *  Filter the search results when the search terms are found inside HTML or MODx tags
+    *  Filter the search results when the search terms are found inside HTML or MODX tags
     */
     function _doFilterTags($results, $searchString, $advSearch) {
         $filteredResults = array();
@@ -974,7 +974,7 @@ class AjaxSearchResults {
         return $text;
     }
     /*
-    *  stripTags : Remove MODx sensitive tags
+    *  stripTags : Remove MODX sensitive tags
     */
     function stripTags($text) {
 

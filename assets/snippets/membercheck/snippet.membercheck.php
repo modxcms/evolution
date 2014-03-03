@@ -61,7 +61,7 @@ if (!isset ($chunk)) {
 }
 
 # turn comma-delimited list of groups into an array
-$groups = explode(',', $groups);
+$groups = array_filter(array_map('trim', explode(',', $groups)));
 
 if (!class_exists('MemberCheck')) {
 	class MemberCheck {
@@ -82,13 +82,9 @@ if (!class_exists('MemberCheck')) {
 			$this->debug = $debug;
 			if ($debug) {
 				$this->allGroups = array ();
-				$tableName = $modx->getFullTableName('webgroup_names');
-				$sql = "SELECT name FROM $tableName";
-				if ($rs = $modx->db->query($sql)) {
-					while ($row = $modx->db->getRow($rs)) {
-						array_push($this->allGroups, stripslashes($row['name']));
-					}
-				}
+				$rs = $modx->db->select('name', $modx->getFullTableName('webgroup_names'));
+					$this->allGroups = $modx->db->getColumn('name', $rs);
+					$this->allGroups = array_map('stripslashes', $this->allGroups);
 			}
 		}
 
@@ -101,9 +97,8 @@ if (!class_exists('MemberCheck')) {
 			global $modx;
 			$o = '';
 			if (is_array($groups)) {
-				for ($i = 0; $i < count($groups); $i++) {
-					$groups[$i] = trim($groups[$i]);
-					if ($this->debug) {
+				if ($this->debug) {
+					for ($i = 0; $i < count($groups); $i++) {
 						if (!$this->isValidGroup($groups[$i])) {
 							return "<p>The group <strong>" . $groups[$i] . "</strong> could not be found...</p>";
 						}

@@ -1,8 +1,8 @@
 <?php
 /*
-icelandic.inc.php - for AjaxSearch 1.8
+icelandic.inc.php - for AjaxSearch 1.10.0
 Created by: Bjarki (bb@bjarki.net)
-Created on: 01/03/10
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Ekkert fannst. Vinsamlegast einfaldið leitarskilyrði til að fá fleiri niðurstöður.';
@@ -27,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = 'Fannstu það sem þú varst að leita að? Skri
 $_lang['as_cmtSubmitText'] = 'Senda';
 $_lang['as_cmtResetText'] = 'Hreinsa';
 $_lang['as_cmtThksMessage'] = 'Takk fyrir skilaboðin !';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

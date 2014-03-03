@@ -6,10 +6,10 @@
  * @released    Jun 5, 2013
  * @CodeMirror  3.13
  *
- * @required    MODx 0.9.6.3+
+ * @required    MODX 0.9.6.3+
  *              CodeMirror  3.13 : pl
  *
- * @confirmed   MODx Evolution 1.10.0
+ * @confirmed   MODX Evolution 1.10.0
  *
  * @author      Mihanik71 
  *

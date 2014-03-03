@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AjaxSearch
  *
  * Ajax and non-Ajax search that supports results highlighting

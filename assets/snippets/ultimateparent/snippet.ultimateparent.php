@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 /*
  * @name UltimateParent
- * @version 2.0 beta (requires MODx 0.9.5+)
+ * @version 2.0 beta (requires MODX 0.9.5+)
  * @author Jason Coward <modx@opengeek.com>
  * 
  * @param &id The id of the document whose parent you want to find.
@@ -21,7 +21,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
  * 
  * This snippet travels up the document tree from a specified document and
  * returns the "ultimate" parent.  Version 2.0 was rewritten to use the new
- * getParentIds function features available only in MODx 0.9.5 or later.
+ * getParentIds function features available only in MODX 0.9.5 or later.
  * 
  * Based on the original UltimateParent 1.x snippet by Susan Ottwell
  * <sottwell@sottwell.com>.  The topLevel parameter was introduced by staed and

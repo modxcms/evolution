@@ -1,20 +1,18 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
- * @author davaeron
- * @package MODX
- * @version 1.0
+ * @author Pontus Ågren (Pont)
+ * @author Thomas Djärv (Beryl)
+ * @version 1.0.13
+ * @date 2014/02/24
  *
- * Filename:       /install/lang/svenska/svenska.inc.php
- * Language:       Svenska
- * Encoding:       utf-8
- * Revision:       6624
+ * @language Svenska
+ * @package modx
+ * @subpackage installer
  *
- * Translation: Pontus Ågren (Pont) & Thomas Djärv (Beryl)
- * Date: 2010-03-29
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
-
 $_lang["agree_to_terms"] = 'Godkänn licensvillkoren och installera';
 $_lang["alert_database_test_connection"] = 'Du behöver skapa din databas eller testa det databasval du gjort!';
 $_lang["alert_database_test_connection_failed"] = 'Testet av ditt databasval har misslyckats!';
@@ -50,7 +48,7 @@ $_lang["checking_mysql_strict_mode"] = 'Kontrollerar MySQL för strikt sql_mode:
 $_lang["checking_mysql_version"] = 'Kontrollerar MySQL-versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerar PHP-version: ';
 $_lang["checking_registerglobals"] = 'Kontrollerar att Register_Globals är inaktiverad: ';
-$_lang["checking_registerglobals_note"] = 'Denna konfiguration gör din webbplats betydligt mer sårbar för attacker med webbkodsinjektion (Cross Site Scripting - XSS). Du bör kontakta din webbhost om att inaktivera denna inställning. Vanligen går det till på ett av följande tre sätt: modifiering av den globala php.ini-filen, tillägg av regler i en .htaccess-fil i roten på din MODX-installation eller genom att lägga till en anpassad php.ini-fil (som åsidosätter den globala filen) i alla kataloger i din installation (och det finns massor av dom). Du kan fortfarande installera MODX, men ta den här varningen på allvar.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Denna konfiguration gör din webbplats betydligt mer sårbar för attacker med webbkodsinjektion (Cross Site Scripting - XSS). Du bör kontakta din webbhost om att inaktivera denna inställning. Vanligen går det till på ett av följande tre sätt: modifiering av den globala php.ini-filen, tillägg av regler i en .htaccess-fil i roten på din MODX-installation eller genom att lägga till en anpassad php.ini-fil (som åsidosätter den globala filen) i alla kataloger i din installation (och det finns massor av dom). Du kan fortfarande installera MODX, men ta den här varningen på allvar.';
 $_lang["checking_sessions"] = 'Kontrollerar att sessioner är korrekt konfigurerade: ';
 $_lang["checking_table_prefix"] = 'Kontrollerar tabellprefixet `';
 $_lang["chunks"] = 'Chunks';
@@ -84,11 +82,14 @@ $_lang["database_use_failed"] = 'Databasen kunde inte väljas!';
 $_lang["database_use_failed_note"] = 'Kontrollera databasens åtkomsträttigheter för den angivna användaren och försök igen.';
 $_lang["default_language"] = 'Standardspråk i hanteraren';
 $_lang["default_language_description"] = 'Det här är det standardspråk som kommer att användas i MODX hanterare.';
+$_lang["depedency_create"] = 'Beroende skapat';
+$_lang["depedency_update"] = 'Beroende uppdaterat';
 $_lang["during_execution_of_sql"] = ' under körningen av SQL-frågan ';
-$_lang["encoding"] = 'utf-8';   //charset encoding for html header
+$_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'fel';
 $_lang["errors"] = 'fel';
 $_lang["failed"] = 'MISSLYCKADES!';
+$_lang["guid_set"] = 'GUID angivet';
 $_lang["help"] = 'Hjälp!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Installationshjälp i MODX forum';
@@ -110,10 +111,10 @@ $_lang["installation_upgrade_existing"] = 'Uppgradera befintlig installation';
 $_lang["installation_upgrade_existing_note"] = 'Uppgradera dina nuvarande filer och databas.';
 $_lang["installed"] = 'Installerad';
 $_lang["installing_demo_site"] = 'Installerar demo-webbplats: ';
-$_lang["language_code"] = 'sv'; // for html element e.g. <html xml:lang="sv" lang="sv">
+$_lang["language_code"] = 'sv';
 $_lang["loading"] = 'Laddar...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med ensamrätt. MODX är licensierad under GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med ensamrätt. MODX är licensierad under GNU GPL.';
 $_lang["modx_footer2"] = 'MODX är fri programvara. Vi uppmuntrar dig att vara kreativ och använda MODX på vilket sätt du vill. Vara bara noga med att bevara källkoden fri om du gör ändringar och sedan väljer att omdistribuera din modifierade version av MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', och MODX kräver PHP 4.2.0 eller senare.';
@@ -141,7 +142,7 @@ $_lang["running_database_updates"] = 'Kör uppdateringar för databasen: ';
 $_lang["sample_web_site"] = 'Demo-webbplats';
 $_lang["sample_web_site_note"] = 'Observera att detta kommer att <b>skriva över</b> existerande dokument och resurser.';
 $_lang["session_problem"] = 'Ett problem med dina serversessioner upptäcktes. Kontakta din serveradministratör för att rätta till problemet.';
-$_lang["session_problem_try_again"] = 'Försök igen?'; 
+$_lang["session_problem_try_again"] = 'Försök igen?';
 $_lang["setup_cannot_continue"] = 'Installationsprogrammet kan tyvärr inte fortsätta på grund av ovanstående ';
 $_lang["setup_couldnt_install"] = 'MODX installationsprogram kunde inte lägga till/ändra några tabeller i den valda databasen.';
 $_lang["setup_database"] = 'Installationsprogrammet kommer nu att försöka konfigurera databasen:<br />';

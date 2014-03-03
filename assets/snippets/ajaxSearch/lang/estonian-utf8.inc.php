@@ -1,8 +1,8 @@
 <?php
 /*
-estonian.inc.php - for AjaxSearch 1.8
+estonian.inc.php - for AjaxSearch 1.10.0
 Created by: e-Stonia (http://e-stonia.co.uk)
-Created on: 23/05/10
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'Otsingutulemused puuduvad. Palun proovi üldisemaid otsisõnu.';

@@ -1,12 +1,10 @@
 <?php
-
 /*
-english.inc.php - for AjaxSearch 1.8
+chinese_traditional-utf8.inc.php - for AjaxSearch 1.10.0
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
-
 $_lang['as_resultsIntroFailure'] = '沒有搜索到相關的內容，請嘗試輸另外的關鍵詞';
 $_lang['as_searchButtonText'] = '搜索';
 $_lang['as_boxText'] = '輸入搜索關鍵詞...';
@@ -29,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = '你的搜索目標查找到了嗎?在這裡留�
 $_lang['as_cmtSubmitText'] = '發送';
 $_lang['as_cmtResetText'] = '清除';
 $_lang['as_cmtThksMessage'] = '謝謝你的意見！';
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>

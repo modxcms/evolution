@@ -1,14 +1,16 @@
 <?php
 /**
- * MODX language File
+ * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
- * @package MODX
- * @version 1.0.4J-r1
- * 
- * Filename:       /install/lang/japanese-utf8/japanese-utf8.inc.php
- * Language:       Japanese
- * Encoding:       utf-8
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language Japanese
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'ライセンスが規定する諸条件を確認しインストールを実行してください';
 $_lang["alert_database_test_connection"] = 'データベースを作成、またはデータベースの接続テストを行う必要があります';
@@ -24,24 +26,24 @@ $_lang["alert_server_test_connection_failed"] = 'サーバー接続テストが�
 $_lang["alert_table_prefixes"] = 'テーブルのプレフィックスはアルファベットのみ使えます。';
 $_lang["all"] = '全て選択';
 $_lang["and_try_again"] = 'これらのエラーを修正し、右下の「再チェック」ボタンをクリックしてください。';
-$_lang["and_try_again_plural"] = 'これらのエラーを修正し、右下の「再チェック」ボタンをクリックしてください。'; //Plural form
+$_lang["and_try_again_plural"] = 'これらのエラーを修正し、右下の「再チェック」ボタンをクリックしてください。';
 $_lang["begin"] = '開始';
 $_lang["btnback_value"] = '戻る';
 $_lang["btnclose_value"] = 'インストール終了';
 $_lang["btnnext_value"] = '進む';
 $_lang["cant_write_config_file"] = '設定ファイルを生成できませんでした。以下をコピーしてconfig.inc.phpに反映してください ';
-$_lang["cant_write_config_file_note"] = '実行後は、サイト名/[+MGR_DIR+]/ にアクセスすることで管理画面にログインできます。';
+$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = '拡張機能の選択:';
 $_lang["checking_if_cache_exist"] = '<span class="mono">/assets/cache</span>ディレクトリの存在チェック(なければ転送に失敗しています): ';
 $_lang["checking_if_cache_file_writable"] = 'ファイル<span class="mono">/assets/cache/siteCache.idx.php</span>の書き込み属性(606などに設定): ';
 $_lang["checking_if_cache_file2_writable"] = 'ファイル<span class="mono">/assets/cache/sitePublishing.idx.php</span>の書き込み属性(606などに設定): ';
 $_lang["checking_if_cache_writable"] = '<span class="mono">/assets/cache</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_if_config_exist_and_writable"] = 'ファイル<span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span>の存在と書き込み属性: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> exists and is writable: ';
 $_lang["checking_if_export_exists"] = '<span class="mono">/assets/export</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_export_writable"] = '<span class="mono">/assets/export</span>ディレクトリの書き込み属性(707などに設定): ';
 $_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_images_writable"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict mode: ';
+$_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'MySQLのバージョン: ';
 $_lang["checking_php_version"] = 'PHPのバージョンチェック: ';
 $_lang["checking_registerglobals"] = 'Register_Globalsの設定: ';
@@ -49,7 +51,7 @@ $_lang["checking_registerglobals_note"] = 'Register_Globalsがオンになって
 $_lang["checking_sessions"] = 'セッション情報が正常に構成されるかどうか: ';
 $_lang["checking_table_prefix"] = 'Tableプリフィックスの設定 `';
 $_lang["chunks"] = 'チャンク';
-$_lang["config_permissions_note"] = '<span class="mono">config.inc.php</span>という名前の空ファイルを作って<span class="mono">/[+MGR_DIR+]/includes/</span>ディレクトリに転送するか、すでに転送済みのconfig.inc.php.blankをリネームするなどし、パーミッションを606などに設定してください。';
+$_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = '照合順序(エンコード指定含む):<br />※utf8_general_ciを<br />おすすめします';
 $_lang["connection_screen_connection_method"] = '接続時の文字セットの扱い:';
 $_lang["connection_screen_database_connection_information"] = 'データベース設定';
@@ -79,11 +81,14 @@ $_lang["database_use_failed"] = 'データベースを選択できません。�
 $_lang["database_use_failed_note"] = 'データベースのユーザー権限を確認してください。';
 $_lang["default_language"] = '管理画面で使用する言語';
 $_lang["default_language_description"] = '管理画面で使用する言語を選択してください。(※Japanese-eucを選択するとプリインストールされるサンプルコンテンツやアドオンの説明文は文字化けしますのでご注意ください。アドオンの機能は利用できます。)';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'エラー';
-$_lang["errors"] = 'エラー'; //Plural form
+$_lang["errors"] = 'エラー';
 $_lang["failed"] = '確認してください';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://modxcms-jp.com/howto/rserver.html';
 $_lang["help_title"] = 'インストールで困ったらココをチェック(MODXフォーラム)';
@@ -91,7 +96,7 @@ $_lang["iagree_box"] = '<b><a href="../assets/docs/license.txt" target="_blank">
 $_lang["install"] = 'インストール';
 $_lang["install_overwrite"] = 'インストール - ';
 $_lang["install_results"] = 'インストールを実行しました。';
-$_lang["install_update"] = '';
+$_lang["install_update"] = 'インストール／アップデート';
 $_lang["installation_error_occured"] = '<span style="font-weight:bold;color:red;">インストール中に以下のエラーが発生しました。</span>';
 $_lang["installation_install_new_copy"] = '新規インストール - ';
 $_lang["installation_install_new_note"] = 'すでにMODXをインストールしている場合はデータを上書きします。<br />※Tableプリフィクスが異なる場合を除く';
@@ -102,13 +107,13 @@ $_lang["installation_successful"] = '<span style="color:#080;font-size:22px;">�
 $_lang["installation_upgrade_advanced"] = 'カスタムアップデート<br /><small>(データベース設定をアップデートできます)</small>';
 $_lang["installation_upgrade_advanced_note"] = 'データベース設定の変更を伴うアップデート(MySQL4→MySQL5など)が必要な場合はこちらを選んでください。config.inc.phpのデータベース接続情報一式を更新します。<br />';
 $_lang["installation_upgrade_existing"] = '通常アップデート';
-$_lang["installation_upgrade_existing_note"] = '通常のアップデートはこのオプションを。コアファイル・リソースファイルの両方とデータベースをアップデートします。<br /><b style="color:red;">【注意】</b>データベースのバックアップはお済みですか？まだの場合は今からでも<a href="../[+MGR_DIR+]/">バックアップマネージャー</a>でどうぞ。';
+$_lang["installation_upgrade_existing_note"] = 'ファイルとデータベースをアップデートします。';
 $_lang["installed"] = 'インストールしました';
 $_lang["installing_demo_site"] = 'サンプルサイトのインストール: ';
 $_lang["language_code"] = 'ja';
 $_lang["loading"] = '処理中...';
 $_lang["modules"] = 'モジュール';
-$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
 $_lang["modx_install"] = 'MODX &raquo; インストール';
 $_lang["modx_requires_php"] = ', PHP5.0.0以上を推奨します(4.3.8以上であれば動作しますがセキュリティ面に問題があります)';
@@ -123,7 +128,7 @@ $_lang["optional_items"] = 'インストールオプションの選択';
 $_lang["optional_items_note"] = 'オプションを選択してください:<br /><br />初めてMODXを試す人は、全てチェックを入れましょう。<br />※日本チームより：「サンプルサイト」は内容が古く、検証も不十分です。興味がある場合のみ、参考程度にお試しください。';
 $_lang["php_security_notice"] = '<legend>セキュリティ警告</legend><p>このサーバ上で稼働しているPHPには重大な問題があります。MODXの稼働自体には問題はありませんが、このバージョンのPHPには報告されている脆弱性がいくつか存在し、MODXに限らずさまざまなPHPアプリを通じて多数の攻撃にさらされてきました。バージョン4.3.8より古いPHPは深刻な脆弱性を抱えています。この機会にPHPのアップデートをおすすめします。</p>';
 $_lang["please_correct_error"] = 'があります。';
-$_lang["please_correct_errors"] = 'があります。'; //Plural form
+$_lang["please_correct_errors"] = 'があります。';
 $_lang["plugins"] = 'プラグイン';
 $_lang["preinstall_validation"] = 'インストール前の状態確認';
 $_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
@@ -136,7 +141,7 @@ $_lang["running_database_updates"] = '実行中のデータベースのアップ
 $_lang["sample_web_site"] = 'サンプルサイト';
 $_lang["sample_web_site_note"] = '<span style="font-style:normal;">※このサンプルサイトは内容が古く検証も不十分なので、現状ではMODXの仕組みの理解にはあまり役立ちません。テスト目的のダミーコンテンツなどとして、必要に応じてお試しください。</span>';
 $_lang["session_problem"] = 'サーバー接続に問題が発生しました。問題修正のために、サーバー管理者へ相談してください。';
-$_lang["session_problem_try_again"] = '再試行しますか？'; 
+$_lang["session_problem_try_again"] = '再試行しますか？';
 $_lang["setup_cannot_continue"] = '上記理由のため、セットアップを継続できません。';
 $_lang["setup_couldnt_install"] = '選択されたテーブルをインストール/変更できませんでした。';
 $_lang["setup_database"] = 'セットアップ結果<br />';
@@ -172,7 +177,7 @@ $_lang["table_prefix_already_inuse_note"] = '異なるテーブルプリフィ�
 $_lang["table_prefix_not_exist"] = ' - 指定されたテーブルプレフィックスがデータベース内に存在していなかったため、インストールが完了しませんでした。正しいテーブルプリフィックスを指定し、再度実行してください。';
 $_lang["table_prefix_not_exist_note"] = 'Setup couldn\'t install into the selected database, as it does not contain existing tables with the prefix you specified to be upgraded. Please choose an existing table prefix, and run Setup again.';
 $_lang["templates"] = 'テンプレート';
-$_lang["to_log_into_content_manager"] = 'おつかれさまでした。「インストール終了」ボタンをクリックすると、管理画面のログインページ([+MGR_DIR+]/index.php)にアクセスします。';
+$_lang["to_log_into_content_manager"] = 'To log into the Content Manager ([+MGR_DIR+]/index.php) you can click on the `Close` button.';
 $_lang["toggle"] = '選択状態を反転';
 $_lang['tvs'] = 'テンプレート変数';
 $_lang["unable_install_chunk"] = 'チャンクをインストールできません';
@@ -183,9 +188,9 @@ $_lang["unable_install_template"] = 'テンプレートをインストールで�
 $_lang["upgrade_note"] = '<strong>注意:</strong>管理画面に無事にログインできたら、リソース(旧称・ドキュメント)および各種設定を日本語を含めて編集・保存し、文字化けが起きないかどうかを必ず確認してください。また管理画面内の「イベントログ」を開き、エラーの有無をご確認ください。';
 $_lang["upgraded"] = 'アップデートしました';
 $_lang["validate_referer_title"] = 'Validate HTTP_REFERER headers?';
-$_lang["visit_forum"] = '';
+$_lang["visit_forum"] = ' <a href="http://forum.modx.jp/" target="_blank">MODX フォーラム</a>';
 $_lang["warning"] = '注意 ';
-$_lang["welcome_message_start"] = '';
+$_lang["welcome_message_start"] = 'インストールの種別を選択してください。';
 $_lang["welcome_message_text"] = '心踊る、未知の領域へようこそ。ガイドに従ってインストールを進めましょう。MODXのインストールは簡単。インストーラの説明に従って、次へ次へと進めてください。<br /><br />このインストーラの手順に従うことにより、他のCMSとのデータベースの共有設定(Tableプリフィクス)や、サンプルコンテンツ及び、推奨される拡張機能のインストールを個別に選択できます。何も選択せずシンプルにコアのみをインストールすることもできます。また、すでに運用中のMODXをアップデートしたり、データベースの設定を変更することもできます。';
 $_lang["welcome_message_welcome"] = 'MODXのインストールを開始します。';
 $_lang["writing_config_file"] = 'config.inc.phpへの書き込み(設定情報): ';

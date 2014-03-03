@@ -1,17 +1,21 @@
 <?php
 /**
- * Filename:       includes/lang/japanese-utf8.inc.php
- * Function:       Japanese language file.
- * Encoding:       UTF8
- * Author:         eastbind
- * Author:         MEGU              - http://modx.liolion.net/
- * Author:         yamamoto          - http://kyms.jp
- * Date:           2013/04/06
- * Version:        1.0.10
- * MODX version:   Evolution 1.0.0 - 1.0.10
-*/
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 2014/02/24
+ * @author eastbind
+ * @author MEGU
+ * @author yamamoto
+ *
+ * @language Japanese
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
-$modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
+$modx_lang_attribute = 'ja'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = '<p>MODX(モドエックスまたはモッドエックス)は <a href="http://ja.wikipedia.org/wiki/MODX" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。GPL に基づいて使用が許諾されます。</p>';
@@ -180,7 +184,7 @@ $_lang["create_resource_title"] = 'リソースを投稿';
 $_lang["create_weblink_here"] = 'ウェブリンクを作成';
 $_lang["createdon"] = '作成日時';
 $_lang["credits"] = '著作権表示/謝辞';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://www.modx.com/company/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'リソースが使用するコンテントタイプに独自のタイプを追加できます。新しいタイプを追加するにはテキストボックスに入力して「追加」ボタンをクリックします。';
 $_lang["custom_contenttype_title"] = 'カスタムコンテントタイプ';
 $_lang["database_charset"] = 'データベース文字コード';
@@ -280,7 +284,7 @@ $_lang["existing_category"] = '既存のカテゴリー';
 $_lang["expand_tree"] = 'リソースツリーを展開';
 $_lang["export_site"] = 'エクスポート';
 $_lang["export_site_cacheable"] = '非キャッシュリソースを含む';
-$_lang["export_site_exporting_document"] = 'エクスポートファイル <strong>%s</strong>個 (<strong>%s</strong>個中)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'スキップ';
 $_lang["export_site_failed_no_open"] = 'ファイルを開けません:';
 $_lang["export_site_failed_no_retrieve"] = '非公開リソースのためエクスポートしません。';
@@ -370,7 +374,7 @@ $_lang["go"] = '実行';
 $_lang["group_access_permissions"] = 'ユーザーグループのアクセス';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'ヘルプ';
-$_lang["help_msg"] = '<p><a href="http://forum.modx.jp/" target="_blank">MODX日本公式フォーラム</a>でサポートを得ることができます。 また、逐次執筆が進められている<a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">MODXドキュメントとガイド（英語）</a>があり、MODX のほぼすべてに関して記されています。</p>';
+$_lang["help_msg"] = '<p><a href="http://forum.modx.jp/" target="_blank">MODX日本公式フォーラム</a>でサポートを得ることができます。 また、逐次執筆が進められている<a href="http://rtfm.modx.com/evolution/1.0" target="_blank">MODXドキュメントとガイド（英語）</a>があり、MODX のほぼすべてに関して記されています。</p>';
 $_lang["help_title"] = 'サポート';
 $_lang["hide_tree"] = 'リソースツリーを非表示';
 $_lang["home"] = 'ダッシュボード';
@@ -418,7 +422,7 @@ $_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this set
 $_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
 $_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
 $_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
-$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["thumbsDir_message"] = 'The name of thumbnail directory.';
 $_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
 $_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'キーワード';
@@ -573,12 +577,13 @@ $_lang["new_keyword"] = 'キーワードを追加';
 $_lang["new_module"] = 'モジュールを作成';
 $_lang["new_parent"] = '移動先の親リソース';
 $_lang["new_plugin"] = 'プラグインを作成';
-$_lang["new_role"] = 'ロールを作成';
+$_lang["new_role"] = '新規ロール';
 $_lang["new_snippet"] = 'スニペットを作成';
 $_lang["new_template"] = 'テンプレートを作成';
 $_lang["new_tmplvars"] = 'テンプレート変数を作成';
 $_lang["new_user"] = 'ユーザーを作成';
 $_lang["new_web_user"] = 'ウェブユーザーを作成';
+$_lang["new_resource"] = '新規リソース';
 $_lang["no"] = 'いいえ';
 $_lang["no_active_users_found"] = '管理画面にログインしているメンバーはいません。';
 $_lang["no_activity_message"] = 'まだリソースを作成または編集していません。';
@@ -587,7 +592,7 @@ $_lang["no_docs_pending_publishing"] = '公開を予定しているリソース�
 $_lang["no_docs_pending_pubunpub"] = 'イベントはありません';
 $_lang["no_docs_pending_unpublishing"] = '公開取り消しを予定しているリソースはありません。';
 $_lang["no_edits_creates"] = '最近作成または編集したリソースはありません。';
-$_lang["no_groups_found"] = '';
+$_lang["no_groups_found"] = 'グループが存在しません。';
 $_lang["no_keywords_found"] = 'キーワードはありません';
 $_lang["no_records_found"] = 'レコードはありません。';
 $_lang["no_results"] = '何もありません';
@@ -859,13 +864,13 @@ $_lang["saving"] = '更新中です。お待ちください';
 $_lang["search"] = '検索';
 $_lang["search_criteria"] = '検索 条件';
 $_lang["search_criteria_content"] = '本文で検索';
-$_lang["search_criteria_content_msg"] = '';
+$_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'IDで検索';
-$_lang["search_criteria_id_msg"] = '';
+$_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
 $_lang["search_criteria_longtitle"] = 'タイトルで検索';
-$_lang["search_criteria_longtitle_msg"] = '';
+$_lang["search_criteria_longtitle_msg"] = 'Find all Resources with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'リソース名で検索';
-$_lang["search_criteria_title_msg"] = '';
+$_lang["search_criteria_title_msg"] = 'Find all Resources with the entered text in their title.';
 $_lang["search_empty"] = '指定したデータが見つかりませんでした。検索範囲を広げて再度検索してください。';
 $_lang["search_item_deleted"] = 'このアイテムは削除されています';
 $_lang["search_results"] = '検索結果';
@@ -1101,6 +1106,8 @@ $_lang["user_use_config"] = 'グローバル設定を使用';
 $_lang["user_zip"] = '郵便番号';
 $_lang["username"] = 'ログイン名';
 $_lang["users"] = '権限管理';
+$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
+$_lang["valid_hostnames_title"] = 'Valid hostnames';
 $_lang["validate_referer_message"] = 'リファラチェック(参照元チェック)を行い、<a href="http://www.google.com/search?hl=ja&q=csrf" target="_blank">(CSRF=Cross Site Request Forgery)</a>をある程度回避できます。万全ではありませんので、管理画面にログイン中は不用意に外部サイトを閲覧しない・こまめにログアウトするなどを習慣づけてください。';
 $_lang["validate_referer_title"] = '管理画面操作のリファラチェック';
 $_lang["value"] = '値';
@@ -1142,16 +1149,20 @@ $_lang["yourinfo_role"] = '所属ロール(役割)';
 $_lang["yourinfo_title"] = 'あなたの情報';
 $_lang["yourinfo_total_logins"] = '合計ログイン回数';
 $_lang["yourinfo_username"] = 'ログイン名';
+
 $_lang["a17_error_reporting_title"] = 'PHPエラーの検出レベル';
 $_lang["a17_error_reporting_msg"] = 'PHPエラーの検出レベルを設定します。';
 $_lang["a17_error_reporting_opt0"] = '全て無視する';
 $_lang["a17_error_reporting_opt1"] = '通知レベルの軽度の警告を無視する(<a href="https://www.google.com/search?hl=ja&q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'E_NOTICE 以外の全てのエラーを検出';
 $_lang["a17_error_reporting_opt99"] = '全て検出する';
+
 $_lang["pwd_hash_algo_title"] = 'ハッシュ生成アルゴリズム';
 $_lang["pwd_hash_algo_message"] = 'パスワード文字列はここで設定したアルゴリズムによって解読困難な文字列に変換され、DBに保存されます。これにより、悪意の第三者がDBデータからパスワードを取得することを防ぐことができます。上から順にセキュアなアルゴリズムです。UNCRYPT以外はサーバによっては利用できないことがあるため、サーバ移管の際は注意してください。';
+
 $_lang["enable_bindings_title"] = '@Bindingsを有効にする';
 $_lang["enable_bindings_message"] = '<a href="http://www.google.com/cse?cx=007286147079563201032%3Aigbcdgg0jyo&q=Bindings" target="_blank">@Bindings機能</a>を有効にします。この機能は、投稿画面上の入力フィールド(テンプレート変数)に任意のコマンドを記述し、実行するものです。PHP文の実行などが可能なため、複数メンバーでサイトを運用する場合、当機能の運用には注意が必要です。';
+
 $_lang["bkmgr_alert_mkdir"] = 'ディレクトリにファイルを作成できません。[+snapshot_path+]のパーミッションを確認してください。';
 $_lang["bkmgr_restore_msg"] = '<p>「バックアップ」で取得したSQLファイルを用いて、サイトをリストアできます。<br />※SQL文を実行するだけなので、他の用途にも使えます(拡張機能のインストールなど)。</p>';
 $_lang["bkmgr_restore_title"] = 'リストア';
@@ -1167,40 +1178,96 @@ $_lang["bkmgr_snapshot_submit"] = 'スナップショットを追加する';
 $_lang["bkmgr_snapshot_list_title"] = 'スナップショットの一覧';
 $_lang["bkmgr_restore_submit"] = 'このデータに戻す';
 $_lang["bkmgr_snapshot_nothing"] = 'スナップショットはありません。';
+
 $_lang["files.dynamic.php1"] = 'テキストファイルを新規作成';
 $_lang["files.dynamic.php2"] = 'このディレクトリは参照できません';
 $_lang["files.dynamic.php3"] = 'ファイル名が不正です。';
 $_lang["files.dynamic.php4"] = 'テキストファイルを作成しました。';
+$_lang["files_dynamic_new_folder_name"] = 'ディレクトリ名';
+$_lang["files_dynamic_new_file_name"] = 'ファイル名';
 $_lang["not_readable_dir"] = 'ディレクトリが存在しないか、PHPスクリプトがこのディレクトリにアクセスする権限がありません。';
 $_lang["confirm_delete_dir"] = 'このディレクトリを削除してもよろしいですか?';
 $_lang["confirm_delete_dir_recursive"] = 'ディレクトリ内にファイルが存在します。\nこのディレクトリを削除してもよろしいですか?';
-$_lang["make_folders_title"] = 'Make end slash URL at the container';
-$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+
+$_lang["make_folders_title"] = 'End Container URL with Slash';
+$_lang["make_folders_message"] = 'Append trailing slash to Resources that are set as containers when using Friendly URLs.';
+
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have configured MODX to check important system files for possible website script attacks. This does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes  were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message.';
+
+$_lang['email_method_title'] = 'Sendmail method';
+$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_smtp'] = 'SMTP サーバ';
+$_lang['smtp_auth_title'] = 'SMTP-AUTH';
+$_lang['smtp_host_title'] = 'SMTP ホスト';
+$_lang['smtp_username_title'] = 'SMTP ユーザ名';
+$_lang['smtp_password_title'] = 'SMTP パスワード';
+$_lang['smtp_port_title'] = 'SMTP ポート';
+
 $_lang["setting_resource_tree_node_name"] = 'リソースツリーのノード名';
-$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["setting_resource_tree_node_name_desc"] = 'Select the Resource field to show as the Resource name in the Resource Tree. The default setting is pagetitle.';
+
+$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
+$_lang['resource_opt_is_published'] = 'Published';
+$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
+
 $_lang["cache_type_title"] = 'Document caching type';
-$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
-$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+$_lang["cache_type_1"] = 'Cache is based only on Resource ID (standard)';
+$_lang["cache_type_2"] = 'Cache is based on Resource ID and $_GET parameters';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
-$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content (if needed)';
+
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file in the MODX installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since MODX was installed in a subdirectory, it is necessary to change the content of .htaccess.';
+
 $_lang["user_street"] = '番地';
 $_lang["user_city"] = '市区町村';
 $_lang["user_other"] = 'その他';
 
-$_lang["mutate_settings.dynamic.php6"] = 'システムエラーを<br />メールで通知する';
-$_lang["mutate_settings.dynamic.php7"] = '通知しない';
-$_lang["mutate_settings.dynamic.php8"] = 'エラー発生時に[(emailsender)]([+emailsender+])に通知します。エラーの内容の詳細は<a href="index.php?a=114">イベントログ</a>を確認してください。';
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
+$_lang["import_site.static.php5"] = 'Whole file content';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited Resources';
+$_lang["export_site.static.php3"] = 'All Resources';
+$_lang["export_site.static.php4"] = 'Search for';
+$_lang["export_site.static.php5"] = 'Replace with';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "この操作を行なう権限がありません。";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "データベースからの返り値が多過ぎます。内部処理に問題があります。";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "自分自身を親として指定することはできません。";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "ログイン名またはパスワードが間違っています。";
+$_lang["login_processor_wrong_password"]     = "ログイン名またはパスワードが間違っています。";
+$_lang["login_processor_many_failed_logins"] = "ログインを数回失敗したため、一時的にアクセスが制限されています。";
+$_lang["login_processor_blocked1"]           = "ログインをブロックされています。";
+$_lang["login_processor_blocked2"]           = "ログインをブロックされています。しばらくたってから再び試してください。";
+$_lang["login_processor_bad_code"]           = "入力されたセキュリティコードが間違っています。";

@@ -225,7 +225,6 @@ if ($sortDir == '') $sortDir = ($sortBy == 'date')? 'DESC' : 'ASC' ;
 
 
 // Make useful variable shortcut for the content table
-//$tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
 $tblsc = $modx->getFullTableName("site_content");
 $tbldg = $modx->getFullTableName("document_groups");
 
@@ -275,25 +274,14 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
     foreach($tempLevelArray AS $p){
 
       // Get children who are parents (isfolder = 1)
-      $validParentSql = "";
-      $validParentSql .= "SELECT id FROM $tblsc sc WHERE ";
-      $validParentSql .= "isfolder = 1 AND parent = $p ";
-      $validParentSql .= "AND sc.deleted=0 ";
-      $validParentSql .= ($seeThruUnpub)? ";" : "AND sc.published = 1;";
-
-      // Run statement
-      $rsTempParents = $modx->db->query($validParentSql);
-      // Get number of results
-      $countTempParents = $modx->db->getRecordCount($rsTempParents);
+      $rsTempParents = $modx->db->select(
+	    'id',
+		$tblsc . ' sc',
+		"isfolder=1 AND parent='{$p}' AND sc.deleted=0 " . ($seeThruUnpub ? '' : "AND sc.published=1")
+	    );
 
       // If there are results, put them in an array
-      $tempValidArray = false;
-      if ($countTempParents){
-        for ($i=0;$i<$countTempParents;$i++){
-          $tempId = $modx->db->getRow($rsTempParents);
-          $tempValidArray[] = $tempId['id'];
-        } // end while
-      } // end if
+        $tempValidArray = $modx->db->getColumn('id', $rsTempParents);
 
     // populate next level of array 
     if ($tempValidArray){
@@ -336,41 +324,41 @@ $access = " (".($modx->isFrontend() ? "sc.privateweb=0":"1='".$_SESSION['mgrRole
           (!$docgrp ? "":" OR dg.document_group IN ($docgrp)").") AND ";
 
 // Initialize
-$recentSql = "";
-$recentSql .= "SELECT sc.id, pagetitle, description";
+$recent_select = "sc.id, pagetitle, description";
 // Include pub_date or createdon date if date is desired
-$recentSql .= ($showCreationDate)? ", IF(pub_date > 0, pub_date, createdon) AS pubDate ": " " ;
-$recentSql .= "FROM $tblsc sc LEFT JOIN $tbldg dg on dg.document = sc.id ";
-$recentSql .= "WHERE ";
-$recentSql .= ($hidePrivate)? $access:"";
+$recent_select .= ($showCreationDate)? ", IF(pub_date > 0, pub_date, createdon) AS pubDate ": " " ;
+
+$recent_from = "$tblsc sc LEFT JOIN $tbldg dg on dg.document = sc.id";
+
+$recent_where = ($hidePrivate)? $access:"";
 // Look everywhere, or just under valid parents
-$recentSql .= (($rootFolder == 0) && $seeThruUnpub && ($descendentDepth == 0))? "" : "parent IN ($validParents) AND " ;
+$recent_where .= (($rootFolder == 0) && $seeThruUnpub && ($descendentDepth == 0))? "" : "parent IN ($validParents) AND " ;
 // Published
-$recentSql .= "sc.published = 1 ";
+$recent_where .= "sc.published = 1 ";
 // Show In Menu
-$recentSql .= ($seeShowInMenu)? " " : " AND sc.hidemenu=0 " ;
+$recent_where .= ($seeShowInMenu)? " " : " AND sc.hidemenu=0 " ;
 // Not deleted
-$recentSql .= "AND sc.deleted=0 ";
+$recent_where .= "AND sc.deleted=0 ";
 // Choose sort method
 switch ($sortBy){
   case 'alpha':
-    $recentSql .= "ORDER BY pagetitle ";
+    $recent_orderby = 'pagetitle ';
     break;
   case 'menuindex':
-    $recentSql .= "ORDER BY menuindex ";
+    $recent_orderby = 'menuindex ';
     break;
   default:
-    $recentSql .= "ORDER BY IF(pub_date>0, pub_date, createdon) ";
+    $recent_orderby = 'IF(pub_date>0, pub_date, createdon) ';
     break;
 }
 // Provide a sort direction
-$recentSql .= $sortDir;
+$recent_orderby .= $sortDir;
 
 // If this is a short list, just pull a limited number
-$recentSql .= ($mode == 'short')? " LIMIT $shortQty;" : ";" ;
+$recent_limit .= ($mode == 'short')? $shortQty : '' ;
 
 // Run statement
-$rsRecent = $modx->db->query($recentSql);
+$rsRecent = $modx->db->select($recent_select, $recent_from, $recent_where, $recent_orderby, $recent_limit);
 // Count records
 $recentLimit = $modx->db->getRecordCount($rsRecent);
 

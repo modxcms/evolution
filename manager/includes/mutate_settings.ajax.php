@@ -29,31 +29,20 @@ switch(true){
     case ($action == 'setsetting' && !empty($key) && !empty($value)):{
         $sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('{$key}', '{$value}');";
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
+        $modx->db->query($sql);
+        $emptyCache = true;
         break;
     }
     case ($action == 'updateplugin' && ($key == '_delete_' && !empty($lang))):{
-        $sql = "DELETE FROM " . $modx->getFullTableName("site_plugins") . " WHERE name='{$lang}'";
+        $modx->db->delete($modx->getFullTableName("site_plugins"), "name='{$lang}'");
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
+        $emptyCache = true;
         break;
     }
     case ($action == 'updateplugin' && (!empty($key) && !empty($lang) && !empty($value))):{
-        $sql = "UPDATE ".$modx->getFullTableName("site_plugins")." SET {$key}='{$value}' WHERE name = '{$lang}';";
+        $modx->db->update(array($key=>$value), $modx->getFullTableName("site_plugins"), "name = '{$lang}'");
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
+        $emptyCache = true;
         break;
     }
     default: {
@@ -62,11 +51,7 @@ switch(true){
 }
 
 if($emptyCache) {
-    include_once dirname(dirname(__FILE__)) . "/processors/cache_sync.class.processor.php";
-    $sync = new synccache();
-    $sync->setCachepath("../assets/cache/");
-    $sync->setReport(false);
-    $sync->emptyCache();
+	$modx->clearCache('full');
 }
 
 echo $str;

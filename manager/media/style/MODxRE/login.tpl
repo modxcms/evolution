@@ -1,15 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-    <title>MODx CMF Manager Login</title>
+    <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
     <meta name="robots" content="noindex, nofollow" />
     <style type="text/css">
-
-		body {font-family:  Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;}
-		input {font-family:inherit;}
+		body {
+			font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+		}
+		input {
+			font-family:inherit;
+		}
 		#login {
-			background: #eeeeee url(media/style/[+theme+]/images/body.jpg);
+			background: #eeeeee url('media/style/[+theme+]/images/body.jpg');
 			margin: 12% 0 0;
 		}
 		#mx_loginbox {
@@ -86,7 +89,7 @@
 		    margin-top: -7px;
 		    margin-right:20px;
 		    margin-bottom:10px;
-			background: url(media/style/[+theme+]/images/misc/enter.png) no-repeat top left;
+			background: url('media/style/[+theme+]/images/misc/enter.png') no-repeat top left;
 		}
 		#onManagerLoginFormRender {
 			clear: both;
@@ -128,7 +131,7 @@
 			font-size: 14px;
 			font-weight: 100;
 			width: 111px;
-			background: url(media/style/[+theme+]/images/misc/submit.png) no-repeat top left;
+			background: url('media/style/[+theme+]/images/misc/submit.png') no-repeat top left;
 		}
 		.loginLicense {
 			width: 309px;
@@ -153,9 +156,17 @@
 			font: 13px Arial;
 			color: #f00;
 		}
-		.gpl {position:absolute; bottom: 0; right:0; color: #B2B2B2;margin: 0.5em auto;font-size: 80%;}
-	
-         .gpl a, .loginLicense a {color: #B2B2B2;}
+		.gpl {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			color: #B2B2B2;
+			margin: 0.5em auto;
+			font-size: 80%;
+		}
+        .gpl a, .loginLicense a {
+			color: #B2B2B2;
+		}
     </style>
 
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
@@ -238,6 +249,6 @@
 <p class="loginLicense" >
 	
 </p>
-<div class="gpl">&copy; 2005-2013 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
+<div class="gpl">&copy; 2005-2014 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
 </body>
 </html>

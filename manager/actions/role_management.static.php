@@ -1,9 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('edit_user')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get search string
@@ -24,16 +22,12 @@ $sqlQuery = $modx->db->escape($query);
 <ul>
 <?php
 
-$sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` order by name";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
-	echo "The request returned no roles!</div>";
-	exit;
-	include_once "footer.inc.php";
+	echo "<p>The request returned no roles!</p>";
 }
-for($i=0; $i<$limit; $i++) {
-	$row = $modx->db->getRow($rs);
+while ($row = $modx->db->getRow($rs)) {
 	if($row['id']==1) {
 ?>
 	<li><span style="width: 200px"><i><?php echo $row['name']; ?></i></span> - <i><?php echo $_lang['administrator_role_message']; ?></i></li>

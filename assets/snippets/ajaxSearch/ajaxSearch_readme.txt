@@ -1,5 +1,5 @@
 
-AjaxSearch Readme version 1.9.3b
+AjaxSearch Readme version 1.10.0
 
 ---------------------------------------------------------------
 :: Snippet: AjaxSearch
@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.9.3b
         Ajax-driven & Flexible Search form
 
   Version:
-        1.9.3b  - 20/11/2012
+        1.10.0 - 27/03/2013
 
   Created by:  Coroico - (coroico@wangba.fr)
   
@@ -45,6 +45,9 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 ----------------------------------------------------------------
 :: Changelog:  for more details see www.evo.wangba.fr
 ----------------------------------------------------------------
+  27-march-13 (1.10.0)
+    -- security/bug fixes    
+
   26-september-12 (1.9.3)
     -- Bug fixing
 	-- Removed ajaxsearch's own striptags functions and substituted the use of $modx->stripTags
@@ -157,7 +160,7 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 This snippet adds AJAX functionality on top of the robust content searching.
 
 What AjaxSearch do:
-- search in fields of the content an TV MODx tables
+- search in fields of the content an TV MODX tables
 - several customizable input forms available
 - search in a subset of documents
 - highlighting of searchword in the results returned
@@ -198,7 +201,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 ---- &config [config_name | "default"] (optional)
 
         Load a custom configuration
-        config_name - Other config installed in the configs folder or in any folder within the MODx base path via @FILE:
+        config_name - Other config installed in the configs folder or in any folder within the MODX base path via @FILE:
         Configuration files are named in the form: <config_name>.config.php
 
         To limit the number of javascript variables, the default parameters are stored in the default.config.inc.php file.
@@ -284,7 +287,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
     Any combination of characters a-z, underscores, and numbers 0-9
     This is case sensitive. Default = empty string
-    Name of a TV. The category of a MODx document is provided by this TV content
+    Name of a TV. The category of a MODX document is provided by this TV content
 
     e.g: &category=`category`
     And the "category" tv value of a document could contain for instance Music, Arts, ...
@@ -382,7 +385,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
     
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
   
-    Where tvname is the MODx name of a TV
+    Where tvname is the MODX name of a TV
   
     [+as.tvname+] is the HTML output of your TV
     [+as.tvnameShow+] = 1 if the TV is not NULL
@@ -413,7 +416,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
     
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
   
-    Where tvname is the MODx name of a TV
+    Where tvname is the MODX name of a TV
   
     [+as.tvname+] is the HTML output of your TV
     [+as.tvnameShow+] = 1 if the TV is not NULL
@@ -589,7 +592,6 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
 ---- &filter : exclude unwanted documents      (optional)
         &filter runs as the &filter Ditto 2.1 parameter.
-        (see http://ditto.modxcms.com/tutorials/basic_filtering.html)
 
         &filter=`field,criterion,mode`
 
@@ -656,7 +658,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
             The following internal functions could be called:
               $searchString = stripHtml($searchString) : strip all the html tags
               $searchString = stripHtmlExceptImage($searchString) : strip all the html tags execpt image tag.
-              $searchString = stripTags($searchString) : strip all the MODx tags
+              $searchString = stripTags($searchString) : strip all the MODX tags
               $searchString = stripSnip($searchString) : strip all the snippet names
 
             You could also developp you own filter based on regular expressions.
@@ -699,7 +701,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
             Any Php code which filter the results
             The following internal functions could be called:
-              $text = stripTags($text); // strip all the MODx tags
+              $text = stripTags($text); // strip all the MODX tags
               $text = stripJscript($text); // strip jscript
               $text = stripLineBreaking($text); // replace line breaking tags with whitespace
               $text = stripHtml($text); // strip all the html tags
@@ -794,7 +796,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 ---- &jscript ['jquery'|'mootools2'|'mootools'](optional)
        Set this to jquery if you would like use the jquery library
        set mootools2 to use the version 1.2 of mootools (limited to JS functions used by AS)
-       Default: 'mootools' - use the version 1.11 of mootools provided with MODx
+       Default: 'mootools' - use the version 1.11 of mootools provided with MODX
 
 
 ---- &jsMooTools
@@ -1218,7 +1220,7 @@ With &whereSearch="content,tv,maxigallery,jot" we add :
 
   [+as.tvName+], [+as.tvNameShow+], [+as.tvNameClass+]
 
-  Where tvName is the MODx name of a TV
+  Where tvName is the MODX name of a TV
 
   [+as.tvName+] is the HTML output of your TV
   [+as.tvNameShow+] = 1 if the TV is not NULL
@@ -1288,9 +1290,9 @@ creation of the log file.
 === AjaxSearch error: php_mbstring extension required
 means that the Php mbstring extension should be set
 
-=== AjaxSearch error: database_connection_charset not set. Check your MODx config file
+=== AjaxSearch error: database_connection_charset not set. Check your MODX config file
 
-=== AjaxSearch error: database_connection_charset is null. Check your MODx config file
+=== AjaxSearch error: database_connection_charset is null. Check your MODX config file
 means that your $database_connection_charset variable of your /'.MGR_DIR.'/includes/config.inc.php file is an empty value 
 
 === AjaxSearch error: unknown database_connection_charset = xxxx  Add the appropriate Html charset mapping in the classes/ajaxSearch.php file
@@ -1683,12 +1685,10 @@ Install it as the search highlight plugin.
 
     Modx Community forum >> support >> Repository Items Support >> support/comments for ajaxSearch
 
-    http://modxcms.com/AjaxSearch-490.html
+    http://forums.modx.com/forums/thread/39223/support-comments-for-ajaxsearch-1-9-2b-finale#dis-post-226189
 
-
-2. Documentation : http://wiki.modxcms.com/index.php/AjaxSearch
+2. Documentation : http://rtfm.modx.com/extras/evo/ajaxsearch
 
 3. Demo site : http://www.evo.wangba.fr
 
-4. Bugs & features : http://svn.modxcms.com/jira/browse/AJAXSEARCH
-   Don't hesitate to signup for an account to post an issue or a new feature
+4. Bugs & features : https://github.com/modxcms/AjaxSearch

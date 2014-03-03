@@ -1,16 +1,17 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = $_REQUEST['id'];
-
+$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
+}
 
 /************webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
-$pid=($pid==0?$id:$pid);
+$content=$modx->db->getRow($modx->db->select('parent, pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$pid=($content['parent']==0?$id:$content['parent']);
 
 /************** webber *************/
 $sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
@@ -23,38 +24,36 @@ $add_path=$sd.$sb.$pg;
 
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	include "header.inc.php";
-	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
-	<div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include("footer.inc.php");
-	exit;	
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // update the document
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=1, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=".$modx->getLoginUserID().", publishedon=".time()." WHERE id=$id;";
-
-$rs = $modx->db->query($sql);
-if(!$rs){
-	echo "An error occured while attempting to publish the document.";
-}
+$modx->db->update(
+	array(
+		'published'   => 1,
+		'pub_date'    => 0,
+		'unpub_date'  => 0,
+		'editedby'    => $modx->getLoginUserID(),
+		'editedon'    => time(),
+		'publishedby' => $modx->getLoginUserID(),
+		'publishedon' => time(),
+	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocPublished  event
-$modx->invokeEvent("OnDocPublished",array("docid"=>$id));	
+$modx->invokeEvent("OnDocPublished",array("docid"=>$id));
 
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache		
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
+
+// empty cache
+$modx->clearCache('full');
 
 //$header="Location: index.php?r=1&id=$id&a=7";
 

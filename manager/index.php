@@ -1,39 +1,39 @@
 <?php
 /*
 *************************************************************************
-    MODx Content Management System and PHP Application Framework
+    MODX Content Management System and PHP Application Framework
     Managed and maintained by Raymond Irving, Ryan Thrash and the
-    MODx community
+    MODX community
 *************************************************************************
-    MODx is an opensource PHP/MySQL content management system and content
+    MODX is an opensource PHP/MySQL content management system and content
     management framework that is flexible, adaptable, supports XHTML/CSS
     layouts, and works with most web browsers, including Safari.
 
-    MODx is distributed under the GNU General Public License
+    MODX is distributed under the GNU General Public License
 *************************************************************************
 
-    MODx CMS and Application Framework ("MODx")
+    MODX CMS and Application Framework ("MODX")
     Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
     All rights reserved.
 
     This file and all related or dependant files distributed with this filie
-    are considered as a whole to make up MODx.
+    are considered as a whole to make up MODX.
 
-    MODx is free software; you can redistribute it and/or modify
+    MODX is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    MODx is distributed in the hope that it will be useful,
+    MODX is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with MODx (located in "/assets/docs/"); if not, write to the Free Software
+    along with MODX (located in "/assets/docs/"); if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-    For more information on MODx please visit http://modxcms.com/
+    For more information on MODX please visit http://modx.com/
 
 **************************************************************************
     Originally based on Etomite by Alex Butter
@@ -43,7 +43,7 @@
 
 /**
  *  Filename: index.php
- *  Function: This file is the main root file for MODx. It is
+ *  Function: This file is the main root file for MODX. It is
  *          only file that will be directly requested, and
  *          depending on the request, will branch different
  *          content
@@ -59,6 +59,8 @@ $mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
 $base_path = str_replace($mgr_dir . '/index.php','',$self);
 $site_mgr_path = $base_path . 'assets/cache/siteManager.php';
 if(is_file($site_mgr_path)) include_once($site_mgr_path);
+$site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
+if(is_file($site_hostnames_path)) include_once($site_hostnames_path);
 if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 	$src = "<?php\n";
 	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
@@ -85,9 +87,6 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
-
-// set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
 
 // check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
 $php_ver_comp =  version_compare(phpversion(), "5.0.0");
@@ -123,7 +122,7 @@ define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
     echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the MODx <a href='../install'>install utility</a>";
+    echo "Please run the MODX <a href='../install'>install utility</a>";
     exit;
 }
 
@@ -197,16 +196,12 @@ if(isset($allow_manager_access) && $allow_manager_access==0) {
     include_once "manager.lockout.inc.php";
 }
 
-// include_once the error handler
-include_once "error.class.inc.php";
-$e = new errorHandler;
-
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
 // first we check to see if this is a frameset request
-if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0) && !isset($_POST['updateMsgCount'])) {
+if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
     // this looks to be a top-level frameset request, so let's serve up a frameset
     include_once "frames/1.php";
     exit;
@@ -214,12 +209,7 @@ if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0) && !isset($_
 
 // OK, let's retrieve the action directive from the request
 if(isset($_GET['a']) && isset($_POST['a'])) {
-    $e->setError(100);
-    $e->dumpError();
-    // set $e to a corresponding errorcode
-    // we know that if an error occurs here, something's wrong,
-    // so we dump the error, thereby stopping the script.
-
+    $modx->webAlertAndQuit($_lang["error_double_action"]);
 } else {
     $action= isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : null;
 }
@@ -238,16 +228,13 @@ if (isset($modx->config['validate_referer']) && intval($modx->config['validate_r
 
         if (!empty($referer)) {
             if (!preg_match('/^'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
-                echo "A possible CSRF attempt was detected from referer: {$referer}.";
-                exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected from referer: {$referer}.", "index.php");
             }
         } else {
-            echo "A possible CSRF attempt was detected. No referer was provided by the client.";
-            exit();
+                $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the client.", "index.php");
         }
     } else {
-        echo "A possible CSRF attempt was detected. No referer was provided by the server.";
-        exit();
+        $modx->webAlertAndQuit("A possible CSRF attempt was detected. No referer was provided by the server.", "index.php");
     }
 }
 

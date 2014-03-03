@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.8 - Electronic Form Snippet
+# eForm 1.4.5 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -54,7 +54,7 @@ $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.4';
+	$fileVersion = '1.4.5';
 	$version = isset($version)?$version:'prior to 1.4.2';
 
 	#include default language file
@@ -74,7 +74,7 @@ $_dfnMaxlength = 6;
 
 	//check version differences
 	if( $version != $fileVersion )
-		return $_lang['ef_version_error'];
+		return formMerge($_lang['ef_version_error'], array('version' => $version, 'fileVersion' => $fileVersion));
 
 	# check for valid form key - moved to below fetching form template to allow id coming from form template
 
@@ -135,9 +135,8 @@ $_dfnMaxlength = 6;
 	# invoke onBeforeFormParse event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormParse) {
-		$eFormOnBeforeFormParse = explode(',', $eFormOnBeforeFormParse);
+		$eFormOnBeforeFormParse = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormParse)));
 		foreach ($eFormOnBeforeFormParse as $beforeFormParse) {
-			$beforeFormParse = trim($beforeFormParse);
 			if ($isDebug && !function_exists($beforeFormParse)) {
 				$fields['debug'] .= 'eFormOnBeforeFormParse event: Could not find the function ' . $beforeFormParse;
 			} else {
@@ -170,7 +169,7 @@ $_dfnMaxlength = 6;
 				//remove empty values
 				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
-				if ($allowhtml || $formats[$name][2]=='html') {
+				if ($allowhtml && $formats[$name][2]=='html') {
 					$fields[$name] = stripslashes($value);
 				} else {
 					$fields[$name] = strip_tags(stripslashes($value));
@@ -194,17 +193,20 @@ $_dfnMaxlength = 6;
 		}
 
 		# sanitize the values with slashes stripped to avoid remote execution of Snippets
-		modx_sanitize_gpc($fields, array (
-			'@<script[^>]*?>.*?</script>@si',
-			'@&#(\d+);@e',
-			'@\[\~(.*?)\~\]@si',
-			'@\[\((.*?)\)\]@si',
-			'@{{(.*?)}}@si',
-			'@\[\+(.*?)\+\]@si',
-			'@\[\*(.*?)\*\]@si',
-			'@\[\[(.*?)\]\]@si',
-			'@\[!(.*?)!\]@si'
-		));
+		$version = $modx->getVersionData();
+		if (version_compare($version['version'], '1.0.9', '<=')) {
+			modx_sanitize_gpc($fields, array(
+				'@<script[^>]*?>.*?</script>@si',
+				'@&#(\d+);@e',
+				'@\[\~(.*?)\~\]@si',
+				'@\[\((.*?)\)\]@si',
+				'@{{(.*?)}}@si',
+				'@\[\+(.*?)\+\]@si',
+				'@\[\*(.*?)\*\]@si',
+				'@\[\[(.*?)\]\]@si',
+				'@\[!(.*?)!\]@si'
+			));
+		}
 
 		# validate fields
 		foreach($fields as $name => $value) {
@@ -277,9 +279,8 @@ $_dfnMaxlength = 6;
 		// Changed in 1.4.4.5 - now expects 4 parameters
 		// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 		if ($eFormOnValidate) {
-			$eFormOnValidate = explode(',', $eFormOnValidate);
+			$eFormOnValidate = array_filter(array_map('trim', explode(',', $eFormOnValidate)));
 			foreach ($eFormOnValidate as $onValidate) {
-				$onValidate = trim($onValidate);
 				if ($isDebug && !function_exists($onValidate)) {
 					$fields['debug'] .= 'eformOnValidate event: Could not find the function ' . $onValidate;
 				} else {
@@ -295,7 +296,7 @@ $_dfnMaxlength = 6;
 
 			//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 			foreach($rClass as $n => $class){
-				$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
+				$fields[$n . '_class'] = $fields[$n . '_class'] ? ' ' . $fields[$n . '_class'] . ' ' . $class : ' ' . $class;
 				$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
 				//work around for checkboxes
 				if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
@@ -317,7 +318,12 @@ $_dfnMaxlength = 6;
 			}
 
 			#set validation message
-			$tmp = (count($rMsg)>0)?str_replace("{fields}", implode(", ",$rMsg),$_lang['ef_required_message']):"";
+			if (count($rMsg) > 0) {
+			    $rMsg = "<span class=\"requiredlist\"><span>" . implode("</span><span>",$rMsg) . "</span></span>";
+			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
+			} else {
+			    $tmp = "";
+			}
 			$tmp .= implode("<br />",$vMsg);
 			if(!strstr($tpl,'[+validationmessage+]'))
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
@@ -388,6 +394,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->Body		= $body;
 					AddAddressToMailer($modx->mail,"to",$modx->config['emailsender']);
 					$modx->mail->send(); //ignore mail errors in this case
+					$modx->mail->ClearAllRecipients();
 				}
 				//return empty form with error message
 				//register css and/or javascript
@@ -398,7 +405,7 @@ $_dfnMaxlength = 6;
 			# added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0){
 				if( time()<$submitLimit+$_SESSION[$formid.'_limit'] ){
-					return formMerge($_lang['ef_submit_time_limit'],$fields);
+					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes' => $submitLimit / 60));
 				}
 				else unset($_SESSION[$formid.'_limit'], $_SESSION[$formid.'_hash']); //time expired
 			}
@@ -406,9 +413,8 @@ $_dfnMaxlength = 6;
 			# invoke OnBeforeMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnBeforeMailSent) {
-				$eFormOnBeforeMailSent = explode(',', $eFormOnBeforeMailSent);
+				$eFormOnBeforeMailSent = array_filter(array_map('trim', explode(',', $eFormOnBeforeMailSent)));
 				foreach ($eFormOnBeforeMailSent as $beforeMailSent) {
-					$beforeMailSent = trim($beforeMailSent);
 					if ($isDebug && !function_exists($beforeMailSent)) {
 						$fields['debug'] .= 'eFormOnBeforeMailSent event: Could not find the function ' . $beforeMailSent;
 					} elseif ($beforeMailSent($fields) === false) {
@@ -450,6 +456,17 @@ $_dfnMaxlength = 6;
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
 
+			# added in 1.4.5 - Use a field for attachments
+			if ($attachmentField != '' && isset($fields[$attachmentField]) && !empty($fields[$attachmentField])) {
+				$attachmentPath = realpath(MODX_BASE_PATH . $attachmentPath) . '/';
+				$filenames = explode(',', $fields[$attachmentField]);
+				foreach ($filenames as $filename) {
+					if (file_exists($attachmentPath . $filename)) {
+						$attachments[count($attachments)] = $attachmentPath . $filename;
+					}
+				}
+			}
+
 			$to = formMerge($to,$fields);
 			if(empty($to) || !strpos($to,'@')) $nomail=1;
 
@@ -489,13 +506,15 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"replyto",$replyto);
 					AddAddressToMailer($modx->mail,"to",$to);
 					AddAddressToMailer($modx->mail,"cc",$cc);
 					AddAddressToMailer($modx->mail,"bcc",$bcc);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send user a copy of the report
@@ -504,10 +523,12 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
+					$modx->mail->ClearAttachments();
 				}
 
 				# send auto-respond email
@@ -519,9 +540,10 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= ($autosender)? $autosender:$from;
 					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $autotext;
+					$modx->mail->Body		= ($isHtml) ? $autotext : htmlspecialchars_decode($autotext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
+					$modx->mail->ClearAllRecipients();
 				}
 
 				//defaults to text - test for sendAsHtml
@@ -533,9 +555,10 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $mobiletext;
+					$modx->mail->Body		= ($isHtml) ? $mobiletext : htmlspecialchars_decode($mobiletext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$mobile);
 					$modx->mail->send();
+					$modx->mail->ClearAllRecipients();
 				}
 
 			}//end test nomail
@@ -548,9 +571,8 @@ $_dfnMaxlength = 6;
 			# invoke OnMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnMailSent) {
-				$eFormOnMailSent = explode(',', $eFormOnMailSent);
+				$eFormOnMailSent = array_filter(array_map('trim', explode(',', $eFormOnMailSent)));
 				foreach ($eFormOnMailSent as $mailSent) {
-					$mailSent = trim($mailSent);
 					if ($isDebug && !function_exists($mailSent)) {
 						$fields['debug'] .= 'eFormOnMailSent event: Could not find the function' . $mailSent;
 					} else {
@@ -614,10 +636,8 @@ $_dfnMaxlength = 6;
 
 	# get SESSION data - thanks to sottwell
 	if($sessionVars){
-		$sessionVars = (strpos($sessionVars,',',0))?explode(',',$sessionVars):array($sessionVars);
+		$sessionVars = (strpos($sessionVars,',',0))?array_filter(array_map('trim', explode(',', $sessionVars))):array($sessionVars);
 		foreach( $sessionVars as $varName ){
-			if( empty($varName) ) continue;
-			$varName = trim($varName);
 			if( isset($_SESSION[$varName]) && !empty($_SESSION[$varName]) )
 				$fields[$varName] = ( isset($fields[$varName]) && $postOverides )?$fields[$varName]:$_SESSION[$varName];
 		}
@@ -626,9 +646,8 @@ $_dfnMaxlength = 6;
 	# invoke OnBeforeFormMerge event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormMerge) {
-		$eFormOnBeforeFormMerge = explode(',', $eFormOnBeforeFormMerge);
+		$eFormOnBeforeFormMerge = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormMerge)));
 		foreach ($eFormOnBeforeFormMerge as $beforeFormMerge) {
-			$beforeFormMerge = trim($beforeFormMerge);
 			if ($isDebug && !function_exists($beforeFormMerge)) {
 				$fields['debug'] .= 'eFormOnBeforeFormMerge event: Could not find the function ' . $beforeFormMerge;
 			} else {
@@ -677,6 +696,10 @@ function formMerge($docText, $docFields, $vClasses='') {
 				if(($datatype=="checkbox"||$datatype=="radio") && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
 		}
+		// prevent XSS for formfields
+		if (isset($fld)) {
+		    $value = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
+		}
 		if(strpos($name,":")===false) $docText = str_replace("[+$name+]",$value,$docText);
 		else {
 			// this might be a listbox item.
@@ -696,14 +719,12 @@ function formMerge($docText, $docFields, $vClasses='') {
 
 # Adds Addresses to Mailer
 function AddAddressToMailer(&$mail,$type,$addr){
-	$a = explode(",",$addr);
+	$a = array_filter(array_map('trim', explode(',', $addr)));
 	for($i=0;$i<count($a);$i++){
-		if(!empty($a[$i])) {
 			if ($type=="to") $mail->AddAddress($a[$i]);
 			elseif ($type=="cc") $mail->AddCC($a[$i]);
 			elseif ($type=="bcc") $mail->AddBCC($a[$i]);
 			elseif ($type=="replyto") $mail->AddReplyTo($a[$i]);
-		}
 	}
 }
 
@@ -772,10 +793,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		#skip vericode field - updated in 1.4.4
 		#special case. We need to set the class placeholder but forget about the rest
 		if($name=="vericode"){
-			if(isset($tagAttributes['class'])){
-				$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+			if (isset($tagAttributes['class'])) {
+				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+			} else {
+				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 			}
-			$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 			$tagAttributes['value'] = '';
 			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
 			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -799,10 +821,11 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		unset($tagAttributes[$optionsName]);
 
 		//added in 1.4.2 - add placeholder to class attribute
-		if(isset($tagAttributes['class'])){
-			$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+		if (isset($tagAttributes['class'])) {
+			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+		} else {
+			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 		}
-		$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 
 		switch($type){
 			case "select":
@@ -979,7 +1002,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 						$range = array($p,$p); //yes,.. I know - cheating :)
 
 					if($isDebug && (!is_numeric($range[0]) || !is_numeric($range[1])) )
-						$modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
+						$modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
 					sort($range);
 					if( $value>=$range[0] && $value<=$range[1] ) break 2; //valid
 				}
@@ -998,7 +1021,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 
 				if( $isDebug && count($vlist)==1 && empty($vlist[0])  ){
 					 //if debugging bail out big time
-					 $modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
+					 $modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
 				}elseif(!in_array(strtolower($value),$vlist))
 					$errMsg = ($fld[2]=='file')? $_lang["ef_failed_upload"]: $_lang['ef_failed_list'];
 				break;

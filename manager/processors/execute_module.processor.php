@@ -1,30 +1,22 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('exec_module')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if(isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-} else {
-	$id=0;
-}
-
-// make sure the id's a number
-if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+if($id==0) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 // check if user has access permission, except admins
 if($_SESSION['mgrRole']!=1){
-	$sql = "SELECT sma.usergroup,mg.member " .
-		"FROM ".$modx->getFullTableName("site_module_access")." sma " .
-		"LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'".
-		"WHERE sma.module = '$id'";
-	$rs = $modx->db->query($sql);
-
+	$rs = $modx->db->select(
+		'sma.usergroup,mg.member',
+		$modx->getFullTableName("site_module_access")." sma
+			LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'",
+		"sma.module = '{$id}'"
+		);
 	//initialize permission to -1, if it stays -1 no permissions
 	//attached so permission granted
 	$permissionAccessInt = -1;
@@ -42,46 +34,22 @@ if($_SESSION['mgrRole']!=1){
 	}
 
 	if($permissionAccessInt==0) {
-		echo "<script type='text/javascript'>" .
-		"function jsalert(){ alert('You do not sufficient privileges to execute this module.');" .
-		"window.location.href='index.php?a=106';}".
-		"setTimeout('jsalert()',100)".
-		"</script>";
-		exit;
+		$modx->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
 	}
 }
 
 // get module data
-$sql = "SELECT * " .
-		"FROM ".$modx->getFullTableName("site_modules")." " .
-		"WHERE id = $id;";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('Multiple modules sharing same unique id $id. Please contact the Site Administrator');" .
-			"window.location.href='index.php?a=106';}".
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
-}
-if($limit<1) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('No record found for id $id');" .
-			"window.location.href='index.php?a=106';}" .
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
-}
+$rs = $modx->db->select('*', $modx->getFullTableName("site_modules"), "id='{$id}'");
 $content = $modx->db->getRow($rs);
-if($content['disabled']) {
-	echo "<script type='text/javascript'>" .
-			"function jsalert(){ alert('This module is disabled and cannot be executed.');" .
-			"window.location.href='index.php?a=106';}" .
-			"setTimeout('jsalert()',100)".
-			"</script>";
-	exit;
+if(!$content) {
+	$modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
 }
+if($content['disabled']) {
+	$modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
+}
+
+// Set the item name for logger
+$_SESSION['itemname'] = $content['name'];
 
 // load module configuration
 $parameter = array();

@@ -62,7 +62,7 @@ $xml_placeholders['[+xml_charset+]'] = isset($charset) ? $charset : $modx->confi
 	Any valid charset identifier
 
 	Default:
-	MODx default charset
+	MODX default charset
 */
 $rss_placeholders['[+xml_xsl+]'] = isset($xsl) ? '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : '';
 /*

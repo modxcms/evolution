@@ -183,8 +183,10 @@ class uploader {
             preg_match('/^[^\.]+$/', $_SERVER['HTTP_HOST'])
         )
             $this->config['cookieDomain'] = "";
-        elseif (!strlen($this->config['cookieDomain']))
-            $this->config['cookieDomain'] = $_SERVER['HTTP_HOST'];
+        elseif (!strlen($this->config['cookieDomain'])){
+            $tmp = explode(":", $_SERVER['HTTP_HOST'], 2);
+            $this->config['cookieDomain'] =  $tmp[0];
+        }
         if (!strlen($this->config['cookiePath']))
             $this->config['cookiePath'] = "/";
 
@@ -306,20 +308,55 @@ class uploader {
         $this->callBack($url, $message);
     }
 
-    protected function normalizeFilename($filename) {
-        if (isset($this->config['filenameChangeChars']) &&
-            is_array($this->config['filenameChangeChars'])
-        )
-            $filename = strtr($filename, $this->config['filenameChangeChars']);
-        return $filename;
-    }
+	protected function getTransaliasSettings() {
+		global $modx;
 
-    protected function normalizeDirname($dirname) {
-        if (isset($this->config['dirnameChangeChars']) &&
-            is_array($this->config['dirnameChangeChars'])
-        )
-            $dirname = strtr($dirname, $this->config['dirnameChangeChars']);
-        return $dirname;
+		// Cleaning uploaded filename?
+		$setting = $modx->db->select('count(*)', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
+		if ($modx->db->getValue($setting)>0) {
+			// Transalias plugin active?
+			$res = $modx->db->select('properties', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
+			if ($properties = $modx->db->getValue($res)) {
+				$properties = $modx->parseProperties($properties);
+			} else {
+				$properties = NULL;
+			}
+		} else {
+			$properties = NULL;
+		}
+		return $properties;
+	}
+
+	protected function normalizeFilename($filename) {
+		if ($transaliasSettings = $this->getTransaliasSettings()) {
+			if (!class_exists('TransAlias')) {
+				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
+			}
+			$trans = new TransAlias();
+			$trans->loadTable($transaliasSettings['table_name']);
+			$filename = $trans->stripAlias($filename, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
+		} else {
+			if (isset($this->config['filenameChangeChars']) && is_array($this->config['filenameChangeChars'])) {
+				$filename = strtr($filename, $this->config['filenameChangeChars']);
+			}
+		}
+		return $filename;
+	}
+
+	protected function normalizeDirname($dirname) {
+		if ($transaliasSettings = $this->getTransaliasSettings()) {
+			if (!class_exists('TransAlias')) {
+				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
+			}
+			$trans = new TransAlias();
+			$trans->loadTable($transaliasSettings['table_name']);
+			$dirname = $trans->stripAlias($dirname, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
+		} else {
+			if (isset($this->config['dirnameChangeChars']) && is_array($this->config['dirnameChangeChars'])) {
+				$dirname = strtr($dirname, $this->config['dirnameChangeChars']);
+			}
+		}
+		return $dirname;
     }
 
     protected function checkUploadedFile(array $aFile=null) {

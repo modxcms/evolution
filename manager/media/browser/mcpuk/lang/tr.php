@@ -239,10 +239,6 @@ $lang = array(
 
     // SINCE 2.4
 
-    "Checking for new version..." => "Yeni versiyon kontrol ediliyor...",
-    "Unable to connect!" => "Bağlantı yapılamıyor!",
-    "Download version {version} now!" => " {version} versiyonunu hemen indir!",
-    "KCFinder is up to date!" => "KCFinder güncel durumda!",
     "Licenses:" => "Lisanslar:",
     "Attention" => "Dikkat",
     "Question" => "Soru",

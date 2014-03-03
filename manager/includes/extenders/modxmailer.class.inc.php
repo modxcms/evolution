@@ -91,7 +91,7 @@ class MODxMailer extends PHPMailer
 			mb_language($this->mb_language);
 			mb_internal_encoding($modx->config['modx_charset']);
 		}
-		$exconf = $modx->config['base_path'] . 'manager/includes/controls/phpmailer/config.inc.php';
+		$exconf = MODX_MANAGER_PATH . 'includes/controls/phpmailer/config.inc.php';
 		if(is_file($exconf)) include_once($exconf);
 	}
 	
@@ -177,7 +177,7 @@ class MODxMailer extends PHPMailer
 			$to .= $this->AddrFormat($this->to[$i]);
 		}
 		
-		$toArr = explode(',', $to);
+		$toArr = array_filter(array_map('trim', explode(',', $to)));
 		
 		$params = sprintf("-oi -f %s", $this->Sender);
 		if ($this->Sender != '' && strlen(ini_get('safe_mode')) < 1)

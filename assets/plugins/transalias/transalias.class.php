@@ -79,11 +79,11 @@ class TransAlias {
      * @return value of TV in current POST operation or false if TV not found in POST
      */
     function getTVValue($tv) {
-        $modx =& $GLOBALS['modx'];
+        global $modx;
         $additionalEncodings = array('-' => '%2D', '.' => '%2E', '_' => '%5F');
         $tvname = str_replace(array_keys($additionalEncodings), array_values($additionalEncodings), rawurlencode($tv));
         if(array_key_exists('tv'.$tvname, $_POST)) {
-            include_once $GLOBALS['modx']->config['site_manager_path'] . 'includes/tmplvars.commands.inc.php';
+            include_once MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
             $val = $_POST['tv'.$tvname];
             $id = $_POST['id'];
             if($val == '@INHERIT' && empty($_POST['id']) && !empty($_POST['parent'])) {
@@ -148,6 +148,10 @@ class TransAlias {
         $alias = preg_replace('/&#x([0-9a-f]{1,7});/ei', 'chr(hexdec("\\1"))', $alias);
         $alias = preg_replace('/&#([0-9]{1,7});/e', 'chr("\\1")', $alias);
         
+        if (class_exists('Normalizer')) {
+            $alias = Normalizer::normalize($alias);
+        }
+
         if (!empty($this->_useTable)) {
             $alias = strtr($alias, $this->_tables[$this->_useTable]);
         }

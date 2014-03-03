@@ -4,7 +4,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.1
+ Version: 2.0.2
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -39,8 +39,8 @@ if (class_exists('Wayfinder')) {
 }
 
 $wf->_config = array(
-	'id' => isset($startId) ? $startId : $modx->documentIdentifier,
-	'level' => isset($level) ? $level : 0,
+	'id' => isset($startId) ? intval($startId) : $modx->documentIdentifier,
+	'level' => isset($level) ? intval($level) : 0,
 	'includeDocs' => isset($includeDocs) ? $includeDocs : 0,
 	'excludeDocs' => isset($excludeDocs) ? $excludeDocs : 0,
 	'ph' => isset($ph) ? $ph : FALSE,
@@ -60,6 +60,7 @@ $wf->_config = array(
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
+	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier
 );
 
 //get user class definitions

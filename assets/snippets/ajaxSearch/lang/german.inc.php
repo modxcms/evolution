@@ -1,13 +1,10 @@
 <?php
-
 /*
-german.inc.php - for AjaxSearch 1.8
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 04/17/07
+german.inc.php - for AjaxSearch 1.10.0
+Created by: Marc Hinse
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
-Translation: Marc Hinse
 */
-
 $_lang['as_resultsIntroFailure'] = 'Es gab keine Ergebnisse. Bitte versuchen Sie es mit allgemeineren Begriffen.';
 $_lang['as_searchButtonText'] = 'Suche!';
 $_lang['as_boxText'] = 'Suchtext eingeben...';

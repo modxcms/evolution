@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.9.3');
+define('AS_VERSION', '1.10.0');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file
@@ -34,7 +34,7 @@ if (isset($AS_landing)) return "<h3>AjaxSearch error: AS_landing parameter has b
 if (isset($AS_showResults)) return "<h3>AjaxSearch error: AS_showResults parameter has been renamed showResults. Read " . $readme . " file.</h3>";
 
 // Load a custom configuration file if required
-// config_name - Other config installed in the configs folder or in any folder within the MODx base path via @FILE
+// config_name - Other config installed in the configs folder or in any folder within the MODX base path via @FILE
 // Configuration files should be named in the form: <config_name>.config.php
 // Default: '' - no custom config
 $cfg['config'] = isset($config) ? $config : $dcfg['config'];
@@ -107,7 +107,7 @@ $cfg['subSearch'] = isset($subSearch) ? $subSearch : (isset($__subSearch) ? $__s
 // &category  [ tv_name ]
 // Any combination of characters a-z, underscores, and numbers 0-9
 // This is case sensitive. Default = empty string
-// Name of a TV. The category of a MODx document is provided by this TV content
+// Name of a TV. The category of a MODX document is provided by this TV content
 $cfg['category'] = isset($category) ? $category : (isset($__category) ? $__category : $dcfg['category']);
 
 // &display [ 'mixed' | 'unmixed' ]
@@ -380,7 +380,7 @@ if ($cfg['ajaxSearch']) {
     // &jscript ['jquery'|'mootools2'|'mootools']
     // Set this to jquery if you would like use the jquery library
     // set mootools2 to use the version 1.2 of mootools (limited to JS functions used by AS)
-    // Default: 'mootools' - use the version 1.11 of mootools provided with MODx
+    // Default: 'mootools' - use the version 1.11 of mootools provided with MODX
     $cfg['jscript'] = isset($jscript) ? $jscript : (isset($__jscript) ? $__jscript : $dcfg['jscript']);
 
     // &addJscript [1 | 0]
@@ -388,7 +388,7 @@ if ($cfg['ajaxSearch']) {
     // Default: 1
     $cfg['addJscript'] = isset($addJscript) ? $addJscript : (isset($__addJscript) ? $__addJscript : $dcfg['addJscript']);
 
-    // &jsMooTools - Location of the mootools javascript library (current version of MODx)
+    // &jsMooTools - Location of the mootools javascript library (current version of MODX)
     // Default: MGR_DIR.'media/script/mootools/mootools.js'
     $cfg['jsMooTools'] = isset($jsMooTools) ? $jsMooTools : (isset($__jsMooTools) ? $__jsMooTools : $dcfg['jsMooTools']);
 

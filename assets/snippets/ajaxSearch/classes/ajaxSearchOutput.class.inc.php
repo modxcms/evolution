@@ -5,8 +5,8 @@
 * @package  AjaxSearchOutput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchOutput class contains all functions and data used to display output
@@ -378,7 +378,7 @@ class AjaxSearchOutput {
                 unset($varPaging);
                 $chkPaging->CleanVars();
             }
-            else if (($pagingType == 1) && (($nbrs >= $nbMax) || showPagingAlways)) {
+            else if (($pagingType == 1) && (($nbrs >= $nbMax) || $showPagingAlways)) {
 
                 $tplPaging = $this->asCfg->cfg['tplPaging1'];
                 if ($tplPaging == '') $tplPaging = "@FILE:" . AS_SPATH . 'templates/paging1.tpl.html';
@@ -839,9 +839,8 @@ class AjaxSearchOutput {
     function _snippet_exists($snippetName) {
         global $modx;
         $tbl = $modx->getFullTableName('site_snippets');
-        $select = "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
-        $rs = $modx->db->query($select);
-        return $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('count(*)', $tbl, "name='" . $modx->db->escape($snippetName) . "'");
+        return ($modx->db->getValue($rs)>0);
     }
     /*
     * Get offset of other groups

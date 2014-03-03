@@ -60,6 +60,12 @@ if (!is_writable("../assets/cache") || !file_exists("../assets/media")) {
 }
 // cache files writable?
 echo "<p>" . $_lang['checking_if_cache_file_writable'];
+if (!file_exists("../assets/cache/siteCache.idx.php")) {
+    // make an attempt to create the file
+    @ $hnd = fopen("../assets/cache/siteCache.idx.php", 'w');
+    @ fwrite($hnd, "<?php //MODX site cache file ?>");
+    @ fclose($hnd);
+}
 if (!is_writable("../assets/cache/siteCache.idx.php")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
@@ -110,7 +116,7 @@ echo "<p>".$_lang['checking_if_config_exist_and_writable'];
 if (!is_file("../".MGR_DIR."/includes/config.inc.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../".MGR_DIR."/includes/config.inc.php", 'w');
-    @ fwrite($hnd, "<?php //MODx configuration file ?>");
+    @ fwrite($hnd, "<?php //MODX configuration file ?>");
     @ fclose($hnd);
 }
 else @chmod("../".MGR_DIR."/includes/config.inc.php", 0666);
@@ -245,7 +251,7 @@ if ($errors > 0) {
 ?>
       <p>
       <?php
-      echo $_lang['setup_cannot_continue'];
+      echo $_lang['setup_cannot_continue'] . ' ';
       echo $errors > 1 ? $errors." " : "";
       if ($errors > 1) echo $_lang['errors'];
       else echo $_lang['error'];

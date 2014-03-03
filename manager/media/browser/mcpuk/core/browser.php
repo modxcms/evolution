@@ -592,80 +592,6 @@ class browser extends uploader {
         die;
     }
 
-    protected function act_check4Update() {
-        if ($this->config['denyUpdateCheck'])
-            return json_encode(array('version' => false));
-
-        // Caching HTTP request for 6 hours
-        if (isset($this->session['checkVersion']) &&
-            isset($this->session['checkVersionTime']) &&
-            ((time() - $this->session['checkVersionTime']) < 21600)
-        )
-            return json_encode(array('version' => $this->session['checkVersion']));
-
-        $protocol = "http";
-        $host = "kcfinder.sunhater.com";
-        $port = 80;
-        $path = "/checkVersion.php";
-
-        $url = "$protocol://$host:$port$path";
-        $pattern = '/^\d+\.\d+$/';
-        $responsePattern = '/^[A-Z]+\/\d+\.\d+\s+\d+\s+OK\s*([a-zA-Z0-9\-]+\:\s*[^\n]*\n)*\s*(.*)\s*$/';
-
-        // file_get_contents()
-        if (ini_get("allow_url_fopen") &&
-            (false !== ($ver = file_get_contents($url))) &&
-            preg_match($pattern, $ver)
-
-        // HTTP extension
-        ) {} elseif (
-            function_exists("http_get") &&
-            (false !== ($ver = @http_get($url))) &&
-            (
-                (
-                    preg_match($responsePattern, $ver, $match) &&
-                    false !== ($ver = $match[2])
-                ) || true
-            ) &&
-            preg_match($pattern, $ver)
-
-        // Curl extension
-        ) {} elseif (
-            function_exists("curl_init") &&
-            (false !== (   $curl = @curl_init($url)                                    )) &&
-            (              @ob_start()                 ||  (@curl_close($curl) && false)) &&
-            (              @curl_exec($curl)           ||  (@curl_close($curl) && false)) &&
-            ((false !== (  $ver = @ob_get_clean()   )) ||  (@curl_close($curl) && false)) &&
-            (              @curl_close($curl)          ||  true                         ) &&
-            preg_match($pattern, $ver)
-
-        // Socket extension
-        ) {} elseif (function_exists('socket_create')) {
-            $cmd =
-                "GET $path " . strtoupper($protocol) . "/1.1\r\n" .
-                "Host: $host\r\n" .
-                "Connection: Close\r\n\r\n";
-
-            if ((false !== (  $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  )) &&
-                (false !==    @socket_connect($socket, $host, $port)                    ) &&
-                (false !==    @socket_write($socket, $cmd, strlen($cmd))                ) &&
-                (false !== (  $ver = @socket_read($socket, 2048)                       )) &&
-                preg_match($responsePattern, $ver, $match)
-            )
-                $ver = $match[2];
-
-            if (isset($socket) && is_resource($socket))
-                @socket_close($socket);
-        }
-
-        if (isset($ver) && preg_match($pattern, $ver)) {
-            $this->session['checkVersion'] = $ver;
-            $this->session['checkVersionTime'] = time();
-            return json_encode(array('version' => $ver));
-        } else
-            return json_encode(array('version' => false));
-    }
-
     protected function moveUploadFile($file, $dir) {
         $message = $this->checkUploadedFile($file);
 
@@ -712,23 +638,24 @@ class browser extends uploader {
             return $return;
 
         foreach ($files as $file) {
-            $size = @getimagesize($file);
-            if (is_array($size) && count($size)) {
-                $thumb_file = "$thumbDir/" . basename($file);
-                if (!is_file($thumb_file))
-                    $this->makeThumb($file, false);
-                $smallThumb =
-                    ($size[0] <= $this->config['thumbWidth']) &&
-                    ($size[1] <= $this->config['thumbHeight']) &&
-                    in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
-            } else
-                $smallThumb = false;
-
+            $ext = file::getExtension($file);
+            $smallThumb = false;
+            if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
+				$size = @getimagesize($file);
+				if (is_array($size) && count($size)) {
+					$thumb_file = "$thumbDir/" . basename($file);
+					if (!is_file($thumb_file))
+						$this->makeThumb($file, false);
+					$smallThumb =
+						($size[0] <= $this->config['thumbWidth']) &&
+						($size[1] <= $this->config['thumbHeight']) &&
+						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
+				}
+            }
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
 			if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
-            $ext = file::getExtension($file);
             $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
             $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
             $thumb = file_exists("$thumbDir/$name");

@@ -5,8 +5,8 @@
 * @package  AjaxSearchConfig
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.0
+* @date         27/03/2013
 *
 * Purpose:
 *    The AjaxSearchConfig class contains all functions and data used to manage configuration context
@@ -112,9 +112,9 @@ class AjaxSearchConfig {
                 $valid = true;
             }
         } elseif (!isset($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODX config file";
         } elseif (!strlen($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODX config file";
         } else {
             // if you get this message, simply update the $pageCharset array in search.class.inc.php file
             // with the appropriate mapping between Mysql Charset and Html charset

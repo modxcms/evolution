@@ -1,20 +1,26 @@
 <?php
 /**
- * Filename: includes/lang/german.inc.php
- * Function: Language file.
- * Author: The MODx Project Team
- * Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
- * Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
- * Anpassungen für MODx 1.0 durch Bogdan Günther
- * Anpassungen für MODx 1.0.5 durch Anselm Hannemann
- * Date: 2013-08/08
- * Version: 4.0
- * MODX version: 1.0.11
-*/
-$modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
+ * MODX Manager language file
+ *
+ * @version 1.0.13
+ * @date 2014/02/24
+ * @author Rainer Bachmaier
+ * @author Marc Hinse
+ * @author Bogdan Günther
+ * @author Anselm Hannemann
+ * @author Thomas Jakobi
+ *
+ * @language German
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+$modx_lang_attribute = 'de'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX ist ein unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlichtes <a href="http://modx.com/software/open-source-cms/modx-evolution/" target="_blank">PHP-Framework und Content Management System</a>.';
+$_lang["about_msg"] = 'MODX ist ein unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlichtes <a href="http://modx.com/" target="_blank">PHP-Framework und Content Management System</a>.';
 $_lang["about_title"] = 'Über MODX';
 $_lang["access_permission_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung für diese Ressource.';
 $_lang["access_permission_parent_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung, um eine Ressource an dieser Stelle zu erstellen oder hierher zu verschieben.';
@@ -67,17 +73,17 @@ $_lang["allow_mgr_access_message"] = 'Wählen Sie diese Option, um den Zugriff a
 $_lang["already_deleted"] = 'wurde schon gelöscht.';
 $_lang["attachment"] = 'Anhang';
 $_lang["automatic_alias_message"] = 'Wählen Sie „ja“, damit das System beim Sichern automatisch einen eindeutigen Alias basierend auf den Seitentitel der Ressource vergibt.';
-$_lang["automatic_alias_title"] = 'Automatisch erstellter Alias:';
+$_lang["automatic_alias_title"] = 'Automatisch erstellter Alias';
 $_lang["backup"] = 'Backup';
 $_lang["bk_manager"] = 'Backup';
 $_lang["block_message"] = 'Dieser Benutzer wird gesperrt sein, nachdem Sie die Benutzerdaten gespeichert haben!';
 $_lang["blocked_minutes_message"] = 'Hier können Sie einstellen, wie viele Minuten ein Benutzer gesperrt wird, wenn er die maximale Anzahl von fehlgeschlagenen Anmeldeversuchen erreicht hat. Bitte geben Sie nur Zahlen ein, keine Kommas oder Leerstellen.';
-$_lang["blocked_minutes_title"] = 'Sperrzeit in Minuten:';
+$_lang["blocked_minutes_title"] = 'Sperrzeit in Minuten';
 $_lang["cache_files_deleted"] = 'Die folgenden Dateien wurden gelöscht:';
 $_lang["cancel"] = 'Abbrechen';
 $_lang["captcha_code"] = 'Sicherheits-Code';
 $_lang["captcha_message"] = 'Aktivieren Sie Captcha-Validierung, um die Sicherheit zu erhöhen.';
-$_lang["captcha_title"] = 'Captcha aktivieren:';
+$_lang["captcha_title"] = 'Captcha aktivieren';
 $_lang["captcha_words_default"] = 'MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
 $_lang["captcha_words_message"] = 'Wenn Captcha aktiviert ist können Sie eine Liste von Captcha-Wörter eingeben. Trennen Sie die Wörter mit Kommas. Das Eingabe Feld ist mit 255 Zeichen beschränkt.';
 $_lang["captcha_words_title"] = 'Captcha-Wörter';
@@ -94,7 +100,7 @@ $_lang["change_password_confirm"] = 'Passwort bestätigen';
 $_lang["change_password_message"] = 'Bitte geben Sie Ihr neues Passwort ein und bestätigen Sie dieses durch erneute Eingabe. Das Passwort muss zwischen 6 und 15 Zeichen lang sein.';
 $_lang["change_password_new"] = 'Neues Passwort';
 $_lang["charset_message"] = 'Wählen Sie die Zeichenkodierung für die [(modx_charset)]-Systemvariable. Diese Einstellung beeinflusst nicht den Manager.';
-$_lang["charset_title"] = 'Zeichenkodierung:';
+$_lang["charset_title"] = 'Zeichenkodierung';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Chunk-Code (HTML)';
 $_lang["chunk_multiple_id"] = 'Fehler: Mehrere Chunks benutzen die selbe ID.';
@@ -105,7 +111,7 @@ $_lang["clean_uploaded_filename_message"] = 'Benutzen Sie die Standard- oder Ali
 $_lang["clear_log"] = 'Protokoll löschen';
 $_lang["click_to_context"] = 'Klicken Sie hier, für das Kontextmenü';
 $_lang["click_to_edit_title"] = 'Klicken Sie hier, um den Eintrag zu bearbeiten';
-$_lang["click_to_view_details"] = 'Hier klicken, um die Details anzuzeigen';
+$_lang["click_to_view_details"] = 'Klicken Sie hier, um die Details anzuzeigen';
 $_lang["close"] = 'Schließen';
 $_lang["code"] = 'Code';
 $_lang["collapse_tree"] = 'Baum einklappen';
@@ -115,21 +121,21 @@ $_lang["configcheck_cache"] = 'Das Cache-Verzeichnis ist nicht beschreibbar';
 $_lang["configcheck_cache_msg"] = 'MODX kann das Cache-Verzeichnis nicht beschreiben. MODX wird wie erwartet funktionieren, das Caching ist jedoch deaktiviert. Um das Problem zu beheben, machen Sie das Verzeichnis „cache“ im Verzeichnis „assets“ beschreibbar.';
 $_lang["configcheck_configinc"] = 'Die Konfigurationsdatei ist weiterhin beschreibbar';
 $_lang["configcheck_configinc_msg"] = 'Böswillige Menschen könnten möglicherweise verheerende Schäden an Ihrer Website und allem was damit verbunden ist anrichten. <b>Wichtig:</b> Bitte ändern Sie die Zugriffsrechte der Konfigurationsdatei (/[+MGR_DIR+]/includes/config.inc.php) auf nur-lesen!';
-$_lang["configcheck_default_msg"] = 'Eine nicht spezifizierte Warnung wurde ermittelt, was seltsam ist.';
+$_lang["configcheck_default_msg"] = 'Eine nicht weiter spezifizierte Warnung ist aufgetreten.';
 $_lang["configcheck_errorpage_unavailable"] = 'Die Fehlerseite Ihres Webauftrittes ist nicht verfügbar.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Ihre Fehlerseite ist für normale Besucher nicht abrufbar oder existiert nicht. Dies kann zu einer Endlosschleife und vielen Fehlermeldungen in Ihren Webserver-Statistiken führen. Stellen Sie sicher, dass der Seite keine Benutzergruppen zugeordnet sind.';
 $_lang["configcheck_errorpage_unpublished"] = 'Die Fehlerseite Ihres Webauftrittes wurde nicht veröffentlicht oder noch nicht erstellt.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Ihre Fehlerseite ist der Allgemeinheit nicht zugänglich. Veröffentlichen Sie die Seite oder stellen Sie sicher, dass in der Konfiguration eine vorhandene Seite aus dem Ressourcen-Baum ausgewählt ist.';
 $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Nicht mehr anzeigen.</em></a>';
 $_lang["configcheck_images"] = 'Das Bilderverzeichnis ist nicht beschreibbar';
-$_lang["configcheck_images_msg"] = 'Das Verzeichnis /images/ ist nicht beschreibbar. Die Funktionen des Bilder-Managers im Editor werden nicht funktionieren!';
+$_lang["configcheck_images_msg"] = 'Das Verzeichnis „images“ ist nicht beschreibbar. Die Funktionen des Bilder-Managers im Editor werden nicht funktionieren!';
 $_lang["configcheck_installer"] = 'Installationsverzeichnis ist noch vorhanden';
 $_lang["configcheck_installer_msg"] = 'Das Installationsverzeichnis enthält die Installationsroutinen von MODX. Um zu verhindern, dass eine nicht berechtigte Person die Installationsroutine möglicherweise nochmals starten kann, sollten Sie den Ordner /install jetzt vom Server löschen.';
 $_lang["configcheck_lang_difference"] = 'Die Sprachdatei enthält eine falsche Anzahl an Einträgen';
 $_lang["configcheck_lang_difference_msg"] = 'Die zur Zeit ausgewählte Sprache (Deutsch) enthält nicht die gleiche Anzahl an Einträgen wie die Standardsprache (Englisch). Dies stellt kein Problem für die Arbeit mit MODX dar, bedeutet jedoch, dass Sie die Sprachdatei aktualisieren sollten.';
 $_lang["configcheck_notok"] = 'Eine oder mehrere Optionen der Konfiguration sind nicht in Ordnung: ';
 $_lang["configcheck_ok"] = 'Überprüfung bestanden – keine Warnungen vorhanden.';
-$_lang["configcheck_php_gdzip"] = 'PHP-Erweiterungen GD und / oder ZIP wurden nicht gefunden';
+$_lang["configcheck_php_gdzip"] = 'PHP-Erweiterungen GD und/oder ZIP wurden nicht gefunden';
 $_lang["configcheck_php_gdzip_msg"] = 'MODX benötigt die GD- und ZIP-PHP-Erweiterungen. MODX funktioniert zwar auch ohne diese Erweiterungen, aber Sie werden nicht das volle Potential des eingebauten Datei-Managers, Image-Editors oder Captchas für die Anmeldung ausschöpfen können.';
 $_lang["configcheck_register_globals"] = 'register_globals ist in Ihrer php.ini Konfigurationsdatei auf ON gesetzt';
 $_lang["configcheck_register_globals_msg"] = 'Diese Konfiguration macht Ihre Website wesentlich anfälliger für Cross-Site-Scripting-Attacken (XSS). Sie sollten Ihren Web-Hosting-Provider kontaktieren, um herauszufinden wie Sie diese Einstellung ändern können.';
@@ -143,7 +149,7 @@ $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Die Seite für unautor
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Die Seite für unautorisierte Zugriffe aus den Einstellungen Ihrer Konfiguration ist nicht veröffentlicht.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Die Seite unautorisierte Zugriffe ist der Allgemeinheit nicht zugänglich. Veröffentlichen Sie die Seite oder stellen Sie sicher, dass in der Konfiguration eine vorhandene Seite aus dem Ressourcen-Baum ausgewählt ist.';
 $_lang["configcheck_validate_referer"] = 'Sicherheitshinweis: HTTP Header Validierung';
-$_lang["configcheck_validate_referer_msg"] = 'Die Konfigurationseinstellung <strong>HTTP_REFERER Header validieren?</strong> ist AUS. Wir empfehlen, diese anzuschalten. <a href="index.php?a=17">Zu den Einstellungen</a><br /><a href="javascript:hideHeaderVerificationWarning();"><em>Diese Warnung nicht mehr zeigen</em></a>';
+$_lang["configcheck_validate_referer_msg"] = 'Die Konfigurationseinstellung <strong>HTTP_REFERER Header validieren?</strong> ist AUSGESCHALTET. Wir empfehlen, diese anzuschalten. <a href="index.php?a=17">Zu den Einstellungen</a>';
 $_lang["configcheck_warning"] = 'Konfigurationswarnung:';
 $_lang["configcheck_what"] = 'Was bedeutet das?';
 $_lang["confirm_block"] = 'Sind Sie sicher, dass Sie diesen Benutzer sperren wollen?';
@@ -159,7 +165,7 @@ $_lang["confirm_delete_role"] = 'Sind Sie sicher, dass Sie diese Rolle löschen 
 $_lang["confirm_delete_snippet"] = 'Sind Sie sicher, das Sie dieses Snippet löschen möchten?';
 $_lang["confirm_delete_tags"] = 'Sind Sie sicher, dass Sie die ausgewählten Meta-Tags löschen möchten?';
 $_lang["confirm_delete_template"] = 'Sind Sie sicher, dass Sie dieses Template löschen möchten?';
-$_lang["confirm_delete_tmplvars"] = 'Sind Sie sicher, dass Sie diese Variable inklusive der gespeicherten Inhalte löschen möchten?';
+$_lang["confirm_delete_tmplvars"] = 'Sind Sie sicher, dass Sie diese Template-Variable inklusive der gespeicherten Inhalte löschen möchten?';
 $_lang["confirm_delete_user"] = 'Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?';
 $_lang["confirm_duplicate_record"] = 'Sind Sie sicher, dass Sie diesen Eintrag duplizieren möchten?';
 $_lang["confirm_empty_trash"] = 'Beim leeren des Mülleimers werden alle gelöschten Ressourcen dauerhaft entfernt.\n\nFortfahren?';
@@ -180,15 +186,15 @@ $_lang["create_resource_title"] = 'Ressource erstellen';
 $_lang["create_weblink_here"] = 'Web-Link hier erstellen';
 $_lang["createdon"] = 'Erstellungsdatum';
 $_lang["credits"] = 'Danksagungen';
-$_lang["credits_shouts_msg"] = '<p>Informationen zum MODX-Team und zur Geschichte und Weiterentwicklung von MODX finden Sie unter: <a href="http://modx.com/" target="_blank">modx.com/about/</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX wird auf <a href="http://modx.com/" target="_blank">modx.com</a> weiterentwickelt und gepflegt.</p>';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Inhalts-Typen hinzufügen. Geben Sie hierzu den Typ ein und klicken dann auf hinzufügen.';
-$_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen:';
+$_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen';
 $_lang["database_charset"] = 'Datenbank-Zeichensatz';
 $_lang["database_collation"] = 'Datenbank-Kollations-Zeichensatz';
 $_lang["database_name"] = 'Datenbank-Name';
 $_lang["database_overhead"] = '<b>Hinweis:</b> Der Overhead ist von MySQL reservierter Speicher, der nicht verwendet wird. Sie können diesen Speicher freigeben, indem Sie auf die Overhead-Angabe der jeweiligen Tabelle klicken.';
 $_lang["database_server"] = 'Datenbank-Server';
-$_lang["database_table_clickbackup"] = 'um ein Backup zu erstellen und die ausgewählten Tabellen herunter zu laden';
+$_lang["database_table_clickbackup"] = 'Backup erstellen und die ausgewählten Tabellen herunterladen';
 $_lang["database_table_clickhere"] = 'Hier klicken';
 $_lang["database_table_datasize"] = 'Datenmenge';
 $_lang["database_table_droptablestatements"] = 'Erzeuge DROP TABLE Anweisungen.';
@@ -197,15 +203,15 @@ $_lang["database_table_indexsize"] = 'Index-Größe';
 $_lang["database_table_overhead"] = 'Overhead';
 $_lang["database_table_records"] = 'Datensätze';
 $_lang["database_table_tablename"] = 'Tabellenname';
-$_lang["database_table_totals"] = 'Summen:';
+$_lang["database_table_totals"] = 'Summen';
 $_lang["database_table_totalsize"] = 'Gesamtgröße';
 $_lang["database_tables"] = 'Datenbank-Tabellen';
-$_lang["database_version"] = 'Datenbank-Version:';
+$_lang["database_version"] = 'Datenbank-Version';
 $_lang["date"] = 'Datum';
 $_lang["datechanged"] = 'Änderungsdatum';
-$_lang["datepicker_offset"] = 'Zeitspanne Datumswähler: ';
+$_lang["datepicker_offset"] = 'Zeitspanne Datumswähler';
 $_lang["datepicker_offset_message"] = 'Die Anzahl der vergangenen Jahre die der Datumswähler anzeigen soll.';
-$_lang["datetime_format"] = 'Datumsformat:';
+$_lang["datetime_format"] = 'Datumsformat';
 $_lang["datetime_format_message"] = 'Das Format für Datumsangaben im Manager.';
 $_lang["default"] = 'Default:';
 $_lang["defaultcache_message"] = 'Wählen Sie „Ja“, um alle neuen Ressourcen voreingestellt als cachebar anzulegen.';
@@ -235,7 +241,7 @@ $_lang["doc_data_title"] = 'Daten der Ressource anzeigen';
 $_lang["duplicate"] = 'Duplizieren';
 $_lang["duplicate_alias_found"] = 'Die Ressource „%s“ verwendet bereits den Alias „%s“. Bitte geben Sie einen eindeutigen Alias ein.';
 $_lang["duplicate_alias_message"] = 'Wählen Sie „ja“, um zweideutige Alias-Namen zu erlauben. <b>Hinweis:</b> Diese Option sollte zusammen mit der Option „Benutzerfreundliche URLs“ verwendet werden, um etwaige Probleme bei der Ressourcen-Referenzierung zu vermeiden.';
-$_lang["duplicate_alias_title"] = 'Doppelte Aliase zulassen:';
+$_lang["duplicate_alias_title"] = 'Doppelte Aliase zulassen';
 $_lang["duplicate_name_found_general"] = 'Es existiert bereits ein %s mit dem Namen „%s“. Bitte geben Sie einen eindeutigen Namen ein.';
 $_lang["duplicate_name_found_module"] = 'Es existiert bereits ein Modul mit dem Namen „%s“. Bitte geben Sie einen eindeutigen Namen ein.';
 $_lang["edit"] = 'Bearbeiten';
@@ -245,7 +251,7 @@ $_lang["edit_settings"] = 'Konfiguration';
 $_lang["editedon"] = 'Änderungsdatum';
 $_lang["editing_file"] = 'zu ändernde Datei: ';
 $_lang["editor_css_path_message"] = 'Geben Sie hier den Pfad zur CSS-Datei an, die Sie im Editor verwenden möchten. Falls Sie keine CSS-Datei verwenden möchten, lassen Sie das Feld leer.';
-$_lang["editor_css_path_title"] = 'Pfad zur CSS-Datei:';
+$_lang["editor_css_path_title"] = 'Pfad zur CSS-Datei';
 $_lang["element"] = 'Element';
 $_lang["element_categories"] = 'Alle Elemente';
 $_lang["element_management"] = 'Elemente-Verwaltung';
@@ -256,10 +262,10 @@ $_lang["elements"] = 'Elemente';
 $_lang["email"] = 'E-Mail';
 $_lang["email_sent"] = 'E-Mail erfolgreich gesendet.';
 $_lang["emailsender_message"] = 'Hier können Sie die E-Mail-Adresse angeben, die als Absendeadresse genutzt wird.';
-$_lang["emailsender_title"] = 'E-Mail-Adresse:';
+$_lang["emailsender_title"] = 'E-Mail-Adresse';
 $_lang["emailsubject_default"] = 'Ihre Anmeldedaten';
 $_lang["emailsubject_message"] = 'Hier können Sie den Inhalt des Betreffs eingeben.';
-$_lang["emailsubject_title"] = 'E-Mail-Betreff:';
+$_lang["emailsubject_title"] = 'E-Mail-Betreff';
 $_lang["empty_folder"] = 'Dieser Container ist leer';
 $_lang["empty_recycle_bin"] = 'Papierkorb leeren';
 $_lang["empty_recycle_bin_empty"] = 'Es sind keine gelöschten Ressourcen zum Entfernen vorhanden.';
@@ -270,7 +276,7 @@ $_lang["enabled"] = 'Aktiviert';
 $_lang["error"] = 'Fehler';
 $_lang["error_sending_email"] = 'E-Mail konnte nicht gesendet werden';
 $_lang["errorpage_message"] = 'Geben Sie die ID der Ressource ein, welche aufgerufen wird, wenn eine Seite angefordert wird die nicht vorhanden ist. <b>Hinweis:</b> Stellen Sie sicher, das diese Ressource vorhanden und veröffentlicht ist!';
-$_lang["errorpage_title"] = 'Fehlerseite:';
+$_lang["errorpage_title"] = 'Fehlerseite';
 $_lang["event_id"] = 'Ereignis-ID';
 $_lang["eventlog"] = 'Systemereignisprotokoll';
 $_lang["eventlog_msg"] = 'Informations-, Warn- und Fehlermeldungen des MODX-Managers werden im Systemereignisprotokoll gespeichert. Unter „Quelle“ ist das jeweils verursachende Modul angegeben.';
@@ -299,26 +305,26 @@ $_lang["export_site_suffix"] = 'Datei-Suffix:';
 $_lang["export_site_target_unwritable"] = 'Datei kann nicht gespeichert werden – Überprüfen Sie den Schreibzugriff im Zielverzeichnis und versuchen Sie es erneut!';
 $_lang["export_site_time"] = 'Export beendet. Dauer für den Export %s Sekunden';
 $_lang["failed_login_message"] = 'Hier können Sie die Anzahl fehlgeschlagener Anmeldeversuche einstellen, die erlaubt sind bevor ein Benutzer gesperrt wird.';
-$_lang["failed_login_title"] = 'Fehlgeschlagene Anmeldeversuche:';
+$_lang["failed_login_title"] = 'Fehlgeschlagene Anmeldeversuche';
 $_lang["fe_editor_lang_message"] = 'Wählen Sie die Sprache, die für den Frontend-Editor verwendet werden soll.';
-$_lang["fe_editor_lang_title"] = 'Sprache des Frontend-Editors:';
+$_lang["fe_editor_lang_title"] = 'Sprache des Frontend-Editors';
 $_lang["file_delete_file"] = 'Datei löschen';
-$_lang["file_delete_folder"] = 'Ordner löschen';
+$_lang["file_delete_folder"] = 'Verzeichnis löschen';
 $_lang["file_deleted"] = 'Erfolgreich!';
 $_lang["file_download_file"] = 'Datei-Download';
 $_lang["file_download_unzip"] = 'Datei entpacken';
 $_lang["file_folder_chmod_error"] = 'Die Rechte können nicht verändert werden. Sie müssen die Rechte außerhalb von MODX ändern.';
-$_lang["file_folder_created"] = 'Ordnererstellung erfolgreich!';
-$_lang["file_folder_deleted"] = 'Ordner erfolgreich gelöscht!';
-$_lang["file_folder_not_created"] = 'Ordnererstellung nicht möglich';
-$_lang["file_folder_not_deleted"] = 'Ordner kann nicht gelöscht werden. Stellen Sie sicher, dass der Ordner leer ist.';
+$_lang["file_folder_created"] = 'Verzeichnis erfolgreich erstellt!';
+$_lang["file_folder_deleted"] = 'Verzeichnis erfolgreich gelöscht!';
+$_lang["file_folder_not_created"] = 'Verzeichniserstellung nicht möglich';
+$_lang["file_folder_not_deleted"] = 'Verzeichnis kann nicht gelöscht werden. Stellen Sie sicher, dass das Verzeichnis leer ist.';
 $_lang["file_not_deleted"] = 'Nicht erfolgreich!';
 $_lang["file_not_saved"] = 'Datei kann nicht gespeichert werden. Überprüfen Sie den Schreibzugriff im Zielverzeichnis!';
 $_lang["file_saved"] = 'Datei erfolgreich aktualisiert!';
 $_lang["file_unzip"] = 'Unzip erfolgreich!';
 $_lang["file_unzip_fail"] = 'Unzip fehlgeschlagen!';
 $_lang["filemanager_path_message"] = 'Unter Umständen erkennt Ihr Webserver (z.B. IIS) den Pfad nicht immer korrekt, überprüfen Sie deshalb diese Einstellung.';
-$_lang["filemanager_path_title"] = 'Datei-Manager-Pfad:';
+$_lang["filemanager_path_title"] = 'Datei-Manager-Pfad';
 $_lang["files_access_denied"] = 'Zugriff verweigert!';
 $_lang["files_data"] = 'Größe';
 $_lang["files_dir_listing"] = 'Verzeichnisübersicht für:';
@@ -349,34 +355,34 @@ $_lang["files_uploadfile"] = 'Datei hochladen';
 $_lang["files_uploadfile_msg"] = 'Datei zum Hochladen wählen:';
 $_lang["files_uploading"] = 'Upload <b>%s</b> in Verzeichnis <b>%s/</b>';
 $_lang["files_viewfile"] = 'Datei anzeigen';
-$_lang["folder"] = 'Ordner';
+$_lang["folder"] = 'Verzeichnis';
 $_lang["forgot_password_email_fine_print"] = '* Die oben angegebene URL verliert nach Änderung Ihres Kennworts oder spätestens nach einem Tag ihre Gültigkeit.';
 $_lang["forgot_password_email_instructions"] = 'Anschließend können Sie Ihr Kennwort im Benutzermenü der Zugangsverwaltung ändern.';
 $_lang["forgot_password_email_intro"] = 'Es wurde ein neues Kennwort für Ihren Zugang angefordert.';
 $_lang["forgot_password_email_link"] = 'Klicken Sie hier, um ein neues Kennwort zu erstellen.';
 $_lang["forgot_your_password"] = 'Kennwort vergessen?';
 $_lang["friday"] = 'Freitag';
-$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und die Ressource einen Alias-Eintrag hat, wird das Alias als benutzerfreundliche URL verwendet.  Falls Sie keine benutzerfreundliche URLs verwenden verwenden, generiert MODX den Link mit einer durchlaufenden Nummerierung.';
-$_lang["friendly_alias_title"] = 'Aliasnamen:';
+$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und die Ressource einen Alias-Eintrag hat, wird das Alias als benutzerfreundliche URL verwendet. Falls Sie keine benutzerfreundlichen URLs verwenden, generiert MODX den Link mit einer durchlaufenden Nummerierung.';
+$_lang["friendly_alias_title"] = 'Aliasnamen nutzen';
 $_lang["friendlyurls_message"] = 'Diese Option erlaubt Ihnen die Benutzung benutzerfreundlicher URLs auf Apache-Webservern mit aktiviertem mod_rewrite oder auf dem IIS-Webserver mit entsprechenden Modulen. Öffnen sie bei MODX enthaltene .htaccess-Datei im Root-Verzeichnis für mehr Informationen.';
-$_lang["friendlyurls_title"] = 'Benutzerfreundliche URLs nutzen:';
+$_lang["friendlyurls_title"] = 'Benutzerfreundliche URLs nutzen';
 $_lang["friendlyurlsprefix_message"] = 'Hier können Sie ein Präfix für die benutzerfreundlichen URLs angeben. Wenn Sie z.B. „page“ als Präfix angeben, wird die URL /index.php?id=2 in /page2.html umgewandelt (vorausgesetzt das Suffix wurde auf .html gesetzt).';
-$_lang["friendlyurlsprefix_title"] = 'Präfix für benutzerfreundliche URLs:';
+$_lang["friendlyurlsprefix_title"] = 'Präfix für benutzerfreundliche URLs';
 $_lang["friendlyurlsuffix_message"] = 'Hier können Sie ein Suffix angeben.';
-$_lang["friendlyurlsuffix_title"] = 'Suffix für benutzerfreundliche URLs:';
+$_lang["friendlyurlsuffix_title"] = 'Suffix für benutzerfreundliche URLs';
 $_lang["functionnotimpl"] = 'Sorry!';
 $_lang["functionnotimpl_message"] = 'Diese Funktion ist noch nicht implementiert';
 $_lang["go"] = 'Los';
 $_lang["group_access_permissions"] = 'Benutzergruppenberechtigungen';
 $_lang["guid"] = 'Eindeutige Identifikationsnummer (GUID)';
 $_lang["help"] = 'Hilfe';
-$_lang["help_msg"] = 'Wenn Sie Hilfe bei der Nutzung von MODX benötigen, finden Sie Rat und Unterstützung in folgenden Foren:<br><a href="http://modxcms.de/forum/" target="_blank">MODX-Forum Deutschland</a><br><a href="http://forums.modx.com/" target="_blank">Internationales MODX-Forum</a><br>Auch immer hilfreich: ein Blick in die <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">Dokumentation</a>.';
+$_lang["help_msg"] = 'Wenn Sie Hilfe bei der Nutzung von MODX benötigen, finden Sie Rat und Unterstützung in folgenden Foren:<br><a href="http://modxcms.de/forum/" target="_blank">MODX-Forum Deutschland</a><br><a href="http://forums.modx.com/" target="_blank">Internationales MODX-Forum</a><br>Auch immer hilfreich: ein Blick in die <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">Dokumentation</a>.';
 $_lang["help_title"] = 'Hilfe';
 $_lang["hide_tree"] = 'Baum verbergern';
 $_lang["home"] = 'Start';
 $_lang["htmlsnippet_desc"] = 'Chunk-Beschreibung';
 $_lang["htmlsnippet_management_msg"] = 'Hier können Sie das zu bearbeitende Chunk auswählen';
-$_lang["htmlsnippet_msg"] = 'Hier können Sie Chunks hinzufügen oder bearbeiten. Achtung, Chunks bestehen aus reinem HTML-Code – PHP-Code wird nicht verarbeitet.';
+$_lang["htmlsnippet_msg"] = 'Hier können Sie Chunks hinzufügen oder bearbeiten. Achtung, Chunks bestehen aus reinem HTML-Code – PHP-Code wird nicht ausgeführt.';
 $_lang["htmlsnippet_name"] = 'Chunk-Name';
 $_lang["htmlsnippet_title"] = 'Chunk erstellen/bearbeiten ';
 $_lang["icon"] = 'Symbol';
@@ -406,26 +412,26 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';
 $_lang["inline"] = 'Browser-Fenster';
 $_lang["insert"] = 'Einfügen';
-$_lang["maxImageWidth"] = 'Maximum image width';
-$_lang["maxImageHeight"] = 'Maximum image height';
-$_lang["thumbWidth"] = 'Maximum thumbnail width';
-$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["maxImageWidth"] = 'Maximale Bildbreite';
+$_lang["maxImageHeight"] = 'Maximale Bildhöhe';
+$_lang["thumbWidth"] = 'Maximale Vorschaubild-Breite';
+$_lang["thumbHeight"] = 'Maximale Vorschaubild-Höhe';
 $_lang["thumbsDir"] = 'Thumbnails directory location';
-$_lang["jpegQuality"] = 'JPEG compression';
-$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
-$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
-$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
-$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
-$_lang["thumbsDir_message"] = 'The name of previews folder.';
-$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
-$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
+$_lang["jpegQuality"] = 'JPEG Komprimierung';
+$_lang["denyZipDownload"] = 'Download von ZIP-Dateien deaktivieren';
+$_lang["denyExtensionRename"] = 'Umbenennen von Dateierweiterungen deaktivieren';
+$_lang["maxImageWidth_message"] = 'Sobald ein hochgeladenes Bild diese Größe überschreitet, wird es automatisch verkleinert. Auf 0 stellen zum Deaktivieren';
+$_lang["maxImageHeight_message"] = 'Sobald ein hochgeladenes Bild diese Größe überschreitet, wird es automatisch verkleinert. Auf 0 stellen zum Deaktivieren';
+$_lang["thumbWidth_message"] = 'Maximale Vorschaubild-Breite.';
+$_lang["thumbHeight_message"] = 'Maximale Vorschaubild-Höhe.';
+$_lang["thumbsDir_message"] = 'Name des Vorschaubild-Verzeichnisses';
+$_lang["jpegQuality_message"] = 'JPEG Komprimierungsqualität für Vorschaubilder und verkleinerte Bilder';
+$_lang["showHiddenFiles"] = 'Versteckte Dateien im Datei-Browser anzeigen';
 $_lang["keyword"] = 'Schlüsselwort';
 $_lang["keywords"] = 'Schlüsselwörter';
-$_lang["keywords_intro"] = 'Hier legen Sie die Schlüsselwörter fest, die Ihrem Ressource zugewiesen werden können.';
+$_lang["keywords_intro"] = 'Hier legen Sie die Schlüsselwörter fest, die Ihrer Ressource zugewiesen werden können.';
 $_lang["language_message"] = 'Wählen Sie die Sprache für den MODX-Manager.';
-$_lang["language_title"] = 'Sprache:';
+$_lang["language_title"] = 'Sprache';
 $_lang["launch_site"] = 'Anzeigen';
 $_lang["link_attributes"] = 'Link-Attribute';
 $_lang["link_attributes_help"] = 'Hier können Sie HTML-Attribute für den Link angeben (z.B. target= oder rel=).';
@@ -446,8 +452,8 @@ $_lang["lock_snippet"] = 'Snippet für die Bearbeitung sperren.';
 $_lang["lock_snippet_msg"] = 'Nur Administratoren (Rollen-ID 1) können dieses Snippet bearbeiten.';
 $_lang["lock_template"] = 'Template für die Bearbeitung sperren.';
 $_lang["lock_template_msg"] = 'Nur Administratoren (Rollen-ID 1) können dieses Template bearbeiten.';
-$_lang["lock_tmplvars"] = 'Variable gegen Bearbeitung sperren';
-$_lang["lock_tmplvars_msg"] = 'Nur Administratoren (Rollen-ID 1) können diese Variable bearbeiten.';
+$_lang["lock_tmplvars"] = 'Template-Variable gegen Bearbeitung sperren';
+$_lang["lock_tmplvars_msg"] = 'Nur Administratoren (Rollen-ID 1) können diese Template-Variable bearbeiten.';
 $_lang["locked"] = 'Gesperrt';
 $_lang["login_allowed_days"] = 'Wochentagsbeschränkung';
 $_lang["login_allowed_days_message"] = 'Wählen Sie die Wochentage aus, an denen der Benutzer Zugriff erhält.';
@@ -460,11 +466,11 @@ $_lang["login_captcha_message"] = ' Der Administrator hat die Captcha-Validierun
 $_lang["login_homepage"] = 'Anmeldeseite';
 $_lang["login_homepage_message"] = 'Geben Sie die Ressource-ID an, zu welcher der Web-Benutzer nach einer erfolgreichen Anmeldung weitergeleitet wird. <b>Hinweis:</b> Stellen Sie sicher, das diese Ressource vorhanden und veröffentlicht ist und der entsprechende Web-Benutzer die notwendigen Zugriffsberechtigungen besitzt um darauf zuzugreifen!';
 $_lang["login_message"] = 'Bitte melden Sie sich an, um mit MODX zu arbeiten.<br />Beachten Sie bei Ihrer Eingabe die Groß- und Kleinschreibung.';
-$_lang["logo_slogan"] = 'MODX-Content-Manager – \n\nCreate and do more with less';
+$_lang["logo_slogan"] = 'MODX-Content-Management-System \n\n& Application-Framework.\n\nCreative. Freedom.';
 $_lang["logout"] = 'Abmelden';
 $_lang["long_title"] = 'Langer Titel';
 $_lang["mail_check_timeperiod_message"] = 'Wie oft soll nach neuen Nachrichten im Manager gesucht werden (Angabe in Sekunden)?';
-$_lang["mail_check_timeperiod_title"] = 'Nachrichten-Überprüfungsfrequenz:';
+$_lang["mail_check_timeperiod_title"] = 'Nachrichten-Überprüfungsfrequenz';
 $_lang["manage_depends"] = 'Abhängigkeiten verwalten';
 $_lang["manage_files"] = 'Datei-Manager';
 $_lang["manage_htmlsnippets"] = 'Chunks';
@@ -476,7 +482,7 @@ $_lang["manage_templates"] = 'Template-Verwaltung';
 $_lang["manager"] = 'Manager';
 $_lang["manager_lockout_message"] = '<p>Sie sind gegenwärtig im MODX-Manager angemeldet. Wenn Sie Ihre Login-Session beenden wollen, klicken Sie bitte den Abmelden-Button.</p><p>Um zu Ihrer Start- oder Home-Seite zu gelangen, klicken Sie bitte den Start-Button.';
 $_lang["manager_permissions"] = 'Manager-Zugriffberechtigungen';
-$_lang["manager_theme"] = 'Manager-Template:';
+$_lang["manager_theme"] = 'Manager-Template';
 $_lang["manager_theme_message"] = 'Wählen Sie das Template für den MODX-Manager aus.';
 $_lang["messages"] = 'Nachrichten';
 $_lang["messages_all"] = 'alle';
@@ -574,6 +580,7 @@ $_lang["new_template"] = 'Neues Template';
 $_lang["new_tmplvars"] = 'Neue Template-Variable';
 $_lang["new_user"] = 'Neuer Benutzer';
 $_lang["new_web_user"] = 'Neuer Web-Benutzer';
+$_lang["new_resource"] = 'Neue Ressource';
 $_lang["no"] = 'Nein';
 $_lang["no_active_users_found"] = 'Keine aktiven Benutzer gefunden.';
 $_lang["no_activity_message"] = 'Sie haben bis jetzt noch keine Ressourcen bearbeitet oder erstellt.';
@@ -581,15 +588,15 @@ $_lang["no_category"] = 'nicht kategorisiert';
 $_lang["no_docs_pending_publishing"] = 'Es stehen keine Ressourcen zum zeitgesteuerten Veröffentlichen an.';
 $_lang["no_docs_pending_pubunpub"] = 'Keine Ereignisse.';
 $_lang["no_docs_pending_unpublishing"] = 'Es stehen keine Ressourcen zum zeitgesteuerten Zurückziehen an.';
-$_lang["no_edits_creates"] = 'No edits or creates found.';
+$_lang["no_edits_creates"] = 'Keine bearbeiteten oder erstellten Ressourcen gefunden.';
 $_lang["no_groups_found"] = 'Keine Gruppen gefunden.';
 $_lang["no_keywords_found"] = 'Keine Keywords vorhanden.';
 $_lang["no_records_found"] = 'Keine Einträge gefunden.';
 $_lang["no_results"] = 'Es wurden keine Ergebnisse gefunden';
 $_lang["nologentries_message"] = 'Geben Sie die Anzahl der Einträge an, die im Protokoll angezeigt werden sollen.';
-$_lang["nologentries_title"] = 'Anzahl der Log-Einträge:';
+$_lang["nologentries_title"] = 'Anzahl der Log-Einträge';
 $_lang["nomessages_message"] = 'Geben Sie wie viele Nachrichten im Posteingang angezeigt werden sollen.';
-$_lang["nomessages_title"] = 'Anzahl der Nachrichten:';
+$_lang["nomessages_title"] = 'Anzahl der Nachrichten';
 $_lang["none"] = 'Keine';
 $_lang["noresults_message"] = 'Anzahl der anzuzeigenden Ergebnisse in Listen und Suchergebnissen.';
 $_lang["noresults_title"] = 'Ergebnisse';
@@ -681,14 +688,14 @@ $_lang["publish_resource"] = 'Veröffentlichen';
 $_lang["rb_base_dir_message"] = 'Geben Sie den physischen Pfad auf dem Web-Server zu Ihrem Datei-Verzeichnis ein. Abhängig von Ihrem Webserver ist diese Einstellung im Normalfall automatisch vorausgefüllt. <b>Hinweis:</b> Für die korrekte Funktion muss das Datei-Verzeichnis die Unterverzeichnisse „images“, „docs“, „flash“ und „media“ beinhalten.';
 $_lang["rb_base_dir_title"] = 'Datei-Basispfad';
 $_lang["rb_base_url_message"] = 'Geben Sie den virtuellen Pfad zum Datei-Basispfad an. Der virtuelle Pfad ist identisch mit der URL in Ihrem Web-Browser.';
-$_lang["rb_base_url_title"] = 'Datei-URL:';
+$_lang["rb_base_url_title"] = 'Datei-URL';
 $_lang["rb_message"] = 'Wählen Sie „Ja“, um den Datei-Browser zu aktivieren. Der Datei-Browser ermöglicht Benutzern, allgemeine Dateien wie Bilder, Animationen oder Mediendateien auf den Server zu laden und zu verwalten.';
-$_lang["rb_title"] = 'Datei-Browser aktivieren:';
+$_lang["rb_title"] = 'Datei-Browser aktivieren';
 $_lang["rb_webuser_message"] = 'Soll ein Web-Benutzer den Datei-Browser verwenden dürfen? <b>Hinweis:</b> Wenn Web-Benutzer den Datei-Browser verwenden dürfen, können sie alle Dateien einsehen auf die Manager-Benutzer Zugriff haben. Diese Möglichkeit sollte daher nur vertrauenswürdigen Web-Benutzern eingeräumt werden.';
 $_lang["rb_webuser_title"] = 'Web-Benutzer?';
 $_lang["recent_docs"] = 'Kürzlich bearbeitete Ressourcen';
 $_lang["recommend_setting_change_title"] = 'Empfohlene Änderung der Konfiguration';
-$_lang["recommend_setting_change_description"] = 'Ihre Seite überprüft momentan nicht die HTTP_REFERER von eingehenden Requests. Wir empfehlen dringend, diese Einstellung vorzunehmen, um das Risiko von CSFR-Attacken (Cross Site Request Forgery) zu reduzieren.';
+$_lang["recommend_setting_change_description"] = 'Ihre Seite überprüft momentan nicht die HTTP_REFERER von eingehenden Requests. Wir empfehlen dringend, diese Einstellung vorzunehmen, um das Risiko von CSRF-Attacken (Cross Site Request Forgery) zu reduzieren.';
 $_lang["refresh_cache"] = 'Cache: <b>%s</b> Dateien wurden im Cache-Verzeichnis gefunden. Gelöschte Dateien <b>%d</b>.<p>Der Cache wird erneuert, sobald die Seiten das erste mal aufgerufen werden.';
 $_lang["refresh_published"] = '<b>%s</b> Ressourcen wurden veröffentlicht.';
 $_lang["refresh_site"] = 'Cache leeren';
@@ -873,10 +880,10 @@ $_lang["send"] = 'Senden';
 $_lang["server_protocol_http"] = 'http';
 $_lang["server_protocol_https"] = 'https';
 $_lang["server_protocol_message"] = 'Falls Sie eine https-Verbindung nutzen möchten, geben Sie dies hier an.';
-$_lang["server_protocol_title"] = 'Servertyp:';
+$_lang["server_protocol_title"] = 'Servertyp';
 $_lang["serveroffset"] = 'Server-Zeitverschiebung';
 $_lang["serveroffset_message"] = 'Wählen Sie die Anzahl der Stunden, die zwischen der Server-Zeit und Ihrer Ortszeit liegen. Die derzeitige Server-Zeit ist <b>[%s]</b>, die derzeitige Server-Zeit bei Nutzung der Zeitverschiebung ist <b>[%s]</b>.';
-$_lang["serveroffset_title"] = 'Server-Zeitverschiebung:';
+$_lang["serveroffset_title"] = 'Server-Zeitverschiebung';
 $_lang["servertime"] = 'Server-Zeit';
 $_lang["settings_after_install"] = 'Da es sich um eine neue Installation handelt wird Ihnen empfohlen, die Einstellungen zu überprüfen und gegebenenfalls zu ändern.<br /><br />';
 $_lang["settings_config"] = 'Konfiguration';
@@ -885,7 +892,7 @@ $_lang["settings_events"] = 'Systemereignisse';
 $_lang["settings_furls"] = 'Benutzerfreundliche URL';
 $_lang["settings_general"] = 'Allgemein';
 $_lang["settings_misc"] = 'Sonstiges';
-$_lang["settings_KC"] = 'File Browser';
+$_lang["settings_KC"] = 'Datei-Browser';
 $_lang["settings_page_settings"] = 'Seiteneinstellungen';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Eigenschaften';
@@ -895,26 +902,26 @@ $_lang["settings_strip_image_paths_title"] = 'Bild-Pfade zurückschreiben?';
 $_lang["settings_templvars"] = 'Template-Variablen';
 $_lang["settings_title"] = 'MODX-Konfiguration';
 $_lang["settings_ui"] = 'Benutzeroberfläche';
-$_lang["settings_users"] = 'Benutzerverwaltung';
+$_lang["settings_users"] = 'Benutzer';
 $_lang["show_meta"] = 'META Keywords Tab anzeigen';
 $_lang["show_meta_message"] = 'Den (in Zukunft nicht mehr unterstützten) META Keywords Tab beim Ressource bearbeiten anzeigen.';
 $_lang["show_tree"] = 'Baum anzeigen';
 $_lang["showing"] = 'Anzeige';
 $_lang["signupemail_message"] = 'Hier können Sie die Vorlage der E-Mail eingeben, die das System automatisch an Ihre Benutzer schickt, wenn die entsprechenden Benutzerkonten erstellt werden. Folgende Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /> <br />[+sname+] – Name dieser Website<br />[+saddr+] – E-Mail-Adresse des Webmasters<br />[+surl+] – URL der Website<br />[+uid+] – Name des Benutzerkontos<br />[+pwd+] – Passwort des Benutzerkontos<br />[+ufn+] – Name des Benutzers<br /><br /><b>Hinweis:</b>Sie sollten auf jeden Fall [+uid+] und [+pwd+] in der Vorlage anführen, damit Ihre Benutzer auch die entsprechenden Anmeldedaten erhalten.';
-$_lang["signupemail_title"] = 'Aktivierungs-E-Mail:';
+$_lang["signupemail_title"] = 'Aktivierungs-E-Mail';
 $_lang["site"] = 'Website';
 $_lang["site_schedule"] = 'Terminplan';
 $_lang["sitename_message"] = 'Geben Sie den Namen Ihrer Website ein.';
-$_lang["sitename_title"] = 'Website-Name:';
+$_lang["sitename_title"] = 'Website-Name';
 $_lang["sitestart_message"] = 'Geben Sie die ID der Ressource ein, welche die Startseite sein soll. <b>Hinweis:</b> Stellen Sie sicher, das diese Ressource vorhanden und veröffentlicht ist!';
-$_lang["sitestart_title"] = 'Startseite:';
+$_lang["sitestart_title"] = 'Startseite';
 $_lang["sitestatus_message"] = 'Wählen Sie „Online“, um Ihre Seite zu veröffentlichen. Wenn Sie „Offline“ wählen wird den Besuchern Ihrer Seite die „Seite zur Zeit nicht erreichbar“ angezeigt.';
-$_lang["sitestatus_title"] = 'Status der Seite:';
+$_lang["sitestatus_title"] = 'Status der Seite';
 $_lang["siteunavailable_message"] = 'Diese Nachricht wird angezeigt, wenn Sie Ihre Seite „Offline“ geschaltet haben oder ein Fehler auftritt.';
 $_lang["siteunavailable_message_default"] = 'Diese Seite ist derzeit nicht verfügbar.';
 $_lang["siteunavailable_page_message"] = 'Geben Sie die Ressource-ID der Ressource ein, die beim Status „Offline“ angezeigt werden soll. <b>Hinweis:</b> Stellen Sie sicher, das diese Ressource vorhanden und veröffentlicht ist!';
-$_lang["siteunavailable_page_title"] = 'Offline-Seite:';
-$_lang["siteunavailable_title"] = 'Seite nicht erreichbar:';
+$_lang["siteunavailable_page_title"] = 'Offline-Seite';
+$_lang["siteunavailable_title"] = 'Seite nicht erreichbar';
 $_lang["snippet"] = 'Snippet';
 $_lang["snippet_code"] = 'Snippet-Code (PHP)';
 $_lang["snippet_desc"] = 'Snippet-Beschreibung';
@@ -935,9 +942,42 @@ $_lang["sunday"] = 'Sonntag';
 $_lang["sys_alert"] = 'Systemalarm';
 $_lang["sysinfo_activity_message"] = 'Die Liste zeigt Ihnen die zuletzt bearbeiteten Dateien.';
 $_lang["sysinfo_userid"] = 'Benutzer';
-$_lang["system_email_signup"] = 'Hallo [+uid+]! \n\nHier sind Ihre Anmeldendaten für [+sname+] MODX-Manager: \n\nBenutzername: [+uid+] \nPasswort: [+pwd+] \n\nSobald Sie sich in Ihrem Account ([+surl+]) angemeldet haben, können Sie Ihr Passwort ändern.\n\nMit freundlichen Grüßen \n\nIhr Website-Administrator';
-$_lang["system_email_webreminder"] = 'Hallo [+uid+]! \n\nUm Ihr neues Passwort zu aktivieren, klicken Sie bitte auf folgenden Link \n\n[+surl+] \n\nWenn alles erfolgreich war, können Sie danach das folgende Passwort zum Anmelden verwenden: \n\nPasswort:[+pwd+] \n\nWenn Sie diese E-Mail unverlangt bekommen, ignorieren Sie sie bitte einfach. \n\nMit freundlichen Grüßen \nIhr Website-Administrator';
-$_lang["system_email_websignup"] = 'Hallo [+uid+], \n\nHier sind Ihre Anmeldedetails für [+sname+]: \n\nBenutzername: [+uid+] \nPasswort: [+pwd+] \n\nSobald Sie sich auf [+sname+] ([+surl+]) angemeldet haben, könne Sie Ihr Passwort ändern. \n\nMit freundlichen Grüßen \nIhr Website-Administrator';
+$_lang["system_email_signup"] = 'Hallo [+uid+]!
+
+Hier sind Ihre Anmeldedaten für [+sname+] MODX-Manager:
+
+Benutzername: [+uid+]
+Passwort: [+pwd+]
+
+Sobald Sie sich in Ihrem Account ([+surl+]) angemeldet haben, können Sie Ihr Passwort ändern.
+
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
+$_lang["system_email_webreminder"] = 'Hallo [+uid+]!
+
+Um Ihr neues Passwort zu aktivieren, klicken Sie bitte auf folgenden Link
+
+[+surl+]
+
+Wenn alles erfolgreich war, können Sie danach das folgende Passwort zum Anmelden verwenden:
+
+Passwort: [+pwd+]
+
+Wenn Sie diese E-Mail unverlangt bekommen, ignorieren Sie sie bitte einfach.
+
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
+$_lang["system_email_websignup"] = 'Hallo [+uid+],
+
+Hier sind Ihre Anmeldedetails für [+sname+]:
+
+Benutzername: [+uid+]
+Passwort: [+pwd+]
+
+Sobald Sie sich auf [+sname+] ([+surl+]) angemeldet haben, können Sie Ihr Passwort ändern.
+
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
 $_lang["table_hoverinfo"] = 'Wenn Sie mit dem Mauszeiger über einen Tabellennamen fahren, wird Ihnen (sofern verfügbar) eine kurze Beschreibung der Funktion dieser Tabelle angezeigt.';
 $_lang["table_prefix"] = 'Tabellen-Präfix';
 $_lang["tag"] = 'Tag';
@@ -962,21 +1002,21 @@ $_lang["tmplvar_access_msg"] = 'Wählen Sie jene Ressourcen-Gruppen aus, die die
 $_lang["tmplvar_change_template_msg"] = 'Wenn Sie das Template ändern, werden die Template-Variablen neu geladen. Achtung: alle nicht gespeicherten Änderungen gehen hierbei verloren!\n\nSind Sie sicher, dass Sie das Template ändern möchten?';
 $_lang["tmplvar_inuse"] = 'Folgende Ressourcen verwenden derzeit diese Template-Variable. Wollen Sie mit dem Löschen fortfahren?';
 $_lang["tmplvar_tmpl_access"] = 'Template-Berechtigungen';
-$_lang["tmplvar_tmpl_access_msg"] = 'Wählen Sie hier jene Templates aus, die diese Variable verarbeiten dürfen.';
+$_lang["tmplvar_tmpl_access_msg"] = 'Wählen Sie hier jene Templates aus, die diese Template-Variable verarbeiten dürfen.';
 $_lang["tmplvars"] = 'Template-Variablen';
 $_lang["tmplvars_binding_msg"] = 'Dieses Feld unterstützt Datenbindung mittels des @ Befehls';
 $_lang["tmplvars_caption"] = 'Bezeichnung';
 $_lang["tmplvars_default"] = 'Standardwert';
 $_lang["tmplvars_description"] = 'Beschreibung';
 $_lang["tmplvars_elements"] = 'Eingabeoptionswerte';
-$_lang["tmplvars_inherited"] = 'Value inherited';
+$_lang["tmplvars_inherited"] = 'Wert geerbt';
 $_lang["tmplvars_management_msg"] = 'Hier können Sie Ihre Template-Variablen bearbeiten.';
 $_lang["tmplvars_msg"] = 'Hier können Sie Template-Variablen erstellen und bearbeiten. Die Template-Variablen müssen für die jeweiligen Templates aktiviert werden, damit Snippets und Ressourcen darauf wie normale Variablen zugreifen können.';
-$_lang["tmplvars_name"] = 'Name der Variablen';
+$_lang["tmplvars_name"] = 'Name der Template-Variable';
 $_lang["tmplvars_novars"] = 'Keine Template-Variablen gefunden';
 $_lang["tmplvars_rank"] = 'Sortierung';
 $_lang["tmplvars_reset_params"] = 'Parameter zurücksetzen';
-$_lang["tmplvars_title"] = 'Template Variable erstellen/bearbeiten';
+$_lang["tmplvars_title"] = 'Template-Variable erstellen/bearbeiten';
 $_lang["tmplvars_type"] = 'Eingabetyp';
 $_lang["tmplvars_widget"] = 'Objektauswahl';
 $_lang["tmplvars_widget_prop"] = 'Objekt Eigenschaften';
@@ -996,13 +1036,13 @@ $_lang["tuesday"] = 'Dienstag';
 $_lang["tv"] = 'TV';
 $_lang["type"] = 'Typ';
 $_lang["udperms_allowroot_message"] = 'Möchten Sie Ihren Benutzern die Erstellung von Ressourcen im Hauptverzeichnis der Seite erlauben? ';
-$_lang["udperms_allowroot_title"] = 'Hauptverzeichnis-Erlaubnis:';
+$_lang["udperms_allowroot_title"] = 'Hauptverzeichnis-Erlaubnis';
 $_lang["udperms_message"] = 'Die Zugriffskontrolle erlaubt Ihnen festzulegen, welche Seiten von welchem Benutzer bearbeitet werden können. Die Zugriffskontrolle erlaubt Ihnen mit Hilfe von Benutzergruppen und Ressourcen-Gruppen festzulegen, welche Seiten von welchem Benutzer bearbeitet werden können.';
-$_lang["udperms_title"] = 'Benutzerzugriffskontrolle:';
+$_lang["udperms_title"] = 'Benutzerzugriffskontrolle';
 $_lang["unable_set_link"] = 'Der Link konnte nicht gesetzt werden!';
 $_lang["unable_set_parent"] = 'Setzen des neuen Containers nicht möglich!';
 $_lang["unauthorizedpage_message"] = 'Geben Sie die ID der Ressource an, zu welchem Benutzer bei einem unautorisierten Zugriff weitergeleitet werden. <b>Hinweis:</b> Stellen Sie sicher, das diese Ressource vorhanden und veröffentlicht ist!';
-$_lang["unauthorizedpage_title"] = 'unautorisierter Zugriff:';
+$_lang["unauthorizedpage_title"] = 'unautorisierter Zugriff';
 $_lang["unblock_message"] = 'Dieser Benutzer wird freigeschaltet sein, nachdem Sie die Benutzerdaten gespeichert haben.';
 $_lang["undelete_resource"] = 'Wiederherstellen';
 $_lang["unpublish_date"] = 'Termin zum Zurückziehen';
@@ -1013,19 +1053,19 @@ $_lang["untitled_weblink"] = 'Unbenannter Web-Link';
 $_lang["update_params"] = 'Parameteranzeige aktualisieren';
 $_lang["update_settings_from_language"] = 'Aktuelle ersetzen durch:';
 $_lang["upload_maxsize_message"] = 'Geben Sie hier die maximale Dateigröße für den Datei-Upload mit dem Datei-Manager an. Die Größenangabe ist in Bytes. <b>Achtung: je größer die Datei desto länger dauert der Upload!</b>';
-$_lang["upload_maxsize_title"] = 'Maximale Upload-Größe:';
+$_lang["upload_maxsize_title"] = 'Maximale Upload-Dateigröße';
 $_lang["uploadable_files_message"] = 'Hier können Sie angeben welche Dateitypen über den Filemanager hochgeladen werden können. Bitte geben Sie die Dateierweiterungen mit Komma getrennt ein.';
-$_lang["uploadable_files_title"] = 'Hochladbare Dateitypen:';
+$_lang["uploadable_files_title"] = 'Hochladbare Dateitypen';
 $_lang["uploadable_flash_message"] = 'Datei-Upload nach „assets/flash/“ mit dem Datei-Browser. Mehrere Dateien bitte mit Komma trennen.';
-$_lang["uploadable_flash_title"] = 'Hochladbare Flash-Dateien:';
+$_lang["uploadable_flash_title"] = 'Hochladbare Flash-Dateien';
 $_lang["uploadable_images_message"] = 'Bilder-Upload nach „assets/images/“ mit dem Datei-Browser. Mehrere Dateien bitte mit Komma trennen.';
-$_lang["uploadable_images_title"] = 'Hochladbare Bildformate:';
+$_lang["uploadable_images_title"] = 'Hochladbare Bildformate';
 $_lang["uploadable_media_message"] = 'Medien-Upload nach „assets/media/“ mit dem Datei-Browser. Mehrere Dateien bitte mit Komma trennen.';
-$_lang["uploadable_media_title"] = 'Hochladbare Medien-Formate:';
+$_lang["uploadable_media_title"] = 'Hochladbare Medien-Formate';
 $_lang["use_alias_path_message"] = 'Wenn Sie diese Option mit „Ja“ einstellen, werden Ihre Ressourcen mit den vollen Pfadangaben angezeigt, falls Ihre Ressourcen ein Alias eingetragen haben. Beispiel: Eine Ressource mit dem Alias „Kind“ ist innerhalb des Containers mit dem Alias „Eltern“ abgelegt. Die URL für diese Ressource würde nun http://beispiel.de/Eltern/Kind.html lauten.';
-$_lang["use_alias_path_title"] = 'Benutze benutzerfreundliche Alias-Pfadangaben:';
+$_lang["use_alias_path_title"] = 'Benutze benutzerfreundliche Alias-Pfadangaben';
 $_lang["use_editor_message"] = 'Möchten Sie den Rich-Text-Editor benutzen? Wenn Sie HTML schreiben möchten, deaktivieren Sie diese Einstellung. Diese Einstellung gilt für alle Benutzer und Ressourcen.';
-$_lang["use_editor_title"] = 'Editor aktivieren:';
+$_lang["use_editor_title"] = 'Editor aktivieren';
 $_lang["user"] = 'Benutzer';
 $_lang["user_block"] = 'Deaktiviert';
 $_lang["user_blockedafter"] = 'Gesperrt ab';
@@ -1059,6 +1099,8 @@ $_lang["user_use_config"] = 'Einstellungen der Systemkonfiguration benutzen';
 $_lang["user_zip"] = 'PLZ';
 $_lang["username"] = 'Benutzername';
 $_lang["users"] = 'Sicherheit';
+$_lang["valid_hostnames_message"] = 'Verhindern Sie den Missbrauch der site_url Systemeinstellung für eine XSS-Attacke (Cross Site Scripting), indem sie eine durch Kommata getrennte Liste von gültigen Hostnamen für diese Installation angeben. Diese Attacken sind bei bestimmten Shared Host Konfiguationen und bei direkt über eine IP zugänglichen Hosts möglich. Es wird der erste Hostname in der Liste verwendet, wenn der HTTP_HOST keinem gültigen Hostnamen entspricht.';
+$_lang["valid_hostnames_title"] = 'Gültige Hostnamen';
 $_lang["validate_referer_message"] = 'Die HTTP_REFERER-Header können überprüft werden um das Risiko zu verringern, dass Inhaltsredakteure Opfer eines CSRF-Angriffs (Cross Site Request Forgery) werden und unbeabsichtigte Aktionen im Manager durchführen. Einige Konfigurationen unterstützen diese Option nicht, wenn der Server keine HTTP_REFERER-Header sendet.';
 $_lang["validate_referer_title"] = 'HTTP_REFERER-Header überprüfen?';
 $_lang["value"] = 'Wert';
@@ -1080,14 +1122,14 @@ $_lang["web_user_title"] = 'Web-Benutzer erstellen/bearbeiten';
 $_lang["web_users"] = 'Web-Benutzer';
 $_lang["weblink"] = 'Web-Link';
 $_lang["webpwdreminder_message"] = 'Definieren Sie hier die Vorlage der E-Mail, die Ihre Web-Benutzer erhalten wenn sie ein neues Passwort anfordern. Folgende Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /><br />[+sname+] – Name dieser Website<br />[+saddr+] – E-Mail-Adresse des Website Verwalters<br />[+surl+] – URL der Website<br />[+uid+] – Name des Benutzerkontos<br />[+pwd+] – Passwort des Benutzerkontos<br />[+ufn+] – Name des Benutzers<br /><br /><b>Hinweis:</b>Sie sollten auf jeden Fall [+uid+] und [+pwd+] in der Vorlage anführen, damit Ihre Web-Benutzer auch die entsprechenden Anmeldedaten erhalten!';
-$_lang["webpwdreminder_title"] = 'Erinnerungs-E-Mail:';
+$_lang["webpwdreminder_title"] = 'Erinnerungs-E-Mail';
 $_lang["websignupemail_message"] = 'Hier können Sie die Nachricht definieren, die an Ihre Benutzer geschickt wird, wenn sie sich anmelden. Folgende Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /><br />[+sname+] – Name dieser Website<br />[+saddr+] – E-Mail-Adresse des Website Verwalters<br />[+surl+] – URL der Website<br />[+uid+] – Name des Benutzerkontos<br />[+pwd+] – Passwort des Benutzerkontos<br />[+ufn+] – Name des Benutzers<br /><br /><b>Hinweis:</b> Sie sollten auf jedenfall [+uid+] und [+pwd+] in der Vorlage anführen, damit Ihre Web-Benutzer auch die entsprechenden Anmeldedaten erhalten!';
-$_lang["websignupemail_title"] = 'Registrierungsbestätigung:';
+$_lang["websignupemail_title"] = 'Registrierungsbestätigung';
 $_lang["wednesday"] = 'Mittwoch';
 $_lang["welcome_messages"] = 'Ihr Posteingang enthält <b>%d</b> Nachricht(en). <b>%s</b> davon sind ungelesen.';
 $_lang["welcome_title"] = 'Willkommen bei MODX';
 $_lang["which_editor_message"] = 'Hier legen Sie fest welchen Rich-Text-Editor Sie verwenden wollen.';
-$_lang["which_editor_title"] = 'Eingesetzter Editor:';
+$_lang["which_editor_title"] = 'Eingesetzter Editor';
 $_lang["working"] = 'Arbeite …';
 $_lang["wrap_lines"] = 'Automatischer Zeilenumbruch';
 $_lang["xhtml_urls_message"] = 'Ersetzt „&amp;“-Zeichen in URLs, die von MODX erzeugt werden mit validen &<!-- -->amp; HTML-Entities.';
@@ -1101,54 +1143,56 @@ $_lang["yourinfo_title"] = 'Ihre Informationen';
 $_lang["yourinfo_total_logins"] = 'Anzahl der Anmeldungen:';
 $_lang["yourinfo_username"] = 'Sie sind angemeldet als:';
 
-$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
-$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
-$_lang["a17_error_reporting_opt0"] = 'Ignore all';
-$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
-$_lang["a17_error_reporting_opt99"] = 'Detect all';
+$_lang["a17_error_reporting_title"] = 'PHP-Warnungen/Fehler';
+$_lang["a17_error_reporting_msg"] = 'PHP-Warnungen/Fehler mit dieser Stufe erkennen.';
+$_lang["a17_error_reporting_opt0"] = 'Alle PHP-Warnungen/Fehler ignorieren';
+$_lang["a17_error_reporting_opt1"] = 'Geringfügige PHP-Warnungen ignorieren (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Alle PHP-Warnungen/Fehler außer E_NOTICE erkennen';
+$_lang["a17_error_reporting_opt99"] = 'Alle PHP-Warnungen/Fehler erkennen';
 
-$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
-$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["pwd_hash_algo_title"] = 'Hash Algorithmus';
+$_lang["pwd_hash_algo_message"] = 'Algorithmus für den Passwort-Hash.';
 
-$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
-$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["enable_bindings_title"] = '@Bindings aktivieren';
+$_lang["enable_bindings_message"] = 'Verhindert die Ausführung von PHP-Code innerhalb von @Bindings in Template-Variablen. Nützlich, wenn Sie Manager-Benutzer haben, die keinen PHP-Code einsetzen dürfen, aber Template-Variablen bearbeiten und erstellen dürfen. Die Ausgabe einer Template-Variable mit @Binding lautet in diesem Fall „@Bindings disabled“.';
 
-$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
-$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
-$_lang["bkmgr_restore_title"] = 'Restore';
-$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
-$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
-$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
-$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
-$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
-$_lang["bkmgr_run_sql_result"] = 'Result';
-$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
-$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
-$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
-$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
-$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+$_lang["bkmgr_alert_mkdir"] = 'Es konnte keine Wiederherstellungs-Datei erstellt werden. Bitte überprüfen Sie die Verzeichnis-Rechte von [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>Einzelne Tabellen dieser Installation können mit SQL Befehlen wiederhergestellt werden.</p>';
+$_lang["bkmgr_restore_title"] = 'Wiederherstellen';
+$_lang["bkmgr_import_ok"] = 'Die Wiederherstellung wurde erfolgreich durchgeführt.';
+$_lang["bkmgr_snapshot_ok"] = 'Ein Wiederherstellungspunkt wurde erfolgreich gespeichert.';
+$_lang["bkmgr_run_sql_file_label"] = 'SQL Datei hochladen';
+$_lang["bkmgr_run_sql_direct_label"] = 'SQL Befehle direkt ausführen';
+$_lang["bkmgr_run_sql_submit"] = 'SQL Befehle ausführen';
+$_lang["bkmgr_run_sql_result"] = 'Ergebnis';
+$_lang["bkmgr_snapshot_title"] = 'Wiederherstellungspunkt speichern und laden';
+$_lang["bkmgr_snapshot_msg"] = '<p>Der Inhalt der Datenbank wird in einer Datei gespeichert und kann von dort wiederhergestellt werden.<br />Speicherplatz: [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Wiederherstellungspunkt hinzufügen';
+$_lang["bkmgr_snapshot_list_title"] = 'Liste der Wiederherstellungspunkte';
+$_lang["bkmgr_restore_submit"] = 'Diesen Wiederherstellungspunkt zurückspielen';
+$_lang["bkmgr_snapshot_nothing"] = 'Keine Wiederherstellungspunkte vorhanden';
 
-$_lang["files.dynamic.php1"] = 'create text file';
-$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
-$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
-$_lang["files.dynamic.php4"] = 'The text file was created.';
-$_lang["not_readable_dir"] = 'Can not read this directory.';
-$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
-$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["files.dynamic.php1"] = 'Textdatei erstellen';
+$_lang["files.dynamic.php2"] = 'Dieses Verzeichnis kann nicht dargestellt werden.';
+$_lang["files.dynamic.php3"] = 'Es ist ein Problem mit einem Dateinamen aufgetreten.';
+$_lang["files.dynamic.php4"] = 'Die Textdatei wurde erstellt.';
+$_lang["files_dynamic_new_folder_name"] = 'Name des neuen Verzeichnisses:';
+$_lang["files_dynamic_new_file_name"] = 'Name der neuen Datei:';
+$_lang["not_readable_dir"] = 'Das Verzeichnis kann nicht gelesen werden.';
+$_lang["confirm_delete_dir"] = 'Wollen sie dieses Verzeichnis wirklich löschen?';
+$_lang["confirm_delete_dir_recursive"] = 'Wollen sie dieses Verzeichnis wirklich löschen?\n\nAlle Dateien und Verzeichnisse innerhalb dieses Verzeichnisses werden ebenfalls gelöscht.';
 
-$_lang["make_folders_title"] = 'Make end slash URL at the container';
-$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["make_folders_title"] = 'Container URL mit abschließendem Schrägstrich';
+$_lang["make_folders_message"] = 'Die URL einer Container-Ressource wird mit einem abschließenden Schrägstrich ausgegeben.';
 
-$_lang["check_files_onlogin_title"] = 'Check core files on login';
-$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["check_files_onlogin_title"] = 'Systemdateien überwachen';
+$_lang["check_files_onlogin_message"] = 'Die Dateien in dieser Liste werden bei jedem einloggen auf Veränderungen überprüft. Diese Überprüfung garantiert keine absolute Sicherheit, kann Sie aber nach einem erfolgreichen Angriff auf ein kompromittiertes System aufmerksam machen.';
 
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'MODX wurde so konfiguriert, dass wichtige Systemdateien überwacht werden, um mögliche Angriffsversuche frühzeitig zu entdecken. Änderungen an diesen Systemdateien bedeuten nicht zwingend, dass die MODX Installation erfolgreich angegriffen wurde. Aber Sie sollten die überwachten Dateien (siehe in MODX-Konfiguration -> Benutzer -> Check core files on login) überprüfen. Wenn die Dateien unverändert sind oder ein Systemverantwortlicher sie geändert hat, dann speichern Sie die MODX-Konfiguration erneut ab, um diese Meldung zu deaktivieren.';
+$_lang["configcheck_sysfiles_mod"] = 'Wichtige Systemdateien wurden geändert.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'MODX wurde so konfiguriert, dass wichtige Systemdateien überwacht werden, um mögliche Angriffsversuche frühzeitig zu entdecken. Änderungen an diesen Systemdateien bedeuten nicht zwingend, dass die MODX Installation erfolgreich angegriffen wurde. Aber Sie sollten die überwachten Dateien (siehe in MODX-Konfiguration -> Benutzerverwaltung -> Systemdateien überwachen) überprüfen. Wenn die Dateien unverändert sind oder ein Systemverantwortlicher sie geändert hat, dann speichern Sie die MODX-Konfiguration erneut ab, um diese Meldung zu deaktivieren.';
 
 $_lang['email_method_title'] = 'Sendmail Methode';
-$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
@@ -1156,33 +1200,35 @@ $_lang['smtp_username_title'] = 'SMTP Benutzername';
 $_lang['smtp_password_title'] = 'SMTP Passwort';
 $_lang['smtp_port_title'] = 'SMTP Port';
 
-$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
-$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["setting_resource_tree_node_name"] = 'Titel eines Knotens im Ressourcen-Baum';
+$_lang["setting_resource_tree_node_name_desc"] = 'Wählen Sie das Ressourcen-Feld, welches als Titel eines Knotens ausgegeben wird, wenn der Ressourcen-Baum dargestellt wird.';
 
+$_lang["resource_opt_alvisibled"] = 'Alias im Alias-Pfad ausgeben';
+$_lang["resource_opt_alvisibled_help"] = 'Den Alias dieser Ressource im generierten Alias-Pfad ausgeben.';
 $_lang['resource_opt_is_published'] = 'Veröffentlicht';
-$_lang["docid_incrmnt_method_title"] = 'Vergabe einer neuen Ressource ID ';
+$_lang["docid_incrmnt_method_title"] = 'Vergabe einer neuen Ressourcen-ID ';
 $_lang["docid_incrmnt_method_0"] = 'DB Autoinkrement';
 $_lang["docid_incrmnt_method_1"] = 'Kleinste fehlende ID';
 $_lang["docid_incrmnt_method_2"] = 'Größte ID + 1';
 
-$_lang["cache_type_title"] = 'Ressource Caching Typ';
-$_lang["cache_type_1"] = 'Der Cache basiert nur auf der Ressoucen ID (Standard)';
-$_lang["cache_type_2"] = 'Der Cache basiert auf Ressoucen ID and $_GET Parametern';
-$_lang["seostrict_title"] = 'Use SEO Strict URLs';
-$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+$_lang["cache_type_title"] = 'Ressourcen-Cache';
+$_lang["cache_type_1"] = 'Der Cache basiert nur auf der Ressoucen-ID (Standard)';
+$_lang["cache_type_2"] = 'Der Cache basiert auf Ressoucen-ID and $_GET Parametern';
+$_lang["seostrict_title"] = 'SEO strikte URLs benutzen';
+$_lang["seostrict_message"] = 'Erzwingt die Benutzung von strikten URLs um doppelten Inhalt zu vermeiden.';
 
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["settings_friendlyurls_alert"] = 'Wenn Sie benutzerfreundliche URLs aktivieren wollen, ist es notwendig, die „ht.access“ Datei im Webroot der MODX Installation in „.htaccess“ umzubenennen.';
+$_lang["settings_friendlyurls_alert2"] = 'Da MODX in einem Unterverzeichnis installiert worden ist, ist es notwendig, den Inhalt der „.htaccess“ Datei zu verändern.';
 
-$_lang["user_street"] = 'Street';
-$_lang["user_city"] = 'City';
+$_lang["user_street"] = 'Straße';
+$_lang["user_city"] = 'Stadt';
 $_lang["user_other"] = 'anders';
 
-$_lang["import_site.static.php1"] = 'Ressourcenbaum zurücksetzen';
-$_lang["import_site.static.php2"] = 'Ressourcenbaum zurücksetzen und alle IDs neu initialisieren';
+$_lang["import_site.static.php1"] = 'Ressourcen-Baum zurücksetzen';
+$_lang["import_site.static.php2"] = 'Ressourcen-Baum zurücksetzen und alle Ressoucen-IDs neu initialisieren.';
 $_lang["import_site.static.php3"] = 'Ziel';
-$_lang["import_site.static.php4"] = 'Nur &lt;body&gt;&lt;/body&gt;';
-$_lang["import_site.static.php5"] = 'Datei enthält alle';
+$_lang["import_site.static.php4"] = 'Nur den &lt;body&gt;&lt;/body&gt; Bereich';
+$_lang["import_site.static.php5"] = 'Den gesamten Dateiinhalt';
 
 $_lang["a83_ignore_ids_title"] = 'IDs ignorieren (kommasepariert)';
 $_lang["export_site.static.php1"] = 'Ziel';
@@ -1192,3 +1238,29 @@ $_lang["export_site.static.php4"] = 'Suchen nach';
 $_lang["export_site.static.php5"] = 'Ersetzen mit';
 $_lang["export_site.static.php6"] = 'Ziel';
 $_lang["export_site.static.php7"] = 'Dateien können nicht in [+rb_base_url+] gespeichert werden';
+
+$_lang["mutate_settings.dynamic.php6"] = 'E-Mail Benachrichtigung bei MODX Fehlern';
+$_lang["mutate_settings.dynamic.php7"] = 'Nicht benachrichtigen';
+$_lang["mutate_settings.dynamic.php8"] = '[(emailsender)] ([+emailsender+]) wird bei einem MODX Systemfehler per E-Mail benachrichtigt. Die Details zur jeweiligen Fehlermeldung können im MODX Systemereignisprotokoll angeschaut werden.';
+
+$_lang["error_no_privileges"]         = "Sie haben nicht genügend Rechte, um diese Aktion auszuführen!";
+$_lang["error_no_optimise_tablename"] = "Die zu optimierende Tabelle wurde nicht gefunden!";
+$_lang["error_no_truncate_tablename"] = "Die zu leerende Tabelle wurde nicht gefunden!";
+$_lang["error_double_action"]         = "Doppelte Aktion (GET & POST) angeben!";
+$_lang["error_no_id"]                 = "Es wurde keine Ressourcen ID in der Abfrage angegeben!";
+$_lang["error_id_nan"]                = "Die übergebene ID ist nicht numerisch!";
+$_lang["error_no_parent"]             = "Konnte den Namen der Eltern-Ressource nicht finden!";
+$_lang["error_many_results"]          = "Es wurden zu viele Ergebnisse aus der Datenbank zurückgegeben!";
+$_lang["error_no_results"]            = "Es wurden zu wenige/keine Ergebnisse aus der Datenbank zurückgegeben!";
+$_lang["error_no_user_selected"]      = "Es wurde kein Benutzer als Empfänger der Nachricht ausgewählt!";
+$_lang["error_no_group_selected"]     = "Es wurde keine Benutzergruppe als Empfänger der Nachricht ausgewählt!";
+$_lang["error_movedocument1"]         = "Eine Ressource kann nicht ihre eigene Elternressource sein!";
+$_lang["error_movedocument2"]         = "Es wurde keine Ressourcen ID in der Abfrage angegeben!";
+$_lang["error_movedocument3"]         = "Es wurde keine Elternressource in der Abfrage angegeben!";
+
+$_lang["login_processor_unknown_user"]       = "Benutzername oder Passwort falsch eingegeben!";
+$_lang["login_processor_wrong_password"]     = "Benutzername oder Passwort falsch eingegeben!";
+$_lang["login_processor_many_failed_logins"] = "Aufgrund von zu vielen fehlerhaften Anmeldeversuchen wurden Sie gesperrt!";
+$_lang["login_processor_blocked1"]           = "Sie wurden gesperrt und können sich nicht anmelden!";
+$_lang["login_processor_blocked2"]           = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
+$_lang["login_processor_bad_code"]           = "Der Sicherheitscode stimmt nicht überein! Bitte loggen Sie sich erneut ein!";

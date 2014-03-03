@@ -4,7 +4,6 @@ if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mo
 	$modx->config['mail_check_timeperiod'] = 5;
 }
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
-if ($manager_theme) $manager_theme .= '/';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -12,7 +11,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript" src="media/script/session.js"></script>
@@ -273,11 +272,13 @@ if($modx->hasPermission('exec_module')) {
 	// Each module
 	if ($_SESSION['mgrRole'] != 1) {
 		// Display only those modules the user can execute
-		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
-				FROM '.$modx->getFullTableName('site_modules').' AS sm
-				LEFT JOIN '.$modx->getFullTableName('site_module_access').' AS sma ON sma.module = sm.id
-				LEFT JOIN '.$modx->getFullTableName('member_groups').' AS mg ON sma.usergroup = mg.user_group
-				WHERE (mg.member IS NULL OR mg.member = '.$modx->getLoginUserID().') AND sm.disabled != 1');
+		$rs = $modx->db->select(
+			'DISTINCT sm.id, sm.name, mg.member',
+			$modx->getFullTableName('site_modules')." AS sm
+				LEFT JOIN ".$modx->getFullTableName('site_module_access')." AS sma ON sma.module = sm.id
+				LEFT JOIN ".$modx->getFullTableName('member_groups')." AS mg ON sma.usergroup = mg.user_group",
+			"(mg.member IS NULL OR mg.member = ".$modx->getLoginUserID().") AND sm.disabled != 1"
+			);
 	} else {
 		// Admins get the entire list
 		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
@@ -336,7 +337,10 @@ if($modx->hasPermission('settings')) {
 // Reports Menu
 $reportsmenu = array();
 // site-sched
-$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+if($modx->hasPermission('view_eventlog')) {
+	// eventlog
+	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+}	
 if($modx->hasPermission('view_eventlog')) {
 	// eventlog
 	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=114" target="main">'.$_lang['eventlog_viewer'].'</a></li>';

@@ -98,7 +98,7 @@
 [CHANGED] #ID keys are now preserved in the getDocuments function
 [NEW] rel="tags" to tag links
 [NEW] local and global filter delimiter parameters for customization
-[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://modxcms.com/forums/index.php/topic,12007.msg80206.html#msg80206)
+[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://forums.modx.com/thread/27666/ditto-2-0-beta-3#dis-post-147124)
 [FIXED] ;; in source code removed
 [CHANGED] = to == in filter source
 [REMOVED] debug->stored references
@@ -118,7 +118,7 @@
 [FIXED] Reflect now sets an empty month URL variable so that Ditto filtering works properly on years
 
 [2007-2-15: REVISION 0000]
-[FIXED] "etomite" string in charset param from older MODx versions
+[FIXED] "etomite" string in charset param from older MODX versions
 
 [2007-2-16: REVISION 0000]
 [CHANGED] debug output to clean tables
@@ -234,7 +234,7 @@
 [FIXED] wordwrap non-string warning (take 2)
 [FIXED] implode error in debug
 [FIXED] SQL error when start > total
-[CHANGED] Debug output in MODx info to not var_export objects and resource arrays
+[CHANGED] Debug output in MODX info to not var_export objects and resource arrays
 [CHANGED] Moved cFilters and extenders initiation arrays to the beginning
 [CHANGED] Documentation to show the only configs and formats can load extenders, not extenders themselves
 [NEW] PHx version 2.1.2
@@ -261,7 +261,7 @@
 [FIXED] include_once for extenders is now include
 
 [2007-3-12: REVISION 0000]
-[NEW] Now uses MODxDebugConsole class as a base for the debug class
+[NEW] Now uses MODXDebugConsole class as a base for the debug class
 [CHANGED] minor indenting of the debug templates and new tab template
 [FIXED] &start
 [FIXED] missing urlencode on values of makeURL arguments
@@ -302,7 +302,7 @@
 [2007-3-17: REVISION 0000]
 [FIXED] Debug "unknown" field type issue
 [NEW] Placeholders can now specify their QE field
-[FIXED] $dittoID prefix missing from [+tags+] MODx placeholder
+[FIXED] $dittoID prefix missing from [+tags+] MODX placeholder
 [NEW] Added trim to @bindings
 [CHANGED] Improvements to internal QE link renderer
 [FIXED] Summary extender
@@ -325,7 +325,7 @@
 [FIXED] Changelog dates
 
 [2007-3-21: REVISION 0000]
-[REMOVED] Debug Console MODx Tab
+[REMOVED] Debug Console MODX Tab
 [FIXED] Debug Console fields
 
 [2007-3-22: REVISION 0000]

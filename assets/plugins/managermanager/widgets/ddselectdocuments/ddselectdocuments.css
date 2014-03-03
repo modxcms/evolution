@@ -1,0 +1,38 @@
+.ui-autocomplete {
+	display: block;
+	max-height: 300px;
+	padding: 0;
+	z-index: 3;
+	border: 1px solid #C8C8C8;
+	margin: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	position: absolute;
+	background: #FFFFFF;
+}
+
+.ui-autocomplete li {list-style: none;}
+
+.ui-autocomplete a {
+	display: block;
+	padding: 0 3px 1px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.ui-autocomplete a:hover, .ui-autocomplete .ui-state-focus {
+	background: #007CC3;
+	color: #FFFFFF;
+}
+
+.ui-helper-hidden-accessible {display: none;}
+
+.ddMultipleInput > span {
+	overflow: hidden;
+	vertical-align: middle;
+}
+.ddMultipleInput_dropPlaceholder {
+	display: inline-block !important;
+	overflow: hidden;
+	vertical-align: middle;
+}

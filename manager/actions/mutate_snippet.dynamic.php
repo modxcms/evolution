@@ -4,26 +4,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 switch((int) $_REQUEST['a']) {
   case 22:
     if(!$modx->hasPermission('edit_snippet')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 23:
     if(!$modx->hasPermission('new_snippet')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
-
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
 
 // Get table Names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
@@ -32,41 +25,25 @@ $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=22 AND id='.$id;
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $lock = $modx->db->getRow($rs);
-        if($lock['internalKey']!=$modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'],$lock['username'],$_lang['snippet']);
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
+$rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$username,$_lang['snippet']));
     }
-}
 // end check for lock
 
 
 if(isset($_GET['id'])) {
-    $sql = 'SELECT * FROM '.$tbl_site_snippets.' WHERE id='.$id;
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        echo "Oops, Multiple snippets sharing same unique id. Not good.<p>";
-        exit;
-    }
-    if($limit<1) {
-        header("Location: /index.php?id=".$site_start);
-    }
+    $rs = $modx->db->select('*', $tbl_site_snippets, "id='{$id}'");
     $content = $modx->db->getRow($rs);
+    if(!$content) {
+        header("Location: ".MODX_SITE_URL."index.php?id=".$site_start);
+    }
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
-    $_SESSION['itemname']="New snippet";
+    $_SESSION['itemname']=$_lang["new_snippet"];
 }
 ?>
 <script type="text/javascript">
@@ -111,7 +88,7 @@ function showParameters(ctrl) {
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -274,7 +251,7 @@ function decode(s){
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -283,12 +260,12 @@ function decode(s){
               </li>
               <?php
                 if ($_GET['a'] == '22') { ?>
-              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>/images/icons/copy.gif" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } else { ?>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
               <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/stop.png" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -296,7 +273,7 @@ function decode(s){
 
 <div class="sectionBody">
 <?php echo $_lang['snippet_msg']?>
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
     <script type="text/javascript">
@@ -321,9 +298,8 @@ function decode(s){
             <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
-                    include_once "categories.inc.php";
-                    $ds = getCategories();
-                    if($ds) foreach($ds as $n=>$v){
+                    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                    foreach(getCategories() as $n=>$v){
                         echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
                     }
                 ?>
@@ -343,8 +319,8 @@ function decode(s){
         <!-- PHP text editor start -->
         <div class="section">
             <div class="sectionHeader">
-                <span style="float:left;padding:3px"><?php echo $_lang['snippet_code']?></span>
                 <span style="float:right;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+                <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
             <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
@@ -363,14 +339,15 @@ function decode(s){
             <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
-                    $sql = 'SELECT sm.id,sm.name,sm.guid '.
-                           'FROM '.$tbl_site_modules.' AS sm '.
-                           'INNER JOIN '.$tbl_site_module_depobj.' AS smd ON smd.module=sm.id AND smd.type=40 '.
-                           'INNER JOIN '.$tbl_site_snippets.' AS ss ON ss.id=smd.resource '.
-                           'WHERE smd.resource=\''.$id.'\' AND sm.enable_sharedparams=\'1\' '.
-                           'ORDER BY sm.name';
-                    $ds = $modx->db->query($sql);
-                    if($ds) while($row = $modx->db->getRow($ds)){
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						"{$tbl_site_modules} AS sm 
+							INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
+							INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams=1",
+						'sm.name'
+						);
+                    while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
                     }
                 ?>
@@ -379,7 +356,7 @@ function decode(s){
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td valign="top" style="padding-left:1.3em;"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
+            <td valign="top"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
           </tr>
           <tr>
             <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>

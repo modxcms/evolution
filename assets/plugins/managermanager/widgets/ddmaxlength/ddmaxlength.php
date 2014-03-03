@@ -1,95 +1,65 @@
 <?php
 /**
  * mm_ddMaxLength
- * @version 1.0.1 (2012-01-13)
- *
- * Позволяет ограничить количество вводимых символов в TV.
- *
- * @copyright 2012, DivanDesign
- * http://www.DivanDesign.ru
+ * @version 1.1.1 (2013-12-10)
+ * 
+ * Widget for ManagerManager plugin allowing number limitation of chars inputing in fields (or TVs).
+ * 
+ * @uses ManagerManager plugin 0.6.
+ * 
+ * @param $fields {comma separated string} - The name(s) of the document fields (or TVs) which the widget is applied to. @required
+ * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $templates {comma separated string} - Id of the templates to which this widget is applied. Default: ''.
+ * @param $length {integer} - Maximum number of inputing chars. Default: 150.
+ * 
+ * @event OnDocFormPrerender
+ * @event OnDocFormRender
+ * 
+ * @link http://code.divandesign.biz/modx/mm_ddmaxlength/1.1.1
+ * 
+ * @copyright 2013, DivanDesign
+ * http://www.DivanDesign.biz
  */
 
-function mm_ddMaxLength($tvs='', $roles='', $templates='', $length=150){
-
-	global $modx, $content;
+function mm_ddMaxLength($fields = '', $roles = '', $templates = '', $length = 150){
+	if (!useThisRule($roles, $templates)){return;}
+	
+	global $modx;
 	$e = &$modx->Event;
-
-	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
-		$output = '';
-
-		$site = $modx->config['site_url'];
+	
+	$output = '';
+	
+	if ($e->name == 'OnDocFormPrerender'){
+		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/ddmaxlength/';
 		
-		// Which template is this page using?
-		if (isset($content['template'])) {
-			$page_template = $content['template'];
-		} else {
-			// If no content is set, it's likely we're adding a new page at top level. 
-			// So use the site default template. This may need some work as it might interfere with a default template set by MM?
-			$page_template = $modx->config['default_template']; 
-		}
-
-// 		$tvsMas = array();
-		// Does this page's template use any image or file or text TVs?
-		$tvs = tplUseTvs($page_template, $tvs, 'text,textarea');
-// 		$tvsTemp = tplUseTvs($page_template, $tvs, 'text');
-// 		if ($tvsTemp){
-// 			foreach($tvsTemp as $v){
-// 				$v['type'] = 'text';
-// 				array_push($tvsMas,$v);
-// 			}
-// 		}
-
-// 		if (count($tvsMas) == 0){
-// 			return;
-// 		}
-		if ($tvs == false){
-			return;
-		}
-
-
-		$output .= "// ---------------- mm_ddMaxLength :: Begin ------------- \n";
-		//General functions
-		$output .= includeJs($site.'assets/plugins/managermanager/widgets/ddmaxlength/jquery.ddmaxlength-1.0.min.js');
-		$output .= includeCss($site.'assets/plugins/managermanager/widgets/ddmaxlength/ddmaxlength.css');
-
-		foreach ($tvs as $tv){
-			$output .= '
-$j("#tv'.$tv['id'].'").addClass("ddMaxLengthField").each(function(){
+		$output .= includeJsCss($widgetDir.'ddmaxlength.css', 'html');
+		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMaxLength.js', 'html', 'jquery.ddMM.mm_ddMaxLength', '1.0');
+		
+		$e->output($output);
+	}else if ($e->name == 'OnDocFormRender'){
+		global $mm_fields;
+		
+		$fields = getTplMatchedFields($fields, 'text,textarea');
+		if ($fields == false){return;}
+		
+		$output .= "//---------- mm_ddMaxLength :: Begin -----\n";
+		
+		foreach ($fields as $field){
+			$output .=
+'
+$j("'.$mm_fields[$field]['fieldtype'].'[name='.$mm_fields[$field]['fieldname'].']").addClass("ddMaxLengthField").each(function(){
 	$j(this).parent().append("<div class=\"ddMaxLengthCount\"><span></span></div>");
 }).ddMaxLength({
 	max: '.$length.',
 	containerSelector: "div.ddMaxLengthCount span",
-	warningClass: "maxLenghtWarning"
+	warningClass: "maxLengthWarning"
 });
-			';
+';
 		}
-
-		$output .= '
-$j("#mutate").submit(function(){
-	var ddErrors = new Array();
-	$j("div.ddMaxLengthCount span").each(function(){
-		var $this = $j(this), field = $this.parents(".ddMaxLengthCount:first").parent().find(".ddMaxLengthField");
-		if (parseInt($this.text()) < 0){
-			field.addClass("maxLenghtErrorField").focus(function(){
-				field.removeClass("maxLenghtErrorField");
-			});
-			ddErrors.push(field.parents("tr").find("td:first-child .warning").text());
-		}
-	});
-
-	if(ddErrors.length > 0){
-		alert("Некорректно заполнены поля: " + ddErrors.join(","));
 		
-		return false;
-	} else {
-		return true;
+		$output .= "//---------- mm_ddMaxLength :: End -----\n";
+		
+		$e->output($output);
 	}
-});
-		';
-
-		$output .= "\n// ---------------- mm_ddMaxLength :: End -------------";
-
-		$e->output($output . "\n");
-	}
-} // end of widget
+}
 ?>

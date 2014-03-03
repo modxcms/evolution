@@ -1,8 +1,7 @@
 <?php
-if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('bk_manager')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $dbase = trim($dbase,'`');
@@ -48,10 +47,7 @@ elseif ($mode=='backup')
 	$tables = isset($_POST['chk']) ? $_POST['chk'] : '';
 	if (!is_array($tables))
 	{
-		echo '<html><body>'.
-		     '<script type="text/javascript">alert(\'Please select a valid table from the list below\');</script>'.
-		     '</body></html>';
-		exit;
+		$modx->webAlertAndQuit("Please select a valid table from the list below.");
 	}
 
 	/*
@@ -70,9 +66,7 @@ elseif ($mode=='backup')
 	}
 	else
 	{
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 
 	// MySQLdumper class can be found below
@@ -91,25 +85,17 @@ elseif ($mode=='snapshot')
 	}
 	if(!is_writable(rtrim($modx->config['snapshot_path'],'/')))
 	{
-		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path']));
-		exit;
+		$modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path'])));
 	}
-	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
-	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";
+	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%'";
 	$rs = $modx->db->query($sql);
-	$tables = array();
-	if(0<$modx->db->getRecordCount($rs))
-	{
-		while($db_status = $modx->db->getRow($rs))
-		{
-			$tables[] = $db_status['Name'];
-		}
-	}
-	$today = $modx->toDateFormat(time());
-	$today = str_replace(array('/',' '), '-', $today);
-	$today = str_replace(':', '', $today);
-	$today = strtolower($today);
-	global $path;
+		$tables = $modx->db->getColumn('Name', $rs);
+	//$today = $modx->toDateFormat(time());
+	//$today = str_replace(array('/',' '), '-', $today);
+	//$today = str_replace(':', '', $today);
+	//$today = strtolower($today);
+    $today = date('Y-m-d_H-i-s');
+    global $path;
 	$path = "{$modx->config['snapshot_path']}{$today}.sql";
 	
 	@set_time_limit(120); // set timeout limit to 2 minutes
@@ -136,9 +122,7 @@ elseif ($mode=='snapshot')
 		header("Location: index.php?a=93");
 		exit;
 	} else {
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 }
 else
@@ -207,7 +191,7 @@ else
 	<input type="hidden" name="mode" value="" />
 	<p><?php echo $_lang['table_hoverinfo']?></p>
 
-	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="media/style/<?php echo $modx->config['manager_theme'];?>/images/misc/ed_save.gif" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
+	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="<?php echo $_style['ed_save'];?>" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
 	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		<thead><tr>
@@ -222,12 +206,11 @@ else
 		</tr></thead>
 		<tbody>
 			<?php
-$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
+$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '".$modx->db->escape($modx->db->config['table_prefix'])."%'";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-for ($i = 0; $i < $limit; $i++) {
-	$db_status = $modx->db->getRow($rs);
-	$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+$i = 0;
+while ($db_status = $modx->db->getRow($rs)) {
+	$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 
 	if (isset($tables))
 		$table_string = implode(',', $table);
@@ -240,8 +223,8 @@ for ($i = 0; $i < $limit; $i++) {
 
 	// Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
 	$truncateable = array(
-		$table_prefix.'event_log',
-		$table_prefix.'manager_log',
+		$modx->db->config['table_prefix'].'event_log',
+		$modx->db->config['table_prefix'].'manager_log',
 	);
 	if($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
 		echo '<td dir="ltr" align="right">'.
@@ -334,7 +317,6 @@ if(isset($_SESSION['last_result']) || !empty($_SESSION['last_result']))
 	$last_result = $_SESSION['last_result'];
 	unset($_SESSION['last_result']);
 	if(count($last_result)<1) $result = '';
-	elseif(count($last_result)==1) echo $last_result[0];
 	else
 	{
 		$last_result = array_merge(array(), array_diff($last_result, array('')));
@@ -342,7 +324,7 @@ if(isset($_SESSION['last_result']) || !empty($_SESSION['last_result']))
 		{
 			$title[] = $k;
 		}
-		$result = '<tr><th>' . join('</th><th>',$title) . '</th></tr>';
+		$result = '<tr><th>' . implode('</th><th>',$title) . '</th></tr>';
 		foreach($last_result as $row)
 		{
 			$result_value = array();
@@ -352,7 +334,7 @@ if(isset($_SESSION['last_result']) || !empty($_SESSION['last_result']))
 				{
 					$result_value[] = $v;
 				}
-				$result .= '<tr><td>' . join('</td><td>',$result_value) . '</td></tr>';
+				$result .= '<tr><td>' . implode('</td><td>',$result_value) . '</td></tr>';
 			}
 		}
 		$style = '<style type="text/css">table th {border:1px solid #ccc;background-color:#ddd;}</style>';
@@ -439,6 +421,11 @@ else
 </div>
 
 <?php
+
+if (is_numeric($_GET['tab'])) {
+    echo '<script type="text/javascript">tpDBM.setSelectedIndex( '.$_GET['tab'].' );</script>';
+}
+
 	include_once "footer.inc.php"; // send footer
 ?>
 
@@ -517,11 +504,11 @@ class Mysqldumper {
 			{
 				switch($tblval)
 				{
-					case $table_prefix.'event_log':
-					case $table_prefix.'manager_log':
+					case $modx->db->config['table_prefix'].'event_log':
+					case $modx->db->config['table_prefix'].'manager_log':
 						continue 2;
 				}
-				if(!preg_match('@^'.$table_prefix.'@', $tblval)) continue;
+				if(!preg_match('@^'.$modx->db->config['table_prefix'].'@', $tblval)) continue;
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";
 			$output .= "#{$lf}# Table structure for table `{$tblval}`{$lf}";
@@ -611,14 +598,12 @@ class Mysqldumper {
 function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
+	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('*','[+prefix+]active_users',"action='27'");
-	if(0 < $modx->db->getRecordCount($rs))
+	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
+	if(0 < $modx->db->getValue($rs))
 	{
-		include_once "header.inc.php";  // start normal header
-		$e->setError(5, 'Resource is edit now by any user');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit("Resource is edit now by any user.");
 	}
 	
 	$settings = getSettings();
@@ -634,13 +619,8 @@ function import_sql($source,$result_code='import_ok')
 	restoreSettings($settings);
 	
 	$modx->clearCache();
-	if(0 < $modx->db->getRecordCount($rs))
-	{
-		while($row = $modx->db->getRow($rs))
-		{
-			$_SESSION['last_result'][] = $row;
-		}
-	}
+
+	$_SESSION['last_result'] = $modx->db->makeArray($rs);
 	
 	$_SESSION['result_msg'] = $result_code;
 }
@@ -672,8 +652,9 @@ function snapshot(&$dumpstring) {
 function getSettings()
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
-	$rs = $modx->db->select('setting_name, setting_value','[+prefix+]system_settings');
+	$rs = $modx->db->select('setting_name, setting_value',$tbl_system_settings);
 	
 	$settings = array();
 	while ($row = $modx->db->getRow($rs))
@@ -694,10 +675,11 @@ function getSettings()
 function restoreSettings($settings)
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
 	foreach($settings as $k=>$v)
 	{
-		$modx->db->update(array('setting_value'=>$v),'[+prefix+]system_settings',"setting_name='{$k}'");
+		$modx->db->update(array('setting_value'=>$v),$tbl_system_settings,"setting_name='{$k}'");
 	}
 }
 

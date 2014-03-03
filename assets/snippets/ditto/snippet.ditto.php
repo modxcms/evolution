@@ -6,7 +6,7 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
  *      collections, and more,with full support for templating.
  * 
  * Author: 
- *      Mark Kaplan for MODx CMF
+ *      Mark Kaplan for MODX CMF
 */
 
 //---Core Settings---------------------------------------------------- //
@@ -86,7 +86,7 @@ $config = (isset($config)) ? $config : "default";
 
     Options:
     "default" - default blank config file
-    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODX base path via @FILE
 
     Default:
     "default"
@@ -133,7 +133,7 @@ $extenders = isset($extenders) ? explode(",",$extenders) : array();
     Load an extender which adds functionality to Ditto
 
     Options:
-    Any extender in the extenders folder or in any folder within the MODx base path via @FILE
+    Any extender in the extenders folder or in any folder within the MODX base path via @FILE
 
     Default:
     [NULL]
@@ -206,8 +206,9 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
-    $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
-        // create a new Ditto instance in the specified format and language with the requested debug level
+	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
+	$ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
+	// create a new Ditto instance in the specified format and language with the requested debug level
 } else {
     $modx->logEvent(1,3,$_lang['invalid_class'],"Ditto ".$ditto_version);
     return $_lang['invalid_class'];
@@ -259,10 +260,10 @@ $parents = isset($parents) ? $ditto->cleanIDs($parents) : $modx->documentIdentif
     IDs of containers for Ditto to retrieve their children to &depth depth
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
-    Current MODx Document
+    Current MODX Document
 
     Related:
     - <documents>
@@ -276,7 +277,7 @@ $documents = isset($documents) ? $ditto->cleanIDs($documents) : false;
     IDs of documents for Ditto to retrieve
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
     None
@@ -334,7 +335,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
     Source of the [+date+] placeholder
 
     Options:
-    # - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+    # - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
     
     Default:
     "createdon"
@@ -559,7 +560,7 @@ $hiddenFields = isset($hiddenFields) ? explode(",",$hiddenFields) : false;
     Allow Ditto to retrieve fields its template parser cannot handle such as nested placeholders and [*fields*]
 
     Options:
-    Any valid MODx fieldnames or TVs comma separated
+    Any valid MODX fieldnames or TVs comma separated
 
     Default:
     [NULL]
@@ -641,7 +642,7 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     11 - checks leading character of the field
     
     @EVAL:
-        @EVAL in filters works the same as it does in MODx exect it can only be used 
+        @EVAL in filters works the same as it does in MODX exect it can only be used
         with basic filtering, not custom filtering (tagging, etc). Make sure that
         you return the value you wish Ditto to filter by and that the code is valid PHP.
 
@@ -679,7 +680,7 @@ $randomize = (isset($randomize))? $randomize : 0;
     Options:
     0 - off
     1 - on
-    Any MODx field or TV for weighted random
+    Any MODX field or TV for weighted random
     
     Default:
     0 - off
@@ -702,12 +703,12 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-    "default" => "@CODE".$_lang['default_template'],
-    "base" => $tpl,
-    "alt" => $tplAlt,
-    "first" => $tplFirst,
-    "last" => $tplLast,
-    "current" => $tplCurrentDocument
+	"default" => "@CODE" . $_lang['default_template'],
+	"base" => (isset($tpl)) ? $tpl : NULL,
+	"alt" => (isset($tplAlt)) ? $tplAlt : NULL,
+	"first" => (isset($tplFirst)) ? $tplFirst : NULL,
+	"last" => (isset($tplLast)) ? $tplLast : NULL,
+	"current" => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
@@ -1063,7 +1064,7 @@ if ($count > 0) {
 // ---------------------------------------------------
 
 if ($debug == 1) {
-    $ditto_params =& $modx->event_params;
+    $ditto_params =& $modx->event->params;
     if (!isset($_GET["ditto_".$dittoID."debug"])) {
     $_SESSION["ditto_debug_$dittoID"] = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params, $documentIDs, array("db"=>$dbFields,"tv"=>$TVs), $display, $templates, $orderBy, $start, $stop, $total,$filter,$resource);
     }
@@ -1080,14 +1081,10 @@ if ($debug == 1) {
         $output = $ditto->debug->render_link($dittoID,$ditto_base).$output;
     }
 }
-//outerTpl by Dmi3yy
-if ($outerTpl && $resource) { 
-  if ($modx->getChunk($outerTpl) != "") {
-                        $outerTpl = $modx->getChunk($outerTpl);
-        } else if(substr($outerTpl, 0, 5) == "@CODE") {
-                        $outerTpl = trim(substr($outerTpl, 6));
-        } 
-  $output = str_replace('[+ditto+]',$output,$outerTpl);
+// outerTpl by Dmi3yy & Jako
+if (isset($outerTpl) && $resource) {
+	$outerTpl = $ditto->template->fetch($outerTpl);
+	$output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
 }
 
 return ($save != 3) ? $output : "";

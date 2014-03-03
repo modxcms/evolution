@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>MODx Content Manager</title>
+<title>MODX Content Manager</title>
 <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 <meta name="robots" content="noindex, nofollow" />
 <style type="text/css">
@@ -16,7 +16,7 @@
     body {font-size: 75%; /* 12px 62.5% for 10px*/margin-bottom: 1px; /* avoid jumping scrollbars */background: #F4F4F4; text-shadow: 0 1px 0 #fff;}
     h1 {padding:0;margin:0;font-weight:normal;font-size:218%;}
     form {border: 5px solid #EAECEE;padding:10px;}
-    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;background: #EAECEE url(media/style/MODxRE/images/misc/fade.gif) repeat-x top;}
+    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;background: #EAECEE url(media/style/[+theme+]/images/misc/fade.gif) repeat-x top;}
     .sectionBody {padding:20px;display:block;background: #fff;}
     #mx_loginbox {width: 460px;margin:30px auto 0;}
     fieldset.buttonset{text-align:center;border:none;padding-top:20px;}
@@ -81,7 +81,7 @@
 
 <!-- convert this to a language include -->
 <p class="loginLicense">
-    <strong>MODx</strong>&trade; is licensed under the GPL license. &copy; 2005-2013 <a href="http://modx.com/" target="_blank">MODx</a>.
+    <strong>MODX</strong>&trade; is licensed under the GPL license. &copy; 2005-2014 <a href="http://modx.com/" target="_blank">MODX</a>.
 </p>
 
 

@@ -76,7 +76,7 @@ class filter {
 						$unset = 0;
 					break;
 					
-				// Cases 7 & 8 created by MODx Testing Team Member ZAP
+				// Cases 7 & 8 created by MODX Testing Team Member ZAP
 				case 7 :
 					if (strpos($value[$this->array_key], $this->filterValue)===FALSE)
 						$unset = 0;

@@ -1,14 +1,18 @@
 <?php
 /**
- * MODX language File (modifié le 03/08/09)
+ * MODX Installer language file
  *
- * @author Grégory Pakosz (guardian) - Modifié par Coroico et Jean-Christophe Brebion (Fairytree) pour EVO 1.0.3
- * @package MODX
- * @version 1.0.3
- * 
- * Filename:       /install/lang/francais-utf8/francais-utf8.inc.php
- * Language:       French
- * Encoding:       UTF-8
+ * @author Grégory Pakosz (guardian)
+ * @author Coroico
+ * @author Jean-Christophe Brebion (Fairytree)
+ * @version 1.0.13
+ * @date 2014/02/24
+ *
+ * @language French
+ * @package modx
+ * @subpackage installer
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 $_lang["agree_to_terms"] = 'Acceptation des termes d\'utilisation et installation';
 $_lang["alert_database_test_connection"] = 'Vous devez créer votre base de données ou tester la sélection de votre base de données!';
@@ -33,8 +37,8 @@ $_lang["cant_write_config_file"] = 'MODX n\'a pas pu écrire le fichier de confi
 $_lang["cant_write_config_file_note"] = 'Une fois l\'opération effectuée, vous pouvez vous connecter à l\'interface d\'administration de MODX en utilisant l\'adresse  VotreSite.com/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'Cochez pour sélectionner les options:';
 $_lang["checking_if_cache_exist"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/cache</span>: ';
-$_lang["checking_if_cache_file2_writable"] = 'Vérification des droits en écriture du fichier <span class=\"mono\">assets/cache/sitePublishing.idx.php</span>: ';
 $_lang["checking_if_cache_file_writable"] = 'Vérification des droits en écriture du fichier <span class=\"mono\">assets/cache/siteCache.idx.php</span>: ';
+$_lang["checking_if_cache_file2_writable"] = 'Vérification des droits en écriture du fichier <span class=\"mono\">assets/cache/sitePublishing.idx.php</span>: ';
 $_lang["checking_if_cache_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/cache</span>: ';
 $_lang["checking_if_config_exist_and_writable"] = 'Vérification de l\'existence et des droits en écriture du fichier <span class=\"mono\">[+MGR_DIR+]/includes/config.inc.php</span>: ';
 $_lang["checking_if_export_exists"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/export</span>: ';
@@ -45,7 +49,7 @@ $_lang["checking_mysql_strict_mode"] = 'Vérification du mode strict MySQL: ';
 $_lang["checking_mysql_version"] = 'Vérification de la version MySQL: ';
 $_lang["checking_php_version"] = 'Vérification de la version PHP: ';
 $_lang["checking_registerglobals"] = 'Vérification que Register_Globals est sur off: ';
-$_lang["checking_registerglobals_note"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/attaques/cross-site-scripting.php3">XCSS</a> (Cross Site Scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage, en général par l\'une de ces trois solutions: modifier le fichier php.ini global, ajouter des règles dans le fichier .htaccess à la racine de votre installation MODX, ou ajouter un fichier php.ini personnalisé pour neutraliser l\'ensemble des fichiers dans chacun des répertoires de votre installation (et il y en a beaucoup). Vous pouvez continuez l\installation de MODX, mais considérez vous comme averti.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/attaques/cross-site-scripting.php3">XCSS</a> (Cross Site Scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage, en général par l\'une de ces trois solutions: modifier le fichier php.ini global, ajouter des règles dans le fichier .htaccess à la racine de votre installation MODX, ou ajouter un fichier php.ini personnalisé pour neutraliser l\'ensemble des fichiers dans chacun des répertoires de votre installation (et il y en a beaucoup). Vous pouvez continuez l\installation de MODX, mais considérez vous comme averti.';
 $_lang["checking_sessions"] = 'Vérifications des paramètres de sessions: ';
 $_lang["checking_table_prefix"] = 'Vérification du préfixe de table `';
 $_lang["chunks"] = 'Chunks';
@@ -79,11 +83,14 @@ $_lang["database_use_failed"] = 'Impossible d\'accéder à la base de données!'
 $_lang["database_use_failed_note"] = 'Veuillez vérifier les droits d\'accès utilisateur à la base de données et réessayez.';
 $_lang["default_language"] = 'Langue par défaut du Gestionnaire';
 $_lang["default_language_description"] = 'Ceci est la langue par défaut qui sera utilisée dans l\'interface d\'administration de votre Gestionnaire de Contenu MODX.';
+$_lang["depedency_create"] = 'Depedency created';
+$_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' lors de l\'exécution de la requête SQL ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'erreur';
 $_lang["errors"] = 'erreurs';
 $_lang["failed"] = 'ECHEC!';
+$_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Aide!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Aide à l\'installation sur les forums de MODX';
@@ -105,10 +112,10 @@ $_lang["installation_upgrade_existing"] = 'Mise à jour d\'une installation exis
 $_lang["installation_upgrade_existing_note"] = 'Mise à jour des fichiers existants et de la base de données.';
 $_lang["installed"] = 'Installé';
 $_lang["installing_demo_site"] = 'Installation du site de démonstration: ';
-$_lang["language_code"] = 'fr'; // for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'fr';
 $_lang["loading"] = 'Chargement...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2013 le projet de Framework de Gestion de Contenu <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a>. Tous droits réservés. MODX est publié sous la licence GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 le projet de Framework de Gestion de Contenu <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a>. Tous droits réservés. MODX est publié sous la licence GNU GPL.';
 $_lang["modx_footer2"] = 'MODX est un logiciel libre. Nous vous encourageons à être créatifs et à utiliser MODX comme bon il vous semble. Votre seule obligation est de redistribuer sous licence libre votre version modifiée de MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', alors que MODX nécessite PHP 4.2.0 ou supérieur';
@@ -136,7 +143,7 @@ $_lang["running_database_updates"] = 'Mise à jour de la base de données: ';
 $_lang["sample_web_site"] = 'Exemple de site web';
 $_lang["sample_web_site_note"] = 'Attention, cette opération va <b>écraser</b> les Ressources et Éléments existants.';
 $_lang["session_problem"] = 'Un problème a été détecté avec vos sessions de serveur. Veuillez contacter votre administrateur pour corriger ce problème.';
-$_lang["session_problem_try_again"] = 'Essayer encore?'; 
+$_lang["session_problem_try_again"] = 'Essayer encore?';
 $_lang["setup_cannot_continue"] = 'Impossible de poursuivre l\'installation';
 $_lang["setup_couldnt_install"] = 'Le programme d\'installation n\'a pas pu créer/modifier certaines tables dans la base de données spécifiée.';
 $_lang["setup_database"] = 'Le programme d\'installation va tenter de configurer la base de données:<br />';

@@ -1,7 +1,138 @@
-This file shows the changes in recent releases of MODx. The most current release is usually the
+This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.12 (Sep 12, 2013)
+MODX Evolution 1.0.13 (Feb 23, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#10073] Define in php < 5.3
+* [#10076] Undefined variable in manager panel
+* [#10173] mm_rules hide tv needs to hide split too
+* [#10177] Add - Ditto language entry
+* [#10192] 500 error with save setting if install in subfolder
+* [#10195] Lost tinyMCE theme full
+* [#10196] [+prefix+] -> $modx->getFullTableName($tableName);
+* [#10198] Codemirror template
+* [#10200] Translation on transifex not possible
+* [#10203] @Binding does not work the same
+* [#10212] Version 1.0.12 doesn't seem to work with Reflect
+* [#10225] Increment method Resource ID - Incomplete?
+* [#10235] Webuser can't change Email
+* [#10236] [phpthumb] source filename bug
+* [#10239] mm_rules.inc.php in russian
+* [#10240] Improve onchange trigger for file/image input
+* [#10266] Error if start_page have get
+* [#10273] TinyMCE compatibility with IE11
+* [#10283] modx_sanitize_gpc problem
+* [#10284] modx_sanitize_gpc breaks eForm
+* [#10293] eForm: when using ccsender, 'to' address is visible
+* [#10308] easy2gallery menu not visible
+* [#10309] Don't save SMTP password if field was emptied manually
+* [#10336] eForm sendAsText and htmlspecialchars
+* [#10339] eForm: retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [#10348] Ditto Debug issues
+* [#10356] Closing chunk tag confuses the parser
+* [#10357] Ditto does not work in @EVAL
+* [#10358] FCKEditor && $_SERVER['HTTP_HOST'] with port
+* [gitHub] AjaxSearch: Adding charset header in Ajax Mode
+* [gitHub] $key could be empty if the placeholder tag is not closed or if it is directly closed
+* [gitHub] Fix for not set $_SESSION key
+* [gitHub] Ditto: Fix outerTpl
+* [gitHub] Fix - Save button in file manager
+* [gitHub] Fix missing calendar icon
+* [gitHub] Bugfix for closing opt group tag
+* [gitHub] Restored textareamini
+* [gitHub] Don't save SMTP password if field was emptied manually
+* [gitHub] Codemirror: matchBrekers fix and turn on by default
+* [gitHub] Full request url in messageQuit
+* [gitHub] Fix SQL error when calling optimize method
+* [gitHub] Fix backup format file Y-m-d_H-i-s - now new always top
+* [gitHub] Clean filenames with KCFinder - use of TransAlias class and plugin settings
+* [gitHub] CodeMirror fails to refresh in QuickManager+
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [#10278] Update ManagerManager built-in fields for 1.0.12
+* [#10178] Set permission to config.inc.php when install
+* [#10208] Improvement several text strings
+* [#10271] Modify save button position in file manager
+* [#10300] Allow array parameter in phpthumb snippet
+* [#10349] FirstChildRedirect options
+* [#3137] save_content.processor.php site_start save condition tune. (not old-date set)
+* [#3159] $_lang['install'] button is changed to $_lang['btnnext_value'] button.
+* [#3154] Datebase name default value should be empty.
+* [gitHub] The item of "Update" is concealed at a new installation.
+* [gitHub] Manager Users - List item tuning. Many user env useful.
+* [gitHub] View manager logs - grid view tune
+* [gitHub] Reformatted indents and changed double quotes to single quotes in merge functions
+* [gitHub] Reworked eval snippets/plugin functions and MODX error level detection
+* [gitHub] eForm: Retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [gitHub] eForm: validation messages with span (for better styling with css)
+* [gitHub] Trigger change event for file/image inputs
+* [gitHub] Add css class to displayparams table, removed inline style
+* [gitHub] Use same tags and styles as other fields in manager.
+* [gitHub] Netbeans doesn't like 'and' as classname
+* [gitHub] Updated language files
+* [gitHub] Change nicesize
+* [gitHub] Change snippetsCode out
+* [gitHub] Change input size in access permissions
+* [gitHub] Correct preview link
+* [gitHub] Restore view_eventlog permission on site_shedule
+* [gitHub] Make one point to clearCache and add params
+* [gitHub] Rename MODx to MODX
+* [gitHub] Language files for core and core snippets are now handled by Transifex
+* [gitHub] Changed ConvertDate to direct call $modx->toTimeStamp
+* [gitHub] Change "event->alert"+"include mutate_*" to "manager->saveFormValues"+ webAlertAndMsg
+* [gitHub] Change webAlert() to webAlertAndQuit() and mode webAlert() to deprecated.functions.inc.php
+* [gitHub] Use while in db->makeArray()
+* [gitHub] Use db->makeArray(), db->getColumn() instead of loops
+* [gitHub] Change db loops style from for to while
+* [gitHub] Change nicesize() to $modx->nicesize()
+* [gitHub] update $modx->getDocuments 
+* [gitHub] update $modx->getTemplateVars 
+* [gitHub] update $modx->getTemplateVarOutput 
+* [gitHub] update $modx->getDocumentChildren
+* [gitHub] update $modx->getDocumentChildrenTVarOutput
+* [gitHub] update $modx->getDocumentChildren
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [gitHub] Wayfinder: ability to use all document fields like [+longtitle+] or [+pagetitle+]
+* [gitHub] Wayfinder: ability to @INHERIT custom TVs
+* [gitHub] WebLogin: @FILE ability for &tpl
+* [gitHub] Manager with role = 1 can see all documents in frontend and backend
+* [gitHub] Setup module depedencies
+* [gitHub] in manager now can go to selected tab from url with &tab=#
+* [gitHub] CodeMirror: new shorts for emmet
+* [gitHub] the method “$modx->parseText” which parses a text has been added.
+* [gitHub] Improve file/image set url for inputs that are not direct children of the form (i.e. in a colorbox)
+* [gitHub] Add backtrace info to dumpSql
+* [gitHub] Add dumpPlugins & pluginsCode out
+* [gitHub] Add hide plugin in sort
+* [gitHub] Patch findTemplateVars for compatibility with HPx
+* [gitHub] Add ID in QM+ toolbar.
+* [gitHub] add ID in title for edit document
+* [gitHub] update ManagerManager to 0.6.1.
+* [gitHub] update ajaxSearch to 1.10.0.
+* [gitHub] update Wayfinder to 2.0.2.
+* [gitHub] update Eform to 1.4.5.
+* [gitHub] Breadcrumbs 1.0.4 (option to hide pages with certain templates from crumbs list)
+* [gitHub] phpthumb 1.2 (not include phpthumb class if have resized images)
+* [gitHub] KCFinder - Remove superfluous update check from kcfinder
+* [gitHub] Automatic create .htaccess in cache folder if it is a subfolder of assets/cache
+* [gitHub] FirstChildRedirect 2.0
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [gitHub] Prevent XSS exploits misusing the site_url system setting
+
+
+
+MODX Evolution 1.0.12 (Sep 12, 2013)
 ===================================
 --------------------------------------------
 Bugfixes:
@@ -9,7 +140,7 @@ Bugfixes:
 * [#10190] fix lang (spanish, russian, nederlands)
 
 
-MODx Evolution 1.0.11 (Sep 11, 2013)
+MODX Evolution 1.0.11 (Sep 11, 2013)
 ===================================
 --------------------------------------------
 Security:
@@ -157,7 +288,7 @@ Refactor:
 
 
 
-MODx Evolution 1.0.10 (Apr 18, 2013)
+MODX Evolution 1.0.10 (Apr 18, 2013)
 ===================================
 --------------------------------------------
 Security:
@@ -244,12 +375,12 @@ Additional Improvements & Updates:
 * [#9837] Indicate inheritanced template variable
 
 
-MODx Evolution 1.0.9 (Mar 19, 2013)
+MODX Evolution 1.0.9 (Mar 19, 2013)
 ===================================
 --------------------------------------------
 Security:
 --------------------------------------------
-* [#3796] MODx security issues
+* [#3796] MODX security issues
 * [#8338] LFI in browser.php
 * [#8339] LFI in install
 * [#9621] SQL-injection in logEvent
@@ -307,14 +438,14 @@ Additional Improvements & Updates:
 
 
 
-MODx Evolution 1.0.8 (Jan 08, 2013)
+MODX Evolution 1.0.8 (Jan 08, 2013)
 ===================================
 --------------------------------------------
 Security:
 --------------------------------------------
 * [#9391] Prevent hash array exploit in Forgot Manager Login plugin
 
-MODx Evolution 1.0.7 (Nov 26, 2012)
+MODX Evolution 1.0.7 (Nov 26, 2012)
 ===================================
 --------------------------------------------
 Security:
@@ -323,7 +454,7 @@ Security:
 * [#9175] Escape $hash in Forgot Manager Login plugin
 
 
-MODx Evolution 1.0.6 (Mar 08, 2012)
+MODX Evolution 1.0.6 (Mar 08, 2012)
 ===================================
 --------------------------------------------
 Security:
@@ -344,7 +475,7 @@ Additional Improvements & Updates:
 * Update minimum PHP version for manager to 4.3.3
 
 
-MODx Evolution 1.0.5 (Jan 19, 2011)
+MODX Evolution 1.0.5 (Jan 19, 2011)
 ===================================
 --------------------------------------------
 Security:
@@ -430,7 +561,7 @@ Additional Improvements & Updates:
 * [#3543] Personalize updated to 2.1
 
 
-MODx Evolution 1.0.4 (Jun 8, 2010)
+MODX Evolution 1.0.4 (Jun 8, 2010)
 ===================================
 --------------------------------------------
 Security:
@@ -489,7 +620,7 @@ Additional Improvements & Updates:
 * [#MODX-1977] When previewing, use friendly URLs (if enabled)
 * [#MODX-2009] Clean up handling of 'a' variable in Manager (and related type casting changes)
 
-MODx Evolution 1.0.3 (Apr 1, 2010)
+MODX Evolution 1.0.3 (Apr 1, 2010)
 ===================================
 --------------------------------------------
 Security:
@@ -530,7 +661,7 @@ Bugfixes:
 * [#MODX-1314] Spanish utf-8 translation problem - install language file had been put in place of manager language file
 * [#MODX-1505] Get 'Missing image' boxes in manager tree
 * [#MODX-1694] Extra backslashes in ForgotManagerPassword.tpl::sendEmail
-* [#MODX-1096] Additional fix, only show MODx tables on backup screen
+* [#MODX-1096] Additional fix, only show MODX tables on backup screen
 * [#MODX-1271] Remove unused chunk from sample site
 * [#MODX-1410] Update MooTools to 1.1.2
 * [#MODX-1429] sysAlert js function not working
@@ -570,13 +701,13 @@ Additional Improvements & Updates:
 * [#MODX-1757] File browser CSS tuning
 * [#MODX-1100] Delete unused template files
 * [#MODX-1320] Clean up baseline style.php file
-* [#MODX-1407] Prevent MODx 404-handling for missing images
+* [#MODX-1407] Prevent MODX 404-handling for missing images
 * [#MODX-1600] Add unique CSS ids to ease DOM manipulation of content editing Manager pages
 * [#MODX-1105] Minor Manager cleanups to remove deprecated elements
 * [#MODX-1761] Remove Templates from SQL install files
 * [#MODX-1767] Improve Evo installer to remove leading/trailing elements surrounding opening docblock
 * [#MODX-1760] ManagerManager updated to version 0.3.8
-* Allow TV definitions to be installed via the MODx installer
+* Allow TV definitions to be installed via the MODX installer
 * [#MODX-1756] mcpuk internal file browser hard coding strings pattern
 * [#MODX-1795] Tuning context menu order
 * [#MODX-1800] Finnish language file for Evolution 1.0.3
@@ -593,7 +724,7 @@ Additional Improvements & Updates:
 
 
 
-MODx Evolution 1.0.2 (Nov 4, 2009)
+MODX Evolution 1.0.2 (Nov 4, 2009)
 ===================================
 --------------------------------------------
 Security:
@@ -615,7 +746,7 @@ Bugfixes:
 * [#ADDON-49]  Forgot Manager Login bug in sql query which prevents user from completing the password reset
 * [#ADDON-52]  Hardcoded charset in ForgotManagerPassword plugin
 * [#MODX-1092] DocManager - Adding Document Permissions does not properly set privateweb flag in modx_site_content
-* [#MODX-1386] After install, MODx didn't show configuration page
+* [#MODX-1386] After install, MODX didn't show configuration page
 * [#MODX-1338] Alias field accepts percent character
 * [#MODX-1215] Unixtime widget uses wrong pattern for MySQL date string
 * [#MODX-1364] Add check for tokenizer extension in cache_sync processor
@@ -634,7 +765,7 @@ Additional Improvements & Updates:
 * [#MODX-948]  Parser: Snippet calls no longer break with blank characters or when broken across multiple lines
 
 
-MODx Evolution 1.0.1 (rev 5946 - October 22, 2009)
+MODX Evolution 1.0.1 (rev 5946 - October 22, 2009)
 ===================================
 --------------------------------------------
 Security:
@@ -673,7 +804,7 @@ Bugfixes:
 * [#MODX-1190] Installer fixes and enhancements
 * [#MODX-1095] Fixed Spanish Translation typos and missing labels and convert it to UTF-8
 * [#MODX-1286] Ensure version is saved to DB when saving configuration settings
-* [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODx stripAlias() function)
+* [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODX stripAlias() function)
 * [#MODX-1301] Ensure correct Resource Type option is selected when adding Resources and Weblinks
 * [#MODX-1309] Stop upgrades overwriting the element category
 
@@ -706,7 +837,7 @@ Additional Improvements & Updates:
 * [#MDOX-1307] Update styling on QM+ to improve usability
 
 
-MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
+MODX Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
@@ -743,8 +874,8 @@ Bugfixes & Feature Requests:
 * [#MODX-866] Allow manual editing of the datepicker fields
 * [#MODX-720] The website name on the Manager login page links back to the front end site
 * [#MODX-916] Better handling of text direction and encoding for Manager languages
-* [#MODx-882] Specify the default Manager language during installation
-* [#MODx-815] Users without edit or create module permissions can get to Modules editing screen
+* [#MODX-882] Specify the default Manager language during installation
+* [#MODX-815] Users without edit or create module permissions can get to Modules editing screen
 * [#MODX-390] Infinite loop possible during install
 * [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
 * [#MODX-851] Manager User and Webuser email messages were always in English despite the language setting
@@ -765,7 +896,7 @@ Bugfixes & Feature Requests:
 * [#MODX-806] fix duplicated option groups in template picker
 * [#MODX-581] Installer doesn't check /assets/media, /assets/flash and /assets/files directories
 * [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
-* [#MODX-832] Implement new DatePicker in the MODx Manager.
+* [#MODX-832] Implement new DatePicker in the MODX Manager.
 * [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
 * [#MODX-806] Add option groups to template chooser in Manager
 * [#MODX-571] Fix TV date picker when special characters in TV name
@@ -809,7 +940,7 @@ Bugfixes & Feature Requests:
 * [#MODX-734] Typo in language file it's->its
 * [#MODX-410] access permissions will be inherited from parent when user creates new child but and does not have role permission for access permissions
 * [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
-* [#MODx-394] Update Russian installation file per http://modxcms.com/forums/index.php/topic,34998.msg212346/topicseen.html#msg212346
+* [#MODX-394] Update Russian installation file per http://forums.modx.com/thread/1294/fixes-what-can-i-do-to-be-heard
 * [#MODX-715] Fix .jp lang file for incorrect hard-coded link
 * [#MODX-541] Fix the include statement in getUserData() method
 * [#MODX-650] bad reference to csshover.htc (now csshover2.htc)
@@ -834,21 +965,21 @@ Additional Improvements & Updates:
 * Convert manager to use Mootools exclusively
 	- Manager Login page
 	- Convert the 'Sort TV by template' and 'Plugin Execution Ordering', also fix the button CSS styling on those pages
- 	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions
+ 	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODX versions
 * Upgrade Add-on: eForm 1.4.4.6
 * Upgrade Add-on: AjaxSearch 1.8.3
 * Updated Add-on: TinyMCE 3.2.4.1
 * Fix the Template Variable "Lock variable for editing" checkbox
 * Removed erroneous parameter in isFrontend() method call
-* Exclude /assets and /manager by default from MODx rewrite and to comment out example.com -> www.example.com rule by default
+* Exclude /assets and /manager by default from MODX rewrite and to comment out example.com -> www.example.com rule by default
 * Fix bug when login page language file was missing translation strings. Now falls back to main English file.
 * Added additional database diagnostic info to system info page (auto-generated paths)
-* Updated the MODx installer
+* Updated the MODX installer
     - New skin
     - Streamline process by removing two steps
     - Make Connection/Collation/Default Admin User only show when prior steps are completed first
     - Now set the default Manager language during new installs instead of relying on installation language
-* New MODx Carbon default theme for MODx Evolution 1.0 release
+* New MODX Carbon default theme for MODX Evolution 1.0 release
 	- Removed deprecated themes for Evo 1.0 release
 	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
 	- Remove Bottom Button Bar plugin due to new static button bar similar to Revo
@@ -859,4 +990,4 @@ Additional Improvements & Updates:
 	- Updated RSS feeds to more manageable number of entries for welcome page.
  	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
 
-For earlier changelog entries, please see the /install/changelog.txt file included with the MODx 0.9.6.3 distribution: http://modxcms.com/download/#legacy 
+For earlier changelog entries, please see the /install/changelog.txt file included with the MODX 0.9.6.3 distribution

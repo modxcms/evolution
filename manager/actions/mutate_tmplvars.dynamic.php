@@ -1,68 +1,52 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_template') && $_REQUEST['a']=='301') {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
 else                       $id = 0;
 
+$tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
+$tbl_site_templates         = $modx->getFullTableName('site_templates');
+$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+$tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
+
 // check to see the variable editor isn't locked
-$tbl_active_users = $modx->getFullTableName('active_users');
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
-$total = $modx->db->getRecordCount($rs);
-if($total>1)
-{
-	while($row = $modx->db->getRow($rs))
-	{
-		if($row['internalKey']!=$modx->getLoginUserID())
-		{
-			$msg = sprintf($_lang['lock_msg'], $row['username'], ' template variable');
-			$e->setError(5, $msg);
-			$e->dumpError();
-		}
+$rs = $modx->db->select('username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template variable'));
 	}
-}
 // end check for lock
 
 // make sure the id's a number
 if(!is_numeric($id))
 {
-    echo 'Passed ID is NaN!';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 global $content;
 $content = array();
 if(isset($_GET['id']))
 {
-	$rs = $modx->db->select('*','[+prefix+]site_tmplvars',"id={$id}");
-	$total = $modx->db->getRecordCount($rs);
-	if($total>1)
-	{
-		echo 'Oops, Multiple variables sharing same unique id. Not good.';
-		exit;
-	}
-	if($total<1)
-	{
-		header("Location: /index.php?id={$site_start}");
-	}
+	$rs = $modx->db->select('*',$tbl_site_tmplvars,"id='{$id}'");
 	$content = $modx->db->getRow($rs);
+	if(!$content) {
+		header("Location: ".MODX_SITE_URL."index.php?id={$site_start}");
+	}
+	
 	$_SESSION['itemname'] = $content['caption'];
 	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
 	{
-		$e->setError(3);
-		$e->dumpError();
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 	}
 }
 else
 {
-	$_SESSION['itemname']="New Template Variable";
+    $_SESSION['itemname']=$_lang["new_tmplvars"];
 }
 
 // get available RichText Editors
@@ -138,7 +122,7 @@ function showParameters(ctrl) {
     dp = (widgetParams[df]) ? widgetParams[df].split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -264,7 +248,7 @@ function decode(s){
     		  <li id="Button1">
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-    			</a><span class="and"> + </span>				
+    			</a><span class="plus"> + </span>
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -311,9 +295,8 @@ function decode(s){
     <td><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
         	<option>&nbsp;</option>
         <?php
-            include_once "categories.inc.php";
-            $ds = getCategories();
-            if($ds) foreach($ds as $n=>$v){
+            include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+            foreach(getCategories() as $n=>$v){
                 echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
             }
         ?>
@@ -329,6 +312,9 @@ function decode(s){
     <td colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 <?php endif;?>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
@@ -354,11 +340,11 @@ function decode(s){
     </td>
   </tr>
   <tr>
-	<th valign="top"><?php echo $_lang['tmplvars_elements']; ?>:  </th>
+	<th><?php echo $_lang['tmplvars_elements']; ?>:  </th>
 	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
-    <th valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
     <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
@@ -389,20 +375,17 @@ function decode(s){
     </td>
   </tr>
   <tr id="displayparamrow">
-    <th valign="top"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></th>
+    <th><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></th>
     <td id="displayparams">&nbsp;</td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</th>
     <td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
 </table>
-    	</div>
-
-<!-- TemplateVar Info -->
-<div class="tab-page" id="tabInfo">
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
@@ -411,7 +394,7 @@ function decode(s){
 	</style>
 <table>
 	<?php
-	    $from = '[+prefix+]site_templates as tpl LEFT JOIN [+prefix+]site_tmplvar_templates as stt ON stt.templateid=tpl.id AND stt.tmplvarid='.$id;
+	    $from = "{$tbl_site_templates} as tpl LEFT JOIN {$tbl_site_tmplvar_templates} as stt ON stt.templateid=tpl.id AND stt.tmplvarid='{$id}'";
 	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
 ?>
   <tr>
@@ -446,16 +429,9 @@ function decode(s){
 <!-- Access Permissions -->
 	<?php
 	if($use_udperms==1) {
-	    $groupsarray = array();
-
 	    // fetch permissions for the variable
-	    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
-	    $rs = $modx->db->query($sql);
-	    $limit = $modx->db->getRecordCount($rs);
-	    for ($i = 0; $i < $limit; $i++) {
-	        $currentgroup=$modx->db->getRow($rs);
-	        $groupsarray[$i] = $currentgroup['documentgroup'];
-	    }
+	    $rs = $modx->db->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
+	    $groupsarray = $modx->db->getColumn('documentgroup', $rs);
 
 ?>
 <?php if($modx->hasPermission('access_permissions')) { ?>
@@ -486,13 +462,11 @@ function decode(s){
 <?php
 		}
 		$chk ='';
-		$rs = $modx->db->select('name, id','[+prefix+]documentgroup_names');
-		    $limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
 		    }
-		    for($i=0; $i<$limit; $i++) {
-		        $row=$modx->db->getRow($rs);
+		    while ($row=$modx->db->getRow($rs)) {
 		        $checked = in_array($row['id'], $groupsarray);
 		        if($modx->hasPermission('access_permissions')) {
 		            if($checked) $notPublic = true;
