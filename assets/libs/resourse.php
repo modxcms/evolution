@@ -443,10 +443,11 @@ class resourse {
 		}
 		if (!empty($this->set)){
 			if($this->newDoc){
-				$this->modx->db->insert($this->set, $this->_table['site_content']);
+				$SQL = "INSERT into {$this->_table['site_content']} SET ".implode(', ', $this->set);
 			}else{
-				$this->modx->db->update($this->set, $this->_table['site_content'], "id = '{$this->id}'");
+				$SQL = "UPDATE {$this->_table['site_content']} SET ".implode(', ', $this->set)." WHERE id = ".$this->id;
 			}
+			$this->query($SQL);
 		}
 		
 		if($this->newDoc) $this->id = $this->modx->db->getInsertId();
