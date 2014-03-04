@@ -1670,10 +1670,11 @@ class DocumentParser {
                 $this->documentContent= "[*content*]"; // use blank template
             else {
                 $result= $this->db->select('content', $this->getFullTableName("site_templates"), "id = '{$this->documentObject['template']}'");
-                if ($template_content = $this->db->getValue($result)) {
-                    $this->documentContent = $template_content;
+                $rowCount= $this->db->getRecordCount($result);
+                if ($rowCount==1) {
+                     $this->documentContent = $this->db->getValue($result);
                 } else {
-                    $this->messageQuit("Incorrect number of templates returned from database", $sql);
+                    $this->messageQuit("Incorrect number of templates returned from database");
                 }
             }
 
