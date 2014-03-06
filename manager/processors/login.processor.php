@@ -271,14 +271,15 @@ $_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
 if(isset($_SESSION['mgrValidated'])) {
-    $modx->db->update(
-		array(
-			'failedlogincount' => 0,
-			'logincount'       => 'logincount+1',
-			'lastlogin'        => 'thislogin',
-			'thislogin'        => time(),
-			'sessionid'        => $currentsessionid,
-		), $tbl_user_attributes, "internalKey='{$internalKey}'");
+	$modx->db->query('UPDATE '.$tbl_user_attributes."
+	SET
+		`failedlogincount`	= 0,
+		`logincount`		= `logincount` + 1,
+		`lastlogin`			= `thislogin`,
+		`thislogin`			= ".time().",
+		`sessionid`			= '". $currentsessionid ."'
+	WHERE
+		`internalKey`		= '" . $internalKey . "'");
 }
 
 // get user's document groups
