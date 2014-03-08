@@ -668,8 +668,7 @@ switch ($actionToTake) {
 		header($header);
 		break;
 	default :
-		header("Location: index.php?a=7");
-		exit;
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // -- Save META Keywords --

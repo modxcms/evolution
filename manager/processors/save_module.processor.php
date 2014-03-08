@@ -155,9 +155,7 @@ switch ($_POST['mode']) {
 			}
         break;        
     default:
-    	// redirect to view modules
-		$header="Location: index.php?a=106&r=2";
-		header($header);
+    	$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // saves module user group access
