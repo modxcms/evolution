@@ -373,7 +373,7 @@ $_lang["go"] = 'Start';
 $_lang["group_access_permissions"] = 'Groepstoegang';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
-$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
+$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Website boomstructuur verbergen';
 $_lang["home"] = 'Start';
@@ -1043,7 +1043,7 @@ $_lang["unblock_message"] = 'Deze Gebruiker zal niet geblokkeerd zijn na het ops
 $_lang["undelete_resource"] = 'Herstel Pagina';
 $_lang["unpublish_date"] = 'Niet-publiceren datum';
 $_lang["unpublish_events"] = 'Niet-publiceren gebeurtenissen';
-$_lang["unpublish_resource"] = 'Publicatie Pagina ongedaan maken';
+$_lang["unpublish_resource"] = 'Publicatie ongedaan maken';
 $_lang["untitled_resource"] = 'Naamloze Pagina';
 $_lang["untitled_weblink"] = 'Naamloze Weblink';
 $_lang["update_params"] = 'Parameter weergave bijwerken';

@@ -26,14 +26,14 @@ $_lang['button_splitter'] = "|";
 $_lang['default_copyright'] = "[(site_name)] 2006";
 $_lang['invalid_class'] = "The Ditto class is invalid. Please check it.";
 $_lang['none'] = "None";
-$_lang['edit'] = "Edit";
+$_lang['edit'] = "编辑";
 $_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
 // Debug Tab Names
-$_lang['info'] = "Info";
+$_lang['info'] = "信息";
 $_lang['modx'] = "MODX";
 $_lang['fields'] = "Fields";
-$_lang['templates'] = "Templates";
+$_lang['templates'] = "模板";
 $_lang['filters'] = "Filters";
 $_lang['prefetch_data'] = "Prefetch Data";
 $_lang['retrieved_data'] = "Retreived Data";

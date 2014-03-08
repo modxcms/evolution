@@ -95,7 +95,7 @@ Refactor:
 * [gitHub] update $modx->getTemplateVarOutput 
 * [gitHub] update $modx->getDocumentChildren
 * [gitHub] update $modx->getDocumentChildrenTVarOutput
-* [gitHub] update $modx->getDocumentChildren”
+* [gitHub] update $modx->getDocumentChildren
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -123,6 +123,7 @@ Additional Improvements & Updates:
 * [gitHub] phpthumb 1.2 (not include phpthumb class if have resized images)
 * [gitHub] KCFinder - Remove superfluous update check from kcfinder
 * [gitHub] Automatic create .htaccess in cache folder if it is a subfolder of assets/cache
+* [gitHub] FirstChildRedirect 2.0
 
 --------------------------------------------
 Security:

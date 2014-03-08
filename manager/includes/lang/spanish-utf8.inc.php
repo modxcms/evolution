@@ -372,7 +372,7 @@ $_lang["go"] = 'Ir';
 $_lang["group_access_permissions"] = 'Acceso de grupo de usuarios';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ayuda';
-$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
+$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
 $_lang["help_title"] = 'Ayuda';
 $_lang["hide_tree"] = 'Ocultar árbol';
 $_lang["home"] = 'Inicio';
@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Template nuevo';
 $_lang["new_tmplvars"] = 'Variable de template nueva';
 $_lang["new_user"] = 'Usuario nuevo';
 $_lang["new_web_user"] = 'Usuario Web nuevo ';
-$_lang["new_resource"] = 'Documento Nuevo';
+$_lang["new_resource"] = 'New Resource';
 $_lang["no"] = 'No';
 $_lang["no_active_users_found"] = 'No se encontraron usuarios activos.';
 $_lang["no_activity_message"] = 'No has creado o editado algún documento todavía.';
@@ -1201,7 +1201,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = '¿Publicado?';
+$_lang['resource_opt_is_published'] = 'Publicado';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';

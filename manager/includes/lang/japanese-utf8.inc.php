@@ -374,7 +374,7 @@ $_lang["go"] = '実行';
 $_lang["group_access_permissions"] = 'ユーザーグループのアクセス';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'ヘルプ';
-$_lang["help_msg"] = '<p><a href="http://forum.modx.jp/" target="_blank">MODX日本公式フォーラム</a>でサポートを得ることができます。 また、逐次執筆が進められている<a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">MODXドキュメントとガイド（英語）</a>があり、MODX のほぼすべてに関して記されています。</p>';
+$_lang["help_msg"] = '<p><a href="http://forum.modx.jp/" target="_blank">MODX日本公式フォーラム</a>でサポートを得ることができます。 また、逐次執筆が進められている<a href="http://rtfm.modx.com/evolution/1.0" target="_blank">MODXドキュメントとガイド（英語）</a>があり、MODX のほぼすべてに関して記されています。</p>';
 $_lang["help_title"] = 'サポート';
 $_lang["hide_tree"] = 'リソースツリーを非表示';
 $_lang["home"] = 'ダッシュボード';

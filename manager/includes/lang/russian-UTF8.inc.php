@@ -377,7 +377,7 @@ $_lang["go"] = 'Перейти';
 $_lang["group_access_permissions"] = 'Доступ групп пользователей';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Помощь';
-$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
+$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
 $_lang["help_title"] = 'Помощь';
 $_lang["hide_tree"] = 'Спрятать дерево';
 $_lang["home"] = 'Главная';
