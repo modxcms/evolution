@@ -351,7 +351,7 @@ switch ($input['mode']) {
 		}
 		break;
 	default:
-		webAlertAndQuit("Unauthorized access");
+		webAlertAndQuit("No operation set in request.");
 }
 
 // in case any plugins include a quoted_printable function
