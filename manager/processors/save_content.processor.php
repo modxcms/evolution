@@ -43,11 +43,12 @@ $add_path=$sd.$sb.$pg;
 
 
 
-if (trim($pagetitle) == "") {
+$no_esc_pagetitle = $_POST['pagetitle'];
+if (trim($no_esc_pagetitle) == "") {
 	if ($type == "reference") {
-		$pagetitle = $_lang['untitled_weblink'];
+		$no_esc_pagetitle = $pagetitle = $_lang['untitled_weblink'];
 	} else {
-		$pagetitle = $_lang['untitled_resource'];
+		$no_esc_pagetitle = $pagetitle = $_lang['untitled_resource'];
 	}
 }
 
@@ -415,7 +416,7 @@ switch ($actionToTake) {
 		secureMgrDocument($key);
 
 		// Set the item name for logger
-		$_SESSION['itemname'] = $pagetitle;
+		$_SESSION['itemname'] = $no_esc_pagetitle;
 		
 		if ($syncsite == 1) {
 			// empty cache
@@ -640,7 +641,7 @@ switch ($actionToTake) {
 		secureMgrDocument($id);
 
 		// Set the item name for logger
-		$_SESSION['itemname'] = $pagetitle;
+		$_SESSION['itemname'] = $no_esc_pagetitle;
 
 		if ($syncsite == 1) {
 			// empty cache
@@ -667,8 +668,7 @@ switch ($actionToTake) {
 		header($header);
 		break;
 	default :
-		header("Location: index.php?a=7");
-		exit;
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // -- Save META Keywords --

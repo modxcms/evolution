@@ -124,6 +124,6 @@ switch ($_POST['mode']) {
         header($header);
         break;
     default :
-    	$modx->webAlertAndQuit("Erm... You supposed to be here now?");
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 ?>
