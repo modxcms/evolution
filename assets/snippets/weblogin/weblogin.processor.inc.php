@@ -208,7 +208,7 @@ defined('IN_PARSER_MODE') or die();
         return;
     }
 
-    $internalKey             = $row['internalKey'];
+    $internalKey             = $row['id'];
     $dbasePassword             = $row['password'];
     $failedlogins             = $row['failedlogincount'];
     $blocked                 = $row['blocked'];
