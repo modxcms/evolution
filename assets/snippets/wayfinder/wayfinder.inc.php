@@ -365,6 +365,10 @@ class Wayfinder {
 			if ($this->_config['excludeDocs']) {
 				$menuWhere .= " AND (sc.id NOT IN ({$this->_config['excludeDocs']}))";
 			}
+      // exclude documents with specified template
+      if ($this->_config['excludeDocsWithTemplate']) {
+        $menuWhere .= " AND sc.template NOT IN ({$this->_config['excludeDocsWithTemplate']})";
+      }
 			//add the limit to the query
 			if ($this->_config['limit']) {
 				$sqlLimit = "0, {$this->_config['limit']}";
