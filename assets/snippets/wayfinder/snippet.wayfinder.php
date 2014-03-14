@@ -60,7 +60,8 @@ $wf->_config = array(
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
-	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier
+	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier,
+  'excludeDocsWithTemplate' => isset($excludeDocsWithTemplate) ? $excludeDocsWithTemplate : FALSE
 );
 
 //get user class definitions
