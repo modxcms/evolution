@@ -62,6 +62,8 @@ class EXPORT_SITE
 		if(count($ignore_ids)>0)
 		{
 			$ignore_ids = "AND NOT id IN ('".implode("','", $ignore_ids)."')";
+		} else {
+			$ignore_ids = '';
 		}
 		
 		$this->ignore_ids = $ignore_ids;
