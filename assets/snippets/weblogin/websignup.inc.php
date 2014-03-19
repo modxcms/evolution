@@ -116,7 +116,7 @@ else if ($isPostBack){
 			'zip'         => $zip,
 			'state'       => $state,
 			'country'     => $country,
-		), $modx->getFullTableName("web_users"));
+		), $modx->getFullTableName("web_user_attributes"));
 
     // add user to web groups
     if(count($groups)>0) {
