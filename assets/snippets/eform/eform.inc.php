@@ -667,7 +667,7 @@ $_dfnMaxlength = 6;
 }
 
 # Form Merge
-function formMerge($docText, $docFields, $vClasses='') {
+function formMerge($docText, $docFields) {
 	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
