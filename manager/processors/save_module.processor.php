@@ -172,7 +172,7 @@ function saveUserGroupAccessPermissons(){
 		// delete old permissions on the module
 		$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 		if(is_array($usrgroups)) {
-			foreach ($usrgroups as $ugkey=>$value) {
+			foreach ($usrgroups as $value) {
 				$modx->db->insert(
 					array(
 						'module'    => $id,

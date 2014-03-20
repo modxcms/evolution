@@ -46,7 +46,6 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication 
 	// [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
 
-	$myChildren = array();
 	$userID = $modx->getLoginUserID();
 
 	$tblsc = $modx->getFullTableName('site_content');

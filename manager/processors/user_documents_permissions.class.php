@@ -16,7 +16,6 @@ class udperms{
 		$tbldg = $modx->getFullTableName('document_groups');
 		$tbldgn = $modx->getFullTableName('documentgroup_names');
 
-		$user = $this->user;
 		$document = $this->document;
 		$role = $this->role;
 

@@ -369,7 +369,7 @@ function save_user_quoted_printable($string) {
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$signupemail_message;
 	global $emailsubject, $emailsender;
-	global $site_name, $site_start, $site_url;
+	global $site_name;
 	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders

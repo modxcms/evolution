@@ -263,7 +263,7 @@ class DBAPI {
       else {
          $intotable = $this->replaceFullTableName($intotable);
          if (!is_array($fields)) {
-            $query = $this->query("INSERT INTO {$intotable} {$fields}");
+            $this->query("INSERT INTO {$intotable} {$fields}");
          } else {
             if (empty($fromtable)) {
                $fields = "(`".implode("`, `", array_keys($fields))."`) VALUES('".implode("', '", array_values($fields))."')";
