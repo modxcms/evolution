@@ -388,7 +388,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		$modx->manager->saveFormValues($mode);
+		$modx->manager->saveFormValues();
 		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
