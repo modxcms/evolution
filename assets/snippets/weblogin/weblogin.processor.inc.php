@@ -198,7 +198,7 @@ defined('IN_PARSER_MODE') or die();
                             ));
 
 	$ds = $modx->db->select(
-		'wu.*, wua.fullname',
+		'wu.*, wua.*',
 		$modx->getFullTableName('web_users')." AS wu, ".$modx->getFullTableName('web_user_attributes')." AS wua",
 		"BINARY wu.username='{$username}' AND wua.internalKey=wu.id");
     $row = $modx->db->getRow($ds);
