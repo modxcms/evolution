@@ -38,7 +38,11 @@ elseif ($mode=='restore2')
 	{
 		$source = file_get_contents($path);
 		import_sql($source);
-		header('Location: index.php?r=9&a=93');
+		if (headers_sent()) {
+       		echo "<script>document.location.href='index.php?r=9&a=93';</script>\n";
+		} else {
+        	header("Location: index.php?r=9&a=93");
+		}
 	}
 	exit;
 }
@@ -502,12 +506,13 @@ class Mysqldumper {
 			}
 			if($callBack==='snapshot')
 			{
+				/*
 				switch($tblval)
 				{
 					case $modx->db->config['table_prefix'].'event_log':
 					case $modx->db->config['table_prefix'].'manager_log':
 						continue 2;
-				}
+				}*/
 				if(!preg_match('@^'.$modx->db->config['table_prefix'].'@', $tblval)) continue;
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";

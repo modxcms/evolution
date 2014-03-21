@@ -365,6 +365,10 @@ class Wayfinder {
 			if ($this->_config['excludeDocs']) {
 				$menuWhere .= " AND (sc.id NOT IN ({$this->_config['excludeDocs']}))";
 			}
+			//add custom where conditions
+			if (!empty($this->_config['where'])) {
+				$menuWhere .= " AND ({$this->_config['where']})";
+			}
 			//add the limit to the query
 			if ($this->_config['limit']) {
 				$sqlLimit = "0, {$this->_config['limit']}";

@@ -43,6 +43,7 @@ $wf->_config = array(
 	'level' => isset($level) ? intval($level) : 0,
 	'includeDocs' => isset($includeDocs) ? $includeDocs : 0,
 	'excludeDocs' => isset($excludeDocs) ? $excludeDocs : 0,
+	'where' => isset($where) ? $where : '',
 	'ph' => isset($ph) ? $ph : FALSE,
 	'debug' => isset($debug) ? TRUE : FALSE,
 	'ignoreHidden' => isset($ignoreHidden) ? $ignoreHidden : FALSE,

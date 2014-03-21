@@ -665,7 +665,12 @@ switch ($actionToTake) {
 				$header = "Location: index.php?r=1&id=$id&a=7&dv=1".$add_path;
 			}
 		}
-		header($header);
+		if (headers_sent()) {
+        	$header = str_replace('Location: ','',$header);
+        	echo "<script>document.location.href='$header';</script>\n";
+		} else {
+        	header($header);
+		}
 		break;
 	default :
 		$modx->webAlertAndQuit("No operation set in request.");
