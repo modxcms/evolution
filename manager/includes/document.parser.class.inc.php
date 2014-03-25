@@ -1829,7 +1829,7 @@ class DocumentParser {
 			'eventid'     => $evtid,
 			'type'        => $type,
 			'createdon'   => time(),
-			'source'      => $esc_source,
+			'source'      => $source,
 			'description' => $msg,
 			'user'        => $LoginUserID,
 		), $this->getFullTableName('event_log'));
