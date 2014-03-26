@@ -114,7 +114,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     }
 
     function showPopup(id,title,e){
-        var x,y
+        var x, y;
         var mnu = $('mx_contextmenu');
         var bodyHeight = parseInt(document.body.offsetHeight);
         x = e.clientX>0 ? e.clientX:e.pageX;
@@ -129,7 +129,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         dopopup(x+5,y);
         e.cancelBubble=true;
         return false;
-    };
+    }
 
     function dopopup(x,y) {
         if(selectedObjectName.length>20) {
@@ -152,7 +152,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     }
 
     function toggleNode(node,indent,parent,expandAll,privatenode) {
-        privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
+        privatenode = (!privatenode || privatenode == '0') ?  '0' : '1';
         rpcNode = $(node.parentNode.lastChild);
 
         var rpcNodeText;
@@ -246,14 +246,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         var l = all.length;
 
         for ( var i = 0; i < l; i++ ) {
-            el = all[i]
+            el = all[i];
             cn = el.className;
             if (cn=="treeNodeSelected") {
                 el.className="treeNode";
             }
         }
         elSel.className="treeNodeSelected";
-    };
+    }
 
     function setHoverClass(el, dir) {
         if(el.className!="treeNodeSelected") {
@@ -263,7 +263,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 el.className="treeNode";
             }
         }
-    };
+    }
 
     // set Context Node State
     function setCNS(n, b) {
@@ -272,7 +272,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         } else {
             n.style.backgroundColor="";
         }
-    };
+    }
 
     function updateTree() {
         rpcNode = $('treeRoot');
@@ -497,14 +497,14 @@ function menuHandler(action) {
         case 1 : // view
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
-            break
+            break;
         case 2 : // edit
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
-            break
+            break;
         case 3 : // new Resource
             top.main.document.location.href="index.php?a=4&pid=" + itemToChange;
-            break
+            break;
         case 4 : // delete
             if(selectedObjectDeleted==0) {
                 if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_resource']; ?>")==true) {
@@ -513,18 +513,18 @@ function menuHandler(action) {
             } else {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['already_deleted']; ?>");
             }
-            break
+            break;
         case 5 : // move
             top.main.document.location.href="index.php?a=51&id=" + itemToChange;
-            break
+            break;
         case 6 : // new Weblink
             top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
-            break
+            break;
         case 7 : // duplicate
             if(confirm("<?php echo $_lang['confirm_resource_duplicate'] ?>")==true) {
                    top.main.document.location.href="index.php?a=94&id=" + itemToChange;
                }
-            break
+            break;
         case 8 : // undelete
             if(selectedObjectDeleted==0) {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
@@ -533,12 +533,12 @@ function menuHandler(action) {
                     top.main.document.location.href="index.php?a=63&id=" + itemToChange;
                 }
             }
-            break
+            break;
         case 9 : // publish
             if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_publish']; ?>")==true) {
                 top.main.document.location.href="index.php?a=61&id=" + itemToChange;
             }
-            break
+            break;
         case 10 : // unpublish
             if (itemToChange != <?php echo $modx->config['site_start']?>) {
                 if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
@@ -547,10 +547,10 @@ function menuHandler(action) {
             } else {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
-            break
+            break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
-            break
+            break;
 
         default :
             alert('Unknown operation command.');

@@ -1356,8 +1356,8 @@ class DocumentParser {
     /**
      * Get all db fields and TVs for a document/resource
      *
-     * @param type $method
-     * @param type $identifier
+     * @param string $method
+     * @param mixed $identifier
      * @return array
      */
     function getDocumentObject($method, $identifier, $isPrepareResponse=false) {
