@@ -13,9 +13,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         exit;
     }
 
-    $indent    = $_GET['indent'];
-    $parent    = $_GET['parent'];
-    $expandAll = $_GET['expandAll'];
+    $indent    = intval($_GET['indent']);
+    $parent    = intval($_GET['parent']);
+    $expandAll = intval($_GET['expandAll']);
     $output    = "";
     $theme = $manager_theme ? "$manager_theme/":"";
 
@@ -59,7 +59,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     );
 
     if (isset($_SESSION['openedArray'])) {
-            $opened = explode("|", $_SESSION['openedArray']);
+            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
     } else {
             $opened = array();
     }
@@ -94,7 +94,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $_SESSION['tree_sortby'] = 'menuindex';
         $_SESSION['tree_sortdir'] = 'ASC';
     }
-    $orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
+    $orderby = $modx->db->escape($_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir']);
 
     // Folder sorting gets special setup ;) Add menuindex and pagetitle
     if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
