@@ -7,9 +7,9 @@ if(!$modx->hasPermission('messages')) {
 $sendto = $_REQUEST['sendto'];
 $userid = $_REQUEST['user'];
 $groupid = $_REQUEST['group'];
-$subject = addslashes($_REQUEST['messagesubject']);
+$subject = $modx->db->escape($_REQUEST['messagesubject']);
 if($subject=="") $subject="(no subject)";
-$message = addslashes($_REQUEST['messagebody']);
+$message = $modx->db->escape($_REQUEST['messagebody']);
 if($message=="") $message="(no message)";
 $postdate = time();
 
