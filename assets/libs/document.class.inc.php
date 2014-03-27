@@ -207,7 +207,7 @@ class Document{
 			$fields = $modx->db->escape($fields);
 			if(isset($this->oldTVs[$tv])){
 				if($this->oldTVs[$tv]==$this->tvNames[$tv]) continue;
-				$modx->db->update($fields, $tvc, "tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['id']}'");
+				$modx->db->update($fields, $tvc, "tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['contentid']}'");
 			}
 			else
 				$modx->db->insert($fields, $tvc);
