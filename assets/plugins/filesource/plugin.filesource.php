@@ -1,4 +1,5 @@
 <?php
+if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 /**
  * @name FileSource
  * @version 0.1
