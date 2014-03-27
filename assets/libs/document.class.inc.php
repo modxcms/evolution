@@ -7,7 +7,7 @@
   e-mail: ur001@mail.ru
 
   Example of use:
-	require_once('assets/libs/docmanager/document.class.inc.php');
+	require_once('assets/libs/document.class.inc.php');
 	$doc = new Document();
 	$doc->Set('parent',$folder);
 	$doc->Set('alias','post'.time());
