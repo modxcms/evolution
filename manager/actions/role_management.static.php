@@ -4,11 +4,7 @@ if(!$modx->hasPermission('edit_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-// get search string
-$query = $_REQUEST['search'];
-$sqlQuery = $modx->db->escape($query);
 ?>
-<br />
 <!-- User Roles -->
 
 <h1><?php echo $_lang['role_management_title']; ?></h1>
