@@ -13,7 +13,7 @@ if($id==1){
 	$modx->webAlertAndQuit("The role you are trying to delete is the admin role. This role cannot be deleted!");
 }
 
-$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "role='{$id}'");
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_attributes'), "role='{$id}'");
 $count=$modx->db->getValue($rs);
 if($count>0){
 	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");

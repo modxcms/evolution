@@ -1812,12 +1812,12 @@ class DocumentParser {
      */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
-        $source= $this->db->escape($source);
 	if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
-		$source = mb_substr($source, 0, 50 , "UTF-8");
+		$esc_source = mb_substr($source, 0, 50 , "UTF-8");
 	} else {
-		$source = substr($source, 0, 50);
+		$esc_source = substr($source, 0, 50);
 	}
+        $esc_source= $this->db->escape($esc_source);
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
@@ -1829,7 +1829,7 @@ class DocumentParser {
 			'eventid'     => $evtid,
 			'type'        => $type,
 			'createdon'   => time(),
-			'source'      => $source,
+			'source'      => $esc_source,
 			'description' => $msg,
 			'user'        => $LoginUserID,
 		), $this->getFullTableName('event_log'));
