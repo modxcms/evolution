@@ -460,7 +460,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
-        <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
+        <input type='hidden' name='dt' value='<?php echo htmlspecialchars($_REQUEST['dt']); ?>' />
     </td>
     <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
   </tr>
@@ -471,14 +471,14 @@ if(isset($_REQUEST['tree_sortdir'])) {
 <div id="treeHolder">
 <?php
     // invoke OnTreeRender event
-    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $_REQUEST);
+    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $modx->db->escape($_REQUEST));
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
     <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 <?php
     // invoke OnTreeRender event
-    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $_REQUEST);
+    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->db->escape($_REQUEST));
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
