@@ -1144,7 +1144,7 @@ class DocumentParser {
             $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
             if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
             if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
-            foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
+            if (is_array($params)) foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
             $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
             $this->snippetsCode .= '</fieldset><br />';
             $this->snippetsCount[$snippetObject['name']]++;
