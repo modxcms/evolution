@@ -33,4 +33,3 @@ switch ($e->name ) {
     default:
         return ;
 }
-?>
