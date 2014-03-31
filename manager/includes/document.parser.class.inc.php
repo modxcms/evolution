@@ -727,34 +727,7 @@ class DocumentParser {
                 ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
 
             // clear the cache
-            $this->clearCache();
-
-            // update publish time file
-            $timesArr= array ();
-            $result = $this->db->select('MIN(pub_date) AS minpub', $this->getFullTableName('site_content'), "pub_date>{$timeNow}");
-            if ($minpub = $this->db->getValue($result)) {
-                $timesArr[]= $minpub;
-            }
-
-            $result = $this->db->select('MIN(unpub_date) AS minunpub', $this->getFullTableName("site_content"), "unpub_date>{$timeNow}");
-            if ($minunpub = $this->db->getValue($result)) {
-                $timesArr[]= $minunpub;
-            }
-
-            if (count($timesArr) > 0) {
-                $nextevent= min($timesArr);
-            } else {
-                $nextevent= 0;
-            }
-
-            $basepath= $this->config["base_path"] . "assets/cache";
-            $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
-            if ($fp) {
-                @ flock($fp, LOCK_EX);
-                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
-                @ flock($fp, LOCK_UN);
-                @ fclose($fp);
-            }
+            $this->clearCache('full');
         }
     }
 
