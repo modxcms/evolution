@@ -338,7 +338,7 @@ class DocumentParser {
                 } else {
                     if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result)) {
-                            $usrSettings[$row['setting_name']]= $row['setting_value'];
+                            $musrSettings[$row['setting_name']]= $row['setting_value'];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
                     }
@@ -727,34 +727,7 @@ class DocumentParser {
                 ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
 
             // clear the cache
-            $this->clearCache();
-
-            // update publish time file
-            $timesArr= array ();
-            $result = $this->db->select('MIN(pub_date) AS minpub', $this->getFullTableName('site_content'), "pub_date>{$timeNow}");
-            if ($minpub = $this->db->getValue($result)) {
-                $timesArr[]= $minpub;
-            }
-
-            $result = $this->db->select('MIN(unpub_date) AS minunpub', $this->getFullTableName("site_content"), "unpub_date>{$timeNow}");
-            if ($minunpub = $this->db->getValue($result)) {
-                $timesArr[]= $minunpub;
-            }
-
-            if (count($timesArr) > 0) {
-                $nextevent= min($timesArr);
-            } else {
-                $nextevent= 0;
-            }
-
-            $basepath= $this->config["base_path"] . "assets/cache";
-            $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
-            if ($fp) {
-                @ flock($fp, LOCK_EX);
-                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
-                @ flock($fp, LOCK_UN);
-                @ fclose($fp);
-            }
+            $this->clearCache('full');
         }
     }
 
@@ -1171,7 +1144,7 @@ class DocumentParser {
             $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
             if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
             if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
-            foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
+            if (is_array($params)) foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
             $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
             $this->snippetsCode .= '</fieldset><br />';
             $this->snippetsCount[$snippetObject['name']]++;
@@ -1748,7 +1721,7 @@ class DocumentParser {
                 if (!strlen($pkey)) $pkey = "{$childId}";
                     $children[$pkey] = $childId;
 
-                if ($depth) {
+                if ($depth && isset($documentMap_cache[$childId])) {
                     $children += $this->getChildIds($childId, $depth);
                 }
             }

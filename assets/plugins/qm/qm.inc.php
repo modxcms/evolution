@@ -59,10 +59,7 @@ class Qm {
         $manager_language = $this->modx->config['manager_language'];
         
         // Individual user language setting (if set)
-        $records = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$_SESSION['mgrInternalKey']}'");
-        if ($record_manager_language = $this->modx->db->getValue($records)) {
-            $manager_language = $record_manager_language;
-        }
+        if (isset($_SESSION['mgrUsrConfigSet']['manager_language'])) $manager_language = $_SESSION['mgrUsrConfigSet']['manager_language'];
 	
 		// Include_once the language file
         if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
@@ -160,10 +157,9 @@ class Qm {
                     $imagePreview = '';
                     
                     // Includes
-                    $manager_path = MGR_DIR.'/';
-                    include_once($manager_path.'includes/tmplvars.inc.php');
-                    include_once($manager_path.'includes/tmplvars.commands.inc.php');
-                    include_once($manager_path.'includes/tmplvars.format.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.format.inc.php');
                     
                     // Get save status
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
@@ -341,11 +337,9 @@ class Qm {
                         }
                         
                         $userID = $_SESSION['mgrInternalKey'];
-                        //$docID = $this->modx->documentIdentifier;
-                        $doc = $this->modx->getDocument($docID);
                         
                         // Add ID
-                        $controls .= '<li class="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
+                        $controls .= '<li class="qmId">ID: '.$docID.'</li>';
 
                         // Edit button
                         
