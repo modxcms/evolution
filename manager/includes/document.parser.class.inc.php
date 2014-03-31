@@ -338,7 +338,7 @@ class DocumentParser {
                 } else {
                     if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result)) {
-                            $usrSettings[$row['setting_name']]= $row['setting_value'];
+                            $musrSettings[$row['setting_name']]= $row['setting_value'];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
                     }
