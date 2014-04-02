@@ -997,9 +997,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
 				}
@@ -1030,9 +1029,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $msg . $snip . '</p>');
 				}
