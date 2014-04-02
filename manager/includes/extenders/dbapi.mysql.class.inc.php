@@ -190,8 +190,16 @@ class DBAPI {
             array_shift($debug);	
             $debug_path = array();
             foreach ($debug as $line) $debug_path[] = $line['function'];
-            $debug_path = implode('>',$debug_path);
-            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . " ".$debug_path."</legend>" . $sql . "</fieldset><br />";
+            $debug_path = implode(' > ',array_reverse($debug_path));
+            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . "</legend>";
+            $modx->queryCode .= $sql . '<br><br>';
+            if ($modx->event->name) $modx->queryCode .= 'Current Event  => ' . $modx->event->name . '<br>';
+            if ($modx->event->activePlugin) $modx->queryCode .= 'Current Plugin => ' . $modx->event->activePlugin . '<br>';
+            if ($modx->currentSnippet) $modx->queryCode .= 'Current Snippet => ' . $modx->currentSnippet . '<br>';
+            if (stripos($sql, 'select')===0) $modx->queryCode .= 'Record Count => ' . $this->getRecordCount($result) . '<br>';
+            else $modx->queryCode .= 'Affected Rows => ' . $this->getAffectedRows() . '<br>';
+            $modx->queryCode .= 'Functions Path => ' . $debug_path . '<br>';
+            $modx->queryCode .= "</fieldset><br />";
          }
          $modx->executedQueries = $modx->executedQueries + 1;
          return $result;
