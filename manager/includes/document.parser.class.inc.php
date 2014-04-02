@@ -2279,6 +2279,7 @@ class DocumentParser {
 				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
 					$deletedfiles[] = $name;
 					unlink($file);
+					clearstatcache();
 				}
 			}
 		}
