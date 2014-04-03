@@ -1814,14 +1814,15 @@ class DocumentParser {
 			'description' => $msg,
 			'user'        => $LoginUserID,
 		), $this->getFullTableName('event_log'));
-        if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
-        {
-            if($this->config['send_errormail'] <= $type)
-            {
-                $subject = 'Error mail from ' . $this->config['site_name'];
-                $this->sendmail($subject,$source);
-            }
-        }
+		if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
+			if ($this->config['send_errormail'] <= $type) {
+				$modx->sendmail(array(
+						'subject' => 'MODX System Error on ' . $this->config['site_name'],
+						'body' => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
+						'type' => 'text')
+				);
+			}
+		}
     }
 
     function sendmail($params=array(), $msg='')
