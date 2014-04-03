@@ -503,7 +503,12 @@ class DocumentParser {
         $tbl_document_groups= $this->getFullTableName("document_groups");
         if ($this->config['cache_type'] == 2) {
            $md5_hash = '';
-           if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+           if (!empty($_GET)) {
+	           // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+	           $params = $_GET;
+	           ksort($params);
+	           $md5_hash = '_' . md5(http_build_query($params));
+           }
            $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
         }else{
            $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
@@ -744,7 +749,12 @@ class DocumentParser {
             $this->invokeEvent("OnBeforeSaveWebPageCache");
             if ($this->config['cache_type'] == 2) {
                 $md5_hash = '';
-                if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+                if (!empty($_GET)) {
+	                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+	                $params = $_GET;
+	                ksort($params);
+	                $md5_hash = '_' . md5(http_build_query($params));
+                }
                 $pageCache = $md5_hash .".pageCache.php";
             }else{
                 $pageCache = ".pageCache.php";
