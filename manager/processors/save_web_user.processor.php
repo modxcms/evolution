@@ -364,6 +364,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['subject'] = $emailsubject;
 	$param['body']    = $message;
 	$param['to']      = $email;
+	$param['type']    = 'text';
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
 		$modx->manager->saveFormValues();

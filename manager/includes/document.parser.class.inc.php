@@ -1889,6 +1889,7 @@ class DocumentParser {
         $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body     = $p['body'];
+        if (isset($p['type']) && $p['type'] == 'text') $this->mail->IsHTML(false);
         $rs = $this->mail->send();
         return $rs;
     }
