@@ -52,7 +52,7 @@ class udperms{
 			document group is not assigned to a web user group and visa versa.
 		 */
 		$rs = $modx->db->select(
-			'count(sc.id)',
+			'count(DISTINCT sc.id)',
 			"{$tblsc} AS sc 
 				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
 				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
