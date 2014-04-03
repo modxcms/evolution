@@ -40,12 +40,14 @@ switch ($_POST['mode']) {
                                     "id"    => $id
                                 ));
     
-		// disallow duplicate names for new plugins
-		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}'");
-		$count = $modx->db->getValue($rs);
-		if($count > 0) {
-			$modx->manager->saveFormValues(101);
-			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=101");
+		// disallow duplicate names for active plugins
+		if ($disabled == '0') {
+			$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND disabled='0'");
+			$count = $modx->db->getValue($rs);
+			if($count > 0) {
+				$modx->manager->saveFormValues(101);
+				$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=101");
+			}
 		}
 
 		//do stuff to save the new plugin
@@ -96,12 +98,14 @@ switch ($_POST['mode']) {
                                     "id"    => $id
                                 ));
      
-		// disallow duplicate names for plugins
-		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}'");
-		if ($modx->db->getValue($rs) > 0) {
-			$modx->manager->saveFormValues(102);
-			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
-		}
+		// disallow duplicate names for active plugins
+	    if ($disabled == '0') {
+			$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_plugins'), "name='{$name}' AND id!='{$id}' AND disabled='0'");
+			if ($modx->db->getValue($rs) > 0) {
+				$modx->manager->saveFormValues(102);
+				$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=102&id={$id}");
+			}
+	    }
 
         //do stuff to save the edited plugin    
         $modx->db->update(
