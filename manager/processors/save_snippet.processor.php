@@ -35,7 +35,7 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 if($name=="") $name = "Untitled snippet";
 
 switch ($_POST['mode']) {
-    case '23':
+    case '23': // Save new snippet
 
 		// invoke OnBeforeSnipFormSave event
 		$modx->invokeEvent("OnBeforeSnipFormSave",
@@ -87,7 +87,7 @@ switch ($_POST['mode']) {
 				header($header);
 			}
         break;
-    case '22':
+    case '22': // Save existing snippet
 		// invoke OnBeforeSnipFormSave event
 		$modx->invokeEvent("OnBeforeSnipFormSave",
 								array(
@@ -99,7 +99,7 @@ switch ($_POST['mode']) {
 		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_snippets'), "name='{$name}' AND id!='{$id}'");
 		if ($modx->db->getValue($rs) > 0) {
 			$modx->manager->saveFormValues(22);
-			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name), "index.php?a=22&id={$id}");
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
 		}
 
 		//do stuff to save the edited doc
