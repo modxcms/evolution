@@ -1816,7 +1816,7 @@ class DocumentParser {
 		), $this->getFullTableName('event_log'));
 		if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
 			if ($this->config['send_errormail'] <= $type) {
-				$modx->sendmail(array(
+				$this->sendmail(array(
 						'subject' => 'MODX System Error on ' . $this->config['site_name'],
 						'body' => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
 						'type' => 'text')
