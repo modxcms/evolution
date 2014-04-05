@@ -165,17 +165,30 @@ class Wayfinder {
 		//Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
 			$usedTemplate = 'startItemTpl';
-		} elseif ($resource['id'] == $modx->documentObject['id'] && $resource['isfolder'] && $this->_templates['parentRowHereTpl'] && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0) && $numChildren) {
+		} elseif ($resource['id'] == $modx->documentObject['id']
+			&& $resource['isfolder']
+			&& $this->_templates['parentRowHereTpl']
+			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
+			&& $numChildren) {
             $usedTemplate = 'parentRowHereTpl';
         } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['innerHereTpl'] && $resource['level'] > 1) {
             $usedTemplate = 'innerHereTpl';
         } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['hereTpl']) {
             $usedTemplate = 'hereTpl';
-        } elseif ($resource['isfolder'] && $this->_templates['activeParentRowTpl'] && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0) && $this->isHere($resource['id'])) {
+        } elseif ($resource['isfolder']
+            && $this->_templates['activeParentRowTpl']
+            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
+            && $this->isHere($resource['id'])) {
             $usedTemplate = 'activeParentRowTpl';
-        } elseif ($resource['isfolder'] && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"'))) && $this->_templates['categoryFoldersTpl'] && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)) {
+        } elseif ($resource['isfolder']
+            && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
+            && $this->_templates['categoryFoldersTpl']
+            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)) {
             $usedTemplate = 'categoryFoldersTpl';
-        } elseif ($resource['isfolder'] && $this->_templates['parentRowTpl'] && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0) && $numChildren) {
+        } elseif ($resource['isfolder']
+            && $this->_templates['parentRowTpl']
+            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
+            && $numChildren) {
             $usedTemplate = 'parentRowTpl';
         } elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
             $usedTemplate = 'innerRowTpl';
@@ -367,8 +380,8 @@ class Wayfinder {
 			//Setup the fields for the query
 			$fields = "sc.id, sc.menutitle, sc.pagetitle, sc.introtext, sc.menuindex, sc.published, sc.hidemenu, sc.parent, sc.isfolder, sc.description, sc.alias, sc.longtitle, sc.type,if(sc.type='reference',sc.content,'') as content, sc.template, sc.link_attributes";
 	        //Get the table names
-	        $tblsc = $modx->getFullTableName("site_content");
-	        $tbldg = $modx->getFullTableName("document_groups");
+	        $tbl_site_content = $modx->getFullTableName('site_content');
+	        $tbl_document_groups = $modx->getFullTableName('document_groups');
 	        //Add the ignore hidden option to the where clause
 	        if ($this->_config['ignoreHidden']) {
 	            $menuWhere = '';
@@ -409,7 +422,7 @@ class Wayfinder {
 			//run the query
 			$result = $modx->db->select(
 				"DISTINCT {$fields}",
-				"{$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id",
+				"{$tbl_site_content} sc LEFT JOIN {$tbl_document_groups} dg ON dg.document = sc.id",
 				"sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id",
 				"{$sort} {$this->_config['sortOrder']}",
 				$sqlLimit
@@ -497,12 +510,12 @@ class Wayfinder {
 	    include_once $baspath . "/tmplvars.format.inc.php";
 	    include_once $baspath . "/tmplvars.commands.inc.php";
 
-		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
-		$tb2 = $modx->getFullTableName("site_tmplvars");
+		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+		$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
 		$rs = $modx->db->select(
 			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
-			"{$tb1} stc LEFT JOIN {$tb2} stv ON stv.id=stc.tmplvarid ",
+			"{$tbl_site_tmplvar_contentvalues} stc LEFT JOIN {$tbl_site_tmplvars} stv ON stv.id=stc.tmplvarid ",
 			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
 			"stc.contentid ASC"
 			);
@@ -512,7 +525,7 @@ class Wayfinder {
 		}
 
 		if (count($resourceArray) != count($docIDs)) {
-			$rs = $modx->db->select('name,type,display,display_params,default_text', $tb2, "name='{$tvname}'", 1);
+			$rs = $modx->db->select('name,type,display,display_params,default_text', $tbl_site_tmplvars, "name='{$tvname}'", 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 			    foreach ($docIDs as $id) {
@@ -539,8 +552,7 @@ class Wayfinder {
 
 	function getTVList() {
 		global $modx;
-		$table = $modx->getFullTableName("site_tmplvars");
-		$tvs = $modx->db->select("name", $table);
+		$tvs = $modx->db->select("name", $modx->getFullTableName('site_tmplvars'));
 			// TODO: make it so that it only pulls those that apply to the current template
 		$dbfields = $modx->db->getColumn('name', $tvs); 
 		return $dbfields;
