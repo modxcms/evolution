@@ -23,8 +23,6 @@ class Wayfinder {
 	var $debugInfo = array();
 	
 	function __construct() {
-		global $modx;
-		
 		$_[] = '[+wf.wrapper+]';
 		$_[] = '[+wf.classes+]';
 		$_[] = '[+wf.classnames+]';
@@ -45,6 +43,7 @@ class Wayfinder {
 	}
 	
 	function run() {
+		global $modx;
 		if ($this->_config['debug']) {
 			$this->addDebugInfo('settings','Settings','Settings','Settings used to create this menu.',$this->_config);
 			$this->addDebugInfo('settings','CSS','CSS Settings','Available CSS options.',$this->_css);
