@@ -18,16 +18,30 @@ class Wayfinder {
 	var $docs = array();
 	var $parentTree = array();
 	var $hasChildren = array();
-	var $placeHolders = array(
-		'rowLevel' => array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.alias+]','[+wf.attributes+]','[+wf.docid+]','[+wf.introtext+]','[+wf.description+]','[+wf.subitemcount+]'),
-		'wrapperLevel' => array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]'),
-		'tvs' => array(),
-	);
+	var $placeHolders = array();
 	var $tvList = array();
 	var $debugInfo = array();
 	
 	function run() {
 		global $modx;
+		
+		$_[] = '[+wf.wrapper+]';
+		$_[] = '[+wf.classes+]';
+		$_[] = '[+wf.classnames+]';
+		$_[] = '[+wf.link+]';
+		$_[] = '[+wf.title+]';
+		$_[] = '[+wf.linktext+]';
+		$_[] = '[+wf.id+]';
+		$_[] = '[+wf.alias+]';
+		$_[] = '[+wf.attributes+]';
+		$_[] = '[+wf.docid+]';
+		$_[] = '[+wf.introtext+]';
+		$_[] = '[+wf.description+]';
+		$_[] = '[+wf.subitemcount+]';
+		$this->placeHolders['rowLevel'] = $_;
+		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]');
+		$this->placeHolders['tvs']          = array();
+		
 		//setup here checking array
 		$this->parentTree = $modx->getParentIds($this->_config['hereId']);
 		$this->parentTree[] = $this->_config['hereId'];
