@@ -44,107 +44,107 @@ function mm_ddSetFieldValue($field, $value = '', $roles = '', $templates = ''){
 			//Дата публикации
 			case 'pub_date':
 				$value = ($value == '') ? date("$date_format H:i:s") : $value;
-				$output .= '$j("input[name=pub_date]").val("'.jsSafe($value).'"); '."\n";
+				$output .= '$j("input[name=\'pub_date\']").val("'.jsSafe($value).'"); '."\n";
 			break;
 			
 			//Дата отмены публикации
 			case 'unpub_date':
 				$value = ($value=='') ? date("$date_format H:i:s") : $value;
-				$output .= '$j("input[name=unpub_date]").val("'.jsSafe($value).'"); '."\n";
+				$output .= '$j("input[name=\'unpub_date\']").val("'.jsSafe($value).'"); '."\n";
 			break;
 			
 			//Признак публикации
 			case 'published':
 				if ($value == '1'){
-					$output .= '$j("input[name=publishedcheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'publishedcheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=publishedcheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'publishedcheck\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=published]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'published\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак отображения в меню
 			case 'show_in_menu':
 				if ($value == '1'){
-					$output .= '$j("input[name=hidemenucheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'hidemenucheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=hidemenucheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'hidemenucheck\']").removeAttr("checked"); '."\n";
 				}
 								
-				$output .= '$j("input[name=hidemenu]").val("'.(($value == '1') ? '0' : '1').'"); '."\n"; // Note these are reversed from what you'd think
+				$output .= '$j("input[name=\'hidemenu\']").val("'.(($value == '1') ? '0' : '1').'"); '."\n"; // Note these are reversed from what you'd think
 			break;
 			
 			//Признак скрытия из меню (аналогично show_in_menu, только наоборот)
 			case 'hide_menu':
 				if ($value == '0'){
-					$output .= '$j("input[name=hidemenucheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'hidemenucheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '1';
-					$output .= '$j("input[name=hidemenucheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'hidemenucheck\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=hidemenu]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'hidemenu\']").val("'.$value.'"); '."\n";
 			break;
 					
 			//Признак доступности для поиска
 			case 'searchable':
 				if ($value == '1'){
-					$output .= '$j("input[name=searchablecheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'searchablecheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=searchablecheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'searchablecheck\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=searchable]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'searchable\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак кэширования
 			case 'cacheable':
 				if ($value == '1'){
-					$output .= '$j("input[name=cacheablecheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'cacheablecheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=cacheablecheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'cacheablecheck\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=cacheable]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'cacheable\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак очистки кэша
 			case 'clear_cache':
 				if ($value == '1'){
-					$output .= '$j("input[name=syncsitecheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'syncsitecheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=syncsitecheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'syncsitecheck\']").removeAttr("checked"); '."\n";
 				}
 
-				$output .= '$j("input[name=syncsite]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'syncsite\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак папки
 			case 'is_folder':
 				if ($value == '1'){
-					$output .= '$j("input[name=isfoldercheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'isfoldercheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=isfoldercheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'isfoldercheck\']").removeAttr("checked"); '."\n";
 				}
 			break;
 			
 			//Участвует в URL
 			case 'alias_visible':
 				if ($value == '1'){
-					$output .= '$j("input[name=alias_visible_check]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'alias_visible_check\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
-					$output .= '$j("input[name=alias_visible_check]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'alias_visible_check\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=alias_visible]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'alias_visible\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак использованшия визуального редактора
@@ -152,11 +152,11 @@ function mm_ddSetFieldValue($field, $value = '', $roles = '', $templates = ''){
 				$output .= 'var originalRichtextValue = $j("#which_editor:first").val(); '."\n";
 				
 				if ($value == '1'){
-					$output .= '$j("input[name=richtextcheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'richtextcheck\']").attr("checked", "checked"); '."\n";
 				}else{
 					$value = '0';
 					$output .= '
-								$j("input[name=richtextcheck]").removeAttr("checked");
+								$j("input[name=\'richtextcheck\']").removeAttr("checked");
 								// Make the RTE displayed match the default value that has been set here
 								if (originalRichtextValue != "none"){
 									$j("#which_editor").val("none");
@@ -167,7 +167,7 @@ function mm_ddSetFieldValue($field, $value = '', $roles = '', $templates = ''){
 					$output .= ''."\n";
 				}
 
-				$output .= '$j("input[name=richtext]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'richtext\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Признак логирования
@@ -176,24 +176,24 @@ function mm_ddSetFieldValue($field, $value = '', $roles = '', $templates = ''){
 				$value = ($value) ? '0' : '1';
 				
 				if ($value == '1'){
-					$output .= '$j("input[name=donthitcheck]").attr("checked", "checked"); '."\n";
+					$output .= '$j("input[name=\'donthitcheck\']").attr("checked", "checked"); '."\n";
 				}else{
-					$output .= '$j("input[name=donthitcheck]").removeAttr("checked"); '."\n";
+					$output .= '$j("input[name=\'donthitcheck\']").removeAttr("checked"); '."\n";
 				}
 				
-				$output .= '$j("input[name=donthit]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'donthit\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//Тип содержимого
 			case 'content_type':
-				$output .= '$j("select[name=contentType]").val("'.$value.'");' . "\n";
+				$output .= '$j("select[name=\'contentType\']").val("'.$value.'");' . "\n";
 			break;
 			
 			//Аттрибуты ссылки
 			case 'link_attributes':
 				//Обработаем кавычки
 				$value = str_replace(array("'", '"'), '\"', $value);
-				$output .= '$j("input[name=link_attributes]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=\'link_attributes\']").val("'.$value.'"); '."\n";
 			break;
 			
 			//TV
