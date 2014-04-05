@@ -42,9 +42,6 @@ class Wayfinder {
 		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]');
 		$this->placeHolders['tvs']          = array();
 		
-		//setup here checking array
-		$this->parentTree = $modx->getParentIds($this->_config['hereId']);
-		$this->parentTree[] = $this->_config['hereId'];
 	}
 	
 	function run() {
@@ -52,6 +49,9 @@ class Wayfinder {
 			$this->addDebugInfo('settings','Settings','Settings','Settings used to create this menu.',$this->_config);
 			$this->addDebugInfo('settings','CSS','CSS Settings','Available CSS options.',$this->_css);
 		}
+		//setup here checking array
+		$this->parentTree = $modx->getParentIds($this->_config['hereId']);
+		$this->parentTree[] = $this->_config['hereId'];
 		//Load the templates
 		$this->checkTemplates();
 		//Register any scripts
