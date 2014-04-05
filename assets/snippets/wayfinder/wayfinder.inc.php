@@ -47,8 +47,8 @@ class Wayfinder {
 		$this->parentTree[] = $this->_config['hereId'];
 		
 		if ($this->_config['debug']) {
-			$this->addDebugInfo("settings","Settings","Settings","Settings used to create this menu.",$this->_config);
-			$this->addDebugInfo("settings","CSS","CSS Settings","Available CSS options.",$this->_css);
+			$this->addDebugInfo('settings','Settings','Settings','Settings used to create this menu.',$this->_config);
+			$this->addDebugInfo('settings','CSS','CSS Settings','Available CSS options.',$this->_css);
 		}
 		//Load the templates
 		$this->checkTemplates();
@@ -147,8 +147,8 @@ class Wayfinder {
 				foreach ($this->placeHolders['wrapperLevel'] as $n => $v) {
 					if ($v !== '[+wf.wrapper+]')
 						$debugDocInfo[$v] = $phArray[$n];
-				}	
-				$this->addDebugInfo("wrapper","{$debugParent}","Wrapper for items with parent {$debugParent}.","These fields were used when processing the wrapper for the following documents.",$debugDocInfo);
+				}
+				$this->addDebugInfo('wrapper',$debugParent,"Wrapper for items with parent {$debugParent}.","These fields were used when processing the wrapper for the following documents.",$debugDocInfo);
 			}
 		}
 		//Return the submenu
@@ -218,7 +218,7 @@ class Wayfinder {
 			$debugDocInfo['template'] = $usedTemplate;
 			foreach ($usePlaceholders as $n => $v) {
 				$debugDocInfo[$v] = $phArray[$n];
-			}		
+			}
 			$this->addDebugInfo("row","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were used when processing this document.",$debugDocInfo);
 			$this->addDebugInfo("rowdata","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were retrieved from the database for this document.",$resource);
 		}
@@ -422,7 +422,7 @@ class Wayfinder {
 			}
 			$resultIds = array();
 			//loop through the results
-			while ($tempDocInfo = $modx->db->getRow($result))  {
+			while($tempDocInfo = $modx->db->getRow($result)) {
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
@@ -587,7 +587,7 @@ class Wayfinder {
 	function fetch($tpl){
 		// based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
 		global $modx;
-		$template = "";
+		$template = '';
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
 		} else if(substr($tpl, 0, 6) == "@FILE:") {
@@ -695,13 +695,11 @@ class Wayfinder {
 	}
 
 	function modxPrep($value) {
-		$value = (strpos($value,"<") !== FALSE) ? htmlentities($value) : $value;
-		$value = str_replace("[","&#091;",$value);
-		$value = str_replace("]","&#093;",$value);
-		$value = str_replace("{","&#123;",$value);
-		$value = str_replace("}","&#125;",$value);
+		$value = (strpos($value,'<') !== FALSE) ? htmlentities($value) : $value;
+		$value = str_replace('[','&#091;',$value);
+		$value = str_replace(']','&#093;',$value);
+		$value = str_replace('{','&#123;',$value);
+		$value = str_replace('}','&#125;',$value);
 		return $value;
 	}
 }
-
-?>
