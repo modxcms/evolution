@@ -137,7 +137,8 @@ class Wayfinder {
 			}
 			//Get the class names for the wrapper
 			$classNames = $this->setItemClass($wrapperClass);
-			if ($classNames) $useClass = ' class="' . $classNames . '"';
+			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
+			
 			$phArray = array($subMenuOutput,$useClass,$classNames);
 			//Process the wrapper
 			$subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
@@ -186,7 +187,8 @@ class Wayfinder {
 		//Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
         $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
-        if ($classNames) $useClass = ' class="' . $classNames . '"';
+        $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
+        
         //Setup the row id if a prefix is specified
         if ($this->_config['rowIdPrefix']) {
             $useId = ' id="' . $this->_config['rowIdPrefix'] . $resource['id'] . '"';
