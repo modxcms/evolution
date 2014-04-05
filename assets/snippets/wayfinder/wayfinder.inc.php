@@ -22,7 +22,7 @@ class Wayfinder {
 	var $tvList = array();
 	var $debugInfo = array();
 	
-	function run() {
+	function __construct() {
 		global $modx;
 		
 		$_[] = '[+wf.wrapper+]';
@@ -45,7 +45,9 @@ class Wayfinder {
 		//setup here checking array
 		$this->parentTree = $modx->getParentIds($this->_config['hereId']);
 		$this->parentTree[] = $this->_config['hereId'];
-		
+	}
+	
+	function run() {
 		if ($this->_config['debug']) {
 			$this->addDebugInfo('settings','Settings','Settings','Settings used to create this menu.',$this->_config);
 			$this->addDebugInfo('settings','CSS','CSS Settings','Available CSS options.',$this->_css);
