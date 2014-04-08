@@ -410,14 +410,14 @@ $_lang["info"] = '情報';
 $_lang["information"] = '情報';
 $_lang["inline"] = 'ブラウザ内に通常表示';
 $_lang["insert"] = '挿入';
-$_lang["maxImageWidth"] = 'Maximum image width';
-$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["maxImageWidth"] = '最大の画像幅';
+$_lang["maxImageHeight"] = '最大の画像高さ';
 $_lang["thumbWidth"] = 'Maximum thumbnail width';
 $_lang["thumbHeight"] = 'Maximum thumbnail height';
 $_lang["thumbsDir"] = 'Thumbnails directory location';
-$_lang["jpegQuality"] = 'JPEG compression';
-$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
-$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
+$_lang["jpegQuality"] = 'JPEG 圧縮';
+$_lang["denyZipDownload"] = 'zip アーカイブでのダウンロードを無効にする';
+$_lang["denyExtensionRename"] = 'ファイル拡張子の変更を禁止する';
 $_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
 $_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
 $_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
@@ -1198,8 +1198,8 @@ $_lang["check_files_onlogin_message"] = 'By enabling this option, important syst
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have configured MODX to check important system files for possible website script attacks. This does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes  were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message.';
 
-$_lang['email_method_title'] = 'Sendmail method';
-$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_title'] = 'Sendmail による方法';
+$_lang['email_method_mail'] = 'PHP mail() による機能';
 $_lang['email_method_smtp'] = 'SMTP サーバ';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP ホスト';
@@ -1212,7 +1212,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Select the Resource field to s
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = '発行完了';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
@@ -1233,21 +1233,21 @@ $_lang["user_other"] = 'その他';
 
 $_lang["import_site.static.php1"] = 'Reset resource tree';
 $_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php3"] = '対象';
 $_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
 $_lang["import_site.static.php5"] = 'Whole file content';
 
 $_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php1"] = '対象';
 $_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
+$_lang["export_site.static.php3"] = 'すべてのリソース';
 $_lang["export_site.static.php4"] = 'Search for';
 $_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php6"] = '対象';
 $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
-$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php6"] = 'MODXのエラーをメールで通知する';
+$_lang["mutate_settings.dynamic.php7"] = '通知しない';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
 
 $_lang["error_no_privileges"]         = "この操作を行なう権限がありません。";
