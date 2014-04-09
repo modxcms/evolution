@@ -1131,9 +1131,7 @@ function efLoadTemplate($key){
 	$tpl = false;
 	if( is_numeric($key) ) { //get from document id
 		//try unpublished docs first
-		$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
-		if(!$tpl )
-			$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
+		$tpl = ( $doc=$modx->getDocument($key,'content','all') )? $doc['content'] :false;
 
 	}elseif( $key ){
 		$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
