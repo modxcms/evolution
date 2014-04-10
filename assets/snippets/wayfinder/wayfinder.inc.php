@@ -377,7 +377,7 @@ class Wayfinder {
 		}
 		if (!empty($ids)) {
 			//Setup the fields for the query
-			$fields = "sc.id, sc.menutitle, sc.pagetitle, sc.introtext, sc.menuindex, sc.published, sc.hidemenu, sc.parent, sc.isfolder, sc.description, sc.alias, sc.longtitle, sc.type,if(sc.type='reference',sc.content,'') as content, sc.template, sc.link_attributes";
+			$fields = "DISTINCT sc.id, sc.menutitle, sc.pagetitle, sc.introtext, sc.menuindex, sc.published, sc.hidemenu, sc.parent, sc.isfolder, sc.description, IF(sc.alias='', sc.id, sc.alias) AS alias, sc.longtitle, sc.type,if(sc.type='reference',sc.content,'') as content, sc.template, sc.link_attributes";
 	        //Get the table names
 	        $tbl_site_content = $modx->getFullTableName('site_content');
 	        $tbl_document_groups = $modx->getFullTableName('document_groups');
