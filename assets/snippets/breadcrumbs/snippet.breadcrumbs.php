@@ -25,8 +25,15 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
 ( isset($hereId) ) ? $hereId : $hereId = $modx->documentObject['id'];
 
-$res = $modx->db->select('*', $modx->getFullTableName('site_content'), "id = " . $hereId);
-$document = $modx->db->getRow( $res );
+if ($hereId != $modx->documentObject['id'])
+{
+    $res = $modx->db->select('*', $modx->getFullTableName('site_content'), "id = " . $hereId);
+    $document = $modx->db->getRow( $res );
+}
+else
+{
+    $document = $modx->documentObject;
+}
 
 $templates = array(
     'defaultString' => array(
