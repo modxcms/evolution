@@ -111,7 +111,7 @@ echo $cm->render();
 	if (!empty($sqlQuery))
 		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
 	$ds = $modx->db->select(
-		"mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked",
+		"mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked, mua.thislogin",
 		$modx->getFullTableName('manager_users')." AS mu 
 			INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id 
 			LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id",
@@ -137,7 +137,7 @@ echo $cm->render();
 	                          'template:[+email+]',
 	                          'template:[+gender+]',
 	                          'template:[+blocked+]',
-	                          'date: ' . $modx->toDateFormat(null, 'formatOnly') . ' %H:%M'));
+	                          'date: ' . $modx->toDateFormat('[+thislogin+]', 'formatOnly') . ' %H:%M'));
 	if($listmode=='1')
 	  $grd->pageSize=0;
 	if($_REQUEST['op']=='reset')
