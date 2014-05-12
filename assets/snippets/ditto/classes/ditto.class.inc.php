@@ -1059,14 +1059,16 @@ class ditto {
 	function getParam($param,$langString){
 		// get a parameter value and if it is not set get the default language string value
 		global $modx,$ditto_lang;
-		$out = "";
-		if ($this->template->fetch($param) != "") {
-			return $modx->getChunk($param);
+		$output = "";
+		if (substr($param,0,1)==='@') {
+			$output = $this->template->fetch($param);
 		} else if(!empty($param)) {
-			return $param;
-		}else{
-			return $ditto_lang[$langString];
+			$output = $modx->getChunk($param);
+		} else {
+			$output = $ditto_lang[$langString];
 		}
+		if(trim($output)==='') $output = $param;
+		return $output;
 	}
 
 	// ---------------------------------------------------
