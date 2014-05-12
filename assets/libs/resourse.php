@@ -153,13 +153,13 @@ class resourse {
 	}
 	
 	private function Uset($key){
-		if(!isset($this->field[$key])){ 
-			$this->set[]= "{$key}=''";
-			$this->log[] =  '{$key} is empty';
+		if(!isset($this->field[$key])){
+			$this->set[$key]= "";
+			$this->log[] =  "{$key} is empty";
 		} else {
 			try{
 				if(is_scalar($this->field[$key])){
-					$this->set[]= "{$key}='{$this->field[$key]}'";
+					$this->set[$key]= $this->field[$key];
 				} else throw new Exception("{$key} is not scalar <pre>".print_r($this->field[$key],true)."</pre>");
 			}catch(Exception $e){ die($e->getMessage()); }
 		}
@@ -438,14 +438,14 @@ class resourse {
 			if ($this->newDoc && $this->get($key) == '' && $this->get($key)!==$value){
 				$this->set($key,$value);
 			}
-			$this->Uset($key);
+			$this->Uset($key,$value);
 			unset($fld[$key]);
 		}
 		if (!empty($this->set)){
 			if($this->newDoc){
-				$this->modx->db->query("INSERT into {$this->_table['site_content']} SET ".implode(', ', $this->set));
+				$this->modx->db->insert($this->set, $this->_table['site_content']);
 			}else{
-				 $this->modx->db->query("UPDATE {$this->_table['site_content']} SET ".implode(', ', $this->set)." WHERE id = ".$this->id);
+				$this->modx->db->update($this->set, $this->_table['site_content'], "id = '{$this->id}'");
 			}
 		}
 		
