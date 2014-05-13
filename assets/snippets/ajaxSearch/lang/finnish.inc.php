@@ -29,4 +29,8 @@ $_lang['as_cmtResetText'] = 'Tyhjennä';
 $_lang['as_cmtThksMessage'] = 'Kiitos kommentistasi!';
 $_lang['as_resultsTextSingle'] = 'Löytyi %d hakutulosta.';
 $_lang['as_resultsTextMultiple'] = 'Löytyi %d hakutulosta.';
+$_lang['as_grpResultsDisplayedText'] = '(Näytetään %d - %d yhteensä %d tuloksesta)';
+$_lang['as_resultsDisplayed'] = 'Näytetään: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Show more %d results';
 ?>
