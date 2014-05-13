@@ -1,6 +1,6 @@
 <?php
 	// DISPLAY FORM ELEMENTS
-	function renderFormElement($field_type, $field_id, $default_text='', $field_elements, $field_value, $field_style='', $row = array()) {
+	function renderFormElement($field_type, $field_id, $default_text='', $field_elements = '', $field_value='', $field_style='', $row = array()) {
 		global $modx;
 		global $_style;
 		global $_lang;
