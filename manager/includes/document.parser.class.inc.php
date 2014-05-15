@@ -1895,7 +1895,8 @@ class DocumentParser {
                 $this->mail->AddBCC($address,$name);
             }
         }
-        if(isset($p['from'])) list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
+        if(isset($p['from']) && strpos($p['from'],'<')!==false && substr($p['from'],-1)==='>')
+            list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
         $this->mail->From     = (!isset($p['from']))  ? $this->config['emailsender']  : $p['from'];
         $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
