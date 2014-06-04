@@ -1879,7 +1879,7 @@ class DocumentParser {
         }
         if(isset($p['cc']))
         {
-            $p['cc'] = explode(',',$sendto);
+            $p['cc'] = explode(',',$p['cc']);
             foreach($p['cc'] as $address)
             {
                 list($name, $address) = $this->mail->address_split($address);
@@ -1888,14 +1888,15 @@ class DocumentParser {
         }
         if(isset($p['bcc']))
         {
-            $p['bcc'] = explode(',',$sendto);
+            $p['bcc'] = explode(',',$p['bcc']);
             foreach($p['bcc'] as $address)
             {
                 list($name, $address) = $this->mail->address_split($address);
                 $this->mail->AddBCC($address,$name);
             }
         }
-        if(isset($p['from'])) list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
+        if(isset($p['from']) && strpos($p['from'],'<')!==false && substr($p['from'],-1)==='>')
+            list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
         $this->mail->From     = (!isset($p['from']))  ? $this->config['emailsender']  : $p['from'];
         $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];

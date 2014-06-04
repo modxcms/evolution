@@ -147,6 +147,8 @@ class DBAPI {
     */
    function disconnect() {
       @ mysql_close($this->conn);
+      $this->conn = null;
+      $this->isConnected = false;
    }
 
    function escape($s, $safecount=0) {
