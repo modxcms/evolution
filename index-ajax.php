@@ -9,6 +9,14 @@ include_once(dirname(__FILE__)."/assets/cache/siteManager.php");
 // harden it
 require_once('./'.MGR_DIR.'/includes/protect.inc.php');
 
+// set some settings, and address some IE issues
+@ini_set('url_rewriter.tags', '');
+@ini_set('session.use_trans_sid', 0);
+@ini_set('session.use_only_cookies',1);
+session_cache_limiter('');
+header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
+header('Cache-Control: private, must-revalidate');
+
 // initialize the variables prior to grabbing the config file
 $database_type = "";
 $database_server = "";
@@ -32,7 +40,6 @@ if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $
     $axhandler = realpath(MODX_BASE_PATH.$axhandler) or die(); // full
     $axhandler = str_replace('\\','/',$axhandler);
     $axhandler_rel = substr($axhandler, strlen(MODX_BASE_PATH)); // relative
-    //$axhandler = realpath($directory.str_replace($directory, '', $axhandler));
 
     if ($axhandler_rel && strtolower(substr($axhandler_rel, -4)) == '.php') {
     // permission check
@@ -46,7 +53,15 @@ if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $
 
 		if ($allowed) {
             include_once($axhandler);
-        }
+        } else {
+			header('HTTP/1.1 404 Not Found');
+			exit();
+		}
+	} else {
+		header('HTTP/1.1 404 Not Found');
+		exit();
 	}
+} else {
+	header('HTTP/1.1 404 Not Found');
+	exit();
 }
-?>
