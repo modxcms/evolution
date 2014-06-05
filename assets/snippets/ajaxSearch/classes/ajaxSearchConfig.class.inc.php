@@ -5,8 +5,8 @@
 * @package  AjaxSearchConfig
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.0
-* @date         27/03/2013
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchConfig class contains all functions and data used to manage configuration context
@@ -174,7 +174,10 @@ class AjaxSearchConfig {
         $ucfg = array();
         $pattern = '/&([^=]*)=`([^`]*)`/';
         preg_match_all($pattern, $strUcfg, $out);
-        foreach ($out[1] as $key => $values) $ucfg[$out[1][$key]] = $out[2][$key];
+        foreach ($out[1] as $key => $values) {
+            // remove any @BINDINGS in posted user config for security reasons
+            $ucfg[$out[1][$key]] = preg_replace('/@[a-z]+/i', '', $out[2][$key]);
+        }
         return $ucfg;
     }
     /*
