@@ -67,6 +67,7 @@ class synccache{
                     $deletedfilesincache++;
                     $deletedfiles[] = $name;
                     @unlink($file);
+					clearstatcache();
                 }
             }
 

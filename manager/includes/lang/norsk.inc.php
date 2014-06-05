@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'Eksisterende kategori';
 $_lang["expand_tree"] = 'Utvid tre';
 $_lang["export_site"] = 'Eksporter webplass';
 $_lang["export_site_cacheable"] = 'Inkludere&nbsp;ikke<br />cachebare&nbsp;filer';
-$_lang["export_site_exporting_document"] = 'Eksporterer fil <b>%s</b> av <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = '<span style=\'color:#990000\'>Mislyktes!</span>';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';

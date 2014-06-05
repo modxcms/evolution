@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author modxcms.cz
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'Existující kategorie';
 $_lang["expand_tree"] = 'Rozbalit';
 $_lang["export_site"] = 'Export do HTML';
 $_lang["export_site_cacheable"] = 'Včetně souborů neuložených v zásobníku (cache):';
-$_lang["export_site_exporting_document"] = 'Exportuji soubor <b>%s</b> z <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Selhalo!';
 $_lang["export_site_failed_no_open"] = 'Nelze otevřít soubor: ';
 $_lang["export_site_failed_no_retrieve"] = 'Nelze získat dokument.';

@@ -13,9 +13,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         exit;
     }
 
-    $indent    = $_GET['indent'];
-    $parent    = $_GET['parent'];
-    $expandAll = $_GET['expandAll'];
+    $indent    = intval($_GET['indent']);
+    $parent    = intval($_GET['parent']);
+    $expandAll = intval($_GET['expandAll']);
     $output    = "";
     $theme = $manager_theme ? "$manager_theme/":"";
 
@@ -59,7 +59,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     );
 
     if (isset($_SESSION['openedArray'])) {
-            $opened = explode("|", $_SESSION['openedArray']);
+            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
     } else {
             $opened = array();
     }
@@ -94,14 +94,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $_SESSION['tree_sortby'] = 'menuindex';
         $_SESSION['tree_sortdir'] = 'ASC';
     }
-    $orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
+    $orderby = $modx->db->escape($_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir']);
 
     // Folder sorting gets special setup ;) Add menuindex and pagetitle
     if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');
-        $tbldgn = $modx->getFullTableName('documentgroup_names');
         // get document groups for current user
     $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
         $showProtected= false;
@@ -112,6 +111,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if ($showProtected == false) {
             $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
+        } else {
+            $access = '';
         }
         $result = $modx->db->select(
 			"DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, template, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
@@ -160,7 +161,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 default:
                     $nodetitle = $pagetitle;
             }
-            $node = '';
             $nodetitle = htmlspecialchars(str_replace(array("\r\n", "\n", "\r"), ' ', $nodetitle));
             $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
             $nodetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$nodetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$nodetitle</span>":"<span class=\"publishedNode$protectedClass\">$nodetitle</span>");
@@ -179,7 +179,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,
                 'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,
                 'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template,
-                'nodetitle' => $nodetitle, 'spacer' => $spacer, 'pad' => $pad, 'url' => $url, 'pageIdDisplay' => $pageIdDisplay,'alt' => $alt,
+                'nodetitle' => $nodetitle, 'spacer' => $spacer, 'pad' => $pad, 'url' => $url, 'alt' => $alt,
                 'nodetitleDisplay' => $nodetitleDisplay,'weblinkDisplay' => $weblinkDisplay,'pageIdDisplay' => $pageIdDisplay
             );
             // invoke OnManagerNodePrerender event
@@ -216,10 +216,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                         if ($expandAll == 1) {
                            array_push($opened2, $id);
                         }
-                        if($id == $modx->config['site_start'])                $icon = $_style["tree_page_home"];
-                        elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
-                        elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
-                        elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
                         $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
                         $node .= '<span onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
                         $output .= $node;
@@ -259,4 +255,3 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             }
         }
     }
-?>

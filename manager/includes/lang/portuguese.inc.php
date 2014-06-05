@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'Categoria existente';
 $_lang["expand_tree"] = 'Expandir árvore';
 $_lang["export_site"] = 'Exportar HTML estático';
 $_lang["export_site_cacheable"] = 'Incluir ficheiros não abrangidos pela cache:';
-$_lang["export_site_exporting_document"] = 'Exportando <b>%s</b> ficheiros <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = '<span style=\'color:#990000\'>Falhou!!</span>';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';

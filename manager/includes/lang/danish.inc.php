@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author Henrik Nielsen
  * @author Mads Vestmar
@@ -283,7 +283,7 @@ $_lang["existing_category"] = 'Eksisterende kategori';
 $_lang["expand_tree"] = 'Udvid website træet';
 $_lang["export_site"] = 'Eksporter statisk HTML';
 $_lang["export_site_cacheable"] = 'Inkluder ikke cache bare filer:';
-$_lang["export_site_exporting_document"] = 'Eksport fil <b>%s</b> af <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Mislykket!';
 $_lang["export_site_failed_no_open"] = 'Kan ikke åbne fil: ';
 $_lang["export_site_failed_no_retrieve"] = 'Kan ikke hente dokument.';

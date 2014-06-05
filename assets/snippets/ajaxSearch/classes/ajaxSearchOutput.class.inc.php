@@ -5,8 +5,8 @@
 * @package  AjaxSearchOutput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.0
-* @date         27/03/2013
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchOutput class contains all functions and data used to display output
@@ -906,7 +906,7 @@ class AjaxSearchOutput {
                 $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch-mootools2.js';
             } else {
                 if ($this->asCfg->cfg['addJscript']) $modx->regClientStartupScript($this->asCfg->cfg['jsMooTools']);
-                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch.js';
+                $jsInclude = MODX_BASE_URL . AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch.js';
             }
             $modx->regClientStartupScript($jsInclude);
 

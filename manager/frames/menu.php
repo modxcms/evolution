@@ -37,7 +37,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			// Delay first run until we're ready...
 			xx=updateMail.delay(1000 * 60,'',true);
 		}
-	};
+	}
 
 	function showResponse(request) {
 		var counts = request.split(',');

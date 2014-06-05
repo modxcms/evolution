@@ -39,7 +39,7 @@ $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
 $mtime = microtime();
 $manage_path = '../../../../'.MGR_DIR.'/';
 include($manage_path . 'includes/config.inc.php');
-include($manage_path . 'includes/document.parser.class.inc.php');
+include(MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $mtime = explode(" ",$mtime);
 $modx->tstart = $mtime[1] + $mtime[0];;

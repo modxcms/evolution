@@ -2,8 +2,8 @@
 /**
  * MODX Installer language file
  *
- * @author Anssi Rajakallio
- * @version 1.0.13
+ * @author Anssi Rajakallio, Kari Söderholm
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Finnish
@@ -81,8 +81,8 @@ $_lang["database_use_failed"] = 'Tietokantaa ei voitu valita!';
 $_lang["database_use_failed_note"] = 'Ole hyvä ja tarkista tietokannan käyttöoikeudet määritetylle käyttäjälle ja yritä uudelleen.';
 $_lang["default_language"] = 'Kieli';
 $_lang["default_language_description"] = 'Tämä asetetaan MODX ylläpidon oletus kieleksi.';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
+$_lang["depedency_create"] = 'Riippuvuus luotu';
+$_lang["depedency_update"] = 'Riippuvuus päivitetty';
 $_lang["during_execution_of_sql"] = ' SQL lauseen suorituksen aikana ';
 $_lang["encoding"] = 'UTF-8';
 $_lang["error"] = 'virhe';
@@ -116,7 +116,7 @@ $_lang["modules"] = 'Moduulit';
 $_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODX on lisensoitu GNU GPL lisenssillä.';
 $_lang["modx_footer2"] = 'MODX on ilmainen ohjelmisto. Kehoitamme sinua olemaan luova ja käyttämään MODX järjestelmää siten, miten sinä sen parhaaksi näet. Jos teet muutoksia järjestelmään ja päätät jakaa muokattua MODX järjestelmää eteenpäin, muista pitää muokattu lähdekoodi vapaasti saatavilla!';
 $_lang["modx_install"] = 'MODX &raquo; Asennus';
-$_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version 4.2.0 tai uudemman';
+$_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version 5.0.0 tai uudemman';
 $_lang["mysql_5051"] = ' MySQL palvelimen versio on 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL 5.0.51 versiolla on havaittu järjestelmän toiminnassa ongelmia. On suositeltavaa, että päivität MySQL version uudempaan ennen asennuksen jatkamista.';
 $_lang["mysql_version_is"] = ' Sinun MySQL palvelimen versio on: ';
@@ -132,7 +132,7 @@ $_lang["please_correct_errors"] = '. Ole hyvä ja korjaa seuraavat virheet';
 $_lang["plugins"] = 'Liitännäiset';
 $_lang["preinstall_validation"] = 'Ennen asennusta suoritettava tarkastus';
 $_lang["recommend_setting_change_title"] = 'Suositeltava asetusten muutos';
-$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Asetuksen muutos: <em>Validoi HTTP_REFERER otsikkotieto?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Sivustolla ei ole käytössä ylläpidon HTTP_REFERER tunnisteiden tarkistusta. On suositeltavaa ottaa tarkistus käyttöön CSFR-verkkohyökkäysten (Cross Site Request Forgery) estämiseksi.';
 $_lang["remove_install_folder_auto"] = 'Poista asennuskansio, sekä asennustiedostot sivutilastani<br />&nbsp;(Tämä toiminto vaatii, että kansioon /install on tiedostojen sekä ko. kansion poisto-oikeudet).';
 $_lang["remove_install_folder_manual"] = 'Muista poistaa &quot;<b>install</b>&quot; kansio ennen kuin kirjaudut järjestelmään.';
@@ -171,7 +171,7 @@ $_lang["strict_mode"] = ' MySQL palvelimen "strict sql_mode" asetus on päällä
 $_lang["strict_mode_error"] = 'Tietyt MODX:n toiminnot ei toimi oikein jos "STRICT_TRANS_TABLES sql_mode" ei kytketä pois käytöstä. Voit asettaa kyseisen MySQL asetuksen muokkaamalla my.cnf tiedostoa tai ottamalla yhteyttä palveluntarjoajaasi.';
 $_lang["summary_setup_check"] = 'Asennus on tarkistanut erinäiset tiedot tarkastaakseen, että kaikki on kunnossa asennusta varten.';
 $_lang["system_configuration"] = 'Järjestelmän asetukset';
-$_lang["system_configuration_validate_referer_description"] = 'The <strong>Validate HTTP_REFERER headers</strong> setting is recommended and can protect your site from CSRF attacks, but in some server configurations, can make your manager inaccessible.';
+$_lang["system_configuration_validate_referer_description"] = '<strong>Validoi HTTP_REFERER otsikkotieto</strong> asetuksen käyttöä suositellaan. Se suojaa sivustoasi CSRF-hyökkäyksiltä, mutta se saattaa joissain palvelinkonfiguraatioissa estää pääsyn sivustosi ylläpitoon.';
 $_lang["table_prefix_already_inuse"] = ' - Tietokannan taulujen etuliite on jo käytössä tässä tietokannassa!';
 $_lang["table_prefix_already_inuse_note"] = 'Asennusohjelma ei voinut asentaa valittuun tietokantaan, koska se sisältää jo tauluja asetetulla etuliitteellä. Ole hyvä ja valitse uusi etuliite ja yritä uudelleen.';
 $_lang["table_prefix_not_exist"] = ' - Tietokannan taulujen etuliitettä ei löydetty tästä tietokannasta!';

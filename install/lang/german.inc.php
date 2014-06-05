@@ -4,7 +4,7 @@
  *
  * @author Marc Hinse
  * @author Bogdan Günther
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language German
@@ -117,7 +117,7 @@ $_lang["modules"] = 'Module';
 $_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODX ist freie Software.  Wir ermutigen Sie, kreativ zu sein und MODX so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quellcodes und der Weiterverbreitung der modifizierten MODX-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
-$_lang["modx_requires_php"] = ', und MODX benötigt PHP 4.2.0 oder höher';
+$_lang["modx_requires_php"] = ', und MODX benötigt PHP 5.0.0 oder höher';
 $_lang["mysql_5051"] = 'Warnung: MySQL-Server-Version ist 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL-Server-Version ist 5.0.51 hat bekannte Bugs. Es wird empfohlen ein Update auf eine neuere Version durchzuführen, bevor Sie fortfahren.';
 $_lang["mysql_version_is"] = ' Ihre MySQL-Version ist: ';

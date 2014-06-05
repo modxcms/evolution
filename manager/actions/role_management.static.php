@@ -4,11 +4,7 @@ if(!$modx->hasPermission('edit_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-// get search string
-$query = $_REQUEST['search'];
-$sqlQuery = $modx->db->escape($query);
 ?>
-<br />
 <!-- User Roles -->
 
 <h1><?php echo $_lang['role_management_title']; ?></h1>
@@ -19,27 +15,23 @@ $sqlQuery = $modx->db->escape($query);
 <ul class="actionButtons">
 	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
 </ul>
-<ul>
 <?php
 
 $rs = $modx->db->select('name, id, description', $modx->getFullTableName('user_roles'), '', 'name');
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
 	echo "<p>The request returned no roles!</p>";
-}
-while ($row = $modx->db->getRow($rs)) {
-	if($row['id']==1) {
-?>
-	<li><span style="width: 200px"><i><?php echo $row['name']; ?></i></span> - <i><?php echo $_lang['administrator_role_message']; ?></i></li>
-<?php
-	} else {
-?>
-	<li><span style="width: 200px"><a href="index.php?id=<?php echo $row['id']; ?>&a=35"><?php echo $row['name']; ?></a></span> - <?php echo $row['description']; ?></li>
-<?php
+} else {
+	echo "<ul>";
+	while ($row = $modx->db->getRow($rs)) {
+		if($row['id']==1) {
+			echo '<li><span style="width: 200px"><i>' . $row['name'] . '</i></span> - <i>' . $_lang['administrator_role_message'] . '</i></li>';
+		} else {
+			echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=35">' . $row['name'] . '</a></span> - ' . $row['description'] . '</li>';
+		}
 	}
+	echo "</ul>";
 }
-
 ?>
-</ul>
 </div>
 </div>

@@ -506,7 +506,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
+					$modx->mail->Body		= (!$isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"replyto",$replyto);
 					AddAddressToMailer($modx->mail,"to",$to);
 					AddAddressToMailer($modx->mail,"cc",$cc);
@@ -523,7 +523,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
+					$modx->mail->Body		= (!$isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
@@ -540,7 +540,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= ($autosender)? $autosender:$from;
 					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= ($isHtml) ? $autotext : htmlspecialchars_decode($autotext, ENT_QUOTES);
+					$modx->mail->Body		= (!$isHtml) ? $autotext : htmlspecialchars_decode($autotext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 					$modx->mail->ClearAllRecipients();
@@ -555,7 +555,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= ($isHtml) ? $mobiletext : htmlspecialchars_decode($mobiletext, ENT_QUOTES);
+					$modx->mail->Body		= (!$isHtml) ? $mobiletext : htmlspecialchars_decode($mobiletext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$mobile);
 					$modx->mail->send();
 					$modx->mail->ClearAllRecipients();
@@ -667,7 +667,7 @@ $_dfnMaxlength = 6;
 }
 
 # Form Merge
-function formMerge($docText, $docFields, $vClasses='') {
+function formMerge($docText, $docFields) {
 	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
@@ -1131,9 +1131,7 @@ function efLoadTemplate($key){
 	$tpl = false;
 	if( is_numeric($key) ) { //get from document id
 		//try unpublished docs first
-		$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
-		if(!$tpl )
-			$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
+		$tpl = ( $doc=$modx->getDocument($key,'content','all') )? $doc['content'] :false;
 
 	}elseif( $key ){
 		$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;

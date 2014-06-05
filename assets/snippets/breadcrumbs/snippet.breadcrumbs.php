@@ -23,6 +23,18 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($ignoreTemplates) ) ? $ignoreTemplates : $ignoreTemplates = '0';
 ( isset($crumbSeparator) ) ? $separator = $crumbSeparator : $separator = ' &raquo; ';
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
+( isset($hereId) ) ? $hereId : $hereId = $modx->documentObject['id'];
+
+if ($hereId != $modx->documentObject['id'])
+{
+    $res = $modx->db->select('*', $modx->getFullTableName('site_content'), "id = " . $hereId);
+    $document = $modx->db->getRow( $res );
+}
+else
+{
+    $document = $modx->documentObject;
+}
+
 $templates = array(
     'defaultString' => array(
         'crumb' => '[+crumb+]',
@@ -40,7 +52,7 @@ $templates = array(
     ),
 );
 // Return blank if necessary: on home page
-if ( !$showCrumbsAtHome && $homeId == $modx->documentObject['id'] )
+if ( !$showCrumbsAtHome && $homeId == $document['id'] )
 {
     return '';
 }
@@ -60,7 +72,7 @@ if ( $hideOn || $hideUnder )
         $hideOn = array_merge($hideOn,$hiddenKids);
     }
 
-    if ( in_array($modx->documentObject['id'],$hideOn) )
+    if ( in_array($document['id'],$hideOn) )
     {
         return '';
     }
@@ -79,7 +91,7 @@ $ignoreTemplates = array_filter(array_map('trim', explode(',', $ignoreTemplates)
  * published, hidemenu
  */
 $crumbs = array();
-$parent = $modx->documentObject['parent'];
+$parent = $document['parent'];
 $output = '';
 $maxCrumbs += ($showCurrentCrumb) ? 1 : 0;
 
@@ -92,12 +104,12 @@ $crumbGap = str_replace('||','=',$crumbGap);
 if ( $showCurrentCrumb )
 {
     $crumbs[] = array(
-        'id' => $modx->documentObject['id'],
-        'parent' => $modx->documentObject['parent'],
-        'pagetitle' => $modx->documentObject['pagetitle'],
-        'longtitle' => $modx->documentObject['longtitle'],
-        'menutitle' => $modx->documentObject['menutitle'],
-        'description' => $modx->documentObject['description']);
+        'id' => $document['id'],
+        'parent' => $document['parent'],
+        'pagetitle' => $document['pagetitle'],
+        'longtitle' => $document['longtitle'],
+        'menutitle' => $document['menutitle'],
+        'description' => $document['description']);
 }
 
 // Intermediate crumbs ---------------------------------------------------------
@@ -146,7 +158,7 @@ while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 
 // Home crumb ------------------------------------------------------------------
 
-if ( $showHomeCrumb && $homeId != $modx->documentObject['id'] && $homeCrumb = $modx->getPageInfo($homeId,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu") )
+if ( $showHomeCrumb && $homeId != $document['id'] && $homeCrumb = $modx->getPageInfo($homeId,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu") )
 {
     $crumbs[] = array(
     'id' => $homeCrumb['id'],
@@ -196,7 +208,7 @@ foreach ( $crumbs as $c )
     {
         $crumbClass = $stylePrefix.'homeCrumb';
     }
-    else if ( $modx->documentObject['id'] == $c['id'] )
+    else if ( $document['id'] == $c['id'] )
     {
         $crumbClass = $stylePrefix.'currentCrumb';
     }
@@ -207,8 +219,8 @@ foreach ( $crumbs as $c )
 
     // Make link
     if (
-        ( $c['id'] != $modx->documentObject['id'] && $showCrumbsAsLinks ) ||
-        ( $c['id'] == $modx->documentObject['id'] && $currentAsLink )
+        ( $c['id'] != $document['id'] && $showCrumbsAsLinks ) ||
+        ( $c['id'] == $document['id'] && $currentAsLink )
     )
     {
         // Determine appropriate title for link: home link specified

@@ -58,11 +58,12 @@ class MODxMailer extends PHPMailer
 		
 		if(isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {
 			$mail_charset = $modx->config['mail_charset'];
-		}
-		else {
-			$mail_charset = strtolower($modx->config['manager_language']);
-    		if(substr($mail_charset,0,8)==='japanese') $mail_charset = 'jis';
-    		else                                       $mail_charset = 'utf8';
+		} else {
+			if (substr($modx->config['manager_language'], 0, 8) === 'japanese') {
+				$mail_charset = 'jis';
+			} else {
+				$mail_charset = $modx->config['modx_charset'];
+			}
 		}
 		
 		switch($mail_charset)

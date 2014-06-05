@@ -58,13 +58,17 @@ $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language
 #    if (!isset ($_POST['chkagree'])) $action= 'license';
 #}
 
+$ph = ph();
+$ph = array_merge($ph,$_lang);
+$ph['install_language'] = $install_language;
+
 ob_start();
-include ('header.php');
-
-if (!@include ('action.' . $action . '.php')) {
-    die ('Invalid install action attempted. [action=' . $action . ']');
+if (!@include_once("action.{$action}.php")) {
+    die ("Invalid install action attempted. [action={$action}]");
 }
+$ph['content'] = ob_get_contents();
+ob_end_clean();
 
-include ('footer.php');
-ob_end_flush();
-?>
+$tpl = file_get_contents("{$base_path}install/template.tpl");
+echo parse($tpl,$ph);
+

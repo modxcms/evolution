@@ -155,9 +155,7 @@ switch ($_POST['mode']) {
 			}
         break;        
     default:
-    	// redirect to view modules
-		$header="Location: index.php?a=106&r=2";
-		header($header);
+    	$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // saves module user group access
@@ -174,7 +172,7 @@ function saveUserGroupAccessPermissons(){
 		// delete old permissions on the module
 		$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 		if(is_array($usrgroups)) {
-			foreach ($usrgroups as $ugkey=>$value) {
+			foreach ($usrgroups as $value) {
 				$modx->db->insert(
 					array(
 						'module'    => $id,

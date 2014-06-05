@@ -310,7 +310,7 @@ class asPHxParser {
                              if ($snippet = $modx->db->getValue($result)) {
                                  $cm = $this->cache["cm"][$modifier_cmd[$i]] = $snippet;
                              } else if ($modx->db->getRecordCount($result) == 0){ // If snippet not found, look in the modifiers folder
-                                $filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';
+                                $filename = MODX_BASE_PATH . 'assets/plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';
                                 if (@file_exists($filename)) {
                                     $file_contents = @file_get_contents($filename);
                                     $file_contents = str_replace('<?php', '', $file_contents);

@@ -1,6 +1,6 @@
 <?php
 /*
-german.inc.php - for AjaxSearch 1.10.0
+german.inc.php - for AjaxSearch 1.10.1
 Created by: Marc Hinse
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

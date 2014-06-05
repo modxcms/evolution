@@ -10,7 +10,7 @@ defined('IN_PARSER_MODE') or die();
         $id = $_REQUEST['wli'];
         $pwdkey = $_REQUEST['wlk'];
 
-        $ds = $modx->db->select('wu.*', $modx->getFullTableName('web_users'), "wu.id='".$modx->db->escape($id)."'");
+        $ds = $modx->db->select('*', $modx->getFullTableName('web_users'), "id='".$modx->db->escape($id)."'");
         if($row = $modx->db->getRow($ds)) {
             $username = $row["username"];
             list($newpwd,$newpwdkey) = explode("|",$row['cachepwd']);
@@ -38,12 +38,12 @@ defined('IN_PARSER_MODE') or die();
 				);
 
             // invoke OnWebChangePassword event
-                $modx->invokeEvent("OnWebChangePassword",
-                                array(
-                                    "userid"        => $id,
-                                    "username"        => $username,
-                                    "userpassword"    => $newpwd
-                                ));
+            $modx->invokeEvent("OnWebChangePassword",
+                array(
+                    "userid"       => $id,
+                    "username"     => $username,
+                    "userpassword" => $newpwd
+            ));
 
             if(!$pwdActId) $output = webLoginAlert("Your new password was successfully activated.");
             else {
@@ -198,7 +198,7 @@ defined('IN_PARSER_MODE') or die();
                             ));
 
 	$ds = $modx->db->select(
-		'wu.*, wua.fullname',
+		'wu.*, wua.*',
 		$modx->getFullTableName('web_users')." AS wu, ".$modx->getFullTableName('web_user_attributes')." AS wua",
 		"BINARY wu.username='{$username}' AND wua.internalKey=wu.id");
     $row = $modx->db->getRow($ds);
@@ -208,7 +208,7 @@ defined('IN_PARSER_MODE') or die();
         return;
     }
 
-    $internalKey             = $row['internalKey'];
+    $internalKey             = $row['id'];
     $dbasePassword             = $row['password'];
     $failedlogins             = $row['failedlogincount'];
     $blocked                 = $row['blocked'];

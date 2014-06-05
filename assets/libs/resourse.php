@@ -60,7 +60,7 @@ class resourse {
 	private $tvid = array();
 	private $log = array();
 	private $edit = 0;
-	private $dafeult_field ;
+	private $default_field ;
 	private $table=array('"'=>'_',"'"=>'_',' '=>'_','.'=>'_',','=>'_','а'=>'a','б'=>'b','в'=>'v',
 		'г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'zh','з'=>'z','и'=>'i','й'=>'y','к'=>'k',
 		'л'=>'l','м'=>'m','н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s','т'=>'t','у'=>'u',
@@ -68,7 +68,7 @@ class resourse {
 		'э'=>'e','ю'=>'yu','я'=>'ya','А'=>'A','Б'=>'B','В'=>'V','Г'=>'G','Д'=>'D','Е'=>'E',
 		'Ё'=>'E','Ж'=>'Zh','З'=>'Z','И'=>'I','Й'=>'Y','К'=>'K','Л'=>'L','М'=>'M','Н'=>'N',
 		'О'=>'O','П'=>'P','Р'=>'R','С'=>'S','Т'=>'T','У'=>'U','Ф'=>'F','Х'=>'H','Ц'=>'C',
-		'Ч'=>'Ch','Ш'=>'Sh','Щ'=>'Sch','Ь'=>'','Ы'=>'Y','Ъ'=>'','Э'=>'E','Ю'=>'Yu','Я'=>'Ya',
+		'Ч'=>'Ch','Ш'=>'Sh','Щ'=>'Sch','Ь'=>'','Ы'=>'Y','Ъ'=>'','Э'=>'E','Ю'=>'Yu','Я'=>'Ya','/'=>'-',
 	);
 
 	private $set;	
@@ -153,13 +153,13 @@ class resourse {
 	}
 	
 	private function Uset($key){
-		if(!isset($this->field[$key])){ 
-			$this->set[]= "{$key}=''";
-			$this->log[] =  '{$key} is empty';
+		if(!isset($this->field[$key])){
+			$this->set[$key]= "";
+			$this->log[] =  "{$key} is empty";
 		} else {
 			try{
 				if(is_scalar($this->field[$key])){
-					$this->set[]= "{$key}='{$this->field[$key]}'";
+					$this->set[$key]= $this->field[$key];
 				} else throw new Exception("{$key} is not scalar <pre>".print_r($this->field[$key],true)."</pre>");
 			}catch(Exception $e){ die($e->getMessage()); }
 		}
@@ -438,7 +438,7 @@ class resourse {
 			if ($this->newDoc && $this->get($key) == '' && $this->get($key)!==$value){
 				$this->set($key,$value);
 			}
-			$this->Uset($key);
+			$this->Uset($key,$value);
 			unset($fld[$key]);
 		}
 		if (!empty($this->set)){

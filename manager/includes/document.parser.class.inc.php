@@ -338,7 +338,7 @@ class DocumentParser {
                 } else {
                     if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result)) {
-                            $usrSettings[$row['setting_name']]= $row['setting_value'];
+                            $musrSettings[$row['setting_name']]= $row['setting_value'];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
                     }
@@ -348,9 +348,9 @@ class DocumentParser {
                 }
             }
             $this->error_reporting = $this->config['error_reporting'];
-            $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
             $this->config= array_merge($this->config, $usrSettings);
+            $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);            
         }
     }
 
@@ -503,7 +503,12 @@ class DocumentParser {
         $tbl_document_groups= $this->getFullTableName("document_groups");
         if ($this->config['cache_type'] == 2) {
            $md5_hash = '';
-           if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+           if (!empty($_GET)) {
+	           // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+	           $params = $_GET;
+	           ksort($params);
+	           $md5_hash = '_' . md5(http_build_query($params));
+           }
            $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
         }else{
            $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
@@ -727,34 +732,7 @@ class DocumentParser {
                 ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
 
             // clear the cache
-            $this->clearCache();
-
-            // update publish time file
-            $timesArr= array ();
-            $result = $this->db->select('MIN(pub_date) AS minpub', $this->getFullTableName('site_content'), "pub_date>{$timeNow}");
-            if ($minpub = $this->db->getValue($result)) {
-                $timesArr[]= $minpub;
-            }
-
-            $result = $this->db->select('MIN(unpub_date) AS minunpub', $this->getFullTableName("site_content"), "unpub_date>{$timeNow}");
-            if ($minunpub = $this->db->getValue($result)) {
-                $timesArr[]= $minunpub;
-            }
-
-            if (count($timesArr) > 0) {
-                $nextevent= min($timesArr);
-            } else {
-                $nextevent= 0;
-            }
-
-            $basepath= $this->config["base_path"] . "assets/cache";
-            $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
-            if ($fp) {
-                @ flock($fp, LOCK_EX);
-                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
-                @ flock($fp, LOCK_UN);
-                @ fclose($fp);
-            }
+            $this->clearCache('full');
         }
     }
 
@@ -771,7 +749,12 @@ class DocumentParser {
             $this->invokeEvent("OnBeforeSaveWebPageCache");
             if ($this->config['cache_type'] == 2) {
                 $md5_hash = '';
-                if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+                if (!empty($_GET)) {
+	                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+	                $params = $_GET;
+	                ksort($params);
+	                $md5_hash = '_' . md5(http_build_query($params));
+                }
                 $pageCache = $md5_hash .".pageCache.php";
             }else{
                 $pageCache = ".pageCache.php";
@@ -997,9 +980,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
 				}
@@ -1030,9 +1012,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $msg . $snip . '</p>');
 				}
@@ -1171,7 +1152,7 @@ class DocumentParser {
             $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
             if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
             if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
-            foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
+            if (is_array($params)) foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
             $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
             $this->snippetsCode .= '</fieldset><br />';
             $this->snippetsCount[$snippetObject['name']]++;
@@ -1356,8 +1337,8 @@ class DocumentParser {
     /**
      * Get all db fields and TVs for a document/resource
      *
-     * @param type $method
-     * @param type $identifier
+     * @param string $method
+     * @param mixed $identifier
      * @return array
      */
     function getDocumentObject($method, $identifier, $isPrepareResponse=false) {
@@ -1670,10 +1651,11 @@ class DocumentParser {
                 $this->documentContent= "[*content*]"; // use blank template
             else {
                 $result= $this->db->select('content', $this->getFullTableName("site_templates"), "id = '{$this->documentObject['template']}'");
-                if ($template_content = $this->db->getValue($result)) {
-                    $this->documentContent = $template_content;
+                $rowCount= $this->db->getRecordCount($result);
+                if ($rowCount==1) {
+                     $this->documentContent = $this->db->getValue($result);
                 } else {
-                    $this->messageQuit("Incorrect number of templates returned from database", $sql);
+                    $this->messageQuit("Incorrect number of templates returned from database");
                 }
             }
 
@@ -1747,7 +1729,7 @@ class DocumentParser {
                 if (!strlen($pkey)) $pkey = "{$childId}";
                     $children[$pkey] = $childId;
 
-                if ($depth) {
+                if ($depth && isset($documentMap_cache[$childId])) {
                     $children += $this->getChildIds($childId, $depth);
                 }
             }
@@ -1811,12 +1793,12 @@ class DocumentParser {
      */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
-        $source= $this->db->escape($source);
 	if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
-		$source = mb_substr($source, 0, 50 , "UTF-8");
+		$esc_source = mb_substr($source, 0, 50 , "UTF-8");
 	} else {
-		$source = substr($source, 0, 50);
+		$esc_source = substr($source, 0, 50);
 	}
+        $esc_source= $this->db->escape($esc_source);
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
@@ -1832,14 +1814,15 @@ class DocumentParser {
 			'description' => $msg,
 			'user'        => $LoginUserID,
 		), $this->getFullTableName('event_log'));
-        if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
-        {
-            if($this->config['send_errormail'] <= $type)
-            {
-                $subject = 'Error mail from ' . $this->config['site_name'];
-                $this->sendmail($subject,$source);
-            }
-        }
+		if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
+			if ($this->config['send_errormail'] <= $type) {
+				$this->sendmail(array(
+						'subject' => 'MODX System Error on ' . $this->config['site_name'],
+						'body' => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
+						'type' => 'text')
+				);
+			}
+		}
     }
 
     function sendmail($params=array(), $msg='')
@@ -1896,7 +1879,7 @@ class DocumentParser {
         }
         if(isset($p['cc']))
         {
-            $p['cc'] = explode(',',$sendto);
+            $p['cc'] = explode(',',$p['cc']);
             foreach($p['cc'] as $address)
             {
                 list($name, $address) = $this->mail->address_split($address);
@@ -1905,18 +1888,20 @@ class DocumentParser {
         }
         if(isset($p['bcc']))
         {
-            $p['bcc'] = explode(',',$sendto);
+            $p['bcc'] = explode(',',$p['bcc']);
             foreach($p['bcc'] as $address)
             {
                 list($name, $address) = $this->mail->address_split($address);
                 $this->mail->AddBCC($address,$name);
             }
         }
-        if(isset($p['from'])) list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
+        if(isset($p['from']) && strpos($p['from'],'<')!==false && substr($p['from'],-1)==='>')
+            list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
         $this->mail->From     = (!isset($p['from']))  ? $this->config['emailsender']  : $p['from'];
         $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body     = $p['body'];
+        if (isset($p['type']) && $p['type'] == 'text') $this->mail->IsHTML(false);
         $rs = $this->mail->send();
         return $rs;
     }
@@ -2278,6 +2263,7 @@ class DocumentParser {
 				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
 					$deletedfiles[] = $name;
 					unlink($file);
+					clearstatcache();
 				}
 			}
 		}
@@ -2299,7 +2285,7 @@ class DocumentParser {
      */
     function makeUrl($id, $alias= '', $args= '', $scheme= '') {
         $url= '';
-        $virtualDir= '';
+        $virtualDir= $this->config['virtual_dir'];
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {

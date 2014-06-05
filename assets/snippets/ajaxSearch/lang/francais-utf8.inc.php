@@ -1,6 +1,6 @@
 <?php
 /*
-francais-utf8.inc.php - for AjaxSearch 1.10.0
+francais-utf8.inc.php - for AjaxSearch 1.10.1
 Created by: David Mollière, Corrected by: Jean-Christophe Brebion
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

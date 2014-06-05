@@ -5,8 +5,8 @@
 * ajaxSearchPopup.php
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.0
-* @date         27/03/2013
+* @version      1.10.1
+* @date         05/06/2014
 *
 */
 
@@ -22,7 +22,7 @@ if (!function_exists('parseUserConfig')) {
 
 if (isset($_POST['search'])) {
 
-    define('AS_VERSION', '1.10.0');
+    define('AS_VERSION', '1.10.1');
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
@@ -46,13 +46,22 @@ if (isset($_POST['search'])) {
         else return "<h3>AjaxSearch error: $default not found !<br />Check the existing of this file!</h3>";
         if (!isset($dcfg)) return "<h3>AjaxSearch error: default configuration array not defined in $default!<br /> Check the content of this file!</h3>";
         $config = parseUserConfig((strip_tags($_POST['ucfg'])));
+
         // Load the custom functions of the custom configuration file if needed
-        if ($config) {
-            if (substr($config, 0, 6) != "@FILE:") $lconfig = AS_PATH . "configs/{$config}.config.php";
-			else return "<h3>AjaxSearch error: @FILE: prefix not allowed !<br />Check your config parameter or your config file name!</h3>";
-            if (file_exists($lconfig)) include $lconfig;
-            else return "<h3>AjaxSearch error: " . $lconfig . " not found !<br />Check your config parameter or your config file name!</h3>";
-        }
+		if ($config) {
+			if (substr($config, 0, 6) != "@FILE:") {
+				// remove all not alphanumeric chars exept underscore and minus in the filename
+				$config = preg_replace('/[^a-zA-Z0-9_-]/i','', $config);
+				$lconfig = AS_PATH . "configs/{$config}.config.php";
+				if (file_exists($lconfig)) {
+					include $lconfig;
+				} else {
+					return "<h3>AjaxSearch error: " . $lconfig . " not found !<br />Check your config parameter or your config file name!</h3>";
+				}
+			} else {
+				return "<h3>AjaxSearch error: @FILE: prefix not allowed !<br />Check your config parameter or your config file name!</h3>";
+			}
+		}
 		if ($dcfg['version'] != AS_VERSION) return "<h3>AjaxSearch error: Version number mismatch. Check the content of the default configuration file!</h3>";
         $as = new AjaxSearch();
         $output = $as->run($tstart, $dcfg);

@@ -924,9 +924,6 @@ switch ($action) {
         // say that what was requested doesn't do anything yet
         include_once "header.inc.php";
         echo "
-            <div class='subTitle'>
-                <span class='right'>".$_lang['functionnotimpl']."</span>
-            </div>
             <div class='sectionHeader'>".$_lang['functionnotimpl']."</div>
 			<div class='sectionBody'>
                 <p>".$_lang['functionnotimpl_message']."</p>

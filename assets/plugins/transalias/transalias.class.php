@@ -89,8 +89,7 @@ class TransAlias {
             if($val == '@INHERIT' && empty($_POST['id']) && !empty($_POST['parent'])) {
                 // we have to look at parent directly
                 $id = $_POST['parent'];
-                $parent = $modx->getPageInfo($_POST['parent'], 0, 'id,parent,published');
-                $ptv = $modx->getTemplateVar($tv, '*', $parent['id'], $parent['published']);
+                $ptv = $modx->getTemplateVar($tv, '*', $id, 'all');
                 $val = $ptv['value'];
             }
             $return = ProcessTVCommand($val, $tv, $id);
