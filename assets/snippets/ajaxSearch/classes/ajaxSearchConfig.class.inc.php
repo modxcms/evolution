@@ -176,7 +176,7 @@ class AjaxSearchConfig {
         preg_match_all($pattern, $strUcfg, $out);
         foreach ($out[1] as $key => $values) {
             // remove any @BINDINGS in posted user config for security reasons
-            $ucfg[$out[1][$key]] = preg_replace('/@[a-z]+/i', '', $out[2][$key]);
+            $ucfg[$out[1][$key]] = preg_replace('/@(FILE|DIRECTORY|DOCUMENT|CHUNK|INHERIT|SELECT|EVAL|CHUNK)[: ]/i', '', $out[2][$key]);
         }
         return $ucfg;
     }
