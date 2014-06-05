@@ -4,7 +4,7 @@
  *
  * @author Pontus Ågren (Pont)
  * @author Thomas Djärv (Beryl)
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Svenska

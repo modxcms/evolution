@@ -1,6 +1,123 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODX Evolution 1.0.14 (Jun 05, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#f233bf0] Error in resource lib
+* [GitHub:#8958b7c] Empty template error
+* [GitHub:#99d6824] Web user view  ico
+* [GitHub:#c5cfa3e] weblogin.processor.inc.php missing fields
+* [GitHub:#9f404dd] If (not_empty)
+* [GitHub:#40a7d49] Export not cacheable resources
+* [GitHub:#6fcde64] Cool explode() bug
+* [GitHub:#a02dcce] WebLogin
+* [GitHub:#8d7f933] weblogin.processor.inc.php
+* [GitHub:#5738f4c] htmlspecialchars_decode should be executed for the reports if sent as html
+* [GitHub:#fa0b0ad] weblogin.processor.inc.php
+* [GitHub:#8829799] Warning issue: (superfluous) default object created from value
+* [GitHub:#9adc29a] Unset parameters in $modx->messageQuit call
+* [GitHub:#40229ea] phpthumb, bkmanager
+* [GitHub:#f755592] logEvent
+* [GitHub:#b7b9ed1] Typo in PHx class for ditto
+* [GitHub:#8f5f0bc] Typo in document.class.inc.php
+* [GitHub:#448ddb7] Typo in delete_role.processor.php
+* [GitHub:#fd4ce0e] Path for example in document.class.inc.php
+* [GitHub:#e88c78d] Typo in document.parser.class.inc.php
+* [GitHub:#852093b] Possible fix for valid cache file file_exist check but not found file
+* [GitHub:#e6ca725] Missing error message in evalSnippet/evalPlugin error
+* [GitHub:#488c893] Wrong language string used when renaming existing snippet with duplicate name
+* [GitHub:#9a7b2bb] Plugin save logic is updated so that it allows duplicate names for disabled plugins. Duplicate names among activated plugins are still prevented.
+* [GitHub:#7ca2938] Access Permissions error
+* [GitHub:#fc29642] Send mail at $modx->logEvent()
+* [GitHub:#751d22e] Lost installer image file
+* [GitHub:#5b87dd6] Wayfinder - Small fix
+* [GitHub:#cc65308] Wayfinder - Small fixes
+* [GitHub:#41ad3c4] Wayfinder - Fix
+* [GitHub:#e3da37d] Wayfinder - Fix undefined variable
+* [GitHub:#80486bb] Wayfinder - Fix htmlentities
+* [GitHub:#52bae77] Wayfinder - Fix fetch template
+* [GitHub:#3cb3d0b] Wayfinder - Fix Read config
+* [GitHub:#b239aa8] Wayfinder - Fix
+* [GitHub:#f9d09ff] Fix
+* [GitHub:#7e668ac] Fix - $modx_textdir
+* [GitHub:#0bb19bf] Wayfinder - Fix empty value of alias
+* [GitHub:#243ec89] Charset and Collation Charset not showing
+* [GitHub:#c4f18f6] 'Array is currently editing these settings'
+* [GitHub:#3608861] tinyMCE style for use in custom manager theme
+* [GitHub:#78bc5f3] $modx->getSettings
+* [GitHub:#dd5d8f3] Fix - Don't parse EVAL binding at the TV form
+* [GitHub:#b3ab833] Update value+1 in login.processor
+* [GitHub:#c15a609] fix resourse.php
+* [GitHub:#3d9186f] Ditto - &noResults parameter doesn't work
+* [GitHub:#eea2a6b] Wayfinder sets "last" class to all items
+* [GitHub:#39a2e5c] $modx->sendmail() cc and bcc
+* [GitHub:#1bcc38e] $modx->sendmail() $param['from']
+* [GitHub:#cb69e7d] TinyMCE - toolbar style
+* [GitHub:#8d55236] Requirements not checked php version
+* [GitHub:#b30c2e2] Tools>Export - language entry
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#006b40c] Refactor resource lib
+* [GitHub:#0448020] eForm: Remove not needed function parameter
+* [GitHub:#93ba7f9] Removing superfluous variables
+* [GitHub:#c9fd858] Removing unused keys
+* [GitHub:#9d8f797] Code issues: Removed unused code, fixed missing semicolons, corrected DocBlock declaration
+* [GitHub:#7c79471] Code issues: Removed semicolon
+* [GitHub:#49c0ed6] Delete unused code
+* [GitHub:#c6d5136] Change escape logic in logEvent - substr non-escaped source - send mail with non-escaped source
+* [GitHub:#5ce9296] Use db->escape() instead addslashes()
+* [GitHub:#781a578] <ul> only if count roles > 0
+* [GitHub:#428b523] Disable direct call of filesource/plugin.filesource.php
+* [GitHub:#7fdf3c2] Fixes in QM+ - get "Individual user language setting" from session (mgrUsrConfigSet) - use MODX_MANAGER_PATH instead MGR_DIR for include() - delete unused modx->getDocument() call
+* [GitHub:#2ff654f] Use MODX_MANAGER_PATH for include
+* [GitHub:#6c4f6b4] Add more debug info about query
+* [GitHub:#3fac66b] Use clearCache('full')
+* [GitHub:#4aca668] Show snippet params in debug info only if it's present
+* [GitHub:#e74aee6] Stop the unnecessary call recursive functions
+* [GitHub:#e5fb3aa] Use new 'all' param
+* [GitHub:#98acdd6] MariaDB. POSIX collating elements are not supported
+* [GitHub:#7300f38] Update TinyMCE default width to 100%
+* [GitHub:#21f3463] Sort cached parameters
+* [GitHub:#3bfdfd7] Send user processor mails as text.
+* [GitHub:#ccbe3b9] Use modx_charset for non japanese languages als mail charset
+* [GitHub:#651e846] Send system mails as text More detailed error mail
+* [GitHub:#65b9087] New design of installer like Revo
+* [GitHub:#89e5c14] Wayfinder - Use __construct()
+* [GitHub:#74fea39] Keep original publish state, publishedon, publishedby on save
+* [GitHub:#0da61aa] Updated Japanese Language - thanks to Mika Kobayashi
+* [GitHub:#3e7cd8c] $virtualDir= $this->config['virtual_dir'];
+* [GitHub:#07960d2] Use published='all' for one query
+* [GitHub:#9b0c95d] Info about character_set_database and collation_database
+* [GitHub:#a23ec37] Now we can specify document ID if needed
+* [GitHub:#7dafcf8] DB request only made if $hereId != $modx->documentObject['id']
+* [GitHub:#64d730f] sample-robots.txt added Disallow: /assets/packages/
+* [GitHub:#ed0d697] Delete unnecessary bold tags
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#cd61342] Updated polish language
+* [GitHub:#cb6e8be] Updated Finnish Language - thanks to Kari Söderholm
+* [GitHub:#c938674] New feature - @@EVAL at the TV form
+* [GitHub:#79e1f0f] Added polish eForm language - thanks to Piotr Matysiak
+* [GitHub:#f9eeb72] Updated Finnish language
+* [GitHub:#9c14e64] Update - TinyMCE 3.5.11
+* [GitHub:#3a920f1] MODX DBAPI->disconnect() is incomplete
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [GitHub:#b875144] SQL injection vulnerability in manager
+* [GitHub:#f466faf] Fix possible SQL injection vulnerability in manager
+* [GitHub:#45f47c6] Fix possible XSS vulnerability in manager
+* [GitHub:#0919124] Harden index-ajax.php
+* [GitHub:#13eac12] Update AjaxSearch to 1.10.1 - Security/Bug fixes
+
 MODX Evolution 1.0.13 (Feb 23, 2014)
 ===================================
 --------------------------------------------

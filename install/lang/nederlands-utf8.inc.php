@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author davaeron
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Dutch
