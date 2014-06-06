@@ -1,0 +1,5 @@
+# Restrict direct access to script file types and templates
+<FilesMatch "\.(php|tpl)$">
+   Order allow,deny
+   Deny from all
+</FilesMatch>
