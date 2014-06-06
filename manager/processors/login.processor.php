@@ -136,7 +136,7 @@ if($blockeduntildate>time()) {
 if($blockedafterdate>0 && $blockedafterdate<time()) {
     @session_destroy();
     session_unset();
-    jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert($_lang["login_processor_blocked3"]);
     return;
 }
 
@@ -144,12 +144,12 @@ if($blockedafterdate>0 && $blockedafterdate<time()) {
 if ($allowed_ip) {
         if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
           if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
-            jsAlert("Your hostname doesn't point back to your IP!");
+            jsAlert($_lang["login_processor_remotehost_ip"]);
             return;
           }
         }
         if(!in_array($_SERVER['REMOTE_ADDR'], array_filter(array_map('trim', explode(',', $allowed_ip))))) {
-          jsAlert("You are not allowed to login from this location.");
+          jsAlert($_lang["login_processor_remote_ip"]);
           return;
         }
 }
@@ -159,7 +159,7 @@ if ($allowed_days) {
     $date = getdate();
     $day = $date['wday']+1;
     if (strpos($allowed_days,"$day")===false) {
-        jsAlert("You are not allowed to login at this time. Please try again later.");
+        jsAlert($_lang["login_processor_date"]);
         return;
     }
 }
@@ -222,7 +222,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 
 if($use_captcha==1) {
 	if (!isset ($_SESSION['veriword'])) {
-		jsAlert('Captcha is not configured properly.');
+        jsAlert($_lang["login_processor_captcha_config"]);
 		return;
 	}
 	elseif ($_SESSION['veriword'] != $captcha_code) {
