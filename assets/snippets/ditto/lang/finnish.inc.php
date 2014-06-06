@@ -17,7 +17,7 @@ $_lang['default_template'] = '
     </div>
 ';
 $_lang["bad_tpl"] = "<p>&[+tpl+] ei joko sisällä yhtään Ditton muuttujaa tai on viallinen palasen nimi, koodi, tai tiedostonimi. Ole hyvä ja tarkista.</p>";
-$_lang['missing_placeholders_tpl'] = 'One of your Ditto templates are missing placeholders, please check the template below:';
+$_lang['missing_placeholders_tpl'] = 'Jostakin Ditto palasestasi puuttuu muuttujia. Ole hyvä ja tarkista alla oleva palanen:';
 $_lang['no_documents'] = '<p>Ei löytynyt yhtään dokumenttia.</p>';
 $_lang['resource_array_error'] = 'Resurssitaulukko virhe';
 $_lang['prev'] = "&lt; Edellinen";

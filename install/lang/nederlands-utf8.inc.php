@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author davaeron
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Dutch
@@ -116,7 +116,7 @@ $_lang["modules"] = 'Modules';
 $_lang["modx_footer1"] = '&copy; 2005-2014 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
-$_lang["modx_requires_php"] = ', en MODX heeft PHP 4.2.0 of nieuwer nodig';
+$_lang["modx_requires_php"] = ', en MODX heeft PHP 5.0.0 of nieuwer nodig';
 $_lang["mysql_5051"] = 'MySQL server versie is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Er zijn bekende problemen met MySQL 5.0.51. Het wordt aanbevolen dat u een upgrade uitvoert voordat u verder gaat.';
 $_lang["mysql_version_is"] = 'Uw MySQL versie is:';

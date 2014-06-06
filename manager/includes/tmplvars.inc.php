@@ -1,17 +1,18 @@
 <?php
 	// DISPLAY FORM ELEMENTS
-	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='', $row = array()) {
+	function renderFormElement($field_type, $field_id, $default_text='', $field_elements = '', $field_value='', $field_style='', $row = array()) {
 		global $modx;
 		global $_style;
 		global $_lang;
 		global $content;
 
-		$field_html ='';
-		$field_value = ($field_value!="" ? $field_value : $default_text);
-		if(substr($field_value, 0, 5) == "@EVAL") {
-	     	$eval_str = trim(substr($field_value, 6));
-	    	$field_value = eval($eval_str);
+		if(substr($default_text, 0, 6) === '@@EVAL' && $field_value===$default_text) {
+	     	$eval_str = trim(substr($default_text, 7));
+	    	$default_text = eval($eval_str);
+	    	$field_value = $default_text;
 	    }
+	    
+		$field_html ='';
 
 		switch ($field_type) {
 

@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author Nicolas Martignoni (Nissai)
  * @author David Mollière (davidm)
@@ -285,7 +285,7 @@ $_lang["existing_category"] = 'Catégorie existante';
 $_lang["expand_tree"] = 'Développer l\'Arbre du Site';
 $_lang["export_site"] = 'Export en HTML statique';
 $_lang["export_site_cacheable"] = 'Inclure les fichiers non-cachables:';
-$_lang["export_site_exporting_document"] = 'Exportation du fichier <b>%s</b> sur <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Échec!';
 $_lang["export_site_failed_no_open"] = 'Impossible d\'ouvrir le fichier: ';
 $_lang["export_site_failed_no_retrieve"] = 'Impossible de récupérer le document.';

@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author Mohsen Zare (MotSmart), www.modxcms.ir
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'بخش یا مجموعه ی حاضر یا فعل�
 $_lang["expand_tree"] = 'باز کردن درختی';
 $_lang["export_site"] = 'تخلیه و دریافت خروجی بصورت HTML';
 $_lang["export_site_cacheable"] = 'فایلهای ذخیره نشدنی یا غیر قابل کش را هم شامل شود';
-$_lang["export_site_exporting_document"] = 'در حال تخلیه و تهیه ی خروجی <b>%s</b> از <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, ردیف %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'عملیات خروجی ناموق بود';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';

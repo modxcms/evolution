@@ -2,12 +2,12 @@
 /**
  * MODX Country list language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Polish
  * @package modx
- * @subpackage installer
+ * @subpackage manager
  *
  * Array keys refer to the ID number that is saved in the database
  *

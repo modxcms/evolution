@@ -99,13 +99,15 @@ class DBAPI {
                if($modx->config['send_errormail'] <= 2)
                {
                   $logtitle    = 'Failed to create the database connection!';
-                  $request_uri = $_SERVER['REQUEST_URI'];
-                  $request_uri = htmlspecialchars($request_uri, ENT_QUOTES);
+                  $request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
                   $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
                   $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
-                  $subject = 'Missing to create the database connection! from ' . $modx->config['site_name'];
-                  $msg = "{$logtitle}<br />{$request_uri}<br />{$ua}<br />{$referer}";
-                  $modx->sendmail($subject,$msg);
+
+                  $modx->sendmail(array(
+					  'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
+					  'body' => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
+					  'type' => 'text')
+				  );
                }
             }
             sleep(1);
@@ -145,6 +147,8 @@ class DBAPI {
     */
    function disconnect() {
       @ mysql_close($this->conn);
+      $this->conn = null;
+      $this->isConnected = false;
    }
 
    function escape($s, $safecount=0) {
@@ -190,8 +194,16 @@ class DBAPI {
             array_shift($debug);	
             $debug_path = array();
             foreach ($debug as $line) $debug_path[] = $line['function'];
-            $debug_path = implode('>',$debug_path);
-            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . " ".$debug_path."</legend>" . $sql . "</fieldset><br />";
+            $debug_path = implode(' > ',array_reverse($debug_path));
+            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . "</legend>";
+            $modx->queryCode .= $sql . '<br><br>';
+            if ($modx->event->name) $modx->queryCode .= 'Current Event  => ' . $modx->event->name . '<br>';
+            if ($modx->event->activePlugin) $modx->queryCode .= 'Current Plugin => ' . $modx->event->activePlugin . '<br>';
+            if ($modx->currentSnippet) $modx->queryCode .= 'Current Snippet => ' . $modx->currentSnippet . '<br>';
+            if (stripos($sql, 'select')===0) $modx->queryCode .= 'Record Count => ' . $this->getRecordCount($result) . '<br>';
+            else $modx->queryCode .= 'Affected Rows => ' . $this->getAffectedRows() . '<br>';
+            $modx->queryCode .= 'Functions Path => ' . $debug_path . '<br>';
+            $modx->queryCode .= "</fieldset><br />";
          }
          $modx->executedQueries = $modx->executedQueries + 1;
          return $result;
@@ -263,7 +275,7 @@ class DBAPI {
       else {
          $intotable = $this->replaceFullTableName($intotable);
          if (!is_array($fields)) {
-            $query = $this->query("INSERT INTO {$intotable} {$fields}");
+            $this->query("INSERT INTO {$intotable} {$fields}");
          } else {
             if (empty($fromtable)) {
                $fields = "(`".implode("`, `", array_keys($fields))."`) VALUES('".implode("', '", array_values($fields))."')";

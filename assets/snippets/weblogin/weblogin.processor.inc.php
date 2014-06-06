@@ -10,7 +10,7 @@ defined('IN_PARSER_MODE') or die();
         $id = $_REQUEST['wli'];
         $pwdkey = $_REQUEST['wlk'];
 
-        $ds = $modx->db->select('wu.*', $modx->getFullTableName('web_users'), "wu.id='".$modx->db->escape($id)."'");
+        $ds = $modx->db->select('*', $modx->getFullTableName('web_users'), "id='".$modx->db->escape($id)."'");
         if($row = $modx->db->getRow($ds)) {
             $username = $row["username"];
             list($newpwd,$newpwdkey) = explode("|",$row['cachepwd']);
@@ -38,12 +38,12 @@ defined('IN_PARSER_MODE') or die();
 				);
 
             // invoke OnWebChangePassword event
-                $modx->invokeEvent("OnWebChangePassword",
-                                array(
-                                    "userid"        => $id,
-                                    "username"        => $username,
-                                    "userpassword"    => $newpwd
-                                ));
+            $modx->invokeEvent("OnWebChangePassword",
+                array(
+                    "userid"       => $id,
+                    "username"     => $username,
+                    "userpassword" => $newpwd
+            ));
 
             if(!$pwdActId) $output = webLoginAlert("Your new password was successfully activated.");
             else {
@@ -198,7 +198,7 @@ defined('IN_PARSER_MODE') or die();
                             ));
 
 	$ds = $modx->db->select(
-		'wu.*, wua.fullname',
+		'wu.*, wua.*',
 		$modx->getFullTableName('web_users')." AS wu, ".$modx->getFullTableName('web_user_attributes')." AS wua",
 		"BINARY wu.username='{$username}' AND wua.internalKey=wu.id");
     $row = $modx->db->getRow($ds);
@@ -208,19 +208,19 @@ defined('IN_PARSER_MODE') or die();
         return;
     }
 
-    $internalKey             = $row['internalKey'];
-    $dbasePassword             = $row['password'];
-    $failedlogins             = $row['failedlogincount'];
+    $internalKey             = $row['id'];
+    $dbasePassword           = $row['password'];
+    $failedlogins            = $row['failedlogincount'];
     $blocked                 = $row['blocked'];
     $blockeduntildate        = $row['blockeduntil'];
     $blockedafterdate        = $row['blockedafter'];
-    $registeredsessionid    = $row['sessionid'];
+    $registeredsessionid     = $row['sessionid'];
     $role                    = $row['role'];
-    $lastlogin                = $row['lastlogin'];
+    $lastlogin               = $row['lastlogin'];
     $nrlogins                = $row['logincount'];
     $fullname                = $row['fullname'];
-    //$sessionRegistered         = checkSession();
-    $email                     = $row['email'];
+    //$sessionRegistered     = checkSession();
+    $email                   = $row['email'];
 
     // load user settings
     if($internalKey){
@@ -316,11 +316,10 @@ defined('IN_PARSER_MODE') or die();
 
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
-        if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
+        if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block until!
 			$modx->db->update(
 				array(
 					'failedlogincount' => $failedlogins,
-					'blocked'          => 1,
 					'blockeduntil'     => (time()+($modx->config['blocked_minutes']*60)),
 					),
 				$modx->getFullTableName('web_user_attributes'),

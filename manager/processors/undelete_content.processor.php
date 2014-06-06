@@ -48,8 +48,6 @@ function getChildren($parent) {
 	global $children;
 	global $deltime;
 	
-	$db->debug = true;
-	
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
 		// the document has children documents, we'll need to delete those too
 		while ($row=$modx->db->getRow($rs)) {

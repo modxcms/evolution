@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author Yossi Bengigi, www.modx.co.il
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'קטגוריה קיימת';
 $_lang["expand_tree"] = 'פרוש עץ אתר';
 $_lang["export_site"] = 'HTML יצוא ל';
 $_lang["export_site_cacheable"] = 'Include non-cacheable files:';
-$_lang["export_site_exporting_document"] = 'Exporting file <b>%s</b> of <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Failed!';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';

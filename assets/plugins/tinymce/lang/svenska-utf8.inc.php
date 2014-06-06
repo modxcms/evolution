@@ -6,7 +6,7 @@
  * Author:         Jeff Whitfield
  * Date:           2014/02/01
  * Version:        3.5.10
- * MODX version:   0.9.5-1.0.13
+ * MODX version:   0.9.5-1.0.14
 */
 
 $_lang['mce_editor_theme_title'] = 'Tema';

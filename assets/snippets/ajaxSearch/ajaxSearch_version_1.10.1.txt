@@ -1,9 +1,9 @@
 
-                              AjaxSearch - version 1.10.0
+                              AjaxSearch - version 1.10.1
 
                            Coroico - http://www.evo.wangba.fr
 
-                                 27th of march 2013
+                                 05th of june 2014
                                  
                                  
     Small Fixes
@@ -11,6 +11,7 @@
 =====================================================================================
 
 Previous versions :
+ - 1.10.0 delivered the 27th of March 2014 (provided with MODX 1.0.13)
  - 1.9.3 delivered the 26th of September 2012 (provided with MODX 1.0.11)
  - 1.9.2 delivered the 5th of December 2010 (provided with MODX 1.0.4)
  - 1.9.1 delivered the 30th of August 2010

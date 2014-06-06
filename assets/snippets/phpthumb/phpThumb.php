@@ -9,10 +9,10 @@
 //                                                         ///
 //////////////////////////////////////////////////////////////
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-ini_set('magic_quotes_runtime', '0');
-if (ini_get('magic_quotes_runtime')) {
+@error_reporting(E_ALL);
+@ini_set('display_errors', '1');
+@ini_set('magic_quotes_runtime', '0');
+if (@ini_get('magic_quotes_runtime')) {
 	die('"magic_quotes_runtime" is set in php.ini, cannot run phpThumb with this enabled');
 }
 $starttime = array_sum(explode(' ', microtime()));

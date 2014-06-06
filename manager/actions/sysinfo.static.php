@@ -74,8 +74,8 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
 	$sql1 = "show variables like 'character_set_database'";
     $res = $modx->db->query($sql1);
-    $charset = $modx->db->getValue($res);
-    echo $charset;
+    $charset = $modx->db->getRow($res, 'num');
+    echo $charset[1];
 			?></strong></td>
 		  </tr>
 		  <tr>
@@ -84,8 +84,8 @@ if(!$modx->hasPermission('logs')) {
 			<td><strong><?php
     $sql2 = "show variables like 'collation_database'";
     $res = $modx->db->query($sql2);
-    $collation = $modx->db->getValue($res);
-    echo $collation;
+    $collation = $modx->db->getRow($res, 'num');
+    echo $collation[1];
             ?></strong></td>
 		  </tr>
 		  <tr>

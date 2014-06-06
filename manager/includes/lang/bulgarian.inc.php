@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -282,7 +282,7 @@ $_lang["existing_category"] = 'Съществуваща категория';
 $_lang["expand_tree"] = 'Разширете дървото';
 $_lang["export_site"] = 'Експорт на статичен HTML';
 $_lang["export_site_cacheable"] = 'Вмъкване на некешируеми файлове:';
-$_lang["export_site_exporting_document"] = 'Експортване на <b>%s</b> от <b>%s</b> файла<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Несполучливо!';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';

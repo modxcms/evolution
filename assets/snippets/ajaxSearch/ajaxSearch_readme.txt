@@ -1,5 +1,5 @@
 
-AjaxSearch Readme version 1.10.0
+AjaxSearch Readme version 1.10.1
 
 ---------------------------------------------------------------
 :: Snippet: AjaxSearch
@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.10.0
         Ajax-driven & Flexible Search form
 
   Version:
-        1.10.0 - 27/03/2013
+        1.10.1 - 05/06/2014
 
   Created by:  Coroico - (coroico@wangba.fr)
   
@@ -43,10 +43,13 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
   Originally based on the FlexSearchForm snippet created by jaredc (jaredc@honeydewdesign.com)
 
 ----------------------------------------------------------------
-:: Changelog:  for more details see www.evo.wangba.fr
+:: Changelog:
 ----------------------------------------------------------------
+  05-june-14 (1.10.1)
+    -- Security/Bug fixes
+
   27-march-13 (1.10.0)
-    -- security/bug fixes    
+    -- Security/Bug fixes
 
   26-september-12 (1.9.3)
     -- Bug fixing

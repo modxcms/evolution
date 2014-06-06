@@ -168,9 +168,7 @@ switch ($_POST['mode']) {
 		
         break;
     default:
-	?>
-	Erm... You supposed to be here now?
-	<?php
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 
 function saveTemplateAccess() {	
@@ -218,7 +216,7 @@ function saveDocumentAccessPermissons(){
 		// delete old permissions on the tv
 		$modx->db->delete($tbl_site_tmplvar_templates, "tmplvarid='{$id}'");
 		if(is_array($docgroups)) {
-			foreach ($docgroups as $dgkey=>$value) {
+			foreach ($docgroups as $value) {
 				$modx->db->insert(
 					array(
 						'tmplvarid'  => $id,

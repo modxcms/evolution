@@ -62,11 +62,13 @@ class EXPORT_SITE
 		if(count($ignore_ids)>0)
 		{
 			$ignore_ids = "AND NOT id IN ('".implode("','", $ignore_ids)."')";
+		} else {
+			$ignore_ids = '';
 		}
 		
 		$this->ignore_ids = $ignore_ids;
 		
-		$noncache = $include_noncache==1 ? '' : 'AND cacheable=1';
+		$noncache = ($noncache == 1) ? '' : 'AND cacheable=1';
 		$where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
 		$rs  = $modx->db->select('count(id)',$tbl_site_content,$where);
 		$this->total = $modx->db->getValue($rs);

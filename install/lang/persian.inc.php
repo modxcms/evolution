@@ -4,7 +4,7 @@
  *
  * @author Mohsen Zare (MotSmart), MotSmart@Gmail.com, www.modxcms.ir
  * @author AliAqua
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  *
  * @language Persian
@@ -117,7 +117,7 @@ $_lang["modules"] = 'ماژولها';
 $_lang["modx_footer1"] = '&copy; 2005-2014 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
 $_lang["modx_footer2"] = 'مادایکس نرم افزاری رایگان است، ما شما را تشویق به خلاقیت می کنیم، شما می توانید به منظور هماهنگی مادایکس با نیازهای خود، هر تغییری را در آن اعمال کنید. چنانچه قصد ارائه نسخه مادایکس ویژه خود به دیگران را دارید حتما آن را رایگان ارائه کنید!';
 $_lang["modx_install"] = 'MODX &raquo; برنامه نصب';
-$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 4.2.0 و یا بالاتر نیاز دار';
+$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 5.0.0 و یا بالاتر نیاز دار';
 $_lang["mysql_5051"] = ' نسخه MySQL سرور 5.0.51 می باشد!';
 $_lang["mysql_5051_warning"] = 'مشکلاتی با نسخه MySQL 5.0.51 کشف شده. پیشنهاد می کنیم نسخه MySQL خود را ارتقا دهید.';
 $_lang["mysql_version_is"] = ' نسخه MySQL شما: ';

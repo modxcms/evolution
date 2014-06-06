@@ -1,6 +1,6 @@
 <?php
 /*
-arabic-utf8.inc.php - for AjaxSearch 1.10.0
+arabic-utf8.inc.php - for AjaxSearch 1.10.1
 Created by: Robin North (www.phenotype.net)
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

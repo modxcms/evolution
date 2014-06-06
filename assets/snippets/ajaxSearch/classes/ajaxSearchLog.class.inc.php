@@ -5,8 +5,8 @@
 * @package  AjaxSearchLog
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.0
-* @date         27/03/2013
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests
@@ -79,7 +79,9 @@ class AjaxSearchLog {
           `ip` varchar(255) NOT NULL,
           PRIMARY KEY  (`id`)
           ) ENGINE=MyISAM;";
-            $modx->db->query($SQL_CREATE_TABLE);
+            if (!$modx->db->query($SQL_CREATE_TABLE)) {
+                return false;
+            }
             return true;
         }
     }

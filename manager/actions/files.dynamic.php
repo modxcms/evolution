@@ -10,8 +10,8 @@ $newToken = makeToken();
 $theme_image_path = $modx->config['site_manager_url'] . 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $excludes = array('.', '..', '.svn');
 $alias_suffix = (!empty($friendly_url_suffix)) ? ','.ltrim($friendly_url_suffix,'.') : '';
-$editablefiles       = explode(',', 'txt,php,shtml,html,htm,xml,js,css,pageCache,htaccess'.$alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,html,htm,xml,js,css,pageCache,htaccess'.$alias_suffix);
+$editablefiles       = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess'.$alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess'.$alias_suffix);
 $viewablefiles       = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles       = add_dot($editablefiles);

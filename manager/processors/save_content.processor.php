@@ -43,11 +43,12 @@ $add_path=$sd.$sb.$pg;
 
 
 
-if (trim($pagetitle) == "") {
+$no_esc_pagetitle = $_POST['pagetitle'];
+if (trim($no_esc_pagetitle) == "") {
 	if ($type == "reference") {
-		$pagetitle = $_lang['untitled_weblink'];
+		$no_esc_pagetitle = $pagetitle = $_lang['untitled_weblink'];
 	} else {
-		$pagetitle = $_lang['untitled_resource'];
+		$no_esc_pagetitle = $pagetitle = $_lang['untitled_resource'];
 	}
 }
 
@@ -415,7 +416,7 @@ switch ($actionToTake) {
 		secureMgrDocument($key);
 
 		// Set the item name for logger
-		$_SESSION['itemname'] = $pagetitle;
+		$_SESSION['itemname'] = $no_esc_pagetitle;
 		
 		if ($syncsite == 1) {
 			// empty cache
@@ -494,36 +495,35 @@ switch ($actionToTake) {
 
 		// update the document
 		$modx->db->update(
-			array(
-				'introtext'       => $introtext,
-				'content'         => $content,
-				'pagetitle'       => $pagetitle,
-				'longtitle'       => $longtitle,
-				'type'            => $type,
-				'description'     => $description,
-				'alias'           => $alias,
-				'link_attributes' => $link_attributes,
-				'isfolder'        => $isfolder,
-				'richtext'        => $richtext,
-				'published'       => $published,
-				'pub_date'        => $pub_date,
-				'unpub_date'      => $unpub_date,
-				'parent'          => $parent,
-				'template'        => $template,
-				'menuindex'       => $menuindex,
-				'searchable'      => $searchable,
-				'cacheable'       => $cacheable,
-				'editedby'        => $modx->getLoginUserID(),
-				'editedon'        => $currentdate,
-				'publishedon'     => $publishedon,
-				'publishedby'     => $publishedby,
-				'contentType'     => $contentType,
-				'content_dispo'   => $contentdispo,
-				'donthit'         => $donthit,
-				'menutitle'       => $menutitle,
-				'hidemenu'        => $hidemenu,
-				'alias_visible'   => $aliasvisible,
-			), $tbl_site_content, "id='{$id}'");
+			"introtext='{$introtext}', "
+			. "content='{$content}', "
+			. "pagetitle='{$pagetitle}', "
+			. "longtitle='{$longtitle}', "
+			. "type='{$type}', "
+			. "description='{$description}', "
+			. "alias='{$alias}', "
+			. "link_attributes='{$link_attributes}', "
+			. "isfolder={$isfolder}, "
+			. "richtext={$richtext}, "
+			. "published={$published}, "
+			. "pub_date={$pub_date}, "
+			. "unpub_date={$unpub_date}, "
+			. "parent={$parent}, "
+			. "template={$template}, "
+			. "menuindex={$menuindex}, "
+			. "searchable={$searchable}, "
+			. "cacheable={$cacheable}, "
+			. "editedby=" . $modx->getLoginUserID() . ", "
+			. "editedon={$currentdate}, "
+			. "publishedon={$publishedon}, "
+			. "publishedby={$publishedby}, "
+			. "contentType='{$contentType}', "
+			. "content_dispo={$contentdispo}, "
+			. "donthit={$donthit}, "
+			. "menutitle='{$menutitle}', "
+			. "hidemenu={$hidemenu}, "
+			. "alias_visible={$aliasvisible}"
+			, $tbl_site_content, "id='{$id}'");
 
 		// update template variables
 		$rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, "contentid='{$id}'");
@@ -640,7 +640,7 @@ switch ($actionToTake) {
 		secureMgrDocument($id);
 
 		// Set the item name for logger
-		$_SESSION['itemname'] = $pagetitle;
+		$_SESSION['itemname'] = $no_esc_pagetitle;
 
 		if ($syncsite == 1) {
 			// empty cache
@@ -664,11 +664,15 @@ switch ($actionToTake) {
 				$header = "Location: index.php?r=1&id=$id&a=7&dv=1".$add_path;
 			}
 		}
-		header($header);
+		if (headers_sent()) {
+        	$header = str_replace('Location: ','',$header);
+        	echo "<script>document.location.href='$header';</script>\n";
+		} else {
+        	header($header);
+		}
 		break;
 	default :
-		header("Location: index.php?a=7");
-		exit;
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 
 // -- Save META Keywords --
