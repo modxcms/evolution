@@ -320,7 +320,6 @@ defined('IN_PARSER_MODE') or die();
 			$modx->db->update(
 				array(
 					'failedlogincount' => $failedlogins,
-					'blocked'          => 1,
 					'blockeduntil'     => (time()+($modx->config['blocked_minutes']*60)),
 					),
 				$modx->getFullTableName('web_user_attributes'),
