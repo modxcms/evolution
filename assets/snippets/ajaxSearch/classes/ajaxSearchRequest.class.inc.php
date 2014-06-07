@@ -791,4 +791,3 @@ class AjaxSearchRequest {
         return $string;
     }
 }
-?>

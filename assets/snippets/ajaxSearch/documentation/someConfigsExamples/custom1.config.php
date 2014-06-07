@@ -33,4 +33,3 @@ if(!function_exists('categConfig')) {
         return $config;
     }
 }
-?>
