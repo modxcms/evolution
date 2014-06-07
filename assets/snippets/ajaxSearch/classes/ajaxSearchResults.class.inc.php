@@ -805,6 +805,10 @@ class AjaxSearchResults {
     */
     function _getChildIds($Ids, $depth) {
         global $modx;
+        if(method_exists($modx, 'setdocumentMap') && !isset($modx->documentMap))
+        {
+            $modx->setdocumentMap();
+        }
         $depth = intval($depth);
         $kids = array();
         $docIds = array();
