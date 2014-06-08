@@ -287,7 +287,7 @@ form select
 		-webkit-border-radius:3px;
 		border-radius:3px;
 }
-form select.dropdown, form select[size="1"] {
+form select.dropdown, form select[size="1"], form select:not([size]) {
     height: 28px;
 }
 form input[type="text"],
