@@ -114,4 +114,3 @@ class AjaxSearchUtil {
         ini_set( 'pcre.backtrack_limit', $this->_current_pcre_backtrack );
     }
 }
-?>

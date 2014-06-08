@@ -33,4 +33,3 @@ $_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
 $_lang['as_resultsDisplayed'] = 'Displayed: %d';
 $_lang['as_paging1Text'] = '%d - %d / %d';
 $_lang['as_paging2Text'] = 'Show more %d results';
-?>

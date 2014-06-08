@@ -201,4 +201,3 @@ class AjaxSearchConfig {
         return "\n" . $output;
     }
 }
-?>
