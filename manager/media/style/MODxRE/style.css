@@ -286,9 +286,11 @@ form select
 		-moz-border-radius:3px;
 		-webkit-border-radius:3px;
 		border-radius:3px;
+    height: 28px;
 }
 form input[type="text"],
 form input[type="password"],
+form input[type="number"],
 form textarea {
 	background: #f9f9f9;
 	border-color: #999 #DDD #DDD #999;
@@ -1521,6 +1523,8 @@ form#mutate textarea {
 	width: 300px;
 }
 #tv_body input[type="text"],
+#tv_body input[type="password"],
+#tv_body input[type="number"],
 #tv_body textarea
 {
 	background: none repeat scroll 0 0 #FFFFFF;
