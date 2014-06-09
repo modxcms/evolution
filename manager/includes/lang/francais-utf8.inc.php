@@ -1146,8 +1146,8 @@ $_lang["files_dynamic_new_folder_name"] = 'Saisissez un nouveau nom de dossier :
 $_lang["files_dynamic_new_file_name"] = 'Saisissez un nouveau nom de fichier :';
 $_lang["not_readable_dir"] = 'Dossier illisible.';
 $_lang["confirm_delete_dir"] = 'Confirmez-vous la suppression de ce dossier ?';
-$_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier?\n\nTout ses contenus seront aussi supprimés.';
-// @ack : Etat d'avancement TD...
+$_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier ?\n\nTout ses contenus seront aussi supprimés.';
+// @ack : Etat d'avancement TD (vers le bas)...
 
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
@@ -1224,6 +1224,7 @@ $_lang["error_no_group_selected"]     = "No group selected as recipient of this 
 $_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
 $_lang["error_movedocument2"]         = "Document's ID not passed in request!";
 $_lang["error_movedocument3"]         = "New parent not set in request!";
+// @ack : Etat d'avancement GN (vers le haut)...
 
 $_lang["login_processor_unknown_user"]       = 'Identifiant ou mot de passe invalide !';
 $_lang["login_processor_wrong_password"]     = $_lang["login_processor_unknown_user"];
