@@ -1137,17 +1137,17 @@ $_lang["bkmgr_snapshot_submit"] = 'Ajouter un "snapshot"';
 $_lang["bkmgr_snapshot_list_title"] = 'Liste des "snapshots"';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
 $_lang["bkmgr_snapshot_nothing"] = 'Aucun "snapshot"';
-// @ack : Etat d'avancement...
 
-$_lang["files.dynamic.php1"] = 'create text file';
-$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
-$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
-$_lang["files.dynamic.php4"] = 'The text file was created.';
-$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
-$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
-$_lang["not_readable_dir"] = 'Can not read this directory.';
-$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
-$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["files.dynamic.php1"] = 'Créer un fichier texte';
+$_lang["files.dynamic.php2"] = 'Ce dossier ne peut être affiché.';
+$_lang["files.dynamic.php3"] = 'Il y a un problème dans le nom du fichier.';
+$_lang["files.dynamic.php4"] = 'Le fichier texte a été crée.';
+$_lang["files_dynamic_new_folder_name"] = 'Saisissez un nouveau nom de dossier :';
+$_lang["files_dynamic_new_file_name"] = 'Saisissez un nouveau nom de fichier :';
+$_lang["not_readable_dir"] = 'Dossier illisible.';
+$_lang["confirm_delete_dir"] = 'Confirmez-vous la suppression de ce dossier ?';
+$_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier?\n\nTout ses contenus seront aussi supprimés.';
+// @ack : Etat d'avancement TD...
 
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
