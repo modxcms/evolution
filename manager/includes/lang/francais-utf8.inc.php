@@ -137,7 +137,7 @@ $_lang["configcheck_ok"] = 'Le contrôle s\'est bien passé - aucun avertissemen
 $_lang["configcheck_php_gdzip"] = 'Extensions PHP GD et/ou Zip non trouvées';
 $_lang["configcheck_php_gdzip_msg"] = 'MODX a besoin de l\'extension GD et Zip autorisée pour PHP. Même si MODX sait travailler sans, vous ne tirerez pas pleinement profit du gestionnaire de fichiers, de l\'éditeur d\'images ou de Captcha pour les logins.';
 $_lang["configcheck_register_globals"] = 'register_globals est sur "ON" dans votre fichier de configuration php (php.ini)';
-$_lang["configcheck_register_globals_msg"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/contents/attaques/cross-site-scripting.php3">XCSS</a> (cross site scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage.';
+$_lang["configcheck_register_globals_msg"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/contents/50-xss-cross-site-scripting">XCSS</a> (cross site scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage.';
 $_lang["configcheck_title"] = 'Contrôle de configuration';
 $_lang["configcheck_templateswitcher_present"] = 'Plugin TemplateSwitcher détecté';
 $_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Supprime TemplateSwitcher</a>';
@@ -1194,10 +1194,10 @@ $_lang["user_other"] = 'Other';
 $_lang["import_site.static.php1"] = 'Reset resource tree';
 $_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
 $_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
+$_lang["import_site.static.php4"] = 'Uniquement la partie &lt;body&gt;&lt;/body&gt;';
 $_lang["import_site.static.php5"] = 'Whole file content';
 
-$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
+$_lang["a83_ignore_ids_title"]    = 'Ignore IDs (comma separated)';
 $_lang["export_site.static.php1"] = 'Target';
 $_lang["export_site.static.php2"] = 'Only edited Resources';
 $_lang["export_site.static.php3"] = 'All Resources';
@@ -1205,11 +1205,11 @@ $_lang["export_site.static.php4"] = 'Search for';
 $_lang["export_site.static.php5"] = 'Replace with';
 $_lang["export_site.static.php6"] = 'Target';
 $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
-
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
-$_lang["mutate_settings.dynamic.php7"] = 'not notify';
-$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
 // @ack : Etat d'avancement GN (vers le haut)...
+
+$_lang["mutate_settings.dynamic.php6"] = 'Envoyer un e-mail en cas d\'erreur MODX';
+$_lang["mutate_settings.dynamic.php7"] = 'Ne pas notifier';
+$_lang["mutate_settings.dynamic.php8"] = 'Si une erreur MODX survient un e-mail contenant l\'origine de l\'erreur sera envoyé à [(emailsender)] ([+emailsender+]). Le détail de l\'erreur pourra être consulté dans l\'historique des événements MODX.';
 
 $_lang["error_no_privileges"]         = 'Vous ne disposez pas de suffisamment de droits pour effectuer cette opération !';
 $_lang["error_no_optimise_tablename"] = 'Nom de la table à optimiser non trouvé dans la requête !';
