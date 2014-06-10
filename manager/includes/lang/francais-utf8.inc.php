@@ -1110,16 +1110,16 @@ $_lang["yourinfo_total_logins"] = 'Nombre total de connexions:';
 $_lang["yourinfo_username"] = 'Connecté sous le nom:';
 
 $_lang["a17_error_reporting_title"] = 'Niveau de rapport d\'erreurs PHP';
-$_lang["a17_error_reporting_msg"] = 'Fixe le niveau de rapport d\'erreurs PHP.';
-$_lang["a17_error_reporting_opt0"] = 'Tout ignorer';
-$_lang["a17_error_reporting_opt1"] = 'Ignorer les erreurs de faible niveau (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Détection des toutes les erreurs sauf E_NOTICE';
+$_lang["a17_error_reporting_msg"]   = 'Fixe le niveau de rapport d\'erreurs PHP.';
+$_lang["a17_error_reporting_opt0"]  = 'Tout ignorer';
+$_lang["a17_error_reporting_opt1"]  = 'Ignorer les erreurs de faible niveau (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"]  = 'Détection des toutes les erreurs sauf E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Tout détecter';
 
-$_lang["pwd_hash_algo_title"] = 'Algorithme "Hash"';
+$_lang["pwd_hash_algo_title"]   = 'Algorithme "Hash"';
 $_lang["pwd_hash_algo_message"] = 'Algorithme "Hash" pour les mots de passe.';
 
-$_lang["enable_bindings_title"] = 'Activer les commandes @Bindings';
+$_lang["enable_bindings_title"]   = 'Activer les commandes @Bindings';
 $_lang["enable_bindings_message"] = 'Interdit l\'exécution de code PHP via les @Bindings des TVs. Utile si vous avez des utilisateurs qui doivent pourvoir créer ou éditer des des TVs mais ne doivent pas pouvoir créer de code PHP. Le résultat des TVs contenant un @Binding sera "@Bindings is disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'Un fichier n\'a pu être créé dans un répertoire. Veuillez vérifier les droits de [+snapshot_path+]';
@@ -1147,37 +1147,35 @@ $_lang["files_dynamic_new_file_name"] = 'Saisissez un nouveau nom de fichier :';
 $_lang["not_readable_dir"] = 'Dossier illisible.';
 $_lang["confirm_delete_dir"] = 'Confirmez-vous la suppression de ce dossier ?';
 $_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier ?\n\nTout ses contenus seront aussi supprimés.';
-// @ack : Etat d'avancement TD (vers le bas)...
 
-$_lang["make_folders_title"]   = 'Make end slash URL at the container';
-$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["make_folders_title"]   = 'Slash en fin d\'URL des dossiers';
+$_lang["make_folders_message"] = 'Ajouter un slash en fin d\'URL des dossiers en mode URLs simples.';
 
-$_lang["check_files_onlogin_title"]   = 'Check core files on login';
-$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["check_files_onlogin_title"]   = 'Vérifier les fichiers du système à la connexion';
+$_lang["check_files_onlogin_message"] = 'En activant cette option, les fichiers importants du système seront vérifiés à chaque connexion. Une modification peut être le signe d\'une attaque de votre site. Ceci n\'est pas une garantie complète, mais peut vous indiquer une possible altération ou attaque';
 
-$_lang["configcheck_sysfiles_mod"]     = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["configcheck_sysfiles_mod"]     = 'D\'importants fichiers du système ont été modifiés.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'Nous avons détecté que des fichiers importants du système ont été modifiés. Cela ne signifie pas nécessairement que votre site a été attaqué. Nous vous conseillons néanmoins de vérifier les fichiers : index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php';
 
-$_lang['email_method_title']  = 'Sendmail method';
-$_lang['email_method_mail']   = 'mail() PHP function';
-$_lang['email_method_smtp']   = 'SMTP Server';
-$_lang['smtp_auth_title']     = 'SMTP－AUTH';
-$_lang['smtp_host_title']     = 'SMTP host';
-$_lang['smtp_username_title'] = 'SMTP user name';
-$_lang['smtp_password_title'] = 'SMTP password';
-$_lang['smtp_port_title']     = 'SMTP port';
+$_lang['email_method_title']  = 'Méthode à utiliser pour l\'envoi des e-mails';
+$_lang['email_method_mail']   = 'via la fonction mail() de PHP';
+$_lang['email_method_smtp']   = 'via un serveur SMTP';
+$_lang['smtp_auth_title']     = 'Authentification SMTP';
+$_lang['smtp_host_title']     = 'Serveur SMTP';
+$_lang['smtp_username_title'] = 'Utilisateur SMTP';
+$_lang['smtp_password_title'] = 'Mot de passe SMTP';
+$_lang['smtp_port_title']     = 'Port SMTP';
 
-$_lang["setting_resource_tree_node_name"]      = 'The node name of a resource tree';
-$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["setting_resource_tree_node_name"]      = 'Nom du The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Permet de définir le champ du document à utiliser dans l\'arbre. Par défaut ce champ est "pagetitle", mais tous les champs peuvent être utilisés comme "menutitle", "alias"...';
 
-$_lang["resource_opt_alvisibled"]      = 'Use current alias in alias path';
-$_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
+$_lang["resource_opt_alvisibled"]      = 'Utiliser l\'alias du document dans chemin d\'alias';
+$_lang["resource_opt_alvisibled_help"] = 'L\'alias de ce document sera utilisé dans le chemin d\'alias';
 $_lang['resource_opt_is_published']    = 'Publié';
-$_lang["docid_incrmnt_method_title"]   = 'Increment Resource ID method';
-$_lang["docid_incrmnt_method_0"]       = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"]       = 'Minimum missed ID';
-$_lang["docid_incrmnt_method_2"]       = 'Maximal ID + 1';
-// @ack : Etat d'avancement GN (vers le haut)...
+$_lang["docid_incrmnt_method_title"]   = 'Mode de gestion de l\'incrément des ID des documents';
+$_lang["docid_incrmnt_method_0"]       = 'Incrément automatique de la base de données';
+$_lang["docid_incrmnt_method_1"]       = 'Plus petit ID disponible';
+$_lang["docid_incrmnt_method_2"]       = 'Plus grand ID + 1';
 
 $_lang["cache_type_title"]  = 'Type de cache des documents';
 $_lang["cache_type_1"]      = 'Le cache est basé sur l\'ID du document (standard)';
@@ -1185,7 +1183,7 @@ $_lang["cache_type_2"]      = 'Le cache est basé sur l\'ID du document et les p
 $_lang["seostrict_title"]   = 'Utiliser le format "SEO Strict" pour les URLs';
 $_lang["seostrict_message"] = 'Forcer le format "SEO Strict" pour les URLs afin d\'éviter les contenus dupliqués';
 
-$_lang["settings_friendlyurls_alert"] = 'Il est nécessaire de renommer le fichier ht.access de MODX en .htaccess pour être en mesure d\'utiliser les "URLs simples".';
+$_lang["settings_friendlyurls_alert"]  = 'Il est nécessaire de renommer le fichier ht.access de MODX en .htaccess pour être en mesure d\'utiliser les "URLs simples".';
 $_lang["settings_friendlyurls_alert2"] = 'L\'installation ayant été réalisée dans un sous répertoire, il est nécessaire de modifier la directive "RewriteBase" dans votre fichier .htaccess.';
 
 $_lang["user_street"] = 'Rue';
