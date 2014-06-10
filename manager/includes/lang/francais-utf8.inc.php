@@ -1149,63 +1149,63 @@ $_lang["confirm_delete_dir"] = 'Confirmez-vous la suppression de ce dossier ?';
 $_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier ?\n\nTout ses contenus seront aussi supprimés.';
 // @ack : Etat d'avancement TD (vers le bas)...
 
-$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_title"]   = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
 
-$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_title"]   = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod"]     = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
 
-$_lang['email_method_title'] = 'Sendmail method';
-$_lang['email_method_mail'] = 'mail() PHP function';
-$_lang['email_method_smtp'] = 'SMTP Server';
-$_lang['smtp_auth_title'] = 'SMTP－AUTH';
-$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['email_method_title']  = 'Sendmail method';
+$_lang['email_method_mail']   = 'mail() PHP function';
+$_lang['email_method_smtp']   = 'SMTP Server';
+$_lang['smtp_auth_title']     = 'SMTP－AUTH';
+$_lang['smtp_host_title']     = 'SMTP host';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
-$_lang['smtp_port_title'] = 'SMTP port';
+$_lang['smtp_port_title']     = 'SMTP port';
 
-$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name"]      = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 
-$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled"]      = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Publié';
-$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
-$_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
-
-$_lang["cache_type_title"] = 'Document caching type';
-$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
-$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
-$_lang["seostrict_title"] = 'Use SEO Strict URLs';
-$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
-
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
-
-$_lang["user_street"] = 'Street';
-$_lang["user_city"] = 'City';
-$_lang["user_other"] = 'Other';
-
-$_lang["import_site.static.php1"] = 'Reset resource tree';
-$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Uniquement la partie &lt;body&gt;&lt;/body&gt;';
-$_lang["import_site.static.php5"] = 'Whole file content';
-
-$_lang["a83_ignore_ids_title"]    = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
-$_lang["export_site.static.php4"] = 'Search for';
-$_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
-$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+$_lang['resource_opt_is_published']    = 'Publié';
+$_lang["docid_incrmnt_method_title"]   = 'Increment Resource ID method';
+$_lang["docid_incrmnt_method_0"]       = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"]       = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"]       = 'Maximal ID + 1';
 // @ack : Etat d'avancement GN (vers le haut)...
+
+$_lang["cache_type_title"]  = 'Type de cache des documents';
+$_lang["cache_type_1"]      = 'Le cache est basé sur l\'ID du document (standard)';
+$_lang["cache_type_2"]      = 'Le cache est basé sur l\'ID du document et les paramètres $_GET';
+$_lang["seostrict_title"]   = 'Utiliser le format "SEO Strict" pour les URLs';
+$_lang["seostrict_message"] = 'Forcer le format "SEO Strict" pour les URLs afin d\'éviter les contenus dupliqués';
+
+$_lang["settings_friendlyurls_alert"] = 'Il est nécessaire de renommer le fichier ht.access de MODX en .htaccess pour être en mesure d\'utiliser les "URLs simples".';
+$_lang["settings_friendlyurls_alert2"] = 'L\'installation ayant été réalisée dans un sous répertoire, il est nécessaire de modifier la directive "RewriteBase" dans votre fichier .htaccess.';
+
+$_lang["user_street"] = 'Rue';
+$_lang["user_city"]   = 'Ville';
+$_lang["user_other"]  = 'Autre';
+
+$_lang["import_site.static.php1"] = 'Réinitialiser l\'arbre des ressources';
+$_lang["import_site.static.php2"] = $_lang["import_site.static.php1"].' et tous les IDs.';
+$_lang["import_site.static.php3"] = 'Cible';
+$_lang["import_site.static.php4"] = 'Uniquement la partie &lt;body&gt;&lt;/body&gt;';
+$_lang["import_site.static.php5"] = 'Tout le contenu du fichier';
+
+$_lang["a83_ignore_ids_title"]    = 'IDs à ignorer (séparés par des virgules)';
+$_lang["export_site.static.php1"] = 'Cible';
+$_lang["export_site.static.php2"] = 'Uniquement les ressources éditées';
+$_lang["export_site.static.php3"] = 'Toutes les ressources';
+$_lang["export_site.static.php4"] = 'Rechercher';
+$_lang["export_site.static.php5"] = 'Remplacer par';
+$_lang["export_site.static.php6"] = $_lang["export_site.static.php1"];
+$_lang["export_site.static.php7"] = 'Les fichiers ne peuvent être sauvés dans [+rb_base_url+]';
 
 $_lang["mutate_settings.dynamic.php6"] = 'Envoyer un e-mail en cas d\'erreur MODX';
 $_lang["mutate_settings.dynamic.php7"] = 'Ne pas notifier';
