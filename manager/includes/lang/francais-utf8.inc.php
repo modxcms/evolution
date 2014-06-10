@@ -1209,22 +1209,22 @@ $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
-
-$_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
-$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
-$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
-$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
-$_lang["error_no_id"]                 = "ID not passed in request!";
-$_lang["error_id_nan"]                = "ID passed in request is NaN!";
-$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
-$_lang["error_many_results"]          = "Too many results returned from database!";
-$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
-$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
-$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
-$_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
-$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
-$_lang["error_movedocument3"]         = "New parent not set in request!";
 // @ack : Etat d'avancement GN (vers le haut)...
+
+$_lang["error_no_privileges"]         = 'Vous ne disposez pas de suffisamment de droits pour effectuer cette opération !';
+$_lang["error_no_optimise_tablename"] = 'Nom de la table à optimiser non trouvé dans la requête !';
+$_lang["error_no_truncate_tablename"] = 'Nom de la table à vider non trouvé dans la requête !';
+$_lang["error_double_action"]         = 'Double action (GET & POST) demandée !';
+$_lang["error_no_id"]                 = 'ID du document non passé dans la requête !';
+$_lang["error_id_nan"]                = 'l\'ID du document passé dans la requête est invalide !';
+$_lang["error_no_parent"]             = 'Impossible de trouver le nom du document parent !';
+$_lang["error_many_results"]          = 'Trop de résultats ont été retournés par la base de données !';
+$_lang["error_no_results"]            = 'Pas assez de résultat(s) ont été retournés par la base de données !';
+$_lang["error_no_user_selected"]      = 'Aucun utilisateur n\'est destinataire de ce message !';
+$_lang["error_no_group_selected"]     = 'Aucun groupe n\'est destinataire de ce message !';
+$_lang["error_movedocument1"]         = 'Un document ne peut pas être son propre parent !';
+$_lang["error_movedocument2"]         = $_lang["error_no_id"];
+$_lang["error_movedocument3"]         = 'Nouveau parent non défini dans la requête !';
 
 $_lang["login_processor_unknown_user"]       = 'Identifiant ou mot de passe invalide !';
 $_lang["login_processor_wrong_password"]     = $_lang["login_processor_unknown_user"];
