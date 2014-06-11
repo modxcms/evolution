@@ -37,7 +37,7 @@ class Wayfinder {
 		$_[] = '[+wf.description+]';
 		$_[] = '[+wf.subitemcount+]';
 		$this->placeHolders['rowLevel'] = $_;
-		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]');
+		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.level+]');
 		$this->placeHolders['tvs']          = array();
 		
 	}
@@ -138,7 +138,7 @@ class Wayfinder {
 			$classNames = $this->setItemClass($wrapperClass);
 			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
 			
-			$phArray = array($subMenuOutput,$useClass,$classNames);
+			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
 			//Process the wrapper
 			$subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
 			//Debug
