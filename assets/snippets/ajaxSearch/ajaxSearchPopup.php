@@ -69,5 +69,3 @@ if (isset($_POST['search'])) {
     }
     echo $output;
 }
-
-?>

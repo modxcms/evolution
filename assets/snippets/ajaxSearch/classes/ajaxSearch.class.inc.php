@@ -170,4 +170,3 @@ if (!function_exists('stripLineBreaking')) {
         return $text;
     }
 }
-?>
