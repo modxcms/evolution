@@ -7,7 +7,7 @@
  * Translated by:  Piotr Matysiak
  * Date:           2014/02/24
  */
-$_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
+$_lang["ef_date_format"] = "%d-%m-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">UWAGA - DEBUGOWANIE WŁĄCZONE</span> <br />Nie zapomnij wyłączyć debugowania przed opublikowaniem tego formularza!</p>";
 $_lang["ef_error_filter_rule"] = "Filtr tekstu nierozpoznany.";
@@ -26,7 +26,7 @@ $_lang["ef_invalid_date"] = "nie jest poprawną datą";
 $_lang["ef_invalid_email"] = "nie jest poprawnym adresem e-mail";
 $_lang["ef_invalid_number"] = "nie jest poprawną liczbą";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Form template set to id of page containing snippet call! You can not have the form in the same document as the snippet call.</span> id=";
-$_lang["ef_mail_abuse_error"] = "<strong>Invalid or insecure entries were detected in your form.</strong>";
+$_lang["ef_mail_abuse_error"] = "<strong>W formularzu wykryto błędne lub niebezpieczne wpisy.</strong>";
 $_lang["ef_mail_abuse_message"] = "<p>A form on your website may have been the subject of an email injection attempt. The details of the posted values are printed below. Suspected text has been embedded in \[..]\ tags.</p>";
 $_lang["ef_mail_abuse_subject"] = "Potential email form abuse detected for form id";
 $_lang["ef_mail_error"] = "Mailer nie był w stanie wysłać wiadomości";
