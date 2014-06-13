@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Программа не смогла отправит
 $_lang["ef_multiple_submit"] = "<p>Данные успешно отправлены. Нет нужды отправлять данные несколько раз.</p>";
 $_lang["ef_no_doc"] = "Ресурс или чанк не найдены для шаблона с id=";
 $_lang["ef_regex_error"] = "ошибка в регулярном выражении ";
-$_lang["ef_required_message"] = " Необходимо заполнить следующие поля: [+fields+]";
+$_lang["ef_required_message"] = "Необходимо заполнить следующие поля: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Ошибка!</span> Не выполнено правило [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Успешно выполнено правило [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " без проблем прошел проверку. <span style=\"color:red;\"> SQL-запрос не возвратил никаких результатов!</span> ";

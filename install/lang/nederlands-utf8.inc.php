@@ -6,7 +6,7 @@
  * @version 1.0.14
  * @date 2014/02/24
  *
- * @language Dutch
+ * @language English
  * @package modx
  * @subpackage installer
  *
@@ -92,7 +92,7 @@ $_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Hulp bij installeren via in de MODX forums';
-$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</ a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
+$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
 $_lang["install"] = 'Installeer';
 $_lang["install_overwrite"] = 'Installeer/Overschrijven';
 $_lang["install_results"] = 'Installatie resultaten';
@@ -113,7 +113,7 @@ $_lang["installing_demo_site"] = 'Installeer demo site:';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2014 <a target="_blank" href="http://modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a target="_blank" href="http://modx.com/" style="color: green;">MODX</a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
 $_lang["modx_requires_php"] = ', en MODX heeft PHP [+min_version+] of nieuwer nodig';
