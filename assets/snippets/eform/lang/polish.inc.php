@@ -5,7 +5,7 @@
  * Language:       Polish
  * Encoding:       UTF-8
  * Translated by:  Piotr Matysiak
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d-%m-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Mailer nie był w stanie wysłać wiadomości";
 $_lang["ef_multiple_submit"] = "<p>Formularz już został pomyślnie wysłany. Nie ma potrzeby wysyłać go kilka razy.</p>";
 $_lang["ef_no_doc"] = "Dokument lub chunk nie został znaleziony dla szablonu id=";
 $_lang["ef_regex_error"] = "błąd w wyrażeniu regularnym";
-$_lang["ef_required_message"] = "Nie wypełniono wymaganych pól: {fields}<br>";
+$_lang["ef_required_message"] = "The following required field(s) are missing: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Niepowodzenie</span> używając reguły [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Powodzenie używając reguły [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = "walidacja udana. <span style=\"color:red;\"> SQL nie zwróciło wyników!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Dziękujemy!</h3><p>Wiadomość została po
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": błąd podczas wgrywania pliku.";
 $_lang["ef_upload_exceeded"] = "przekroczono limit wielkości wgrywanego pliku.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Some errors were detected in your form:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Some errors were detected in your form:";
 $_lang["ef_version_error"] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
 ?>

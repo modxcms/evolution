@@ -87,6 +87,9 @@ $params = array (
    'autoSenderName' => isset($autoSenderName)?$autoSenderName:'',
    'attachmentField' => isset($attachmentField)?$attachmentField:'',
    'attachmentPath' => isset($attachmentPath)?$attachmentPath:'',
+   'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
+   'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span></span>',
+   'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span><span>',
    'version' => '1.4.5'
 );
 

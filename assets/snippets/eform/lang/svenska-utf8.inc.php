@@ -5,7 +5,7 @@
  * Language:       Swedish
  * Encoding:       UTF-8
  * Translated by:  Pontus Ågren
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%Y-%b-%d %H:%M:%S";
 $_lang["ef_debug_info"] = "Debugg-info: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Mailscriptet kunde inte skicka eposten";
 $_lang["ef_multiple_submit"] = "<p>Det här formuläret har redan skickats utan problem. Du behöver inte skicka din information flera gånger.</p>";
 $_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas för mall-ID: ";
 $_lang["ef_regex_error"] = "fel i reguljära uttrycket ";
-$_lang["ef_required_message"] = " De följande, nödvändiga, fält(en) saknas: {fields}<br />";
+$_lang["ef_required_message"] = "De följande, nödvändiga, fält(en) saknas: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Misslyckades</span> med regeln [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Utfördes med regeln [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " klarade valideringen i smyg. <span style=\"color:red;\"> SQL returnerade inget resultat!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": fel vid uppladdning av fil.";
 $_lang["ef_upload_exceeded"] = " har överskridit den maximala uppladdningsstorleken.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Några fel upptäcktes i ditt formulär:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Några fel upptäcktes i ditt formulär:";
 $_lang["ef_version_error"] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;[+version+]) skiljer sig från den inkluderade eForm-filen (version:&nbsp;[+fileVersion+]). Kontrollera att du använder samma version på båda.";
 ?>

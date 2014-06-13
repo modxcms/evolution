@@ -5,7 +5,7 @@
  * Language:       French
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Information de débuggage: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Le serveur mail est incapable d'expédier l'email";
 $_lang["ef_multiple_submit"] = "<p>Ce formulaire a déjà été soumis avec succès. Il est inutile de soumettre le même formulaire à plusieurs reprises.</p>";
 $_lang["ef_no_doc"] = "Ressource ou Chunk introuvable pour le Modèle ID=";
 $_lang["ef_regex_error"] = "erreur dans l'expression régulière";
-$_lang["ef_required_message"] = " Les champs requis ci-dessous sont introuvables: {fields}<br />";
+$_lang["ef_required_message"] = "Les champs requis ci-dessous sont introuvables: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Échec</span> en utilisant la règle [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Passée en utilisant la règle [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " validation silencieuse passée. <span style=\"color:red;\"> SQL n'a retourné aucun resultat!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Merci!</h3><p>Vos informations ont été co
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": erreur dans l'envoi du fichier.";
 $_lang["ef_upload_exceeded"] = " a dépassé la limite de taille en envoi.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Des erreurs ont été détectées dans le formulaire:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Des erreurs ont été détectées dans le formulaire:";
 $_lang["ef_version_error"] = "<strong>ATTENTION!</strong> La version du Snippet eForm (version:&nbsp;[+version+]) est différente de celle des fichiers eForm présents sur votre serveur (version:&nbsp;[+fileVersion+]). Pensez à mettre à jour les fichiers lorsque vous mettez à jour le Snippet.";
 ?>
