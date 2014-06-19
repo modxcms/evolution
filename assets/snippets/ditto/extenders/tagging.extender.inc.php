@@ -196,9 +196,9 @@ if(!class_exists("tagging")) {
 		}
 	
 		function prepGivenTags ($givenTags) {
-			global $_GET,$dittoID;
+			global $modx,$_GET,$dittoID;
 
-			$getTags = !empty($_GET[$dittoID.'tags']) ? strip_tags(trim($_GET[$dittoID.'tags'])) : false;
+			$getTags = !empty($_GET[$dittoID.'tags']) ? $modx->stripTags(trim($_GET[$dittoID.'tags'])) : false;
 				// Get tags from the $_GET array
 
 			$tags1 = array();
