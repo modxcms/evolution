@@ -196,9 +196,9 @@ if(!class_exists("tagging")) {
 		}
 	
 		function prepGivenTags ($givenTags) {
-			global $_GET,$dittoID;
+			global $modx,$_GET,$dittoID;
 
-			$getTags = !empty($_GET[$dittoID.'tags']) ? trim($_GET[$dittoID.'tags']) : false;
+			$getTags = !empty($_GET[$dittoID.'tags']) ? $modx->stripTags(trim($_GET[$dittoID.'tags'])) : false;
 				// Get tags from the $_GET array
 
 			$tags1 = array();
@@ -364,6 +364,4 @@ $modx->setPlaceholder($dittoID."tags",implode($delimiter,$tags->givenTags));
 */
 // set tagging placeholder			
 $placeholders['tagLinks'] = array(array($source,"*"),array($tags,"makeLinks"));
-
-
 ?>

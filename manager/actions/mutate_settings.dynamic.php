@@ -1020,7 +1020,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><?php echo $_lang["smtp_password_title"] ?></td>
-            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
           </tr>
           <tr>
             <td colspan="2"><div class="split"></div></td>
@@ -1322,137 +1322,6 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><?php echo $_lang["settings_strip_image_paths_title"]?></td>
-            <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["settings_strip_image_paths_message"]?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><?php echo $_lang["rb_title"]?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_browser" value="1" <?php echo ($use_browser=='1' || !isset($use_browser)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 1);" />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_browser" value="0" <?php echo $use_browser=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 0);" />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["rb_message"]?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          
-          <?php if(!isset($use_browser)) $use_browser=1; ?>
-          
-          <tr id='rbRow1' class="" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["rb_webuser_title"]?></td>
-            <td><input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="0" <?php echo ($rb_webuser=='0' || !isset($rb_webuser)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='rbRow2' class="" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class="comment"><?php echo $_lang["rb_webuser_message"]?></td>
-          </tr>
-          <tr id='rbRow3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='rbRow4' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["rb_base_dir_title"]?></td>
-            <td>
-                <?php echo $_lang['default']; ?> <span id="default_rb_base_dir">[(base_path)]assets/</span><br />
-                <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo (isset($rb_base_dir)) ? $rb_base_dir : '[(base_path)]assets/' ; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang["reset"]; ?>" name="reset_rb_base_dir">
-            </td>
-          </tr>
-          <tr id='rbRow5' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["rb_base_dir_message"]?></td>
-          </tr>
-          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='rbRow7' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["rb_base_url_title"]?></td>
-            <td> <?php
-				function getResourceBaseUrl() {
-					global $site_url;
-					return $site_url . "assets/";
-				}
-				?>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : getResourceBaseUrl() ; ?>" />
-              </td>
-          </tr>
-          <tr id='rbRow8' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["rb_base_url_message"]?></td>
-          </tr>
-          <tr id='rbRow9' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='rbRow10' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["uploadable_images_title"]?></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>" />
-            </td>
-          </tr>
-          <tr id='rbRow11' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
-          </tr>
-          <tr id='rbRow12' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-          <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='rbRow13' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["uploadable_media_title"]?></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>" />
-            </td>
-          </tr>
-          <tr id='rbRow14' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
-          </tr>
-          <tr id='rbRow15' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-          <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='rbRow16' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning"><?php echo $_lang["uploadable_flash_title"]?></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
-            </td>
-          </tr>
-            <tr id='rbRow17' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-              <td width="200">&nbsp;</td>
-              <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
-            </tr>
-            <tr id='rbRow171' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-              <td colspan="2"><div class='split'></div></td>
-            </tr>
-          <tr id='rbRow172' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-              <td nowrap class="warning"><?php echo $_lang["clean_uploaded_filename"]?></td>
-              <td> <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
-                <?php echo $_lang["yes"]?><br />
-                <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="0" <?php echo ($clean_uploaded_filename=='0' || !isset($clean_uploaded_filename)) ? 'checked="checked"' : "" ; ?> />
-                <?php echo $_lang["no"]?> </td>
-          </tr>
-            <tr id='rbRow17' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-              <td width="200">&nbsp;</td>
-              <td class='comment'><?php echo $_lang["clean_uploaded_filename_message"];?></td>
-            </tr>
-          <tr id='rbRow18' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-          <td colspan="2"><div class='split'></div></td>
-          </tr>
-
-          <tr>
             <td nowrap class="warning"><?php echo $_lang["use_editor_title"]?></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 1); checkCustomIcons();" />
               <?php echo $_lang["yes"]?><br />
@@ -1562,6 +1431,45 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
+            <td nowrap class="warning"><?php echo $_lang["uploadable_images_title"]?></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
+          </tr>
+          <tr>
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><?php echo $_lang["uploadable_media_title"]?></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
+          </tr>
+          <tr>
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><?php echo $_lang["uploadable_flash_title"]?></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
+            </td>
+          </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+          <tr>
             <td nowrap class="warning"><?php echo $_lang["upload_maxsize_title"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>" />
@@ -1612,112 +1520,202 @@ function confirmLangChange(el, lkey, elupd){
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage8" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
+            <td nowrap class="warning"><?php echo $_lang["rb_title"]?></td>
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_browser" value="1" <?php echo ($use_browser=='1' || !isset($use_browser)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 1);" />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="use_browser" value="0" <?php echo $use_browser=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 0);" />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["rb_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          
+          <?php if(!isset($use_browser)) $use_browser=1; ?>
+          
+          <tr id='rbRow1' class="" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><?php echo $_lang["rb_webuser_title"]?></td>
+            <td><input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="0" <?php echo ($rb_webuser=='0' || !isset($rb_webuser)) ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr id='rbRow2' class="" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?php echo $_lang["rb_webuser_message"]?></td>
+          </tr>
+          <tr id='rbRow3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow4' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><?php echo $_lang["rb_base_dir_title"]?></td>
+            <td>
+                <?php echo $_lang['default']; ?> <span id="default_rb_base_dir">[(base_path)]assets/</span><br />
+                <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo (isset($rb_base_dir)) ? $rb_base_dir : '[(base_path)]assets/' ; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang["reset"]; ?>" name="reset_rb_base_dir">
+            </td>
+          </tr>
+          <tr id='rbRow5' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["rb_base_dir_message"]?></td>
+          </tr>
+          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow7' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><?php echo $_lang["rb_base_url_title"]?></td>
+            <td> <?php
+				function getResourceBaseUrl() {
+					global $site_url;
+					return $site_url . "assets/";
+				}
+				?>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : getResourceBaseUrl() ; ?>" />
+              </td>
+          </tr>
+          <tr id='rbRow8' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["rb_base_url_message"]?></td>
+          </tr>
+          <tr id='rbRow9' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow172' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td nowrap class="warning"><?php echo $_lang["clean_uploaded_filename"]?></td>
+              <td> <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["yes"]?><br />
+                <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="0" <?php echo ($clean_uploaded_filename=='0' || !isset($clean_uploaded_filename)) ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["no"]?> </td>
+          </tr>
+            <tr id='rbRow17' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["clean_uploaded_filename_message"];?></td>
+            </tr>
+          <tr id='rbRow18' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow19' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><?php echo $_lang["settings_strip_image_paths_title"]?></td>
+            <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr id="rbRow20" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?php echo $_lang["settings_strip_image_paths_message"]?></td>
+          </tr>
+          <tr id="rbRow21" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id="rbRow22" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["maxImageWidth"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="maxImageWidth" value="<?php echo isset($maxImageWidth) ? $maxImageWidth : "1600" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow23" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["maxImageWidth_message"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow24" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr id="rbRow25" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["maxImageHeight"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="maxImageHeight" value="<?php echo isset($maxImageHeight) ? $maxImageHeight : "1200" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow26" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["maxImageHeight_message"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow27" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr id="rbRow28" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["thumbWidth"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="thumbWidth" value="<?php echo isset($thumbWidth) ? $thumbWidth : "150" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow29" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["thumbWidth_message"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow30" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr id="rbRow31" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["thumbHeight"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="thumbHeight" value="<?php echo isset($thumbHeight) ? $thumbHeight : "150" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow32" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["thumbHeight_message"]?></td>
           </tr>
-
-          <tr>
+          <tr id="rbRow33" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr id="rbRow34" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["thumbsDir"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="thumbsDir" value="<?php echo isset($thumbsDir) ? $thumbsDir : ".thumbs" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow35" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["thumbsDir_message"]?></td>
           </tr>
-		  <tr>
+		  <tr id="rbRow36" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr id="rbRow37" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><?php echo $_lang["jpegQuality"]?></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="jpegQuality" value="<?php echo isset($jpegQuality) ? $jpegQuality : "90" ; ?>" />
             </td>
           </tr>
-          <tr>
+          <tr id="rbRow38" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["jpegQuality_message"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow39" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
 		  </tr>
-          <tr>
+          <tr id="rbRow40" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
                <td nowrap class="warning"><?php echo $_lang["denyZipDownload"] ?></td>
                <td> <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["no"]?><br />
                  <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="1" <?php echo (!isset($denyZipDownload) || $denyZipDownload=='1') ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["yes"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow41" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
 		  </tr>
-		  <tr>
+		  <tr id="rbRow42" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
                <td nowrap class="warning"><?php echo $_lang["denyExtensionRename"] ?></td>
                <td> <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["no"]?><br />
                  <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="1" <?php echo (!isset($denyExtensionRename) || $denyExtensionRename=='1') ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["yes"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow43" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
 		  </tr>
-		  <tr>
+		  <tr id="rbRow44" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
                <td nowrap class="warning"><?php echo $_lang["showHiddenFiles"] ?></td>
                <td> <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["no"]?><br />
                  <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="1" <?php echo (!isset($showHiddenFiles) || $showHiddenFiles=='1') ? 'checked="checked"' : ""; ?> />
                  <?php echo $_lang["yes"]?></td>
           </tr>
-          <tr>
+          <tr id="rbRow45" style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
 		  </tr>
 		  
