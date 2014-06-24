@@ -28,7 +28,7 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
             stopWorker();
             hideLoader();
             <?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;
-        }
+        };
 
 		function reset_path(elementName) {
 	  		document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
@@ -39,7 +39,7 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
             if(!dontShowWorker) {
                 top.mainMenu.work();
             }
-        }
+        };
 
         // set tree to default action.
         if (parent.tree) parent.tree.ca = "open";
