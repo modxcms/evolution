@@ -200,34 +200,17 @@ class template{
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
 		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(MODX_BASE_PATH.substr($tpl, 6));
+			$template = file_get_contents(MODX_BASE_PATH.substr($tpl, 6));
 		} else if(substr($tpl, 0, 6) == "@CODE:") {
 			$template = substr($tpl, 6);
 		} else if(substr($tpl, 0, 5) == "@FILE") {
-			$template = $this->get_file_contents(trim(substr($tpl, 5)));
+			$template = file_get_contents(trim(substr($tpl, 5)));
 		} else if(substr($tpl, 0, 5) == "@CODE") {
 			$template = trim(substr($tpl, 5));
 		} else {
 			$template = $this->language['missing_placeholders_tpl'];
 		}
 			return $template;
-	}
-
-	// ---------------------------------------------------
-	// Function: get_file_contents
-	// Returns the contents of file name passed
-	// 
-	// From http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
-	// ---------------------------------------------------
-	function get_file_contents($filename) {
-		if (!function_exists('file_get_contents')) {
-			$fhandle = fopen($filename, "r");
-			$fcontents = fread($fhandle, filesize($filename));
-			fclose($fhandle);
-		} else	{
-			$fcontents = file_get_contents($filename);
-		}
-		return $fcontents;
 	}
 }
 
