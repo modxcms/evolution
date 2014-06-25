@@ -11,12 +11,8 @@ $url = $modx->config['site_url'];
 
 // Get table names (alphabetical)
 $tbl_document_groups       = $modx->getFullTableName('document_groups');
-$tbl_keyword_xref          = $modx->getFullTableName('keyword_xref');
 $tbl_manager_users         = $modx->getFullTableName('manager_users');
 $tbl_site_content          = $modx->getFullTableName('site_content');
-$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
-$tbl_site_keywords         = $modx->getFullTableName('site_keywords');
-$tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
 
@@ -56,26 +52,6 @@ $templatename = $modx->db->getValue($rs);
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['pagetitle'];
-
-// Get list of current keywords for this document
-$keywords = array();
-$rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
-       "k.id = x.keyword_id AND x.content_id = '{$id}'",
-       'k.keyword ASC');
-	$keywords = $modx->db->getColumn('keyword', $rs);
-
-// Get list of selected site META tags for this document
-$metatags_selected = array();
-$rs = $modx->db->select(
-	'meta.id, meta.name, meta.tagvalue',
-	"{$tbl_site_metatags} AS meta
-		LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id",
-	"sc.content_id='{$content['id']}'"
-	);
-	while ($row = $modx->db->getRow($rs)) {
-		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
-	}
-
 
 /**
  * "View Children" tab setup
@@ -268,6 +244,32 @@ function movedocument() {
 				<td><?php echo $content['type']=='reference' ? $_lang['weblink'] : $_lang['resource']?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['resource_alias']?>: </td>
 				<td><?php echo $content['alias']!='' ? $content['alias'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
+<?php
+	if($modx->config['show_meta']==='1'):
+	$tbl_keyword_xref          = $modx->getFullTableName('keyword_xref');
+	$tbl_site_keywords         = $modx->getFullTableName('site_keywords');
+	$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
+	$tbl_site_metatags         = $modx->getFullTableName('site_metatags');
+	// Get list of current keywords for this document
+	$keywords = array();
+	$rs = $modx->db->select(
+		'k.keyword',
+		"{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ",
+	    "k.id = x.keyword_id AND x.content_id='{$id}'",
+	    'k.keyword ASC');
+	$keywords = $modx->db->getColumn('keyword', $rs);
+
+// Get list of selected site META tags for this document
+	$metatags_selected = array();
+	$rs = $modx->db->select(
+		'meta.id, meta.name, meta.tagvalue',
+		"{$tbl_site_metatags} AS meta LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id",
+		"sc.content_id='{$content['id']}'"
+		);
+	while ($row = $modx->db->getRow($rs)) {
+		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
+	}
+?>
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
 				if(count($keywords) != 0)
@@ -280,6 +282,9 @@ function movedocument() {
 					echo implode('<br />', $metatags_selected);
 				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
+<?php
+	endif;
+?>
 		<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_changes']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_created']?>: </td>
