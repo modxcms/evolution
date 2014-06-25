@@ -11,13 +11,11 @@
 */
 
 /*!
-* parseUserConfig : parse the non default configuration file name from ucfg string
+* getUserConfigName : parse the non default configuration file name from ucfg string
 */
-if (!function_exists('parseUserConfig')) {
-    function parseUserConfig($ucfg) {
-        preg_match('/&config=`([^`]*)`/', $ucfg, $matches);
-        return $matches[1];
-    }
+function getUserConfigName($ucfg) {
+    preg_match('/&config=`([^`]*)`/', $ucfg, $matches);
+    return $matches[1];
 }
 
 if (isset($_POST['search'])) {
@@ -45,7 +43,7 @@ if (isset($_POST['search'])) {
         if (file_exists($default)) include $default;
         else return "<h3>AjaxSearch error: $default not found !<br />Check the existing of this file!</h3>";
         if (!isset($dcfg)) return "<h3>AjaxSearch error: default configuration array not defined in $default!<br /> Check the content of this file!</h3>";
-        $config = parseUserConfig((strip_tags($_POST['ucfg'])));
+        $config = getUserConfigName((strip_tags($_POST['ucfg'])));
 
         // Load the custom functions of the custom configuration file if needed
 		if ($config) {
