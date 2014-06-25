@@ -10,7 +10,7 @@
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Informação de Depuração: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">ATENÇÃO - DEPURAÇÃO ESTÁ LIGADA</span> <br />Certifique-se de que desliga a depuração antes de colocar este formulário online!</p>";
-$_lang["ef_error_filter_rule"] = "Text filter not recognized";
+$_lang["ef_error_filter_rule"] = "Filtro de texto não reconhecido";
 $_lang["ef_error_formid"] = "ID ou nome de formulário inválido.";
 $_lang["ef_error_list_rule"] = "Error in validating form field! #LIST rule declared but no list values found: ";
 $_lang["ef_error_validation_rule"] = "Regra de validação não reconhecida.";
@@ -34,8 +34,8 @@ $_lang["ef_multiple_submit"] = "<p class=\"invalid\">Este formulário já foi su
 $_lang["ef_no_doc"] = "Documento ou Chunk não encontrado para o template com id=";
 $_lang["ef_regex_error"] = "erro na \"regular expression\" ";
 $_lang["ef_required_message"] = "Os seguintes campos estão em falta: [+fields+]";
-$_lang["ef_rule_failed"] = "<span style=\"color:red;\">Failed</span> using rule [+rule+] (input=\"[+input+]\")";
-$_lang["ef_rule_passed"] = "Passed using rule [+rule+] (input=\"[+input+]\").";
+$_lang["ef_rule_failed"] = "<span style=\"color:red;\">Falhou</span> utilizando a regra [+rule+] (input=\"[+input+]\")";
+$_lang["ef_rule_passed"] = "Passou utilizando a regra [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " passou a validação silenciosamente. <span style=\"color:red;\"> O SQL não devolveu nenhum resultado!</span> ";
 $_lang["ef_submit_time_limit"] = "<p>Este formulário já foi submetido. O reenvio do formulário está desactivado por [+submitLimitMinutes+] minutos.</p>";
 $_lang["ef_tamper_attempt"] = "Tentativa de falsificação detectada!";

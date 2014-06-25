@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Mailer nie był w stanie wysłać wiadomości";
 $_lang["ef_multiple_submit"] = "<p>Formularz już został pomyślnie wysłany. Nie ma potrzeby wysyłać go kilka razy.</p>";
 $_lang["ef_no_doc"] = "Dokument lub chunk nie został znaleziony dla szablonu id=";
 $_lang["ef_regex_error"] = "błąd w wyrażeniu regularnym";
-$_lang["ef_required_message"] = "The following required field(s) are missing: [+fields+]";
+$_lang["ef_required_message"] = "Następujące pola nie zostały wypełnione: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Niepowodzenie</span> używając reguły [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Powodzenie używając reguły [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = "walidacja udana. <span style=\"color:red;\"> SQL nie zwróciło wyników!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Dziękujemy!</h3><p>Wiadomość została po
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": błąd podczas wgrywania pliku.";
 $_lang["ef_upload_exceeded"] = "przekroczono limit wielkości wgrywanego pliku.";
-$_lang["ef_validation_message"] = "Some errors were detected in your form:";
-$_lang["ef_version_error"] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
+$_lang["ef_validation_message"] = "W formularzu znaleziono błędy:";
+$_lang["ef_version_error"] = "<strong>UWAGA!</strong> Wersja snippetu eForm (version:&nbsp;[+version+]) jest inna od pliku eForm (version:&nbsp;[+fileVersion+]). Upewnij się że używasz tej samej wersji w obu.";
 ?>

@@ -30,7 +30,7 @@ $_lang['as_cmtThksMessage'] = 'Obrigado pelo seu comentário!';
 $_lang['as_resultsTextSingle'] = '%d resultado encontrado.';
 $_lang['as_resultsTextMultiple'] = '%d resultados encontrados.';
 $_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
-$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+$_lang['as_resultsDisplayed'] = 'Exibindo: %d';
 $_lang['as_paging1Text'] = '%d - %d / %d';
-$_lang['as_paging2Text'] = 'Show more %d results';
+$_lang['as_paging2Text'] = 'Exibir mais %d resultados';
 ?>
