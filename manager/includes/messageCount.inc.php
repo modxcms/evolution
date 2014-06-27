@@ -9,6 +9,7 @@ $messagesallowed = $modx->hasPermission('messages');
 
 // ajax response
 if (isset($_POST['updateMsgCount'])) {
+	header("Content-Type: application/json; charset=utf-8");
 	print $nrnewmessages.','.$nrtotalmessages;
 	exit;
 }
