@@ -1,6 +1,6 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-# eForm 1.4.5 - Electronic Form Snippet
+# eForm 1.4.6 - Electronic Form Snippet
 # Original created by Raymond Irving 15-Dec-2004.
 # Version 1.3+ extended by Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -90,7 +90,7 @@ $params = array (
    'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
    'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span></span>',
    'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span><span>',
-   'version' => '1.4.5'
+   'version' => '1.4.6'
 );
 
 // pixelchutes PHx workaround

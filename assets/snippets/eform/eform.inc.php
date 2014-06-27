@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.5 - Electronic Form Snippet
+# eForm 1.4.6 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -54,7 +54,7 @@ $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.5';
+	$fileVersion = '1.4.6';
 	$version = isset($version)?$version:'prior to 1.4.2';
 
 	#include default language file
@@ -318,6 +318,9 @@ $_dfnMaxlength = 6;
 			}
 
 			// set validation message
+            $params['errorTpl'] = ($modx->getChunk($params['errorTpl'])) ? $modx->getChunk($params['errorTpl']) : $params['errorTpl'];
+            $params['errorRequiredTpl'] = ($modx->getChunk($params['errorRequiredTpl'])) ? $modx->getChunk($params['errorRequiredTpl']) : $params['errorRequiredTpl'];
+            $params['errorRequiredSeparator'] = ($modx->getChunk($params['errorRequiredSeparator'])) ? $modx->getChunk($params['errorRequiredSeparator']) : $params['errorRequiredSeparator'];
 			if (count($rMsg) > 0) {
 				$rMsg = str_replace('[+ef_required_list+]', implode($params['errorRequiredSeparator'], $rMsg), $params['errorRequiredTpl']);
 				array_unshift($vMsg, str_replace("[+fields+]", $rMsg, $_lang['ef_required_message']));
