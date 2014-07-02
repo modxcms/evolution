@@ -21,11 +21,11 @@ parse_str($options, $params);
 if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
 
 $path_parts=pathinfo($input);
-$tmpFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
-$tmpFolder=str_replace("assets/images","",$tmpFolder);
-$tmpFolder=explode("/",$tmpFolder);
+$tmpImagesFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
+$tmpImagesFolder=str_replace("assets/images","",$tmpImagesFolder);
+$tmpImagesFolder=explode("/",$tmpImagesFolder);
   
-foreach ($tmpFolder as $folder) {
+foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {
         $cacheFolder.="/".$folder;
         if(!is_dir(MODX_BASE_PATH.$cacheFolder)) mkdir(MODX_BASE_PATH.$cacheFolder);
