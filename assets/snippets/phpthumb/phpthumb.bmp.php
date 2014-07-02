@@ -757,7 +757,7 @@ class phpthumb_bmp {
 			return false;
 		}
 		if (!phpthumb_functions::FunctionIsDisabled('set_time_limit')) {
-		set_time_limit(intval(round($BMPinfo['resolution_x'] * $BMPinfo['resolution_y'] / 10000)));
+			set_time_limit(intval(round($BMPinfo['resolution_x'] * $BMPinfo['resolution_y'] / 10000)));
 		}
 		$im = $this->PlotPixelsGD($BMPinfo['bmp']);
 		if (headers_sent()) {
