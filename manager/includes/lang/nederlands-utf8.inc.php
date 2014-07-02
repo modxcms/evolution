@@ -1234,9 +1234,9 @@ $_lang["export_site.static.php5"] = 'Vervang string (na)';
 $_lang["export_site.static.php6"] = 'Doel';
 $_lang["export_site.static.php7"] = 'Bestanden kunnen niet worden aangepast naar [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php6"] = 'Verstuur een e-mail bij MODX foutmeldingen';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
-$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+$_lang["mutate_settings.dynamic.php8"] = 'Een e-mail met de foutmelding wordt verzonden naar [(emailsender)] ([+emailsender+]) wanneer er een systeem probleem in MODX voorkomt. De details kunt u bekijken in het systeem error log bestand.';
 
 $_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
 $_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
