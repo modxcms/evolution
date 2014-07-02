@@ -2311,10 +2311,11 @@ class DocumentParser {
                 $args= '&' . substr($args, 1);
             elseif ($c != '&') $args= '&' . $args;
         }
-        if ($id != $modx->config['site_start']) {
+        if ($id != $this->config['site_start']) {
             if ($this->config['friendly_urls'] == 1 && $alias != '') {
             } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
                 $alias = $id;
+                $alPath = '';
                 if ($this->config['friendly_alias_urls'] == 1) {
                     $al = $this->aliasListing[$id];
                     if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
