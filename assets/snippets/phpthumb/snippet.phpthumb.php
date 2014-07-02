@@ -18,12 +18,13 @@ if (strpos($cacheFolder, 'assets/cache/') === 0 && $cacheFolder != 'assets/cache
 $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
 parse_str($options, $params);
 
+if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
+
 $path_parts=pathinfo($input);
 $tmpFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
 $tmpFolder=str_replace("assets/images","",$tmpFolder);
 $tmpFolder=explode("/",$tmpFolder);
   
-if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
 foreach ($tmpFolder as $folder) {
     if (!empty($folder)) {
         $cacheFolder.="/".$folder;
