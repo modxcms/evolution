@@ -1508,8 +1508,8 @@ class DocumentParser {
                 $k= array_keys($_GET);
                 unset ($_GET[$k[0]]);
                 unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-                $_SERVER['QUERY_STRING']= $qp['query'];
                 $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+                $_SERVER['QUERY_STRING']= $qp['query'];
                 if (!empty ($qp['query'])) {
                     parse_str($qp['query'], $qv);
                     foreach ($qv as $n => $v)
@@ -3689,7 +3689,7 @@ class DocumentParser {
 	/**
 	 * Format alias to be URL-safe. Strip invalid characters.
 	 *
-	 * @param string Alias to be formatted
+	 * @param string $alias Alias to be formatted
 	 * @return string Safe alias
 	 */
     function stripAlias($alias) {
@@ -3821,4 +3821,3 @@ class SystemEvent {
         $this->activated= false;
     }
 }
-?>
