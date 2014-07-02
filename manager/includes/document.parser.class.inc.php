@@ -2329,7 +2329,7 @@ class DocumentParser {
                 $url = 'index.php?id=' . $id . $args;
             }
         } else {
-            $url = '/' . $args;
+            $url = $args;
         }
         $host= $this->config['base_url'];
         // check if scheme argument has been set
@@ -3788,8 +3788,10 @@ class SystemEvent {
         if ($msg == "")
             return;
         if (is_array($SystemAlertMsgQueque)) {
-            if ($this->name && $this->activePlugin)
+            $title = '';
+            if ($this->name && $this->activePlugin) {
                 $title= "<div><b>" . $this->activePlugin . "</b> - <span style='color:maroon;'>" . $this->name . "</span></div>";
+            }
             $SystemAlertMsgQueque[]= "$title<div style='margin-left:10px;margin-top:3px;'>$msg</div>";
         }
     }
