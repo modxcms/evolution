@@ -2311,25 +2311,26 @@ class DocumentParser {
                 $args= '&' . substr($args, 1);
             elseif ($c != '&') $args= '&' . $args;
         }
-        if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            $url= $f_url_prefix . $alias . $f_url_suffix . $args;
-        }
-        elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
-            $alias= $id;
-            if ($this->config['friendly_alias_urls'] == 1) {
-                $al= $this->aliasListing[$id];
-                if($al['isfolder']===1 && $this->config['make_folders']==='1')
-                    $f_url_suffix = '/';
-                $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
-                if ($al && $al['alias'])
-                    $alias= $al['alias'];
+        if ($id != $modx->config['site_start']) {
+            if ($this->config['friendly_urls'] == 1 && $alias != '') {
+            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
+                $alias = $id;
+                if ($this->config['friendly_alias_urls'] == 1) {
+                    $al = $this->aliasListing[$id];
+                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
+                        $f_url_suffix = '/';
+                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
+                    if ($al && $al['alias'])
+                        $alias = $al['alias'];
+                }
+                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                $url = $alias . $args;
+            } else {
+                $url = 'index.php?id=' . $id . $args;
             }
-            $alias= $alPath . $f_url_prefix . $alias . $f_url_suffix;
-            $url= $alias . $args;
         } else {
-            $url= 'index.php?id=' . $id . $args;
+            $url = '/' . $args;
         }
-
         $host= $this->config['base_url'];
         // check if scheme argument has been set
         if ($scheme != '') {
