@@ -2291,25 +2291,14 @@ class DocumentParser {
         if (!is_numeric($id)) {
             $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
         }
-        if ($args != '' && $this->config['friendly_urls'] == 1) {
-            // add ? to $args if missing
-            $c= substr($args, 0, 1);
-            if (strpos($f_url_prefix, '?') === false) {
-                if ($c == '&')
-                    $args= '?' . substr($args, 1);
-                elseif ($c != '?') $args= '?' . $args;
-            } else {
-                if ($c == '?')
-                    $args= '&' . substr($args, 1);
-                elseif ($c != '&') $args= '&' . $args;
+        if ($args !== '') {
+            // add ? or & to $args if missing
+            $args= ltrim($args, '?&');
+            $_ = strpos($f_url_prefix, '?');
+            if($this->config['friendly_urls'] === '1' && $_ !== false) {
+                $args= "?{$args}";
             }
-        }
-        elseif ($args != '') {
-            // add & to $args if missing
-            $c= substr($args, 0, 1);
-            if ($c == '?')
-                $args= '&' . substr($args, 1);
-            elseif ($c != '&') $args= '&' . $args;
+            else $args= "&{$args}";
         }
         if ($id != $this->config['site_start']) {
             if ($this->config['friendly_urls'] == 1 && $alias != '') {
