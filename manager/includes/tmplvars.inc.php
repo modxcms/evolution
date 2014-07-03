@@ -43,7 +43,7 @@
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
-				$field_html .=  '   	new DatePicker($(\'tv'.$field_id.'\'), {\'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
+				$field_html .=  '	  	new DatePicker($(\'tv'.$field_id.'\'), {\'dayNames\' : '.$_lang['dp_dayNames'] . ', \'startDay\' : ' .$_lang['dp_startDay'] . ', \'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
 				$field_html .=  '});';
 				$field_html .=  '</script>';
 

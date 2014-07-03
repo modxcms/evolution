@@ -88,10 +88,13 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 window.addEvent('domready', function() {
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
 	var dpformat = "<?php echo $modx->config['datetime_format']; ?>";
-	new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat});
+	var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
+    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
+    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
+	new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 	if ($('blockeduntil')) {
-		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
-		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
+		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
+		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 	}
 });
 
