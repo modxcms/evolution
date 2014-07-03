@@ -1268,3 +1268,4 @@ $_lang["login_processor_captcha_config"]     = "Captcha is not configured proper
 
 $_lang["dp_dayNames"]	=	"['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
 $_lang["dp_monthNames"]	=	"['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"] = 7;
