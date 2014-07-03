@@ -435,7 +435,14 @@ switch ($actionToTake) {
 		} else {
 			$header = "Location: index.php?r=1&id=$key&a=7&dv=1";
 		}
-		header($header);
+		
+        if (headers_sent()) {
+        	$header = str_replace('Location: ','',$header);
+        	echo "<script>document.location.href='$header';</script>\n";
+		} else {
+        	header($header);
+		}
+
 
 		break;
 	case 'edit' :
