@@ -43,8 +43,8 @@ window.addEvent('domready', function() {
 	var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
     var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
     var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames});
+	new DatePicker($('datefrom'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames});
+	new DatePicker($('dateto'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames}});
 });
 </script>
 <h1><?php echo $_lang["mgrlog_view"]?></h1>
