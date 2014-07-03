@@ -2288,7 +2288,7 @@ class DocumentParser {
         $virtualDir= $this->config['virtual_dir'];
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
-        if (!preg_match('/^[1-9][0-9]*$/',$id)) {
+        if (!is_numeric($id)) {
             $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
         if ($args !== '') {
