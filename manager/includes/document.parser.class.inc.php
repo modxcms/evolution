@@ -2288,8 +2288,8 @@ class DocumentParser {
         $virtualDir= $this->config['virtual_dir'];
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
-        if (!is_numeric($id)) {
-            $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
+        if (!preg_match('/^[1-9][0-9]*$/',$id)) {
+            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
         if ($args !== '') {
             // add ? or & to $args if missing
@@ -2314,9 +2314,9 @@ class DocumentParser {
                         $alias = $al['alias'];
                 }
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = $alias . $args;
+                $url = "{$alias}{$args}";
             } else {
-                $url = 'index.php?id=' . $id . $args;
+                $url = "index.php?id={$id}{$args}";
             }
         } else {
             $url = $args;
