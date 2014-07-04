@@ -852,7 +852,7 @@ $_lang["role_web_user_management"] = 'ウェブユーザー管理';
 $_lang["rss_url_news_default"] = 'http://feeds2.feedburner.com/modxjp';
 $_lang["rss_url_news_message"] = '管理画面トップの「MODX News」のフィードURL';
 $_lang["rss_url_news_title"] = 'RSS ニュースフィード';
-$_lang["rss_url_security_default"] = 'http://feeds2.feedburner.com/modxjpsec';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = '管理画面トップの「MODX Security」のフィードURL';
 $_lang["rss_url_security_title"] = 'RSS セキュリティ情報フィード';
 $_lang["run_module"] = 'モジュールの実行';
@@ -1276,3 +1276,7 @@ $_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back
 $_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";

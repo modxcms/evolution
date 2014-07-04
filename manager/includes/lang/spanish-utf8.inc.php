@@ -841,7 +841,7 @@ $_lang["role_web_user_management"] = 'Administración de usuarios web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Ingresa el URL del Feed de Noticias de MODX.';
 $_lang["rss_url_news_title"] = 'Feed RSS de Noticias';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Ingresa el URL para el Feed de Seguridad MODX.';
 $_lang["rss_url_security_title"] = 'Feed RSS de Seguridad';
 $_lang["run_module"] = 'Correr módulo';
@@ -1202,7 +1202,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Publicado';
-$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
+$_lang["docid_incrmnt_method_title"] = 'Método de Incremento de la ID de los Recursos';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
@@ -1265,3 +1265,7 @@ $_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back
 $_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";

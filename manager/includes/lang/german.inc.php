@@ -845,7 +845,7 @@ $_lang["role_web_user_management"] = 'Web-Benutzerverwaltung';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'URL des MODX-News-Feeds eintragen.';
 $_lang["rss_url_news_title"] = 'RSS-News-Feed';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'URL des MODX-Security-Feeds eintragen.';
 $_lang["rss_url_security_title"] = 'RSS-Security-Feed';
 $_lang["run_module"] = 'Modul starten';
@@ -1269,3 +1269,7 @@ $_lang["login_processor_remotehost_ip"]      = "Der gespeicherte Hostname ist ni
 $_lang["login_processor_remote_ip"]          = "Sie können sich von dieser IP-Adresse nicht einloggen.";
 $_lang["login_processor_date"]               = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
 $_lang["login_processor_captcha_config"]     = "Das Captcha ist falsch konfiguriert.";
+
+$_lang["dp_dayNames"]   = "['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']";
+$_lang["dp_monthNames"] = "['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']";
+$_lang["dp_startDay"]   = "1";

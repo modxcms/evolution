@@ -841,7 +841,7 @@ $_lang["role_web_user_management"] = 'ניהול חברים';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = 'הרץ מודול';
@@ -1265,3 +1265,7 @@ $_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back
 $_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";

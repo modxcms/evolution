@@ -420,10 +420,10 @@ $_lang["jpegQuality"] = 'Compression JPEG';
 $_lang["denyZipDownload"] = 'Interdire le téléchargement des archives ZIP';
 $_lang["denyExtensionRename"] = 'Interdire le changement des extensions des fichiers';
 $_lang["maxImageWidth_message"] = 'Si la largeur de l\'image est supérieure à cette valeur elle sera automatiquement retaillée. Indiquer 0 pour désactiver ce traitement.';
-$_lang["maxImageHeight_message"] = str_replace('largeur', 'hauteur', $_lang["maxImageWidth_message"]);
-$_lang["thumbWidth_message"] = $_lang["thumbWidth"];
-$_lang["thumbHeight_message"] = $_lang["thumbHeight"];
-$_lang["thumbsDir_message"] = $_lang["thumbsDir"];
+$_lang["maxImageHeight_message"] = 'Si la hauteur de l\'image est supérieure à cette valeur elle sera automatiquement retaillée. Indiquer 0 pour désactiver ce traitement.';
+$_lang["thumbWidth_message"] = 'Largeur maximum de la miniature.';
+$_lang["thumbHeight_message"] = 'Hauteur maximum de la miniature.';
+$_lang["thumbsDir_message"] = 'Chemin du répertoire des miniatures.';
 $_lang["jpegQuality_message"] = 'Niveau de compression JPEG pour les miniatures et les images retaillées';
 $_lang["showHiddenFiles"] = 'Afficher les fichiers cachés dans l\'explorateur';
 $_lang["keyword"] = 'Mot-clé';
@@ -844,7 +844,7 @@ $_lang["role_web_user_management"] = 'Gestion des Utilisateurs Web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Entrez l\'URL du flux pour les actualités MODX.';
 $_lang["rss_url_news_title"] = 'Flux RSS des actualités';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Entrez l\'URL du flux pour les bulletins de sécurité MODX.';
 $_lang["rss_url_security_title"] = 'Flux RSS des bulletins de sécurité';
 $_lang["run_module"] = 'Lancer le Module';
@@ -1110,16 +1110,16 @@ $_lang["yourinfo_total_logins"] = 'Nombre total de connexions:';
 $_lang["yourinfo_username"] = 'Connecté sous le nom:';
 
 $_lang["a17_error_reporting_title"] = 'Niveau de rapport d\'erreurs PHP';
-$_lang["a17_error_reporting_msg"]   = 'Fixe le niveau de rapport d\'erreurs PHP.';
-$_lang["a17_error_reporting_opt0"]  = 'Tout ignorer';
-$_lang["a17_error_reporting_opt1"]  = 'Ignorer les erreurs de faible niveau (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"]  = 'Détection des toutes les erreurs sauf E_NOTICE';
+$_lang["a17_error_reporting_msg"] = 'Fixe le niveau de rapport d\'erreurs PHP.';
+$_lang["a17_error_reporting_opt0"] = 'Tout ignorer';
+$_lang["a17_error_reporting_opt1"] = 'Ignorer les erreurs de faible niveau (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Détection des toutes les erreurs sauf E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Tout détecter';
 
-$_lang["pwd_hash_algo_title"]   = 'Algorithme "Hash"';
+$_lang["pwd_hash_algo_title"] = 'Algorithme "Hash"';
 $_lang["pwd_hash_algo_message"] = 'Algorithme "Hash" pour les mots de passe.';
 
-$_lang["enable_bindings_title"]   = 'Activer les commandes @Bindings';
+$_lang["enable_bindings_title"] = 'Activer les commandes @Bindings';
 $_lang["enable_bindings_message"] = 'Interdit l\'exécution de code PHP via les @Bindings des TVs. Utile si vous avez des utilisateurs qui doivent pourvoir créer ou éditer des des TVs mais ne doivent pas pouvoir créer de code PHP. Le résultat des TVs contenant un @Binding sera "@Bindings is disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'Un fichier n\'a pu être créé dans un répertoire. Veuillez vérifier les droits de [+snapshot_path+]';
@@ -1148,90 +1148,94 @@ $_lang["not_readable_dir"] = 'Dossier illisible.';
 $_lang["confirm_delete_dir"] = 'Confirmez-vous la suppression de ce dossier ?';
 $_lang["confirm_delete_dir_recursive"] = 'Confirmez-vous la suppression de ce dossier ?\n\nTout ses contenus seront aussi supprimés.';
 
-$_lang["make_folders_title"]   = 'Slash en fin d\'URL des dossiers';
+$_lang["make_folders_title"] = 'Slash en fin d\'URL des dossiers';
 $_lang["make_folders_message"] = 'Ajouter un slash en fin d\'URL des dossiers en mode URLs simples.';
 
-$_lang["check_files_onlogin_title"]   = 'Vérifier les fichiers du système à la connexion';
+$_lang["check_files_onlogin_title"] = 'Vérifier les fichiers du système à la connexion';
 $_lang["check_files_onlogin_message"] = 'En activant cette option, les fichiers importants du système seront vérifiés à chaque connexion. Une modification peut être le signe d\'une attaque de votre site. Ceci n\'est pas une garantie complète, mais peut vous indiquer une possible altération ou attaque';
 
-$_lang["configcheck_sysfiles_mod"]     = 'D\'importants fichiers du système ont été modifiés.';
+$_lang["configcheck_sysfiles_mod"] = 'D\'importants fichiers du système ont été modifiés.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'Nous avons détecté que des fichiers importants du système ont été modifiés. Cela ne signifie pas nécessairement que votre site a été attaqué. Nous vous conseillons néanmoins de vérifier les fichiers : index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php';
 
-$_lang['email_method_title']  = 'Méthode à utiliser pour l\'envoi des e-mails';
-$_lang['email_method_mail']   = 'via la fonction mail() de PHP';
-$_lang['email_method_smtp']   = 'via un serveur SMTP';
-$_lang['smtp_auth_title']     = 'Authentification SMTP';
-$_lang['smtp_host_title']     = 'Serveur SMTP';
+$_lang['email_method_title'] = 'Méthode à utiliser pour l\'envoi des e-mails';
+$_lang['email_method_mail'] = 'via la fonction mail() de PHP';
+$_lang['email_method_smtp'] = 'via un serveur SMTP';
+$_lang['smtp_auth_title'] = 'Authentification SMTP';
+$_lang['smtp_host_title'] = 'Serveur SMTP';
 $_lang['smtp_username_title'] = 'Utilisateur SMTP';
 $_lang['smtp_password_title'] = 'Mot de passe SMTP';
-$_lang['smtp_port_title']     = 'Port SMTP';
+$_lang['smtp_port_title'] = 'Port SMTP';
 
-$_lang["setting_resource_tree_node_name"]      = 'Nom des éléments dans l\'arbre des ressources';
+$_lang["setting_resource_tree_node_name"] = 'Nom des éléments dans l\'arbre des ressources';
 $_lang["setting_resource_tree_node_name_desc"] = 'Permet de définir le champ du document à utiliser dans l\'arbre. Par défaut ce champ est "pagetitle", mais tous les champs peuvent être utilisés comme "menutitle", "alias"...';
 
-$_lang["resource_opt_alvisibled"]      = 'Utiliser l\'alias du document dans chemin d\'alias';
+$_lang["resource_opt_alvisibled"] = 'Utiliser l\'alias du document dans chemin d\'alias';
 $_lang["resource_opt_alvisibled_help"] = 'L\'alias de ce document sera utilisé dans le chemin d\'alias';
-$_lang['resource_opt_is_published']    = 'Publié';
-$_lang["docid_incrmnt_method_title"]   = 'Mode de gestion de l\'incrément des ID des documents';
-$_lang["docid_incrmnt_method_0"]       = 'Incrément automatique de la base de données';
-$_lang["docid_incrmnt_method_1"]       = 'Plus petit ID disponible';
-$_lang["docid_incrmnt_method_2"]       = 'Plus grand ID + 1';
+$_lang['resource_opt_is_published'] = 'Publié';
+$_lang["docid_incrmnt_method_title"] = 'Mode de gestion de l\'incrément des ID des documents';
+$_lang["docid_incrmnt_method_0"] = 'Incrément automatique de la base de données';
+$_lang["docid_incrmnt_method_1"] = 'Plus petit ID disponible';
+$_lang["docid_incrmnt_method_2"] = 'Plus grand ID + 1';
 
-$_lang["cache_type_title"]  = 'Type de cache des documents';
-$_lang["cache_type_1"]      = 'Le cache est basé sur l\'ID du document (standard)';
-$_lang["cache_type_2"]      = 'Le cache est basé sur l\'ID du document et les paramètres $_GET';
-$_lang["seostrict_title"]   = 'Utiliser le format "SEO Strict" pour les URLs';
+$_lang["cache_type_title"] = 'Type de cache des documents';
+$_lang["cache_type_1"] = 'Le cache est basé sur l\'ID du document (standard)';
+$_lang["cache_type_2"] = 'Le cache est basé sur l\'ID du document et les paramètres $_GET';
+$_lang["seostrict_title"] = 'Utiliser le format "SEO Strict" pour les URLs';
 $_lang["seostrict_message"] = 'Forcer le format "SEO Strict" pour les URLs afin d\'éviter les contenus dupliqués';
 
-$_lang["settings_friendlyurls_alert"]  = 'Il est nécessaire de renommer le fichier ht.access de MODX en .htaccess pour être en mesure d\'utiliser les "URLs simples".';
+$_lang["settings_friendlyurls_alert"] = 'Il est nécessaire de renommer le fichier ht.access de MODX en .htaccess pour être en mesure d\'utiliser les "URLs simples".';
 $_lang["settings_friendlyurls_alert2"] = 'L\'installation ayant été réalisée dans un sous répertoire, il est nécessaire de modifier la directive "RewriteBase" dans votre fichier .htaccess.';
 
 $_lang["user_street"] = 'Rue';
-$_lang["user_city"]   = 'Ville';
-$_lang["user_other"]  = 'Autre';
+$_lang["user_city"] = 'Ville';
+$_lang["user_other"] = 'Autre';
 
 $_lang["import_site.static.php1"] = 'Réinitialiser l\'arbre des ressources';
-$_lang["import_site.static.php2"] = $_lang["import_site.static.php1"].' et tous les IDs.';
+$_lang["import_site.static.php2"] = 'Réinitialiser l\'arbre des ressources et tous les IDs.';
 $_lang["import_site.static.php3"] = 'Cible';
 $_lang["import_site.static.php4"] = 'Uniquement la partie &lt;body&gt;&lt;/body&gt;';
 $_lang["import_site.static.php5"] = 'Tout le contenu du fichier';
 
-$_lang["a83_ignore_ids_title"]    = 'IDs à ignorer (séparés par des virgules)';
+$_lang["a83_ignore_ids_title"] = 'IDs à ignorer (séparés par des virgules)';
 $_lang["export_site.static.php1"] = 'Cible';
 $_lang["export_site.static.php2"] = 'Uniquement les ressources éditées';
 $_lang["export_site.static.php3"] = 'Toutes les ressources';
 $_lang["export_site.static.php4"] = 'Rechercher';
 $_lang["export_site.static.php5"] = 'Remplacer par';
-$_lang["export_site.static.php6"] = $_lang["export_site.static.php1"];
+$_lang["export_site.static.php6"] = 'Cible';
 $_lang["export_site.static.php7"] = 'Les fichiers ne peuvent être sauvés dans [+rb_base_url+]';
 
 $_lang["mutate_settings.dynamic.php6"] = 'Envoyer un e-mail en cas d\'erreur MODX';
 $_lang["mutate_settings.dynamic.php7"] = 'Ne pas notifier';
 $_lang["mutate_settings.dynamic.php8"] = 'Si une erreur MODX survient un e-mail contenant l\'origine de l\'erreur sera envoyé à [(emailsender)] ([+emailsender+]). Le détail de l\'erreur pourra être consulté dans l\'historique des événements MODX.';
 
-$_lang["error_no_privileges"]         = 'Vous ne disposez pas de suffisamment de droits pour effectuer cette opération !';
-$_lang["error_no_optimise_tablename"] = 'Nom de la table à optimiser non trouvé dans la requête !';
-$_lang["error_no_truncate_tablename"] = 'Nom de la table à vider non trouvé dans la requête !';
-$_lang["error_double_action"]         = 'Double action (GET & POST) demandée !';
-$_lang["error_no_id"]                 = 'ID du document non passé dans la requête !';
-$_lang["error_id_nan"]                = 'l\'ID du document passé dans la requête est invalide !';
-$_lang["error_no_parent"]             = 'Impossible de trouver le nom du document parent !';
-$_lang["error_many_results"]          = 'Trop de résultats ont été retournés par la base de données !';
-$_lang["error_no_results"]            = 'Pas assez de résultats ont été retournés par la base de données !';
-$_lang["error_no_user_selected"]      = 'Aucun utilisateur n\'est destinataire de ce message !';
-$_lang["error_no_group_selected"]     = 'Aucun groupe n\'est destinataire de ce message !';
-$_lang["error_movedocument1"]         = 'Un document ne peut pas être son propre parent !';
-$_lang["error_movedocument2"]         = $_lang["error_no_id"];
-$_lang["error_movedocument3"]         = 'Nouveau parent non défini dans la requête !';
+$_lang["error_no_privileges"]         = "Vous ne disposez pas de suffisamment de droits pour effectuer cette opération !";
+$_lang["error_no_optimise_tablename"] = "Nom de la table à optimiser non trouvé dans la requête !";
+$_lang["error_no_truncate_tablename"] = "Nom de la table à vider non trouvé dans la requête !";
+$_lang["error_double_action"]         = "Double action (GET & POST) demandée !";
+$_lang["error_no_id"]                 = "ID du document non passé dans la requête !";
+$_lang["error_id_nan"]                = "l'ID du document passé dans la requête est invalide !";
+$_lang["error_no_parent"]             = "Impossible de trouver le nom du document parent !";
+$_lang["error_many_results"]          = "Trop de résultats ont été retournés par la base de données !";
+$_lang["error_no_results"]            = "Pas assez de résultats ont été retournés par la base de données !";
+$_lang["error_no_user_selected"]      = "Aucun utilisateur n'est destinataire de ce message !";
+$_lang["error_no_group_selected"]     = "Aucun groupe n'est destinataire de ce message !";
+$_lang["error_movedocument1"]         = "Un document ne peut pas être son propre parent !";
+$_lang["error_movedocument2"]         = "ID du document non passé dans la requête !";
+$_lang["error_movedocument3"]         = "Nouveau parent non défini dans la requête !";
 
-$_lang["login_processor_unknown_user"]       = 'Identifiant ou mot de passe invalide !';
-$_lang["login_processor_wrong_password"]     = $_lang["login_processor_unknown_user"];
-$_lang["login_processor_many_failed_logins"] = 'Votre compte a été verrouillé en raison de trop nombreuses tentatives.';
-$_lang["login_processor_blocked1"]           = 'Votre compte a été verrouillé, vous ne pouvez plus vous connecter.';
-$_lang["login_processor_blocked2"]           = $_lang["login_processor_blocked1"].' Veuillez réessayer plus tard.';
-$_lang["login_processor_bad_code"]           = 'Le code de sécurité que vous avez entré est invalide ! Veuillez essayer à nouveau.';
-$_lang["login_processor_blocked3"]           = 'Votre compte a été verrouillé, vous ne pouvez plus vous connecter.';
-$_lang["login_processor_remotehost_ip"]      = 'Le nom de votre machine et son adresse IP ne sont pas compatibles !';
-$_lang["login_processor_remote_ip"]          = 'Vous n\'êtes pas autorisé à vous connecter depuis ce poste.';
-$_lang["login_processor_date"]               = 'Vous n\'êtes - pour l\'instant - pas autorisé à vous connecter. Veuillez réessayer plus tard.';
-$_lang["login_processor_captcha_config"]     = 'Les Captcha ne sont pas correctement configurés.';
+$_lang["login_processor_unknown_user"]       = "Identifiant ou mot de passe invalide !";
+$_lang["login_processor_wrong_password"]     = "Identifiant ou mot de passe invalide !";
+$_lang["login_processor_many_failed_logins"] = "Votre compte a été verrouillé en raison de trop nombreuses tentatives.";
+$_lang["login_processor_blocked1"]           = "Votre compte a été verrouillé, vous ne pouvez plus vous connecter.";
+$_lang["login_processor_blocked2"]           = "Votre compte a été verrouillé, vous ne pouvez plus vous connecter. Veuillez réessayer plus tard.";
+$_lang["login_processor_blocked3"]           = "Votre compte a été verrouillé, vous ne pouvez plus vous connecter.";
+$_lang["login_processor_bad_code"]           = "Le code de sécurité que vous avez entré est invalide ! Veuillez essayer à nouveau.";
+$_lang["login_processor_remotehost_ip"]      = "Le nom de votre machine et son adresse IP ne sont pas compatibles !";
+$_lang["login_processor_remote_ip"]          = "Vous n'êtes pas autorisé à vous connecter depuis ce poste.";
+$_lang["login_processor_date"]               = "Vous n'êtes - pour l'instant - pas autorisé à vous connecter. Veuillez réessayer plus tard.";
+$_lang["login_processor_captcha_config"]     = "Les Captcha ne sont pas correctement configurés.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";

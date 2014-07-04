@@ -1266,6 +1266,6 @@ $_lang["login_processor_remote_ip"]          = "You are not allowed to login fro
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
 
-$_lang["dp_dayNames"]	=	"['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
-$_lang["dp_monthNames"]	=	"['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
-$_lang["dp_startDay"] = 1;
+$_lang["dp_dayNames"]   = "['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
+$_lang["dp_monthNames"] = "['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
+$_lang["dp_startDay"]   = "1";
