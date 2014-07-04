@@ -792,128 +792,145 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		//strip quotes as well as any brackets to get the raw name
 		$name = str_replace(array("'",'"','[',']'),'',$tagAttributes['name']);
 
-		#skip vericode field - updated in 1.4.4
-		#special case. We need to set the class placeholder but forget about the rest
-		if($name=="vericode"){
-			if (isset($tagAttributes['class'])) {
-				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
-			} else {
-				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
-			}
-			$tagAttributes['value'] = '';
-			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
-			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
-			continue;
-		}
+        //skip all fields without name attribute (these could even not be worked by eform)
+        if ($name) {
+            #skip vericode field - updated in 1.4.4
+            #special case. We need to set the class placeholder but forget about the rest
+            if ($name == "vericode") {
+                if (isset($tagAttributes['class'])) {
+                    $tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+                } else {
+                    $tagAttributes['class'] = '"[+' . $name . '_class+]"';
+                }
+                $tagAttributes['value'] = '';
+                $newTag = buildTagPlaceholder('input', $tagAttributes, $name);
+                $tpl = str_replace($fieldTags[$i], $newTag, $tpl);
+                continue;
+            }
 
-		//store the field options
-			if (isset($tagAttributes[$optionsName])){
-				//split to max of 5 so validation rule can contain ':'
-				$formats[$name] = explode(":",stripTagQuotes($tagAttributes[$optionsName]),5) ;
-				array_unshift($formats[$name],$name);
-		}else{
-			if(!isset($formats[$name])) $formats[$name]=array($name,'','',0);
-		}
-		//added for 1.4 - use label if it is defined
-		if(empty($formats[$name][1]))
-			$formats[$name][1]=(isset($labels[$name])) ? $labels[$name] : $name;
+            //store the field options
+            if (isset($tagAttributes[$optionsName])) {
+                //split to max of 5 so validation rule can contain ':'
+                $formats[$name] = explode(":", stripTagQuotes($tagAttributes[$optionsName]), 5);
+                array_unshift($formats[$name], $name);
+            } else {
+                if (!isset($formats[$name])) $formats[$name] = array($name, '', '', 0);
+            }
+            //added for 1.4 - use label if it is defined
+            if (empty($formats[$name][1])) {
+                $formats[$name][1] = (isset($labels[$name])) ? $labels[$name] : $name;
+            }
 
-		if(isset($id)) $formats[6] = $id; //added in 1.4.4.1
+            //added in 1.4.4.1
+            if (isset($id)) {
+                $formats[6] = $id;
+            }
+            unset($tagAttributes[$optionsName]);
 
-		unset($tagAttributes[$optionsName]);
+            //added in 1.4.2 - add placeholder to class attribute
+            if (isset($tagAttributes['class'])) {
+                $tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+            } else {
+                $tagAttributes['class'] = '"[+' . $name . '_class+]"';
+            }
 
-		//added in 1.4.2 - add placeholder to class attribute
-		if (isset($tagAttributes['class'])) {
-			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
-		} else {
-			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
-		}
+            switch ($type) {
+                case "select":
+                    //replace with 'cleaned' tag and added placeholder
+                    $newTag = buildTagPlaceholder('select', $tagAttributes, $name);
+                    $tpl = str_replace($fieldTags[$i], $newTag, $tpl);
+                    if ($formats[$name]) {
+                        $formats[$name][2] = 'listbox';
+                    }
 
-		switch($type){
-			case "select":
-				//replace with 'cleaned' tag and added placeholder
-				$newTag = buildTagPlaceholder('select',$tagAttributes,$name);
-				$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
-				if($formats[$name]) $formats[$name][2]='listbox';
+                    //Get the whole select block with option tags
+                    //escape any regex characters!
+                    $regExp = "#<select [^><]*?name=" . preg_quote($tagAttributes['name'], '#') . "[^>]*?" . ">(.*?)</select>#si";
+                    preg_match($regExp, $tpl, $matches);
+                    $optionTags = $matches[1];
 
-				//Get the whole select block with option tags
-				//escape any regex characters!
-				$regExp = "#<select [^><]*?name=".preg_quote($tagAttributes['name'],'#')."[^>]*?".">(.*?)</select>#si";
-				preg_match($regExp,$tpl,$matches);
-				$optionTags = $matches[1];
+                    $select = $newSelect = $matches[0];
+                    //get separate option tags and split them up
+                    preg_match_all("#(<option [^>]*?>)#si", $optionTags, $matches);
+                    $validValues = array();
+                    foreach ($matches[1] as $option) {
+                        $attr = attr2array($option);
+                        //* debug */ print __LINE__.': <pre>'.print_r($attr,true) .'</pre><br />';
+                        $value = substr($attr['value'], 1, -1); //strip outer quotes
+                        if (trim($value) != '') {
+                            $validValues[] = $value;
+                        }
+                        $newTag = buildTagPlaceholder('option', $attr, $name);
+                        $newSelect = str_replace($option, $newTag, $newSelect);
+                        //if no postback, retain any checked values
+                        if (!$efPostBack && !empty($attr['selected'])) {
+                            $fields[$name][] = $value;
+                        }
+                    }
+                    //replace complete select block
+                    $tpl = str_replace($select, $newSelect, $tpl);
 
-				$select = $newSelect = $matches[0];
-				//get separate option tags and split them up
-				preg_match_all("#(<option [^>]*?>)#si",$optionTags,$matches);
-				$validValues = array();
-				foreach($matches[1] as $option){
-					$attr = attr2array($option);
-					//* debug */ print __LINE__.': <pre>'.print_r($attr,true) .'</pre><br />';
-					$value = substr($attr['value'],1,-1); //strip outer quotes
-					if( trim($value)!='' ) $validValues[] = $value;
-					$newTag = buildTagPlaceholder('option',$attr,$name);
-					$newSelect = str_replace($option,$newTag,$newSelect);
-					//if no postback, retain any checked values
-					if(!$efPostBack && !empty($attr['selected'])) $fields[$name][]=$value;
-				}
-				//replace complete select block
-				$tpl = str_replace($select,$newSelect,$tpl);
-				//add valid values to formats... (extension to $formats)
+                    //add valid values to formats... (extension to $formats)
+                    if ($formats[$name] && !$formats[$name][5]) {
+                        $formats[$name][4] = $_lang['ef_failed_default'];
+                        //convert commas in values to something else !
+                        $formats[$name][5] = "#LIST " . implode(",", str_replace(',', '&#44;', $validValues));
+                    }
+                    break;
 
-				if($formats[$name] && !$formats[$name][5]){
-					$formats[$name][4] = $_lang['ef_failed_default'];
-					//convert commas in values to something else !
-					$formats[$name][5]= "#LIST " . implode(",",str_replace(',','&#44;',$validValues));
-				}
-				break;
+                case "textarea":
+                    // add support for maxlength attribute for textarea
+                    // attribute get's stripped form form //
+                    if ($tagAttributes['maxlength']) {
+                        $formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
+                        unset($tagAttributes['maxlength']);
+                    }
+                    $newTag = buildTagPlaceholder($type, $tagAttributes, $name);
+                    $regExp = "#<textarea [^>]*?name=" . $tagAttributes["name"] . "[^>]*?" . ">(.*?)</textarea>#si";
+                    preg_match($regExp, $tpl, $matches);
+                    //if nothing Posted retain the content between start/end tags
+                    $placeholderValue = ($efPostBack) ? "[+$name+]" : $matches[1];
 
-			case "textarea":
-				// add support for maxlength attribute for textarea
-				// attribute get's stripped form form //
-				if( $tagAttributes['maxlength'] ){
-					$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
-					unset($tagAttributes['maxlength']);
-				}
-				$newTag = buildTagPlaceholder($type,$tagAttributes,$name);
-				$regExp = "#<textarea [^>]*?name=" . $tagAttributes["name"] . "[^>]*?" . ">(.*?)</textarea>#si";
-				preg_match($regExp,$tpl,$matches);
-				//if nothing Posted retain the content between start/end tags
-				$placeholderValue = ($efPostBack)?"[+$name+]":$matches[1];
+                    $tpl = str_replace($matches[0], $newTag . $placeholderValue . "</textarea>", $tpl);
+                    break;
+                default:
+                    //all the rest, ie. "input"
+                    $newTag = buildTagPlaceholder($type, $tagAttributes, $name);
+                    $fieldType = stripTagQuotes($tagAttributes['type']);
+                    //validate on maxlength...
+                    if ($fieldType == 'text' && $tagAttributes['maxlength']) {
+                        $formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
+                    }
+                    if ($formats[$name] && !$formats[$name][2]) {
+                        $formats[$name][2] = ($fieldType == 'text') ? "string" : $fieldType;
+                    }
+                    //populate automatic validation values for hidden, checkbox and radio fields
+                    if ($fieldType == 'hidden') {
+                        if (!$isDebug) $formats[$name][1] = "[undefined]"; //do not want to disclose hidden field names
+                        if (!isset($formats[$name][4])) $formats[$name][4] = $_lang['ef_tamper_attempt'];
+                        if (!isset($formats[$name][5])) $formats[$name][5] = "#VALUE " . stripTagQuotes($tagAttributes['value']);
+                    } elseif ($fieldType == 'checkbox' || $fieldType == 'radio') {
+                        $formats[$name][4] = $_lang['ef_failed_default'];
+                        $formats[$name][5] .= isset($formats[$name][5]) ? "," : "#LIST ";
+                        //convert embedded comma's in values!
+                        $formats[$name][5] .= str_replace(',', '&#44;', stripTagQuotes($tagAttributes['value']));
+                        //store the id as well
+                        //if no postback, retain any checked values
+                        if (!$efPostBack && !empty($tagAttributes['checked'])) {
+                            $fields[$name][] = stripTagQuotes($tagAttributes['value']);
+                        }
+                        $formats[$name][6] .= (isset($formats[$name][6]) ? "," : "") . stripTagQuotes($tagAttributes['id']);
+                    } elseif (empty($fields[$name])) {
+                        //plain old text input field
+                        //retain default value set in form template if not already set in code
+                        $fields[$name] = stripTagQuotes($tagAttributes['value']);
+                    }
 
-				$tpl = str_replace($matches[0],$newTag.$placeholderValue."</textarea>",$tpl);
-				break;
-			default: //all the rest, ie. "input"
-				$newTag = buildTagPlaceholder($type,$tagAttributes,$name);
-				  $fieldType = stripTagQuotes($tagAttributes['type']);
-					//validate on maxlength...
-					if( $fieldType=='text' && $tagAttributes['maxlength'] ){
-						$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
-					}
-					if($formats[$name] && !$formats[$name][2]) $formats[$name][2]=($fieldType=='text')?"string":$fieldType;
-					//populate automatic validation values for hidden, checkbox and radio fields
-					if($fieldType=='hidden'){
-						if(!$isDebug) $formats[$name][1] = "[undefined]"; //do not want to disclose hidden field names
-						if(!isset($formats[$name][4])) $formats[$name][4]= $_lang['ef_tamper_attempt'];
-						if(!isset($formats[$name][5])) $formats[$name][5]= "#VALUE ". stripTagQuotes($tagAttributes['value']);
-					}elseif($fieldType=='checkbox' || $fieldType=='radio'){
-						$formats[$name][4]= $_lang['ef_failed_default'];
-						$formats[$name][5] .= isset($formats[$name][5])?",":"#LIST ";
-						//convert embedded comma's in values!
-						$formats[$name][5] .= str_replace(',','&#44;',stripTagQuotes($tagAttributes['value']));
-						//store the id as well
-						//if no postback, retain any checked values
-						if(!$efPostBack && !empty($tagAttributes['checked'])) $fields[$name][]=stripTagQuotes($tagAttributes['value']);
-						//
-						$formats[$name][6] .= ( isset($formats[$name][6])?",":"").stripTagQuotes($tagAttributes['id']);
-					}elseif(empty($fields[$name])){ //plain old text input field
-						//retain default value set in form template if not already set in code
-						$fields[$name] = stripTagQuotes($tagAttributes['value']);
-					}
-
-				$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
-				break;
-		}
-	}
+                    $tpl = str_replace($fieldTags[$i], $newTag, $tpl);
+                    break;
+            }
+        }
+    }
 	if($isDebug>2) $debugText .= "<strong>Parsed template</strong><p style=\"border:1px solid black;padding:2px;\">" . str_replace("\n",'<br />',str_replace('+','&#043;',htmlspecialchars($tpl)))."</p><hr>";
 	return $tpl;
 }
