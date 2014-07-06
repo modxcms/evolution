@@ -655,7 +655,10 @@ class browser extends uploader {
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
-			if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
+            $types = $this->config['types'];
+            $types = explode(' ',$types['images'].' '.$types['image']);
+            if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
+            if ($this->type == 'images' && !in_array(strtolower($ext),$types)) continue;
             $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
             $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
             $thumb = file_exists("$thumbDir/$name");
