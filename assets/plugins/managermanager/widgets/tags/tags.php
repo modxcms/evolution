@@ -1,9 +1,9 @@
 <?php
 /**
  * mm_widget_tags
- * @version 1.1.2 (2013-12-11)
+ * @version 1.1.3 (2014-05-15)
  * 
- * Adds a tag selection widget to the specified TVs.
+ * @desc A widget for ManagerManager plugin allowing tags to be added to the documents (the tag list creates automatically for the required TV with all written tags; new tags may be written right in the tag list) on the document edit page.
  * 
  * @uses ManagerManager plugin 0.6.
  * 
@@ -17,9 +17,9 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_widget_tags/1.1.2
+ * @link http://code.divandesign.biz/modx/mm_widget_tags/1.1.3
  * 
- * @copyright 2013
+ * @copyright 2014
  */
 
 function mm_widget_tags($fields, $delimiter = ',', $source = '', $display_count = false, $roles = '', $templates = ''){
@@ -67,14 +67,13 @@ function mm_widget_tags($fields, $delimiter = ',', $source = '', $display_count 
 			$sql_sources = implode(',', $source_tvs[0]);
 			
 			// Get the list of current values for this TV
-			$sql = 'SELECT `value` FROM '.$modx->getFullTableName('site_tmplvar_contentvalues').' WHERE tmplvarid IN ('.$sql_sources.')';
-			
-			$result = $modx->db->query($sql);
+			$result = $modx->db->select('value', $modx->getFullTableName('site_tmplvar_contentvalues'), 'tmplvarid IN ('.$sql_sources.')');
 			$all_docs = $modx->db->makeArray($result);
 			
 			$foundTags = array();
 			foreach ($all_docs as $theDoc){
 				$theTags = explode($delimiter, $theDoc['value']);
+				
 				foreach ($theTags as $t){
 					$foundTags[trim($t)]++;
 				}

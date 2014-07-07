@@ -1,13 +1,13 @@
 <?php
 /**
  * ManagerManager plugin
- * @version 0.6.1 (2014-02-17)
+ * @version 0.6.2 (2014-05-28)
  * 
  * @for MODx Evolution 1.0.x
  * 
  * @desc Used to manipulate the display of document fields in the manager.
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.6.1
+ * @link http://code.divandesign.biz/modx/managermanager/0.6.2
  * 
  * @author DivanDesign studio (www.DivanDesign.biz), Nick Crossland (www.rckt.co.uk)
  * 
@@ -18,7 +18,7 @@
  * @copyright 2014
  */
 
-$mm_version = '0.6.1';
+$mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 
@@ -29,9 +29,21 @@ $e = &$modx->Event;
 if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
-	'jq' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
-	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
-	'ddTools' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js'
+	'jq' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
+		'name' => 'jquery',
+		'version' => '1.9.1'
+	),
+	'mm' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'name' => 'ddMM',
+		'version' => '1.2.1'
+	),
+	'ddTools' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+		'name' => 'jquery.ddTools',
+		'version' => '1.8.6'
+	)
 );
 
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
@@ -55,13 +67,15 @@ $ignore_first_chars = array('.', '_', '!');
 // We look for a PHP file with the same name as the directory - e.g.
 // /widgets/widgetname/widgetname.php
 $widget_dir = $pluginDir.'widgets';
+
 if ($handle = opendir($widget_dir)){
-    while (false !== ($file = readdir($handle))){
-        if (!in_array(substr($file, 0, 1), $ignore_first_chars)  && $file != ".."  && is_dir($widget_dir.'/'.$file)){
-            include_once($widget_dir.'/'.$file.'/'.$file.'.php');
-        }
-    }
-    closedir($handle);
+	while (false !== ($file = readdir($handle))){
+		if (!in_array(substr($file, 0, 1), $ignore_first_chars) && $file != '..' && is_dir($widget_dir.'/'.$file)){
+				include_once($widget_dir.'/'.$file.'/'.$file.'.php');
+		}
+	}
+	
+	closedir($handle);
 }
 
 $mm_current_page = array();
@@ -115,7 +129,7 @@ $mm_fields = array(
 );
 
 // Add in TVs to the list of available fields
-$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->db->config['table_prefix'].'site_tmplvars', '', 'name ASC'));
+$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
 foreach ($all_tvs as $thisTv){
 	// What is the field name?
 	$n = $thisTv['name'];
@@ -157,13 +171,9 @@ foreach ($all_tvs as $thisTv){
 	if (!isset($mm_fields[$n])){
 		$mm_fields[$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 	}
-	
-	//For backward compatibility =(
-	$mm_fields['tv'.$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
-	$mm_fields['tv'.$thisTv['id']] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 }
 
-// Get the contents of the config chunk, and put it in the "make changes" function, to be run at the appropriate moment later on
+// Get the contents of the config chunk, and put it in the “make_changes” function, to be run at the appropriate moment later on
 if (!function_exists('make_changes')){
 	function make_changes($chunk){
 		//Global modx object & $content for rules
@@ -210,13 +220,13 @@ switch ($e->name){
 	case 'OnPluginFormRender':
 		// The ID of the plugin we're editing
 		$plugin_id_editing = $e->params['id'];
-		$result = $modx->db->select('name, id', $modx->db->config['table_prefix'].'site_plugins', 'id='.$plugin_id_editing);
+		$result = $modx->db->select('name', $modx->getFullTableName('site_plugins'), 'id='.$plugin_id_editing);
 		$plugin_editing_name = $modx->db->getValue($result);
 		
 		// if it's the right plugin
 		if (strtolower($plugin_editing_name) == 'managermanager'){
 			// Get all templates
-			$result = $modx->db->select('templatename, id, description', $modx->db->config['table_prefix'].'site_templates', '', 'templatename ASC');
+			$result = $modx->db->select('templatename, id, description', $modx->getFullTableName('site_templates'), '', 'templatename ASC');
 			$all_templates = $modx->db->makeArray($result);
 			
 			$template_table = '<table>';
@@ -235,7 +245,7 @@ switch ($e->name){
 			$template_table .= '</table>';
 			
 			// Get all tvs
-			$result = $modx->db->select('name,caption,id', $modx->db->config['table_prefix'].'site_tmplvars', '', 'name ASC');
+			$result = $modx->db->select('name,caption,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC');
 			$all_tvs = $modx->db->makeArray($result);
 			$tvs_table = '<table>';
 			$tvs_table .= '<tr><th class="gridHeader">TV name</th><th class="gridHeader">TV caption</th><th class="gridHeader">ID</th></tr>';
@@ -252,7 +262,7 @@ switch ($e->name){
 			$tvs_table .= '</table>';
 			
 			// Get all roles
-			$result = $modx->db->select('name, id', $modx->db->config['table_prefix'].'user_roles', '', 'name ASC');
+			$result = $modx->db->select('name, id', $modx->getFullTableName('user_roles'), '', 'name ASC');
 			$all_roles = $modx->db->makeArray($result);
 			
 			$roles_table = '<table>';
@@ -270,11 +280,11 @@ switch ($e->name){
 			
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->'."\n";
-			$output .= includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-			$output .= includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
+			$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
 			
 			$output .= '<script type="text/javascript">'."\n";
-			//produces var  $j = jQuery.noConflict();
+			//produces var $j = jQuery.noConflict();
 			$output .= "var \$j = jQuery.noConflict(); \n";
 			
 			$output .= initJQddManagerManager();
@@ -292,9 +302,9 @@ switch ($e->name){
 	case 'OnDocFormPrerender':
 		$e->output("<!-- Begin ManagerManager output -->\n");
 		// Load the js libraries
-		$e->output(includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1'));
-		$e->output(includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2'));
-		$e->output(includeJsCss($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1'));
+		$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
+		$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
+		$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		$e->output(
@@ -303,7 +313,17 @@ switch ($e->name){
 <script type="text/javascript">
 window.$j = jQuery.noConflict();
 '.initJQddManagerManager().'
-$j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "absolute", zIndex: "1000", backgroundColor: "#ffffff"} );
+$j("#loadingmask").css({
+	width: "100%",
+	minHeight: "100%",
+	position: "absolute",
+	zIndex: "1000",
+	backgroundColor: "#ffffff"
+});
+				
+$j(function(){
+	$j("#loadingmask").css({height: $j("body").height()});
+});
 </script>
 ');
 		
@@ -315,8 +335,8 @@ $j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "
 	
 	// The main document editing form
 	case 'OnDocFormRender':
-	    // Include the JQuery call
-	    $e->output('
+		// Include the JQuery call
+		$e->output('
 <!-- ManagerManager Plugin :: '.$mm_version.' -->
 <!-- This document is using template: '. $mm_current_page['template'] .' -->
 <!-- You are logged into the following role: '. $mm_current_page['role'] .' -->
@@ -330,7 +350,8 @@ $j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "
 		// Lets handle errors nicely...
 		try {
 			// Change section index depending on Content History running or not
-			var sidx = ($j("div.sectionBody:eq(1)").attr("id") == "ch-body")?1:0;  //ch-body is the CH id name (currently at least)
+			//ch-body is the CH id name (currently at least)
+			var sidx = ($j("div.sectionBody:eq(1)").attr("id") == "ch-body") ? 1 : 0;
 			
 			// Give IDs to the sections of the form
 			// This assumes they appear in a certain order
@@ -343,9 +364,9 @@ $j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "
 		
 		// Get the JS for the changes & display the status
 		$e->output(make_changes($e->params['config_chunk']));
-	    
-	    // Close it off
-	    $e->output('
+		
+		// Close it off
+		$e->output('
 			// Misc tidying up
 			
 			// General tab table container is too narrow for receiving TVs -- make it a bit wider
@@ -353,28 +374,32 @@ $j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "
 			
 			// if template variables containers are empty, remove their section
 			if ($j("div.tmplvars :input").length == 0){
-				$j("div.tmplvars").hide();	// Still contains an empty table and some dividers
-				$j("div.tmplvars").prev("div").hide();	// Still contains an empty table and some dividers
+				// Still contains an empty table and some dividers
+				$j("div.tmplvars").hide();
+				// Still contains an empty table and some dividers
+				$j("div.tmplvars").prev("div").hide();
 				//$j("#sectionTVsHeader").hide();
 			}
 			
 			// If template category is empty, hide the optgroup
-			$j("#template optgroup").each( function(){
+			$j("#template optgroup").each(function(){
 				var $this = $j(this),
-				visibleOptions = 0;
-				$this.find("option").each( function(){
-					if ($j(this).css("display") != "none") 	visibleOptions++ ;
+					visibleOptions = 0;
+					
+				$this.find("option").each(function(){
+					if ($j(this).css("display") != "none"){visibleOptions++;}
 				});
-				if (visibleOptions == 0) $this.remove();
+					
+				if (visibleOptions == 0){$this.remove();}
 			});
 			
 			// Re-initiate the tooltips, in order for them to pick up any new help text which has been added
 			// This bit is MooTools, matching code inserted further up the page
-			if( !window.ie6 ){
+			if(!window.ie6){
 				$$(".tooltip").each(function(help_img){
-					help_img.setProperty("title", help_img.getProperty("alt") );
+					help_img.setProperty("title", help_img.getProperty("alt"));
 				});
-				new Tips($$(".tooltip"), {className:"custom"} );
+				new Tips($$(".tooltip"), {className:"custom"});
 			}
 		}catch(e){
 			// If theres an error, fail nicely
@@ -396,15 +421,16 @@ $j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "
 		if ($remove_deprecated_tv_types){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
-			echo includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
+			echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			
 			// Create a mask to cover the page while the fields are being rearranged
 			echo '
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
+	
 	$j("select[name=type] option").each(function(){
 		var $this = $j(this);
-		if( !($this.text().match("deprecated")==null)){
+		if(!($this.text().match("deprecated") == null)){
 			$this.remove();
 		}
 	});

@@ -1,9 +1,9 @@
 <?php
 /**
  * mm_ddMultipleFields
- * @version 4.5 (2013-12-10)
+ * @version 4.5.1 (2014-05-15)
  * 
- * Widget for plugin ManagerManager that allows you to add any number of fields values (TV) in one document (values is written as one with using separator symbols). For example: a few images.
+ * @desc Widget for plugin ManagerManager that allows you to add any number of fields values (TV) in one document (values is written as one with using separator symbols). For example: a few images.
  * 
  * @uses ManagerManager plugin 0.6.
  * 
@@ -24,9 +24,9 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddmultiplefields/4.5
+ * @link http://code.divandesign.biz/modx/mm_ddmultiplefields/4.5.1
  * 
- * @copyright 2013, DivanDesign
+ * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 
@@ -46,7 +46,7 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 		
 		$output .= includeJsCss($site.'assets/plugins/managermanager/js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
 		$output .= includeJsCss($widgetDir.'ddmultiplefields.css', 'html');
-		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMultipleFields.js', 'html', 'jquery.ddMM.mm_ddMultipleFields', '1.0');
+		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMultipleFields.js', 'html', 'jquery.ddMM.mm_ddMultipleFields', '1.1.1');
 		
 		$output .= includeJsCss('$j.ddMM.lang.edit = "'.$_lang['edit'].'";', 'html', 'mm_ddMultipleFields_plain', '1', true, 'js');
 		
@@ -73,7 +73,7 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 		$tvsMas = tplUseTvs($mm_current_page['template'], $tvs, 'image,file,text,email,textarea', 'id,type');
 		if ($tvsMas == false){return;}
 		
-		$output .= "// ---------------- mm_ddMultipleFields :: Begin ------------- \n";
+		$output .= "//---------- mm_ddMultipleFields :: Begin -----\n";
 		
 		foreach ($tvsMas as $tv){
 			if ($tv['type'] == 'image'){
@@ -87,7 +87,8 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 				$makeFieldFunction = 'makeNull';
 			}
 			
-			$output .= '
+			$output .=
+'
 $j("#tv'.$tv['id'].'").mm_ddMultipleFields({
 	splY: "'.$splY.'",
 	splX: "'.$splX.'",
@@ -101,12 +102,12 @@ $j("#tv'.$tv['id'].'").mm_ddMultipleFields({
 	makeFieldFunction: "'.$makeFieldFunction.'",
 	browseFuntion: '.$browseFuntion.'
 });
-			';
+';
 		}
 		
-		$output .= "\n// ---------------- mm_ddMultipleFields :: End -------------";
+		$output .= "//---------- mm_ddMultipleFields :: End -----\n";
 		
-		$e->output($output."\n");
+		$e->output($output);
 	}
 }
 ?>

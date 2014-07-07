@@ -6,8 +6,7 @@
 
 // Pass useThisRule a comma separated list of allowed roles and templates, and it will
 // return TRUE or FALSE to indicate whether this rule should be run on this page
-function useThisRule($roles='', $templates='') {
-
+function useThisRule($roles = '', $templates = ''){
 	global $mm_current_page, $modx;
 	$e = &$modx->Event;
 	
@@ -15,13 +14,13 @@ function useThisRule($roles='', $templates='') {
 	$exclude_templates = false;
 	
 	// Are they negative roles?
-	if (substr($roles, 0, 1) == '!') {
+	if (substr($roles, 0, 1) == '!'){
 		$roles = substr($roles, 1);
 		$exclude_roles = true;
 	}
 	
 	// Are they negative templates?
-	if (substr($templates, 0, 1) == '!') {
+	if (substr($templates, 0, 1) == '!'){
 		$templates = substr($templates, 1);
 		$exclude_templates = true;
 	}
@@ -32,12 +31,12 @@ function useThisRule($roles='', $templates='') {
 	
 	// Does the current role match the conditions supplied?
 	$match_role_list = ($exclude_roles) ? !in_array($mm_current_page['role'], $roles) : in_array($mm_current_page['role'], $roles);
-
+	
 	// Does the current template match the conditions supplied?
 	$match_template_list = ($exclude_templates) ? !in_array($mm_current_page['template'], $templates) : in_array($mm_current_page['template'], $templates);
 	
 	// If we've matched either list in any way, return true	
-	if ( ($match_role_list || count($roles)==0) && ($match_template_list || count($templates)==0) ) {
+	if (($match_role_list || count($roles) == 0) && ($match_template_list || count($templates) == 0)){
 		return true;
 	} 
 	
@@ -45,45 +44,46 @@ function useThisRule($roles='', $templates='') {
 }
 
 // Makes a commas separated list into an array
-function makeArray($csv) {
-	
+function makeArray($csv){
 	// If we've already been supplied an array, just return it
-	if (is_array($csv)) {
+	if (is_array($csv)){
 		return $csv;
-	}	
+	}
 	
 	// Else if we have an empty string
-	if (trim($csv)=='') {
+	if (trim($csv) == ''){
 		return array();
 	}
 	
 	// Otherwise, turn it into an array
-	$return = explode(',',$csv);
-	array_walk( $return, create_function('$v, $k', 'return trim($v);'));	// Remove any whitespace
+	$return = explode(',', $csv);
+	// Remove any whitespace
+	array_walk($return, create_function('$v, $k', 'return trim($v);'));
+	
 	return $return;
 }
 
 // Make an output JS safe
-function jsSafe($str) {
+function jsSafe($str){
 	global $modx;
 	
 	// Only PHP versions > 5.2.3 allow us to prevent double_encoding
 	// If you are using an older version of PHP, and use characters which require 
 	// HTML entity encoding in new label names, etc you will have to specify the
 	// actual character, not a pre-encoded version
-	if (version_compare(PHP_VERSION, '5.2.3') >= 0) {
+	if (version_compare(PHP_VERSION, '5.2.3') >= 0){
 		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
-	} else {
+	}else{
 		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset']);
 	}
 }
 
 /**
  * tplUseTvs
- * @version 1.2 (2013-09-16)
- *
+ * @version 1.2.1 (2014-03-29)
+ * 
  * @desc Does the specified template use the specified TVs?
- *
+ * 
  * @param $tpl_id {integer} - Template ID.
  * @param $tvs {comma separated string; array} - TV names. Default: ''.
  * @param $types {comma separated string; array} - TV types, e.g. image. Default: ''.
@@ -93,7 +93,6 @@ function jsSafe($str) {
  * @return {array; false}
  */
 function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey = false){
-	
 	// If it's a blank template, it can't have TVs
 	if($tpl_id == 0){return false;}
 	
@@ -113,17 +112,22 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 	$tv_table = $modx->getFullTableName('site_tmplvars');	
 	$rel_table = $modx->getFullTableName('site_tmplvar_templates');
 	
+	$where = array();
 	//Are we looking at specific TVs, or all?
-	$tvs_sql = !empty($fields) ? ' AND tvs.name IN ' . makeSqlList($fields) : '';
+	if (!empty($fields)){$where[] = 'tvs.name IN '.makeSqlList($fields);}
 	
 	//Are we looking at specific TV types, or all?
-	$types_sql = !empty($types) ? ' AND type IN ' . makeSqlList($types) : '';
+	if (!empty($types)){$where[] = 'type IN '.makeSqlList($types);}
 	
 	//Make the SQL for this template
-	$cur_tpl = !empty($tpl_id) ? ' AND rel.templateid = ' . $tpl_id : '';
-		
+	if (!empty($tpl_id)){$where[] = 'rel.templateid = '.$tpl_id;}
+	
 	//Execute the SQL query
-	$result = $modx->db->query("SELECT ".implode(',', $dbFields)." FROM $tv_table tvs LEFT JOIN $rel_table rel ON rel.tmplvarid = tvs.id WHERE 1=1  $cur_tpl $tvs_sql $types_sql");
+	$result = $modx->db->select(
+		implode(',', $dbFields),
+		$tv_table.' AS tvs LEFT JOIN '.$rel_table.' AS rel ON rel.tmplvarid = tvs.id',
+		implode(' AND ', $where)
+	);
 	
 	$recordCount = $modx->db->getRecordCount($result);
 	
@@ -135,9 +139,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 		if ($resultKey !== false){
 			$rsArray = array();
 			
-			for ($i = 0; $i < $recordCount; $i++){
-				$row = $modx->db->getRow($result);
-				
+			while ($row = $modx->db->getRow($result)){
 				//If result contains the result key
 				if (array_key_exists($resultKey, $row)){
 					$rsArray[$row[$resultKey]] = $row;
@@ -155,7 +157,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 
 /**
  * getTplMatchedFields
- * @version 1.0.1 (2013-11-11)
+ * @version 1.0.2 (2014-03-27)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
@@ -171,6 +173,8 @@ function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 	//$fields is required
 	if (empty($fields)){return false;}
 	
+	global $mm_fields;
+	
 	//Template of current document by default
 	if (empty($tempaleId)){
 		global $mm_current_page;
@@ -178,8 +182,14 @@ function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 		$tempaleId = $mm_current_page['template'];
 	}
 	
+	$docFields = array();
+	
 	//Only document fields
-	$docFields = array_intersect($fields, ddTools::$documentFields);
+	foreach ($fields as $field){
+		if (isset($mm_fields[$field]) && !$mm_fields[$field]['tv']){
+			$docFields[] = $field;
+		}
+	}
 	
 	//If $fields contains no TVs
 	if (count($docFields) == count($fields)){
@@ -203,19 +213,21 @@ function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 
 /**
  * makeSqlList
- * @version 1.0.1 (2013-03-19)
+ * @version 1.0.2 (2014-03-29)
  * 
  * @desc Create a MySQL-safe list from an array.
  * 
  * @param $arr {array; comma separated string} - Values.
  */
 function makeSqlList($arr){
+	global $modx;
+	
 	$arr = makeArray($arr);
 	
 	foreach($arr as $k => $tv){
-        //if (substr($tv, 0, 2) == 'tv') {$tv=substr($tv,2);}
+        //if (substr($tv, 0, 2) == 'tv'){$tv=substr($tv,2);}
 		// Escape them for MySQL
-		$arr[$k] = "'".mysql_real_escape_string($tv)."'";
+		$arr[$k] = "'".$modx->db->escape($tv)."'";
 	}
 	
 	$sql = " (".implode(',', $arr).") ";
@@ -276,7 +288,7 @@ function includeJsCss($source, $output_type = 'js', $name = '', $version = '', $
 		//Add
 		$mm_includedJsCss[$nameVersion['name']] = array();
 	}
-		
+	
 	//If the new version is used
 	if ($useThisVer){
 		//Save the new version
@@ -355,7 +367,7 @@ function prepareTabId($id){
 
 /**
  * prepareSectionId
- * @version 1.0 (2013-05-21)
+ * @version 1.1 (2014-05-25)
  * 
  * @desc Prepare id of a section.
  * 
@@ -364,32 +376,20 @@ function prepareTabId($id){
  * @return {string} - Section id.
  */
 function prepareSectionId($id){
-	return 'ddSection'.$id;
+	switch ($id){
+		case 'content':
+			$id = 'content';
+		break;
+		
+		case 'tvs':
+			$id = 'tv';
+		break;
+		
+		default:
+			$id = 'ddSection'.$id;
+		break;
+	}
+	
+	return $id;
 }
-
-//function tvIdFromName($tv_id) {
-//	
-//	global $modx;
-//	
-//	// Get the DB table names
-//	$tv_table = $modx->getFullTableName('site_tmplvars');
-//	
-//	$tv_id = mysql_escape_string($tv_id);
-//	
-//	$result = $modx->db->query("SELECT id FROM $tv_table tvs WHERE name = '$tv_id'");
-//	$result = $modx->db->makeArray($result);
-//	
-//	
-//	
-//	
-//	
-//	// If we have results, return them, otherwise return false
-//	if ( $modx->db->getRecordCount($result) == 0) {
-//		return false;	
-//	} else {
-//		print_r($result);
-//		return $result[0]['id'];
-//	}
-//
-//}
 ?>

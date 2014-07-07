@@ -1,9 +1,9 @@
 <?php
 /**
  * mm_changeFieldHelp
- * @version 1.1.1 (2013-05-20)
- *
- * Change the help text of a field.
+ * @version 1.1.2 (2014-05-07)
+ * 
+ * @desc A widget for ManagerManager plugin that allows to change help text that appears near each document field when the icon or comment below template variable is hovered.
  * 
  * @uses ManagerManager plugin 0.5.
  * 
@@ -12,22 +12,22 @@
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates). Default: ''.
  * 
- * @link http://code.divandesign.biz/modx/mm_changefieldhelp/1.1.1
+ * @link http://code.divandesign.biz/modx/mm_changefieldhelp/1.1.2
  * 
- * @copyright 2013
+ * @copyright 2014
  */
 
 function mm_changeFieldHelp($field, $helptext = '', $roles = '', $templates = ''){
-	global $mm_fields, $modx;
+	global $modx;
 	$e = &$modx->Event;
-
-	if ($helptext == ''){
-		return;
-	}
-
+	
+	if ($helptext == ''){return;}
+	
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
-		$output = "//  -------------- mm_changeFieldHelp :: Begin ------------- \n";
+		global $mm_fields;
+		
+		$output = "//---------- mm_changeFieldHelp :: Begin -----\n";
 		
 		// What type is this field?
 		if (isset($mm_fields[$field])){
@@ -36,17 +36,28 @@ function mm_changeFieldHelp($field, $helptext = '', $roles = '', $templates = ''
 			
 			//Is this TV?
 			if ($mm_fields[$field]['tv']){
-				$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").parents("td:first").prev("td").children("span.comment").html("'.jsSafe($helptext).'");';
-				//Or document field
+				$output .=
+'
+var $mm_changeFieldHelp_title = $j("'.$fieldtype.'[name=\''.$fieldname.'\']").parents("td:first").prev("td"),
+	$mm_changeFieldHelp_title_comment = $mm_changeFieldHelp_title.children("span.comment");
+
+if ($mm_changeFieldHelp_title_comment.length == 0){
+	$mm_changeFieldHelp_title.append("<br />");
+	$mm_changeFieldHelp_title_comment = $j("<span class=\'comment\'></span>").appendTo($mm_changeFieldHelp_title);
+}
+
+$mm_changeFieldHelp_title_comment.html("'.jsSafe($helptext).'");
+';
+			//Or document field
 			}else{
 				// Give the help button an ID, and modify the alt/title text
-				$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'"); ';
+				$output .= '$j("'.$fieldtype.'[name=\''.$fieldname.'\']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'");'."\n";
 			}
 		}
 		
-		$output .= "//  -------------- mm_changeFieldHelp :: End ------------- \n";
+		$output .= "//---------- mm_changeFieldHelp :: End -----\n";
 		
-		$e->output($output . "\n");
+		$e->output($output);
 	}
 }
 ?>

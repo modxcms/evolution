@@ -1,10 +1,10 @@
 /**
  * jQuery ddMM Plugin
- * @version: 1.1.2 (2013-12-10)
+ * @version 1.2.1 (2014-05-28)
  * 
  * @uses jQuery 1.9.1
- *
- * @copyright 2013, DivanDesign
+ * 
+ * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 
@@ -18,6 +18,15 @@ $.ddMM = {
 	urls: {
 		mm: 'assets/plugins/managermanager/'
 	},
+	/**
+	 * fields {plain object} - All document fields (include tvs).
+	 * fields[item] {plain object} - A field.
+	 * fields[item].fieldtype {string} - Field type.
+	 * fields[item].fieldname {string} - Field name.
+	 * fields[item].dbname {string} - Field db name.
+	 * fields[item].tv {boolean} - Is the field a tv?
+	 * fields[item].$elem {jQuery} - Field jQuery element.
+	 */
 	fields: {},
 	lang: {},
 	$mutate: $(),
@@ -54,7 +63,7 @@ $.ddMM = {
 	
 	/**
 	 * moveFields
-	 * @version 1.0 (2013-05-22)
+	 * @version 1.1 (2014-05-28)
 	 * 
 	 * @desctiption Move a fields to some target (e.g. tab or section).
 	 * 
@@ -76,8 +85,19 @@ $.ddMM = {
 			
 			$.each(fields, function(){
 				if (this == 'content'){
-					$('#content_body').appendTo($target);
-					$('#content_header').hide();
+					//Если перемещаем в секцию
+					if ($target.hasClass('sectionBody')){
+						var $row = $('<tr><td valign="top"></td><td></td></tr>');
+						
+						$('#content_header').removeClass('sectionHeader').wrapInner('<span class="warning"></span>').appendTo($row.find('td:first'));
+						
+						$('#content_body').removeClass('sectionBody').appendTo($row.find('td:last'));
+						
+						$row.appendTo($target.find('> table:first')).after(ruleHtml);
+					}else{
+						$('#content_body').appendTo($target);
+						$('#content_header').hide();
+					}
 				//We can't move these fields because they belong in a particular place
 				}else if (
 					this == 'keywords' ||
@@ -96,11 +116,8 @@ $.ddMM = {
 					$helpline.after(ruleHtml);
 				}else{
 					if ($.isPlainObject(_this.fields[this])){
-						//TODO: Maybe check for empty? Just ':input' is not very well…
-//						fieldtype = _this.fields[this]['fieldtype'];
-						var fieldtype = ':input',
-							// Identify the table row to move
-							$toMove = $(fieldtype + '[name="' + _this.fields[this].fieldname + '"]').parents('tr:not(.urltv)');
+						// Identify the table row to move
+						var $toMove = _this.fields[this].$elem.parents('tr:not(.urltv)');
 						
 						$toMove.find('script').remove();
 						// Get rid of line after, if there is one
@@ -115,7 +132,7 @@ $.ddMM = {
 						// Remove widths from label column
 						//movedTV.find("td[width]").attr("width","");
 						// This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
-						$('[name="' + _this.fields[this].fieldname + '"]:first').parents('td').removeAttr('style');
+						_this.fields[this].$elem.parents('td').removeAttr('style');
 					}
 				}
 			});
@@ -126,5 +143,10 @@ $.ddMM = {
 //On document.ready
 $(function(){
 	$.ddMM.$mutate = $('#mutate');
+	
+	//Initialization of the corresponding jQuery element for each document field
+	for (var field in $.ddMM.fields){
+		$.ddMM.fields[field].$elem = $($.ddMM.fields[field].fieldtype + '[name="' + $.ddMM.fields[field].fieldname + '"]');
+	}
 });
 })(jQuery);

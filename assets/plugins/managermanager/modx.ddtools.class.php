@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.11 (2014-02-11)
+ * @version 0.12 (2014-05-23)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.11
+ * @link http://code.divandesign.biz/modx/ddtools/0.12
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -328,26 +328,26 @@ class ddTools {
 		global $modx;
 		
 		//Если нет хотя бы заголовка, выкидываем
-		if (!$fields['pagetitle']) return false;
+		if (!$fields['pagetitle']){return false;}
 		
 		//Если не передана дата создания документа, ставим текущую
-		if (!$fields['createdon']) $fields['createdon'] = time();
+		if (!$fields['createdon']){$fields['createdon'] = time();}
 		
 		//Если не передано, кем документ создан, ставим 1
-		if (!$fields['createdby']) $fields['createdby'] = 1;
+		if (!$fields['createdby']){$fields['createdby'] = 1;}
 		
 		//Если группы заданы, то это приватный документ
-		if ($groups) $fields['privatemgr'] = 1;
+		if ($groups){$fields['privatemgr'] = 1;}
 		
 		//Если надо публиковать, поставим дату публикации текущей
-		if ($fields['published'] == 1) $fields['pub_date'] = $fields['createdon'];
+		if ($fields['published'] == 1){$fields['pub_date'] = $fields['createdon'];}
 		
 		$fields = self::explodeFieldsArr($fields);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
 		$id = $modx->db->insert($fields[0], self::$tables['site_content']);
 		
-		if (!$id) return false;
+		if (!$id){return false;}
 		
 		//Если есть хоть одна TV
 		if (count($fields[1]) > 0){
@@ -392,7 +392,7 @@ class ddTools {
 	public static function updateDocument($id = 0, $update = array(), $where = ''){
 		global $modx;
 		
-		if ($id == 0 && trim($where) == '') return false;
+		if ($id == 0 && trim($where) == ''){return false;}
 		
 		$where_sql = '';
 		
@@ -460,7 +460,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.0 (2013-03-16)
+	 * @version 1.1 (2014-03-19)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -480,44 +480,46 @@ class ddTools {
 	 * 
 	 * @return {mixed} - Массив документов или false, если что-то не так.
 	 */
-	public static function getDocuments($ids = array(), $published = false, $deleted = 0, $fields = "*", $where = '', $sort = "menuindex", $dir = "ASC", $limit = ""){
+	public static function getDocuments($ids = array(), $published = false, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		global $modx;
+		
+		if(is_string($ids)){
+			if(strpos($ids, ',') !== false){
+				$ids = array_filter(array_map('intval', explode(',', $ids)));
+			}else{
+				$ids = array($ids);
+			}
+		}
 		
 		if (count($ids) == 0){
 			return false;
 		}else{
-			$limit = ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
 			// modify field names to use sc. table reference
-			$fields = 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-			$sort = ($sort == "") ? "" : 'sc.' . implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sort)));
-			
+			$fields = 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 			if ($where != ''){
 				$where = 'AND '.$where;
 			}
 			
-			$published = ($published !== false) ? 'AND sc.published = '.$published : '';
-			$deleted = ($deleted !== false) ? 'AND sc.deleted = '.$deleted : '';
+			$published = ($published !== false) ? "AND sc.published = '{$published}'" : '';
+			$deleted = ($deleted !== false) ? "AND sc.deleted = '{$deleted}'" : '';
 			
 			// get document groups for current user
 			if ($docgrp = $modx->getUserDocGroups()){
-				$docgrp = implode(",", $docgrp);
+				$docgrp = implode(',', $docgrp);
 			}
 			
-			$access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+			$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 			
-			$sql = "
-				SELECT DISTINCT $fields FROM ".self::$tables['site_content']." sc
-				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id
-				WHERE (sc.id IN (".implode(",", $ids).") $published $deleted $where) AND ($access)
-				GROUP BY sc.id ".($sort ? " ORDER BY $sort $dir" : "")." $limit 
-			";
+			$result = $modx->db->select(
+				"DISTINCT {$fields}",
+				self::$tables['site_content']." sc LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
+				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+				($sort ? "{$sort} {$dir}" : ""),
+				$limit
+			);
 			
-			$result = $modx->db->query($sql);
-			$resourceArray = array();
-			
-			for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++){
-				array_push($resourceArray, @ $modx->db->getRow($result));
-			}
+			$resourceArray = $modx->db->makeArray($result);
 			
 			return $resourceArray;
 		}
@@ -541,11 +543,11 @@ class ddTools {
 	 * 
 	 * @return {mixed} - Массив данных документа или false, если что-то не так.
 	 */
-	public static function getDocument($id = 0, $fields = "*", $published = false, $deleted = 0){
+	public static function getDocument($id = 0, $fields = '*', $published = false, $deleted = 0){
 		if ($id == 0){
 			return false;
 		}else{
-			$docs = self::getDocuments(array($id), $published, $deleted, $fields, "", "", "", 1);
+			$docs = self::getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
 			
 			if ($docs != false){
 				return $docs[0];
@@ -557,7 +559,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.0 (2013-03-16)
+	 * @version 1.1 (2014-03-19)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -574,16 +576,14 @@ class ddTools {
 	 * 
 	 * @return {mixed} - Массив TV или false, если что-то не так.
 	 */
-	public static function getTemplateVars($idnames = array(), $fields = "*", $docid = "", $published = false, $sort = "rank", $dir = "ASC"){
+	public static function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = false, $sort = 'rank', $dir = 'ASC'){
 		global $modx;
 		
 		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
 			return false;
 		}else{
-			$result = array();
-			
 			// get document record
-			if ($docid == ""){
+			if ($docid == ''){
 				$docid = $modx->documentIdentifier;
 				$docRow = $modx->documentObject;
 			}else{
@@ -595,43 +595,34 @@ class ddTools {
 			}
 			
 			// get user defined template variables
-			$fields = ($fields == "") ? "tv.*" : 'tv.'.implode(',tv.', preg_replace("/^\s/i", "", explode(',', $fields)));
-			$sort = ($sort == "") ? "" : 'tv.'.implode(',tv.', preg_replace("/^\s/i", "", explode(',', $sort)));
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
+			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
 			
-			if ($idnames == "*"){
-				$query = "tv.id<>0";
+			if ($idnames == '*'){
+				$query = 'tv.id<>0';
 			}else{
-				$query = (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
+				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name')." IN ('".implode("','", $idnames)."')";
 			}
 			
-			if ($docgrp= $modx->getUserDocGroups()){
-				$docgrp= implode(",", $docgrp);
-			}
+			$rs = $modx->db->select(
+				"{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
+				self::$tables['site_tmplvars']." tv
+					INNER JOIN ".self::$tables['site_tmplvar_templates']." tvtpl ON tvtpl.tmplvarid = tv.id
+					LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
+				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
+				($sort ? "{$sort} {$dir}" : "")
+			);
 			
-			$sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-			$sql .= "FROM ".self::$tables['site_tmplvars']." tv ";
-			$sql .= "INNER JOIN ".self::$tables['site_tmplvar_templates']." tvtpl ON tvtpl.tmplvarid = tv.id ";
-			$sql .= "LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
-			$sql .= "WHERE ".$query." AND tvtpl.templateid = ".$docRow['template'];
-			
-			if ($sort){
-				$sql .= " ORDER BY $sort $dir ";
-			}
-			
-			$rs = $modx->db->query($sql);
-			
-			for ($i= 0; $i < @ $modx->db->getRecordCount($rs); $i++){
-				array_push($result, @ $modx->db->getRow($rs));
-			}
+			$result = $modx->db->makeArray($rs);
 			
 			// get default/built-in template variables
 			ksort($docRow);
 			
 			foreach ($docRow as $key => $value){
-				if ($idnames == "*" || in_array($key, $idnames)){
+				if ($idnames == '*' || in_array($key, $idnames)){
 					array_push($result, array(
-						"name" => $key,
-						"value" => $value
+						'name' => $key,
+						'value' => $value
 					));
 				}
 			}
@@ -642,7 +633,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.0 (2013-03-16)
+	 * @version 1.0.1 (2014-03-19)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -657,7 +648,7 @@ class ddTools {
 	 * 
 	 * @return {mixed} - Массив TV или false, если что-то не так.
 	 */
-	public static function getTemplateVarOutput($idnames = array(), $docid = "", $published = false, $sep = ''){
+	public static function getTemplateVarOutput($idnames = array(), $docid = '', $published = false, $sep = ''){
 		global $modx;
 		
 		if (count($idnames) == 0){
@@ -667,18 +658,19 @@ class ddTools {
 			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
 			
 			$docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
-			
-			$result = self::getTemplateVars($vars, '*', $docid, $published, '', ''); // remove sort for speed
+			// remove sort for speed
+			$result = self::getTemplateVars($vars, '*', $docid, $published, '', '');
 			
 			if ($result == false){
 				return false;
 			}else{
-				$baspath = $modx->config['base_path'].'manager/includes';
+				$baspath = MODX_MANAGER_PATH.'includes';
 				include_once $baspath.'/tmplvars.format.inc.php';
 				include_once $baspath.'/tmplvars.commands.inc.php';
 				
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
+					
 					if (!$row['id']){
 						$output[$row['name']] = $row['value'];
 					}else{
@@ -693,7 +685,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.0 (2013-05-15)
+	 * @version 1.1 (2014-03-19)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -707,13 +699,13 @@ class ddTools {
 	 * @param $deleted {false; 0; 1} - Documents removal status which does not matter if deleted === false. Default: 0.
 	 * @param $fields {comma separated string} - Documents fields to get. Default: '*'.
 	 * @param $where {string} - SQL WHERE clause. Default: ''.
-	 * @param $sortBy {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
-	 * @param $sortDir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
+	 * @param $sort {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
+	 * @param $dir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
 	 * @param $limit {string} - SQL LIMIT (without 'LIMIT'). Default: ''.
 	 * 
 	 * @return {mixed} - Массив документов или false, если что-то не так.
 	 */
-	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sortBy = 'menuindex', $sortDir = 'ASC', $limit = ''){
+	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		global $modx;
 		
 		$published = ($published !== false) ? 'AND sc.published = '.$published : '';
@@ -723,39 +715,35 @@ class ddTools {
 			$where = 'AND '.$where;
 		}
 		
-		$limit = ($limit != '') ? 'LIMIT '.$limit : '';
-		
 		// modify field names to use sc. table reference
-		$fields = 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $fields)));
-		$sortBy = ($sortBy == "") ? "" : 'sc.'.implode(',sc.', preg_replace("/^\s/i", "", explode(',', $sortBy)));
+		$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
+		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 		
 		// get document groups for current user
 		if ($docgrp = $modx->getUserDocGroups()){
-			$docgrp = implode(",", $docgrp);
+			$docgrp = implode(',', $docgrp);
 		}
 		
 		// build query
-		$access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
+		$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 		
-		$sql = "SELECT DISTINCT $fields
-				FROM ".self::$tables['site_content']." sc
-				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id
-				WHERE sc.parent = '$parentid' $published $deleted $where AND ($access)
-				GROUP BY sc.id ".($sortBy ? " ORDER BY $sortBy $sortDir " : "")." $limit ";
+		$result = $modx->db->select(
+			"DISTINCT {$fields}",
+			self::$tables['site_content']." sc
+				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
+			"sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
+			($sort ? "{$sort} {$dir}" : ""),
+			$limit
+		);
 		
-		$result = $modx->db->query($sql);
-		$resourceArray = array();
-		
-		for ($i = 0; $i < @$modx->db->getRecordCount($result); $i++){
-			array_push($resourceArray, @$modx->db->getRow($result));
-		}
+		$resourceArray = $modx->db->makeArray($result);
 		
 		return $resourceArray;
 	}
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.1 (2013-05-15)
+	 * @version 1.2 (2014-03-19)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -767,7 +755,7 @@ class ddTools {
 	 * 	— The $published parameter can be set as ===false so documents data can be got regardless of their publication status.
 	 * 
 	 * @param $parentid {integer} - Id of parent document. Default: 0.
-	 * @param $fields {array} - Array of document fields or TVs to get. Default: array($resultKey).
+	 * @param $tvidnames {array} - Array of document fields or TVs to get. Default: array($resultKey).
 	 * @param $published {false; 0; 1} - Documents publication status which does not matter if published === false. Default: 1.
 	 * @param $sortBy {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
 	 * @param $sortDir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
@@ -776,7 +764,7 @@ class ddTools {
 	 * 
 	 * @return {mixed} - Массив документов или false, если что-то не так.
 	 */
-	public static function getDocumentChildrenTVarOutput($parentid = 0, $fields = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
+	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
 		//Получаем всех детей
 		$docs = self::getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
 		
@@ -786,13 +774,23 @@ class ddTools {
 		}else{
 			$result = array();
 			
-			//Если указано поле ключа результирующего массива, добавим это поле (если ещё нету конечно)
-			if ($resultKey !== false && !in_array($resultKey, $fields)) $fields[] = $resultKey;
+			$unsetResultKey = false;
+			
+			if ($resultKey !== false){
+				if (is_array($tvidnames)){
+					if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)){
+						$tvidnames[] = $resultKey;
+						$unsetResultKey = true;
+					}
+				}else if ($tvidnames != '*' && $tvidnames != $resultKey){
+					$tvidnames = array($tvidnames, $resultKey);
+					$unsetResultKey = true;
+				}
+			}
 			
 			//Перебираем все документы
 			for ($i = 0; $i < count($docs); $i++){
-				//Получаем необходимые TV и поля документа
-				$tvs = self::getTemplateVarOutput($fields, $docs[$i]['id'], $published);
+				$tvs = self::getTemplateVarOutput($tvidnames, $docs[$i]['id'], $published);
 				
 				//Если что-то есть
 				if ($tvs){
@@ -800,6 +798,10 @@ class ddTools {
 					if ($resultKey !== false && array_key_exists($resultKey, $tvs)){
 						//Записываем результат с соответствующим ключом
 						$result[$tvs[$resultKey]] = $tvs;
+						
+						if ($unsetResultKey){
+							unset($result[$tvs[$resultKey]][$resultKey]);
+						}
 					}else{
 						//Просто накидываем по индексу
 						$result[] = $tvs;
@@ -863,9 +865,9 @@ class ddTools {
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
 	 * The parameters ara passed as an associative array, where:
-	 * @param name {string} - Script name. @required
-	 * @param version {string} - Script version. Default: '0'.
-	 * @param startup {boolean} - Is the script connected in the <head>? Default: false.
+	 * @param $name {string} - Script name. @required
+	 * @param $version {string} - Script version. Default: '0'.
+	 * @param $startup {boolean} - Is the script connected in the <head>? Default: false.
 	 * 
 	 * @return {array: associative} - Array of: 'name' {string} => Script name; 'version' {string} => Script version (если был ранее подключен более поздняя версия, вернётся она); 'useThisVer' {boolean} => Использовалась ли та версия, что передали; 'startup' {boolean} => Подключён ли скрипт в <head>?; 'pos' {integer} => Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODx.
 	 */
@@ -987,6 +989,40 @@ class ddTools {
 		}else{
 			return 0;
 		}
+	}
+	
+	/**
+	 * verifyRenamedParams
+	 * @version 1.0 (2014-05-23)
+	 * 
+	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
+	 * 
+	 * @param $params {array} - The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
+	 * @param $compliance {array} - An array of correspondence between old parameter names and new ones, in which the new names are the keys and the old names are the values. @required
+	 * 
+	 * @return {array} - An associative array, in which the correct parameter names are the keys and the parameter values are the values.
+	 */
+	public static function verifyRenamedParams($params, $compliance){
+		$result = array();
+		$msg = array();
+		
+		//Перебираем таблицу соответствия
+		foreach ($compliance as $new => $old){
+			//Если старый параметр задан, а новый — нет
+			if (isset($params[$old]) && !isset($params[$new])){
+				//Зададим
+				$result[$new] = $params[$old];
+				$msg[] .= '<li>“'.$old.'” must be renamed as “'.$new.'”;</li>';
+			}
+		}
+		
+		if (count($result) > 0){
+			global $modx;
+			
+			$modx->logEvent(1, 2, '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $msg).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>', $modx->currentSnippet);
+		}
+		
+		return $result;
 	}
 	
 	/**
