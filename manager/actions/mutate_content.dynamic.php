@@ -99,6 +99,13 @@ if (!empty ($id)) {
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
+    
+    if (isset($_REQUEST['newtemplate'])){
+    	$content['template'] = $_REQUEST['newtemplate'];
+    }else{
+    	$content['template'] = getDefaultTemplate();
+    }
+    
     $_SESSION['itemname'] = $_lang["new_resource"];
 }
 
@@ -488,8 +495,10 @@ function decode(s) {
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
-    'id' => $id
+    'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut))
     echo implode('', $evtOut);
 	
@@ -605,17 +614,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
                         $closeOptGroup = true;
                     }
-                    if (isset($_REQUEST['newtemplate'])) {
-                        $selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
-                    } else {
-                        if (isset ($content['template'])) {
-                            $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
-                        } else {
-                            $default_template = getDefaultTemplate();
-                            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
-                            $content['template'] = $default_template;
-                        }
-                    }
+                    
+                    $selectedtext = ($row['id'] == $content['template']) ? ' selected="selected"' : '';
+                    
                     echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
                     $currentCategory = $thisCategory;
                 }
@@ -1157,8 +1158,10 @@ if ($use_udperms == 1) {
 
 // invoke OnDocFormRender event
 $evtOut = $modx->invokeEvent('OnDocFormRender', array(
-    'id' => $id,
+	'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut)) echo implode('', $evtOut);
 ?>
 </div><!--div class="tab-pane" id="documentPane"-->
