@@ -173,7 +173,7 @@ class OldFunctions {
     
     function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
     	global $modx;
-        if ($id == $modx->config['site_start'] && $modx->config['seostrict']==='1') {return '/';}
+        if ($id == $modx->config['site_start'] && $modx->config['seostrict']==='1') {return $modx->config['base_url'];}
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
         $dir = implode('/', $Alias);
