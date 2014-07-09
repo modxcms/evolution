@@ -1940,7 +1940,11 @@ class DocumentParser {
      * @return boolean
      */
     function isFrontend() {
-        return !$this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return false;
+		}
+		else return true;
     }
 
     /**
