@@ -721,7 +721,7 @@ class DocumentParser {
             $this->db->update(
                 array(
                     'published'   => 1,
-                    'publishedon' => time(),
+                    'publishedon' => $timeNow,
                 ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
@@ -1809,7 +1809,7 @@ class DocumentParser {
 		array(
 			'eventid'     => $evtid,
 			'type'        => $type,
-			'createdon'   => time(),
+			'createdon'   => time() + $this->config['server_offset_time'],
 			'source'      => $esc_source,
 			'description' => $msg,
 			'user'        => $LoginUserID,
@@ -2928,7 +2928,7 @@ class DocumentParser {
                 'sender'      => $from,
                 'recipient'   => $to,
                 'private'     => $private,
-                'postdate'    => time(),
+                'postdate'    => time() + $this->config['server_offset_time'],
                 'messageread' => 0,
             ), $this->getFullTableName('user_messages'));
     }
