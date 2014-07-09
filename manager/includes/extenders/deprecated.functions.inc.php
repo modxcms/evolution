@@ -170,17 +170,6 @@ class OldFunctions {
         }
         return $keywords;
     }
-    
-    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
-    	global $modx;
-        if ($id == $modx->config['site_start'] && $modx->config['seostrict']==='1') {return '/';}
-        $Alias = explode('/',$alias);
-        $alias = array_pop($Alias);
-        $dir = implode('/', $Alias);
-        unset($Alias);
-        if($modx->config['make_folders']==='1' && $isfolder==1) $suff = '/';
-        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
-    }
 
     /*############################################
       Etomite_dbFunctions.php

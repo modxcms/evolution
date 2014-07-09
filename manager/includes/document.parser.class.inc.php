@@ -1233,7 +1233,17 @@ class DocumentParser {
         $suff= $this->config['friendly_url_suffix'];
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
-
+    
+    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
+    	
+        if ($id == $this->config['site_start'] && $this->config['seostrict']==='1') {return '/';}
+        $Alias = explode('/',$alias);
+        $alias = array_pop($Alias);
+        $dir = implode('/', $Alias);
+        unset($Alias);
+        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
+        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
+    }
     
     /** 
      * Convert URL tags [~...~] to URLs
