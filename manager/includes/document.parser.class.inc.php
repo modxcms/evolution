@@ -1927,7 +1927,11 @@ class DocumentParser {
      * @return boolean
      */
     function isBackend() {
-        return $this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return true;
+		}
+		else return false;
     }
 
     /**
