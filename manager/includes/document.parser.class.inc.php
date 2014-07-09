@@ -82,9 +82,34 @@ class DocumentParser {
         $this->error_reporting = 1;
     }
 
-    function __call($name,$args) {
+    function __call($method_name,$arguments) {
         include_once(MODX_MANAGER_PATH . 'includes/extenders/deprecated.functions.inc.php');
-        if(method_exists($this->old,$name)) return call_user_func_array(array($this->old,$name),$args);
+        if(method_exists($this->old,$method_name)) $error_type=1;
+        else                                       $error_type=3;
+        
+        if(!isset($this->config['error_reporting'])||1<$this->config['error_reporting'])
+    	{
+    		if($error_type==1)
+        	{
+	        	$title = 'Call deprecated method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+    		}
+    		else
+    		{
+	        	$title = 'Call undefined method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+    		}
+	    	$info = debug_backtrace();
+	    	$m[] = $msg;
+	        if(!empty($this->currentSnippet))          $m[] = 'Snippet - ' . $this->currentSnippet;
+	        elseif(!empty($this->event->activePlugin)) $m[] = 'Plugin - '  . $this->event->activePlugin;
+	    	$m[] = $this->decoded_request_uri;
+	    	$m[] = str_replace('\\','/',$info[0]['file']) . '(line:' . $info[0]['line'] . ')';
+	    	$msg = implode('<br />', $m);
+	        $this->logEvent(0, $error_type, $msg, $title);
+        }
+        if(method_exists($this->old,$method_name))
+        	return call_user_func_array(array($this->old,$method_name),$arguments);
     }
 
     /**
