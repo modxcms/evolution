@@ -57,6 +57,24 @@ if(is_array($evtOut)) $RTEditors = implode(',',$evtOut);
 ?>
 <script language="JavaScript">
 
+function check_toggle() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = !el[i].checked; 
+};
+
+function check_none() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = false; 
+};
+
+function check_all() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = true; 
+};
+
 function duplicaterecord(){
     if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
         documentDirty=false;
@@ -389,6 +407,7 @@ function decode(s){
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
+    <p><a href="#" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a> <a href="#" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a> <a href="#" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a></p>
 	<style type="text/css">
 		label {display:block;}
 	</style>

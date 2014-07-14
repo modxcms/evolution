@@ -1269,3 +1269,7 @@ $_lang["login_processor_captcha_config"]     = "Captcha is not configured proper
 $_lang["dp_dayNames"]   = "['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
 $_lang["dp_monthNames"] = "['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
 $_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Включить все";
+$_lang["check_none"] = "Выключить все";
+$_lang["check_toggle"] = "Переключить";
