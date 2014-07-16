@@ -5,7 +5,7 @@
  * @version 1.0.14
  * @date 2014/02/24
  *
- * @language English
+ * @language Finnish
  * @package modx
  * @subpackage manager
  *

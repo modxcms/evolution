@@ -1,9 +1,9 @@
 <?php
 /**
  * Filename:       assets/plugins/tinymce/lang/english.inc.php
- * Function:       English language file for TinyMCE
- * Encoding:       ISO-Latin-1
- * Author:         Jeff Whitfield and yama
+ * Function:       Polish language file for TinyMCE
+ * Encoding:       UTF-8
+ * Author:         Jeff Whitfield and Piotr Matysiak
  * Date:           2014/02/01
  * Version:        3.5.10
  * MODX version:   0.9.5-1.0.14
