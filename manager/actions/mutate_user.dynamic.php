@@ -583,7 +583,7 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($usersettings['upload_images']) ? $usersettings['upload_images'] : "" ; ?>">
-              &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_images" value="1" <?php echo isset($usersettings['upload_images']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
+              &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_images" value="1" <?php echo isset($usersettings['upload_images']) && $usersettings['upload_images']!='' ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
@@ -597,7 +597,7 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($usersettings['upload_media']) ? $usersettings['upload_media'] : "" ; ?>">
-				&nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_media" value="1" <?php echo isset($usersettings['upload_media']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />            
+				&nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_media" value="1" <?php echo isset($usersettings['upload_media']) && $usersettings['upload_media']!='' ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />            
             </td>
           </tr>
           <tr>
@@ -611,7 +611,7 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : "" ; ?>">
-            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_flash" value="1" <?php echo isset($usersettings['upload_flash']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
+            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_flash" value="1" <?php echo isset($usersettings['upload_flash']) && $usersettings['upload_flash']!=''  ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
@@ -625,7 +625,7 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
             <td>
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : "" ; ?>">
-            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_files" value="1" <?php echo isset($usersettings['upload_files']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
+            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_files" value="1" <?php echo isset($usersettings['upload_files']) && $usersettings['upload_files']!='' ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
