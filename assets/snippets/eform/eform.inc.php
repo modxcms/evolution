@@ -721,6 +721,7 @@ function formMerge($docText, $docFields) {
 
 # Adds Addresses to Mailer
 function AddAddressToMailer(&$mail,$type,$addr){
+	if(empty($addr)) return;
 	$a = array_filter(array_map('trim', explode(',', $addr)));
 	for($i=0;$i<count($a);$i++){
 			if ($type=="to") $mail->AddAddress($a[$i]);

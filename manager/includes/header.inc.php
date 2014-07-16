@@ -27,7 +27,9 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
         function document_onload() {
             stopWorker();
             hideLoader();
-            <?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;
+<?php
+	if(isset($_REQUEST['r'])) echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
+?>
         }
 
 		function reset_path(elementName) {

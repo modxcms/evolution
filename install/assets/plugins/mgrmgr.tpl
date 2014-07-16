@@ -5,7 +5,7 @@
  * Customize the MODX Manager to offer bespoke admin functions for end users.
  * 
  * @category plugin
- * @version 0.6.1
+ * @version 0.6.2
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal @properties &remove_deprecated_tv_types_pref=Remove deprecated TV types;list;yes,no;yes &config_chunk=Configuration Chunk;text;mm_rules
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnPluginFormRender,OnTVFormRender
