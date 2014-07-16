@@ -151,10 +151,7 @@ if (('none' == $rte) && $mode) {
 						stream.eat("]");
 						return "modxConfig";
 					}
-					if (stream.match("&")) {
-						while ((ch = stream.next()) != null)
-							if (ch == "=") break;
-						stream.eat("=");
+					if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
 						return "attribute";
 					}
 					if (stream.match("!]")) {
