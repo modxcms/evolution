@@ -1159,7 +1159,7 @@ $_lang["make_folders_message"] = 'Aggiunge uno slash (/) all\'URL delle Risorse 
 $_lang["check_files_onlogin_title"] = '<b>Controllo dei file di sistema al login:</b>';
 $_lang["check_files_onlogin_message"] = 'Attivando questa opzione, i file di sistema più importanti saranno controllati e sarete avvisati nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Pur non essendo una garanzia infallibile, può essere utile per capire quando è stato compromesso un file di sistema MODX e/o il sito web.';
 
-$_lang["configcheck_sysfiles_mod"] = 'Importanti File di Sistema sono stati modificati.';
+$_lang["configcheck_sysfiles_mod"] = 'Sono stati modificati alcuni importanti file di sistema.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'E\' stata attivata l\'opzione per verificare i file di sistema più importanti e avvisare nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Se vi arriva un avviso non è detto che il sistema sia stato compromesso, ma può essere utile verificare i files importanti (impostati in Configurazione di Sistema -> Utente -> Verifica Files Importanti).
 Se i files non sono stati modificati o li ha modificati un amministratore di sistema potete eliminare l\'avviso andando su  Configurazione di Sistema e salvando nuovamente le impostazioni.';
 
@@ -1235,13 +1235,17 @@ $_lang["login_processor_wrong_password"]     = "Username o password errati!";
 $_lang["login_processor_many_failed_logins"] = "Accesso bloccato a causa di troppi tentativi falliti!";
 $_lang["login_processor_blocked1"]           = "Impossibile accedere, l'accesso è stato bloccato!";
 $_lang["login_processor_blocked2"]           = "L'accesso è stato bloccato! Riprovare più tardi.";
-$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
+$_lang["login_processor_blocked3"]           = "Dopo una certa data sarai bloccato e non potrai più accedere!";
 $_lang["login_processor_bad_code"]           = "Codice di sicurezza errato! Riprovare!";
-$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
-$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
-$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
-$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+$_lang["login_processor_remotehost_ip"]      = "In nome del tuo host non corrisponde al tuo indirizzo IP!";
+$_lang["login_processor_remote_ip"]          = "Non ti puoi collegare da questa località!";
+$_lang["login_processor_date"]               = "Non puoi accedere adesso. Prova in un altro momento.";
+$_lang["login_processor_captcha_config"]     = "Captcha non è configurato correttamente.";
 
-$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_dayNames"]   = "['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'] ";
+$_lang["dp_monthNames"] = "['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giusgno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']";
 $_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

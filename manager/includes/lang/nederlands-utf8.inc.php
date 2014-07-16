@@ -1265,6 +1265,10 @@ $_lang["login_processor_remote_ip"]          = "Het is niet toegestaan ​​om 
 $_lang["login_processor_date"]               = "Het is niet toegestaan ​​om in te loggen op dit moment. Probeer het later opnieuw.";
 $_lang["login_processor_captcha_config"]     = "Captcha is niet correct geconfigureerd.";
 
-$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_dayNames"]   = "['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag']";
+$_lang["dp_monthNames"] = "['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']";
 $_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

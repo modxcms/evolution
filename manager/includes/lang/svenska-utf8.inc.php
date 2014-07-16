@@ -1270,3 +1270,7 @@ $_lang["login_processor_captcha_config"]     = "Captcha är inte korrekt konfigu
 $_lang["dp_dayNames"]   = "['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag']";
 $_lang["dp_monthNames"] = "['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December']";
 $_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Välj alla";
+$_lang["check_none"] = "Välj ingen";
+$_lang["check_toggle"] = "Växla val";
