@@ -88,6 +88,7 @@ $_CONFIG = array(
 	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
     'dirPerms' => intval($settings['new_folder_permissions'],8),
     'filePerms' => intval($settings['new_file_permissions'],8),
+    'maxfilesize' => $settings['upload_maxsize'],
 
     'access' => array(
 
