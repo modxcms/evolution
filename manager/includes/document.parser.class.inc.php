@@ -114,57 +114,19 @@ class DocumentParser {
 
     /**
      * Loads an extension from the extenders folder.
-     * Currently of limited use - can only load the DBAPI and ManagerAPI.
+     * You can load any extension creating a boot file:
+     * MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php"
+     * $extname - extension name in lowercase
      *
-     * @global string $database_type
-     * @param string $extnamegetAllChildren
      * @return boolean
      */
     function loadExtension($extname) {
-        global $database_type;
 
-        switch ($extname) {
-            // Database API
-            case 'DBAPI' :
-                if (!include_once MODX_MANAGER_PATH . 'includes/extenders/dbapi.' . $database_type . '.class.inc.php')
-                    return false;
-                $this->db= new DBAPI;
-                return true;
-                break;
+        $extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
 
-                // Manager API
-            case 'ManagerAPI' :
-                if (!include_once MODX_MANAGER_PATH . 'includes/extenders/manager.api.class.inc.php')
-                    return false;
-                $this->manager= new ManagerAPI;
-                return true;
-                break;
+        $filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
 
-            // PHPMailer
-            case 'MODxMailer' :
-                include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php');
-                $this->mail= new MODxMailer;
-                if($this->mail) return true;
-                else            return false;
-                break;
-
-            case 'EXPORT_SITE' :
-                if(include_once(MODX_MANAGER_PATH . 'includes/extenders/export.class.inc.php'))
-                {
-                    $this->export= new EXPORT_SITE;
-                    return true;
-                }
-                else return false;
-                break;
-            case 'PHPCOMPAT' :
-                if(is_object($this->phpcompat)) return;
-                include_once(MODX_MANAGER_PATH . 'includes/extenders/phpcompat.class.inc.php');
-                $this->phpcompat = new PHPCOMPAT;
-                break;
-                
-                default :
-                return false;
-        }
+        return is_file($filename) ? include $filename : false;
     }
 
     /**
