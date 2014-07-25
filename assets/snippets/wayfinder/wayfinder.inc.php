@@ -265,8 +265,8 @@ class Wayfinder {
             }
 
             //Set level class if specified
-            if (!empty($this->_css['level'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['level'] . $level : $this->_css['level'] . $level;
+            if (!empty($this->_css['outerLevel'])) {
+                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
                 $hasClass = 1;
             }
 
@@ -284,6 +284,11 @@ class Wayfinder {
             //Set last class if specified
             if ($last && !empty($this->_css['last'])) {
                 $returnClass .= $hasClass ? ' ' . $this->_css['last'] : $this->_css['last'];
+                $hasClass = 1;
+            }
+            //Set level class if specified
+            if (!empty($this->_css['level'])) {
+                $returnClass .= $hasClass ? ' ' . $this->_css['level'] . $level : $this->_css['level'] . $level;
                 $hasClass = 1;
             }
             //Set parentFolder class if specified

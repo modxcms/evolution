@@ -73,6 +73,7 @@ $wf->_css = array(
 	'row' => isset($rowClass) ? $rowClass : '',
 	'outer' => isset($outerClass) ? $outerClass : '',
 	'inner' => isset($innerClass) ? $innerClass : '',
+	'outerLevel' => isset($outerLevelClass) ? $outerLevelClass: '',
 	'level' => isset($levelClass) ? $levelClass: '',
 	'self' => isset($selfClass) ? $selfClass : '',
 	'weblink' => isset($webLinkClass) ? $webLinkClass : '',
