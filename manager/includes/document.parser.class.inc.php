@@ -3224,6 +3224,38 @@ class DocumentParser {
         $this->regClientScript($html, true);
     }
 
+
+
+    /**
+     * Registers Client-side JavaScript library (registers many JS and CSS files)
+     * @param $lib_name library names separated by commas
+     * @param array $params more options for library array('jqueri'=>array('version'=>'1.9'),'jquery-ui'=>array(...))
+     */
+    function regClientLib($lib_name,$params=array()){
+
+        $lib_names = explode(",",$lib_name);
+
+        //General options
+        extract($params);
+
+        //Register the library
+        foreach($lib_names as $lib_name){
+            $lib_name = trim(str_replace(array('..','/','\\'),'',strtolower($lib_name)));
+            $reg_file = MODX_BASE_PATH."assets/libs/$lib_name/register.php";
+
+            //Library registered only once
+            if (file_exists($reg_file)){
+
+                //Library options
+                if (isset($params[$lib_name])){
+                    extract($params[$lib_name]);
+                }
+
+                include_once ($reg_file);
+            }
+        }
+    }
+
    /**
      * Remove unwanted html tags and snippet, settings and tags
      *
