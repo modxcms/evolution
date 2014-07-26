@@ -3235,9 +3235,6 @@ class DocumentParser {
 
         $lib_names = explode(",",$lib_name);
 
-        //General options
-        extract($params);
-
         //Register the library
         foreach($lib_names as $lib_name){
             $lib_name = trim(str_replace(array('..','/','\\'),'',strtolower($lib_name)));
@@ -3247,9 +3244,7 @@ class DocumentParser {
             if (file_exists($reg_file)){
 
                 //Library options
-                if (isset($params[$lib_name])){
-                    extract($params[$lib_name]);
-                }
+                $options = isset($params[$lib_name]) ? $params[$lib_name] : $params;
 
                 include_once ($reg_file);
             }

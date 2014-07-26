@@ -11,10 +11,10 @@
 if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
 
 //Library version. версия подключаемой библиотеки
-$version = isset($version) ? $version : '1.11.0';
+$version = isset($options['version']) ? $options['version'] : '1.11.0';
 
 //Mode. Режим подключения
-$mode = isset($mode) ? $mode : 'google';
+$mode = isset($options['mode']) ? $options['mode'] : 'google';
 
 switch($mode){
 
