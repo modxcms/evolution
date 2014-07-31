@@ -317,18 +317,17 @@ $_dfnMaxlength = 6;
 				$fields['debug']=$debugText;
 			}
 
-			#set validation message
+			// set validation message
 			if (count($rMsg) > 0) {
-			    $rMsg = "<span class=\"requiredlist\"><span>" . implode("</span><span>",$rMsg) . "</span></span>";
-			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
-			} else {
-			    $tmp = "";
+				$rMsg = str_replace('[+ef_required_list+]', implode($params['errorRequiredSeparator'], $rMsg), $params['errorRequiredTpl']);
+				array_unshift($vMsg, str_replace("[+fields+]", $rMsg, $_lang['ef_required_message']));
 			}
-			$tmp .= implode("<br />",$vMsg);
-			if(!strstr($tpl,'[+validationmessage+]'))
-				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
-			else
-				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']);
+			$validationMessage = str_replace('[+ef_message_text+]', $_lang['ef_validation_message'], $params['errorTpl']);
+			if (!strstr($tpl, '[+validationmessage+]')) {
+				$modx->setPlaceholder('validationmessage', str_replace('[+ef_wrapper+]', implode('<br/>', $vMsg), $validationMessage));
+			} else {
+				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', implode('<br/>', $vMsg), $validationMessage);
+			}
 		} else {
 
 			# format report fields

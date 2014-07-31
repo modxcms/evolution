@@ -226,6 +226,8 @@ class AjaxSearchInput {
             $searchString = $this->_stripHtml($searchString);
 
             $searchString = $this->_htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
+
+            if(function_exists('mb_convert_kana')) $searchString = mb_convert_kana($searchString, 's', $pgCharset);
         }
         return $searchString;
     }
@@ -372,4 +374,3 @@ class AjaxSearchInput {
         return strip_tags($text);
     }
 }
-?>

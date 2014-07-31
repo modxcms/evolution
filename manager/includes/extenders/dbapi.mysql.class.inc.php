@@ -375,7 +375,7 @@ class DBAPI {
     *
     */
    function getRow($ds, $mode = 'assoc') {
-      if ($ds) {
+      if (is_resource($ds)) {
          if ($mode == 'assoc') {
             return mysql_fetch_assoc($ds);
          }

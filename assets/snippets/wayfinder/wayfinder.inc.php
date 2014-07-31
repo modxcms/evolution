@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.2
+ Version: 2.0.3
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -37,7 +37,7 @@ class Wayfinder {
 		$_[] = '[+wf.description+]';
 		$_[] = '[+wf.subitemcount+]';
 		$this->placeHolders['rowLevel'] = $_;
-		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]');
+		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.level+]');
 		$this->placeHolders['tvs']          = array();
 		
 	}
@@ -138,7 +138,7 @@ class Wayfinder {
 			$classNames = $this->setItemClass($wrapperClass);
 			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
 			
-			$phArray = array($subMenuOutput,$useClass,$classNames);
+			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
 			//Process the wrapper
 			$subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
 			//Debug
@@ -191,6 +191,8 @@ class Wayfinder {
             $usedTemplate = 'parentRowTpl';
         } elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
             $usedTemplate = 'innerRowTpl';
+	} elseif ($resource['last'] && $this->_templates['lastRowTpl']) {
+            $usedTemplate = 'lastRowTpl';
         } else {
             $usedTemplate = 'rowTpl';
         }

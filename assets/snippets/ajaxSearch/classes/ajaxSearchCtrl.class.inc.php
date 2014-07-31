@@ -194,4 +194,3 @@ class AjaxSearchCtrl {
         $this->subSearch = $subSearch;
     }
 }
-?>

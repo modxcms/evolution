@@ -5,7 +5,7 @@
  * Language:       Spanish
  * Encoding:       UTF-8
  * Translated by:  "alconpez" y "ARES1983"
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Información de eliminación de errores (Debug): ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "El enviador fue incapaz de realizar el envío del ema
 $_lang["ef_multiple_submit"] = "<p>Este formulario ya fue correctamente enviado. No hay necesidad de que envíe su información multiples veces.</p>";
 $_lang["ef_no_doc"] = "No se encontró el documento o el Chunk para la plantilla id=";
 $_lang["ef_regex_error"] = "error en una expresión regular ";
-$_lang["ef_required_message"] = "  Los siguientes campos contienen errores: {fields}<br />";
+$_lang["ef_required_message"] = "Los siguientes campos contienen errores: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Fallo</span> usando la regla [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Pasado usando la regla [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " la validación paso silenciosamente. <span style=\"color:red;\"> ¡El SQL no devolvió ningún resultado!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>¡Gracias!</h3><p>Su información ha sido e
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": error al enviar el archivo.";
 $_lang["ef_upload_exceeded"] = " ha excedido el límite máximo de subida.";
-$_lang["ef_validation_message"] = "<strong>Se detectaron algunos errores:</strong><br />";
+$_lang["ef_validation_message"] = "Se detectaron algunos errores:";
 $_lang["ef_version_error"] = "<strong>¡Alerta!</strong> La versión del snippet eForm (version:&nbsp;[+version+]) es diferente al archivo eForm incluído (version:&nbsp;[+fileVersion+]). Por favor, asegurese de usar la misma versión en ambos.";
 ?>

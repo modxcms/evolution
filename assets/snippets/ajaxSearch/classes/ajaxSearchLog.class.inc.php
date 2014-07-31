@@ -166,4 +166,3 @@ if ($_POST['logid'] && $_POST['ascmt']) {
         echo "ERROR: comment rejected";
     }
 }
-?>

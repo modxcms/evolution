@@ -79,5 +79,3 @@ $dcfg['jsJquery'] = 'assets/js/jquery.min.js';
 
 // For a global parameter initialisation use the following syntax $__param = 'value';
 // To overwrite parameter snippet call use $param = 'value';
-
-?>

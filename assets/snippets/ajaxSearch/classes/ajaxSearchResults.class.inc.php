@@ -1320,5 +1320,3 @@ function code_to_utf8($num) {
     }
     return ' '; // default value
 }
-
-?>

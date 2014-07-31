@@ -3262,7 +3262,7 @@ class DocumentParser {
         $this->regClientScript($html, true);
     }
 
-    /**
+   /**
      * Remove unwanted html tags and snippet, settings and tags
      *
      * @param string $html
@@ -3277,23 +3277,9 @@ class DocumentParser {
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
-        $t= preg_replace('~&#x005B;\*(.*?)\*&#x005D;~', "", $t); //encoded tv
-        $t= preg_replace('~&#x005B;&#x005B;(.*?)&#x005D;&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\!(.*?)\!&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\((.*?)\)&#x005D;~', "", $t); //encoded settings
-        $t= preg_replace('~&#x005B;\+(.*?)\+&#x005D;~', "", $t); //encoded placeholders
-        $t= preg_replace('~&#x007B;&#x007B;(.*?)&#x007D;&#x007D;~', "", $t); //encoded chunks
         return $t;
     }
 
-	# Decode JSON regarding hexadecimal entity encoded MODX tags
-    function jsonDecode($json, $assoc = false) {
-		// unmask MODX tags
-		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
-		$unmasked = array('[', ']', '{', '}');
-		$json = str_replace($masked, $unmasked, $json);
-		return json_decode($json, $assoc);
-    }
    /**
      * Add an event listner to a plugin - only for use within the current execution cycle
      *

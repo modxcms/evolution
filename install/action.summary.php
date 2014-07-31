@@ -14,7 +14,7 @@ $errors = 0;
 echo "<p>" . $_lang['checking_php_version'];
 // -1 if left is less, 0 if equal, +1 if left is higher
 if (version_compare(phpversion(), "5.0.0") < 0) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>".$_lang['you_running_php'] . phpversion() . $_lang["modx_requires_php"]."</p>";
+    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', '5.0.0', $_lang["modx_requires_php"]) . "</p>";
     $errors += 1;
 }
 // check php register globals off

@@ -4,17 +4,16 @@
  *
  * @version 1.0.14
  * @date 2014/02/24
- * @author Stefan van Zanden
- * @author Gauke Pieter Sietzema - Sterc.nl
+ * @author The MODX Project Team
  *
- * @language Dutch
+ * @language English
  * @package modx
  * @subpackage manager
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
-$modx_lang_attribute = 'nl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
+$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX is een <a href="http://modx.com/" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -1259,4 +1258,9 @@ $_lang["login_processor_wrong_password"]     = "Onjuiste gebruikersnaam of wacht
 $_lang["login_processor_many_failed_logins"] = "Wegens te veel mislukte aanmeldingen ben je geblokkeerd!";
 $_lang["login_processor_blocked1"]           = "U bent geblokkeerd en kan niet inloggen!";
 $_lang["login_processor_blocked2"]           = "U bent geblokkeerd en kan niet inloggen! Probeer het later opnieuw.";
+$_lang["login_processor_blocked3"]           = "U wordt automatisch geblokkeerd na een bepaalde datum en kunt niet meer inloggen!";
 $_lang["login_processor_bad_code"]           = "De veiligheidscode klopt niet! Probeer het opnieuw!";
+$_lang["login_processor_remotehost_ip"]      = "Uw hostnaam verwijst niet terug naar uw IP!";
+$_lang["login_processor_remote_ip"]          = "Het is niet toegestaan ​​om in te loggen vanaf deze locatie.";
+$_lang["login_processor_date"]               = "Het is niet toegestaan ​​om in te loggen op dit moment. Probeer het later opnieuw.";
+$_lang["login_processor_captcha_config"]     = "Captcha is niet correct geconfigureerd.";
