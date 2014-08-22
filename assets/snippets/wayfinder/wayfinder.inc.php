@@ -142,7 +142,7 @@ class Wayfinder {
 				$wrapperClass = 'outercls';
 			}
 			//Get the class names for the wrapper
-			$classNames = $this->setItemClass($wrapperClass);
+			$classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
 			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
 			
 			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
@@ -262,10 +262,20 @@ class Wayfinder {
             //Set outer class if specified
             $returnClass .= $this->_css['outer'];
             $hasClass = 1;
-        } elseif ($classType === 'innercls' && !empty($this->_css['inner'])) {
-            //Set inner class if specified
-            $returnClass .= $this->_css['inner'];
-            $hasClass = 1;
+        } elseif ($classType === 'innercls') {
+
+            if ( !empty($this->_css['inner'])) {
+                //Set inner class if specified
+                $returnClass .= $this->_css['inner'];
+                $hasClass = 1;
+            }
+
+            //Set level class if specified
+            if (!empty($this->_css['outerLevel'])) {
+                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
+                $hasClass = 1;
+            }
+
         } elseif ($classType === 'rowcls') {
             //Set row class if specified
             if (!empty($this->_css['row'])) {
