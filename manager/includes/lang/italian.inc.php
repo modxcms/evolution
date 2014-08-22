@@ -1246,6 +1246,6 @@ $_lang["dp_dayNames"]   = "['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Gi
 $_lang["dp_monthNames"] = "['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giusgno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']";
 $_lang["dp_startDay"]   = "1";
 
-$_lang["check_all"] = "Select all";
-$_lang["check_none"] = "Select none";
-$_lang["check_toggle"] = "Toggle selection";
+$_lang["check_all"] = "Seleziona tutto";
+$_lang["check_none"] = "Annulla selezione";
+$_lang["check_toggle"] = "Inverti selezione";
