@@ -708,7 +708,7 @@ class DocumentParser {
             $this->db->update(
                 array(
                     'published'   => 1,
-                    'publishedon' => $timeNow,
+                    'publishedon' => 'pub_date',
                 ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
