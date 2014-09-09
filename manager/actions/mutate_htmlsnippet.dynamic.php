@@ -140,10 +140,10 @@ if (is_array($evtOut))
     <p><?php echo $_lang['htmlsnippet_msg']?></p>
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
-            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'], ENT_QUOTES, $modx->config['modx_charset'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
     <tr>
         <th><?php echo $_lang['htmlsnippet_desc']?></th>
-        <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+        <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description'], ENT_QUOTES, $modx->config['modx_charset'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
     </tr>
     <tr>
         <th><?php echo $_lang['existing_category']?></th>
@@ -153,7 +153,7 @@ if (is_array($evtOut))
 <?php
 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
 foreach (getCategories() as $n => $v) {
-    echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
+    echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'], ENT_QUOTES, $modx->config['modx_charset'])."</option>\n";
 }
 ?>
         </select></td>
@@ -173,7 +173,7 @@ foreach (getCategories() as $n => $v) {
             <?php echo $_lang['chunk_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post'], ENT_QUOTES, $modx->config['modx_charset']) : htmlspecialchars($content['snippet'], ENT_QUOTES, $modx->config['modx_charset'])?></textarea>
         </div>
     </div>
 

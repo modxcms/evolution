@@ -293,7 +293,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <table>
       <tr>
         <th><?php echo $_lang['plugin_name']; ?>:</th>
-        <td><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
+        <td><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'], ENT_QUOTES, $modx->config['modx_charset']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
       </tr>
       <tr>
         <th><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</th>
@@ -306,7 +306,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <?php
                 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                 foreach(getCategories() as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"], ENT_QUOTES, $modx->config['modx_charset'])."</option>";
                 }
             ?>
         </select>
@@ -357,7 +357,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 						'sm.name'
 						);
                     while($row = $modx->db->getRow($ds)){
-                        echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
+                        echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"], ENT_QUOTES, $modx->config['modx_charset'])."</option>";
                     }
                 ?>
             </select>

@@ -92,12 +92,12 @@ class DocumentParser {
     		if($error_type==1)
         	{
 	        	$title = 'Call deprecated method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function", ENT_QUOTES, $this->config['modx_charset']);
     		}
     		else
     		{
 	        	$title = 'Call undefined method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function", ENT_QUOTES, $this->config['modx_charset']);
     		}
 	    	$info = debug_backtrace();
 	    	$m[] = $msg;
@@ -3439,7 +3439,7 @@ class DocumentParser {
         }
         if (is_readable($file)) {
             $source= file($file);
-            $source= htmlspecialchars($source[$line -1]);
+            $source= htmlspecialchars($source[$line -1], ENT_QUOTES, $this->config['modx_charset']);
         } else {
             $source= "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>

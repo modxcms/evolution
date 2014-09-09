@@ -161,7 +161,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 default:
                     $nodetitle = $pagetitle;
             }
-            $nodetitle = htmlspecialchars(str_replace(array("\r\n", "\n", "\r"), ' ', $nodetitle));
+            $nodetitle = htmlspecialchars(str_replace(array("\r\n", "\n", "\r"), ' ', $nodetitle), ENT_QUOTES, $modx->config['modx_charset']);
             $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
             $nodetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$nodetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$nodetitle</span>":"<span class=\"publishedNode$protectedClass\">$nodetitle</span>");
             $nodetitleDisplay = $deleted==1 ? "<span class=\"deletedNode\">$nodetitle</span>" : $nodetitleDisplay;

@@ -99,9 +99,9 @@ class DBAPI {
                if($modx->config['send_errormail'] <= 2)
                {
                   $logtitle    = 'Failed to create the database connection!';
-                  $request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
-                  $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
-                  $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
+                  $request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, $modx->config['modx_charset']);
+                  $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $modx->config['modx_charset']);
+                  $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $modx->config['modx_charset']);
 
                   $modx->sendmail(array(
 					  'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
