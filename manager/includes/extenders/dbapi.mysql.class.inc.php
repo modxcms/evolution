@@ -89,8 +89,8 @@ class DBAPI {
       $safe_count = 0;
       while(!$this->conn && $safe_count<3)
       {
-          if($persist!=0) $this->conn = mysql_pconnect($host, $uid, $pwd);
-          else            $this->conn = mysql_connect($host, $uid, $pwd, true);
+          if($persist!=0) $this->conn = @mysql_pconnect($host, $uid, $pwd);
+          else            $this->conn = @mysql_connect($host, $uid, $pwd, true);
           
           if(!$this->conn)
           {
@@ -130,7 +130,7 @@ class DBAPI {
             $modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s", $totaltime) . "</fieldset><br />";
          }
             if (function_exists('mysql_set_charset')) {
-                mysql_set_charset($this->config['charset']);
+                @mysql_set_charset($this->config['charset']);
             } else {
                 @mysql_query("SET NAMES {$this->config['charset']}", $this->conn);
             }
@@ -168,7 +168,7 @@ class DBAPI {
               }
           }
       }
-      else $s = mysql_real_escape_string($s, $this->conn);
+      else $s = @mysql_real_escape_string($s, $this->conn);
           return $s;
    }
 
@@ -305,7 +305,7 @@ class DBAPI {
     *
     */
    function freeResult($rs) {
-      mysql_free_result($rs);
+      @mysql_free_result($rs);
    }
    
    /**
@@ -313,7 +313,7 @@ class DBAPI {
     *
     */
    function numFields($rs) {
-      return mysql_num_fields($rs);
+      return @mysql_num_fields($rs);
    }
    
    /**
@@ -321,7 +321,7 @@ class DBAPI {
     *
     */
    function fieldName($rs,$col=0) {
-      return mysql_field_name($rs,$col);
+      return @mysql_field_name($rs,$col);
    }
    
     /**
@@ -329,7 +329,7 @@ class DBAPI {
     *
     */
    function selectDb($name) {
-      mysql_select_db($name);
+      @mysql_select_db($name);
    }
    
 
@@ -339,7 +339,7 @@ class DBAPI {
     */
    function getInsertId($conn=NULL) {
       if( !is_resource($conn)) $conn =& $this->conn;
-      return mysql_insert_id($conn);
+      return @mysql_insert_id($conn);
    }
 
    /**
@@ -348,7 +348,7 @@ class DBAPI {
     */
    function getAffectedRows($conn=NULL) {
       if (!is_resource($conn)) $conn =& $this->conn;
-      return mysql_affected_rows($conn);
+      return @mysql_affected_rows($conn);
    }
 
    /**
@@ -357,7 +357,7 @@ class DBAPI {
     */
    function getLastError($conn=NULL) {
       if (!is_resource($conn)) $conn =& $this->conn;
-      return mysql_error($conn);
+      return @mysql_error($conn);
    }
 
    /**
@@ -365,7 +365,7 @@ class DBAPI {
     *
     */
    function getRecordCount($ds) {
-      return (is_resource($ds)) ? mysql_num_rows($ds) : 0;
+      return (is_resource($ds)) ? @mysql_num_rows($ds) : 0;
    }
 
    /**
@@ -377,16 +377,16 @@ class DBAPI {
    function getRow($ds, $mode = 'assoc') {
       if (is_resource($ds)) {
          if ($mode == 'assoc') {
-            return mysql_fetch_assoc($ds);
+            return @mysql_fetch_assoc($ds);
          }
          elseif ($mode == 'num') {
-            return mysql_fetch_row($ds);
+            return @mysql_fetch_row($ds);
          }
 		 elseif ($mode == 'object') {
-            return mysql_fetch_object($ds);
+            return @mysql_fetch_object($ds);
          }
          elseif ($mode == 'both') {
-            return mysql_fetch_array($ds, MYSQL_BOTH);
+            return @mysql_fetch_array($ds, MYSQL_BOTH);
          } else {
             global $modx;
             $modx->messageQuit("Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num' or 'both'.");
@@ -421,9 +421,9 @@ class DBAPI {
          $dsq = $this->query($dsq);
       if ($dsq) {
          $names = array ();
-         $limit = mysql_num_fields($dsq);
+         $limit = @mysql_num_fields($dsq);
          for ($i = 0; $i < $limit; $i++) {
-            $names[] = mysql_field_name($dsq, $i);
+            $names[] = @mysql_field_name($dsq, $i);
          }
          return $names;
       }
@@ -607,7 +607,7 @@ class DBAPI {
     * @return string
     */
    function getVersion() {
-       return mysql_get_server_info();
+       return @mysql_get_server_info();
    }
    
    /**
