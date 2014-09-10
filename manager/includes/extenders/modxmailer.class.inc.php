@@ -80,6 +80,8 @@ class MODxMailer extends PHPMailer
 				$this->encode_header_method = 'mb_encode_mimeheader';
 				$this->IsHTML(false);
 				break;
+            case 'windows-1251':
+                $this->CharSet     = 'cp1251';
 			case 'utf8':
 			case 'utf-8':
 			default:
