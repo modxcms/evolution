@@ -1,11 +1,8 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_template')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-?>
-<?php
 
 $id = intval($_POST['id']);
 $template = $modx->db->escape($_POST['post']);
@@ -15,15 +12,13 @@ $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
 }
@@ -41,35 +36,22 @@ switch ($_POST['mode']) {
 							));	
 							
 		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(id)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename));
-
-			// prepare a few request/post variables for form redisplay...
-			$_REQUEST['a'] = '19';
-			$_POST['locked'] = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
-			$_POST['category'] = $categoryid;
-			$_GET['stay'] = $_POST['stay'];
-			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_templates.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(19);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=19");
 		}
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			echo "\$rs not set! New template not saved!";
-		} else {
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
-			}
+		$newid = $modx->db->insert(
+			array(
+				'templatename'  => $templatename,
+				'description' => $description,
+				'content' => $template,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_templates'));
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -78,12 +60,12 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 								));				
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $templatename;
+
 			// empty cache
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$modx->clearCache('full');
+			
 			// finished emptying cache - redirect		
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "16&id=$newid":"19";
@@ -93,7 +75,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}		
         break;
     case '16':
 
@@ -104,31 +85,23 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 							));	   
 		
-		// disallow duplicate names for new templates
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}' AND id != '{$id}'";
-		$rs = $modx->db->query($sql);
+		// disallow duplicate names for templates
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_templates'), "templatename='{$templatename}' AND id!='{$id}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename));
-
-			// prepare a few request/post variables for form redisplay...
-			$_REQUEST['a'] = '16';
-			$_POST['locked'] = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
-			$_POST['category'] = $categoryid;
-			$_GET['stay'] = $_POST['stay'];
-			include 'header.inc.php';
-			include(dirname(dirname(__FILE__)).'/actions/mutate_templates.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(16);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['template'], $templatename), "index.php?a=16&id={$id}");
 		}
 							
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_templates` SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			echo "\$rs not set! Edited template not saved!";
-		} else {
+		$modx->db->update(
+			array(
+				'templatename' => $templatename,
+				'description'  => $description,
+				'content'      => $template,
+				'locked'       => $locked,
+				'category'     => $categoryid,
+			), $modx->getFullTableName('site_templates'), "id='{$id}'");
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -137,12 +110,12 @@ switch ($_POST['mode']) {
 										"id"	=> $id
 								));	    		
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $templatename;
+
 			// first empty the cache		
-			include_once "cache_sync.class.processor.php";
-			$sync = new synccache();
-			$sync->setCachepath("../assets/cache/");
-			$sync->setReport(false);
-			$sync->emptyCache(); 		
+			$modx->clearCache('full');
+
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "16&id=$id":"19";
@@ -152,14 +125,11 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}		
 
 		
 		
         break;
     default:
-	?>
-	Erm... You supposed to be here now?
-	<?php
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 ?>

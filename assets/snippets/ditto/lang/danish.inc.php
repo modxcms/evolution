@@ -1,18 +1,14 @@
 <?php
-
 /**
- * Filename:       assets/snippets/ditto/english.inc.php
- * Function:       Default English language file for Ditto.
- * Author:         The MODx Project
- * Date:           2006/07/2
- * Version:        1.0.2
- * MODx version:   0.9.2.1
-*/
-
-// NOTE: New language keys should added at the bottom of this page
-
+ * Title: Language File
+ * Purpose: Default Danish language file for Ditto
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+$_lang['language'] = "danish";
+$_lang['abbr_lang'] = "da";
 $_lang['file_does_not_exist'] = " eksisterer ikke. tjek filen.";
-
+$_lang['extender_does_not_exist'] = "extender does not exist. Please check it.";
 $_lang['default_template'] = '
     <div class="ditto_summaryPost">
         <h3><a href="[~[+id+]~]">[+title+]</a></h3>
@@ -21,61 +17,43 @@ $_lang['default_template'] = '
         <div style="text-align:right;">by <strong>[+author+]</strong> den [+date+]</div>
     </div>
 ';
-
-$_lang['blank_tpl'] = "er blank eller du har en stavefejl i dit chunk navn, venligst tjek det.";
-
+$_lang["bad_tpl"] = "<p>&[+tpl+] either does not contain any placeholders or is an invalid chunk name, code block, or filename. Please check it.</p>";
 $_lang['missing_placeholders_tpl'] = 'En af dine Ditto skabeloner mangler en placeholder, tjek venligst skabelonen nedenunder: <br /><br /><hr /><br /><br />';
-
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
-
-$_lang['default_splitter'] = "<!-- splitter -->";
-
-$_lang['more_text'] = "L&aelig;s mere...";
-
-$_lang['no_entries'] = '<p>Ingen artikler fundet.</p>';
-
-$_lang['date_format'] = "%d-%b-%y %H:%M";
-
-$_lang['archives'] = "Arkiv";
-
+$_lang['no_documents'] = '<p>No documents found.</p>';
+$_lang['resource_array_error'] = 'Resource Array Error';
 $_lang['prev'] = "&lt; tidligere";
-
-$_lang['next'] = "N&aelig;ste &gt;";
-
+$_lang['next'] = "Nӕste &gt;";
 $_lang['button_splitter'] = "|";
-
-$_lang['default_copyright'] = "[(site_name)] 2007";	
-
-$_lang['rss_lang'] = "da";
-
-$_lang['debug_summarized'] = "Antal som skal resumeres (summarize):";
-
-$_lang['debug_returned'] = "<br />Total som det er meningen der skal returneres:";
-
-$_lang['debug_retrieved_from_db'] = "antal af total i db:";
-
-$_lang['debug_sort_by'] = "Sorter efter (sortBy):";
-
-$_lang['debug_sort_dir'] = "Sorter retning (sortDir):";
-
-$_lang['debug_start_at'] = "Start ved";
-
-$_lang['debug_stop_at'] = "og stop ved";
-
-$_lang['debug_out_of'] = "ude af";
-
-$_lang['debug_document_data'] = "Dokument Data for ";
-
-$_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
-
+$_lang['default_copyright'] = "[(site_name)] 2007";
 $_lang['invalid_class'] = "Ditto klassen er ugyldig. tjek den venligst.";
+$_lang['none'] = "Ingen";
+$_lang['edit'] = "Rediger";
+$_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
-// New language key added 2-July-2006 to 5-July-2006
+// Debug Tab Names
+$_lang['info'] = "Info";
+$_lang['modx'] = "MODX";
+$_lang['fields'] = "Fields";
+$_lang['templates'] = "Templates";
+$_lang['filters'] = "Filters";
+$_lang['prefetch_data'] = "Prefetch Data";
+$_lang['retrieved_data'] = "Retreived Data";
 
-// Keys deprecated : $_lang['api_method'] and $_lang['GetAllSubDocs_method'] 
-
-$_lang['tvs'] = "TVs:";
-
-$_lang['api'] = "Bruger den nye MODx 0.9.2.1 API";
-
-?>
+// Debug Text
+$_lang['placeholders'] = "Placeholders";
+$_lang['params'] = "Parameters";
+$_lang['basic_info'] = "Basic Info";
+$_lang['document_info'] = "Document Info";
+$_lang['debug'] = "Debug";
+$_lang['version'] = "Version";
+$_lang['summarize'] = "Summarize";
+$_lang['total'] = "Total";
+$_lang['sortBy'] = "Sort By";
+$_lang['sortDir'] = "Sort Direction";
+$_lang['start'] = "Start";
+$_lang['stop'] = "Stop";
+$_lang['ditto_IDs'] = "IDs";
+$_lang['ditto_IDs_selected'] = "Selected IDs";
+$_lang['ditto_IDs_all'] = "All IDs";
+$_lang['open_dbg_console'] = "Open Debug Console";
+$_lang['save_dbg_console'] = "Save Debug Console";

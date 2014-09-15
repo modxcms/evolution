@@ -1,24 +1,22 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_eventlog')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-?>
-<?php
 
-$id=intval($_GET['id']);
-$clearlog = ($_GET['cls']==1 ? true:false);
+if (isset($_GET['cls']) && $_GET['cls']==1) {
+	$where = '';
+} else {
+	$id = isset($_GET['id'])? intval($_GET['id']) : 0;
+	if($id==0) {
+		$modx->webAlertAndQuit($_lang["error_no_id"]);
+	}
+	$where = "id='{$id}'";
+}
 
 // delete event log
-$sql = "DELETE FROM ".$modx->getFullTableName("event_log").(!$clearlog ? " WHERE id=".$id.";":"");
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to delete the event log...";
-	exit;
-} else {
-	$header="Location: index.php?a=114";
-	header($header);
-}
+$modx->db->delete($modx->getFullTableName('event_log'), $where);
 
+$header="Location: index.php?a=114";
+header($header);
 ?>

@@ -5,8 +5,8 @@
 * @package  AjaxSearchUtil
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchUtil class contains some util methods
@@ -114,4 +114,3 @@ class AjaxSearchUtil {
         ini_set( 'pcre.backtrack_limit', $this->_current_pcre_backtrack );
     }
 }
-?>

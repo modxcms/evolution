@@ -1097,7 +1097,7 @@ class CGIF
 		$nPxl = ($this->m_gfh->m_nHeight - 1) * $this->m_gfh->m_nWidth;
 		for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
 			if (!phpthumb_functions::FunctionIsDisabled('set_time_limit')) {
-			set_time_limit(30);
+				set_time_limit(30);
 			}
 			for ($x = 0; $x < $this->m_gfh->m_nWidth; $x++, $nPxl++) {
 				if (

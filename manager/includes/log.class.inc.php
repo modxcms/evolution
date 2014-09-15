@@ -16,14 +16,6 @@ class logHandler {
     // Single variable for a log entry
     var $entry = array();
 
-    function logError($msg) {
-        include_once dirname(__FILE__)."/error.class.inc.php";
-        $e = new errorHandler;
-        $e->setError(9, "Logging error: ".$msg);
-        $e->dumpError();
-        return;
-    }
-
     function initAndWriteLog($msg="", $internalKey="", $username="", $action="", $itemid="", $itemname="") {
         global $modx;
         $this->entry['msg'] = $msg; // writes testmessage to the object
@@ -48,21 +40,19 @@ class logHandler {
     // writes it to the logging table
     function writeToLog() {
         global $modx;
-
+        $tbl_manager_log = $modx->getFullTableName('manager_log');
+        
         if($this->entry['internalKey'] == "") {
-            $this->logError("internalKey not set.");
-            return;
+            $modx->webAlertAndQuit("Logging error: internalKey not set.");
         }
         if(empty($this->entry['action'])) {
-            $this->logError("action not set.");
-            return;
+            $modx->webAlertAndQuit("Logging error: action not set.");
         }
         if($this->entry['msg'] == "") {
             include_once "actionlist.inc.php";
             $this->entry['msg'] = getAction($this->entry['action'], $this->entry['itemId']);
             if($this->entry['msg'] == "") {
-                $this->logError("couldn't find message to write to log.");
-                return;
+                $modx->webAlertAndQuit("Logging error: couldn't find message to write to log.");
             }
         }
 
@@ -73,17 +63,13 @@ class logHandler {
         $fields['itemid']      = $this->entry['itemId'];
         $fields['itemname']    = $modx->db->escape($this->entry['itemName']);
         $fields['message']     = $modx->db->escape($this->entry['msg']);
-        $insert_id = $modx->db->insert($fields,'[+prefix+]manager_log');
+        $insert_id = $modx->db->insert($fields,$tbl_manager_log);
         if(!$insert_id) {
-            $this->logError("Couldn't save log to table! ".$modx->db->getLastError());
-            return true;
-        }
-        else
-        {
+            $modx->messageQuit("Logging error: couldn't save log to table! Error code: ".$modx->db->getLastError());
+        } else {
             $limit = (isset($modx->config['manager_log_limit'])) ? intval($modx->config['manager_log_limit']) : 3000;
             $trim  = (isset($modx->config['manager_log_trim']))  ? intval($modx->config['manager_log_trim']) : 100;
-            if(($insert_id % $trim) === 0)
-            {
+            if(($insert_id % $trim) === 0) {
                 $modx->rotate_log('manager_log',$limit,$trim);
             }
         }

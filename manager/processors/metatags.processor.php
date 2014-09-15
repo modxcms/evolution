@@ -1,9 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('manage_metatags')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // get op code
@@ -13,10 +11,10 @@ $opcode = isset($_POST['op']) ? $_POST['op'] : "keys" ;
 if($opcode=="addtag") {
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => $modx->db->escape($_POST["tagname"]),
-		tag => $modx->db->escape($tag),
-		tagvalue => $modx->db->escape($_POST["tagvalue"]),
-		http_equiv => intval($http_equiv)
+		'name' => $modx->db->escape($_POST["tagname"]),
+		'tag' => $modx->db->escape($tag),
+		'tagvalue' => $modx->db->escape($_POST["tagvalue"]),
+		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->insert($f,$modx->getFullTableName("site_metatags"));
@@ -27,20 +25,20 @@ else if($opcode=="edttag") {
 	$id = intval($_POST["id"]);
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => $modx->db->escape($_POST["tagname"]),
-		tag => $modx->db->escape($tag),
-		tagvalue => $modx->db->escape($_POST["tagvalue"]),
-		http_equiv => intval($http_equiv)
+		'name' => $modx->db->escape($_POST["tagname"]),
+		'tag' => $modx->db->escape($tag),
+		'tagvalue' => $modx->db->escape($_POST["tagvalue"]),
+		'http_equiv' => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
-		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='$id'");
+		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='{$id}'");
 	}
 }
 // delete
 else if($opcode=="deltag") {
 	$f = $_POST["tag"];
 	if(is_array($f) && count($f)>0) {
-		for($i=0;$i<count($f);$i++) $f[$i]=$modx->db->escape($f[$i]);
+		$f = $modx->db->escape($f);
 		$modx->db->delete($modx->getFullTableName("site_metatags"),"id IN('".implode("','",$f)."')");
 	}
 }
@@ -52,39 +50,26 @@ else {
 	// do any renaming that has to be done
 	foreach($orig_keywords as $key => $value) {
 		if($rename_keywords[$key]!=$value) {
-			$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
-			$rs = $modx->db->query($sql);
-			$limit = $modx->db->getRecordCount($rs);
+			$rs = $modx->db->select('count(*)', $modx->getFullTableName('site_keywords'), "BINARY keyword='".$modx->db->escape($rename_keywords[$key])."'");
+			$limit = $modx->db->getValue($rs);
 			if($limit > 0) {
-				echo "  - This keyword has already been defined!";
-				exit;
+				$modx->webAlertAndQuit("Keyword '{$rename_keywords[$key]}' already been defined!");
 			} else {
-				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
-				$rs = $modx->db->query($sql);
+				$modx->db->update(
+					array(
+						'keyword' => $modx->db->escape($rename_keywords[$key]),
+					), $modx->getFullTableName('site_keywords'), "keyword='".$modx->db->escape($value)."'");
 			}
 		}
 	}
 
 	// delete any keywords that need to be deleted
 	if(count($delete_keywords)>0) {
-		$keywords_array = array();
-		foreach($delete_keywords as $key => $value) {
-			$keywords_array[] = $key;
-		}
+		$keywords_array = array_keys($delete_keywords);
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
-		if(!$rs) {
-			echo "Failure on deletion of xref keys: ".$modx->db->getLastError();
-			exit;
-		}
+		$modx->db->delete($modx->getFullTableName('keyword_xref'), "keyword_id IN(".implode(",", $keywords_array).")");
 
-		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
-		if(!$rs) {
-			echo "Failure on deletion of keywords ".$modx->db->getLastError();
-			exit;
-		}
+		$modx->db->delete($modx->getFullTableName('site_keywords'), "id IN(".implode(",", $keywords_array).")");
 
 	}
 
@@ -92,25 +77,21 @@ else {
 	if(!empty($_POST['new_keyword'])) {
 		$nk = $_POST['new_keyword'];
 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE keyword='".addslashes($nk)."'";
-		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(*)', $modx->getFullTableName('site_keywords'), "keyword='".$modx->db->escape($nk)."'");
+		$limit = $modx->db->getValue($rs);
 		if($limit > 0) {
-			echo "Keyword $nk already exists!";
-			exit;
+			$modx->webAlertAndQuit("Keyword '{$nk}' already exists!");
 		} else {
-			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
-			$rs = $modx->db->query($sql);
+			$modx->db->insert(
+				array(
+					'keyword' => $modx->db->escape($nk),
+				), $modx->getFullTableName('site_keywords'));
 		}
 	}
 }
 
 // empty cache
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache();
+$modx->clearCache('full');
 
 $header="Location: index.php?a=81";
 header($header);

@@ -5,7 +5,7 @@
  * PHPThumb creates thumbnails and altered images on the fly and caches them
  *
  * @category 	snippet
- * @version 	1.1
+ * @version 	1.2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category Content

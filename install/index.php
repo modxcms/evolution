@@ -1,6 +1,6 @@
 <?php
 /**
- * MODx Installer
+ * MODX Installer
  */
 // do a little bit of environment cleanup if possible
 if (version_compare(phpversion(), "5.3") < 0) {
@@ -13,7 +13,7 @@ $base_path = str_replace($self,'',str_replace('\\','/', __FILE__));
 require_once("{$base_path}install/functions.php");
 
 // set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 if (is_file("{$base_path}assets/cache/siteManager.php")) {
 	include_once("{$base_path}assets/cache/siteManager.php");
@@ -44,6 +44,7 @@ $modulePlugins = array (); // plugins - array : name, description, type - 0:file
 $moduleModules = array (); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
 $moduleTVs = array (); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
+$moduleDependencies = array(); // module depedencies - array : module, table, column, type, name
 
 $errors= 0;
 
@@ -57,13 +58,17 @@ $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language
 #    if (!isset ($_POST['chkagree'])) $action= 'license';
 #}
 
+$ph = ph();
+$ph = array_merge($ph,$_lang);
+$ph['install_language'] = $install_language;
+
 ob_start();
-include ('header.php');
-
-if (!@include ('action.' . $action . '.php')) {
-    die ('Invalid install action attempted. [action=' . $action . ']');
+if (!@include_once("action.{$action}.php")) {
+    die ("Invalid install action attempted. [action={$action}]");
 }
+$ph['content'] = ob_get_contents();
+ob_end_clean();
 
-include ('footer.php');
-ob_end_flush();
-?>
+$tpl = file_get_contents("{$base_path}install/template.tpl");
+echo parse($tpl,$ph);
+

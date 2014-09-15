@@ -14,7 +14,6 @@
 browser.version = "<?php echo self::VERSION ?>";
 browser.support.chromeFrame = <?php echo (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), " chromeframe") !== false) ? "true" : "false" ?>;
 browser.support.zip = <?php echo (class_exists('ZipArchive') && !$this->config['denyZipDownload']) ? "true" : "false" ?>;
-browser.support.check4Update = <?php echo ((!isset($this->config['denyUpdateCheck']) || !$this->config['denyUpdateCheck']) && (ini_get("allow_url_fopen") || function_exists("http_get") || function_exists("curl_init") || function_exists('socket_create'))) ? "true" : "false" ?>;
 browser.lang = "<?php echo text::jsValue($this->lang) ?>";
 browser.type = "<?php echo text::jsValue($this->type) ?>";
 browser.theme = "<?php echo text::jsValue($this->config['theme']) ?>";

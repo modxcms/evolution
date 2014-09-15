@@ -1,35 +1,48 @@
 <?php
 /**
-* snippets/eform/english.inc.php
-* English language file for eForm
-*/
-
-
-$_lang["ef_thankyou_message"] = "<h3>Thank You!</h3><p>Your information was successfully submitted.</p>";
-$_lang["ef_no_doc"] = "Document or chunk not found for template id=";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Some errors were detected in your form:</strong><br />[+ef_wrapper+]</div>";
-$_lang["ef_required_message"] = " The following required field(s) are missing: {fields}<br />";
-$_lang["ef_invalid_number"] = " is not a valid number";
-$_lang["ef_invalid_date"] = " is not a valid date";
-$_lang["ef_invalid_email"] = " is not a valid email address";
-$_lang["ef_upload_exceeded"] = " has exceeded maximum upload limit.";
-$_lang["ef_failed_default"] = "Incorrect value";
-$_lang["ef_failed_vericode"] = "Invalid verification code.";
-$_lang["ef_failed_range"] = "Value not in permitted range";
-$_lang["ef_failed_list"] = "Value not in list of permitted values";
-$_lang["ef_failed_eval"] = "Value did not validate";
-$_lang["ef_failed_ereg"] = "Value did not validate";
-$_lang["ef_failed_upload"] = "Incorrect file type.";
-$_lang["ef_error_validation_rule"] = "Validation rule not recognized";
-$_lang["ef_tamper_attempt"] = "Tampering attempt detected!";
-$_lang["ef_error_formid"] = "Invalid Form Id number or name.";
+ * Language file for eForm
+ *
+ * Language:       Polish
+ * Encoding:       UTF-8
+ * Translated by:  Piotr Matysiak
+ * Date:           2014/06/13
+ */
+$_lang["ef_date_format"] = "%d-%m-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
+$_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">UWAGA - DEBUGOWANIE WŁĄCZONE</span> <br />Nie zapomnij wyłączyć debugowania przed opublikowaniem tego formularza!</p>";
+$_lang["ef_error_filter_rule"] = "Filtr tekstu nierozpoznany.";
+$_lang["ef_error_formid"] = "Nieprawidłowy numer ID lub nazwa formularza.";
+$_lang["ef_error_list_rule"] = "Error in validating form field! #LIST rule declared but no list values found: ";
+$_lang["ef_error_validation_rule"] = "Reguła walidacji nierozpoznana";
+$_lang["ef_eval_deprecated"] = "The #EVAL rule is deprecated and may not work in future versions. Use #FUNCTION instead.";
+$_lang["ef_failed_default"] = "Nieprawidłowa wartość";
+$_lang["ef_failed_ereg"] = "Wartość nie przeszła walidacji";
+$_lang["ef_failed_eval"] = "Wartość nie przeszła walidacji";
+$_lang["ef_failed_list"] = "Wartość nie znajduje się na liście dozwolonych wartości";
+$_lang["ef_failed_range"] = "Wartość poza zakresem";
+$_lang["ef_failed_upload"] = "Niepoprawny typ pliku.";
+$_lang["ef_failed_vericode"] = "Nieprawidłowy kod weryfikacji.";
+$_lang["ef_invalid_date"] = "nie jest poprawną datą";
+$_lang["ef_invalid_email"] = "nie jest poprawnym adresem e-mail";
+$_lang["ef_invalid_number"] = "nie jest poprawną liczbą";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Form template set to id of page containing snippet call! You can not have the form in the same document as the snippet call.</span> id=";
-$_lang["ef_sql_no_result"] = " silently passed validation. <span style=\"color:red;\"> SQL returned no result!</span> ";
-$_lang['ef_regex_error'] = 'error in regular expression ';
-$_lang['ef_debug_warning'] = '<p style="color:red;"><span style="font-size:1.5em;font-weight:bold;">WARNING - DEBUGGING IS ON</span> <br />Make sure you turn debugging off before making this form live!</p>';
-$_lang['ef_mail_abuse_subject'] = 'Potential email form abuse detected for form id';
-$_lang['ef_mail_abuse_message'] = '<p>A form on your website may have been the subject of an email injection attempt. The details of the posted values are printed below. Suspected text has been embedded in \[..]\ tags.  </p>';
-$_lang['ef_mail_abuse_error'] = '<strong>Invalid or insecure entries were detected in your form</strong>.';
-$_lang['ef_eval_deprecated'] = "The #EVAL rule is deprecated and may not work in future versions. Use #FUNCTION instead.";
+$_lang["ef_mail_abuse_error"] = "<strong>W formularzu wykryto błędne lub niebezpieczne wpisy.</strong>";
+$_lang["ef_mail_abuse_message"] = "<p>A form on your website may have been the subject of an email injection attempt. The details of the posted values are printed below. Suspected text has been embedded in \[..]\ tags.</p>";
+$_lang["ef_mail_abuse_subject"] = "Potential email form abuse detected for form id";
+$_lang["ef_mail_error"] = "Mailer nie był w stanie wysłać wiadomości";
+$_lang["ef_multiple_submit"] = "<p>Formularz już został pomyślnie wysłany. Nie ma potrzeby wysyłać go kilka razy.</p>";
+$_lang["ef_no_doc"] = "Dokument lub chunk nie został znaleziony dla szablonu id=";
+$_lang["ef_regex_error"] = "błąd w wyrażeniu regularnym";
+$_lang["ef_required_message"] = "Następujące pola nie zostały wypełnione: [+fields+]";
+$_lang["ef_rule_failed"] = "<span style=\"color:red;\">Niepowodzenie</span> używając reguły [+rule+] (input=\"[+input+]\")";
+$_lang["ef_rule_passed"] = "Powodzenie używając reguły [+rule+] (input=\"[+input+]\").";
+$_lang["ef_sql_no_result"] = "walidacja udana. <span style=\"color:red;\"> SQL nie zwróciło wyników!</span> ";
+$_lang["ef_submit_time_limit"] = "<p>Formularz już został pomyślnie wysłany. Ponowne wysłanie będzie możliwe po upływie [+submitLimitMinutes+] minut.</p>";
+$_lang["ef_tamper_attempt"] = "Wykryto próbę manipulacji!";
+$_lang["ef_thankyou_message"] = "<h3>Dziękujemy!</h3><p>Wiadomość została pomyślnie wysłana.</p>";
+$_lang["ef_thousands_separator"] = "";
+$_lang["ef_upload_error"] = ": błąd podczas wgrywania pliku.";
+$_lang["ef_upload_exceeded"] = "przekroczono limit wielkości wgrywanego pliku.";
+$_lang["ef_validation_message"] = "W formularzu znaleziono błędy:";
+$_lang["ef_version_error"] = "<strong>UWAGA!</strong> Wersja snippetu eForm (version:&nbsp;[+version+]) jest inna od pliku eForm (version:&nbsp;[+fileVersion+]). Upewnij się że używasz tej samej wersji w obu.";
 ?>

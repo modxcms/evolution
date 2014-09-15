@@ -18,7 +18,7 @@ $limit               = 0;
 
 /* That's it to config! */
 define('MODX_API_MODE', true);
-define('IN_MANAGER_MODE', true);
+define('IN_MANAGER_MODE', "true");
 $self = 'assets/plugins/tinymce/js/get_template.php';
 $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
 include_once("{$base_path}index.php");
@@ -70,7 +70,7 @@ else
 			$ph['title']       = ($docs[$i]['menutitle']!=='') ? $docs[$i]['menutitle'] : $docs[$i]['pagetitle'];
 			$ph['target']      = 'docid=' . $docs[$i]['id'];
 			$ph['description'] = $docs[$i]['description'];
-			$list[] = parsePlaceholder($tpl,$ph);
+			$list[] = $modx->parseText($tpl,$ph);
 		}
 	}
 	
@@ -79,12 +79,9 @@ else
 		$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 		if(strpos($chunks,',')!==false)
 		{
-			$chunks = explode(',', $chunks);
-			foreach($chunks as $i=>$v)
-			{
-				$chunks[$i] = $modx->db->escape(trim($v));
-			}
-			$chunks = join("','", $chunks);
+			$chunks = array_filter(array_map('trim', explode(',', $chunks)));
+			$chunks = $modx->db->escape($chunks);
+			$chunks = implode("','", $chunks);
 			$where  = "`name` IN ('{$chunks}')";
 			$orderby = "FIELD(name, '{$chunks}')";
 		}
@@ -101,11 +98,11 @@ else
 			$ph['title']       = $row['name'];
 			$ph['target']      = 'chunk=' . $row['id'];
 			$ph['description'] = $row['description'];
-			$list[] = parsePlaceholder($tpl,$ph);
+			$list[] = $modx->parseText($tpl,$ph);
 		}
 	}
 	
-	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . join(',',$list) . '];';
+	if(0<count($list)) $output = 'var tinyMCETemplateList = [' . implode(',',$list) . '];';
 }
 
 if($output)

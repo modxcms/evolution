@@ -5,7 +5,7 @@
  * Allows Web User to change their password from the front-end of the website
  *
  * @category 	snippet
- * @version 	1.0
+ * @version 	1.0.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Login
@@ -29,11 +29,11 @@
 #	[[WebChangePwd? &tpl=`ChangePwd`]] 
 
 # Set Snippet Paths 
-$snipPath  = (($modx->insideManager())? "../":"");
+$snipPath  = (($modx->isBackend())? "../":"");
 $snipPath .= "assets/snippets/";
 
 # check if inside manager
-if ($m = $modx->insideManager()) {
+if ($m = $modx->isBackend()) {
 	return ''; # don't go any further when inside manager
 }
 

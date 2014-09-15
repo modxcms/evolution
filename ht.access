@@ -1,5 +1,5 @@
 # For full documentation and other suggested options, please see
-# http://svn.modxcms.com/docs/display/MODx096/Friendly+URL+Solutions
+# http://rtfm.modx.com/evolution/1.0/administration/friendly-url-solutions
 # including for unexpected logouts in multi-server/cloud environments
 # and especially for the first three commented out rules
 
@@ -16,9 +16,10 @@ RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
-#RewriteCond %{HTTP_HOST} .
-#RewriteCond %{HTTP_HOST} !^www\.example\.com [NC]
-#RewriteRule (.*) http://www.example.com/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} !^$
+#RewriteCond %{HTTP_HOST} !^www\. [NC]
+#RewriteCond %{HTTP_HOST} (.+)$
+#RewriteRule ^(.*)$ http://www.%1/$1 [R=permanent,L] . 
 
 # without www
 #RewriteCond %{HTTP_HOST} .
@@ -31,7 +32,7 @@ RewriteRule .* - [F,L]
 #RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 # Exclude /assets and /manager directories and images from rewrite rules
-RewriteRule ^(manager|assets|js|css|images|img)/.*$ - [L]
+RewriteRule ^(manager|assets)/.*$ - [L]
 RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
 
 # For Friendly URLs

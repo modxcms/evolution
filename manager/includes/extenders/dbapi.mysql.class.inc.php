@@ -99,13 +99,15 @@ class DBAPI {
                if($modx->config['send_errormail'] <= 2)
                {
                   $logtitle    = 'Failed to create the database connection!';
-                  $request_uri = $_SERVER['REQUEST_URI'];
-                  $request_uri = htmlspecialchars($request_uri, ENT_QUOTES);
+                  $request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
                   $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
                   $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
-                  $subject = 'Missing to create the database connection! from ' . $modx->config['site_name'];
-                  $msg = "{$logtitle}<br />{$request_uri}<br />{$ua}<br />{$referer}";
-                  $modx->sendmail($subject,$msg);
+
+                  $modx->sendmail(array(
+					  'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
+					  'body' => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
+					  'type' => 'text')
+				  );
                }
             }
             sleep(1);
@@ -116,7 +118,7 @@ class DBAPI {
          $modx->messageQuit("Failed to create the database connection!");
          exit;
       } else {
-         $dbase = str_replace('`', '', $dbase); // remove the `` chars
+         $dbase = trim($dbase,'`'); // remove the `` chars
          if (!@ mysql_select_db($dbase, $this->conn)) {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
@@ -145,6 +147,8 @@ class DBAPI {
     */
    function disconnect() {
       @ mysql_close($this->conn);
+      $this->conn = null;
+      $this->isConnected = false;
    }
 
    function escape($s, $safecount=0) {
@@ -186,7 +190,20 @@ class DBAPI {
          $totaltime = $tend - $tstart;
          $modx->queryTime = $modx->queryTime + $totaltime;
          if ($modx->dumpSQL) {
-            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($this->executedQueries + 1) . " - " . sprintf("%2.4f s", $totaltime) . "</legend>" . $sql . "</fieldset><br />";
+            $debug = debug_backtrace();
+            array_shift($debug);	
+            $debug_path = array();
+            foreach ($debug as $line) $debug_path[] = $line['function'];
+            $debug_path = implode(' > ',array_reverse($debug_path));
+            $modx->queryCode .= "<fieldset style='text-align:left'><legend>Query " . ($modx->executedQueries + 1) . " - " . sprintf("%2.2f ms", $totaltime*1000) . "</legend>";
+            $modx->queryCode .= $sql . '<br><br>';
+            if ($modx->event->name) $modx->queryCode .= 'Current Event  => ' . $modx->event->name . '<br>';
+            if ($modx->event->activePlugin) $modx->queryCode .= 'Current Plugin => ' . $modx->event->activePlugin . '<br>';
+            if ($modx->currentSnippet) $modx->queryCode .= 'Current Snippet => ' . $modx->currentSnippet . '<br>';
+            if (stripos($sql, 'select')===0) $modx->queryCode .= 'Record Count => ' . $this->getRecordCount($result) . '<br>';
+            else $modx->queryCode .= 'Affected Rows => ' . $this->getAffectedRows() . '<br>';
+            $modx->queryCode .= 'Functions Path => ' . $debug_path . '<br>';
+            $modx->queryCode .= "</fieldset><br />";
          }
          $modx->executedQueries = $modx->executedQueries + 1;
          return $result;
@@ -198,13 +215,14 @@ class DBAPI {
     *
     */
    function delete($from, $where='', $orderby='', $limit = '') {
+      global $modx;
       if (!$from)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
       else {
          $from = $this->replaceFullTableName($from);
-         if($where != '') $where = "WHERE {$where}";
-         if($orderby !== '') $orderby = "ORDER BY {$orderby}";
-         if($limit != '') $limit = "LIMIT {$limit}";
+         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
          return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
@@ -214,14 +232,15 @@ class DBAPI {
     *
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
+      global $modx;
       if (!$from)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where = ($where != "") ? "WHERE $where" : "";
-         $orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
-         $limit = ($limit != "") ? "LIMIT $limit" : "";
-         return $this->query("SELECT $fields FROM $from $where $orderby $limit");
+         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
 
@@ -230,23 +249,18 @@ class DBAPI {
     *
     */
    function update($fields, $table, $where = "") {
+      global $modx;
       if (!$table)
-         return false;
+         $modx->messageQuit("Empty \$table parameter in DBAPI::update().");
       else {
          $table = $this->replaceFullTableName($table);
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $flds = '';
-            foreach ($fields as $key => $value) {
-               if (!empty ($flds))
-                  $flds .= ",";
-               $flds .= $key . "=";
-               $flds .= "'" . $value . "'";
-            }
+         if (is_array($fields)) {
+            foreach ($fields as $key => $value)
+               $fields[$key] = "`{$key}` = '{$value}'";
+            $fields = implode(",", $fields);
          }
-         $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("UPDATE $table SET $flds $where");
+         $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
 
@@ -255,27 +269,35 @@ class DBAPI {
     * @desc:  returns either last id inserted or the result from the query
     */
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+      global $modx;
       if (!$intotable)
-         return false;
+         $modx->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
       else {
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $keys = array_keys($fields);
-            $values = array_values($fields);
-            $flds = "(" . implode(",", $keys) . ") " .
-             (!$fromtable && $values ? "VALUES('" . implode("','", $values) . "')" : "");
-            if ($fromtable) {
-               $fromtable = $this->replaceFullTableName($fromtable);
-               $where = ($where != "") ? "WHERE $where" : "";
-               $limit = ($limit != "") ? "LIMIT $limit" : "";
-               $sql = "SELECT $fromfields FROM $fromtable $where $limit";
+         $intotable = $this->replaceFullTableName($intotable);
+         if (!is_array($fields)) {
+            $this->query("INSERT INTO {$intotable} {$fields}");
+         } else {
+            if (empty($fromtable)) {
+               $fields = "(`".implode("`, `", array_keys($fields))."`) VALUES('".implode("', '", array_values($fields))."')";
+               $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+            } else {
+               if (version_compare($this->getVersion(),"4.0.14")>=0) {
+                  $fromtable = $this->replaceFullTableName($fromtable);
+                  $fields = "(".implode(",", array_keys($fields)).")";
+                  $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+                  $limit = !empty($limit) ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
+               } else {
+                  $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
+                  while ($row = $this->getRow($ds)) {
+                     $fields = "(".implode(",", array_keys($fields)).") VALUES('".implode("', '", $row)."')";
+                     $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+                  }
+               }
             }
          }
-         $intotable = $this->replaceFullTableName($intotable);
-         $rt = $this->query("INSERT INTO $intotable $flds $sql");
-         $lid = $this->getInsertId();
-         return $lid ? $lid : $rt;
+         if (($lid = $this->getInsertId())===false) $modx->messageQuit("Couldn't get last insert key!");
+         return $lid;
       }
    }
    /**
@@ -353,7 +375,7 @@ class DBAPI {
     *
     */
    function getRow($ds, $mode = 'assoc') {
-      if ($ds) {
+      if (is_resource($ds)) {
          if ($mode == 'assoc') {
             return mysql_fetch_assoc($ds);
          }
@@ -519,7 +541,6 @@ class DBAPI {
     *
     */
    function getHTMLGrid($dsq, $params) {
-      global $base_path;
       if (!is_resource($dsq))
          $dsq = $this->query($dsq);
       if ($dsq) {
@@ -573,8 +594,9 @@ class DBAPI {
    function makeArray($rs=''){
       if(!$rs) return false;
       $rsArray = array();
-      $qty = $this->getRecordCount($rs);
-      for ($i = 0; $i < $qty; $i++) $rsArray[] = $this->getRow($rs);
+      while ($row = $this->getRow($rs)) {
+            $rsArray[] = $row;
+      }
       return $rsArray;
    }
    
@@ -615,9 +637,14 @@ class DBAPI {
    
    function optimize($table_name)
    {
-       $table_name = str_replace('[+prefix+]', $this->config['table_prefix'], $table_name);
-       $rs = $this->query("OPTIMIZE TABLE `{$table_name}`");
-       if($rs) $rs = $this->query("ALTER TABLE `{$table_name}`");
+       $rs = $this->query("OPTIMIZE TABLE {$table_name}");
+       if($rs) $rs = $this->query("ALTER TABLE {$table_name}");
+       return $rs;
+   }
+   
+   function truncate($table_name)
+   {
+       $rs = $this->query("TRUNCATE {$table_name}");
        return $rs;
    }
 }

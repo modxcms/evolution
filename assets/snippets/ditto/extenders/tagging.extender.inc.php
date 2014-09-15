@@ -19,10 +19,10 @@ $landing = isset($tagDocumentID) ? $tagDocumentID : $modx->documentObject['id'];
  	ID for tag links to point to
 
 	Options:
-	Any MODx document with a Ditto call setup to receive the tags
+	Any MODX document with a Ditto call setup to receive the tags
 	
 	Default:
-	Current MODx Document
+	Current MODX Document
 */
 $source = isset($tagData) ? $tagData : "";
 /*
@@ -32,7 +32,7 @@ $source = isset($tagData) ? $tagData : "";
  	Field to get the tags from
 
 	Options:
-	Comma separated list of MODx fields or TVs
+	Comma separated list of MODX fields or TVs
 	
 	Default:
 	[NULL]
@@ -196,9 +196,9 @@ if(!class_exists("tagging")) {
 		}
 	
 		function prepGivenTags ($givenTags) {
-			global $_GET,$dittoID;
+			global $modx,$_GET,$dittoID;
 
-			$getTags = !empty($_GET[$dittoID.'tags']) ? trim($_GET[$dittoID.'tags']) : false;
+			$getTags = !empty($_GET[$dittoID.'tags']) ? $modx->stripTags(trim($_GET[$dittoID.'tags'])) : false;
 				// Get tags from the $_GET array
 
 			$tags1 = array();
@@ -364,6 +364,4 @@ $modx->setPlaceholder($dittoID."tags",implode($delimiter,$tags->givenTags));
 */
 // set tagging placeholder			
 $placeholders['tagLinks'] = array(array($source,"*"),array($tags,"makeLinks"));
-
-
 ?>

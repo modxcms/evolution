@@ -1,5 +1,6 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
-html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
+* html { overflow-x :hidden; overflow-y: auto;} /* for IE6 */
+*+html { overflow-x :hidden; overflow-y: auto;} /* for IE7 */
 html, body, form, fieldset,img {
 	margin: 0;
 	padding: 0;
@@ -286,8 +287,12 @@ form select
 		-webkit-border-radius:3px;
 		border-radius:3px;
 }
+form select.dropdown, form select[size="1"], form select:not([size]) {
+    height: 28px;
+}
 form input[type="text"],
 form input[type="password"],
+form input[type="number"],
 form textarea {
 	background: #f9f9f9;
 	border-color: #999 #DDD #DDD #999;
@@ -313,6 +318,7 @@ input[type="password"]:focus,
 input[type="search"]:focus,
 input[type="text"]:focus,
 input[type="url"]:focus,
+input[type="number"]:focus,
 textarea:focus,
 select:focus
 {
@@ -361,12 +367,6 @@ input[type="button"] {
 	height: auto !important;
 	width: auto !important;
 	cursor:pointer;cursor:hand;
-}
-input.checkbox,
-input.radio,
-input[type="checkbox"],
-input[type="radio"] {
-	vertical-align: -2px;
 }
 select {
 	border: 1px solid #c3c3c3 !important;
@@ -491,7 +491,7 @@ input.submit {
 	color: #777;
 	margin: 0 15px;
 	padding: 5px 3px 5px;
-	overflow:hidden;zoom:1;
+	zoom:1;
 	font-weight: bold;
 	font-size: 1.2em;
 	border: 1px solid #ccc;
@@ -1492,7 +1492,7 @@ ul.actionButtons {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
-.actionButtons .and{
+.actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
 	font-weight: bold;
@@ -1523,9 +1523,14 @@ form#mutate input.disabled {
 form#mutate select.inputBox,
 form#mutate input,
 form#mutate textarea {
-	width: 300px;
+    width: 300px;
+}
+form#mutate select {
+    width: 308px;
 }
 #tv_body input[type="text"],
+#tv_body input[type="password"],
+#tv_body input[type="number"],
 #tv_body textarea
 {
 	background: none repeat scroll 0 0 #FFFFFF;
@@ -1794,7 +1799,24 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
+	vertical-align: top;
 }
+.sectionBody .displayparams, .sectionBody .permissiongroup {
+	margin-bottom: 3px;
+	background-color: #eee;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+.sectionBody .displayparams th, .sectionBody .displayparams td {
+	padding: 2px 4px;
+}
+.sectionBody .displayparams thead td, .sectionBody .permissiongroup thead td {
+	border-top: none;
+}
+.sectionBody .permissiongroup input, .sectionBody .permissiongroups input {
+	width: 200px;
+}
+
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
 	color: yellow !important;

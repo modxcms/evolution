@@ -5,7 +5,7 @@
  * Basic Web User account creation/signup system
  *
  * @category 	snippet
- * @version 	1.1
+ * @version 	1.1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &tpl=Template;string;
  * @internal	@modx_category Login
@@ -23,6 +23,10 @@
 # Params:    
 #
 #    &tpl        - (Optional) Chunk name or document id to use as a template
+#	    		   If custom template AND captcha on AND using WebSignup and 
+#                  WebLogin on the same page make sure you have a field named
+#                  cmdwebsignup. In the default template it is the submit button 
+#                  One can use a hidden field.
 #    &groups     - Web users groups to be assigned to users
 #    &useCaptcha - (Optional) Determine to use (1) or not to use (0) captcha
 #                  on signup form - if not defined, will default to system
@@ -41,7 +45,7 @@
 $snipPath = $modx->config['base_path'] . "assets/snippets/";
 
 # check if inside manager
-if ($m = $modx->insideManager()) {
+if ($m = $modx->isBackend()) {
     return ''; # don't go any further when inside manager
 }
 
@@ -53,8 +57,7 @@ $useCaptcha = isset($useCaptcha)? $useCaptcha : $modx->config['use_captcha'] ;
 if ($useCaptcha && !gd_info()) $useCaptcha = 0;
 
 # setup web groups
-$groups = isset($groups) ? explode(',',$groups):array();
-for($i=0;$i<count($groups);$i++) $groups[$i] = trim($groups[$i]);
+$groups = isset($groups) ? array_filter(array_map('trim', explode(',', $groups))):array();
 
 # System settings
 $isPostBack        = count($_POST) && isset($_POST['cmdwebsignup']);

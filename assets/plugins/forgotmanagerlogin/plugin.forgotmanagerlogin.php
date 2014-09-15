@@ -41,7 +41,6 @@ EOD;
             $tbl_user_attributes = $modx->getFullTableName('user_attributes');
             $tbl_active_users    = $modx->getFullTableName('active_users');
 
-            $pre = $modx->db->config['table_prefix'];
             $site_id = $modx->config['site_id'];
             $today = date('Yz'); // Year and day of the year
             $wheres = array();
@@ -54,19 +53,16 @@ EOD;
             if(!empty($hash))      { $wheres[] = "MD5(CONCAT(auser.lasthit,usr.password))='{$hash}'"; }
 
             if($wheres) {
-                $where = ' WHERE '.implode(' AND ',$wheres);
-                $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(auser.lasthit,usr.password)) AS hash
-                    FROM {$tbl_manager_users} usr
-                    INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
-                    INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username
-                    {$where}
-                    LIMIT 1;";
-
-                if($result = $modx->db->query($sql)){
-                    if($modx->db->getRecordCount($result)==1) {
+                $result = $modx->db->select(
+                    "usr.id, usr.username, attr.email, MD5(CONCAT(auser.lasthit,usr.password)) AS hash",
+                    "{$tbl_manager_users} usr
+                        INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
+                        INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username",
+                    implode(' AND ',$wheres),
+                    "",
+                    1
+                    );
                         $user = $modx->db->getRow($result);
-                    }
-                }
             }
 
             if($user == null) { $this->errors[] = $_lang['could_not_find_user']; }
@@ -106,8 +102,7 @@ EOD;
         function unblockUser($user_id) {
             global $modx, $_lang;
 
-            $pre = $modx->db->config['table_prefix'];
-            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
+            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), $modx->getFullTableName('user_attributes'), "internalKey = '{$user_id}'");
 
             if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
 
@@ -192,4 +187,3 @@ if($event_name == 'OnManagerAuthentication' && $hash && $username) {
 }
 
 $modx->Event->output($output);
-?>

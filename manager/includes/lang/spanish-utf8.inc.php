@@ -1,15 +1,20 @@
 <?php
 /**
- * Filename:       includes/lang/spanish.inc.php
- * Function:       Language file.
- * Author:         The MODx Project Team
- * Date:           28 Julio 2009
- * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * MODX Manager language file
  *
-*/
+ * @version 1.0.14
+ * @date 2014/02/24
+ * @author The MODX Project Team
+ *
+ * @language Spanish
+ * @package modx
+ * @subpackage manager
+ *
+ * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'es'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
-$modx_manager_charset = 'utf-8';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX es un <a href="http://modx.com/" target="_blank">Sistema de Administración de Contenido y Esquema de PHP</a> bajo licencia <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Acerca de MODX';
@@ -277,7 +282,7 @@ $_lang["existing_category"] = 'Categoría existente';
 $_lang["expand_tree"] = 'Expandir árbol';
 $_lang["export_site"] = 'Exportar HTML estático';
 $_lang["export_site_cacheable"] = 'Incluir archivos no cacheables:';
-$_lang["export_site_exporting_document"] = 'Exportando archivo <b>%s</b> de <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = '¡Falló!';
 $_lang["export_site_failed_no_open"] = 'No se puede abrir el archivo: ';
 $_lang["export_site_failed_no_retrieve"] = 'No se puede traer el documento.';
@@ -367,7 +372,7 @@ $_lang["go"] = 'Ir';
 $_lang["group_access_permissions"] = 'Acceso de grupo de usuarios';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ayuda';
-$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://modx.com/documentation" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
+$_lang["help_msg"] = '<p>Puede obtener soporte gratuito de la comunidad <a href="http://forums.modx.com" target="_blank">visitando los foros de MODX</a>.  También hay un cumulo creciente de <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">Documentación y Guías MODX</a> que tocan virtualmente todos los aspectos de MODX.</p><p>Estamos planeando ofrecer servicios de soporte comercial para MODX. Por favor, <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">envíenos un mensaje si está interesado</a>.';
 $_lang["help_title"] = 'Ayuda';
 $_lang["hide_tree"] = 'Ocultar árbol';
 $_lang["home"] = 'Inicio';
@@ -571,6 +576,7 @@ $_lang["new_template"] = 'Template nuevo';
 $_lang["new_tmplvars"] = 'Variable de template nueva';
 $_lang["new_user"] = 'Usuario nuevo';
 $_lang["new_web_user"] = 'Usuario Web nuevo ';
+$_lang["new_resource"] = 'Nuevo Recurso';
 $_lang["no"] = 'No';
 $_lang["no_active_users_found"] = 'No se encontraron usuarios activos.';
 $_lang["no_activity_message"] = 'No has creado o editado algún documento todavía.';
@@ -835,7 +841,7 @@ $_lang["role_web_user_management"] = 'Administración de usuarios web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Ingresa el URL del Feed de Noticias de MODX.';
 $_lang["rss_url_news_title"] = 'Feed RSS de Noticias';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Ingresa el URL para el Feed de Seguridad MODX.';
 $_lang["rss_url_security_title"] = 'Feed RSS de Seguridad';
 $_lang["run_module"] = 'Correr módulo';
@@ -1089,6 +1095,8 @@ $_lang["user_use_config"] = 'Usar Configuración Principal';
 $_lang["user_zip"] = 'Código postal';
 $_lang["username"] = 'Nombre de usuario';
 $_lang["users"] = 'Seguridad';
+$_lang["valid_hostnames_message"] = 'Ayudar a prevenir ataques XSS que explota un mal uso de la configuración del sistema site_url al proporcionar una lista separada por comas de nombres de host válidos para esta instalación. Esto es importante para algunos tipos de hosts compartidos o hosts accesible a través de una dirección IP. Se usará en primer lugar el nombre de host de la lista si el HTTP_HOST no coincide con ningún nombre de host válido.';
+$_lang["valid_hostnames_title"] = 'Nombres de host válido';
 $_lang["validate_referer_message"] = 'Validar el encabezado de HTTP_REFERER para reducir el riesgo de que tus editores de contenido sean engañados a efectuar acciones no intencionadas en el administrador como víctimas de un ataque CSRF (Cross Site Request Forgery -- Solicitud de Sitio Cruzada Falsa).  Algunas configuraciones no podrán usar esta opción si el servidor no está enviando los encabezados HTTP_REFERER.';
 $_lang["validate_referer_title"] = 'Validar encabezados HTTP_REFERER?';
 $_lang["value"] = 'Valor';
@@ -1130,16 +1138,20 @@ $_lang["yourinfo_role"] = 'Tu rol es:';
 $_lang["yourinfo_title"] = 'Tu información';
 $_lang["yourinfo_total_logins"] = 'Número total de ingresos:';
 $_lang["yourinfo_username"] = 'Estás ingresado como:';
+
 $_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
 $_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
 $_lang["a17_error_reporting_opt0"] = 'Ignore all';
 $_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Detect all';
+
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1155,36 +1167,109 @@ $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+
 $_lang["files.dynamic.php1"] = 'create text file';
 $_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
 $_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
 $_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["files_dynamic_new_folder_name"] = 'Introduzca nuevo nombre de directorio:';
+$_lang["files_dynamic_new_file_name"] = 'Introduzca nuevo nombre de archivo:';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
+
+$_lang['email_method_title'] = 'Sendmail method';
+$_lang['email_method_mail'] = 'mail() PHP function';
+$_lang['email_method_smtp'] = 'SMTP Server';
+$_lang['smtp_auth_title'] = 'SMTP－AUTH';
+$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_username_title'] = 'SMTP user name';
+$_lang['smtp_password_title'] = 'SMTP password';
+$_lang['smtp_port_title'] = 'SMTP port';
+
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+
+$_lang["resource_opt_alvisibled"] = 'Utilizar alias actual en ruta de alias';
+$_lang["resource_opt_alvisibled_help"] = 'El alias de este Recurso se insertará en la ruta de alias de URL amigable';
+$_lang['resource_opt_is_published'] = 'Publicado';
+$_lang["docid_incrmnt_method_title"] = 'Método de Incremento de la ID de los Recursos';
+$_lang["docid_incrmnt_method_0"] = 'DB auto incremental';
+$_lang["docid_incrmnt_method_1"] = 'Mínimo ID perdido';
+$_lang["docid_incrmnt_method_2"] = 'Máximo ID + 1';
+
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
 $_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
+
+$_lang["import_site.static.php1"] = 'Inicializa el arbol de recursos';
+$_lang["import_site.static.php2"] = 'Inicializa el arbol de recursos y todos las ID\'s de los Recursos';
+$_lang["import_site.static.php3"] = 'Objectivo';
+$_lang["import_site.static.php4"] = 'Solo partes &lt;body&gt;&lt;/body&gt;';
+$_lang["import_site.static.php5"] = 'Contenido del archivo entero';
+
+$_lang["a83_ignore_ids_title"] = 'Ignorar ID\'s (separadas por comas)';
+$_lang["export_site.static.php1"] = 'Objectivo';
+$_lang["export_site.static.php2"] = 'Sólo editar recursos';
+$_lang["export_site.static.php3"] = 'Todos los recursos';
+$_lang["export_site.static.php4"] = 'Buscar por';
+$_lang["export_site.static.php5"] = 'Reemplazar con';
+$_lang["export_site.static.php6"] = 'Objetivo';
+$_lang["export_site.static.php7"] = 'Los archivos no se pudieron guardar en [+ rb_base_url +]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'Enviar correo a errores MODX';
+$_lang["mutate_settings.dynamic.php7"] = 'No notificar';
+$_lang["mutate_settings.dynamic.php8"] = 'Un correo electrónico con el origen del error se enviará a [(emailsender)] ([+ emailsender +]) si se produce un error en MODX. Los detalles del error se podran ver en el sistema de registro de eventos de MODX.';
+
+$_lang["error_no_privileges"]         = "No tienes suficientes privilegios para esta acción.";
+$_lang["error_no_optimise_tablename"] = "Tabla a optimizar no se encuentra en la petición!";
+$_lang["error_no_truncate_tablename"] = "Tabla a truncar no se encuentra en la petición!";
+$_lang["error_double_action"]         = "Doble acción (GET & POST) enviadas!.";
+$_lang["error_no_id"]                 = "ID no pasada en la petición!";
+$_lang["error_id_nan"]                = "ID pasada en la petición es NaN!";
+$_lang["error_no_parent"]             = "No pudo encontrar el nombre del documento padre!";
+$_lang["error_many_results"]          = "Demasiados resultados devueltos de la base de datos!.";
+$_lang["error_no_results"]            = "Insuficientes ó sin resultados devueltos de la base de datos!.";
+$_lang["error_no_user_selected"]      = "Ningún usuario seleccionado como receptor de este mensaje.";
+$_lang["error_no_group_selected"]     = "Ningún grupo seleccionado como receptor de este mensaje.";
+$_lang["error_movedocument1"]         = "Documento no puede ser es propio padre!";
+$_lang["error_movedocument2"]         = "ID del documento no pasada durante una solicitud!";
+$_lang["error_movedocument3"]         = "El nuevo padre no se envió en la solicitud!.";
+
+$_lang["login_processor_unknown_user"]       = "Incorrecto nombre o password introducido!";
+$_lang["login_processor_wrong_password"]     = "Incorrecto nombre o password introducido!";
+$_lang["login_processor_many_failed_logins"] = "Debido a muchos inicios de sesión fallidos, usted ha sido bloqueado!";
+$_lang["login_processor_blocked1"]           = "¡ Estás bloqueado y no puedo ingresar!";
+$_lang["login_processor_blocked2"]           = "¡ Estás bloqueado y no puedo ingresar! Inténtalo de nuevo más tarde.";
+$_lang["login_processor_blocked3"]           = "Usted está bloqueado de forma automática después de una fecha determinada y no puede ingresar!";
+$_lang["login_processor_bad_code"]           = "El código de seguridad que introdujo no es valido! Por favor, intenta iniciar sesión nuevamente.";
+$_lang["login_processor_remotehost_ip"]      = "El nombre de host no apunta a tu IP!";
+$_lang["login_processor_remote_ip"]          = "No se le permite iniciar sesión desde esta ubicación.";
+$_lang["login_processor_date"]               = "No puedes iniciar sesión en este momento. Por favor, Inténtalo de nuevo más tarde.";
+$_lang["login_processor_captcha_config"]     = "Captcha no está configurado correctamente.";
+
+$_lang["dp_dayNames"]   = "['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']";
+$_lang["dp_monthNames"] = "['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Selecciona Todo";
+$_lang["check_none"] = "No seleccionar nada";
+$_lang["check_toggle"] = "Invertir selección";

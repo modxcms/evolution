@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-    <title>MODx CMF Manager Login</title>
+    <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
     <meta name="robots" content="noindex, nofollow" />
     <style type="text/css">
@@ -348,7 +348,7 @@
         </div>
     </form>
     <div class="loginLicense">
-    &copy; 2005-2013 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
+    &copy; 2005-2014 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
     </div>
 </div>
 <!-- close #mx_loginbox -->

@@ -1,4 +1,5 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+<?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
@@ -28,7 +29,7 @@ JS;
 $modx->regClientScript($script);
 
 // set placeholders
-$modx->setPlaceholder('theme',$manager_theme ? $manager_theme : '');
+$modx->setPlaceholder('theme',$modx->config['manager_theme']);
 $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
@@ -99,17 +100,12 @@ $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_n
 
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
-$sql = "SELECT id, pagetitle, description FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND ($dbase.`".$table_prefix."site_content`.editedby=".$modx->getLoginUserID()." OR $dbase.`".$table_prefix."site_content`.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('id, pagetitle, description', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     $html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
-    for ($i = 0; $i < $limit; $i++) {
-        $content = $modx->db->getRow($rs);
-        if($i==0) {
-            $syncid = $content['id'];
-        }
+    while ($content = $modx->db->getRow($rs)) {
         $html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
     }
 }
@@ -155,8 +151,7 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
 
     include_once "actionlist.inc.php";
 
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>'$timetocheck' ORDER BY username ASC";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
     $limit = $modx->db->getRecordCount($rs);
     if($limit<1) {
         $html = "<p>".$_lang['no_active_users_found']."</p>";
@@ -174,10 +169,9 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
                   </thead>
                   <tbody>
         ';
-        for ($i = 0; $i < $limit; $i++) {
-            $activeusers = $modx->db->getRow($rs);
+        while ($activeusers = $modx->db->getRow($rs)) {
             $currentaction = getAction($activeusers['action'], $activeusers['id']);
-            $webicon = ($activeusers['internalKey']<0)? "<img src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user' />":"";
+            $webicon = ($activeusers['internalKey']<0)? "<img src='".$_style["tree_globe"]."' alt='Web user' />":"";
             $html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
         }
         $html.= '

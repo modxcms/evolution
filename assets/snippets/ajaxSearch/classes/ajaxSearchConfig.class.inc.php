@@ -5,8 +5,8 @@
 * @package  AjaxSearchConfig
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchConfig class contains all functions and data used to manage configuration context
@@ -112,9 +112,9 @@ class AjaxSearchConfig {
                 $valid = true;
             }
         } elseif (!isset($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset not set. Check your MODX config file";
         } elseif (!strlen($this->dbCharset)) {
-            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODx config file";
+            $msgErr = "AjaxSearch error: database_connection_charset is null. Check your MODX config file";
         } else {
             // if you get this message, simply update the $pageCharset array in search.class.inc.php file
             // with the appropriate mapping between Mysql Charset and Html charset
@@ -174,7 +174,10 @@ class AjaxSearchConfig {
         $ucfg = array();
         $pattern = '/&([^=]*)=`([^`]*)`/';
         preg_match_all($pattern, $strUcfg, $out);
-        foreach ($out[1] as $key => $values) $ucfg[$out[1][$key]] = $out[2][$key];
+        foreach ($out[1] as $key => $values) {
+            // remove any @BINDINGS in posted user config for security reasons
+            $ucfg[$out[1][$key]] = preg_replace('/@(FILE|DIRECTORY|DOCUMENT|CHUNK|INHERIT|SELECT|EVAL|CHUNK)[: ]/i', '', $out[2][$key]);
+        }
         return $ucfg;
     }
     /*
@@ -198,4 +201,3 @@ class AjaxSearchConfig {
         return "\n" . $output;
     }
 }
-?>

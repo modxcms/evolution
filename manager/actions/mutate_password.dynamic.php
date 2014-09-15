@@ -1,14 +1,8 @@
 <?php
-if(IN_MANAGER_MODE != 'true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('change_password')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  = '';
 ?>
 
 <h1><?php echo $_lang['change_password']?></h1>

@@ -15,7 +15,7 @@
 
 /*
  * Author: 
- *      Mark Kaplan for MODx CMF
+ *      Mark Kaplan for MODX CMF
  * 
  * Note: 
  *      If Reflect is not retrieving its own documents, make sure that the
@@ -53,7 +53,7 @@ $config = (isset($config)) ? $config : "default";
 
     Options:
     "default" - default blank config file
-    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODX base path via @FILE
 
     Default:
     "default"
@@ -135,10 +135,10 @@ $targetID = isset($targetID) ? $targetID : $modx->documentObject['id'];
     ID for archive links to point to
 
     Options:
-    Any MODx document with a Ditto call setup with extenders=`dateFilter`
+    Any MODX document with a Ditto call setup with extenders=`dateFilter`
     
     Default:
-    Current MODx Document
+    Current MODX Document
 */
 $dateSource = isset($dateSource) ? $dateSource : "createdon";
 /*
@@ -148,7 +148,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
     Date source to display for archive items
 
     Options:
-    # - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+    # - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
     
     Default:
     "createdon"

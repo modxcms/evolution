@@ -1,9 +1,8 @@
 <?php
 /*
-spanish.inc.php - for AjaxSearch 1.8.2
-Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07
-Modified: 21/07/08 Translated to spanish by Luciano A. Ferrer & Coroico
+spanish-utf8.inc.php - for AjaxSearch 1.10.1
+Created by: Luciano A. Ferrer & Coroico
+Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'No hay resultados. Intente utilizando términos más generales para obtener más resultados.';
@@ -16,7 +15,9 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Páginas de resultado: ';
 $_lang['as_moreResultsText'] = 'Presione aquí para ver todos los resultados.';
 $_lang['as_moreResultsTitle'] = 'Más resultados';
+$_lang['as_maxWords'] = 'Se permite un máximo de %d palabras por búsqueda';
 $_lang['as_minChars'] = 'Para la búsqueda se necessita entrar por lo menos %d letras ';
+$_lang['as_maxChars'] = 'Se permite un máximo de %d caracteres en el término de búsqueda';
 $_lang['oneword'] = 'Una palabra';
 $_lang['allwords'] = 'Todas las palabras';
 $_lang['exactphrase'] = 'Frasé exacta';
@@ -26,4 +27,10 @@ $_lang['as_cmtIntroMessage'] = '¿Encontró lo que estaba buscando?  ¡Deje un c
 $_lang['as_cmtSubmitText'] = 'enviar';
 $_lang['as_cmtResetText'] = 'borrar';
 $_lang['as_cmtThksMessage'] = 'Gracias por su comentario';
+$_lang['as_resultsTextSingle'] = '%d resultado encontrado.';
+$_lang['as_resultsTextMultiple'] = '%d resultados encontrados.';
+$_lang['as_grpResultsDisplayedText'] = '(Mostrando %d - %d de %d)';
+$_lang['as_resultsDisplayed'] = 'Mostrado: %d';
+$_lang['as_paging1Text'] = '%d - %d / %d';
+$_lang['as_paging2Text'] = 'Mostrar %d resultados más';
 ?>

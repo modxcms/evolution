@@ -4,65 +4,48 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 switch((int) $_REQUEST['a']) {
   case 102:
     if(!$modx->hasPermission('edit_plugin')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 101:
     if(!$modx->hasPermission('new_plugin')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
+$tbl_active_users       = $modx->getFullTableName('active_users');
+$tbl_site_plugins       = $modx->getFullTableName('site_plugins');
+$tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
+$tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
-$rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action='102' AND id='{$id}'");
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1)
-{
-    while($lock = $modx->db->getRow)
-    {
-        if($lock['internalKey']!=$modx->getLoginUserID())
-        {
-            $msg = sprintf($_lang["lock_msg"],$lock['username'],$_lang['plugin']);
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
+$rs = $modx->db->select('username',$tbl_active_users,"action='102' AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getRow($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['plugin']));
     }
-}
 // end check for lock
 
 if(isset($_GET['id']))
 {
-    $rs = $modx->db->select('*','[+prefix+]site_plugins',"id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1)
-    {
-        echo "Multiple plugins sharing same unique id. Not good.<p>";
-        exit;
-    }
-    if($limit<1)
-    {
+    $rs = $modx->db->select('*',$tbl_site_plugins,"id='{$id}'");
+    $content = $modx->db->getRow($rs);
+    if(!$content) {
         header("Location: {$modx->config['site_url']}");
     }
-    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
     {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 }
 else
 {
-    $_SESSION['itemname']='New Plugin';
+    $_SESSION['itemname']=$_lang["new_plugin"];
 }
 ?>
 <script language="JavaScript">
@@ -107,7 +90,7 @@ function showParameters(ctrl) {
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -277,7 +260,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -321,9 +304,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
             <option>&nbsp;</option>
             <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n=>$v){
                     echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
                 }
             ?>
@@ -334,6 +316,9 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <th><?php echo $_lang['new_category']; ?>:</th>
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
+       <tr>
+        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
+      </tr>
 <?php if($modx->hasPermission('save_role')):?>
       <tr>
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
@@ -343,8 +328,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <!-- PHP text editor start -->
     <div class="section">
         <div class="sectionHeader">
-            <span style="float:left;">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
-            <span style="float:right;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+            <span style="float:right;">&nbsp;<?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+            <?php echo $_lang['plugin_code']; ?>
         </div>
         <div class="sectionBody">
         <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
@@ -359,21 +344,19 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
       <tr>
-        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
-      </tr>
-          <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
-                    $sql =    "SELECT sm.id,sm.name,sm.guid " .
-                            "FROM ".$modx->getFullTableName("site_modules")." sm ".
-                            "INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
-                            "INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
-                            "WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
-                            "ORDER BY sm.name ";
-                    $ds = $modx->db->query($sql);
-                    if($ds) while($row = $modx->db->getRow($ds)){
+                    $ds = $modx->db->select(
+						'sm.id,sm.name,sm.guid',
+						$modx->getFullTableName("site_modules")." sm 
+							INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30
+							INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource",
+						"smd.resource='{$id}' AND sm.enable_sharedparams='1'",
+						'sm.name'
+						);
+                    while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
                     }
                 ?>
@@ -405,13 +388,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 
     // get selected events
     if(is_numeric($id) && $id > 0) {
-        $evts = array();
-        $rs = $modx->db->select('*','[+prefix+]site_plugin_events',"pluginid='{$id}'");
-        $limit = $modx->db->getRecordCount($rs);
-        for ($i=0; $i<$limit; $i++) {
-            $row = $modx->db->getRow($rs);
-            $evts[] = $row['evtid'];
-        }
+        $rs = $modx->db->select('evtid',$tbl_site_plugin_events,"pluginid='{$id}'");
+        $evts = $modx->db->getColumn('evtid', $rs);
     } else {
         if(isset($content['sysevents']) && is_array($content['sysevents'])) {
             $evts = $content['sysevents'];
@@ -430,11 +408,10 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         "Template Service Events",
         "User Defined Events"
     );
-    $rs = $modx->db->select('*','[+prefix+]system_eventnames','','service DESC, groupname, name');
+    $rs = $modx->db->select('*',$tbl_system_eventnames,'','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
-    else for ($i=0; $i<$limit; $i++) {
-        $row = $modx->db->getRow($rs);
+    else while ($row = $modx->db->getRow($rs)) {
         // display records
         if($srv!=$row['service']){
             $srv=$row['service'];

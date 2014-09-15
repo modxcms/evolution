@@ -1,18 +1,13 @@
 <?php
-if (IN_MANAGER_MODE != "true")
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_role')) {
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-foreach ($_POST as $n => $v)
-    $_POST[$n] = $modx->db->escape($v); // escape post values 
 extract($_POST);
 
 if ($name == '' || !isset ($name)) {
-    echo "Please enter a name for this role!";
-    exit;
+	$modx->webAlertAndQuit("Please enter a name for this role!", "index.php?a={$mode}".($mode=35?"&id={$id}":""));
 }
 
 // setup fields
@@ -89,29 +84,46 @@ $fields = array (
     'remove_locks' => $remove_locks
 );
 
+$fields = $modx->db->escape($fields);
+
 switch ($_POST['mode']) {
     case '38' :
         $tbl = $modx->getFullTableName("user_roles");
-        $rs = $modx->db->insert($fields, $tbl);
-        if (!$rs) {
-            echo "An error occured while attempting to save the new role.<p>";
-            exit;
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(38);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=38");
         }
+
+        $modx->db->insert($fields, $tbl);
+
+        // Set the item name for logger
+        $_SESSION['itemname'] = $_POST['name'];
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
-        $rs = $modx->db->update($fields, $tbl, "id=$id");
-        if (!$rs = $modx->db->query($sql)) {
-            echo "An error occured while attempting to update the role. <br />" . $modx->db->getLastError();
-            exit;
+
+        // disallow duplicate names for role
+        $rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "name='{$fields['name']}' AND id!='{$id}'");
+        if ($modx->db->getValue($rs) > 0) {
+            $modx->manager->saveFormValues(35);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['role'], $name), "index.php?a=35&id={$id}");
         }
+
+        $modx->db->update($fields, $tbl, "id='{$id}'");
+
+        // Set the item name for logger
+        $_SESSION['itemname'] = $_POST['name'];
+
         $header = "Location: index.php?a=86&r=2";
         header($header);
         break;
     default :
-    	echo "Erm... You supposed to be here now?";
-        exit;
+		$modx->webAlertAndQuit("No operation set in request.");
 }
 ?>

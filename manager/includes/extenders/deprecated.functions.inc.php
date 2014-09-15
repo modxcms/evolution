@@ -170,17 +170,6 @@ class OldFunctions {
         }
         return $keywords;
     }
-    
-    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
-    	global $modx;
-        if ($id == $modx->config['site_start'] && $modx->config['seostrict']==='1') {return '/';}
-        $Alias = explode('/',$alias);
-        $alias = array_pop($Alias);
-        $dir = implode('/', $Alias);
-        unset($Alias);
-        if($modx->config['make_folders']==='1' && $isfolder==1) $suff = '/';
-        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
-    }
 
     /*############################################
       Etomite_dbFunctions.php
@@ -368,6 +357,28 @@ class OldFunctions {
             elseif ($prefix == "") $results[$key]= $value;
         }
         return $results;
+    }
+
+    /**
+     * Displays a javascript alert message in the web browser
+     *
+     * @param string $msg Message to show
+     * @param string $url URL to redirect to
+     */
+    function webAlert($msg, $url= "") {
+        $msg= addslashes($this->db->escape($msg));
+        if (substr(strtolower($url), 0, 11) == "javascript:") {
+            $act= "__WebAlert();";
+            $fnc= "function __WebAlert(){" . substr($url, 11) . "};";
+        } else {
+            $act= ($url ? "window.location.href='" . addslashes($url) . "';" : "");
+        }
+        $html= "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
+        if ($this->isFrontend())
+            $this->regClientScript($html);
+        else {
+            echo $html;
+        }
     }
 
     ########################################

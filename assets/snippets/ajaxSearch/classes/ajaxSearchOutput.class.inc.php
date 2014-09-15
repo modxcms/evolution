@@ -5,8 +5,8 @@
 * @package  AjaxSearchOutput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @version      1.10.1
+* @date         05/06/2014
 *
 * Purpose:
 *    The AjaxSearchOutput class contains all functions and data used to display output
@@ -378,7 +378,7 @@ class AjaxSearchOutput {
                 unset($varPaging);
                 $chkPaging->CleanVars();
             }
-            else if (($pagingType == 1) && (($nbrs >= $nbMax) || showPagingAlways)) {
+            else if (($pagingType == 1) && (($nbrs >= $nbMax) || $showPagingAlways)) {
 
                 $tplPaging = $this->asCfg->cfg['tplPaging1'];
                 if ($tplPaging == '') $tplPaging = "@FILE:" . AS_SPATH . 'templates/paging1.tpl.html';
@@ -416,7 +416,6 @@ class AjaxSearchOutput {
                     $varPaging1['next_grpResultId'] = $prefix . 'next_' . $this->_getCleanCssId($this->asResults->groupResults[$ig]['subsite']);
                     if ($this->asCfg->isAjax) $varPaging1['pagingNext'] = 'javascript:void(0);';
                     else {
-                        $nrp = $nrp + 1;
                         $ofst = (string)$ig . ',' . (string)$nextOffset;
                         $asOffset = ($otherOffset) ? $otherOffset . ',' . $ofst : $ofst;
                         $asOffset = '&aso=' . $asOffset;
@@ -839,9 +838,8 @@ class AjaxSearchOutput {
     function _snippet_exists($snippetName) {
         global $modx;
         $tbl = $modx->getFullTableName('site_snippets');
-        $select = "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
-        $rs = $modx->db->query($select);
-        return $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('count(*)', $tbl, "name='" . $modx->db->escape($snippetName) . "'");
+        return ($modx->db->getValue($rs)>0);
     }
     /*
     * Get offset of other groups
@@ -907,7 +905,7 @@ class AjaxSearchOutput {
                 $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch-mootools2.js';
             } else {
                 if ($this->asCfg->cfg['addJscript']) $modx->regClientStartupScript($this->asCfg->cfg['jsMooTools']);
-                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch.js';
+                $jsInclude = MODX_BASE_URL . AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch.js';
             }
             $modx->regClientStartupScript($jsInclude);
 
@@ -1089,4 +1087,3 @@ EOD;
         return $json;
     }
 }
-?>

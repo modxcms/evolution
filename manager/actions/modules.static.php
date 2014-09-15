@@ -1,11 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!($modx->hasPermission('new_module')||$modx->hasPermission('edit_module')||$modx->hasPermission('exec_module'))) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$theme = $manager_theme ? "$manager_theme/":"";
 
 // initialize page view state - the $_PAGE object
 $modx->manager->initPageViewState();
@@ -92,11 +89,12 @@ echo $cm->render();
 	<div>
 	<?php
 
-	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
-			"FROM ".$modx->getFullTableName("site_modules")." ".
-			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
-			"ORDER BY name";
-	$ds = $modx->db->query($sql);
+	$ds = $modx->db->select(
+		"id,name,description,IF(locked,'{$_lang['yes']}','-') as locked,IF(disabled,'{$_lang['yes']}','-') as disabled,IF(icon<>'',icon,'{$_style['icons_modules']}') as icon",
+		$modx->getFullTableName("site_modules"),
+		(!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')":""),
+		"name"
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];

@@ -1,6 +1,6 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+<?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-    $theme = $manager_theme ? "$manager_theme/":"";
     $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
         if($allowed==1) { ?>
@@ -13,13 +13,12 @@
         <?php
     }
     $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -54,7 +53,7 @@
 <?php
     echo  "var openedArray = new Array();\n";
     if (isset($_SESSION['openedArray'])) {
-            $opened = explode("|", $_SESSION['openedArray']);
+            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
 
             foreach ($opened as $item) {
                  printf("openedArray[%d] = 1;\n", $item);
@@ -115,7 +114,7 @@
     }
 
     function showPopup(id,title,e){
-        var x,y
+        var x, y;
         var mnu = $('mx_contextmenu');
         var bodyHeight = parseInt(document.body.offsetHeight);
         x = e.clientX>0 ? e.clientX:e.pageX;
@@ -130,7 +129,7 @@
         dopopup(x+5,y);
         e.cancelBubble=true;
         return false;
-    };
+    }
 
     function dopopup(x,y) {
         if(selectedObjectName.length>20) {
@@ -153,7 +152,7 @@
     }
 
     function toggleNode(node,indent,parent,expandAll,privatenode) {
-        privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
+        privatenode = (!privatenode || privatenode == '0') ?  '0' : '1';
         rpcNode = $(node.parentNode.lastChild);
 
         var rpcNodeText;
@@ -164,7 +163,7 @@
 
         if (rpcNode.style.display != 'block') {
             // expand
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('<?php echo $_style['tree_plusnode']?>')>-1) {
                 signImg.src = '<?php echo $_style["tree_minusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folderopen"]; ?>' :'<?php echo $_style["tree_folderopen_secure"]; ?>';
             }
@@ -189,7 +188,7 @@
         }
         else {
             // collapse
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('<?php echo $_style["tree_minusnode"]; ?>')>-1) {
                 signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folder"]; ?>' : '<?php echo $_style["tree_folder_secure"]; ?>';
             }
@@ -247,14 +246,14 @@
         var l = all.length;
 
         for ( var i = 0; i < l; i++ ) {
-            el = all[i]
+            el = all[i];
             cn = el.className;
             if (cn=="treeNodeSelected") {
                 el.className="treeNode";
             }
         }
         elSel.className="treeNodeSelected";
-    };
+    }
 
     function setHoverClass(el, dir) {
         if(el.className!="treeNodeSelected") {
@@ -264,7 +263,7 @@
                 el.className="treeNode";
             }
         }
-    };
+    }
 
     // set Context Node State
     function setCNS(n, b) {
@@ -273,7 +272,7 @@
         } else {
             n.style.backgroundColor="";
         }
-    };
+    }
 
     function updateTree() {
         rpcNode = $('treeRoot');
@@ -461,7 +460,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
-        <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
+        <input type='hidden' name='dt' value='<?php echo htmlspecialchars($_REQUEST['dt']); ?>' />
     </td>
     <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
   </tr>
@@ -472,14 +471,14 @@ if(isset($_REQUEST['tree_sortdir'])) {
 <div id="treeHolder">
 <?php
     // invoke OnTreeRender event
-    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $_REQUEST);
+    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $modx->db->escape($_REQUEST));
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
     <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 <?php
     // invoke OnTreeRender event
-    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $_REQUEST);
+    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->db->escape($_REQUEST));
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
@@ -498,14 +497,14 @@ function menuHandler(action) {
         case 1 : // view
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
-            break
+            break;
         case 2 : // edit
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
-            break
+            break;
         case 3 : // new Resource
             top.main.document.location.href="index.php?a=4&pid=" + itemToChange;
-            break
+            break;
         case 4 : // delete
             if(selectedObjectDeleted==0) {
                 if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_resource']; ?>")==true) {
@@ -514,18 +513,18 @@ function menuHandler(action) {
             } else {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['already_deleted']; ?>");
             }
-            break
+            break;
         case 5 : // move
             top.main.document.location.href="index.php?a=51&id=" + itemToChange;
-            break
+            break;
         case 6 : // new Weblink
             top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
-            break
+            break;
         case 7 : // duplicate
             if(confirm("<?php echo $_lang['confirm_resource_duplicate'] ?>")==true) {
                    top.main.document.location.href="index.php?a=94&id=" + itemToChange;
                }
-            break
+            break;
         case 8 : // undelete
             if(selectedObjectDeleted==0) {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
@@ -534,12 +533,12 @@ function menuHandler(action) {
                     top.main.document.location.href="index.php?a=63&id=" + itemToChange;
                 }
             }
-            break
+            break;
         case 9 : // publish
             if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_publish']; ?>")==true) {
                 top.main.document.location.href="index.php?a=61&id=" + itemToChange;
             }
-            break
+            break;
         case 10 : // unpublish
             if (itemToChange != <?php echo $modx->config['site_start']?>) {
                 if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
@@ -548,10 +547,10 @@ function menuHandler(action) {
             } else {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
-            break
+            break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
-            break
+            break;
 
         default :
             alert('Unknown operation command.');

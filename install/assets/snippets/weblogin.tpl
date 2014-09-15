@@ -5,7 +5,7 @@
  * Allows webusers to login to protected pages in the website, supporting multiple user groups
  *
  * @category 	snippet
- * @version 	1.1
+ * @version 	1.1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;
  * @internal	@modx_category Login
@@ -58,7 +58,7 @@
 $snipPath = $modx->config['base_path'] . "assets/snippets/";
 
 # check if inside manager
-if ($m = $modx->insideManager()) {
+if ($m = $modx->isBackend()) {
 	return ''; # don't go any further when inside manager
 }
 
@@ -68,7 +68,7 @@ if(isset($logoutid)) $logouthomeid = $logoutid;
 if(isset($template)) $tpl = $template;
 
 # Snippet customize settings
-$liHomeId	= isset($loginhomeid)? explode(",",$loginhomeid):array($modx->config['login_home'],$modx->documentIdentifier);
+$liHomeId	= isset($loginhomeid)? array_filter(array_map('intval', explode(',', $loginhomeid))):array($modx->config['login_home'],$modx->documentIdentifier);
 $loHomeId	= isset($logouthomeid)? $logouthomeid:$modx->documentIdentifier;
 $pwdReqId	= isset($pwdreqid)? $pwdreqid:0;
 $pwdActId	= isset($pwdactid)? $pwdactid:0;

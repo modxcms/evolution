@@ -1,5 +1,5 @@
 # For unexpected logouts in multi-server/cloud environments see:
-# http://svn.modxcms.com/docs/display/MODx096/Friendly+URL+Solutions
+# http://rtfm.modx.com/evolution/1.0/administration/friendly-url-solutions
 
 RewriteEngine Off
 

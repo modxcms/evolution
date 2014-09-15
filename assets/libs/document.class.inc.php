@@ -7,7 +7,7 @@
   e-mail: ur001@mail.ru
 
   Example of use:
-	require_once('assets/libs/docmanager/document.class.inc.php');
+	require_once('assets/libs/document.class.inc.php');
 	$doc = new Document();
 	$doc->Set('parent',$folder);
 	$doc->Set('alias','post'.time());
@@ -71,21 +71,17 @@ class Document{
 	function Save($clearcache=1){
 		global $modx;
 		$tablename=$modx->getFullTableName('site_content');
+		$fields = $modx->db->escape($this->fields);
 		if($this->isNew){
-			$this->fields['id']=$modx->db->insert($this->fields, $tablename);
+			$this->fields['id']=$modx->db->insert($fields, $tablename);
 			$this->isNew = false;
 		} else {
 			$id=$this->fields['id'];
-			$modx->db->update($this->fields, $tablename, "id=$id");
+			$modx->db->update($fields, $tablename, "id='{$id}'");
 		}
 		if(is_array($this->tvs)) $this->saveTVs();
     if ($clearcache == 1) {
-      $modx->clearCache();
-      include_once (MODX_MANAGER_PATH . '/processors/cache_sync.class.processor.php');
-      $sync = new synccache();
-      $sync->setCachepath(MODX_BASE_PATH . "assets/cache/");
-      $sync->setReport(false);
-      $sync->emptyCache();
+      $modx->clearCache('full');
     }
 	}
 
@@ -154,8 +150,7 @@ class Document{
 		global $modx;
 		// Retrieve id of template if name is given
 		if(!is_numeric($tpl)) {
-			$tablename=$modx->getFullTableName('site_templates');
-			$tpl = $modx->db->getValue("SELECT id FROM $tablename WHERE templatename='$tpl' LIMIT 1");
+			$tpl = $modx->db->getValue($modx->db->select('id', $modx->getFullTableName('site_templates'), "templatename='{$tpl}'", '', 1));
 			if(empty($tpl)) return false;
 		}
 		
@@ -170,8 +165,8 @@ class Document{
 		if($this->isNew) return;
 		global $modx;
 		$id=$this->fields['id'];
-		$modx->db->delete($modx->getFullTableName('site_content'),"id=$id");
-		$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'),"contentid=$id");
+		$modx->db->delete($modx->getFullTableName('site_content'),"id='{$id}'");
+		$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'),"contentid='{$id}'");
 		$this->isNew=true;
 	}
 	
@@ -202,17 +197,20 @@ class Document{
 			$this->oldTVs = array();
 			
 		$tvc = $modx->getFullTableName('site_tmplvar_contentvalues');
-		$id=$this->fields['id'];
 		foreach($this->tvs as $tv=>$value)
 		if(isset($this->tvNames[$tv])){
-			$tmplvarid=$this->tvNames[$tv];		
+			$fields = array(
+				'tmplvarid' => $this->tvNames[$tv],
+				'contentid' => $this->fields['id'],
+				'value'     => $value,
+				);
+			$fields = $modx->db->escape($fields);
 			if(isset($this->oldTVs[$tv])){
 				if($this->oldTVs[$tv]==$this->tvNames[$tv]) continue;
-				$sql="UPDATE $tvc SET value='$value' WHERE tmplvarid=$tmplvarid AND contentid=$id";
+				$modx->db->update($fields, $tvc, "tmplvarid='{$fields['tmplvarid']}' AND contentid='{$fields['contentid']}'");
 			}
 			else
-				$sql="INSERT INTO $tvc (tmplvarid,value,contentid) VALUES ($tmplvarid,'$value',$id)";
-			$modx->db->query($sql);
+				$modx->db->insert($fields, $tvc);
 		}
 	}
 	
@@ -227,12 +225,13 @@ class Document{
     }
 		$tvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 		$tvs = $modx->getFullTableName('site_tmplvars');
-		$sql = 'SeLECT tvs.name as name, tvc.value as value '.
-		       "FROM $tvc tvc INNER JOIN $tvs tvs ".
-			   'ON tvs.id=tvc.tmplvarid WHERE tvc.contentid ='.$this->fields['id'];
-		$result = $modx->db->query($sql);
+		$result = $modx->db->select(
+			'tvs.name as name, tvc.value as value',
+			$modx->getFullTableName('site_tmplvar_contentvalues')." tvc
+				INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tvs  ON tvs.id=tvc.tmplvarid WHERE tvc.contentid =".$this->fields['id'].""
+			);
 		$TVs = array();
-		while ($row = mysql_fetch_assoc($result)) $TVs[$row['name']] = $row['value'];
+		while ($row = $modx->db->getRow($result)) $TVs[$row['name']] = $row['value'];
 		return $TVs;
 	}
 	
@@ -243,7 +242,7 @@ class Document{
 		global $modx;
 		$this->tvNames = array();
 		$result = $modx->db->select('id, name', $modx->getFullTableName('site_tmplvars'));
-		while ($row = mysql_fetch_assoc($result)) $this->tvNames[$row['name']] = $row['id'];
+		while ($row = $modx->db->getRow($result)) $this->tvNames[$row['name']] = $row['id'];
 	}
 
   function setAlias ($alias = '') {

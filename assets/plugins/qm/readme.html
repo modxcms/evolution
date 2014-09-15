@@ -35,7 +35,7 @@ License (GPL v3),&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_b
 
 @version 1.5.5 updated 12/01/2011<br>
 
-@requirements MODx 1.0.0+
+@requirements MODX 1.0.0+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;<br>
 
@@ -178,7 +178,7 @@ class;text;qm-tv </span><span style="font-family: Courier New,Courier,monospace;
 <span style="font-weight: bold;">If you don't need inline template variable buttons you can skip this.</span><br>
 <br>
 You don't need to change anything if your rich text editor version is at least:<br>
-- TinyMCE 3.3.6r2 for MODx<br>
+- TinyMCE 3.3.6r2 for MODX<br>
 - CKEditor 3.3 for modx alpha 3 <br>
 
 <br>Now the hardest part. To get rich text editors to work properly
@@ -190,11 +190,11 @@ variables.<br>
 
 <br>
 
-<span style="font-weight: bold;">TinyMCE 3.2.4.1 (MODx 1.0.2 and below): </span><br>
+<span style="font-weight: bold;">TinyMCE 3.2.4.1 (MODX 1.0.2 and below): </span><br>
 <br>
 
 
-In MODx manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
+In MODX manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
 
 <br>
 
@@ -212,11 +212,11 @@ With: <br>
 
 <br>
 
-<span style="font-weight: bold;">TinyMCE 3.3.2 (MODx 1.0.3) and 3.3.5.1 (MODX 1.0.4): </span><br>
+<span style="font-weight: bold;">TinyMCE 3.3.2 (MODX 1.0.3) and 3.3.5.1 (MODX 1.0.4): </span><br>
 <br>
 
 
-In MODx manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
+In MODX manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
 
 <br>
 
@@ -371,7 +371,7 @@ new document template: <br>
 - parent: Use parent document template<br>
 - id: Use template based on id number<br>
 - selected: Define template based on parent document "inheritTpl"
-template variable used by "Inherit Selected Template" plugin <a href="http://modxcms.com/extras.html?view=package/view&amp;package=214">http://modxcms.com/extras.html?view=package/view&amp;package=214</a>.
+template variable used by <a href="http://modx.com/extras/package/inheritselectedtemplate">Inherit Selected Template Plugin</a>.
 You don't have to install the plugin, but you still have to
 have "inheritTpl" template variable on parent document with correct
 template id number.</td>
@@ -400,7 +400,7 @@ title','link','http://www.example.com','','visible for user role ids'</span><br>
 <br>
 - Modal button: <span style="font-family: Courier New,Courier,monospace;">'button
 title','modal','http://www.example.com','','visible for user role ids'</span><br>
-      <br>MODx link tag, e.g. [~23~], works for link and modal button links.<br>MODx id tag [*id*] works, e.g. http://www.example.com?refererMODxPageId=[*id*]<br>
+      <br>MODX link tag, e.g. [~23~], works for link and modal button links.<br>MODX id tag [*id*] works, e.g. http://www.example.com?refererMODXPageId=[*id*]<br>
 Every custom button has individual CSS class, e.g. qm-custom-"index"<br>
 <br>
 Visible for user role ids: leave empty to accept all roles, role 1 =
@@ -446,7 +446,7 @@ Separate fields with commas, for example:
       <td style="vertical-align: top;">true<br>
       </td>
       <td style="vertical-align: top;">true || false</td>
-      <td style="vertical-align: top;">Define if toolbar hides automatically or is always visible (manually close the toolbar by clicking MODx logo or X button)<br>
+      <td style="vertical-align: top;">Define if toolbar hides automatically or is always visible (manually close the toolbar by clicking MODX logo or X button)<br>
       </td>
     </tr><tr>
       <td style="vertical-align: top;">Inline edit buttons<br>
@@ -549,7 +549,7 @@ Purpose:<br>
 Edit any template variable.<br>
 
       <br>
-Editable default MODx fields:<br>
+Editable default MODX fields:<br>
       <span style="font-family: Courier New,Courier,monospace;">pagetitle, longtitle, description, content, menutitle, introtext</span><br>
 <br>
 
@@ -675,8 +675,8 @@ if "'" mark was used (was affecting pagetitle etc default fields)</li>
   <li>Added: OnParseDocument plugin event</li>
   <li>Added: Image TV preview</li>
   <li>Added: Preserve alias on save</li>
-  <li>Added: "documentDirty=false;" to cancel button to prevent unnecessary MODx manager alert message</li>
-  <li>Added: Custom buttons now support standard MODx [*id*] tag, e.g. http://www.example.com?refererMODxPageId=[*id*]</li>
+  <li>Added: "documentDirty=false;" to cancel button to prevent unnecessary MODX manager alert message</li>
+  <li>Added: Custom buttons now support standard MODX [*id*] tag, e.g. http://www.example.com?refererMODXPageId=[*id*]</li>
   <li>Added: Individual CSS class for every custom button, e.g. qm-custom-"index"<br>
   </li>
 
@@ -706,7 +706,7 @@ if "'" mark was used (was affecting pagetitle etc default fields)</li>
 <ul>
   <li>Added: Edit buttons inside content. Edit any page from other page, e.g. for editing ditto listings.</li>
   <li>Added: New resource buttons inside content. Create any page from other page, e.g. create new news item.</li>
-  <li>Added: Custom buttons works now with default MODx links, e.g. [~23~]<br>
+  <li>Added: Custom buttons works now with default MODX links, e.g. [~23~]<br>
   </li>
   <li>Added: Show friendly alias after saving the document. Notice: This is still an experimental feature in is off by default.<br>
   </li>
@@ -755,7 +755,7 @@ button is pressed (Thanks uxello for the solution!)<br>
 Manager/user settings</li>
   <li>Added:
 Little tweaks with QuickManager action buttons: small hide/show
-animations and possibilty to close the menu by clicking the MODx logo</li>
+animations and possibilty to close the menu by clicking the MODX logo</li>
   <li>Added: New option for custom buttons: modal = any link opened in
 a modal box (ColorBox)</li>
   <li>Changed: &nbsp;Custom buttons separator is now || instead of #
@@ -766,7 +766,7 @@ with&nbsp;ColorBox CSS in IE and friendly urls</li>
   <li>Fixed: Satinitized possible XSS vulnerabilities</li>
   <li>Removed: OnManagerPageInit plugin event removed</li>
   <li>Removed: IE6 support dropped, QuickManager+ is not tested with
-IE6 as MODx manager doesn't offially support IE6</li>
+IE6 as MODX manager doesn't offially support IE6</li>
 </ul>
 
 1.3.2.1<br>
@@ -798,7 +798,7 @@ IE ClearType fix (no more ugly fonts)</li>
   <li>Changed: colorbox.css renamed to qm-colorbox.css and moved to QM+
 css&nbsp;folder</li>
   <li>Fixed:
-All normal MODx manager actions including template and RTE selection
+All normal MODX manager actions including template and RTE selection
 works now just fine (thank you very much Susan O. for your ideas!)</li>
   <li>Fixed: Multiple small CSS fixes for IE</li>
   <li>Fixed: Alias friendly logout code (thanks Mar!)</li>
@@ -824,15 +824,15 @@ to solve this problem</li>
 
 <ul>
 
-  <li>Added: Support for MODx Evolution 1.0.0 version,&nbsp;better
-combatibility with MODx Carbon manager theme</li>
+  <li>Added: Support for MODX Evolution 1.0.0 version,&nbsp;better
+combatibility with MODX Carbon manager theme</li>
   <li>Added: Support for jQuery in noConflict mode by default</li>
   <li>Added: ColorBox modal box support</li>
   <li>Added: Modal box (ColorBox) window width</li>
   <li>Added: Modal box (ColorBox) window height</li>
   <li>Added: Possibility to add custom link buttons</li>
   <li>Removed: Thickbox&nbsp;window max width</li>
-  <li>Removed: MODx versions below 1.0.0 are not&nbsp;supported due
+  <li>Removed: MODX versions below 1.0.0 are not&nbsp;supported due
 manager interface changes</li>
   <li>Removed: ThickBox modal box support</li>
 </ul>

@@ -9,12 +9,13 @@ class udperms{
 	
 	function checkPermissions() {
 		
-		global $table_prefix;
-		global $dbase;
 		global $udperms_allowroot;
 		global $modx;
 
-		$user = $this->user;
+		$tblsc = $modx->getFullTableName('site_content');
+		$tbldg = $modx->getFullTableName('document_groups');
+		$tbldgn = $modx->getFullTableName('documentgroup_names');
+
 		$document = $this->document;
 		$role = $this->role;
 
@@ -32,7 +33,7 @@ class udperms{
 			return true; // permissions aren't in use
 		}
 		
-		$parent = $modx->db->getValue('SELECT parent FROM '.$modx->getFullTableName('site_content').' WHERE id='.$this->document);
+		$parent = $modx->db->getValue($modx->db->select('parent', $tblsc, "id='{$this->document}'"));
 		if ($this->duplicateDoc==true && $parent==0 && $udperms_allowroot==0) {
 			return false; // deny duplicate document at root if Allow Root is No
 		}
@@ -50,18 +51,14 @@ class udperms{
 			are private to the manager users will not be private to web users if the 
 			document group is not assigned to a web user group and visa versa.
 		 */
-		$tblsc = $dbase.".`".$table_prefix."site_content`";
-		$tbldg = $dbase.".`".$table_prefix."document_groups`";
-		$tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
-		$sql = "SELECT DISTINCT sc.id 
-				FROM $tblsc sc 
-				LEFT JOIN $tbldg dg on dg.document = sc.id
-				LEFT JOIN $tbldgn dgn ON dgn.id = dg.document_group
-				WHERE sc.id = $document 
-				AND (". ( (!$docgrp) ? null : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)";
-				   
-		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select(
+			'count(DISTINCT sc.id)',
+			"{$tblsc} AS sc 
+				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
+				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
+			"sc.id='{$this->document}' AND (". ( (!$docgrp) ? null : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)"
+			);
+		$limit = $modx->db->getValue($rs);
 		if($limit==1) $permissionsok = true;
 		
 		return $permissionsok;

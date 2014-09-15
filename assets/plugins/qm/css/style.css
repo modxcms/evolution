@@ -207,6 +207,12 @@
 	border: 0;
 }
 
+#qmEditor .qmId {
+	font-size: 20px;
+	line-height: 25px;
+	color: black;
+}
+
 #qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
 {
     background: transparent url(images/save.png) no-repeat left center;
@@ -257,7 +263,7 @@
 }
 
 
-/* Action buttons based on MODx Carbon Theme */
+/* Action buttons based on MODX Carbon Theme */
 
 #qmEditor ul 
 { /* .actionButtons --> #qmEditor */

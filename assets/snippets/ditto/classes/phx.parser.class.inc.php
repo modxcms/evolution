@@ -15,8 +15,8 @@ class PHxParser {
 		global $modx;
 		$this->name = "PHx";
 		$this->version = "2.1.2";
-		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
-		$this->user["usrid"] = intval($_SESSION['webInternalKey']);
+		$this->user["mgrid"] = intval(isset($_SESSION['mgrInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
+		$this->user["usrid"] = intval(isset($_SESSION['webInternalKey']) ? $_SESSION['webInternalKey'] : 0);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 		$this->cache["cm"] = array();
 		$this->cache["ui"] = array();
@@ -36,14 +36,14 @@ class PHxParser {
 		$modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
 	}
 	
-	// Plugin event hook for MODx
+	// Plugin event hook for MODX
 	function OnParseDocument() {
 		global $modx;
-		// Get document output from MODx
+		// Get document output from MODX
 		$template = $modx->documentOutput;
 		// To the parse cave .. let's go! *insert batman tune here*
 		$template = $this->Parse($template);
-		// Set processed document output in MODx
+		// Set processed document output in MODX
 		$modx->documentOutput = $template;
 	}
 	
@@ -58,7 +58,7 @@ class PHxParser {
 		$template = preg_replace($this->safetags[0],$this->safetags[1],$template);
 		// To the parse mobile.. let's go! *insert batman tune here*
 		$template = $this->ParseValues($template);
-		// clean up unused placeholders that have modifiers attached (MODx can't clean them)
+		// clean up unused placeholders that have modifiers attached (MODX can't clean them)
 		preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s', $template, $matches);
     	if ($matches[0]) {
 			$template = str_replace($matches[0], '', $template);
@@ -89,11 +89,11 @@ class PHxParser {
 		//$this->LogSource($template);
 		$this->LogPass();
 						
-		// MODx Chunks
-		$this->Log("MODx Chunks -> Merging all chunk tags");
+		// MODX Chunks
+		$this->Log("MODX Chunks -> Merging all chunk tags");
 		$template = $modx->mergeChunkContent($template);
 		
-		// MODx Snippets
+		// MODX Snippets
 		//if ( preg_match_all('~\[(\[|!)([^\[]*?)(!|\])\]~s',$template, $matches)) {
 		if ( preg_match_all('~\[(\[)([^\[]*?)(\])\]~s',$template, $matches)) {
 				$count = count($matches[0]);
@@ -103,9 +103,9 @@ class PHxParser {
 				// for each detected snippet
 				for($i=0; $i<$count; $i++) {
 					$snippet = $matches[2][$i]; // snippet call
-					$this->Log("MODx Snippet -> ".$snippet);
+					$this->Log("MODX Snippet -> ".$snippet);
 					
-					// Let MODx evaluate snippet
+					// Let MODX evaluate snippet
 					$replace = $modx->evalSnippets("[[".$snippet."]]");
 					$this->LogSnippet($replace);
 					
@@ -117,7 +117,7 @@ class PHxParser {
 				$template = str_replace($var_search, $var_replace, $template);
 		}
 		
-		// PHx / MODx Tags
+		// PHx / MODX Tags
 		if ( preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s',$template, $matches)) {
 
 			//$matches[0] // Complete string that's need to be replaced
@@ -140,19 +140,19 @@ class PHxParser {
 					switch($type) {
 						// Document / Template Variable eXtended
 						case "*":
-							$this->Log("MODx TV/DV: " . $input);
+							$this->Log("MODX TV/DV: " . $input);
 							$input = $modx->mergeDocumentContent("[*".$input."*]");
 							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Setting eXtended
+						// MODX Setting eXtended
 						case "(":
-							$this->Log("MODx Setting variable: " . $input);
+							$this->Log("MODX Setting variable: " . $input);
 							$input = $modx->mergeSettingsContent("[(".$input.")]");
 							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Placeholder eXtended
+						// MODX Placeholder eXtended
 						default:
-							$this->Log("MODx / PHx placeholder variable: " . $input);
+							$this->Log("MODX / PHx placeholder variable: " . $input);
 							// Check if placeholder is set
 							if ( !array_key_exists($input, $this->placeholders) && !array_key_exists($input, $modx->placeholders) ) {
 								// not set so try again later.
@@ -205,7 +205,7 @@ class PHxParser {
 					case "lowerthan":	case "lt":$condition[] = intval(($output<$modifier_value[$i]));break;
 					case "isinrole": case "ir": case "memberof": case "mo": // Is Member Of  (same as inrole but this one can be stringed as a conditional)
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$condition[] = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					case "or":$condition[] = "||";break;
@@ -282,16 +282,14 @@ class PHxParser {
 						break;
 					case "inrole": // deprecated
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$output = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					default:
 						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
-							$sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $modifier_cmd[$i] . "';";
-			             	$result = $modx->db->query($sql);
-			             	if ($modx->db->getRecordCount($result) == 1) {
-								$row = $modx->db->getRow($result);
-						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
+			             	$result = $modx->db->select('snippet', $modx->getFullTableName("site_snippets"), "name='phx:".$modifier_cmd[$i]."'");
+			             	if ($snippet = $modx->db->getValue($result)) {
+						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $snippet;
 						 		$this->Log("  |--- DB -> Custom Modifier");
 						 	}
 						 } else {
@@ -322,7 +320,7 @@ class PHxParser {
 		}
 	}
 	
-	// Returns a cleaned string escaping the HTML and special MODx characters
+	// Returns a cleaned string escaping the HTML and special MODX characters
 	function LogClean($string) {
 		$string = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", htmlspecialchars($string));
 		$string = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$string);
@@ -381,8 +379,8 @@ class PHxParser {
 		if (!array_key_exists($userid, $this->cache["mo"])) {
 			$tbl = $modx->getFullTableName("webgroup_names");
 			$tbl2 = $modx->getFullTableName("web_groups");
-			$sql = "SELECT wgn.name FROM $tbl wgn INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wg.webuser='".$userid."'";
-			$this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$sql);
+			$rs = $modx->db->select('wgn.name', "$tbl AS wgn INNER JOIN $tbl2 AS wg ON wg.webgroup=wgn.id AND wg.webuser='{$userid}'");
+			$this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$rs);
 		} else {
 			$grpNames = $this->cache["mo"][$userid];
 		}
@@ -394,7 +392,7 @@ class PHxParser {
 		return false;
 	 }
 	 
-	// Returns the value of a PHx/MODx placeholder.
+	// Returns the value of a PHx/MODX placeholder.
     function getPHxVariable($name) {
         global $modx;
 		// Check if this variable is created by PHx 
@@ -402,7 +400,7 @@ class PHxParser {
 			// Return the value from PHx
 			return $this->placeholders[$name];
 		} else {
-			// Return the value from MODx
+			// Return the value from MODX
 			return $modx->getPlaceholder($name);
 		}  
     }

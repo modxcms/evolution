@@ -1,5 +1,5 @@
 /** 
-This file is used by the MODx TinyMCE plugin to pass additional parameters to TinyMCE for processing.
+This file is used by the MODX TinyMCE plugin to pass additional parameters to TinyMCE for processing.
 */
 
 var mce_valid_elements = "@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|"

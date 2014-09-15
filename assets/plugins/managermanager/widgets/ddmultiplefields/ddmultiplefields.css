@@ -1,0 +1,101 @@
+.ddMultipleField {
+	display: block;
+	border-collapse: collapse;
+	position: relative;
+}
+
+.ddMultipleField a.false {
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	text-decoration: none;
+}
+
+.ddMultipleField input, .ddMultipleField textarea {
+	border: 1px solid #C8C8C8 !important;
+	padding: 0.2em 0.533em 0.333em !important;
+	margin-right: 5px;
+	font: 12px/1.2em Verdana,Helvetica,sans-serif !important;
+}
+
+.ddMultipleField input {height: 1.2em;}
+
+.ddMultipleField input:focus {border-color: #E1A020 !important;}
+
+.ddMultipleField input.DatePicker {
+	width: 147px !important;
+	padding-left: 24px !important;
+}
+
+.ddMultipleField input[disabled] {
+	opacity: .5;
+	cursor: not-allowed;
+}
+
+.ddMultipleField textarea {resize: vertical;}
+
+.ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol {
+	min-height: 23px;
+	padding: 5px 7px;
+	vertical-align: top;
+}
+
+.ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol:last-child {
+	white-space: nowrap;
+}
+
+.ddMultipleField tr th {text-align: left;}
+
+.ddMultipleField tr td.ddFieldCol, .ddMultipleField tr td.ddSortHandle {
+	border: 2px solid #FFFFFF;
+	-webkit-transition: background 0.3s ease-out;
+	-moz-transition: background 0.3s ease-out;
+	-ms-transition: background 0.3s ease-out;
+	-o-transition: background 0.3s ease-out;
+	transition: background 0.3s ease-out;
+	background: #D9F1FF;
+}
+
+/* .ddMultipleField tr td:first-child {border-radius: 7px 0 0 7px;}
+.ddMultipleField tr td:last-child {border-radius: 0 7px 7px 0;} */
+
+.ddMultipleField tr td.ddSortHandle {
+	border-right: none;
+	width: 16px;
+	padding: 0;
+	vertical-align: middle;
+}
+
+.ddMultipleField tr td.ddFieldCol:nth-child(2) {border-left: none;}
+
+.ddMultipleField tr td.ddSortHandle div {
+/* 	border-radius: 0 12px 12px 0; */
+	background: #007CC3;
+	width: 10px;
+	height: 23px;
+	-webkit-transition: opacity 0.3s ease-out;
+	-moz-transition: opacity 0.3s ease-out;
+	-ms-transition: opacity 0.3s ease-out;
+	-o-transition: opacity 0.3s ease-out;
+	transition: opacity 0.3s ease-out;
+	opacity: .3;
+	cursor: n-resize;
+}
+
+.ddMultipleField tr.ddFieldBlock:hover td.ddFieldCol, .ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle {background: #B2E3FF;}
+
+.ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle div {opacity: 1;}
+
+.ddFieldCol_edit {
+	text-align: right;
+	font-style: italic;
+}
+
+.ddMultipleField .ui-state-highlight td {padding: 0;}
+
+.ddMultipleField .ui-state-highlight div {
+	border: 1px solid #84c225;
+/* 	border-radius: 3px; */
+	background: #f0f0f0;
+	width: 100%;
+	height: 100%;
+}

@@ -1,66 +1,47 @@
- <?php
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch((int) $_REQUEST['a']) {
   case 16:
     if(!$modx->hasPermission('edit_template')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 19:
     if(!$modx->hasPermission('new_template')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-    $id = (int) $_REQUEST['id'];
-    // check to see the template editor isn't locked
-    $rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=16 AND id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        for ($i=0;$i<$limit;$i++) {
-            $lock = $modx->db->getRow($rs);
-            if($lock['internalKey']!=$modx->getLoginUserID()) {
-                $msg = sprintf($_lang["lock_msg"],$lock['username'],"template");
-                $e->setError(5, $msg);
-                $e->dumpError();
-            }
-        }
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+
+$tbl_active_users   = $modx->getFullTableName('active_users');
+$tbl_site_templates = $modx->getFullTableName('site_templates');
+
+// check to see the template editor isn't locked
+$rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
+    if ($username = $modx->db->getValue($rs)) {
+            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
     }
-    // end check for lock
-} else {
-    $id='';
-}
+// end check for lock
 
 $content = array();
 if(!empty($id)) {
-    $rs = $modx->db->select('*','[+prefix+]site_templates',"id='{$id}'");
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "More results returned than expected. Which sucks. <p>Aborting.";
-        exit;
-    }
-    if($limit<1) {
-        echo "Oops, something went terribly wrong...<p>";
-        print "No database record has been found for this template. <p>Aborting.";
-        exit;
-    }
+    $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
     $content = $modx->db->getRow($rs);
+    if(!$content) {
+        $modx->webAlertAndQuit("No database record has been found for this template.");
+    }
+    
     $_SESSION['itemname']=$content['templatename'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
-        $e->setError(3);
-        $e->dumpError();
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
-    $_SESSION['itemname']="New template";
+    $_SESSION['itemname']=$_lang["new_template"];
 }
 
 $content = array_merge($content, $_POST);
@@ -101,7 +82,7 @@ function deletedocument() {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="and"> + </span>
+                  <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -144,9 +125,8 @@ function deletedocument() {
     <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
             <option>&nbsp;</option>
             <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n=>$v){
                     echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
                 }
             ?>
@@ -176,14 +156,14 @@ function deletedocument() {
     <input type="submit" name="save" style="display:none">
 
 <?php
-$sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
-    FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
-    INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
-    LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
-    WHERE tr.templateid='{$id}' ORDER BY tr.rank, tv.rank, tv.id";
-
-
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
+    $modx->getFullTableName('site_tmplvar_templates')." tr
+		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
+		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
+    "tr.templateid='{$id}'",
+	"tr.rank, tv.rank, tv.id"
+	);
 $limit = $modx->db->getRecordCount($rs);
 ?>
     </div>
@@ -196,9 +176,8 @@ $limit = $modx->db->getRecordCount($rs);
 $tvList = '';
 
 if($limit>0) {
-    for ($i=0;$i<$limit;$i++) {
-        $row = $modx->db->getRow($rs);
-        if ($i == 0 ) $tvList .= '<br /><ul>';
+    $tvList .= '<br /><ul>';
+    while ($row = $modx->db->getRow($rs)) {
         $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
     }
     $tvList .= '</ul>';
