@@ -252,7 +252,7 @@ if (is_array($evtOut))
 		  <tr id="showname" style="display: <?php echo ($_GET['a']=='12' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
 			<td colspan="3">
 				<img src="<?php echo $_style["icons_user"]?>" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
-				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
+				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username'], ENT_QUOTES, $modx->config['modx_charset']); ?>" />
 				<hr />
 			</td>
 		  </tr>
@@ -260,7 +260,7 @@ if (is_array($evtOut))
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='11'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
+			<td><input type="text" name="newusername" class="inputBox" value="<?php echo htmlspecialchars($usernamedata['username'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='11' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
@@ -291,14 +291,14 @@ if (is_array($evtOut))
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" value="<?php echo htmlspecialchars($userdata['fullname']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="fullname" class="inputBox" value="<?php echo htmlspecialchars($userdata['fullname'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-			<input type="text" name="email" class="inputBox" value="<?php echo htmlspecialchars($userdata['email']); ?>" onchange="documentDirty=true;" />
-			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
+			<input type="text" name="email" class="inputBox" value="<?php echo htmlspecialchars($userdata['email'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" />
+			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email'], ENT_QUOTES, $modx->config['modx_charset']); ?>" />
 			</td>
 		  </tr>
 		  <tr>
@@ -330,37 +330,37 @@ while ($row = $modx->db->getRow($rs)) {
 		  <tr>
 			<td><?php echo $_lang['user_phone']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="phone" class="inputBox" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="phone" class="inputBox" value="<?php echo htmlspecialchars($userdata['phone'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_mobile']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="mobilephone" class="inputBox" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="mobilephone" class="inputBox" value="<?php echo htmlspecialchars($userdata['mobilephone'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>		  
 		  <tr>	  
 			<td><?php echo $_lang['user_fax']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fax" class="inputBox" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="fax" class="inputBox" value="<?php echo htmlspecialchars($userdata['fax'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		<tr>
 			<td><?php echo $_lang['user_street']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="street" class="inputBox" value="<?php echo htmlspecialchars($userdata['street']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="street" class="inputBox" value="<?php echo htmlspecialchars($userdata['street'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		</tr>
 		<tr>
 			<td><?php echo $_lang['user_city']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="city" class="inputBox" value="<?php echo htmlspecialchars($userdata['city']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="city" class="inputBox" value="<?php echo htmlspecialchars($userdata['city'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		</tr>
 		  <tr>
 			<td><?php echo $_lang['user_state']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="state" class="inputBox" value="<?php echo htmlspecialchars($userdata['state']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="state" class="inputBox" value="<?php echo htmlspecialchars($userdata['state'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_zip']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="zip" class="inputBox" value="<?php echo htmlspecialchars($userdata['zip']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="zip" class="inputBox" value="<?php echo htmlspecialchars($userdata['zip'], ENT_QUOTES, $modx->config['modx_charset']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_country']; ?>:</td>
@@ -400,7 +400,7 @@ while ($row = $modx->db->getRow($rs)) {
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo htmlspecialchars($userdata['comment'], ENT_QUOTES, $modx->config['modx_charset']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='12') { ?>

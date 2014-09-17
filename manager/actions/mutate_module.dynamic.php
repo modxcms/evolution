@@ -348,7 +348,7 @@ function SetUrl(url, width, height, alt) {
 
     <table border="0" cellspacing="0" cellpadding="1">
         <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
-            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'], ENT_QUOTES, $modx->config['modx_charset'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -357,7 +357,7 @@ function SetUrl(url, width, height, alt) {
             <?php echo $_lang['module_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'], ENT_QUOTES, $modx->config['modx_charset'])?></textarea>
         </div>
     <!-- PHP text editor end -->
     </div>
@@ -442,7 +442,7 @@ $ds = $modx->db->select(
 <?php
                 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                 foreach(getCategories() as $n => $v) {
-                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'], ENT_QUOTES, $modx->config['modx_charset'])."</option>\n";
                 }
 ?>
             </select></td></tr>

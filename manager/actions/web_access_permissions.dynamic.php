@@ -85,7 +85,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_user_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name'], ENT_QUOTES, $modx->config['modx_charset']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'" />&nbsp;'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&usergroup='.$row['id'].'&operation=delete_user_group\';" />'."\n".
 				'</form>';
@@ -158,7 +158,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name'], ENT_QUOTES, $modx->config['modx_charset']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'">'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
 				'</form>';
@@ -172,7 +172,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				continue;
 			}
 			if ($pid == $row['id']) echo ", \n";
-			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.htmlspecialchars($row['doc_title']).'">'.$row['doc_id'].'</a>';
+			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.htmlspecialchars($row['doc_title'], ENT_QUOTES, $modx->config['modx_charset']).'">'.$row['doc_id'].'</a>';
 			$pid = $row['id'];
 		}
 		echo "</table>";

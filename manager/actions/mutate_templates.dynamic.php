@@ -114,11 +114,11 @@ function deletedocument() {
     <table>
       <tr>
         <th><?php echo $_lang['template_name']; ?>:</th>
-        <td><input name="templatename" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span></td>
+        <td><input name="templatename" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['templatename'], ENT_QUOTES, $modx->config['modx_charset']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span></td>
       </tr>
     <tr>
     <th><?php echo $_lang['template_desc']; ?>:</th>
-    <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+    <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description'], ENT_QUOTES, $modx->config['modx_charset']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
     </tr>
     <tr>
     <th><?php echo $_lang['existing_category']; ?>:</th>
@@ -127,7 +127,7 @@ function deletedocument() {
             <?php
                 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                 foreach(getCategories() as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"], ENT_QUOTES, $modx->config['modx_charset'])."</option>";
                 }
             ?>
         </select>
@@ -149,7 +149,7 @@ function deletedocument() {
             <?php echo $_lang['template_code']; ?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height: 370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height: 370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post'], ENT_QUOTES, $modx->config['modx_charset']) : htmlspecialchars($content['content'], ENT_QUOTES, $modx->config['modx_charset']); ?></textarea>
         </div>
     </div>
     <!-- HTML text editor end -->

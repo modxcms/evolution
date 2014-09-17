@@ -358,7 +358,7 @@ function movedocument() {
 				$buffer .= fgets($handle, 4096);
 			}
 			fclose($handle);
-			$buffer = $_lang['page_data_cached'].'<p><textarea style="width: 100%; height: 400px;">'.htmlspecialchars($buffer)."</textarea>\n";
+			$buffer = $_lang['page_data_cached'].'<p><textarea style="width: 100%; height: 400px;">'.htmlspecialchars($buffer, ENT_QUOTES, $modx->config['modx_charset'])."</textarea>\n";
 		}
 		echo $buffer;
 ?>

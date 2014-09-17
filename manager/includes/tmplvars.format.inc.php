@@ -41,7 +41,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                         'class' => $params['class'],
                         'src' => $src,
                         'id' => ($params['id'] ? $params['id'] : ''),
-                        'alt' => htmlspecialchars($params['alttext']),
+                        'alt' => htmlspecialchars($params['alttext'], ENT_QUOTES, $modx->config['modx_charset']),
                         'style' => $params['style']
                     );
                     if(isset($params['align']) && $params['align'] != 'none') {
@@ -164,7 +164,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     // setup the link attributes
                     $attr = array(
                         'href' => $url,
-                        'title' => $params['title'] ? htmlspecialchars($params['title']) : $name,
+                        'title' => $params['title'] ? htmlspecialchars($params['title'], ENT_QUOTES, $this->config['modx_charset']) : $name,
                         'class' => $params['class'],
                         'style' => $params['style'],
                         'target' => $params['target'],
@@ -173,7 +173,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     $attributes .= ' '.$params['attrib']; // add extra
 
                     // Output the link
-                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? htmlspecialchars($params['text']) : $name) .'</a>';
+                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? htmlspecialchars($params['text'], ENT_QUOTES, $modx->config['modx_charset']) : $name) .'</a>';
                 }
             }
             break;
@@ -207,7 +207,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $h = $params['h']? $params['h']:'400px';
             $richtexteditor = $params['edt']? $params['edt']: "";
             $o = '<div class="MODX_RichTextWidget"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
-            $o.= htmlspecialchars($value);
+            $o.= htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
             $o.= '</textarea></div>';
             $replace_richtext = array($id);
             // setup editors
