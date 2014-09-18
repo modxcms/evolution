@@ -494,7 +494,7 @@ function decode(s) {
 /* ]]> */
 </script>
 
-<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
+<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
