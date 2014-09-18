@@ -82,6 +82,7 @@ class MODxMailer extends PHPMailer
 				break;
             case 'windows-1251':
                 $this->CharSet     = 'cp1251';
+                break;
 			case 'utf8':
 			case 'utf-8':
 			default:
