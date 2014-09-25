@@ -28,7 +28,7 @@ $set['advanced']['b2'] = 'bullist,numlist,|,outdent,indent,|,undo,redo,|,link,un
 $set['advanced']['b3'] = 'hr,removeformat,visualaid,|,sub,sup,|,charmap';
 $set['advanced']['b4'] = '';
 
-$set['full']['p']  = 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template,xhtmlxtras,youtubeIframe,autosave';
+$set['full']['p']  = 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template,xhtmlxtras,youtubeIframe,autosave,advlist';
 
 $set['full']['b1'] = 'save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect';
 $set['full']['b2'] = 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor';

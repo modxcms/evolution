@@ -996,7 +996,22 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class="split"></div></td>
           </tr>
-
+          
+	  <tr>
+            <td nowrap class="warning"><?php echo $_lang["smtp_secure_title"] ?></td>
+            <td >
+             <select name="smtp_secure" size="1" class="inputBox">
+	      <option value="none" ><?php echo $_lang["no"] ?></option>
+ 	      <option value="ssl" <?php if($smtp_secure == 'ssl') echo "selected='selected'"; ?> >SSL</option>
+	      <option value="tls" <?php if($smtp_secure == 'tls') echo "selected='selected'"; ?> >TLS</option>
+	     </select>
+	     <br />
+          </td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+          
           <tr>
             <td nowrap class="warning"><?php echo $_lang["smtp_host_title"] ?></td>
             <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_host" value="<?php echo isset($smtp_host) ? $smtp_host : "smtp.example.com" ; ?>" /></td>

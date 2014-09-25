@@ -227,8 +227,8 @@ if (('none' == $rte) && $mode) {
 			myCodeMirror.hasFocus();
 		}
 		if (localStorage["history_{$object_id}"] !== undefined){
-			var history = JSON.parse(localStorage["history_{$object_id}"]);
-			myCodeMirror.doc.setHistory(history);
+			var cmHistory = JSON.parse(localStorage["history_{$object_id}"]);
+			myCodeMirror.doc.setHistory(cmHistory);
 		}
 		// add event
 		myCodeMirror.on("gutterClick", function(cm, n) {
@@ -237,8 +237,8 @@ if (('none' == $rte) && $mode) {
 			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 		});
 		myCodeMirror.on("change", function(cm, n) {
-			var history = myCodeMirror.doc.getHistory();
-			localStorage['history_{$object_id}'] = JSON.stringify(history);
+			var cmHistory = myCodeMirror.doc.getHistory();
+			localStorage['history_{$object_id}'] = JSON.stringify(cmHistory);
 			documentDirty=true;
 		});
 

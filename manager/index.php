@@ -170,7 +170,7 @@ foreach($_lang as $k=>$v)
 }
 
 // send the charset header
-header('Content-Type: text/html; charset='.$modx_charset);
+header('Content-Type: text/html; charset='.$modx_manager_charset);
 
 /*
  * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()

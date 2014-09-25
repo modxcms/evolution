@@ -103,16 +103,37 @@ class filter {
 					//Added by Andchir (http://modx-shopkeeper.ru/)
 				case 12 :
 					$inputArr = explode('~',$value[$this->array_key]);
-          $check = 0;
-          foreach($inputArr as $val){
-            if(empty($this->filterValue) || empty($val))
-              return;
-            if (strpos($this->filterValue, $val)!==false)
-              $check++;
-          }
+			          $check = 0;
+			          foreach($inputArr as $val){
+			            if(empty($this->filterValue) || empty($val))
+			              return;
+			            if (strpos($this->filterValue, $val)!==false)
+			              $check++;
+			          }
 					$unset = $check>0 ? 1 : 0;
 					unset($val,$check);
-				break;			
+				break;	
+					//Added by Dmi3yy
+				case 13 :
+					$inputArr = explode('~',$value[$this->array_key]);
+					$check = 0;
+					foreach($inputArr as $val){
+						if(empty($this->filterValue) || empty($val))
+							return;
+						
+						$iA = explode('~',$this->filterValue);
+						foreach($iA as $ii){
+							$iB = explode(',',$val);
+							foreach($iB as $iii){
+								if (trim($ii) == trim($iii))
+								$check++;
+							}
+
+						}	
+					}
+					$unset = $check>0 ? 1 : 0;
+					unset($val,$check);
+					break;				
 		}
 			return $unset;
 	}

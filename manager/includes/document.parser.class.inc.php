@@ -706,8 +706,10 @@ class DocumentParser {
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
             $this->db->update(
-                "published = 1, publishedon = 'pub_date'",
-                $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
+                array(
+                    'published'   => 1,
+                    'publishedon' => $timeNow,
+                ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
             $this->db->update(
