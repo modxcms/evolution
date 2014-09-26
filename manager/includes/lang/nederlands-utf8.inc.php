@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Webgebruikersbeheer';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Geef hier de URL voor de MODX Nieuws Feed.';
 $_lang["rss_url_news_title"] = 'RSS Nieuws Feed:';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Geef hier de URL voor de MODX Beveiligings Feed.';
 $_lang["rss_url_security_title"] = 'RSS Beveiligings Feed:';
 $_lang["run_module"] = 'Module uitvoeren';
@@ -1192,6 +1192,7 @@ $_lang['email_method_mail'] = 'mail() PHP functie';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Gecodeerde SMTP';
 $_lang['smtp_username_title'] = 'SMTP gebruikersnaam';
 $_lang['smtp_password_title'] = 'SMTP wachtwoord';
 $_lang['smtp_port_title'] = 'SMTP poort';
@@ -1235,9 +1236,9 @@ $_lang["export_site.static.php5"] = 'Vervang string (na)';
 $_lang["export_site.static.php6"] = 'Doel';
 $_lang["export_site.static.php7"] = 'Bestanden kunnen niet worden aangepast naar [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php6"] = 'Verstuur een e-mail bij MODX foutmeldingen';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
-$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+$_lang["mutate_settings.dynamic.php8"] = 'Een e-mail met de foutmelding wordt verzonden naar [(emailsender)] ([+emailsender+]) wanneer er een systeem probleem in MODX voorkomt. De details kunt u bekijken in het systeem error log bestand.';
 
 $_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
 $_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
@@ -1259,4 +1260,17 @@ $_lang["login_processor_wrong_password"]     = "Onjuiste gebruikersnaam of wacht
 $_lang["login_processor_many_failed_logins"] = "Wegens te veel mislukte aanmeldingen ben je geblokkeerd!";
 $_lang["login_processor_blocked1"]           = "U bent geblokkeerd en kan niet inloggen!";
 $_lang["login_processor_blocked2"]           = "U bent geblokkeerd en kan niet inloggen! Probeer het later opnieuw.";
+$_lang["login_processor_blocked3"]           = "U wordt automatisch geblokkeerd na een bepaalde datum en kunt niet meer inloggen!";
 $_lang["login_processor_bad_code"]           = "De veiligheidscode klopt niet! Probeer het opnieuw!";
+$_lang["login_processor_remotehost_ip"]      = "Uw hostnaam verwijst niet terug naar uw IP!";
+$_lang["login_processor_remote_ip"]          = "Het is niet toegestaan ​​om in te loggen vanaf deze locatie.";
+$_lang["login_processor_date"]               = "Het is niet toegestaan ​​om in te loggen op dit moment. Probeer het later opnieuw.";
+$_lang["login_processor_captcha_config"]     = "Captcha is niet correct geconfigureerd.";
+
+$_lang["dp_dayNames"]   = "['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag']";
+$_lang["dp_monthNames"] = "['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Selecteer alle";
+$_lang["check_none"] = "Deselecteer alle";
+$_lang["check_toggle"] = "Selectie aan/uit";

@@ -845,7 +845,7 @@ $_lang["role_web_user_management"] = 'Web-Benutzerverwaltung';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'URL des MODX-News-Feeds eintragen.';
 $_lang["rss_url_news_title"] = 'RSS-News-Feed';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'URL des MODX-Security-Feeds eintragen.';
 $_lang["rss_url_security_title"] = 'RSS-Security-Feed';
 $_lang["run_module"] = 'Modul starten';
@@ -1196,6 +1196,7 @@ $_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
+$_lang['smtp_secure_title'] = 'SMTP Verschlüsselung';
 $_lang['smtp_username_title'] = 'SMTP Benutzername';
 $_lang['smtp_password_title'] = 'SMTP Passwort';
 $_lang['smtp_port_title'] = 'SMTP Port';
@@ -1263,4 +1264,17 @@ $_lang["login_processor_wrong_password"]     = "Benutzername oder Passwort falsc
 $_lang["login_processor_many_failed_logins"] = "Aufgrund von zu vielen fehlerhaften Anmeldeversuchen wurden Sie gesperrt!";
 $_lang["login_processor_blocked1"]           = "Sie wurden gesperrt und können sich nicht anmelden!";
 $_lang["login_processor_blocked2"]           = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
+$_lang["login_processor_blocked3"]           = "Sie wurden automatisch zu einem bestimmten Datum gesperrt und können sich nicht mehr anmelden!";
 $_lang["login_processor_bad_code"]           = "Der Sicherheitscode stimmt nicht überein! Bitte loggen Sie sich erneut ein!";
+$_lang["login_processor_remotehost_ip"]      = "Der gespeicherte Hostname ist nicht unter Ihrer IP-Adresse erreichbar!";
+$_lang["login_processor_remote_ip"]          = "Sie können sich von dieser IP-Adresse nicht einloggen.";
+$_lang["login_processor_date"]               = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
+$_lang["login_processor_captcha_config"]     = "Das Captcha ist falsch konfiguriert.";
+
+$_lang["dp_dayNames"]   = "['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']";
+$_lang["dp_monthNames"] = "['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Alles auswählen";
+$_lang["check_none"] = "Nichts auswählen";
+$_lang["check_toggle"] = "Auswahl umkehren";
