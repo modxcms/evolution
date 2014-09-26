@@ -82,64 +82,51 @@ class DocumentParser {
         $this->error_reporting = 1;
     }
 
-    function __call($name,$args) {
+    function __call($method_name,$arguments) {
         include_once(MODX_MANAGER_PATH . 'includes/extenders/deprecated.functions.inc.php');
-        if(method_exists($this->old,$name)) return call_user_func_array(array($this->old,$name),$args);
+        if(method_exists($this->old,$method_name)) $error_type=1;
+        else                                       $error_type=3;
+        
+        if(!isset($this->config['error_reporting'])||1<$this->config['error_reporting'])
+    	{
+    		if($error_type==1)
+        	{
+	        	$title = 'Call deprecated method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+    		}
+    		else
+    		{
+	        	$title = 'Call undefined method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+    		}
+	    	$info = debug_backtrace();
+	    	$m[] = $msg;
+	        if(!empty($this->currentSnippet))          $m[] = 'Snippet - ' . $this->currentSnippet;
+	        elseif(!empty($this->event->activePlugin)) $m[] = 'Plugin - '  . $this->event->activePlugin;
+	    	$m[] = $this->decoded_request_uri;
+	    	$m[] = str_replace('\\','/',$info[0]['file']) . '(line:' . $info[0]['line'] . ')';
+	    	$msg = implode('<br />', $m);
+	        $this->logEvent(0, $error_type, $msg, $title);
+        }
+        if(method_exists($this->old,$method_name))
+        	return call_user_func_array(array($this->old,$method_name),$arguments);
     }
 
     /**
      * Loads an extension from the extenders folder.
-     * Currently of limited use - can only load the DBAPI and ManagerAPI.
+     * You can load any extension creating a boot file:
+     * MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php"
+     * $extname - extension name in lowercase
      *
-     * @global string $database_type
-     * @param string $extnamegetAllChildren
      * @return boolean
      */
     function loadExtension($extname) {
-        global $database_type;
 
-        switch ($extname) {
-            // Database API
-            case 'DBAPI' :
-                if (!include_once MODX_MANAGER_PATH . 'includes/extenders/dbapi.' . $database_type . '.class.inc.php')
-                    return false;
-                $this->db= new DBAPI;
-                return true;
-                break;
+        $extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
 
-                // Manager API
-            case 'ManagerAPI' :
-                if (!include_once MODX_MANAGER_PATH . 'includes/extenders/manager.api.class.inc.php')
-                    return false;
-                $this->manager= new ManagerAPI;
-                return true;
-                break;
+        $filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
 
-            // PHPMailer
-            case 'MODxMailer' :
-                include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.php');
-                $this->mail= new MODxMailer;
-                if($this->mail) return true;
-                else            return false;
-                break;
-
-            case 'EXPORT_SITE' :
-                if(include_once(MODX_MANAGER_PATH . 'includes/extenders/export.class.inc.php'))
-                {
-                    $this->export= new EXPORT_SITE;
-                    return true;
-                }
-                else return false;
-                break;
-            case 'PHPCOMPAT' :
-                if(is_object($this->phpcompat)) return;
-                include_once(MODX_MANAGER_PATH . 'includes/extenders/phpcompat.class.inc.php');
-                $this->phpcompat = new PHPCOMPAT;
-                break;
-                
-                default :
-                return false;
-        }
+        return is_file($filename) ? include $filename : false;
     }
 
     /**
@@ -721,7 +708,7 @@ class DocumentParser {
             $this->db->update(
                 array(
                     'published'   => 1,
-                    'publishedon' => time(),
+                    'publishedon' => $timeNow,
                 ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
@@ -1233,7 +1220,17 @@ class DocumentParser {
         $suff= $this->config['friendly_url_suffix'];
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
-
+    
+    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
+    	
+        if ($id == $this->config['site_start'] && $this->config['seostrict']==='1') {return $this->config['base_url'];}
+        $Alias = explode('/',$alias);
+        $alias = array_pop($Alias);
+        $dir = implode('/', $Alias);
+        unset($Alias);
+        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
+        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
+    }
     
     /** 
      * Convert URL tags [~...~] to URLs
@@ -1508,8 +1505,8 @@ class DocumentParser {
                 $k= array_keys($_GET);
                 unset ($_GET[$k[0]]);
                 unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-                $_SERVER['QUERY_STRING']= $qp['query'];
                 $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+                $_SERVER['QUERY_STRING']= $qp['query'];
                 if (!empty ($qp['query'])) {
                     parse_str($qp['query'], $qv);
                     foreach ($qv as $n => $v)
@@ -1809,7 +1806,7 @@ class DocumentParser {
 		array(
 			'eventid'     => $evtid,
 			'type'        => $type,
-			'createdon'   => time(),
+			'createdon'   => time() + $this->config['server_offset_time'],
 			'source'      => $esc_source,
 			'description' => $msg,
 			'user'        => $LoginUserID,
@@ -1927,7 +1924,11 @@ class DocumentParser {
      * @return boolean
      */
     function isBackend() {
-        return $this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return true;
+		}
+		else return false;
     }
 
     /**
@@ -1936,7 +1937,11 @@ class DocumentParser {
      * @return boolean
      */
     function isFrontend() {
-        return !$this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return false;
+		}
+		else return true;
     }
 
     /**
@@ -2289,47 +2294,38 @@ class DocumentParser {
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
-            $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
+            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
-        if ($args != '' && $this->config['friendly_urls'] == 1) {
-            // add ? to $args if missing
-            $c= substr($args, 0, 1);
-            if (strpos($f_url_prefix, '?') === false) {
-                if ($c == '&')
-                    $args= '?' . substr($args, 1);
-                elseif ($c != '?') $args= '?' . $args;
+        if ($args !== '') {
+            // add ? or & to $args if missing
+            $args= ltrim($args, '?&');
+            $_ = strpos($f_url_prefix, '?');
+            if($this->config['friendly_urls'] === '1' && $_ === false) {
+                $args= "?{$args}";
+            }
+            else $args= "&{$args}";
+        }
+        if ($id != $this->config['site_start']) {
+            if ($this->config['friendly_urls'] == 1 && $alias != '') {
+            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
+                $alias = $id;
+                $alPath = '';
+                if ($this->config['friendly_alias_urls'] == 1) {
+                    $al = $this->aliasListing[$id];
+                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
+                        $f_url_suffix = '/';
+                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
+                    if ($al && $al['alias'])
+                        $alias = $al['alias'];
+                }
+                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                $url = "{$alias}{$args}";
             } else {
-                if ($c == '?')
-                    $args= '&' . substr($args, 1);
-                elseif ($c != '&') $args= '&' . $args;
+                $url = "index.php?id={$id}{$args}";
             }
-        }
-        elseif ($args != '') {
-            // add & to $args if missing
-            $c= substr($args, 0, 1);
-            if ($c == '?')
-                $args= '&' . substr($args, 1);
-            elseif ($c != '&') $args= '&' . $args;
-        }
-        if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            $url= $f_url_prefix . $alias . $f_url_suffix . $args;
-        }
-        elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
-            $alias= $id;
-            if ($this->config['friendly_alias_urls'] == 1) {
-                $al= $this->aliasListing[$id];
-                if($al['isfolder']===1 && $this->config['make_folders']==='1')
-                    $f_url_suffix = '/';
-                $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
-                if ($al && $al['alias'])
-                    $alias= $al['alias'];
-            }
-            $alias= $alPath . $f_url_prefix . $alias . $f_url_suffix;
-            $url= $alias . $args;
         } else {
-            $url= 'index.php?id=' . $id . $args;
+            $url = $args;
         }
-
         $host= $this->config['base_url'];
         // check if scheme argument has been set
         if ($scheme != '') {
@@ -2809,7 +2805,7 @@ class DocumentParser {
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
 					
-					if (!isset($row['id'] or !$row['id']){
+					if (!isset($row['id']) or !$row['id']){
 						$output[$row['name']] = $row['value'];
 					}else{
 						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
@@ -2937,7 +2933,7 @@ class DocumentParser {
                 'sender'      => $from,
                 'recipient'   => $to,
                 'private'     => $private,
-                'postdate'    => time(),
+                'postdate'    => time() + $this->config['server_offset_time'],
                 'messageread' => 0,
             ), $this->getFullTableName('user_messages'));
     }
@@ -3008,7 +3004,7 @@ class DocumentParser {
             "mu.id = '{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype'] or !$row["usertype"])
+            if (!isset($row['usertype']) or !$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
         }
@@ -3028,7 +3024,7 @@ class DocumentParser {
             "wu.id='{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype'] or !$row["usertype"])
+            if (!isset($row['usertype']) or !$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
         }
@@ -3262,7 +3258,7 @@ class DocumentParser {
         $this->regClientScript($html, true);
     }
 
-    /**
+   /**
      * Remove unwanted html tags and snippet, settings and tags
      *
      * @param string $html
@@ -3277,23 +3273,9 @@ class DocumentParser {
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
-        $t= preg_replace('~&#x005B;\*(.*?)\*&#x005D;~', "", $t); //encoded tv
-        $t= preg_replace('~&#x005B;&#x005B;(.*?)&#x005D;&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\!(.*?)\!&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\((.*?)\)&#x005D;~', "", $t); //encoded settings
-        $t= preg_replace('~&#x005B;\+(.*?)\+&#x005D;~', "", $t); //encoded placeholders
-        $t= preg_replace('~&#x007B;&#x007B;(.*?)&#x007D;&#x007D;~', "", $t); //encoded chunks
         return $t;
     }
 
-	# Decode JSON regarding hexadecimal entity encoded MODX tags
-    function jsonDecode($json, $assoc = false) {
-		// unmask MODX tags
-		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
-		$unmasked = array('[', ']', '{', '}');
-		$json = str_replace($masked, $unmasked, $json);
-		return json_decode($json, $assoc);
-    }
    /**
      * Add an event listner to a plugin - only for use within the current execution cycle
      *
@@ -3701,7 +3683,7 @@ class DocumentParser {
 	/**
 	 * Format alias to be URL-safe. Strip invalid characters.
 	 *
-	 * @param string Alias to be formatted
+	 * @param string $alias Alias to be formatted
 	 * @return string Safe alias
 	 */
     function stripAlias($alias) {
@@ -3801,8 +3783,10 @@ class SystemEvent {
         if ($msg == "")
             return;
         if (is_array($SystemAlertMsgQueque)) {
-            if ($this->name && $this->activePlugin)
+            $title = '';
+            if ($this->name && $this->activePlugin) {
                 $title= "<div><b>" . $this->activePlugin . "</b> - <span style='color:maroon;'>" . $this->name . "</span></div>";
+            }
             $SystemAlertMsgQueque[]= "$title<div style='margin-left:10px;margin-top:3px;'>$msg</div>";
         }
     }
@@ -3831,4 +3815,3 @@ class SystemEvent {
         $this->activated= false;
     }
 }
-?>

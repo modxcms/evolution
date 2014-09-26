@@ -846,7 +846,7 @@ $_lang["role_web_user_management"] = 'Zarządzanie użytkownikami web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Wprowadź URL źródła wiadomości MODX';
 $_lang["rss_url_news_title"] = 'Żródło RSS wiadomości';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Wprowadź URL źródła biuletynu bezpieczeństwa MODX';
 $_lang["rss_url_security_title"] = 'Źródło RSS biuletynu bezpieczeństwa';
 $_lang["run_module"] = 'Uruchom moduł';
@@ -1264,4 +1264,17 @@ $_lang["login_processor_wrong_password"]     = "Podano błędną nazwę użytkow
 $_lang["login_processor_many_failed_logins"] = "Zostałeś zablokowany z powodu zbyt wielu nieudanych prób zalogowania się!";
 $_lang["login_processor_blocked1"]           = "Zostałeś zablokowany i nie możesz się zalogować!";
 $_lang["login_processor_blocked2"]           = "Zostałeś zablokowany i nie możesz się zalogować! Proszę spróbować później.";
+$_lang["login_processor_blocked3"]           = "Jesteś blokowany od określonej daty i nie możesz się zalogować.";
 $_lang["login_processor_bad_code"]           = "Podany kod bezpieczeństwa nie zgadza się! Proszę spróbować ponownie.";
+$_lang["login_processor_remotehost_ip"]      = "Twój hostname nie wskazuje na Twoje IP!";
+$_lang["login_processor_remote_ip"]          = "Nie masz zezwolenia na logowanie z tej lokalizacji.";
+$_lang["login_processor_date"]               = "Nie masz zezwolenia na logowanie w tej chwili. Proszę spróbować później.";
+$_lang["login_processor_captcha_config"]     = "Captcha jest źle skonfigurowana.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

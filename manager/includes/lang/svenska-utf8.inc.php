@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Hantera webbanvändare';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Ange URL:en för MODX nyhetsflöde.';
 $_lang["rss_url_news_title"] = 'RSS nyhetsflöde';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Ange URL:en för MODX säkerhetsflöde.';
 $_lang["rss_url_security_title"] = 'RSS säkerhetsflöde';
 $_lang["run_module"] = 'Kör modul';
@@ -1260,4 +1260,17 @@ $_lang["login_processor_wrong_password"]     = "Felaktigt användarnamn eller l�
 $_lang["login_processor_many_failed_logins"] = "Du har blivit blockerad på grund av för många felaktiga inloggningsförsök!";
 $_lang["login_processor_blocked1"]           = "Du är blockerad och kan inte logga in!";
 $_lang["login_processor_blocked2"]           = "Du är blockerad och kan inte logga in! Försök igen senare.";
+$_lang["login_processor_blocked3"]           = "Du har blockerats automatiskt efter ett angivet datum och kan inte logga in längre!";
 $_lang["login_processor_bad_code"]           = "Säkerhetskoden du angav var inte korrekt! Försök att logga in en gång till.";
+$_lang["login_processor_remotehost_ip"]      = "Ditt värdnamn pekar inte tillbaka till din ip-adress!";
+$_lang["login_processor_remote_ip"]          = "Du får inte logga in från den här platsen.";
+$_lang["login_processor_date"]               = "Du får inte logga in just nu. Försök senare.";
+$_lang["login_processor_captcha_config"]     = "Captcha är inte korrekt konfigurerad.";
+
+$_lang["dp_dayNames"]   = "['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag']";
+$_lang["dp_monthNames"] = "['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Välj alla";
+$_lang["check_none"] = "Välj ingen";
+$_lang["check_toggle"] = "Växla val";

@@ -841,7 +841,7 @@ $_lang["role_web_user_management"] = 'Web-käyttäjän hallinta';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Anna MODX-uutisten osoite (RSS-syöte).';
 $_lang["rss_url_news_title"] = 'RSS / Uutiset';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Anna MODX-tietoturvatiedotteiden osoite (RSS-syöte).';
 $_lang["rss_url_security_title"] = 'RSS / Tietoturvatiedotteet';
 $_lang["run_module"] = 'Suorita moduuli';
@@ -1260,4 +1260,17 @@ $_lang["login_processor_wrong_password"]     = "Virheellinen käyttäjätunnus t
 $_lang["login_processor_many_failed_logins"] = "Kirjautumisesi on estetty liian monen epäonnistuneen kirjautumisyrityksen johdosta!";
 $_lang["login_processor_blocked1"]           = "Et voi kirjautua sisään, koska kirjautumisesi on estetty!";
 $_lang["login_processor_blocked2"]           = "Et voi kirjautua sisään, koska kirjautumisesi on estetty! Ole hyvä ja yritä myöhemmin uudelleen.";
+$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
 $_lang["login_processor_bad_code"]           = "Syöttämäsi varmistuskoodi oli virheellinen! Ole hyvä ja yritä uudelleen!";
+$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
+$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
+$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
+$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

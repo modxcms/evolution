@@ -312,6 +312,10 @@ switch ($actionToTake) {
 		$publishedon = ($published ? $currentdate : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
+        if ((!empty($pub_date))&&($published)){
+            $publishedon=$pub_date;
+        }
+
 		$dbInsert = array
         (
             "introtext"        => $introtext ,
@@ -435,7 +439,14 @@ switch ($actionToTake) {
 		} else {
 			$header = "Location: index.php?r=1&id=$key&a=7&dv=1";
 		}
-		header($header);
+		
+        if (headers_sent()) {
+        	$header = str_replace('Location: ','',$header);
+        	echo "<script>document.location.href='$header';</script>\n";
+		} else {
+        	header($header);
+		}
+
 
 		break;
 	case 'edit' :
@@ -478,8 +489,10 @@ switch ($actionToTake) {
 		if (!$was_published && $published) {
 			$publishedon = $currentdate;
 			$publishedby = $modx->getLoginUserID();
-		}
-		elseif ($was_published && !$published) {
+        	}elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
+			$publishedon = $pub_date;
+			$publishedby = $modx->getLoginUserID();
+       		}elseif ($was_published && !$published) {
 			$publishedon = 0;
 			$publishedby = 0;
 		} else {

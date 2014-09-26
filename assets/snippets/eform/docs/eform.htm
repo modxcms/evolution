@@ -283,8 +283,14 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 			For those that want to keep different versions of eForm active. You can now save all of eForm's files in a different directory and set the &amp;snipFolder accordingly. You can for instance save version 1.4.4 in the 'assets/snippets/eform/1.4.4' folder and set <code>&amp;snipFolder=`eform/1.4.4`</code>. The value of &amp;snipFolder is added to the basic snippets folder 'assets/snippets/'.It should not include a closing slash (/)!</li>
 			<li><strong>&amp;attachmentField</strong> <span class="new">(new in 1.4.5)</span> (Optional)<br />
 			The name of the form field that contains a comma separated list of filenames located in &amp;attachmentFolder that are attached to the mail sent to the &amp;to address. Usefull if you want to create/set attachments in event functions.
-			<li><strong>&amp;attachmentFolder</strong> <span class="new">(new in 1.4.5)</span> (Optional)<br />
-			The folder (relative to the MODX basepath) that contains the files specified by &amp;attachmentField. It should not include a closing slash (/)!</li>
+            <li><strong>&amp;attachmentFolder</strong> <span class="new">(new in 1.4.5)</span> (Optional)<br />
+            The folder (relative to the MODX basepath) that contains the files specified by &amp;attachmentField. It should not include a closing slash (/)!</li>
+            <li><strong>&amp;errorTpl</strong> <span class="new">(new in 1.4.6)</span> (Optional)<br />
+            Chunk name or text to use as a error template. Placeholders available: [+ef_message_text+] for the language specific intro message and [+ef_wrapper+] for the error messages.</li>
+            <li><strong>&amp;errorRequiredTpl</strong> <span class="new">(new in 1.4.6)</span> (Optional)<br />
+            Chunk name or text to use as a template for the list of required fields. Placeholders available: [+ef_required_list+] for the language specific intro message.</li>
+            <li><strong>&amp;errorRequiredSeparator</strong> <span class="new">(new in 1.4.6)</span> (Optional)<br />
+            Chunk name or text to use as a separator between two elements in the list of required fields. E.g. <code>&errorRequiredSeparator=`, `</code>.</li>
 			</ul>
 			
 			

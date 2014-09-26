@@ -1,20 +1,28 @@
 <?php
 //Kill them all
 $_GET = $_POST = $_REQUEST = array();
-//Relative path for manager folder
-define('MODX_MANAGER_PATH', $_SERVER['DOCUMENT_ROOT'].'/manager/');
+
+//Root dir
+$dir = '../../../../../../';
+
+//Define MGR_DIR
+if (file_exists($dir.'assets/cache/siteManager.php')){include_once($dir.'assets/cache/siteManager.php');}
+if (!defined('MGR_DIR')){define('MGR_DIR', 'manager');}
+
+$dir .= MGR_DIR.'/';
+
 //Config
 $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] = '/';
-require_once(MODX_MANAGER_PATH.'/includes/config.inc.php');
+require_once($dir.'includes/protect.inc.php');
+require_once($dir.'includes/config.inc.php');
 startCMSSession();
 
 if ($_SESSION['mgrValidated']){
 	define('IN_MANAGER_MODE', true);
-	require_once(MODX_MANAGER_PATH.'/includes/protect.inc.php');
 	//Setup the MODx API
 	define('MODX_API_MODE', true);
 	//Initiate a new document parser
-	require_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
+	require_once($dir.'includes/document.parser.class.inc.php');
 	$modx = new DocumentParser;
 	
 	//Provide the MODx DBAPI

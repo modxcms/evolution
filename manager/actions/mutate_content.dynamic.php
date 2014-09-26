@@ -37,9 +37,7 @@ switch ($_REQUEST['a']) {
 }
 
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
@@ -155,8 +153,11 @@ if (isset ($_POST['which_editor'])) {
 window.addEvent('domready', function(){
     var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
     var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat});
+    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
+    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
+    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
+    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
+    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 
     if( !window.ie6 ) {
         $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
@@ -491,7 +492,7 @@ function decode(s) {
 /* ]]> */
 </script>
 
-<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
+<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(

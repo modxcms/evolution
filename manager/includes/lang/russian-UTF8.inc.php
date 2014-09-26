@@ -1192,6 +1192,7 @@ $_lang['email_method_mail'] = 'MAIL - cообщения отправляются
 $_lang['email_method_smtp'] = 'Через SMTP-сервер';
 $_lang['smtp_auth_title'] = 'SMTP авторизация';
 $_lang['smtp_host_title'] = 'Адрес SMTP-сервера';
+$_lang['smtp_secure_title'] = 'Защита SMTP';
 $_lang['smtp_username_title'] = 'SMTP почта';
 $_lang['smtp_password_title'] = 'SMTP пароль';
 $_lang['smtp_port_title'] = 'SMTP порт';
@@ -1259,4 +1260,17 @@ $_lang["login_processor_wrong_password"]     = "Неверно указан ло
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
+$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
 $_lang["login_processor_bad_code"]           = "Проверочный код введен не правильно! Попробуйте еще раз!";
+$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
+$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
+$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
+$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
+$_lang["dp_monthNames"] = "['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Включить все";
+$_lang["check_none"] = "Выключить все";
+$_lang["check_toggle"] = "Переключить";

@@ -432,6 +432,11 @@ class uploader {
         if (!$gd->init_error && !$this->imageResize($gd, $file['tmp_name']))
             return $this->label("The image is too big and/or cannot be resized.");
 
+	// CHECK FOR MODX MAX FILE SIZE                
+	$actualfilesize=filesize($file['tmp_name']);
+	if (isset($this->config['maxfilesize']) && $actualfilesize > $this->config['maxfilesize'])
+	    return $this->label("File is too big: ".$actualfilesize." Bytes. (max ".$this->config['maxfilesize']." Bytes)");
+
         return true;
     }
 

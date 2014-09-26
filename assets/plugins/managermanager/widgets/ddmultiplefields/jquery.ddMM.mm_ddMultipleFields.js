@@ -1,12 +1,12 @@
 /**
  * jQuery ddMM.mm_ddMultipleFields Plugin
- * @version: 1.1 (2013-12-10)
+ * @version 1.1.1 (2014-05-15)
  * 
  * @uses jQuery 1.9.1
  * @uses $.ddTools 1.8.1
  * @uses $.ddMM 1.1.2
- *
- * @copyright 2013, DivanDesign
+ * 
+ * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 
@@ -116,7 +116,7 @@ $.ddMM.mm_ddMultipleFields = {
 				masRows.push(col);
 			}
 		});
-
+		
 		//Записываем значение в оригинальное поле
 //		$('#' + id).attr('value', _this.maskQuoutes(masRows.join(_this.instances[id].splY)));
 		$('#' + id).val(_this.maskQuoutes(masRows.join(_this.instances[id].splY)));
@@ -131,6 +131,7 @@ $.ddMM.mm_ddMultipleFields = {
 		//Если есть хоть один заголовок
 		if (_this.instances[id].coloumnsTitle.length > 0){
 			var text = '';
+			
 			//Создадим шапку (перебираем именно колонки!)
 			$.each(_this.instances[id].coloumns, function(key, val){
 				//Если это колонка с id
@@ -222,21 +223,21 @@ $.ddMM.mm_ddMultipleFields = {
 		val = _this.maskQuoutes(val).split(_this.instances[id].splX);
 		
 		var $field;
-
+		
 		//Перебираем колонки
 		$.each(_this.instances[id].coloumns, function(key){
 			if (!val[key]){val[key] = '';}
 			if (!_this.instances[id].coloumnsTitle[key]){_this.instances[id].coloumnsTitle[key] = '';}
 			if (!_this.instances[id].colWidth[key] || _this.instances[id].colWidth[key] == ''){_this.instances[id].colWidth[key] = _this.instances[id].colWidth[key - 1];}
-		
+			
 			var $col = _this.makeFieldCol($fieldBlock);
-
+			
 			//Если текущая колонка является полем
 			if(_this.instances[id].coloumns[key] == 'field'){
 				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 				
 				_this[_this.instances[id].makeFieldFunction](id, $col);
-
+				
 				//If is file or image
 				if (_this.instances[id].browseFuntion){
 					//Create Attach browse button
@@ -271,7 +272,6 @@ $.ddMM.mm_ddMultipleFields = {
 			}else{
 				_this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}
-		
 		});
 		
 		//Create DeleteButton
@@ -307,7 +307,7 @@ $.ddMM.mm_ddMultipleFields = {
 			
 			//Отчистим значения полей
 			$par.find('.ddField').val('');
-
+			
 			//Если больше одной строки, то можно удалить текущую строчку
 			if ($par.siblings('.ddFieldBlock').length > 0){
 				$par.fadeOut(300, function(){
@@ -349,7 +349,7 @@ $.ddMM.mm_ddMultipleFields = {
 		if (!$target){
 			$target = $('#' + id + 'ddMultipleField .ddFieldBlock:last');
 		}
-
+		
 		//Находим кнопку добавления и переносим куда надо
 		_this.instances[id].$addButton.appendTo($target.find('.ddFieldCol:last'));
 	},
@@ -391,7 +391,7 @@ $.ddMM.mm_ddMultipleFields = {
 				'resizable=no',
 				'scrollbars=yes'
 			).join(','));
-				
+			
 			if (_this.richtextWindow != null){
 				_this.richtextWindow.$ddField = $field;
 			}
@@ -412,13 +412,13 @@ $.ddMM.mm_ddMultipleFields = {
 			//Удаление дерьма, блеать (превьюшка, оставленная от виджета showimagetvs)
 			$('#' + id + 'PreviewContainer').remove();
 		});
-
+		
 		//Находим поле, привязываем события
 		$('.ddField', $fieldCol).on('change.ddEvents load.ddEvents', function(){
 			var $this = $(this), url = $this.val();
-
+			
 			url = (url != '' && url.search(/http:\/\//i) == -1) ? ($.ddMM.config.site_url + url) : url;
-
+			
 			//If field not empty
 			if (url != ''){
 				//Show preview
@@ -461,11 +461,9 @@ $.ddMM.mm_ddMultipleFields = {
 
 /**
  * jQuery.fn.mm_ddMultipleFields Plugin
- * @version 1.0 (2013-10-24)
+ * @version 1.0.1 (2014-03-01)
  * 
  * @description Делает мультиполя.
- * 
- * @uses $.ddMM.mm_ddMultipleFields 1.0
  * 
  * Параметры передаются в виде plain object.
  * @param splY {string} - Разделитель строк. Default: '||'.
@@ -480,7 +478,7 @@ $.ddMM.mm_ddMultipleFields = {
  * @param makeFieldFunction {string} - Имя метода конструктора поля (в случае если тип колонки == 'field'). Default: 'makeNull'.
  * @param browseFuntion {function; false} - Функция получения файлов. Default: false.
  * 
- * @copyright 2013, DivanDesign
+ * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 $.fn.mm_ddMultipleFields = function(params){
@@ -503,15 +501,15 @@ $.fn.mm_ddMultipleFields = function(params){
 			var $this = $(this),
 				//id оригинального поля
 				id = $this.attr('id');
-
+			
 			//Проверим на существование (возникали какие-то непонятные варианты, при которых два раза вызов был)
 			if (!_this.instances[id]){
 				//Инициализация текущего объекта с правилами
 				_this.instances[id] = $.extend({}, params);
 				
 				//Скрываем оригинальное поле
-				$this.removeClass('imageField').addClass('originalField').hide();
-
+				$this.removeClass('imageField').off('.mm_widget_showimagetvs').addClass('originalField').hide();
+				
 				//Назначаем обработчик события при изменении (необходимо для того, чтобы после загрузки фотки адрес вставлялся в нужное место)
 				$this.on('change.ddEvents', function(){
 					//Обновляем текущее мульти-поле
@@ -520,7 +518,7 @@ $.fn.mm_ddMultipleFields = function(params){
 				
 				//Если это файл или изображение, cкрываем оригинальную кнопку
 				if (_this.instances[id].browseFuntion){$this.next('input[type=button]').hide();}
-
+				
 				//Создаём мульти-поле
 				_this.init(id, $this.val(), $this.parent());
 			}
@@ -533,7 +531,7 @@ $(function(){
 	//If we have imageTVs on this page, modify the SetUrl function so it triggers a "change" event on the URL field
 	if (typeof(SetUrl) != 'undefined'){
 		//Copy the existing Image browser SetUrl function
-		var oldSetUrl = SetUrl;			
+		var oldSetUrl = SetUrl;
 		
 		//Redefine it to also tell the preview to update
 		SetUrl = function(url, width, height, alt){

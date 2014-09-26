@@ -1,14 +1,14 @@
-/* -----------------------------------------------------------------------------
-* Module: AjaxSearch Log manager
-* -----------------------------------------------------------------------------
+/**
+* AjaxSearch Log manager
 *
-* @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* Display the content of the AjaxSearch Log table in the manager
 *
-* Purpose:
-*    To display the content of the AjaxSearch Log table in the manager
-*
+* @category module
+* @version 	1.10.1
+* @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+* @internal	@modx_category Search
+* @author   Coroico
+* @date     05/06/2014
 */
 
 Define('NB_LINES',100); // number of rows displayed

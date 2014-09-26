@@ -5,7 +5,7 @@
  * Language:       Danish
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d.%b.%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug information: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Mailer'en var ikke i stand til at afsende e-mailen. "
 $_lang["ef_multiple_submit"] = "<p>Indholdet af formularen er allerede afsendt.</p>";
 $_lang["ef_no_doc"] = "Ressourcen eller chunk'et blev ikke fundet med skabelon ID = ";
 $_lang["ef_regex_error"] = "fejl i regulære expressions. ";
-$_lang["ef_required_message"] = " Følgende påkrævede felt eller felter mangler at blive udfyldt: {fields}<br />";
+$_lang["ef_required_message"] = "Følgende påkrævede felt eller felter mangler at blive udfyldt: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Fejl</span> ved brug af regler [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Gennemført med brug af reglen [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " blev i stilhed valideret. <span style=\"color:red;\"> SQL returnerede ingen resultater!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Tak!</h3><p>De indtastede oplysninger er nu
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": fejl ved fil upload. ";
 $_lang["ef_upload_exceeded"] = " har overskredet den maksimale upload størrelse. ";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Følgende fejl blev opdaget i det indtastede:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Følgende fejl blev opdaget i det indtastede:";
 $_lang["ef_version_error"] = "<strong>Advarsel!</strong> Denne version af eForm (version:&nbsp;[+version+]) er forskellig fra den inkluderede fil version. (Version:&nbsp;[+fileVersion+]). Kontroller at du bruger samme version af begge. ";
 ?>

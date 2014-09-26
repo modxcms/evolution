@@ -291,7 +291,7 @@ class AjaxSearchResults {
                 $rs[$i]['order'] = $rs[$i][$order];
                 $this->_groupMixedResults['results'][] = $rs[$i];
             }
-            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults[$ig], "AjaxSearch - group mixed results");
+            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults, "AjaxSearch - group mixed results");
 
         }
         else {
@@ -356,7 +356,7 @@ class AjaxSearchResults {
                             $this->_groupMixedResults['results'][] = $rs[$j];
                         }
 
-                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults[$ig], "AjaxSearch - group results");
+                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults, "AjaxSearch - group results");
                     }
                 }
             }
@@ -805,10 +805,6 @@ class AjaxSearchResults {
     */
     function _getChildIds($Ids, $depth) {
         global $modx;
-        if(method_exists($modx, 'setdocumentMap') && !isset($modx->documentMap))
-        {
-            $modx->setdocumentMap();
-        }
         $depth = intval($depth);
         $kids = array();
         $docIds = array();

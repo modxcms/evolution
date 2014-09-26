@@ -5,7 +5,7 @@
  * Language:       Italian
  * Encoding:       UTF-8
  * Translated by:  Diego Meozzi, Nicola Lambathaki (Banzai), luigif
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Informazioni di debug: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "Impossibile inviare l'emal";
 $_lang["ef_multiple_submit"] = "<p>Questi dati sono già stati inviati. Non occorre inviare ancora gli stessi dati.</p>";
 $_lang["ef_no_doc"] = "Risorsa o Chunk non trovati per il template con id=";
 $_lang["ef_regex_error"] = "errore nell'espressione regolare ";
-$_lang["ef_required_message"] = " Compilare i seguenti campi obbligatori: {fields}<br />";
+$_lang["ef_required_message"] = "Compilare i seguenti campi obbligatori: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Errore</span> utilizzando la regola [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Verificato usando la regola [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = "ha superato la convalida. <span style=\"color:red;\"> SQL non ha fornito risultati!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Grazie!</h3><p>Le vostre informazioni sono 
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": errore nel caricamento del file.";
 $_lang["ef_upload_exceeded"] = "ha superato la dimensione massima dei dati caricabili.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Sono stati riscontrati alcuni errori nella compilazione del form:</strong><br /><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Sono stati riscontrati alcuni errori nella compilazione del form:";
 $_lang["ef_version_error"] = "<strong>WARNING!</strong> La versione dello snippet eForm che utilizzate (versione:&nbsp;[+version+]) è diversa dal file eForm incluso (versione:&nbsp;[+fileVersion+]). Dovete utilizzare la stessa versione di entrambi.";
 ?>

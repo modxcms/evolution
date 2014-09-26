@@ -240,7 +240,7 @@ $cfg['depth'] = isset($depth) ? intval($depth) : (isset($__depth) ? intval($__de
 // 1 - search only in documents hidden from menu
 // 2 - search in hidden or visible documents from menu
 // Default: 2
-$cfg['hideMenu'] = isset($hideMenu) ? $hideMenu : (isset($__hideMenu) ? $__hideMenu : $dcfg['hideMenu']);
+$cfg['hideMenu'] = isset($hideMenu) ? intval($hideMenu) : (isset($__hideMenu) ? intval($__hideMenu) : $dcfg['hideMenu']);
 
 // &hideLink [0 | 1 ]   Search in content of type reference (link)
 // 0 - search in content of type document AND reference

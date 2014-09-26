@@ -83,10 +83,13 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 window.addEvent('domready', function() {
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
 	var dpformat = "<?php echo $modx->config['datetime_format']; ?>";
-	new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat});
+	var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
+    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
+    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
+	new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 	if ($('blockeduntil')) {
-		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
-		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
+		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
+		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 	}
 });
 
@@ -189,7 +192,7 @@ function showHide(what, onoff){
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>" />
-<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+<input type="hidden" name="id" value="<?php echo $user ?>" />
 <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
 <h1><?php echo $_lang['web_user_title']; ?></h1>
@@ -499,7 +502,7 @@ if($use_udperms==1) {
 $groupsarray = array();
 
 if($_GET['a']=='88') { // only do this bit if the user is being edited
-	$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$_GET['id']}'");
+	$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
 	$groupsarray = $modx->db->getColumn('webgroup', $rs);
 }
 

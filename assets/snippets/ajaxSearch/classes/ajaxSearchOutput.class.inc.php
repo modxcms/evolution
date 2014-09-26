@@ -416,7 +416,6 @@ class AjaxSearchOutput {
                     $varPaging1['next_grpResultId'] = $prefix . 'next_' . $this->_getCleanCssId($this->asResults->groupResults[$ig]['subsite']);
                     if ($this->asCfg->isAjax) $varPaging1['pagingNext'] = 'javascript:void(0);';
                     else {
-                        $nrp = $nrp + 1;
                         $ofst = (string)$ig . ',' . (string)$nextOffset;
                         $asOffset = ($otherOffset) ? $otherOffset . ',' . $ofst : $ofst;
                         $asOffset = '&aso=' . $asOffset;

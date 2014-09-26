@@ -5,7 +5,7 @@
  * Language:       Japanese
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%Y-%m-%d %H:%M:%S";
 $_lang["ef_debug_info"] = "デバッグ情報: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "メールの送信ができませんでした。";
 $_lang["ef_multiple_submit"] = "<p>フォームデータは送信済みです。再送信する必要はありません。</p>";
 $_lang["ef_no_doc"] = "テンプレートのドキュメントまたはチャンクが見つかりません。 id=";
 $_lang["ef_regex_error"] = "正規表現のエラー ";
-$_lang["ef_required_message"] = "{fields}は、必須項目です<br />";
+$_lang["ef_required_message"] = "[+fields+]は、必須項目です";
 $_lang["ef_rule_failed"] = "設定された[+rule+] (input=\"[+input+]\")ルールが<span style=\"color:red;\">適用</span>されませんでした。 ";
 $_lang["ef_rule_passed"] = "設定された[+rule+] (input=\"[+input+]\")が正しく認識されました。";
 $_lang["ef_sql_no_result"] = " 検証を通過しました。<span style=\"color:red;\">SQLは結果を返しませんでした。</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>ありがとうございます。</h3><p>�
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": ファイルアップロード中にエラーが発生しました。";
 $_lang["ef_upload_exceeded"] = "はアップロードの上限を超えています.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>いくつかのエラーが見つかりました</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "いくつかのエラーが見つかりました";
 $_lang["ef_version_error"] = "<strong>注意!</strong> eFormのバージョン (version:&nbsp;[+version+])がインクルードされているファイルのバージョン (version:&nbsp;[+fileVersion+])と異なります。 同じバージョンのファイルであることを確認してください。";
 ?>

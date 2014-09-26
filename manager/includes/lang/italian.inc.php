@@ -841,7 +841,7 @@ $_lang["role_web_user_management"] = 'Gestione utente web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = '<b>Inserire l\'URL per il Feed RSS Novità MODX.</b>';
 $_lang["rss_url_news_title"] = '<b>Feed RSS Novità MODX:</b>';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Inserire l\'URL per il Feed RSS Avvisi di Protezione MODX.';
 $_lang["rss_url_security_title"] = '<b>Feed RSS Avvisi di Protezione MODX:</b>';
 $_lang["run_module"] = 'Esegui Modulo';
@@ -1159,7 +1159,7 @@ $_lang["make_folders_message"] = 'Aggiunge uno slash (/) all\'URL delle Risorse 
 $_lang["check_files_onlogin_title"] = '<b>Controllo dei file di sistema al login:</b>';
 $_lang["check_files_onlogin_message"] = 'Attivando questa opzione, i file di sistema più importanti saranno controllati e sarete avvisati nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Pur non essendo una garanzia infallibile, può essere utile per capire quando è stato compromesso un file di sistema MODX e/o il sito web.';
 
-$_lang["configcheck_sysfiles_mod"] = 'Importanti File di Sistema sono stati modificati.';
+$_lang["configcheck_sysfiles_mod"] = 'Sono stati modificati alcuni importanti file di sistema.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'E\' stata attivata l\'opzione per verificare i file di sistema più importanti e avvisare nel caso siano stati modificati (ad es. in caso attacchi via script al sito web). Se vi arriva un avviso non è detto che il sistema sia stato compromesso, ma può essere utile verificare i files importanti (impostati in Configurazione di Sistema -> Utente -> Verifica Files Importanti).
 Se i files non sono stati modificati o li ha modificati un amministratore di sistema potete eliminare l\'avviso andando su  Configurazione di Sistema e salvando nuovamente le impostazioni.';
 
@@ -1235,4 +1235,17 @@ $_lang["login_processor_wrong_password"]     = "Username o password errati!";
 $_lang["login_processor_many_failed_logins"] = "Accesso bloccato a causa di troppi tentativi falliti!";
 $_lang["login_processor_blocked1"]           = "Impossibile accedere, l'accesso è stato bloccato!";
 $_lang["login_processor_blocked2"]           = "L'accesso è stato bloccato! Riprovare più tardi.";
+$_lang["login_processor_blocked3"]           = "Dopo una certa data sarai bloccato e non potrai più accedere!";
 $_lang["login_processor_bad_code"]           = "Codice di sicurezza errato! Riprovare!";
+$_lang["login_processor_remotehost_ip"]      = "In nome del tuo host non corrisponde al tuo indirizzo IP!";
+$_lang["login_processor_remote_ip"]          = "Non ti puoi collegare da questa località!";
+$_lang["login_processor_date"]               = "Non puoi accedere adesso. Prova in un altro momento.";
+$_lang["login_processor_captcha_config"]     = "Captcha non è configurato correttamente.";
+
+$_lang["dp_dayNames"]   = "['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'] ";
+$_lang["dp_monthNames"] = "['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giusgno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Seleziona tutto";
+$_lang["check_none"] = "Annulla selezione";
+$_lang["check_toggle"] = "Inverti selezione";

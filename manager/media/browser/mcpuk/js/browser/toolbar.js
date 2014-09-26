@@ -113,30 +113,41 @@ browser.uploadFile = function(form) {
     $('<iframe id="uploadResponse" name="uploadResponse" src="javascript:;"></iframe>').prependTo(document.body);
     $('#loading').html(this.label("Uploading file..."));
     $('#loading').css('display', 'inline');
-    form.submit();
-    $('#uploadResponse').load(function() {
-        var response = $(this).contents().find('body').html();
-        $('#loading').css('display', 'none');
-        response = response.split("\n");
-        var selected = [], errors = [];
-        $.each(response, function(i, row) {
-            if (row.substr(0, 1) == '/')
-                selected[selected.length] = row.substr(1, row.length - 1)
-            else
-                errors[errors.length] = row;
+    if (window.FormData === undefined ) {
+        form.submit();
+        $('#uploadResponse').load(function() {
+            var response = $(this).contents().find('body').html();
+            $('#loading').css('display', 'none');
+            response = response.split("\n");
+            var selected = [], errors = [];
+            $.each(response, function(i, row) {
+                if (row.substr(0, 1) == '/')
+                    selected[selected.length] = row.substr(1, row.length - 1)
+                else
+                    errors[errors.length] = row;
+            });
+            if (errors.length)
+                browser.alert(errors.join("\n"));
+            if (!selected.length)
+                selected = null;
+            browser.refresh(selected);
+            $('#upload').detach();
+            setTimeout(function() {
+                $('#uploadResponse').detach();
+            }, 1);
+            browser.initUploadButton();
         });
-        if (errors.length)
-            browser.alert(errors.join("\n"));
-        if (!selected.length)
-            selected = null
-        browser.refresh(selected);
-        $('#upload').detach();
-        setTimeout(function() {
-            $('#uploadResponse').detach();
-        }, 1);
-        browser.initUploadButton();
-    });
-};
+    } else {
+            files = form.elements[0].files;
+            uploader.filesCount = files.length;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                file.thisTargetDir = browser.dir;
+                uploader.uploadQueue.push(file);
+            }
+            uploader.processUploadQueue();
+        }
+    };
 
 browser.maximize = function(button) {
     if (window.opener) {

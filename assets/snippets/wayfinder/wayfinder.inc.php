@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.3
+ Version: 2.0.4
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -23,24 +23,31 @@ class Wayfinder {
 	var $debugInfo = array();
 	
 	function __construct() {
-		$_[] = '[+wf.wrapper+]';
-		$_[] = '[+wf.classes+]';
-		$_[] = '[+wf.classnames+]';
-		$_[] = '[+wf.link+]';
-		$_[] = '[+wf.title+]';
-		$_[] = '[+wf.linktext+]';
-		$_[] = '[+wf.id+]';
-		$_[] = '[+wf.alias+]';
-		$_[] = '[+wf.attributes+]';
-		$_[] = '[+wf.docid+]';
-		$_[] = '[+wf.introtext+]';
-		$_[] = '[+wf.description+]';
-		$_[] = '[+wf.subitemcount+]';
-		$this->placeHolders['rowLevel'] = $_;
-		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.level+]');
-		$this->placeHolders['tvs']          = array();
-		
-	}
+        $this->placeHolders = array(
+            'rowLevel' => array(
+                '[+wf.wrapper+]',
+                '[+wf.classes+]',
+                '[+wf.classnames+]',
+                '[+wf.link+]',
+                '[+wf.title+]',
+                '[+wf.linktext+]',
+                '[+wf.id+]',
+                '[+wf.alias+]',
+                '[+wf.attributes+]',
+                '[+wf.docid+]',
+                '[+wf.introtext+]',
+                '[+wf.description+]',
+                '[+wf.subitemcount+]'
+            ),
+            'wrapperLevel' => array(
+                '[+wf.wrapper+]',
+                '[+wf.classes+]',
+                '[+wf.classnames+]',
+                '[+wf.level+]'
+            ),
+            'tvs' => array()
+        );
+    }
 	
 	function run() {
 		global $modx;
@@ -135,7 +142,7 @@ class Wayfinder {
 				$wrapperClass = 'outercls';
 			}
 			//Get the class names for the wrapper
-			$classNames = $this->setItemClass($wrapperClass);
+			$classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
 			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
 			
 			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
@@ -216,21 +223,20 @@ class Wayfinder {
 		} else {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		}
+        $usePlaceholders = $this->placeHolders['rowLevel'];
         //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {
-            $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
+            $usePlaceholders[] = '[+' . $dvName . '+]';
             $phArray[] = $dvVal;
         }
-		//If tvs are used add them to the placeholder array
-		if (!empty($this->tvList)) {
-			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
-			foreach ($this->tvList as $tvName) {
-				$phArray[] = $resource[$tvName];
-			}
-		} else {
-			$usePlaceholders = $this->placeHolders['rowLevel'];
-		}
-		//Debug
+        //If tvs are used add them to the placeholder array
+        if (!empty($this->tvList)) {
+            $usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
+            foreach ($this->tvList as $tvName) {
+                $phArray[] = $resource[$tvName];
+            }
+        }
+        //Debug
 		if ($this->_config['debug']) {
 			$debugDocInfo = array();
 			$debugDocInfo['template'] = $usedTemplate;
@@ -256,10 +262,20 @@ class Wayfinder {
             //Set outer class if specified
             $returnClass .= $this->_css['outer'];
             $hasClass = 1;
-        } elseif ($classType === 'innercls' && !empty($this->_css['inner'])) {
-            //Set inner class if specified
-            $returnClass .= $this->_css['inner'];
-            $hasClass = 1;
+        } elseif ($classType === 'innercls') {
+
+            if ( !empty($this->_css['inner'])) {
+                //Set inner class if specified
+                $returnClass .= $this->_css['inner'];
+                $hasClass = 1;
+            }
+
+            //Set level class if specified
+            if (!empty($this->_css['outerLevel'])) {
+                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
+                $hasClass = 1;
+            }
+
         } elseif ($classType === 'rowcls') {
             //Set row class if specified
             if (!empty($this->_css['row'])) {

@@ -5,7 +5,7 @@
  * Language:       Finnish
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d.%m.%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug tietoa: ";
@@ -33,7 +33,7 @@ $_lang["ef_mail_error"] = "S&auml;hk&ouml;postin l&auml;hetys ep&auml;onnistui";
 $_lang["ef_multiple_submit"] = "<p>T&auml;m&auml; lomake on jo l&auml;hetetty onnistuneesti. Uutta l&auml;hetyst&auml; ei toimitettu.</p>";
 $_lang["ef_no_doc"] = "Dokumenttia tai palasta ei l&ouml;ytynyt id:lle";
 $_lang["ef_regex_error"] = "virhe regular expression lauseessa ";
-$_lang["ef_required_message"] = " Seuraavat pakolliset kent&auml;t puuttuvat: {fields}<br />";
+$_lang["ef_required_message"] = "Seuraavat pakolliset kent&auml;t puuttuvat: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Ei hyv&auml;ksytty</span> s&auml;&auml;nt&ouml; [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Hyv&auml;ksytty s&auml;&auml;nt&ouml; [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " l&auml;p&auml;isi tarkastuksen hiljaisesti. <span style=\"color:red;\"> SQL ei palauttanut yht&auml;&auml;n tulosta!</span> ";
@@ -43,6 +43,6 @@ $_lang["ef_thankyou_message"] = "<h3>Kiitos!</h3><p>Viestisi on l&auml;hetetty o
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": virhe tiedoston l&auml;hetyksess&auml;.";
 $_lang["ef_upload_exceeded"] = " saavuttanut maksimi l&auml;hetysrajan.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Lomakkeella on virheit&auml;:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Lomakkeella on virheit&auml;:";
 $_lang["ef_version_error"] = "<strong>VAROITUS!</strong> eForm snippetin versio (versio:&nbsp;[+version+]) on eri kuin sis&auml;llytetty eForm kirjasto (versio:&nbsp;[+fileVersion+]). Varmista ett&auml; k&auml;yt&auml;t molemmista samaa versiota.";
 ?>
