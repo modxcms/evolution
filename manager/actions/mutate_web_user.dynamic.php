@@ -192,7 +192,7 @@ function showHide(what, onoff){
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>" />
-<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+<input type="hidden" name="id" value="<?php echo $user ?>" />
 <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
 <h1><?php echo $_lang['web_user_title']; ?></h1>
@@ -502,7 +502,7 @@ if($use_udperms==1) {
 $groupsarray = array();
 
 if($_GET['a']=='88') { // only do this bit if the user is being edited
-	$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$_GET['id']}'");
+	$rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
 	$groupsarray = $modx->db->getColumn('webgroup', $rs);
 }
 

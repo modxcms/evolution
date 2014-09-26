@@ -205,7 +205,7 @@ if (is_array($evtOut))
 	echo implode("", $evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>">
-<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+<input type="hidden" name="id" value="<?php echo $user ?>">
 <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
 <h1><?php echo $_lang['user_title']; ?></h1>
@@ -774,7 +774,7 @@ if (is_array($evtOut))
 	$groupsarray = array ();
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
-		$rs = $modx->db->select('user_group', $modx->getFullTableName('member_groups'), "member='{$_GET['id']}'");
+		$rs = $modx->db->select('user_group', $modx->getFullTableName('member_groups'), "member='{$user}'");
 		$groupsarray = $modx->db->getColumn('user_group', $rs);
 	}
 
