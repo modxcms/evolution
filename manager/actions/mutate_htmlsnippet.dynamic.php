@@ -16,9 +16,7 @@ switch ((int) $_REQUEST['a']) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users      = $modx->getFullTableName('active_users');
