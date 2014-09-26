@@ -7,8 +7,7 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
-else                       $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -21,12 +20,6 @@ $rs = $modx->db->select('username',$modx->getFullTableName('active_users'),"acti
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template variable'));
 	}
 // end check for lock
-
-// make sure the id's a number
-if(!is_numeric($id))
-{
-    $modx->webAlertAndQuit($_lang["error_id_nan"]);
-}
 
 global $content;
 $content = array();

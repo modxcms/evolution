@@ -4,9 +4,7 @@ if(!$modx->hasPermission('save_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if (!is_numeric($_REQUEST['id'])) {
-    $modx->webAlertAndQuit($_lang["error_id_nan"]);
-}
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
@@ -24,7 +22,7 @@ if(isset($_POST['listSubmitted'])) {
         foreach($orderArray as $key => $item) {
             if (strlen($item) == 0) continue; 
             $tmplvar = ltrim($item, 'item_');
-            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$_REQUEST['id']}'");
+            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
         }
     }
     // empty cache
@@ -36,7 +34,7 @@ $rs = $modx->db->select(
 	"{$tbl_site_tmplvar_templates} AS tr
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
-	"tr.templateid='".(int)$_REQUEST['id']."'",
+	"tr.templateid='{$id}'",
 	"tr.rank, tv.rank, tv.id"
 	);
 $limit = $modx->db->getRecordCount($rs);
@@ -130,7 +128,7 @@ $header .= '</head>
 <div id="actions">
     <ul class="actionButtons">
         <li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-        <li><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$_REQUEST['id'].'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$id.'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
     </ul>
 </div>
 

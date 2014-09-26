@@ -5,9 +5,7 @@ if (!$modx->hasPermission('edit_module')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
@@ -29,11 +27,6 @@ $rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'module'));
 	}
 // end check for lock
-
-// make sure the id's a number
-if(!is_numeric($id)) {
-	$modx->webAlertAndQuit($_lang["error_id_nan"]);
-}
 
 // take action
 switch ($_REQUEST['op']) {
