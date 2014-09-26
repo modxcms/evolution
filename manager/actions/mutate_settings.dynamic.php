@@ -862,7 +862,7 @@ function confirmLangChange(el, lkey, elupd){
             <td class='comment'> <?php echo $_lang['a17_error_reporting_msg'];?></td>
     </tr>
 <tr><td colspan="2"><div class='split'></div></td></tr>
-<?php if(!isset($send_errormail)) $send_errormail='3';?>
+<?php if(!isset($send_errormail)) $send_errormail='0';?>
 <tr>
 <th><?php echo $_lang['mutate_settings.dynamic.php6']; ?></th>
 <td>
