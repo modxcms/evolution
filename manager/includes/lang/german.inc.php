@@ -1196,6 +1196,7 @@ $_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
+$_lang['smtp_secure_title'] = 'SMTP Verschlüsselung';
 $_lang['smtp_username_title'] = 'SMTP Benutzername';
 $_lang['smtp_password_title'] = 'SMTP Passwort';
 $_lang['smtp_port_title'] = 'SMTP Port';

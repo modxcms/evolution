@@ -1191,6 +1191,7 @@ $_lang['email_method_mail'] = 'mail() PHP functie';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Gecodeerde SMTP';
 $_lang['smtp_username_title'] = 'SMTP gebruikersnaam';
 $_lang['smtp_password_title'] = 'SMTP wachtwoord';
 $_lang['smtp_port_title'] = 'SMTP poort';
