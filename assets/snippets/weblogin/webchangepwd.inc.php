@@ -85,7 +85,7 @@ else if ($isPostBack && isset($_SESSION['webValidated'])){
         }
         
         // save new password to database
-        $rt = $modx->changeWebUserPassword($oldpassword,$newpassword);
+        $rt = $modx->changeWebUserPassword($oldpassword,md5($newpassword));
         if($rt!==true) {
             $output = webLoginAlert("An error occured while saving new password: $rt");
             return;
