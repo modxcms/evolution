@@ -25,7 +25,18 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
   <tr>
 	<td width="120"><?php echo $_lang['search_criteria_template_id']; ?></td>
 	<td width="20">&nbsp;</td>
-	<td width="120"><input name="templateid" type="text" /></td>
+<?php
+	$rs = $modx->db->select('*',$modx->getFullTableName('site_templates'));
+	$option[] = '<option value="">No selected</option>';
+	$option[] = '<option value="0">(blank)</option>';
+	while($row=$modx->db->getRow($rs))
+	{
+		$templatename = htmlspecialchars($row['templatename'], ENT_QUOTES, $modx->config['modx_charset']);
+		$option[] = sprintf('<option value="%s">%s(%s)</option>', $row['id'], $templatename, $row['id']);
+	}
+	$tpls = sprintf('<select name="templateid">%s</select>', join("\n",$option));
+?>
+	<td width="120"><?php echo $tpls;?></td>
 	<td><?php echo $_lang['search_criteria_template_id_msg']; ?></td>
   </tr>
   <tr>
