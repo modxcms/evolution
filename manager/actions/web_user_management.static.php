@@ -110,7 +110,7 @@ echo $cm->render();
 		"wu.id, wu.username, wua.fullname, wua.email, ELT(wua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'",
 		$modx->getFullTableName("web_users")." wu 
 			INNER JOIN ".$modx->getFullTableName("web_user_attributes")." wua ON wua.internalKey=wu.id",
-		($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '{$sqlQuery}%')":""),
+		($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '%{$sqlQuery}%')":""),
 		'username'
 		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
