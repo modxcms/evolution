@@ -23,6 +23,12 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 	<td><?php echo $_lang['search_criteria_id_msg']; ?></td>
   </tr>
   <tr>
+	<td width="120"><?php echo $_lang['search_criteria_template_id']; ?></td>
+	<td width="20">&nbsp;</td>
+	<td width="120"><input name="templateid" type="text" /></td>
+	<td><?php echo $_lang['search_criteria_template_id_msg']; ?></td>
+  </tr>
+  <tr>
     <td><?php echo $_lang['search_criteria_title']; ?></td>
     <td>&nbsp;</td>
     <td><input name="pagetitle" type="text" /></td>
@@ -70,6 +76,7 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 <?php
 if(isset($_REQUEST['submitok'])) {
     $searchid = ($_REQUEST['searchid']!=='') ? intval($_REQUEST['searchid']) : '0';
+	$templateid = ($_REQUEST['templateid']!=='') ? intval($_REQUEST['templateid']) : '0';
 	$searchtitle = htmlentities($_POST['pagetitle'], ENT_QUOTES, $modx_manager_charset);
     $search_alias = $modx->db->escape($_REQUEST['alias']);
 	$searchcontent = $modx->db->escape($_REQUEST['content']);
@@ -88,6 +95,7 @@ if(isset($_REQUEST['submitok'])) {
 
     $tbl_site_content = $modx->getFullTableName('site_content');
     $sqladd .= $searchid!=='0'        ? " AND id='{$searchid}' " : '';
+	$sqladd .= $templateid!=='0'        ? " AND template='{$templateid}' " : '';
     $sqladd .= $searchtitle!=''     ? " AND pagetitle LIKE '%{$searchtitle}%' " : '';
     $sqladd .= $searchlongtitle!='' ? " AND longtitle LIKE '%{$searchlongtitle}%' " : '';
     $sqladd .= $search_alias!='' ? " AND alias LIKE '%{$search_alias}%' " : '';
