@@ -66,7 +66,7 @@ tinyMCE.init({
 			// State get is set when contents is extracted from editor
 			if (o.get)
 			{
-				o.content = o.content.replace('<p>{{', '{{');
+				o.content = o.content.replace('<p>{' + '{', '{' + '{');
 				o.content = o.content.replace('}}</p>', '}}');
 				o.content = o.content.replace(/<p>\[([\[\!\~\^])/g, '[$1');
 				o.content = o.content.replace(/([\]\!\~\^])\]<\/p>/g, '$1]');
