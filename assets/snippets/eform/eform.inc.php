@@ -498,7 +498,7 @@ $_dfnMaxlength = 6;
 				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
 				if ($fields['email']) {
 					$firstEmail = explode(',', $fields['email']);
-                    $firstEmail = array_shift($firstEmail);
+					$firstEmail = array_shift($firstEmail);
 				} else {
 					$firstEmail = '';
 				}
