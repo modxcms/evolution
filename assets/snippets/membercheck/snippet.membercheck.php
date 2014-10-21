@@ -48,7 +48,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 $debug = isset ($debug) ? $debug : false;
 
 # check if inside manager
-if ($m = $modx->insideManager()) {
+if ($m = $modx->isBackend()) {
 	return ''; # don't go any further when inside manager
 }
 
