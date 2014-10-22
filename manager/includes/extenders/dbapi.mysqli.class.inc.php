@@ -202,7 +202,8 @@ class DBAPI {
 	}
 
 	function fieldName($rs,$col=0) {
-		return $rs->fetch_field_direct($col);
+		$field = $rs->fetch_field_direct($col);
+		return $field->name;
 	}
 
 	function selectDb($name) {
