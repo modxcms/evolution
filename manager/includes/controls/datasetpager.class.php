@@ -85,7 +85,7 @@ class DataSetPager {
 	function render(){
 		global $modx,$_PAGE;
 			
-		$isDataset = is_resource($this->ds);
+		$isDataset = $modx->db->isResult($this->ds);
 		
 		if (!$this->selPageStyle) $this->selPageStyle = "font-weight:bold";
 		
