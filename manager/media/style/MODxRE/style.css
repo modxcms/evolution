@@ -759,7 +759,11 @@ padding:5px;
 .searchbar {
 	width: 100%;
 }
+.searchbar table {
+	margin-top:-3px;
+}
 .searchtext {
+	margin-top:-5px!important;
 	height: 18px;
 	padding: 2px;
 }
