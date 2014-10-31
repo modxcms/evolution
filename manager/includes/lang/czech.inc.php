@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author modxcms.cz
  *
@@ -860,6 +860,8 @@ $_lang["search_criteria_content"] = 'Hledat v obsahu';
 $_lang["search_criteria_content_msg"] = 'Najít všechny dokumenty obsahující zadaný text.';
 $_lang["search_criteria_id"] = 'Hledat podle ID';
 $_lang["search_criteria_id_msg"] = 'Zadajte ID dokumentu rychlého vyhledávání.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Hledat podle dlouhého názvu';
 $_lang["search_criteria_longtitle_msg"] = 'Najít všechny dokumenty s vloženým textem v dlouhém názvu.';
 $_lang["search_criteria_title"] = 'Hledat podle názvu';
@@ -1196,6 +1198,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

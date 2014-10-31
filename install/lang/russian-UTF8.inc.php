@@ -5,7 +5,7 @@
  * @author Pertsev Dmitriy
  * @author Safronovich Victor
  * @author Russian MODX Community
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Russian

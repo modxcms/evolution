@@ -25,7 +25,7 @@ $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
 $rs = $modx->db->select('username',$tbl_active_users,"action='102' AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getRow($rs)) {
+    if ($username = $modx->db->getValue($rs)) {
             $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['plugin']));
     }
 // end check for lock

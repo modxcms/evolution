@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Russian MODX community
  * @author gabdullin
@@ -861,6 +861,8 @@ $_lang["search_criteria_content"] = 'Искать в содержимом';
 $_lang["search_criteria_content_msg"] = 'Найти все ресурсы, содержащие введенный текст в своем теле.';
 $_lang["search_criteria_id"] = 'Искать по ID';
 $_lang["search_criteria_id_msg"] = 'Введите ID ресурса, чтобы быстро найти его.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Искать в расширенных заголовках';
 $_lang["search_criteria_longtitle_msg"] = 'Найти все ресурсы, содержащие текст в расширенных заголовках.';
 $_lang["search_criteria_title"] = 'Искать в заголовках';

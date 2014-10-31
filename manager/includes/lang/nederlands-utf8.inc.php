@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -856,6 +856,8 @@ $_lang["search_criteria_content"] = 'Op inhoud zoeken';
 $_lang["search_criteria_content_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in de inhoud.';
 $_lang["search_criteria_id"] = 'Op ID zoeken';
 $_lang["search_criteria_id_msg"] = 'Voer de ID van de Pagina in om de Pagina snel te vinden.';
+$_lang["search_criteria_template_id"] = 'Op template ID zoeken';
+$_lang["search_criteria_template_id_msg"] = 'Zoek alle pagina\'s die de gekozen template gebruikt.';
 $_lang["search_criteria_longtitle"] = 'Zoek op uitgebreide titel';
 $_lang["search_criteria_longtitle_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in hun uitgebreide titel.';
 $_lang["search_criteria_title"] = 'Op titel zoeken';

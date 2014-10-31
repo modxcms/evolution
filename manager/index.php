@@ -86,6 +86,7 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+header("X-Frame-Options: SAMEORIGIN");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
 
 // check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)

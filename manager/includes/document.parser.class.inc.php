@@ -92,12 +92,12 @@ class DocumentParser {
     		if($error_type==1)
         	{
 	        	$title = 'Call deprecated method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+	        	$msg = $this->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
     		}
     		else
     		{
 	        	$title = 'Call undefined method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+	        	$msg = $this->htmlspecialchars("\$modx->{$method_name}() is undefined function");
     		}
 	    	$info = debug_backtrace();
 	    	$m[] = $msg;
@@ -3439,7 +3439,7 @@ class DocumentParser {
         }
         if (is_readable($file)) {
             $source= file($file);
-            $source= htmlspecialchars($source[$line -1]);
+            $source= $this->htmlspecialchars($source[$line -1]);
         } else {
             $source= "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
@@ -3451,9 +3451,9 @@ class DocumentParser {
 	    $version= isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
 		$release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
 	    $request_uri = "http://".$_SERVER['HTTP_HOST'].($_SERVER["SERVER_PORT"]==80?"":(":".$_SERVER["SERVER_PORT"])).$_SERVER['REQUEST_URI'];
-	    $request_uri = htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
-	    $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
-	    $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
+	    $request_uri = $this->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
+	    $ua          = $this->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
+	    $referer     = $this->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
 	    if ($is_error) {
 	        $str = '<h3 style="color:red">&laquo; MODX Parse Error &raquo;</h3>
 	                <table border="0" cellpadding="1" cellspacing="0">

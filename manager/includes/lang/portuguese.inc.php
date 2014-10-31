@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -856,6 +856,8 @@ $_lang["search_criteria_content"] = 'Procurar por conteúdo';
 $_lang["search_criteria_content_msg"] = 'Encontrar todos os documentos que contenham o texto indicado no seu <b>conteúdo</b>.';
 $_lang["search_criteria_id"] = 'Procurar por ID';
 $_lang["search_criteria_id_msg"] = 'Indique a ID de um documento para o localizar rapidamente.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Procurar por título longo';
 $_lang["search_criteria_longtitle_msg"] = 'Encontrar todos os documentos que contenham o texto indicado no seu <b>título longo</b>.';
 $_lang["search_criteria_title"] = 'Procurar por título';
@@ -1192,6 +1194,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

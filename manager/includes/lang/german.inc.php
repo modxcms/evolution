@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Rainer Bachmaier
  * @author Marc Hinse
@@ -860,6 +860,8 @@ $_lang["search_criteria_content"] = 'Suche im Inhalt';
 $_lang["search_criteria_content_msg"] = 'Findet alle Ressource in deren Inhalt der eingegebene Text vorkommt.';
 $_lang["search_criteria_id"] = 'Suche nach ID';
 $_lang["search_criteria_id_msg"] = 'Findet die Ressource dessen ID mit der eingegebenen übereinstimmt.';
+$_lang["search_criteria_template_id"] = 'Suche nach Template ID';
+$_lang["search_criteria_template_id_msg"] = 'Findet alle Ressourcen die das Template mit der angegebenen ID benutzen.';
 $_lang["search_criteria_longtitle"] = 'Suche nach Langtitel';
 $_lang["search_criteria_longtitle_msg"] = 'Findet alle Ressource in deren Langtitel der eingegebene Text vorkommt.';
 $_lang["search_criteria_title"] = 'Suche nach Titel';

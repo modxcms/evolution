@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -856,6 +856,8 @@ $_lang["search_criteria_content"] = 'Buscar por contenido';
 $_lang["search_criteria_content_msg"] = 'Encontrar todos los documentos con el texto ingresado en su contenido.';
 $_lang["search_criteria_id"] = 'Buscar por ID';
 $_lang["search_criteria_id_msg"] = 'Ingresar el ID de un documento para encontrar rápidamente ese documento.';
+$_lang["search_criteria_template_id"] = 'Buscar por ID de Plantilla';
+$_lang["search_criteria_template_id_msg"] = 'Encontrar todos los Recursos que usan una Plantilla especificada.';
 $_lang["search_criteria_longtitle"] = 'Buscar por título largo';
 $_lang["search_criteria_longtitle_msg"] = 'Buscar todos los documentos con el texto ingresado en su título largo.';
 $_lang["search_criteria_title"] = 'Buscar por título';
@@ -1192,6 +1194,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Cifrado SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

@@ -6,7 +6,7 @@
  * Author:         Hansek, COEX (hansek@coex.cz)
  * Date:           2014/02/01
  * Version:        3.5.10
- * MODX version:   0.9.5-1.0.14
+ * MODX version:   0.9.5-1.0.15
 */
 
 $_lang['mce_editor_theme_title'] = 'Téma';

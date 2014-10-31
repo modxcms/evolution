@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author changkong.org rerbin@gmail.com
  * @author modx.cn leepoooo@163.com
@@ -857,6 +857,8 @@ $_lang["search_criteria_content"] = '按内容搜索';
 $_lang["search_criteria_content_msg"] = '寻找文件内容中有输入文字的文件';
 $_lang["search_criteria_id"] = '按ID号搜索';
 $_lang["search_criteria_id_msg"] = '输入文件ID号快速定位。';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = '按长标题搜索';
 $_lang["search_criteria_longtitle_msg"] = '查询长标题里有所有输入查询字符的文档';
 $_lang["search_criteria_title"] = '按标题搜索';
@@ -1193,6 +1195,7 @@ $_lang['email_method_mail'] = 'PHP mail() function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

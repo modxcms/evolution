@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author eastbind
  * @author MEGU
@@ -867,6 +867,8 @@ $_lang["search_criteria_content"] = '本文で検索';
 $_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'IDで検索';
 $_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'タイトルで検索';
 $_lang["search_criteria_longtitle_msg"] = 'Find all Resources with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'リソース名で検索';
@@ -1203,6 +1205,7 @@ $_lang['email_method_mail'] = 'PHP mail() による機能';
 $_lang['email_method_smtp'] = 'SMTP サーバ';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP ホスト';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP ユーザ名';
 $_lang['smtp_password_title'] = 'SMTP パスワード';
 $_lang['smtp_port_title'] = 'SMTP ポート';

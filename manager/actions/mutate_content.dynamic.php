@@ -763,7 +763,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
                         // post back value
                         if(array_key_exists('tv'.$row['id'], $_POST)) {
-                            if($row['type'] == 'listbox-multiple') {
+                            if(is_array($_POST['tv'.$row['id']])) {
                                 $tvPBV = implode('||', $_POST['tv'.$row['id']]);
                             } else {
                                 $tvPBV = $_POST['tv'.$row['id']];
