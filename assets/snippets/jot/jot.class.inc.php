@@ -492,7 +492,7 @@ class CJot {
 						if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
 
 						// Avoid XSS
-						$v = $modx->htmlspecialchars($v);
+						$v = $modx->htmlspecialchars($v, ENT_QUOTES);
 
 						// Validate fields and store error level + msg in array
 						$valFields[] = $this->validateFormField($n,$v);
@@ -893,7 +893,7 @@ class CJot {
 		$array_url = array_merge($array_get, $array_values);
 		foreach ($array_url as $name => $value) {
 			if (!is_null($value)) {
-			  $urlstring[] = $name . '=' . urlencode($modx->htmlspecialchars($value));
+			  $urlstring[] = $name . '=' . urlencode($modx->htmlspecialchars($value, ENT_QUOTES));
 			}
 		}
 		
