@@ -6,13 +6,16 @@ MODX Evolution 1.0.15 (Oct 31, 2014)
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
+* [GitHub:#8721e56] Typo
+* [GitHub:#6dc47ed] Wrong indents
+* [GitHub:#c9267a8] Bugfix for "Context menu don't show if node has quotes."
 * [GitHub:#7b8ad03] Wrong indents
 * [GitHub:#6805efa] Not only "listbox-multiple" send array to POST
 * [GitHub:#21bf185] Fix MYSQLI->fieldName()
 * [GitHub:#8926b25] Fixing Bug: Only variables should be passed by reference
 * [GitHub:#ee6e7a0] Don't show set_time_limit warning on host that have changing the time limit disabled
-* [GitHub:#c02f75c] Fixing #341 Richtext widget "undefined" output
-* [GitHub:#3151a01] #304
+* [GitHub:#c02f75c] Richtext widget "undefined" output #341
+* [GitHub:#3151a01] changeWebUserPassword doesn't use md5 for a new password #304
 * [GitHub:#b7e665f] Update web_user_management.static.php
 * [GitHub:#5c4bda6] Patch https://github.com/modxcms/evolution/commit/98e68cbab53dd6523bb65243a9a654263cd8423d
 * [GitHub:#56357ce] fix makeURL
@@ -39,13 +42,13 @@ Bugfixes:
 * [GitHub:#cb5b0e0] Removed unused variables
 * [GitHub:#be143a1] Removed wrong array keys
 * [GitHub:#987f8b8] Output Content-Type header at messageCount
-* [GitHub:#f7aecc4] Fixing #275
-* [GitHub:#dfe0020] Fixing Webusers Not Showing Private Resources #273
+* [GitHub:#f7aecc4] Tools/Backup/Restore #275
+* [GitHub:#dfe0020] Webusers Not Showing Private Resources #273
 * [GitHub:#766e662] Fix for CJK multi byte environment
 * [GitHub:#39ee732] Fixing issue with accounts not getting unblocked automatically (#267) and added some language string
 * [GitHub:#a245648] Rename function name
-* [GitHub:#102fe60] Fixing #226 - Wayfinder problems after upgrading MODX from 1.0.10 to 1.0.13
-* [GitHub:#744fdcc] #283 Hide META tags content in Resource Overview when META Keywords tab is set to no
+* [GitHub:#102fe60] Fixing Wayfinder problems after upgrading MODX from 1.0.10 to 1.0.13 #226
+* [GitHub:#744fdcc] Hide META tags content in Resource Overview when META Keywords tab is set to no #283
 * [GitHub:#ea9ccdf] Quickfix for Refused to set unsafe header "Connection" #227 - removed setHeader("Connection", "close
 * [GitHub:#43bcf75] Fixed some style issues
 
@@ -130,9 +133,6 @@ Security:
 * [GitHub:#e62d961] Prevent XSS
 * [GitHub:#3e7f9bd] Avoid XSS - $modx->htmlspecialchars or explicit integer casting on $_GET/$_POST values
 * [GitHub:#3373321] Close SQL Injection
-
-
-
 
 MODX Evolution 1.0.14 (Jun 05, 2014)
 ===================================
