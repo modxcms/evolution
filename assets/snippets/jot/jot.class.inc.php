@@ -491,8 +491,8 @@ class CJot {
 						// Stripslashes if needed
 						if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
 
-                        // Avoid XSS
-                        $v = $modx->htmlspecialchars($v);
+						// Avoid XSS
+						$v = $modx->htmlspecialchars($v);
 
 						// Validate fields and store error level + msg in array
 						$valFields[] = $this->validateFormField($n,$v);
