@@ -298,7 +298,7 @@ if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.MGR_D
 // start cms session
 if(!function_exists(\'startCMSSession\')) {
     function startCMSSession(){
-        global $site_sessionname;
+        global $site_sessionname, $https_port;
         session_name($site_sessionname);
         session_start();
         $cookieExpiration= 0;
@@ -314,7 +314,8 @@ if(!function_exists(\'startCMSSession\')) {
               $_SESSION[\'modx.session.created.time\'] = time();
             }
         }
-        setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL);
+        $secure = ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port);
+        setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
     }
 }';
 $configString .= "\n?>";

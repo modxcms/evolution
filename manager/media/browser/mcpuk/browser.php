@@ -10,13 +10,13 @@
 			}
 		};
 <?php
-	if(isset($_GET['type']))     $type = strip_tags(trim($_GET['type']));
-	elseif(isset($_GET['Type'])) $type = strip_tags(trim($_GET['Type']));
+	if(isset($_GET['type']))     $type = htmlspecialchars(trim($_GET['type']), ENT_QUOTES);
+	elseif(isset($_GET['Type'])) $type = htmlspecialchars(trim($_GET['Type']), ENT_QUOTES);
     else                         $type = 'images';
     
     if($type==='image') $type = 'images';
     
-	$opener = (isset($_GET['editor'])) ? 'opener=' . strip_tags(trim($_GET['editor'])) : '';
+	$opener = (isset($_GET['editor'])) ? 'opener=' . htmlspecialchars(trim($_GET['editor']), ENT_QUOTES) : '';
 	$request_uri = "{$opener}&type={$type}";
 ?>
 		window.location.href = "browse.php?<?php echo $request_uri; ?>";
