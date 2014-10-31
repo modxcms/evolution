@@ -158,7 +158,7 @@ defined('IN_PARSER_MODE') or die();
 //            $_SESSION = array();
             // destroy session cookie
             if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', 0, MODX_BASE_URL);
+                setcookie(session_name(), '', 0, MODX_BASE_URL, null, false, true);
             }
             session_destroy();
 //            $sessionID = md5(date('d-m-Y H:i:s'));
