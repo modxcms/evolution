@@ -5,7 +5,7 @@
  * @author Grégory Pakosz (guardian)
  * @author Coroico
  * @author Jean-Christophe Brebion (Fairytree)
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language French

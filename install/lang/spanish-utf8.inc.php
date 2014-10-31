@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author MODX Team
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Spanish

@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Łukasz Kowalczyk, lukasz@pixeligence.com
  * @author Piotr Łukańko, piotr.lukanko@gmail.com
