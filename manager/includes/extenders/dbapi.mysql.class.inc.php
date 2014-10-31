@@ -301,6 +301,14 @@ class DBAPI {
       }
    }
    /**
+    * @name:  isResult
+    *
+    */
+   function isResult($rs) {
+      return is_resource($rs);
+   }
+
+   /**
     * @name:  freeResult
     *
     */

@@ -281,7 +281,7 @@ function ParseIntputOptions($v) {
         global $modx;
 	$a = array();
 	if(is_array($v)) return $v;
-	else if(is_resource($v)) {
+	else if($modx->db->isResult($v)) {
 		$a = $modx->db->makeArray($v);
 	}
 	else $a = explode("||", $v);

@@ -1,6 +1,139 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODX Evolution 1.0.15 (Oct 31, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#7b8ad03] Wrong indents
+* [GitHub:#6805efa] Not only "listbox-multiple" send array to POST
+* [GitHub:#21bf185] Fix MYSQLI->fieldName()
+* [GitHub:#8926b25] Fixing Bug: Only variables should be passed by reference
+* [GitHub:#ee6e7a0] Don't show set_time_limit warning on host that have changing the time limit disabled
+* [GitHub:#c02f75c] Fixing #341 Richtext widget "undefined" output
+* [GitHub:#3151a01] #304
+* [GitHub:#b7e665f] Update web_user_management.static.php
+* [GitHub:#5c4bda6] Patch https://github.com/modxcms/evolution/commit/98e68cbab53dd6523bb65243a9a654263cd8423d
+* [GitHub:#56357ce] fix makeURL
+* [GitHub:#1d2bfdb] Fix - Can't work manager except utf8
+* [GitHub:#2da96f6] Wayfinder, move levelClass from li to ul http://c2n.me/iA951g
+* [GitHub:#31f6759] $modx  to   $this
+* [GitHub:#c2775fd] Fixed CodeMirror syntax HTML entity highlighting
+* [GitHub:#13d0d6d] fix makeFriendlyURL for site_start
+* [GitHub:#0f4aba1] eForm - Fix Invalid address error
+* [GitHub:#71492ad] Delete unnecessary evaluate PHP code
+* [GitHub:#d8872e7] Update media.js
+* [GitHub:#022b755] Fix PHP Notices from document.parser
+* [GitHub:#04cdccc] Bugfix - $id could be an integer and not a string.
+* [GitHub:#0448cf7] fix uploader
+* [GitHub:#b49e81e] show only allowed images in their folder
+* [GitHub:#f5629f3] Skip all fields without name attribute in eFormParseTemplate
+* [GitHub:#27d7adf] Bugfix - wrong quotes
+* [GitHub:#7781b65] Small fix - smtp password field in system settings
+* [GitHub:#d2b7cb0] fix http://joxi.ru/Y_SlUxjKTJBBH38Lv8U
+* [GitHub:#9a121bc] Fixing $modx->makeUrl($modx->config['site_start']) should return '/' or $modx->config['site_url'] #2
+* [GitHub:#5266730] Fixes for phpthumb snippet - added temp folder creation – for open_basedir issues - updated phpthumb
+* [GitHub:#dfbd44e] Bugfix for hideMenu parameter
+* [GitHub:#6a23f91] New Security Feed! -> english.inc.php
+* [GitHub:#cb5b0e0] Removed unused variables
+* [GitHub:#be143a1] Removed wrong array keys
+* [GitHub:#987f8b8] Output Content-Type header at messageCount
+* [GitHub:#f7aecc4] Fixing #275
+* [GitHub:#dfe0020] Fixing Webusers Not Showing Private Resources #273
+* [GitHub:#766e662] Fix for CJK multi byte environment
+* [GitHub:#39ee732] Fixing issue with accounts not getting unblocked automatically (#267) and added some language string
+* [GitHub:#a245648] Rename function name
+* [GitHub:#102fe60] Fixing #226 - Wayfinder problems after upgrading MODX from 1.0.10 to 1.0.13
+* [GitHub:#744fdcc] #283 Hide META tags content in Resource Overview when META Keywords tab is set to no
+* [GitHub:#ea9ccdf] Quickfix for Refused to set unsafe header "Connection" #227 - removed setHeader("Connection", "close
+* [GitHub:#43bcf75] Fixed some style issues
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#0b82d66] Use of $modx->htmlspecialchars instead of htmlspecialchars
+* [GitHub:#ace7999] htmlspecialchars be called with ENT_QUOTES
+* [GitHub:#9c4d6f5] Avoid tampering cache file by escaping all keys and values - changing all $modx->db->escape to $this
+* [GitHub:#3cdcffd] add ,  to errorRequiredSeparator in eForm
+* [GitHub:#d8ec4ce] Typo - When you need to get one field, need use the db->getValue()
+* [GitHub:#b20c22b] Update style.css
+* [GitHub:#db56a5f] insideManager is deprecated
+* [GitHub:#8deface] Uniform style code for int of $_REQUEST['id']
+* [GitHub:#3eceb21] Uniform style code for int of $_REQUEST['id'] in mutate_* Remove unnecessary checks
+* [GitHub:#92b0d75] Updated AjaxSearch - Documentation in markdown format - Changed module/snippet/plugin code from txt 
+* [GitHub:#1ea15af] Set default: Send mail on MODX errors = not notify #289
+* [GitHub:#645503e] Update modxmailer.class.inc.php
+* [GitHub:#c7f6d34] Wayfinder, revert levelClass, add outerLevelClass
+* [GitHub:#5c97732] Update uploader.php
+* [GitHub:#51c473f] Update config.php
+* [GitHub:#d9c3cda] Update mutate_user.dynamic.php
+* [GitHub:#acbaf8b] Refactor - Calling method of deprecated-function
+* [GitHub:#aef110e] Refactor - $modx->makeUrl()
+* [GitHub:#3715940] typo fix
+* [GitHub:#39a62fb] Replace insideManager() to isBackend()
+* [GitHub:#855fc76] Refactor - $modx->isFrontend()
+* [GitHub:#2d86096] Refactor - $modx->isBackend()
+* [GitHub:#1849346] Refactor - File browser settings
+* [GitHub:#6a87f51] Set $modx->config['server_offset_time']
+* [GitHub:#be2f392] + The “OnDocFormPrerender” and “OnDocFormRender” events now have the document template ID parameter.
+* [GitHub:#caf0f98] Add placeholder for PHP version in language files
+* [GitHub:#8752559] Add "level" to the "wrapperLevel" placeholders
+* [GitHub:#1f76491] Refactoring #265 - new parameters: errorTpl, errorRequiredTpl, errorRequiredSeparator
+* [GitHub:#eb3a458] Remove changes added during #90 - Hexadecimal entities not needed anymore for MODX tags
+* [GitHub:#66255dc] Change DOCTYPE declaration(HTML5)
+* [GitHub:#696a8d6] Remove semicoron
+* [GitHub:#9ab2678] Added support for lastRowTpl that will apply to last row of a list
+* [GitHub:#a98fe41] Update KCFinder Dutch language file
+* [GitHub:#576e210] Remove "?>" from end of php file
+* [GitHub:#0fc2ccb] Update tagging.extender.inc.php
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#b74b11b] update mm to 0.6.2
+* [GitHub:#1e22788] Update Wayfinder to 2.0.4
+* [GitHub:#e0c80f3] Update eForm to 1.4.6
+* [GitHub:#55b4471] Updated Languages from Transifex
+* [GitHub:#2aad3e3] Updated languages from Transifex
+* [GitHub:#f1f53d3] Updated languages from Transifex
+* [GitHub:#6166167] Updated Dutch language
+* [GitHub:#3dd0c82] Added Ukrainian Language to Transfix
+* [GitHub:#6a97faa] Updated Languages from Transifex
+* [GitHub:#9a0eb01] add ukranian lang for eFrom and AjaxSearch
+* [GitHub:#d19102d] Update english-british.inc.php
+* [GitHub:#ac38129] MYSQLI Extender
+* [GitHub:#f53d739] New feature: Allow searching of resources by template ID used. Include language strings for English 
+* [GitHub:#0c98bec] update logo
+* [GitHub:#ceee98f] add ssl to smtp mail setting add alias_listing in breadcrumbs plugin add one more type in Ditto filt
+* [GitHub:#c264569] Support for encoding windows-1251 in the emails
+* [GitHub:#98e68cb] Change publishedon, set value from current time to pub_date
+* [GitHub:#a2a3a57] Fix save mutate_content form on press Enter in input field
+* [GitHub:#41048c3] add .tpl, .less, .sass  for View/Edit  in  FileManager
+* [GitHub:#7f05792] Allow load any extension without changing the core code
+* [GitHub:#45f08ec] datepicker localization
+* [GitHub:#0c29ed0] select/deselect all templates for tv
+* [GitHub:#6b468fb] French translation for 1.0.14
+* [GitHub:#f4a559b] Updated polish and brazilian portuguese languages from Transifex Thanks to Raphael Mendonça & Piotr 
+* [GitHub:#ad335ad] Re-Added Breadcrumbs snippet commented documentation #236
+* [GitHub:#6e0fd11] Updated swedish language
+* [GitHub:#03a1e04] Première version complète de la traduction pour la 1.0.14
+* [GitHub:#45cb1ff] Début de traduction pour la 1.0.14
+* [GitHub:#a761a63] mise à jour des messages de gestionnaire de fichiers
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [GitHub:#a293ec6] Set secure flag to prevent cookies to be leaked via non encrypted requests.
+* [GitHub:#d798a2a] config.inc.php to have setcookie specify httponly
+* [GitHub:#38cbdaa] Sameorigin header
+* [GitHub:#e62d961] Prevent XSS
+* [GitHub:#3e7f9bd] Avoid XSS - $modx->htmlspecialchars or explicit integer casting on $_GET/$_POST values
+* [GitHub:#3373321] Close SQL Injection
+
+
+
+
 MODX Evolution 1.0.14 (Jun 05, 2014)
 ===================================
 --------------------------------------------
