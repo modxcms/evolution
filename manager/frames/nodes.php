@@ -175,7 +175,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $alt.= " ".$_lang['resource_opt_show_menu'].": ".($hidemenu==1 ? $_lang['no']:$_lang['yes']);
             $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
-            $alt = $modx->htmlspecialchars($alt);
+            $alt = $modx->addslashes($alt);
 
             $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,
                 'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,
