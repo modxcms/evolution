@@ -1239,17 +1239,17 @@ class DocumentParser {
      * @return string
      */
     function rewriteUrls($documentSource) {
+        static $aliases = false;
+        static $isfolder = false;
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
-            $aliases= array ();
-            /* foreach ($this->aliasListing as $item) {
-                $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
-                $isfolder[$item['id']]= $item['isfolder'];
-            } */
-			foreach($this->documentListing as $key=>$val){
-				$aliases[$val] = $key;
-				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            if ($aliases===false) {
+                foreach($this->documentListing as $key=>$val){
+                    $aliases[$val] = $key;
+                    $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+                }
             }
+            if (version_compare(PHP_VERSION, '5.3.0', '<') ) {
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
@@ -1265,7 +1265,23 @@ class DocumentParser {
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
-			
+            } else {
+                $_this = &$this;
+                $documentSource= preg_replace_callback(
+                    '!\[\~([0-9]+)\~\]!is', 
+                    function ($matches) use ($_this, $aliases, $isfolder) {
+                        if (($_this->config['friendly_alias_urls']==1) && isset($aliases[$matches[1]])) {
+                            $return = $_this->makeFriendlyURL($_this->config['friendly_url_prefix'], $_this->config['friendly_url_suffix'], $aliases[$matches[1]], $isfolder[$matches[1]], $matches[1]);
+                            if ($_this->config['seostrict']=='1'){
+                               $_this->toAlias($return);
+                            }
+                        } else {
+                            $return = $_this->makeFriendlyURL($_this->config['friendly_url_suffix'], $_this->config['friendly_url_suffix'], $matches[1]);
+                        }
+                        return $return;
+                    },
+                    $documentSource);
+            }
         } else {
             $in= '!\[\~([0-9]+)\~\]!is';
             $out= "index.php?id=" . '\1';
