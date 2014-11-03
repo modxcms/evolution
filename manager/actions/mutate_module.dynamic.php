@@ -62,6 +62,10 @@ if (isset($_GET['id'])) {
     $content['wrap'] = '1';
 }
 
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 ?>
 <script type="text/javascript">
 function loadDependencies() {
