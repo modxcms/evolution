@@ -600,6 +600,10 @@ switch ($action) {
         // get the duplicate processor
         include_once "processors/duplicate_plugin.processor.php";
     break;
+    case 119:
+        // get the purge processor
+        include_once "processors/purge_plugin.processor.php";
+    break;
 /********************************************************************/
 /* view phpinfo                                                     */
 /********************************************************************/

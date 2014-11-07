@@ -137,8 +137,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p><?php echo $_lang['plugin_management_msg']; ?></p>
 
 		<ul class="actionButtons">
-            <li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li>
+            <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
             <?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
+<?php   if($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
+            $tbl_site_plugins = $modx->getFullTableName('site_plugins');
+            if ($modx->db->getRecordCount($modx->db->query("SELECT id FROM {$tbl_site_plugins} t1 WHERE disabled = 1 AND name IN (SELECT name FROM {$tbl_site_plugins} t2 WHERE t1.name = t2.name AND t1.id != t2.id)"))) { ?>
+            <li><a href="index.php?a=119"><?php echo $_lang['purge_plugin']; ?></a></li>
+<?php       }
+        } ?>
         </ul>
         <?php echo createResourceList('site_plugins',102); ?>
     </div>
