@@ -29,6 +29,7 @@ class ManagerAPI {
 
 	// save page view state - not really necessary,
 	function savePageViewState($id=0){
+		global $_PAGE;
 		$_SESSION["mgrPageViewSDATA"] = $_PAGE['vs'];
 		$_SESSION["mgrPageViewSID"] = $id>0 ? $id:$this->action;
 	}
@@ -43,6 +44,7 @@ class ManagerAPI {
 				$this->clearSavedFormValues();
 			}
 		}
+		return false;
 	}	
 	// saved form post from $_POST
 	function saveFormValues($id=0){
@@ -120,42 +122,39 @@ class ManagerAPI {
 	
 	function checkHashAlgorithm($algorithm='')
 	{
-		if(empty($algorithm)) return;
-		
-		switch($algorithm)
+		$result = false;
+		if (!empty($algorithm))
 		{
-			case 'BLOWFISH_Y':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
-				{
-					if(version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
-				}
-				break;
-			case 'BLOWFISH_A':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
-				break;
-			case 'SHA512':
-				if(defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
-				break;
-			case 'SHA256':
-				if(defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
-				break;
-			case 'MD5':
-				if(defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7')
+			switch ($algorithm)
+			{
+				case 'BLOWFISH_Y':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
+					{
+						if (version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
+					}
+					break;
+				case 'BLOWFISH_A':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
+					break;
+				case 'SHA512':
+					if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
+					break;
+				case 'SHA256':
+					if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
+					break;
+				case 'MD5':
+					if (defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7') $result = true;
+					break;
+				case 'UNCRYPT':
 					$result = true;
-				break;
-			case 'UNCRYPT':
-				$result = true;
-				break;
+					break;
+			}
 		}
-		
-		if(!isset($result)) $result = false;
-		
 		return $result;
 	}
 
 	function getSystemChecksum($check_files) {
-		global $modx;
-		
+		$_ = array();
 		$check_files = trim($check_files);
 		$check_files = explode("\n", $check_files);
 		foreach($check_files as $file) {
@@ -180,12 +179,12 @@ class ManagerAPI {
 		if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return '0';
 		
 		$current = $this->getSystemChecksum($modx->config['check_files_onlogin']);
-		if(empty($current)) return;
+		if(empty($current)) return '0';
 		
 		if(!isset($modx->config['sys_files_checksum']) || empty($modx->config['sys_files_checksum']))
 		{
 			$this->setSystemChecksum($current);
-			return;
+			return '0';
 		}
 		if($current===$modx->config['sys_files_checksum']) $result = '0';
 		else                                               $result = 'modified';
