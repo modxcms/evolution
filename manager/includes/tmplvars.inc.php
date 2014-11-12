@@ -10,7 +10,7 @@
 	     	$eval_str = trim(substr($default_text, 7));
 	    	$default_text = eval($eval_str);
 	    }
-    	$field_value = $default_text;
+    	$field_value = ($field_value != '') ? $field_value : $default_text;
 	    
 		$field_html ='';
 
