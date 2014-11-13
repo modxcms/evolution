@@ -1220,17 +1220,45 @@ class DocumentParser {
         $suff= $this->config['friendly_url_suffix'];
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
-    
-    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
-    	
-        if ($id == $this->config['site_start'] && $this->config['seostrict']==='1') {return $this->config['base_url'];}
-        $Alias = explode('/',$alias);
-        $alias = array_pop($Alias);
-        $dir = implode('/', $Alias);
-        unset($Alias);
-        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
-        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
-    }
+	
+	/**
+	 * makeFriendlyURL
+	 * 
+	 * @desc Create an URL.
+	 * 
+	 * @param $pre {string} - Friendly URL Prefix. @required
+	 * @param $suff {string} - Friendly URL Suffix. @required
+	 * @param $alias {string} - Full document path. @required
+	 * @param $isfolder {0; 1} - Is it a folder? Default: 0.
+	 * @param $id {integer} - Document id. Default: 0.
+	 * 
+	 * @return {string} - Result URL.
+	 */
+	function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0){
+		if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1'){
+			$url = $this->config['base_url'];
+		}else{
+			$Alias = explode('/',$alias);
+			$alias = array_pop($Alias);
+			$dir = implode('/', $Alias);
+			unset($Alias);
+			
+			if($this->config['make_folders'] === '1' && $isfolder == 1){$suff = '/';}
+			
+			$url = ($dir != '' ? $dir.'/' : '').$pre.$alias.$suff;
+		}
+		
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
+		
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
+		
+		return $url;
+	}
     
     /** 
      * Convert URL tags [~...~] to URLs
@@ -2273,82 +2301,106 @@ class DocumentParser {
 			}
 		}
     }
-
-    /**
-     * Create an URL for the given document identifier. The url prefix and
-     * postfix are used, when friendly_url is active.
-     *
-     * @param int $id The document identifier
-     * @param string $alias The alias name for the document
-     *                      Default: Empty string
-     * @param string $args The paramaters to add to the URL
-     *                     Default: Empty string
-     * @param string $scheme With full as valus, the site url configuration is
-     *                       used
-     *                       Default: Empty string
-     * @return string
-     */
-    function makeUrl($id, $alias= '', $args= '', $scheme= '') {
-        $url= '';
-        $virtualDir= $this->config['virtual_dir'];
-        $f_url_prefix = $this->config['friendly_url_prefix'];
-        $f_url_suffix = $this->config['friendly_url_suffix'];
-        if (!is_numeric($id)) {
-            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
-        }
-        if ($args !== '') {
-            // add ? or & to $args if missing
-            $args= ltrim($args, '?&');
-            $_ = strpos($f_url_prefix, '?');
-            if($this->config['friendly_urls'] === '1' && $_ === false) {
-                $args= "?{$args}";
-            }
-            else $args= "&{$args}";
-        }
-        if ($id != $this->config['site_start']) {
-            if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
-                $alias = $id;
-                $alPath = '';
-                if ($this->config['friendly_alias_urls'] == 1) {
-                    $al = $this->aliasListing[$id];
-                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
-                        $f_url_suffix = '/';
-                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
-                    if ($al && $al['alias'])
-                        $alias = $al['alias'];
-                }
-                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = "{$alias}{$args}";
-            } else {
-                $url = "index.php?id={$id}{$args}";
-            }
-        } else {
-            $url = $args;
-        }
-        $host= $this->config['base_url'];
-        // check if scheme argument has been set
-        if ($scheme != '') {
-            // for backward compatibility - check if the desired scheme is different than the current scheme
-            if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']) {
-                $scheme= ($_SERVER['HTTPS'] ? 'http' : 'https');
-            }
-
-            // to-do: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
-        }
-
-        //fix strictUrl by Bumkaka
-        if ($this->config['seostrict']=='1'){
-           $url = $this->toAlias($url);
-        }
-        if ($this->config['xhtml_urls']) {
-        	return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
-        } else {
-        	return $host . $virtualDir . $url;
-        }
-    }
-
+	
+	/**
+	 * makeUrl
+	 * 
+	 * @desc Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
+	 * 
+	 * @param $id {integer} - The document identifier. @required
+	 * @param $alias {string} - The alias name for the document. Default: ''.
+	 * @param $args {string} - The paramaters to add to the URL. Default: ''.
+	 * @param $scheme {string} - With full as valus, the site url configuration is used. Default: ''.
+	 * 
+	 * @return {string} - Result URL.
+	 */
+	function makeUrl($id, $alias = '', $args = '', $scheme = ''){
+		$url = '';
+		$virtualDir = $this->config['virtual_dir'];
+		$f_url_prefix = $this->config['friendly_url_prefix'];
+		$f_url_suffix = $this->config['friendly_url_suffix'];
+		
+		if (!is_numeric($id)){
+			$this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
+		}
+		
+		if ($args !== ''){
+			// add ? or & to $args if missing
+			$args = ltrim($args, '?&');
+			$_ = strpos($f_url_prefix, '?');
+			
+			if($this->config['friendly_urls'] === '1' && $_ === false){
+				$args = "?{$args}";
+			}else{
+				$args = "&{$args}";
+			}
+		}
+		
+		if ($id != $this->config['site_start']){
+			if ($this->config['friendly_urls'] == 1 && $alias != ''){
+			}elseif ($this->config['friendly_urls'] == 1 && $alias == ''){
+				$alias = $id;
+				$alPath = '';
+				
+				if ($this->config['friendly_alias_urls'] == 1){
+					$al = $this->aliasListing[$id];
+					
+					if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1'){
+						$f_url_suffix = '/';
+					}
+					
+					$alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
+					
+					if ($al && $al['alias']){
+						$alias = $al['alias'];
+					}
+				}
+				
+				$alias = $alPath.$f_url_prefix.$alias.$f_url_suffix;
+				$url = "{$alias}{$args}";
+			}else{
+				$url = "index.php?id={$id}{$args}";
+			}
+		}else{
+			$url = $args;
+		}
+		
+		$host = $this->config['base_url'];
+		
+		// check if scheme argument has been set
+		if ($scheme != ''){
+			// for backward compatibility - check if the desired scheme is different than the current scheme
+			if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']){
+				$scheme= ($_SERVER['HTTPS'] ? 'http' : 'https');
+			}
+			
+			//TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
+			$host = $scheme == 'full' ? $this->config['site_url'] : $scheme.'://'.$_SERVER['HTTP_HOST'].$host;
+		}
+		
+		//fix strictUrl by Bumkaka
+		if ($this->config['seostrict'] == '1'){
+			 $url = $this->toAlias($url);
+		}
+		
+		if ($this->config['xhtml_urls']){
+			$url = preg_replace("/&(?!amp;)/","&amp;", $host.$virtualDir.$url);
+		}else{
+			$url = $host.$virtualDir.$url;
+		}
+		
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
+		
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
+		
+		return $url;
+	}
+	
     /**
      * Returns an entry from the config
      *
