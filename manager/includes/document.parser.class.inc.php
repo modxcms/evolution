@@ -1235,16 +1235,29 @@ class DocumentParser {
 	 * @return {string} - Result URL.
 	 */
 	function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0){
-		if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1'){return $this->config['base_url'];}
+		if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1'){
+			$url = $this->config['base_url'];
+		}else{
+			$Alias = explode('/',$alias);
+			$alias = array_pop($Alias);
+			$dir = implode('/', $Alias);
+			unset($Alias);
+			
+			if($this->config['make_folders'] === '1' && $isfolder == 1){$suff = '/';}
+			
+			$url = ($dir != '' ? $dir.'/' : '').$pre.$alias.$suff;
+		}
 		
-		$Alias = explode('/',$alias);
-		$alias = array_pop($Alias);
-		$dir = implode('/', $Alias);
-		unset($Alias);
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
 		
-		if($this->config['make_folders'] === '1' && $isfolder == 1){$suff = '/';}
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
 		
-		return ($dir != '' ? $dir.'/' : '').$pre.$alias.$suff;
+		return $url;
 	}
     
     /** 
@@ -2371,10 +2384,21 @@ class DocumentParser {
 		}
 		
 		if ($this->config['xhtml_urls']){
-			return preg_replace("/&(?!amp;)/","&amp;", $host.$virtualDir.$url);
+			$url = preg_replace("/&(?!amp;)/","&amp;", $host.$virtualDir.$url);
 		}else{
-			return $host.$virtualDir.$url;
+			$url = $host.$virtualDir.$url;
 		}
+		
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
+		
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
+		
+		return $url;
 	}
 	
     /**
