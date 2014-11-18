@@ -5,6 +5,8 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 $cacheFolder=isset($cacheFolder) ? $cacheFolder : "assets/cache/images";
 $tmpFolder = 'assets/cache/tmp';
+$filetype = isset($filetype) ? $filetype : 'jpg';
+$quality = isset($quality) ? $quality : 96;
 
 if(empty($input) || !file_exists(MODX_BASE_PATH . $input)){
     $input = isset($noImage) ? $noImage : 'assets/snippets/phpthumb/noimage.png';
@@ -15,7 +17,7 @@ if (strpos($cacheFolder, 'assets/cache/') === 0 && $cacheFolder != 'assets/cache
 	file_put_contents(MODX_BASE_PATH . $cacheFolder . '/.htaccess', "order deny,allow\nallow from all\n");
 }
 
-$options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
+$options = 'f='.$filetype.'&q='.$quality.'&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
 parse_str($options, $params);
 
 if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
