@@ -529,7 +529,7 @@ class AjaxSearchResults {
                 $wordLength = $mbStrlen($searchTerm);
                 $wordLength2 = $wordLength / 2;
                 // $pattern = '/' . preg_quote($searchTerm, '/') . $lookAhead . '/' . $pcreModifier;
-                if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                 else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                 $matches = array();
                 $nbr = preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
@@ -592,7 +592,7 @@ class AjaxSearchResults {
                 if ($this->asCfg->cfg['highlightResult']) {
                     $rank = $extracts[$i]['rank'];
                     $searchTerm = $searchList[$rank - 1];
-                    if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                    if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                     else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                     $subject = '<span class="' . $highlightClass . ' ' . $highlightClass . $rank . '">\0</span>';
                     $extract = preg_replace($pattern, $subject, $extract);
@@ -881,7 +881,7 @@ class AjaxSearchResults {
                     $searchList = $this->asCtrl->getSearchWords($searchString, $advSearch);
                     $pcreModifier = $this->asCfg->pcreModifier;
                     foreach ($searchList as $searchTerm) {
-                        if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                        if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                         else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                         $matches = array();
                         $found = preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
