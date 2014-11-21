@@ -5,6 +5,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 $cacheFolder=isset($cacheFolder) ? $cacheFolder : "assets/cache/images";
 $tmpFolder = 'assets/cache/tmp';
+if (!empty($input)) $input = rawurldecode($input);
 
 if(empty($input) || !file_exists(MODX_BASE_PATH . $input)){
     $input = isset($noImage) ? $noImage : 'assets/snippets/phpthumb/noimage.png';
@@ -32,7 +33,7 @@ foreach ($tmpImagesFolder as $folder) {
     }
 }
   
-$fname=$cacheFolder."/".$params['w']."x".$params['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($params)),0,3).".".$params['f'];
+$fname=$cacheFolder."/".$params['w']."x".$params['h'].'-'.rawurlencode($path_parts['filename']).".".substr(md5(serialize($params)),0,3).".".$params['f'];
 $outputFilename =MODX_BASE_PATH.$fname;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
