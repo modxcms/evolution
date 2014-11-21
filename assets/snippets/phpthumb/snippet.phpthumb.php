@@ -15,8 +15,6 @@ if (strpos($cacheFolder, 'assets/cache/') === 0 && $cacheFolder != 'assets/cache
 	file_put_contents(MODX_BASE_PATH . $cacheFolder . '/.htaccess', "order deny,allow\nallow from all\n");
 }
 
-$options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
-parse_str($options, $params);
 
 if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
 
@@ -24,7 +22,9 @@ $path_parts=pathinfo($input);
 $tmpImagesFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
 $tmpImagesFolder=str_replace("assets/images","",$tmpImagesFolder);
 $tmpImagesFolder=explode("/",$tmpImagesFolder);
-  
+$ext=strtolower($path_parts['extension']);
+$options = 'f='.(in_array($ext,explode(",","jpg,png,gif"))?$ext:"jpg").'&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
+parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {
         $cacheFolder.="/".$folder;
