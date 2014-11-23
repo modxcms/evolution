@@ -12,9 +12,9 @@
 $_lang['mce_editor_theme_title'] = 'Motyw';
 $_lang['mce_editor_theme_message'] = 'Tu możesz wybrać, którego motywu lub skórki ma używać edytor.';
 $_lang['mce_editor_custom_plugins_title'] = 'Niestandardowe wtyczki';
-$_lang['mce_editor_custom_plugins_message'] = 'Enter the plugins to use for the \'custom\' theme as a comma separated list.<br />Default : template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table';
+$_lang['mce_editor_custom_plugins_message'] = 'Wprowadź nazwy wtyczek w postaci listy oddzielonej przecinkami, których będzie używać temat \'custom\'.<br />Domyślnie: template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table';
 $_lang['mce_editor_custom_buttons_title'] = 'Niestandardowe przyciski';
-$_lang['mce_editor_custom_buttons_message'] = 'Enter the buttons to use for the \'custom\' theme as a comma separated list for each row. Be sure that each button has the required plugin enabled in the \'Custom Plugins\' setting.';
+$_lang['mce_editor_custom_buttons_message'] = 'Wprowadź nazwy przycisków w postaci listy oddzielonej przecinkami, których będzie używać temat \'custom\'. Upewnij się, że każdy z nich posiada wtyczkę w ustawieniu \'Własne wtyczki\'.';
 $_lang['mce_editor_css_selectors_title'] = 'Selektory CSS';
 $_lang['mce_editor_css_selectors_message'] = 'Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />\'displayName=selectorName;displayName2=selectorName2\'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />\'Monospaced text=mono;Small text=smallText\'<br />Note that the last entry should not have a semi-colon after it.';
 $_lang['mce_settings'] = 'Ustawienia TinyMCE';
@@ -39,8 +39,8 @@ $_lang['mce_element_format_message'] = 'This option enables control if elements 
 $_lang['mce_schema_title'] = 'Schemat';
 $_lang['mce_schema_message'] = 'The schema option enables you to switch between the HTML4 and HTML5 schema. This controls the valid elements and attributes that can be placed in the HTML. This value can either be the default html4 or html5.';
 
-$_lang['mce_toolbar1_msg'] = 'Default: undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
-$_lang['mce_toolbar2_msg'] = 'Default: image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
+$_lang['mce_toolbar1_msg'] = 'Domyślne: undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
+$_lang['mce_toolbar2_msg'] = 'Domyślne: image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
 
 $_lang['mce_tpl_title'] = 'Przycisk szablonu';
 $_lang['mce_tpl_msg'] = 'You could define templates on chunk or ressource base for the template button in TinyMCE (won\'t be displayed by default). The content of the chunk/of the resource will be inserted at the cursor position as html code in TinyMCE. Multiple chunk names or ressource IDs have to be separated by comma.';
