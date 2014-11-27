@@ -33,8 +33,9 @@ foreach ($tmpImagesFolder as $folder) {
     }
 }
   
-$fname=$cacheFolder."/".$params['w']."x".$params['h'].'-'.rawurlencode($path_parts['filename']).".".substr(md5(serialize($params)),0,3).".".$params['f'];
-$outputFilename =MODX_BASE_PATH.$fname;
+$fname_preffix=$cacheFolder."/".$params['w']."x".$params['h'].'-';
+$fname = $path_parts['filename'].".".substr(md5(serialize($params)),0,3).".".$params['f'];
+$outputFilename =MODX_BASE_PATH.$fname_preffix.$fname;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
     $phpThumb = new phpthumb();
@@ -49,5 +50,5 @@ if (!file_exists($outputFilename)) {
         $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
     }
 }
-return $fname;
+return $fname_preffix.rawurlencode($fname);
 ?>
