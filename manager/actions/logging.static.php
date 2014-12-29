@@ -45,7 +45,7 @@ window.addEvent('domready', function() {
     var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
     var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
 	new DatePicker($('datefrom'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames, 'startDay':dpstartDay});
-	new DatePicker($('dateto'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames,'startDay':dpstartDay}});
+	new DatePicker($('dateto'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames,'startDay':dpstartDay});
 });
 </script>
 <h1><?php echo $_lang["mgrlog_view"]?></h1>
