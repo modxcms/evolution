@@ -1280,8 +1280,8 @@ $_lang["login_processor_remote_ip"]          = "You are not allowed to login fro
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
 
-$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_dayNames"]   = "['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日']";
+$_lang["dp_monthNames"] = "['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']";
 $_lang["dp_startDay"]   = "1";
 
 $_lang["check_all"] = "Select all";
