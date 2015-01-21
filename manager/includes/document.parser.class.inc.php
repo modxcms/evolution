@@ -769,51 +769,70 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $hash = explode($left,$content);
-        foreach($hash as $i=>$v) {
-          if(0<$i) $hash[$i] = $left.$v;
+        $_ = $this->_getTagsFromContent($content,$left,$right);
+        if(empty($_)) return array();
+        foreach($_ as $v)
+        {
+            $tags[0][] = "{$left}{$v}{$right}";
+            $tags[1][] = $v;
         }
-        
-        $i=0;
-        $count = count($hash);
-        $safecount = 0;
-        $temp_hash = array();
-        while(0<$count) {
-            $open  = 1;
-            $close = 0;
-            $safecount++;
-            if(1000<$safecount) break;
-            while($close < $open && 0 < $count) {
-                $safecount++;
-                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
-                if(1000<$safecount) break;
-                $remain = array_shift($hash);
-                $remain = explode($right,$remain);
-                foreach($remain as $v)
-            	{
-            		if($close < $open)
-                	{
-                		$close++;
-                		$temp_hash[$i] .= $v . $right;
-            		}
-            		else break;
+        return $tags;
+    }
+    
+    function _getTagsFromContent($content, $left='[+',$right='+]') {
+        $_tmp = $content;
+        $spacer = md5('dummy');
+        if(strpos($_tmp,']]>')!==false)  $_tmp = str_replace(']]>', "]{$spacer}]>",$_tmp);
+        if(strpos($_tmp,';}}')!==false)  $_tmp = str_replace(';}}', ";}{$spacer}}",$_tmp);
+        if(strpos($_tmp,'{{}}')!==false) $_tmp = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$_tmp);
+        $count_left  = 0;
+        $count_right = 0;
+        $strlen_left  = strlen($left);
+        $strlen_right = strlen($right);
+        $key = '';
+        $c = 0;
+        while($_tmp!=='')
+        {
+            $bt = $_tmp;
+            $key .= substr($_tmp,0,1);
+            $_tmp = substr($_tmp,1);
+            $strpos_left = strpos($key,$left);
+            if($strpos_left!==false && substr($key,-$strlen_right)===$right)
+            {
+                $key = substr($key,$strpos_left);
+                if(substr_count($key,$left)===substr_count($key,$right))
+                {
+                    $key = substr($key, (strpos($key,$left) + $strlen_left) );
+                    $tags[] = substr($key,0,strlen($key)-$strlen_right);
+                    $key = '';
                 }
-                $count = count($hash);
-                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
             }
+            if($bt === $_tmp) break;
+            if(1000000<$c) exit('Fetch tags error');
+            $c++;
+        }
+        if(!$tags) return array();
+        
+        foreach($tags as $tag)
+        {
+            if(strpos($tag,$left)!==false)
+            {
+                $fetch = $this->_getTagsFromContent($tag,$left,$right);
+                foreach($fetch as $v)
+                {
+                    $tags[] = $v;
+                }
+            }
+        }
+        $i = 0;
+        foreach($tags as $tag)
+        {
+            if(strpos($tag,"]{$spacer}]>")!==false)           $tags[$i] = str_replace("]{$spacer}]>", ']]>', $tag);
+            if(strpos($tag,";}{$spacer}}")!==false)           $tags[$i] = str_replace(";}{$spacer}}", ';}}', $tag);
+            if(strpos($tag,"{{$spacer}{}{$spacer}}")!==false) $tags[$i] = str_replace("{{$spacer}{}{$spacer}}", '{{}}',$tag);
             $i++;
         }
-        $matches=array();
-        $i = 0;
-        foreach($temp_hash as $v) {
-            if(strpos($v,$left)!==false) {
-                $v = substr($v,0,strrpos($v,$right));
-                $matches[0][$i] = $v . $right;
-                $matches[1][$i] = substr($v,strlen($left));
-                $i++;
-            }
-        }
-        return $matches;
+        return $tags;
     }
     
     /**
