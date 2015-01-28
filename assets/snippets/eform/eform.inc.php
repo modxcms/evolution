@@ -960,6 +960,10 @@ function buildTagPlaceholder($tag,$attributes,$name){
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
 				case 'password':
