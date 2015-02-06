@@ -83,9 +83,9 @@ if(!isset($_SESSION['webValidated'])){
         $tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
         $tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
         $tpl = str_replace("[+action+]",preserveUrl($modx->documentIdentifier,"",$ref),$tpl);
-        $tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);
+        $tpl = str_replace("[+rememberme+]",($_POST['rememberme'] ? 1 : 0),$tpl);
         $tpl = str_replace("[+username+]",$uid,$tpl);
-        $tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
+        $tpl = str_replace("[+checkbox+]",($_POST['rememberme'] ? "checked='checked'" : ""),$tpl);
         $tpl = str_replace("[+logintext+]",$loginText,$tpl);
         echo $tpl;
     ?>
