@@ -152,6 +152,7 @@ defined('IN_PARSER_MODE') or die();
             unset($_SESSION['webUsrConfigSet']);
             unset($_SESSION['webUserGroupNames']);
             unset($_SESSION['webDocgroups']);
+            unset($_SESSION['webDocgrpNames']);
         }
         else {
             // Unset all of the session variables.
