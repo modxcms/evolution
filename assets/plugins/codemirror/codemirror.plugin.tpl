@@ -1,7 +1,7 @@
 /**
  * CodeMirror
  *
- * JavaScript library that can be used to create a relatively pleasant editor interface based on CodeMirrir 3.13
+ * JavaScript library that can be used to create a relatively pleasant editor interface based on CodeMirror 3.13
  *
  * @events:
  * - OnDocFormRender
