@@ -297,9 +297,23 @@ if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.MGR_D
 
 // start cms session
 if(!function_exists(\'startCMSSession\')) {
+    function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
+      if (isset($storage[$session_name]) && $storage[$session_name] === '')
+      {
+        unset($storage[$session_name]);
+      }
+    }
+    function removeInvalidCmsSessionIds($session_name) {
+        // session ids is invalid iff it is empty string
+        // storage priorioty can see in PHP source ext/session/session.c
+        removeInvalidCmsSessionFromStorage($_COOKIE, $session_name);
+        removeInvalidCmsSessionFromStorage($_GET, $session_name);
+        removeInvalidCmsSessionFromStorage($_POST, $session_name);
+    }
     function startCMSSession(){
         global $site_sessionname, $https_port;
         session_name($site_sessionname);
+        removeInvalidCmsSessionIds($site_sessionname);
         session_start();
         $cookieExpiration= 0;
         if (isset ($_SESSION[\'mgrValidated\']) || isset ($_SESSION[\'webValidated\'])) {
