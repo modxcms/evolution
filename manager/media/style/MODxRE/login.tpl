@@ -13,7 +13,7 @@
 		}
 		#login {
 			background: #eeeeee url('media/style/[+theme+]/images/body.jpg');
-			margin: 12% 0 0;
+			margin: 7% 0 0;
 		}
 		#mx_loginbox {
 			width: 309px;
@@ -32,7 +32,9 @@
 			border-radius: 5px;
 		}
 		.logo {
-			margin: 0 0 0 14px;
+      display: block;
+			text-align: center;
+
 		}
 		.logo img{
 			border: 0 none;
@@ -44,7 +46,9 @@
 			font: 14px Arial;
 			margin: 0 0 11px;
 		}
-		.sectionBody .text {
+		.sectionBody input[type="text"],
+		.sectionBody input[type="password"]
+    {
 			width: 261px;
 			height: 33px;
 			border: 1px solid #E5E5E5;
@@ -58,7 +62,9 @@
 			-moz-box-shadow:    0 0 5px rgba(188, 188, 188, 0.2);
 			box-shadow:         0 0 5px rgba(188, 188, 188, 0.2);
 		}
-		.sectionBody .text:focus {
+		.sectionBody input[type="text"]:focus,
+		.sectionBody input[type="password"]:focus
+    {
 			border: 1px solid #DECBA5;
 			-webkit-box-shadow: 0 0 5px rgba(222, 203, 165, 0.5);
 			-moz-box-shadow:    0 0 5px rgba(222, 203, 165, 0.5);
@@ -164,9 +170,12 @@
 			margin: 0.5em auto;
 			font-size: 80%;
 		}
-        .gpl a, .loginLicense a {
+    .gpl a, .loginLicense a {
 			color: #B2B2B2;
 		}
+    .caption {font-size: 11px; color: #666; padding-right: 25px;}
+    .clear {clear: both;}
+    .form-footer {padding-top: 15px; padding-bottom: 10px;}
     </style>
 
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
@@ -227,18 +236,30 @@
 			</a>
 		</div>
         <div class="sectionBody">
+            
             <!--<p class="loginMessage">[+login_message+]</p>-->
+            
             <label for="username">[+username+]</label>
             <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
+            
             <label for="password">[+password+]</label>
             <input type="password" class="text" name="password" id="password" tabindex="2" value="" />
+            
             <p class="caption">[+login_captcha_message+]</p>
-            <div>[+captcha_image+]</div>
+            
+            <p>[+captcha_image+]</p>
             [+captcha_input+]
-            <input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] />
-			<label for="rememberme" style="cursor:pointer" class="remtext">[+remember_username+]</label>
-            <input type="submit" class="login" id="submitButton" value="[+login_button+]" />
-            <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
+            
+            <div class="clear"></div>
+            
+            <div class="form-footer">
+              <input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] />
+              <label for="rememberme" style="cursor:pointer" class="remtext">[+remember_username+]</label>
+              <input type="submit" class="login" id="submitButton" value="[+login_button+]" />
+              <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
+              <div class="clear"></div>
+            </div>
+            
             [+OnManagerLoginFormRender+]
         </div>
     </form>
