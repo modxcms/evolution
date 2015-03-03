@@ -212,7 +212,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 				</script>";
 				$ResourceManagerLoaded  = true;					
 			} 
-			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
+			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" /> <input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
 			break;
 		case "file": // handles the input of file uploads
 		/* Modified by Timon for use with resource browser */
@@ -267,7 +267,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 				</script>";
 				$ResourceManagerLoaded  = true;					
 			} 
-			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
+			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" /> <input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
             
 			break;
 		default: // the default handler -- for errors, mostly
