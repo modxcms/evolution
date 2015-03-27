@@ -782,7 +782,9 @@ class DocumentParser {
     function _getTagsFromContent($content, $left='[+',$right='+]') {
         if(strpos($content,$left)===false) return array();
         $spacer = md5('<<<MODX>>>');
+        if(strpos($content,'<[!')!==false)  $content = str_replace('<[!', "<[{$spacer}!",$content);
         if(strpos($content,']]>')!==false)  $content = str_replace(']]>', "]{$spacer}]>",$content);
+        if(strpos($content,'!]>')!==false)  $content = str_replace('!]>', "!{$spacer}]>",$content);
         if(strpos($content,';}}')!==false)  $content = str_replace(';}}', ";}{$spacer}}",$content);
         if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$content);
         
