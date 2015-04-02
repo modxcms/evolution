@@ -182,7 +182,7 @@
 					</script>";
 					$ResourceManagerLoaded  = true;					
 				} 
-				$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" /> <input type="button" value="'.$_lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
+				$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.htmlspecialchars($field_value) .'" '.$field_style.' onchange="documentDirty=true;" /> <input type="button" value="'.$_lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
 			/* Modified by Timon for use with resource browser */
