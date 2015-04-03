@@ -1219,7 +1219,7 @@ class DocumentParser {
         else
         {
             $where = sprintf("name='%s'",$this->db->escape($snip_name));
-            $rs= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',$where);
+            $rs= $this->db->select('name,snippet,properties',$this->getFullTableName('site_snippets'),$where);
             $count = $this->db->getRecordCount($rs);
             if(1<$count) exit('Error $modx->_getSnippetObject()'.$snip_name);
             if($count)
