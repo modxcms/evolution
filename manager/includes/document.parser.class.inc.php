@@ -847,27 +847,26 @@ class DocumentParser {
      */
     function mergeDocumentContent($content) {
         if (strpos($content, '[*') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '[*', '*]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i]) {
-					$key = $matches[1][$i];
-					$key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
-					$value = $this->documentObject[$key];
-					if (is_array($value)) {
-						include_once MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php';
-						include_once MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
-						$value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-					}
-					$replace[$i] = $value;
-				}
-			}
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+            return $content;
+        if(!isset($this->documentIdentifier)) return $content;
+        if(!isset($this->documentObject) || empty($this->documentObject)) return $content;
+        
+        $matches = $this->getTagsFromContent($content,'[*','*]');
+        if(!$matches) return $content;
+        
+        foreach($matches[1] as $i=>$key) {
+            $key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
+            $value= $this->documentObject[$key];
+            if (is_array($value)) {
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+            }
+            $content= str_replace($matches['0'][$i], $value, $content);
+        }
+        
+        return $content;
+    }
 
 	/**
      * Merge system settings
