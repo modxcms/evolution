@@ -1746,10 +1746,10 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 	background-color: #fff;
 	border: 1px solid #0070bf;
 	position: absolute;
-	width: 177px;
+	width: auto;
 	top: 24px;
 	left: 0;
-	margin: 0px 0px 3px 0px;
+	margin: 0 0 3px 0;
 }
 .dp_cal table {
 	width: 100%;
@@ -1780,7 +1780,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal th,
 .dp_cal td {
 	width: 14.2857%;
-	text-align: center;
+	text-align: center !important;
 	font-size: 1em;
 	padding: 2px 0;
 }
