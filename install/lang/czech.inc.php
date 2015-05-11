@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kontrola zda je nastavení Register_Global
 $_lang["checking_registerglobals_note"] = 'Díky tomtuto nastavení je Váš portál mnohem více náchylný k hackerským útokům typu Cross Site Scripting (XSS). Měli by jste pohovořit se svým poskytovatelem hostingu a zjistit co je možné udělat k deaktivaci tohoto nastavení.';
 $_lang["checking_sessions"] = 'Kontrola zda jsou správně nakonfigurovány session: ';
 $_lang["checking_table_prefix"] = 'Kontrola prefixů tabulek `';
+$_lang["choose_language"] = 'Zvolte jazyk';
 $_lang["chunks"] = 'Chunky';
 $_lang["config_permissions_note"] = 'V nových instalacích Linux/Unix vytvořte prázdná soubor s názvem <span class="mono">config.inc.php</span> v adresáři <span class="mono">/[+MGR_DIR+]/includes/</span> s atributy 0666.';
 $_lang["connection_screen_collation"] = 'Porovnání:';

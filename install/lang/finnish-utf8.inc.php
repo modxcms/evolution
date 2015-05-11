@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Tarkistetaan onko PHP:n Register_Globals a
 $_lang["checking_registerglobals_note"] = 'Tämä asetus tekee sivustostasi alttiimman XSS hyökkäyksille (Cross Site Scripting). Sinun tulisi kehottaa palveluntarjoajaasi kytkemään tämä asetus pois käytöstä. Useimmiten tämän asetuksen voi kytkeä pois muokkaamalla palvelimen php.ini tiedostoa. Jos se ei ole mahdollista, voit koittaa kytkeä sen pois .htaccess tiedostossa, joka sijaitsee MODX asennuksen juuri kansiossa. Jos tämäkään ei ole mahdollista, voit viimeisenä vaihtoehtona koittaa asettaa jokaiseen MODX asennuksen sisällä olevaan kansioon muokatun php.ini tiedoston, joka yliajaa asetukset palvelimen jaetusta php.ini tiedostosta, mutta kansioita MODX asennuksessa on tosin huomattava määrä. Voit kuitenkin asentaa MODX järjestelmän tästä asetuksesta huolimatta, mutta sinua on varoitettu.';
 $_lang["checking_sessions"] = 'Tarkistetaan onko palvelinistunnot asetettu toimimaan oikein: ';
 $_lang["checking_table_prefix"] = 'Tarkistetaan tietokannan taulujen etuliite `';
+$_lang["choose_language"] = 'Valitse kieli';
 $_lang["chunks"] = 'HTML-palaset';
 $_lang["config_permissions_note"] = 'Jos olet asentamassa järjestelmää Linux / Unix palvelimeen, luo kansioon <span class=\"mono\">[+MGR_DIR+]/includes/</span> tyhjä tiedosto nimeltä <span class=\"mono\">config.inc.php</span> ja aseta tiedostoon 0666 oikeudet.';
 $_lang["connection_screen_collation"] = 'Merkistö:';

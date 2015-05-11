@@ -51,6 +51,7 @@ $_lang["checking_registerglobals"] = 'بازخوانی اینکه Register_Globa
 $_lang["checking_registerglobals_note"] = 'این تنظیمات سایت شما رو در مقابل حملات (XSS) نقوذ پذیر کرده. شما بایستی از طریق هاستینگ خود این تنظیمات را غیر فعال کنید,  به طور معمول از سه طریق امکان پذیر است: از طریق اعمال تغییر در فایل php.ini, ویرایش قوانین و دستورات در فایل .htaccess روت و پرونده نصب مادایکس و یا اضافه کردن دستور اضافه در فایل جدید خود تحت نام php.ini که داخل همه ی پرونده های نصب شده مادایکس خود قرار می دهیدو. شما همچنان قادر به نصب مادایکس هستید, به هر حال ما به شما تذکرات لازم را دادیم!';
 $_lang["checking_sessions"] = 'بازخوانی sessions مطابق تنظیمات درست: ';
 $_lang["checking_table_prefix"] = 'مرور پیشوند جدول  `';
+$_lang["choose_language"] = 'انتخاب زبان';
 $_lang["chunks"] = 'چانکها';
 $_lang["config_permissions_note"] = 'برای نصب جدید روی لینوکس/یونیکس, لطفا یک فایل خالی به نام <span class=\"mono\">config.inc.php</span> در دایرکتوری <span class=\"mono\">[+MGR_DIR+]/includes/</span> ایجاد کنید که سطح دسترسی به آن 0666 تنظیم شده باشد.';
 $_lang["connection_screen_collation"] = 'تطبیق(Collation):';

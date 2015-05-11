@@ -9,12 +9,12 @@ if( $handle = opendir('lang/') ) {
 sort( $langs );
 ?>
 <form name="install" id="install_form" action="index.php?action=mode" method="post">
-    <h2 style="display:inline;">Choose language:&nbsp;&nbsp;</h2>
+    <h2 style="display:inline;"><?=$_lang['choose_language'];?>:&nbsp;&nbsp;</h2>
     <select name="language">
 <?php
 foreach ($langs as $language) {
     $abrv_language = explode('-',$language);
-	echo '<option value="' . $language . '"'. ( ($abrv_language[0] == 'english') ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
+	echo '<option value="' . $language . '"'. ( ($abrv_language[0] == $install_language) ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
 }
 ?>
     </select>

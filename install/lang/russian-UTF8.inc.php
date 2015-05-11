@@ -53,6 +53,7 @@ $_lang["checking_registerglobals"] = 'Проверка PHP-параметра Re
 $_lang["checking_registerglobals_note"] = 'Конфигурация PHP делает ваш сайт более восприимчивым к XSS-атакам. Вы должны самостоятельно, или связавшись с администрацией хостинга, выключить Register_Globals. Обычно это делается одним из следующих путей: вносятся исправления в php.ini файл, добавляются правила в файл .htaccess, который находится в корне папки MODX, или добавлением своего php.ini в каждую папку внутри папки MODX (их очень много). Вы можете продолжить установку MODX, но обдумайте это предупреждение.';
 $_lang["checking_sessions"] = 'Проверка настроек сессий: ';
 $_lang["checking_table_prefix"] = 'Проверка префикса таблиц `';
+$_lang["choose_language"] = 'Выберите язык';
 $_lang["chunks"] = 'Чанки';
 $_lang["config_permissions_note"] = 'При новой Linux/Unix установке, создайте пустой файл <span class="mono">config.inc.php</span> в папке <span class="mono">/[+MGR_DIR+]/includes/</span> с правами 0666.';
 $_lang["connection_screen_collation"] = 'Сопоставление:';

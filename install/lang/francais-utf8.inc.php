@@ -52,6 +52,7 @@ $_lang["checking_registerglobals"] = 'Vérification que Register_Globals est sur
 $_lang["checking_registerglobals_note"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/attaques/cross-site-scripting.php3">XCSS</a> (Cross Site Scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage, en général par l\'une de ces trois solutions: modifier le fichier php.ini global, ajouter des règles dans le fichier .htaccess à la racine de votre installation MODX, ou ajouter un fichier php.ini personnalisé pour neutraliser l\'ensemble des fichiers dans chacun des répertoires de votre installation (et il y en a beaucoup). Vous pouvez continuez l\installation de MODX, mais considérez vous comme averti.';
 $_lang["checking_sessions"] = 'Vérifications des paramètres de sessions: ';
 $_lang["checking_table_prefix"] = 'Vérification du préfixe de table `';
+$_lang["choose_language"] = 'Choisissez la langue';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Lors des installations Linux/Unix, veuillez créer un nouveau fichier nommé <span class=\"mono\">config.inc.php</span> dans le répertoire <span class=\"mono\">[+MGR_DIR+]/includes/</span> avec les droits d\'accès 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
