@@ -47,6 +47,11 @@ else
 {
     $_SESSION['itemname']=$_lang["new_plugin"];
 }
+
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 ?>
 <script language="JavaScript">
 

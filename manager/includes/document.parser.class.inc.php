@@ -451,7 +451,7 @@ class DocumentParser {
         if ($this->config['use_alias_path'] == 1) {
             $this->virtualDir= dirname($q);
             $this->virtualDir= ($this->virtualDir == '.' ? '' : $this->virtualDir);
-            $q= basename($q);
+            $q = preg_replace('/.*[\/\\\]/', '', $q);
         } else {
             $this->virtualDir= '';
         }
@@ -769,51 +769,74 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $hash = explode($left,$content);
-        foreach($hash as $i=>$v) {
-          if(0<$i) $hash[$i] = $left.$v;
+        $_ = $this->_getTagsFromContent($content,$left,$right);
+        if(empty($_)) return array();
+        foreach($_ as $v)
+        {
+            $tags[0][] = "{$left}{$v}{$right}";
+            $tags[1][] = $v;
+        }
+        return $tags;
+    }
+    
+    function _getTagsFromContent($content, $left='[+',$right='+]') {
+        if(strpos($content,$left)===false) return array();
+        $spacer = md5('<<<MODX>>>');
+        if(strpos($content,'<[!')!==false)  $content = str_replace('<[!', "<[{$spacer}!",$content);
+        if(strpos($content,']]>')!==false)  $content = str_replace(']]>', "]{$spacer}]>",$content);
+        if(strpos($content,'!]>')!==false)  $content = str_replace('!]>', "!{$spacer}]>",$content);
+        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', ";}{$spacer}}",$content);
+        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$content);
+        
+        $lp = explode($left,$content);
+        $piece = array();
+        foreach($lp as $lc=>$lv) {
+            if($lc!==0) $piece[] = $left;
+            if(strpos($lv,$right)===false) $piece[] = $lv;
+            else {
+                $rp = explode($right,$lv);
+                foreach($rp as $rc=>$rv) {
+                    if($rc!==0) $piece[] = $right;
+                    $piece[] = $rv;
+                }
+            }
+        }
+        $lc=0;
+        $rc=0;
+        $fetch = '';
+        foreach($piece as $v) {
+            if($v===$left) {
+                if(0<$lc) $fetch .= $left;
+                $lc++;
+            }
+            elseif($v===$right) {
+                if($lc===0) continue;
+                $rc++;
+                if($lc===$rc) {
+                    $tags[] = $fetch; // Fetch and reset
+                    $fetch = '';
+                    $lc=0;
+                    $rc=0;
+                }
+                else $fetch .= $right;
+            } else {
+                if(0<$lc) $fetch .= $v;
+                else continue;
+            }
+        }
+        if(!$tags) return array();
+        
+        foreach($tags as $tag) {
+            if(strpos($tag,$left)!==false) {
+                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
+                $tags = array_merge($innerTags,$tags);
+            }
         }
         
-        $i=0;
-        $count = count($hash);
-        $safecount = 0;
-        $temp_hash = array();
-        while(0<$count) {
-            $open  = 1;
-            $close = 0;
-            $safecount++;
-            if(1000<$safecount) break;
-            while($close < $open && 0 < $count) {
-                $safecount++;
-                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
-                if(1000<$safecount) break;
-                $remain = array_shift($hash);
-                $remain = explode($right,$remain);
-                foreach($remain as $v)
-            	{
-            		if($close < $open)
-                	{
-                		$close++;
-                		$temp_hash[$i] .= $v . $right;
-            		}
-            		else break;
-                }
-                $count = count($hash);
-                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
-            }
-            $i++;
+        foreach($tags as $i=>$tag) {
+            if(strpos($tag,"$spacer")!==false) $tags[$i] = str_replace("$spacer", '', $tag);
         }
-        $matches=array();
-        $i = 0;
-        foreach($temp_hash as $v) {
-            if(strpos($v,$left)!==false) {
-                $v = substr($v,0,strrpos($v,$right));
-                $matches[0][$i] = $v . $right;
-                $matches[1][$i] = substr($v,strlen($left));
-                $i++;
-            }
-        }
-        return $matches;
+        return $tags;
     }
     
     /**
@@ -824,27 +847,26 @@ class DocumentParser {
      */
     function mergeDocumentContent($content) {
         if (strpos($content, '[*') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '[*', '*]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i]) {
-					$key = $matches[1][$i];
-					$key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
-					$value = $this->documentObject[$key];
-					if (is_array($value)) {
-						include_once MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php';
-						include_once MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php';
-						$value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-					}
-					$replace[$i] = $value;
-				}
-			}
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+            return $content;
+        if(!isset($this->documentIdentifier)) return $content;
+        if(!isset($this->documentObject) || empty($this->documentObject)) return $content;
+        
+        $matches = $this->getTagsFromContent($content,'[*','*]');
+        if(!$matches) return $content;
+        
+        foreach($matches[1] as $i=>$key) {
+            $key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
+            $value= $this->documentObject[$key];
+            if (is_array($value)) {
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+            }
+            $content= str_replace($matches['0'][$i], $value, $content);
+        }
+        
+        return $content;
+    }
 
 	/**
      * Merge system settings
@@ -1021,200 +1043,203 @@ class DocumentParser {
      * @param string $documentSource
      * @return string
      */
-   function evalSnippets($documentSource) {
-        if(strpos($documentSource,'[[')===false) return $documentSource;
+    function evalSnippets($content)
+    {
+        if(strpos($content,'[[')===false) return $content;
+        
         $etomite= & $this;
         
-        $stack = $documentSource;
-        unset($documentSource);
+        if(!$this->snippetCache) $this->setSnippetCache();
+        $matches = $this->getTagsFromContent($content,'[[',']]');
         
-        
-        $passes = $this->minParserPasses;
-        
-        for($i= 0; $i < $passes; $i++)
+        if(!$matches) return $content;
+        $replace= array ();
+        foreach($matches[1] as $i=>$value)
         {
-            $stack=$this->mergeSettingsContent($stack);
-            if($i == ($passes -1)) $bt = md5($stack);
-            $pieces = array();
-            $pieces = explode('[[', $stack);
-            $stack = '';
-            $loop_count = 0;
-            
-            foreach($pieces as $piece)
+            foreach($matches[0] as $find=>$tag)
             {
-                if($loop_count < 1)                 $result = $piece;
-                elseif(strpos($piece,']]')===false) $result = '[[' . $piece;
-                else                                $result = $this->_get_snip_result($piece);
-                
-                $stack .= $result;
-                $loop_count++; // End of foreach loop
+                if(isset($replace[$find]) && strpos($value,$tag)!==false)
+                {
+                    $value = str_replace($tag,$replace[$find],$value);
+                    break;
+                }
             }
-            if($i == ($passes -1) && $i < ($this->maxParserPasses - 1))
-            {
-                if($bt != md5($stack)) $passes++;
-            }
+            $replace[$i] = $this->_get_snip_result($value);
         }
-        return $stack;
+        $content = str_replace($matches['0'], $replace, $content);
+        return $content;
     }
     
     private function _get_snip_result($piece)
     {
-        if ($this->dumpSnippets == 1) $sniptime = $this->getMicroTime();
-        $snip_call        = $this->_split_snip_call($piece);
-        $snip_name        = $snip_call['name'];
-        $except_snip_call = $snip_call['except_snip_call'];
+        $snip_call = $this->_split_snip_call($piece);
+        $snip_name = $snip_call['name'];
         
-        $key = $snip_call['name'];
-        
-        $snippetObject = $this->_get_snip_properties($snip_call);
-        
-        $params   = array ();
+        $snippetObject = $this->_getSnippetObject($snip_call['name']);
         $this->currentSnippet = $snippetObject['name'];
         
-        if(isset($snippetObject['properties'])) $params = $this->parseProperties($snippetObject['properties']);
-        else                                    $params = '';
         // current params
-        if(!empty($snip_call['params']))
+        $params = $this->_snipParamsToArray($snip_call['params']);
+        
+        if(isset($snippetObject['properties']))
         {
-            $snip_call['params'] = ltrim($snip_call['params'], '?');
-            
-            $i = 0;
-            $limit = 50;
-            $params_stack = $snip_call['params'];
-            while(!empty($params_stack) && $i < $limit)
-            {
-				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
-				else {
-					$pname=$params_stack;
-					$params_stack = '';
-				}
-                $params_stack = trim($params_stack);
-                $delim = substr($params_stack, 0, 1);
-                $temp_params = array();
-                switch($delim)
-                {
-                    case '`':
-                    case '"':
-                    case "'":
-                        $params_stack = substr($params_stack,1);
-                        list($pvalue,$params_stack) = explode($delim,$params_stack,2);
-                        $params_stack = trim($params_stack);
-                        if(substr($params_stack, 0, 2)==='//')
-                        {
-                            $params_stack = strstr($params_stack, "\n");
-                        }
-                        break;
-                    default:
-                        if(strpos($params_stack, '&')!==false)
-                        {
-                            list($pvalue,$params_stack) = explode('&',$params_stack,2);
-                        }
-                        else $pvalue = $params_stack;
-                        $pvalue = trim($pvalue);
-                        $delim = '';
-                }
-                if($delim !== "'")
-                {
-                    $pvalue = (strpos($pvalue,'[*')!==false) ? $this->mergeDocumentContent($pvalue) : $pvalue;
-                    $pvalue = (strpos($pvalue,'[(')!==false) ? $this->mergeSettingsContent($pvalue) : $pvalue;
-                    $pvalue = (strpos($pvalue,'{{')!==false) ? $this->mergeChunkContent($pvalue)    : $pvalue;
-                    $pvalue = (strpos($pvalue,'[+')!==false) ? $this->mergePlaceholderContent($pvalue) : $pvalue;
-                }
-                
-                $pname  = str_replace('&amp;', '', $pname);
-                $pname  = trim($pname);
-                $pname  = trim($pname,'&');
-                $params[$pname] = $pvalue;
-                $params_stack = trim($params_stack);
-                if($params_stack!=='') $params_stack = '&' . ltrim($params_stack,'&');
-                $i++;
-            }
-            unset($temp_params);
+            $default_params = $this->parseProperties($snippetObject['properties']);
+            $params = array_merge($default_params,$params);
         }
+        
         $value = $this->evalSnippet($snippetObject['content'], $params);
         
-        if($this->dumpSnippets == 1)
+        if($this->dumpSnippets)
         {
-            $sniptime = $this->getMicroTime() - $sniptime;
-            $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
-            if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
-            if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
-            if (is_array($params)) foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
-            $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
-            $this->snippetsCode .= '</fieldset><br />';
-            $this->snippetsCount[$snippetObject['name']]++;
-            $this->snippetsTime[$snippetObject['name']] += $sniptime;
+            $this->snipCode .= sprintf('<fieldset><legend><b>%s</b></legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']));
         }
-        return $value . $except_snip_call;
+        return $value;
     }
     
-    private function _split_snip_call($src)
+    function _snipParamsToArray($string='')
     {
-        list($call,$snip['except_snip_call']) = explode(']]', $src, 2);
-        if(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, '?') < strpos($call, "\n"))
+        if(empty($string)) return array();
+        
+        $_tmp = $string;
+        $_tmp = ltrim($_tmp, '?&');
+        $params = array();
+        while($_tmp!==''):
+            $bt = $_tmp;
+            $char = substr($_tmp,0,1);
+            $_tmp = substr($_tmp,1);
+            
+            if($char==='=')
+            {
+                $_tmp = trim($_tmp);
+                $nextchar = substr($_tmp,0,1);
+                if(in_array($nextchar, array('"', "'", '`')))
+                {
+                    list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
+                }
+                elseif(strpos($_tmp,'&')!==false)
+                {
+                    list($value, $_tmp) = explode('&', $_tmp, 2);
+                    $value = trim($value);
+                }
+                else
+                {
+                    $value = $_tmp;
+                    $_tmp = '';
+                }
+            }
+            elseif($char==='&')
+            {
+                if(trim($key)!=='') $value = '';
+                else continue;
+            }
+            else
+                if($key!==''||trim($char)!=='') $key .= $char;
+            
+            if(!is_null($value))
+            {
+                if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
+                $key=trim($key);
+                if(substr($value,0,6)!=='@CODE:')
+                {
+                    if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
+                    if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
+                    if(strpos($value,'{{')!==false) $value = $this->mergeChunkContent($value);
+                    if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
+                    if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
+                }
+                $params[$key]=$value;
+                
+                $key   = '';
+                $value = null;
+
+                $_tmp = ltrim($_tmp, " ,\t");
+                if(substr($_tmp, 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
+            }
+            
+            if($_tmp===$bt)
+            {
+                $key = trim($key);
+                if($key!=='') $params[$key] = '';
+                break;
+            }
+        endwhile;
+        
+        return $params;
+    }
+    
+    private function _split_snip_call($call)
+    {
+        $spacer = md5('dummy');
+        if(strpos($call,']]>')!==false)
+            $call = str_replace(']]>', "]{$spacer}]>",$call);
+        
+        $pos['?']  = strpos($call, '?');
+        $pos['&']  = strpos($call, '&');
+        $pos['=']  = strpos($call, '=');
+        $pos['lf'] = strpos($call, "\n");
+        
+        if($pos['?'] !== false)
         {
-            list($name,$params) = explode('?',$call,2);
+            if($pos['lf']!==false && $pos['?'] < $pos['lf'])
+                list($name,$params) = explode('?',$call,2);
+            elseif($pos['lf']!==false && $pos['lf'] < $pos['?'])
+                list($name,$params) = explode("\n",$call,2);
+            else
+                list($name,$params) = explode('?',$call,2);
         }
-        elseif(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, "\n") < strpos($call, '?'))
-        {
-            list($name,$params) = explode("\n",$call,2);
-        }
-        elseif(strpos($call, '?') !== false)
-        {
-            list($name,$params) = explode('?',$call,2);
-        }
-        elseif((strpos($call, '&') !== false) && (strpos($call, '=') !== false) && (strpos($call, '?') === false))
-        {
+        elseif($pos['&'] !== false && $pos['='] !== false && $pos['?'] === false)
             list($name,$params) = explode('&',$call,2);
-            $params = "&{$params}";
-        }
-        elseif(strpos($call, "\n") !== false)
-        {
+        elseif($pos['lf'] !== false)
             list($name,$params) = explode("\n",$call,2);
-        }
         else
         {
             $name   = $call;
             $params = '';
         }
+        
         $snip['name']   = trim($name);
-        $snip['params'] = $params;
+        if(strpos($params,$spacer)!==false)
+            $params = str_replace("]{$spacer}]>",']]>',$params);
+        $snip['params'] = $params = ltrim($params,"?& \t\n");
         return $snip;
     }
     
-    private function _get_snip_properties($snip_call)
+    private function _getSnippetObject($snip_name)
     {
-        $snip_name  = $snip_call['name'];
-        
         if(isset($this->snippetCache[$snip_name]))
         {
             $snippetObject['name']    = $snip_name;
             $snippetObject['content'] = $this->snippetCache[$snip_name];
-            if(isset($this->snippetCache[$snip_name . 'Props']))
+            if(isset($this->snippetCache["{$snip_name}Props"]))
             {
-                $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'];
+                $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
         }
         else
         {
-            $tbl_snippets  = $this->getFullTableName('site_snippets');
-            $esc_snip_name = $this->db->escape($snip_name);
-            // get from db and store a copy inside cache
-            $result= $this->db->select('name,snippet,properties',$tbl_snippets,"name='{$esc_snip_name}'");
-                if($row = $this->db->getRow($result))
-                {
-                    $snippetObject['name']       = $row['name'];
-                    $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
-                    $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
-                } else {
-                    $snippetObject['name']       = $snip_name;
-                    $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
-                    $snippetObject['properties'] = '';
-                }
+            $where = sprintf("name='%s'",$this->db->escape($snip_name));
+            $rs= $this->db->select('name,snippet,properties',$this->getFullTableName('site_snippets'),$where);
+            $count = $this->db->getRecordCount($rs);
+            if(1<$count) exit('Error $modx->_getSnippetObject()'.$snip_name);
+            if($count)
+            {
+                $row = $this->db->getRow($rs);
+                $snip_content = $row['snippet'];
+                $snip_prop    = $row['properties'];
+            }
+            else
+            {
+                $snip_content = 'return false;';
+                $snip_prop    = '';
+            }
+            $snippetObject['name']       = $snip_name;
+            $snippetObject['content']    = $snip_content;
+            $snippetObject['properties'] = $snip_prop;
+            $this->snippetCache[$snip_name]          = $snip_content;
+            $this->snippetCache["{$snip_name}Props"] = $snip_prop;
         }
         return $snippetObject;
     }
-    
     
     function toAlias($text) {
         $suff= $this->config['friendly_url_suffix'];
@@ -2292,7 +2317,7 @@ class DocumentParser {
 			$files = glob(MODX_BASE_PATH . 'assets/cache/*');
 			$deletedfiles = array();
 			while ($file = array_shift($files)) {
-				$name = basename($file);
+				$name = preg_replace('/.*[\/\\\]/', '', $file);
 				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
 					$deletedfiles[] = $name;
 					unlink($file);
@@ -3091,16 +3116,16 @@ class DocumentParser {
      *                            Default: false
      * @return string|array
      */
-    function getUserDocGroups($resolveIds= false) {
-        if ($this->isFrontend() && isset ($_SESSION['webDocgroups']) && isset ($_SESSION['webValidated'])) {
-            $dg= $_SESSION['webDocgroups'];
-            $dgn= isset ($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
+    function getUserDocGroups($resolveIds = false) {
+        if ($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
+            $dg = $_SESSION['webDocgroups'];
+            $dgn = isset($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
         } else
-            if ($this->isBackend() && isset ($_SESSION['mgrDocgroups']) && isset ($_SESSION['mgrValidated'])) {
-                $dg= $_SESSION['mgrDocgroups'];
-                $dgn= isset ($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
+            if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
+                $dg = $_SESSION['mgrDocgroups'];
+                $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
             } else {
-                $dg= '';
+                $dg = '';
             }
         if (!$resolveIds)
             return $dg;
@@ -3110,9 +3135,10 @@ class DocumentParser {
             else
                 if (is_array($dg)) {
                     // resolve ids to names
+                    $dgn = array();
                     $ds = $this->db->select('name', $this->getFullTableName("documentgroup_names"), "id IN (".implode(",", $dg).")");
-                    while ($row= $this->db->getRow($ds))
-                        $dgn[count($dgn)]= $row['name'];
+                    while ($row = $this->db->getRow($ds))
+                        $dgn[] = $row['name'];
                     // cache docgroup names to session
                     if ($this->isFrontend())
                         $_SESSION['webDocgrpNames']= $dgn;

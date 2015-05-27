@@ -9,7 +9,7 @@
  * @required    MODX 0.9.6.3+
  *              CodeMirror  3.13 : pl
  *
- * @confirmed   MODX Evolution 1.10.0
+ * @confirmed   MODX Evolution 1.0.15
  *
  * @author      Mihanik71 
  *

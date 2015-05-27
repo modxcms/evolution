@@ -211,19 +211,23 @@ hr {
 	margin: 0 5px;
 }
 #statusbar {
-	position: absolute;
-	right: 0;
-	top: 27px;
+  font-size: 11px;
+  position: absolute;
+  right: 0;
+  top: 21px;
+  z-index: 50;
 }
 	.rtl #statusbar {
 		left: 0;
 	}
 #supplementalNav {
-	float: right;
-	background: transparent;
-	padding: 0 0 30px;
-	margin: 0;
-	color: #89939E;
+  background: none repeat scroll 0 0 transparent;
+  color: #89939e;
+  margin: 0;
+  padding: 3px 0 30px;
+  position: absolute;
+  right: 0;
+  z-index: 111;
 }
 	.rtl #supplementalNav {
 		float: left;
@@ -367,6 +371,12 @@ input[type="button"] {
 	height: auto !important;
 	width: auto !important;
 	cursor:pointer;cursor:hand;
+}
+input.checkbox,
+input.radio,
+input[type="checkbox"],
+input[type="radio"] {
+	vertical-align: -2px;
 }
 select {
 	border: 1px solid #c3c3c3 !important;
@@ -824,13 +834,28 @@ a.hometblink:hover {
 	height: 100%;
 	text-align: center;
 	vertical-align: middle;
+  padding: 100px 0 0 0;
+  background-color: rgba(255,255,255,0.5);
 }
 .preLoaderText {
 	background-color: #fff;
-	width: 300px;
+	width: 400px;
+
 	height: 150px;
 	padding: 50px;
-	border: 1px solid #039;
+	border: 1px solid #dadada;
+  -webkit-border-radius: 7px; 
+     -moz-border-radius: 7px; 
+          border-radius: 7px;
+  -webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,0.2);
+     -moz-box-shadow: 0 0 40px 0 rgba(0,0,0,0.2);
+          box-shadow: 0 0 40px 0 rgba(0,0,0,0.2);
+}
+.preLoaderText p {
+  font-size: 18px; padding: 25px 0 0 0;
+}
+#loadingmask {
+  display: none !important;
 }
 /* -------------------------[ contextmenu in editing modules ]--- */
 .contextMenu {
@@ -905,7 +930,7 @@ a.hometblink:hover {
 	height: 25px;
 	width: 100%;
 	position: absolute;
-	top: 18px;
+	top: 12px;
 	overflow: visible !important;
 }
 	.rtl #nav {
@@ -913,11 +938,11 @@ a.hometblink:hover {
 	}
 #nav ul {
 	display: none;
-	height: 26px;
+	height: 28px;
 	position: relative;
 	z-index: 500;
 	margin: 0 0 0 -10px;
-	padding: 0 0 0 20px;
+	padding: 0 0 0 10px;
 }
 	.rtl #nav ul {
 		margin: 0 -10px 0 0;
@@ -927,7 +952,7 @@ a.hometblink:hover {
 	list-style: none;
 	float: left;
 	width: auto;
-	margin: 0 0 0 10px;
+	margin: 0;
 	padding: 0;
 }
 	.rtl #nav li {
@@ -936,16 +961,20 @@ a.hometblink:hover {
 	}
 #nav li a {
 	color: #A4B8B6;
-	height: 25px;
+	height: 28px;
 	text-decoration: none;
 	white-space: nowrap;
 	cursor: pointer;
-	line-height: 25px;
+	line-height: 26px;
 	overflow: hidden;
 	padding: 0 18px;
 	float: none !important;
 	float: left;
 	display: block;
+}
+#nav > li > a {
+  height: 29px;
+  line-height: 29px;
 }
 #nav li ul li a {
 	padding: 0 18px !important;
@@ -984,8 +1013,10 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav {
 	display: block;
-	position:fixed;
-	bottom:0;
+	position: absolute;
+	top: 29px;
+	width: 200%;
+
 	left: 0;
 	border-top: 1px solid #999;
 	border-bottom: 1px solid #FFF;
@@ -1036,34 +1067,37 @@ a.hometblink:hover {
 	visibility: hidden;
 	z-index: 10000;
 	width: 170px;
-	background-color: #fff;
-	box-shadow: inset 0px 5px 10px 0px rgba(70, 70, 70, 0.1);
+	background: #fff;
+
 	margin: 0;
-	padding-bottom:10px;
-	border: 1px solid #ededed;
-	border-right-color: #dcdcdc;
-	border-bottom-color: #dcdcdc;
+	padding: 4px;
+	border: 1px solid #C9C9C9;
 	overflow: hidden;
 	line-height: 11px;
-	box-shadow: 2px 2px 15px #eaeaea;
-	-moz-box-shadow: 2px 2px 15px #eaeaea;
-	-webkit-box-shadow: 2px 2px 20px #eaeaea;
+  /* font-size: 11px; */
+	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); 
+
+
 }
 #mx_contextmenu .menuLink {
 	cursor: pointer;
 	color: #222;
-	padding: 3px 5px 3px 4px;
+	padding: 4px 2px 4px 4px;
+  line-height: 16px;
+	border: 1px solid #fff;
 }
 #mx_contextmenu .menuLink:hover {
-	background: #DDE4EB;
-	border: 1px solid #fdfdfd;
-	border-bottom-color: #dcdcdc;
+	background: #E5F0D6;
+
+	border-color: #98BF6C;
 	color: #333;
 }
 #mx_contextmenu .menuLink:hover,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
-	padding: 2px 4px 2px 3px;
+
 }
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
@@ -1072,42 +1106,35 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLink:hover img,
 #mx_contextmenu .menuLinkDisabled img {
-	margin-right: 5px;
+	margin-right: 8px;
 }
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLinkDisabled img {
-	opacity: .3;
-	filter: alpha(opacity=30);
+/* 	opacity: .3;
+	filter: alpha(opacity=30); */
+  vertical-align: top;
 }
 #mx_contextmenu .menuLink:hover img {
-	opacity: 1;
-	filter: alpha(opacity=100);
+/* 	opacity: 1;
+	filter: alpha(opacity=100); */
 }
 
 #mx_contextmenu #nameHolder {
-	color: #fff;
+	color: #86939E;
 	text-align: left;
 	cursor: default;
 	font-weight: bold;
-	padding: 6px 4px;
-	margin-bottom: 3px;
-	background-color: #86939E;
-	background-repeat:repeat-x;
-	text-shadow: 0px -1px 0px #222;
-	background:-moz-linear-gradient(#8aae4b, #66901b);
-	background:-webkit-gradient(linear, 0 0, 0 100%, from(#8aae4b), to(#66901b));
-	background:-o-linear-gradient(#8aae4b, #66901b);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b);
-	background: -ms-linear-gradient(top, #8aae4b, #66901b); /*ie9*/
-	background: linear-gradient(to bottom, #8aae4b, #66901b);/*ie10*/
-			zoom:1;
+	margin-bottom: 2px;
+  font-size: 12px;
+  padding: 6px 6px 6px 4px;
+
 }
 #mx_contextmenu .seperator {
 	font-size: 0;
 	height: 1px;
-	background-color: silver;
+	background-color: #D8D8D8;
 	overflow: hidden;
-	margin: 3px 1px 3px 28px;
+	margin: 3px 0;
 }
 
 	.rtl #mx_contextmenu .menuLink {
@@ -1162,17 +1189,18 @@ a.hometblink:hover {
 	display: inline;
 	margin: 3px 2px 1px 0;
 	float: left;
-	padding: 3px 10px;
+
+	padding: 4px 12px 5px 12px;
 	z-index: 1;
 	position: relative;
 	top: 1px;
 	border: 1px solid #658f1a;
 	background: none repeat scroll 0 0 #66901b;
 	text-shadow: 0px -1px 0px #2B5F0C;
-		border-radius:5px 5px 0 0;
-		-moz-border-radius:5px 5px 0 0;
-		-webkit-border-radius:5px 5px 0 0;
-		-ms-border-radius:0;
+		-webkit-border-radius:4px 4px 0 0;
+       -moz-border-radius:4px 4px 0 0;
+            border-radius:4px 4px 0 0;
+        -ms-border-radius:0;
 			background:-moz-linear-gradient(#8aae4b, #66901b);
 			background:-webkit-gradient(linear, 0 0, 0 100%, from(#8aae4b), to(#66901b));
 			background:-o-linear-gradient(#8aae4b, #66901b);
@@ -1197,9 +1225,9 @@ a.hometblink:hover {
 	border-width: 1px;
 	border-bottom-style: solid;
 	border-color: #ffcc72 #AAA #FFF #AAA;
-		-moz-border-radius:5px 5px 0 0;
-		-webkit-border-radius:5px 5px 0 0;
-		border-radius:5px 5px 0 0;
+		-webkit-border-radius:4px 4px 0 0;
+       -moz-border-radius:4px 4px 0 0;
+            border-radius:4px 4px 0 0;
 	border-width:1px 1px 0;
 	background: #fff;
 	background-color: #fff;
@@ -1401,7 +1429,9 @@ fieldset#preview h2.tab {
 }
 select#stay {
 	margin-top: -7px;
-    padding: 6px 5px 6px 2px;
+  padding: 6px 5px 6px 2px;
+  width: auto !important;
+  height: 32px;
 }
 .rtl #actions {
 	left: 10px;
@@ -1716,7 +1746,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 	background-color: #fff;
 	border: 1px solid #0070bf;
 	position: absolute;
-	width: 325px;
+	width: 177px;
 	top: 24px;
 	left: 0;
 	margin: 0px 0px 3px 0px;
@@ -1742,6 +1772,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal select {
 	margin: 2px 3px;
 	font-size: 1em;
+	width: auto !important;
 }
 .dp_cal select option {
 	padding: 1px 3px;
@@ -1832,3 +1863,7 @@ strong[style*='color:#EF1D1D'] {
 #tabEvents table, #tabEvents td {padding:2px;}
 
 code {font-size:inherit;font-family: 'Courier New','Courier', monospace;background-color:#eee;border:1px solid #ccc;padding:1px 2px;}
+
+#resourcesPane a {
+  text-decoration: none;
+}

@@ -962,6 +962,18 @@ function buildTagPlaceholder($tag,$attributes,$name){
 				case 'text':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
+				case 'range':
+				case 'date':
+				case 'month':
+				case 'week':
+				case 'time':
+				case 'datetime':
+				case 'datetime-local':
+				case 'color':
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder

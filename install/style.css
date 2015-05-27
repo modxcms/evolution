@@ -383,6 +383,12 @@ font-size:1.3em;
 #rtl #installChoices input {
 	margin: 0 0 10px 10px;
 }
+#installChoices .comname {
+	font-weight: bold;
+}
+#installChoices .description {
+	font-size: 0.9em;
+}
 
 p.labelHolder {
 	clear: left;

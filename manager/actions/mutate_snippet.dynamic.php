@@ -45,6 +45,11 @@ if(isset($_GET['id'])) {
 } else {
     $_SESSION['itemname']=$_lang["new_snippet"];
 }
+
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 ?>
 <script type="text/javascript">
 
