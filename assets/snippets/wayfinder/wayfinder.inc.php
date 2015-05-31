@@ -170,7 +170,7 @@ class Wayfinder {
         $output = '';
 
       // Addet by MrSwed. Set id of reference to original document ID if it is inner doc
-      if (($this->_config['referenceUseOriginalID'] !== 'FALSE') && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+      if ($this->_config['referenceUseOriginalID'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
        $resource['id'] = $resource['content'];
       }
 
