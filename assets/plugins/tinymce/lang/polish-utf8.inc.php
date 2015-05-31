@@ -16,7 +16,7 @@ $_lang['mce_editor_custom_plugins_message'] = 'Wprowadź nazwy wtyczek w postaci
 $_lang['mce_editor_custom_buttons_title'] = 'Niestandardowe przyciski';
 $_lang['mce_editor_custom_buttons_message'] = 'Wprowadź nazwy przycisków w postaci listy oddzielonej przecinkami, których będzie używać temat \'custom\'. Upewnij się, że każdy z nich posiada wtyczkę w ustawieniu \'Własne wtyczki\'.';
 $_lang['mce_editor_css_selectors_title'] = 'Selektory CSS';
-$_lang['mce_editor_css_selectors_message'] = 'Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />\'displayName=selectorName;displayName2=selectorName2\'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />\'Monospaced text=mono;Small text=smallText\'<br />Note that the last entry should not have a semi-colon after it.';
+$_lang['mce_editor_css_selectors_message'] = 'Tutaj możesz wprowadzić listę selektorów, które będą dostępne w edytorze. Wprowadź w ten sposób:<br />\'nazwaWidoczna=nazwaSelektora;nazwaWidoczna2=nazwaSelektora2\'<br />Na przykład, powiedzmy że w pliku CSS posiadasz selektory <b>.mono</b> oraz <b>.smallText</b>. Możesz dodać je tak:<br />\'Monospaced text=mono;Small text=smallText\'<br />Zwróć uwagę, że ostatni element nie posiada średnika.';
 $_lang['mce_settings'] = 'Ustawienia TinyMCE';
 $_lang['mce_theme_simple'] = 'Prosty';
 $_lang['mce_theme_full'] = 'Pełny';
