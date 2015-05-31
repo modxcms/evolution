@@ -24,7 +24,7 @@
 // ---------------------------------------------------
 
 $searchFields = isset($searchFields) ?
-    preg_replace('/[\s|\n|\r|\t]+/', '', $searchFields) :
+    preg_replace('/\s+/', '', $searchFields) :
     "content";
 /*
     Param:      searchFields
