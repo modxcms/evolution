@@ -169,10 +169,33 @@ class Wayfinder {
         global $modx;
         $output = '';
 
-      // Addet by MrSwed. Set id of reference to original document ID if it is inner doc
-      if ($this->_config['referenceUseOriginalID'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
-       $resource['id'] = $resource['content'];
-      }
+        // Determine fields for use from referenced resource
+        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+         if ($this->_config['useReferenced']=="id") {
+          // if id only, do not need get referenced data
+          $resource["id"] = $resource['content'];
+         } else if($referenced = $modx->getDocument($resource['content'])){
+          if (in_array($this->_config['useReferenced'],explode(",","1,*"))) { 
+           $this->_config['useReferenced'] = array_keys($resource);
+          }
+          if (!is_array($this->_config['useReferenced'])) {
+           $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
+          }
+          $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'],explode(",","content,parent,isfolder"));
+
+          foreach ($this->_config['useReferenced'] as $field) {
+           if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
+           switch ($field) {
+            case "linktext" :
+             $resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
+             break;
+            case "title" :
+             $resource['title'] = $resource[$this->_config['titleOfLinks']];
+             break;
+           }
+          }
+         }
+        }
 
 		//Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
