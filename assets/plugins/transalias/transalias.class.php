@@ -189,7 +189,7 @@ class TransAlias {
         } elseif($char_restrict=='alphanumeric') {
             $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
         } else { // restrict only to legal characters
-            $alias = preg_replace('/[&=+%#<>"~`@\?\[\]\{\}\|\^\'\\\\]/', '', $alias); // remove chars that are illegal/unsafe in a url
+            $alias = preg_replace('/[&=+%#<>"~`@\?\[\]\{\}\|\^\'\\\\\:]/', '', $alias); // remove chars that are illegal/unsafe in a url
         }
         switch($word_separator) {
             case 'dash': $word_separator='-'; break;
