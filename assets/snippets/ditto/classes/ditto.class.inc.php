@@ -1035,16 +1035,16 @@ class ditto {
 			}
 			$queryString = "";
 			foreach ($query as $param=>$value) {
-				
-        //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
-        
-        if(!is_array($value)){
-          $queryString .= '&'.$param.'='.$value;
-        }else{
-          foreach ($value as $key=>$val){
-            $queryString .= '&'.$param.'['.$key.']='.$val;
-          }
-        }
+
+				//$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+				if (!is_array($value)) {
+					if (!($modx->config['seostrict']=='1' and $param == "start" and !$value)) $queryString .= '&'.$param.'='.$value;
+				}
+				else {
+					foreach ($value as $key=>$val) {
+						$queryString .= '&'.$param.'['.$key.']='.$val;
+					}
+				}
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);
