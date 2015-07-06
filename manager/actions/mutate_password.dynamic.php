@@ -8,7 +8,7 @@ if(!$modx->hasPermission('change_password')) {
 <h1><?php echo $_lang['change_password']?></h1>
 <div id="actions">
 	<ul class="actionButtons">
-		<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?></a></li>
+		<li><a href="javascript:void(0)" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?></a></li>
 	  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 	</ul>
 </div>
