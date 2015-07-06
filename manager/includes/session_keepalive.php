@@ -4,6 +4,7 @@
  *
  * This page is requested once in awhile to keep the session alive and kicking.
  */
+include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
 require_once(dirname(__FILE__).'/protect.inc.php');
 
 $ok = false;
