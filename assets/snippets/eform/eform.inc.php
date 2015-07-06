@@ -253,6 +253,13 @@ $_dfnMaxlength = 6;
 								$rClass[$name]=$invalidClass;
 							}
 							break;
+							case "phone":
+							if (strlen($value)>0 && !preg_match(
+								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
+								$rClass[$name]=$invalidClass;
+							}
+							break;
 						case "file":
 							if ($_FILES[$name]['error']==1 || $_FILES[$name]['error']==2){
 								$vMsg[count($vMsg)]=$desc . $_lang['ef_upload_exceeded'];
