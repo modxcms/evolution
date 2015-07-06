@@ -459,7 +459,7 @@ class resourse {
 					'contentid' => $this->id,
 					'value'     => $this->modx->db->escape($value),
 					);
-				$rc = $this->modx->db->select('value', $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
+				$rs = $this->modx->db->select('value', $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
 				if ($row = $this->modx->db->getRow($rs)) {
 					if ($row['value'] != $value) {
 						$this->modx->db->update($fields, $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
