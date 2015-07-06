@@ -155,7 +155,12 @@ class DBAPI {
 			$table = $this->replaceFullTableName($table);
 			if (is_array($fields)) {
 				foreach ($fields as $key => $value) {
-					$fields[$key] = "`{$key}` = '{$value}'";
+					if(is_null($value) || strtolower($value) === 'null'){
+						$flds = 'NULL';
+					}else{
+						$flds = "'" . $value . "'";
+					}
+					$fields[$key] = "`{$key}` = ".$flds;
 				}
 				$fields = implode(",", $fields);
 			}
