@@ -237,7 +237,7 @@ $sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=2" target="main">
 // preview
 $sitemenu[] = '<li><a onclick="this.blur();" href="../" target="_blank">'.$_lang['preview'].'</a></li>';
 // clear-cache
-if($modx->hasPermission('empty_cache')) $sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=26" target="main">'.$_lang['refresh_site'].'</a></li>';
+$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=26" target="main">'.$_lang['refresh_site'].'</a></li>';
 // search
 $sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=71" target="main">'.$_lang['search'].'</a></li>';
 if ($modx->hasPermission('new_document')) {
