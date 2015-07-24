@@ -982,6 +982,7 @@ class ditto {
 	function cleanIDs($IDs) {
 		//Define the pattern to search for
 		$pattern = array (
+			'/\s+/', //Spaces
 			'`(,)+`', //Multiple commas
 			'`^(,)`', //Comma on first position
 			'`(,)$`' //Comma on last position
@@ -989,6 +990,7 @@ class ditto {
 
 		//Define replacement parameters
 		$replace = array (
+			'',
 			',',
 			'',
 			''
