@@ -51,6 +51,7 @@ $_lang["checking_registerglobals"] = 'Überprüfe ob PHP register_globals ausges
 $_lang["checking_registerglobals_note"] = 'Diese Konfiguration macht Ihre Website angreifbarer für Cross Site Scripting (XSS) Attacken. Sie sollten mit Ihrem Provider sprechen, ob diese Einstellung geändert werden kann. Es gibt normalerweise drei Möglichkeiten: Ändern der globalen php.ini, Hinzufügen von Regeln zu der .htaccess-Datei im Root-Verzeichnis der MODX-Installation oder durch Hinzufügen einer angepassten php.ini in jedem Verzeichnis Ihrer MODX-Installation. Sie können MODX trotzdem installieren, aber Sie müssen sich den möglichen Sicherheitsrisiken bewusst sein.';
 $_lang["checking_sessions"] = 'Überprüfe ob die Sessions sauber definiert sind: ';
 $_lang["checking_table_prefix"] = 'Überprüfe Tabellen-Präfix `';
+$_lang["choose_language"] = 'Sprache wählen';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitte eine leere Datei <span class="mono">config.inc.php</span> im Ordner <span class="mono">/[+MGR_DIR+]/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
 $_lang["connection_screen_collation"] = 'Kollation:';
