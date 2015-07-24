@@ -980,24 +980,10 @@ class ditto {
 	// ---------------------------------------------------
 	
 	function cleanIDs($IDs) {
-		//Define the pattern to search for
-		$pattern = array (
-			'/\s+/', //Spaces
-			'`(,)+`', //Multiple commas
-			'`^(,)`', //Comma on first position
-			'`(,)$`' //Comma on last position
-		);
-
-		//Define replacement parameters
-		$replace = array (
-			'',
-			',',
-			'',
-			''
-		);
-
 		//Clean startID (all chars except commas and numbers are removed)
-		$IDs = preg_replace($pattern, $replace, $IDs);
+		$IDs = trim($IDs,',');
+		$IDs = preg_replace('/,+/', ',', $IDs);
+		$IDs = str_replace(' ','',$IDs);
 
 		return $IDs;
 	}
