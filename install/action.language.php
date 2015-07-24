@@ -9,7 +9,7 @@ if( $handle = opendir('lang/') ) {
 sort( $langs );
 ?>
 <form name="install" id="install_form" action="index.php?action=mode" method="post">
-    <h2 style="display:inline;"><?=$_lang['choose_language'];?>:&nbsp;&nbsp;</h2>
+    <h2 style="display:inline;"><?php echo $_lang['choose_language'];?>:&nbsp;&nbsp;</h2>
     <select name="language">
 <?php
 foreach ($langs as $language) {
