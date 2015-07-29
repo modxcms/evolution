@@ -5,7 +5,7 @@
  * Generates date-based archives using Ditto
  *
  * @category 	snippet
- * @version 	2.1.0
+ * @version 	2.1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Content
@@ -233,6 +233,19 @@ $phx = (isset($phx))? $phx : 1;
     Default:
     1 - on
 */
+$emptymsg = isset($emptymsg)? $emptymsg : "The Ditto object is invalid. Please check it.";
+/*
+    Param: emptymsg
+
+    Purpose:
+    Message to return if error
+
+    Options:
+    Any string
+    
+    Default:
+    The Ditto object is invalid. Please check it.
+*/
 
 // ---------------------------------------------------
 //  Initialize Ditto
@@ -308,7 +321,7 @@ if ($placeholder === false) {
     $resource = $modx->getPlaceholder($id."ditto_resource");
 }
 if (!is_object($ditto) || !isset($ditto) || !isset($resource)) {
-    return !empty($snippetOutput) ? $snippetOutput : "The Ditto object is invalid. Please check it.";
+    return !empty($snippetOutput) ? $snippetOutput : $emptymsg;
 }
 
 // ---------------------------------------------------
