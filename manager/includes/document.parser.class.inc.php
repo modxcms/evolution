@@ -855,7 +855,7 @@ class DocumentParser {
         if(!$matches) return $content;
         
         foreach($matches[1] as $i=>$key) {
-            $key = substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
+            if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             $value= $this->documentObject[$key];
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
