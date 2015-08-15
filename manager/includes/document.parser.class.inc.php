@@ -1749,7 +1749,17 @@ class DocumentParser {
         }
         return $parents;
     }
-
+    
+    function getUltimateParentId($id,$top=0) {
+        while ($id) {
+            if($top===$id) break;
+            if($last_id===$id) break;
+            $last_id = $id;
+            $id = $this->aliasListing[$id]['parent'];
+        }
+        return $last_id;
+    }
+    
     /**
      * Returns an array of child IDs belonging to the specified parent.
      *
