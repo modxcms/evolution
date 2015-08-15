@@ -2210,6 +2210,22 @@ class DocumentParser {
 		}
 	}
 	
+    function getField($field='content', $docid='') {
+        if(empty($docid) && isset($this->documentIdentifier))
+            $docid = $this->documentIdentifier;
+        elseif(!preg_match('@^[0-9]+$@',$docid))
+            $docid = $this->getIdFromAlias($identifier);
+        
+        if(empty($docid)) return false;
+        
+        $doc = $this->getDocumentObject('id', $docid);
+        if(is_array($doc[$field])) {
+            $tvs= $this->getTemplateVarOutput($field, $docid,null);
+            return $tvs[$field];
+        }
+        return $doc[$field];
+    }
+    
     /**
      * Returns the page information as database row, the type of result is
      * defined with the parameter $rowMode
