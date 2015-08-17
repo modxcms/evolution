@@ -1109,6 +1109,7 @@ class ditto {
 			$min_x = $max_x - $max_paginate + 1;
 		}
 
+		$modx->setPlaceholder("dittoID", $dittoID);
 		for ($x = 0; $x <= $totalpages -1; $x++) {
 			$inc = $x * $summarize;
 			$display = $x +1;
@@ -1143,6 +1144,7 @@ class ditto {
 		global $modx, $dittoID;
 		$set = $modx->getPlaceholder($dittoID."ditto_pagination_set");
 		if ($paginate && $set !== true) {
+			$modx->setPlaceholder("dittoID", $dittoID);
 			$modx->setPlaceholder($dittoID."next", "");
 			$modx->setPlaceholder($dittoID."previous", "");
 			$modx->setPlaceholder($dittoID."splitter", "");
