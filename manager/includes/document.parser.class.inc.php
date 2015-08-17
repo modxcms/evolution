@@ -1751,13 +1751,13 @@ class DocumentParser {
     }
     
     function getUltimateParentId($id,$top=0) {
-        while ($id) {
-            if($top===$id) break;
-            if($last_id===$id) break;
-            $last_id = $id;
+        $i=0;
+        while ($id &&$i<20) {
+            if($top==$this->aliasListing[$id]['parent']) break;
             $id = $this->aliasListing[$id]['parent'];
+            $i++;
         }
-        return $last_id;
+        return $id;
     }
     
     /**
