@@ -66,7 +66,7 @@ if(is_dir($tvPath) && is_readable($tvPath)) {
                 $params['output_widget'],
                 $params['output_widget_params'],
                 "$templatePath/{$params['filename']}", /* not currently used */
-                $params['template_assignments'], /* comma-separated list of template names */
+                $params['template_assignments']!="*"?$params['template_assignments']:implode(",",array_map(create_function('$v','return $v[0];'),$mt)), /* comma-separated list of template names */
                 $params['modx_category'],
                 $params['lock_tv'],  /* value should be 1 or 0 */
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
