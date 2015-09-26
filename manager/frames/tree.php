@@ -153,7 +153,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     function toggleNode(node,indent,parent,expandAll,privatenode) {
         privatenode = (!privatenode || privatenode == '0') ?  '0' : '1';
-        rpcNode = $(node.parentNode.lastChild);
+        rpcNode = document.getElementById("c"+parent);
 
         var rpcNodeText;
         var loadText = "<?php echo $_lang['loading_doc_tree'];?>";
