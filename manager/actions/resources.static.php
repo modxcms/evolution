@@ -218,7 +218,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $name[$n] = $v['name'];
             }
 
-            array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
+            $category_lowercase = array_map('strtolower', $category);
+            $name_lowercase = array_map('strtolower', $name);
+            array_multisort($category_lowercase, SORT_ASC, SORT_STRING, $name_lowercase, SORT_ASC, SORT_STRING, $finalInfo);
 
             echo '<ul>';
             $preCat = '';
