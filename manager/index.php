@@ -53,10 +53,11 @@
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
 
+$self_filename = basename(__FILE__);
 $self      = str_replace('\\','/',__FILE__);
-$self_dir  = str_replace('/index.php','',$self);
+$self_dir  = str_replace('/'.$self_filename,'',$self);
 $mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
-$base_path = str_replace($mgr_dir . '/index.php','',$self);
+$base_path = str_replace($mgr_dir . '/'. $self_filename,'',$self);
 $site_mgr_path = $base_path . 'assets/cache/siteManager.php';
 if(is_file($site_mgr_path)) include_once($site_mgr_path);
 $site_hostnames_path = $base_path . 'assets/cache/siteHostnames.php';
