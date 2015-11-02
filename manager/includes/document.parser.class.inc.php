@@ -60,7 +60,7 @@ class DocumentParser {
     var $aliasListing;
     private $version=array();
 
-    /**
+	/**
      * Document constructor
      *
      * @return DocumentParser
@@ -1124,7 +1124,7 @@ class DocumentParser {
         
         if(isset($snippetObject['properties']))
         {
-            $default_params = $this->parseProperties($snippetObject['properties']);
+            $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
             $params = array_merge($default_params,$params);
         }
         
@@ -3499,6 +3499,9 @@ class DocumentParser {
 
                 // load default params/properties
                 $parameter= $this->parseProperties($pluginProperties);
+                if(!is_array($parameter)){
+                    $parameter = array();
+                }
                 if (!empty ($extParams))
                     $parameter= array_merge($parameter, $extParams);
 
@@ -3524,9 +3527,11 @@ class DocumentParser {
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
+	 * @param string|null $elementName
+	 * @param string|null $elementType
      * @return array Associative array in the form property name => property value
      */
-    function parseProperties($propertyString) {
+    function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
@@ -3542,6 +3547,15 @@ class DocumentParser {
                 }
             }
         }
+		if(!empty($elementName) && !empty($elementType)){
+			$out = $this->invokeEvent('OnParseProperties', array(
+				'element' => $elementName,
+				'type' => $elementType,
+				'args' => $parameter
+			));
+			if(is_array($out)) $out = array_pop($out);
+            if(is_array($out)) $parameter = $out;
+		}
         return $parameter;
     }
 
@@ -3862,6 +3876,7 @@ class DocumentParser {
 	function getIdFromAlias($alias)
 	{
 		$children = array();
+		if (isset($this->documentListing[$alias])) {return $this->documentListing[$alias];}
 
 		$tbl_site_content = $this->getFullTableName('site_content');
 		if($this->config['use_alias_path']==1)

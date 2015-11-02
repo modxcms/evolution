@@ -52,16 +52,7 @@ if($content['disabled']) {
 $_SESSION['itemname'] = $content['name'];
 
 // load module configuration
-$parameter = array();
-if(!empty($content["properties"])){
-	$tmpParams = explode("&",$content["properties"]);
-	for($x=0; $x<count($tmpParams); $x++) {
-		$pTmp = explode("=", $tmpParams[$x]);
-		$pvTmp = explode(";", trim($pTmp[1]));
-		if ($pvTmp[1]=='list' && $pvTmp[3]!="") $parameter[$pTmp[0]] = $pvTmp[3]; //list default
-		else if($pvTmp[1]!='list' && $pvTmp[2]!="") $parameter[$pTmp[0]] = $pvTmp[2];
-	}
-}
+$parameter = $modx->parseProperties($content["properties"], $content["guid"], 'module');
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
