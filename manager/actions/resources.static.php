@@ -201,7 +201,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $rs = $modx->db->select(
                     "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, categories.category, categories.id as catid",
                     $modx->getFullTableName($v['table'])." AS {$v['table']}
-                        LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
+                        RIGHT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
                     "",
                     "5,1"
                     );
@@ -218,7 +218,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $name[$n] = $v['name'];
             }
 
-            array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
+            $category_lowercase = array_map('strtolower', $category);
+            $name_lowercase = array_map('strtolower', $name);
+            array_multisort($category_lowercase, SORT_ASC, SORT_STRING, $name_lowercase, SORT_ASC, SORT_STRING, $finalInfo);
 
             echo '<ul>';
             $preCat = '';
@@ -234,9 +236,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                     $insideUl = 1;
                 }
                 $class = array_key_exists('disabled',$v) && $v['disabled'] ? ' class="disabledPlugin"' : '';
+                if ($v['id']) {
         ?>
             <li><span<?php echo $class;?>><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo !empty($v['description']) ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ; ?></li>
         <?php
+                }
             $preCat = $v['category'];
             }
             echo $insideUl? '</ul>': '';
