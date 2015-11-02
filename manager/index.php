@@ -76,6 +76,9 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 
 // we use this to make sure files are accessed through
 // the manager instead of seperately.
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "true");
+}
 
 // harden it
 require_once('./includes/protect.inc.php');
@@ -203,6 +206,9 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // first we check to see if this is a frameset request
 if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
     // this looks to be a top-level frameset request, so let's serve up a frameset
+    if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/frames/1.php")) {
+        include_once "media/style/".$manager_theme."/frames/1.php";
+    }else{
         include_once "frames/1.php";
     }
     exit;
