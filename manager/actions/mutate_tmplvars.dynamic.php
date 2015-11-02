@@ -329,24 +329,37 @@ function decode(s){
   <tr>
     <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
-	            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
-	            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
-	            <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
-	            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
-	            <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
-	            <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
-	            <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
-	            <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
-	            <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
-	            <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
-	            <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
-	            <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
-	            <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
-	            <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
-	            <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
-	            <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
-	            <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
-	            <option value="custom_tv" <?php      echo ($content['type']=='custom_tv')? "selected='selected'":""; ?>>Custom Input</option>
+	            <optgroup label="Standard Type">
+                    <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
+                    <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
+                    <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
+                    <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
+                    <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
+                    <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
+                    <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
+                    <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
+                    <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
+                    <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
+                    <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
+                    <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
+                    <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
+                    <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
+                    <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
+                    <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
+                    <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
+                </optgroup>
+                <optgroup label="Custom Type">
+                    <option value="custom_tv" <?php  echo ($content['type']=='custom_tv')? "selected='selected'":""; ?>>Custom Input</option>
+                    <?php 
+                        $custom_tvs = scandir(MODX_BASE_PATH.'assets/tvs'); 
+                        foreach($custom_tvs as $ctv) {
+                            if(strpos($ctv, '.')!==0){
+                                $selected = ($content['type']=='custom_tv:'.$ctv )? "selected='selected'":"";
+                                echo '<option value="custom_tv:'.$ctv.'"  '.$selected.'>'.$ctv.'</option>';
+                            }
+                        }    
+                    ?>
+               </optgroup>
 	        </select>
     </td>
   </tr>
