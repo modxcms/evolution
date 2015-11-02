@@ -30,21 +30,14 @@ if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
 define('IN_MANAGER_MODE', "true");
-// Get system settings and override them with managers'
-include_once('../../../includes/settings.inc.php');
-include_once('../../../includes/user_settings.inc.php');
+$modx->getSettings();
 
+$manager_language = $modx->config['manager_language'];
 // Pass language code from MODX to KCFinder
-if(!isset($manager_language) || !file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
+if(!file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
     $manager_language = "english"; // if not set, get the english language file.
 }
-$_lang = array();
-include_once "../../../includes/lang/english.inc.php";
-$length_eng_lang = count($_lang);
-
-if($manager_language!="english" && file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
-    include_once "../../../includes/lang/".$manager_language.".inc.php";
-}
+include_once "../../../includes/lang/".$manager_language.".inc.php";
 $_GET['langCode'] = $modx_lang_attribute;
 
 // PHP VERSION CHECK
