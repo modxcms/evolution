@@ -5,8 +5,8 @@ if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
 //			setcookie(session_name(), '', 0, MODX_BASE_URL);
 //		}
-		@session_destroy();
-		// start session
+	@session_destroy();
+	// start session
 //	    startCMSSession();
 }
 
@@ -18,7 +18,7 @@ if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
 			unset($installStartTime);
 			@ chmod(MODX_BASE_PATH . 'assets/cache/installProc.inc.php', 0755);
 			unlink(MODX_BASE_PATH . 'assets/cache/installProc.inc.php');
-		} 
+		}
 		else {
 			if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 				if (isset($_COOKIE[session_name()])) {
@@ -34,10 +34,10 @@ if (file_exists(MODX_BASE_PATH . 'assets/cache/installProc.inc.php')) {
 
 // andrazk 20070416 - if session started before install and was not destroyed yet
 if (isset($lastInstallTime)) {
-  if (isset($_SESSION['mgrValidated'])) {
+	if (isset($_SESSION['mgrValidated'])) {
 		if (isset($_SESSION['modx.session.created.time'])) {
 			if ($_SESSION['modx.session.created.time'] < $lastInstallTime) {
-					if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+				if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 					if (isset($_COOKIE[session_name()])) {
 						session_unset();
 						@session_destroy();
@@ -81,10 +81,10 @@ if(!isset($_SESSION['mgrValidated'])){
 	if (isset($_GET['installGoingOn'])) {
 		$installGoingOn = $_GET['installGoingOn'];
 	}
-	if (isset($installGoingOn)) {			
+	if (isset($installGoingOn)) {
 		switch ($installGoingOn) {
-		 case 1 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_install_in_progress"]."</p><p>".$_lang["login_message"]."</p>"); break;
-		 case 2 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_site_was_updated"]."</p><p>".$_lang["login_message"]."</p>"); break;
+			case 1 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_install_in_progress"]."</p><p>".$_lang["login_message"]."</p>"); break;
+			case 2 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_site_was_updated"]."</p><p>".$_lang["login_message"]."</p>"); break;
 		}
 	}
 
@@ -95,7 +95,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	}
 
 	// login info
-	$uid =  isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '',  $_COOKIE['modx_remember_manager']) :''; 
+	$uid =  isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '',  $_COOKIE['modx_remember_manager']) :'';
 	$modx->setPlaceholder('uid',$uid);
 	$modx->setPlaceholder('username',$_lang["username"]);
 	$modx->setPlaceholder('password',$_lang["password"]);
@@ -105,61 +105,56 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('remember_me',$html);
 	$modx->setPlaceholder('remember_username',$_lang["remember_username"]);
 	$modx->setPlaceholder('login_button',$_lang["login_button"]);
-	
+
 	// invoke OnManagerLoginFormRender event
 	$evtOut = $modx->invokeEvent('OnManagerLoginFormRender');
 	$html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">'.implode('',$evtOut).'</div>' : '';
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template
-    if(!isset($modx->config['manager_login_tpl']) || empty($modx->config['manager_login_tpl'])) {
-    	$modx->config['manager_login_tpl'] = MODX_MANAGER_PATH . 'media/style/common/login.tpl'; 
-    }
-    
-    $target = $modx->config['manager_login_tpl'];
-    $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
-    $target = $modx->mergeSettingsContent($target);
-    
-    if(substr($target,0,1)==='@') {
-    	if(substr($target,0,6)==='@CHUNK') {
-    		$target = trim(substr($target,7));
-    		$login_tpl = $modx->getChunk($target);
-    	}
-    	elseif(substr($target,0,5)==='@FILE') {
-    		$target = trim(substr($target,6));
-    		$login_tpl = file_get_contents($target);
-    	}
+	$target = $modx->getConfig('manager_login_tpl');
+	$target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
+	$target = $modx->mergeSettingsContent($target);
+
+	$login_tpl = null;
+	if(substr($target,0,1)==='@') {
+		if(substr($target,0,6)==='@CHUNK') {
+			$target = trim(substr($target,7));
+			$login_tpl = $modx->getChunk($target);
+		}
+		elseif(substr($target,0,5)==='@FILE') {
+			$target = trim(substr($target,6));
+			$login_tpl = file_get_contents($target);
+		}
 	} else {
-    	$chunk = $modx->getChunk($target);
-    	if($chunk!==false && !empty($chunk)) {
-    		$login_tpl = $chunk;
-	}
-    	elseif(is_file(MODX_BASE_PATH . $target)) {
-    		$target = MODX_BASE_PATH . $target;
-    		$login_tpl = file_get_contents($target);
-    	}
-    	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
-    		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
-    		$login_tpl = file_get_contents($target);
-    	}
-    	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
-    		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
-    		$login_tpl = file_get_contents($target);
-	}
-	else {
-    		$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
-    		$login_tpl = file_get_contents($target);
-    	}
+		$chunk = $modx->getChunk($target);
+		if($chunk!==false && !empty($chunk)) {
+			$login_tpl = $chunk;
+		} elseif(is_file(MODX_BASE_PATH . $target)) {
+			$target = MODX_BASE_PATH . $target;
+			$login_tpl = file_get_contents($target);
+		} elseif(is_file($target)) {
+			$login_tpl = file_get_contents($target);
+		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
+			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
+			$login_tpl = file_get_contents($target);
+		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
+			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
+			$login_tpl = file_get_contents($target);
+		} else {
+			$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
+			$login_tpl = file_get_contents($target);
+		}
 	}
 
-    // merge placeholders
-    $login_tpl = $modx->mergePlaceholderContent($login_tpl);
-    $regx = strpos($login_tpl,'[[+')!==false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
-    $login_tpl = preg_replace($regx, '', $login_tpl); //cleanup
+	// merge placeholders
+	$login_tpl = $modx->mergePlaceholderContent($login_tpl);
+	$regx = strpos($login_tpl,'[[+')!==false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
+	$login_tpl = preg_replace($regx, '', $login_tpl); //cleanup
 
-    echo $login_tpl;
+	echo $login_tpl;
 
-    exit;
+	exit;
 
 } else {
 	// log the user action
@@ -170,15 +165,15 @@ if(!isset($_SESSION['mgrValidated'])){
 	elseif ($cip = getenv("REMOTE_ADDR"))
 		$ip = $cip;
 	else	$ip = "UNKNOWN";
-	
+
 	$_SESSION['ip'] = $ip;
 
-    $itemid = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
-    $lasthittime = time();
-    $action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
+	$itemid = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
+	$lasthittime = time();
+	$action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
 
-    if($action !== 1) {
-			if (!intval($itemid)) $itemid= null;
+	if($action !== 1) {
+		if (!intval($itemid)) $itemid= null;
 		$sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, action, id, ip)
 			VALUES (%d, \'%s\', \'%d\', \'%s\', %s, \'%s\')',
 			$modx->getFullTableName('active_users'), // Table
