@@ -36,7 +36,20 @@ if ($modx->db->getRecordCount($rs) < 1) {
 <p><?php echo $_lang['access_permissions_introtext'];?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : '' ;?>
 
 <div class="tab-pane" id="wuapPane">
-<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById("wuapPane"), true );</script>
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById("wuapPane"), true );
+
+function deletegroup(groupid,type) {
+    if(confirm("<?php echo $_lang['confirm_delete_group']?>")==true) {
+		if (type=='usergroup') {
+			document.location.href="index.php?a=92&usergroup=" + groupid + "&operation=delete_user_group";
+		}
+		else if (type=='documentgroup') {
+			document.location.href="index.php?a=92&documentgroup=" + groupid + "&operation=delete_document_group";
+		}
+    }
+}
+</script>
 
 
 <div class="tab-page" id="tabPage1">
@@ -87,7 +100,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="operation" value="rename_user_group" />'."\n".
 				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'" />&nbsp;'."\n".
-				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&usergroup='.$row['id'].'&operation=delete_user_group\';" />'."\n".
+				'	<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'usergroup\');" />'."\n".
 				'</form>';
 
 				echo "<ul>\n";
@@ -160,7 +173,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
 				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'">'."\n".
-				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
+				'	<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'documentgroup\');" />'."\n".
 				'</form>';
 
 				echo '</td></tr><tr><td class="row2">'.$_lang['access_permissions_resources_in_group'].' ';
