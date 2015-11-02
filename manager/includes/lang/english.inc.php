@@ -858,6 +858,8 @@ $_lang["search_criteria_content"] = 'Search by content';
 $_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'Search by ID';
 $_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
+$_lang["search_criteria_top"] = 'Search in main fields';
+$_lang["search_criteria_top_msg"] = 'ID, Pagetitle, Longtitle, alias';
 $_lang["search_criteria_template_id"] = 'Search by template ID';
 $_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Search by long title';
@@ -1217,6 +1219,8 @@ $_lang["cache_type_1"] = 'Cache is based only on Resource ID (standard)';
 $_lang["cache_type_2"] = 'Cache is based on Resource ID and $_GET parameters';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content (if needed)';
+$_lang["aliaslistingfolder_title"] = 'Use AliasListing only for Folders';
+$_lang["aliaslistingfolder_message"] = 'Reduces memory consumption when a large number of resources';
 
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file in the MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since MODX was installed in a subdirectory, it is necessary to change the content of .htaccess.';
