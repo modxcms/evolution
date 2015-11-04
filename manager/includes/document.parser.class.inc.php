@@ -2485,11 +2485,11 @@ class DocumentParser {
 		if ($type=='full') {
 		include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
 		$sync = new synccache();
-		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
+		$sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
 		$sync->setReport($report);
 		$sync->emptyCache();
 		} else {
-			$files = glob(MODX_BASE_PATH . 'assets/cache/*');
+			$files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
 			$deletedfiles = array();
 			while ($file = array_shift($files)) {
 				$name = preg_replace('/.*[\/\\\]/', '', $file);
@@ -2542,9 +2542,14 @@ class DocumentParser {
 				$alias = $id;
 				$alPath = '';
 				
-				if ($this->config['friendly_alias_urls'] == 1){
-					$al = $this->aliasListing[$id];
-					
+                if ($this->config['friendly_alias_urls'] == 1) {
+
+                    if ($this->config['aliaslistingfolder'] == 1) {
+                        $al= $this->getAliasListing($id);
+                    }else{
+                        $al= $this->aliasListing[$id];
+                    }
+	
 					if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1'){
 						$f_url_suffix = '/';
 					}
@@ -2552,8 +2557,9 @@ class DocumentParser {
 					$alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
 					
 					if ($al && $al['alias']){
-						$alias = $al['alias'];
-					}
+                        $alias = $al['alias'];
+                    }
+
 				}
 				
 				$alias = $alPath.$f_url_prefix.$alias.$f_url_suffix;
@@ -2599,8 +2605,38 @@ class DocumentParser {
 		}
 		
 		return $url;
-	}
-	
+    }
+
+    function getAliasListing($id){
+        if(isset($this->aliasListing[$id])){
+            $out = $this->aliasListing[$id];
+        }else{
+            $q = $this->db->query("SELECT id,alias,isfolder,parent FROM ".$this->getFullTableName("site_content")." WHERE id=".(int)$id);
+            if($this->db->getRecordCount($q)=='1'){
+                $q = $this->db->getRow($q);
+                $this->aliasListing[$id] =  array(
+                    'id' => (int)$q['id'],
+                    'alias' => $q['alias']=='' ? $q['id'] : $q['alias'],
+                    'parent' => (int)$q['parent'],
+                    'isfolder' => (int)$q['isfolder'],
+                );
+                if($this->aliasListing[$id]['parent']>0){
+                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                    //fix alias_path_usage
+                    if ($this->config['use_alias_path'] == '1') {
+                        //&& $tmp['path'] != '' - fix error slash with epty path
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                    } else {
+                        $this->aliasListing[$id]['path'] = '';
+                    }
+                }
+
+                $out = $this->aliasListing[$id];
+            }
+        }
+        return $out;
+    }
+
     /**
      * Returns an entry from the config
      *
