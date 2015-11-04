@@ -3215,15 +3215,25 @@ class DocumentParser {
      * @return string
      */
     function getLoginUserName($context= '') {
-        if (!empty($context) && isset ($_SESSION[$context . 'Validated'])) {
-            return $_SESSION[$context . 'Shortname'];
+        $out = false;
+
+        if(!empty($context)){
+            if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
+                $out = $_SESSION[$context . 'Shortname'];
+            }
+        }else{
+            switch(true){
+                case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
+                    $out = $_SESSION['webShortname'];
+                    break;
+                }
+                case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
+                    $out = $_SESSION['mgrShortname'];
+                    break;
+                }
+            }
         }
-        elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
-            return $_SESSION['webShortname'];
-        }
-        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-            return $_SESSION['mgrShortname'];
-        }
+        return $out;
     }
 
    /**
