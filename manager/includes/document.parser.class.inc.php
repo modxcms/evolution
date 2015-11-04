@@ -246,9 +246,12 @@ class DocumentParser {
     /**
      * Redirect to the error page, by calling sendForward(). This is called for example when the page was not found.
      */
-    function sendErrorPage() {
-        // invoke OnPageNotFound event
-        $this->invokeEvent('OnPageNotFound');
+    function sendErrorPage($noEvent = false) {
+		$this->systemCacheKey = 'notfound';
+		if(!$noEvent) {
+			// invoke OnPageNotFound event
+			$this->invokeEvent('OnPageNotFound');
+		}
            $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
            $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         exit();
