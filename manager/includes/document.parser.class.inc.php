@@ -1892,8 +1892,13 @@ class DocumentParser {
         $parents= array ();
         while ( $id && $height-- ) {
             $thisid = $id;
-            $id = $this->aliasListing[$id]['parent'];
-            if (!$id) break;
+            if ($this->config['aliaslistingfolder'] == 1) {
+                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->db->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                if (!$id || $id == '0') break;
+            } else {
+                $id = $this->aliasListing[$id]['parent'];
+                if (!$id) break;
+            }
             $parents[$thisid] = $id;
         }
         return $parents;
