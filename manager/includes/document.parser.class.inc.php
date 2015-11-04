@@ -2671,9 +2671,22 @@ class DocumentParser {
      * @param string $chunkName
      * @return boolean|string
      */
-    function getChunk($chunkName) {
-        return isset($this->chunkCache[$chunkName]) ? $this->chunkCache[$chunkName] : null;
-    }
+	function getChunk($chunkName) {
+		$out = null;
+		if(empty($chunkName)) return $out;
+		if (isset ($this->chunkCache[$chunkName])) {
+			$out = $this->chunkCache[$chunkName];
+		} else {
+			$sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($chunkName) . "';";
+			$result= $this->db->query($sql);
+			$limit= $this->db->getRecordCount($result);
+			if ($limit == 1) {
+				$row= $this->db->getRow($result);
+				$out = $this->chunkCache[$chunkName]= $row['snippet'];
+			}
+		}
+		return $out;
+	}
 	
     /**
      * parseText
