@@ -3149,7 +3149,7 @@ class DocumentParser {
      */
     function getCachePath() {
         global $base_url;
-        $pth= $base_url . 'assets/cache/';
+        $pth= $base_url . $this->getCacheFolder();
         return $pth;
     }
 
@@ -3196,16 +3196,26 @@ class DocumentParser {
      * @param string $context. Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
      * @return string
      */
-    function getLoginUserID($context= '') {
-        if ($context && isset ($_SESSION[$context . 'Validated'])) {
-            return $_SESSION[$context . 'InternalKey'];
+    public function getLoginUserID($context= '') {
+        $out = false;
+
+        if(!empty($context)){
+            if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
+                $out = $_SESSION[$context . 'InternalKey'];
+            }
+        }else{
+    		switch(true){
+    			case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
+    				$out = $_SESSION['webInternalKey'];
+    				break;
+    			}
+    			case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
+    				$out = $_SESSION['mgrInternalKey'];
+    				break;
+    			}
+    		}
         }
-        elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
-            return $_SESSION['webInternalKey'];
-        }
-        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-            return $_SESSION['mgrInternalKey'];
-        }
+		return $out;
     }
 
     /**
