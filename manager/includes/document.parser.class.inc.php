@@ -283,18 +283,18 @@ class DocumentParser {
         $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
         $tbl_user_settings     = $this->getFullTableName('user_settings');
         if (!is_array($this->config) || empty ($this->config)) {
-            if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
-                $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
+            if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
             }
             if (!$included || !is_array($this->config) || empty ($this->config)) {
                 include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
-                $cache->setCachepath(MODX_BASE_PATH . "assets/cache/");
+                $cache->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
                 $cache->setReport(false);
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
-                if($rebuilt && $included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
-                    $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
+                if($rebuilt && $included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                    $included= include MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -508,7 +508,33 @@ class DocumentParser {
             return $q;
         }
     }
-
+	
+	public function getCacheFolder(){
+		return "assets/cache/";
+	}
+	public function getHashFile($key){
+		return $this->getCacheFolder()."docid_" . $key . ".pageCache.php";
+	}
+	public function makePageCacheKey($id){
+		$hash = $id;
+		$tmp = null;
+		$params = array();
+		if(!empty($this->systemCacheKey)){
+			$hash = $this->systemCacheKey;
+		}else {
+			if (!empty($_GET)) {
+				// Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+				$params = $_GET;
+				ksort($params);
+				$hash .= '_'.md5(http_build_query($params));
+			}
+		}
+		$evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$tmp = array_pop($evtOut);
+		}
+		return empty($tmp) ? $hash : $tmp;
+	}
     /**
      * Check the cache for a specific document/resource
      *
