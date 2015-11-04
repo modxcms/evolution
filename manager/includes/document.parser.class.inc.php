@@ -2034,7 +2034,7 @@ class DocumentParser {
 		}
     }
 
-    function sendmail($params=array(), $msg='')
+    function sendmail($params=array(), $msg='', $files = array())
     {
         if(isset($params) && is_string($params))
         {
@@ -2111,6 +2111,12 @@ class DocumentParser {
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body     = $p['body'];
         if (isset($p['type']) && $p['type'] == 'text') $this->mail->IsHTML(false);
+		if(!is_array($files)) $files = array();
+		foreach($files as $f){
+			if(file_exists(MODX_BASE_PATH.$f) && is_file(MODX_BASE_PATH.$f) && is_readable(MODX_BASE_PATH.$f)){
+				$this->mail->AddAttachment(MODX_BASE_PATH.$f);
+			}
+		}
         $rs = $this->mail->send();
         return $rs;
     }
