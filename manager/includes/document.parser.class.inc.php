@@ -1420,6 +1420,24 @@ class DocumentParser {
 				$aliases[$val] = $key;
 				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
+
+            if ($this->config['aliaslistingfolder'] == 1) {
+                preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
+                $ids = implode(',', array_unique($match['1']));
+                if ($ids) {
+                    $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
+                    while( $row = $this->db->getRow( $res ) ) {
+                        if ($this->config['use_alias_path'] == '1') {
+                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                        } else {
+                            $aliases[$row['id']] = $row['alias'];
+                        }
+                        $isfolder[$row['id']] = '0';
+
+                    }
+                }
+            }
+
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
