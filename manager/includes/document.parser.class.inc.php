@@ -257,10 +257,13 @@ class DocumentParser {
         exit();
     }
 
-    function sendUnauthorizedPage() {
+    function sendUnauthorizedPage($noEvent = false) {
         // invoke OnPageUnauthorized event
         $_REQUEST['refurl'] = $this->documentIdentifier;
-        $this->invokeEvent('OnPageUnauthorized');
+		$this->systemCacheKey = 'unauth';
+		if(!$noEvent) {
+			$this->invokeEvent('OnPageUnauthorized');
+		}
         if ($this->config['unauthorized_page']) {
             $unauthorizedPage= $this->config['unauthorized_page'];
         } elseif ($this->config['error_page']) {
