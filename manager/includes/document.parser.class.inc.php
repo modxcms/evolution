@@ -539,22 +539,16 @@ class DocumentParser {
      * Check the cache for a specific document/resource
      *
      * @param int $id
+	 * @param bool $loading
      * @return string
      */
-    function checkCache($id) {
+    function checkCache($id, $loading = false) {
         $tbl_document_groups= $this->getFullTableName("document_groups");
-        if ($this->config['cache_type'] == 2) {
-           $md5_hash = '';
-           if (!empty($_GET)) {
-	           // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-	           $params = $_GET;
-	           ksort($params);
-	           $md5_hash = '_' . md5(http_build_query($params));
-           }
-           $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
-        }else{
-           $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
-        }
+        $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($id) : $id;
+		$cacheFile = $this->getHashFile($key);
+		if($loading){
+			$this->cacheKey = $key;
+		}
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;
             $flContent = file_get_contents($cacheFile, false);
@@ -810,18 +804,6 @@ class DocumentParser {
         if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
-            if ($this->config['cache_type'] == 2) {
-                $md5_hash = '';
-                if (!empty($_GET)) {
-	                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-	                $params = $_GET;
-	                ksort($params);
-	                $md5_hash = '_' . md5(http_build_query($params));
-                }
-                $pageCache = $md5_hash .".pageCache.php";
-            }else{
-                $pageCache = ".pageCache.php";
-            }
 
             if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen(MODX_BASE_PATH.$this->getHashFile($this->cacheKey), "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
