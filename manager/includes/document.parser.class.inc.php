@@ -770,15 +770,16 @@ class DocumentParser {
 			header("Last-Modified: {$last_modified}");
 			header("ETag: '{$etag}'");
 		}
-    }
-    
+	}
+
     /**
      * Checks the publish state of page
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
-        @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
-        $timeNow= time() + $this->config['server_offset_time'];
+        @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
+		$this->recentUpdate = $recent_update;
+        $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
             $this->db->update(
