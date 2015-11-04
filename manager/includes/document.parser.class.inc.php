@@ -2002,27 +2002,37 @@ class DocumentParser {
      */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
-	if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
-		$esc_source = mb_substr($source, 0, 50 , "UTF-8");
-	} else {
-		$esc_source = substr($source, 0, 50);
-	}
+		if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
+			$esc_source = mb_substr($source, 0, 50 , "UTF-8");
+		} else {
+			$esc_source = substr($source, 0, 50);
+		}
         $esc_source= $this->db->escape($esc_source);
-	$LoginUserID = $this->getLoginUserID();
-	if ($LoginUserID == '') $LoginUserID = 0;
+
+		$LoginUserID = $this->getLoginUserID();
+		if ($LoginUserID == '') $LoginUserID = 0;
+
+		$usertype = $this->isFrontend() ? 1 : 0;
         $evtid= intval($evtid);
 		$type = intval($type);
-		if ($type < 1) $type= 1; // Types: 1 = information, 2 = warning, 3 = error
-		if (3 < $type) $type= 3;
-	$this->db->insert(
-		array(
-			'eventid'     => $evtid,
-			'type'        => $type,
-			'createdon'   => time() + $this->config['server_offset_time'],
-			'source'      => $esc_source,
+
+		// Types: 1 = information, 2 = warning, 3 = error
+		if ($type < 1) {
+			$type= 1;
+		} elseif ($type > 3) {
+			$type= 3;
+		}
+
+		$this->db->insert(array(
+			'eventid' => $evtid,
+			'type' =>$type,
+			'createdon' => time() + $this->config['server_offset_time'],
+			'source' => $esc_source,
 			'description' => $msg,
-			'user'        => $LoginUserID,
-		), $this->getFullTableName('event_log'));
+			'user' => $LoginUserID,
+			'usertype' => $usertype
+		), $this->getFullTableName("event_log"));
+
 		if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
 			if ($this->config['send_errormail'] <= $type) {
 				$this->sendmail(array(
