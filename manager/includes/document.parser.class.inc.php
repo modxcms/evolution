@@ -2723,6 +2723,43 @@ class DocumentParser {
 	}
     
     /**
+     * getTpl
+     * get template for snippets
+     * @param $tpl {string}
+     *
+     * @return {string}
+     */
+    function getTpl($tpl){
+        $template = $tpl;
+        if (preg_match("~^@([^:\s]+)[:\s]+(.+)$~", $tpl, $match)) {
+            $command = strtoupper($match[1]);
+            $template = $match[2];
+        }
+        switch ($command) {
+            case 'CODE': 
+                break;
+            case 'FILE': 
+                $template=file_get_contents(MODX_BASE_PATH . $template); 
+                break;
+            case 'CHUNK': 
+                $template = $this->getChunk($template); 
+                break;
+            case 'DOCUMENT': 
+                $doc = $this->getDocument($template, 'content', 'all'); 
+                $template = $doc['content']; 
+                break;
+            case 'SELECT': 
+                $this->db->getValue($this->db->query("SELECT {$template}")); 
+                break;
+            default:
+                if (!($template = $this->getChunk($tpl))) {
+                    $template = $tpl;
+                }
+        }
+        return $template;
+    }
+ 
+    /**
      * Returns the timestamp in the date format defined in $this->config['datetime_format']
      *
      * @param int $timestamp Default: 0
