@@ -57,31 +57,28 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		}
 	});
 
-	function hideTreeFrame() {
-		userDefinedFrameWidth = parent.document.getElementsByTagName("FRAMESET").item(1).cols;
-		currentFrameState = 'closed';
-		try {
-			var elm = $('tocText');
-			if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']?>' alt='<?php echo $_lang['show_tree']?>' width='16' height='16' /></a>";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo (!$modx_textdir ? '0,*' : '*,0')?>';
-			top.__hideTree = true;
-		} catch(oException) {
-			x=window.setTimeout('hideTreeFrame()', 1000);
-		}
-	}
 
-	function defaultTreeFrame() {
-		userDefinedFrameWidth = defaultFrameWidth;
-		currentFrameState = 'open';
-		try {
-			var elm = $('tocText');
-			if(elm) elm.innerHTML = "";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = defaultFrameWidth;
-			top.__hideTree = false;
-		} catch(oException) {
-			z=window.setTimeout('defaultTreeFrame()', 1000);
-		}
-	}
+    function setTreeFrameWidth(pos) {
+        parent.document.getElementById('tree').style.width    = pos + 'px';
+        parent.document.getElementById('resizer').style.left = pos + 'px';
+        parent.document.getElementById('main').style.left    = pos + 'px';
+
+    }
+
+    function toggleTreeFrame() {
+        var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:250;
+        setTreeFrameWidth(pos);
+    }
+
+    function hideTreeFrame() {
+        var pos = 0;
+        setTreeFrameWidth(pos);
+    }
+
+    function defaultTreeFrame() {
+        var pos = 250;
+        setTreeFrameWidth(pos);
+    }
 
 	// TREE FUNCTIONS - Expand/ Collapse
 	// These functions affect the expanded/collapsed state of the tree and any items that may be pointing to it
