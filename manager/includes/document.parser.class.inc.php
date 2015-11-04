@@ -1722,6 +1722,7 @@ class DocumentParser {
         // check site settings
         if (!$this->checkSiteStatus()) {
             header('HTTP/1.0 503 Service Unavailable');
+			$this->systemCacheKey = 'unavailable';
             if (!$this->config['site_unavailable_page']) {
                 // display offline message
                 $this->documentContent= $this->config['site_unavailable_message'];
@@ -1755,13 +1756,42 @@ class DocumentParser {
                     $this->documentIdentifier= $this->documentListing[$alias];
                 } else {
 					//@TODO: check new $alias;
-                    $this->sendErrorPage();
+                    if ($this->config['aliaslistingfolder'] == 1) {
+                        $tbl_site_content = $this->getFullTableName('site_content');
+                        $alias = $this->db->escape($_GET['q']);
+
+                        $parentAlias = dirname($alias);
+                        $parentId = $this->getIdFromAlias($parentAlias);
+                        $parentId = ($parentId > 0) ? $parentId : '0';
+
+                        $docAlias = basename($alias, $this->config['friendly_url_suffix']);
+
+                        $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
+                        if($this->db->getRecordCount($rs)==0)
+                        {
+                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
+                        }
+                        $docId = $this->db->getValue($rs);
+
+                        if ($docId > 0)
+                        {
+                            $this->documentIdentifier = $docId;
+                        }else{
+                            $this->sendErrorPage();
+                        }
+                    }else{
+                        $this->sendErrorPage();
+                    }
+
                 }
             } else {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
 				} else {
-					$this->documentIdentifier = (int) $this->documentIdentifier;
+					$alias = $this->db->escape($_GET['q']);
+					$docAlias = basename($alias, $this->config['friendly_url_suffix']);
+					$rs  = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+					$this->documentIdentifier = (int) $this->db->getValue($rs);
 				}
             }
             $this->documentMethod= 'id';
@@ -1789,7 +1819,7 @@ class DocumentParser {
      */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
-        $this->documentContent= $this->checkCache($this->documentIdentifier);
+        $this->documentContent= $this->checkCache($this->documentIdentifier, true);
         if ($this->documentContent != "") {
             // invoke OnLoadWebPageCache  event
             $this->invokeEvent("OnLoadWebPageCache");
@@ -1873,8 +1903,9 @@ class DocumentParser {
 		if($this->documentIdentifier==$this->config['error_page'] &&  $this->config['error_page']!=$this->config['site_start']){
 			header('HTTP/1.0 404 Not Found');
 		}
+
         register_shutdown_function(array (
-            & $this,
+            &$this,
             "postProcess"
         )); // tell PHP to call postProcess when it shuts down
         $this->outputContent();
