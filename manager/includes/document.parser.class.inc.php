@@ -2646,21 +2646,24 @@ class DocumentParser {
      */
     function runSnippet($snippetName, $params= array ()) {
         if (isset ($this->snippetCache[$snippetName])) {
-            $snippet= $this->snippetCache[$snippetName];
-            $properties= $this->snippetCache[$snippetName . "Props"];
+            $snippet = $this->snippetCache[$snippetName];
+            $properties = $this->snippetCache[$snippetName . "Props"];
         } else { // not in cache so let's check the db
-            $result= $this->db->select('name, snippet, properties', $this->getFullTableName("site_snippets"), "name='" . $this->db->escape($snippetName) . "'");
-            if ($row= $this->db->getRow($result)) {
-                $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
-                $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
-            } else {
-                $snippet= $this->snippetCache[$snippetName]= "return false;";
-                $properties= '';
-            }
+			$sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "';";
+			$result = $this->db->query($sql);
+			if ($this->db->getRecordCount($result) == 1) {
+				$row = $this->db->getRow($result);
+				$snippet =  $this->snippetCache[$snippetName]= $row['snippet'];
+				$properties = $this->snippetCache[$snippetName . "Props"]= $row['properties']." ".$row['sharedproperties'];
+			} else {
+				$snippet = $this->snippetCache[$snippetName]= "return false;";
+				$properties = $this->snippetCache[$snippetName . "Props"]= '';
+			}
         }
         // load default params/properties
-        $parameters= $this->parseProperties($properties);
-        $parameters= array_merge($parameters, $params);
+        $parameters = $this->parseProperties($properties, $snippetName, 'snippet');
+        $parameters = array_merge($parameters, $params);
+
         // run snippet
         return $this->evalSnippet($snippet, $parameters);
     }
