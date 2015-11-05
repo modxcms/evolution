@@ -39,9 +39,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/plain' => $_style["tree_page"],
         'text/xml' => $_style["tree_page_xml"],
         'text/javascript' => $_style["tree_page_js"],
-    'image/gif' => isset($_style["tree_page_gif"]) ? $_style["tree_page_gif"] : $_style["tree_page"],
-    'image/jpg' => isset($_style["tree_page_jpg"]) ? $_style["tree_page_jpg"] :  $_style["tree_page"],
-    'image/png' => isset($_style["tree_page_png"]) ? $_style["tree_page_png"] : $_style["tree_page"]
+        'image/gif' => isset($_style["tree_page_gif"]) ? $_style["tree_page_gif"] : $_style["tree_page"],
+        'image/jpg' => isset($_style["tree_page_jpg"]) ? $_style["tree_page_jpg"] :  $_style["tree_page"],
+        'image/png' => isset($_style["tree_page_png"]) ? $_style["tree_page_png"] : $_style["tree_page"]
     );
     $iconsPrivate = array(
         'application/rss+xml' => $_style["tree_page_rss_secure"],
@@ -53,9 +53,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/plain' => $_style["tree_page_secure"],
         'text/xml' => $_style["tree_page_xml_secure"],
         'text/javascript' => $_style["tree_page_js_secure"],
-    'image/gif' => isset($_style["tree_page_gif_secure"]) ? $_style["tree_page_gif_secure"] : $_style["tree_page_secure"],
-    'image/jpg' => isset($_style["tree_page_jpg_secure"]) ? $_style["tree_page_jpg_secure"] : $_style["tree_page_secure"],
-    'image/png' => isset($_style["tree_page_png_secure"]) ? $_style["tree_page_png_secure"] : $_style["tree_page_secure"]
+        'image/gif' => isset($_style["tree_page_gif_secure"]) ? $_style["tree_page_gif_secure"] : $_style["tree_page_secure"],
+        'image/jpg' => isset($_style["tree_page_jpg_secure"]) ? $_style["tree_page_jpg_secure"] : $_style["tree_page_secure"],
+        'image/png' => isset($_style["tree_page_png_secure"]) ? $_style["tree_page_png_secure"] : $_style["tree_page_secure"]
     );
 
     if (isset($_SESSION['openedArray'])) {
@@ -102,7 +102,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');
         // get document groups for current user
-    $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
+        $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
         $showProtected= false;
         if (isset ($modx->config['tree_show_protected'])) {
             $showProtected= (boolean) $modx->config['tree_show_protected'];
@@ -208,8 +208,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                     elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
                     elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
                     elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
-                    $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;"><div>'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
-                    $node .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div></div>';               }
+                    $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
+                    $node .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
                 }
                 else {
                     // expandAll: two type for partial expansion
@@ -218,15 +218,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                         if ($expandAll == 1) {
                            array_push($opened2, $id);
                         }
-                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;"><div>'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div><div id="c' .$id.'" style="display:block;">';                        $output .= $node;
+                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.','.$expandAll.','. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
+                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
                         $output .= $node;
                         makeHTML($indent+1,$id,$expandAll,$theme);
                         $node = '</div></div>';
                     }
                     else {
-                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;"><div>'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_plusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div><div id="c' .$id.'" style="display:none;"></div></div>';                       array_push($closed2, $id);
+                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_plusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.','.$expandAll.','. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
+                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:none"></div></div>';
                         array_push($closed2, $id);
                     }
                 }
