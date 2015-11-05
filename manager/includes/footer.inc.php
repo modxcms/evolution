@@ -9,7 +9,7 @@ if (count($SystemAlertMsgQueque)>0) {
 	<script type='text/javascript'>      
         document.body.addEventListener('keydown', function (e) {
             if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey)) {
-                documentDirty=false; document.mutate.save.click();
+                document.getElementById( 'Button1' ).getElementsByTagName( 'a' )[0].click();
                 e.preventDefault();
             }
         });
