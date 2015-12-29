@@ -1420,21 +1420,21 @@ class DocumentParser {
                 }
             }
 
-            $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
-            $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
-            $pref= $this->config['friendly_url_prefix'];
-            $suff= $this->config['friendly_url_suffix'];
-            $thealias= '$aliases[\\1]';
-            $thefolder= '$isfolder[\\1]';
-            if ($this->config['seostrict']=='1'){
-			
-               $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
-            }else{
-               $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
-            }
-            $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
-            $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
-            $documentSource= preg_replace($in, $out, $documentSource);
+            $in= '!\[\~([0-9]+)\~\]!is';
+            $documentSource = preg_replace_callback($in, function($m) use($aliases,$isfolder) {
+                $isfriendly = ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
+                $pref = $this->config['friendly_url_prefix'];
+                $suff = $this->config['friendly_url_suffix'];
+                $thealias = $aliases[$m[1]];
+                $thefolder = $isfolder[$m[1]];
+                $not_found_friendlyurl = $this->makeFriendlyURL($pref,$suff,$m[1]); 
+                if($this->config['seostrict']=='1'){
+                    $found_friendlyurl =  $this->toAlias($this->makeFriendlyURL($pref,$suff,$thealias,$thefolder,$m[1]));
+                }else {
+                    $found_friendlyurl = $this->makeFriendlyURL($pref,$suff,$thealias,$thefolder,$m[1]);
+                }
+                return ($isfriendly && isset($thealias) ? $found_friendlyurl : $not_found_friendlyurl);
+            } , $documentSource);
 			
         } else {
             $in= '!\[\~([0-9]+)\~\]!is';
