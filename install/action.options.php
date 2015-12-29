@@ -19,12 +19,12 @@ if ($installMode == 0 || $installMode == 2) {
 elseif ($installMode == 1) {
     include "../".MGR_DIR."/includes/config.inc.php";
 
-    if (@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-        if (@ mysql_query("USE {$dbase}")) {
-            if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-                $rs = @ mysql_query("show session variables like 'collation_server'");
+    if (@ $conn = mysqli_connect($database_server, $database_user, $database_password)) {
+        if (@ mysqli_query($conn, "USE {$dbase}")) {
+            if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
+                $rs = mysqli_query($conn, "show session variables like 'collation_server'");
             }
-            if ($rs && $collation = mysql_fetch_row($rs)) {
+            if ($rs && $collation = mysqli_fetch_row($rs)) {
                 $database_collation = trim($collation[1]);
             }
         }
@@ -39,7 +39,7 @@ elseif ($installMode == 1) {
 
     if (!isset ($database_connection_method) || empty ($database_connection_method)) {
         $database_connection_method = 'SET CHARACTER SET';
-        if (function_exists('mysql_set_charset')) mysql_set_charset($database_connection_charset);
+        if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_connection_charset);
     }
     if ($database_connection_method != 'SET NAMES' && $database_connection_charset != $database_charset) {
         $database_connection_method = 'SET NAMES';

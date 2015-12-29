@@ -136,24 +136,24 @@ if ($installMode == 1) {
     $table_prefix = $_POST['tableprefix'];
 }
 echo "<p>".$_lang['creating_database_connection'];
-if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
+if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
     $errors += 1;
     echo "<span class=\"notok\">".$_lang['database_connection_failed']."</span><p />".$_lang['database_connection_failed_note']."</p>";
 } else {
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // make sure we can use the database
-if ($installMode > 0 && !@ mysql_query("USE {$dbase}")) {
+if ($installMode > 0 && !mysqli_query($conn, "USE {$dbase}")) {
     $errors += 1;
     echo "<span class=\"notok\">".$_lang['database_use_failed']."</span><p />".$_lang["database_use_failed_note"]."</p>";
 }
 
 // check the database collation if not specified in the configuration
 if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
-    if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-        $rs = @ mysql_query("show session variables like 'collation_server'");
+    if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
+        $rs = mysqli_query($conn, "show session variables like 'collation_server'");
     }
-    if ($rs && $collation = mysql_fetch_row($rs)) {
+    if ($rs && $collation = mysqli_fetch_row($rs)) {
         $database_collation = $collation[1];
     }
     if (empty ($database_collation)) {
@@ -171,7 +171,7 @@ if (!isset($database_connection_method) || empty($database_connection_method)) {
 // check table prefix
 if ($conn && $installMode == 0) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
-    if ($rs= @ mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+    if ($rs= mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
         echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_already_inuse'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
@@ -180,7 +180,7 @@ if ($conn && $installMode == 0) {
     }
 } elseif ($conn && $installMode == 2) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
-    if (!$rs = @ mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+    if (!$rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
         echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_not_exist'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_not_exist_note'] . "</p>";
@@ -192,20 +192,20 @@ if ($conn && $installMode == 0) {
 // check mysql version
 if ($conn) {
     echo "<p>" . $_lang['checking_mysql_version'];
-    if ( version_compare(mysql_get_server_info(), '5.0.51', '=') ) {
+    if ( version_compare(mysqli_get_server_info($conn), '5.0.51', '=') ) {
         echo "<span class=\"notok\">"  . $_lang['warning'] . "</span></b>&nbsp;&nbsp;<strong>". $_lang['mysql_5051'] . "</strong></p>";
         echo "<p><span class=\"notok\">" . $_lang['mysql_5051_warning'] . "</span></p>";
     } else {
-        echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysql_get_server_info() . "</strong></p>";
+        echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysqli_get_server_info($conn) . "</strong></p>";
     }
 }
 
 // check for strict mode
 if ($conn) {
     echo "<p>". $_lang['checking_mysql_strict_mode'];
-    $mysqlmode = @ mysql_query("SELECT @@global.sql_mode");
-    if (@mysql_num_rows($mysqlmode) > 0){
-        $modes = mysql_fetch_array($mysqlmode, MYSQL_NUM);
+    $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
+    if (mysqli_num_rows($mysqlmode) > 0){
+        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
         //$modes = array("STRICT_TRANS_TABLES"); // for testing
         // print_r($modes);
         foreach ($modes as $mode) {
