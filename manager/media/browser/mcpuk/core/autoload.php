@@ -55,18 +55,29 @@ if (ini_get("safe_mode"))
 
 
 // MAGIC AUTOLOAD CLASSES FUNCTION
-function __autoload($class) {
-    if ($class == "uploader")
-        require "core/uploader.php";
-    elseif ($class == "browser")
-        require "core/browser.php";
-    elseif (file_exists("core/types/$class.php"))
-        require "core/types/$class.php";
-    elseif (file_exists("lib/class_$class.php"))
-        require "lib/class_$class.php";
-    elseif (file_exists("lib/helper_$class.php"))
-        require "lib/helper_$class.php";
+function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
+    static $classes = null;
+    if ($classes === null) {
+        $classes = array(
+            'browser' => '/browser.php',
+            'dir' => '/../lib/helper_dir.php',
+            'file' => '/../lib/helper_file.php',
+            'gd' => '/../lib/class_gd.php',
+            'httpCache' => '/../lib/helper_httpCache.php',
+            'input' => '/../lib/class_input.php',
+            'path' => '/../lib/helper_path.php',
+            'text' => '/../lib/helper_text.php',
+            'type_img' => '/types/type_img.php',
+            'type_mime' => '/types/type_mime.php',
+            'uploader' => '/uploader.php',
+            'zipFolder' => '/../lib/class_zipFolder.php'
+        );
+    }
+    if (isset($classes[$class])) {
+        require dirname(__FILE__) . $classes[$class];
+    }
 }
+spl_autoload_register('autoloadda9d06472ccb71b84928677ce2a6ca89', true);
 
 
 // json_encode() IMPLEMENTATION IF JSON EXTENSION IS MISSING
