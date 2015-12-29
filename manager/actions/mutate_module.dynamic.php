@@ -1,6 +1,5 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 switch ((int) $_REQUEST['a']) {
     case 107:
         if(!$modx->hasPermission('new_module')) {
@@ -15,9 +14,7 @@ switch ((int) $_REQUEST['a']) {
     default:
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
-
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_membergroup_names  = $modx->getFullTableName('membergroup_names');
@@ -30,7 +27,6 @@ $tbl_site_plugins       = $modx->getFullTableName('site_plugins');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 $tbl_site_templates     = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvars      = $modx->getFullTableName('site_tmplvars');
-
 // create globally unique identifiers (guid)
 function createGUID(){
     srand((double)microtime()*1000000);
@@ -39,14 +35,12 @@ function createGUID(){
     $m = md5 ($u);
     return $m;
 }
-
 // Check to see the editor isn't locked
 $rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
     if ($username = $modx->db->getValue($rs)) {
             $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['module']));
     }
 // end check for lock
-
 if (isset($_GET['id'])) {
     $rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
     $content = $modx->db->getRow($rs);
@@ -61,11 +55,9 @@ if (isset($_GET['id'])) {
     $_SESSION['itemname'] = $_lang["new_module"];
     $content['wrap'] = '1';
 }
-
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
-
 ?>
 <script type="text/javascript">
 function loadDependencies() {
@@ -83,106 +75,101 @@ function duplicaterecord() {
         document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=111";
     }
 }
-
 function deletedocument() {
     if(confirm("<?php echo $_lang['confirm_delete_module']?>")==true) {
         documentDirty=false;
         document.location.href="index.php?id=" + document.mutate.id.value + "&a=110";
     }
 }
-
 function setTextWrap(ctrl,b) {
     if(!ctrl) return;
     ctrl.wrap = (b)? "soft":"off";
 }
-
 // Current Params
 var currentParams = {};
-
 function showParameters(ctrl) {
     var c,p,df,cp;
     var ar,desc,value,key,dt;
-
     currentParams = {}; // reset;
-
     if (ctrl) {
         f = ctrl.form;
     } else {
         f= document.forms['mutate'];
         if(!f) return;
     }
-
     // setup parameters
     tr = (document.getElementById) ? document.getElementById('displayparamrow'):document.all['displayparamrow'];
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter'];?></td><td width="50%"><?php echo $_lang['value'];?></td></tr></thead>';
+        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
-            key = ar[0];     // param
+            key = ar[0];        // param
             ar = (ar[1]+'').split(";");
-            desc = ar[0];   // description
-            dt = ar[1];     // data type
+            desc = ar[0];	// description
+            dt = ar[1];		// data type
             value = decode((ar[2])? ar[2]:'');
-
             // store values for later retrieval
-            if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
-
             if (dt) {
                 switch(dt) {
-                    case 'int':
-                        c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
-                        break;
-                    case 'menu':
-                        value = ar[3];
-                        c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                        ls = (ar[2]+'').split(",");
-                        if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                        for(i=0;i<ls.length;i++) {
-                            c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
-                        }
-                        c += '</select>';
-                        break;
-                    case 'list':
-                        value = ar[3];
-                        ls = (ar[2]+'').split(",");
-                        if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                        c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                        for(i=0;i<ls.length;i++) {
-                            c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
-                        }
-                        c += '</select>';
-                        break;
-                    case 'list-multi':
-                        value = (ar[3]+'').replace(/^\s|\s$/,"");
-                        arrValue = value.split(",")
-                            ls = (ar[2]+'').split(",");
-                        if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                        c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                        for(i=0;i<ls.length;i++) {
-                            if(arrValue.length) {
-                                for(j=0;j<arrValue.length;j++) {
-                                    if(ls[i]==arrValue[j]) {
-                                        c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
-                                    } else {
-                                        c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
-                                    }
+                case 'int':
+                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
+                    break;
+                case 'menu':
+                    value = ar[3];
+                    c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                    ls = (ar[2]+'').split(",");
+                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+                    for(i=0;i<ls.length;i++){
+                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
+                    }
+                    c += '</select>';
+                    break;
+                case 'list':
+                    value = ar[3];
+                    ls = (ar[2]+'').split(",");
+                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+                    c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                    for(i=0;i<ls.length;i++){
+                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
+                    }
+                    c += '</select>';
+                    break;
+                case 'list-multi':
+                    value = typeof ar[3] !== 'undefined' ? (ar[3]+'').replace(/^\s|\s$/,"") : '';
+                    arrValue = value.split(",");
+                    ls = (ar[2]+'').split(",");
+                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+                    c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                    for(i=0;i<ls.length;i++){
+                        if(arrValue.length){
+                            var found = false;
+                            for(j=0;j<arrValue.length;j++){
+                                if (ls[i] == arrValue[j]) {
+                                    found = true;
                                 }
-                            } else {
+                            }
+                            if(found == true){
+                                c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
+                            }else{
                                 c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
                             }
+                        }else{
+                            c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
                         }
-                        c += '</select>';
-                        break;
-                    case 'textarea':
-                        c = '<textarea class="phptextarea" name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
-                        break;
-                    default:  // string
-                        c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
-                        break;
+                    }
+                    c += '</select>';
+                    break;
+                case 'textarea':
+                    c = '<textarea class="phptextarea" name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
+                    break;
+                default:  // string
+                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
+                    break;
 
                 }
                 t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'</td><td bgcolor="#FFFFFF" width="50%">'+c+'</td></tr>';
@@ -195,7 +182,6 @@ function showParameters(ctrl) {
     }
     implodeParameters();
 }
-
 function setParameter(key,dt,ctrl) {
     var v;
     if(!ctrl) return null;
@@ -235,7 +221,6 @@ function setParameter(key,dt,ctrl) {
     currentParams[key][2] = v;
     implodeParameters();
 }
-
 // implode parameters
 function implodeParameters() {
     var v, p, s='';
@@ -243,46 +228,39 @@ function implodeParameters() {
         if(currentParams[p]) {
             v = currentParams[p].join(";");
             if(s && v) s+=' ';
-            if(v) s += '&'+p+'='+ v;
+            if(v) s += '&'+p+'='+ encode(v);
         }
     }
     document.forms['mutate'].properties.value = s;
 }
-
 function encode(s) {
     s=s+'';
     s = s.replace(/\=/g,'%3D'); // =
     s = s.replace(/\&/g,'%26'); // &
     return s;
 }
-
 function decode(s) {
     s=s+'';
     s = s.replace(/\%3D/g,'='); // =
     s = s.replace(/\%26/g,'&'); // &
     return s;
 }
-
 // Resource browser
 function OpenServerBrowser(url, width, height ) {
     var iLeft = (screen.width  - width) / 2 ;
     var iTop  = (screen.height - height) / 2 ;
-
     var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
     sOptions += ",width=" + width ;
     sOptions += ",height=" + height ;
     sOptions += ",left=" + iLeft ;
     sOptions += ",top=" + iTop ;
-
     var oWindow = window.open( url, "FCKBrowseWindow", sOptions ) ;
 }
-
 function BrowseServer() {
     var w = screen.width * 0.7;
     var h = screen.height * 0.7;
     OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.php?Type=images", w, h);
 }
-
 function SetUrl(url, width, height, alt) {
     document.mutate.icon.value = url;
 }
@@ -358,7 +336,6 @@ function SetUrl(url, width, height, alt) {
         </div>
     <!-- PHP text editor end -->
     </div>
-
     <!-- Configuration -->
     <div class="tab-page" id="tabConfig">
         <h2 class="tab"><?php echo $_lang['settings_config']?></h2>
@@ -370,18 +347,16 @@ function SetUrl(url, width, height, alt) {
             <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
                 <td align="left" valign="top"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
             <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
-                <td align="left" valign="top"><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;" /><input type="button" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
+                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br /><input type="button" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
             <tr id="displayparamrow"><td valign="top" align="left">&nbsp;</td>
                 <td align="left" id="displayparams">&nbsp;</td></tr>
         </table>
     </div>
-
 <?php if ($_REQUEST['a'] == '108'): ?>
     <!-- Dependencies -->
     <div class="tab-page" id="tabDepend">
     <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
-
     <table width="95%" border="0" cellspacing="0" cellpadding="0">
     <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
         <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
