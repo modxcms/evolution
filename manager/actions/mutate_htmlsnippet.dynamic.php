@@ -43,6 +43,10 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
     $_SESSION['itemname'] = $_lang["new_htmlsnippet"];
 }
 
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 if (isset($_POST['which_editor']))
         $which_editor = $_POST['which_editor'];
 else    $which_editor = 'none';

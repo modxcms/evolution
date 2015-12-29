@@ -24,6 +24,7 @@ $_lang["ef_failed_upload"] = "Incorrect file type.";
 $_lang["ef_failed_vericode"] = "Invalid verification code.";
 $_lang["ef_invalid_date"] = " is not a valid date";
 $_lang["ef_invalid_email"] = " is not a valid email address";
+$_lang["ef_invalid_phone"] = "Invalid values in the phone number";
 $_lang["ef_invalid_number"] = " is not a valid number";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Form template set to id of page containing snippet call! You can not have the form in the same document as the snippet call.</span> id=";
 $_lang["ef_mail_abuse_error"] = "<strong>Invalid or insecure entries were detected in your form.</strong>";

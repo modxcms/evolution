@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kijken of Register_Globals uit staat gesch
 $_lang["checking_registerglobals_note"] = 'Deze configuratie maakt uw site veel gevoeliger voor Site Scripting (XSS) Cross aanvallen. U moet uw host informeren over het uitschakelen van deze instelling, meestal door een van de drie manieren: het wijzigen van de globale php.ini bestand, het toevoegen van regels om een .htaccess bestand in de root van je MODX installatie, of het toevoegen van aangepaste php.ini bestanden. Elke map op uw installatie (en er zijn er veel van hen). U zult nog steeds in staat zijn om MODX installeren, maar beschouw jezelf gewaarschuwd.';
 $_lang["checking_sessions"] = 'Controleren of sessies correct zijn geconfigureerd:';
 $_lang["checking_table_prefix"] = 'Controleren tabel voorvoegsel `';
+$_lang["choose_language"] = 'Kies Taal';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Voor nieuwe Linux / Unix installaties, maak een leeg bestand met de naam <span class="mono">config.inc.php</span> in de <span class="mono">/[+ MGR_DIR +]/includes/</span> map met permissie ingesteld op 0666.';
 $_lang["connection_screen_collation"] = 'Collatie:';

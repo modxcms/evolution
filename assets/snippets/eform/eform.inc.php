@@ -253,6 +253,13 @@ $_dfnMaxlength = 6;
 								$rClass[$name]=$invalidClass;
 							}
 							break;
+							case "phone":
+							if (strlen($value)>0 && !preg_match(
+								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
+								$rClass[$name]=$invalidClass;
+							}
+							break;
 						case "file":
 							if ($_FILES[$name]['error']==1 || $_FILES[$name]['error']==2){
 								$vMsg[count($vMsg)]=$desc . $_lang['ef_upload_exceeded'];
@@ -956,12 +963,27 @@ function buildTagPlaceholder($tag,$attributes,$name){
 			return "<$tag$t value=".$quotedValue." [+$name:$val+]>";
 		case "input":
 			switch($type){
+				case 'file':
+				case 'image':
+    				return "<input$t/>";
 				case 'radio':
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
+				case 'range':
+				case 'date':
+				case 'month':
+				case 'week':
+				case 'time':
+				case 'datetime':
+				case 'datetime-local':
+				case 'color':
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder

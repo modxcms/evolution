@@ -44,6 +44,10 @@ if(!empty($id)) {
     $_SESSION['itemname']=$_lang["new_template"];
 }
 
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 $content = array_merge($content, $_POST);
 
 ?>

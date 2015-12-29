@@ -13,10 +13,11 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
     include "../".MGR_DIR."/includes/config.inc.php";
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
     if ($dbase) {
-        if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
+        if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;	
+            echo '2';
         }
-        elseif (!@ mysql_select_db(trim($dbase, '`'), $conn)) {
+        elseif (!mysqli_select_db($conn, trim($dbase, '`'))) {
             $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
         } else {
             $upgradeable = 1;

@@ -137,8 +137,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p><?php echo $_lang['plugin_management_msg']; ?></p>
 
 		<ul class="actionButtons">
-            <li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li>
+            <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
             <?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
+<?php   if($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
+            $tbl_site_plugins = $modx->getFullTableName('site_plugins');
+            if ($modx->db->getRecordCount($modx->db->query("SELECT id FROM {$tbl_site_plugins} t1 WHERE disabled = 1 AND name IN (SELECT name FROM {$tbl_site_plugins} t2 WHERE t1.name = t2.name AND t1.id != t2.id)"))) { ?>
+            <li><a href="index.php?a=119"><?php echo $_lang['purge_plugin']; ?></a></li>
+<?php       }
+        } ?>
         </ul>
         <?php echo createResourceList('site_plugins',102); ?>
     </div>
@@ -195,7 +201,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $rs = $modx->db->select(
                     "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, categories.category, categories.id as catid",
                     $modx->getFullTableName($v['table'])." AS {$v['table']}
-                        LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
+                        RIGHT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
                     "",
                     "5,1"
                     );
@@ -212,7 +218,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $name[$n] = $v['name'];
             }
 
-            array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
+            $category_lowercase = array_map('strtolower', $category);
+            $name_lowercase = array_map('strtolower', $name);
+            array_multisort($category_lowercase, SORT_ASC, SORT_STRING, $name_lowercase, SORT_ASC, SORT_STRING, $finalInfo);
 
             echo '<ul>';
             $preCat = '';
@@ -228,9 +236,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                     $insideUl = 1;
                 }
                 $class = array_key_exists('disabled',$v) && $v['disabled'] ? ' class="disabledPlugin"' : '';
+                if ($v['id']) {
         ?>
             <li><span<?php echo $class;?>><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo !empty($v['description']) ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ; ?></li>
         <?php
+                }
             $preCat = $v['category'];
             }
             echo $insideUl? '</ul>': '';

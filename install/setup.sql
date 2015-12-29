@@ -315,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`id` INT(11) NOT NULL auto_increment,
-	`type` varchar(20) NOT NULL default '',
+	`type` varchar(50) NOT NULL default '',
 	`name` varchar(50) NOT NULL default '',
 	`caption` varchar(80) NOT NULL default '',
 	`description` varchar(255) NOT NULL default '',
@@ -866,8 +866,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
 ('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
 ('upload_flash','fla,flv,swf'),
-('upload_files','aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip'),
-('upload_maxsize','1048576'),
+('upload_files','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF'),
+('upload_maxsize','10485760'),
 ('new_file_permissions','0644'),
 ('new_folder_permissions','0755'),
 ('filemanager_path',''),
@@ -906,8 +906,9 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('denyExtensionRename', '0'),
 ('showHiddenFiles', '0'),
 ('docid_incrmnt_method', '0'),
-('make_folders', '0');
-
+('make_folders', '0'),
+('tree_page_click', '27'),
+('clean_uploaded_filename', '1');
 
 REPLACE INTO `{PREFIX}user_roles` 
 (id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks) VALUES 
@@ -938,6 +939,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('17','OnManagerCreateGroup','2',''),
 ('18','OnBeforeCacheUpdate','4',''),
 ('19','OnCacheUpdate','4',''),
+('107','OnMakePageCacheKey','4',''),
 ('20','OnLoadWebPageCache','4',''),
 ('21','OnBeforeSaveWebPageCache','4',''),
 ('22','OnChunkFormPrerender','1','Chunks'),
@@ -952,6 +954,9 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('31','OnDocFormSave','1','Documents'),
 ('32','OnBeforeDocFormDelete','1','Documents'),
 ('33','OnDocFormDelete','1','Documents'),
+('1033','OnDocFormUnDelete','1','Documents'),
+('1034','onBeforeMoveDocument','1','Documents'),
+('1035','onAfterMoveDocument','1','Documents'),
 ('34','OnPluginFormPrerender','1','Plugins'),
 ('35','OnPluginFormRender','1','Plugins'),
 ('36','OnBeforePluginFormSave','1','Plugins'),
@@ -1010,8 +1015,11 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('89','OnManagerPageInit','2',''),
 ('90','OnWebPageInit','5',''),
 ('101','OnLoadDocumentObject','5',''),
+('104','OnBeforeLoadDocumentObject','5',''),
+('105','OnAfterLoadDocumentObject','5',''),
 ('91','OnLoadWebDocument','5',''),
 ('92','OnParseDocument','5',''),
+('106','OnParseProperties','5',''),
 ('93','OnManagerLoginFormRender','2',''),
 ('94','OnWebPageComplete','5',''),
 ('95','OnLogPageHit','5',''),
@@ -1020,6 +1028,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('98','OnEmptyTrash','1','Documents'),
 ('99','OnManagerLoginFormPrerender','2',''),
 ('100','OnStripAlias','1','Documents'),
+('102','OnMakeDocUrl','5',''),
+('103','OnBeforeLoadExtension','5',''),
 ('200','OnCreateDocGroup','1','Documents'),
 ('201','OnManagerWelcomePrerender','2',''),
 ('202','OnManagerWelcomeHome','2',''),
@@ -1034,8 +1044,11 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('211','OnManagerTreeRender','2',''),
 ('212','OnManagerNodePrerender','2',''),
 ('213','OnManagerNodeRender','2',''),
+('214','OnManagerMenuPrerender','2',''),
+('224','OnDocFormTemplateRender','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
-('1000','OnPageNotFound','1','');
+('1000','OnPageNotFound','1',''),
+('1001','OnFileBrowserUpload','1','File Browser Events');
 
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001

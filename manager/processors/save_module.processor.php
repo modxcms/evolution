@@ -66,7 +66,7 @@ switch ($_POST['mode']) {
 				'enable_sharedparams' => $enable_sharedparams,
 				'guid'                => $guid,
 				'modulecode'          => $modulecode,
-				'guid'                => $properties,
+				'properties'          => $properties,
 			), $modx->getFullTableName('site_modules'));
 			
 			// save user group access permissions

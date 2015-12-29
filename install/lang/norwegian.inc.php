@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kontrollerar att Register_Globals är inak
 $_lang["checking_registerglobals_note"] = 'Denne konfigurasjonen gj&oslash;r din nettside betydelig mer s&aring;rbar for webkodeinjeksjon (Cross Site Scripting - XSS). Du b&oslash;r kontakte din webhost og be om &aring; f&aring; inaktivert denne instillingen. Vanligvis lar det seg gj&oslash;re p&aring; tre f&oslash;lgende m&aring;ter: modifisering av den globale php.ini-filen, tillegg av regler i en .htaccess-fil i roten p&aring; din MODX-installasjon eller gjennom &aring; legge til en tilpasset php.ini-fil (som tilsidesetter den globale filen) i alla kataloger i din installasjon (og det finns masser av dem). Du kan fremdeles installere MODX, men ta denne advarselen p&aring; alvor.';
 $_lang["checking_sessions"] = 'Kontrollerer at sesjoner er korrekt konfigurert: ';
 $_lang["checking_table_prefix"] = 'Kontrollerer tabellprefixet `';
+$_lang["choose_language"] = 'Velg språk';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'For nye installasjoner i Linux/Unix-milj&oslash; m&aring; en tom fil med navnet <span class="mono">config.inc.php</span> opprettes i katalogen <span class="mono">[+MGR_DIR+]/includes/</span> med skriverrettighetene satt til 666.';
 $_lang["connection_screen_collation"] = 'Kollasjonering:';

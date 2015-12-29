@@ -39,7 +39,7 @@
             [[Ditto? &parents=`2` &display=`2` &total=`20` &removeChunk=`Comments` &tpl=`nl_sidebar`]]
             <div id="recentdocsctnr">
               <h2>Most Recent:</h2>
-				<a name="recentdocs"></a><ul class="LIn_shortMode">[[Ditto?parents=0&display=5&tpl='@CODE:<li><a href="[+url+]" title="[+pagetitle+]">[+pagetitle+]</a> <span class="LIn_date">[+date+]</span> <span class="LIn_desc"></span></li>']]</ul> </div>
+				<a name="recentdocs"></a><ul class="LIn_shortMode">[[Ditto? &showInMenuOnly="1" &parents=0&display=5&tpl='@CODE:<li><a href="[+url+]" title="[+pagetitle+]">[+pagetitle+]</a> <span class="LIn_date">[+date+]</span> <span class="LIn_desc"></span></li>']]</ul> </div>
             <h2>Login:</h2>
             <div id="sidebarlogin">[!WebLogin? &tpl=`WebLoginSideBar` &loginhomeid=`[(site_start)]`!]</div>
             <h2>Meta:</h2>

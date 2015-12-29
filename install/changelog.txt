@@ -1,6 +1,152 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODX Evolution 1.1RC (Dec 29, 2015)
+===================================
+ @Jako	   Fixing #356 Loosing content in chunk after saving and already exists … …	 41a5bcd
+ @TimGS	   Transalias fixes …	 cc7bb5a
+ @Jako	   Refactor manager api class …	aa2baae
+ @TimGS	   Purge obsolete plugins …	30aa5c7
+ @jasonabird	[#364] Fixed issue for renderFormElements to provide default text eve… …	6d799af
+ @jasonabird	[#364] Fixed to only set value if field_value is empty	fb32017
+ @bossloper	Web login - Retain remember me option …	90b1a91
+ @Jako	    Fixing PHP 5.2 issues with transalias plugin	1e83802
+ @MrSwed	[+] array version of #1 and #2 - in_array() used	d9aacba
+ @MrSwed	[+] Ukrainian characters	3db4296
+ @MrSwed	[*] word boundary do NOT working with utf8 on some servers …	bdf2d37
+ @MrSwed	[+] phpthumb: determination of the original image file extension	0ca31ad
+ @Jako	    Updated Languages from Transifex	47782d1
+ @MrSwed	[+] Ukrainian characters	79f8bc7
+ @MrSwed	[+] phpthumb encode decode cyr filenames	46e8457
+ @MrSwed	[*] &q=96 makes no sense with png and gif (should be 100 there – or b… …	70d0c84
+ @MrSwed	[+] Display TV name during install	dfb0ac4
+ @MrSwed	[+] Install: styles for component names and description	3c0b38d
+ @MrSwed	[+] phpthumb: encode only returned filenames	9b0a873
+ @Eoler	    Fix script error in View manager logs	dcd9656
+ @Eoler	    Increase FileSource filebinding input field maxlength to prevent data… …	3e6895d
+ @fourroses666	Larger image	bc501e0
+ @Jako	    Updated Languages from Transifex	9d3cb59
+ @yama	    Refactor - $modx->getTagsFromContent()	a4ceee9
+ @yama	    Refactor - $modx->evalSnippets()	6f26656
+ @rpre	    Update eform.inc.php …	563934c
+ @Jako	    Adding HTML5 input types	d2adb9d
+ @Haprog	Fix #396 getUserDocGroups(true) always returns only one group name	32f0d65
+ @Haprog	Fix: weblogin doesn't always clear $_SESSION['webDocgrpNames'] on log… …	3cea34d
+ @pmfx	    MODxRE theme fixes small fixes …	4b7b3f0
+ @pmfx	    MODxRE login screen small fixes …	897855b
+ @pmfx	    Fix #394 error in description of CodeMirror …	1b0148e
+ @Haprog	Fix comment typo in ht.access.	4ca6432
+ @Haprog	Fix typo in CodeMirror plugin description.	c4b9a64
+ @Haprog	Fix/update confirmed working MODX version in CodeMirror plugin comment.	6cc4467
+ @kulmjens	Value of properties in GUID on module creation …	1c2e755
+ @yama	    Refactor - $modx->getTagsFromContent() …	1cebc29
+ @MaXL-ru	Prevent PHP warning 'Key cannot be empty' …	da4cf8a
+ @kulmjens	Maybe missing permission check …	8530858
+ @MrSwed	[-] garbage	8c6adc4
+ @MrSwed	non-breaking space. It interferes with the use of the ddmultifield im… …	21e1aad
+ @yama	    Refactor - $modx->getTagsFromContent()	c2ee598
+ @yama	    Fix - $modx->getTagsFromContent() …	18234eb
+ @yama	    Refactor - $modx->evalSnippets()	6c098f5
+ @MrSwed	Merge remote-tracking branch 'remotes/evolution/develop' into develop	7aedfe2
+ @MrSwed	preserve input value	c87d649
+ @yama	    Fix	1adcf8d
+ @yama	    Minor fix - MODxHost template	aca2a22
+ @yama	    Refactor - $modx->mergeDocumentContent()	4e8b8da
+ @MrSwed	Merge remote-tracking branch 'remotes/Evolution/develop' into develop	8030902
+ @MrSwed	small calendar styles fix	30fd127
+ @bossloper	Update setup.sql …	2b56d5d
+ @MrSwed	Choose language translate	7dec05a
+ @dmi3yy	Merge pull request #419 from bossloper/patch-5 …	c8871b1
+ @Jako	    Updated polish language	4fdd700
+ @Jako	    Date format	0dc2c0f
+ @MrSwed	fix transalias	a90447c
+ @MrSwed	Wayfinder. Set id of reference to original document ID if it is inner… …	7be7aca
+ @MrSwed	ability to set indentation	f16f3e2
+ @MrSwed	Starting the installation with the language of the user's browser	63e6414
+ @MrSwed	Merge remote-tracking branch 'remotes/Evolution/develop' into develop	11d2eb9
+ @MrSwed	can not be turned off, fixed	39058c8
+ @MrSwed	for local references - use original document fields separated by comma …	fb2f868
+ @MrSwed	&useWeblinkUrl=`0` now work, no longer need to write &useWeblinkUrl=`… …	e77c169
+ @MrSwed	no "start=0" in links of ditto pagination depending on modx setting s… …	27ebbe6
+ @yama	    Minor fix	a20cd0f
+ @yama	    Fix	dcbf2b6
+ @bossloper	Update ditto.class.inc.php …	ce883ea
+ @yama	    Cross-references …	956c9ae
+ @MrSwed	allow using asterisk for assign TVs to all templates which will be in… …	5ddb8df
+ @yama	    Fix - Slimming Paint rendering issue at Chrome …	75c9c0f
+ @bossloper	Update resources.static.php …	0216a35
+ @bossloper	Update resources.static.php …	69367dd
+ @bossloper	Update english.inc.php	dc83897
+ @bossloper	Update web_access_permissions.dynamic.php	67645ad
+ @bossloper	Update access_permissions.dynamic.php	1424839
+ @dmi3yy	clear code^ fix tabs	89ef20b
+ @dmi3yy	Update file browser	2ed509b
+ @dmi3yy	Update CodeMirror to 1.2b	eae7e74
+ @dmi3yy	the ability to pass arbitrary parameters in the snippet (so you can u… …	b7dc20f
+ @dmi3yy	add [+wf.iterator+]	fcb6343
+ @dmi3yy	start for view custom tv type	d0a0e9d
+ @dmi3yy	add tvs folder	7e7708d
+ @dmi3yy	add some langs string	ddc4b92
+ @dmi3yy	fix dmi3yy/modx.evo.custom#181	6a448b4
+ @dmi3yy	view customTV in Select when choice tv type	907a1f2
+ @dmi3yy	now we can use custom frame files from theme	fa0348f
+ @dmi3yy	fix index.php in manager	13e5c89
+ @dmi3yy	clear code	dcd5131
+ @dmi3yy	Fix error render the default setting in the TV type date	14a94c6
+ @dmi3yy	refactor search.static	a842303
+ @dmi3yy	frameset to iframe	c09c083
+ @dmi3yy	use Mysqli by default	ed5396e
+ @dmi3yy	add some events	1072d79
+ @dmi3yy	refactor MainMenu	1968b47
+ @dmi3yy	add mm_movecategorytotab …	2770263
+ @dmi3yy	add TinyMce theme circuit	d7b1048
+ @dmi3yy	use stable phpmailer	933605c
+ @dmi3yy	delete unused file	88dddef
+ @dmi3yy	fix in node.php	c88f4c0
+ @dmi3yy	add event OnDocFormTemplateRender	9233753
+ @dmi3yy	fix td width	4a2f16c
+ @dmi3yy	add event onBeforeMoveDocument and onAfterMoveDocument …	6a8a692
+ @dmi3yy	refactor cache_sync class, add some code for AliasListingFolder	6211a79
+ @dmi3yy	setting for AliasLiastingFolder	0284b48
+ @dmi3yy	add event OnBeforeLoadExtension	c78515e
+ @dmi3yy	some change in sendErrorPage	32a6d53
+ @dmi3yy	some change in sendUnauthorizedPage	c8672fe
+ @dmi3yy	add function getCacheFolder	07bac53
+ @dmi3yy	add function setConditional	9372391
+ @dmi3yy	fix rewriteUrls for AliasListingFolder	aa24247
+ @dmi3yy	add events OnBeforeLoadDocumentObject OnAfterLoadDocumentObject	bfebbbd
+ @dmi3yy	refactor BackTrace	bdb542d
+ @dmi3yy	refactor getLoginUserName	e612f72
+ @dmi3yy	refactor getLoginUserID	03c5e28
+ @dmi3yy	add function getTpl	09e0ba7
+ @dmi3yy	refactor getChunk	816af9c
+ @dmi3yy	refactor runSnippet	93fa0fc
+ @dmi3yy	refactor makeUrl for AliasListingFolder	26f86d0
+ @dmi3yy	fix sendmail	cbce5e7
+ @dmi3yy	refactor logEvent	7d3e99e
+ @dmi3yy	refactor getChildIds for AliasListingFolder	a7fd270
+ @dmi3yy	refactor getParentIds for AliasListngFolder	6f19c69
+ @dmi3yy	refactor executeParser for AliasListingFolder	fa86662
+ @dmi3yy	fix in postProcess	7c6adaa
+ @dmi3yy	refactor checkPublishStatus()	3c94596
+ @dmi3yy	checkCache fix	175a18e
+ @dmi3yy	Fix - Slimming Paint rendering issue at Chrome by Yama	7131bb1
+ @dmi3yy	ctrl + S, cmd + S now save in Manager	769617e
+ @dmi3yy	fix for cmd + S	618c900
+ @kulmjens	Workaround for deprecated preg_replace() with /e modifier …	295ad92
+ @pmfx	    "Show in menu" moved to new row …	758817d
+ @dmi3yy	copyright to 2016	b893c7e
+ @dmi3yy	#444 (Installer & PHP 5.5+ )	b229ca1
+ @dmi3yy	fix index.html in tvs custom types	b9e1888
+ @dmi3yy	add php version in sysinfo	113ac4c
+ @dmi3yy	autoload_register to spl_autoload_register	de360bd
+ @dmi3yy	fix OnManagerWelcomeHome position	961a256
+ @dmi3yy	fix html validation in eForm	88b4dd5
+ @dmi3yy	wayfinder config need include for multi use with other configs	9e09c4e
+ @dmi3yy	update revriteUrls	52745fb
+
+
 MODX Evolution 1.0.15 (Oct 31, 2014)
 ===================================
 --------------------------------------------

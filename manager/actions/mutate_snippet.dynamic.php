@@ -45,6 +45,11 @@ if(isset($_GET['id'])) {
 } else {
     $_SESSION['itemname']=$_lang["new_snippet"];
 }
+
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
 ?>
 <script type="text/javascript">
 
@@ -99,7 +104,7 @@ function showParameters(ctrl) {
             value = decode((ar[2])? ar[2]:'');
 
             // store values for later retrieval
-            if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && dt=='list' || dt=='list-multi') currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
 
             if (dt) {
@@ -128,19 +133,23 @@ function showParameters(ctrl) {
                     c += '</select>';
                     break;
                 case 'list-multi':
-                    value = (ar[3]+'').replace(/^\s|\s$/,"");
-                    arrValue = value.split(",")
+                    value = typeof ar[3] !== 'undefined' ? (ar[3]+'').replace(/^\s|\s$/,"") : '';
+                    arrValue = value.split(",");
                     ls = (ar[2]+'').split(",");
                     if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
                     c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
                     for(i=0;i<ls.length;i++){
                         if(arrValue.length){
+                            var found = false;
                             for(j=0;j<arrValue.length;j++){
-                                if(ls[i]==arrValue[j]){
-                                    c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
-                                }else{
-                                    c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+                                if (ls[i] == arrValue[j]) {
+                                    found = true;
                                 }
+                            }
+                            if(found == true){
+                                c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
+                            }else{
+                                c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
                             }
                         }else{
                             c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
@@ -360,7 +369,7 @@ function decode(s){
           </tr>
           <tr>
             <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>
-            <td valign="top"><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox phptextarea" style="width:300px;" onchange="showParameters(this);documentDirty=true;"></td>
+            <td valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea></td>
           </tr>
           <tr id="displayparamrow">
             <td valign="top">&nbsp;</td>

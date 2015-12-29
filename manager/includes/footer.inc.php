@@ -6,6 +6,14 @@ if (count($SystemAlertMsgQueque)>0) {
 	include "sysalert.display.inc.php";
 }
 ?>
+	<script type='text/javascript'>      
+        document.body.addEventListener('keydown', function (e) {
+            if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey)) {
+                document.getElementById( 'Button1' ).getElementsByTagName( 'a' )[0].click();
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
 <!-- end footer -->

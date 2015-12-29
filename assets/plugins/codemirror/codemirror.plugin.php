@@ -9,7 +9,7 @@
  * @required    MODX 0.9.6.3+
  *              CodeMirror  3.13 : pl
  *
- * @confirmed   MODX Evolution 1.10.0
+ * @confirmed   MODX Evolution 1.0.15
  *
  * @author      Mihanik71 
  *
@@ -177,7 +177,7 @@ if (('none' == $rte) && $mode) {
 			lineWrapping: {$lineWrapping},
 			gutters: ["CodeMirror-linenumbers", "breakpoints"],
 			styleActiveLine: {$activeLine},
-			indentWithTabs: true,
+			indentWithTabs: {$indentWithTabs},
 			extraKeys:{
 				"Ctrl-Space": function(cm){
 					var n = cm.getCursor().line;

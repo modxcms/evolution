@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Controllo se Register_Globals è disattiva
 $_lang["checking_registerglobals_note"] = 'Con questa configurazione il vostro sito potrebbe essere vittima di attacchi Cross Site Scripting (XSS). Per disabilitare Register_Globals ci sono diverse alternative: modificare il file php.ini globale, modificare il file .htaccess nella root della vostra installazione MODX, oppure aggiungere dei files php.ini in ogni directory della vostra installazione MODX (ma ci sono molte directories). Potete continuare con l\'installazione, ma non dite che non vi abbiamo avvertito.';
 $_lang["checking_sessions"] = 'Controllo se le sessioni sono configurate correttamente: ';
 $_lang["checking_table_prefix"] = 'Controllo il prefisso per le tabelle `';
+$_lang["choose_language"] = 'Scegli la lingua';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Per nuove installazioni su Linux/Unix, vi preghiamo di creare un file vuoto <span class="mono">config.inc.php</span> nella directory <span class="mono">/[+MGR_DIR+]/includes/</span> con i permessi di scrittura a 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';

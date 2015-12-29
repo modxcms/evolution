@@ -27,18 +27,18 @@ class SqlParser {
 	}
 
 	function connect() {
-		$this->conn = mysql_connect($this->host, $this->user, $this->password);
-		mysql_select_db($this->dbname, $this->conn);
-		if (function_exists('mysql_set_charset')) mysql_set_charset($this->connection_charset);
+		$this->conn = mysqli_connect($this->host, $this->user, $this->password);
+		mysqli_select_db($this->conn, $this->dbname);
+		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
 
 		$this->dbVersion = 3.23; // assume version 3.23
-		if(function_exists("mysql_get_server_info")) {
-			$ver = mysql_get_server_info();
+		if(function_exists("mysqli_get_server_info")) {
+			$ver = mysqli_get_server_info($this->conn);
 			$this->dbMODx 	 = version_compare($ver,"4.0.2");
 			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
 		}
 
-        mysql_query("{$this->connection_method} {$this->connection_charset}");
+        mysqli_query($this->conn,"{$this->connection_method} {$this->connection_charset}");
 	}
 
 	function process($filename) {
@@ -98,21 +98,21 @@ class SqlParser {
 
 
 			$num = $num + 1;
-			if ($sql_do) mysql_query($sql_do, $this->conn);
-			if(mysql_error()) {
+			if ($sql_do) mysqli_query($this->conn, $sql_do);
+			if(mysqli_error($this->conn)) {
 				// Ignore duplicate and drop errors - Raymond
 				if ($this->ignoreDuplicateErrors){
-					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
+					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1091) continue;
 				}
 				// End Ignore duplicate
-				$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);
+				$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
 				$this->installFailed = true;
 			}
 		}
 	}
 
 	function close() {
-		mysql_close($this->conn);
+		mysqli_close($this->conn);
 	}
 }
 

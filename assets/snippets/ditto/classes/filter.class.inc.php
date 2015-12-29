@@ -128,12 +128,20 @@ class filter {
 								if (trim($ii) == trim($iii))
 								$check++;
 							}
-
-						}	
+						}
 					}
 					$unset = $check>0 ? 1 : 0;
 					unset($val,$check);
-					break;				
+				break;
+					// Cases 21-22 created by Sergey Davydov <webmaster@collection.com.ua> 08.11.2011
+				case 21 : // array version of #1 - exlude records that do not in miltiple values such a "65||115" and have output delimeted list by comma
+					if (!isset ($value[$this->array_key]) || !in_array($this->filterValue,explode(',',$value[$this->array_key])))
+						$unset = 0;
+				break;
+				case 22 : // array version of #2 - exlude records that in miltiple values such a "65||115" and have output delimeted list by comma
+				if (in_array($this->filterValue,explode(',',$value[$this->array_key])))
+					$unset = 0;
+				break;
 		}
 			return $unset;
 	}

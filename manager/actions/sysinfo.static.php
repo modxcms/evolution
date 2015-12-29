@@ -3,6 +3,33 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 if(!$modx->hasPermission('logs')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
+
+$res = $modx->db->query("show variables like 'character_set_database'");
+$charset = $modx->db->getRow($res, 'num');
+$res = $modx->db->query("show variables like 'collation_database'");
+$collation = $modx->db->getRow($res, 'num');
+
+$serverArr = array(
+	$_lang['modx_version']       => $modx->getVersionData('version'). ' '.$newversiontext,
+	$_lang['release_date']       => $modx->getVersionData('release_date'),
+	'PHP Version'                => phpversion(),
+	'phpInfo()'            		 => '<a href="#" onclick="viewPHPInfo();return false;">'.$_lang['view'].'</a>',
+	$_lang['access_permissions'] =>  ($use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']),
+	$_lang['servertime']		 => strftime('%H:%M:%S', time()),
+	$_lang['localtime']          => strftime('%H:%M:%S', time()+$server_offset_time),
+	$_lang['serveroffset']	     => $server_offset_time/(60*60) . ' h',
+	$_lang['database_name']      => trim($dbase,'`'),
+	$_lang['database_server']    => $database_server,
+	$_lang['database_version']   => $modx->db->getVersion(),
+	$_lang['database_charset']   => $charset[1],
+	$_lang['database_collation'] => $collation[1],
+	$_lang['table_prefix']       => $modx->db->config['table_prefix'],
+	$_lang['cfg_base_path']      => MODX_BASE_PATH,
+	$_lang['cfg_base_url']       => MODX_BASE_URL,
+	$_lang['cfg_manager_url']    => MODX_MANAGER_URL,
+	$_lang['cfg_manager_path']   => MODX_MANAGER_PATH,
+	$_lang['cfg_site_url']       => MODX_SITE_URL
+);
 ?>
 <h1><?php echo $_lang["view_sysinfo"]; ?></h1>
 
@@ -16,110 +43,16 @@ if(!$modx->hasPermission('logs')) {
 <!-- server -->
 <div class="section">
 <div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
-
 		<table border="0" cellspacing="2" cellpadding="2">
-		  <tr>
-			<td width="150"><?php echo $_lang['modx_version']?></td>
-			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx->getVersionData('version') ?></b><?php echo $newversiontext ?></td>
-		  </tr>
-		  <tr>
-			<td width="150"><?php echo $_lang['release_date']?></td>
-			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx->getVersionData('release_date') ?></b></td>
-		  </tr>
-		  <tr>
-			<td>phpInfo()</td>
-			<td>&nbsp;</td>
-			<td><b><a href="#" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['access_permissions']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']; ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['servertime']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo strftime('%H:%M:%S', time()); ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['localtime']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['serveroffset']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $server_offset_time/(60*60) ?></b> h</td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_name']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo trim($dbase,'`') ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_server']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $database_server ?></b></td>
-		  </tr>
-		  <tr>
-		    <td><?php echo $_lang['database_version']?></td>
-		    <td>&nbsp;</td>
-		    <td><strong><?php echo $modx->db->getVersion(); ?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_charset']?></td>
-			<td>&nbsp;</td>
-			<td><strong><?php
-	$sql1 = "show variables like 'character_set_database'";
-    $res = $modx->db->query($sql1);
-    $charset = $modx->db->getRow($res, 'num');
-    echo $charset[1];
-			?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_collation']?></td>
-			<td>&nbsp;</td>
-			<td><strong><?php
-    $sql2 = "show variables like 'collation_database'";
-    $res = $modx->db->query($sql2);
-    $collation = $modx->db->getRow($res, 'num');
-    echo $collation[1];
-            ?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['table_prefix']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $modx->db->config['table_prefix'] ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_base_path']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_BASE_PATH ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_base_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_BASE_URL ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_manager_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_MANAGER_URL ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_manager_path']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_MANAGER_PATH ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_site_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_SITE_URL ?></b></td>
-		  </tr>
+		<?php foreach ($serverArr as $key => $value){
+			echo '<tr>
+					<td>'.$key.'</td>
+					<td>&nbsp;</td>
+					<td><b>'.$value.'</b></td>
+				  </tr>';
+		}	
+		?>	 
 		</table>
-
    </div>
 </div>
 

@@ -96,6 +96,7 @@ class uploader {
   * @var string */
     protected $cms = "";
 
+    protected $modx = null;
 /** Magic method which allows read-only access to protected or private class properties
   * @param string $property
   * @return mixed */
@@ -103,13 +104,23 @@ class uploader {
         return property_exists($this, $property) ? $this->$property : null;
     }
 
-    public function __construct() {
+    public function __construct($modx) {
 
         // DISABLE MAGIC QUOTES
         if (function_exists('set_magic_quotes_runtime'))
             @set_magic_quotes_runtime(false);
 
+        //MODX
+        try {
+            if ($modx instanceof DocumentParser) {
+                $this->modx = $modx;
+            } else throw new Exception('MODX should be instance of DocumentParser');
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+
         // INPUT INIT
+
         $input = new input();
         $this->get = &$input->get;
         $this->post = &$input->post;
@@ -246,7 +257,6 @@ class uploader {
         $config = &$this->config;
         $file = &$this->file;
         $url = $message = "";
-
         if ($config['disabled'] || !$config['access']['files']['upload']) {
             if (isset($file['tmp_name'])) @unlink($file['tmp_name']);
             $message = $this->label("You don't have permissions to upload files.");
@@ -308,6 +318,7 @@ class uploader {
         $this->callBack($url, $message);
     }
 
+
 	protected function getTransaliasSettings() {
 		global $modx;
 
@@ -317,7 +328,7 @@ class uploader {
 			// Transalias plugin active?
 			$res = $modx->db->select('properties', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
 			if ($properties = $modx->db->getValue($res)) {
-				$properties = $modx->parseProperties($properties);
+				$properties = $modx->parseProperties($properties, 'TransAlias', 'plugin');
 			} else {
 				$properties = NULL;
 			}
@@ -327,36 +338,13 @@ class uploader {
 		return $properties;
 	}
 
+
 	protected function normalizeFilename($filename) {
-		if ($transaliasSettings = $this->getTransaliasSettings()) {
-			if (!class_exists('TransAlias')) {
-				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
-			}
-			$trans = new TransAlias();
-			$trans->loadTable($transaliasSettings['table_name']);
-			$filename = $trans->stripAlias($filename, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
-		} else {
-			if (isset($this->config['filenameChangeChars']) && is_array($this->config['filenameChangeChars'])) {
-				$filename = strtr($filename, $this->config['filenameChangeChars']);
-			}
-		}
-		return $filename;
+        return $this->modx->stripAlias($filename);
 	}
 
 	protected function normalizeDirname($dirname) {
-		if ($transaliasSettings = $this->getTransaliasSettings()) {
-			if (!class_exists('TransAlias')) {
-				include MODX_BASE_PATH . 'assets/plugins/transalias/transalias.class.php';
-			}
-			$trans = new TransAlias();
-			$trans->loadTable($transaliasSettings['table_name']);
-			$dirname = $trans->stripAlias($dirname, $transaliasSettings['char_restrict'], $transaliasSettings['word_separator']);
-		} else {
-			if (isset($this->config['dirnameChangeChars']) && is_array($this->config['dirnameChangeChars'])) {
-				$dirname = strtr($dirname, $this->config['dirnameChangeChars']);
-			}
-		}
-		return $dirname;
+        return $this->modx->stripAlias($dirname);
     }
 
     protected function checkUploadedFile(array $aFile=null) {
@@ -431,6 +419,7 @@ class uploader {
         $gd = new gd($file['tmp_name']);
         if (!$gd->init_error && !$this->imageResize($gd, $file['tmp_name']))
             return $this->label("The image is too big and/or cannot be resized.");
+
 
 	// CHECK FOR MODX MAX FILE SIZE                
 	$actualfilesize=filesize($file['tmp_name']);

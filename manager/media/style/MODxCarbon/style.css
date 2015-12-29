@@ -616,6 +616,10 @@ a img {
 	border: 1px solid #c8c8d4;
 	padding: 1px;
 }
+.treeNodeSelected
+{
+    font-weight:700;
+}
 .unpublishedNode,
 .unpublished a {
 	color: #b68282;
