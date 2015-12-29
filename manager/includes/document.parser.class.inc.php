@@ -3812,9 +3812,15 @@ class DocumentParser {
                     $pvTmp= explode(";", trim($pTmp[1]));
                     if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
                         $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
+                    else {
+                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
+				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
+			else{
+				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
                             $parameter[trim($pTmp[0])]= $pvTmp[2];
+                }
+            }
+        }
                 }
             }
         }
