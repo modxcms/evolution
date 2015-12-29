@@ -27,7 +27,7 @@ $wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
 //Include a custom config file if specified
 $config = (isset($config)) ? "{$wayfinder_base}configs/{$config}.config.php" : "{$wayfinder_base}configs/default.config.php";
 if (file_exists($config)) {
-	include_once("$config");
+	include("$config");
 }
 
 include_once("{$wayfinder_base}wayfinder.inc.php");
