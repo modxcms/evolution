@@ -169,6 +169,35 @@ class Wayfinder {
     function renderRow(&$resource,$numChildren,$curNum) {
         global $modx;
         $output = '';
+
+        // Determine fields for use from referenced resource
+        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+         if ($this->_config['useReferenced']=="id") {
+          // if id only, do not need get referenced data
+          $resource["id"] = $resource['content'];
+         } else if($referenced = $modx->getDocument($resource['content'])){
+          if (in_array($this->_config['useReferenced'],explode(",","1,*"))) { 
+           $this->_config['useReferenced'] = array_keys($resource);
+          }
+          if (!is_array($this->_config['useReferenced'])) {
+           $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
+          }
+          $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'],explode(",","content,parent,isfolder"));
+
+          foreach ($this->_config['useReferenced'] as $field) {
+           if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
+           switch ($field) {
+            case "linktext" :
+             $resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
+             break;
+            case "title" :
+             $resource['title'] = $resource[$this->_config['titleOfLinks']];
+             break;
+           }
+          }
+         }
+        }
+
 		//Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
 			$usedTemplate = 'startItemTpl';
@@ -463,7 +492,7 @@ class Wayfinder {
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
-				if ($this->_config['useWeblinkUrl'] !== 'FALSE' && $tempDocInfo['type'] == 'reference') {
+				if ($this->_config['useWeblinkUrl'] && $tempDocInfo['type'] == 'reference') {
 					if (is_numeric($tempDocInfo['content'])) {
 						$tempDocInfo['link'] = $modx->makeUrl(intval($tempDocInfo['content']),'','',$linkScheme);
 					} else {

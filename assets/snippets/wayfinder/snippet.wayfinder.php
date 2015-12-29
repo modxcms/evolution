@@ -27,7 +27,7 @@ $wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
 //Include a custom config file if specified
 $config = (isset($config)) ? "{$wayfinder_base}configs/{$config}.config.php" : "{$wayfinder_base}configs/default.config.php";
 if (file_exists($config)) {
-	include("$config");
+	include_once("$config");
 }
 
 include_once("{$wayfinder_base}wayfinder.inc.php");
@@ -61,6 +61,8 @@ $wf->_config = array(
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
+	// for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr, etc)
+	'useReferenced' => isset($useReferenced) ? $useReferenced: "id", 
 	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier
 );
 
