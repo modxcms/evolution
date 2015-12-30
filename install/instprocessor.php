@@ -298,7 +298,7 @@ if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.MGR_D
 // start cms session
 if(!function_exists(\'startCMSSession\')) {
     function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
-      if (isset($storage[$session_name]) && $storage[$session_name] === '')
+      if (isset($storage[$session_name]) && $storage[$session_name] === \'\')
       {
         unset($storage[$session_name]);
       }
