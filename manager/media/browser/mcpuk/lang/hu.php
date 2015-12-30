@@ -110,12 +110,18 @@ $lang = array(
     "Download" => "Letöltés",
     "Download files" => "Fájlok letöltése",
     "Clipboard" => "Vágólap",
+    "Checking for new version..." => "Új verzió keresése ...",
+    "Unable to connect!" => "Nem lehet csatlakozni!",
+    "Download version {version} now!" => "Töltse le a {version} verziót most!",
+    "KCFinder is up to date!" => "Ez a KCFinder verzió a legfrissebb",
     "Licenses:" => "Licenszek:",
     "Attention" => "Figyelem",
     "Question" => "Kérdés",
     "Yes" => "Igen",
     "No" => "Nem",
     "You cannot rename the extension of files!" => "Nem változtathatja meg a fájlok kiterjezstését",
+    "Uploading file {number} of {count}... {progress}" => "A(z) {number}. fájl feltöltése (összesen {count}) ... {progress}",
+    "Failed to upload {filename}!" => "Nem sikerült feltölteni a '{filename}' fájlt.",
 );
 
 ?>

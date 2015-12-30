@@ -4,9 +4,9 @@
   *
   *      @desc HTTP cache helper class
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -51,7 +51,7 @@ class httpCache {
         if ($checkMTime) self::checkMTime($mtime);
         if ($type === null) $type = self::DEFAULT_TYPE;
         if ($expire === null) $expire = self::DEFAULT_EXPIRE;
-		$size = function_exists('mb_strlen') ? mb_strlen($content,'ASCII') : strlen($content);
+        $size = strlen($content);
         $expires = gmdate("D, d M Y H:i:s", time() + $expire) . " GMT";
         header("Content-Type: $type");
         header("Expires: $expires");

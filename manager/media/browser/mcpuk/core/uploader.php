@@ -4,9 +4,9 @@
   *
   *      @desc Uploader class
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -15,11 +15,15 @@
 class uploader {
 
 /** Release version */
-    const VERSION = "2.51";
+    const VERSION = "2.54";
 
 /** Config session-overrided settings
   * @var array */
     protected $config = array();
+
+/** Default image driver
+  * @var string */
+    protected $imageDriver = "gd";
 
 /** Opener applocation properties
   *   $opener['name']                 Got from $_GET['opener'];
@@ -48,7 +52,7 @@ class uploader {
 
 /** Settings which can override default settings if exists as keys in $config['types'][$type] array
   * @var array */
-    protected $typeSettings = array('disabled', 'theme', 'dirPerms', 'filePerms', 'denyZipDownload', 'maxImageWidth', 'maxImageHeight', 'thumbWidth', 'thumbHeight', 'jpegQuality', 'access', 'filenameChangeChars', 'dirnameChangeChars', 'denyExtensionRename', 'deniedExts');
+    protected $typeSettings = array('disabled', 'theme', 'dirPerms', 'filePerms', 'denyZipDownload', 'maxImageWidth', 'maxImageHeight', 'thumbWidth', 'thumbHeight', 'jpegQuality', 'access', 'filenameChangeChars', 'dirnameChangeChars', 'denyExtensionRename', 'deniedExts', 'watermark');
 
 /** Got from language file
   * @var string */
@@ -148,7 +152,7 @@ class uploader {
             ini_set('session.cookie_domain', $_CONFIG['_sessionDomain']);
         switch ($this->cms) {
             case "drupal": break;
-            default: session_start(); break;
+            default: if (!session_id()) session_start(); break;
         }
 
         // RELOAD DEFAULT CONFIGURATION
@@ -167,6 +171,23 @@ class uploader {
             $this->session = &$this->config['_sessionVar']['self'];
         } else
             $this->session = &$_SESSION;
+
+        // IMAGE DRIVER INIT
+        if (isset($this->config['imageDriversPriority'])) {
+            $this->config['imageDriversPriority'] =
+                text::clearWhitespaces($this->config['imageDriversPriority']);
+            $driver = image::getDriver(explode(' ', $this->config['imageDriversPriority']));
+            if ($driver !== false)
+                $this->imageDriver = $driver;
+        }
+        if ((!isset($driver) || ($driver === false)) &&
+            (image::getDriver(array($this->imageDriver)) === false)
+        )
+            die("Cannot find any of the supported PHP image extensions!");
+
+        // WATERMARK INIT
+        if (isset($this->config['watermark']) && is_string($this->config['watermark']))
+            $this->config['watermark'] = array('file' => $this->config['watermark']);
 
         // GET TYPE DIRECTORY
         $this->types = &$this->config['types'];
@@ -194,17 +215,45 @@ class uploader {
             preg_match('/^[^\.]+$/', $_SERVER['HTTP_HOST'])
         )
             $this->config['cookieDomain'] = "";
-        elseif (!strlen($this->config['cookieDomain'])){
-            $tmp = explode(":", $_SERVER['HTTP_HOST'], 2);
-            $this->config['cookieDomain'] =  $tmp[0];
-        }
+        elseif (!strlen($this->config['cookieDomain']))
+            $this->config['cookieDomain'] = $_SERVER['HTTP_HOST'];
         if (!strlen($this->config['cookiePath']))
             $this->config['cookiePath'] = "/";
 
         // UPLOAD FOLDER INIT
+
+        // FULL URL
+        if (preg_match('/^([a-z]+)\:\/\/([^\/^\:]+)(\:(\d+))?\/(.+)\/?$/',
+                $this->config['uploadURL'], $patt)
+        ) {
+            list($unused, $protocol, $domain, $unused, $port, $path) = $patt;
+            $path = path::normalize($path);
+            $this->config['uploadURL'] = "$protocol://$domain" . (strlen($port) ? ":$port" : "") . "/$path";
+            $this->config['uploadDir'] = strlen($this->config['uploadDir'])
+                ? path::normalize($this->config['uploadDir'])
+                : path::url2fullPath("/$path");
          $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
          $this->typeURL = "{$this->config['siteURL']}/{$this->config['uploadURL']}/{$this->type}";
 
+        // SITE ROOT
+        } elseif ($this->config['uploadURL'] == "/") {
+            $this->config['uploadDir'] = strlen($this->config['uploadDir'])
+                ? path::normalize($this->config['uploadDir'])
+                : path::normalize($_SERVER['DOCUMENT_ROOT']);
+            $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
+            $this->typeURL = "/{$this->type}";
+
+        // ABSOLUTE & RELATIVE
+        } else {
+            $this->config['uploadURL'] = (substr($this->config['uploadURL'], 0, 1) === "/")
+                ? path::normalize($this->config['uploadURL'])
+                : path::rel2abs_url($this->config['uploadURL']);
+            $this->config['uploadDir'] = strlen($this->config['uploadDir'])
+                ? path::normalize($this->config['uploadDir'])
+                : path::url2fullPath($this->config['uploadURL']);
+            $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
+            $this->typeURL = "{$this->config['uploadURL']}/{$this->type}";
+        }
         if (!is_dir($this->config['uploadDir']))
             @mkdir($this->config['uploadDir'], $this->config['dirPerms']);
 
@@ -257,6 +306,7 @@ class uploader {
         $config = &$this->config;
         $file = &$this->file;
         $url = $message = "";
+
         if ($config['disabled'] || !$config['access']['files']['upload']) {
             if (isset($file['tmp_name'])) @unlink($file['tmp_name']);
             $message = $this->label("You don't have permissions to upload files.");
@@ -416,8 +466,8 @@ class uploader {
         }
 
         // IMAGE RESIZE
-        $gd = new gd($file['tmp_name']);
-        if (!$gd->init_error && !$this->imageResize($gd, $file['tmp_name']))
+        $img = image::factory($this->imageDriver, $file['tmp_name']);
+        if (!$img->initError && !$this->imageResize($img, $file['tmp_name']))
             return $this->label("The image is too big and/or cannot be resized.");
 
 
@@ -491,57 +541,105 @@ class uploader {
     }
 
     protected function imageResize($image, $file=null) {
-        if (!($image instanceof gd)) {
-            $gd = new gd($image);
-            if ($gd->init_error) return false;
+
+        if (!($image instanceof image)) {
+            $img = image::factory($this->imageDriver, $image);
+            if ($img->initError) return false;
             $file = $image;
         } elseif ($file === null)
             return false;
         else
-            $gd = $image;
+            $img = $image;
 
-        if ((!$this->config['maxImageWidth'] && !$this->config['maxImageHeight']) ||
+        $orientation = 1;
+        if (function_exists("exif_read_data")) {
+            $orientation = @exif_read_data($file);
+            $orientation = isset($orientation['Orientation']) ? $orientation['Orientation'] : 1;
+        }
+
+        // IMAGE WILL NOT BE RESIZED WHEN NO WATERMARK AND SIZE IS ACCEPTABLE
+        if ((
+                !isset($this->config['watermark']['file']) ||
+                (!strlen(trim($this->config['watermark']['file'])))
+            ) && (
             (
-                ($gd->get_width() <= $this->config['maxImageWidth']) &&
-                ($gd->get_height() <= $this->config['maxImageHeight'])
+                    !$this->config['maxImageWidth'] &&
+                    !$this->config['maxImageHeight']
+                ) || (
+                    ($img->width <= $this->config['maxImageWidth']) &&
+                    ($img->height <= $this->config['maxImageHeight'])
             )
+            ) &&
+            ($orientation == 1)
         )
             return true;
 
+
+        // PROPORTIONAL RESIZE
         if ((!$this->config['maxImageWidth'] || !$this->config['maxImageHeight'])) {
-            if ($this->config['maxImageWidth']) {
-                if ($this->config['maxImageWidth'] >= $gd->get_width())
-                    return true;
+
+            if ($this->config['maxImageWidth'] &&
+                ($this->config['maxImageWidth'] < $img->width)
+            ) {
                 $width = $this->config['maxImageWidth'];
-                $height = $gd->get_prop_height($width);
-            } else {
-                if ($this->config['maxImageHeight'] >= $gd->get_height())
-                    return true;
+                $height = $img->getPropHeight($width);
+
+            } elseif (
+                $this->config['maxImageHeight'] &&
+                ($this->config['maxImageHeight'] < $img->height)
+            ) {
                 $height = $this->config['maxImageHeight'];
-                $width = $gd->get_prop_width($height);
+                $width = $img->getPropWidth($height);
             }
-            if (!$gd->resize($width, $height))
+
+            if (isset($width) && isset($height) && !$img->resize($width, $height))
                 return false;
 
-        } elseif (!$gd->resize_fit(
-            $this->config['maxImageWidth'], $this->config['maxImageHeight']
-        ))
+        // RESIZE TO FIT
+        } elseif (
+            $this->config['maxImageWidth'] && $this->config['maxImageHeight'] &&
+            !$img->resizeFit($this->config['maxImageWidth'], $this->config['maxImageHeight'])
+        )
             return false;
 
-		switch ($gd->type) {
-			case IMAGETYPE_GIF: return $gd->imagegif($file);
-			case IMAGETYPE_PNG: return $gd->imagepng($file);
-			case IMAGETYPE_JPEG: return $gd->imagejpeg($file, $this->config['jpegQuality']);
-			default: return $gd->imagejpeg($file, $this->config['jpegQuality']);
+        // AUTO FLIP AND ROTATE FROM EXIF
+        if ((($orientation == 2) && !$img->flipHorizontal()) ||
+            (($orientation == 3) && !$img->rotate(180)) ||
+            (($orientation == 4) && !$img->flipVertical()) ||
+            (($orientation == 5) && (!$img->flipVertical() || !$img->rotate(90))) ||
+            (($orientation == 6) && !$img->rotate(90)) ||
+            (($orientation == 7) && (!$img->flipHorizontal() || !$img->rotate(90))) ||
+            (($orientation == 8) && !$img->rotate(270))
+        )
+            return false;
+        if (($orientation >= 2) && ($orientation <= 8) && ($this->imageDriver == "imagick"))
+            try {
+                $img->image->setImageProperty('exif:Orientation', "1");
+            } catch (Exception $e) {}
         
+        // WATERMARK
+        if (isset($this->config['watermark']['file']) &&
+            is_file($this->config['watermark']['file'])
+        ) {
+            $left = isset($this->config['watermark']['left'])
+                ? $this->config['watermark']['left'] : false;
+            $top = isset($this->config['watermark']['top'])
+                ? $this->config['watermark']['top'] : false;
+            $img->watermark($this->config['watermark']['file'], $left, $top);
 		}
+
+        // WRITE TO FILE
+        return $img->output("jpeg", array(
+            'file' => $file,
+            'quality' => $this->config['jpegQuality']
+        ));
     }
 
     protected function makeThumb($file, $overwrite=true) {
-        $gd = new gd($file);
+        $img = image::factory($this->imageDriver, $file);
 
-        // Drop files which are not GD handled images
-        if ($gd->init_error)
+        // Drop files which are not images
+        if ($img->initError)
             return true;
 
         $thumb = substr($file, strlen($this->config['uploadDir']));
@@ -555,27 +653,23 @@ class uploader {
             return true;
 
         // Images with smaller resolutions than thumbnails
-        if (($gd->get_width() <= $this->config['thumbWidth']) &&
-            ($gd->get_height() <= $this->config['thumbHeight'])
+        if (($img->width <= $this->config['thumbWidth']) &&
+            ($img->height <= $this->config['thumbHeight'])
         ) {
-            $browsable = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG);
+            list($tmp, $tmp, $type) = @getimagesize($file);
             // Drop only browsable types
-            if (in_array($gd->type, $browsable))
+            if (in_array($type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)))
                 return true;
 
         // Resize image
-        } elseif (!$gd->resize_fit($this->config['thumbWidth'], $this->config['thumbHeight']))
+        } elseif (!$img->resizeFit($this->config['thumbWidth'], $this->config['thumbHeight']))
             return false;
 
         // Save thumbnail
-		switch ($gd->type) {
-			case IMAGETYPE_GIF: return $gd->imagepng($thumb);
-			case IMAGETYPE_PNG: return $gd->imagepng($thumb);
-			case IMAGETYPE_JPEG: return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
-			default: return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
-        
-		}
-		//return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
+        return $img->output("jpeg", array(
+            'file' => $thumb,
+            'quality' => $this->config['jpegQuality']
+        ));
     }
 
     protected function localize($langCode) {

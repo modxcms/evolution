@@ -4,9 +4,9 @@
   *
   *      @desc Browser actions class
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -152,19 +152,19 @@ class browser extends uploader {
             $file = "{$this->config['uploadDir']}/{$this->type}/{$this->get['dir']}/" . basename($file);
             if (!is_file($file) || !is_readable($file))
                 $this->sendDefaultThumb($file);
-            $image = new gd($file);
-            if ($image->init_error)
+            $image = image::factory($this->imageDriver, $file);
+            if ($image->initError)
                 $this->sendDefaultThumb($file);
-            $browsable = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG);
-            if (in_array($image->type, $browsable) &&
-                ($image->get_width() <= $this->config['thumbWidth']) &&
-                ($image->get_height() <= $this->config['thumbHeight'])
+            list($tmp, $tmp, $type) = getimagesize($file);
+            if (in_array($type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) &&
+                ($image->width <= $this->config['thumbWidth']) &&
+                ($image->height <= $this->config['thumbHeight'])
             ) {
-                $type =
-                    ($image->type == IMAGETYPE_GIF) ? "gif" : (
-                    ($image->type == IMAGETYPE_PNG) ? "png" : "jpeg");
-                $type = "image/$type";
-                httpCache::file($file, $type);
+                $mime =
+                    ($type == IMAGETYPE_GIF) ? "gif" : (
+                    ($type == IMAGETYPE_PNG) ? "png" : "jpeg");
+                $mime = "image/$mime";
+                httpCache::file($file, $mime);
             } else
                 $this->sendDefaultThumb($file);
         }
@@ -592,6 +592,80 @@ class browser extends uploader {
         die;
     }
 
+    protected function act_check4Update() {
+        if ($this->config['denyUpdateCheck'])
+            return json_encode(array('version' => false));
+
+        // Caching HTTP request for 6 hours
+        if (isset($this->session['checkVersion']) &&
+            isset($this->session['checkVersionTime']) &&
+            ((time() - $this->session['checkVersionTime']) < 21600)
+        )
+            return json_encode(array('version' => $this->session['checkVersion']));
+
+        $protocol = "http";
+        $host = "kcfinder.sunhater.com";
+        $port = 80;
+        $path = "/checkVersion.php";
+
+        $url = "$protocol://$host:$port$path";
+        $pattern = '/^\d+\.\d+$/';
+        $responsePattern = '/^[A-Z]+\/\d+\.\d+\s+\d+\s+OK\s*([a-zA-Z0-9\-]+\:\s*[^\n]*\n)*\s*(.*)\s*$/';
+
+        // file_get_contents()
+        if (ini_get("allow_url_fopen") &&
+            (false !== ($ver = file_get_contents($url))) &&
+            preg_match($pattern, $ver)
+
+        // HTTP extension
+        ) {} elseif (
+            function_exists("http_get") &&
+            (false !== ($ver = @http_get($url))) &&
+            (
+                (
+                    preg_match($responsePattern, $ver, $match) &&
+                    false !== ($ver = $match[2])
+                ) || true
+            ) &&
+            preg_match($pattern, $ver)
+
+        // Curl extension
+        ) {} elseif (
+            function_exists("curl_init") &&
+            (false !== (   $curl = @curl_init($url)                                    )) &&
+            (              @ob_start()                 ||  (@curl_close($curl) && false)) &&
+            (              @curl_exec($curl)           ||  (@curl_close($curl) && false)) &&
+            ((false !== (  $ver = @ob_get_clean()   )) ||  (@curl_close($curl) && false)) &&
+            (              @curl_close($curl)          ||  true                         ) &&
+            preg_match($pattern, $ver)
+
+        // Socket extension
+        ) {} elseif (function_exists('socket_create')) {
+            $cmd =
+                "GET $path " . strtoupper($protocol) . "/1.1\r\n" .
+                "Host: $host\r\n" .
+                "Connection: Close\r\n\r\n";
+
+            if ((false !== (  $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  )) &&
+                (false !==    @socket_connect($socket, $host, $port)                    ) &&
+                (false !==    @socket_write($socket, $cmd, strlen($cmd))                ) &&
+                (false !== (  $ver = @socket_read($socket, 2048)                       )) &&
+                preg_match($responsePattern, $ver, $match)
+            )
+                $ver = $match[2];
+
+            if (isset($socket) && is_resource($socket))
+                @socket_close($socket);
+        }
+
+        if (isset($ver) && preg_match($pattern, $ver)) {
+            $this->session['checkVersion'] = $ver;
+            $this->session['checkVersionTime'] = time();
+            return json_encode(array('version' => $ver));
+        } else
+            return json_encode(array('version' => false));
+    }
+
     protected function moveUploadFile($file, $dir) {
         $message = $this->checkUploadedFile($file);
 
@@ -644,10 +718,12 @@ class browser extends uploader {
             return $return;
 
         foreach ($files as $file) {
-            $ext = file::getExtension($file);
-            $smallThumb = false;
-            if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
-				$size = @getimagesize($file);
+            $img = new fastImage($file);
+            $type = $img->getType();
+
+            if ($type !== false) {
+                $size = $img->getSize($file);
+
 				if (is_array($size) && count($size)) {
 					$thumb_file = "$thumbDir/" . basename($file);
 					if (!is_file($thumb_file))
@@ -655,12 +731,18 @@ class browser extends uploader {
 					$smallThumb =
 						($size[0] <= $this->config['thumbWidth']) &&
 						($size[1] <= $this->config['thumbHeight']) &&
-						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
-				}
-            }
+                        in_array($type, array("gif", "jpeg", "png"));
+                } else
+                    $smallThumb = false;
+            } else
+                $smallThumb = false;
+
+            $img->close();
+
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
+            $ext = file::getExtension($file);
             $types = $this->config['types'];
             $types = explode(' ',$types['images'].' '.$types['image']);
             if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;

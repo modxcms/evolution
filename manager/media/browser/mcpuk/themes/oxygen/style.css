@@ -63,7 +63,7 @@ input[type="button"]:focus, input[type="submit"]:focus, input[type="reset"]:focu
 }
 
 fieldset {
-    margin: 0 5px 5px 0;
+    margin: 0 5px 5px 0px;
     padding: 5px;
     border: 1px solid #afadaa;
     border-radius: 4px;
