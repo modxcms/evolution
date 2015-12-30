@@ -4,9 +4,9 @@
   *
   *      @desc File related functionality
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -158,13 +158,18 @@ browser.returnFile = function(file) {
         ? file : browser.assetsURL + '/' + browser.dir + '/' + file.data('name');
     fileURL = _.escapeDirs(fileURL);
 
-    if (this.opener.CKEditor) {
+    if (this.opener.TinyMCE4) {
+        var win = window.opener ? window.opener : window.parent;
+        $(win.document).find('#' + this.opener.TinyMCE4).val(fileURL);
+        win.tinyMCE.activeEditor.windowManager.close();
+
+    } else if (this.opener.CKEditor) {
         this.opener.CKEditor.object.tools.callFunction(this.opener.CKEditor.funcNum, fileURL, '');
         window.close();
 
     } else if (this.opener.FCKeditor) {
-        window.close() ;
         window.opener.SetUrl(fileURL) ;
+        window.close() ;
         
     } else if (this.opener.TinyMCE) {
         var win = tinyMCEPopup.getWindowArg('window');

@@ -4,9 +4,9 @@
   *
   *      @desc This file is included first, before each other
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -44,10 +44,6 @@ $_GET['langCode'] = $modx_lang_attribute;
 if (substr(PHP_VERSION, 0, strpos(PHP_VERSION, '.')) < 5)
     die("You are using PHP " . PHP_VERSION . " when KCFinder require at least version 5! Some systems has an option to change the active PHP version. Please refer to your hosting provider or upgrade your PHP distribution.");
 
-// GD EXTENSION CHECK
-if (!function_exists("imagecopyresampled"))
-    die("The GD PHP extension is not available! It's required to run KCFinder.");
-
 
 // SAFE MODE CHECK
 if (ini_get("safe_mode"))
@@ -70,7 +66,12 @@ function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
             'type_img' => '/types/type_img.php',
             'type_mime' => '/types/type_mime.php',
             'uploader' => '/uploader.php',
-            'zipFolder' => '/../lib/class_zipFolder.php'
+            'zipFolder' => '/../lib/class_zipFolder.php',
+            'image' => '/../lib/class_image.php',
+            'image_imagick' => '/../lib/class_image_imagick.php',
+            'image_gmagick' => '/../lib/class_image_gmagick.php',
+            'image_gd' => '/../lib/class_image_gd.php',
+            'fastImage' => '/../lib/class_fastImage.php'  
         );
     }
     if (isset($classes[$class])) {

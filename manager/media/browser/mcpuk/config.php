@@ -4,9 +4,9 @@
   *
   *      @desc Base configuration file
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -22,14 +22,14 @@ $_CONFIG = array(
     'disabled' => false,
     'denyZipDownload' => $modx->config['denyZipDownload'],
     'denyExtensionRename' => $modx->config['denyExtensionRename'],
-	'showHiddenFiles' => $modx->config['showHiddenFiles'],
+    'showHiddenFiles' => $modx->config['showHiddenFiles'],
 	
     'theme' => "oxygen",
 
     'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
     'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
     'siteURL' => $modx->config['site_url'],
-	'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
     'dirPerms' => intval($modx->config['new_folder_permissions'],8),
     'filePerms' => intval($modx->config['new_file_permissions'],8),
     'maxfilesize' => $settings['upload_maxsize'],
@@ -66,7 +66,10 @@ $_CONFIG = array(
         'media'   =>  str_replace(',',' ',$modx->config['upload_media']),
         'image'   =>  str_replace(',',' ',$modx->config['upload_images']),
     ),
-
+    'dirnameChangeChars' => array(
+        ' ' => "_",
+        ':' => "."
+     ), 
     'mime_magic' => "",
 
     'maxImageWidth' => $modx->config['maxImageWidth'],
