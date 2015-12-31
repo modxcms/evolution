@@ -879,8 +879,8 @@ function getCreateDbCategory($category, $sqlParser) {
     $table_prefix = $sqlParser->prefix;
     $category_id = 0;
     if(!empty($category)) {
-        $category = mysqli_real_escape_string($conn, $category);
-        $rs = mysqli_query($conn, "SELECT id FROM $dbase.`".$table_prefix."categories` WHERE category = '".$category."'");
+        $category = mysqli_real_escape_string($sqlParser->conn, $category);
+        $rs = mysqli_query($sqlParser->conn, "SELECT id FROM $dbase.`".$table_prefix."categories` WHERE category = '".$category."'");
         if(mysqli_num_rows($rs) && ($row = mysqli_fetch_assoc($rs))) {
             $category_id = $row['id'];
         } else {
