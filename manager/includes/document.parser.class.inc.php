@@ -1393,15 +1393,14 @@ class DocumentParser {
     function rewriteUrls($documentSource) {
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
-			$this->aliases = array ();
-			$this->isfolder = array ();
+            $aliases= array ();
             /* foreach ($this->aliasListing as $item) {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
                 $isfolder[$item['id']]= $item['isfolder'];
             } */
-			foreach($this->documentListing as $key=>$val){
-				$this->aliases[$val] = $key;
-				$this->isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            foreach($this->documentListing as $key=>$val){
+                $aliases[$val] = $key;
+                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
@@ -1411,34 +1410,38 @@ class DocumentParser {
                     $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
-							$this->aliases[$row['id']] = $this->aliases[$row['parent']].'/'.$row['alias'];
+                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
                         } else {
-							$this->aliases[$row['id']] = $row['alias'];
+                            $aliases[$row['id']] = $row['alias'];
                         }
-						$this->isfolder[$row['id']] = '0';
+                        $isfolder[$row['id']] = '0';
                     }
                 }
             }
-			$documentSource = preg_replace_callback(
-				"!\[\~([0-9]+)\~\]!is",
-				function ($m) {					
-                $isfriendly = ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
-                $pref = $this->config['friendly_url_prefix'];
-                $suff = $this->config['friendly_url_suffix'];
-					$thealias = $this->aliases[$m[1]];
-					$thefolder = $this->isfolder[$m[1]];
-					$found_friendlyurl = ($this->config['seostrict'] == '1' ? $this->toAlias($this->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $this->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
-                $not_found_friendlyurl = $this->makeFriendlyURL($pref,$suff,$m[1]); 
-                return ($isfriendly && isset($thealias) ? $found_friendlyurl : $not_found_friendlyurl);
-				},
-				$documentSource
-			);	
+            $in= '!\[\~([0-9]+)\~\]!is';
+            $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
+            $pref= $this->config['friendly_url_prefix'];
+            $suff= $this->config['friendly_url_suffix'];            
+            $documentSource = preg_replace_callback(
+                $in,
+                function($m) use($aliases, $isfolder, $isfriendly, $pref, $suff) {
+                    global $modx;
+                    $thealias = $aliases[$m[1]];
+                    $thefolder = $isfolder[$m[1]];
+                    $found_friendlyurl = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
+                    $not_found_friendlyurl = $modx->makeFriendlyURL($pref, $suff, $m[1]);
+                    $out = ($isfriendly && isset($thealias) ? $found_friendlyurl : $not_found_friendlyurl);
+                    return $out;
+                },
+                $documentSource
+            );          
+            
         } else {
             $in= '!\[\~([0-9]+)\~\]!is';
             $out= "index.php?id=" . '\1';
             $documentSource= preg_replace($in, $out, $documentSource);
         }
-		unset($this->aliases, $this->isfolder);
+        
         return $documentSource;
     }
 	
