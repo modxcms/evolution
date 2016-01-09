@@ -40,16 +40,16 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 					$output .= '$j("select[name*\'=metatags\']").parent("td").hide()'."\n";
 				break;
 				
-				case 'hidemenu':
-				case 'hide_menu':
-				case 'show_in_menu':
-					$output .= '$j("input[name=\'hidemenucheck\']").parent("td").hide();'."\n";
-				break;
+				//case 'hidemenu':
+				//case 'hide_menu':
+				//case 'show_in_menu':
+				//	$output .= '$j("input[name=\'hidemenucheck\']").parent("td").hide();'."\n";
+				//break;
 				
-				case 'menuindex':
-					$output .= '$j("input[name=\'menuindex\']").parents("table").parent("td").prev("td").children("span.warning").hide();'."\n";
-					$output .= '$j("input[name=\'menuindex\']").parent("td").hide();'."\n";
-				break;
+				//case 'menuindex':
+				//	$output .= '$j("input[name=\'menuindex\']").parents("table").parent("td").prev("td").children("span.warning").hide();'."\n";
+				//	$output .= '$j("input[name=\'menuindex\']").parent("td").hide();'."\n";
+				//break;
 				
 				case 'which_editor':
 					$output .= '$j("select#which_editor").prev("span.warning").hide();'."\n";

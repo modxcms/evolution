@@ -102,10 +102,11 @@ $.ddMM = {
 				}else if (
 					this == 'keywords' ||
 					this == 'metatags' ||
-					this == 'which_editor' ||
-					this == 'hidemenu' ||
-					this == 'show_in_menu' ||
-					this == 'menuindex'
+					this == 'which_editor' 
+					//||
+					//this == 'hidemenu' ||
+					//this == 'show_in_menu' ||
+					//this == 'menuindex'
 				){
 					//Do nothing
 					return;

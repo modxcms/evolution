@@ -1,0 +1,223 @@
+     body{
+       padding:10px; 
+       background: #eeeeee url('../img/body.jpg');"
+     }
+     .github {
+     	background: url(../img/github.png);
+     	display: block;
+     	position: absolute;
+     	width: 80px;
+     	height: 80px;
+     }
+
+     .curr{
+     	color:#F17D10;
+     	font-size:10px;
+     }
+     .pack_old .item-update,
+     .pack_alredy .item-reinstall,
+     .pack_install item-install{
+     	display:block!important
+     }
+
+
+     .pack_install .item-reinstall,
+     .pack_install .item-update{
+     	display:none;
+     }
+
+     .pack_update .item-reinstall,
+     .pack_update .item-install{
+     	display:none;
+     }
+
+     .pack_reinstall .item-install,
+     .pack_reinstall .item-update{
+     	display:none;
+     }
+
+     .informer{
+     	position:absolute;
+     	top:0;
+     	left:0;
+     	right:0;
+     	bottom:0;
+     	background-color:rgba(255, 255, 255, 0.8);
+     	display:none;
+     	opacity:0;
+     	vertical-alig:middle;
+     	text-align:center;
+
+     }
+     .loader{
+     	background: url("../img/loader.gif") no-repeat scroll center center rgba(255, 255, 255, 0.8);
+     	bottom: 0;
+     	left: 0;
+     	position: absolute;
+     	right: 0;
+     	text-align: center;
+     	top: 0;
+     	display:none;
+     	opacity:1;
+     }
+     .informer div {
+     	color: black;
+     	font-size: 25px;
+     	padding-top: 51px;
+     	text-align: center;
+     	vertical-align: middle;
+     	width: 100%;
+     }
+     .info_block{
+     	opacity:1;
+     }
+     .blocked .info_block{
+     	opacity:0.3;
+     }
+     .blocked_item{
+     	display:none;
+     	bottom: 0;
+     	left: 0;
+     	position: absolute;
+     	right: 0;
+     	text-align: center;
+     	top: 0;
+     }
+     .blocked .blocked_item{
+     	display:block;
+     }
+     .types{
+     	font-size:145%;
+     	color:rgba(0,0,0,0.3)
+     }
+     .warning {
+     	color: #ff0000!important;
+     	padding-left:20px;
+     	display: inline-block;
+     	margin: 6px 20px 6px 0px;
+     }
+     .info span{color:#ccc;}
+     .info span strong{color:#555;}
+     .item_list .catalog_item:nth-child(odd) {
+     	background: #f7f7f7;
+     }
+     .item_list .catalog_item:hover {
+     	background: #fff;
+     	box-shadow: #c4dc8d 0 0 5px,#a9cd5b 0 0 2px;
+     }
+     .row-category H3 {margin:0;float:left}
+     .catalog_thumb {
+     	border: 1px solid #AAA;
+     	background: #fff;
+     	float:left;
+     	margin-right:10px;
+     }
+     .clear {clear:both;}
+     .fr {float:right;}
+     nav ul li {float:left;list-style:none;}
+     .paginate li {
+     	padding:0px 3px;
+     	margin:2px;
+     	border: 1px solid #AAA;
+     	background: #fff;
+     	float:left;
+     }
+     .cont{
+     	margin-left:230px;
+     	margin-bottom:20px;
+     }
+     .sidebar {
+     	float:left;
+     	width:230px;
+     }
+     .box{
+     	width:200px;
+     	border: 1px solid #AAA;
+     	background: #fff;
+     	padding:10px;
+     	margin-bottom:10px;
+     	box-shadow: 0px 0px 2px #aaa;
+     }
+     .mh{min-height:150px;}
+     .catalog_item{
+     	margin:5px;
+     	padding:5px;
+     	min-height:80px;
+     	position:relative;
+     	overflow:hidden;
+     }
+     .grid TD {padding-left:5px;}
+     .grid TH {
+     	padding-left:5px;
+     	font-size: 12px;
+     }
+     .info .version {
+     	min-width:90px;
+     	overflow:hidden;
+     	display:inline-block;
+     	padding-left:20px;
+
+     }
+     .info .autor {
+     	min-width:120px;
+     	overflow:hidden;
+     	display:inline-block;
+     	padding-left:20px;
+
+     }
+     .info .date {
+     	min-width:80px;
+     	overflow:hidden;
+     	display:inline-block;
+     	padding-left:20px;
+
+     }
+     .info .download {
+     	width:20px;
+     	overflow:hidden;
+     	display:inline-block;
+     	padding-left:20px;
+
+     }
+     .descript {min-height: 36px;
+     	display: block;
+     	margin-bottom: -15px;}
+
+     	input[type="email"]:focus,
+     	input[type="password"]:focus,
+     	input[type="search"]:focus,
+     	input[type="text"]:focus,
+     	input[type="url"]:focus,
+     	textarea:focus,
+     	select:focus
+     	{
+     		outline: none;
+     		background: #fff;
+     		border-color: #AAA!important;
+     		border-style: inset;
+     		border-width: 2px!important;
+     	}
+     	.error {color: red;}	
+     	.cart_list input {width:198px;}
+     	#loading {
+     		background: url(../img/loading.png);
+     		display:block;
+     		width: 39px;
+     		height:39px;
+     		position:fixed;
+     		z-index: 100;
+     		left: 48%;
+     		top: 47%;
+     	}
+     	body,
+     	.wrapper{
+     		height:auto;
+     	}
+           .loginbut {
+               margin:5px 0; width:196px;text-align:center;display:block;
+               padding-left: 0px!important;padding-right: 0px!important;
+          }
+          .loginul{margin:0px!important;padding:0px!important;}
+          .row-category h3 {padding:0px!important;}
+
+

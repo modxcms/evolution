@@ -47,6 +47,7 @@ if (isset($_GET['id'])) {
     if (!$content) {
         $modx->webAlertAndQuit("Module not found for id '{$id}'.");
     }
+    $content['properties'] = str_replace("&", "&amp;", $content['properties']);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);

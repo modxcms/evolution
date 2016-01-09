@@ -34,6 +34,10 @@ browser.initFiles = function() {
         _.unselect();
         browser.returnFile($(this));
     });
+    $('.selectThis').click(function() {
+        _.unselect();
+        browser.returnFile($(this).parent('.file'));
+    });
     $('.file').mouseup(function() {
         _.unselect();
     });
@@ -88,6 +92,7 @@ browser.showFiles = function(callBack, selected) {
                     '<div class="name">' + _.htmlData(file.name) + '</div>' +
                     '<div class="time">' + file.date + '</div>' +
                     '<div class="size">' + browser.humanSize(file.size) + '</div>' +
+                    '<div class="selectThis">' + "+" + '</div>' +
                 '</div>';
             }
         });

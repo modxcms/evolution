@@ -117,7 +117,7 @@ $_lang["modules"] = 'Moduulit';
 $_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODX on lisensoitu GNU GPL lisenssillä.';
 $_lang["modx_footer2"] = 'MODX on ilmainen ohjelmisto. Kehoitamme sinua olemaan luova ja käyttämään MODX järjestelmää siten, miten sinä sen parhaaksi näet. Jos teet muutoksia järjestelmään ja päätät jakaa muokattua MODX järjestelmää eteenpäin, muista pitää muokattu lähdekoodi vapaasti saatavilla!';
 $_lang["modx_install"] = 'MODX &raquo; Asennus';
-$_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version [+min_version+] tai uudemman';
+$_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version 5.3 tai uudemman';
 $_lang["mysql_5051"] = ' MySQL palvelimen versio on 5.0.51!';
 $_lang["mysql_5051_warning"] = 'MySQL 5.0.51 versiolla on havaittu järjestelmän toiminnassa ongelmia. On suositeltavaa, että päivität MySQL version uudempaan ennen asennuksen jatkamista.';
 $_lang["mysql_version_is"] = ' Sinun MySQL palvelimen versio on: ';
