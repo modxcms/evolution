@@ -4,6 +4,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //Author: Bumkaka
 
 $cacheFolder=isset($cacheFolder) ? $cacheFolder : "assets/cache/images";
+if(!is_dir(MODX_BASE_PATH.$cacheFolder)) mkdir(MODX_BASE_PATH.$cacheFolder);
 $tmpFolder = 'assets/cache/tmp';
 if (!empty($input)) $input = rawurldecode($input);
 
