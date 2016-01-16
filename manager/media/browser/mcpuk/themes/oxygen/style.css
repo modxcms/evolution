@@ -564,7 +564,8 @@ span.close:hover {
 
 span.clicked:hover {
     background: url(img/icons/close-clicked.png);
-}.selectThis {
+}
+.selectThis {
         padding: 6px 0;
         border-radius: 2px;
         background: #EEE;
