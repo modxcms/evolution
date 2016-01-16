@@ -128,7 +128,6 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             if (pageUrl === null) {
                 pageUrl = frm.location.search.substring(1);
             }
-            console.log(pageUrl +' '+ frm.location.search.substring(1));
             if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
                 if ( getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1)) ){
                     frm.scrollTo(0,currentPageY);
