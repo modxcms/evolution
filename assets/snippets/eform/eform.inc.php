@@ -185,7 +185,8 @@ $_dfnMaxlength = 6;
 		# check vericode
 		if($vericode) {
 			//add support for captcha code - thanks to Djamoer
-			$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
+			//$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
+			$code = $_SESSION['veriword_'.$formid] ? $_SESSION['veriword_'.$formid] : $_SESSION['eForm.VeriCode'];
 			if($fields['vericode']!=$code) {
 				$vMsg[count($vMsg)]=$_lang['ef_failed_vericode'];
 				$rClass['vericode']=$invalidClass; //added in 1.4.4

@@ -1,0 +1,12 @@
+{
+    "paginate": "pages",
+    "display": " 10",
+    "PrevNextAlwaysShow": "1",
+    "TplNextP": "@CODE: <li><a href=\"[+link+]\">&raquo;</a></li>",
+    "TplNextI": "@CODE: <li class=\"disabled\"><a href=\"[+link+]\">&raquo;</a></li>",
+    "TplPrevP": "@CODE: <li><a href=\"[+link+]\">&laquo;</a></li>",
+    "TplPrevI": "@CODE: <li class=\"disabled\"><a href=\"[+link+]\">&laquo;</a></li>",
+    "TplPage": "@CODE: <li><a href=\"[+link+]\">[+num+]</a></li>",
+    "TplCurrentPage": "@CODE: <li class=\"active\"><a href=\"[+link+]\">[+num+]</a></li>",
+    "TplWrapPaginate": "@CODE: <ul class=\"pagination\">[+wrap+]</ul>"
+}

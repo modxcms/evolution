@@ -66,7 +66,12 @@ class VeriWord {
         /* create session variable for verification, 
            you may change the session variable name */
         $this->word             = $this->pick_word();   
+        if(isset($_GET['formid'])){
+            $_SESSION['veriword_'.$_GET['formid']]   = $this->word;
+        }else{ 
         $_SESSION['veriword']   = $this->word;
+    }
+
     }
 
     function output_image() {

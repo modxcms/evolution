@@ -43,10 +43,10 @@ function mm_renameField($fields, $newlabel, $roles = '', $templates = '', $newhe
 					$element = '$j("select[name*=\'metatags\']").siblings("span.warning")';
 				break;
 				
-				case 'hidemenu':
-				case 'show_in_menu':
-					$element = '$j("input[name=\'hidemenucheck\']").siblings("span.warning")';
-				break;
+				//case 'hidemenu':
+				//case 'show_in_menu':
+				//	$element = '$j("input[name=\'hidemenucheck\']").siblings("span.warning")';
+				//break;
 				
 				case 'which_editor':
 					$element = '$j("#which_editor").prev("span.warning")';
@@ -56,9 +56,9 @@ function mm_renameField($fields, $newlabel, $roles = '', $templates = '', $newhe
 					$element = '$j("#content_header")';
 				break;
 				
-				case 'menuindex':
-					$element = '$j("input[name=\'menuindex\']").parents("table:first").parents("td:first").prev("td").find("span.warning")';
-				break;
+				//case 'menuindex':
+				//	$element = '$j("input[name=\'menuindex\']").parents("table:first").parents("td:first").prev("td").find("span.warning")';
+				//break;
 				
 				// Ones that follow the regular pattern
 				default:
