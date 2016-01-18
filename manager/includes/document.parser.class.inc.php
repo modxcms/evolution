@@ -1153,18 +1153,21 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-        foreach($matches[1] as $i=>$value)
-        {
-            foreach($matches[0] as $find=>$tag)
-            {
-                if(isset($replace[$find]) && strpos($value,$tag)!==false)
-                {
-                    $value = str_replace($tag,$replace[$find],$value);
-                    break;
-                }
-            }
-            $replace[$i] = $this->_get_snip_result($value);
-        }
+		foreach($matches[1] as $i=>$value)
+		{
+			$find = $i - 1;
+			while( $find >= 0 )
+			{
+				$tag = $matches[0][ $find ];
+				if(isset($replace[$find]) && strpos($value,$tag)!==false)
+				{
+					$value = str_replace($tag,$replace[$find],$value);
+					break;
+				}
+				$find--;
+			}
+			$replace[$i] = $this->_get_snip_result($value);
+		}
         $content = str_replace($matches['0'], $replace, $content);
         return $content;
     }
