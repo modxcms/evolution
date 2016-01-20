@@ -249,44 +249,44 @@ function clean_up($sqlParser) {
     $ids = array();
     $mysqlVerOk = -1;
 
-    if(function_exists("mysql_get_server_info")) {
-        $mysqlVerOk = (version_compare(mysql_get_server_info(),"4.0.2")>=0);
+    if(function_exists("mysqli_get_server_info")) {
+        $mysqlVerOk = (version_compare(mysqli_get_server_info($sqlParser->conn),"4.0.2")>=0);
     }
 
     // secure web documents - privateweb
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."webgroup_access` wga ON wga.documentgroup = dg.document_group
              WHERE wga.id>0";
-    $ds = mysql_query($sql,$sqlParser->conn);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }
 
     // secure manager documents privatemgr
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."membergroup_access` mga ON mga.documentgroup = dg.document_group
              WHERE mga.id>0";
-    $ds = mysql_query($sql);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }

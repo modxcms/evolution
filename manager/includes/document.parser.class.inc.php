@@ -1398,9 +1398,11 @@ class DocumentParser {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
                 $isfolder[$item['id']]= $item['isfolder'];
             } */
-			foreach($this->documentListing as $key=>$val){
-				$aliases[$val] = $key;
-				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            if (is_array($this->documentListing)){
+            foreach($this->documentListing as $key=>$val){
+                $aliases[$val] = $key;
+                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            }
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
@@ -1415,33 +1417,33 @@ class DocumentParser {
                             $aliases[$row['id']] = $row['alias'];
                         }
                         $isfolder[$row['id']] = '0';
-
                     }
                 }
             }
-
-            $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
+            $in= '!\[\~([0-9]+)\~\]!is';
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
-            $suff= $this->config['friendly_url_suffix'];
-            $thealias= '$aliases[\\1]';
-            $thefolder= '$isfolder[\\1]';
-            if ($this->config['seostrict']=='1'){
-			
-               $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
-            }else{
-               $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
-            }
-            $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
-            $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
-            $documentSource= preg_replace($in, $out, $documentSource);
-			
+            $suff= $this->config['friendly_url_suffix'];            
+            $documentSource = preg_replace_callback(
+                $in,
+                function($m) use($aliases, $isfolder, $isfriendly, $pref, $suff) {
+                    global $modx;
+                    $thealias = $aliases[$m[1]];
+                    $thefolder = $isfolder[$m[1]];
+                    $found_friendlyurl = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
+                    $not_found_friendlyurl = $modx->makeFriendlyURL($pref, $suff, $m[1]);
+                    $out = ($isfriendly && isset($thealias) ? $found_friendlyurl : $not_found_friendlyurl);
+                    return $out;
+                },
+                $documentSource
+            );          
+            
         } else {
             $in= '!\[\~([0-9]+)\~\]!is';
             $out= "index.php?id=" . '\1';
             $documentSource= preg_replace($in, $out, $documentSource);
         }
-		
+        
         return $documentSource;
     }
 	
@@ -3812,9 +3814,15 @@ class DocumentParser {
                     $pvTmp= explode(";", trim($pTmp[1]));
                     if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
                         $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
+                    else {
+                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
+				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
+			else{
+				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
                             $parameter[trim($pTmp[0])]= $pvTmp[2];
+                }
+            }
+        }
                 }
             }
         }

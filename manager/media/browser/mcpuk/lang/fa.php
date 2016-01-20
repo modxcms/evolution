@@ -246,6 +246,10 @@ $lang = array(
 
     // SINCE 2.4
 
+    "Checking for new version..." => "...وجود نسخه جدید را بررسی کن",
+    "Unable to connect!" => "!مشکل در برقراری ارتباط",
+    "Download version {version} now!" => "!را دانلود کن {version} همسین حالا نسخه ",
+    "KCFinder is up to date!" => "!بروز است KCFinder",
     "Licenses:" => "مجوز",
     "Attention" => "توجه",
     "Question" => "پرسش",
@@ -255,6 +259,9 @@ $lang = array(
     // SINCE 2.41
 
     "You cannot rename the extension of files!" => "!شما نمی توانید پسوند فایلها را تغییر دهید",
+    "Uploading file {number} of {count}... {progress}" => "{progress} ...ارسال شد {count} فایل از {number}",
+    "Failed to upload {filename}!"  => "! {filename} خطا در ارسال"
+
 );
 
 ?>

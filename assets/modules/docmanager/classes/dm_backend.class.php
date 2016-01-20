@@ -191,7 +191,31 @@ class DocManagerBackend {
                                             $noUpdate = true;
                                         }
                                     }
+                                    //+++++++
+                                    $newTvVal = $tmplVars["$tvIndex"];
+                                    if (substr($newTvVal, 0, 5) == '@EVAL') {
+                                        $sign = trim(substr($newTvVal, 6, 1));
+                                        $op = trim(substr($newTvVal, 7));
+                                        switch ($sign) {
+                                            case '+':   
+                                                $newTvVal = $checkRow['value'] + $op;
+                                                break;
+                                            case '-':   
+                                                $newTvVal = $checkRow['value'] - $op;
+                                                break;
+                                            case '*':   
+                                                $newTvVal = $checkRow['value'] * $op;
+                                                break;
+                                            case '/':   
+                                                $newTvVal = $checkRow['value'] / $op;
+                                                break;
 
+                                            default:
+                                                $newTvVal = $checkRow['value'].'~'.$op;
+                                                break;
+                                        }
+                                    }
+                                    //++++++
                                     if ($checkCount > 0 && !isset ($noUpdate)) {
                                         $fields = array (
                                             'value' => $this->modx->db->escape($tmplVars["$tvIndex"])

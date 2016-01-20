@@ -12,6 +12,7 @@ $collation = $modx->db->getRow($res, 'num');
 $serverArr = array(
 	$_lang['modx_version']       => $modx->getVersionData('version'). ' '.$newversiontext,
 	$_lang['release_date']       => $modx->getVersionData('release_date'),
+	'PHP Version'                => phpversion(),
 	'phpInfo()'            		 => '<a href="#" onclick="viewPHPInfo();return false;">'.$_lang['view'].'</a>',
 	$_lang['access_permissions'] =>  ($use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']),
 	$_lang['servertime']		 => strftime('%H:%M:%S', time()),
