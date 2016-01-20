@@ -15,7 +15,7 @@
 require "core/autoload.php";
 $mtime = @filemtime(__FILE__);
 if ($mtime) httpCache::checkMTime($mtime);
-$browser = new browser();
+$browser = new browser($modx);
 $config = $browser->config;
 ob_start();
 

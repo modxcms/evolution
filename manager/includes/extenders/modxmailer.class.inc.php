@@ -97,7 +97,7 @@ class MODxMailer extends PHPMailer
 			mb_internal_encoding($modx->config['modx_charset']);
 		}
 		$exconf = MODX_MANAGER_PATH . 'includes/controls/phpmailer/config.inc.php';
-		if(is_file($exconf)) include_once($exconf);
+		if(is_file($exconf)) include($exconf);
 	}
 	
 	function EncodeHeader($str, $position = 'text')

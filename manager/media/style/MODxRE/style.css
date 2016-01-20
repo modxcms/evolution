@@ -688,6 +688,10 @@ div.treeNode {
     padding: 1px 2px;
 	margin-left:-3px;
 }
+.treeNodeSelected
+{
+    font-weight:700;
+}
 .unpublished a, .unpublishedNode, .unpublish {
 	color: #B68282;
 	font-style: italic;
@@ -1746,10 +1750,10 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 	background-color: #fff;
 	border: 1px solid #0070bf;
 	position: absolute;
-	width: auto;
+	width: 177px;
 	top: 24px;
 	left: 0;
-	margin: 0 0 3px 0;
+	margin: 0px 0px 3px 0px;
 }
 .dp_cal table {
 	width: 100%;

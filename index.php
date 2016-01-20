@@ -77,8 +77,9 @@ ob_start();
 
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
-define("IN_MANAGER_MODE", "false");
-
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "false");
+}
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }

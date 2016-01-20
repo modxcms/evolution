@@ -74,8 +74,11 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 	exit;
 }
 
-define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
-                                    // the manager instead of seperately.
+// we use this to make sure files are accessed through
+// the manager instead of seperately.
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "true");
+}
 
 // harden it
 require_once('./includes/protect.inc.php');
@@ -86,7 +89,6 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-header("X-Frame-Options: SAMEORIGIN");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
 
 // check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
@@ -204,7 +206,11 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // first we check to see if this is a frameset request
 if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])) {
     // this looks to be a top-level frameset request, so let's serve up a frameset
-    include_once "frames/1.php";
+    if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/frames/1.php")) {
+        include_once "media/style/".$manager_theme."/frames/1.php";
+    }else{
+        include_once "frames/1.php";
+    }
     exit;
 }
 
@@ -254,7 +260,12 @@ switch ($action) {
         if($frame>9) {
             $enable_debug=false;    // this is to stop the debug thingy being attached to the framesets
         }
-        include_once "frames/".$frame.".php";
+
+        if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/frames/1.php")) {
+            include_once "media/style/".$manager_theme."/frames/".$frame.".php";
+        }else{
+            include_once "frames/".$frame.".php";
+        }
     break;
 /********************************************************************/
 /* show the homepage                                                */

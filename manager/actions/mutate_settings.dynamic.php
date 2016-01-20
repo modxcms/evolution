@@ -705,6 +705,22 @@ function confirmLangChange(el, lkey, elupd){
   <td colspan="2"><div class='split'></div></td>
   </tr>
 
+            <?php if(!isset($aliaslistingfolder)) $aliaslistingfolder = '0';?>
+            <tr id="furlRow56" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <th><?php echo $_lang['aliaslistingfolder_title'] ?></th>
+                <td>
+                    <?php echo wrap_label($_lang["yes"],form_radio('aliaslistingfolder','1', $aliaslistingfolder=='1'));?><br />
+                    <?php echo wrap_label($_lang["no"],form_radio('aliaslistingfolder','0', $aliaslistingfolder=='0'));?><br />
+                </td>
+            </tr>
+            <tr id='furlRow57' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <td width="200">&nbsp;</td>
+                <td class='comment'><?php echo $_lang["aliaslistingfolder_message"] ?></td>
+            </tr>
+            <tr id='furlRow58' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <td colspan="2"><div class='split'></div></td>
+            </tr>
+
 
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><?php echo $_lang["friendly_alias_title"] ?></td>

@@ -1,5 +1,10 @@
 <?php
 /**
+
+version: 0.4.2.1
+- fix edit document
+
+
 version: 0.4.2
 
 Author:
@@ -191,6 +196,7 @@ class resourse {
 	}
 	
 	public function set($key,$value){
+		$value = str_replace("'", "\'", $value );
 		if(is_scalar($value) && is_scalar($key) && !empty($key)){
 			switch($key){
 				case 'template': {
@@ -392,7 +398,7 @@ class resourse {
 		return $this->field;
 	}
 	
-	private function checkAlias($alias){
+	private function checkAlias($alias, $i=1){
 		if($this->modx->config['friendly_urls']){
 			$flag = false;
 			$_alias = $this->modx->db->escape($alias);
@@ -402,14 +408,14 @@ class resourse {
 				$flag = $this->modx->db->getValue($this->modx->db->select('id', $this->_table['site_content'], "alias='{$_alias}'", '',  1));
 			}
 			if(($flag && $this->newDoc) || (!$this->newDoc && $flag && $this->id != $flag)){
-				$suffix = substr($alias, -2);
+				/*$suffix = substr($alias, -2);
 				if(preg_match('/-(\d+)/',$suffix,$tmp) && isset($tmp[1]) && (int)$tmp[1]>1){
 					$suffix = (int)$tmp[1] + 1;
 					$alias = substr($alias, 0, -2) . '-'. $suffix;
 				}else{
 					$alias .= '-2';
-				}
-				$alias = $this->checkAlias($alias);
+				}*/
+				$alias = $this->checkAlias($alias.'-'.$i,$i+1);
 			}
 		}
 		return $alias;
@@ -452,21 +458,25 @@ class resourse {
 		if($this->newDoc) $this->id = $this->modx->db->getInsertId();
 		
 		foreach($fld as $key=>$value){
-			if ($value=='') continue;
+			#if ($value=='') continue;
  			if ($this->tv[$key]!=''){
 				$fields = array(
 					'tmplvarid' => $this->tv[$key],
 					'contentid' => $this->id,
 					'value'     => $this->modx->db->escape($value),
 					);
+
 				$rs = $this->modx->db->select('value', $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
-				if ($row = $this->modx->db->getRow($rs)) {
+				
+				if ( $this->modx->db->getRecordCount($rs) > 0 ) {
+					$row = $this->modx->db->getRow($rs);
 					if ($row['value'] != $value) {
 						$this->modx->db->update($fields, $this->_table['site_tmplvar_contentvalues'], "contentid = '{$fields['contentid']}' AND tmplvarid = '{$fields['tmplvarid']}'");
 				    }
 				}else{	
 					$this->modx->db->insert($fields, $this->_table['site_tmplvar_contentvalues']);
 				}
+				
 			}
 		}
 		$this->invokeEvent('OnDocFormSave',array (

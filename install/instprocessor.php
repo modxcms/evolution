@@ -218,7 +218,7 @@ $configString = '<?php
 /**
  * MODX Configuration file
  */
-$database_type = \'mysql\';
+$database_type = \'mysqli\';
 $database_server = \'' . $database_server . '\';
 $database_user = \'' . mysql_real_escape_string($database_user) . '\';
 $database_password = \'' . mysql_real_escape_string($database_password) . '\';

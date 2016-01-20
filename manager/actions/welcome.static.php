@@ -4,9 +4,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
 if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx->getVersionData('version'))) {
-    // seems to be a new install - send the user to the configuration page
-    echo '<script type="text/javascript">document.location.href="index.php?a=17";</script>';
-    exit;
+	// seems to be a new install - send the user to the configuration page
+	echo '<script type="text/javascript">document.location.href="index.php?a=17";</script>';
+	exit;
 }
 
 $script = <<<JS
@@ -37,56 +37,56 @@ $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
 
 // setup message info
 if($modx->hasPermission('messages')) {
-		include_once MODX_MANAGER_PATH.'includes/messageCount.inc.php';
-		$_SESSION['nrtotalmessages'] = $nrtotalmessages;
-		$_SESSION['nrnewmessages'] = $nrnewmessages;
+	include_once MODX_MANAGER_PATH.'includes/messageCount.inc.php';
+	$_SESSION['nrtotalmessages'] = $nrtotalmessages;
+	$_SESSION['nrnewmessages'] = $nrnewmessages;
 
-    $msg = '<a href="index.php?a=10"><img src="'.$_style['icons_mail_large'].'" /></a>
+	$msg = '<a href="index.php?a=10"><img src="'.$_style['icons_mail_large'].'" /></a>
     <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;'.$_lang["inbox"].($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
     <span class="comment">'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</span>';
-    $modx->setPlaceholder('MessageInfo',$msg);
+	$modx->setPlaceholder('MessageInfo',$msg);
 }
 
 // setup icons
-if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { 
-    $icon = '<a class="hometblink" href="index.php?a=75"><img src="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'" /><br />'.$_lang['security'].'</a>';     
-    $modx->setPlaceholder('SecurityIcon',$icon);
+if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) {
+	$icon = '<a class="hometblink" href="index.php?a=75"><img src="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'" /><br />'.$_lang['security'].'</a>';
+	$modx->setPlaceholder('SecurityIcon',$icon);
 }
-if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { 
-    $icon = '<a class="hometblink" href="index.php?a=99"><img src="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
-    $modx->setPlaceholder('WebUserIcon',$icon);
+if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) {
+	$icon = '<a class="hometblink" href="index.php?a=99"><img src="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
+	$modx->setPlaceholder('WebUserIcon',$icon);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-    $icon = '<a class="hometblink" href="index.php?a=106"><img src="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
-    $modx->setPlaceholder('ModulesIcon',$icon);
+	$icon = '<a class="hometblink" href="index.php?a=106"><img src="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
+	$modx->setPlaceholder('ModulesIcon',$icon);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-    $icon = '<a class="hometblink" href="index.php?a=76"><img src="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
-    $modx->setPlaceholder('ResourcesIcon',$icon);
+	$icon = '<a class="hometblink" href="index.php?a=76"><img src="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
+	$modx->setPlaceholder('ResourcesIcon',$icon);
 }
 if($modx->hasPermission('bk_manager')) {
-    $icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
-    $modx->setPlaceholder('BackupIcon',$icon);
+	$icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
+	$modx->setPlaceholder('BackupIcon',$icon);
 }
 
 // do some config checks
 if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
-    include_once "config_check.inc.php";
-    $modx->setPlaceholder('settings_config',$_lang['settings_config']);
-    $modx->setPlaceholder('configcheck_title',$_lang['configcheck_title']);
-    if($config_check_results != $_lang['configcheck_ok']) {    
-        $modx->setPlaceholder('config_check_results',$config_check_results);
-        $modx->setPlaceholder('config_display','block');
-    }
-    else {
-        $modx->setPlaceholder('config_display','none');
-    }
+	include_once "config_check.inc.php";
+	$modx->setPlaceholder('settings_config',$_lang['settings_config']);
+	$modx->setPlaceholder('configcheck_title',$_lang['configcheck_title']);
+	if($config_check_results != $_lang['configcheck_ok']) {
+		$modx->setPlaceholder('config_check_results',$config_check_results);
+		$modx->setPlaceholder('config_display','block');
+	}
+	else {
+		$modx->setPlaceholder('config_display','none');
+	}
 } else {
-     $modx->setPlaceholder('config_display','none');
+	$modx->setPlaceholder('config_display','none');
 }
 
 // include rss feeds for important forum topics
-include_once "rss.inc.php"; 
+include_once "rss.inc.php";
 
 // modx news
 $modx->setPlaceholder('modx_news',$_lang["modx_news_tab"]);
@@ -103,11 +103,11 @@ $html = $_lang["activity_message"].'<br /><br /><ul>';
 $rs = $modx->db->select('id, pagetitle, description', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
-    $html .= '<li>'.$_lang['no_activity_message'].'</li>';
+	$html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
-    while ($content = $modx->db->getRow($rs)) {
-        $html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
-    }
+	while ($content = $modx->db->getRow($rs)) {
+		$html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
+	}
 }
 $html.='</ul>';
 $modx->setPlaceholder('recent_docs',$_lang['recent_docs']);
@@ -147,16 +147,16 @@ $modx->setPlaceholder('UserInfo',$html);
 // online users
 $modx->setPlaceholder('online',$_lang['online']);
 $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
-    $timetocheck = (time()-(60*20));//+$server_offset_time;
+$timetocheck = (time()-(60*20));//+$server_offset_time;
 
-    include_once "actionlist.inc.php";
+include_once "actionlist.inc.php";
 
-    $rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit<1) {
-        $html = "<p>".$_lang['no_active_users_found']."</p>";
-    } else {
-        $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
+$rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
+$limit = $modx->db->getRecordCount($rs);
+if($limit<1) {
+	$html = "<p>".$_lang['no_active_users_found']."</p>";
+} else {
+	$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
                 <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
                   <thead>
                     <tr>
@@ -169,37 +169,37 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
                   </thead>
                   <tbody>
         ';
-        while ($activeusers = $modx->db->getRow($rs)) {
-            $currentaction = getAction($activeusers['action'], $activeusers['id']);
-            $webicon = ($activeusers['internalKey']<0)? "<img src='".$_style["tree_globe"]."' alt='Web user' />":"";
-            $html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
-        }
-        $html.= '
+	while ($activeusers = $modx->db->getRow($rs)) {
+		$currentaction = getAction($activeusers['action'], $activeusers['id']);
+		$webicon = ($activeusers['internalKey']<0)? "<img src='".$_style["tree_globe"]."' alt='Web user' />":"";
+		$html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
+	}
+	$html.= '
                 </tbody>
                 </table>
         ';
-    }
+}
 $modx->setPlaceholder('OnlineInfo',$html);
 
 // invoke event OnManagerWelcomePrerender
 $evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
 if(is_array($evtOut)) {
-    $output = implode("",$evtOut);
-    $modx->setPlaceholder('OnManagerWelcomePrerender', $output);
+	$output = implode("",$evtOut);
+	$modx->setPlaceholder('OnManagerWelcomePrerender', $output);
 }
 
 // invoke event OnManagerWelcomeHome
 $evtOut = $modx->invokeEvent('OnManagerWelcomeHome');
 if(is_array($evtOut)) {
-    $output = implode("",$evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeHome', $output);
+	$output = implode("",$evtOut);
+	$modx->setPlaceholder('OnManagerWelcomeHome', $output);
 }
 
 // invoke event OnManagerWelcomeRender
 $evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
 if(is_array($evtOut)) {
-    $output = implode("",$evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeRender', $output);
+	$output = implode("",$evtOut);
+	$modx->setPlaceholder('OnManagerWelcomeRender', $output);
 }
 
 // load template

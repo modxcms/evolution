@@ -37,7 +37,8 @@ class Wayfinder {
                 '[+wf.docid+]',
                 '[+wf.introtext+]',
                 '[+wf.description+]',
-                '[+wf.subitemcount+]'
+                '[+wf.subitemcount+]',
+		'[+wf.iterator+]'
             ),
             'wrapperLevel' => array(
                 '[+wf.wrapper+]',
@@ -121,7 +122,7 @@ class Wayfinder {
 			$docInfo['hasChildren'] = in_array($docInfo['id'],$this->hasChildren) ? 1 : 0;
 			$numChildren = $docInfo['hasChildren'] ? count($this->docs[$level+1][$docInfo['id']]) : 0;
 			//Render the row output
-			$subMenuOutput .= $this->renderRow($docInfo,$numChildren);
+			$subMenuOutput .= $this->renderRow($docInfo,$numChildren,$counter);
 			//Update counter for last check
 			$counter++;
 		}
@@ -165,7 +166,7 @@ class Wayfinder {
 	}
 	
 	//render each rows output
-    function renderRow(&$resource,$numChildren) {
+    function renderRow(&$resource,$numChildren,$curNum) {
         global $modx;
         $output = '';
 		//Determine which template to use
@@ -223,6 +224,8 @@ class Wayfinder {
 		} else {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		}
+	//add iterator in phArray
+	$phArray[] = $curNum;
         $usePlaceholders = $this->placeHolders['rowLevel'];
         //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {

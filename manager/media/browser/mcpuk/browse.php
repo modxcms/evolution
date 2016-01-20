@@ -13,7 +13,7 @@
   */
 
 require "core/autoload.php";
-$browser = new browser();
+$browser = new browser($modx);
 $browser->action();
 
 ?>

@@ -32,7 +32,7 @@ if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormP
 if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 
 # Snippet customize settings
-$params = array (
+$_params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
 	 'snipFolder' => $snipFolder,
@@ -94,13 +94,13 @@ $params = array (
 );
 
 // pixelchutes PHx workaround
-foreach( $params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
+foreach( $_params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
 
 # Start processing
 
 include_once ($snipPath."eform.inc.php");
 
-$output = eForm($modx,$params);
+$output = eForm($modx,array_merge($params,$_params));
 
 # Return
 return $output;

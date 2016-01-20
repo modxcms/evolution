@@ -13,7 +13,7 @@
   */
 
 require "core/autoload.php";
-$uploader = new uploader();
+$uploader = new uploader($modx);
 $uploader->upload();
 
 ?>
