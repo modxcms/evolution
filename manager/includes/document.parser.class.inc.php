@@ -871,8 +871,10 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    $tags[] = $fetch; // Fetch and reset
-                    $fetch = '';
+					if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+						$tags[] = $fetch; // Fetch
+					};
+                    $fetch = ''; // and reset
                     $lc=0;
                     $rc=0;
                 }
