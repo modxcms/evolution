@@ -1945,12 +1945,17 @@ class DocumentParser {
     function getChildIds($id, $depth= 10, $children= array ()) {
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
-            $idx = array();
-            while( $row = $this->db->getRow( $res ) ) {
-                $children[$row['alias']] = $row['id'];
-                if ($row['isfolder']==1) $idx[] = $row['id'];
-            }
+			$res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
+			$idx = array();
+			while( $row = $this->db->getRow( $res ) ) {
+				$pAlias = '';
+				if( isset( $this->aliasListing[$row['parent']] )) {
+					$pAlias .= !empty( $this->aliasListing[$row['parent']]['path'] ) ? $this->aliasListing[$row['parent']]['path'] .'/' : '';
+					$pAlias .= !empty( $this->aliasListing[$row['parent']]['alias'] ) ? $this->aliasListing[$row['parent']]['alias'] .'/' : '';
+				};
+				$children[$pAlias.$row['alias']] = $row['id'];
+				if ($row['isfolder']==1) $idx[] = $row['id'];
+			}
             $depth--;
             $idx = implode(',',$idx);
             if (!empty($idx)) {
