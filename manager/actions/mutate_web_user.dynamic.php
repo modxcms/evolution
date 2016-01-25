@@ -198,24 +198,25 @@ function showHide(what, onoff){
 <h1><?php echo $_lang['web_user_title']; ?></h1>
 
 <div id="actions">
-	<ul class="actionButtons">
-		<li id="Button1">
-			<a href="#" onclick="documentDirty=false; document.userform.save.click();">
-			  <img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
-			<select id="stay" name="stay">
-			  <?php if ($modx->hasPermission('new_web_user')) { ?>
-				<option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-			  <?php } ?>
-			  	<option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-			  	<option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
-			</select>
-		</li>
-		<li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
-<?php if($_GET['a']!='88') { ?>
-		<script type="text/javascript">document.getElementById("Button3").className='disabled';</script>
-<?php } ?>
-		<li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=99';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
-	</ul>
+    <ul class="actionButtons">
+        <li id="Button1">
+            <a href="#" onclick="documentDirty=false; document.userform.save.click();">
+              <img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
+            <select id="stay" name="stay">
+              <?php if ($modx->hasPermission('new_web_user')) { ?>
+                <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
+              <?php } ?>
+                  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
+            </select>
+        </li>
+    <?php if($_GET['a'] == '87') { ?>
+        <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+    <?php } else { ?>
+        <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+    <?php } ?>
+        <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=99';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+    </ul>
 </div>
 
 <!-- Tab Start -->

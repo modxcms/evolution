@@ -286,26 +286,21 @@ function SetUrl(url, width, height, alt) {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
-                  <?php if ($modx->hasPermission('new_module')) { ?>
+          <?php if ($modx->hasPermission('new_module')) { ?>
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-                  <?php } ?>
+          <?php } ?>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-              <?php
-                if ($_REQUEST['a'] == '108') { ?>
-              <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
-              <li id="Button2"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-              <?php // In Place for future extraction of actionbar
-                    if ($_REQUEST['a'] == '27') { ?>
-                        <li id="Button6"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img src="<?php echo $_style["icons_preview"]?>" /> <?php echo $_lang['preview']?></a></li>
-              <?php } ?>
+          <?php if ($_REQUEST['a'] == '107') { ?>
+              <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } else { ?>
+              <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } ?>
+              <li id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
     <!-- end #actions -->
