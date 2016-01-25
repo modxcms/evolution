@@ -1185,11 +1185,11 @@ class DocumentParser {
         // current params
         $params = $this->_snipParamsToArray($snip_call['params']);
         
-        if(isset($snippetObject['properties']))
-        {
-            $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
-            $params = array_merge($default_params,$params);
+        if(!isset($snippetObject['properties'])){
+            $snippetObject['properties'] = '';
         }
+        $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
+        $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
         
