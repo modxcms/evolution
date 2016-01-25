@@ -194,7 +194,7 @@ class template{
 	// 
 	// http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
 	// ---------------------------------------------------
-	static function fetch($tpl){
+	function fetch($tpl){
 		global $modx;
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {
