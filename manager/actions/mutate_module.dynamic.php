@@ -113,7 +113,7 @@ function showParameters(ctrl) {
             dt = ar[1];		// data type
             value = decode((ar[2])? ar[2]:'');
             // store values for later retrieval
-            if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && (dt=='menu' || dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
             if (dt) {
                 switch(dt) {
