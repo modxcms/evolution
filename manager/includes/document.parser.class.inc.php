@@ -871,8 +871,10 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    $tags[] = $fetch; // Fetch and reset
-                    $fetch = '';
+					if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+						$tags[] = $fetch; // Fetch
+					};
+                    $fetch = ''; // and reset
                     $lc=0;
                     $rc=0;
                 }
@@ -1153,18 +1155,21 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-        foreach($matches[1] as $i=>$value)
-        {
-            foreach($matches[0] as $find=>$tag)
-            {
-                if(isset($replace[$find]) && strpos($value,$tag)!==false)
-                {
-                    $value = str_replace($tag,$replace[$find],$value);
-                    break;
-                }
-            }
-            $replace[$i] = $this->_get_snip_result($value);
-        }
+		foreach($matches[1] as $i=>$value)
+		{
+			$find = $i - 1;
+			while( $find >= 0 )
+			{
+				$tag = $matches[0][ $find ];
+				if(isset($replace[$find]) && strpos($value,$tag)!==false)
+				{
+					$value = str_replace($tag,$replace[$find],$value);
+					break;
+				}
+				$find--;
+			}
+			$replace[$i] = $this->_get_snip_result($value);
+		}
         $content = str_replace($matches['0'], $replace, $content);
         return $content;
     }
@@ -1940,12 +1945,17 @@ class DocumentParser {
     function getChildIds($id, $depth= 10, $children= array ()) {
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
-            $idx = array();
-            while( $row = $this->db->getRow( $res ) ) {
-                $children[$row['alias']] = $row['id'];
-                if ($row['isfolder']==1) $idx[] = $row['id'];
-            }
+			$res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
+			$idx = array();
+			while( $row = $this->db->getRow( $res ) ) {
+				$pAlias = '';
+				if( isset( $this->aliasListing[$row['parent']] )) {
+					$pAlias .= !empty( $this->aliasListing[$row['parent']]['path'] ) ? $this->aliasListing[$row['parent']]['path'] .'/' : '';
+					$pAlias .= !empty( $this->aliasListing[$row['parent']]['alias'] ) ? $this->aliasListing[$row['parent']]['alias'] .'/' : '';
+				};
+				$children[$pAlias.$row['alias']] = $row['id'];
+				if ($row['isfolder']==1) $idx[] = $row['id'];
+			}
             $depth--;
             $idx = implode(',',$idx);
             if (!empty($idx)) {

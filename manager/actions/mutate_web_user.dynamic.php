@@ -239,7 +239,7 @@ function showHide(what, onoff){
 		  <tr id="showname" style="display: <?php echo ($_GET['a']=='88' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
 			<td colspan="3">
 				<img src="<?php echo $_style["icons_user"]?>" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
-				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
+				<input type="hidden" name="oldusername" value="<?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
 				<hr />
 			</td>
 		  </tr>
@@ -247,7 +247,7 @@ function showHide(what, onoff){
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
+			<td><input type="text" name="newusername" class="inputBox" value="<?php echo $modx->htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
@@ -278,14 +278,14 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" value="<?php echo htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="fullname" class="inputBox" value="<?php echo $modx->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
 			<input type="text" name="email" class="inputBox" value="<?php echo  isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onchange="documentDirty=true;" />
-			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
+			<input type="hidden" name="oldemail" value="<?php echo $modx->htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
 			</td>
 		  </tr>
 		  <tr>
@@ -306,12 +306,12 @@ function showHide(what, onoff){
 		<tr>
 			<td><?php echo $_lang['user_street']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="street" class="inputBox" value="<?php echo htmlspecialchars($userdata['street']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="street" class="inputBox" value="<?php echo $modx->htmlspecialchars($userdata['street']); ?>" onchange="documentDirty=true;" /></td>
 		</tr>
 		<tr>
 			<td><?php echo $_lang['user_city']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="city" class="inputBox" value="<?php echo htmlspecialchars($userdata['city']); ?>" onchange="documentDirty=true;" /></td>
+			<td><input type="text" name="city" class="inputBox" value="<?php echo $modx->htmlspecialchars($userdata['city']); ?>" onchange="documentDirty=true;" /></td>
 		</tr>
 		  <tr>
 			<td><?php echo $_lang['user_state']; ?>:</td>
@@ -361,7 +361,7 @@ function showHide(what, onoff){
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='88') { ?>
@@ -484,7 +484,7 @@ function showHide(what, onoff){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["user_photo"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo $modx->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>

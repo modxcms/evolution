@@ -296,7 +296,7 @@ function decode(s){
         <table>
           <tr>
             <th><?php echo $_lang['snippet_name']?>:</th>
-            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
+            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
           </tr>
           <tr>
             <th><?php echo $_lang['snippet_desc']?></th>
@@ -309,7 +309,7 @@ function decode(s){
                 <?php
                     include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                     foreach(getCategories() as $n=>$v){
-                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
+                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.$modx->htmlspecialchars($v['category']).'</option>';
                     }
                 ?>
                 </select>
@@ -332,7 +332,7 @@ function decode(s){
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim($modx->htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->
@@ -357,7 +357,7 @@ function decode(s){
 						'sm.name'
 						);
                     while($row = $modx->db->getRow($ds)){
-                        echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
+                        echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".$modx->htmlspecialchars($row['name'])."</option>";
                     }
                 ?>
                 </select>
