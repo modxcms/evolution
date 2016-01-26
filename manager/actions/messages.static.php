@@ -167,7 +167,7 @@ $dotablestuff = 1;
             $messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
 ?>
     <tr>
-      <td ><?php echo $message['messageread']==0 ? "<img src='".$_style["icons_new19"]."'>" : ""; ?></td>
+      <td ><?php echo $message['messageread']==0 ? "<img src='".$_style["icons_message_unread"]."'>" : ""; ?></td>
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
       <td ><?php echo $message['private']==0 ? $_lang['no'] : $_lang['yes'] ; ?></td>
