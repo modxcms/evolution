@@ -210,26 +210,25 @@ if (is_array($evtOut))
 
 <h1><?php echo $_lang['user_title']; ?></h1>
     <div id="actions">
-    	  <ul class="actionButtons">
-    		  <li id="Button1">
-    			<a href="#" onclick="documentDirty=false; document.userform.save.click();">
-    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-    			</a>
-    			  <span class="plus"> + </span>
-    			<select id="stay" name="stay">
-    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
-    			</select>		
-    		  </li>
-    		  <?php
-    			if ($_REQUEST['a'] == '12') { ?>
-    		  <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } else { ?>
-    		  <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } ?>	
-    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
-    	  </ul>
+          <ul class="actionButtons">
+              <li id="Button1">
+                <a href="#" onclick="documentDirty=false; document.userform.save.click();">
+                  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+                </a>
+                <span class="plus"> + </span>
+                <select id="stay" name="stay">
+                  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
+                  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
+                </select>
+              </li>
+          <?php if ($_REQUEST['a'] == '11') { ?>
+              <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } else { ?>
+              <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } ?>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
+          </ul>
     </div>
 <!-- Tab Start -->
 <div class="sectionBody">
