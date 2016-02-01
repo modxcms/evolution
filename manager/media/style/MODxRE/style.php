@@ -79,6 +79,7 @@ $_style['icons_home']               = $style_path.'icons/home.gif';
 $_style['icons_information']        = $style_path.'icons/information.png';
 $_style['icons_loading_doc_tree']   = $style_path.'icons/information.png'; // top bar
 $_style['icons_mail']               = $style_path.'icons/email.png'; // top bar
+$_style['icons_message_unread']     = $style_path.'icons/email.png';
 $_style['icons_message_forward']    = $style_path.'icons/forward.gif';
 $_style['icons_message_reply']      = $style_path.'icons/reply.gif';
 $_style['icons_modules']            = $style_path.'icons/modules.gif';
