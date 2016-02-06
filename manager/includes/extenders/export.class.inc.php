@@ -11,7 +11,7 @@ class EXPORT_SITE
 	var $repl_after;
 	var $output = array();
 	
-	function EXPORT_SITE()
+	function __construct()
 	{
 		global $modx;
 		

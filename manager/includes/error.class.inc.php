@@ -5,7 +5,7 @@ class errorHandler{
 var $errorcode;
 var $errors = array();
 
-	function errorHandler() {
+	function __construct() {
 		
 		$_lang = $this->include_lang('errormsg');
 		
