@@ -1519,7 +1519,7 @@ ul.actionButtons {
 	background:-o-linear-gradient(#8aae4b,#66901b);
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b);
 }
-/*.actionButtons li.disabled a {
+.actionButtons li.disabled a {
 	border: 1px solid #657587;
 	color: #777;
 	border-width: 0;
@@ -1528,7 +1528,7 @@ ul.actionButtons {
 .actionButtons li.disabled a img {
 	opacity: .3;
 	filter: alpha(opacity=30);
-}*/
+}
 .actionButtons .plus{
     margin:0 2px 0 5px;
     color: #3b454f;
