@@ -4,7 +4,7 @@ class DBAPI {
 	var $config;
 	var $isConnected;
 
-	function DBAPI($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
+	function __construct($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
 		$this->config['host'] = $host ? $host : $GLOBALS['database_server'];
 		$this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
 		$this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];

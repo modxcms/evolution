@@ -53,7 +53,7 @@ class VeriWord {
     var $im_width   = 0;
     var $im_height  = 0;
 
-    function VeriWord($w=200, $h=80) {
+    function __construct($w=200, $h=80) {
         /* create session to set word for verification */
         startCMSSession();
         $this->set_veriword();

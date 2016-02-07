@@ -2,7 +2,7 @@
 // todo file_put_contents(), strftime(), mb_*()
 class PHPCOMPAT
 {
-	function PHPCOMPAT()
+	function __construct()
 	{
 	}
 	

@@ -31,7 +31,7 @@ class MakeTable {
 	var $columnWidths;
 	var $selectedValues;
 	
-	function MakeTable() {
+	function __construct() {
 		$this->fieldHeaders= array();
 		$this->excludeFields= array();
 		$this->actionField= '';
