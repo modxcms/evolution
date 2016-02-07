@@ -44,9 +44,12 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
             $has_filebinding = '0';
         elseif(!empty($filebinding))
         {
-            $has_filebinding = '1';
             $elm_path = "assets/{$elm_name}/{$filebinding}";
-            $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
+            $pInfo = pathinfo(MODX_BASE_PATH.$elm_path);
+            if(is_dir($pInfo['dirname'])) {
+                $has_filebinding = '1';
+                $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
+            };
         }
         else $has_filebinding = '0';
     }
