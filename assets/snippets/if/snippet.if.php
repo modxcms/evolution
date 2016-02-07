@@ -177,11 +177,9 @@ if (substr($output,0,6) == "@eval:") {
     $output = ob_get_contents();
     ob_end_clean();
 }
-if (empty($then)&&empty($else)) {
-    if ($math=='on') {
-        eval('$subject='.$subject.';');
-        return $subject;
-    }
+if (empty($then)&&empty($else)&&$math=='on') {
+    eval('$subject='.$subject.';');
+    return $subject;
 }
 
 return $output;
