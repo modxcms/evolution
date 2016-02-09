@@ -185,7 +185,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -325,7 +325,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></li>
+				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -508,7 +508,7 @@ function sanitize($str='',$safecount=0) {
 		}
 	}
 	else {
-		$str = strip_tags($str);
+		// $str = strip_tags($str); // LEAVE < and > intact
 		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
 	}
 	return $str;

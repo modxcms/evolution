@@ -28,7 +28,7 @@ else if ($isPostBack){
     $username = $modx->db->escape($modx->stripTags(trim(htmlspecialchars($_POST['username'], ENT_NOQUOTES, $modx->config['modx_charset']))));
     $fullname = $modx->db->escape($modx->stripTags($_POST['fullname']));
     $email = $modx->db->escape($modx->stripTags($_POST['email']));
-    $password = $modx->db->escape($modx->stripTags(htmlspecialchars($_POST['password'], ENT_NOQUOTES, $modx->config['modx_charset'])));
+    $password = htmlspecialchars($_POST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
     $country = $modx->db->escape($modx->stripTags($_POST['country']));
     $state = $modx->db->escape($modx->stripTags($_POST['state']));
     $zip = $modx->db->escape($modx->stripTags($_POST['zip']));
