@@ -1,4 +1,10 @@
 <?php
+/*
+ * events: OnRichTextEditorRegister, OnRichTextEditorInit
+ * configuration: &customparams=Custom Parameters;textarea;valid_elements : "*[*]", &mce_formats=Block Formats;text;p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre &entity_encoding=Entity Encoding;list;named,numeric,raw;named &entities=Entities;text; &mce_path_options=Path Options;list;Site config,Absolute path,Root relative,URL,No convert;Site config &mce_resizing=Advanced Resizing;list;true,false;true &disabledButtons=Disabled Buttons;text; &link_list=Link List;list;enabled,disabled;enabled &custom_plugins=Custom Plugins;text; &custom_buttons1=Custom Buttons 1;text;bold,italic,underline &custom_buttons2=Custom Buttons 2;text;strikethrough &custom_buttons3=Custom Buttons 3;text; &custom_buttons4=Custom Buttons 4;text; &toolbar_align=Toolbar Alignment;list;ltr,rtl;ltr &width=Width;text;200 &height=Height;text;200
+ *
+ * */
+
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 global $usersettings,$settings;
@@ -35,8 +41,8 @@ switch ($e->name)
 		break;
 
 	case "OnInterfaceSettingsRender":
-		$html = $mce->get_mce_settings();
-		$e->output($html);
+		// $html = $mce->get_mce_settings();
+		// $e->output($html);
 		break;
 
    default :
