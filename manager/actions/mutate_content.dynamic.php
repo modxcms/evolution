@@ -719,7 +719,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array(
+                $elements_richtext = array(
                     'ta',
                 );
             } else {
@@ -761,12 +761,24 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                             // Add richtext editor to the list
-                            if (is_array($replace_richtexteditor)) {
-                                $replace_richtexteditor = array_merge($replace_richtexteditor, array(
+                            if (is_array($elements_richtext)) {
+                                $elements_richtext = array_merge($elements_richtext, array(
                                     "tv" . $row['id'],
                                 ));
                             } else {
-                                $replace_richtexteditor = array(
+                                $elements_richtext = array(
+                                    "tv" . $row['id'],
+                                );
+                            }
+                        }
+                        if ($row['type'] == 'richtextmini') {
+                            // Add richtext editor to the list
+                            if (is_array($elements_richtextmini)) {
+                                $elements_richtextmini = array_merge($elements_richtextmini, array(
+                                    "tv" . $row['id'],
+                                ));
+                            } else {
+                                $elements_richtextmini = array(
                                     "tv" . $row['id'],
                                 );
                             }
@@ -1190,11 +1202,20 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </script>
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
-        if (is_array($replace_richtexteditor)) {
+        if (is_array($elements_richtext)) {
             // invoke OnRichTextEditorInit event
             $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
                 'editor' => $which_editor,
-                'elements' => $replace_richtexteditor
+                'elements' => $elements_richtext
+            ));
+            if (is_array($evtOut))
+                echo implode('', $evtOut);
+        }
+        if (is_array($elements_richtextmini)) {
+            // invoke OnRichTextEditorInit event
+            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+                'editor' => $which_editor. ' Mini',
+                'elements' => $elements_richtextmini
             ));
             if (is_array($evtOut))
                 echo implode('', $evtOut);
