@@ -3389,16 +3389,16 @@ class DocumentParser {
 
         if(!empty($context)){
             if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
-                $out = $_SESSION[$context . 'Shortname'];
+                $out = stripslashes($_SESSION[$context . 'Shortname']);
             }
         }else{
             switch(true){
                 case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
-                    $out = $_SESSION['webShortname'];
+                    $out = stripslashes($_SESSION['webShortname']);
                     break;
                 }
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
-                    $out = $_SESSION['mgrShortname'];
+                    $out = stripslashes($_SESSION['mgrShortname']);
                     break;
                 }
             }
