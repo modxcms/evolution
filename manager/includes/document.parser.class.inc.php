@@ -839,10 +839,8 @@ class DocumentParser {
     
     function _getTagsFromContent($content, $left='[+',$right='+]') {
         if(strpos($content,$left)===false) return array();
-        $spacer = md5('<<<MODX>>>');
-        if(strpos($content,'<[!')!==false)  $content = str_replace('<[!', "<[{$spacer}!",$content);
-        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', ";}{$spacer}}",$content);
-        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$content);
+        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', '',$content);
+        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}','',$content);
         
         $pos['<![CDATA['] = strpos($content,'<![CDATA[');
         $pos[']]>']       = strpos($content,']]>');
@@ -896,10 +894,6 @@ class DocumentParser {
                 $innerTags = $this->_getTagsFromContent($tag,$left,$right);
                 $tags = array_merge($innerTags,$tags);
             }
-        }
-        
-        foreach($tags as $i=>$tag) {
-            if(strpos($tag,"$spacer")!==false) $tags[$i] = str_replace("$spacer", '', $tag);
         }
         return $tags;
     }
