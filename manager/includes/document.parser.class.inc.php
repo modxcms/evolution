@@ -841,10 +841,15 @@ class DocumentParser {
         if(strpos($content,$left)===false) return array();
         $spacer = md5('<<<MODX>>>');
         if(strpos($content,'<[!')!==false)  $content = str_replace('<[!', "<[{$spacer}!",$content);
-        if(strpos($content,']]>')!==false)  $content = str_replace(']]>', "]{$spacer}]>",$content);
-        if(strpos($content,'!]>')!==false)  $content = str_replace('!]>', "!{$spacer}]>",$content);
         if(strpos($content,';}}')!==false)  $content = str_replace(';}}', ";}{$spacer}}",$content);
         if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$content);
+        
+        $pos['<![CDATA['] = strpos($content,'<![CDATA[');
+        $pos[']]>']       = strpos($content,']]>');
+        
+        if($pos['<![CDATA[']!==false && $pos[']]>']!==false) {
+            $content = substr($content,0,$pos['<![CDATA[']) . substr($content,$pos[']]>']+3);
+        }
         
         $lp = explode($left,$content);
         $piece = array();
