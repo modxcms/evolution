@@ -196,7 +196,7 @@ class Qm {
                             else $this->setLocked(1);                       
                             
                             // Handle RTE
-                            if($tv['type'] == 'richtext') {                   
+                            if($tv['type'] == 'richtext' || $tv['type'] == 'richtextmini') {
                                 // Invoke OnRichTextEditorInit event
                                 $eventOutput = $this->modx->invokeEvent("OnRichTextEditorInit", array('editor'=>$this->modx->config['which_editor'], 'elements'=>array('tv'.$tvName)));
                                 
