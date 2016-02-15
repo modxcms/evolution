@@ -2,8 +2,8 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.1
+ * @date 2015/02/15
  * @author The MODX Project Team
  *
  * @language Ukraine
@@ -17,3 +17,4 @@ $filename = dirname(__FILE__) . '/russian-UTF8.inc.php';
 $contents = file_get_contents($filename);
 eval('?>' . $contents);
 $modx_lang_attribute = 'uk'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+setlocale (LC_ALL, 'uk_UA.UTF-8');
