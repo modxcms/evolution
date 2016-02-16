@@ -1214,7 +1214,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
         if (is_array($elements_richtextmini)) {
             // invoke OnRichTextEditorInit event
             $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                'editor' => $which_editor. ' Mini',
+                'editor' => strpos($which_editor, ' Mini') !== false ? $which_editor : $which_editor.' Mini',
                 'elements' => $elements_richtextmini
             ));
             if (is_array($evtOut))
