@@ -1224,7 +1224,7 @@ a.hometblink:hover {
 }
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #333;
-	z-index: 999;
+	z-index: 9;
 	top: 1px;
 	border-width: 1px;
 	border-bottom-style: solid;
@@ -1255,7 +1255,6 @@ a.hometblink:hover {
 .dynamic-tab-pane-control .tab-page {
 	clear: both;
 	background: #fff;
-	z-index: 2;
 	position: relative;
 	top: -2px;
 	padding: 20px 15px 14px !important;
@@ -1520,13 +1519,13 @@ ul.actionButtons {
 	background:-o-linear-gradient(#8aae4b,#66901b);
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b);
 }
-.actionButtons a.disabled {
+.actionButtons li.disabled a {
 	border: 1px solid #657587;
-	padding: 2px 4px;
 	color: #777;
 	border-width: 0;
+    pointer-events: none;
 }
-.actionButtons a.disabled img {
+.actionButtons li.disabled a img {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
@@ -1535,6 +1534,7 @@ ul.actionButtons {
     color: #3b454f;
 	font-weight: bold;
 }
+
 		/*
 * Generic styles for all form elements
 		*/

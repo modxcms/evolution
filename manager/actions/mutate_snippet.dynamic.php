@@ -42,6 +42,7 @@ if(isset($_GET['id'])) {
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
+    $content['properties'] = str_replace("&", "&amp;", $content['properties']);
 } else {
     $_SESSION['itemname']=$_lang["new_snippet"];
 }
@@ -104,7 +105,7 @@ function showParameters(ctrl) {
             value = decode((ar[2])? ar[2]:'');
 
             // store values for later retrieval
-            if (key && dt=='list' || dt=='list-multi') currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && dt=='menu' ||dt=='list' || dt=='list-multi') currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
 
             if (dt) {
@@ -260,20 +261,20 @@ function decode(s){
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-              <?php
-                if ($_GET['a'] == '22') { ?>
-              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+          <?php if ($_GET['a'] == '23') { ?>
+              <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
+          <?php } else { ?>
+              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
+          <?php } ?>
               <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
@@ -296,7 +297,7 @@ function decode(s){
         <table>
           <tr>
             <th><?php echo $_lang['snippet_name']?>:</th>
-            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
+            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
           </tr>
           <tr>
             <th><?php echo $_lang['snippet_desc']?></th>
@@ -309,7 +310,7 @@ function decode(s){
                 <?php
                     include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                     foreach(getCategories() as $n=>$v){
-                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
+                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.$modx->htmlspecialchars($v['category']).'</option>';
                     }
                 ?>
                 </select>
@@ -332,7 +333,7 @@ function decode(s){
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim($modx->htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->
@@ -357,7 +358,7 @@ function decode(s){
 						'sm.name'
 						);
                     while($row = $modx->db->getRow($ds)){
-                        echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
+                        echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".$modx->htmlspecialchars($row['name'])."</option>";
                     }
                 ?>
                 </select>

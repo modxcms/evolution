@@ -56,6 +56,7 @@ function ph()
 	$ph['release_date']  = ($modx_textdir ? '&rlm;':'') . $modx_release_date;
 	$ph['footer1']       = $_lang['modx_footer1'];
 	$ph['footer2']       = $_lang['modx_footer2'];
+	$ph['current_year']  = date('Y');
 	return $ph;
 }
 

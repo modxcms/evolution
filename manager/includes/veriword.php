@@ -53,7 +53,7 @@ class VeriWord {
     var $im_width   = 0;
     var $im_height  = 0;
 
-    function VeriWord($w=200, $h=80) {
+    function __construct($w=200, $h=80) {
         /* create session to set word for verification */
         startCMSSession();
         $this->set_veriword();
@@ -66,12 +66,7 @@ class VeriWord {
         /* create session variable for verification, 
            you may change the session variable name */
         $this->word             = $this->pick_word();   
-        if(isset($_GET['formid'])){
-            $_SESSION['veriword_'.$_GET['formid']]   = $this->word;
-        }else{ 
         $_SESSION['veriword']   = $this->word;
-    }
-
     }
 
     function output_image() {
