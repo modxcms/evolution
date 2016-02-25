@@ -421,5 +421,8 @@ class DBAPI {
 		$rs = $this->query("TRUNCATE {$table_name}");
 		return $rs;
 	}
-}
+
+	function dataSeek($result, row_number) {
+		return mysqli_data_seek($result, $row_number);
+	}
 ?>
