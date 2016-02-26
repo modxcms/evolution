@@ -662,7 +662,7 @@ class DBAPI {
        return $rs;
    }
 
-  function dataSeek($result, row_number) {
+  function dataSeek($result, $row_number) {
     return mysql_data_seek($result, $row_number);
   }
 }
