@@ -194,10 +194,9 @@ class CJotDataDb {
 				break;
 			case 1:
 			default:
-                        	$viewtype = 1;
 				$where = "published = 1 "; // Published
 		}
-		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}'", $where);
+		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}' AND ".$where);
 		return intval($modx->db->getValue($rs));
 	}
 			

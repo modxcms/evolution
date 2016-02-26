@@ -185,8 +185,8 @@ defined('IN_PARSER_MODE') or die();
 
 # process login
 
-    $username = $modx->db->escape(htmlspecialchars($_POST['username'], ENT_QUOTES));
-    $givenPassword = $modx->db->escape($_POST['password']);
+    $username = $modx->db->escape(htmlspecialchars($_POST['username'], ENT_NOQUOTES, $modx->config['modx_charset']));
+    $givenPassword = htmlspecialchars($_POST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
     $captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
     $rememberme = $_POST['rememberme'];
 
