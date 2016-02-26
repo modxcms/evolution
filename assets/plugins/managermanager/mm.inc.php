@@ -18,6 +18,7 @@
  * @copyright 2014
  */
 
+global $mm_version;
 $mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
