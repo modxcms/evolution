@@ -252,7 +252,7 @@ if(!class_exists('synccache')) {
 			);
 			$tmpPHP .= '$e = &$this->pluginEvent;';
 			while ($evt = $modx->db->getRow($rs)) {
-				if (!$events[$evt['evtname']]) {
+				if (!isset($events[$evt['evtname']])) {
 					$events[$evt['evtname']] = array();
 				}
 				$events[$evt['evtname']][] = $evt['name'];
