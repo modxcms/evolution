@@ -26,7 +26,7 @@
  * http://www.DivanDesign.biz
  */
 
-function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentIds, $depth = 1, $filter = '', $max = 0, $labelMask = '[+title+] ([+id+])'){
+function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentIds, $depth = 1, $filter = '', $max = 0, $labelMask = '[+title+] ([+id+])',$allowDoubling = false){
 	if (empty($parentIds) || !useThisRule($roles, $templates)){return;}
 	
 	global $modx;
@@ -135,7 +135,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 		foreach ($tvs as $tv){
 			$output .=
 '
-$j("#tv'.$tv['id'].'").ddMultipleInput({source: '.$jsonDocs.', max: '.$max.'});
+$j("#tv'.$tv['id'].'").ddMultipleInput({source: '.$jsonDocs.', max: '.$max.', allowDoubling: '.$allowDoubling.'});
 ';
 		}
 		

@@ -1,69 +1,72 @@
 <?php
 /**
  * mm_hideTabs
- * @version 1.1 (2012-11-13)
+ * @version 1.2 (2014-12-01)
  * 
- * Hide a tab.
+ * @desc A widget for ManagerManager plugin that allows one or a few default tabs to be hidden on the document edit page.
  * 
- * @uses ManagerManager plugin 0.4.
+ * @uses ManagerManager plugin 0.6.2.
  * 
- * @link http://code.divandesign.biz/modx/mm_hidetabs/1.1
+ * @param $tabs {'general'; 'settings'; 'access'} - The id(s) of the tab(s) this should apply to. @required
+ * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates). Default: ''.
  * 
- * @copyright 2012
+ * @event OnDocFormRender
+ * 
+ * @link http://code.divandesign.biz/modx/mm_hidetabs/1.2
+ * 
+ * @copyright 2014, DivanDesign
+ * http://www.DivanDesign.biz
  */
 
 function mm_hideTabs($tabs, $roles = '', $templates = ''){
 	global $modx;
 	$e = &$modx->Event;
 	
-	// if we've been supplied with a string, convert it into an array
-	$tabs = makeArray($tabs);
-	
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
-		$output = "//  -------------- mm_hideTabs :: Begin ------------- \n";
+		$output = "//---------- mm_hideTabs :: Begin -----\n";
+		
+		// if we've been supplied with a string, convert it into an array
+		$tabs = makeArray($tabs);
 		
 		foreach($tabs as $tab){
-			switch ($tab){
-				case 'general':
-					$output .= 'if (tpSettings.getSelectedIndex() == 0) { tpSettings.setSelectedIndex(1); } ' . "\n"; // if we are hiding the currently active tab, make another visible
-					$output .= '$j("div#documentPane h2:nth-child(1)").hide(); ' . "\n";
-					$output .= '$j("#tabGeneral").hide();';
-				break;
-				
-				case 'settings':
-					$output .= 'if (tpSettings.getSelectedIndex() == 1) { tpSettings.setSelectedIndex(0); } ' . "\n";
-					$output .= '$j("div#documentPane h2:nth-child(2)").hide(); ' . "\n";
-					$output .= '$j("#tabSettings").hide();';
-				break;
-				
-				// =< v1.0.0 only
-				case 'meta':
-					if($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta'] != "0"){
-						$output .= 'if (tpSettings.getSelectedIndex() == 2) { tpSettings.setSelectedIndex(0); } ' . "\n";
-						$output .= '$j("div#documentPane h2:nth-child(3)").hide(); ' . "\n";
-						$output .= '$j("#tabMeta").hide(); ';
-					}
-				break;
-				
-				// Meta tags tab is removed by default in version 1.0.1+ but can still be enabled via a preference.
-				// Access tab was only added in 1.0.1
-				// Since counting the tabs is the only way of determining this, we need to know if this has been activated
-				// If meta tabs are active, the "access" tab is index 4 in the HTML; otherwise index 3.
-				// If config['show_meta'] is NULL, this is a version before this option existed, e.g. < 1.0.1
-				// For versions => 1.0.1, 0 is the default value to not show them, 1 is the option to show them.
-				case 'access':
-					$access_index = ($modx->config['show_meta'] == "0") ? 3 : 4;
-					$output .= 'if (tpSettings.getSelectedIndex() == '.($access_index-1).') { tpSettings.setSelectedIndex(0); } ' . "\n";
-					$output .= '$j("div#documentPane h2:nth-child('.$access_index.')").hide(); ' . "\n";
-					$output .= '$j("#tabAccess").hide();';
-				break;
+			//meta for =< v1.0.0 only
+			if ($tab != 'meta' || ($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta'] != '0')){
+				$output .=
+'
+var $mm_hideTabs_tabElement = $j("#'.prepareTabId($tab).'");
+
+//If the element exists
+if ($mm_hideTabs_tabElement.length > 0){
+	//Hide the tab element
+	$mm_hideTabs_tabElement.hide();
+	//Hide the tab link
+	$j($mm_hideTabs_tabElement.get(0).tabPage.tab).hide();
+}
+';
 			}
-			
-			$output .= "//  -------------- mm_hideTabs :: End ------------- \n";
-			
-			$e->output($output . "\n");
 		}
+		
+		$output .=
+'
+//All tabs
+var $mm_hideTabs_allTabs = $j();
+
+for (var i = 0; i < tpSettings.pages.length - 1; i++){
+	$mm_hideTabs_allTabs = $mm_hideTabs_allTabs.add(tpSettings.pages[i].tab);
+}
+
+//If the active tab is hidden
+if ($j(tpSettings.pages[tpSettings.getSelectedIndex()].tab).is(":hidden")){
+	//Activate the first visible tab
+	$mm_hideTabs_allTabs.filter(":visible").eq(0).trigger("click");
+}
+';
+		
+		$output .= "//---------- mm_hideTabs :: End -----\n";
+		
+		$e->output($output);
 	}
 }
 ?>
