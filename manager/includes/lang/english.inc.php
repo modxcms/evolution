@@ -994,6 +994,7 @@ $_lang["template_name"] = 'Template name';
 $_lang["template_no_tv"] = 'No Template Variables have been assigned to this Template yet.';
 $_lang["template_reset_all"] = 'Reset all pages to use Default Template';
 $_lang["template_reset_specific"] = 'Reset only \'%s\' pages';
+$_lang["template_selectable"] = 'Template selectable when creating or editing ressources.';
 $_lang["template_title"] = 'Create/edit Template';
 $_lang["template_tv_edit"] = 'Edit the TV sort order';
 $_lang["template_tv_edit_message"] = 'Drag to reorder the Template Variables for this template.';
