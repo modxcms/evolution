@@ -129,6 +129,7 @@ Additional Improvements & Updates:
 * [GitHub:#97326f2] Added missing CSS-ID to "actionButtons"
 * [GitHub:#95a9283] Add Extras module to core
 * [GitHub:#0d95ec6] if: Added Expression "contains"	
+* [GitHub:#3b2547b] #328 Checkbox "selectable templates" #513
 
 
 
