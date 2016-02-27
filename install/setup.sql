@@ -271,6 +271,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
   `content` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
+  `selectable` tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains the site templates.';
 
@@ -764,6 +765,10 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
+#1.1
+ALTER TABLE `{PREFIX}site_templates`
+ ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
+
 # ]]upgrade-able
 
 
@@ -778,7 +783,7 @@ ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DE
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template (content returned only)','0','0','','0','[*content*]','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked, selectable) VALUES ('3','Minimal Template','Default minimal empty template (content returned only)','0','0','','0','[*content*]','0','1');
 
 
 # Default Site Documents

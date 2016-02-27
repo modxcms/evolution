@@ -605,7 +605,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     <option value="0">(blank)</option>
 <?php
                 $rs = $modx->db->select(
-					"t.templatename, t.id, c.category",
+					"t.templatename, t.selectable, t.id, c.category",
 					"{$tbl_site_templates} AS t
 						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
 					'',
@@ -613,6 +613,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 					);
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
+                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
                     $thisCategory = $row['category'];
                     if($thisCategory == null) {
                         $thisCategory = $_lang["no_category"];
