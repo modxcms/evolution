@@ -51,6 +51,7 @@ Bugfixes:
 * [GitHub:#8845642] export.class.inc.php #417
 * [GitHub:#9e0a1b9] makeUrl fails with site start and query string
 * [GitHub:#92f6cda] Error counting published and unpublished comments in JOT #389
+* [GitHub:#f8ea894] Template Variable Type 'date' doesn't allow manual time
 
 --------------------------------------------
 Refactor:
