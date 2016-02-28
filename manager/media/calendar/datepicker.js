@@ -84,6 +84,7 @@ var DatePicker = new Class({
             dp.today = new Date();
         } else {
             dp.then = dp.today = new Date();
+            dp.thenvalue = dp.then;
         }
         return dp;
     },
@@ -271,6 +272,13 @@ var DatePicker = new Class({
                 el.addClass('dp_selected');                                                     // Set new selected
                 this.updateValue(this.dp);
                 // this.remove(dp);                                                             // Stay after date is picked
+            }.bind(this);
+            el.ondblclick = function(){
+                if( $(document.body).getElement('td.dp_selected') )
+                    $(document.body).getElement('td.dp_selected').removeClass('dp_selected');   // Remove old selected
+                el.addClass('dp_selected');                                                     // Set new selected
+                this.updateValue(this.dp);
+                this.remove(dp);                                                                // Close for double click
             }.bind(this);
         }.bind(this));
         
