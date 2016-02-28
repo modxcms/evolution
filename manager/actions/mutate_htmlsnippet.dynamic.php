@@ -47,9 +47,11 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
-if (isset($_POST['which_editor']))
-        $which_editor = $_POST['which_editor'];
-else    $which_editor = 'none';
+if (isset($_POST['which_editor'])) {
+    $which_editor = $_POST['which_editor'];
+} else {
+    $which_editor = $content['editor_name'] != 'none' ? $content['editor_name'] : 'none';
+}
 
 $content = array_merge($content, $_POST);
 
