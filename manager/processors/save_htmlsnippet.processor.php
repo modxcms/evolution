@@ -25,6 +25,9 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 
 if($name=="") $name = "Untitled chunk";
 
+$editor_type = $_POST['which_editor'] != 'none' ? 1 : 2;
+$editor_name = $_POST['which_editor'] != 'none' ? $_POST['which_editor'] : 'none';
+
 switch ($_POST['mode']) {
     case '77':
 
@@ -51,6 +54,8 @@ switch ($_POST['mode']) {
 				'snippet' => $snippet,
 				'locked' => $locked,
 				'category' => $categoryid,
+                                'editor_type' => $editor_type,
+                                'editor_name' => $editor_name
 			), $modx->getFullTableName('site_htmlsnippets'));
 
 			// invoke OnChunkFormSave event
@@ -99,6 +104,8 @@ switch ($_POST['mode']) {
 				'snippet'     => $snippet,
 				'locked'      => $locked,
 				'category'    => $categoryid,
+                                'editor_type' => $editor_type,
+                                'editor_name' => $editor_name
 			), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
 
 			// invoke OnChunkFormSave event
