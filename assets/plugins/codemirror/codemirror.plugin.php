@@ -43,6 +43,8 @@ $xrte   = $content['richtext'];
 switch($modx->Event->name) {
     case 'OnTempFormRender'   :
         $object_name = $content['templatename'];
+        $rte   = ($prte ? $prte : 'none');
+        break;
     case 'OnChunkFormRender'  :
         $rte   = isset($which_editor) ? $which_editor : 'none';
         break;
