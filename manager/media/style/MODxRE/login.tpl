@@ -270,6 +270,6 @@
 <p class="loginLicense" >
 	
 </p>
-<div class="gpl">&copy; 2005-2014 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
+<div class="gpl">&copy; 2005-2016 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
 </body>
 </html>
