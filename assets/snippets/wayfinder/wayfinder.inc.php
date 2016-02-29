@@ -23,32 +23,32 @@ class Wayfinder {
 	var $debugInfo = array();
 	
 	function __construct() {
-        $this->placeHolders = array(
-            'rowLevel' => array(
-                '[+wf.wrapper+]',
-                '[+wf.classes+]',
-                '[+wf.classnames+]',
-                '[+wf.link+]',
-                '[+wf.title+]',
-                '[+wf.linktext+]',
-                '[+wf.id+]',
-                '[+wf.alias+]',
-                '[+wf.attributes+]',
-                '[+wf.docid+]',
-                '[+wf.introtext+]',
-                '[+wf.description+]',
-                '[+wf.subitemcount+]',
+		$this->placeHolders = array(
+			'rowLevel' => array(
+				'[+wf.wrapper+]',
+				'[+wf.classes+]',
+				'[+wf.classnames+]',
+				'[+wf.link+]',
+				'[+wf.title+]',
+				'[+wf.linktext+]',
+				'[+wf.id+]',
+				'[+wf.alias+]',
+				'[+wf.attributes+]',
+				'[+wf.docid+]',
+				'[+wf.introtext+]',
+				'[+wf.description+]',
+				'[+wf.subitemcount+]',
 		'[+wf.iterator+]'
-            ),
-            'wrapperLevel' => array(
-                '[+wf.wrapper+]',
-                '[+wf.classes+]',
-                '[+wf.classnames+]',
-                '[+wf.level+]'
-            ),
-            'tvs' => array()
-        );
-    }
+			),
+			'wrapperLevel' => array(
+				'[+wf.wrapper+]',
+				'[+wf.classes+]',
+				'[+wf.classnames+]',
+				'[+wf.level+]'
+			),
+			'tvs' => array()
+		);
+	}
 	
 	function run() {
 		global $modx;
@@ -63,7 +63,7 @@ class Wayfinder {
 		$this->checkTemplates();
 		//Register any scripts
 		if ($this->_config['cssTpl'] || $this->_config['jsTpl']) {
-		    $this->regJsCss();
+			$this->regJsCss();
 		}
 		//Get all of the documents
 		$this->docs = $this->getData();
@@ -166,88 +166,88 @@ class Wayfinder {
 	}
 	
 	//render each rows output
-    function renderRow(&$resource,$numChildren,$curNum) {
-        global $modx;
-        $output = '';
+	function renderRow(&$resource,$numChildren,$curNum) {
+		global $modx;
+		$output = '';
 
-        // Determine fields for use from referenced resource
-        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
-         if ($this->_config['useReferenced']=="id") {
-          // if id only, do not need get referenced data
-          $resource["id"] = $resource['content'];
-         } else if($referenced = $modx->getDocument($resource['content'])){
-          if (in_array($this->_config['useReferenced'],explode(",","1,*"))) { 
-           $this->_config['useReferenced'] = array_keys($resource);
-          }
-          if (!is_array($this->_config['useReferenced'])) {
-           $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
-          }
-          $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'],explode(",","content,parent,isfolder"));
+		// Determine fields for use from referenced resource
+		if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+			if ($this->_config['useReferenced'] == "id") {
+				// if id only, do not need get referenced data
+				$resource["id"] = $resource['content'];
+			} else if ($referenced = $modx->getDocument($resource['content'])) {
+					if (in_array($this->_config['useReferenced'], explode(",", "1,*"))) {
+						$this->_config['useReferenced'] = array_keys($resource);
+					}
+					if (!is_array($this->_config['useReferenced'])) {
+						$this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
+					}
+					$this->_config['useReferenced'] = array_diff($this->_config['useReferenced'], explode(",", "content,parent,isfolder"));
 
-          foreach ($this->_config['useReferenced'] as $field) {
-           if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
-           switch ($field) {
-            case "linktext" :
-             $resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
-             break;
-            case "title" :
-             $resource['title'] = $resource[$this->_config['titleOfLinks']];
-             break;
-           }
-          }
-         }
-        }
+					foreach ($this->_config['useReferenced'] as $field) {
+						if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
+						switch ($field) {
+							case "linktext" :
+								$resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
+								break;
+							case "title" :
+								$resource['title'] = $resource[$this->_config['titleOfLinks']];
+								break;
+						}
+					}
+				}
+			}
 
 		//Determine which template to use
-        if ($this->_config['displayStart'] && $resource['level'] == 0) {
+		if ($this->_config['displayStart'] && $resource['level'] == 0) {
 			$usedTemplate = 'startItemTpl';
 		} elseif ($resource['id'] == $modx->documentObject['id']
 			&& $resource['isfolder']
 			&& $this->_templates['parentRowHereTpl']
 			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
 			&& $numChildren) {
-            $usedTemplate = 'parentRowHereTpl';
-        } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['innerHereTpl'] && $resource['level'] > 1) {
-            $usedTemplate = 'innerHereTpl';
-        } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['hereTpl']) {
-            $usedTemplate = 'hereTpl';
-        } elseif ($resource['isfolder']
-            && $this->_templates['activeParentRowTpl']
-            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
-            && $this->isHere($resource['id'])) {
-            $usedTemplate = 'activeParentRowTpl';
-        } elseif ($resource['isfolder']
-            && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
-            && $this->_templates['categoryFoldersTpl']
-            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)) {
-            $usedTemplate = 'categoryFoldersTpl';
-        } elseif ($resource['isfolder']
-            && $this->_templates['parentRowTpl']
-            && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
-            && $numChildren) {
-            $usedTemplate = 'parentRowTpl';
-        } elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
-            $usedTemplate = 'innerRowTpl';
+			$usedTemplate = 'parentRowHereTpl';
+		} elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['innerHereTpl'] && $resource['level'] > 1) {
+			$usedTemplate = 'innerHereTpl';
+		} elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['hereTpl']) {
+			$usedTemplate = 'hereTpl';
+		} elseif ($resource['isfolder']
+			&& $this->_templates['activeParentRowTpl']
+			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
+			&& $this->isHere($resource['id'])) {
+			$usedTemplate = 'activeParentRowTpl';
+		} elseif ($resource['isfolder']
+			&& ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
+			&& $this->_templates['categoryFoldersTpl']
+			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)) {
+			$usedTemplate = 'categoryFoldersTpl';
+		} elseif ($resource['isfolder']
+			&& $this->_templates['parentRowTpl']
+			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
+			&& $numChildren) {
+			$usedTemplate = 'parentRowTpl';
+		} elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
+			$usedTemplate = 'innerRowTpl';
 	} elseif ($resource['last'] && $this->_templates['lastRowTpl']) {
-            $usedTemplate = 'lastRowTpl';
-        } else {
-            $usedTemplate = 'rowTpl';
-        }
-        //Get the template
-        $useChunk = $this->_templates[$usedTemplate];
+			$usedTemplate = 'lastRowTpl';
+		} else {
+			$usedTemplate = 'rowTpl';
+		}
+		//Get the template
+		$useChunk = $this->_templates[$usedTemplate];
 		//Setup the new wrapper name and get the class names
-        $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
-        $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
-        $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
-        
-        //Setup the row id if a prefix is specified
-        if ($this->_config['rowIdPrefix']) {
-            $useId = ' id="' . $this->_config['rowIdPrefix'] . $resource['id'] . '"';
-        } else {
-            $useId = '';
-        }
+		$useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
+		$classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
+		$useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
+		
+		//Setup the row id if a prefix is specified
+		if ($this->_config['rowIdPrefix']) {
+			$useId = ' id="' . $this->_config['rowIdPrefix'] . $resource['id'] . '"';
+		} else {
+			$useId = '';
+		}
 		//Load row values into placholder array
-        $charset = $modx->config['modx_charset'];
+		$charset = $modx->config['modx_charset'];
 		if ($this->_config['entityEncode']) {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset),$numChildren);
 		} else {
@@ -255,20 +255,20 @@ class Wayfinder {
 		}
 	//add iterator in phArray
 	$phArray[] = $curNum;
-        $usePlaceholders = $this->placeHolders['rowLevel'];
-        //Add document variables to the placeholder array
-        foreach ($resource as $dvName => $dvVal) {
-            $usePlaceholders[] = '[+' . $dvName . '+]';
-            $phArray[] = $dvVal;
-        }
-        //If tvs are used add them to the placeholder array
-        if (!empty($this->tvList)) {
-            $usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
-            foreach ($this->tvList as $tvName) {
-                $phArray[] = $resource[$tvName];
-            }
-        }
-        //Debug
+		$usePlaceholders = $this->placeHolders['rowLevel'];
+		//Add document variables to the placeholder array
+		foreach ($resource as $dvName => $dvVal) {
+			$usePlaceholders[] = '[+' . $dvName . '+]';
+			$phArray[] = $dvVal;
+		}
+		//If tvs are used add them to the placeholder array
+		if (!empty($this->tvList)) {
+			$usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
+			foreach ($this->tvList as $tvName) {
+				$phArray[] = $resource[$tvName];
+			}
+		}
+		//Debug
 		if ($this->_config['debug']) {
 			$debugDocInfo = array();
 			$debugDocInfo['template'] = $usedTemplate;
@@ -279,116 +279,116 @@ class Wayfinder {
 			$this->addDebugInfo("rowdata","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were retrieved from the database for this document.",$resource);
 		}
 		//Process the row
-        $output .= str_replace($usePlaceholders,$phArray,$useChunk);
+		$output .= str_replace($usePlaceholders,$phArray,$useChunk);
 		//Return the row
-        return $output . $this->_config['nl'];
-    }
+		return $output . $this->_config['nl'];
+	}
 	
 	//determine style class for current item being processed
-    function setItemClass($classType, $docId = 0, $first = 0, $last = 0, $level = 0, $isFolder = 0, $type = 'document') {
-        global $modx;
-        $returnClass = '';
-        $hasClass = 0;
+	function setItemClass($classType, $docId = 0, $first = 0, $last = 0, $level = 0, $isFolder = 0, $type = 'document') {
+		global $modx;
+		$returnClass = '';
+		$hasClass = 0;
 
-        if ($classType === 'outercls' && !empty($this->_css['outer'])) {
-            //Set outer class if specified
-            $returnClass .= $this->_css['outer'];
-            $hasClass = 1;
-        } elseif ($classType === 'innercls') {
+		if ($classType === 'outercls' && !empty($this->_css['outer'])) {
+			//Set outer class if specified
+			$returnClass .= $this->_css['outer'];
+			$hasClass = 1;
+		} elseif ($classType === 'innercls') {
 
-            if ( !empty($this->_css['inner'])) {
-                //Set inner class if specified
-                $returnClass .= $this->_css['inner'];
-                $hasClass = 1;
-            }
+			if ( !empty($this->_css['inner'])) {
+				//Set inner class if specified
+				$returnClass .= $this->_css['inner'];
+				$hasClass = 1;
+			}
 
-            //Set level class if specified
-            if (!empty($this->_css['outerLevel'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
-                $hasClass = 1;
-            }
+			//Set level class if specified
+			if (!empty($this->_css['outerLevel'])) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
+				$hasClass = 1;
+			}
 
-        } elseif ($classType === 'rowcls') {
-            //Set row class if specified
-            if (!empty($this->_css['row'])) {
-                $returnClass .= $this->_css['row'];
-                $hasClass = 1;
-            }
-            //Set first class if specified
-            if ($first && !empty($this->_css['first'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['first'] : $this->_css['first'];
-                $hasClass = 1;
-            }
-            //Set last class if specified
-            if ($last && !empty($this->_css['last'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['last'] : $this->_css['last'];
-                $hasClass = 1;
-            }
-            //Set level class if specified
-            if (!empty($this->_css['level'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['level'] . $level : $this->_css['level'] . $level;
-                $hasClass = 1;
-            }
-            //Set parentFolder class if specified
-            if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0) && ($this->isHere($docId) || !$this->_config['hideSubMenus'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['parent'] : $this->_css['parent'];
-                $hasClass = 1;
-            }
-            //Set here class if specified
-            if (!empty($this->_css['here']) && $this->isHere($docId)) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['here'] : $this->_css['here'];
-                $hasClass = 1;
-            }
-            //Set self class if specified
-            if (!empty($this->_css['self']) && $docId == $this->_config['hereId']) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['self'] : $this->_css['self'];
-                $hasClass = 1;
-            }
-            //Set class for weblink
-            if (!empty($this->_css['weblink']) && $type == 'reference') {
-                $returnClass .= $hasClass ? ' ' . $this->_css['weblink'] : $this->_css['weblink'];
-                $hasClass = 1;
-            }
-        }
+		} elseif ($classType === 'rowcls') {
+			//Set row class if specified
+			if (!empty($this->_css['row'])) {
+				$returnClass .= $this->_css['row'];
+				$hasClass = 1;
+			}
+			//Set first class if specified
+			if ($first && !empty($this->_css['first'])) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['first'] : $this->_css['first'];
+				$hasClass = 1;
+			}
+			//Set last class if specified
+			if ($last && !empty($this->_css['last'])) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['last'] : $this->_css['last'];
+				$hasClass = 1;
+			}
+			//Set level class if specified
+			if (!empty($this->_css['level'])) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['level'] . $level : $this->_css['level'] . $level;
+				$hasClass = 1;
+			}
+			//Set parentFolder class if specified
+			if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0) && ($this->isHere($docId) || !$this->_config['hideSubMenus'])) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['parent'] : $this->_css['parent'];
+				$hasClass = 1;
+			}
+			//Set here class if specified
+			if (!empty($this->_css['here']) && $this->isHere($docId)) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['here'] : $this->_css['here'];
+				$hasClass = 1;
+			}
+			//Set self class if specified
+			if (!empty($this->_css['self']) && $docId == $this->_config['hereId']) {
+				$returnClass .= $hasClass ? ' ' . $this->_css['self'] : $this->_css['self'];
+				$hasClass = 1;
+			}
+			//Set class for weblink
+			if (!empty($this->_css['weblink']) && $type == 'reference') {
+				$returnClass .= $hasClass ? ' ' . $this->_css['weblink'] : $this->_css['weblink'];
+				$hasClass = 1;
+			}
+		}
 
-        return $returnClass;
-    }
+		return $returnClass;
+	}
 
 	//determine "you are here"
-    function isHere($did) {
-        return in_array($did,$this->parentTree);
-    }
+	function isHere($did) {
+		return in_array($did,$this->parentTree);
+	}
 
 	//Add the specified css & javascript chunks to the page
-    function regJsCss() {
-        global $modx;
-        //Debug
-        if ($this->_config['debug']) {
-            $jsCssDebug = array('js' => 'None Specified.', 'css' => 'None Specified.');
-        }
-        //Check and load the CSS
-        if ($this->_config['cssTpl']) {
+	function regJsCss() {
+		global $modx;
+		//Debug
+		if ($this->_config['debug']) {
+			$jsCssDebug = array('js' => 'None Specified.', 'css' => 'None Specified.');
+		}
+		//Check and load the CSS
+		if ($this->_config['cssTpl']) {
 			$cssChunk = $this->fetch($this->_config['cssTpl']);
-            if ($cssChunk) {
-                $modx->regClientCSS($cssChunk);
-                if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was registered.";}
-            } else {
-                if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was not found.";}
-            }
-        }
-        //Check and load the Javascript
-        if ($this->_config['jsTpl']) {
+			if ($cssChunk) {
+				$modx->regClientCSS($cssChunk);
+				if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was registered.";}
+			} else {
+				if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was not found.";}
+			}
+		}
+		//Check and load the Javascript
+		if ($this->_config['jsTpl']) {
 			$jsChunk = $this->fetch($this->_config['jsTpl']);
-            if ($jsChunk) {
-                $modx->regClientStartupScript($jsChunk);
-                if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was registered.";}
-            } else {
-                if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was not found.";}
-            }
-        }
+			if ($jsChunk) {
+				$modx->regClientStartupScript($jsChunk);
+				if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was registered.";}
+			} else {
+				if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was not found.";}
+			}
+		}
 		//Debug
 		if ($this->_config['debug']) {$this->addDebugInfo("settings","JSCSS","JS/CSS Includes","Results of CSS & Javascript includes.",$jsCssDebug);}
-    }
+	}
 
 	//Get all of the documents from the database
 	function getData() {
@@ -428,15 +428,15 @@ class Wayfinder {
 		if (!empty($ids)) {
 			//Setup the fields for the query
 			$fields = "DISTINCT sc.id, sc.menutitle, sc.pagetitle, sc.introtext, sc.menuindex, sc.published, sc.hidemenu, sc.parent, sc.isfolder, sc.description, IF(sc.alias='', sc.id, sc.alias) AS alias, sc.longtitle, sc.type,if(sc.type='reference',sc.content,'') as content, sc.template, sc.link_attributes";
-	        //Get the table names
-	        $tbl_site_content = $modx->getFullTableName('site_content');
-	        $tbl_document_groups = $modx->getFullTableName('document_groups');
-	        //Add the ignore hidden option to the where clause
-	        if ($this->_config['ignoreHidden']) {
-	            $menuWhere = '';
-	        } else {
-	            $menuWhere = ' AND sc.hidemenu=0';
-	        }
+			//Get the table names
+			$tbl_site_content = $modx->getFullTableName('site_content');
+			$tbl_document_groups = $modx->getFullTableName('document_groups');
+			//Add the ignore hidden option to the where clause
+			if ($this->_config['ignoreHidden']) {
+				$menuWhere = '';
+			} else {
+				$menuWhere = ' AND sc.hidemenu=0';
+			}
 			//add the include docs to the where clause
 			if ($this->_config['includeDocs']) {
 				$menuWhere .= " AND sc.id IN ({$this->_config['includeDocs']})";
@@ -464,10 +464,10 @@ class Wayfinder {
 				$sort = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $this->_config['sortBy']))));
 			}
 
-	        // get document groups for current user
-	        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
-	        // build query
-	        $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
+			// get document groups for current user
+			if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
+			// build query
+			$access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
 			//run the query
 			$result = $modx->db->select(
 				"DISTINCT {$fields}",
@@ -476,7 +476,7 @@ class Wayfinder {
 				"{$sort} {$this->_config['sortOrder']}",
 				$sqlLimit
 				);
-	        $resourceArray = array();
+			$resourceArray = array();
 			$level = 1;
 			$prevParent = -1;
 			//Setup startlevel for determining each items level
@@ -524,7 +524,7 @@ class Wayfinder {
 				} else {
 					$resourceArray[$tempDocInfo['level']][$tempDocInfo['parent']][] = $tempDocInfo;
 				}
-	        }
+			}
 			//Process the tvs
 			if (!empty($this->tvList) && !empty($resultIds)) {
 				$tvValues = array();
@@ -544,7 +544,7 @@ class Wayfinder {
 			}
 		}
 		//return final docs
-        return $resourceArray;
+		return $resourceArray;
 	}
 
 	// ---------------------------------------------------
@@ -556,8 +556,8 @@ class Wayfinder {
 		global $modx;
 
 		$baspath= MODX_MANAGER_PATH."includes";
-	    include_once $baspath . "/tmplvars.format.inc.php";
-	    include_once $baspath . "/tmplvars.commands.inc.php";
+		include_once $baspath . "/tmplvars.format.inc.php";
+		include_once $baspath . "/tmplvars.commands.inc.php";
 
 		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
 		$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
@@ -577,19 +577,19 @@ class Wayfinder {
 			$rs = $modx->db->select('name,type,display,display_params,default_text', $tbl_site_tmplvars, "name='{$tvname}'", 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
-			    foreach ($docIDs as $id) {
-				    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
-				    if (!isset($resourceArray["#{$id}"])) {
-					    $resourceArray["#{$id}"][$tvname] = $output;
-				    }
-			    }
+				foreach ($docIDs as $id) {
+					$output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+					if (!isset($resourceArray["#{$id}"])) {
+						$resourceArray["#{$id}"][$tvname] = $output;
+					}
+				}
 			} else {
-			    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
-			    foreach ($docIDs as $id) {
-				    if (!isset($resourceArray["#{$id}"])) {
-					    $resourceArray["#{$id}"][$tvname] = $output;
-				    }
-			    }
+				$output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
+				foreach ($docIDs as $id) {
+					if (!isset($resourceArray["#{$id}"])) {
+						$resourceArray["#{$id}"][$tvname] = $output;
+					}
+				}
 			}
 		}
 		return $resourceArray;
@@ -608,32 +608,32 @@ class Wayfinder {
 	}
 
 	//debugging to check for valid chunks
-    function checkTemplates() {
-        global $modx;
+	function checkTemplates() {
+		global $modx;
 		$nonWayfinderFields = array();
 
-        foreach ($this->_templates as $n => $v) {
-            $templateCheck = $this->fetch($v);
-            if (empty($v) || !$templateCheck) {
-                if ($n === 'outerTpl') {
-                    $this->_templates[$n] = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';
-                } elseif ($n === 'rowTpl') {
-                    $this->_templates[$n] = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';
+		foreach ($this->_templates as $n => $v) {
+			$templateCheck = $this->fetch($v);
+			if (empty($v) || !$templateCheck) {
+				if ($n === 'outerTpl') {
+					$this->_templates[$n] = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';
+				} elseif ($n === 'rowTpl') {
+					$this->_templates[$n] = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';
 				} elseif ($n === 'startItemTpl') {
 					$this->_templates[$n] = '<h2[+wf.id+][+wf.classes+]>[+wf.linktext+]</h2>[+wf.wrapper+]';
-                } else {
-                    $this->_templates[$n] = FALSE;
-                }
+				} else {
+					$this->_templates[$n] = FALSE;
+				}
 				if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"No template found, using default.",array($n => $this->_templates[$n])); }
-            } else {
-                $this->_templates[$n] = $templateCheck;
+			} else {
+				$this->_templates[$n] = $templateCheck;
 				$check = $this->findTemplateVars($templateCheck);
 				if (is_array($check)) {
 					$nonWayfinderFields = array_merge($check, $nonWayfinderFields);
 				}
 				if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"Template Found.",array($n => $this->_templates[$n])); }
-            }
-        }
+			}
+		}
 
 		if (!empty($nonWayfinderFields)) {
 			$nonWayfinderFields = array_unique($nonWayfinderFields);
@@ -647,7 +647,7 @@ class Wayfinder {
 			}
 			if ($this->_config['debug']) { $this->addDebugInfo('tvars','tvs','Template Variables',"The following template variables were found in your templates.",$this->tvList); }
 		}
-    }
+	}
 
 	function fetch($tpl){
 		// based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
