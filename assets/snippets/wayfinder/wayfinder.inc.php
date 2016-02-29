@@ -330,7 +330,7 @@ class Wayfinder {
                 $hasClass = 1;
             }
             //Set parentFolder class if specified
-            if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0)) {
+            if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0) && ($this->isHere($docId) || !$this->_config['hideSubMenus'])) {
                 $returnClass .= $hasClass ? ' ' . $this->_css['parent'] : $this->_css['parent'];
                 $hasClass = 1;
             }
