@@ -214,7 +214,8 @@ class Wayfinder {
 		} elseif ($resource['isfolder']
 			&& $this->_templates['activeParentRowTpl']
 			&& ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
-			&& $this->isHere($resource['id'])) {
+			&& $this->isHere($resource['id'])
+			&& $numChildren) {
 			$usedTemplate = 'activeParentRowTpl';
 		} elseif ($resource['isfolder']
 			&& ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
