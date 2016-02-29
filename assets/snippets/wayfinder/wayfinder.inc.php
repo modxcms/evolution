@@ -237,7 +237,7 @@ class Wayfinder {
         $useChunk = $this->_templates[$usedTemplate];
 		//Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
-        $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
+        $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
         $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
         
         //Setup the row id if a prefix is specified
