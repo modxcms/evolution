@@ -19,22 +19,22 @@
 
 				case "text": // handler for regular text boxes
 				case "rawtext"; // non-htmlentity converted text boxes
-					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" />';
+					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" />';
 					break;
 				case "email": // handles email input fields
-					$field_html .=  '<input type="email" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%"/>';
+					$field_html .=  '<input type="email" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%"/>';
 					break;
 				case "number": // handles the input of numbers
-					$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
+					$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 					break;
 				case "textareamini": // handler for textarea mini boxes
-					$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+					$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->htmlspecialchars($field_value) .'</textarea>';
 					break;
 				case "textarea": // handler for textarea boxes
 				case "rawtextarea": // non-htmlentity convertex textarea boxes
 				case "htmlarea": // handler for textarea boxes (deprecated)
 				case "richtext": // handler for textarea boxes
-					$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+					$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%">' . $modx->htmlspecialchars($field_value) .'</textarea>';
 					break;
 				case "date":
 					$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
@@ -56,7 +56,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
+						$field_html .=  '<option value="'.$modx->htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.$modx->htmlspecialchars($item).'</option>';
 					}
 					$field_html .=  "</select>";
 					break;
@@ -67,7 +67,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
+						$field_html .=  '<option value="'.$modx->htmlspecialchars($itemvalue).'"'.($itemvalue==$field_value ?' selected="selected"':'').'>'.$modx->htmlspecialchars($item).'</option>';
 					}
 					$field_html .=  "</select>";
 					break;
@@ -79,7 +79,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<option value="'.htmlspecialchars($itemvalue).'"'.(in_array($itemvalue,$field_value) ?' selected="selected"':'').'>'.htmlspecialchars($item).'</option>';
+						$field_html .=  '<option value="'.$modx->htmlspecialchars($itemvalue).'"'.(in_array($itemvalue,$field_value) ?' selected="selected"':'').'>'.$modx->htmlspecialchars($item).'</option>';
 					}
 					$field_html .=  "</select>";
 					break;
@@ -94,7 +94,7 @@
 						}
 					}
 					$field_html .='</select></td><td>';
-					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;" /></td></tr></table>';
+					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;" /></td></tr></table>';
 					break;
 				case "checkbox": // handles check boxes
 					$field_value = !is_array($field_value) ? explode("||",$field_value) : $field_value;
@@ -104,7 +104,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
 						$i++;
 					}
 					break;
@@ -115,7 +115,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="radio" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="radio" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
 						$i++;
 					}
 					break;
@@ -299,7 +299,7 @@
 	                    '[+field_type+]'   => $field_type,
 	                    '[+field_id+]'     => $field_id,
 	                    '[+default_text+]' => $default_text,
-	                    '[+field_value+]'  => htmlspecialchars($field_value),
+	                    '[+field_value+]'  => $modx->htmlspecialchars($field_value),
 	                    '[+field_style+]'  => $field_style,
 	                );
 	                $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);
@@ -309,7 +309,7 @@
 	                break;
 	            
 				default: // the default handler -- for errors, mostly
-					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
+					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
 
 			} // end switch statement
 		}else{
@@ -328,7 +328,7 @@
 	                    '[+field_type+]'   => $field_type,
 	                    '[+field_id+]'     => $field_id,
 	                    '[+default_text+]' => $default_text,
-	                    '[+field_value+]'  => htmlspecialchars($field_value),
+	                    '[+field_value+]'  => $modx->htmlspecialchars($field_value),
 	                    '[+field_style+]'  => $field_style,
 	                );
 	        $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);

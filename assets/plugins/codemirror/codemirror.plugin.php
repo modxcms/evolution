@@ -15,11 +15,11 @@
  *
  * @see         https://github.com/Mihanik71/CodeMirror-MODx
  */
-global $content;
+global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
-$object_id = md5($evt->name.'-'.$content[id]);
+$object_id = md5($evt->name.'-'.$content['id']);
 /*
  * Default Plugin configuration
  */
@@ -28,9 +28,9 @@ $indentUnit             = (isset($indentUnit)               ? $indentUnit       
 $tabSize                = (isset($tabSize)                  ? $tabSize                  : 4);
 $lineWrapping           = (isset($lineWrapping)             ? $lineWrapping             : false);
 $matchBrackets          = (isset($matchBrackets)            ? $matchBrackets            : false);
-$activeLine           	= (isset($activeLine)             	? $activeLine            	: false);
-$emmet					= (($emmet == 'true')? 	'<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' 	: "");
-$search					= (($search == 'true')? '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>' 	: "");
+$activeLine           	= (isset($activeLine)               ? $activeLine            	: false);
+$emmet			= (($emmet == 'true')? 	'<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' 	: "");
+$search			= (($search == 'true')? '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>' 	: "");
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -43,8 +43,10 @@ $xrte   = $content['richtext'];
 switch($modx->Event->name) {
     case 'OnTempFormRender'   :
         $object_name = $content['templatename'];
-    case 'OnChunkFormRender'  :
         $rte   = ($prte ? $prte : 'none');
+        break;
+    case 'OnChunkFormRender'  :
+        $rte   = isset($which_editor) ? $which_editor : 'none';
         break;
 
     case 'OnDocFormRender'    :

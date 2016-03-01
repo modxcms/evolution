@@ -9,6 +9,7 @@ $template = $modx->db->escape($_POST['post']);
 $templatename = $modx->db->escape(trim($_POST['templatename']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
+$selectable = $_POST['selectable']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -50,6 +51,7 @@ switch ($_POST['mode']) {
 				'description' => $description,
 				'content' => $template,
 				'locked' => $locked,
+                                'selectable' => $selectable,
 				'category' => $categoryid,
 			), $modx->getFullTableName('site_templates'));
 
@@ -100,6 +102,7 @@ switch ($_POST['mode']) {
 				'description'  => $description,
 				'content'      => $template,
 				'locked'       => $locked,
+                                'selectable'   => $selectable,
 				'category'     => $categoryid,
 			), $modx->getFullTableName('site_templates'), "id='{$id}'");
 

@@ -273,7 +273,12 @@ class LINKLIST
 		// If we have got this far, it must not have been cached already, so lets do it now.
 		$page_cache[$doc_id] = $resourceArray[0];
 	
-	    return $resourceArray[0];
+    		if (isset($resourceArray[0]))
+		{
+		$page_cache[$doc_id] = $resourceArray[0];
+		return $resourceArray[0];
+		}
+	    return;
 	}
 	
 }

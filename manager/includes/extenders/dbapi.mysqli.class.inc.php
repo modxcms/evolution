@@ -4,7 +4,7 @@ class DBAPI {
 	var $config;
 	var $isConnected;
 
-	function DBAPI($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
+	function __construct($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
 		$this->config['host'] = $host ? $host : $GLOBALS['database_server'];
 		$this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
 		$this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
@@ -102,7 +102,7 @@ class DBAPI {
 			$modx->queryTime = $modx->queryTime + $totaltime;
 			if ($modx->dumpSQL) {
 				$debug = debug_backtrace();
-				array_shift($debug);	
+				array_shift($debug);
 				$debug_path = array();
 				foreach ($debug as $line) $debug_path[] = $line['function'];
 				$debug_path = implode(' > ', array_reverse($debug_path));
@@ -193,7 +193,7 @@ class DBAPI {
 			return $lid;
 		}
 	}
-	
+
 	function isResult($rs) {
 		return is_object($rs);
 	}
@@ -420,6 +420,10 @@ class DBAPI {
 	function truncate($table_name) {
 		$rs = $this->query("TRUNCATE {$table_name}");
 		return $rs;
+	}
+
+	function dataSeek($result, $row_number) {
+		return mysqli_data_seek($result, $row_number);
 	}
 }
 ?>

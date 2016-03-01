@@ -12,7 +12,7 @@ class ManagerAPI {
 	
 	var $action; // action directive
 
-	function ManagerAPI(){
+	function __construct(){
 		global $action;
 		$this->action = $action; // set action directive
 	}
@@ -125,30 +125,30 @@ class ManagerAPI {
 		$result = false;
 		if (!empty($algorithm))
 		{
-		switch($algorithm)
-		{
-			case 'BLOWFISH_Y':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
-				{
-					if(version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
-				}
-				break;
-			case 'BLOWFISH_A':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
-				break;
-			case 'SHA512':
-				if(defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
-				break;
-			case 'SHA256':
-				if(defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
-				break;
-			case 'MD5':
+			switch ($algorithm)
+			{
+				case 'BLOWFISH_Y':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
+					{
+						if (version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
+					}
+					break;
+				case 'BLOWFISH_A':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
+					break;
+				case 'SHA512':
+					if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
+					break;
+				case 'SHA256':
+					if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
+					break;
+				case 'MD5':
 					if (defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7') $result = true;
-				break;
-			case 'UNCRYPT':
-				$result = true;
-				break;
-		}
+					break;
+				case 'UNCRYPT':
+					$result = true;
+					break;
+			}
 		}
 		return $result;
 	}

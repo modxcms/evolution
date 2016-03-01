@@ -138,6 +138,9 @@ if(!isset($_SESSION['mgrValidated'])){
 		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
 			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
 			$login_tpl = file_get_contents($target);
+		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl')) {
+			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl';
+			$login_tpl = file_get_contents($target);
 		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
 			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
 			$login_tpl = file_get_contents($target);

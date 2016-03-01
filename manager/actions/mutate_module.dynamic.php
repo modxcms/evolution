@@ -113,7 +113,7 @@ function showParameters(ctrl) {
             dt = ar[1];		// data type
             value = decode((ar[2])? ar[2]:'');
             // store values for later retrieval
-            if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && (dt=='menu' || dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
             if (dt) {
                 switch(dt) {
@@ -286,26 +286,21 @@ function SetUrl(url, width, height, alt) {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
-                  <?php if ($modx->hasPermission('new_module')) { ?>
+          <?php if ($modx->hasPermission('new_module')) { ?>
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-                  <?php } ?>
+          <?php } ?>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-              <?php
-                if ($_REQUEST['a'] == '108') { ?>
-              <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
-              <li id="Button2"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-              <?php // In Place for future extraction of actionbar
-                    if ($_REQUEST['a'] == '27') { ?>
-                        <li id="Button6"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img src="<?php echo $_style["icons_preview"]?>" /> <?php echo $_lang['preview']?></a></li>
-              <?php } ?>
+          <?php if ($_REQUEST['a'] == '107') { ?>
+              <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } else { ?>
+              <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } ?>
+              <li id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
     <!-- end #actions -->
@@ -324,7 +319,7 @@ function SetUrl(url, width, height, alt) {
 
     <table border="0" cellspacing="0" cellpadding="1">
         <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
-            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -333,7 +328,7 @@ function SetUrl(url, width, height, alt) {
             <?php echo $_lang['module_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['modulecode'])?></textarea>
         </div>
     <!-- PHP text editor end -->
     </div>
@@ -415,7 +410,7 @@ $ds = $modx->db->select(
 <?php
                 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                 foreach(getCategories() as $n => $v) {
-                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.$modx->htmlspecialchars($v['category'])."</option>\n";
                 }
 ?>
             </select></td></tr>

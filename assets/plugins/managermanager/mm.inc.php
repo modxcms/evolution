@@ -18,6 +18,7 @@
  * @copyright 2014
  */
 
+global $mm_version;
 $mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -81,7 +82,9 @@ if ($handle = opendir($widget_dir)){
 $mm_current_page = array();
 
 //Get page template
-if (isset($_POST['template'])){
+if (isset($e->params['template'])){
+	$mm_current_page['template'] = $e->params['template'];
+}else if (isset($_POST['template'])){
 	$mm_current_page['template'] = $_POST['template'];
 }else if (isset($content['template'])){
 	$mm_current_page['template'] = $content['template'];
@@ -138,8 +141,7 @@ foreach ($all_tvs as $thisTv){
 	$fieldname_suffix = '';
 	
 	// What fieldtype is this TV type?
-	$thisTvI = explode(":", $thisTv['type']);	
-	switch ($thisTvI['0']){
+	switch ($thisTv['type']){
 		case 'textarea':
 		case 'rawtextarea':
 		case 'textareamini':
@@ -207,6 +209,8 @@ if (!function_exists('initJQddManagerManager')){
 $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+
+$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
 
 $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 ';

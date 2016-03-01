@@ -98,7 +98,7 @@ function deletegroup(groupid,type) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_user_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.$modx->htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'" />&nbsp;'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'usergroup\');" />'."\n".
 				'</form>';
@@ -171,7 +171,7 @@ function deletegroup(groupid,type) {
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
-				'	<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				'	<input type="text" name="newgroupname" value="'.$modx->htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				'	<input type="submit" value="'.$_lang['rename'].'">'."\n".
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'documentgroup\');" />'."\n".
 				'</form>';
@@ -185,7 +185,7 @@ function deletegroup(groupid,type) {
 				continue;
 			}
 			if ($pid == $row['id']) echo ", \n";
-			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.htmlspecialchars($row['doc_title']).'">'.$row['doc_id'].'</a>';
+			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.$modx->htmlspecialchars($row['doc_title']).'">'.$row['doc_id'].'</a>';
 			$pid = $row['id'];
 		}
 		echo "</table>";

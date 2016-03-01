@@ -11,7 +11,7 @@ class EXPORT_SITE
 	var $repl_after;
 	var $output = array();
 	
-	function EXPORT_SITE()
+	function __construct()
 	{
 		global $modx;
 		
@@ -125,7 +125,7 @@ class EXPORT_SITE
 			if($result !== false) return 'success';
 			else                  return 'failed_no_write';
 		}
-		else                      return 'no_retrieve';
+		else                      return 'failed_no_retrieve';
 	}
 
 	function getFileName($docid, $alias='', $prefix, $suffix)
@@ -205,9 +205,14 @@ class EXPORT_SITE
 						$status = $this->makeFile($row['id'], $filename);
 						switch($status)
 						{
-							case 'failed_no_write'   : $row['status'] = $msg_failed_no_write   ;
-							case 'failed_no_retrieve': $row['status'] = $msg_failed_no_retrieve;
-							default:                   $row['status'] = $msg_success;
+							case 'failed_no_write'   :
+                                                            $row['status'] = $msg_failed_no_write;
+                                                            break;
+							case 'failed_no_retrieve':
+                                                            $row['status'] = $msg_failed_no_retrieve;
+                                                            break;
+							default:
+                                                            $row['status'] = $msg_success;
 						}
 					}
 					else $row['status'] = $msg_failed_no_retrieve;
@@ -248,9 +253,11 @@ class EXPORT_SITE
     function curl_get_contents($url, $timeout = 30 )
     {
     	if(!function_exists('curl_init')) return @file_get_contents($url);
-    	
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);    // 0 = DO NOT VERIFY AUTHENTICITY OF SSL-CERT
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);    // 2 = CERT MUST INDICATE BEING CONNECTED TO RIGHT SERVER
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
