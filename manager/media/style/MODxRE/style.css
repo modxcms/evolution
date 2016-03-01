@@ -1197,7 +1197,7 @@ a.hometblink:hover {
 	padding: 4px 12px 5px 12px;
 	z-index: 1;
 	position: relative;
-	top: 1px;
+	top: 0;
 	border: 1px solid #658f1a;
 	background: none repeat scroll 0 0 #66901b;
 	text-shadow: 0px -1px 0px #2B5F0C;
@@ -1225,7 +1225,8 @@ a.hometblink:hover {
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #333;
 	z-index: 9;
-	top: 1px;
+	top: 0;
+  padding-bottom: 6px;
 	border-width: 1px;
 	border-bottom-style: solid;
 	border-color: #ffcc72 #AAA #FFF #AAA;
