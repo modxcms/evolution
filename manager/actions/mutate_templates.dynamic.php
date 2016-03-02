@@ -184,8 +184,10 @@ $tvList = '';
 
 if($limit>0) {
     $tvList .= '<br /><ul>';
+    $assignedTvsArr = array();
     while ($row = $modx->db->getRow($rs)) {
-        $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
+        $tvList .= '<li><strong><a href="index.php?id='.$row['id'].'&a=301">'.$row['name'].'</a></strong> ('.$row['category'].')</li>';
+        $assignedTvsArr[$row['id']] = '';
     }
     $tvList .= '</ul>';
 
@@ -194,6 +196,37 @@ if($limit>0) {
 }
 echo $tvList;
 ?></div>
+<?php
+    $rs = $modx->db->select(
+        "tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
+        $modx->getFullTableName('site_tmplvar_templates')." tr
+		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
+		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
+        "tr.templateid!='{$id}'",   // simple way of making a list of not assigned..
+        "tr.rank, tv.rank, tv.id"
+    );
+    $limit = $modx->db->getRecordCount($rs);
+?>
+<div class="tab-page" id="tabNotAssignedTVs">
+    <h2 class="tab"><?php echo $_lang["template_notassignedtv_tab"] ?></h2>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabNotAssignedTVs" ) );</script>
+    <p><?php if ($limit > 0) echo $_lang['template_notassignedtv_msg']; ?></p>
+
+    <?php
+        $tvList = '';
+        if($limit>0) {
+            $tvList .= '<br /><ul>';
+            while ($row = $modx->db->getRow($rs)) {
+                if(isset($assignedTvsArr[$row['id']])) continue;    // Skip assigned TVs
+                $tvList .= '<li><input name="newAssignedTvs[]" value="'.$row['id'].'" type="checkbox" class="inputBox"> <strong><a href="index.php?id='.$row['id'].'&a=301">'.$row['name'].'</a></strong> ('.$row['category'].')</li>';
+            }
+            $tvList .= '</ul>';
+        } else {
+            echo $_lang['template_notassignedtv_empty'];
+        }
+        echo $tvList;
+    ?>
+</div>
 <?php
 // invoke OnTempFormRender event
 $evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));
