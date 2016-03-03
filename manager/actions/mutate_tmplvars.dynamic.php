@@ -419,14 +419,34 @@ function decode(s){
 		label {display:block;}
 	</style>
 <table>
-	<?php
-	    $from = "{$tbl_site_templates} as tpl LEFT JOIN {$tbl_site_tmplvar_templates} as stt ON stt.templateid=tpl.id AND stt.tmplvarid='{$id}'";
-	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
+<?php
+        $rs = $modx->db->select(
+            sprintf("tpl.id,tpl.category,templatename,tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+            sprintf("%s as tpl
+                    LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
+                    LEFT JOIN %s as cat ON tpl.category=cat.id",
+                    $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')),
+            '',
+            "tpl.category, templatename"
+        );
+        $_ = array();
+        while($row = $modx->db->getRow($rs)) {
+            $_[$row['id']] = $row;
+            if($id) $_[$row['id']]['checked'] = $row['tmplvarid']==$id ? 'checked' : '';
+        }
+        $selectedTvs = array();
+        $unselectedTvs = array();
+        foreach($_ as $id=> $template) {
+            if($template['checked']=='checked') $selectedTvs[$id]   = $template;
+            else                                $unselectedTvs[$id] = $template;
+        }
+        $tvs = $selectedTvs+$unselectedTvs;
+        $total = count($tvs);
 ?>
   <tr>
     <td>
 <?php
-	    while ($row = $modx->db->getRow($rs))
+            while ($row = array_shift($tvs))
 	    {
 	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
 	    	{
@@ -442,10 +462,10 @@ function decode(s){
 	    	}
 	    	else
 	    	{
-	    		$checked = $row['tmplvarid'];
+	    		$checked = $row['checked'];
 	    	}
 	    	$checked = $checked ? ' checked="checked"':'';
-	        echo '<label><input type="checkbox" name="template[]" value="' . $row['id'] . '"' . $checked . ' />' . $row['templatename'] . '</label>';
+                echo sprintf('<label><input name="template[]" value="%s" type="checkbox" %s>%s (%s)</label>', $row['id'], $checked, $row['templatename'], $row['category']);
 	    }
 	?>
     </td>
