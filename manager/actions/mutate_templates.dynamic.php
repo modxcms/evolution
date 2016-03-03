@@ -165,7 +165,10 @@ function deletedocument() {
 <?php
 $rs = $modx->db->select(
 	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
-	sprintf("%s tv LEFT JOIN %s tr ON tv.id=tr.tmplvarid LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
+	sprintf("%s tv
+	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
+	    LEFT JOIN %s cat ON tv.category=cat.id",
+            $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
 	'',
 	"tr.rank, tv.rank, tv.name, tv.id"
 	);
@@ -199,7 +202,7 @@ if($total>0) {
     $tvList .= '<br /><ul>';
     $assignedTvsArr = array();
     while ($row = array_shift($tvs)) {
-        $tvList .= sprintf('<li><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s> <strong><a href="index.php?id=%s&a=301">'.$row['tvname'].'</a></strong> (%s)</li>',$row['tvid'], $row['checked'], $row['tvid'],$row['category']);
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s</label> (%s) <a href="index.php?id=%s&a=301">%s</a></li>',$row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit']);
         $assignedTvsArr[$row['tvid']] = '';
     }
     $tvList .= '</ul>';
