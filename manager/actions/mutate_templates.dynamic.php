@@ -202,7 +202,7 @@ if($total>0) {
     $tvList .= '<br /><ul>';
     $assignedTvsArr = array();
     while ($row = array_shift($tvs)) {
-        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label><a href="index.php?id=%s&a=301">%s</a></li>',$row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit']);
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label> <a href="index.php?id=%s&a=301">%s</a></li>',$row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit']);
         $assignedTvsArr[$row['tvid']] = '';
     }
     $tvList .= '</ul>';
