@@ -48,6 +48,10 @@ $settings['rb_base_url'] =  $rb_base_url = trim($settings['rb_base_url']) == '' 
   table th {text-align:left; vertical-align:top;}
 </style>
 <script type="text/javascript">
+jQuery(function(){
+	jQuery('#furlRowOn').change(function()   {jQuery('.furlRow').fadeIn();});
+	jQuery('#furlRowOff').change(function()  {jQuery('.furlRow').fadeOut();});
+});
 function checkIM() {
 	im_on = document.settings.im_plugin[0].checked; // check if im_plugin is on
 	if(im_on==true) {
@@ -637,156 +641,158 @@ function confirmLangChange(el, lkey, elupd){
         <h2 class="tab"><?php echo $_lang["settings_furls"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage3" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
-          <tr>
-            <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurls_title"] ?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="friendly_urls" value="1" <?php echo $friendly_urls=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 1);' />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="friendly_urls" value="0" <?php echo ($friendly_urls=='0' || !isset($friendly_urls)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 0);' />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["friendlyurls_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='furlRow1' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurlsprefix_title"] ?></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_prefix" value="<?php echo isset($friendly_url_prefix) ? $friendly_url_prefix : "p" ; ?>" /></td>
-          </tr>
-          <tr id='furlRow2' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["friendlyurlsprefix_message"] ?></td>
-          </tr>
-          <tr id='furlRow3' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='furlRow4' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurlsuffix_title"] ?></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_suffix" value="<?php echo isset($friendly_url_suffix) ? $friendly_url_suffix : ".html" ; ?>" /></td>
-          </tr>
-          <tr id='furlRow5' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["friendlyurlsuffix_message"] ?></td>
-          </tr>
-          <tr id='furlRow6' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
+<?php if(!isset($friendly_urls)) $friendly_urls = 0;?>
+  <tr>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurls_title"] ?></td>
+    <td>
+        <input id="furlRowOn" onchange="documentDirty=true;" type="radio" name="friendly_urls" value="1" <?php echo $friendly_urls==1 ? 'checked="checked"' : "" ; ?> />
+        <?php echo $_lang["yes"]?><br />
+        <input id="furlRowOff" onchange="documentDirty=true;" type="radio" name="friendly_urls" value="0" <?php echo $friendly_urls==0 ? 'checked="checked"' : "" ; ?> />
+        <?php echo $_lang["no"]?> </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["friendlyurls_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+<?php if(!isset($friendly_url_prefix)) $friendly_url_prefix = 'p';?>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurlsprefix_title"] ?></td>
+    <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_prefix" value="<?php echo $friendly_url_prefix; ?>" /></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["friendlyurlsprefix_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["friendlyurlsuffix_title"] ?></td>
+    <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_suffix" value="<?php echo isset($friendly_url_suffix) ? $friendly_url_suffix : ".html" ; ?>" /></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["friendlyurlsuffix_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
 <?php if(!isset($make_folders)) $make_folders = '0';?>
-  <tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
     <th><?php echo $_lang['make_folders_title'] ?></th>
     <td>
       <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
       <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
 </td>
   </tr>
-  <tr id='furlRow56' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["make_folders_message"] ?></td>
           </tr>  
-  <tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
   <td colspan="2"><div class='split'></div></td>
   </tr>
       
   <?php if(!isset($seostrict)) $seostrict = '0';?>
-  <tr id="furlRow53" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
     <th><?php echo $_lang['seostrict_title'] ?></th>
     <td>
       <?php echo wrap_label($_lang["yes"],form_radio('seostrict','1', $seostrict=='1'));?><br />
       <?php echo wrap_label($_lang["no"],form_radio('seostrict','0', $seostrict=='0'));?><br />
      </td> 
   </tr>
-  <tr id='furlRow54' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["seostrict_message"] ?></td>
-          </tr> 
-  <tr id='furlRow55' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  </tr> 
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
   <td colspan="2"><div class='split'></div></td>
   </tr>
 
-            <?php if(!isset($aliaslistingfolder)) $aliaslistingfolder = '0';?>
-            <tr id="furlRow56" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-                <th><?php echo $_lang['aliaslistingfolder_title'] ?></th>
-                <td>
-                    <?php echo wrap_label($_lang["yes"],form_radio('aliaslistingfolder','1', $aliaslistingfolder=='1'));?><br />
-                    <?php echo wrap_label($_lang["no"],form_radio('aliaslistingfolder','0', $aliaslistingfolder=='0'));?><br />
-                </td>
-            </tr>
-            <tr id='furlRow57' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-                <td width="200">&nbsp;</td>
-                <td class='comment'><?php echo $_lang["aliaslistingfolder_message"] ?></td>
-            </tr>
-            <tr id='furlRow58' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-                <td colspan="2"><div class='split'></div></td>
-            </tr>
+  <?php if(!isset($aliaslistingfolder)) $aliaslistingfolder = '0';?>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+      <th><?php echo $_lang['aliaslistingfolder_title'] ?></th>
+      <td>
+          <?php echo wrap_label($_lang["yes"],form_radio('aliaslistingfolder','1', $aliaslistingfolder=='1'));?><br />
+          <?php echo wrap_label($_lang["no"],form_radio('aliaslistingfolder','0', $aliaslistingfolder=='0'));?><br />
+      </td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+      <td width="200">&nbsp;</td>
+      <td class='comment'><?php echo $_lang["aliaslistingfolder_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+      <td colspan="2"><div class='split'></div></td>
+  </tr>
 
-
-          <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["friendly_alias_title"] ?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="0" <?php echo ($friendly_alias_urls=='0' || !isset($friendly_alias_urls)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='furlRow8' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["friendly_alias_message"] ?></td>
-          </tr>
-          <tr id='furlRow9' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='furlRow10' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["use_alias_path_title"] ?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="1" <?php echo $use_alias_path=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="0" <?php echo ($use_alias_path=='0' || !isset($use_alias_path)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='furlRow11' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["use_alias_path_message"] ?></td>
-          </tr>
-          <tr id='furlRow12' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='furlRow16' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["duplicate_alias_title"] ?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="1" <?php echo $allow_duplicate_alias=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="0" <?php echo ($allow_duplicate_alias=='0' || !isset($allow_duplicate_alias)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='furlRow17' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["duplicate_alias_message"] ?></td>
-          </tr>
-          <tr id='furlRow18' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='furlRow13' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><?php echo $_lang["automatic_alias_title"] ?></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="1" <?php echo $automatic_alias=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="0" <?php echo ($automatic_alias=='0' || !isset($automatic_alias)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='furlRow14' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["automatic_alias_message"] ?></td>
-          </tr>
-          <tr id='furlRow15' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-		  <tr class='row1'>
-            <td colspan="2">
-		        <?php
-					// invoke OnFriendlyURLSettingsRender event
-					$evtOut = $modx->invokeEvent("OnFriendlyURLSettingsRender");
-					if(is_array($evtOut)) echo implode("",$evtOut);
-		        ?>
-            </td>
-          </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["friendly_alias_title"] ?></td>
+    <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["yes"]?><br />
+      <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="0" <?php echo ($friendly_alias_urls=='0' || !isset($friendly_alias_urls)) ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["no"]?> </td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["friendly_alias_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["use_alias_path_title"] ?></td>
+    <td> <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="1" <?php echo $use_alias_path=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["yes"]?><br />
+      <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="0" <?php echo ($use_alias_path=='0' || !isset($use_alias_path)) ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["no"]?> </td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["use_alias_path_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["duplicate_alias_title"] ?></td>
+    <td> <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="1" <?php echo $allow_duplicate_alias=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["yes"]?><br />
+      <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="0" <?php echo ($allow_duplicate_alias=='0' || !isset($allow_duplicate_alias)) ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["no"]?> </td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["duplicate_alias_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td nowrap class="warning" valign="top"><?php echo $_lang["automatic_alias_title"] ?></td>
+    <td> <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="1" <?php echo $automatic_alias=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["yes"]?><br />
+      <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="0" <?php echo ($automatic_alias=='0' || !isset($automatic_alias)) ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang["no"]?> </td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td width="200">&nbsp;</td>
+    <td class='comment'><?php echo $_lang["automatic_alias_message"] ?></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2"><div class='split'></div></td>
+  </tr>
+  <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+    <td colspan="2">
+        <?php
+			// invoke OnFriendlyURLSettingsRender event
+			$evtOut = $modx->invokeEvent("OnFriendlyURLSettingsRender");
+			if(is_array($evtOut)) echo implode("",$evtOut);
+        ?>
+    </td>
+  </tr>
         </table>
       </div>
 
