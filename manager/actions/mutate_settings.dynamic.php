@@ -236,7 +236,6 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-          <tr>
             <td nowrap class="warning"><?php echo $_lang["xhtml_urls_title"] ?></td>
             <td><input onchange="documentDirty=true;" type="radio" name="xhtml_urls" value="1" <?php echo $xhtml_urls=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
