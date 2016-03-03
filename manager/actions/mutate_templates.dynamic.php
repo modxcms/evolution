@@ -165,16 +165,24 @@ function deletedocument() {
 <?php
 $rs = $modx->db->select(
 	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
-	sprintf("%s tr INNER JOIN %s tv ON tv.id=tr.tmplvarid LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('site_tmplvars'),$modx->getFullTableName('categories')),
+	sprintf("%s tv LEFT JOIN %s tr ON tv.id=tr.tmplvarid LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
 	'',
 	"tr.rank, tv.rank, tv.id"
 	);
-$tv = array();
+$_ = array();
 while($row = $modx->db->getRow($rs)) {
-	if(!isset($tv[$row['tvid']]) || $row['templateid']==$id)
-		$tv[$row['tvid']] = $row;
+    if(!isset($_[$row['tvid']]) || $row['templateid']==$id)
+        $_[$row['tvid']] = $row;
+    $_[$row['tvid']]['checked'] = $row['templateid']==$id ? 'checked' : '';
 }
-$total = count($tv);
+$selectedTvs = array();
+$unselectedTvs = array();
+foreach($_ as $tvid=>$tv) {
+    if($tv['checked']=='checked') $selectedTvs[$tvid]   = $tv;
+    else                          $unselectedTvs[$tvid] = $tv;
+}
+$tvs = $selectedTvs+$unselectedTvs;
+$total = count($tvs);
 ?>
     </div>
     <div class="tab-page" id="tabAssignedTVs">
@@ -190,9 +198,8 @@ $tvList = '';
 if($total>0) {
     $tvList .= '<br /><ul>';
     $assignedTvsArr = array();
-    while ($row = array_shift($tv)) {
-        $checked = $row['templateid']==$id ? 'checked' : '';
-        $tvList .= sprintf('<li><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s> <strong><a href="index.php?id=%s&a=301">'.$row['tvname'].'</a></strong> (%s)</li>',$row['tvid'],$checked, $row['tvid'],$row['category']);
+    while ($row = array_shift($tvs)) {
+        $tvList .= sprintf('<li><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s> <strong><a href="index.php?id=%s&a=301">'.$row['tvname'].'</a></strong> (%s)</li>',$row['tvid'], $row['checked'], $row['tvid'],$row['category']);
         $assignedTvsArr[$row['tvid']] = '';
     }
     $tvList .= '</ul>';
