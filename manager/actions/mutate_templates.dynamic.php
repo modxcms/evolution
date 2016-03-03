@@ -167,7 +167,7 @@ $rs = $modx->db->select(
 	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
 	sprintf("%s tv LEFT JOIN %s tr ON tv.id=tr.tmplvarid LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
 	'',
-	"tr.rank, tv.rank, tv.id"
+	"tr.rank, tv.rank, tv.name, tv.id"
 	);
 $_ = array();
 while($row = $modx->db->getRow($rs)) {
