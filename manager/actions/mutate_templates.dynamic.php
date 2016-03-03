@@ -164,19 +164,20 @@ function deletedocument() {
 
 <?php
 $rs = $modx->db->select(
-	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tr.rank AS rank, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
 	sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id",
             $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
 	'',
-	"tr.rank, tv.rank, tv.name, tv.id"
+	"tr.rank DESC, tv.rank DESC, tvname DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
 	);
 $_ = array();
 while($row = $modx->db->getRow($rs)) {
-    if(!isset($_[$row['tvid']]) || $row['templateid']==$id)
+    if(!isset($_[$row['tvid']]) || $row['templateid']==$id) {
         $_[$row['tvid']] = $row;
-    $_[$row['tvid']]['checked'] = $row['templateid']==$id ? 'checked' : '';
+        $_[$row['tvid']]['checked'] = $row['templateid'] == $id ? 'checked' : '';
+    };
 }
 $selectedTvs = array();
 $unselectedTvs = array();
@@ -184,6 +185,10 @@ foreach($_ as $tvid=>$tv) {
     if($tv['checked']=='checked') $selectedTvs[$tvid]   = $tv;
     else                          $unselectedTvs[$tvid] = $tv;
 }
+
+$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+$unselectedTvs = array_reverse($unselectedTvs, true);   // reverse ORDERBY DESC
+
 $tvs = $selectedTvs+$unselectedTvs;
 $total = count($tvs);
 ?>
@@ -200,10 +205,9 @@ $tvList = '';
 
 if($total>0) {
     $tvList .= '<br /><ul>';
-    $assignedTvsArr = array();
     while ($row = array_shift($tvs)) {
-        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label> <a href="index.php?id=%s&a=301">%s</a></li>',$row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit']);
-        $assignedTvsArr[$row['tvid']] = '';
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label> <a href="index.php?id=%s&a=301">%s</a>%s</li>',
+                            $row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit'], $hiddenRank);
     }
     $tvList .= '</ul>';
 
