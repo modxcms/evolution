@@ -77,6 +77,9 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
+
+                // Set new assigned Tvs
+                saveTemplateAccess();
         break;
     case '16':
 
@@ -129,10 +132,28 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 
-		
+                // Set new assigned Tvs
+                saveTemplateAccess();
 		
         break;
     default:
 		$modx->webAlertAndQuit("No operation set in request.");
+}
+
+function saveTemplateAccess() {
+
+    global $id, $modx;
+
+    $newAssignedTvs = $_POST['newAssignedTvs'];
+
+    $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+
+    for($i=0;$i<count($newAssignedTvs);$i++){
+        $modx->db->insert(
+            array(
+                'tmplvarid'  => $newAssignedTvs[$i],
+                'templateid' => $id
+            ), $tbl_site_tmplvar_templates);
+    }
 }
 ?>
