@@ -14,12 +14,11 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
     <title>MODX</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
-
-    <!-- OnManagerMainFrameHeaderHTMLBlock -->
-    <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
     <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+    <!-- OnManagerMainFrameHeaderHTMLBlock -->
+    <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
     <script type="text/javascript">
 		/* <![CDATA[ */
         window.addEvent('load', document_onload);
