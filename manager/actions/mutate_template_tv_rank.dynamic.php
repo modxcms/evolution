@@ -35,13 +35,19 @@ $rs = $modx->db->select(
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
 	"tr.templateid='{$id}'",
-	"tr.rank, tv.rank, tv.id"
+	"tr.rank DESC, tv.rank DESC, name DESC, tv.id DESC"     // workaround for correct sort of none-existing ranks
 	);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit>1) {
-    $i = 0;
+    $tvsArr = array();
     while ($row = $modx->db->getRow($rs)) {
+        $tvsArr[] = $row;
+    }
+    $tvsArr = array_reverse($tvsArr,true);  // reverse ORDERBY DESC
+
+    $i = 0;
+    foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
         $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
     }

@@ -164,28 +164,50 @@ function deletedocument() {
 
 <?php
 $rs = $modx->db->select(
-	"tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
-    $modx->getFullTableName('site_tmplvar_templates')." tr
-		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
-		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
-    "tr.templateid='{$id}'",
-	"tr.rank, tv.rank, tv.id"
+	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tr.rank AS rank, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+	sprintf("%s tv
+	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
+	    LEFT JOIN %s cat ON tv.category=cat.id",
+            $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
+	'',
+	"tr.rank DESC, tv.rank DESC, tvname DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
 	);
-$limit = $modx->db->getRecordCount($rs);
+$_ = array();
+while($row = $modx->db->getRow($rs)) {
+    if(!isset($_[$row['tvid']]) || $row['templateid']==$id) {
+        $_[$row['tvid']] = $row;
+        $_[$row['tvid']]['checked'] = $row['templateid'] == $id ? 'checked' : '';
+    };
+}
+$selectedTvs = array();
+$unselectedTvs = array();
+foreach($_ as $tvid=>$tv) {
+    if($tv['checked']=='checked') $selectedTvs[$tvid]   = $tv;
+    else                          $unselectedTvs[$tvid] = $tv;
+}
+
+$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+$unselectedTvs = array_reverse($unselectedTvs, true);   // reverse ORDERBY DESC
+
+$tvs = $selectedTvs+$unselectedTvs;
+$total = count($tvs);
 ?>
     </div>
     <div class="tab-page" id="tabAssignedTVs">
         <h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
-        <p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>
-        <p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
 <?php
+if ($total > 0) echo '<p>' . $_lang['template_tv_msg'] . '</p>';
+if($modx->hasPermission('save_template') && $total > 1) {
+    echo sprintf('<p><a href="index.php?a=117&amp;id=%s">%s</a></p>',$id,$_lang['template_tv_edit']);
+}
 $tvList = '';
 
-if($limit>0) {
+if($total>0) {
     $tvList .= '<br /><ul>';
-    while ($row = $modx->db->getRow($rs)) {
-        $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
+    while ($row = array_shift($tvs)) {
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label> <a href="index.php?id=%s&a=301">%s</a>%s</li>',
+                            $row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit'], $hiddenRank);
     }
     $tvList .= '</ul>';
 
