@@ -1855,3 +1855,10 @@ function parsePlaceholder($tpl='', $ph=array())
 	}
 	return $tpl;
 }
+
+function showHide($cond=true)
+{
+    global $displayStyle;
+    $showHide = $cond ? $displayStyle : 'none';
+    return sprintf('style="display:%s"', $showHide);
+}
