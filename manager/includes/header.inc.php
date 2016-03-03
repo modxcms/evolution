@@ -7,6 +7,7 @@ $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
+$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo  $mxla;?>" dir="<?php echo  $textdir;?>"><head>
@@ -15,8 +16,8 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
-    <?php echo $onManagerMainFrameHeaderHTMLBlock; ?>
-    
+    <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
+    <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['jquery_mgr_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
