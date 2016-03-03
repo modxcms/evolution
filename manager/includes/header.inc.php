@@ -17,7 +17,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
     <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
-    <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['jquery_mgr_path']); ?>
+    <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
