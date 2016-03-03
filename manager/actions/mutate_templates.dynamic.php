@@ -164,30 +164,36 @@ function deletedocument() {
 
 <?php
 $rs = $modx->db->select(
-	"tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
-    $modx->getFullTableName('site_tmplvar_templates')." tr
-		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
-		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
-    "tr.templateid='{$id}'",
+	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+	sprintf("%s tr INNER JOIN %s tv ON tv.id=tr.tmplvarid LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('site_tmplvars'),$modx->getFullTableName('categories')),
+	'',
 	"tr.rank, tv.rank, tv.id"
 	);
-$limit = $modx->db->getRecordCount($rs);
+$tv = array();
+while($row = $modx->db->getRow($rs)) {
+	if(!isset($tv[$row['tvid']]) || $row['templateid']==$id)
+		$tv[$row['tvid']] = $row;
+}
+$total = count($tv);
 ?>
     </div>
     <div class="tab-page" id="tabAssignedTVs">
         <h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
-        <p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>
-        <p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
 <?php
+if ($total > 0) echo '<p>' . $_lang['template_tv_msg'] . '</p>';
+if($modx->hasPermission('save_template') && $total > 1) {
+    echo sprintf('<p><a href="index.php?a=117&amp;id=%s">%s</a></p>',$id,$_lang['template_tv_edit']);
+}
 $tvList = '';
 
-if($limit>0) {
+if($total>0) {
     $tvList .= '<br /><ul>';
     $assignedTvsArr = array();
-    while ($row = $modx->db->getRow($rs)) {
-        $tvList .= '<li><strong><a href="index.php?id='.$row['id'].'&a=301">'.$row['name'].'</a></strong> ('.$row['category'].')</li>';
-        $assignedTvsArr[$row['id']] = '';
+    while ($row = array_shift($tv)) {
+        $checked = $row['templateid']==$id ? 'checked' : '';
+        $tvList .= sprintf('<li><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s> <strong><a href="index.php?id=%s&a=301">'.$row['tvname'].'</a></strong> (%s)</li>',$row['tvid'],$checked, $row['tvid'],$row['category']);
+        $assignedTvsArr[$row['tvid']] = '';
     }
     $tvList .= '</ul>';
 
@@ -196,37 +202,6 @@ if($limit>0) {
 }
 echo $tvList;
 ?></div>
-<?php
-    $rs = $modx->db->select(
-        "tv.name as name, tv.id as id, tr.templateid, tr.rank, if(isnull(cat.category),'{$_lang['no_category']}',cat.category) as category",
-        $modx->getFullTableName('site_tmplvar_templates')." tr
-		INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
-		LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id",
-        "tr.templateid!='{$id}'",   // simple way of making a list of not assigned..
-        "tr.rank, tv.rank, tv.id"
-    );
-    $limit = $modx->db->getRecordCount($rs);
-?>
-<div class="tab-page" id="tabNotAssignedTVs">
-    <h2 class="tab"><?php echo $_lang["template_notassignedtv_tab"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabNotAssignedTVs" ) );</script>
-    <p><?php if ($limit > 0) echo $_lang['template_notassignedtv_msg']; ?></p>
-
-    <?php
-        $tvList = '';
-        if($limit>0) {
-            $tvList .= '<br /><ul>';
-            while ($row = $modx->db->getRow($rs)) {
-                if(isset($assignedTvsArr[$row['id']])) continue;    // Skip assigned TVs
-                $tvList .= '<li><input name="newAssignedTvs[]" value="'.$row['id'].'" type="checkbox" class="inputBox"> <strong><a href="index.php?id='.$row['id'].'&a=301">'.$row['name'].'</a></strong> ('.$row['category'].')</li>';
-            }
-            $tvList .= '</ul>';
-        } else {
-            echo $_lang['template_notassignedtv_empty'];
-        }
-        echo $tvList;
-    ?>
-</div>
 <?php
 // invoke OnTempFormRender event
 $evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));

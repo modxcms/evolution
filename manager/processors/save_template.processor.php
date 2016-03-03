@@ -61,6 +61,8 @@ switch ($_POST['mode']) {
 										"mode"	=> "new",
 										"id"	=> $newid
 								));				
+            // Set new assigned Tvs
+            saveTemplateAccess();
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $templatename;
@@ -78,8 +80,6 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 
-                // Set new assigned Tvs
-                saveTemplateAccess();
         break;
     case '16':
 
@@ -108,6 +108,8 @@ switch ($_POST['mode']) {
                                 'selectable'   => $selectable,
 				'category'     => $categoryid,
 			), $modx->getFullTableName('site_templates'), "id='{$id}'");
+                // Set new assigned Tvs
+                saveTemplateAccess();
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -132,8 +134,6 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 
-                // Set new assigned Tvs
-                saveTemplateAccess();
 		
         break;
     default:
@@ -144,16 +144,14 @@ function saveTemplateAccess() {
 
     global $id, $modx;
 
-    $newAssignedTvs = $_POST['newAssignedTvs'];
-
-    $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
-
-    for($i=0;$i<count($newAssignedTvs);$i++){
+    $newAssignedTvs = $_POST['assignedTv'];
+    $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'),"templateid='{$id}'");
+    if(empty($newAssignedTvs)) return;
+    foreach($newAssignedTvs as $tvid){
         $modx->db->insert(
             array(
-                'tmplvarid'  => $newAssignedTvs[$i],
-                'templateid' => $id
-            ), $tbl_site_tmplvar_templates);
+                'templateid' => $id,
+                'tmplvarid'  => $tvid
+            ), $modx->getFullTableName('site_tmplvar_templates'));
     }
 }
-?>
