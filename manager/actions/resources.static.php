@@ -9,10 +9,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
-    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars' || $resourceTable == 'site_templates') {
-        $orderby= '6,2';
-    }else{
-        $orderby= '5,1';
+    switch($resourceTable) {
+        case 'site_plugins':
+        case 'site_tmplvars':
+            $orderby= '6,2'; break;
+        case 'site_templates':
+            $orderby= '6,1'; break;
+        default:
+            $orderby= '5,1';
     }
 
     $selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
