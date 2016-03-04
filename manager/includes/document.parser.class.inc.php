@@ -3829,7 +3829,7 @@ class DocumentParser {
             foreach ($props as $prop) {
                 
                 if (strpos($prop, '=')===false) {
-                    $property[$prop]='';
+                    $property[trim($prop)]='';
                     continue;
                 }
                 
