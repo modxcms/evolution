@@ -222,7 +222,7 @@ if($total>0) {
     foreach($selectedTvs as $row) {
         $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>('.$row['tvdescription'].')</small>' : '';
         $locked = $row['tvlocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
-        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" checked="checked">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" checked="checked" onchange="documentDirty=true;">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
                             $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $_lang['edit']);
     }
     $tvList .= '</ul>';
@@ -247,7 +247,7 @@ while ($row = array_shift($unselectedTvs)) {
 
     $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>('.$row['tvdescription'].')</small>' : '';
     $locked = $row['tvlocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
-    $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
+    $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" onchange="documentDirty=true;">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
                         $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $_lang['edit']);
     $tvList .= '</li>';
 
