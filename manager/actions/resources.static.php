@@ -9,7 +9,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
-    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
+    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars' || $resourceTable == 'site_templates') {
         $orderby= '6,2';
     }else{
         $orderby= '5,1';
