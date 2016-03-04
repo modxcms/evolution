@@ -657,6 +657,9 @@ a img {
 	color: #aaa;
 	text-decoration: line-through;
 }
+label.disabled {
+    color: #aaa;
+}
 /* -------------------------[ grid style ]--- */
 table.grid {
 	width: 100%;

@@ -728,6 +728,9 @@ div.treeNode {
 	color: #aaa;
 	text-decoration: line-through;
 }
+label.disabled {
+    color: #aaa;
+}
 /* -------------------------[ grid style ]--- */
 .grid {
 	width: 100%;
