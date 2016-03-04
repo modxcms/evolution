@@ -3835,7 +3835,7 @@ class DocumentParser {
                 
                 $_ = explode('=', $prop, 2);
                 $key = trim($_[0]);
-                $p = explode(';', trim($_[1]), 3);
+                $p = explode(';', trim($_[1]));
                 if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
                 elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
                 elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
