@@ -3834,12 +3834,13 @@ class DocumentParser {
                 }
                 
                 $_ = explode('=', $prop, 2);
-                $pname = trim($_[0]);
-                $v= explode(';', trim($_[1]));
-                if    ($v[1] == 'list'       && $v[3] != '') $property[$pname] = $v[3]; //list default
-                elseif($v[1] == 'list-multi' && $v[3] != '') $property[$pname] = $v[3]; // list-multi
-                elseif($v[1] != 'list'       && $v[2] != '') $property[$pname] = $v[2]; // text, textarea, etc..
-                else                                         $property[$pname] = '';
+                $key = trim($_[0]);
+                $p = explode(';', trim($_[1]), 3);
+                if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
+                elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
+                elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
+                else                                     $value = '';
+                $property[$key] = $value;
             }
         }
         else $property = array();
