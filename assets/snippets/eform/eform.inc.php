@@ -368,7 +368,7 @@ $_dfnMaxlength = 6;
 							break;
 						case "file":
 							// set file name
-							if($value['type']!="" && $value['type']!=""){
+							if($value['type']!="" && $value['error']==0){
 								$value = $value["name"];
 								$patharray = explode(((strpos($value,"/")===false)? "\\":"/"), $value);
 								$value = $patharray[count($patharray)-1];
