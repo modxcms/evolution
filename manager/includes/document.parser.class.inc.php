@@ -3822,10 +3822,12 @@ class DocumentParser {
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         
-        $property = array();
+        $propertyString = trim($propertyString);
+        $token = substr($propertyString,0,1);
         
-        if (!empty ($propertyString)) {
+        if ($token=='&') {
             $props= explode('&', $propertyString);
+            $property = array();
             foreach ($props as $prop) {
                 
                 if (strpos($prop, '=')===false) {
@@ -3843,6 +3845,9 @@ class DocumentParser {
                 $property[$key] = $value;
             }
         }
+//      elseif($token=='[' || $token=='{') {
+//          $property = json_decode($propertyString, true);
+//      }
         else $property = array();
         
         if(!empty($elementName) && !empty($elementType)){
