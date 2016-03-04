@@ -440,7 +440,7 @@ function decode(s){
   <tr>
     <td>
 <?php
-            while ($row = array_shift($tvs))
+        while ($row = array_shift($tvs))
 	    {
 	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
 	    	{

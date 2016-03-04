@@ -24,7 +24,7 @@ $tbl_site_templates = $modx->getFullTableName('site_templates');
 // check to see the template editor isn't locked
 $rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
     if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
     }
 // end check for lock
 
