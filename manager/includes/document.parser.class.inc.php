@@ -3821,37 +3821,39 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-        $parameter= array ();
+        
+        $property = array();
+        
         if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else {
-                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
-				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
-			else{
-				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
-                            $parameter[trim($pTmp[0])]= $pvTmp[2];
+            $props= explode('&', $propertyString);
+            foreach ($props as $prop) {
+                
+                if (strpos($prop, '=')===false) {
+                    $property[$prop]='';
+                    continue;
                 }
+                
+                $_ = explode('=', $prop, 2);
+                $pname = trim($_[0]);
+                $v= explode(';', trim($_[1]));
+                if    ($v[1] == 'list'       && $v[3] != '') $property[$pname] = $v[3]; //list default
+                elseif($v[1] == 'list-multi' && $v[3] != '') $property[$pname] = $v[3]; // list-multi
+                elseif($v[1] != 'list'       && $v[2] != '') $property[$pname] = $v[2]; // text, textarea, etc..
+                else                                         $property[$pname] = '';
             }
         }
-                }
-            }
+        else $property = array();
+        
+        if(!empty($elementName) && !empty($elementType)){
+            $out = $this->invokeEvent('OnParseProperties', array(
+                'element' => $elementName,
+                'type'    => $elementType,
+                'args'    => $property
+            ));
+            if(is_array($out)) $out = array_pop($out);
+            if(is_array($out)) $property = $out;
         }
-		if(!empty($elementName) && !empty($elementType)){
-			$out = $this->invokeEvent('OnParseProperties', array(
-				'element' => $elementName,
-				'type' => $elementType,
-				'args' => $parameter
-			));
-			if(is_array($out)) $out = array_pop($out);
-            if(is_array($out)) $parameter = $out;
-		}
-        return $parameter;
+        return $property;
     }
 
     /***************************************************************************************/
