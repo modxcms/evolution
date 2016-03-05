@@ -163,34 +163,47 @@ function deletedocument() {
     <input type="submit" name="save" style="display:none">
 
 <?php
+$selectedTvs = array();
+if( !isset($_POST['assignedTv']) ) {
+    $rs = $modx->db->select(
+        sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+        sprintf("%s tv
+                LEFT JOIN %s tr ON tv.id=tr.tmplvarid
+                LEFT JOIN %s cat ON tv.category=cat.id",
+            $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')),
+        "templateid='{$id}'",
+        "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
+    );
+    while ($row = $modx->db->getRow($rs)) {
+        $selectedTvs[$row['tvid']] = $row;
+    }
+    $selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+}
+
+$unselectedTvs = array();
 $rs = $modx->db->select(
-	sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tr.rank AS rank, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
-	sprintf("%s tv
+    sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+    sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id",
-            $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
-	'',
-	"tr.rank DESC, tv.rank DESC, tvname DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
-	);
-$_ = array();
+        $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'),$modx->getFullTableName('categories')),
+    "",
+    "category, tvcaption"
+);
 while($row = $modx->db->getRow($rs)) {
-    if(!isset($_[$row['tvid']]) || $row['templateid']==$id) {
-        $_[$row['tvid']] = $row;
-        $_[$row['tvid']]['checked'] = $row['templateid'] == $id ? 'checked' : '';
+    $unselectedTvs[$row['tvid']] = $row;
+}
+
+// Catch checkboxes if form not validated
+if( isset($_POST['assignedTv']) ) {
+    $selectedTvs = array();
+    foreach($_POST['assignedTv'] as $tvid) {
+        if(isset($unselectedTvs[$tvid]))
+            $selectedTvs[$tvid] = $unselectedTvs[$tvid];
     };
 }
-$selectedTvs = array();
-$unselectedTvs = array();
-foreach($_ as $tvid=>$tv) {
-    if($tv['checked']=='checked') $selectedTvs[$tvid]   = $tv;
-    else                          $unselectedTvs[$tvid] = $tv;
-}
 
-$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
-$unselectedTvs = array_reverse($unselectedTvs, true);   // reverse ORDERBY DESC
-
-$tvs = $selectedTvs+$unselectedTvs;
-$total = count($tvs);
+$total = count($selectedTvs);
 ?>
     </div>
     <div class="tab-page" id="tabAssignedTVs">
@@ -198,16 +211,19 @@ $total = count($tvs);
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
 <?php
 if ($total > 0) echo '<p>' . $_lang['template_tv_msg'] . '</p>';
-if($modx->hasPermission('save_template') && $total > 1) {
+if($modx->hasPermission('save_template') && $total > 1 && $id) {
     echo sprintf('<p><a href="index.php?a=117&amp;id=%s">%s</a></p>',$id,$_lang['template_tv_edit']);
 }
-$tvList = '';
 
+// Selected TVs
+$tvList = '<br/>';
 if($total>0) {
-    $tvList .= '<br /><ul>';
-    while ($row = array_shift($tvs)) {
-        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" %s>%s (%s)</label> <a href="index.php?id=%s&a=301">%s</a>%s</li>',
-                            $row['tvid'], $row['checked'], $row['tvname'], $row['category'], $row['tvid'], $_lang['edit'], $hiddenRank);
+    $tvList .= '<ul>';
+    foreach($selectedTvs as $row) {
+        $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>('.$row['tvdescription'].')</small>' : '';
+        $locked = $row['tvlocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+        $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" checked="checked" onchange="documentDirty=true;">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
+                            $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $_lang['edit']);
     }
     $tvList .= '</ul>';
 
@@ -215,6 +231,32 @@ if($total>0) {
 	echo $_lang['template_no_tv'];
 }
 echo $tvList;
+
+// Unselected TVs
+$tvList = '<br/><hr/><br/>'.$_lang['template_notassigned_tv'].'<br/><br/><ul>';
+$preCat = '';
+$insideUl = 0;
+while ($row = array_shift($unselectedTvs)) {
+    if(isset($selectedTvs[$row['tvid']])) continue; // Skip selected
+    $row['category'] = stripslashes($row['category']); //pixelchutes
+    if ($preCat !== $row['category']) {
+        $tvList .= $insideUl? '</ul>': '';
+        $tvList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $insideUl = 1;
+    }
+
+    $desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>('.$row['tvdescription'].')</small>' : '';
+    $locked = $row['tvlocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+    $tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" onchange="documentDirty=true;">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301">%s</a></li>',
+                        $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $_lang['edit']);
+    $tvList .= '</li>';
+
+    $preCat = $row['category'];
+}
+$tvList .= $insideUl? '</ul>': '';
+$tvList .= '</ul>';
+echo $tvList;
+
 ?></div>
 <?php
 // invoke OnTempFormRender event

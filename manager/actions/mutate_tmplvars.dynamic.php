@@ -42,6 +42,12 @@ else
     $_SESSION['itemname']=$_lang["new_tmplvars"];
 }
 
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
+$content = array_merge($content, $_POST);
+
 // get available RichText Editors
 $RTEditors = '';
 $evtOut = $modx->invokeEvent('OnRichTextEditorRegister',array('forfrontend' => 1));
@@ -415,53 +421,62 @@ function decode(s){
 <table>
 <?php
         $rs = $modx->db->select(
-            sprintf("tpl.id,tpl.category,templatename,tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
             sprintf("%s as tpl
                     LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
                     LEFT JOIN %s as cat ON tpl.category=cat.id",
                     $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')),
             '',
-            "tpl.category, templatename"
+            "category, templatename"
         );
-        $_ = array();
-        while($row = $modx->db->getRow($rs)) {
-            $_[$row['id']] = $row;
-            if($id) $_[$row['id']]['checked'] = $row['tmplvarid']==$id ? 'checked' : '';
-        }
-        $selectedTvs = array();
-        $unselectedTvs = array();
-        foreach($_ as $id=> $template) {
-            if($template['checked']=='checked') $selectedTvs[$id]   = $template;
-            else                                $unselectedTvs[$id] = $template;
-        }
-        $tvs = $selectedTvs+$unselectedTvs;
-        $total = count($tvs);
 ?>
   <tr>
     <td>
 <?php
-        while ($row = array_shift($tvs))
-	    {
-	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif($id == 0 && is_array($_POST['template']))
-	    	{
-	    		$checked = in_array($row['id'], $_POST['template']);
-	    	}
-	    	else
-	    	{
-	    		$checked = $row['checked'];
-	    	}
-	    	$checked = $checked ? ' checked="checked"':'';
-                echo sprintf('<label><input name="template[]" value="%s" type="checkbox" %s>%s (%s)</label>', $row['id'], $checked, $row['templatename'], $row['category']);
-	    }
-	?>
+
+$tplList = '<ul>';
+$preCat = '';
+$insideUl = 0;
+while ($row = $modx->db->getRow($rs)) {
+    $row['category'] = stripslashes($row['category']); //pixelchutes
+    if ($preCat !== $row['category']) {
+        $tplList .= $insideUl? '</ul>': '';
+        $tplList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $insideUl = 1;
+    }
+
+    if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+    {
+        $checked = true;
+    }
+    elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
+    {
+        $checked = true;
+    }
+    elseif($id == 0 && is_array($_POST['template']))
+    {
+        $checked = in_array($row['id'], $_POST['template']);
+    }
+    else
+    {
+        $checked = $row['tmplvarid'];
+    }
+    $selectable = !$row['selectable'] ? ' class="disabled"':'';
+    $checked = $checked ? ' checked="checked"':'';
+    $tplId = '&nbsp;<small>(' . $row['id'] . ')</small>';
+    $desc = !empty($row['tpldescription']) ? ' - '.$row['tpldescription'] : '';
+    $locked = $row['tpllocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+    $tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;">%s%s%s%s</label></li>',
+                        $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $locked );
+    $tplList .= '</li>';
+
+    $preCat = $row['category'];
+}
+$tplList .= $insideUl? '</ul>': '';
+$tplList .= '</ul>';
+echo $tplList;
+
+?>
     </td>
   </tr>
 </table>

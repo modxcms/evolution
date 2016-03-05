@@ -63,7 +63,7 @@ switch ($_POST['mode']) {
 										"id"	=> $newid
 								));				
             // Set new assigned Tvs
-            saveTemplateAccess();
+            saveTemplateAccess($newid);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $templatename;
@@ -110,7 +110,7 @@ switch ($_POST['mode']) {
 				'category'     => $categoryid,
 			), $modx->getFullTableName('site_templates'), "id='{$id}'");
                 // Set new assigned Tvs
-                saveTemplateAccess();
+                saveTemplateAccess($id);
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -141,9 +141,9 @@ switch ($_POST['mode']) {
 		$modx->webAlertAndQuit("No operation set in request.");
 }
 
-function saveTemplateAccess() {
+function saveTemplateAccess($id) {
 
-    global $id, $modx;
+    global $modx;
 
     $newAssignedTvs = $_POST['assignedTv'];
 
@@ -160,6 +160,7 @@ function saveTemplateAccess() {
     $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'),"templateid='{$id}'");
     if(empty($newAssignedTvs)) return;
     foreach($newAssignedTvs as $tvid){
+        if(!$id || !$tvid) continue;    // Dont link zeros
         $modx->db->insert(
             array(
                 'templateid' => $id,

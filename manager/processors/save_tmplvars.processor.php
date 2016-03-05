@@ -29,9 +29,8 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
     }
 }
 
-if($caption =="") {
-	$caption  = $name? $name: "Untitled variable";
-}
+$name = $name != '' ? $name : "Untitled variable";
+$caption = $caption != '' ? $caption : $name;
 
 // get table names
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
