@@ -38,7 +38,7 @@
 
             // Register example button
             ed.addButton('youtubeIframe', {
-                title: 'youtubeIframe.desc',
+                title: 'youtube.desc',
                 cmd: 'mceYoutubeIframe',
                 image: url + '/img/youtube.png'
             });
