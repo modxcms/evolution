@@ -141,7 +141,8 @@ foreach ($all_tvs as $thisTv){
 	$fieldname_suffix = '';
 	
 	// What fieldtype is this TV type?
-	switch ($thisTv['type']){
+	$thisTvI = explode(":", $thisTv['type']);	
+	switch ($thisTvI['0']){
 		case 'textarea':
 		case 'rawtextarea':
 		case 'textareamini':
