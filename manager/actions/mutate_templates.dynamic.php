@@ -114,11 +114,12 @@ function deletedocument() {
         <h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 
-<?php echo '<div>' . $_lang['template_msg'] . '</div>'; ?>
+<?php echo '<div>' . $_lang['template_msg'] . '<br/><br/></div>'; ?>
     <table>
       <tr>
         <th><?php echo $_lang['template_name']; ?>:</th>
-        <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span></td>
+        <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
+            <?php if($id == $modx->config['default_template']) echo ' <b>'.$_lang['defaulttemplate_title'].'</b>'; ?></td>
       </tr>
     <tr>
     <th><?php echo $_lang['template_desc']; ?>:</th>
