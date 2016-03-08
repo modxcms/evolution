@@ -1,2 +1,5 @@
 .gitattributes export-ignore
 .tx export-ignore
+
+# Disable LF normalization for all files
+* -text
