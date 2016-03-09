@@ -52,7 +52,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         }else{
             $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
         }
-        $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+
+        $tplInfo  = array();
+        if($row['locked']) $tplInfo[] = $_lang['locked'];
+        if($row['id'] == $modx->config['default_template']) $tplInfo[] = $_lang['defaulttemplate_title'];
+        $output .= !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
+
         $output .= '</li>';
 
         $preCat = $row['category'];
