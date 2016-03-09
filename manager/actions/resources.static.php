@@ -22,7 +22,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
     
     $rs = $modx->db->select(
-        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category",
+        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
             LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id",
         "",
@@ -39,7 +39,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $row['category'] = stripslashes($row['category']); //pixelchutes
         if ($preCat !== $row['category']) {
             $output .= $insideUl? '</ul>': '';
-            $output .= '<li><strong>'.$row['category'].'</strong><ul>';
+            $output .= '<li><strong>'.$row['category']. ($row['catid']!=''? ' ('.$row['catid'].')' : '') .'</strong><ul>';
             $insideUl = 1;
         }
 
