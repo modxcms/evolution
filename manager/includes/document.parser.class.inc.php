@@ -3824,10 +3824,11 @@ class DocumentParser {
         
         $propertyString = trim($propertyString);
         $token = substr($propertyString,0,1);
-        
+        $property = array();
+
+        // old format
         if ($token=='&') {
             $props= explode('&', $propertyString);
-            $property = array();
             foreach ($props as $prop) {
                 
                 if (strpos($prop, '=')===false) {
@@ -3845,11 +3846,21 @@ class DocumentParser {
                 $property[$key] = $value;
             }
         }
-//      elseif($token=='[' || $token=='{') {
-//          $property = json_decode($propertyString, true);
-//      }
-        else $property = array();
-        
+        // new json-format
+        elseif($token=='{') {
+            $jsonFormat = json_decode($propertyString, true);
+            foreach( $jsonFormat as $key=>$row ) {
+                switch($key) {
+                    case 'pluginConfig':
+                        if(isset($row[0]['events']))   $property['pluginEvents']   = explode(',', $row['events']);
+                        if(isset($row[0]['filePath'])) $property['pluginFilePath'] = $row['filePath'];
+                        break;
+                    default:
+                        $property[$key] = $row[0]['value'];
+                }
+            };
+        }
+
         if(!empty($elementName) && !empty($elementType)){
             $out = $this->invokeEvent('OnParseProperties', array(
                 'element' => $elementName,
