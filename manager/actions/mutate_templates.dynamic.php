@@ -183,7 +183,7 @@ if( !isset($_POST['assignedTv']) ) {
 
 $unselectedTvs = array();
 $rs = $modx->db->select(
-    sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+    sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']),
     sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id",
@@ -242,7 +242,7 @@ while ($row = array_shift($unselectedTvs)) {
     $row['category'] = stripslashes($row['category']); //pixelchutes
     if ($preCat !== $row['category']) {
         $tvList .= $insideUl? '</ul>': '';
-        $tvList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $tvList .= '<li><strong>'.$row['category']. ($row['catid']!='' ? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
         $insideUl = 1;
     }
 

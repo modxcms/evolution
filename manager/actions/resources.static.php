@@ -39,7 +39,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $row['category'] = stripslashes($row['category']); //pixelchutes
         if ($preCat !== $row['category']) {
             $output .= $insideUl? '</ul>': '';
-            $output .= '<li><strong>'.$row['category']. ($row['catid']!=''? ' ('.$row['catid'].')' : '') .'</strong><ul>';
+            $output .= '<li><strong>'.$row['category']. ($row['catid']!=''? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
             $insideUl = 1;
         }
 
@@ -48,7 +48,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
-             $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>  ('.$row['description'].')</small>' : ' - '.$row['caption'];
+             $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>('.$row['description'].')</small>' : ' - '.$row['caption'];
         }else{
             $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
         }
@@ -240,9 +240,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 if ($preCat !== $v['category']) {
                     echo $insideUl? '</ul>': '';
                     if ($v['category'] == $_lang['no_category'] || !$delPerm) {
-                        echo '<li><strong>'.$v['category'].'</strong><ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .'</strong><ul>';
                     } else {
-                        echo '<li><strong>'.$v['category'].'</strong> (<a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a>)<ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a></strong><ul>';
                     }
                     $insideUl = 1;
                 }
