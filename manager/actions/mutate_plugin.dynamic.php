@@ -291,7 +291,7 @@ function setParameter(key,dt,ctrl) {
 function implodeParameters(){
     var merged = currentParams;
     merged['pluginConfig'] = pluginConfig;
-    document.forms['mutate'].properties.value = JSON.stringify(merged);
+    document.forms['mutate'].properties.value = JSON.stringify(merged, null, 2);
 }
 
 function encode(s){
