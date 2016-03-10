@@ -421,7 +421,7 @@ function decode(s){
 <table>
 <?php
         $rs = $modx->db->select(
-            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']),
             sprintf("%s as tpl
                     LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
                     LEFT JOIN %s as cat ON tpl.category=cat.id",
@@ -441,7 +441,7 @@ while ($row = $modx->db->getRow($rs)) {
     $row['category'] = stripslashes($row['category']); //pixelchutes
     if ($preCat !== $row['category']) {
         $tplList .= $insideUl? '</ul>': '';
-        $tplList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $tplList .= '<li><strong>'.$row['category']. ($row['catid']!='' ? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
         $insideUl = 1;
     }
 
