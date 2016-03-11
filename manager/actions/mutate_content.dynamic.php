@@ -720,9 +720,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array(
-                    'ta',
-                );
+                $replace_richtexteditor = array( 0=>array(
+                    'id'=>'ta',
+                    'options'=>''
+                ));
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -762,15 +763,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                             // Add richtext editor to the list
-                            if (is_array($replace_richtexteditor)) {
-                                $replace_richtexteditor = array_merge($replace_richtexteditor, array(
-                                    "tv" . $row['id'],
-                                ));
-                            } else {
-                                $replace_richtexteditor = array(
-                                    "tv" . $row['id'],
-                                );
-                            }
+                            $replace_richtexteditor[] = array(
+                                "id"=>"tv".$row['id'],
+                                "options"=>$row['elements']
+                            );
                         }
                         // splitter
                         if ($i++ > 0)
@@ -1192,13 +1188,16 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
         if (is_array($replace_richtexteditor)) {
-            // invoke OnRichTextEditorInit event
-            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                'editor' => $which_editor,
-                'elements' => $replace_richtexteditor
-            ));
-            if (is_array($evtOut))
-                echo implode('', $evtOut);
+            foreach($replace_richtexteditor as $editor) {
+                // invoke OnRichTextEditorInit event
+                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+                    'editor' => $which_editor,
+                    'elements' => array($editor['id']),
+                    'options' => $editor['options']
+                ));
+                if (is_array($evtOut))
+                    echo implode('', $evtOut);
+            }
         }
     }
 
