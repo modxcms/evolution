@@ -155,8 +155,8 @@ class TinyMCE
 		}
 	
 		include_once("{$mce_path}settings/default_params.php");
-		$ph += $_lang;
-		
+		$ph = array_merge($ph, $_lang);
+
 		switch($modx->manager->action)
 		{
 			case '11';
@@ -244,41 +244,40 @@ class TinyMCE
 		
 		if($modx->isBackend() || (intval($_GET['quickmanagertv']) == 1 && isset($_SESSION['mgrValidated'])))
 		{
-			$params['theme']              = $modx->config['tinymce_editor_theme'];
-			$params['mce_editor_skin']    = $modx->config['mce_editor_skin'];
-			$params['mce_entermode']      = $modx->config['mce_entermode'];
+			$params['theme']              = !empty($params['theme'])           ? $params['theme']           : $modx->config['tinymce_editor_theme'];
+			$params['mce_editor_skin']    = !empty($params['mce_editor_skin']) ? $params['mce_editor_skin'] : $modx->config['mce_editor_skin'];
+			$params['mce_entermode']      = !empty($params['mce_entermode'])   ? $params['mce_entermode']   : $modx->config['mce_entermode'];
 			$params['language']           = $this->get_lang($modx->config['manager_language']);
 			$params['frontend']           = false;
-			$params['custom_plugins']     = $modx->config['tinymce_custom_plugins'];
-			$params['custom_buttons1']    = $modx->config['tinymce_custom_buttons1'];
-			$params['custom_buttons2']    = $modx->config['tinymce_custom_buttons2'];
-			$params['custom_buttons3']    = $modx->config['tinymce_custom_buttons3'];
-			$params['custom_buttons4']    = $modx->config['tinymce_custom_buttons4'];
-			$params['toolbar_align']      = $modx->config['manager_direction']==='rtl' ? 'rtl' : 'ltr';
+			$params['custom_plugins']     = !empty($params['custom_plugins'])  ? $params['custom_plugins']  : $modx->config['tinymce_custom_plugins'];
+			$params['custom_buttons1']    = !empty($params['custom_buttons1']) ? $params['custom_buttons1'] : $modx->config['tinymce_custom_buttons1'];
+			$params['custom_buttons2']    = isset( $params['custom_buttons2']) ? $params['custom_buttons2'] : $modx->config['tinymce_custom_buttons2'];
+			$params['custom_buttons3']    = isset( $params['custom_buttons3']) ? $params['custom_buttons3'] : $modx->config['tinymce_custom_buttons3'];
+			$params['custom_buttons4']    = isset( $params['custom_buttons4']) ? $params['custom_buttons4'] : $modx->config['tinymce_custom_buttons4'];
+			$params['toolbar_align']      = $params['toolbar_align'] === 'rtl' ? 'rtl'                      : ($modx->config['manager_direction']==='rtl' ? 'rtl' : 'ltr');
 			$params['webuser']            = null;
 		}
 		else
 		{
 			$frontend_language = isset($modx->config['fe_editor_lang']) ? $modx->config['fe_editor_lang']:'';
 			$webuser = (isset($modx->config['rb_webuser']) ? $modx->config['rb_webuser'] : null);
-			
-			$params['theme']           = $webtheme;
+
+			$params['theme']           = $params['webtheme'];
 			$params['webuser']         = $webuser;
 			$params['language']        = $this->get_lang($frontend_language);
 			$params['frontend']        = true;
-			$params['custom_plugins']  = $webPlugins;
-			$params['custom_buttons1'] = $webButtons1;
-			$params['custom_buttons2'] = $webButtons2;
-			$params['custom_buttons3'] = $webButtons3;
-			$params['custom_buttons4'] = $webButtons4;
-			$params['toolbar_align']   = $webAlign;
+			$params['custom_plugins']  = $params['webPlugins'];
+			$params['custom_buttons1'] = $params['webButtons1'];
+			$params['custom_buttons2'] = $params['webButtons2'];
+			$params['custom_buttons3'] = $params['webButtons3'];
+			$params['custom_buttons4'] = $params['webButtons4'];
+			$params['toolbar_align']   = $params['webAlign'];
 			
 		}
 		
 		$str = '';
 		
-		$theme = $params['theme'];
-		switch($theme)
+		switch( $params['theme'] )
 		{
     		case 'custom':
     			$plugins  = $params['custom_plugins'];
@@ -296,7 +295,7 @@ class TinyMCE
     		case 'default':
     		case 'editor':
     		default:
-    			include_once("{$mce_path}settings/toolbar.settings.inc.php");
+    			include("{$mce_path}settings/toolbar.settings.inc.php");
     			if(empty($theme) || $theme==='editor') $theme = 'default';
     			$plugins  = $set[$theme]['p'];
     			$buttons1 = $set[$theme]['b1'];
@@ -458,9 +457,14 @@ class TinyMCE
 		$ph['link_list']               = ($params['link_list']=='enabled') ? "'{$mce_url}js/tinymce.linklist.php'" : 'false';
 		
 		$ph['tpl_list']                = "{$mce_url}js/get_template.php";
-	
-		$mce_init = file_get_contents("{$mce_path}js/mce_init.js.inc");
-		
+
+                $mce_init = '';
+                if(!defined('TINY_MCE_INIT_ONCE')) {
+                    define('TINY_MCE_INIT_ONCE', 1);
+                    $mce_init .= file_get_contents("{$mce_path}js/mce_init_once.js.inc");
+                }
+                $mce_init .= file_get_contents("{$mce_path}js/mce_init.js.inc");
+
 		foreach($ph as $name => $value)
 		{
 			$name = '[+' . $name . '+]';

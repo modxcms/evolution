@@ -28,6 +28,7 @@
 					$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 					break;
 				case "textareamini": // handler for textarea mini boxes
+                                case "richtextmini": // handler for richtext mini boxes
 					$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . $modx->htmlspecialchars($field_value) .'</textarea>';
 					break;
 				case "textarea": // handler for textarea boxes
