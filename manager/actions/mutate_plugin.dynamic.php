@@ -108,13 +108,13 @@ function showParameters(ctrl) {
                 dt = ar[1];		// data type
                 value = decode((ar[2]) ? ar[2] : '');
 
-                // store values for later retrieval
+                // convert values to new json-format
                 if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi')) {
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label": desc, "type": dt, "value": ar[3], "options":value, "desc":"" };
+                    currentParams[key][0] = {"label":desc, "type":dt, "value":ar[3], "options":value, "default":ar[3], "desc":"" };
                 } else if (key) {
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label":desc, "type":dt, "value":value, "desc":"" };
+                    currentParams[key][0] = {"label":desc, "type":dt, "value":value, "default":value, "desc":"" };
                 }
             }
 
@@ -129,22 +129,37 @@ function showParameters(ctrl) {
     t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
-        for (var key in currentParams) {
+        for (key in currentParams) {
             if (currentParams.hasOwnProperty(key)) {
 
                 if(key == 'pluginConfig') {
                     pluginConfig = currentParams[key];
                     createAssignEventsButton();
                     continue;
-                };
+                }
 
                 var cp          = currentParams[key][0];
                 var type        = cp['type'];
                 var value       = cp['value'];
-                var defaultVal  = cp['default'];    // @todo: insert optional button to set back to default val
-                var label       = cp['label'];
-                var desc        = cp['desc'];
-                var options     = cp['options'];
+                var defaultVal  = cp['default']
+                var label       = cp['label'] != undefined ? cp['label'] : key;
+                var desc        = cp['desc']+'';
+                var options     = cp['options']+'';
+
+                var ll, ls = [];
+                if(options.indexOf('==') > -1) {
+                    // option-format: label==value||label==value
+                    var sets = options.split("||");
+                    for (i = 0; i < sets.length; i++) {
+                        split = sets[i].split("==");
+                        ll[i] = split[0];
+                        ls[i] = split[1] != undefined ? split[1] : split[0];
+                    }
+                } else {
+                    // option-format: value,value
+                    ls = (options + '').split(",");
+                    ll = ls;
+                }
 
                 switch(type) {
                     case 'int':
@@ -152,26 +167,23 @@ function showParameters(ctrl) {
                         break;
                     case 'menu':
                         c = '<select name="prop_' + key + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
-                        ls = (options + '').split(",");
                         if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
                         for (i = 0; i < ls.length; i++) {
-                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
+                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
                         }
                         c += '</select>';
                         break;
                     case 'list':
-                        ls = (options + '').split(",");
                         if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
                         c = '<select name="prop_' + key + '" size="' + ls.length + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
                         for (i = 0; i < ls.length; i++) {
-                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
+                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
                         }
                         c += '</select>';
                         break;
                     case 'list-multi':
                         // value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
                         arrValue = value.split(",");
-                        ls = (options + '').split(",");
                         if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
                         c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
                         for (i = 0; i < ls.length; i++) {
@@ -183,27 +195,42 @@ function showParameters(ctrl) {
                                     }
                                 }
                                 if (found == true) {
-                                    c += '<option value="' + ls[i] + '" selected="selected">' + ls[i] + '</option>';
+                                    c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
                                 } else {
-                                    c += '<option value="' + ls[i] + '">' + ls[i] + '</option>';
+                                    c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
                                 }
                             } else {
-                                c += '<option value="' + ls[i] + '">' + ls[i] + '</option>';
+                                c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
                             }
                         }
                         c += '</select>';
                         break;
+                    case 'checkbox':
+                        lv = (value + '').split(",");
+                        c = '';
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' +  ls[i] + '"' + ((contains(lv, ls[i]) == true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />'+ll[i]+'</label>&nbsp;';
+                        }
+                        break;
+                    case 'radio':
+                        c = '';
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<label><input type="radio" name="prop_' + key + '" value="' +  ls[i] + '"' + ((ls[i] == value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />'+ll[i]+'</label>&nbsp;';
+                        }
+                        break;
                     case 'textarea':
-                        c = '<textarea class="phptextarea" name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
+                        c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
                         break;
                     default:  // string
                         c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
                         break;
                 }
+
                 var info = '';
                 info += desc ? '<br/><small>'+desc+'</small>' : '';
+                var sd = defaultVal != undefined ? ' <small><a style="float:right" onclick="setDefaultParam(\''+ key +'\');return false;">Set Default</a></small>' : '';
 
-                t += '<tr><td bgcolor="#FFFFFF" width="20%">' + label + info +'</td><td bgcolor="#FFFFFF" width="80%">' + c + '</td></tr>';
+                t += '<tr><td bgcolor="#FFFFFF" width="20%">' + label + info +'</td><td bgcolor="#FFFFFF" width="80%">' + c + sd +'</td></tr>';
             }
         }
 
@@ -242,6 +269,16 @@ function setParameter(key,dt,ctrl) {
             }
             v = arrValues.toString();
             break;
+        case 'checkbox':
+            var arrValues = new Array;
+            var cboxes = document.getElementsByName(ctrl.name);
+            for(var i=0; i < cboxes.length; i++){
+                if(cboxes[i].checked){
+                    arrValues.push(cboxes[i].value);
+                }
+            }
+            v = arrValues.toString();
+            break;
         default:
             v = ctrl.value+'';
             break;
@@ -254,7 +291,7 @@ function setParameter(key,dt,ctrl) {
 function implodeParameters(){
     var merged = currentParams;
     merged['pluginConfig'] = pluginConfig;
-    document.forms['mutate'].properties.value = JSON.stringify(merged);
+    document.forms['mutate'].properties.value = JSON.stringify(merged, null, 2);
 }
 
 function encode(s){
@@ -301,12 +338,31 @@ function createAssignEventsButton() {
 }
 
 function assignEvents() {
+    // remove all events first
+    var sysevents = document.getElementsByName("sysevents[]");
+    for(var i = 0; i < sysevents.length; i++) { sysevents[i].checked = false; }
+    // set events
     var events = pluginConfig[0]['events'];
     events = events.split(',');
-    for(var i = 0; i < events.length; i++)
-    {
-        document.getElementById(events[i]).checked = true;
+    for(var i = 0; i < events.length; i++) { document.getElementById(events[i]).checked = true; }
+}
+
+function setDefaultParam(key) {
+    if (typeof currentParams[key][0]['default'] != 'undefined') {
+        currentParams[key][0]['value'] = currentParams[key][0]['default'];
+        implodeParameters();
+        showParameters();
     }
+}
+
+function contains(a, obj) {
+    var i = a.length;
+    while (i--) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
 }
 </script>
 
