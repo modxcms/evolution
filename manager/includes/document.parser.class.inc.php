@@ -3848,13 +3848,17 @@ class DocumentParser {
         // new json-format
         } else if(!empty($jsonFormat)){
             foreach( $jsonFormat as $key=>$row ) {
-                switch($key) {
-                    case 'pluginConfig':
-                        if(isset($row[0]['events']))   $property['pluginEvents']   = explode(',', $row['events']);
-                        if(isset($row[0]['filePath'])) $property['pluginFilePath'] = $row['filePath'];
-                        break;
-                    default:
-                        $property[$key] = $row[0]['value'];
+                if(is_array($row)) {
+                    switch ($key) {
+                        case 'pluginConfig':
+                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row['events']);
+                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row['filePath'];
+                            break;
+                        default:
+                            $property[$key] = $row[0]['value'];
+                    }
+                } else {
+                    $property[$key] = $row;
                 }
             }
         }
