@@ -20,15 +20,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     $theme = $manager_theme ? "$manager_theme/":"";
 
     // setup sorting
-    if(isset($_REQUEST['tree_sortby'])) {
-        $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
-    }
-    if(isset($_REQUEST['tree_sortdir'])) {
-        $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-    }
+    if(isset($_REQUEST['tree_sortby']))   { $_SESSION['tree_sortby']   = $_REQUEST['tree_sortby']; }
+    if(isset($_REQUEST['tree_sortdir']))  { $_SESSION['tree_sortdir']  = $_REQUEST['tree_sortdir']; }
+    if(isset($_REQUEST['tree_nodename'])) { $_SESSION['tree_nodename'] = $_REQUEST['tree_nodename']; }
 
     // icons by content type
-
     $icons = array(
         'application/rss+xml' => $_style["tree_page_rss"],
         'application/pdf' => $_style["tree_page_pdf"],
@@ -145,7 +141,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         // Make sure to pass in the $modx_textdir variable to the node builder
         global $modx_textdir;
 
-        $node_name_source = $modx->config['resource_tree_node_name'];
+        $node_name_source = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
         while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$pub_date,$unpub_date,$richtext,$searchable,$cacheable,$deleted,$type,$template,$templatename,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
             switch($node_name_source)
