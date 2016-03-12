@@ -3787,7 +3787,7 @@ class DocumentParser {
                 }
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties);
+                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
                 if(!is_array($parameter)){
                     $parameter = array();
                 }
@@ -3823,19 +3823,19 @@ class DocumentParser {
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         
         $propertyString = trim($propertyString);
-        $token = substr($propertyString,0,1);
+        $jsonFormat = $this->isJson($propertyString, true);
         $property = array();
 
         // old format
-        if ($token=='&') {
+        if ( !$jsonFormat ) {
             $props= explode('&', $propertyString);
             foreach ($props as $prop) {
-                
+
                 if (strpos($prop, '=')===false) {
                     $property[trim($prop)]='';
                     continue;
                 }
-                
+
                 $_ = explode('=', $prop, 2);
                 $key = trim($_[0]);
                 $p = explode(';', trim($_[1]));
@@ -3845,10 +3845,8 @@ class DocumentParser {
                 else                                     $value = '';
                 $property[$key] = $value;
             }
-        }
         // new json-format
-        elseif($token=='{') {
-            $jsonFormat = json_decode($propertyString, true);
+        } else if(!empty($jsonFormat)){
             foreach( $jsonFormat as $key=>$row ) {
                 switch($key) {
                     case 'pluginConfig':
@@ -3858,7 +3856,7 @@ class DocumentParser {
                     default:
                         $property[$key] = $row[0]['value'];
                 }
-            };
+            }
         }
 
         if(!empty($elementName) && !empty($elementType)){
@@ -4250,6 +4248,11 @@ class DocumentParser {
 		$this->loadExtension('PHPCOMPAT');
 		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
+
+        function isJson($string, $returnData=false) {
+            $data = json_decode($string, true);
+            return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        }
     // End of class.
 
 }
