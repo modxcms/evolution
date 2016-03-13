@@ -925,7 +925,7 @@ class DocumentParser {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
-            $content= str_replace($matches['0'][$i], $value, $content);
+            $content= str_replace($matches[0][$i], $value, $content);
         }
         
         return $content;
@@ -1003,32 +1003,32 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content) {
-		if (strpos($content, '{{') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '{{', '}}');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i]) {
-					if (isset($this->chunkCache[$matches[1][$i]])) {
-						$replace[$i] = $this->chunkCache[$matches[1][$i]];
-					} else {
-						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
-						if ($snippet = $this->db->getValue($result)) {
-							$this->chunkCache[$matches[1][$i]] = $snippet;
-							$replace[$i] = $snippet;
-						} else {
-							$this->chunkCache[$matches[1][$i]] = '';
-							$replace[$i] = '';
-						}
-					}
-				}
-			}
-			$content = str_replace($matches[0], $replace, $content);
-			$content = $this->mergeSettingsContent($content);
-		}
-		return $content;
-	}
+        if (strpos($content, '{{') === false)
+            return $content;
+        $replace = array();
+        $matches = $this->getTagsFromContent($content, '{{', '}}');
+        if ($matches) {
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                if ($matches[1][$i]) {
+                    if (isset($this->chunkCache[$matches[1][$i]])) {
+                        $replace[$i] = $this->chunkCache[$matches[1][$i]];
+                    } else {
+                        $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
+                        if ($snippet = $this->db->getValue($result)) {
+                            $this->chunkCache[$matches[1][$i]] = $snippet;
+                            $replace[$i] = $snippet;
+                        } else {
+                            $this->chunkCache[$matches[1][$i]] = '';
+                            $replace[$i] = '';
+                        }
+                    }
+                }
+            }
+            $content = str_replace($matches[0], $replace, $content);
+            $content = $this->mergeSettingsContent($content);
+        }
+        return $content;
+    }
 
     /**
      * Merge placeholder values
@@ -1037,26 +1037,26 @@ class DocumentParser {
      * @return string
      */
     function mergePlaceholderContent($content) {
-		if (strpos($content, '[+') === false)
-			return $content;
-		$replace = array();
-		$content = $this->mergeSettingsContent($content);
-		$matches = $this->getTagsFromContent($content, '[+', '+]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				$v = '';
-				$key = $matches[1][$i];
-				if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
-					$v = $this->placeholders[$key];
-				if ($v === '')
-					unset($matches[0][$i]); // here we'll leave empty placeholders for last.
-				else
-					$replace[$i] = $v;
-			}
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+        if (strpos($content, '[+') === false)
+            return $content;
+        $replace = array();
+        $content = $this->mergeSettingsContent($content);
+        $matches = $this->getTagsFromContent($content, '[+', '+]');
+        if ($matches) {
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                $v = '';
+                $key = $matches[1][$i];
+                if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
+                    $v = $this->placeholders[$key];
+                if ($v === '')
+                    unset($matches[0][$i]); // here we'll leave empty placeholders for last.
+                else
+                    $replace[$i] = $v;
+            }
+            $content = str_replace($matches[0], $replace, $content);
+        }
+        return $content;
+    }
 
 	/**
 	 * Detect PHP error according to MODX error level
@@ -1160,22 +1160,22 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-		foreach($matches[1] as $i=>$value)
-		{
-			$find = $i - 1;
-			while( $find >= 0 )
-			{
-				$tag = $matches[0][ $find ];
-				if(isset($replace[$find]) && strpos($value,$tag)!==false)
-				{
-					$value = str_replace($tag,$replace[$find],$value);
-					break;
-				}
-				$find--;
-			}
-			$replace[$i] = $this->_get_snip_result($value);
-		}
-        $content = str_replace($matches['0'], $replace, $content);
+        foreach($matches[1] as $i=>$value)
+        {
+            $find = $i - 1;
+            while( $find >= 0 )
+            {
+                $tag = $matches[0][ $find ];
+                if(isset($replace[$find]) && strpos($value,$tag)!==false)
+                {
+                    $value = str_replace($tag,$replace[$find],$value);
+                    break;
+                }
+                $find--;
+            }
+            $replace[$i] = $this->_get_snip_result($value);
+        }
+        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -2816,17 +2816,17 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-	function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
-		if (!is_array($chunkArr)){
-			return $chunk;
-		}
-		
-		foreach ($chunkArr as $key => $value){
-			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
-		}
-		
-		return $chunk;
-	}
+    function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
+        if (!is_array($chunkArr)){
+            return $chunk;
+        }
+        
+        foreach ($chunkArr as $key => $value){
+            $chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
+        }
+        
+        return $chunk;
+    }
 	
 	/**
 	 * parseChunk
