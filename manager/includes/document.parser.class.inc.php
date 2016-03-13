@@ -915,47 +915,10 @@ class DocumentParser {
         
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            if(strpos($key,'@')!==false) {
-                list($key,$str) = explode('@',$key,2);
-                $context = strtolower($str);
-                if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
-                    $context = 'alias';
-                elseif(substr($str,0,1)==='u' && strpos($str,'(')!==false)
-                    $context = 'uparent';
-                switch($context) {
-                    case 'site_start':
-                        $docid = $this->config['site_start'];
-                        break;
-                    case 'parent':
-                    case 'p':
-                        $docid = $this->documentObject['parent'];
-                        if($docid==0) $docid = $this->config['site_start'];
-                        break;
-                    case 'ultimateparent':
-                    case 'uparent':
-                    case 'up':
-                    case 'u':
-                        if(strpos($str,'(')!==false) {
-                            $top = substr($str,strpos($str,'('));
-                            $top = trim($top,'()"\'');
-                        }
-                        else $top = 0;
-                        $docid = $this->getUltimateParentId($this->documentIdentifier,$top);
-                        break;
-                    case 'alias':
-                        $str = substr($str,strpos($str,'('));
-                        $str = trim($str,'()"\'');
-                        $docid = $this->getIdFromAlias($str);
-                        break;
-                    default:
-                        $docid = $str;
-                }
-                if(preg_match('@^[1-9][0-9]*$@',$docid))
-                    $value = $this->getField($key,$docid);
-                else $value = '';
-            }
-            elseif(!isset($this->documentObject[$key])) $value = '';
-            else $value= $this->documentObject[$key];
+            
+            if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
+            elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
+            else                                   $value = '';
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -968,6 +931,47 @@ class DocumentParser {
         return $content;
     }
 
+    function _contextValue($key) {
+        list($key,$str) = explode('@',$key,2);
+        $context = strtolower($str);
+        if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
+            $context = 'alias';
+        elseif(substr($str,0,1)==='u' && strpos($str,'(')!==false)
+            $context = 'uparent';
+        switch($context) {
+            case 'site_start':
+                $docid = $this->config['site_start'];
+                break;
+            case 'parent':
+            case 'p':
+                $docid = $this->documentObject['parent'];
+                if($docid==0) $docid = $this->config['site_start'];
+                break;
+            case 'ultimateparent':
+            case 'uparent':
+            case 'up':
+            case 'u':
+                if(strpos($str,'(')!==false) {
+                    $top = substr($str,strpos($str,'('));
+                    $top = trim($top,'()"\'');
+                }
+                else $top = 0;
+                $docid = $this->getUltimateParentId($this->documentIdentifier,$top);
+                break;
+            case 'alias':
+                $str = substr($str,strpos($str,'('));
+                $str = trim($str,'()"\'');
+                $docid = $this->getIdFromAlias($str);
+                break;
+            default:
+                $docid = $str;
+        }
+        if(preg_match('@^[1-9][0-9]*$@',$docid))
+            $value = $this->getField($key,$docid);
+        else $value = '';
+        return $value;
+    }
+    
 	/**
      * Merge system settings
      *
