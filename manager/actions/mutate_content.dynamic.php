@@ -702,7 +702,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $htmlContent = $content['content'];
 ?>
                 <div style="width:100%">
-                    <textarea id="ta" name="ta" cols="" rows="" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
+                    <textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
                     <span class="warning"><?php echo $_lang['which_editor_title']?></span>
 
                     <select id="which_editor" name="which_editor" onchange="changeRTE();">
@@ -720,10 +720,11 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array( 0=>array(
-                    'id'=>'ta',
-                    'options'=>''
-                ));
+                // Richtext-[*content*]
+                $richtexteditorIds = array();
+                $richtexteditorOptions = array();
+                $richtexteditorIds[$which_editor][] = 'ta';
+                $richtexteditorOptions[$which_editor]['ta'] = '';
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -762,11 +763,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     while ($row = $modx->db->getRow($rs)) {
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                            // determine TV-options
+                            $tvOptions = $modx->parseProperties($row['elements']);
+                            if(!empty($tvOptions)) {
+                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $which_editor;
+                            };
                             // Add richtext editor to the list
-                            $replace_richtexteditor[] = array(
-                                "id"=>"tv".$row['id'],
-                                "options"=>$row['elements']
-                            );
+                            $richtexteditorIds[$editor][] = "tv".$row['id'];
+                            $richtexteditorOptions[$editor]["tv".$row['id']] = $tvOptions;
                         }
                         // splitter
                         if ($i++ > 0)
@@ -1187,13 +1192,13 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </script>
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
-        if (is_array($replace_richtexteditor)) {
-            foreach($replace_richtexteditor as $editor) {
+        if (is_array($richtexteditorIds)) {
+            foreach($richtexteditorIds as $editor=>$elements) {
                 // invoke OnRichTextEditorInit event
                 $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                    'editor' => $which_editor,
-                    'elements' => array($editor['id']),
-                    'options' => $editor['options']
+                    'editor' => $editor,
+                    'elements' => $elements,
+                    'options' => $richtexteditorOptions[$editor]
                 ));
                 if (is_array($evtOut))
                     echo implode('', $evtOut);
