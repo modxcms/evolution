@@ -38,6 +38,7 @@ $prte = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
 $srte = ($modx->config['use_editor'] ? $modx->config['which_editor'] : 'none');
 $xrte = $content['richtext'];
 $tvMode = false;
+$limitedHeight = false;
 /*
  * Switch event
  */
@@ -103,6 +104,9 @@ switch ($modx->Event->name) {
     case 'OnSnipFormRender'   :
     case 'OnPluginFormRender' :
     case 'OnModFormRender'    :
+        $tvMode = true;
+        $limitedHeight = true;
+        $elements = array($textarea_name,'properties');
         $mode = 'application/x-httpd-php-open';
         $rte = ($prte ? $prte : 'none');
         $lang = "php";
@@ -255,11 +259,19 @@ if (!$tvMode) {
 
 if (('none' == $rte) && $mode && $elements !== NULL) {
     foreach ($elements as $el) {
+
+        if($elements != $textarea_name) {
+            $setHeight = "myCodeMirrors['{$el}'].setSize('100%', 260);";
+        } else {
+            $setHeight = '';
+        };
+        
         $output .= "
     <script>
         var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
         var myTextArea = document.getElementsByName('{$el}')[0];
-        myCodeMirrors['{$el}'] = (CodeMirror.fromTextArea(myTextArea, config));
+        myCodeMirrors['{$el}'] = CodeMirror.fromTextArea(myTextArea, config);
+        {$setHeight}
         // reset onchange tab
         $$('.tab-row .tab').addEvents({
                 click: function() {
