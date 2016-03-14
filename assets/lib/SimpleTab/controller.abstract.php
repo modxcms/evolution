@@ -110,7 +110,7 @@ abstract class AbstractController {
             $this->dlParams['sortBy'] = preg_replace('/[^A-Za-z0-9_\-]/', '', $_REQUEST['sort']);
         }
         if(isset($_REQUEST['order']) && in_array(strtoupper($_REQUEST['order']), array("ASC","DESC"))){
-            $param['sortDir'] = $_REQUEST['order'];
+            $this->dlParams['sortDir'] = $_REQUEST['order'];
         }
         foreach ($this->dlParams as &$param) {
             if (empty($param)) unset($param);
