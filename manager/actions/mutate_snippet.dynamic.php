@@ -76,6 +76,7 @@ function setTextWrap(ctrl,b){
 // Current Params/Configurations
 var currentParams = {};
 var snippetConfig = {};
+var first = true;
 
 function showParameters(ctrl) {
     var c,p,df,cp;
@@ -292,7 +293,8 @@ function setParameter(key,dt,ctrl) {
 function implodeParameters(){
     var merged = currentParams;
     merged['snippetConfig'] = snippetConfig;
-    myCodeMirrors['properties'].setValue(JSON.stringify(merged, null, 2))
+    myCodeMirrors['properties'].setValue(JSON.stringify(merged, null, 2));
+    if(first) { documentDirty = false; first = false; };
 }
 
 function encode(s){
