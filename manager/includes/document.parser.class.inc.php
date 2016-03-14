@@ -57,6 +57,7 @@ class DocumentParser {
     var $dumpPlugins;
     var $pluginsCode;
     var $pluginsTime=array();
+    var $pluginCache=array();
     var $aliasListing;
     private $version=array();
 	public $extensions = array();
@@ -3776,19 +3777,9 @@ class DocumentParser {
                 $e->activePlugin= $pluginName;
 
                 // get plugin code
-                if (isset ($this->pluginCache[$pluginName])) {
-                    $pluginCode= $this->pluginCache[$pluginName];
-                    $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
-                } else {
-                    $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-                    if ($row= $this->db->getRow($result)) {
-                        $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
-                        $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
-                        $pluginCode= $this->pluginCache[$pluginName]= "return false;";
-                        $pluginProperties= '';
-                    }
-                }
+                $plugin = $this->getPluginCode($pluginName);
+                $pluginCode= $plugin['code'];
+                $pluginProperties= $plugin['props'];
 
                 // load default params/properties
                 $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
@@ -3814,6 +3805,35 @@ class DocumentParser {
             }
         $e->activePlugin= "";
         return $results;
+    }
+
+    /**
+     * Returns plugin-code and properties
+     *
+     * @param string $pluginName
+     * @return array Associative array consisting of 'code' and 'props'
+     */
+    public function getPluginCode($pluginName)
+    {
+        $plugin = array();
+        if (isset ($this->pluginCache[$pluginName])) {
+            $pluginCode = $this->pluginCache[$pluginName];
+            $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
+        } else {
+            $pluginName = $this->db->escape($pluginName);
+            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            if ($row = $this->db->getRow($result)) {
+                $pluginCode = $this->pluginCache[$row['name']]= $row['plugincode'];
+                $pluginProperties = $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
+            } else {
+                $pluginCode = $this->pluginCache[$pluginName]= "return false;";
+                $pluginProperties = '';
+            }
+        }
+        $plugin['code'] = $pluginCode;
+        $plugin['props'] = $pluginProperties;
+
+        return $plugin;
     }
 
     /**
@@ -3855,8 +3875,12 @@ class DocumentParser {
                 if(is_array($row)) {
                     switch ($key) {
                         case 'pluginConfig':
-                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row['events']);
-                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row['filePath'];
+                            if (isset($row[0]['legacy_names'])) $property['pluginName'] = $row[0]['legacy_names'];
+                            if (isset($row[0]['description'])) $property['pluginDesc'] = $row[0]['description'];
+                            if (isset($row[0]['modx_category'])) $property['pluginCategory'] = $row[0]['modx_category'];
+                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row[0]['events']);
+                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row[0]['filePath'];
+                            if (isset($row[0]['installset'])) $property['pluginInstallSet'] = $row[0]['installset'];
                             break;
                         default:
                             $property[$key] = $row[0]['value'];
