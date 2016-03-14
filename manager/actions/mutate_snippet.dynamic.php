@@ -111,7 +111,7 @@ function showParameters(ctrl) {
                 value = decode((ar[2]) ? ar[2] : '');
 
                 // convert values to new json-format
-                if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi')) {
+                if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
                     currentParams[key] = [];
                     currentParams[key][0] = {"label":desc, "type":dt, "value":ar[3], "options":value, "default":ar[3], "desc":"" };
                 } else if (key) {

@@ -3865,6 +3865,8 @@ class DocumentParser {
                 $p = explode(';', trim($_[1]));
                 if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
                 elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
+                elseif($p[1]=='checkbox'   && $p[3]!='') $value = $p[3]; // checkbox
+                elseif($p[1]=='radio'      && $p[3]!='') $value = $p[3]; // radio
                 elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
                 else                                     $value = '';
                 $property[$key] = $value;
