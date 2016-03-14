@@ -143,7 +143,7 @@ function showParameters(ctrl) {
                 var cp          = currentParams[key][0];
                 var type        = cp['type'];
                 var value       = cp['value'];
-                var defaultVal  = cp['default']
+                var defaultVal  = cp['default'];
                 var label       = cp['label'] != undefined ? cp['label'] : key;
                 var desc        = cp['desc']+'';
                 var options     = cp['options']+'';
