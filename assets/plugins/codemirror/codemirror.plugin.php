@@ -260,8 +260,8 @@ if (!$tvMode) {
 if (('none' == $rte) && $mode && $elements !== NULL) {
     foreach ($elements as $el) {
 
-        if($elements != $textarea_name) {
-            $setHeight = "myCodeMirrors['{$el}'].setSize('100%', 260);";
+        if($el != $textarea_name && $limitedHeight) {
+            $setHeight = "myCodeMirrors['{$el}'].setSize('98%', 260);";
         } else {
             $setHeight = '';
         };
