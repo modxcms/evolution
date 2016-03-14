@@ -126,6 +126,8 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$theme}.css">
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
+    <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
+    <script src="{$_CM_URL}cm/mode/clike-compressed.js"></script> <!-- required by mode php -->
     <script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
     {$emmet}{$search}
     
@@ -182,13 +184,13 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                         return "modxConfig";
                     }
                     if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
-                        return "attribute";
+                        return "modxAttribute";
                     }
                     if (stream.match("!]")) {
-                        return "modxSnippet";
+                        return "modxSnippetNoCache";
                     }
                     if (stream.match("]]")) {
-                        return "modxSnippetNoCache";
+                        return "modxSnippet";
                     }
                     while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
                     return null;
