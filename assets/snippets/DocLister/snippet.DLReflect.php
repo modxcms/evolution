@@ -259,14 +259,12 @@ $outReflects = $outReflects->sort(function($a, $b) use ($sortDir, $dateFormat){
     $bDate = DateTime::createFromFormat($dateFormat, $b);
     $out = false;
     switch($sortDir){
-    	case 'ASC':{
+    	case 'ASC':
     		$out = $aDate->getTimestamp() - $bDate->getTimestamp();
     		break;
-    	}
-    	case 'DESC':{
+    	case 'DESC':
     		$out = $bDate->getTimestamp() - $aDate->getTimestamp();
     		break;
-    	}
     }
     return $out;
 })->reindex()->unique();

@@ -32,22 +32,20 @@ class paginate_DL_Extender extends extDocLister
         $pages = 0;
         $display = $this->DocLister->getCFGDef('display', 0);
         switch ($paginate) {
-            case 'offset': {
+            case 'offset':
                 $requestName = $this->getRequestName('start');
                 $start = (isset($_GET[$requestName]) && intval($_GET[$requestName]) > 1) ? intval($_GET[$requestName]) : 0;
                 $this->_pages['current'] = ceil($start / $display) + 1;
                 $this->DocLister->setConfig(array('start' => $start));
                 break;
-            }
             case 'pages':
-            default: {
+            default:
                 $paginate = 'pages';
                 $requestName = $this->getRequestName('page');
                 $start = (isset($_GET[$requestName]) && intval($_GET[$requestName]) > 1) ? (intval($_GET[$requestName]) - 1) : 0;
                 $this->_pages['current'] = $start + 1;
                 $this->DocLister->setConfig(array('start' => $start * $display));
                 break;
-            }
         }
 
         $pages = $this->getListPages($paginate, 'total');
@@ -134,16 +132,14 @@ class paginate_DL_Extender extends extDocLister
         $p->currentPage($this->currentPage());
 
         switch (true) {
-            case ($mode == 'offset' && $this->totalPage() > 1): {
+            case ($mode == 'offset' && $this->totalPage() > 1):
                 $p->setMode('offset', array(
                     'display' => $this->DocLister->getCFGDef('display', 0)
                 ))->parameterName($this->getRequestName('start'));
                 break;
-            }
-            case ($mode == 'pages' && $this->totalPage() > 1):{
+            case ($mode == 'pages' && $this->totalPage() > 1):
                 $p->parameterName($this->getRequestName('page'));
                 break;
-            }
         }
         return $p->getOutput();
     }
@@ -155,15 +151,13 @@ class paginate_DL_Extender extends extDocLister
         parse_str(html_entity_decode($params), $params);
         if ($requestName == '') {
             switch ($this->DocLister->getCFGDef('paginate', '')) {
-                case 'offset': {
+                case 'offset':
                     $requestName = 'start';
                     break;
-                }
                 case 'pages':
-                default: {
+                default:
                     $requestName = 'page';
                     break;
-                }
             }
         }
         if ($requestName != '' && is_array($params)) {

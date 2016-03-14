@@ -44,7 +44,7 @@ class onetableDocLister extends DocLister
     public function getDocs($tvlist = '')
     {
         if ($this->checkExtender('paginate')) {
-            $pages = $this->extender['paginate']->init($this);
+            $this->extender['paginate']->init($this);
         } else {
             $this->setConfig(array('start' => 0));
         }
@@ -103,7 +103,8 @@ class onetableDocLister extends DocLister
                     }
 
                     $findTpl = $this->renderTPL;
-                    extract($this->uniformPrepare($item, $i), EXTR_SKIP);
+					$tmp = $this->uniformPrepare($item, $i);
+                    extract($tmp, EXTR_SKIP);
                     if ($this->renderTPL == '') {
                         $this->renderTPL = $findTpl;
                     }
@@ -160,16 +161,12 @@ class onetableDocLister extends DocLister
 
             switch (true) {
                 case ((array('1') == $fields || in_array('summary', $fields)) && $extSummary):
-                {
                     $row['summary'] = $this->getSummary($this->_docs[$num], $extSummary, 'introtext');
                     //without break
-                }
                 case ((array('1') == $fields || in_array('date', $fields)) && $date != 'date'):
-                {
                     $tmp = (isset($this->_docs[$num][$date]) && $date != 'createdon' && $this->_docs[$num][$date] != 0 && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date]) ? $this->_docs[$num][$date] : $this->_docs[$num]['createdon'];
                     $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $tmp + $this->modx->config['server_offset_time']);
-                    //without break
-                }
+					// no break
             }
 
             if($extE && $tmp = $extE->init($this, array('data' => $row))){
@@ -236,19 +233,16 @@ class onetableDocLister extends DocLister
         if ($sanitarInIDs != "''") {
             $tmpWhere = "(`{$this->getParentField()}` IN (" . $sanitarInIDs . ")";
             switch($this->getCFGDef('showParent', '0')){
-				case -1:{
+				case -1:
 					$tmpWhere .= ")";
 					break;
-				}
-				case 0:{
+				case 0:
 					$tmpWhere .= " AND `{$this->getPK()}` NOT IN(" . $sanitarInIDs . "))";
 					break;
-				}
 				case 1:
-				default:{
+				default:
 					$tmpWhere .= " OR `{$this->getPK()}` IN({$sanitarInIDs}))";
 					break;
-				}
 			}
         }
         if (($addDocs = $this->getCFGDef('documents', '')) != '') {
@@ -299,21 +293,17 @@ class onetableDocLister extends DocLister
                 if ($sanitarInIDs != "''") {
                     switch ($this->getCFGDef('idType', 'parents')) {
                         case 'parents':
-                        {
 							switch($this->getCFGDef('showParent', '0')){
-								case '-1':{
+								case '-1':
 									$tmpWhere = "`{$this->getParentField()}` IN ({$sanitarInIDs})";
 									break;
-								}
-								case 0:{
+								case 0:
 									$tmpWhere = "`{$this->getParentField()}` IN ({$sanitarInIDs}) AND `{$this->getPK()}` NOT IN({$sanitarInIDs})";
 									break;
-								}
 								case 1:
-								default:{
+								default:
 									$tmpWhere = "(`{$this->getParentField()}` IN ({$sanitarInIDs}) OR `{$this->getPK()}` IN({$sanitarInIDs}))";
 									break;
-								}
 							}
                             if (($addDocs = $this->getCFGDef('documents', '')) != '') {
                                 $addDocs = $this->sanitarIn($this->cleanIDs($addDocs));
@@ -321,14 +311,10 @@ class onetableDocLister extends DocLister
                             } else {
                                 $where[] = $tmpWhere;
                             }
-
                             break;
-                        }
                         case 'documents':
-                        {
                             $where[] = "`{$this->getPK()}` IN({$sanitarInIDs})";
                             break;
-                        }
                     }
                 }
             }

@@ -127,6 +127,7 @@ class jsonHelper
                     if($c > 0 && $json[$c-1] != '\\'){
                         $in_string = !$in_string;
                     }
+					// no break ???
                 default:
                     $new_json .= $char;
                     break;
