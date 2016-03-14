@@ -94,9 +94,12 @@ function showParameters(ctrl) {
 
     tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
 
+    // check if codemirror is used
+    var props = typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+    
     // convert old schemed setup parameters
-    if( !IsJsonString(f.properties.value) ) {
-        dp = (f.properties.value) ? f.properties.value.split("&") : "";
+    if( !IsJsonString(props) ) {
+        dp = (props) ? props.split("&") : "";
         if (!dp) tr.style.display = 'none';
         else {
             for (p = 0; p < dp.length; p++) {
@@ -119,11 +122,13 @@ function showParameters(ctrl) {
             }
 
             var events = getEventsList();
+            var filebinding = f.filebinding !== undefined ? f.filebinding.value : '';
+            
             currentParams['pluginConfig'] = [];
-            currentParams['pluginConfig'][0] = {"events":events, "filePath":f.filebinding.value};
+            currentParams['pluginConfig'][0] = {"events":events, "filePath":filebinding};
         }
     } else {
-        currentParams = JSON.parse(f.properties.value);
+        currentParams = JSON.parse(props);
     }
 
     t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
@@ -237,7 +242,7 @@ function showParameters(ctrl) {
         t += '</table>';
 
     } catch (e) {
-        t = e + "\n\n" + f.properties.value;
+        t = e + "\n\n" + props;
     }
 
     td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
@@ -291,7 +296,7 @@ function setParameter(key,dt,ctrl) {
 function implodeParameters(){
     var merged = currentParams;
     merged['pluginConfig'] = pluginConfig;
-    document.forms['mutate'].properties.value = JSON.stringify(merged, null, 2);
+    myCodeMirrors['properties'].setValue(JSON.stringify(merged, null, 2))
 }
 
 function encode(s){
@@ -492,7 +497,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
           </tr>
           <tr>
             <th valign="top"><?php echo $_lang['plugin_config']; ?>:</th>
-            <td valign="top"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
+            <td valign="top"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" onclick='showParameters(this)' value="<?php echo $_lang['update_params']; ?>" /></td>
           </tr>
           <tr id="displayparamrow">
             <td valign="top">&nbsp;</td>
