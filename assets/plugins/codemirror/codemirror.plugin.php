@@ -261,7 +261,7 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
     foreach ($elements as $el) {
 
         if($el != $textarea_name && $limitedHeight) {
-            $setHeight = "myCodeMirrors['{$el}'].setSize('100%', 260);";
+            $setHeight = "myCodeMirrors['{$el}'].setSize('98%', 260);";
         } else {
             $setHeight = '';
         };
