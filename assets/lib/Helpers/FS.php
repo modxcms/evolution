@@ -1,10 +1,8 @@
-<?php
-
-namespace Helpers;
+<?php namespace Helpers;
 
 class FS{
     /**
-     * @var cached reference to singleton instance
+     * @var FS cached reference to singleton instance
      */
     protected static $instance;
 
@@ -51,7 +49,7 @@ class FS{
      * Чтобы не дергать постоянно файл который обрабатываем
      *
      * @access private
-     * @param string $name ключ
+     * @param string $file ключ
      * @return string информация из pathinfo о обрабатываемом файле input
      */
     private function _pathinfo($file, $mode){
@@ -123,18 +121,16 @@ class FS{
             $fname = MODX_BASE_PATH.$path;
             switch(true){
                 /** need fileinfo extension */
-                case (extension_loaded('fileinfo') && class_exists('\finfo')):{
+                case (extension_loaded('fileinfo') && class_exists('\finfo')):
                     $fi = new \finfo(FILEINFO_MIME_TYPE);
                     if ($fi) {
                         $out = $fi->file($fname);
                     }
                     break;
-                }
-                case function_exists('mime_content_type'):{
+                case function_exists('mime_content_type'):
                     list($out) = explode(';', @mime_content_type($fname));
                     break;
-                }
-                default:{
+                default:
                     /**
                      * @see: http://www.php.net/manual/ru/function.finfo-open.php#112617
                      */
@@ -150,7 +146,6 @@ class FS{
                             default: $out = 'application/octet-stream'; break;
                         }
                     }
-                }
             }
         }
         return $out;
@@ -188,8 +183,8 @@ class FS{
     /**
      * Перемещение файла с проверкой на существование оригинального файла и созданием папок
      *
-     * @param $from источник
-     * @param $to получатель
+     * @param string $from источник
+     * @param string $to получатель
      * @return bool статус перемещения
      */
     public function moveFile($from, $to, $chmod = 0644){
@@ -264,17 +259,14 @@ class FS{
 	public function delete($path){
 		$path = MODX_BASE_PATH . $this->relativePath($path);
 		switch(true){
-			case $this->checkDir($path):{
+			case $this->checkDir($path):
 				$flag = $this->rmDir($path);
 				break;
-			}
-			case $this->checkFile($path):{
+			case $this->checkFile($path):
 				$flag = $this->unlink($path);
 				break;
-			}
-			default:{
+			default:
 				$flag = false;
-			}
 		}
 		return $flag;
 	}
