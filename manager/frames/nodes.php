@@ -144,6 +144,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $node_name_source = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
         while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$pub_date,$unpub_date,$richtext,$searchable,$cacheable,$deleted,$type,$template,$templatename,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
+            $dateNode = false;
             switch($node_name_source)
             {
                 case 'menutitle':
@@ -166,6 +167,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 case 'publishedon':
                 case 'pub_date':
                 case 'unpub_date':
+                    $dateNode = true;
                     $doc = $modx->getDocumentObject('id',$id);
                     $date = $doc[$node_name_source];
                     if(!empty($date)) $nodetitle = $modx->toDateFormat($date);
@@ -183,9 +185,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
             $url = $modx->makeUrl($id);
 
-            $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": -";
-            $alt.= "[+lf+]".$_lang['resource_opt_menu_index'].": ".$menuindex;
+            $alt = $dateNode == true ? $_lang["pagetitle"].": ".$pagetitle : "";
             $alt.= "[+lf+]".$_lang['resource_opt_menu_title'].": ".$menutitle;
+            $alt.= "[+lf+]".$_lang['resource_opt_menu_index'].": ".$menuindex;
+            $alt.= "[+lf+]".$_lang['alias'].": ".(!empty($alias) ? $alias : "-");
             $alt.= "[+lf+]".$_lang['template'].": ".$templatename;
             $alt.= "[+lf+]".$_lang['publish_date'].": ".$modx->toDateFormat($pub_date);
             $alt.= "[+lf+]".$_lang['unpublish_date'].": ".$modx->toDateFormat($unpub_date);
