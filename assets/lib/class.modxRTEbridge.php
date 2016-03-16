@@ -216,30 +216,33 @@ class modxRTEbridge
                 $ph['configRawString'] = $this->renderConfigRawString();
                 $ph['editorKey'] = $this->editorKey;
                 $ph['themeKey'] = $this->theme;
-                $ph['selector'] = $selector;
+                $ph['selector'][] = $selector;
                 $ph['documentIdentifier'] = $modx->documentIdentifier;
 
                 $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
-
-                // Init only once at all - Load Editors-Library, CSS etc
-                if (!defined($this->editorKey . '_INIT_ONCE')) {
-                    define($this->editorKey . '_INIT_ONCE', 1);
-                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init_once.html") ."\n";
-                    if (!empty($this->initOnceArr)) {
-                        $output .= implode("\n", $this->initOnceArr);
-                    }
-                }
-
-                // Init only once per config (enables multiple config-objects i.e. for richtext / richtextmini via [+configJs+])
-                if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
-                    define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
-                    $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
-                }
-
-                // Loop through tvs
-                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") ."\n";
-                $output  = $modx->parseText($output, $ph);
             }
+            
+            // Array of selectors
+            $ph['selector'] = implode(','.$ph['selectorPrefix'], $ph['selector']);
+            
+            // Init only once at all - Load Editors-Library, CSS etc
+            if (!defined($this->editorKey . '_INIT_ONCE')) {
+                define($this->editorKey . '_INIT_ONCE', 1);
+                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init_once.html") ."\n";
+                if (!empty($this->initOnceArr)) {
+                    $output .= implode("\n", $this->initOnceArr);
+                }
+            }
+
+            // Init only once per config (enables multiple config-objects i.e. for richtext / richtextmini via [+configJs+])
+            if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
+                define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
+                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
+            }
+
+            // Loop through tvs
+            $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") ."\n";
+            $output  = $modx->parseText($output, $ph);
 
         } else {
            exit; // @todo: prepare for editors that need no elements
