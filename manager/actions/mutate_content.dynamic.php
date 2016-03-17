@@ -523,6 +523,40 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <fieldset id="create_edit">
     <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
 
+    <?php
+    // breadcrumbs
+    if ($modx->config['use_breadcrumbs']) {
+        $temp = array();
+        $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
+
+        if (isset($_REQUEST['id']) && $content['parent'] != 0) {
+            $id = (int)$_REQUEST['id'];
+            $temp = $modx->getParentIds($id);
+        } else if (isset($_REQUEST['pid'])) {
+            $id = (int)$_REQUEST['pid'];
+            $temp = $modx->getParentIds($id);
+            array_unshift($temp, $id);
+        }
+
+        if ($temp) {
+            $parents = implode(',', $temp);
+
+            if (!empty($parents)) {
+                $query = $modx->db->query("SELECT id, pagetitle FROM " . $modx->getFullTableName("site_content") . " WHERE id IN (" . $parents . ") ORDER BY FIND_IN_SET(id, '" . $parents . "') DESC");
+                while ($row = $modx->db->getRow($query)) {
+                    $out .= '<li class="breadcrumbs__li">
+                                        <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
+                                        <span class="breadcrumbs__sep">></span>
+                                    </li>';
+                }
+            }
+        }
+
+        $out .= '<li class="breadcrumbs__li breadcrumbs__li_current">' . $title . '</li>';
+        echo '<ul class="breadcrumbs">' . $out . '</ul>';
+    }
+    ?>
+
 <div id="actions">
       <ul class="actionButtons">
           <li id="Button1">

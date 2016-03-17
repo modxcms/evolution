@@ -1198,6 +1198,22 @@ function confirmLangChange(el, lkey, elupd){
                <td width="200">&nbsp;</td>
                <td class='comment'><?php echo $_lang["tree_page_click_message"]?></td>
              </tr>
+
+            <tr>
+                <td colspan="2"><div class='split'></div></td>
+            </tr>
+            <tr>
+                <td nowrap class="warning"><?php echo $_lang["use_breadcrumbs"] ?></td>
+                <td> <input onchange="documentDirty=true;" type="radio" name="use_breadcrumbs" value="1" <?php echo $use_breadcrumbs=='1' ? 'checked="checked"' : ""; ?> />
+                    <?php echo $_lang["yes"]?><br />
+                    <input onchange="documentDirty=true;" type="radio" name="use_breadcrumbs" value="0" <?php echo (!isset($use_breadcrumbs) || $use_breadcrumbs=='0') ? 'checked="checked"' : ""; ?> />
+                    <?php echo $_lang["no"]?></td>
+            </tr>
+            <tr>
+                <td width="200">&nbsp;</td>
+                <td class='comment'><?php echo $_lang["use_breadcrumbs_message"]?></td>
+            </tr>
+
              <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
