@@ -335,7 +335,7 @@ class modxRTEbridge
                 $value = str_replace("'", "\\'", $value);
 
             // Determine output-type
-            switch ($conf['type']) {
+            switch (strtolower($conf['type'])) {
                 case 'string': case 'str':
                 $config[$key] = "        {$key}:'{$value}'";
                 break;
