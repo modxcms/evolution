@@ -8,6 +8,8 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
+$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : NULL;
 
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -252,6 +254,8 @@ function decode(s){
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="a" value="302">
+<input type="hidden" name="or" value="<?php echo $origin;?>">
+<input type="hidden" name="oid" value="<?php echo $originId;?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
@@ -277,7 +281,7 @@ function decode(s){
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=<?php echo $origin ?><?php echo ($originId!=NULL?'&id='.$originId:''); ?>';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 

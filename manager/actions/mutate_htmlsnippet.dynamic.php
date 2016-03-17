@@ -177,7 +177,7 @@ foreach (getCategories() as $n => $v) {
             <?php echo $_lang['chunk_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" id="post" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
         </div>
     </div>
 

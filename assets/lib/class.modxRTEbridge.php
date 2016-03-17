@@ -175,6 +175,12 @@ class modxRTEbridge
         }
     }
 
+    // Function to get custom-placeholders
+    public function getPlaceholder($ph)
+    {
+        return isset($this->customPlaceholders[$ph]) ? $this->customPlaceholders[$ph] : NULL;
+    }
+
     // Set new/overwrite translations manually (via bridge)
     public function setLang($key, $string, $overwriteExisting = false)
     {
@@ -205,6 +211,9 @@ class modxRTEbridge
 
             $this->pluginParams['elements'] = !is_array($this->pluginParams['elements']) ? explode(',', $this->pluginParams['elements']) : $this->pluginParams['elements']; // Allow setting via plugin-configuration
 
+            // Allows bridging elements+TV-options etc before looping
+            $this->renderBridgeParams('initBridge');
+            
             // Now loop through tvs
             foreach ($this->pluginParams['elements'] as $selector) {
 
@@ -286,21 +295,24 @@ class modxRTEbridge
     }
     
     // Call bridge-functions and receive optional bridged-values
+    // $selector = "initBridge" allows executing bridging function without modifying $this->themeConfig
     public function renderBridgeParams($selector)
     {
         // Call functions - for optional translation of params/values via bridge.xxxxxxxxxx.inc.php
         foreach ($this->bridgeParams as $editorParam => $editorKey) {
             if (is_callable($this->bridgeParams[$editorParam])) {     // Call function, get return
-                $return = $this->bridgeParams[$editorParam]();
-                if ($return !== NULL && isset($this->themeConfig[$editorParam])) {
+                $return = $this->bridgeParams[$editorParam]($selector);
+                if ($return !== NULL && isset($this->themeConfig[$editorParam]) && $selector !== 'initBridge') {
                     $this->themeConfig[$editorParam]['bridged'] = $return;
                 }
             }
         }
         // Load Tv-Options as bridged-params
-        foreach($this->themeConfig as $key=>$conf) {
-            if (isset($this->tvOptions[$selector][$key])) {
-                $this->themeConfig[$key]['bridged'] = $this->tvOptions[$selector][$key];
+        if($selector !== 'initBridge') {
+            foreach ($this->themeConfig as $key => $conf) {
+                if (isset($this->tvOptions[$selector][$key])) {
+                    $this->themeConfig[$key]['bridged'] = $this->tvOptions[$selector][$key];
+                }
             }
         }
     }
