@@ -15,6 +15,8 @@ $rank = isset ($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
 $display = $modx->db->escape($_POST['display']);
 $params = $modx->db->escape($_POST['params']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
+$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
+$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : NULL;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -158,10 +160,10 @@ switch ($_POST['mode']) {
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "301&id=$id":"300";
-				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
+				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay']."&or=".$origin."&oid=".$originId;
 				header($header);
 			} else {
-				$header="Location: index.php?a=76&r=2";
+				$header="Location: index.php?a=".$origin."&r=2".($originId!=NULL?'&id='.$originId:'');
 				header($header);
 			}
 		
