@@ -8,6 +8,7 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$cancel = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
 
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -277,7 +278,7 @@ function decode(s){
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=<?php echo $cancel ?>;'"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
