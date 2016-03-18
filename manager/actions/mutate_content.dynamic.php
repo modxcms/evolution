@@ -523,6 +523,40 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <fieldset id="create_edit">
     <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
 
+    <?php
+    // breadcrumbs
+    if ($modx->config['use_breadcrumbs']) {
+        $temp = array();
+        $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
+
+        if (isset($_REQUEST['id']) && $content['parent'] != 0) {
+            $id = (int)$_REQUEST['id'];
+            $temp = $modx->getParentIds($id);
+        } else if (isset($_REQUEST['pid'])) {
+            $id = (int)$_REQUEST['pid'];
+            $temp = $modx->getParentIds($id);
+            array_unshift($temp, $id);
+        }
+
+        if ($temp) {
+            $parents = implode(',', $temp);
+
+            if (!empty($parents)) {
+                $query = $modx->db->query("SELECT id, pagetitle FROM " . $modx->getFullTableName("site_content") . " WHERE id IN (" . $parents . ") ORDER BY FIND_IN_SET(id, '" . $parents . "') DESC");
+                while ($row = $modx->db->getRow($query)) {
+                    $out .= '<li class="breadcrumbs__li">
+                                        <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
+                                        <span class="breadcrumbs__sep">></span>
+                                    </li>';
+                }
+            }
+        }
+
+        $out .= '<li class="breadcrumbs__li breadcrumbs__li_current">' . $title . '</li>';
+        echo '<ul class="breadcrumbs">' . $out . '</ul>';
+    }
+    ?>
+
 <div id="actions">
       <ul class="actionButtons">
           <li id="Button1">
@@ -702,7 +736,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $htmlContent = $content['content'];
 ?>
                 <div style="width:100%">
-                    <textarea id="ta" name="ta" cols="" rows="" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
+                    <textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
                     <span class="warning"><?php echo $_lang['which_editor_title']?></span>
 
                     <select id="which_editor" name="which_editor" onchange="changeRTE();">
@@ -720,9 +754,11 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array(
-                    'ta',
-                );
+                // Richtext-[*content*]
+                $richtexteditorIds = array();
+                $richtexteditorOptions = array();
+                $richtexteditorIds[$which_editor][] = 'ta';
+                $richtexteditorOptions[$which_editor]['ta'] = '';
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -761,16 +797,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     while ($row = $modx->db->getRow($rs)) {
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                            // determine TV-options
+                            $tvOptions = $modx->parseProperties($row['elements']);
+                            if(!empty($tvOptions)) {
+                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $which_editor;
+                            };
                             // Add richtext editor to the list
-                            if (is_array($replace_richtexteditor)) {
-                                $replace_richtexteditor = array_merge($replace_richtexteditor, array(
-                                    "tv" . $row['id'],
-                                ));
-                            } else {
-                                $replace_richtexteditor = array(
-                                    "tv" . $row['id'],
-                                );
-                            }
+                            $richtexteditorIds[$editor][] = "tv".$row['id'];
+                            $richtexteditorOptions[$editor]["tv".$row['id']] = $tvOptions;
                         }
                         // splitter
                         if ($i++ > 0)
@@ -852,7 +887,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 <?php
 
-if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
+if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_ressourcetype')) {
 ?>
             <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_type']?></span></td>
                 <td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
@@ -1191,14 +1226,17 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </script>
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
-        if (is_array($replace_richtexteditor)) {
-            // invoke OnRichTextEditorInit event
-            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                'editor' => $which_editor,
-                'elements' => $replace_richtexteditor
-            ));
-            if (is_array($evtOut))
-                echo implode('', $evtOut);
+        if (is_array($richtexteditorIds)) {
+            foreach($richtexteditorIds as $editor=>$elements) {
+                // invoke OnRichTextEditorInit event
+                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+                    'editor' => $editor,
+                    'elements' => $elements,
+                    'options' => $richtexteditorOptions[$editor]
+                ));
+                if (is_array($evtOut))
+                    echo implode('', $evtOut);
+            }
         }
     }
 

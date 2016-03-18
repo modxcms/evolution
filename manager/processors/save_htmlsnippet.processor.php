@@ -5,7 +5,7 @@ if (!$modx->hasPermission('save_chunk')) {
 }
 
 $id = intval($_POST['id']);
-$snippet = trim($modx->db->escape($_POST['post']));
+$snippet = $modx->db->escape($_POST['post']);
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;

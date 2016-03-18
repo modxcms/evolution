@@ -448,6 +448,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `import_static` int(1) NOT NULL default '0',
   `export_static` int(1) NOT NULL default '0',
   `remove_locks` int(1) NOT NULL default '0',
+  `change_ressourcetype` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
 

@@ -68,18 +68,14 @@ class user_DL_Extender extends extDocLister
         $table = array();
         switch ($type) {
             case 'manager':
-            {
                 $table['users'] = $this->modx->getFullTableName('manager_users');
                 $table['attributes'] = $this->modx->getFullTableName('user_attributes');
                 break;
-            }
             case 'web':
             default:
-                {
                 $table['users'] = $this->modx->getFullTableName('web_users');
                 $table['attributes'] = $this->modx->getFullTableName('web_user_attributes');
                 break;
-                }
         }
         return $table;
     }

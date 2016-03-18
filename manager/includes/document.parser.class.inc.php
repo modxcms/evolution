@@ -57,6 +57,7 @@ class DocumentParser {
     var $dumpPlugins;
     var $pluginsCode;
     var $pluginsTime=array();
+    var $pluginCache=array();
     var $aliasListing;
     private $version=array();
 	public $extensions = array();
@@ -915,59 +916,63 @@ class DocumentParser {
         
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            if(strpos($key,'@')!==false) {
-                list($key,$str) = explode('@',$key,2);
-                $context = strtolower($str);
-                if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
-                    $context = 'alias';
-                elseif(substr($str,0,1)==='u' && strpos($str,'(')!==false)
-                    $context = 'uparent';
-                switch($context) {
-                    case 'site_start':
-                        $docid = $this->config['site_start'];
-                        break;
-                    case 'parent':
-                    case 'p':
-                        $docid = $this->documentObject['parent'];
-                        if($docid==0) $docid = $this->config['site_start'];
-                        break;
-                    case 'ultimateparent':
-                    case 'uparent':
-                    case 'up':
-                    case 'u':
-                        if(strpos($str,'(')!==false) {
-                            $top = substr($str,strpos($str,'('));
-                            $top = trim($top,'()"\'');
-                        }
-                        else $top = 0;
-                        $docid = $this->getUltimateParentId($this->documentIdentifier,$top);
-                        break;
-                    case 'alias':
-                        $str = substr($str,strpos($str,'('));
-                        $str = trim($str,'()"\'');
-                        $docid = $this->getIdFromAlias($str);
-                        break;
-                    default:
-                        $docid = $str;
-                }
-                if(preg_match('@^[1-9][0-9]*$@',$docid))
-                    $value = $this->getField($key,$docid);
-                else $value = '';
-            }
-            elseif(!isset($this->documentObject[$key])) $value = '';
-            else $value= $this->documentObject[$key];
+            
+            if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
+            elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
+            else                                   $value = '';
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
-            $content= str_replace($matches['0'][$i], $value, $content);
+            $content= str_replace($matches[0][$i], $value, $content);
         }
         
         return $content;
     }
 
+    function _contextValue($key) {
+        list($key,$str) = explode('@',$key,2);
+        $context = strtolower($str);
+        if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
+            $context = 'alias';
+        elseif(substr($str,0,1)==='u' && strpos($str,'(')!==false)
+            $context = 'uparent';
+        switch($context) {
+            case 'site_start':
+                $docid = $this->config['site_start'];
+                break;
+            case 'parent':
+            case 'p':
+                $docid = $this->documentObject['parent'];
+                if($docid==0) $docid = $this->config['site_start'];
+                break;
+            case 'ultimateparent':
+            case 'uparent':
+            case 'up':
+            case 'u':
+                if(strpos($str,'(')!==false) {
+                    $top = substr($str,strpos($str,'('));
+                    $top = trim($top,'()"\'');
+                }
+                else $top = 0;
+                $docid = $this->getUltimateParentId($this->documentIdentifier,$top);
+                break;
+            case 'alias':
+                $str = substr($str,strpos($str,'('));
+                $str = trim($str,'()"\'');
+                $docid = $this->getIdFromAlias($str);
+                break;
+            default:
+                $docid = $str;
+        }
+        if(preg_match('@^[1-9][0-9]*$@',$docid))
+            $value = $this->getField($key,$docid);
+        else $value = '';
+        return $value;
+    }
+    
 	/**
      * Merge system settings
      *
@@ -999,32 +1004,32 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content) {
-		if (strpos($content, '{{') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '{{', '}}');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i]) {
-					if (isset($this->chunkCache[$matches[1][$i]])) {
-						$replace[$i] = $this->chunkCache[$matches[1][$i]];
-					} else {
-						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
-						if ($snippet = $this->db->getValue($result)) {
-							$this->chunkCache[$matches[1][$i]] = $snippet;
-							$replace[$i] = $snippet;
-						} else {
-							$this->chunkCache[$matches[1][$i]] = '';
-							$replace[$i] = '';
-						}
-					}
-				}
-			}
-			$content = str_replace($matches[0], $replace, $content);
-			$content = $this->mergeSettingsContent($content);
-		}
-		return $content;
-	}
+        if (strpos($content, '{{') === false)
+            return $content;
+        $replace = array();
+        $matches = $this->getTagsFromContent($content, '{{', '}}');
+        if ($matches) {
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                if ($matches[1][$i]) {
+                    if (isset($this->chunkCache[$matches[1][$i]])) {
+                        $replace[$i] = $this->chunkCache[$matches[1][$i]];
+                    } else {
+                        $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
+                        if ($snippet = $this->db->getValue($result)) {
+                            $this->chunkCache[$matches[1][$i]] = $snippet;
+                            $replace[$i] = $snippet;
+                        } else {
+                            $this->chunkCache[$matches[1][$i]] = '';
+                            $replace[$i] = '';
+                        }
+                    }
+                }
+            }
+            $content = str_replace($matches[0], $replace, $content);
+            $content = $this->mergeSettingsContent($content);
+        }
+        return $content;
+    }
 
     /**
      * Merge placeholder values
@@ -1033,26 +1038,26 @@ class DocumentParser {
      * @return string
      */
     function mergePlaceholderContent($content) {
-		if (strpos($content, '[+') === false)
-			return $content;
-		$replace = array();
-		$content = $this->mergeSettingsContent($content);
-		$matches = $this->getTagsFromContent($content, '[+', '+]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				$v = '';
-				$key = $matches[1][$i];
-				if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
-					$v = $this->placeholders[$key];
-				if ($v === '')
-					unset($matches[0][$i]); // here we'll leave empty placeholders for last.
-				else
-					$replace[$i] = $v;
-			}
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+        if (strpos($content, '[+') === false)
+            return $content;
+        $replace = array();
+        $content = $this->mergeSettingsContent($content);
+        $matches = $this->getTagsFromContent($content, '[+', '+]');
+        if ($matches) {
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                $v = '';
+                $key = $matches[1][$i];
+                if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
+                    $v = $this->placeholders[$key];
+                if ($v === '')
+                    unset($matches[0][$i]); // here we'll leave empty placeholders for last.
+                else
+                    $replace[$i] = $v;
+            }
+            $content = str_replace($matches[0], $replace, $content);
+        }
+        return $content;
+    }
 
 	/**
 	 * Detect PHP error according to MODX error level
@@ -1156,22 +1161,22 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-		foreach($matches[1] as $i=>$value)
-		{
-			$find = $i - 1;
-			while( $find >= 0 )
-			{
-				$tag = $matches[0][ $find ];
-				if(isset($replace[$find]) && strpos($value,$tag)!==false)
-				{
-					$value = str_replace($tag,$replace[$find],$value);
-					break;
-				}
-				$find--;
-			}
-			$replace[$i] = $this->_get_snip_result($value);
-		}
-        $content = str_replace($matches['0'], $replace, $content);
+        foreach($matches[1] as $i=>$value)
+        {
+            $find = $i - 1;
+            while( $find >= 0 )
+            {
+                $tag = $matches[0][ $find ];
+                if(isset($replace[$find]) && strpos($value,$tag)!==false)
+                {
+                    $value = str_replace($tag,$replace[$find],$value);
+                    break;
+                }
+                $find--;
+            }
+            $replace[$i] = $this->_get_snip_result($value);
+        }
+        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -2812,17 +2817,17 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-	function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
-		if (!is_array($chunkArr)){
-			return $chunk;
-		}
-		
-		foreach ($chunkArr as $key => $value){
-			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
-		}
-		
-		return $chunk;
-	}
+    function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
+        if (!is_array($chunkArr)){
+            return $chunk;
+        }
+        
+        foreach ($chunkArr as $key => $value){
+            $chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
+        }
+        
+        return $chunk;
+    }
 	
 	/**
 	 * parseChunk
@@ -3772,22 +3777,12 @@ class DocumentParser {
                 $e->activePlugin= $pluginName;
 
                 // get plugin code
-                if (isset ($this->pluginCache[$pluginName])) {
-                    $pluginCode= $this->pluginCache[$pluginName];
-                    $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
-                } else {
-                    $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-                    if ($row= $this->db->getRow($result)) {
-                        $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
-                        $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
-                        $pluginCode= $this->pluginCache[$pluginName]= "return false;";
-                        $pluginProperties= '';
-                    }
-                }
+                $plugin = $this->getPluginCode($pluginName);
+                $pluginCode= $plugin['code'];
+                $pluginProperties= $plugin['props'];
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties);
+                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
                 if(!is_array($parameter)){
                     $parameter = array();
                 }
@@ -3813,6 +3808,35 @@ class DocumentParser {
     }
 
     /**
+     * Returns plugin-code and properties
+     *
+     * @param string $pluginName
+     * @return array Associative array consisting of 'code' and 'props'
+     */
+    public function getPluginCode($pluginName)
+    {
+        $plugin = array();
+        if (isset ($this->pluginCache[$pluginName])) {
+            $pluginCode = $this->pluginCache[$pluginName];
+            $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
+        } else {
+            $pluginName = $this->db->escape($pluginName);
+            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            if ($row = $this->db->getRow($result)) {
+                $pluginCode = $this->pluginCache[$row['name']]= $row['plugincode'];
+                $pluginProperties = $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
+            } else {
+                $pluginCode = $this->pluginCache[$pluginName]= "return false;";
+                $pluginProperties = '';
+            }
+        }
+        $plugin['code'] = $pluginCode;
+        $plugin['props'] = $pluginProperties;
+
+        return $plugin;
+    }
+
+    /**
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
@@ -3821,37 +3845,64 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-        $parameter= array ();
-        if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else {
-                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
-				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
-			else{
-				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
-                            $parameter[trim($pTmp[0])]= $pvTmp[2];
+        
+        $propertyString = trim($propertyString);
+        $jsonFormat = $this->isJson($propertyString, true);
+        $property = array();
+
+        // old format
+        if ( !$jsonFormat ) {
+            $props= explode('&', $propertyString);
+            foreach ($props as $prop) {
+
+                if (strpos($prop, '=')===false) {
+                    $property[trim($prop)]='';
+                    continue;
+                }
+
+                $_ = explode('=', $prop, 2);
+                $key = trim($_[0]);
+                $p = explode(';', trim($_[1]));
+                if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
+                elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
+                elseif($p[1]=='checkbox'   && $p[3]!='') $value = $p[3]; // checkbox
+                elseif($p[1]=='radio'      && $p[3]!='') $value = $p[3]; // radio
+                elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
+                else                                     $value = '';
+                $property[$key] = $value;
+            }
+        // new json-format
+        } else if(!empty($jsonFormat)){
+            foreach( $jsonFormat as $key=>$row ) {
+                if(is_array($row)) {
+                    switch ($key) {
+                        case 'pluginConfig':
+                            if (isset($row[0]['legacy_names'])) $property['pluginName'] = $row[0]['legacy_names'];
+                            if (isset($row[0]['description'])) $property['pluginDesc'] = $row[0]['description'];
+                            if (isset($row[0]['modx_category'])) $property['pluginCategory'] = $row[0]['modx_category'];
+                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row[0]['events']);
+                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row[0]['filePath'];
+                            if (isset($row[0]['installset'])) $property['pluginInstallSet'] = $row[0]['installset'];
+                            break;
+                        default:
+                            $property[$key] = $row[0]['value'];
+                    }
+                } else {
+                    $property[$key] = $row;
                 }
             }
         }
-                }
-            }
+
+        if(!empty($elementName) && !empty($elementType)){
+            $out = $this->invokeEvent('OnParseProperties', array(
+                'element' => $elementName,
+                'type'    => $elementType,
+                'args'    => $property
+            ));
+            if(is_array($out)) $out = array_pop($out);
+            if(is_array($out)) $property = $out;
         }
-		if(!empty($elementName) && !empty($elementType)){
-			$out = $this->invokeEvent('OnParseProperties', array(
-				'element' => $elementName,
-				'type' => $elementType,
-				'args' => $parameter
-			));
-			if(is_array($out)) $out = array_pop($out);
-            if(is_array($out)) $parameter = $out;
-		}
-        return $parameter;
+        return $property;
     }
 
     /***************************************************************************************/
@@ -4231,6 +4282,11 @@ class DocumentParser {
 		$this->loadExtension('PHPCOMPAT');
 		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
+
+        function isJson($string, $returnData=false) {
+            $data = json_decode($string, true);
+            return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        }
     // End of class.
 
 }

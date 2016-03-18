@@ -20,7 +20,7 @@ class site_content_tagsDocLister extends site_contentDocLister
 {
     private $tag = array();
 
-    function __construct($modx, $cfg = array(), $startTime = null)
+    public function __construct($modx, $cfg = array(), $startTime = null)
     {
         parent::__construct($modx, $cfg, $startTime);
         $this->whereTag();
@@ -52,16 +52,12 @@ class site_content_tagsDocLister extends site_contentDocLister
             if (count($tmp) == 2) {
                 switch ($tmp[0]) {
                     case 'get':
-                    {
                         $tag = (isset($_GET[$tmp[1]]) && !is_array($_GET[$tmp[1]])) ? $_GET[$tmp[1]] : '';
                         break;
-                    }
                     case 'static':
                     default:
-                        {
                         $tag = $tmp[1];
                         break;
-                        }
                 }
                 $this->tag = array("mode" => $tmp[0], "tag" => $tag);
                 $this->toPlaceholders($this->sanitarData($tag), 1, "tag");

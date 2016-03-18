@@ -19,7 +19,7 @@ class DLpaginate {
     public $showCounter = false;
     public $className = "pagination";
     public $parameterName = "page";
-    public $urlF = false; //urlFriendly
+    public $urlF = null; //urlFriendly
 
     /**Buttons next and previous*/
     public $nextT = ' <a href="[+link+]">Next</a> ';
@@ -142,17 +142,15 @@ class DLpaginate {
     }
     protected function getPageQuery($page){
         switch($this->mode){
-            case 'offset':{
+            case 'offset':
                 $display = isset($this->modeConfig['display']) ? $this->modeConfig['display'] : 0;
                 $out = $display * ($page - 1);
                 break;
-            }
             case 'back':
             case 'pages':
-            default:{
+            default:
                 $out = $page;
                 break;
-            }
         }
         return $out;
     }
@@ -172,14 +170,14 @@ class DLpaginate {
 
     public function calculate() {
         $this->pagination = "";
-        $this->calculate == true;
+        $this->calculate = true;
         $error = false;
 
-        if ($this->urlF and $this->urlF != '%' and strpos($this->target, $this->urlF) === false) {
+        if ($this->urlF && $this->urlF != '%' && strpos($this->target, $this->urlF) === false) {
             //Es necesario especificar el comodin para sustituir
             //echo "Especificaste un wildcard para sustituir, pero no existe en el target<br />";
             $error = true;
-        } elseif ($this->urlF and $this->urlF == '%' and strpos($this->target, $this->urlF) === false) {
+        } elseif ($this->urlF && $this->urlF == '%' && strpos($this->target, $this->urlF) === false) {
             //echo "Es necesario especificar en el target el comodin % para sustituir el n�mero de p�gina<br />";
             $error = true;
         }
@@ -194,13 +192,7 @@ class DLpaginate {
         }
         if ($error) return false;
 
-        /* Setup vars for query. */
-        if ($this->page)
-            $start = ($this->page - 1) * $this->limit; //first item to display on this page
-        else
-            $start = 0; //if no page var is given, set start to 0
-
-        /* Setup page vars for display. */
+       /* Setup page vars for display. */
         $prev = ($this->page <= 1) ? 0 : $this->page - 1; //previous page is page - 1
         $next = (($this->page == $this->total_pages) ? 0 : ($this->page + 1)); //next page is page + 1
         $lastpage = ceil($this->total_pages / $this->limit); //lastpage is = total pages / items per page, rounded up.
@@ -260,7 +252,7 @@ class DLpaginate {
                 }
             }
             if ($this->page) {
-                if ($this->page < $counter - 1){
+                if (isset($counter) && $this->page < $counter - 1){
                     $this->pagination .=  $this->nextT ? $this->renderItemTPL( $this->nextT, $next) : '';
                 } else {
                     $this->pagination .=  $this->nextI ? $this->renderItemTPL( $this->nextI, $next) : '';

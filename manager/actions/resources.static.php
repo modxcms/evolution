@@ -9,16 +9,20 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
-    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
-        $orderby= '6,2';
-    }else{
-        $orderby= '5,1';
+    switch($resourceTable) {
+        case 'site_plugins':
+        case 'site_tmplvars':
+            $orderby= '6,2'; break;
+        case 'site_templates':
+            $orderby= '6,1'; break;
+        default:
+            $orderby= '5,1';
     }
 
     $selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
     
     $rs = $modx->db->select(
-        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category",
+        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
             LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id",
         "",
@@ -35,7 +39,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $row['category'] = stripslashes($row['category']); //pixelchutes
         if ($preCat !== $row['category']) {
             $output .= $insideUl? '</ul>': '';
-            $output .= '<li><strong>'.$row['category'].'</strong><ul>';
+            $output .= '<li><strong>'.$row['category']. ($row['catid']!=''? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
             $insideUl = 1;
         }
 
@@ -44,11 +48,16 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
-             $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>  ('.$row['description'].')</small>' : ' - '.$row['caption'];
+             $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>('.$row['description'].')</small>' : ' - '.$row['caption'];
         }else{
             $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
         }
-        $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+
+        $tplInfo  = array();
+        if($row['locked']) $tplInfo[] = $_lang['locked'];
+        if($row['id'] == $modx->config['default_template']) $tplInfo[] = $_lang['defaulttemplate_title'];
+        $output .= !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
+
         $output .= '</li>';
 
         $preCat = $row['category'];
@@ -231,9 +240,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 if ($preCat !== $v['category']) {
                     echo $insideUl? '</ul>': '';
                     if ($v['category'] == $_lang['no_category'] || !$delPerm) {
-                        echo '<li><strong>'.$v['category'].'</strong><ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .'</strong><ul>';
                     } else {
-                        echo '<li><strong>'.$v['category'].'</strong> (<a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a>)<ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a></strong><ul>';
                     }
                     $insideUl = 1;
                 }

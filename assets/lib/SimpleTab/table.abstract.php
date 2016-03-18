@@ -6,6 +6,9 @@ require_once (MODX_BASE_PATH . 'assets/lib/Helpers/PHPThumb.php');
 class dataTable extends \autoTable {
     protected $params = array();
     protected $fs = null;
+	protected $indexName = null;
+	protected $rfName = null;
+	protected $thumbsCache = null;
 
     public function __construct($modx, $debug = false) {
         parent::__construct($modx, $debug);
@@ -98,7 +101,9 @@ class dataTable extends \autoTable {
      * @return string
      */
     public function stripName($name) {
-        return $this->modx->stripAlias($name);
+        $filename = $this->fs->takeFileName($name);
+        $ext = $this->fs->takeFileExt($name);
+        return $this->modx->stripAlias($filename).'.'.$ext;
     }
 
     public function reorder($source, $target, $point, $rid, $orderDir) {
@@ -113,18 +118,18 @@ class dataTable extends \autoTable {
         /* more refactoring  needed */
         if ($targetIndex < $sourceIndex) {
             if (($point == 'top' && $orderDir == 'asc') || ($point == 'bottom' && $orderDir == 'desc')) {
-                $rows = $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1",$table,"`{$this->indexName}`>={$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
+                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1",$table,"`{$this->indexName}`>={$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
                 $rows = $this->modx->db->update("`{$this->indexName}`={$targetIndex}",$table,"`{$this->pkName}`={$sourceId}");             
             } elseif (($point == 'bottom' && $orderDir == 'asc') || ($point == 'top' && $orderDir == 'desc')) {
-                $rows = $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1",$table,"`{$this->indexName}`>{$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
+                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`+1",$table,"`{$this->indexName}`>{$targetIndex} AND `{$this->indexName}`<{$sourceIndex} AND `{$this->rfName}`={$rid}");
                 $rows = $this->modx->db->update("`{$this->indexName}`=1+{$targetIndex}",$table,"`{$this->pkName}`={$sourceId}");             
             }
         } else {
             if (($point == 'bottom' && $orderDir == 'asc') || ($point == 'top' && $orderDir == 'desc')) {
-                $rows = $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1",$table,"`{$this->indexName}`<={$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
+                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1",$table,"`{$this->indexName}`<={$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
                 $rows = $this->modx->db->update("`{$this->indexName}`={$targetIndex}",$table,"`{$this->pkName}`={$sourceId}");             
             } elseif (($point == 'top' && $orderDir == 'asc') || ($point == 'bottom' && $orderDir == 'desc')) {
-                $rows = $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1",$table,"`{$this->indexName}`<{$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
+                $this->modx->db->update("`{$this->indexName}`=`{$this->indexName}`-1",$table,"`{$this->indexName}`<{$targetIndex} AND `{$this->indexName}`>={$sourceIndex} AND `{$this->rfName}`={$rid}");
                 $rows = $this->modx->db->update("`{$this->indexName}`=-1+{$targetIndex}",$table,"`{$this->pkName}`={$sourceId}");                
             }
         }
@@ -153,4 +158,3 @@ class dataTable extends \autoTable {
         }
     }
 }
-?>

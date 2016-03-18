@@ -75,6 +75,7 @@ abstract class Action{
         });
     }
     public static function deleted(){
+		$data = array();
         $dataID = (int)Template::getParam('docId', $_GET);
         if($dataID>0 && self::_checkObj($dataID)){
             $oldValue = self::_getValue('deleted_at', $dataID);

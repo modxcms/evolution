@@ -5,8 +5,7 @@ if (!defined('MODX_BASE_PATH')) {
 
 require_once 'content.filter.php';
 
-class private_DL_filter extends content_DL_filter
-{   
+class private_DL_filter extends content_DL_filter {
     const TableAlias = 'dg';
     public function __construct() {
         $this->setTableAlias(self::TableAlias);

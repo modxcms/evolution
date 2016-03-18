@@ -359,9 +359,6 @@ class SqlFormatter
 
         $tokens = array();
 
-        // Used for debugging if there is an error while tokenizing the string
-        $original_length = strlen($string);
-
         // Used to make sure the string keeps shrinking on each iteration
         $old_string_len = strlen($string) + 1;
 
@@ -440,7 +437,6 @@ class SqlFormatter
         $increase_special_indent = false;
         $increase_block_indent = false;
         $indent_types = array();
-        $added_newline = false;
         $inline_count = 0;
         $inline_indented = false;
         $clause_limit = false;
