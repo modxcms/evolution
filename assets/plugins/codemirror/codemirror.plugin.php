@@ -190,6 +190,11 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
                         return "modxAttribute";
                     }
+                    if (stream.match("`")) {
+                        while ((ch = stream.next()) != null)
+                            if (stream.next() == "`") break;
+                        return "modxAttributeValue";
+                    }
                     if (stream.match("!]")) {
                         return "modxSnippetNoCache";
                     }
