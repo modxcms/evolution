@@ -1097,7 +1097,6 @@ a.hometblink:hover {
 	border-style: solid;
 	border-width: 1px;
 	top: 0;
-	z-index: 3;
 }
 .dynamic-tab-pane-control .tab-row .tab.selected span {
 	color: #111;
