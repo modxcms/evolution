@@ -81,7 +81,8 @@ $fields = array (
     'view_unpublished' => $view_unpublished,
 	'import_static' => $import_static,
 	'export_static' => $export_static,
-    'remove_locks' => $remove_locks
+    'remove_locks' => $remove_locks,
+    'change_ressourcetype' => $change_ressourcetype
 );
 
 $fields = $modx->db->escape($fields);
