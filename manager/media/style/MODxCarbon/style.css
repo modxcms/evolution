@@ -1698,3 +1698,34 @@ optgroup {font-style:normal;}
 /*Refactor #4440*/
 table.fields {border: 0px solid #fff;}
 table.fields td {border: 0px solid #fff;}
+
+/* breadcrumbs */
+ul.breadcrumbs {
+	margin: 0 0 10px 15px;
+	padding: 0;
+	line-height: normal;
+	font-size: 0;
+}
+
+li.breadcrumbs__li {
+	list-style: none;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+a.breadcrumbs__a {
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.breadcrumbs__sep {
+	font-size: 14px;
+	margin: 0 6px;
+}
+
+li.breadcrumbs__li_current {
+	font-size: 12px;
+	font-weight: bold;
+}
+/* end breadcrumbs */
