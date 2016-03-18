@@ -185,8 +185,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
             $url = $modx->makeUrl($id);
 
-            $alt = $dateNode == true ? $_lang["pagetitle"].": ".$pagetitle : "";
-            $alt.= "[+lf+]".$_lang['resource_opt_menu_title'].": ".$menutitle;
+            $alt = $dateNode == true ? $_lang["pagetitle"].": ".$pagetitle."[+lf+]" : "";
+            $alt.= $_lang['resource_opt_menu_title'].": ".$menutitle;
             $alt.= "[+lf+]".$_lang['resource_opt_menu_index'].": ".$menuindex;
             $alt.= "[+lf+]".$_lang['alias'].": ".(!empty($alias) ? $alias : "-");
             $alt.= "[+lf+]".$_lang['template'].": ".$templatename;
