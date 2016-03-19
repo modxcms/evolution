@@ -1892,13 +1892,14 @@ li.breadcrumbs__li {
 }
 
 a.breadcrumbs__a {
-	font-size: 14px;
+	font-size: 12px;
 	text-decoration: none;
 }
 
 .breadcrumbs__sep {
-	font-size: 14px;
+	font-size: 13px;
 	margin: 0 6px;
+    color: #777;
 }
 
 li.breadcrumbs__li_current {
