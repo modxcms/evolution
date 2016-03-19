@@ -55,7 +55,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 
         $tplInfo  = array();
         if($row['locked']) $tplInfo[] = $_lang['locked'];
-        if($row['id'] == $modx->config['default_template']) $tplInfo[] = $_lang['defaulttemplate_title'];
+        if($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') $tplInfo[] = $_lang['defaulttemplate_title'];
         $output .= !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
 
         $output .= '</li>';
