@@ -417,5 +417,9 @@ span.CodeMirror-selectedtext { background: none; }
 }
 .cm-modxAttribute {
     color: #00c;
-    background-color:rgba(0,0,0,.075);
+    background-color:rgba(0,0,0,.05);
+}
+.cm-modxAttributeValue {
+    color: #000;
+    background-color:rgba(0,0,0,.05);
 }
