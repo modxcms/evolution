@@ -38,6 +38,7 @@ class Wayfinder {
 				'[+wf.introtext+]',
 				'[+wf.description+]',
 				'[+wf.subitemcount+]',
+				'[+wf.refid+]',
 		'[+wf.iterator+]'
 			),
 			'wrapperLevel' => array(
@@ -169,6 +170,7 @@ class Wayfinder {
 	function renderRow(&$resource,$numChildren,$curNum) {
 		global $modx;
 		$output = '';
+		$refid = $resource["id"];
 
 		// Determine fields for use from referenced resource
 		if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
@@ -250,9 +252,9 @@ class Wayfinder {
 		//Load row values into placholder array
 		$charset = $modx->config['modx_charset'];
 		if ($this->_config['entityEncode']) {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset),$numChildren);
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset),$numChildren,$refid);
 		} else {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren,$refid);
 		}
 	//add iterator in phArray
 	$phArray[] = $curNum;
