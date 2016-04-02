@@ -187,13 +187,23 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                         stream.eat("]");
                         return "modxConfig";
                     }
-                    if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
-                        return "modxAttribute";
+                    if (ch = stream.match(/&([^\s=]+=+`)?/)) {
+                        if(ch[1] != undefined)
+                            return "modxAttribute";
                     }
                     if (stream.match("`")) {
-                        while ((ch = stream.next()) != null)
-                            if (stream.next() == "`") break;
                         return "modxAttributeValue";
+                    }
+                    if (stream.match("@inherit", true, true) ||
+                        stream.match("@select", true, true) ||
+                        stream.match("@eval", true, true) ||
+                        stream.match("@directory", true, true) ||
+                        stream.match("@chunk", true, true) ||
+                        stream.match("@document", true, true) ||
+                        stream.match("@file", true, true) ||
+                        stream.match("@code", true, true)
+                    ) {
+                        return "modxBinding";                   
                     }
                     if (stream.match("!]")) {
                         return "modxSnippetNoCache";
@@ -201,7 +211,7 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     if (stream.match("]]")) {
                         return "modxSnippet";
                     }
-                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
+                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("`", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
                     return null;
                 }
             };
