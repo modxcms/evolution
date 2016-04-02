@@ -377,8 +377,9 @@ function checked($cond)
 	<form method="post" name="snapshot" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="snapshot" />
-	<div class="actionButtons" style="margin-top:10px;margin-bottom:10px;">
-	<a href="#" class="primary" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
+	<div class="actionButtons" style="margin-top:2em;margin-bottom:2em;">
+        <?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" /> 
+	<a href="#" class="primary" style="display:inline-block;" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
 	<input type="submit" name="save" style="display:none;" />
 	</form>
 	</div>
@@ -397,18 +398,41 @@ function checked($cond)
 $pattern = "{$modx->config['snapshot_path']}*.sql";
 $files = glob($pattern,GLOB_NOCHECK);
 $total = ($files[0] !== $pattern) ? count($files) : 0;
+$detailFields = array('MODX Version', 'Host', 'Generation Time', 'Server version', 'PHP Version', 'Database', 'Description');
 if(is_array($files) && 0 < $total)
 {
-	echo '<ul>';
+	echo '<table>';
+        echo "<tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr>\n";
 	arsort($files);
-	$tpl = '<li>[+filename+] ([+filesize+]) (<a href="#" onclick="document.restore2.filename.value=\'[+filename+]\';document.restore2.save.click()">' . $_lang["bkmgr_restore_submit"] . '</a>)</li>' . "\n";
+	$tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="#" onclick="document.restore2.filename.value=\'[+filename+]\';document.restore2.save.click()" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
 	while ($file = array_shift($files))
 	{
 		$filename = substr($file,strrpos($file,'/')+1);
 		$filesize = $modx->nicesize(filesize($file));
-		echo str_replace(array('[+filename+]','[+filesize+]'),array($filename,$filesize),$tpl);
+
+                $file = fopen($file,"r");
+                $count = 0;
+                $details = array();
+                while($count < 11) {
+                    $line = fgets($file);
+                    foreach($detailFields as $label) {
+                        $fileLabel = '# '.$label;
+                        if (strpos($line, $fileLabel) !== false) {
+                            $details[$label] = htmlentities(trim(str_replace(array($fileLabel,':','`'), '', $line)), ENT_QUOTES, $modx_manager_charset);
+                        }
+                    }
+                    $count++;
+                };
+                fclose($file);
+            
+                $tooltip  = "Generation Time: ".$details["Generation Time"]."\n";
+                $tooltip .= "Server version: ".$details["Server version"]."\n";
+                $tooltip .= "PHP Version: ".$details["PHP Version"]."\n";
+                $tooltip .= "Host: ".$details["Host"]."\n";
+            
+		echo str_replace(array('[+filename+]','[+filesize+]','[+filedesc+]','[+modx_version+]','[+database_name+]','[+tooltip+]'),array($filename,$filesize,$details['Description'],$details['MODX Version'],$details['Database'],$tooltip),$tpl);
 	}
-	echo '</ul>';
+	echo '</table>';
 }
 else
 {
@@ -486,7 +510,8 @@ class Mysqldumper {
 		$output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
 		$output .= "# Server version: ". $modx->db->getVersion() . $lf;
 		$output .= "# PHP Version: " . phpversion() . $lf;
-		$output .= "# Database : `{$this->dbname}`{$lf}";
+		$output .= "# Database: `{$this->dbname}`{$lf}";
+                $output .= "# Description: ".trim($_REQUEST['backup_title'])."{$lf}";
 		$output .= "#";
 		file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
 		$output = '';
