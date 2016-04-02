@@ -390,7 +390,8 @@ function contains(a, obj) {
         <table>
           <tr>
             <th><?php echo $_lang['snippet_name']?>:</th>
-            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
+            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span>
+            <?php if(strpos($content['name'],'Duplicate of')!==false) echo '<script>document.getElementsByName("name")[0].focus();</script>'?></td>
           </tr>
           <tr>
             <th><?php echo $_lang['snippet_desc']?></th>
