@@ -724,8 +724,8 @@ class browser extends uploader {
 				$size = @getimagesize($file);
 				if (is_array($size) && count($size)) {
 					$thumb_file = "$thumbDir/" . basename($file);
-					if (!is_file($thumb_file))
-						$this->makeThumb($file, false);
+					if (!is_file($thumb_file) || filemtime($file) > filemtime($thumb_file))
+						$this->makeThumb($file);
 					$smallThumb =
 						($size[0] <= $this->config['thumbWidth']) &&
 						($size[1] <= $this->config['thumbHeight']) &&
