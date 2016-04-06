@@ -80,7 +80,7 @@ var first = true;
 
 function showParameters(ctrl) {
     var c,p,df,cp;
-    var ar,desc,value,key,dt;
+    var ar,label,value,key,dt,defaultVal;
 
     currentParams = {}; // reset;
 
@@ -98,25 +98,29 @@ function showParameters(ctrl) {
 
     // convert old schemed setup parameters
     if( !IsJsonString(props) ) {
-        dp = (props) ? props.split("&") : "";
+        dp = props ? props.match(/([^&=]+)=(.*?)(?=&[^&=]+=|$)/g) : ""; // match &paramname=
         if (!dp) tr.style.display = 'none';
         else {
             for (p = 0; p < dp.length; p++) {
                 dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
-                ar = dp[p].split("=");
+                ar = dp[p].match(/(?:[^\=]|==)+/g); // split by =, not by ==
                 key = ar[0];        // param
                 ar = (ar[1] + '').split(";");
-                desc = ar[0];	// description
+                label = ar[0];	// label
                 dt = ar[1];		// data type
                 value = decode((ar[2]) ? ar[2] : '');
 
                 // convert values to new json-format
                 if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+                    defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
+                    desc = decode((ar[5]) ? ar[5] : "");
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label":desc, "type":dt, "value":ar[3], "options":value, "default":ar[3], "desc":"" };
+                    currentParams[key][0] = {"label":label, "type":dt, "value":ar[3], "options":value, "default":defaultVal, "desc":desc };
                 } else if (key) {
+                    defaultVal = decode((ar[3]) ? ar[3] : ar[2]);
+                    desc = decode((ar[4]) ? ar[4] : "");
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label":desc, "type":dt, "value":value, "default":value, "desc":"" };
+                    currentParams[key][0] = {"label":label, "type":dt, "value":value, "default":defaultVal, "desc":desc };
                 }
             }
         }
@@ -128,7 +132,7 @@ function showParameters(ctrl) {
 
     try {
         
-        var type, defaultVal, label, options, found, info, sd;
+        var type, options, found, info, sd;
         var ll, ls, sets = [];
 
         Object.keys(currentParams).forEach(function(key) {
@@ -143,7 +147,7 @@ function showParameters(ctrl) {
                 desc        = cp['desc']+'';
                 options     = cp['options'] != undefined ? cp['options'] : '';
 
-                ll = ls = [];
+                ll = []; ls = [];
                 if(options.indexOf('==') > -1) {
                     // option-format: label==value||label==value
                     sets = options.split("||");
@@ -225,9 +229,9 @@ function showParameters(ctrl) {
 
                 info = '';
                 info += desc ? '<br/><small>'+desc+'</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a style="float:right" onclick="setDefaultParam(\''+ key +'\',1);return false;">Set Default</a></small>' : '';
+                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\''+ key +'\',1);return false;">Set Default</a></small>' : '';
 
-                t += '<tr><td bgcolor="#FFFFFF" width="20%">' + label + info +'</td><td bgcolor="#FFFFFF" width="80%">' + c + sd +'</td></tr>';
+            t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             
         });
 
