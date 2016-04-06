@@ -10,15 +10,16 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $tvjoin = '';
     if($resourceTable == 'site_tmplvars') {
         $tvsql = $resourceTable . '.caption, stt.templateid AS notassigned, ';
-        $tvjoin = "LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS stt ON {$resourceTable}.id = stt.tmplvarid";
+        $tvjoin = "LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS stt ON {$resourceTable}.id = stt.tmplvarid GROUP BY stt.tmplvarid";
     }
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
     switch($resourceTable) {
         case 'site_plugins':
-        case 'site_tmplvars':
             $orderby= '6,2'; break;
+        case 'site_tmplvars':
+            $orderby= '7,3'; break;
         case 'site_templates':
             $orderby= '6,1'; break;
         default:
