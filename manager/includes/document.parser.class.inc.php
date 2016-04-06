@@ -3871,25 +3871,11 @@ class DocumentParser {
                 else                                     $value = '';
                 $property[$key] = $value;
             }
+            
         // new json-format
         } else if(!empty($jsonFormat)){
             foreach( $jsonFormat as $key=>$row ) {
-                if(is_array($row)) {
-                    switch ($key) {
-                        case 'pluginConfig':
-                            if (isset($row[0]['legacy_names'])) $property['pluginName'] = $row[0]['legacy_names'];
-                            if (isset($row[0]['description'])) $property['pluginDesc'] = $row[0]['description'];
-                            if (isset($row[0]['modx_category'])) $property['pluginCategory'] = $row[0]['modx_category'];
-                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row[0]['events']);
-                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row[0]['filePath'];
-                            if (isset($row[0]['installset'])) $property['pluginInstallSet'] = $row[0]['installset'];
-                            break;
-                        default:
-                            $property[$key] = $row[0]['value'];
-                    }
-                } else {
-                    $property[$key] = $row;
-                }
+                $property[$key] = is_array($row) ? $row[0]['value'] : $row;
             }
         }
 
@@ -3903,6 +3889,113 @@ class DocumentParser {
             if(is_array($out)) $property = $out;
         }
         return $property;
+    }
+    
+    // modified parseDocBlock() - taken from modules/stores/setup.info.php by dmi3yy
+    function parseDocBlockFromFile($element_dir, $filename) {
+        $params = array();
+        $fullpath = $element_dir . '/' . $filename;
+        if(is_readable($fullpath)) {
+            $tpl = @fopen($fullpath, "r");
+            if($tpl) {
+                $params['filename'] = $filename;
+                $docblock_start_found = false;
+                $name_found = false;
+                $description_found = false;
+                $docblock_end_found = false;
+                
+                while(!feof($tpl)) {
+                    $line = fgets($tpl);
+                    $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
+                    $docblock_start_found = $r['docblock_start_found'];
+                    $name_found = $r['name_found'];
+                    $description_found = $r['description_found'];
+                    $docblock_end_found = $r['docblock_end_found'];
+                    $param = $r['param'];
+                    $val = $r['val'];
+                    if(!$docblock_end_found) break;
+                    if(!$docblock_start_found || !$name_found || !$description_found || empty($param)) continue;
+                    $params[$param] = $val;
+                }
+                @fclose($tpl);
+            }
+        }
+        return $params;
+    }
+
+    function parseDocBlockFromString($string) {
+        $params = array();
+        if(!empty($string)) {
+            $exp = explode('\r\n', $string);
+            $docblock_start_found = false;
+            $name_found = false;
+            $description_found = false;
+            $docblock_end_found = false;
+
+            foreach($exp as $line) {
+                $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
+                $docblock_start_found = $r['docblock_start_found'];
+                $name_found = $r['name_found'];
+                $description_found = $r['description_found'];
+                $docblock_end_found = $r['docblock_end_found'];
+                $param = $r['param'];
+                $val = $r['val'];
+                if($docblock_end_found) break;
+                if(!$docblock_start_found || !$name_found || !$description_found || empty($param)) continue;
+                $params[$param] = $val;
+            }            
+        }
+        return $params;
+    }
+    
+    function parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found) {
+        $param = '';
+        $val = '';
+        if(!$docblock_start_found) {
+            // find docblock start
+            if(strpos($line, '/**') !== false) {
+                $docblock_start_found = true;
+            }
+        } elseif(!$name_found) {
+            // find name
+            $ma = null;
+            if(preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
+                $params['name'] = trim($ma[1]);
+                $name_found = !empty($params['name']);
+            }
+        } elseif(!$description_found) {
+            // find description
+            $ma = null;
+            if(preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
+                $params['description'] = trim($ma[1]);
+                $description_found = !empty($params['description']);
+            }
+        } else {
+            $ma = null;
+            if(preg_match("/^\s+\*\s+\@([^\s]+)\s+(.+)/", $line, $ma)) {
+                $param = trim($ma[1]);
+                $val = trim($ma[2]);
+                if(!empty($param) && !empty($val)) {
+                    if($param == 'internal') {
+                        $ma = null;
+                        if(preg_match("/\@([^\s]+)\s+(.+)/", $val, $ma)) {
+                            $param = trim($ma[1]);
+                            $val = trim($ma[2]);
+                        }
+                    }
+                }
+            } elseif(preg_match("/^\s*\*\/\s*$/", $line)) {
+                $docblock_end_found = true;
+            }
+        }
+        return array(
+            'docblock_start_found'=>$docblock_start_found,
+            'name_found'=>$name_found,
+            'description_found'=>$description_found,
+            'docblock_end_found'=>$docblock_end_found,
+            'param'=>$param,
+            'val'=>$val
+        );
     }
 
     /***************************************************************************************/
