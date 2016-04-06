@@ -217,6 +217,13 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
             };
             return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "{$mode}"), mustacheOverlay);
         });
+        function makeMarker(symbol) {
+          var marker = document.createElement("div");
+          marker.style.color = "#822";
+          marker.className = "cm-marker";
+          marker.innerHTML = "●";
+          return marker;
+        }
         //Basic settings
         var config = {
             mode: 'MODx-{$mode}',
