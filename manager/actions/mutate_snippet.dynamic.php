@@ -119,11 +119,6 @@ function showParameters(ctrl) {
                     currentParams[key][0] = {"label":desc, "type":dt, "value":value, "default":value, "desc":"" };
                 }
             }
-
-            var filebinding = f.filebinding !== undefined ? f.filebinding.value : '';
-            
-            currentParams['snippetConfig'] = [];
-            currentParams['snippetConfig'][0] = {"filePath":filebinding};
         }
     } else {
         currentParams = JSON.parse(props);
@@ -132,26 +127,26 @@ function showParameters(ctrl) {
     t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
-        for (key in currentParams) {
-            if (currentParams.hasOwnProperty(key)) {
+        
+        var type, defaultVal, label, options, found, info, sd;
+        var ll, ls, sets = [];
 
-                if(key == 'snippetConfig') {
-                    snippetConfig = currentParams[key];
-                    continue;
-                }
+        Object.keys(currentParams).forEach(function(key) {
 
-                var cp          = currentParams[key][0];
-                var type        = cp['type'];
-                var value       = cp['value'];
-                var defaultVal  = cp['default'];
-                var label       = cp['label'] != undefined ? cp['label'] : key;
-                var desc        = cp['desc']+'';
-                var options     = cp['options']+'';
+                if (key == 'internal' || currentParams[key][0]['label'] == undefined) return;
 
-                var ll, ls = [];
+                cp          = currentParams[key][0];
+                type        = cp['type'];
+                value       = cp['value'];
+                defaultVal  = cp['default'];
+                label       = cp['label'] != undefined ? cp['label'] : key;
+                desc        = cp['desc']+'';
+                options     = cp['options'] != undefined ? cp['options'] : '';
+
+                ll = ls = [];
                 if(options.indexOf('==') > -1) {
                     // option-format: label==value||label==value
-                    var sets = options.split("||");
+                    sets = options.split("||");
                     for (i = 0; i < sets.length; i++) {
                         split = sets[i].split("==");
                         ll[i] = split[0];
@@ -159,7 +154,7 @@ function showParameters(ctrl) {
                     }
                 } else {
                     // option-format: value,value
-                    ls = (options + '').split(",");
+                    ls = options.split(",");
                     ll = ls;
                 }
 
@@ -190,7 +185,7 @@ function showParameters(ctrl) {
                         c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
                         for (i = 0; i < ls.length; i++) {
                             if (arrValue.length) {
-                                var found = false;
+                                found = false;
                                 for (j = 0; j < arrValue.length; j++) {
                                     if (ls[i] == arrValue[j]) {
                                         found = true;
@@ -228,13 +223,13 @@ function showParameters(ctrl) {
                         break;
                 }
 
-                var info = '';
+                info = '';
                 info += desc ? '<br/><small>'+desc+'</small>' : '';
-                var sd = defaultVal != undefined ? ' <small><a style="float:right" onclick="setDefaultParam(\''+ key +'\');return false;">Set Default</a></small>' : '';
+                sd = defaultVal != undefined ? ' <small><a style="float:right" onclick="setDefaultParam(\''+ key +'\',1);return false;">Set Default</a></small>' : '';
 
                 t += '<tr><td bgcolor="#FFFFFF" width="20%">' + label + info +'</td><td bgcolor="#FFFFFF" width="80%">' + c + sd +'</td></tr>';
-            }
-        }
+            
+        });
 
         t += '</table>';
 
@@ -251,6 +246,7 @@ function showParameters(ctrl) {
 
 function setParameter(key,dt,ctrl) {
     var v;
+    var arrValues, cboxes = [];
     if(!ctrl) return null;
     switch (dt) {
         case 'int':
@@ -263,7 +259,7 @@ function setParameter(key,dt,ctrl) {
             v = ctrl.options[ctrl.selectedIndex].value;
             break;
         case 'list-multi':
-            var arrValues = new Array;
+            arrValues = [];
             for(var i=0; i < ctrl.options.length; i++){
                 if(ctrl.options[i].selected){
                     arrValues.push(ctrl.options[i].value);
@@ -272,8 +268,8 @@ function setParameter(key,dt,ctrl) {
             v = arrValues.toString();
             break;
         case 'checkbox':
-            var arrValues = new Array;
-            var cboxes = document.getElementsByName(ctrl.name);
+            arrValues = [];
+            cboxes = document.getElementsByName(ctrl.name);
             for(var i=0; i < cboxes.length; i++){
                 if(cboxes[i].checked){
                     arrValues.push(cboxes[i].value);
@@ -291,9 +287,7 @@ function setParameter(key,dt,ctrl) {
 
 // implode parameters
 function implodeParameters(){
-    var merged = currentParams;
-    merged['snippetConfig'] = snippetConfig;
-    myCodeMirrors['properties'].setValue(JSON.stringify(merged, null, 2));
+    myCodeMirrors['properties'].setValue(JSON.stringify(currentParams, null, 2));
     if(first) { documentDirty = false; first = false; };
 }
 
@@ -320,12 +314,21 @@ function IsJsonString(str) {
     return true;
 }
 
-function setDefaultParam(key) {
+function setDefaultParam(key, show) {
     if (typeof currentParams[key][0]['default'] != 'undefined') {
         currentParams[key][0]['value'] = currentParams[key][0]['default'];
-        implodeParameters();
-        showParameters();
+        if(show) { implodeParameters(); showParameters(); }
     }
+}
+
+function setDefaults() {
+    var keys = Object.keys(currentParams);
+    var last = keys[keys.length-1],
+        show;
+    Object.keys(currentParams).forEach(function(key) {
+        show = key == last ? 1 : 0;
+        setDefaultParam(key, show);
+    });
 }
 
 function contains(a, obj) {
@@ -463,8 +466,15 @@ function contains(a, obj) {
             <td valign="top"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
           </tr>
           <tr>
+            <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
+            <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
+          </tr>
+          <tr>
             <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>
-            <td valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br /><input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td>
+            <td valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
+                <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
+                <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+            </td>
           </tr>
           <tr id="displayparamrow">
             <td valign="top">&nbsp;</td>
