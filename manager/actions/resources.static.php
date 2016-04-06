@@ -5,7 +5,13 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     global $modx, $_lang, $modx_textdir;
     
     $pluginsql = $resourceTable == 'site_plugins' ? $resourceTable.'.disabled, ' : '';
-    $tvsql = $resourceTable == 'site_tmplvars' ? $resourceTable.'.caption, ' : '';
+    
+    $tvsql = '';
+    $tvjoin = '';
+    if($resourceTable == 'site_tmplvars') {
+        $tvsql = $resourceTable . '.caption, stt.templateid AS notassigned, ';
+        $tvjoin = "LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS stt ON {$resourceTable}.id = stt.tmplvarid";
+    }
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
@@ -24,7 +30,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $rs = $modx->db->select(
         "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
-            LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id",
+            LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
         "",
         $orderby
         );
@@ -45,6 +51,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 
         if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
         if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
+        if ($resourceTable == 'site_tmplvars') $class = $row['notassigned'] ? '' : ' class="disabledPlugin"';
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
