@@ -36,7 +36,7 @@ if($name=="") $name = "Untitled snippet";
 
 if($parse_docblock) {
     $parsed       = $modx->parseDocBlockFromString($snippet);
-    $name         = isset($parsed['legacy_names']) ? $parsed['legacy_names'] : $name;
+    $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
 
     $description  = isset($parsed['description']) ? $parsed['description'] : $description;
