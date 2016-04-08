@@ -3951,6 +3951,7 @@ class DocumentParser {
     function parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found) {
         $param = '';
         $val = '';
+        $ma = null;
         if(!$docblock_start_found) {
             // find docblock start
             if(strpos($line, '/**') !== false) {
@@ -3958,20 +3959,19 @@ class DocumentParser {
             }
         } elseif(!$name_found) {
             // find name
-            $ma = null;
             if(preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
-                $params['name'] = trim($ma[1]);
-                $name_found = !empty($params['name']);
+                $param = 'name';
+                $val = trim($ma[1]);
+                $name_found = !empty($val);
             }
         } elseif(!$description_found) {
             // find description
-            $ma = null;
             if(preg_match("/^\s+\*\s+(.+)/", $line, $ma)) {
-                $params['description'] = trim($ma[1]);
-                $description_found = !empty($params['description']);
+                $param = 'description';
+                $val = trim($ma[1]);
+                $description_found = !empty($val);
             }
         } else {
-            $ma = null;
             if(preg_match("/^\s+\*\s+\@([^\s]+)\s+(.+)/", $line, $ma)) {
                 $param = trim($ma[1]);
                 $val = trim($ma[2]);
