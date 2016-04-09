@@ -874,7 +874,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('editor_css_path',''),
 ('editor_css_selectors',''),
 ('strip_image_paths','1'),
-('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
+('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,svg,tif,tiff'),
 ('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
 ('upload_flash','fla,flv,swf'),
 ('upload_files','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF'),
