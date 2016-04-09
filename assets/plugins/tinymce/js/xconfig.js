@@ -5,7 +5,7 @@ This file is used by the MODX TinyMCE plugin to pass additional parameters to Ti
 var mce_valid_elements = "@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|"
 + "onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|"
 + "onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|"
-+ "name|href|target|title|class|onfocus|onblur||download],strong/b,em/i,strike,u,"
++ "name|href|target|title|class|onfocus|onblur|download],strong/b,em/i,strike,u,"
 + "#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|"
 + "src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,"
 + "-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|"
