@@ -1,7 +1,6 @@
 <?php
 /**
- * @author Deesen, yama / updated: 13.03.2016
- * Issue on Github: https://github.com/modxcms/evolution/issues/498
+ * @author Deesen, yama / updated: 04.04.2016
  */
 
 class modxRTEbridge
@@ -22,7 +21,7 @@ class modxRTEbridge
     public $debug = false;                      // Enable/disable debug messages via HTML-comment
     public $debugMessages = array();            // Holds all messages - added by    $this->debugMessages[] = 'Message';
 
-    public function __construct($editorKey = NULL, $basePath='', $tvOptions=array())
+    public function __construct($editorKey = NULL, $bridgeConfig=array(), $tvOptions=array(), $basePath='')
     {
         global $modx, $settings, $usersettings;
 
@@ -42,13 +41,10 @@ class modxRTEbridge
         // Init language before bridge so bridge can alter translations via $this->setLang()
         $this->initLang($basePath);
 
-        // Get modxRTEbridge-config
-        if (is_readable("{$basePath}gsettings/bridge.{$editorKey}.inc.php")) {
-            include("{$basePath}gsettings/bridge.{$editorKey}.inc.php");
-            $this->bridgeParams = isset($bridgeParams) ? $bridgeParams : array();
-            $this->gSettingsCustom = isset($gSettingsCustom) ? $gSettingsCustom : array();
-            $this->gSettingsDefaultValues = isset($gSettingsDefaultValues) ? $gSettingsDefaultValues : array();
-        } else exit("modxRTEbridge: {$basePath}gsettings/bridge.{$editorKey}.inc.php not found");
+        // Get modxRTEbridge-config from child-class
+        $this->bridgeParams           = isset($bridgeConfig['bridgeParams']) ? $bridgeConfig['bridgeParams'] : array();
+        $this->gSettingsCustom        = isset($bridgeConfig['gSettingsCustom']) ? $bridgeConfig['gSettingsCustom'] : array();
+        $this->gSettingsDefaultValues = isset($bridgeConfig['gSettingsDefaultValues']) ? $bridgeConfig['gSettingsDefaultValues'] : array();
 
         // Determine settings from Modx
         $mgrAction = isset($modx->manager->action) ? $modx->manager->action : 11;
@@ -95,17 +91,17 @@ class modxRTEbridge
         // Set TV-options
         $this->tvOptions = $tvOptions;
 
-        // Get/set pluginParams
-        $this->editorKey = $editorKey;
-        $this->theme = isset($this->modxParams['theme']) ? $this->modxParams['theme'] : 'base';
-        $this->pluginParams = isset($modx->event->params) ? $modx->event->params : array();
-        $this->pluginParams['pluginName'] = $modx->event->activePlugin;
-        $this->pluginParams['editorLabel'] = isset($editorLabel) ? $editorLabel : 'No editorLabel set for "' . $editorKey . '"';
-        $this->pluginParams['editorVersion'] = isset($editorVersion) ? $editorVersion : 'No editorVersion set';
-        $this->pluginParams['editorLogo'] = isset($editorLogo) ? $editorLogo : '';
-        $this->pluginParams['skinsDirectory'] = isset($skinsDirectory) && !empty($skinsDirectory) ? trim($skinsDirectory, "/") . "/" : '';
-        $this->pluginParams['base_path'] = $basePath;
-        $this->pluginParams['base_url'] = $baseUrl;
+        // Set pluginParams
+        $this->editorKey                      = $editorKey;
+        $this->theme                          = isset($this->modxParams['theme']) ? $this->modxParams['theme'] : 'base';
+        $this->pluginParams                   = isset($modx->event->params) ? $modx->event->params : array();
+        $this->pluginParams['pluginName']     = $modx->event->activePlugin;
+        $this->pluginParams['editorLabel']    = isset($bridgeConfig['editorLabel']) ? $bridgeConfig['editorLabel'] : 'No editorLabel set for "' . $editorKey . '"';
+        $this->pluginParams['editorVersion']  = isset($bridgeConfig['editorVersion']) ? $bridgeConfig['editorVersion'] : 'No editorVersion set';
+        $this->pluginParams['editorLogo']     = isset($bridgeConfig['editorLogo']) ? $bridgeConfig['editorLogo'] : '';
+        $this->pluginParams['skinsDirectory'] = isset($bridgeConfig['skinsDirectory']) && !empty($bridgeConfig['skinsDirectory']) ? trim($bridgeConfig['skinsDirectory'], "/") . "/" : '';
+        $this->pluginParams['base_path']      = $basePath;
+        $this->pluginParams['base_url']       = $baseUrl;
     }
 
     // Function to set editor-parameters
@@ -304,9 +300,10 @@ class modxRTEbridge
     public function renderBridgeParams($selector)
     {
         // Call functions - for optional translation of params/values via bridge.xxxxxxxxxx.inc.php
-        foreach ($this->bridgeParams as $editorParam => $editorKey) {
-            if (is_callable($this->bridgeParams[$editorParam])) {     // Call function, get return
-                $return = $this->bridgeParams[$editorParam]($selector);
+        foreach ($this->bridgeParams as $editorParam) {
+            $bridgeFunction = 'bridge_'.$editorParam;
+            if (method_exists($this, $bridgeFunction)) {     // Call function, get return
+                $return = $this->$bridgeFunction($selector);
                 if ($return !== NULL && isset($this->themeConfig[$editorParam]) && $selector !== 'initBridge') {
                     $this->themeConfig[$editorParam]['bridged'] = $return;
                 }
