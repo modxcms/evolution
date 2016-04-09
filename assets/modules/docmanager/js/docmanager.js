@@ -114,6 +114,7 @@ function hideInteraction() {
     if (tabActiveID == '1') { 
         $('tvloading').style.display = 'none';
     }
+    /*
     if (tabActiveID == '3') {
         if ($('interaction')) {
             $('interaction').style.display = 'none';
@@ -123,7 +124,7 @@ function hideInteraction() {
         $('interaction').style.display = '';
         parent.tree.ca = '';
     }
-    
+    */
     return true;
 }
 
