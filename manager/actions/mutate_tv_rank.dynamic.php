@@ -4,6 +4,8 @@ if(!$modx->hasPermission('save_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+$reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
+
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 
 $siteURL = $modx->config['site_url'];
@@ -13,10 +15,11 @@ $updateMsg = '';
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /></span>';
     foreach ($_POST as $listName=>$listValue) {
-        if ($listName == 'listSubmitted') continue;
+        if ($listName == 'listSubmitted' || $listName == 'reset') continue;
         $orderArray = explode(';', rtrim($listValue, ';'));
         foreach($orderArray as $key => $item) {
-            if (strlen($item) == 0) continue; 
+            if (strlen($item) == 0) continue;
+            $key = $reset ? 0 : $key;
             $id = ltrim($item, 'item_');
             $modx->db->update(array('rank'=>$key), $tbl_site_tmplvars, "id='{$id}'");
         }
@@ -29,7 +32,7 @@ $rs = $modx->db->select(
 	"name, id, rank",
         $tbl_site_tmplvars,
 	"",
-	"rank ASC, name ASC, id ASC"
+	"rank ASC, id ASC"
 	);
 $limit = $modx->db->getRecordCount($rs);
 
@@ -80,7 +83,17 @@ $header = '
     </style>
     <script type="text/javascript">
         function save() {
+            $j("#updated").hide();
+            $j("#updating").fadeIn();
             setTimeout("document.sortableListForm.submit()",1000);
+        }
+        
+        function renderList() {
+            var list = \'\';
+            $$(\'li.sort\').each(function(el, i) {
+                list += el.id + \';\';
+            });
+            $(\'list\').value = list;
         }
             
         window.addEvent(\'domready\', function() {
@@ -96,15 +109,11 @@ $header = '
                         el.setStyle(\'background-color\', \'#ccc\');
                         el.setStyle(\'cursor\', \'move\');
                     });
+                    renderList();
                 },
                 onComplete: function()
                 {
-                   var list = \'\';
-                    $$(\'li.sort\').each(function(el, i)
-                    {
-                       list += el.id + \';\';
-                   });
-                   $(\'list\').value = list;
+                   renderList();
                }
            });
         });
@@ -124,6 +133,18 @@ $header = '
             });
             $j(\'#list\').val(list);
         }
+        
+        function resetSortOrder() {
+            if (confirm("'.$_lang["confirm_reset_sort_order"].'")==true) {
+                documentDirty=false;
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "reset";
+                input.value = "true";
+                document.sortableListForm.appendChild(input);
+                save();
+            }
+        }
     </script>';
 
 $header .= '</head>
@@ -141,6 +162,7 @@ $header .= '</head>
 <div class="section">
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
+<button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
 <p>'.$_lang["tmplvars_rank_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
 
 echo $header;
