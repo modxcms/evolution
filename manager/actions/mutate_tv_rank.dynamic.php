@@ -4,11 +4,8 @@ if(!$modx->hasPermission('save_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 
-$tbl_site_templates         = $modx->getFullTableName('site_templates');
-$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 
 $siteURL = $modx->config['site_url'];
@@ -21,10 +18,10 @@ if(isset($_POST['listSubmitted'])) {
         if ($listName == 'listSubmitted' || $listName == 'reset') continue;
         $orderArray = explode(';', rtrim($listValue, ';'));
         foreach($orderArray as $key => $item) {
-            if (strlen($item) == 0) continue; 
+            if (strlen($item) == 0) continue;
             $key = $reset ? 0 : $key;
-            $tmplvar = ltrim($item, 'item_');
-            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
+            $id = ltrim($item, 'item_');
+            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvars, "id='{$id}'");
         }
     }
     // empty cache
@@ -32,12 +29,10 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $rs = $modx->db->select(
-	"tv.name AS name, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
-	"{$tbl_site_tmplvar_templates} AS tr
-		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
-		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
-	"tr.templateid='{$id}'",
-	"tr.rank DESC, tv.rank DESC, tv.id DESC"     // workaround for correct sort of none-existing ranks
+	"name, id, rank",
+        $tbl_site_tmplvars,
+	"",
+	"rank ASC, id ASC"
 	);
 $limit = $modx->db->getRecordCount($rs);
 
@@ -46,7 +41,6 @@ if($limit>1) {
     while ($row = $modx->db->getRow($rs)) {
         $tvsArr[] = $row;
     }
-    $tvsArr = array_reverse($tvsArr,true);  // reverse ORDERBY DESC
 
     $i = 0;
     foreach($tvsArr as $row) {
@@ -119,7 +113,7 @@ $header = '
                 },
                 onComplete: function()
                 {
-                    renderList();
+                   renderList();
                }
            });
         });
@@ -161,7 +155,7 @@ $header .= '</head>
 <div id="actions">
     <ul class="actionButtons">
         <li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-        <li><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$id.'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
     </ul>
 </div>
 
@@ -169,7 +163,7 @@ $header .= '</head>
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
 <button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
-<p>'.$_lang["template_tv_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
+<p>'.$_lang["tmplvars_rank_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
 
 echo $header;
 

@@ -237,6 +237,11 @@ class modxRTEbridge
                     if (!empty($this->initOnceArr)) {
                         $output .= implode("\n", $this->initOnceArr);
                     }
+                    // Provide JS-object with parameters for external scripts like MultiTV
+                    $jsParams = array(
+                        'default'=>'config_'.$this->editorKey.'_'.$this->modxParams['theme']
+                    );
+                    $output .= "<script>var modxRTEbridge_{$this->editorKey} = ". json_encode($jsParams) .";</script>";
                 }
 
                 // Init only once per config (enables multiple config-objects i.e. for richtext / richtextmini via [+configJs+])
