@@ -3940,9 +3940,9 @@ class DocumentParser {
                 $docblock_end_found = $r['docblock_end_found'];
                 $param = $r['param'];
                 $val = $r['val'];
+                if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
-                if(!$docblock_start_found || !$name_found || !$description_found || empty($param)) continue;
-                $params[$param] = $val;
+                if(!empty($param)) $params[$param] = $val;
             }            
         }
         return $params;
