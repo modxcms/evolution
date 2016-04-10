@@ -59,6 +59,12 @@ if (isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
+
+// Prepare internal params via parseDocBlock
+$modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
+$docBlock = $modx->parseDocBlockFromString($modulecode);
+$docBlockList = $modx->convertDocBlockIntoList($docBlock);
+$internal = array();
 ?>
 <script type="text/javascript">
 function loadDependencies() {
@@ -87,13 +93,14 @@ function setTextWrap(ctrl,b) {
     ctrl.wrap = (b)? "soft":"off";
 }
 // Current Params/Configurations
+// Current Params/Configurations
 var currentParams = {};
-var moduleConfig = {};
+var internal = <?php echo json_encode($internal); ?>;
 var first = true;
 
 function showParameters(ctrl) {
     var c,p,df,cp;
-    var ar,desc,value,key,dt;
+    var ar,label,value,key,dt,defaultVal;
 
     currentParams = {}; // reset;
 
@@ -108,34 +115,34 @@ function showParameters(ctrl) {
 
     // check if codemirror is used
     var props = typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
-
+    
     // convert old schemed setup parameters
     if( !IsJsonString(props) ) {
-        dp = (props) ? props.split("&") : "";
+        dp = props ? props.match(/([^&=]+)=(.*?)(?=&[^&=]+=|$)/g) : ""; // match &paramname=
         if (!dp) tr.style.display = 'none';
         else {
             for (p = 0; p < dp.length; p++) {
                 dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
-                ar = dp[p].split("=");
+                ar = dp[p].match(/(?:[^\=]|==)+/g); // split by =, not by ==
                 key = ar[0];        // param
                 ar = (ar[1] + '').split(";");
-                desc = ar[0];	// description
-                dt = ar[1];		// data type
+                label = ar[0];	    // label
+                dt = ar[1];	    // data type
                 value = decode((ar[2]) ? ar[2] : '');
 
                 // convert values to new json-format
                 if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+                    defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
+                    desc = decode((ar[5]) ? ar[5] : "");
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label":desc, "type":dt, "value":ar[3], "options":value, "default":ar[3], "desc":"" };
+                    currentParams[key][0] = {"label":label, "type":dt, "value":ar[3], "options":value, "default":defaultVal, "desc":desc };
                 } else if (key) {
+                    defaultVal = decode((ar[3]) ? ar[3] : ar[2]);
+                    desc = decode((ar[4]) ? ar[4] : "");
                     currentParams[key] = [];
-                    currentParams[key][0] = {"label":desc, "type":dt, "value":value, "default":value, "desc":"" };
+                    currentParams[key][0] = {"label":label, "type":dt, "value":value, "default":defaultVal, "desc":desc };
                 }
             }
-
-            // var events = getEventsList();
-            // currentParams['moduleConfig'] = [];
-            // currentParams['moduleConfig'][0] = {"events":events, "filePath":f.filebinding.value};
         }
     } else {
         currentParams = JSON.parse(props);
@@ -144,26 +151,25 @@ function showParameters(ctrl) {
     t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
-        for (key in currentParams) {
-            if (currentParams.hasOwnProperty(key)) {
+        var type, options, found, info, sd;
+        var ll, ls, sets = [];
 
-                if(key == 'moduleConfig') {
-                    moduleConfig = currentParams[key];
-                    continue;
-                }
+        Object.keys(currentParams).forEach(function(key) {
 
-                var cp          = currentParams[key][0];
-                var type        = cp['type'];
-                var value       = cp['value'];
-                var defaultVal  = cp['default'];
-                var label       = cp['label'] != undefined ? cp['label'] : key;
-                var desc        = cp['desc']+'';
-                var options     = cp['options']+'';
+                if (key == 'internal' || currentParams[key][0]['label'] == undefined) return;
 
-                var ll, ls = [];
+                cp = currentParams[key][0];
+                type = cp['type'];
+                value = cp['value'];
+                defaultVal = cp['default'];
+                label = cp['label'] != undefined ? cp['label'] : key;
+                desc = cp['desc'] + '';
+                options = cp['options'] != undefined ? cp['options'] : '';
+
+                ll = []; ls = [];
                 if(options.indexOf('==') > -1) {
                     // option-format: label==value||label==value
-                    var sets = options.split("||");
+                    sets = options.split("||");
                     for (i = 0; i < sets.length; i++) {
                         split = sets[i].split("==");
                         ll[i] = split[0];
@@ -171,7 +177,7 @@ function showParameters(ctrl) {
                     }
                 } else {
                     // option-format: value,value
-                    ls = (options + '').split(",");
+                    ls = options.split(",");
                     ll = ls;
                 }
 
@@ -202,7 +208,7 @@ function showParameters(ctrl) {
                         c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
                         for (i = 0; i < ls.length; i++) {
                             if (arrValue.length) {
-                                var found = false;
+                                found = false;
                                 for (j = 0; j < arrValue.length; j++) {
                                     if (ls[i] == arrValue[j]) {
                                         found = true;
@@ -240,16 +246,15 @@ function showParameters(ctrl) {
                         break;
                 }
 
-                var info = '';
-                info += desc ? '<br/><small>'+desc+'</small>' : '';
-                var sd = defaultVal != undefined ? ' <small><a style="float:right" onclick="setDefaultParam(\''+ key +'\');return false;">Set Default</a></small>' : '';
+                info = '';
+                info += desc ? '<br/><small>' + desc + '</small>' : '';
+                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></small>' : '';
 
-                t += '<tr><td bgcolor="#FFFFFF" width="20%">' + label + info +'</td><td bgcolor="#FFFFFF" width="80%">' + c + sd +'</td></tr>';
-            }
-        }
+                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+            });
 
         t += '</table>';
-
+        
     } catch (e) {
         t = e + "\n\n" + props;
     }
@@ -263,6 +268,7 @@ function showParameters(ctrl) {
 
 function setParameter(key,dt,ctrl) {
     var v;
+    var arrValues, cboxes = [];
     if(!ctrl) return null;
     switch (dt) {
         case 'int':
@@ -275,7 +281,7 @@ function setParameter(key,dt,ctrl) {
             v = ctrl.options[ctrl.selectedIndex].value;
             break;
         case 'list-multi':
-            var arrValues = new Array;
+            arrValues = [];
             for(var i=0; i < ctrl.options.length; i++){
                 if(ctrl.options[i].selected){
                     arrValues.push(ctrl.options[i].value);
@@ -284,8 +290,8 @@ function setParameter(key,dt,ctrl) {
             v = arrValues.toString();
             break;
         case 'checkbox':
-            var arrValues = new Array;
-            var cboxes = document.getElementsByName(ctrl.name);
+            arrValues = [];
+            cboxes = document.getElementsByName(ctrl.name);
             for(var i=0; i < cboxes.length; i++){
                 if(cboxes[i].checked){
                     arrValues.push(cboxes[i].value);
@@ -303,9 +309,7 @@ function setParameter(key,dt,ctrl) {
 
 // implode parameters
 function implodeParameters(){
-    var merged = currentParams;
-    merged['moduleConfig'] = moduleConfig;
-    myCodeMirrors['properties'].setValue(JSON.stringify(merged, null, 2));
+    myCodeMirrors['properties'].setValue(JSON.stringify(currentParams, null, 2));
     if(first) { documentDirty = false; first = false; };
 }
 
@@ -332,12 +336,21 @@ function IsJsonString(str) {
     return true;
 }
 
-function setDefaultParam(key) {
+function setDefaultParam(key, show) {
     if (typeof currentParams[key][0]['default'] != 'undefined') {
         currentParams[key][0]['value'] = currentParams[key][0]['default'];
-        implodeParameters();
-        showParameters();
+        if(show) { implodeParameters(); showParameters(); }
     }
+}
+
+function setDefaults() {
+    var keys = Object.keys(currentParams);
+    var last = keys[keys.length-1],
+        show;
+    Object.keys(currentParams).forEach(function(key) {
+        show = key == last ? 1 : 0;
+        setDefaultParam(key, show);
+    });
 }
 
 function contains(a, obj) {
@@ -445,8 +458,16 @@ function SetUrl(url, width, height, alt) {
                 <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
             <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
                 <td align="left" valign="top"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
+            <tr>
+                <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
+                <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
+            </tr>
             <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
-                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br /><input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
+                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br />
+                    <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
+                    <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+                </td>
+            </tr>
             <tr id="displayparamrow"><td valign="top" align="left">&nbsp;</td>
                 <td align="left" id="displayparams">&nbsp;</td></tr>
         </table>
@@ -496,7 +517,7 @@ $ds = $modx->db->select(
     </div>
 <?php endif; ?>
 
-<!-- TemplateVar Info -->
+<!-- Properties -->
 <div class="tab-page" id="tabInfo">
 <h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
 <script type="text/javascript">tp.addTabPage( document.getElementById( "tabInfo" ) );</script>
@@ -527,7 +548,6 @@ $ds = $modx->db->select(
             <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span> <span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
 </table>
 </div>
-
 
 <?php if ($use_udperms == 1) : ?>
 <?php
@@ -584,8 +604,16 @@ $ds = $modx->db->select(
 </div>
 <?php endif; ?>
 </div>
+    
+<!-- docBlock Info -->
+<div class="tab-page" id="tabDocBlock">
+<h2 class="tab"><?php echo $_lang['information'];?></h2>
+<script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+<div class="section">
+        <?php echo $docBlockList; ?>
 </div>
-
+</div>
+  
 <input type="submit" name="save" style="display:none;">
 <?php
 // invoke OnModFormRender event
