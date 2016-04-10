@@ -3890,8 +3890,14 @@ class DocumentParser {
         }
         return $property;
     }
-    
-    // modified parseDocBlock() - taken from modules/stores/setup.info.php by dmi3yy
+
+    /**
+     * Parses docBlock from a file and returns the result as an array
+     *
+     * @param string $element_dir
+     * @param string $filename
+     * @return array Associative array in the form property name => property value
+     */
     function parseDocBlockFromFile($element_dir, $filename) {
         $params = array();
         $fullpath = $element_dir . '/' . $filename;
@@ -3903,6 +3909,7 @@ class DocumentParser {
                 $name_found = false;
                 $description_found = false;
                 $docblock_end_found = false;
+                $arrayParams = array('author','documentation','reportissues','link');
                 
                 while(!feof($tpl)) {
                     $line = fgets($tpl);
@@ -3915,7 +3922,14 @@ class DocumentParser {
                     $val = $r['val'];
                     if(!$docblock_end_found) break;
                     if(!$docblock_start_found || !$name_found || !$description_found || empty($param)) continue;
-                    $params[$param] = $val;
+                    if(!empty($param)) {
+                        if(in_array($param, $arrayParams)) {
+                            if(!isset($params[$param])) $params[$param] = array();
+                            $params[$param][] = $val;
+                        } else {
+                            $params[$param] = $val;
+                        }
+                    }
                 }
                 @fclose($tpl);
             }
@@ -3923,6 +3937,12 @@ class DocumentParser {
         return $params;
     }
 
+    /**
+     * Parses docBlock from string and returns the result as an array
+     *
+     * @param string $string
+     * @return array Associative array in the form property name => property value
+     */
     function parseDocBlockFromString($string) {
         $params = array();
         if(!empty($string)) {
@@ -3931,7 +3951,8 @@ class DocumentParser {
             $name_found = false;
             $description_found = false;
             $docblock_end_found = false;
-
+            $arrayParams = array('author','documentation','reportissues','link');
+            
             foreach($exp as $line) {
                 $r = $this->parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found);
                 $docblock_start_found = $r['docblock_start_found'];
@@ -3942,12 +3963,30 @@ class DocumentParser {
                 $val = $r['val'];
                 if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
-                if(!empty($param)) $params[$param] = $val;
+                if(!empty($param)) {
+                    if(in_array($param, $arrayParams)) {
+                        if(!isset($params[$param])) $params[$param] = array();
+                        $params[$param][] = $val;
+                    } else {
+                        $params[$param] = $val;
+                    }
+                }
             }            
         }
         return $params;
     }
     
+    /**
+     * Parses docBlock of a component´s source-code and returns the result as an array
+     * (modified parseDocBlock() from modules/stores/setup.info.php by Bumkaka & Dmi3yy)
+     *
+     * @param string  $line
+     * @param boolean $docblock_start_found
+     * @param boolean $name_found
+     * @param boolean $description_found
+     * @param boolean $docblock_end_found
+     * @return array Associative array in the form property name => property value
+     */
     function parseDocBlockLine($line, $docblock_start_found, $name_found, $description_found, $docblock_end_found) {
         $param = '';
         $val = '';
@@ -3996,6 +4035,69 @@ class DocumentParser {
             'param'=>$param,
             'val'=>$val
         );
+    }
+
+    /**
+     * Renders docBlock-parameters into human readable list
+     *
+     * @param array  $parsed
+     * @return string List in HTML-format
+     */
+    function convertDocBlockIntoList($parsed) {
+        global $_lang;
+        
+        // Make URLs & Emails clickable
+        $regexUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+        $regexEmail = '#([0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-wyz][a-z](fo|g|l|m|mes|o|op|pa|ro|seum|t|u|v|z)?)#i';
+        $emailSubject  = isset($parsed['name']) ? '?subject='.$parsed['name'] : '';
+        $emailSubject .= isset($parsed['version']) ? ' v'.$parsed['version'] : '';
+        foreach($parsed as $key=>$val) {
+            if(is_array($val)) {
+                foreach($val as $key2=>$val2) {
+                    if(preg_match($regexUrl, $val2, $url)) $parsed[$key][$key2] = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val2);
+                    if(preg_match($regexEmail, $val2, $url)) $parsed[$key][$key2] = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val2);
+                }
+            } else {
+                if(preg_match($regexUrl, $val, $url)) $parsed[$key] = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val);
+                if(preg_match($regexEmail, $val, $url)) $parsed[$key] = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val);
+            }
+        }
+
+        $arrayParams = array(
+            'documentation'=>$_lang['documentation'],
+            'reportissues'=>$_lang['report_issues'],
+            'link'=>$_lang['further_info'],
+            'author'=>$_lang['author_infos']
+        );
+            
+        $nl = "\n";
+        $list  = isset($parsed['logo']) ? '<img src="/'.ltrim($parsed['logo'], "/") .'" style="float:right;max-width:100px;height:auto;" />'.$nl : '';
+        $list .= '<p>'.$nl;
+        $list .= isset($parsed['name']) ? '<strong>'.$parsed['name'].'</strong><br/>'.$nl : '';
+        $list .= isset($parsed['description']) ? $parsed['description'].$nl : '';
+        $list .= '</p><br/>'.$nl;
+        $list .= isset($parsed['version']) ? '<p><strong>'.$_lang['version'].':</strong> '.$parsed['version'].'</p>'.$nl : '';
+        $list .= isset($parsed['license']) ? '<p><strong>'.$_lang['license'].':</strong> '.$parsed['license'].'</p>'.$nl : '';
+        $list .= '<br/>'.$nl;
+        $first = true;
+        foreach($arrayParams as $param=>$label) {
+            if (isset($parsed[$param])) {
+                if($first) {
+                    $list .= '<p><strong>'.$_lang['references'].'</strong></p>'.$nl;
+                    $list .= '<ul class="docBlockList">'.$nl;
+                    $first = false;
+                }            
+                $list .= '    <li><strong>'.$label.'</strong>'.$nl;
+                $list .= '        <ul>'.$nl;
+                foreach ($parsed[$param] as $val) {
+                    $list .= '            <li>'.$val.'</li>'.$nl;
+                }
+                $list .= '        </ul></li>'.$nl;
+            }
+        }
+        $list .= !$first ? '</ul>'.$nl : '';
+        
+        return $list;
     }
 
     /***************************************************************************************/
