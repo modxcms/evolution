@@ -240,8 +240,8 @@ if (count($moduleTVs )>0) {
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
                         $template = $modx->db->escape($assignment);
-						$where = "WHERE templatename='$template'";
-						if ($template=='*') $where ='';
+                        $where = "WHERE templatename='$template'";
+                        if ($template=='*') $where ='';
                         $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` ".$where.";" );
                         if ($ds && $ts) {
                             $tRow = $modx->db->getRow($ts,'assoc');
@@ -371,6 +371,7 @@ if (count($modulePlugins )>0) {
             $guid = $modx->db->escape($modulePlugin[5]);
             $category = $modx->db->escape($modulePlugin[6]);
             $leg_names = '';
+            $disabled = $modulePlugin[9];
             if(array_key_exists(7, $modulePlugin)) {
                 // parse comma-separated legacy names and prepare them for sql IN clause
                 $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', $modx->db->escape($modulePlugin[7]))) . "'";
@@ -393,7 +394,7 @@ if (count($modulePlugins )>0) {
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                 $plugin = $modx->db->escape($plugin);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_plugins` WHERE name='$name'");
-				
+                
                 if ($modx->db->getRecordCount($rs)) {
                     $insert = true;
                     while($row = $modx->db->getRow($rs,'assoc')) {
@@ -419,21 +420,12 @@ if (count($modulePlugins )>0) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-				 
-				    //add disabled
-                    if ($category == 'add'){				
-						if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','1',$category);")) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}else{	
-						if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',$category);")) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}
-					
-					
+                 
+                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid',$disabled,$category);")) {
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
+                            
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -478,9 +470,9 @@ if (count($moduleSnippets ) > 0) {
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
                 $snippet = $modx->db->escape($snippet);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
-				
+                
                 if ($modx->db->getRecordCount($rs)) {
-				
+                
                     $row = $modx->db->getRow($rs,'assoc');
                     $props = propUpdate($properties,$modx->db->escape($row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
@@ -488,7 +480,7 @@ if (count($moduleSnippets ) > 0) {
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {	
+                } else {    
                     if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -569,7 +561,7 @@ function propUpdate($new,$old){
 }
 
 function getCreateDbCategory($category) {
-	
+    
     global $modx;
     $dbase = $modx->db->config['dbase'];
     $table_prefix = $modx->db->config['table_prefix'];
