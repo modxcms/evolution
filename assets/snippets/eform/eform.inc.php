@@ -84,7 +84,7 @@ $_dfnMaxlength = 6;
 
 
 	# load templates
-	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
+	if($tpl==$modx->documentIdentifier && $modx->documentIdentifier > 0) return $_lang['ef_is_own_id']."'$tpl'";
 
 	//required
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
