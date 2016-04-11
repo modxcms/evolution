@@ -53,9 +53,10 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
-// Prepare internal JS-params via parseDocBlock
+// Prepare internal params via parseDocBlock
 $plugincode = isset($content['plugincode']) ? $modx->db->escape($content['plugincode']) : '';
 $parsed = $modx->parseDocBlockFromString($plugincode);
+$docBlockList = $modx->convertDocBlockIntoList($parsed);
 $internal = array();
 $internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 ?>
@@ -588,6 +589,15 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         </table>
 </div>
 
+<!-- docBlock Info -->
+<div class="tab-page" id="tabDocBlock">
+<h2 class="tab"><?php echo $_lang['information'];?></h2>
+<script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+<div class="section">
+        <?php echo $docBlockList; ?>
+</div>
+</div>
+    
 </div>
 <input type="submit" name="save" style="display:none">
 </div>

@@ -51,6 +51,9 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
+$snippetcode = isset($content['snippet']) ? $modx->db->escape($content['snippet']) : '';
+$parsed = $modx->parseDocBlockFromString($snippetcode);
+$docBlockList = $modx->convertDocBlockIntoList($parsed);
 ?>
 <script type="text/javascript">
 
@@ -485,10 +488,19 @@ function contains(a, obj) {
             <td id="displayparams">&nbsp;</td>
           </tr>
         </table>
+        </div>
+    
+        <!-- docBlock Info -->
+        <div class="tab-page" id="tabDocBlock">
+            <h2 class="tab"><?php echo $_lang['information'];?></h2>
+            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+            <div class="section">
+                <?php echo $docBlockList; ?>
             </div>
-            </div>
+        </div>
+            
+        </div>
         <input type="submit" name="save" style="display:none">
-    </div>
 <?php
 // invoke OnSnipFormRender event
 $evtOut = $modx->invokeEvent("OnSnipFormRender",array("id" => $id));

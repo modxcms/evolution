@@ -341,6 +341,12 @@ switch ($action) {
 		// get the processor for publishing content
 		include_once(includeFileProcessor("processors/unpublish_content.processor.php",$manager_theme));
 	break;
+	case 54:
+		// get the move action
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_menuindex_sort.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+		break;
 /********************************************************************/
 /* show the wait page - gives the tree time to refresh (hopefully)  */
 /********************************************************************/
