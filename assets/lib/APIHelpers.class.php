@@ -76,7 +76,7 @@ class APIhelpers
     public static function emailValidate($email, $dns = true)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            list($user,$domain) = explode("@", $email, 2);
+            list(,$domain) = explode("@", $email, 2);
             if (!$dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
                 $error = false;
             } else {

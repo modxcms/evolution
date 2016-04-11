@@ -3,6 +3,33 @@ include_once(MODX_BASE_PATH.'assets/lib/APIHelpers.class.php');
 include_once(MODX_BASE_PATH.'assets/snippets/DocLister/lib/jsonHelper.class.php');
 include_once(MODX_BASE_PATH.'assets/snippets/DocLister/lib/DLCollection.class.php');
 
+
+class MODxAPIhelpers
+{
+    public function emailValidate($email, $dns = true)
+    {
+        return \APIhelpers::emailValidate($email, $dns);
+    }
+    public function genPass($len, $data = '')
+    {
+        return \APIhelpers::genPass($len, $data);
+    }
+    public function getUserIP($out = '127.0.0.1')
+    {
+        return \APIhelpers::getUserIP($out);
+    }
+
+    public function sanitarTag($data)
+    {
+        return \APIhelpers::sanitarTag($data);
+    }
+
+    public function checkString($value, $minLen = 1, $alph = array(), $mixArray = array())
+    {
+        return \APIhelpers::checkString($value, $minLen, $alph, $mixArray);
+    }
+}
+
 abstract class MODxAPI extends MODxAPIhelpers
 {
     protected $modx = null;
@@ -594,31 +621,5 @@ abstract class MODxAPI extends MODxAPIhelpers
             $this->encodeField($field, true);
         }
         return $this;
-    }
-}
-
-class MODxAPIhelpers
-{
-    public function emailValidate($email, $dns = true)
-    {
-        return \APIhelpers::emailValidate($email, $dns);
-    }
-    public function genPass($len, $data = '')
-    {
-        return \APIhelpers::genPass($len, $data);
-    }
-    public function getUserIP($out = '127.0.0.1')
-    {
-        return \APIhelpers::getUserIP($out);
-    }
-
-    public function sanitarTag($data)
-    {
-        return \APIhelpers::sanitarTag($data);
-    }
-
-    public function checkString($value, $minLen = 1, $alph = array(), $mixArray = array())
-    {
-        return \APIhelpers::checkString($value, $minLen, $alph, $mixArray);
     }
 }

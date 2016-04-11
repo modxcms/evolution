@@ -27,6 +27,12 @@ class DLpaginate {
     public $prevT = ' <a href="[+link+]">Previous</a> ';
     public $prevI = "&#171;"; //&#9668;
 
+    /**Buttons last and first*/
+    public $lastT = ' <a href="[+link+]">Last</a> ';
+    public $lastI = "&#187;&#187;"; //&#9658;
+    public $firstT = ' <a href="[+link+]">First</a> ';
+    public $firstI = "&#171;&#171;"; //&#9668;
+
     public $numberT = ' <a href="[+link+]">[+num+]</a> ';
     public $currentT = ' <b>[+num+]</b> ';
 
@@ -142,15 +148,17 @@ class DLpaginate {
     }
     protected function getPageQuery($page){
         switch($this->mode){
-            case 'offset':
+            case 'offset':{
                 $display = isset($this->modeConfig['display']) ? $this->modeConfig['display'] : 0;
                 $out = $display * ($page - 1);
                 break;
+            }
             case 'back':
             case 'pages':
-            default:
+            default:{
                 $out = $page;
                 break;
+            }
         }
         return $out;
     }
@@ -192,7 +200,13 @@ class DLpaginate {
         }
         if ($error) return false;
 
-       /* Setup page vars for display. */
+        /* Setup vars for query. */
+        if ($this->page)
+            $start = ($this->page - 1) * $this->limit; //first item to display on this page
+        else
+            $start = 0; //if no page var is given, set start to 0
+
+        /* Setup page vars for display. */
         $prev = ($this->page <= 1) ? 0 : $this->page - 1; //previous page is page - 1
         $next = (($this->page == $this->total_pages) ? 0 : ($this->page + 1)); //next page is page + 1
         $lastpage = ceil($this->total_pages / $this->limit); //lastpage is = total pages / items per page, rounded up.
@@ -205,8 +219,10 @@ class DLpaginate {
         if ($lastpage > 1) {
             if ($this->page) {
                 if ($this->page > 1) {
+                    $this->pagination .= $this->firstT ? $this->renderItemTPL($this->firstT, 0) : '';
                     $this->pagination .=  $this->prevT ? $this->renderItemTPL( $this->prevT, $prev) : '';
                 } else {
+                    $this->pagination .= $this->firstI ? $this->renderItemTPL($this->firstI, 0) : '';
                     $this->pagination .=  $this->prevI ? $this->renderItemTPL( $this->prevI, $prev) : '';
                 }
             }
@@ -252,10 +268,12 @@ class DLpaginate {
                 }
             }
             if ($this->page) {
-                if (isset($counter) && $this->page < $counter - 1){
+                if ($this->page < $counter - 1){
                     $this->pagination .=  $this->nextT ? $this->renderItemTPL( $this->nextT, $next) : '';
+                    $this->pagination .=  $this->lastT ? $this->renderItemTPL( $this->lastT, $lastpage) : '';
                 } else {
                     $this->pagination .=  $this->nextI ? $this->renderItemTPL( $this->nextI, $next) : '';
+                    $this->pagination .=  $this->lastI ? $this->renderItemTPL( $this->lastI, $lastpage) : '';
                 }
 
                 if ($this->showCounter) {
