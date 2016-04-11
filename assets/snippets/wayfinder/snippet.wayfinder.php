@@ -1,26 +1,24 @@
 <?php
+/**
+ * Wayfinder
+ *
+ * Completely template-driven and highly flexible menu builder
+ *
+ * @category 	snippet
+ * @version 	2.0.4
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Navigation
+ * @internal    @installset base, sample
+ * @documentation Official docs https://rtfm.modx.com/extras/evo/wayfinder
+ * @documentation Almost complete guide, Cheatsheet http://sottwell.com/links/wayfinder.html
+ * @documentation Almost complete guide Direct-Link https://drive.google.com/file/d/0B5y4Q9am5QDTOVpIa3Y0VVpjcFU/edit?usp=sharing
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Kyle Jaebker http://muddydogpaws.com
+ * @author      Ryan Thrash http://vertexworks.com
+ * @author      and many others since 2006
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-/*
-::::::::::::::::::::::::::::::::::::::::
- Snippet name: Wayfinder
- Short Desc: builds site navigation
- Version: 2.0.4
- Authors: 
-	Kyle Jaebker (muddydogpaws.com)
-	Ryan Thrash (vertexworks.com)
- Date: February 27, 2006
-::::::::::::::::::::::::::::::::::::::::
-Description:
-    Totally refactored from original DropMenu nav builder to make it easier to
-    create custom navigation by using chunks as output templates. By using templates,
-    many of the paramaters are no longer needed for flexible output including tables,
-    unordered- or ordered-lists (ULs or OLs), definition lists (DLs) or in any other
-    format you desire.
-::::::::::::::::::::::::::::::::::::::::
-Example Usage:
-    [[Wayfinder? &startId=`0`]]
-::::::::::::::::::::::::::::::::::::::::
-*/
 
 $wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
 
@@ -104,7 +102,7 @@ if ($wf->_config['debug']) {
 	$output .= $wf->renderDebugOutput();
 }
 
-//Ouput Results
+//Output Results
 if ($wf->_config['ph']) {
     $modx->setPlaceholder($wf->_config['ph'],$output);
     return;
