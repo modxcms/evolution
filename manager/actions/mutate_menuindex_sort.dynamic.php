@@ -10,6 +10,17 @@ $items = isset($_POST['list']) ? $_POST['list'] : '';
 $ressourcelist = '';
 $updateMsg = '';
 
+// check permissions on the document
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
+$udperms = new udperms();
+$udperms->user = $modx->getLoginUserID();
+$udperms->document = $id;
+$udperms->role = $_SESSION['mgrRole'];
+
+if(!$udperms->checkPermissions()) {
+    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+}
+
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= '<span class="warning" id="updated">Updated!</span>';
     if (strlen($items) > 0) {
