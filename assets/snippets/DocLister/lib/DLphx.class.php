@@ -14,37 +14,44 @@ include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
 class DLphx
 {
-    var $placeholders = array();
+    public $placeholders = array();
+	public $name = 'PHx';
+	public $version = '2.2.0';
+	public $user = array();
+	public $cache = array(
+		'cm' => array(),
+		'ui' => array(),
+		'mo' => array()
+	);
+	public $safetags = array(
+		array('~(?<![\[]|^\^)\[(?=[^\+\*\(\[]|$)~s', '~(?<=[^\+\*\)\]]|^)\](?=[^\]]|$)~s'),
+		array('&_PHX_INTERNAL_091_&', '&_PHX_INTERNAL_093_&'),
+		array('[', ']')
+	);
+	public $console = array();
+	public $debug = false;
+	public $debugLog = false;
+	public $curPass = 0;
+	public $maxPasses = 50;
+	public $swapSnippetCache = array();
 
     public function __construct($debug = 0, $maxpass = 50)
     {
         global $modx;
-        $this->name = "PHx";
-        $this->version = "2.2.0";
         $this->user["mgrid"] = isset($_SESSION['mgrInternalKey']) ? intval($_SESSION['mgrInternalKey']) : 0;
         $this->user["usrid"] = isset($_SESSION['webInternalKey']) ? intval($_SESSION['webInternalKey']) : 0;
         $this->user["id"] = ($this->user["usrid"] > 0) ? (-$this->user["usrid"]) : $this->user["mgrid"];
-        $this->cache["cm"] = array();
-        $this->cache["ui"] = array();
-        $this->cache["mo"] = array();
-        $this->safetags[0][0] = '~(?<![\[]|^\^)\[(?=[^\+\*\(\[]|$)~s';
-        $this->safetags[0][1] = '~(?<=[^\+\*\)\]]|^)\](?=[^\]]|$)~s';
-        $this->safetags[1][0] = '&_PHX_INTERNAL_091_&';
-        $this->safetags[1][1] = '&_PHX_INTERNAL_093_&';
-        $this->safetags[2][0] = '[';
-        $this->safetags[2][1] = ']';
-        $this->console = array();
-        $this->debug = ($debug != '') ? $debug : 0;
-        $this->debugLog = false;
-        $this->curPass = 0;
+
+		$this->debug = ($debug != '') ? $debug : 0;
+
         $this->maxPasses = ($maxpass != '') ? $maxpass : 50;
-        $this->swapSnippetCache = array();
+
         $modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
         if (function_exists('mb_internal_encoding')) mb_internal_encoding($modx->config['modx_charset']);
     }
 
     // Plugin event hook for MODx
-    function OnParseDocument()
+    public function OnParseDocument()
     {
         global $modx;
         // Get document output from MODx
@@ -56,7 +63,7 @@ class DLphx
     }
 
     // Parser: Preparation, cleaning and checkup
-    function Parse($template = '')
+    public function Parse($template = '')
     {
         global $modx;
         // If we already reached max passes don't get at it again.
@@ -89,7 +96,7 @@ class DLphx
     }
 
     // Parser: Tag detection and replacements
-    function ParseValues($template = '')
+    public function ParseValues($template = '')
     {
         global $modx;
 
@@ -106,15 +113,11 @@ class DLphx
             $var_search = array();
             $var_replace = array();
             for ($i = 0; $i < $count; $i++) {
-                $replace = NULL;
-                $match = $matches[0][$i];
-                $input = $matches[1][$i];
-                $modifiers = $matches[2][$i];
-                $var_search[] = $match;
-                $this->Log('MODX Chunk: ' . $input);
+				$var_search[] = $matches[0][$i];
+				$input = $matches[1][$i];
+				$this->Log('MODX Chunk: ' . $input);
                 $input = $modx->mergeChunkContent('{{' . $input . '}}');
-                $replace = $this->Filter($input, $modifiers);
-                $var_replace[] = $replace;
+                $var_replace[] = $this->Filter($input, $matches[2][$i]);
             }
             $template = str_replace($var_search, $var_replace, $template);
         }
@@ -155,14 +158,10 @@ class DLphx
             $var_search = array();
             $var_replace = array();
             for ($i = 0; $i < $count; $i++) {
-                $replace = NULL;
-                $match = $matches[0][$i];
-                $type = $matches[1][$i];
-                $type_end = $matches[4][$i];
                 $input = $matches[2][$i];
                 $modifiers = $matches[3][$i];
-                $var_search[] = $match;
-                switch ($type) {
+                $var_search[] = $matches[0][$i];
+                switch ($matches[1][$i]) {
                     // Document / Template Variable eXtended
                     case "*":
                         $this->Log("MODx TV/DV: " . $input);
@@ -204,7 +203,7 @@ class DLphx
     }
 
     // Parser: modifier detection and eXtended processing if needed
-    function Filter($input, $modifiers)
+    public function Filter($input, $modifiers)
     {
         global $modx;
         $output = $input;
@@ -276,6 +275,7 @@ class DLphx
                         if (!$isvalid) {
                             $output = NULL;
                         }
+						break;
                     case "then":
                         $conditional = implode(' ', $condition);
                         $isvalid = intval(eval("return (" . $conditional . ");"));
@@ -295,7 +295,8 @@ class DLphx
                     case "select":
                         $raw = explode("&", $modifier_value[$i]);
                         $map = array();
-                        for ($m = 0; $m < (count($raw)); $m++) {
+						$count = count($raw);
+                        for ($m = 0; $m < $count; $m++) {
                             $mi = explode("=", $raw[$m]);
                             $map[$mi[0]] = $mi[1];
                         }
@@ -304,10 +305,9 @@ class DLphx
                     ##### End of Conditional Modifiers
 
                     #####  String Modifiers
-					case "default":{
+					case "default":
                         $output = ($output === '') ? $modifier_value[0] : $output;
                         break;
-                    }
                     case "lcase":
                     case "strtolower":
                         $output = $this->strtolower($output);
@@ -414,6 +414,7 @@ class DLphx
 
                     // If we haven't yet found the modifier, let's look elsewhere
                     default:
+						$snippet = '';
                         // modified by Anton Kuzmin (23.06.2010) //
                         $snippetName = 'phx:' . $modifier_cmd[$i];
                         if (isset($modx->snippetCache[$snippetName])) {
@@ -443,12 +444,16 @@ class DLphx
                         $cm = $snippet;
                         // end //
 
-                        ob_start();
-                        $options = $modifier_value[$i];
-                        $custom = eval($cm);
-                        $msg = ob_get_contents();
-                        $output = $msg . $custom;
-                        ob_end_clean();
+						if(!empty($cm)){
+							ob_start();
+							$options = $modifier_value[$i];
+							$custom = eval($cm);
+							$msg = ob_get_contents();
+							$output = $msg . $custom;
+							ob_end_clean();
+						}else{
+							$output = '';
+						}
                         break;
                 }
                 if (count($condition)) $this->Log("  |--- Condition = '" . $condition[count($condition) - 1] . "'");
@@ -459,9 +464,9 @@ class DLphx
     }
 
     // Event logging (debug)
-    function createEventLog()
+    public function createEventLog()
     {
-        if ($this->console) {
+        if (!empty($this->console)) {
             $console = implode("\n", $this->console);
             $this->console = array();
             return '<pre style="overflow: auto;">' . $console . '</pre>';
@@ -469,7 +474,7 @@ class DLphx
     }
 
     // Returns a cleaned string escaping the HTML and special MODx characters
-    function LogClean($string)
+	public function LogClean($string)
     {
         $string = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", $string);
         $string = APIHelpers::sanitarTag($string);
@@ -477,7 +482,7 @@ class DLphx
     }
 
     // Simple log entry
-    function Log($string)
+	public function Log($string)
     {
         if ($this->debug) {
             $this->debugLog = true;
@@ -486,7 +491,7 @@ class DLphx
     }
 
     // Log snippet output
-    function LogSnippet($string)
+	public function LogSnippet($string)
     {
         if ($this->debug) {
             $this->debugLog = true;
@@ -495,13 +500,13 @@ class DLphx
     }
 
     // Log pass
-    function LogPass()
+	public function LogPass()
     {
         $this->console[] = "<div style='margin: 2px;margin-top: 5px;border-bottom: 1px solid black;'>Pass " . $this->curPass . "</div>";
     }
 
     // Log pass
-    function LogSource($string)
+	public function LogSource($string)
     {
         $this->console[] = "<div style='margin: 2px;margin-top: 5px;border-bottom: 1px solid black;'>Source:</div>" . $this->LogClean($string);
     }
@@ -509,7 +514,7 @@ class DLphx
 
     // Returns the specified field from the user record
     // positive userid = manager, negative integer = webuser
-    function ModUser($userid, $field)
+	public function ModUser($userid, $field)
     {
         global $modx;
         if (!array_key_exists($userid, $this->cache["ui"])) {
@@ -526,7 +531,7 @@ class DLphx
     }
 
     // Returns true if the user id is in one the specified webgroups
-    function isMemberOfWebGroupByUserId($userid = 0, $groupNames = array())
+	public function isMemberOfWebGroupByUserId($userid = 0, $groupNames = array())
     {
         global $modx;
 
@@ -556,7 +561,7 @@ class DLphx
     }
 
     // Returns the value of a PHx/MODx placeholder.
-    function getPHxVariable($name)
+	public function getPHxVariable($name)
     {
         global $modx;
         // Check if this variable is created by PHx
@@ -570,71 +575,71 @@ class DLphx
     }
 
     // Sets a placeholder variable which can only be access by PHx
-    function setPHxVariable($name, $value)
+	public function setPHxVariable($name, $value)
     {
         if ($name != "phx") $this->placeholders[$name] = $value;
     }
 
     //mbstring
-    function substr($str, $s, $l = null)
+	public function substr($str, $s, $l = null)
     {
         if (function_exists('mb_substr')) return mb_substr($str, $s, $l);
         return substr($str, $s, $l);
     }
 
-    function strlen($str)
+	public function strlen($str)
     {
         if (function_exists('mb_strlen')) return mb_strlen($str);
         return strlen($str);
     }
 
-    function strtolower($str)
+	public function strtolower($str)
     {
         if (function_exists('mb_strtolower')) return mb_strtolower($str);
         return strtolower($str);
     }
 
-    function strtoupper($str)
+	public function strtoupper($str)
     {
         if (function_exists('mb_strtoupper')) return mb_strtoupper($str);
         return strtoupper($str);
     }
 
-    function ucfirst($str)
+	public function ucfirst($str)
     {
         if (function_exists('mb_strtoupper') && function_exists('mb_substr') && function_exists('mb_strlen'))
             return mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1, mb_strlen($str));
         return ucfirst($str);
     }
 
-    function lcfirst($str)
+	public function lcfirst($str)
     {
         if (function_exists('mb_strtolower') && function_exists('mb_substr') && function_exists('mb_strlen'))
             return mb_strtolower(mb_substr($str, 0, 1)) . mb_substr($str, 1, mb_strlen($str));
         return lcfirst($str);
     }
 
-    function ucwords($str)
+	public function ucwords($str)
     {
         if (function_exists('mb_convert_case'))
             return mb_convert_case($str, MB_CASE_TITLE);
         return ucwords($str);
     }
 
-    function strrev($str)
+	public function strrev($str)
     {
         preg_match_all('/./us', $str, $ar);
         return implode(array_reverse($ar[0]));
     }
 
-    function str_shuffle($str)
+	public function str_shuffle($str)
     {
         preg_match_all('/./us', $str, $ar);
         shuffle($ar[0]);
         return implode($ar[0]);
     }
 
-    function str_word_count($str)
+	public function str_word_count($str)
     {
         return count(preg_split('~[^\p{L}\p{N}\']+~u', $str));
     }

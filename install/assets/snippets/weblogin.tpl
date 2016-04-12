@@ -72,8 +72,8 @@ $liHomeId	= isset($loginhomeid)? array_filter(array_map('intval', explode(',', $
 $loHomeId	= isset($logouthomeid)? $logouthomeid:$modx->documentIdentifier;
 $pwdReqId	= isset($pwdreqid)? $pwdreqid:0;
 $pwdActId	= isset($pwdactid)? $pwdactid:0;
-$loginText	= isset($logintext)? $logintext:'Login';
-$logoutText	= isset($logouttext)? $logouttext:'Logout';
+$loginText	= isset($logintext) && $logintext!='' ? $logintext:'Login';
+$logoutText	= isset($logouttext) && $logouttext!='' ? $logouttext:'Logout';
 $tpl		= isset($tpl)? $tpl:"";
 
 # System settings

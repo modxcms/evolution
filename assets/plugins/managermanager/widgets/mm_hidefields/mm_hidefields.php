@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_hideFields
- * @version 1.1.2 (2014-05-07)
+ * @version 1.1.3 (2015-02-01)
  * 
  * @desc A widget for ManagerManager plugin that allows one or more of the default document fields or template variables to be hidden within the manager.
  * 
@@ -11,27 +11,27 @@
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates). Default: ''.
  * 
- * @link http://code.divandesign.biz/modx/mm_hidefields/1.1.2
+ * @link http://code.divandesign.biz/modx/mm_hidefields/1.1.3
  * 
- * @copyright 2014
+ * @copyright 2015
  */
 
 function mm_hideFields($fields, $roles = '', $templates = ''){
 	global $modx;
 	$e = &$modx->Event;
 	
-	// if we've been supplied with a string, convert it into an array
-	$fields = makeArray($fields);
-	
-	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
+	//if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		global $mm_fields;
+		
+		// if we've been supplied with a string, convert it into an array
+		$fields = makeArray($fields);
 		
 		$output = "//---------- mm_hideFields :: Begin -----\n";
 		
 		foreach ($fields as $field){
 			switch ($field){
-				// Exceptions
+				//Exceptions
 				case 'keywords':
 					$output .= '$j("select[name*=\'keywords\']").parent("td").hide();'."\n";
 				break;
@@ -57,8 +57,10 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 				break;
 				
 				case 'content':
-					$output .= '$j("#sectionContentHeader, #sectionContentBody").hide();'."\n"; // For 1.0.0
-					$output .= '$j("#ta").parent("div").parent("div").hide().prev("div").hide();'."\n"; // For 1.0.1
+					//For 1.0.0
+					$output .= '$j("#sectionContentHeader, #sectionContentBody").hide();'."\n";
+					//For 1.0.1
+					$output .= '$j("#ta").parent("div").parent("div").hide().prev("div").hide();'."\n";
 				break;
 				
 				case 'pub_date':
@@ -71,18 +73,19 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 					$output .= '$j("input[name=\'unpub_date\']").parents("tr").hide();'."\n";
 				break;
 				
-				// Ones that follow the regular pattern
+				//Ones that follow the regular pattern
 				default:
-					if (isset($mm_fields[$field])){ // Check the fields exist,  so we're not writing JS for elements that don't exist
+					//Check the fields exist,  so we're not writing JS for elements that don't exist
+					if (isset($mm_fields[$field])){
 						$output .= '$j("'.$mm_fields[$field]['fieldtype'].'[name=\''.$mm_fields[$field]['fieldname'].'\']").parents("tr").hide().next("tr").find("td[colspan=2]").parent("tr").hide();'."\n";
 					}
 				break;
 			}
-			
-			$output .= "//---------- mm_hideFields :: End -----\n";
-			
-			$e->output($output);
 		}
+		
+		$output .= "//---------- mm_hideFields :: End -----\n";
+		
+		$e->output($output);
 	}
 }
 ?>

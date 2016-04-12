@@ -1,7 +1,7 @@
 <?php
 class sqlHelper
 {
-    static public function tildeField($field, $table = '')
+    public static function tildeField($field, $table = '')
     {
         $out = '';
         if (!empty($field) && is_scalar($field)) {
@@ -26,25 +26,19 @@ class sqlHelper
         return $out;
     }
 
-    static public function trimLogicalOp($string, $mode = '')
+    public static function trimLogicalOp($string, $mode = '')
     {
         $regex = 'AND|and|OR|or|\&\&|\|\||NOT|not|\!';
         switch ($mode) {
             case 'right':
-            {
                 $regex = '\s+(' . $regex . ')\s*$';
                 break;
-            }
             case 'left':
-            {
                 $regex = '^\s*(' . $regex . ')\s+';
                 break;
-            }
             default:
-                {
                 $regex = '(^\s*(' . $regex . ')\s+)|(\s+(' . $regex . ')\s*$)';
                 break;
-                }
         }
         return is_scalar($string) ? preg_replace("/{$regex}/", "", $string) : "";
     }
@@ -60,7 +54,7 @@ class sqlHelper
      * @param string $tpl шаблон подстановки значения в SQL запрос
      * @return string строка для подстановки в SQL запрос
      */
-    static public function LikeEscape($modx, $field, $value, $escape = '=', $tpl = '%[+value+]%')
+    public static function LikeEscape($modx, $field, $value, $escape = '=', $tpl = '%[+value+]%')
     {
         $str = '';
         $escaped = false;

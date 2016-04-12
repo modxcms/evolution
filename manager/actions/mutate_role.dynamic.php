@@ -132,6 +132,7 @@ table td {vertical-align:top;}
 	echo render_form('view_document',     $_lang['role_view_docdata'], 'disabled');
 	echo render_form('new_document',      $_lang['role_create_doc']);
 	echo render_form('edit_document',     $_lang['role_edit_doc']);
+	echo render_form('change_ressourcetype',$_lang['role_change_ressourcetype']); 
 	echo render_form('save_document',     $_lang['role_save_doc']);
 	echo render_form('publish_document',  $_lang['role_publish_doc']);
 	echo render_form('delete_document',   $_lang['role_delete_doc']);

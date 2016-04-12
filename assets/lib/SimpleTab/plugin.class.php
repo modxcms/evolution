@@ -19,6 +19,8 @@ abstract class Plugin {
     public $_table = '';
 	protected $fs = null;
     protected $assets = null;
+	protected $emptyTpl = null;
+	protected $jsListEmpty = '';
 
 	public $DLTemplate = null;
 	public $lang_attribute = '';
@@ -31,15 +33,15 @@ abstract class Plugin {
 	/**
      * @param $modx
      * @param string $lang_attribute
-     * @param bool $debug
      */
-    public function __construct($modx, $lang_attribute = 'en', $debug = false) {
+    public function __construct($modx, $lang_attribute = 'en') {
         $this->modx = $modx;
         $this->_table = $modx->getFullTableName($this->table);
         $this->lang_attribute = $lang_attribute;
         $this->params = $modx->event->params;
         if ($this->checkTemplate && !isset($this->params['template']) && $modx->event->name != 'OnEmptyTrash') {
-            $this->params['template'] = array_pop($modx->getDocument($this->params['id'],'template','all','all'));
+			$doc = $modx->getDocument($this->params['id'],'template','all','all');
+            $this->params['template'] = is_array($doc) ? end($doc) : null;
         }
         //overload plugin and class properties
         $_params = $modx->parseProperties('&template=;;'.$this->params['template'].' &id=;;'.$this->params['id'],$modx->event->activePlugin,'plugin');
@@ -92,7 +94,7 @@ abstract class Plugin {
                 'version' => '1.9.1',
                 'src'     => 'assets/js/jquery/jquery-1.9.1.min.js'
             ));
-            if ($jquery) {
+            if ($jquery !== false) {
                 $output .= $jquery;
                 $output .='<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';    
             }
@@ -122,7 +124,7 @@ abstract class Plugin {
 			$scripts = isset($scripts['scripts']) ? $scripts['scripts'] : $scripts['styles'];
 			foreach ($scripts as $name => $params) {
 				$script = $this->assets->registerScript($name,$params);
-                if ($script) $js .= $script;
+                if ($script !== false) $js .= $script;
 			}
 		} else {
 			if ($list == $this->jsListDefault) {

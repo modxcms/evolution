@@ -5,6 +5,7 @@ if(!$modx->hasPermission('save_template')) {
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
@@ -17,10 +18,11 @@ $updateMsg = '';
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /></span>';
     foreach ($_POST as $listName=>$listValue) {
-        if ($listName == 'listSubmitted') continue;
+        if ($listName == 'listSubmitted' || $listName == 'reset') continue;
         $orderArray = explode(';', rtrim($listValue, ';'));
         foreach($orderArray as $key => $item) {
             if (strlen($item) == 0) continue; 
+            $key = $reset ? 0 : $key;
             $tmplvar = ltrim($item, 'item_');
             $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
         }
@@ -35,30 +37,27 @@ $rs = $modx->db->select(
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
 	"tr.templateid='{$id}'",
-	"tr.rank, tv.rank, tv.id"
+	"tr.rank DESC, tv.rank DESC, tv.id DESC"     // workaround for correct sort of none-existing ranks
 	);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit>1) {
-    $i = 0;
+    $tvsArr = array();
     while ($row = $modx->db->getRow($rs)) {
+        $tvsArr[] = $row;
+    }
+    $tvsArr = array_reverse($tvsArr,true);  // reverse ORDERBY DESC
+
+    $i = 0;
+    foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
         $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
     }
     $evtLists .= '</ul>';
 }
 
-
 $header = '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-    <title>MODX</title>
-    <meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-    <link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
-    <script type="text/javascript" src="media/script/mootools/mootools.js"></script>';
-
-$header .= '
+    <script>window.$j = jQuery.noConflict();</script>
     <style type="text/css">
         .topdiv {
             border: 0;
@@ -90,7 +89,17 @@ $header .= '
     </style>
     <script type="text/javascript">
         function save() {
+            $j("#updated").hide();
+            $j("#updating").fadeIn();
             setTimeout("document.sortableListForm.submit()",1000);
+        }
+        
+        function renderList() {
+            var list = \'\';
+            $$(\'li.sort\').each(function(el, i) {
+                list += el.id + \';\';
+            });
+            $(\'list\').value = list;
         }
             
         window.addEvent(\'domready\', function() {
@@ -106,18 +115,42 @@ $header .= '
                         el.setStyle(\'background-color\', \'#ccc\');
                         el.setStyle(\'cursor\', \'move\');
                     });
+                    renderList();
                 },
                 onComplete: function()
                 {
-                   var list = \'\';
-                    $$(\'li.sort\').each(function(el, i)
-                    {
-                       list += el.id + \';\';
-                   });
-                   $(\'list\').value = list;
+                    renderList();
                }
            });
         });
+        
+        function sort() {
+            var items = $j(\'.sort\').get();
+            items.sort(function(a,b){
+              var keyA = $j(a).text().toLowerCase();
+              var keyB = $j(b).text().toLowerCase();
+              return keyA.localeCompare(keyB);
+            });
+            var ul = $j(\'#sortlist\');
+            var list = \'\';
+            $j.each(items, function(i, li){
+              ul.append(li);
+              list += li.id + \';\';
+            });
+            $j(\'#list\').val(list);
+        }
+        
+        function resetSortOrder() {
+            if (confirm("'.$_lang["confirm_reset_sort_order"].'")==true) {
+                documentDirty=false;
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "reset";
+                input.value = "true";
+                document.sortableListForm.appendChild(input);
+                save();
+            }
+        }
     </script>';
 
 $header .= '</head>
@@ -135,7 +168,8 @@ $header .= '</head>
 <div class="section">
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
-<p>'.$_lang["template_tv_edit_message"].'</p>';
+<button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
+<p>'.$_lang["template_tv_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
 
 echo $header;
 

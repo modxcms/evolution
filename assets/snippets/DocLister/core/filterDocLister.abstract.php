@@ -168,7 +168,6 @@ abstract class filterDocLister
                 $output .= " REGEXP '" . $this->modx->db->escape($value) . "'";
                 break;
             case 'against':
-            {
                 /** content:pagetitle,description,content,introtext:against:искомая строка */
                 if (trim($value) != '') {
                     $field = explode(",", $this->field);
@@ -176,8 +175,7 @@ abstract class filterDocLister
                     $output = "MATCH ({$field}) AGAINST ('{$this->modx->db->escape($value)}*')";
                 }
                 break;
-            }
-            case 'containsOne' :
+            case 'containsOne':
                 $words = explode($this->DocLister->getCFGDef('filter_delimiter', ','), $value);
                 $word_arr = array();
                 foreach ($words as $word) {

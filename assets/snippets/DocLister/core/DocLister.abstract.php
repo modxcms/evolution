@@ -174,6 +174,12 @@ abstract class DocLister
 	
 	/** @var int Число документов, которые были отфильтрованы через prepare при выводе */
 	public $skippedDocs = 0;
+
+	/** @var string Имя таблицы */
+	protected $table = '';
+
+	/** @var null|paginate_DL_Extender  */
+	protected $extPaginate = null;
     /**
      * Конструктор контроллеров DocLister
      *
@@ -181,35 +187,35 @@ abstract class DocLister
      * @param array $cfg массив параметров сниппета
      * @param int $startTime время запуска сниппета
      */
-    function __construct($modx, $cfg = array(), $startTime = null)
+    public function __construct($modx, $cfg = array(), $startTime = null)
     {
         $this->setTimeStart($startTime);
-        try {
-            if (extension_loaded('mbstring')) {
-                mb_internal_encoding("UTF-8");
-            } else {
-                throw new Exception('Not found php extension mbstring');
-            }
 
-            if ($modx instanceof DocumentParser) {
-                $this->modx = $modx;
-                $this->setDebug(1);
-                $this->loadLang(array('core', 'json'));
+		if (extension_loaded('mbstring')) {
+        	mb_internal_encoding("UTF-8");
+		} else {
+        	throw new Exception('Not found php extension mbstring');
+		}
 
-                if (!is_array($cfg) || empty($cfg)) $cfg = $this->modx->Event->params;
-            } else {
-                throw new Exception('MODX var is not instaceof DocumentParser');
-            }
-            $this->FS = \Helpers\FS::getInstance();
-            if (isset($cfg['config'])) {
-                $cfg = array_merge($this->loadConfig($cfg['config']), $cfg);
-            }
-            if (!$this->setConfig($cfg)) {
-                throw new Exception('no parameters to run DocLister');
-            }
-        } catch (Exception $e) {
-            $this->ErrorLogger($e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine(), $e->getTrace());
-        }
+        if ($modx instanceof DocumentParser) {
+        	$this->modx = $modx;
+            $this->setDebug(1);
+            $this->loadLang(array('core', 'json'));
+
+            if (!is_array($cfg) || empty($cfg)) $cfg = $this->modx->Event->params;
+		} else {
+        	throw new Exception('MODX var is not instaceof DocumentParser');
+		}
+
+        $this->FS = \Helpers\FS::getInstance();
+        if (isset($cfg['config'])) {
+        	$cfg = array_merge($this->loadConfig($cfg['config']), $cfg);
+		}
+
+		if (!$this->setConfig($cfg)) {
+        	throw new Exception('no parameters to run DocLister');
+		}
+
         $this->setDebug($this->getCFGDef('debug', 0));
 
         if ($this->checkDL()) {
@@ -220,20 +226,16 @@ abstract class DocLister
             }
             switch ($idType) {
                 case 'documents':
-                {
                     $IDs = $this->getCFGDef('documents');
                     $cfg['idType'] = "documents";
                     break;
-                }
                 case 'parents':
                 default:
-                    {
                     $cfg['idType'] = "parents";
                     if (($IDs = $this->getCFGDef('parents')) === null) {
                         $IDs = $this->getCurrentMODXPageID();
                     }
                     break;
-                    }
             }
             $this->setConfig($cfg);
 
@@ -271,7 +273,7 @@ abstract class DocLister
 		for($i=0;$i<=$strlen;$i++){
 			$e = mb_substr($str, $i, 1, 'UTF-8');
 			switch($e){
-				case ')': {
+				case ')':
 					$open--;
 					if($open == 0){
 						$res[] = $cur.')';
@@ -280,13 +282,11 @@ abstract class DocLister
 						$cur .= $e;
 					}
 					break;
-				}
-				case '(':{
+				case '(':
 					$open++;
 					$cur .= $e;
 					break;
-				}
-				case ';':{
+				case ';':
 					if($open == 0){
 						$res[] = $cur;
 						$cur = '';
@@ -294,10 +294,8 @@ abstract class DocLister
 						$cur .= $e;
 					}
 					break;
-				}
-				default:{
+				default:
 					$cur .= $e;
-				}
 			}
 		}
 		$cur = preg_replace("/(\))$/u", '', $cur);
@@ -431,14 +429,12 @@ abstract class DocLister
             $cfgName[1] = rtrim($cfgName[1], '/');
             switch($cfgName[1]){
                 case 'custom':
-                case 'core':{
+                case 'core':
                     $configFile = dirname(dirname(__FILE__)) . "/config/{$cfgName[1]}/{$cfgName[0]}.json";
                     break;
-                }
-                default:{
+                default:
                     $configFile = $this->FS->relativePath( $cfgName[1] . '/' . $cfgName[0] . ".json");
                     break;
-                }
             }
 
             if ($this->FS->checkFile($configFile)) {
@@ -477,7 +473,6 @@ abstract class DocLister
      */
     public function isErrorJSON($json)
     {
-        $error = false;
         $error = jsonHelper::json_last_error_msg();
         if (!in_array($error, array('error_none', 'other'))) {
             $this->debug->error($this->getMsg('json.' . $error) . ": " . $this->debug->dumpData($json, 'code'), 'JSON');
@@ -496,15 +491,12 @@ abstract class DocLister
         $flag = true;
         $extenders = $this->getCFGDef('extender', '');
         $extenders = explode(",", $extenders);
-        try {
-            if (($this->getCFGDef('requestActive', '') != '' || in_array('request', $extenders)) && !$this->_loadExtender('request')) { //OR request in extender's parameter
+        	if (($this->getCFGDef('requestActive', '') != '' || in_array('request', $extenders)) && !$this->_loadExtender('request')) { //OR request in extender's parameter
                 throw new Exception('Error load request extender');
-                $flag = false;
             }
 
             if (($this->getCFGDef('summary', '') != '' || in_array('summary', $extenders)) && !$this->_loadExtender('summary')) { //OR summary in extender's parameter
                 throw new Exception('Error load summary extender');
-                $flag = false;
             }
 
             if (
@@ -517,7 +509,6 @@ abstract class DocLister
                 ) && !$this->_loadExtender('paginate')
             ) {
                 throw new Exception('Error load paginate extender');
-                $flag = false;
             } else if ((int)$this->getCFGDef('display', 0) == 0) {
                 $extenders = $this->unsetArrayVal($extenders, 'paginate');
             }
@@ -525,11 +516,8 @@ abstract class DocLister
             if ($this->getCFGDef('prepare', '') != '' || $this->getCFGDef('prepareWrap') != '') {
                 $this->_loadExtender('prepare');
             }
-        } catch (Exception $e) {
-            $this->ErrorLogger($e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine(), $e->getTrace());
-        }
 
-        $this->setConfig('extender', implode(",", $extenders));
+        $this->setConfig(array('extender' => implode(",", $extenders)));
         $this->debug->debugEnd("checkDL");
         return $flag;
     }
@@ -616,7 +604,7 @@ abstract class DocLister
 		$id = isset($this->modx->documentIdentifier) ? (int)$this->modx->documentIdentifier : 0;
 		$docData = isset($this->modx->documentObject) ? $this->modx->documentObject : array();
 
-		return empty($id) ? \APIHelpers::getkey($this->modx->documentObject, 'id', 0) : $id;
+		return empty($id) ? \APIHelpers::getkey($docData, 'id', 0) : $id;
 	}
 
     /**
@@ -664,15 +652,9 @@ abstract class DocLister
         if ($ext != '') {
             $ext = explode(",", $ext);
             foreach ($ext as $item) {
-                try {
-                    if ($item != '' && !$this->_loadExtender($item)) {
-                        $out = false;
-                        throw new Exception('Error load ' . APIHelpers::e($item) . ' extender');
-                        break;
-                    }
-                } catch (Exception $e) {
-                    $this->ErrorLogger($e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine(), $e->getTrace());
-                }
+                if ($item != '' && !$this->_loadExtender($item)) {
+                	throw new Exception('Error load ' . APIHelpers::e($item) . ' extender');
+				}
             }
         }
         return $out;
@@ -694,7 +676,7 @@ abstract class DocLister
      */
     public function setConfig($cfg)
     {
-        if (is_array($cfg)) {
+		if (is_array($cfg)) {
             $this->_cfg = array_merge($this->_cfg, $cfg);
             $ret = count($this->_cfg);
         } else {
@@ -961,7 +943,6 @@ abstract class DocLister
      */
     public function parseChunk($name, $data, $parseDocumentSource = false)
     {
-        $out = null;
         $this->debug->debug(
             array("parseChunk" => $name, "With data" => print_r($data, 1)),
             "parseChunk",
@@ -1353,9 +1334,9 @@ abstract class DocLister
      *
      * @global string $order
      * @global string $orderBy
-     * @global string sortBy
+     * @global string $sortBy
      *
-     * @param string $sortNme default sort field
+     * @param string $sortName default sort field
      * @param string $orderDef default order (ASC|DESC)
      *
      * @return string Order by for SQL
@@ -1367,32 +1348,25 @@ abstract class DocLister
         $sort = '';
         switch ($this->getCFGDef('sortType', '')) {
             case 'none':
-            {
                 break;
-            }
             case 'doclist':
-            {
                 $idList = $this->sanitarIn($this->IDs, ',', false);
-                $out['orderBy'] = "FIND_IN_SET({$this->getPK()}, '{$idList}')";
+                $out = array('orderBy' => "FIND_IN_SET({$this->getPK()}, '{$idList}')");
                 $this->setConfig($out); //reload config;
                 $sort = "ORDER BY " . $out['orderBy'];
                 break;
-            }
             default:
-                {
                 $out = array('orderBy' => '', 'order' => '', 'sortBy' => '');
                 if (($tmp = $this->getCFGDef('orderBy', '')) != '') {
                     $out['orderBy'] = $tmp;
                 } else {
                     switch (true) {
-                        case ('' != ($tmp = $this->getCFGDef('sortDir', ''))):
-                        { //higher priority than order
+                        case ('' != ($tmp = $this->getCFGDef('sortDir', ''))): //higher priority than order
                             $out['order'] = $tmp;
-                        }
+							// no break
                         case ('' != ($tmp = $this->getCFGDef('order', ''))):
-                        {
                             $out['order'] = $tmp;
-                        }
+							// no break
                     }
                     if ('' == $out['order'] || !in_array(strtoupper($out['order']), array('ASC', 'DESC'))) {
                         $out['order'] = $orderDef; //Default
@@ -1404,7 +1378,6 @@ abstract class DocLister
                 $this->setConfig($out); //reload config;
                 $sort = "ORDER BY " . $out['orderBy'];
                 break;
-                }
         }
         $this->debug->debugEnd("sortORDER", 'Get sort order for SQL: ' . $this->debug->dumpData($sort));
         return $sort;
@@ -1536,6 +1509,7 @@ abstract class DocLister
         if (!$filter_string) return;
         $output = array('join' => '', 'where' => '');
         $logic_op_found = false;
+		$joins = $wheres = array();
         foreach ($this->_logic_ops as $op => $sql) {
             if (strpos($filter_string, $op) === 0) {
                 $logic_op_found = true;
@@ -1588,30 +1562,20 @@ abstract class DocLister
         $type = trim($type);
         switch (strtoupper($type)) {
             case 'DECIMAL':
-            {
                 $field = 'CAST(' . $field . ' as DECIMAL(10,2))';
                 break;
-            }
             case 'UNSIGNED':
-            {
                 $field = 'CAST(' . $field . ' as UNSIGNED)';
                 break;
-            }
             case 'BINARY':
-            {
                 $field = 'CAST(' . $field . ' as BINARY)';
                 break;
-            }
             case 'DATETIME':
-            {
                 $field = 'CAST(' . $field . ' as DATETIME)';
                 break;
-            }
             case 'SIGNED':
-            {
                 $field = 'CAST(' . $field . ' as SIGNED)';
                 break;
-            }
         }
         return $field;
     }

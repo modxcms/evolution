@@ -68,33 +68,27 @@ abstract class autoTable extends MODxAPI
             }
             $result = $this->query($SQL);
         }
-			if($result && $this->modx->db->getAffectedRows() >= 0 ){
-				if ($this->newDoc && !empty($SQL)) $this->id = $this->modx->db->getInsertId();
-				if ($clearCache) {
-					$this->clearCache($fire_events);
-				}
-				$result = $this->id;
-			}else{
-				$this->log['SqlError'] = $SQL;
-				$result = false;
-			}
+		if($result && $this->modx->db->getAffectedRows() >= 0 ){
+			if ($this->newDoc && !empty($SQL)) $this->id = $this->modx->db->getInsertId();
+			if ($clearCache) $this->clearCache($fire_events);
+			$result = $this->id;
+		}else{
+			if(!empty($SQL)) $this->log['SqlError'] = $SQL;
+			$result = false;
+		}
         return $result;
     }
 
     public function delete($ids, $fire_events = null)
     {
         $_ids = $this->cleanIDs($ids, ',');
-        try {
-            if (is_array($_ids) && $_ids != array()) {
-                $id = $this->sanitarIn($_ids);
-                if(!empty($id)){
-                    $this->query("DELETE from {$this->makeTable($this->table)} where `" . $this->pkName . "` IN ({$id})");
-                }
-                $this->clearCache($fire_events);
-            } else throw new Exception('Invalid IDs list for delete: <pre>' . print_r($ids, 1) . '</pre>');
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+        if (is_array($_ids) && $_ids != array()) {
+        	$id = $this->sanitarIn($_ids);
+            if(!empty($id)){
+            	$this->query("DELETE from {$this->makeTable($this->table)} where `" . $this->pkName . "` IN ({$id})");
+			}
+            $this->clearCache($fire_events);
+		} else throw new Exception('Invalid IDs list for delete: <pre>' . print_r($ids, 1) . '</pre>');
         return $this;
     }
 }

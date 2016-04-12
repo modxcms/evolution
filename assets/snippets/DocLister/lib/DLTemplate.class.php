@@ -6,7 +6,7 @@ class DLTemplate
     protected $modx = null;
 
     /**
-     * @var cached reference to singleton instance
+     * @var DLTemplate cached reference to singleton instance
      */
     protected static $instance;
 
@@ -89,7 +89,6 @@ class DLTemplate
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
             switch ($mode) {
                 case '@FILE':
-                { //tpl in file
                     if ($subTmp != '') {
                         $real = realpath(MODX_BASE_PATH . 'assets/templates');
                         $path = realpath(MODX_BASE_PATH . 'assets/templates/' . preg_replace(array('/\.*[\/|\\\]/i', '/[\/|\\\]+/i'), array('/', '/'), $subTmp) . '.html');
@@ -99,92 +98,49 @@ class DLTemplate
                         }
                     }
                     break;
-                }
                 case '@CHUNK':
-                {
-                    if ($subTmp != '') {
-                        $tpl = $this->modx->getChunk($subTmp);
-                    } else {
-                        //error chunk name
-                    }
+                    if ($subTmp != '') $tpl = $this->modx->getChunk($subTmp);
                     break;
-                }
                 case '@INLINE':
                 case '@TPL':
                 case '@CODE':
-                {
                     $tpl = $tmp[3]; //without trim
                     break;
-                }
                 case '@DOCUMENT':
                 case '@DOC':
-                {
                     switch (true) {
                         case ((int)$subTmp > 0):
-                        {
                             $tpl = $this->modx->getPageInfo((int)$subTmp, 0, "content");
                             $tpl = isset($tpl['content']) ? $tpl['content'] : '';
                             break;
-                        }
                         case ((int)$subTmp == 0):
-                        {
                             $tpl = $this->modx->documentObject['content'];
                             break;
-                        }
-                        default:
-                            {
-                            //error docid
-                            }
                     }
                     break;
-                }
                 case '@PLH':
                 case '@PLACEHOLDER':
-                {
-                    if ($subTmp != '') {
-                        $tpl = $this->modx->getPlaceholder($subTmp);
-                    } else {
-                        //error placeholder name
-                    }
+                    if ($subTmp != '') $tpl = $this->modx->getPlaceholder($subTmp);
                     break;
-                }
                 case '@CFG':
                 case '@CONFIG':
                 case '@OPTIONS':
-                {
-                    if ($subTmp != '') {
-                        $tpl = $this->modx->getConfig($subTmp);
-                    } else {
-                        //error config name
-                    }
+                    if ($subTmp != '') $tpl = $this->modx->getConfig($subTmp);
                     break;
-                }
                 case '@SNIPPET':
-                {
-                    if ($subTmp != '') {
-                        $tpl = $this->modx->runSnippet($subTmp, $this->modx->event->params);
-                    } else {
-                        //error snippet name
-                    }
+                    if ($subTmp != '') $tpl = $this->modx->runSnippet($subTmp, $this->modx->event->params);
                     break;
-                }
-                case '@RENDERPAGE':{
+                case '@RENDERPAGE':
                     $tpl = $this->renderDoc($subTmp, false);
                     break;
-                }
-
-                case '@LOADPAGE':{
+                case '@LOADPAGE':
                     $tpl = $this->renderDoc($subTmp, true);
                     break;
-                }
-                case '@TEMPLATE':{
+                case '@TEMPLATE':
                     $tpl = $this->getTemplate($subTmp);
                     break;
-                }
                 default:
-                    {
                     $tpl = $this->modx->getChunk($name);
-                    }
             }
             $this->modx->chunkCache[$name] = $tpl;
         } else {
@@ -220,17 +176,14 @@ class DLTemplate
             }
         }
         switch(true){
-            case is_integer($tpl):{
+            case is_integer($tpl):
                 $tpl = $this->getTemplate($tpl);
                 break;
-            }
-            case is_string($tpl):{
+            case is_string($tpl):
                 break;
-            }
             case is_null($tpl):
-            default:{
+            default:
                 $tpl = $this->getTemplate($m->documentObject['template']);
-            }
         }
         $m->documentContent = $tpl;
         if($events){
@@ -248,7 +201,8 @@ class DLTemplate
     * @return string HTML код шаблона
     */
     public function getTemplate($id){
-        if ($id > 0){
+        $tpl = null;
+		if ($id > 0){
             $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = '{$id}'");
         }
         if(is_null($tpl)){

@@ -8,6 +8,8 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
+$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : NULL;
 
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -41,6 +43,12 @@ else
 {
     $_SESSION['itemname']=$_lang["new_tmplvars"];
 }
+
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
+}
+
+$content = array_merge($content, $_POST);
 
 // get available RichText Editors
 $RTEditors = '';
@@ -84,15 +92,12 @@ function deletedocument() {
 
 // Widget Parameters
 var widgetParams = {};          // name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
-    widgetParams['marquee']     = '&width=Width;string;100% &height=Height;string;100px &speed=Speed (1-20);float;3; &modifier=Modifier;float;90; &pause=Mouse Pause;list;Yes,No;Yes &tfx=Transition;list;Vertical,Horizontal &class=Class;string; &style=Style;string;';
-    widgetParams['ticker']      = '&width=Width;string;100% &height=Height;string;50px &delay=Delay (ms);int;3000 &delim=Message Delimiter;string;|| &class=Class;string; &style=Style;string;';
     widgetParams['date']        = '&format=Date Format;string;%A %d, %B %Y &default=If no value, use current date;list;Yes,No;No';
     widgetParams['string']      = '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
     widgetParams['delim']       = '&format=Delimiter;string;,';
     widgetParams['hyperlink']   = '&text=Display Text;string; &title=Title;string; &class=Class;string &style=Style;string &target=Target;string &attrib=Attributes;string';
     widgetParams['htmltag']     = '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
     widgetParams['viewport']    = '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
-    widgetParams['floater']     = '&x=Offset X;int &y=Offset Y;int &width=Width;string;200px &height=Height;string;30px &pos=Position;list;top-right,top-left,bottom-left,bottom-right &gs=Glide Speed;int;6 &class=Class;string &style=Style;string ';
     widgetParams['datagrid']    = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
     widgetParams['richtext']    = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';
     widgetParams['image']       = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
@@ -249,6 +254,8 @@ function decode(s){
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="a" value="302">
+<input type="hidden" name="or" value="<?php echo $origin;?>">
+<input type="hidden" name="oid" value="<?php echo $originId;?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
@@ -274,7 +281,7 @@ function decode(s){
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=<?php echo $origin ?><?php echo ($originId!=NULL?'&id='.$originId:''); ?>';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -295,7 +302,8 @@ function decode(s){
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
-    <td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+    <td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
+    <?php if(strpos($content['caption'],'Duplicate of')!==false) echo '<script>document.getElementsByName("caption")[0].focus();</script>'?></td>
   </tr>
 
   <tr>
@@ -379,10 +387,7 @@ function decode(s){
 	            <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
 			<optgroup label="Widgets">
 	            <option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>Data Grid</option>
-	            <option value="floater" <?php echo ($content['display']=='floater')? "selected='selected'":""; ?>>Floater</option>
-	            <option value="marquee" <?php echo ($content['display']=='marquee')? "selected='selected'":""; ?>>Marquee</option>
 	            <option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
-	            <option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
 	            <option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
                 <option value="custom_widget" <?php echo ($content['display']=='custom_widget')? "selected='selected'":""; ?>>Custom Widget</option>
 			</optgroup>
@@ -419,35 +424,69 @@ function decode(s){
 		label {display:block;}
 	</style>
 <table>
-	<?php
-	    $from = "{$tbl_site_templates} as tpl LEFT JOIN {$tbl_site_tmplvar_templates} as stt ON stt.templateid=tpl.id AND stt.tmplvarid='{$id}'";
-	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
+<?php
+        $rs = $modx->db->select(
+            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']),
+            sprintf("%s as tpl
+                    LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
+                    LEFT JOIN %s as cat ON tpl.category=cat.id",
+                    $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')),
+            '',
+            "category, templatename"
+        );
 ?>
   <tr>
     <td>
 <?php
-	    while ($row = $modx->db->getRow($rs))
-	    {
-	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif($id == 0 && is_array($_POST['template']))
-	    	{
-	    		$checked = in_array($row['id'], $_POST['template']);
-	    	}
-	    	else
-	    	{
-	    		$checked = $row['tmplvarid'];
-	    	}
-	    	$checked = $checked ? ' checked="checked"':'';
-	        echo '<label><input type="checkbox" name="template[]" value="' . $row['id'] . '"' . $checked . ' />' . $row['templatename'] . '</label>';
-	    }
-	?>
+
+$tplList = '<ul>';
+$preCat = '';
+$insideUl = 0;
+while ($row = $modx->db->getRow($rs)) {
+    $row['category'] = stripslashes($row['category']); //pixelchutes
+    if ($preCat !== $row['category']) {
+        $tplList .= $insideUl? '</ul>': '';
+        $tplList .= '<li><strong>'.$row['category']. ($row['catid']!='' ? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
+        $insideUl = 1;
+    }
+
+    if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+    {
+        $checked = true;
+    }
+    elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
+    {
+        $checked = true;
+    }
+    elseif($id == 0 && is_array($_POST['template']))
+    {
+        $checked = in_array($row['id'], $_POST['template']);
+    }
+    else
+    {
+        $checked = $row['tmplvarid'];
+    }
+    $selectable = !$row['selectable'] ? ' class="disabled"':'';
+    $checked = $checked ? ' checked="checked"':'';
+    $tplId = '&nbsp;<small>(' . $row['id'] . ')</small>';
+    $desc = !empty($row['tpldescription']) ? ' - '.$row['tpldescription'] : '';
+
+    $tplInfo = array();
+    if($row['tpllocked']) $tplInfo[] = $_lang['locked'];
+    if($row['id'] == $modx->config['default_template']) $tplInfo[] = $_lang['defaulttemplate_title'];
+    $tplInfo = !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
+
+    $tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;">%s%s%s%s</label></li>',
+                        $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo );
+    $tplList .= '</li>';
+
+    $preCat = $row['category'];
+}
+$tplList .= $insideUl? '</ul>': '';
+$tplList .= '</ul>';
+echo $tplList;
+
+?>
     </td>
   </tr>
 </table>

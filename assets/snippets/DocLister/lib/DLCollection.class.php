@@ -8,23 +8,19 @@ class DLCollection extends \Helpers\Collection{
         $this->modx = $modx;
 		switch(true){
 			case is_resource($data):
-			case (is_object($data) && $data instanceof \mysqli_result): {
+			case (is_object($data) && $data instanceof \mysqli_result):
 				$this->fromQuery($data, false);
 				break;
-			}
-			case is_array($data):{
+			case is_array($data):
 				$this->data = $data;
 				break;
-			}
-			case (is_object($data) && $data instanceof \IteratorAggregate):{
+			case (is_object($data) && $data instanceof \IteratorAggregate):
 				foreach($data as $key => $item){
 					$this->add($item, $key);
 				}
 				break;
-			}
-			default:{
+			default:
 				$this->add($data);
-			}
 		}
     }
 

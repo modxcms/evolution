@@ -14,7 +14,7 @@ if (!defined('MODX_BASE_PATH')) {
 include_once(dirname(__FILE__) . "/site_content.php");
 class shopkeeperDocLister extends site_contentDocLister
 {
-    function __construct($modx, $cfg = array(), $startTime = null)
+    public function __construct($modx, $cfg = array(), $startTime = null)
     {
         $cfg = array_merge(array('tvValuesTable' => 'catalog_tmplvar_contentvalues'), $cfg);
         parent::__construct($modx, $cfg, $startTime);
@@ -49,8 +49,6 @@ class shopkeeperDocLister extends site_contentDocLister
             $tpl = $this->getCFGDef('tpl', '@CODE:<a href="[+url+]">[+pagetitle+]</a><br />');
         }
         if ($tpl != '') {
-            $date = $this->getCFGDef('dateSource', 'createdon');
-
             $this->toPlaceholders(count($this->_docs), 1, "display"); // [+display+] - сколько показано на странице.
 
             $i = 1;
@@ -112,7 +110,8 @@ class shopkeeperDocLister extends site_contentDocLister
                     }
 
 					$findTpl = $this->renderTPL;
-					extract($this->uniformPrepare($item, $i), EXTR_SKIP);
+					$tmp = $this->uniformPrepare($item, $i);
+					extract($tmp, EXTR_SKIP);
 					if ($this->renderTPL == '') {
 						$this->renderTPL = $findTpl;
 					}
@@ -176,21 +175,17 @@ class shopkeeperDocLister extends site_contentDocLister
             if ($sanitarInIDs != "''") {
                 switch ($this->getCFGDef('idType', 'parents')) {
                     case 'parents':
-                    {
 						switch($this->getCFGDef('showParent', '0')){
-							case '-1':{
+							case '-1':
 								$tmpWhere = "c.parent IN (" . $sanitarInIDs . ")";
 								break;
-							}
-							case 0:{
+							case 0:
 								$tmpWhere = "c.parent IN ({$sanitarInIDs}) AND c.id NOT IN({$sanitarInIDs})";
 								break;
-							}
 							case 1:
-							default: {
+							default:
 								$tmpWhere = "(c.parent IN ({$sanitarInIDs}) OR c.id IN({$sanitarInIDs}))";
-							break;
-							}
+								break;
 						}
                         if (($addDocs = $this->getCFGDef('documents', '')) != '') {
                             $addDocs = $this->sanitarIn($this->cleanIDs($addDocs));
@@ -199,15 +194,11 @@ class shopkeeperDocLister extends site_contentDocLister
                             $whereArr[] = $tmpWhere;
                         }
                         break;
-                    }
                     case 'documents':
-                    {
                         $whereArr[] = "c.id IN({$sanitarInIDs})";
                         break;
-                    }
                 }
             }
-            $fields = $this->getCFGDef('selectFields', 'c.*');
             $from = $tbl_site_content . " " . $this->_filters['join'];
             $where = sqlHelper::trimLogicalOp($where);
 
@@ -223,7 +214,7 @@ class shopkeeperDocLister extends site_contentDocLister
             }
             $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
             $sort = $this->SortOrderSQL("c.createdon");
-            list($from, $sort) = $this->injectSortByTV($from, $sort);
+            list($from) = $this->injectSortByTV($from, $sort);
 
             $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group}) as `tmp`");
             $out = $this->modx->db->getValue($rs);
@@ -334,19 +325,16 @@ class shopkeeperDocLister extends site_contentDocLister
 
 		if ($sanitarInIDs != "''") {
 			switch($this->getCFGDef('showParent', '0')){
-				case '-1':{
+				case '-1':
 					$tmpWhere = "c.parent IN (" . $sanitarInIDs . ")";
 					break;
-				}
-				case 0:{
+				case 0:
 					$tmpWhere = "c.parent IN (" . $sanitarInIDs . ") AND c.id NOT IN(" . $sanitarInIDs . ")";
 					break;
-				}
 				case 1:
-				default: {
-				$tmpWhere = "(c.parent IN (" . $sanitarInIDs . ") OR c.id IN({$sanitarInIDs}))";
-				break;
-				}
+				default:
+					$tmpWhere = "(c.parent IN (" . $sanitarInIDs . ") OR c.id IN({$sanitarInIDs}))";
+					break;
 			}
 		}
 		if (($addDocs = $this->getCFGDef('documents', '')) != '') {

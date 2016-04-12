@@ -390,7 +390,12 @@ class uploader {
 
 
 	protected function normalizeFilename($filename) {
-        return $this->modx->stripAlias($filename);
+		if ($this->getTransaliasSettings()) {
+        		$format = strrchr($filename, ".");
+        		$filename = str_replace($format, "", $filename);
+            		$filename = $this->modx->stripAlias($filename).$format;
+        	}
+        	return $filename;
 	}
 
 	protected function normalizeDirname($dirname) {

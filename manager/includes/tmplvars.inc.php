@@ -104,7 +104,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'" class="checkbox">'.$item.'</label><br />';
 						$i++;
 					}
 					break;
@@ -115,7 +115,7 @@
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="radio" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="radio" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'" class="radio">'.$item.'</label><br />';
 						$i++;
 					}
 					break;

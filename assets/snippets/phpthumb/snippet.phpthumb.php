@@ -3,8 +3,14 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
 //Author: Bumkaka
 
+$newfolderaccessmode = $modx->config['new_folder_permissions'] ? octdec($modx->config['new_folder_permissions']) : 0777;
+
 $cacheFolder=isset($cacheFolder) ? $cacheFolder : "assets/cache/images";
-if(!is_dir(MODX_BASE_PATH.$cacheFolder)) mkdir(MODX_BASE_PATH.$cacheFolder);
+if(!is_dir(MODX_BASE_PATH.$cacheFolder)) {
+    mkdir(MODX_BASE_PATH.$cacheFolder);
+    chmod(MODX_BASE_PATH.$cacheFolder, $newfolderaccessmode);
+}
+
 $tmpFolder = 'assets/cache/tmp';
 if (!empty($input)) $input = rawurldecode($input);
 
@@ -18,7 +24,10 @@ if (strpos($cacheFolder, 'assets/cache/') === 0 && $cacheFolder != 'assets/cache
 }
 
 
-if(!is_dir(MODX_BASE_PATH.$tmpFolder)) mkdir(MODX_BASE_PATH.$tmpFolder);
+if(!is_dir(MODX_BASE_PATH.$tmpFolder)) {
+    mkdir(MODX_BASE_PATH.$tmpFolder);
+    chmod(MODX_BASE_PATH.$tmpFolder, $newfolderaccessmode);
+}
 
 $path_parts=pathinfo($input);
 $tmpImagesFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
@@ -30,17 +39,21 @@ parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {
         $cacheFolder.="/".$folder;
-        if(!is_dir(MODX_BASE_PATH.$cacheFolder)) mkdir(MODX_BASE_PATH.$cacheFolder);
+        if(!is_dir(MODX_BASE_PATH.$cacheFolder)) {
+            mkdir(MODX_BASE_PATH.$cacheFolder);
+            chmod(MODX_BASE_PATH.$cacheFolder, $newfolderaccessmode);
+        }
     }
 }
   
 $fname_preffix=$cacheFolder."/".$params['w']."x".$params['h'].'-';
-$fname = $path_parts['filename'].".".substr(md5(serialize($params)),0,3).".".$params['f'];
+$fname = $path_parts['filename'].".".substr(md5(serialize($params).filemtime(MODX_BASE_PATH . $input)),0,3).".".$params['f'];
 $outputFilename =MODX_BASE_PATH.$fname_preffix.$fname;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
     $phpThumb = new phpthumb();
     $phpThumb->config_temp_directory = $tmpFolder;
+    $phpThumb->config_document_root = MODX_BASE_PATH;
     $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
     foreach ($params as $key => $value) {
         $phpThumb->setParameter($key, $value);

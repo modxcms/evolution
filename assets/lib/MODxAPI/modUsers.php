@@ -91,10 +91,8 @@ class modUsers extends MODxAPI
         if (is_scalar($value) && is_scalar($key) && !empty($key)) {
             switch ($key) {
                 case 'password':
-                {
                     $value = $this->getPassword($value);
                     break;
-                }
             }
             $this->field[$key] = $value;
         }
@@ -146,7 +144,7 @@ class modUsers extends MODxAPI
             } else {
                 $SQL = "UPDATE {$this->makeTable('web_users')} SET " . implode(', ', $this->set['user']) . " WHERE id = " . $this->id;
             }
-            $data = $this->query($SQL);
+            $this->query($SQL);
         }
 
         if ($this->newDoc) {
@@ -179,9 +177,9 @@ class modUsers extends MODxAPI
             if ($value == '') continue;
             $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('web_user_settings')} WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}'");
             if ($this->modx->db->getRecordCount($result) > 0) {
-                $result = $this->query("UPDATE {$this->makeTable('web_user_settings')} SET `setting_value` = '{$value}' WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}';");
+                $this->query("UPDATE {$this->makeTable('web_user_settings')} SET `setting_value` = '{$value}' WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}';");
             } else {
-                $result = $this->query("INSERT into {$this->makeTable('web_user_settings')} SET `webuser` = {$this->id},`setting_name` = '{$key}',`setting_value` = '{$value}';");
+                $this->query("INSERT into {$this->makeTable('web_user_settings')} SET `webuser` = {$this->id},`setting_name` = '{$key}',`setting_value` = '{$value}';");
             }
         }
 
@@ -294,7 +292,6 @@ class modUsers extends MODxAPI
     {
         switch ($directive) {
             case 'start':
-            {
                 if ($this->getID()) {
                     $_SESSION['webShortname'] = $this->get('username');
                     $_SESSION['webFullname'] = $this->get('fullname');
@@ -316,9 +313,7 @@ class modUsers extends MODxAPI
                     }
                 }
                 break;
-            }
             case 'destroy':
-            {
                 if (isset($_SESSION['mgrValidated'])) {
                     unset($_SESSION['webShortname']);
                     unset($_SESSION['webFullname']);
@@ -343,7 +338,6 @@ class modUsers extends MODxAPI
                     session_destroy();
                 }
                 break;
-            }
         }
         return $this;
     }

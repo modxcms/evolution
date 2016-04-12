@@ -61,13 +61,6 @@ $_lang['DM_doc_radio_remove'] = 'Remove a Document Group';
 $_lang['DM_doc_skip_message1'] = 'Document with ID';
 $_lang['DM_doc_skip_message2'] = 'is already part of the selected document group (skipping)';
 
-// sort menu tab
-$_lang['DM_sort_pick_item'] = 'Please click the site root or parent document from the MAIN DOCUMENT TREE that you\'d like to sort.';
-$_lang['DM_sort_updating'] = 'Updating ...';
-$_lang['DM_sort_updated'] = 'Updated';
-$_lang['DM_sort_nochildren'] = 'Parent does not have any children';
-$_lang['DM_sort_noid'] = 'No Document has been selected. Please go back and select a document.';
-
 // other tab
 $_lang['DM_other_header'] = 'Miscellaneous Document Settings';
 $_lang['DM_misc_label'] = 'Available Settings:';

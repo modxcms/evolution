@@ -6,7 +6,8 @@
  * @category	chunk
  * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal @modx_category Login
+ * @internal    @modx_category Login
+ * @internal    @overwrite false
  * @internal    @installset base, sample
  */
 <!-- #declare:separator <hr> -->

@@ -47,9 +47,11 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
-if (isset($_POST['which_editor']))
-        $which_editor = $_POST['which_editor'];
-else    $which_editor = 'none';
+if (isset($_POST['which_editor'])) {
+    $which_editor = $_POST['which_editor'];
+} else {
+    $which_editor = $content['editor_name'] != 'none' ? $content['editor_name'] : 'none';
+}
 
 $content = array_merge($content, $_POST);
 
@@ -142,7 +144,8 @@ if (is_array($evtOut))
     <p><?php echo $_lang['htmlsnippet_msg']?></p>
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
-            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span>
+            <?php if(strpos($content['name'],'Duplicate of')!==false) echo '<script>document.getElementsByName("name")[0].focus();</script>'?></td></tr>
     <tr>
         <th><?php echo $_lang['htmlsnippet_desc']?></th>
         <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
@@ -175,7 +178,7 @@ foreach (getCategories() as $n => $v) {
             <?php echo $_lang['chunk_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" id="post" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
         </div>
     </div>
 

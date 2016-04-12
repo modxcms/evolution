@@ -22,7 +22,7 @@ $_Lang['enter_in_own_repository'] = "Login to your repository";
 $_Lang['password'] = "Password";
 $_Lang['enter'] = "&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; Login &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
 $_Lang['email'] = "Email";
-$_Lang['register'] = "Sing up now";
+$_Lang['register'] = "Sign up now";
 $_Lang['own_repository'] = "My Repository";
 $_Lang['login_errors'] = "Incorrect Email or Password";
 

@@ -18,6 +18,7 @@
  * @copyright 2014
  */
 
+global $mm_version;
 $mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -81,7 +82,9 @@ if ($handle = opendir($widget_dir)){
 $mm_current_page = array();
 
 //Get page template
-if (isset($_POST['template'])){
+if (isset($e->params['template'])){
+	$mm_current_page['template'] = $e->params['template'];
+}else if (isset($_POST['template'])){
 	$mm_current_page['template'] = $_POST['template'];
 }else if (isset($content['template'])){
 	$mm_current_page['template'] = $content['template'];
@@ -208,6 +211,8 @@ $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
 
+$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
+
 $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 ';
 		
@@ -281,7 +286,8 @@ switch ($e->name){
 			
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->'."\n";
-			$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+			if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
+				$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
 			
 			$output .= '<script type="text/javascript">'."\n";
@@ -303,7 +309,8 @@ switch ($e->name){
 	case 'OnDocFormPrerender':
 		$e->output("<!-- Begin ManagerManager output -->\n");
 		// Load the js libraries
-		$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
+		if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
+			$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
 		$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
 		$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
 		
@@ -422,7 +429,8 @@ $j(function(){
 		if ($remove_deprecated_tv_types){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
-			echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+			if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
+				echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			
 			// Create a mask to cover the page while the fields are being rearranged
 			echo '

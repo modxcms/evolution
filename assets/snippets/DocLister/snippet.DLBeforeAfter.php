@@ -107,7 +107,7 @@ $elements[$noRule] = $DLObj->getChildrenCount();
 
 $afterStart = $beforeStart = null;
 switch(true){
-	case ($elements['offset'] > 0):{
+	case ($elements['offset'] > 0):
 		$beforeStart = $elements['offset'] - $elements['display'];
 		if($elements['offset'] + $elements['display'] < $elements['after']){
 			$afterStart = $elements['offset'] + $elements['display'];
@@ -115,8 +115,7 @@ switch(true){
 			$afterStart = null;
 		}
 		break;
-	}
-	case ($elements['offset'] < 0):{
+	case ($elements['offset'] < 0):
 		$afterStart = $elements['offset'] + $elements['display'];
 		if(abs($elements['offset']) + $elements['display'] <= $elements['before']){
 			$beforeStart = $elements['offset'] - $elements['display'];
@@ -124,8 +123,7 @@ switch(true){
 			$beforeStart = null;
 		}
 		break;
-	}
-	default:{ // ($start = 0)
+	default: // ($start = 0)
 		if($elements['display'] < $elements['after']){
 			$afterStart = $elements['display'];
 		}else{
@@ -136,7 +134,6 @@ switch(true){
 		}else{
 			$beforeStart = null;
 		}
-	}
 }
 $pageParams = array(
 	'elementsBefore' => $elements['before'],

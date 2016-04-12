@@ -65,30 +65,23 @@ class SummaryText
                 $process = explode(":", $doing);
                 switch ($process[0]) {
                     case 'notags':
-                    {
-                        $this->_cfg['content'] = strip_tags($this->_cfg['content']);
+                    	$this->_cfg['content'] = strip_tags($this->_cfg['content']);
                         break;
-                    }
                     case 'noparser':
-                    {
                         $this->_cfg['content'] = APIhelpers::sanitarTag($this->_cfg['content']);
                         break;
-                    }
-                    case 'chars':{
+                    case 'chars':
                         if (!(isset($process[1]) && $process[1] > 0)) {
                             $process[1] = 200;
                         }
                         $this->_cfg['content'] = APIhelpers::mb_trim_word($this->_cfg['content'], $process[1]);
                         break;
-                    }
                     case 'len':
-                    {
                         if (!(isset($process[1]) && $process[1] > 0)) {
                             $process[1] = 200;
                         }
                         $this->_cfg['content'] = $this->summary($this->_cfg['content'], $process[1], 50, true, $this->getCut());
                         break;
-                    }
                 }
             }
         }
@@ -121,7 +114,7 @@ class SummaryText
         }
 
         $summary = $this->closeTags($summary);
-        $summary = $this->rTriming($summary, $this->_dotted);
+        $summary = $this->rTriming($summary);
 
         return $summary;
     }
