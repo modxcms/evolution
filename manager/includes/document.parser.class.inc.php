@@ -4047,20 +4047,25 @@ class DocumentParser {
     function convertDocBlockIntoList($parsed) {
         global $_lang;
         
-        // Make URLs & Emails clickable
-        $regexUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+        // Replace special placeholders & make URLs + Emails clickable
+        $ph = array('site_url'=>MODX_SITE_URL);
+        $regexUrl = "/((http|https|ftp|ftps)\:\/\/[^\/]+(\/[^\s]+[^,.?!:;\s])?)/";
         $regexEmail = '#([0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-wyz][a-z](fo|g|l|m|mes|o|op|pa|ro|seum|t|u|v|z)?)#i';
         $emailSubject  = isset($parsed['name']) ? '?subject='.$parsed['name'] : '';
         $emailSubject .= isset($parsed['version']) ? ' v'.$parsed['version'] : '';
         foreach($parsed as $key=>$val) {
             if(is_array($val)) {
                 foreach($val as $key2=>$val2) {
-                    if(preg_match($regexUrl, $val2, $url)) $parsed[$key][$key2] = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val2);
-                    if(preg_match($regexEmail, $val2, $url)) $parsed[$key][$key2] = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val2);
+                    $val2 = $this->parseText($val2, $ph);
+                    if(preg_match($regexUrl, $val2, $url)) $val2 = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val2);
+                    if(preg_match($regexEmail, $val2, $url)) $val2 = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val2);
+                    $parsed[$key][$key2] = $val2;
                 }
             } else {
-                if(preg_match($regexUrl, $val, $url)) $parsed[$key] = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val);
-                if(preg_match($regexEmail, $val, $url)) $parsed[$key] = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val);
+                $val = $this->parseText($val, $ph);
+                if(preg_match($regexUrl, $val, $url)) $val = preg_replace($regexUrl, "<a href=\"{$url[0]}\" target=\"_blank\">{$url[0]}</a> ", $val);
+                if(preg_match($regexEmail, $val, $url)) $val = preg_replace($regexEmail, '<a href="mailto:\\1'.$emailSubject.'">\\1</a>', $val);
+                $parsed[$key] = $val;
             }
         }
 
