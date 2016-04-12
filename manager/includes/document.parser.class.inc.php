@@ -1213,6 +1213,7 @@ class DocumentParser {
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
         $params = array();
+        $key = '';
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
