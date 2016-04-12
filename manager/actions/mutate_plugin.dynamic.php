@@ -52,13 +52,6 @@ else
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
-
-// Prepare internal params via parseDocBlock
-$plugincode = isset($content['plugincode']) ? $modx->db->escape($content['plugincode']) : '';
-$parsed = $modx->parseDocBlockFromString($plugincode);
-$docBlockList = $modx->convertDocBlockIntoList($parsed);
-$internal = array();
-$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 ?>
 <script language="JavaScript">
 
@@ -389,6 +382,13 @@ function contains(a, obj) {
 // invoke OnPluginFormPrerender event
 $evtOut = $modx->invokeEvent("OnPluginFormPrerender",array("id" => $id));
 if(is_array($evtOut)) echo implode("",$evtOut);
+
+// Prepare internal params & info-tab via parseDocBlock
+$plugincode = isset($content['plugincode']) ? $modx->db->escape($content['plugincode']) : '';
+$parsed = $modx->parseDocBlockFromString($plugincode);
+$docBlockList = $modx->convertDocBlockIntoList($parsed);
+$internal = array();
+$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 ?>
     <input type="hidden" name="id" value="<?php echo $content['id'];?>">
     <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">

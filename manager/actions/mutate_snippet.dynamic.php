@@ -50,10 +50,6 @@ if(isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
-
-$snippetcode = isset($content['snippet']) ? $modx->db->escape($content['snippet']) : '';
-$parsed = $modx->parseDocBlockFromString($snippetcode);
-$docBlockList = $modx->convertDocBlockIntoList($parsed);
 ?>
 <script type="text/javascript">
 
@@ -354,10 +350,15 @@ function contains(a, obj) {
     // invoke OnSnipFormPrerender event
     $evtOut = $modx->invokeEvent("OnSnipFormPrerender",array("id" => $id));
     if(is_array($evtOut)) echo implode("",$evtOut);
+
+    // Prepare info-tab via parseDocBlock
+    $snippetcode = isset($content['snippet']) ? $modx->db->escape($content['snippet']) : '';
+    $parsed = $modx->parseDocBlockFromString($snippetcode);
+    $docBlockList = $modx->convertDocBlockIntoList($parsed);
 ?>
     <input type="hidden" name="id" value="<?php echo $content['id']?>">
     <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
-
+    
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1">
