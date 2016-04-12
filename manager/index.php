@@ -341,6 +341,12 @@ switch ($action) {
 		// get the processor for publishing content
 		include_once(includeFileProcessor("processors/unpublish_content.processor.php",$manager_theme));
 	break;
+	case 54:
+		// get the move action
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_menuindex_sort.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+		break;
 /********************************************************************/
 /* show the wait page - gives the tree time to refresh (hopefully)  */
 /********************************************************************/
@@ -462,7 +468,7 @@ switch ($action) {
 	break;
 	case 117:
 		// change the tv rank for selected template
-		//include_once(includeFileProcessor("includes/header.inc.php",$manager_theme)); - in action file
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
 		include_once(includeFileProcessor("actions/mutate_template_tv_rank.dynamic.php",$manager_theme));
 		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
 		break;
@@ -913,7 +919,12 @@ switch ($action) {
 		// get the duplicate processor
 		include_once(includeFileProcessor("processors/duplicate_tmplvars.processor.php",$manager_theme));
 	break;
-
+	case 305:
+		// get the tv-rank action
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_tv_rank.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+	break;
 /********************************************************************/
 /* Event viewer: show event message log                             */
 /********************************************************************/

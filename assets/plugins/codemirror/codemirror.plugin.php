@@ -19,7 +19,6 @@ global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
-$object_id = md5($evt->name . '-' . $content['id']);
 /*
  * Default Plugin configuration
  */
@@ -31,6 +30,9 @@ $matchBrackets = (isset($matchBrackets) ? $matchBrackets : false);
 $activeLine = (isset($activeLine) ? $activeLine : false);
 $emmet = (($emmet == 'true') ? '<script src="' . $_CM_URL . 'cm/emmet-compressed.js"></script>' : "");
 $search = (($search == 'true') ? '<script src="' . $_CM_URL . 'cm/search-compressed.js"></script>' : "");
+$indentWithTabs = (isset($indentWithTabs) ? $indentWithTabs : false);
+$undoDepth = (isset($undoDepth) ? $undoDepth : 200);
+$historyEventDelay = (isset($historyEventDelay) ? $historyEventDelay : 1250);
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -187,13 +189,23 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                         stream.eat("]");
                         return "modxConfig";
                     }
-                    if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
-                        return "modxAttribute";
+                    if (ch = stream.match(/&([^\s=]+=+`)?/)) {
+                        if(ch[1] != undefined)
+                            return "modxAttribute";
                     }
                     if (stream.match("`")) {
-                        while ((ch = stream.next()) != null)
-                            if (stream.next() == "`") break;
                         return "modxAttributeValue";
+                    }
+                    if (stream.match("@inherit", true, true) ||
+                        stream.match("@select", true, true) ||
+                        stream.match("@eval", true, true) ||
+                        stream.match("@directory", true, true) ||
+                        stream.match("@chunk", true, true) ||
+                        stream.match("@document", true, true) ||
+                        stream.match("@file", true, true) ||
+                        stream.match("@code", true, true)
+                    ) {
+                        return "modxBinding";                   
                     }
                     if (stream.match("!]")) {
                         return "modxSnippetNoCache";
@@ -201,12 +213,19 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
                     if (stream.match("]]")) {
                         return "modxSnippet";
                     }
-                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
+                    while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("`", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
                     return null;
                 }
             };
             return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "{$mode}"), mustacheOverlay);
         });
+        function makeMarker(symbol) {
+          var marker = document.createElement("div");
+          marker.style.color = "#822";
+          marker.className = "cm-marker";
+          marker.innerHTML = "●";
+          return marker;
+        }
         //Basic settings
         var config = {
             mode: 'MODx-{$mode}',
@@ -219,22 +238,14 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
             gutters: ["CodeMirror-linenumbers", "breakpoints"],
             styleActiveLine: {$activeLine},
             indentWithTabs: {$indentWithTabs},
+            undoDepth: {$undoDepth},
+            historyEventDelay: {$historyEventDelay},
             extraKeys:{
                 "Ctrl-Space": function(cm){
                     var n = cm.getCursor().line;
                     var info = cm.lineInfo(n);
                     foldFunc(cm, n);
                     cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
-                },
-                "F11": function(cm) {
-                    setFullScreen(cm, !isFullScreen(cm));
-                    localStorage["cm_fullScreen_{$object_id}"] = isFullScreen(cm);
-                },
-                "Esc": function(cm) {
-                    if (isFullScreen(cm)){
-                        setFullScreen(cm, false);
-                        localStorage["cm_fullScreen_{$object_id}"] = "false";
-                    }
                 },
                 "Ctrl-S": function(cm) {
                     document.getElementById('Button1').getElementsByTagName('a')[0].onclick();
@@ -271,10 +282,22 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
             $setHeight = '';
         };
         
+        $object_id = md5($evt->name . '-' . $content['id'] . '-' . $el);
+        
         $output .= "
     <script>
         var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
         var myTextArea = document.getElementsByName('{$el}')[0];
+        config['extraKeys']['F11'] = function(cm) {
+            setFullScreen(cm, !isFullScreen(cm));
+            localStorage['cm_fullScreen_{$object_id}'] = isFullScreen(cm);
+        };
+        config['extraKeys']['Esc'] = function(cm) {
+            if (isFullScreen(cm)){
+                setFullScreen(cm, false);
+                localStorage['cm_fullScreen_{$object_id}'] = 'false';
+            }
+        };
         myCodeMirrors['{$el}'] = CodeMirror.fromTextArea(myTextArea, config);
         {$setHeight}
         // reset onchange tab
@@ -299,9 +322,13 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
             cm.setGutterMarker(n, 'breakpoints', info.gutterMarkers ? null : makeMarker('+'));
         });
         myCodeMirrors['{$el}'].on('change', function(cm, n) {
-            var cmHistory = myCodeMirrors['{$el}'].doc.getHistory();
-            localStorage['history_{$object_id}'] = JSON.stringify(cmHistory);
-            documentDirty=true;
+            try {
+                var cmHistory = myCodeMirrors['{$el}'].doc.getHistory();
+                localStorage['history_{$object_id}'] = JSON.stringify(cmHistory);
+                documentDirty=true;
+            } catch(e) {
+                alert('History could not be written. Error: '+e);
+            }
         });
 
         (function() {

@@ -24,69 +24,7 @@ class DocManagerBackend {
     		case 'changeOther':
     			echo $this->changeOther($_POST['pids']);
     			break;
-    		case 'sortMenu':
-    			echo $this->showSortList($_POST['new_parent']);
-    			break;
-    		case 'sortList':
-    			echo $this->changeSort($_POST['list']);
-    			break;
     	}
-    }
-    
-    function showSortList($id) {
-        $this->dm->ph['sort.disable_tree_select'] = 'false';
-    	$this->dm->ph['sort.options'] = '';
-    	$this->dm->ph['sort.save'] = '';
-    	$resource = array();
-
-    	if (is_numeric($id)) {
-			$rs = $this->modx->db->select('id, pagetitle, parent, menuindex, published, hidemenu, deleted', $this->modx->getFullTableName('site_content'), "parent='{$id}'", 'menuindex ASC');
-			$resource = $this->modx->db->makeArray($rs);
-		} elseif ($id == '') {
-			$noId = true;
-			$this->dm->ph['sort.disable_tree_select'] = 'true';
-			$this->dm->ph['sort.save'] = 'none';
-			$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_noid'];
-		}
-
-		if (!$noId) {
-			$cnt = count($resource);
-			if ($cnt < 1) {
-			    $this->dm->ph['sort.disable_tree_select'] = 'true';
-				$this->dm->ph['sort.save'] = 'none';
-				$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_nochildren'];
-			} else {
-				foreach ($resource as $item) {
-                    // Add classes to determine whether it's published, deleted, not in the menu
-                    // or has children.
-                    // Use class names which match the classes in the document tree
-                    $classes = '';
-                    $classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode' ;
-                    $classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ' ;
-                    $classes = ($item['deleted']) ? ' deletedNode ' : $classes ;
-                    $classes .= (count($this->modx->getChildIds($item['id'], 1)) > 0) ? ' hasChildren ' : ' noChildren ';
-                    $this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'">' . $item['pagetitle'] . '</li>';
-				}
-			}
-		}
-		return $this->dm->parseTemplate('sort_list.tpl', $this->dm->ph);
-    }
-    
-    function changeSort($items) {
-    	if (strlen($items) > 0) {
-    		$items = explode(';', $items);
-    		foreach ($items as $key => $value) {
-    			$id = ltrim($value, 'item_');
-    			if (is_numeric($id)) {
-	    			$this->modx->db->update(array('menuindex'=>$key), $this->modx->getFullTableName('site_content'), "id='{$id}'");
-    			}
-    		}
-    		$this->logDocumentChange('sortmenu');
-    	}
-    	$this->dm->ph['sort.message'] = $this->dm->lang['DM_sort_updated'];
-    	$this->dm->ph['sort.save'] = 'none';
-    	$this->dm->ph['sort.disable_tree_select'] = 'true';
- 		return $this->dm->parseTemplate('sort_list.tpl', $this->dm->ph);
     }
     
     function changeTemplate($pids, $template) {	

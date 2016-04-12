@@ -412,14 +412,17 @@ span.CodeMirror-selectedtext { background: none; }
 }
 .cm-modxChunk, .cm-modxSnippet, .cm-modxTv,  .cm-modxPlaceholder,.cm-modxSnippetNoCache, .cm-modxVariable, .cm-modxUrl, .cm-modxConfig {
     color: #000;
-    background-color:rgba(0,0,0,.075);
+    background-color: rgba(0, 0, 0, 0.05);
     font-weight:bold;
 }
-.cm-modxAttribute {
+.cm-modxAttribute, .cm-modxAttributeValue {
     color: #00c;
-    background-color:rgba(0,0,0,.05);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 .cm-modxAttributeValue {
-    color: #000;
-    background-color:rgba(0,0,0,.05);
+    font-weight:bold;
+}
+.cm-modxBinding {
+    color: #bc00cc;
+    font-weight:900;
 }

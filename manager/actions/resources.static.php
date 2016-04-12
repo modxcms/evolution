@@ -5,14 +5,21 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     global $modx, $_lang, $modx_textdir;
     
     $pluginsql = $resourceTable == 'site_plugins' ? $resourceTable.'.disabled, ' : '';
-    $tvsql = $resourceTable == 'site_tmplvars' ? $resourceTable.'.caption, ' : '';
+    
+    $tvsql = '';
+    $tvjoin = '';
+    if($resourceTable == 'site_tmplvars') {
+        $tvsql = $resourceTable . '.caption, stt.templateid AS notassigned, ';
+        $tvjoin = "LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS stt ON {$resourceTable}.id = stt.tmplvarid GROUP BY stt.tmplvarid";
+    }
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
     switch($resourceTable) {
         case 'site_plugins':
-        case 'site_tmplvars':
             $orderby= '6,2'; break;
+        case 'site_tmplvars':
+            $orderby= '7,3'; break;
         case 'site_templates':
             $orderby= '6,1'; break;
         default:
@@ -24,7 +31,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $rs = $modx->db->select(
         "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
-            LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id",
+            LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
         "",
         $orderby
         );
@@ -45,6 +52,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 
         if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
         if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
+        if ($resourceTable == 'site_tmplvars') $class = $row['notassigned'] ? '' : ' class="disabledPlugin"';
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
@@ -104,7 +112,8 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        <p><?php echo $_lang['tmplvars_management_msg'];
+                 echo sprintf(' (<a href="index.php?a=305">%s</a>)',$_lang['template_tv_edit']); ?></p>
 			<ul class="actionButtons">
                 <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             </ul>

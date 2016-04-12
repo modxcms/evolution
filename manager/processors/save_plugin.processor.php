@@ -13,6 +13,7 @@ $properties = $modx->db->escape($_POST['properties']);
 $disabled = $_POST['disabled']=="on" ? '1' : '0';
 $moduleguid = $modx->db->escape($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
+$parse_docblock = $_POST['parse_docblock']=="1" ? '1' : '0';
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -21,18 +22,33 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
     $categoryid = 0;
 } else {
     include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
-    $categoryid = checkCategory($_POST['newcategory']);
-    if (!$categoryid) {
-        $categoryid = newCategory($_POST['newcategory']);
-    }
+    $categoryid = getCategory($_POST['newcategory']);   
 }
 
 if($name=="") $name = "Untitled plugin";
 
+if($parse_docblock) {
+    $parsed       = $modx->parseDocBlockFromString($plugincode);
+    $name         = isset($parsed['name']) ? $parsed['name'] : $name;
+    $sysevents    = isset($parsed['events']) ? explode(',', $parsed['events']) : $sysevents;
+    $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
+    
+    $description  = isset($parsed['description']) ? $parsed['description'] : $description;
+    $version      = isset($parsed['version']) ? '<b>'.$parsed['version'].'</b> ' : '';
+    if($version) {
+        $description = $version . trim(preg_replace('/(<b>.+?)+(<\/b>)/i', '', $description));
+    }
+    if(isset($parsed['modx_category'])) {
+        include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+        $categoryid = getCategory($parsed['modx_category']);
+    }
+}
+
 $tblSitePlugins = $modx->getFullTableName('site_plugins');
+$eventIds = array();
 switch ($_POST['mode']) {
     case '101':
-
+       
         // invoke OnBeforePluginFormSave event
         $modx->invokeEvent("OnBeforePluginFormSave",
                                 array(
@@ -158,10 +174,12 @@ function saveEventListeners($id,$sysevents,$mode) {
     $tblSitePluginEvents = $modx->getFullTableName('site_plugin_events');
     $insert_sysevents = array();
     for($i=0;$i<count($sysevents);$i++){
+        $evtId = $sysevents[$i];
+        $evtId = !is_numeric($evtId) ? getEventIdByName($evtId) : $evtId;
         if ($mode == '101') {
-            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}'");
+            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$evtId}'");
         } else {
-            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$sysevents[$i]}' and pluginid='{$id}'");
+            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$evtId}' and pluginid='{$id}'");
         }
         $prevPriority = $modx->db->getValue($rs);
         if ($mode == '101') {
@@ -169,7 +187,7 @@ function saveEventListeners($id,$sysevents,$mode) {
         } else {
             $priority = isset($prevPriority) ? $prevPriority : 1;
         }
-        $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$sysevents[$i],'priority'=>$priority);
+        $insert_sysevents[] = array('pluginid'=>$id,'evtid'=>$evtId,'priority'=>$priority);
     }
     $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
     foreach ($insert_sysevents as $insert_sysevent) {
@@ -177,4 +195,13 @@ function saveEventListeners($id,$sysevents,$mode) {
     }
 }
 
+function getEventIdByName($name) {
+    global $modx, $eventIds;
+    if(empty($eventIds)) {
+        $rs = $modx->db->select('id, name', $modx->getFullTableName('system_eventnames'));
+        while ($row = $modx->db->getRow($rs)) 
+            $eventIds[$row['name']] = $row['id']; 
+    }
+    return $eventIds[$name];
+}
 ?>

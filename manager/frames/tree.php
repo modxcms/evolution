@@ -417,6 +417,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
+            <?php if ($modx->hasPermission('edit_document')) { ?>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=54&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><img src="<?php echo $_style['icons_set_parent'] ; ?>" style="" /></a></td>
+            <?php } ?>    
             </tr>
         </table>
     </td>
@@ -553,6 +556,9 @@ function menuHandler(action) {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break;
+        case 11 : // sort menu index
+            top.main.document.location.href="index.php?a=54&id=" + itemToChange;
+            break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
             break;
@@ -572,6 +578,7 @@ function menuHandler(action) {
     constructLink(2, $_style["icons_save"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
     constructLink(5, $_style["icons_move_document"] , $_lang["move_resource"], $modx->hasPermission('save_document')); // move
     constructLink(7, $_style["icons_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
+    constructLink(11,$_style["icons_set_parent"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
     ?>
     <div class="seperator"></div>
     <?php
