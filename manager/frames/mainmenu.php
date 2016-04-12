@@ -31,9 +31,10 @@ $sitemenu['home'] = array('home', 'site', $_lang['home'], 'index.php?a=2', $_lan
 $sitemenu['preview'] = array('preview', 'site', $_lang['preview'], '../', $_lang['preview'], 'this.blur();', '', '_blank', 0, 20, '');
 $sitemenu['refresh_site'] = array('refresh_site', 'site', $_lang['refresh_site'], 'index.php?a=26', $_lang['refresh_site'], 'this.blur();', '', 'main', 0, 30, '');
 $sitemenu['search'] = array('search', 'site', $_lang['search'], 'index.php?a=71', $_lang['search'], 'this.blur();', '', 'main', 1, 40, '');
-//$sitemenu['add_resource'] = array('add_resource', 'site', $_lang['add_resource'], 'index.php?a=4', $_lang['add_resource'], 'this.blur();', 'new_document', 'main', 0, 50, '');
-//$sitemenu['add_weblink'] = array('add_weblink', 'site', $_lang['add_weblink'], 'index.php?a=72', $_lang['add_weblink'], 'this.blur();', 'new_document', 'main', 0, 60, '');
-
+if ($modx->hasPermission('edit_document')) {
+    $sitemenu['add_resource'] = array('add_resource', 'site', $_lang['add_resource'], 'index.php?a=4', $_lang['add_resource'], 'this.blur();', 'new_document', 'main', 0, 50, '');
+    $sitemenu['add_weblink'] = array('add_weblink', 'site', $_lang['add_weblink'], 'index.php?a=72', $_lang['add_weblink'], 'this.blur();', 'new_document', 'main', 0, 60, '');
+}
 
 // Elements Menu
 if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) {

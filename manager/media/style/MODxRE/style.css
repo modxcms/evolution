@@ -1109,6 +1109,9 @@ a.hometblink:hover {
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
 	color: #787878;
+	padding: 3px 2px 4px 4px;
+	line-height: 16px;
+	border: 1px solid #fff;
 }
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLink:hover img,
