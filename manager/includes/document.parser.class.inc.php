@@ -3946,7 +3946,8 @@ class DocumentParser {
     function parseDocBlockFromString($string) {
         $params = array();
         if(!empty($string)) {
-            $exp = explode('\r\n', $string);
+            $string = str_replace('\r\n', '\n', $string);
+            $exp = explode('\n', $string);
             $docblock_start_found = false;
             $name_found = false;
             $description_found = false;
