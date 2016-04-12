@@ -1,6 +1,6 @@
 <?php
 /*
-chinese.inc.php - for AjaxSearch 1.10.1
+chinese.inc.php - for AjaxSearch 1.10.2
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

@@ -3,9 +3,9 @@
  *
  * Ajax and non-Ajax search that supports results highlighting
  *
- * @version      1.10.1
+ * @version      1.10.2
  * @author       Coroico <coroico@wangba.fr>
- * @date         05/12/2010
+ * @date         12/04/2016
  * -----------------------------------------------------------------------------
 /**
 

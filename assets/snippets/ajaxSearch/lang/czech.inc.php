@@ -1,6 +1,6 @@
 <?php
 /*
-czech.inc.php - for AjaxSearch 1.10.1
+czech.inc.php - for AjaxSearch 1.10.2
 Created by: jakub Havranek (jakub@media-form.cz), Modified by: modxcms.cz
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

@@ -4,11 +4,11 @@
 * Display the content of the AjaxSearch Log table in the manager
 *
 * @category module
-* @version 	1.10.1
+* @version 	1.10.2
 * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
 * @internal	@modx_category Search
 * @author   Coroico
-* @date     05/06/2014
+* @date     12/04/2016
 */
 
 Define('NB_LINES',100); // number of rows displayed
