@@ -3962,7 +3962,7 @@ class DocumentParser {
                 $description_found = $r['description_found'];
                 $docblock_end_found = $r['docblock_end_found'];
                 $param = $r['param'];
-                $val = $r['val'];
+                $val = stripslashes($r['val']);
                 if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
                 if(!empty($param)) {
