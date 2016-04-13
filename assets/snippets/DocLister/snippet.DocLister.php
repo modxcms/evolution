@@ -1,9 +1,18 @@
 <?php
 /**
- * DocLister snippet
+ * DocLister
  *
- * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @author Agel_Nash <Agel_Nash@xaker.ru>
+ * Snippet to display the information of the tables by the description rules. The main goal - replacing Ditto and CatalogView
+ *
+ * @category 	snippet
+ * @version 	2.1.30
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Content
+ * @internal    @installset base, sample
+ * @documentation MODX Docs https://rtfm.modx.com/extras/evo/doclister/
+ * @reportissues https://github.com/AgelxNash/DocLister
+ * @author      Agel_Nash Agel_Nash@xaker.ru
  */
 if (!defined('MODX_BASE_PATH')) {
     die('HACK???');
