@@ -418,7 +418,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
             <?php if ($modx->hasPermission('edit_document')) { ?>
-                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=54&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><img src="<?php echo $_style['icons_sort_menuindex'] ; ?>" /></a></td>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><img src="<?php echo $_style['icons_sort_menuindex'] ; ?>" /></a></td>
             <?php } ?>    
             </tr>
         </table>
@@ -559,7 +559,7 @@ function menuHandler(action) {
             }
             break;
         case 11 : // sort menu index
-            top.main.document.location.href="index.php?a=54&id=" + itemToChange;
+            top.main.document.location.href="index.php?a=56&id=" + itemToChange;
             break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
