@@ -1,55 +1,23 @@
 <?php
+/**
+ * Personalize
+ *
+ * Checks to see if web- / mgr-users are logged in or not, to display accordingly yesChunk/noChunk
+ *
+ * @category    snippet
+ * @version     2.1
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @properties
+ * @internal    @modx_category Login
+ * @internal    @installset base
+ * @documentation [+site_url+]assets/snippets/personalize/readme.html
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Created By Ryan Thrash (modx@vertexworks.com)
+ * @author      powered up by kudo (kudo@kudolink.com)
+ * @author      powered up by yama(yamamoto@kyms.ne.jp)
+ * @author      Refactored 2013 by Dmi3yy
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-#::::::::::::::::::::::::::::::::::::::::
-# Created By:Ryan Thrash (modx@vertexworks.com),
-#	and then powered up by kudo (kudo@kudolink.com)
-#
-# Date: Aug 03, 2006
-#
-# Changelog:
-# Dec 01, 05 -- initial release
-# Jun 19, 06 -- updated description
-# Jul 19, 06 -- hacked by kudo to output chunks
-# Aug 03, 06 -- added placeholder for username
-# Aug 27, 10 -- powered up all code
-#
-#::::::::::::::::::::::::::::::::::::::::
-# Description:
-#	Checks to see if webusers are logged in and displays yesChunk if the user
-#	is logged or noChunk if user is not logged. Insert only the chunk name as
-#	param, without {{}}. Can use a placeholder to output the username.
-#	TESTED: can be used more than once per page.
-#	TESTED: chunks can contain snippets.
-#
-#
-# Params:
-#	&yesChunk [string] (optional)
-#		Output for LOGGED users
-#
-#	&noChunk [string] (optional)
-#		Output for NOT logged users
-#
-#	&ph [string] (optional)
-#		Placeholder for placing the username
-#		ATTENTION!: place this ph only in yesChunk!
-#
-#	&context [string] (optional)
-#		web|mgr
-#
-#	&yesTV [string] (optional)
-#		Output for LOGGED users
-#
-#	&noTV [string] (optional)
-#		Output for NOT logged users
-#
-# Example Usage:
-#
-#	[[Personalize? &yesChunk=`Link` &noChunk=`Register` &ph=`name`]]
-#
-#	Having Chunks named {{Link}} and another {{Register}}, the first will be
-#	published to registered user, the second to non-registered users.
-#
-#::::::::::::::::::::::::::::::::::::::::
 
 # prepare params and variables
 

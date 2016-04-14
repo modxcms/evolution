@@ -2,7 +2,7 @@
 /**
  * Personalize
  *
- * Personalize snippet
+ * Checks to see if web- / mgr-users are logged in or not, to display accordingly yesChunk/noChunk
  *
  * @category    snippet
  * @version     2.1
