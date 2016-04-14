@@ -1,18 +1,20 @@
 <?php
-if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 /**
- * @name FileSource
- * @version 0.1
- * 
- * @description Позволяет хранить сниппеты в виде файлов
- * 
- * @author Maxim Mukharev
- * @install
- * Привязываем к следующим событиям:
- * - OnSnipFormRender
- * - OnBeforeSnipFormSave
- * - OnSnipFormPrerender
+ * FileSource
+ *
+ * Save snippets and plugins to static files
+ *
+ * @category    plugin
+ * @version     0.1
+ * @internal    @properties
+ * @internal    @events OnSnipFormRender,OnBeforeSnipFormSave,OnSnipFormPrerender,OnPluginFormPrerender,OnPluginFormRender,OnBeforePluginFormSave
+ * @internal    @modx_category Manager and Admin
+ * @internal    @installset base
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Maxim Mukharev
+ * @author      By Carw, and Bumkaka
  */
+if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 $output = '';
 
