@@ -433,6 +433,7 @@ $_lang["keywords"] = 'Keywords';
 $_lang["keywords_intro"] = 'To edit a keyword, simply type in the new keyword in the text field next to the keyword you wish to change. To delete a keyword, check the \'delete\' box for that keyword. If you check the keyword\'s delete box, and also change it\'s name, it will be deleted, and the renaming of the keyword will not take place!';
 $_lang["language_message"] = 'Select the language for the MODX Content Manager.';
 $_lang["language_title"] = 'Language';
+$_lang["last_update"] = 'Last update';
 $_lang["launch_site"] = 'View Site';
 $_lang["license"] = 'License';
 $_lang["link_attributes"] = 'Link Attributes';
