@@ -15,7 +15,8 @@
  * @documentation Official docs https://codemirror.net/doc/manual.html
  * @author      hansek from http://www.modxcms.cz
  * @author      update Mihanik71
- * @author      update Deesen 11.04.2016
+ * @author      update Deesen
+ * @lastupdate  11/04/2016
  */
 
 $_CM_BASE = 'assets/plugins/codemirror/';

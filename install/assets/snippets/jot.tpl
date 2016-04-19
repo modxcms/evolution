@@ -15,6 +15,7 @@
  * @link 		Latest Version http://modx.com/extras/package/jot
  * @link 		Jot Demo Site http://projects.zerobarrier.nl/modx/
  * @author      Armand "bS" Pondman apondman@zerobarrier.nl
+ * @lastupdate  09/02/2016
  */
 $jotPath = $modx->config['base_path'] . 'assets/snippets/jot/';
 include_once($jotPath.'jot.class.inc.php');

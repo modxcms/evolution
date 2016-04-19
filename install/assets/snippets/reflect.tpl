@@ -16,6 +16,7 @@
  * @author      Mark Kaplan
  * @author      Ryan Thrash http://thrash.me
  * @author      netProphET, Dmi3yy, bossloper
+ * @lastupdate  05/12/2008
  */
 
 /*

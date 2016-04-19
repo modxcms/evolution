@@ -16,6 +16,7 @@
  * @author      Jason Coward jason@opengeek.com
  * @author      Ryan Thrash ryan@vertexworks.com
  * @author      Revolution code ported back by Thomas Jakobi thomas.jakobi@partout.info
+ * @lastupdate  25/12/2013
  */
 if (!defined('MODX_BASE_PATH')) {
 	die('What are you doing? Get out of here!');

@@ -16,6 +16,7 @@
  * @author      Sanitized By Jason Coward http://opengeek.com
  * @author      Refactored 2013 by Dmi3yy
  * @author      Small fixes by Segr
+ * @lastupdate  20/10/2014
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

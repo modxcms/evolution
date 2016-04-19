@@ -13,6 +13,7 @@
  * @documentation MODX Docs https://rtfm.modx.com/extras/evo/doclister/
  * @reportissues https://github.com/AgelxNash/DocLister
  * @author      Agel_Nash Agel_Nash@xaker.ru
+ * @lastupdate  11/04/2016
  */
 if (!defined('MODX_BASE_PATH')) {
     die('HACK???');

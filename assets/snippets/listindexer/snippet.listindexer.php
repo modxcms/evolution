@@ -14,7 +14,8 @@
  * @reportissues https://github.com/modxcms/evolution
  * @author      Derived from ListIndex 0.6j by jaredc@honeydewdesign.com
  * @author      1.1.0 Refactored from ListIndexer 1.0.1 by Dmi3yy on 11.08.2013
- * @author      Since 2013: Yama, Segr, Jako   
+ * @author      Since 2013: Yama, Segr, Jako
+ * @lastupdate  25/02/2016
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

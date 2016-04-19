@@ -21,6 +21,7 @@
  * @author Kari Söderholm aka Haprog / updated: 2014-04-02
  * @author yama / updated: 2014-05-16
  * @author Pathologic, MrSwed, Bossloper
+ * @lastupdate  09/04/2016
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 // Set the name of the plugin folder
