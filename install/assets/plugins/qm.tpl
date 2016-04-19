@@ -18,6 +18,7 @@
  * @link        http://www.maagit.fi/modx/quickmanager-plus
  * @author      Mikko Lammi
  * @author      Since 2011: yama, dmi3yy, segr
+ * @lastupdate  31/03/2014
  */
 
 // In manager

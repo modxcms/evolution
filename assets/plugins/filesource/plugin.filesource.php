@@ -13,6 +13,7 @@
  * @reportissues https://github.com/modxcms/evolution
  * @author      Maxim Mukharev
  * @author      By Carw, and Bumkaka
+ * @lastupdate  09/02/2016
  */
 if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 

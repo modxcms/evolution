@@ -20,6 +20,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
  * @author      Kyle Jaebker kjaebker@muddydogpaws.com
  * @author      Ryan Thrash http://thrash.me
  * @author      Many others since 2010
+ * @lastupdate  27/05/2015
  */
 
 // ajaxSearch version being executed

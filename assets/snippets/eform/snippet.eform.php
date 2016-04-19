@@ -19,6 +19,7 @@
  * @author      Multi checkbox, radio, select support - thanks to Djamoer
  * @author      Form Parser and extended validation - by Jelle Jager
  * @author      and many others
+ * @lastupdate  11/04/2016
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

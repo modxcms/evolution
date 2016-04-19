@@ -5,7 +5,7 @@
  * Allows webusers to login to protected pages in the website, supporting multiple user groups
  *
  * @category 	snippet
- * @version 	1.1.2
+ * @version 	1.1.3
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;
  * @internal	@modx_category Login
@@ -17,6 +17,7 @@
  * @author      Ryan Thrash http://thrash.me
  * @author      Jason Coward http://opengeek.com
  * @author      Shaun McCormick, garryn, Dmi3yy
+ * @lastupdate  19/04/2016
  */
 
 # Set Snippet Paths 
@@ -40,6 +41,7 @@ $pwdActId	= isset($pwdactid)? $pwdactid:0;
 $loginText	= isset($logintext) && $logintext!='' ? $logintext:'Login';
 $logoutText	= isset($logouttext) && $logouttext!='' ? $logouttext:'Logout';
 $tpl		= isset($tpl)? $tpl:"";
+$focusInput = isset($focusInput)? $focusInput : 1;
 
 # System settings
 $webLoginMode = isset($_REQUEST['webloginmode'])? $_REQUEST['webloginmode']: '';

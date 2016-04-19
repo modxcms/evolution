@@ -15,6 +15,7 @@
  * @author      Based on UltimateParent 1.x by Susan Ottwell
  * @author      v2.0 by Jason Coward http://opengeek.com
  * @author      v2.1 Refactored 2013 by Dmi3yy
+ * @lastupdate  25/12/2013
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

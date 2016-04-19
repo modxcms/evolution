@@ -17,6 +17,7 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
  * @reportissues https://github.com/modxcms/evolution
  * @author      Mark Kaplan
  * @author      and many others since 2006
+ * @lastupdate  30/03/2016
  */
 
 //---Core Settings---------------------------------------------------- //

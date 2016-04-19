@@ -16,6 +16,7 @@
  * @link        noimage.png here [+site_url+]assets/snippets/phpthumb/noimage.png
  * @author      Bumkaka
  * @author      Many contributors since then
+ * @lastupdate  09/04/2016
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

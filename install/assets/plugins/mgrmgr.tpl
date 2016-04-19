@@ -21,6 +21,8 @@
  * @author      Inspired by: HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * @author      DivanDesign studio http://www.DivanDesign.biz
  * @author      Nick Crossland http://www.rckt.co.uk
+ * @author      Many others
+ * @lastupdate  06/03/2016
  */
 
 // Run the main code

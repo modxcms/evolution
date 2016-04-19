@@ -13,6 +13,7 @@
  * @documentation Readme [+site_url+]assets/snippets/if/readme.html
  * @reportissues https://github.com/modxcms/evolution
  * @author  	Created By Bumkaka bumkaka@yandex.ru
+ * @lastupdate  07/02/2016
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

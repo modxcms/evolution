@@ -14,6 +14,8 @@
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base, sample
  * @author      Olivier B. Deland, additions by Mike Schell, rfoster
+ * @author      Many others
+ * @lastupdate  31/03/2015
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //Initialize parameters

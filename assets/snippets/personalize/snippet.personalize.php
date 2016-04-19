@@ -16,6 +16,7 @@
  * @author      powered up by kudo (kudo@kudolink.com)
  * @author      powered up by yama(yamamoto@kyms.ne.jp)
  * @author      Refactored 2013 by Dmi3yy
+ * @lastupdate  11/08/2013
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 

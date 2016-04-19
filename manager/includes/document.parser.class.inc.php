@@ -4085,6 +4085,7 @@ class DocumentParser {
         $list .= '</p><br/>'.$nl;
         $list .= isset($parsed['version']) ? '<p><strong>'.$_lang['version'].':</strong> '.$parsed['version'].'</p>'.$nl : '';
         $list .= isset($parsed['license']) ? '<p><strong>'.$_lang['license'].':</strong> '.$parsed['license'].'</p>'.$nl : '';
+        $list .= isset($parsed['lastupdate']) ? '<p><strong>'.$_lang['last_update'].':</strong> '.$parsed['lastupdate'].'</p>'.$nl : '';
         $list .= '<br/>'.$nl;
         $first = true;
         foreach($arrayParams as $param=>$label) {
