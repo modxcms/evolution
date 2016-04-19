@@ -1240,7 +1240,7 @@ function confirmLangChange(el, lkey, elupd){
     <select name="resource_tree_node_name" size="1" class="inputBox">
 <?php
     $tpl = '<option value="[+value+]" [+selected+]>[*[+value+]*]</option>' . "\n";
-    $option = array('pagetitle','menutitle','alias','createdon','editedon','publishedon');
+    $option = array('pagetitle','longtitle','menutitle','alias','createdon','editedon','publishedon');
     $output = array();
     foreach($option as $v)
     {

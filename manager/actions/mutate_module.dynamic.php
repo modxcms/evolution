@@ -59,12 +59,6 @@ if (isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
-
-// Prepare internal params via parseDocBlock
-$modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
-$docBlock = $modx->parseDocBlockFromString($modulecode);
-$docBlockList = $modx->convertDocBlockIntoList($docBlock);
-$internal = array();
 ?>
 <script type="text/javascript">
 function loadDependencies() {
@@ -390,6 +384,12 @@ function SetUrl(url, width, height, alt) {
     // invoke OnModFormPrerender event
     $evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
     if(is_array($evtOut)) echo implode('',$evtOut);
+
+    // Prepare internal params & info-tab via parseDocBlock
+    $modulecode = isset($content['modulecode']) ? $modx->db->escape($content['modulecode']) : '';
+    $docBlock = $modx->parseDocBlockFromString($modulecode);
+    $docBlockList = $modx->convertDocBlockIntoList($docBlock);
+    $internal = array();
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">

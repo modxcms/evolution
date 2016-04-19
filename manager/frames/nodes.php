@@ -126,7 +126,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = '';
         }
         $result = $modx->db->select(
-			"DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+			"DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
 				MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access",
 			"{$tblsc} AS sc
 			 LEFT JOIN {$tbldg} dg on dg.document = sc.id
@@ -142,7 +142,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         global $modx_textdir;
 
         $node_name_source = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
-        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$pub_date,$unpub_date,$richtext,$searchable,$cacheable,$deleted,$type,$template,$templatename,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
+        while(list($id,$pagetitle,$longtitle,$menutitle,$parent,$isfolder,$published,$pub_date,$unpub_date,$richtext,$searchable,$cacheable,$deleted,$type,$template,$templatename,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
             $dateNode = false;
             switch($node_name_source)
@@ -161,6 +161,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                     break;
                 case 'pagetitle':
                     $nodetitle = $pagetitle;
+                    break;
+                case 'longtitle':
+                    $nodetitle = $longtitle;
                     break;
                 case 'createdon':
                 case 'editedon':
@@ -200,7 +203,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $alt = $modx->htmlspecialchars($alt);
             $alt = str_replace('[+lf+]', ' &#13;', $alt);   // replace line-breaks with empty space as fall-back
 
-            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,
+            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'longtitle' => $longtitle, 'menutitle' => $menutitle,'parent' =>$parent,
                 'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,
                 'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,
                 'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template,
