@@ -585,16 +585,24 @@ a img {
 	.rtl #treeRoot div img {
 		margin: 0;
 	}
-#floater {
-	display: none;
-	position: absolute;
-	width: 200px;
-	height: 50px;
-	top: 25px;
-	left: 4px;
-	background: #fff;
+#floater{
+	display:none;
+	position:absolute;
+	top:25px;
+	left:0;
+	width:auto;
+	height:auto;
+	padding:5px 5px 5px 0;
+	background-color:#fff;
 	border-bottom: 1px solid #666;
-	z-index: 500;
+	z-index:500;
+}
+
+#floater table{
+    background:inherit;
+}
+#floater table select{
+    display:block;
 }
 	.rtl #floater {
 		right: 4px

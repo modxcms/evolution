@@ -178,7 +178,7 @@ $header .= '</head>
 <div class="sectionBody">';
 
 if(!$disabled) {
-    $header .= '<button onclick="resetSortOrder();" style="float:right;margin-bottom:1em;display:block;">' . $_lang['reset_sort_order'] . '</button>
+    $header .= '<ul class="actionButtons"><li><a href="#" onclick="resetSortOrder();"><img src="'.$_style["icons_refresh"].'" /> ' . $_lang['reset_sort_order'] . '</a></li></ul>
     <p>' . $_lang["sort_elements_msg"] . ' (<a href="#" onclick="sort();">' . $_lang["sort_alphabetically"] . '</a>)</p>';
 };
 
