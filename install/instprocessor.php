@@ -573,8 +573,7 @@ if (isset ($_POST['module']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
+                // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
                 $module = mysqli_real_escape_string($conn, $module);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -631,8 +630,7 @@ if (isset ($_POST['plugin']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
+                $plugin = removeDocblock($plugin, 'plugin');
                 $plugin = mysqli_real_escape_string($conn, $plugin);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -703,8 +701,7 @@ if (isset ($_POST['snippet']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
-                // remove installer docblock
-                $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
+                $snippet = removeDocblock($snippet, 'snippet');
                 $snippet = mysqli_real_escape_string($conn, $snippet);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -848,6 +845,7 @@ function propUpdate($new,$old){
     $returnArr = array();
     $newArr = explode("&",$new);
     $oldArr = explode("&",$old);
+    $return = '';
 
     foreach ($newArr as $k => $v) {
         if(!empty($v)){
@@ -892,4 +890,33 @@ function getCreateDbCategory($category, $sqlParser) {
         }
     }
     return $category_id;
+}
+
+// Remove installer Docblock only from components using plugin FileSource / fileBinding
+function removeDocblock($code, $type) {
+    
+    $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
+    
+    // Procedure taken from plugin.filesource.php
+    switch($type) {
+        case 'snippet':
+            $elm_name = 'snippets';
+            $include = 'return require';
+            $count = 47;
+            break;
+
+        case 'plugin':
+            $elm_name = 'plugins';
+            $include = 'require';
+            $count = 39;
+            break;
+
+        default:
+            return $cleaned;
+    };
+    if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
+        return $cleaned;
+    
+    // fileBinding not found - return code incl docblock
+    return $code;
 }
