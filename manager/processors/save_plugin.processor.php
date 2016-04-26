@@ -28,7 +28,7 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 if($name=="") $name = "Untitled plugin";
 
 if($parse_docblock) {
-    $parsed       = $modx->parseDocBlockFromString($plugincode);
+    $parsed       = $modx->parseDocBlockFromString($plugincode, true);
     $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $sysevents    = isset($parsed['events']) ? explode(',', $parsed['events']) : $sysevents;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;

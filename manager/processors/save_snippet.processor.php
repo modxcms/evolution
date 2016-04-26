@@ -35,7 +35,7 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 if($name=="") $name = "Untitled snippet";
 
 if($parse_docblock) {
-    $parsed       = $modx->parseDocBlockFromString($snippet);
+    $parsed       = $modx->parseDocBlockFromString($snippet, true);
     $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
 
