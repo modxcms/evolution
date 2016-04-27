@@ -3897,9 +3897,10 @@ class DocumentParser {
      *
      * @param string $element_dir
      * @param string $filename
+     * @param boolean $escapeValues
      * @return array Associative array in the form property name => property value
      */
-    function parseDocBlockFromFile($element_dir, $filename) {
+    function parseDocBlockFromFile($element_dir, $filename, $escapeValues=false) {
         $params = array();
         $fullpath = $element_dir . '/' . $filename;
         if(is_readable($fullpath)) {
@@ -3926,9 +3927,9 @@ class DocumentParser {
                     if(!empty($param)) {
                         if(in_array($param, $arrayParams)) {
                             if(!isset($params[$param])) $params[$param] = array();
-                            $params[$param][] = $val;
+                            $params[$param][] = $escapeValues ? $this->db->escape($val) : $val;
                         } else {
-                            $params[$param] = $val;
+                            $params[$param] = $escapeValues ? $this->db->escape($val) : $val;
                         }
                     }
                 }
@@ -3942,9 +3943,10 @@ class DocumentParser {
      * Parses docBlock from string and returns the result as an array
      *
      * @param string $string
+     * @param boolean $escapeValues
      * @return array Associative array in the form property name => property value
      */
-    function parseDocBlockFromString($string) {
+    function parseDocBlockFromString($string, $escapeValues=false) {
         $params = array();
         if(!empty($string)) {
             $string = str_replace('\r\n', '\n', $string);
@@ -3968,9 +3970,9 @@ class DocumentParser {
                 if(!empty($param)) {
                     if(in_array($param, $arrayParams)) {
                         if(!isset($params[$param])) $params[$param] = array();
-                        $params[$param][] = $val;
+                        $params[$param][] = $escapeValues ? $this->db->escape($val) : $val;
                     } else {
-                        $params[$param] = $val;
+                        $params[$param] = $escapeValues ? $this->db->escape($val) : $val;
                     }
                 }
             }            
