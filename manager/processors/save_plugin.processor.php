@@ -32,6 +32,7 @@ if($parse_docblock) {
     $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $sysevents    = isset($parsed['events']) ? explode(',', $parsed['events']) : $sysevents;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
+    $moduleguid   = isset($parsed['guid']) ? $parsed['guid'] : $moduleguid;
     
     $description  = isset($parsed['description']) ? $parsed['description'] : $description;
     $version      = isset($parsed['version']) ? '<b>'.$parsed['version'].'</b> ' : '';
