@@ -39,6 +39,7 @@ class Wayfinder {
 				'[+wf.description+]',
 				'[+wf.subitemcount+]',
 				'[+wf.refid+]',
+				'[+wf.menuindex+]',
 		'[+wf.iterator+]'
 			),
 			'wrapperLevel' => array(
