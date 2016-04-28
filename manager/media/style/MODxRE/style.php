@@ -91,6 +91,7 @@ $_style['icons_publish_document']   = $style_path.'icons/clock_play.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
+$_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
 $_style['icons_table']              = $style_path.'icons/table.gif'; 
 $_style['icons_undelete_resource']  = $style_path.'icons/b092.gif';
 $_style['icons_unpublish_resource'] = $style_path.'icons/clock_stop.png';
