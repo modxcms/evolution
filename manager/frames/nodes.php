@@ -197,9 +197,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $alt.= "[+lf+]".$_lang['unpublish_date'].": ".$modx->toDateFormat($unpub_date);
             $alt.= "[+lf+]".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= "[+lf+]".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
-            $alt.= "[+lf+]".$_lang['resource_opt_richtext'].": ".($richtext==1 ? $_lang['no']:$_lang['yes']);
-            $alt.= "[+lf+]".$_lang['page_data_searchable'].": ".($searchable==1 ? $_lang['no']:$_lang['yes']);
-            $alt.= "[+lf+]".$_lang['page_data_cacheable'].": ".($cacheable==1 ? $_lang['no']:$_lang['yes']);
+            $alt.= "[+lf+]".$_lang['resource_opt_richtext'].": ".($richtext==0 ? $_lang['no']:$_lang['yes']);
+            $alt.= "[+lf+]".$_lang['page_data_searchable'].": ".($searchable==0 ? $_lang['no']:$_lang['yes']);
+            $alt.= "[+lf+]".$_lang['page_data_cacheable'].": ".($cacheable==0 ? $_lang['no']:$_lang['yes']);
             $alt = $modx->htmlspecialchars($alt);
             $alt = str_replace('[+lf+]', ' &#13;', $alt);   // replace line-breaks with empty space as fall-back
 
