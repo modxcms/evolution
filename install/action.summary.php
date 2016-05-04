@@ -10,11 +10,13 @@ $installMode = intval($_POST['installmode']);
 echo "<h2>" . $_lang['preinstall_validation'] . "</h2>";
 echo "<h3>" . $_lang['summary_setup_check'] . "</h3>";
 $errors = 0;
+
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
+$phpMinVersion = "5.3.0";
 // -1 if left is less, 0 if equal, +1 if left is higher
-if (version_compare(phpversion(), "5.0.0") < 0) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', '5.0.0', $_lang["modx_requires_php"]) . "</p>";
+if (version_compare(phpversion(), $phpMinVersion) < 0) {
+    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
     $errors += 1;
 }
 // check php register globals off
