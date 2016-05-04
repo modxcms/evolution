@@ -2607,7 +2607,7 @@ class DocumentParser {
 			$args = ltrim($args, '?&');
 			$_ = strpos($f_url_prefix, '?');
 			
-			if($_ === false){
+			if($_ === false && $this->config['friendly_urls'] == 1){
 				$args = "?{$args}";
 			}else{
 				$args = "&{$args}";
