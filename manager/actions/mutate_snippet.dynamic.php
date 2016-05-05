@@ -93,7 +93,7 @@ function showParameters(ctrl) {
     tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
 
     // check if codemirror is used
-    var props = typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+    var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
 
     // convert old schemed setup parameters
     if( !IsJsonString(props) ) {
