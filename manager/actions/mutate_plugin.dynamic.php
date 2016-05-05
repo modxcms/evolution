@@ -291,7 +291,12 @@ function setParameter(key,dt,ctrl) {
 
 // implode parameters
 function implodeParameters(){
-    myCodeMirrors['properties'].setValue(JSON.stringify(currentParams, null, 2));
+    var stringified = JSON.stringify(currentParams, null, 2);
+    if(typeof myCodeMirrors != "undefined") {
+        myCodeMirrors['properties'].setValue(stringified);
+    } else {
+        f.properties.value = stringified;
+    }
     if(first) { documentDirty = false; first = false; };
 }
 
