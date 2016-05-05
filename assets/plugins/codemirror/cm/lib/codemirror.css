@@ -372,6 +372,24 @@ span.CodeMirror-selectedtext { background: none; }
     margin: 0;
     font-family: monospace;
 }
+/* Issue #619 */
+.CodeMirror-dialog {
+    background-color:#fff;
+}
+.CodeMirror-dialog-top {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    z-index:99999;
+}
+.CodeMirror-dialog-bottom {
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:99999;
+}
 /*
  * PHP STYLES
  */
