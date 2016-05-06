@@ -13,7 +13,7 @@
  * @reportissues https://github.com/modxcms/evolution
  * @author      Maxim Mukharev
  * @author      By Carw, and Bumkaka
- * @lastupdate  09/02/2016
+ * @lastupdate  06/05/2016
  */
 if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
@@ -137,7 +137,8 @@ mE1.inject(setPlace,"after");
     case 'OnBeforePluginFormSave':
         if($has_filebinding==='1')
         {
-            file_put_contents(MODX_BASE_PATH.$elm_path, "<?php\n{$code}");
+            $phpTag = substr($code,0,5) == '<?php' ? '' : "<?php\n";
+            file_put_contents(MODX_BASE_PATH.$elm_path, "{$phpTag}{$code}");
             $GLOBALS['plugincode'] = $insert_code;
         }
         break;
