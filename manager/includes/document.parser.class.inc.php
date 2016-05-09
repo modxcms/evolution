@@ -1163,6 +1163,11 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$value)
         {
+            if(substr($value,0,2)==='$_')
+            {
+                $replace[$i] = $this->_getSGVar($value);
+                continue;
+            }
             $find = $i - 1;
             while( $find >= 0 )
             {
@@ -1178,6 +1183,24 @@ class DocumentParser {
         }
         $content = str_replace($matches[0], $replace, $content);
         return $content;
+    }
+    
+    function _getSGVar($value) { // Get super globals
+        $key = $value;
+        $key = str_replace(array('(',')'),array("['","']"),$key);
+        if(strpos($key,'$_SESSION')!==false)
+        {
+            $_ = $_SESSION;
+            $key = str_replace('$_SESSION','$_',$key);
+            if(isset($_['mgrFormValues'])) unset($_['mgrFormValues']);
+            if(isset($_['token'])) unset($_['token']);
+        }
+        if(strpos($key,'[')!==false)
+            $value = eval("return {$key};");
+        elseif(0<eval("return count({$key});"))
+            $value = eval("return print_r({$key},true);");
+        else $value = '';
+        return $value;
     }
     
     private function _get_snip_result($piece)
