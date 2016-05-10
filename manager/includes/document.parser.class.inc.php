@@ -1913,98 +1913,87 @@ class DocumentParser {
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
         $this->documentContent= $this->checkCache($this->documentIdentifier, true);
-        if ($this->documentContent != "") {
+        if ($this->documentContent != '') {
             // invoke OnLoadWebPageCache  event
-            $this->invokeEvent("OnLoadWebPageCache");
+            $this->invokeEvent('OnLoadWebPageCache');
         } else {
-
-            // get document object
+            // get document object from DB
             $this->documentObject= $this->getDocumentObject($this->documentMethod, $this->documentIdentifier, 'prepareResponse');
 
             // write the documentName to the object
-            $this->documentName= $this->documentObject['pagetitle'];
-
-            // validation routines
-            if ($this->documentObject['deleted'] == 1) {
-                $this->sendErrorPage();
-            }
-            //  && !$this->checkPreview()
-            if ($this->documentObject['published'] == 0) {
-
-                // Can't view unpublished pages
-                if (!$this->hasPermission('view_unpublished')) {
-                    $this->sendErrorPage();
-                } else {
-                    // Inculde the necessary files to check document permissions
-                    include_once (MODX_MANAGER_PATH . 'processors/user_documents_permissions.class.php');
-                    $udperms= new udperms();
-                    $udperms->user= $this->getLoginUserID();
-                    $udperms->document= $this->documentIdentifier;
-                    $udperms->role= $_SESSION['mgrRole'];
-                    // Doesn't have access to this document
-                    if (!$udperms->checkPermissions()) {
-                        $this->sendErrorPage();
-                    }
-
-                }
-
-            }
-
-            // check whether it's a reference
-            if ($this->documentObject['type'] == "reference") {
-                if (is_numeric($this->documentObject['content'])) {
-                    // if it's a bare document id
-                    $this->documentObject['content']= $this->makeUrl($this->documentObject['content']);
-                }
-                elseif (strpos($this->documentObject['content'], '[~') !== false) {
-                    // if it's an internal docid tag, process it
-                    $this->documentObject['content']= $this->rewriteUrls($this->documentObject['content']);
-                }
-                $this->sendRedirect($this->documentObject['content'], 0, '', 'HTTP/1.0 301 Moved Permanently');
-            }
-
+            $this->documentName= &$this->documentObject['pagetitle'];
+            
             // check if we should not hit this document
-            if ($this->documentObject['donthit'] == 1) {
-                $this->config['track_visitors']= 0;
-            }
+            if ($this->documentObject['donthit'] == 1) $this->config['track_visitors']= 0;
+            
+            if ($this->documentObject['deleted'] == 1)            $this->sendErrorPage(); // validation routines
+            elseif ($this->documentObject['published'] == 0)      $this->_sendErrorForUnpubPage();
+            elseif ($this->documentObject['type'] == 'reference') $this->_sendRedirectForRefPage($this->documentObject['content']);
 
             // get the template and start parsing!
-            if (!$this->documentObject['template'])
-                $this->documentContent= "[*content*]"; // use blank template
-            else {
-                $result= $this->db->select('content', $this->getFullTableName("site_templates"), "id = '{$this->documentObject['template']}'");
-                $rowCount= $this->db->getRecordCount($result);
-                if ($rowCount==1) {
-                     $this->documentContent = $this->db->getValue($result);
-                } else {
-                    $this->messageQuit("Incorrect number of templates returned from database");
-                }
-            }
+            if (!$this->documentObject['template']) $templateCode = '[*content*]'; // use blank template
+            else                                    $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
 
             // invoke OnLoadWebDocument event
-            $this->invokeEvent("OnLoadWebDocument");
+            $this->documentContent = &$templateCode;
+            $this->invokeEvent('OnLoadWebDocument');
 
             // Parse document source
-            $this->documentContent= $this->parseDocumentSource($this->documentContent);
-
-            // setup <base> tag for friendly urls
-            //            if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
-            //                $this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
-            //            }
+            $this->documentContent = $this->parseDocumentSource($templateCode);
         }
 
-        if($this->documentIdentifier==$this->config['error_page'] &&  $this->config['error_page']!=$this->config['site_start']){
+        if($this->config['error_page']==$this->documentIdentifier && $this->config['error_page']!=$this->config['site_start']) {
             header('HTTP/1.0 404 Not Found');
         }
 
         register_shutdown_function(array (
             &$this,
-            "postProcess"
+            'postProcess'
         )); // tell PHP to call postProcess when it shuts down
         $this->outputContent();
         //$this->postProcess();
     }
 
+    function _sendErrorForUnpubPage() {
+        // Can't view unpublished pages !$this->checkPreview()
+        if (!$this->hasPermission('view_unpublished')) {
+            $this->sendErrorPage();
+        } else {
+            // Inculde the necessary files to check document permissions
+            include_once (MODX_MANAGER_PATH . 'processors/user_documents_permissions.class.php');
+            $udperms= new udperms();
+            $udperms->user= $this->getLoginUserID();
+            $udperms->document= $this->documentIdentifier;
+            $udperms->role= $_SESSION['mgrRole'];
+            // Doesn't have access to this document
+            if (!$udperms->checkPermissions()) {
+                $this->sendErrorPage();
+            }
+        }
+        exit;
+    }
+    
+    function _sendRedirectForRefPage($url) {
+        // check whether it's a reference
+        if (preg_match('@^[1-9][0-9]*$@',$url)) {
+            $url= $this->makeUrl($url); // if it's a bare document id
+        }
+        elseif (strpos($url, '[~') !== false) {
+            $url= $this->rewriteUrls($url); // if it's an internal docid tag, process it
+        }
+        $this->sendRedirect($url, 0, '', 'HTTP/1.0 301 Moved Permanently');
+        exit;
+    }
+    
+    function _getTemplateCodeFromDB($templateID) {
+        $rs= $this->db->select('content', '[+prefix+]site_templates', "id = '{$templateID}'");
+        if ($this->db->getRecordCount($rs)==1) {
+             return $this->db->getValue($rs);
+        } else {
+            $this->messageQuit('Incorrect number of templates returned from database');
+        }
+    }
+    
     /**
      * Returns an array of all parent record IDs for the id passed.
      *
