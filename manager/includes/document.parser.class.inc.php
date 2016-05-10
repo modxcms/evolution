@@ -1039,18 +1039,15 @@ class DocumentParser {
         $replace = array();
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
-        if ($matches) {
-            for ($i = 0; $i < count($matches[1]); $i++) {
-                $v = '';
-                $key = $matches[1][$i];
-                if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
-                    $v = $this->placeholders[$key];
-                if ($v === '')
-                    unset($matches[0][$i]); // here we'll leave empty placeholders for last.
-                else
-                    $replace[$i] = $v;
-            }
-            $content = str_replace($matches[0], $replace, $content);
+        if(!$matches) return $content;
+        foreach($matches[1] as $i=>$key) {
+            $value = '';
+            if ($key && is_array($this->placeholders) && isset($this->placeholders[$key]))
+                $value = $this->placeholders[$key];
+            
+            if ($value === '') contnue; // here we'll leave empty placeholders for last.
+            else
+                $content= str_replace($matches[0][$i], $value, $content);
         }
         return $content;
     }
