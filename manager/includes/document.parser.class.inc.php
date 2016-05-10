@@ -2863,16 +2863,50 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($chunk, $chunkArr, $prefix = '[+', $suffix = '+]'){
-        if (!is_array($chunkArr)){
-            return $chunk;
-        }
+    function parseText($content='', $ph=array(), $left= '[+', $right= '+]',$cleanup=true)
+    {
+        if(is_array($content)&&is_string($ph)) {list($ph,$content) = array($content,$ph);}
         
-        foreach ($chunkArr as $key => $value){
-            $chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
+        if(!$ph) return $content;
+        if(strpos($content,$left)===false) return $content;
+        elseif(is_string($ph) && strpos($ph,'='))
+        {
+            if(strpos($ph,',')) $pairs   = explode(',',$ph);
+            else                $pairs[] = $ph;
+            
+            unset($ph);
+            $ph = array();
+            foreach($pairs as $pair)
+            {
+                list($k,$v) = explode('=',trim($pair));
+                $ph[$k] = $v;
+            }
         }
-        
-        return $chunk;
+        $c=0;
+        $bt='';
+        while($bt!==md5($content)) {
+            $matches = $this->getTagsFromContent($content,$left,$right);
+            if(!$matches) break;
+            $bt = md5($content);
+            $replace= array ();
+            foreach($matches[1] as $i=>$key) {
+                
+                if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
+                
+                if(isset($ph[$key])) {
+                    $value = $ph[$key];
+                    $replace[$i]= $value;
+                }
+                elseif($cleanup) $replace[$i] = '';
+                else             $replace[$i] = $matches[0][$i];
+            }
+            $content= str_replace($matches[0], $replace, $content);
+            if($bt===md5($content)) break;
+            $c++;
+            $cleanup = false;
+            if(1000<$c) $this->messageQuit('parseText parse over');
+        }
+        return $content;
     }
     
     /**
