@@ -1007,18 +1007,16 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content, '{{', '}}');
         if ($matches) {
             foreach($matches[1] as $i=>$key) {
-                if ($key) {
-                    if (isset($this->chunkCache[$key])) {
-                        $replace[$i] = $this->chunkCache[$key];
+                if (isset($this->chunkCache[$key])) {
+                    $replace[$i] = $this->chunkCache[$key];
+                } else {
+                    $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($key)."'");
+                    if ($snippet = $this->db->getValue($result)) {
+                        $this->chunkCache[$key] = $snippet;
+                        $replace[$i] = $snippet;
                     } else {
-                        $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($key)."'");
-                        if ($snippet = $this->db->getValue($result)) {
-                            $this->chunkCache[$key] = $snippet;
-                            $replace[$i] = $snippet;
-                        } else {
-                            $this->chunkCache[$key] = '';
-                            $replace[$i] = '';
-                        }
+                        $this->chunkCache[$key] = '';
+                        $replace[$i] = '';
                     }
                 }
             }
