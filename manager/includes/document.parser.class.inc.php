@@ -982,18 +982,15 @@ class DocumentParser {
     function mergeSettingsContent($content) {
         if (strpos($content, '[(') === false)
             return $content;
+        $matches = $this->getTagsFromContent($content,'[(',')]');
+        if(!$matches) return $content;
+        
         $replace= array ();
-        $matches = $this->getTagsFromContent($content, '[(', ')]');
-        if ($matches) {
-            for ($i = 0; $i < count($matches[1]); $i++) {
-                if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config)){
-                    //$replace[$i] = $this->config[$matches[1][$i]];
-                    $content = str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
-                }
-            }
-
-            
+        foreach($matches[1] as $i=>$key) {
+            if(isset($this->config[$key])) $replace[$i] = $this->config[$key];
+            else                           $replace[$i] = '';
         }
+        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
