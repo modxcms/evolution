@@ -1105,32 +1105,32 @@ class DocumentParser {
      * @param array $params
      * @return string
      */
-    function evalSnippet($snippet, $params) {
+    function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        $snip = eval($snippet);
-        $msg = ob_get_contents();
+        $return = eval($phpcode);
+        $echo = ob_get_contents();
         ob_end_clean();
         if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
-                $msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $msg);
+                $echo = ($echo === false) ? 'ob_get_contents() error' : $echo;
+                $this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $echo);
                 if ($this->isBackend()) {
-                    $this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $msg . $snip . '</p>');
+                    $this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $echo . $return . '</p>');
                 }
             }
         }
         unset($modx->event->params);
         $this->currentSnippet = '';
-        if (is_array($snip) || is_object($snip)) {
-            return $snip;
+        if (is_array($return) || is_object($return)) {
+            return $return;
         } else {
-            return $msg . $snip;
+            return $echo . $return;
         }
     }
 
