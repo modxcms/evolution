@@ -1195,7 +1195,7 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $snip_name = $snip_call['name'];
         
-        $snippetObject = $this->_getSnippetObject($snip_call);
+        $snippetObject = $this->_getSnippetObject($snip_call['name']);
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1222,13 +1222,11 @@ class DocumentParser {
         
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
-        $params = array();
-        $key = '';
+        $temp_params = array();
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
             $_tmp = substr($_tmp,1);
-            $doParse = false;
             
             if($char==='=')
             {
@@ -1237,13 +1235,11 @@ class DocumentParser {
                 if(in_array($nextchar, array('"', "'", '`')))
                 {
                     list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
-                    if($nextchar !== "'") $doParse = true;
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
                     list($value, $_tmp) = explode('&', $_tmp, 2);
                     $value = trim($value);
-                    $doParse = true;
                 }
                 else
                 {
@@ -1253,15 +1249,17 @@ class DocumentParser {
             }
             elseif($char==='&')
             {
-                $value = '';
+                if(trim($key)!=='') $value = '';
+                else continue;
             }
-            else $key .= $char;
+            else
+                if($key!==''||trim($char)!=='') $key .= $char;
             
             if(!is_null($value))
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
-                if($doParse)
+                if(substr($value,0,6)!=='@CODE:')
                 {
                     if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
                     if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
@@ -1269,7 +1267,7 @@ class DocumentParser {
                     if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
                     if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
                 }
-                $params[$key]=$value;
+                $temp_params[][$key]=$value;
                 
                 $key   = '';
                 $value = null;
@@ -1281,11 +1279,28 @@ class DocumentParser {
             if($_tmp===$bt)
             {
                 $key = trim($key);
-                if($key!=='') $params[$key] = '';
+                if($key!=='') $temp_params[][$key] = '';
                 break;
             }
         endwhile;
         
+        foreach($temp_params as $p)
+        {
+            $k = key($p);
+            if(substr($k,-2)==='[]')
+            {
+                $k = substr($k,0,-2);
+                $params[$k][] = current($p);
+            }
+            elseif(strpos($k,'[')!==false && substr($k,-1)===']')
+            {
+                list($k, $subk) = explode('[', $k, 2);
+                $subk = substr($subk,0,-1);
+                $params[$k][$subk] = current($p);
+            }
+            else
+                $params[$k] = current($p);
+        }
         return $params;
     }
     
@@ -1348,43 +1363,41 @@ class DocumentParser {
         return $snip;
     }
     
-    private function _getSnippetObject($snip_call)
+    private function _getSnippetObject($snip_name)
     {
-        $snip_name  = $snip_call['name'];
-        
         if(isset($this->snippetCache[$snip_name]))
         {
             $snippetObject['name']    = $snip_name;
             $snippetObject['content'] = $this->snippetCache[$snip_name];
-            if(isset($this->snippetCache[$snip_name . 'Props']))
+            if(isset($this->snippetCache["{$snip_name}Props"]))
             {
-                $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'];
+                if(!isset($this->snippetCache["{$snip_name}Props"]))
+                    $this->snippetCache["{$snip_name}Props"] = '';
+                $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
         }
         else
         {
-            $esc_snip_name = $this->db->escape($snip_name);
-            // get from db and store a copy inside cache
-            $result= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',"name='{$esc_snip_name}'");
-            $added = false;
-            if($this->db->getRecordCount($result) == 1)
+            $where = sprintf("name='%s'",$this->db->escape($snip_name));
+            $rs= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',$where);
+            $count = $this->db->getRecordCount($rs);
+            if(1<$count) exit('Error $modx->_getSnippetObject()'.$snip_name);
+            if($count)
             {
-                $row = $this->db->getRow($result);
-                if($row['name'] == $snip_name)
-                {
-                    $snippetObject['name']       = $row['name'];
-                    $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
-                    $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
-                    $added = true;
-                }
+                $row = $this->db->getRow($rs);
+                $snip_content = $row['snippet'];
+                $snip_prop    = $row['properties'];
             }
-            if($added === false)
+            else
             {
-                $snippetObject['name']       = $snip_name;
-                $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
-                $snippetObject['properties'] = '';
-                //$this->logEvent(0,'1','Not found snippet name [['.$snippetObject['name'].']] {$this->decoded_request_uri}',"Parser (ResourceID:{$this->documentIdentifier})");
+                $snip_content = 'return false;';
+                $snip_prop    = '';
             }
+            $snippetObject['name']       = $snip_name;
+            $snippetObject['content']    = $snip_content;
+            $snippetObject['properties'] = $snip_prop;
+            $this->snippetCache[$snip_name]          = $snip_content;
+            $this->snippetCache["{$snip_name}Props"] = $snip_prop;
         }
         return $snippetObject;
     }
