@@ -2886,10 +2886,9 @@ class DocumentParser {
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
         } else {
-            $sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($chunkName) . "';";
-            $result= $this->db->query($sql);
-            $limit= $this->db->getRecordCount($result);
-            if ($limit == 1) {
+            $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
+            $rs= $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), $where);
+            if ($this->db->getRecordCount($rs)==1) {
                 $row= $this->db->getRow($result);
                 $out = $this->chunkCache[$chunkName]= $row['snippet'];
             }
