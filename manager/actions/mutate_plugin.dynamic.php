@@ -76,7 +76,6 @@ function setTextWrap(ctrl,b){
 
 // Current Params/Configurations
 var currentParams = {};
-var internal = <?php echo json_encode($internal); ?>;
 var first = true;
 
 function showParameters(ctrl) {
@@ -95,7 +94,7 @@ function showParameters(ctrl) {
     tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
 
     // check if codemirror is used
-    var props = typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+    var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
     
     // convert old schemed setup parameters
     if( !IsJsonString(props) ) {
@@ -292,7 +291,12 @@ function setParameter(key,dt,ctrl) {
 
 // implode parameters
 function implodeParameters(){
-    myCodeMirrors['properties'].setValue(JSON.stringify(currentParams, null, 2));
+    var stringified = JSON.stringify(currentParams, null, 2);
+    if(typeof myCodeMirrors != "undefined") {
+        myCodeMirrors['properties'].setValue(stringified);
+    } else {
+        f.properties.value = stringified;
+    }
     if(first) { documentDirty = false; first = false; };
 }
 
@@ -375,9 +379,6 @@ function contains(a, obj) {
     }
     return false;
 }
-</script>
-
-<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
 <?php
 // invoke OnPluginFormPrerender event
 $evtOut = $modx->invokeEvent("OnPluginFormPrerender",array("id" => $id));
@@ -390,6 +391,11 @@ $docBlockList = $modx->convertDocBlockIntoList($parsed);
 $internal = array();
 $internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 ?>
+var internal = <?php echo json_encode($internal); ?>;
+</script>
+
+<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
+
     <input type="hidden" name="id" value="<?php echo $content['id'];?>">
     <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 

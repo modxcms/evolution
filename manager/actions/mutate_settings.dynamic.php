@@ -1257,7 +1257,7 @@ function confirmLangChange(el, lkey, elupd){
 </tr>
         <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'>  <?php echo $_lang["setting_resource_tree_node_name_desc"]?></td>
+            <td class='comment'><?php echo $_lang["setting_resource_tree_node_name_desc"]?><br/><b><?php echo $_lang["setting_resource_tree_node_name_desc_add"]?></b></td>
       </tr>
 <tr>
   <td colspan="2"><div class='split'></div></td>
