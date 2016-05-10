@@ -839,6 +839,8 @@ class DocumentParser {
         if(strpos($content,$left)===false) return array();
         if(strpos($content,';}}')!==false)  $content = str_replace(';}}', '',$content);
         if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}','',$content);
+        if(strpos($content,']]]]')!==false) $content = str_replace(']] ]]','',$content);
+        if(strpos($content,']]]')!==false)  $content = str_replace('] ]]', '',$content);
         
         $pos['<![CDATA['] = strpos($content,'<![CDATA[');
         $pos[']]>']       = strpos($content,']]>');
