@@ -1151,10 +1151,8 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-        foreach($matches[1] as $i=>$value)
-        {
-            if(substr($value,0,2)==='$_')
-            {
+        foreach($matches[1] as $i=>$value) {
+            if(substr($value,0,2)==='$_') {
                 $replace[$i] = $this->_getSGVar($value);
                 continue;
             }
@@ -1162,8 +1160,7 @@ class DocumentParser {
             while( $find >= 0 )
             {
                 $tag = $matches[0][ $find ];
-                if(isset($replace[$find]) && strpos($value,$tag)!==false)
-                {
+                if(isset($replace[$find]) && strpos($value,$tag)!==false) {
                     $value = str_replace($tag,$replace[$find],$value);
                     break;
                 }
