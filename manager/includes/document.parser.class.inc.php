@@ -1000,29 +1000,24 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content) {
-        if (strpos($content, '{{') === false)
-            return $content;
-        $replace = array();
-        $matches = $this->getTagsFromContent($content, '{{', '}}');
-        if ($matches) {
-            foreach($matches[1] as $i=>$key) {
-                if (isset($this->chunkCache[$key])) {
-                    $value = $this->chunkCache[$key];
-                } else {
-                    $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($key)."'");
-                    if ($snippet = $this->db->getValue($result)) {
-                        $this->chunkCache[$key] = $snippet;
-                        $value = $snippet;
-                    } else {
-                        $this->chunkCache[$key] = '';
-                        $value = '';
-                    }
-                }
-                $replace[$i] = $value;
-            }
-            $content = str_replace($matches[0], $replace, $content);
-            $content = $this->mergeSettingsContent($content);
+        if(strpos($content,'{{')===false) return $content;
+        
+        $matches = $this->getTagsFromContent($content,'{{','}}');
+        if(!$matches) return $content;
+        
+        $replace= array ();
+        foreach($matches[1] as $i=>$key) {
+            $snip_call = $this->_split_snip_call($key);
+            $key = $snip_call['name'];
+            $ph = $this->_snipParamsToArray($snip_call['params']);
+            
+            $value = $this->getChunk($key);
+            $value = $this->parseText($ph,$value,'[+','+]','hasModifier');
+            
+            $replace[$i] = $value;
         }
+        
+        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
