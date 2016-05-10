@@ -1008,17 +1008,18 @@ class DocumentParser {
         if ($matches) {
             foreach($matches[1] as $i=>$key) {
                 if (isset($this->chunkCache[$key])) {
-                    $replace[$i] = $this->chunkCache[$key];
+                    $value = $this->chunkCache[$key];
                 } else {
                     $result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($key)."'");
                     if ($snippet = $this->db->getValue($result)) {
                         $this->chunkCache[$key] = $snippet;
-                        $replace[$i] = $snippet;
+                        $value = $snippet;
                     } else {
                         $this->chunkCache[$key] = '';
-                        $replace[$i] = '';
+                        $value = '';
                     }
                 }
+                $replace[$i] = $value;
             }
             $content = str_replace($matches[0], $replace, $content);
             $content = $this->mergeSettingsContent($content);
