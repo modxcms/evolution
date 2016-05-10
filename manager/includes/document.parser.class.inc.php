@@ -1289,13 +1289,33 @@ class DocumentParser {
         return $params;
     }
     
+    function _findSplitter($str) {
+        $str = str_split($str);
+        $pass = false;
+        $i = -1;
+        $pos = false;
+        $inFilter = false;
+        foreach($str as $c) {
+            $i++;
+            if($inFilter)    {
+                if($c===')')     { $pass = false; continue; }
+                elseif($pass)    { continue; }
+                elseif($c==='(') { $pass=true; continue; }
+                elseif($c==='?') { $pos=$i; break; }
+            }
+            elseif($c===':')     { $inFilter=true; }
+            elseif($c==='?')     { $pos = $i; break; }
+        }
+        return $pos;
+    }
+    
     private function _split_snip_call($call)
     {
         $spacer = md5('dummy');
         if(strpos($call,']]>')!==false)
             $call = str_replace(']]>', "]{$spacer}]>",$call);
         
-        $pos['?']  = strpos($call, '?');
+        $pos['?']  = $this->_findSplitter($call);
         $pos['&']  = strpos($call, '&');
         $pos['=']  = strpos($call, '=');
         $pos['lf'] = strpos($call, "\n");
@@ -1306,8 +1326,10 @@ class DocumentParser {
                 list($name,$params) = explode('?',$call,2);
             elseif($pos['lf']!==false && $pos['lf'] < $pos['?'])
                 list($name,$params) = explode("\n",$call,2);
-            else
-                list($name,$params) = explode('?',$call,2);
+            else {
+                $name   = substr($call, 0, $pos['?']);
+                $params = substr($call, $pos['?']+1);
+            }
         }
         elseif($pos['&'] !== false && $pos['='] !== false && $pos['?'] === false)
             list($name,$params) = explode('&',$call,2);
