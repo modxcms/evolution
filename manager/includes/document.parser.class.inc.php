@@ -533,6 +533,11 @@ class DocumentParser {
         }
         return empty($tmp) ? $hash : $tmp;
     }
+    
+    function checkCache($id, $loading = false) {
+        return $this->getDocumentObjectFromCache($id, $loading);
+    }
+    
     /**
      * Check the cache for a specific document/resource
      *
@@ -540,27 +545,25 @@ class DocumentParser {
      * @param bool $loading
      * @return string
      */
-    function checkCache($id, $loading = false) {
-        $tbl_document_groups= $this->getFullTableName("document_groups");
+    function getDocumentObjectFromCache($id, $loading = false) {
         $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($id) : $id;
-        $cacheFile = $this->getHashFile($key);
-        if($loading){
-            $this->cacheKey = $key;
-        }
-        if (file_exists($cacheFile)) {
-            $this->documentGenerated= 0;
-            $flContent = file_get_contents($cacheFile, false);
-            $flContent= substr($flContent, 37); // remove php header
-            $a= explode("<!--__MODxCacheSpliter__-->", $flContent, 2);
+        if($loading) $this->cacheKey = $key;
+        
+        $cache_path = $this->getHashFile($key);
+        
+        if (is_file($cache_path)) {
+            $content = file_get_contents($cache_path, false);
+            if(substr($content,0,5)==='<?php') $content = substr($content, strpos($content,'?>')+2); // remove php header
+            $a= explode('<!--__MODxCacheSpliter__-->', $content, 2);
             if (count($a) == 1)
-                return $a[0]; // return only document content
+                $result = $a[0]; // return only document content
             else {
                 $docObj= unserialize($a[0]); // rebuild document object
                 // check page security
                 if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
                     $pass= false;
                     $usrGrps= $this->getUserDocGroups();
-                    $docGrps= explode(",", $docObj['__MODxDocGroups__']);
+                    $docGrps= explode(',', $docObj['__MODxDocGroups__']);
                     // check is user has access to doc groups
                     if (is_array($usrGrps)) {
                         foreach ($usrGrps as $k => $v)
@@ -573,18 +576,15 @@ class DocumentParser {
                     if (!$pass) {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
-                            $secrs= $this->db->select('count(id)', $tbl_document_groups, "document='{$id}'", '', '1');
-                                $seclimit= $this->db->getValue($secrs);
+                            $rs= $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                            $total= $this->db->getValue($rs);
                         }
-                        if ($seclimit > 0) {
-                            // match found but not publicly accessible, send the visitor to the unauthorized_page
-                            $this->sendUnauthorizedPage();
-                            exit; // stop here
-                        } else {
-                            // no match found, send the visitor to the error_page
-                            $this->sendErrorPage();
-                            exit; // stop here
-                        }
+                        else $total = 0;
+                        
+                        if ($total > 0) $this->sendUnauthorizedPage();
+                        else            $this->sendErrorPage();
+                        
+                        exit; // stop here
                     }
                 }
                 // Grab the Scripts
@@ -595,12 +595,17 @@ class DocumentParser {
                 unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
 
                 $this->documentObject= $docObj;
-                return $a[1]; // return document content
+                
+                $result = $a[1]; // return document content
             }
         } else {
             $this->documentGenerated= 1;
-            return "";
+            return '';
         }
+        $this->documentGenerated= 0;
+        // invoke OnLoadWebPageCache  event
+        $this->invokeEvent('OnLoadWebPageCache');
+        return $result;
     }
 
     /**
@@ -1912,11 +1917,9 @@ class DocumentParser {
      */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
-        $this->documentContent= $this->checkCache($this->documentIdentifier, true);
-        if ($this->documentContent != '') {
-            // invoke OnLoadWebPageCache  event
-            $this->invokeEvent('OnLoadWebPageCache');
-        } else {
+        $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+        
+        if ($this->documentContent == '') {
             // get document object from DB
             $this->documentObject= $this->getDocumentObject($this->documentMethod, $this->documentIdentifier, 'prepareResponse');
 
@@ -1940,7 +1943,9 @@ class DocumentParser {
 
             // Parse document source
             $this->documentContent = $this->parseDocumentSource($templateCode);
+            $this->documentGenerated = 1;
         }
+        else $this->documentGenerated = 0;
 
         if($this->config['error_page']==$this->documentIdentifier && $this->config['error_page']!=$this->config['site_start']) {
             header('HTTP/1.0 404 Not Found');
