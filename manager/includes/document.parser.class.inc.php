@@ -1195,7 +1195,7 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $snip_name = $snip_call['name'];
         
-        $snippetObject = $this->_get_snip_properties($snip_call);
+        $snippetObject = $this->_getSnippetObject($snip_call);
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1326,7 +1326,7 @@ class DocumentParser {
         return $snip;
     }
     
-    private function _get_snip_properties($snip_call)
+    private function _getSnippetObject($snip_call)
     {
         $snip_name  = $snip_call['name'];
         
