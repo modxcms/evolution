@@ -1937,6 +1937,8 @@ class DocumentParser {
             if (!$this->documentObject['template']) $templateCode = '[*content*]'; // use blank template
             else                                    $templateCode = $this->_getTemplateCodeFromDB($this->documentObject['template']);
 
+            if(substr($templateCode,0,8)==='@INCLUDE') $templateCode = $this->atBindInclude($templateCode);
+            
             // invoke OnLoadWebDocument event
             $this->documentContent = &$templateCode;
             $this->invokeEvent('OnLoadWebDocument');
