@@ -4606,6 +4606,42 @@ class DocumentParser {
         return $id;
     }
 
+    function atBindInclude($str='')
+    {
+        if(strpos($str,'@INCLUDE')!==0) return $str;
+        if(strpos($str,"\n")!==false)
+            $str = substr($str,0,strpos("\n",$str));
+        
+        $str = substr($str,9);
+        $str = trim($str);
+        $str = str_replace('\\','/',$str);
+        
+        $tpl_dir = 'assets/templates/';
+        
+        if(substr($str,0,1)==='/')
+        {
+            $vpath = MODX_BASE_PATH . ltrim($str,'/');
+            if(is_file($str) && strpos($str,MODX_MANAGER_PATH)===0)         $file_path = false;
+            elseif(is_file($vpath) && strpos($vpath,MODX_MANAGER_PATH)===0) $file_path = false;
+            elseif(is_file($str) && strpos($str,MODX_BASE_PATH)===0)        $file_path = $str;
+            elseif(is_file($vpath))                                         $file_path = $vpath;
+            else                                                            $file_path = false;
+        }
+        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH . $str;
+        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH . "{$tpl_dir}{$str}";
+        else                                                                $file_path = false;
+        
+        if(!$file_path || !is_file($file_path)) return false;
+        
+        ob_start();
+        global $modx;
+        $result = include($file_path);
+        if($result===1) $result = '';
+        $content = ob_get_clean();
+        if(!$content && $result) $content = $result;
+        return $content;
+    }
+    
     // php compat
     function htmlspecialchars($str, $flags = ENT_COMPAT)
     {
