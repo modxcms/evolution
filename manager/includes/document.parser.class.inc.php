@@ -4613,10 +4613,10 @@ class DocumentParser {
         return $this->phpcompat->htmlspecialchars($str, $flags);
     }
 
-        function isJson($string, $returnData=false) {
-            $data = json_decode($string, true);
-            return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
-        }
+    function isJson($string, $returnData=false) {
+        $data = json_decode($string, true);
+        return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+    }
     // End of class.
 
 }
