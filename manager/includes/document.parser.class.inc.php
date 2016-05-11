@@ -1081,6 +1081,68 @@ class DocumentParser {
         return $content;
     }
 
+    function mergeConditionalTagsContent($content)
+    {
+        if ($this->debug) $fstart = $this->getMicroTime();
+        
+        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ','<!--@IF:',$content);
+        if(strpos($content,'<!--@IF:')===false)      return $content;
+        if(strpos($content,'<!--@ELSEIF')!==false)   $content = str_replace('<!--@ELSEIF',  '<@ELSEIF',  $content);
+        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', '<@ELSE>',   $content);
+        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->','<@ENDIF-->',$content);
+        
+        $s = array('<!--@IF:',        '<@ELSE',            '<@ENDIF-->');
+        $r = array('<!--@CONDTAG@IF:','<!--@CONDTAG@ELSE', '<!--@CONDTAG@ENDIF-->');
+        $content = str_replace($s, $r, $content);
+        $splits = explode('<!--@CONDTAG@', $content);
+        foreach($splits as $i=>$split) {
+            if($i===0) {
+                $content = $split;
+                $excute = false;
+                continue;
+            }
+            if(substr($split,0,2)==='IF' || substr($split,0,6)==='ELSEIF') {
+                if($excute) continue;
+                list($cmd, $text) = explode('>', $split, 2);
+                $dlen = substr($split,0,2)==='IF' ? 2 : 6;
+                
+                $cmd = rtrim(substr($cmd,$dlen+1));
+                if(substr($cmd,-$dlen)==='--') $cmd = substr($cmd,0,-$dlen);
+                // echo ' -|||' . $cmd . '|||- ';
+                $flag = substr($cmd,0,1)!=='!' ? true : false;
+                if($flag===false) $cmd = ltrim($cmd,'!');
+                
+                if(strpos($cmd,'[!')!==false) $cmd = str_replace(array('[!','!]'),array('[[',']]'),$cmd);
+                
+                $cmd = $this->parseDocumentSource($cmd);
+                $cmd = ltrim($cmd);
+                
+                if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!]*$@', $cmd))
+                    $cmd = (int) eval("return {$cmd};");
+                if($cmd < 0) $cmd = 0;
+                
+                if( ($flag===true && !empty($cmd)) || ($flag===false && empty($cmd)) ) {
+                    $content .= $text;
+                    $excute = true;
+                }
+                else $excute = false;
+            }
+            elseif(substr($split,0,4)==='ELSE') {
+                if($excute) continue;
+                list(, $text) = explode('>', $split, 2);
+                $content .= $text;
+                $excute = true;
+            }
+            else {
+                list(, $text) = explode('>', $split, 2);
+                $content .= $text;
+                $excute = false;
+            }
+        }
+        if ($this->debug) $this->addLogEntry('$modx->'.__FUNCTION__,$fstart);
+        return $content;
+    }
+    
     /**
      * Detect PHP error according to MODX error level
      *
@@ -1741,6 +1803,8 @@ class DocumentParser {
             $this->documentOutput= $source; // store source code so plugins can
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
+            
+            $source= $this->mergeConditionalTagsContent($source);
             
             $source = $this->mergeSettingsContent($source);
             
