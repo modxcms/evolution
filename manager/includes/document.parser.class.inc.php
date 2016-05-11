@@ -2545,7 +2545,7 @@ class DocumentParser {
         
         $doc = $this->getDocumentObject('id', $docid);
         if(is_array($doc[$field])) {
-            $tvs= $this->getTemplateVarOutput($field, $docid,null);
+            $tvs= $this->getTemplateVarOutput($field, $docid,1);
             return $tvs[$field];
         }
         return $doc[$field];
