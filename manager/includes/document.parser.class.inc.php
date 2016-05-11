@@ -4629,8 +4629,8 @@ class DocumentParser {
             elseif(is_file($vpath))                                         $file_path = $vpath;
             else                                                            $file_path = false;
         }
-        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH . $str;
-        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH . "{$tpl_dir}{$str}";
+        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH.$str;
+        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH.$tpl_dir.$str;
         else                                                                $file_path = false;
         
         if(!$file_path || !is_file($file_path)) return false;
