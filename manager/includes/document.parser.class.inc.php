@@ -4636,7 +4636,7 @@ class DocumentParser {
         if(!$file_path || !is_file($file_path)) return false;
         
         ob_start();
-        global $modx;
+        $modx = & $this;
         $result = include($file_path);
         if($result===1) $result = '';
         $content = ob_get_clean();
