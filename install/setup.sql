@@ -767,13 +767,18 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
-#1.1
+#1.0.11-1.1
 
 ALTER TABLE `{PREFIX}site_templates`
  ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
 
 ALTER TABLE `{PREFIX}site_htmlsnippets`
  ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
+
+#1.1-1.1.1-beta
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `change_ressourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
 
 # ]]upgrade-able
 
