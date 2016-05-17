@@ -448,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `import_static` int(1) NOT NULL default '0',
   `export_static` int(1) NOT NULL default '0',
   `remove_locks` int(1) NOT NULL default '0',
-  `change_ressourcetype` int(1) NOT NULL default '0',
+  `change_resourcetype` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
 
@@ -778,7 +778,7 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 #1.1-1.1.1-beta
 
 ALTER TABLE  `{PREFIX}user_roles` 
-  ADD COLUMN `change_ressourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
+  ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
 
 # ]]upgrade-able
 

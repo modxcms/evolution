@@ -82,7 +82,7 @@ $fields = array (
 	'import_static' => $import_static,
 	'export_static' => $export_static,
     'remove_locks' => $remove_locks,
-    'change_ressourcetype' => $change_ressourcetype
+    'change_resourcetype' => $change_resourcetype
 );
 
 $fields = $modx->db->escape($fields);
