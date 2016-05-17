@@ -763,6 +763,7 @@ $_lang["role_actionok"] = '查看完成行为';
 $_lang["role_bk_manager"] = '使用备份管理';
 $_lang["role_cache_refresh"] = '清空站点cache';
 $_lang["role_change_password"] = '改变密码';
+$_lang["role_change_resourcetype"] = '更改資源類型';
 $_lang["role_chunk_management"] = 'Chunk management';
 $_lang["role_config_management"] = '管理配置';
 $_lang["role_content_management"] = '管理内容';

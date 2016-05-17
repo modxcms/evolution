@@ -763,6 +763,7 @@ $_lang["role_actionok"] = 'Vis oversigt over handlinger';
 $_lang["role_bk_manager"] = 'Brug backup værktøjet';
 $_lang["role_cache_refresh"] = 'Nulstil websitets cache';
 $_lang["role_change_password"] = 'Skift kodeord';
+$_lang["role_change_resourcetype"] = 'Skift ressourcetype';
 $_lang["role_chunk_management"] = 'Chunk administration';
 $_lang["role_config_management"] = 'Konfigurationsindstillinger';
 $_lang["role_content_management"] = 'Indholdsadministration';

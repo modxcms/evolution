@@ -773,6 +773,7 @@ $_lang["role_actionok"] = '処理完了ページの表示';
 $_lang["role_bk_manager"] = 'バックアップ・リストア機能の使用';
 $_lang["role_cache_refresh"] = 'サイトをリフレッシュ';
 $_lang["role_change_password"] = 'パスワード変更';
+$_lang["role_change_resourcetype"] = '変更リソースタイプ';
 $_lang["role_chunk_management"] = 'チャンクの管理';
 $_lang["role_config_management"] = '設定管理';
 $_lang["role_content_management"] = 'コンテンツ管理';

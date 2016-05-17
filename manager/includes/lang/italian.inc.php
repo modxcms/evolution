@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Visualizza la schermata di azione completata';
 $_lang["role_bk_manager"] = 'Usa il sistema di gestione delle copie di sicurezza';
 $_lang["role_cache_refresh"] = 'Svuota la cache del sito';
 $_lang["role_change_password"] = 'Cambia password';
+$_lang["role_change_resourcetype"] = 'Cambiare tipo di risorsa';
 $_lang["role_chunk_management"] = 'Gestione Chunk';
 $_lang["role_config_management"] = 'Gestione configurazione';
 $_lang["role_content_management"] = 'Gestione contenuto';

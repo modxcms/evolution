@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'مرور صفحه ی عملکردهای تکمیل ش
 $_lang["role_bk_manager"] = 'استفاده از مدیریت پشتیبانی داده';
 $_lang["role_cache_refresh"] = 'تخلیه ی کامل ذخیره یا کش وبگاه';
 $_lang["role_change_password"] = 'تغییر کلمه ی عبور';
+$_lang["role_change_resourcetype"] = 'تغییر نوع منبع';
 $_lang["role_chunk_management"] = 'مدیریت چانک';
 $_lang["role_config_management"] = 'مدیریت تنظیمات';
 $_lang["role_content_management"] = 'مدیریت محتوا';
