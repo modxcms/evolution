@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Näytä "toiminto suoritettu" -viestit';
 $_lang["role_bk_manager"] = 'Käytä varmuuskopiointia';
 $_lang["role_cache_refresh"] = 'Tyhjennä sivuston välimuisti';
 $_lang["role_change_password"] = 'Muuta salasana';
+$_lang["role_change_resourcetype"] = 'Muuta Materiaalityyppi';
 $_lang["role_chunk_management"] = 'HTML-palasten hallinta';
 $_lang["role_config_management"] = 'Asetusten hallinta';
 $_lang["role_content_management"] = 'Sisällönhallinta';

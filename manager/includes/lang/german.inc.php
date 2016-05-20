@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Ausgeführte Aktionen anzeigen';
 $_lang["role_bk_manager"] = 'Backup-Manager benutzen';
 $_lang["role_cache_refresh"] = 'Seitencache leeren';
 $_lang["role_change_password"] = 'Passwort ändern';
+$_lang["role_change_resourcetype"] = 'Ändern Ressourcentyp';
 $_lang["role_chunk_management"] = 'Chunk-Management';
 $_lang["role_config_management"] = 'Konfigurations-Verwaltung';
 $_lang["role_content_management"] = 'Inhalts-Verwaltung';

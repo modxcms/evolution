@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Prohlížení dokončené akce na obrazovce';
 $_lang["role_bk_manager"] = 'Použít správce zálohy';
 $_lang["role_cache_refresh"] = 'Vyprázdnit zásobník stránek (cache)';
 $_lang["role_change_password"] = 'Změna hesla';
+$_lang["role_change_resourcetype"] = 'Změnit typ zdroje';
 $_lang["role_chunk_management"] = 'Správa chunků';
 $_lang["role_config_management"] = 'Správa nastavení';
 $_lang["role_content_management"] = 'Správa obsahu';

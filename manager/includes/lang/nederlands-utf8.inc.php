@@ -762,6 +762,7 @@ $_lang["role_actionok"] = '\'Bewerking is voltooid\'-scherm weergeven';
 $_lang["role_bk_manager"] = 'Backupbeheer gebruiken';
 $_lang["role_cache_refresh"] = 'De cache van de website leegmaken';
 $_lang["role_change_password"] = 'Wachtwoord wijzigen';
+$_lang["role_change_resourcetype"] = 'Change Ressource-Type';
 $_lang["role_chunk_management"] = 'Chunk beheer';
 $_lang["role_config_management"] = 'Configuratiebeheer';
 $_lang["role_content_management"] = 'Inhoud beheer';
