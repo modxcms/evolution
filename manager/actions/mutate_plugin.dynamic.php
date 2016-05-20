@@ -430,13 +430,13 @@ var internal = <?php echo json_encode($internal); ?>;
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="pluginPane">
     <script type="text/javascript">
-        tp = new WebFXTabPane( document.getElementById( "pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+        tpSnippet = new WebFXTabPane( document.getElementById( "pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
     </script>
 
 <!-- General -->
 <div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabPlugin" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabPlugin" ) );</script>
     <table>
       <tr>
         <th><?php echo $_lang['plugin_name']; ?>:</th>
@@ -488,7 +488,7 @@ var internal = <?php echo json_encode($internal); ?>;
 <!-- Configuration/Properties -->
 <div class="tab-page" id="tabProps">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
       <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
@@ -534,7 +534,7 @@ var internal = <?php echo json_encode($internal); ?>;
 <!-- System Events -->
 <div class="tab-page" id="tabEvents">
     <h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabEvents" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
     <p><?php echo $_lang['plugin_event_msg']; ?></p>
     <table>
 <?php
@@ -598,7 +598,7 @@ var internal = <?php echo json_encode($internal); ?>;
 <!-- docBlock Info -->
 <div class="tab-page" id="tabDocBlock">
 <h2 class="tab"><?php echo $_lang['information'];?></h2>
-<script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
 <div class="section">
         <?php echo $docBlockList; ?>
 </div>
