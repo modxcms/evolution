@@ -90,10 +90,10 @@ $header = '
             min-height: 20px;
         }
         li.noChildren {
-            background-image: url(media/style/'.$manager_theme.'/images/tree/page.gif);
+            background-image: url('.$_style["tree_page"].');
         }
         li.hasChildren {
-            background-image: url(media/style/'.$manager_theme.'/images/tree/folder.gif);
+            background-image: url('.$_style["tree_folder"].');
         }
     </style>
     <script type="text/javascript">
