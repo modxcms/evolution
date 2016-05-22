@@ -1039,7 +1039,7 @@ class DocumentParser {
             $ph = $this->_snipParamsToArray($snip_call['params']);
             
             $value = $this->getChunk($key);
-            $value = $this->parseText($ph,$value,'[+','+]','hasModifier');
+            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : '';
             
             $replace[$i] = $value;
         }
