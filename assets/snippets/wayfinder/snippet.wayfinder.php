@@ -61,7 +61,7 @@ $wf->_config = array(
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
 	// for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr, etc)
-	'useReferenced' => isset($useReferenced) ? $useReferenced: "id", 
+	'useReferenced' => isset($useReferenced) ? $useReferenced: FALSE, 
 	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier
 );
 
