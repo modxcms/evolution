@@ -401,7 +401,7 @@ $.ddMM.mm_ddMultipleFields = {
 		//Специально для полей, содержащих изображения необходимо инициализировать
 		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');
 		
-		if (!returnOnly) $fieldBlock.appendTo($("tbody",_ddField));
+		if (!returnOnly) $fieldBlock.appendTo($(">tbody",_ddField));
 		_this.numberingRows(id);
 		return $fieldBlock;
 	},
@@ -410,7 +410,7 @@ $.ddMM.mm_ddMultipleFields = {
 		var _inst = this.instances[id];
 		if (_inst.options && _inst.options.showIndex===false) return;
 		var _ddField = $('#' + id + 'ddMultipleField');
-		$("tbody tr",_ddField).each(function(){
+		$(">tbody tr",_ddField).each(function(){
 			var t=$(this);
 			t.find("td:first *:not(:has(*))").html(t.index()+1);
 		})
