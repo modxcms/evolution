@@ -19,7 +19,7 @@ global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
-$readOnly = isset( $readOnly ) ? 'true' : 'false';
+$readOnly = isset( $readOnly ) && $readOnly === true ? 'true' : 'false';
 /*
  * Default Plugin configuration
  */
