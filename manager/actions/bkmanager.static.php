@@ -501,10 +501,13 @@ class Mysqldumper {
 			$result = $modx->db->query("SHOW CREATE TABLE `{$tblval}`");
 			$createtable[$tblval] = $this->result2Array(1, $result);
 		}
+        
+        $version = $modx->getVersionData();
+        
 		// Set header
 		$output  = "#{$lf}";
 		$output .= "# ".addslashes($modx->config['site_name'])." Database Dump{$lf}";
-		$output .= "# MODX Version:{$modx->config['settings_version']}{$lf}";
+		$output .= "# MODX Version:{$version['version']}{$lf}";
 		$output .= "# {$lf}";
 		$output .= "# Host: {$this->database_server}{$lf}";
 		$output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
@@ -635,7 +638,7 @@ function import_sql($source,$result_code='import_ok')
 	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
 	if(0 < $modx->db->getValue($rs))
 	{
-		$modx->webAlertAndQuit("Resource is edit now by any user.");
+		$modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
 	}
 	
 	$settings = getSettings();
