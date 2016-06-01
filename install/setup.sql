@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 	`id` int(11) NOT NULL auto_increment,
 	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
 	`contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
-	`value` text,
+	`value` mediumtext,
 	PRIMARY KEY  (id),
 	KEY idx_tmplvarid (tmplvarid),
 	KEY idx_id (contentid),
