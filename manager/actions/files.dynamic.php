@@ -18,27 +18,27 @@ $editablefiles       = add_dot($editablefiles);
 $inlineviewablefiles = add_dot($inlineviewablefiles);
 $viewablefiles       = add_dot($viewablefiles);
 
-$proteted_path = array();
+$protected_path = array();
 /* jp only
 if($_SESSION['mgrRole']!=1)
 {
 */
-        $proteted_path[] = $modx->config['site_manager_path'];
-	$proteted_path[] = $modx->config['base_path'] . 'temp/backup';
-	$proteted_path[] = $modx->config['base_path'] . 'assets/backup';
+    $protected_path[] = $modx->config['site_manager_path'];
+	$protected_path[] = $modx->config['base_path'] . 'temp/backup';
+	$protected_path[] = $modx->config['base_path'] . 'assets/backup';
 	
-	if(!$modx->hasPermission('save_plugin'))   $proteted_path[] = $modx->config['base_path'] . 'assets/plugins';
-	if(!$modx->hasPermission('save_snippet'))  $proteted_path[] = $modx->config['base_path'] . 'assets/snippets';
-	if(!$modx->hasPermission('save_template')) $proteted_path[] = $modx->config['base_path'] . 'assets/templates';
-	if(!$modx->hasPermission('save_module'))   $proteted_path[] = $modx->config['base_path'] . 'assets/modules';
-	if(!$modx->hasPermission('empty_cache'))   $proteted_path[] = $modx->config['base_path'] . 'assets/cache';
+	if(!$modx->hasPermission('save_plugin'))   $protected_path[] = $modx->config['base_path'] . 'assets/plugins';
+	if(!$modx->hasPermission('save_snippet'))  $protected_path[] = $modx->config['base_path'] . 'assets/snippets';
+	if(!$modx->hasPermission('save_template')) $protected_path[] = $modx->config['base_path'] . 'assets/templates';
+	if(!$modx->hasPermission('save_module'))   $protected_path[] = $modx->config['base_path'] . 'assets/modules';
+	if(!$modx->hasPermission('empty_cache'))   $protected_path[] = $modx->config['base_path'] . 'assets/cache';
 	if(!$modx->hasPermission('import_static')) {
-		$proteted_path[] = $modx->config['base_path'] . 'temp/import';
-		$proteted_path[] = $modx->config['base_path'] . 'assets/import';
+		$protected_path[] = $modx->config['base_path'] . 'temp/import';
+		$protected_path[] = $modx->config['base_path'] . 'assets/import';
 	}
 	if(!$modx->hasPermission('export_static')) {
-		$proteted_path[] = $modx->config['base_path'] . 'temp/export';
-		$proteted_path[] = $modx->config['base_path'] . 'assets/export';
+		$protected_path[] = $modx->config['base_path'] . 'temp/export';
+		$protected_path[] = $modx->config['base_path'] . 'assets/export';
 	}
 /*
 }
@@ -203,7 +203,7 @@ if(!empty($_FILES['userfile'])) $information = fileupload();
 elseif($_POST['mode']=='save')      echo textsave();
 elseif($_REQUEST['mode']=='delete') echo delete_file();
 
-if(in_array($startpath,$proteted_path))
+if(in_array($startpath,$protected_path))
 {
 	$modx->webAlertAndQuit($_lang["files.dynamic.php2"]);
 }
@@ -428,23 +428,29 @@ if($buffer===false) {
 <input type="hidden" name="path" value="<?php echo $_REQUEST['path']?>" />
 <table width="100%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content" class="phptextarea"><?php echo htmlentities($buffer,ENT_COMPAT,$modx_manager_charset)?></textarea></td>
+    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content" id="content" class="phptextarea"><?php echo htmlentities($buffer,ENT_COMPAT,$modx_manager_charset)?></textarea></td>
   </tr>
 </table>
 </form>
 </div>
 </div>
 <?php
-$_CM_BASE = 'assets/plugins/codemirror/';
-$_CM_URL = $modx->config['site_url'] . $_CM_BASE;
-if(is_file(MODX_BASE_PATH . $_CM_BASE .'cm/codemirror.files.php'))
-	require(MODX_BASE_PATH. $_CM_BASE .'cm/codemirror.files.php');
+$evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+    'editor' => 'Codemirror',
+    'elements' => array(
+        'content',
+    ),
+    'readOnly'=>$_REQUEST['mode']=='edit' ? false : true
+));
+if (is_array($evtOut))
+    echo implode('', $evtOut);
+    
 }
 
 function ls($curpath)
 {
 	global $_lang,$theme_image_path,$_style;
-	global $excludes, $proteted_path, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $modx;
+	global $excludes, $protected_path, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $modx;
 	$dircounter = 0;
 	$filecounter = 0;
 	$curpath = str_replace('//','/',$curpath.'/');
@@ -466,7 +472,7 @@ function ls($curpath)
 			$dirs_array[$dircounter]['dir'] = $newpath;
 			$dirs_array[$dircounter]['stats'] = lstat($newpath);
 			if($file==='..'||$file==='.') continue;
-			elseif(!in_array($file, $excludes) && !in_array($newpath,$proteted_path))
+			elseif(!in_array($file, $excludes) && !in_array($newpath,$protected_path))
 			{
 				$dirs_array[$dircounter]['text'] = '<img src="' . $theme_image_path.'tree/folder.gif" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=drill&path='.urlencode($newpath).'"><b>'.$file.'</b></a>';
 				
