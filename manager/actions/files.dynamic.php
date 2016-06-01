@@ -440,7 +440,7 @@ $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
     'elements' => array(
         'content',
     ),
-    'readOnly'=>true
+    'readOnly'=>$_REQUEST['mode']=='edit' ? false : true
 ));
 if (is_array($evtOut))
     echo implode('', $evtOut);
