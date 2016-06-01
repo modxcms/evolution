@@ -19,6 +19,7 @@ global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
+$readOnly = isset( $readOnly ) ? 'true' : 'false';
 /*
  * Default Plugin configuration
  */
@@ -224,6 +225,7 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
         var config = {
             mode: 'MODx-{$mode}',
             theme: '{$theme}',
+            readOnly: {$readOnly},
             indentUnit: {$indentUnit},
             tabSize: {$tabSize},
             lineNumbers: true,
@@ -280,6 +282,7 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
         
         $output .= "
     <script>
+        var readOnly = {$readOnly};
         var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
         var myTextArea = document.getElementsByName('{$el}')[0];
         config['extraKeys']['F11'] = function(cm) {
@@ -301,11 +304,11 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
                 }
         });
         // get data in localStorage
-        if ('true' == localStorage['cm_fullScreen_{$object_id}']){
+        if ('true' == localStorage['cm_fullScreen_{$object_id}'] && !readOnly){
             setFullScreen(myCodeMirrors['{$el}'], !isFullScreen(myCodeMirrors['{$el}']));
             myCodeMirrors['{$el}'].hasFocus();
         }
-        if (localStorage['history_{$object_id}'] !== undefined){
+        if (localStorage['history_{$object_id}'] !== undefined && !readOnly){
             var cmHistory = JSON.parse(localStorage['history_{$object_id}']);
             myCodeMirrors['{$el}'].doc.setHistory(cmHistory);
         }
