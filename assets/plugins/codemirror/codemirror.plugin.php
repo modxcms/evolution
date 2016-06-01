@@ -127,6 +127,7 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
     <script src="{$_CM_URL}cm/mode/clike-compressed.js"></script> <!-- required by mode php -->
+    <script src="{$_CM_URL}cm/mode/css-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
     {$emmet}{$search}
     
