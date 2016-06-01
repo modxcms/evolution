@@ -623,8 +623,7 @@ ALTER TABLE `{PREFIX}site_tmplvars`
  MODIFY COLUMN `default_text` text;
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
- MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id',
- MODIFY COLUMN `value` text;
+ MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id';
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates` MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id';
 
@@ -779,6 +778,9 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 
 ALTER TABLE  `{PREFIX}user_roles` 
   ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
+ MODIFY COLUMN `value` mediumtext;
 
 # ]]upgrade-able
 
