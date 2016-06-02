@@ -112,7 +112,7 @@ foreach( $_params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'
 
 include_once ($snipPath."eform.inc.php");
 
-$output = eForm($modx,array_merge($params,$_params));
+$output = eForm($modx,array_merge($_params,$params));
 
 # Return
 return $output;
