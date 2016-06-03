@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.4
+ Version: 2.0.5
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -189,14 +189,9 @@ class Wayfinder {
 
 					foreach ($this->_config['useReferenced'] as $field) {
 						if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
-						switch ($field) {
-							case "linktext" :
-								$resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
-								break;
-							case "title" :
-								$resource['title'] = $resource[$this->_config['titleOfLinks']];
-								break;
-						}
+						$linkTextField = empty($resource[$this->_config['textOfLinks']]) ? 'pagetitle' : $this->_config['textOfLinks'];
+						if (in_array($field,array("linktext",$linkTextField))) $resource['linktext'] = $referenced[$linkTextField];
+						if (in_array($field,array("title",$this->_config['titleOfLinks']))) $resource['title'] = $referenced[$this->_config['titleOfLinks']];
 					}
 				}
 			}
