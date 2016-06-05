@@ -364,7 +364,7 @@ class DocumentParser {
             $this->error_reporting = $this->config['error_reporting'];
             $this->config= array_merge($this->config, $usrSettings);
             $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);            
+            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
         }
     }
 
@@ -1709,15 +1709,14 @@ class DocumentParser {
             // get document
             $access= ($this->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
                 (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
-            $result= $this->db->select(
+            $rs= $this->db->select(
                 'sc.*',
                 "{$tblsc} sc
                 LEFT JOIN {$tbldg} dg ON dg.document = sc.id",
                 "sc.{$method} = '{$identifier}' AND ({$access})",
                 "",
                 1);
-            $rowCount= $this->db->getRecordCount($result);
-            if ($rowCount < 1) {
+            if ($this->db->getRecordCount($rs) < 1) {
                 $seclimit = 0;
                 if ($this->config['unauthorized_page']) {
                     // method may still be alias, while identifier is not full path alias, e.g. id not found above
@@ -1739,7 +1738,7 @@ class DocumentParser {
                 }
             }
             # this is now the document :) #
-            $documentObject= $this->db->getRow($result);
+            $documentObject= $this->db->getRow($rs);
 
             if($isPrepareResponse==='prepareResponse') $this->documentObject = & $documentObject;
             $out = $this->invokeEvent('OnLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
