@@ -4036,13 +4036,11 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-        
         $propertyString = trim($propertyString);
         $jsonFormat = $this->isJson($propertyString, true);
         $property = array();
-
         // old format
-        if ( !$jsonFormat ) {
+        if ( $jsonFormat === false) {
             $props= explode('&', $propertyString);
             foreach ($props as $prop) {
 
@@ -4054,22 +4052,31 @@ class DocumentParser {
                 $_ = explode('=', $prop, 2);
                 $key = trim($_[0]);
                 $p = explode(';', trim($_[1]));
-                if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
-                elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
-                elseif($p[1]=='checkbox'   && $p[3]!='') $value = $p[3]; // checkbox
-                elseif($p[1]=='radio'      && $p[3]!='') $value = $p[3]; // radio
-                elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
-                else                                     $value = '';
-                $property[$key] = $value;
+                switch ($p[1]) {
+                    case 'list':
+                    case 'list-multi':
+                    case 'checkbox':
+                    case 'radio':
+                        $value = $p[3];
+                        break;
+                    default:
+                        $value = $p[2];
+                }
+                if (!empty($key) && $value != '') $property[$key] = $value;
             }
-            
         // new json-format
         } else if(!empty($jsonFormat)){
             foreach( $jsonFormat as $key=>$row ) {
-                $property[$key] = is_array($row) ? $row[0]['value'] : $row;
+                if (!empty($key)) {
+                    if (is_array($row)) {
+                        $value = empty($row[0]['value'])? '' : $row[0]['value'];
+                    } else {
+                        $value = $row;
+                    }
+                    if (!empty($value)) $property[$key] = $value;
+                }
             }
         }
-
         if(!empty($elementName) && !empty($elementType)){
             $out = $this->invokeEvent('OnParseProperties', array(
                 'element' => $elementName,
