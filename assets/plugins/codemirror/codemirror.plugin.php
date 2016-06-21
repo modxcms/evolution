@@ -115,6 +115,13 @@ switch ($modx->Event->name) {
         $lang = "php";
         break;
 
+    case 'OnManagerPageRender':
+        if ((31 == $action) && (('view' == $_REQUEST['mode']) || ('edit' == $_REQUEST['mode']))) {
+            $textarea_name = 'content';
+            $rte = 'none';
+        }
+        break;
+
     default:
         $this->logEvent(1, 2, 'Undefined event : <b>' . $modx->Event->name . '</b> in <b>' . $this->Event->activePlugin . '</b> Plugin', 'CodeMirror Plugin : ' . $modx->Event->name);
 }
