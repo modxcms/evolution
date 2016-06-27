@@ -530,12 +530,12 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
         $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
 
         if (isset($_REQUEST['id']) && $content['parent'] != 0) {
-            $id = (int)$_REQUEST['id'];
-            $temp = $modx->getParentIds($id);
+            $bID = (int)$_REQUEST['id'];
+            $temp = $modx->getParentIds($bID);
         } else if (isset($_REQUEST['pid'])) {
-            $id = (int)$_REQUEST['pid'];
-            $temp = $modx->getParentIds($id);
-            array_unshift($temp, $id);
+            $bID = (int)$_REQUEST['pid'];
+            $temp = $modx->getParentIds($bID);
+            array_unshift($temp, $bID);
         }
 
         if ($temp) {
