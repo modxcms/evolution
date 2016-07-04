@@ -921,7 +921,7 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
@@ -1002,7 +1002,7 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
@@ -1062,7 +1062,7 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content, '[+', '+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
@@ -1268,7 +1268,7 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
-        if(strpos($key,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
             list($key,$modifiers) = explode(':', $key, 2);
         else $modifiers = false;
         $key = str_replace(array('(',')'),array("['","']"),$key);
@@ -1297,7 +1297,7 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $snip_name = $snip_call['name'];
         
-        if(strpos($snip_name,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($snip_name,':')!==false)
         {
             list($snip_name,$modifiers) = explode(':', $snip_name, 2);
             $snip_call['name'] = $snip_name;
@@ -2995,8 +2995,10 @@ class DocumentParser {
             $bt = md5($content);
             $replace= array ();
             foreach($matches[1] as $i=>$key) {
-                if(strpos($key,':')!==false) list($key,$modifiers) = explode(':', $key, 2);
-                else                         $modifiers = false;
+                if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+                    list($key,$modifiers) = explode(':', $key, 2);
+                else
+                    $modifiers = false;
                 
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
                 
@@ -3953,6 +3955,10 @@ class DocumentParser {
             return false;
         if (!isset ($this->pluginEvent[$evtName]))
             return false;
+        
+        if($evtName=='OnParseDocument' && class_exists('PHxParser'))
+            $this->config['enable_filter'] = 0;
+        
         $el= $this->pluginEvent[$evtName];
         $results= array ();
         $numEvents= count($el);

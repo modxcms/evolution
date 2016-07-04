@@ -601,6 +601,25 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
+<?php
+    $_lang["enable_filter_title"] = 'Enable filters';
+    $_lang["enable_filter_message"] = 'Filters allow you to manipulate the way data is presented or parsed in a tag. They allow you to modify values from inside your templates.';
+    if(!isset($enable_filter)) $enable_filter = 1;
+?>
+            <tr>
+              <td nowrap class="warning"><?php echo $_lang["enable_filter_title"] ?></td>
+              <td >
+                <?php echo wrap_label($_lang["yes"],form_radio('enable_filter', 1));?><br />
+                <?php echo wrap_label($_lang["no"], form_radio('enable_filter', 0));?>
+              </td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["enable_filter_message"]; ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
             <tr>
               <td nowrap class="warning"><?php echo $_lang["rss_url_news_title"] ?></td>
               <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_news" value="<?php echo isset($rss_url_news) ? $rss_url_news : $_lang["rss_url_news_default"] ; ?>" /></td>
