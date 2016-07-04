@@ -108,7 +108,7 @@ function setColor(){
 	ssv = ss.innerHTML;
 	if ($('server_pass') !== null) {
 		col.setStyle('background-color', '#9CCD00');
-//        col.setStyle('color', '#0000CD');
+		col.setStyle('border-width', '1px');
 		col.setStyle('font-weight','bold');
 
 		window.Slider1.slideIn(); //toggle the slider up and down.
