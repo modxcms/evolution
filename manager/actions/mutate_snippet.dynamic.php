@@ -31,7 +31,7 @@ $rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}'
     }
 // end check for lock
 
-
+$content = array();
 if(isset($_GET['id'])) {
     $rs = $modx->db->select('*', $tbl_site_snippets, "id='{$id}'");
     $content = $modx->db->getRow($rs);
@@ -50,6 +50,8 @@ if(isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
+
+$content = array_merge($content, $_POST);
 ?>
 <script type="text/javascript">
 
@@ -443,7 +445,7 @@ function contains(a, obj) {
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim($modx->htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"."?>" ?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->
