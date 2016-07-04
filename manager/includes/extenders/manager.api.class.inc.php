@@ -191,4 +191,40 @@ class ManagerAPI {
 
 		return $result;
 	}
+
+    function getLastUserSetting($key=false) {
+        global $modx;
+        
+        $rs = $modx->db->select('*', $modx->getFullTableName('user_settings'), "user = '{$_SESSION['mgrInternalKey']}'");
+        
+        $usersettings = array ();
+        while ($row = $modx->db->getRow($rs)) {
+            if(substr($row['setting_name'], 0, 6) == '_LAST_') {
+                $name = substr($row['setting_name'], 6);
+                $usersettings[$name] = $row['setting_value'];
+            }
+        }
+        
+        if(!$key) return $usersettings;
+        else return isset($usersettings[$key]) ? $usersettings[$key] : NULL;
+    }
+    
+    function saveLastUserSetting($settings, $val='') {
+        global $modx;
+        
+        if(!empty($settings)) {
+            if(!is_array($settings)) $settings = array($settings=>$val);
+            
+            foreach ($settings as $key => $val) {
+                $f = array();
+                $f['user']          = $_SESSION['mgrInternalKey'];
+                $f['setting_name']  = '_LAST_'.$key;
+                $f['setting_value'] = $val;
+                $f = $modx->db->escape($f);
+                $f = "(`".implode("`, `", array_keys($f))."`) VALUES('".implode("', '", array_values($f))."')";
+                $f .= " ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
+                $modx->db->insert($f, $modx->getFullTableName('user_settings'));
+            }
+        }
+    }
 }
