@@ -2040,7 +2040,6 @@ class DocumentParser {
                 $this->sendErrorPage();
             }
         }
-        exit;
     }
     
     function _sendRedirectForRefPage($url) {
