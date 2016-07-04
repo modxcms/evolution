@@ -20,9 +20,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     $theme = $manager_theme ? "$manager_theme/":"";
 
     // setup sorting
-    if(isset($_REQUEST['tree_sortby']))   { $_SESSION['tree_sortby']   = $_REQUEST['tree_sortby']; }
-    if(isset($_REQUEST['tree_sortdir']))  { $_SESSION['tree_sortdir']  = $_REQUEST['tree_sortdir']; }
-    if(isset($_REQUEST['tree_nodename'])) { $_SESSION['tree_nodename'] = $_REQUEST['tree_nodename']; }
+    $sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
+    foreach($sortParams as $param)
+        if(isset($_REQUEST[$param])) { $_SESSION[$param] = $_REQUEST[$param]; $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]); }
 
     // icons by content type
     $icons = array(
