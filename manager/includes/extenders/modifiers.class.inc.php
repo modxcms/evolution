@@ -546,6 +546,8 @@ class MODIFIERS {
                 if(empty($opt)) $opt = '%H:%M';
                 if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
                 return $modx->mb_strftime($opt,0+$value);
+            case 'strtotime':
+                return strtotime($value);
             #####  mathematical function
             case 'toint':
                 return intval($value);
@@ -562,6 +564,7 @@ class MODIFIERS {
             case 'abs':
                 return $cmd($value);
             case 'math':
+            case 'calc':
                 $value = (int)$value;
                 if(empty($value)) $value = '0';
                 $filter = str_replace(array('[+value+]','%s'),'?',$opt);
@@ -573,6 +576,15 @@ class MODIFIERS {
                 if($value=='') return 0;
                 $value = explode(',',$value);
                 return count($value);
+            case 'sort':
+            case 'rsort':
+                if(strpos($value,"\n")!==false) $delim="\n";
+                else $delim = ',';
+                $swap = explode($delim,$value);
+                if(!$opt) $opt = SORT_REGULAR;
+                else      $opt = constant($opt);
+                $cmd($swap,$opt);
+                return join($delim,$swap);
             #####  Resource fields
             case 'id':
                 if($opt) return $this->getDocumentObject($opt,$phxkey);
