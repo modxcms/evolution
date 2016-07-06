@@ -798,6 +798,21 @@ class MODIFIERS {
             case 'setvar':
                 $modx->placeholders[$opt] = $value;
                 return;
+            case 'csstohead':
+                $modx->regClientCSS($value);
+                return '';
+            case 'htmltohead':
+                $modx->regClientStartupHTMLBlock($value);
+                return;
+            case 'htmltobottom':
+                $modx->regClientHTMLBlock($value);
+                return '';
+            case 'jstohead':
+                $modx->regClientStartupScript($value);
+                return '';
+            case 'jstobottom':
+                $modx->regClientScript($value);
+                return '';
             case 'dummy':
                     return $value;
                 
