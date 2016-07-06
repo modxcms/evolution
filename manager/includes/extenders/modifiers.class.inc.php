@@ -57,6 +57,7 @@ class MODIFIERS {
             
             if    ($char==='=')
             {
+                $modifiers = trim($modifiers);
                 $nextchar = $this->substr($modifiers,0,1);
                 if(in_array($nextchar, array('"', "'", '`'))) list($value,$modifiers) = $this->_delimRoop($modifiers,$nextchar);
                 elseif(strpos($modifiers,':')!==false)        list($value,$modifiers) = explode(':', $modifiers, 2);
@@ -83,6 +84,7 @@ class MODIFIERS {
             elseif($char===':') $value = '';
             else                $key .= $char;
             
+            $key=trim($key);
             if(!is_null($value))
             {
                 $key=trim($key);
@@ -897,32 +899,10 @@ class MODIFIERS {
     {
         $debugbt = $_tmp;
         $_tmp = $this->substr($_tmp,1);
-        $value = '';
-        $c = 0;
-        while($c < 65000)
-        {
-            $bt = $_tmp;
-            $char = $this->substr($_tmp,0,1);
-            $_tmp = $this->substr($_tmp,1);
-            $c++;
-            if($c===65000)
-            {
-                global $modx;
-                $modx->addLog('modifiers _delimRoop debug',$debugbt);
-                exit('Modifiers parse over');
-            }
-            if($char===$delim && ($this->substr($_tmp,0,1)===':'))
-                break;
-            else
-                $value .= $char;
-            
-            if($delim===$_tmp)    {$_tmp='';break;}
-            elseif($bt === $_tmp) break;
-            elseif($_tmp==='')    break;
-        }
-        if($value===$delim) $value = '';
-        if(!empty($value))
-            $value = $this->parseDocumentSource($value);
+        $pos = strpos($_tmp,$delim);
+        $value = $this->substr($_tmp,0,$pos);
+        $_tmp  = $this->substr($_tmp,$pos+1);
+        if(!empty($value)) $value = $this->parseDocumentSource($value);
         
         return array($value,$_tmp);
     }

@@ -925,6 +925,7 @@ class DocumentParser {
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
             else                                   $value = '';
@@ -1006,6 +1007,7 @@ class DocumentParser {
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
                 if($modifiers!==false) {
@@ -1066,6 +1068,7 @@ class DocumentParser {
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
             elseif($key==='phx') $value = '';
             else continue;
@@ -1272,6 +1275,7 @@ class DocumentParser {
             list($key,$modifiers) = explode(':', $key, 2);
         else $modifiers = false;
         $key = str_replace(array('(',')'),array("['","']"),$key);
+        $key = trim($key);
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
@@ -1295,16 +1299,17 @@ class DocumentParser {
     private function _get_snip_result($piece)
     {
         $snip_call = $this->_split_snip_call($piece);
-        $snip_name = $snip_call['name'];
+        $key = $snip_call['name'];
         
-        if($this->config['enable_filter']==1 && strpos($snip_name,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
         {
-            list($snip_name,$modifiers) = explode(':', $snip_name, 2);
-            $snip_call['name'] = $snip_name;
+            list($key,$modifiers) = explode(':', $key, 2);
+            $key = trim($key);
+            $snip_call['name'] = $key;
         }
         else $modifiers = false;
         
-        $snippetObject = $this->_getSnippetObject($snip_call['name']);
+        $snippetObject = $this->_getSnippetObject($key);
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1320,7 +1325,7 @@ class DocumentParser {
         if($modifiers!==false)
         {
             $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($snip_name,$value,$modifiers);
+            $value = $this->filter->phxFilter($key,$value,$modifiers);
         }
         
         if($this->dumpSnippets == 1)
@@ -2999,6 +3004,7 @@ class DocumentParser {
                 else
                     $modifiers = false;
                 
+                $key = trim($key);
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
                 
                 if(isset($ph[$key])) {
