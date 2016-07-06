@@ -4,9 +4,9 @@ if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Ple
 
 <div class="sectionHeader">Changelog</div>
 <div class="sectionBody">
-<pre><?php
+<?php
 	$changeLog = MODX_BASE_PATH . 'assets/docs/changelog.txt';
 	if(is_readable($changeLog))
-		echo file_get_contents($changeLog);
-?></pre>
+		echo str_replace("\n",'<br>',file_get_contents($changeLog));
+?>
 </div>
