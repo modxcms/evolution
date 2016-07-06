@@ -6,7 +6,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <?php
     if ($handle = opendir(MODX_BASE_PATH . 'assets/templates/help/version_notices')) {
         while (false !== ($file = readdir($handle))) {
-            if ($file != "." && $file != ".." && $file != ".svn") {
+            if ($file != "." && $file != ".." && $file != ".svn" && is_readable(MODX_BASE_PATH . "assets/templates/help/version_notices/{$file}")) {
                 $notices[] = str_replace('.php', '', $file);
             }
         }
