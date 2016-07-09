@@ -1312,3 +1312,5 @@ $_lang["check_none"] = "Select none";
 $_lang["check_toggle"] = "Toggle selection";
 
 $_lang["version_notices"] = "Version Notices";
+
+$_lang["em_button_shift"] = " (Shift-Mouseclick to open multiple windows)";
