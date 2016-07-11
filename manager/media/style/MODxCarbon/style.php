@@ -27,6 +27,7 @@ $_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.pn
 $_style['show_tree']                = $style_path.'icons/application_side_expand.png';
 $_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px;height:16px" />';
 $_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px;height:16px" />';
+$_style['element_management']       = '<img src="'.$style_path.'icons/comment.gif" style="margin:3px 0 0 5px" />';
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';

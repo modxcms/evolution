@@ -1,5 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
     $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
@@ -19,6 +20,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -419,12 +421,28 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php } ?>
             <?php if ($modx->hasPermission('edit_document')) { ?>
                 <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
-            <?php } ?>    
+            <?php } ?>
+			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+				<td><a href="#" id="Button12" title="<?php echo $_lang["element_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['element_management'] ; ?></a></td>
+			<?php } ?>
             </tr>
         </table>
     </td>
   </tr>
 </table>
+
+<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+<script>
+	jQuery('#Button12').click(function(e) {
+		e.preventDefault();
+		var randomNum = 'gener';
+		if (e.shiftKey) {
+			randomNum = Math.floor((Math.random()*999999)+1);
+		}
+		window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+	});
+</script>
+<?php } ?>
 
 <div id="floater">
 <?php
