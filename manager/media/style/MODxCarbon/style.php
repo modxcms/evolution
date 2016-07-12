@@ -16,18 +16,18 @@
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 
 // Tree Menu Toolbar
-$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px;height:16px" />';
-$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px;height:16px" />';
-$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px;height:16px" />';
-$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px;height:16px" />';
-$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px;height:16px" />';
-$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px;height:16px" />';
+$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px; height:16px" />';
+$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px; height:16px" />';
+$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px; height:16px" />';
+$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px; height:16px" />';
+$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px; height:16px" />';
+$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px; height:16px" />';
 $_style['show_tree']                = $style_path.'icons/application_side_expand.png';
-$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px;height:16px" />';
-$_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px;height:16px" />';
-$_style['element_management']       = '<img src="'.$style_path.'icons/comment.gif" style="margin:3px 0 0 5px" />';
+$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px; height:16px" />';
+$_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px; height:16px" />';
+$_style['element_management']       = '<img src="'.$style_path.'icons/brick.png" style="width:16px; height:16px" />';
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
