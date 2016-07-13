@@ -416,9 +416,6 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onClick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button5" onClick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
-            <?php if ($modx->hasPermission('empty_trash')) { ?>
-                <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
-            <?php } ?>
             <?php if ($modx->hasPermission('edit_document')) { ?>
                 <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
             <?php } ?>
@@ -426,7 +423,10 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
                 <td><a href="#" id="Button14" class="treeButton" title="<?php echo $_lang["files_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['files_management'] ; ?></a></td>
 			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
                 <td><a href="#" id="Button12" class="treeButton" title="<?php echo $_lang["element_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['element_management'] ; ?></a></td>
-			<?php } ?>
+            <?php } ?>
+            <?php if ($modx->hasPermission('empty_trash')) { ?>
+                <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <?php } ?>
             </tr>
         </table>
     </td>
