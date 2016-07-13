@@ -1637,30 +1637,32 @@ a.hometblink:hover {
 
 /* -------------------------[ Tree buttons ]--- */
 
-.treeButton {
+.treeButton,
+.treeButtonDisabled {
   display: block;
   cursor: pointer;
   cursor: hand;
   color: #333;
-  border: 1px;
-  border-bottom-color: #809c47;
+  border: 1px solid transparent;
+  border-radius: 3px;
   padding: 3px 5px;
   white-space: nowrap;
   vertical-align: middle;
 }
 
 .treeButton:hover {
-  border: 1px solid #88939E;
-  padding: 2px 4px;
-  background: #fff;
+  border-color: #6e7a86;
+  background-color: #fff;
+  background-color: rgba(255,255,255,.5);
+}
+
+.treeButton:active {
+  background-color: #fff;
 }
 
 .treeButtonDisabled {
   cursor: default;
-  border: 1px solid #657587;
-  padding: 2px 4px;
   color: #777;
-  border-width: 0;
   opacity: .5;
   filter: alpha(opacity=50);
 }
