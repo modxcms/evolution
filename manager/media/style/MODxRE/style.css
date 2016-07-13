@@ -764,7 +764,7 @@ li {
 }
 
 ul {
-  margin: 0 20px 0 20px;
+  margin: 0 20px 0 10px;
 }
 
 .rtl ul {
@@ -1638,13 +1638,13 @@ a.hometblink:hover {
 }
 
 .dynamic-tab-pane-control ul {
-  padding-left: 10px;
+  padding-left: 5px;
   padding-right: 10px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 
 .dynamic-tab-pane-control li {
-  padding-left: 5px;
+  padding-left: 2px;
   padding-right: 5px;
 }
 
