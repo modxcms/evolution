@@ -4366,7 +4366,7 @@ class DocumentParser {
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
 
-        include_once('extenders/maketable.class.php');
+        if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');
