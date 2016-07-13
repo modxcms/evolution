@@ -637,12 +637,15 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
               <h2 class="tab">'.$_lang['web_access_permissions'].'</h2>
               <script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPermissions" ) );</script>
             ';
+        echo '<div class="sectionHeader">'. $_lang['web_access_permissions'] . '</div>';
+        echo '<div class="sectionBody">';
         echo '<p>'. $_lang['access_permissions_user_message'] . '</p>';
         $rs = $modx->db->select('name, id', $modx->getFullTableName('webgroup_names'), '', 'name');
         while ($row=$modx->db->getRow($rs)) {
           echo '<label><input type="checkbox" name="user_groups[]" value="'.$row['id'].'"'.(in_array($row['id'], $groupsarray) ? ' checked="checked"' : '').' />'.$row['name'].'</label><br />';
         }
 
+        echo '</div>';
         echo '</div>';
 
       }
