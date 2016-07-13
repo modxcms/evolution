@@ -4080,11 +4080,11 @@ class DocumentParser {
             foreach( $jsonFormat as $key=>$row ) {
                 if (!empty($key)) {
                     if (is_array($row)) {
-                        $value = empty($row[0]['value'])? '' : $row[0]['value'];
+                        if (isset($row[0]['value'])) $value = $row[0]['value'];
                     } else {
                         $value = $row;
                     }
-                    if (!empty($value)) $property[$key] = $value;
+                    if (isset($value)) $property[$key] = $value;
                 }
             }
         }
