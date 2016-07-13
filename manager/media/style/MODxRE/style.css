@@ -2431,6 +2431,10 @@ code {
   color: #1285A4;
 }
 
+#resourcesPane .disabledPlugin a:hover {
+  color: #aaa;
+}
+
 
 /* breadcrumbs */
 
