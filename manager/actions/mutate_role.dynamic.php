@@ -90,12 +90,12 @@ function deletedocument() {
 <fieldset>
 <table>
   <tr>
-    <td><?php echo $_lang['role_name']; ?>:</td>
-    <td><input name="name" type="text" maxlength="50" value="<?php echo $roledata['name'] ; ?>"></td>
+    <td style="vertical-align: top"><?php echo $_lang['role_name']; ?>:</td>
+    <td style="vertical-align: top"><input name="name" type="text" maxlength="50" value="<?php echo $roledata['name'] ; ?>"></td>
   </tr>
   <tr>
-    <td><?php echo $_lang['resource_description']; ?>:</td>
-    <td><input name="description" type="text" maxlength="255" value="<?php echo $roledata['description'] ; ?>" size="60"></td>
+    <td style="vertical-align: top"><?php echo $_lang['resource_description']; ?>:</td>
+    <td style="vertical-align: top"><input name="description" type="text" maxlength="255" value="<?php echo $roledata['description'] ; ?>" size="60"></td>
   </tr>
 </table>
 </fieldset>
@@ -107,7 +107,7 @@ table td {vertical-align:top;}
 </style>
 <table>
 <tr>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['page_data_general']; ?></h3>
 <?php
@@ -125,7 +125,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_content_management']; ?></h3>
 <?php
@@ -148,7 +148,7 @@ table td {vertical-align:top;}
 
 <table>
 <tr>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_template_management']; ?></h3>
 <?php
@@ -159,7 +159,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_snippet_management']; ?></h3>
 <?php
@@ -170,7 +170,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_chunk_management']; ?></h3>
 <?php
@@ -181,7 +181,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_plugin_management']; ?></h3>
 <?php
@@ -195,6 +195,9 @@ table td {vertical-align:top;}
 </tr>
 </table>
 
+<table>
+<tr>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_module_management']; ?></h3>
 <?php
@@ -205,10 +208,13 @@ table td {vertical-align:top;}
 	echo render_form('exec_module',   $_lang['role_run_module']);
 ?>
 </fieldset>
+</td>
+</tr>
+</table>
 
 <table>
 <tr>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_user_management']; ?></h3>
 <?php
@@ -219,7 +225,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_web_user_management']; ?></h3>
 <?php
@@ -230,7 +236,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_udperms']; ?></h3>
 <?php
@@ -239,7 +245,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_role_management']; ?></h3>
 <?php
@@ -255,7 +261,7 @@ table td {vertical-align:top;}
 
 <table>
 <tr>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_eventlog_management']; ?></h3>
 <?php
@@ -264,7 +270,7 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
-<td>
+<td style="vertical-align: top">
 <fieldset>
 <h3><?php echo $_lang['role_config_management']; ?></h3>
 <?php
