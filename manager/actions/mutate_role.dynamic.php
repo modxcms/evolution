@@ -90,12 +90,12 @@ function deletedocument() {
 <fieldset>
 <table>
   <tr>
-    <td style="vertical-align: top"><?php echo $_lang['role_name']; ?>:</td>
-    <td style="vertical-align: top"><input name="name" type="text" maxlength="50" value="<?php echo $roledata['name'] ; ?>"></td>
+    <td><?php echo $_lang['role_name']; ?>:</td>
+    <td><input name="name" type="text" maxlength="50" value="<?php echo $roledata['name'] ; ?>"></td>
   </tr>
   <tr>
-    <td style="vertical-align: top"><?php echo $_lang['resource_description']; ?>:</td>
-    <td style="vertical-align: top"><input name="description" type="text" maxlength="255" value="<?php echo $roledata['description'] ; ?>" size="60"></td>
+    <td><?php echo $_lang['resource_description']; ?>:</td>
+    <td><input name="description" type="text" maxlength="255" value="<?php echo $roledata['description'] ; ?>" size="60"></td>
   </tr>
 </table>
 </fieldset>
