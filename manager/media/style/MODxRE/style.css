@@ -875,13 +875,27 @@ div.treeframebody {
 #floater {
   display: none;
   position: absolute;
-  width: auto;
-  padding: 5px;
-  top: 25px;
+  width: 100%;
+  padding: 15px;
+  padding-bottom: 10px;
+  top: 31px;
   left: 0px;
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #b0b0b0;
+  box-shadow: 0 5px 5px 0 rgba(0,0,0,.1);
+  box-sizing: border-box;
   z-index: 500;
+}
+
+#floater td {
+  padding: 0 !important;
+}
+
+#floater input,
+#floater select {
+  box-sizing: border-box;
+  width: 150px;
+  margin-bottom: 5px;
 }
 
 .rtl #floater {
