@@ -4080,11 +4080,11 @@ class DocumentParser {
             foreach( $jsonFormat as $key=>$row ) {
                 if (!empty($key)) {
                     if (is_array($row)) {
-                        $value = empty($row[0]['value'])? '' : $row[0]['value'];
+                        if (isset($row[0]['value'])) $value = $row[0]['value'];
                     } else {
                         $value = $row;
                     }
-                    if (!empty($value)) $property[$key] = $value;
+                    if (isset($value)) $property[$key] = $value;
                 }
             }
         }
@@ -4366,7 +4366,7 @@ class DocumentParser {
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
 
-        include_once('extenders/maketable.class.php');
+        if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');
@@ -4546,7 +4546,7 @@ class DocumentParser {
     }
 
     function get_backtrace($backtrace) {
-        include_once('extenders/maketable.class.php');
+        if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');
