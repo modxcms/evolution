@@ -66,7 +66,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     }
 
     function toggleTreeFrame() {
-        var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:250;
+        var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:320;
         setTreeFrameWidth(pos);
     }
 
@@ -205,16 +205,18 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	</div>
 
 	<div id="supplementalNav">
-	<?php echo $modx->getLoginUserName(). ($modx->hasPermission('change_password') ? ': <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") ?>
+	<?php 
+      echo '<span class="username">' . $modx->getLoginUserName() . '</span>' . ($modx->hasPermission('change_password') ? ' <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") 
+    ?>
 <?php if($modx->hasPermission('messages')) { ?>
-	| <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang['you_got_mail']?>" target="main"> <img src="<?php echo $_style['icons_mail']?>" width="16" height="16" /></a></span>
+	<span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang['you_got_mail']?>" target="main"> <img src="<?php echo $_style['icons_mail']?>" width="16" height="16" /></a></span>
 	<a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang['messages']?> <span id="msgCounter">( ? / ? )</span></a>
 <?php }
 if($modx->hasPermission('help')) { ?>
-	| <a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
+	<a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
 <?php } ?>
-	| <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx->getVersionData('full_appname') ?>"><?php echo $modx->getVersionData('version') ?></span>&nbsp;
+	<a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
+	<span class="systemversion" title="<?php echo $site_name ?> &ndash; <?php echo $modx->getVersionData('full_appname') ?>"><?php echo $modx->getVersionData('version') ?></span>&nbsp;
 	<!-- close #supplementalNav --></div>
 </div>
 </div>

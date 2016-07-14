@@ -28,6 +28,8 @@ $_style['show_tree']                = $style_path.'icons/application_side_expand
 $_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px; height:16px" />';
 $_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px; height:16px" />';
 $_style['element_management']       = '<img src="'.$style_path.'icons/brick.png" style="width:16px; height:16px" />';
+$_style['images_management']        = '<img src="'.$style_path.'icons/camera.png" style="width:16px; height:16px" />';
+$_style['files_management']         = '<img src="'.$style_path.'icons/files.png" style="width:16px; height:16px" />';
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';

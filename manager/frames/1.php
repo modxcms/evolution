@@ -4,7 +4,7 @@ header("X-XSS-Protection: 0");
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
-if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '300';
+if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '320';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
 <!DOCTYPE html>
