@@ -925,10 +925,10 @@ class MODIFIERS {
     function _delimSplit($_tmp,$delim)
     {
         $debugbt = $_tmp;
-        $_tmp = $this->substr($_tmp,1);
+        $_tmp = substr($_tmp,1);
         $pos = strpos($_tmp,$delim);
-        $value = $this->substr($_tmp,0,$pos);
-        $_tmp  = $this->substr($_tmp,$pos+1);
+        $value = substr($_tmp,0,$pos);
+        $_tmp  = substr($_tmp,$pos+1);
         if(!empty($value)) {
             if(strpos($value,'[')!==false || strpos($value,'{')!==false)
                 $value = $this->parseDocumentSource($value);
