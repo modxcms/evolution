@@ -12,6 +12,7 @@ class MODIFIERS {
     var $phxkey;
     var $value;
     var $opt;
+    var $wrapat;
     
     function __construct()
     {
@@ -411,8 +412,8 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $wrapat = intval($opt) ? intval($opt) : 70;
-                return preg_replace("~(\b\w+\b)~e","wordwrap('\\1',\$wrapat,' ',1)",$value);
+                  $this->wrapat = intval($opt) ? intval($opt) : 70;
+                return preg_replace_callback("~(\b\w+\b)~",function($m){return wordwrap($m[1],$this->wrapat,'<br> ',true);},$value);
             case 'wrap_text':
                   $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
                   if($modx->config['manager_language']==='japanese-utf8')
