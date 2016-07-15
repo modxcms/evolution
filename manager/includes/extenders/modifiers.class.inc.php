@@ -415,26 +415,23 @@ class MODIFIERS {
                   $this->wrapat = intval($opt) ? intval($opt) : 70;
                 return preg_replace_callback("~(\b\w+\b)~",function($m){return wordwrap($m[1],$this->wrapat,'<br> ',true);},$value);
             case 'wrap_text':
-                  $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
-                  if($modx->config['manager_language']==='japanese-utf8')
-                {
+                $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
+                if($modx->config['manager_language']==='japanese-utf8') {
                     $chunk = array();
                     $c=0;
-                    while($c<10000)
-                      {
-                          $c++;
-                          if($this->strlen($value)<$width)
-                        {
+                    while($c<10000) {
+                        $c++;
+                        if($this->strlen($value)<$width) {
                             $chunk[] = $value;
                             break;
-                          }
-                          $chunk[] = $this->substr($value,0,$width);
-                          $value = $this->substr($value,$width);
+                        }
+                        $chunk[] = $this->substr($value,0,$width);
+                        $value = $this->substr($value,$width);
                     }
                     return join("\n",$chunk);
-                  }
-                  else
-                      return wordwrap($value,$width,"\n",true);
+                }
+                else
+                    return wordwrap($value,$width,"\n",true);
             case 'substr':
                 if(empty($opt)) break;
                 if(strpos($opt,',')!==false) {
