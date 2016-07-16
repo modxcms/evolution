@@ -1369,13 +1369,13 @@ class DocumentParser {
             }
             elseif($char==='&')
             {
-                if(trim($key)!=='') $value = '';
+                if(trim($key)!=='') $value = '1';
                 else continue;
             }
             elseif($_tmp==='')
             {
                 $key .= $char;
-                $value = '';
+                $value = '1';
             }
             elseif($key!==''||trim($char)!=='') $key .= $char;
             
