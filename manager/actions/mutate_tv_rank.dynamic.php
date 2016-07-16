@@ -45,7 +45,8 @@ if($limit>1) {
     $i = 0;
     foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
-        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['caption'].' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
+		$caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
+        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$caption.' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
     }
     $evtLists .= '</ul>';
 }
@@ -77,8 +78,9 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-            background-image: url("'.$_style['fade'].'");
-            background-repeat: repeat-x;
+            background: url("'.$_style['fade'].'") center repeat-x;
+            background-size: auto 100%;
+            display:inline-block;
         }
     </style>
     <script type="text/javascript">
