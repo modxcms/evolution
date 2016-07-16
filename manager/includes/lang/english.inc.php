@@ -1317,5 +1317,5 @@ $_lang["version_notices"] = "Version Notices";
 
 $_lang["em_button_shift"] = " (Shift-Mouseclick to open multiple windows)";
 
-$_lang["remove_notice"] = "Remove Notice";
+$_lang["reset_sysfiles_checksum_button"] = "Rebuild Checksums";
 $_lang["reset_sysfiles_checksum_alert"] = "Are you sure you want to reset the system files checksums?";
