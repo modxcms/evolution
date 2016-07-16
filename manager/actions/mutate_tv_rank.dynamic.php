@@ -29,7 +29,7 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $rs = $modx->db->select(
-	"name, id, rank",
+	"name, caption, id, rank",
         $tbl_site_tmplvars,
 	"",
 	"rank ASC, id ASC"
@@ -45,7 +45,7 @@ if($limit>1) {
     $i = 0;
     foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
-        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
+        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['caption'].' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
     }
     $evtLists .= '</ul>';
 }
@@ -66,7 +66,7 @@ $header = '
         ul.sortableList {
             padding-left: 20px;
             margin: 0px;
-            width: 300px;
+            width: 500px;
             font-family: Arial, sans-serif;
         }
 
@@ -105,7 +105,7 @@ $header = '
                     {
                         el.setStyle(\'padding\', \'3px 5px\');
                         el.setStyle(\'font-weight\', \'bold\');
-                        el.setStyle(\'width\', \'300px\');
+                        el.setStyle(\'width\', \'500px\');
                         el.setStyle(\'background-color\', \'#ccc\');
                         el.setStyle(\'cursor\', \'move\');
                     });

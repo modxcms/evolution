@@ -32,7 +32,7 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $rs = $modx->db->select(
-	"tv.name AS name, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
+	"tv.name AS name, tv.caption AS caption, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
 	"{$tbl_site_tmplvar_templates} AS tr
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
@@ -51,7 +51,7 @@ if($limit>1) {
     $i = 0;
     foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
-        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
+        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['caption'].' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
     }
     $evtLists .= '</ul>';
 }
@@ -72,7 +72,7 @@ $header = '
         ul.sortableList {
             padding-left: 20px;
             margin: 0px;
-            width: 300px;
+            width: 500px;
             font-family: Arial, sans-serif;
         }
 
@@ -111,7 +111,7 @@ $header = '
                     {
                         el.setStyle(\'padding\', \'3px 5px\');
                         el.setStyle(\'font-weight\', \'bold\');
-                        el.setStyle(\'width\', \'300px\');
+                        el.setStyle(\'width\', \'500px\');
                         el.setStyle(\'background-color\', \'#ccc\');
                         el.setStyle(\'cursor\', \'move\');
                     });
