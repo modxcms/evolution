@@ -1948,6 +1948,7 @@ ul.actionButtons {
   background: -o-linear-gradient(#FFFFFF, #F5F5F5);
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#F5F5F5);
   zoom: 1;
+  text-decoration:none !important;
 }
 
 .actionButtons a:active {

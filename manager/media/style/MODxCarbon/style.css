@@ -1335,6 +1335,7 @@ ul.actionButtons {
 	-moz-box-shadow: 0 0 10px #b8c7d6;
 	box-shadow:  0 0 10px #b8c7d6;
 	-webkit-transition: -webkit-box-shadow 0.2s linear;
+	text-decoration:none !important;
 }
 .actionButtons a:active {
 	background-color: #92aac4;

@@ -1220,7 +1220,7 @@ $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have configured MODX to check important system files for possible website script attacks. This does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes  were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have configured MODX to check important system files for possible website script attacks. This warning does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message. Changes in the following files have been found:';
 
 $_lang['email_method_title'] = 'Sendmail method';
 $_lang['email_method_mail'] = 'PHP mail() function';
@@ -1316,3 +1316,6 @@ $_lang["check_toggle"] = "Toggle selection";
 $_lang["version_notices"] = "Version Notices";
 
 $_lang["em_button_shift"] = " (Shift-Mouseclick to open multiple windows)";
+
+$_lang["reset_sysfiles_checksum_button"] = "Rebuild Checksums";
+$_lang["reset_sysfiles_checksum_alert"] = "Are you sure you want to reset the system files checksums?";
