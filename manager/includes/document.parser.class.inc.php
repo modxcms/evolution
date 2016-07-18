@@ -1147,6 +1147,24 @@ class DocumentParser {
     }
     
     /**
+     * Remove Comment-Tags from output like <!--@- Comment -@-->
+     */
+    function ignoreCommentedTagsContent($content, $left='<!--@-', $right='-@-->') {
+        if(strpos($content,$left)===false) return $content;
+
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        if(!empty($matches)) {
+            foreach($matches[0] as $i=>$v) {
+                $addBreakMatches[$i] = $v."\n";
+            }
+            $content = str_replace($addBreakMatches,'',$content);
+            if(strpos($content,$left)!==false)
+                $content = str_replace($matches[0],'',$content);
+        }
+        return $content;
+    }
+    
+    /**
      * Detect PHP error according to MODX error level
      *
      * @param integer $error PHP error level
@@ -1812,7 +1830,9 @@ class DocumentParser {
             $this->documentOutput= $source; // store source code so plugins can
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
-            
+
+            $source= $this->ignoreCommentedTagsContent($source);
+
             $source= $this->mergeConditionalTagsContent($source);
             
             $source = $this->mergeSettingsContent($source);
