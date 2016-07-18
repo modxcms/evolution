@@ -7,7 +7,7 @@ $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
-$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
+if(!isset($modx->config['mgr_jquery_path']))  $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 if(!isset($modx->config['devmode_showhash'])) $modx->config['devmode_showhash'] = 0;
 ?>
 <!DOCTYPE html>
