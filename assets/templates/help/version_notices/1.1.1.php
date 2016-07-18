@@ -33,5 +33,8 @@ Top page
 Sub page
 <@ENDIF--&gt;</pre>
 	</li>
-	
+	<li><strong>New Comment Tag</strong>
+		<p>Will be completely removed from output. More infos at <a href="https://github.com/modxcms/evolution/issues/680" target="_blank">Github #680</a>. Example:</p>
+		<pre>&lt;!--@- This is a comment -@--&gt;</pre>
+	</li>
 </ul>
