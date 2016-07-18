@@ -203,7 +203,7 @@ class ManagerAPI {
 		if($current===$modx->config['sys_files_checksum']) $result = '0';
 		else {
 			$result = $this->getModifiedSystemFilesList($modx->config['check_files_onlogin'], $modx->config['sys_files_checksum']);
-		};  
+		} 
 
 		return $result;
 	}
