@@ -72,8 +72,13 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
 </table>
 
 <ul class="actionButtons">
-	<li><a href="#" class="default" onclick="document.exportFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
+	<li id="exportButton"><a href="#" class="default" onclick="document.exportFrm.submit();jQuery(this).hide();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
 </ul>
+<script>
+	jQuery('#exportButton a').click(function(){
+        jQuery(this).parent().html('<?php echo $_style['ajax_loader'];?>');
+    });
+</script>
 </form>
 
 <?php
