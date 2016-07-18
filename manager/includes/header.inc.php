@@ -21,6 +21,13 @@ if(!isset($modx->config['mgr_jquery_path']))  $modx->config['mgr_jquery_path'] =
     <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
     <script type="text/javascript">
 		/* <![CDATA[ */
+	
+        jQuery(function(){
+        jQuery('.transition a').click(function(){
+                jQuery('#actions').fadeOut(100);
+            });
+        });
+        
         window.addEvent('load', document_onload);
         window.addEvent('beforeunload', document_onunload);
         

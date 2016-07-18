@@ -559,7 +559,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 <div id="actions">
       <ul class="actionButtons">
-          <li id="Button1">
+          <li id="Button1" class="transition">
             <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
               <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
             </a>
@@ -579,7 +579,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
           <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } ?>
-          <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <li id="Button4" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
 </div>
