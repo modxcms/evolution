@@ -162,8 +162,8 @@ $header .= '</head>
 
 <div id="actions">
     <ul class="actionButtons">
-        <li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-        <li><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$id.'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li class="transition"><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+        <li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$id.'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
     </ul>
 </div>
 

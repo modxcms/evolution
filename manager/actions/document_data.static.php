@@ -199,10 +199,10 @@ function movedocument() {
 	
 	<div id="actions">	
 	  <ul class="actionButtons">
-		  <li id="Button1">
+		  <li id="Button1" class="transition">
 			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" /> <?php echo $_lang['edit']?></a>
 		  </li>
-		  <li id="Button2">
+		  <li id="Button2" class="transition">
 			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" /> <?php echo $_lang['move']?></a>
 		  </li>
 		  <li id="Button4">

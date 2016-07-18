@@ -82,7 +82,7 @@ echo $cm->render();
 
 	<div id="actions">
 		<ul class="actionButtons">
-			<?php if(($modx->hasPermission('new_module'))){ echo '<li id="newModule"><a href="index.php?a=107"><img src="'. $_style["icons_save"]. '" />'. $_lang["new_module"].'</a></li>'; } ?>
+			<?php if(($modx->hasPermission('new_module'))){ echo '<li id="newModule" class="transition"><a href="index.php?a=107"><img src="'. $_style["icons_save"]. '" />'. $_lang["new_module"].'</a></li>'; } ?>
 		</ul>
 	</div>
 
