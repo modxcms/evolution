@@ -8,7 +8,6 @@ $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
 if(!isset($modx->config['mgr_jquery_path']))  $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
-if(!isset($modx->config['devmode_showhash'])) $modx->config['devmode_showhash'] = 0;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo  $mxla;?>" dir="<?php echo  $textdir;?>"><head>
@@ -22,8 +21,6 @@ if(!isset($modx->config['devmode_showhash'])) $modx->config['devmode_showhash'] 
     <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
     <script type="text/javascript">
 		/* <![CDATA[ */
-        var show_hash = <?php echo $modx->config['devmode_showhash'];?>;
-        if(show_hash) parent.location.hash = location.search.substr(1);
         window.addEvent('load', document_onload);
         window.addEvent('beforeunload', document_onunload);
         
