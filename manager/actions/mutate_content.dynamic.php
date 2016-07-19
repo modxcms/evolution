@@ -147,18 +147,9 @@ if (isset ($_POST['which_editor'])) {
     $which_editor = $_POST['which_editor'];
 }
 ?>
-<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
 window.addEvent('domready', function(){
-    var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-    var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
-    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-
     if( !window.ie6 ) {
         $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
             help_img.removeProperty('onclick');
@@ -1241,6 +1232,9 @@ if (is_array($evtOut)) echo implode('', $evtOut);
             }
         }
     }
+    if(!isset($modx->config['mgr_date_picker_path']))
+        $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
+    echo loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
 {
@@ -1281,4 +1275,11 @@ function getDefaultTemplate()
 	if(!isset($default_template)) $default_template = $modx->config['default_template']; // default_template is already set
 	
 	return $default_template;
+}
+
+function loadDatePicker($path) {
+    global $modx;
+    include_once($path);
+    $dp = new DATEPICKER();
+    return $modx->mergeSettingsContent($dp->getDP());
 }
