@@ -30,6 +30,11 @@ var options = {
 
 var pub_date   = jQuery('#pub_date');
 var unpub_date = jQuery('#unpub_date');
+var dob        = jQuery('#dob');
+var datefrom   = jQuery('#datefrom');
+var dateto     = jQuery('#dateto');
+var blockedafter = jQuery('#blockedafter');
+var blockeduntil = jQuery('#blockeduntil');
 
 pub_date.datepicker(options);
 if(pub_date.val()) {
@@ -44,6 +49,46 @@ if(unpub_date.val()) {
     unpub_date_val = unpub_date.val();
     if(unpub_date_val.indexOf('-')) unpub_date_val = unpub_date_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
     unpub_date.data('datepicker').selectDate(new Date(unpub_date_val));
+    documentDirty = false;
+}
+
+dob.datepicker(options);
+if(dob.val()) {
+    dob_val = dob.val();
+    if(dob_val.indexOf('-')) dob_val = dob_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+    dob.data('datepicker').selectDate(new Date(dob_val));
+    documentDirty = false;
+}
+
+datefrom.datepicker(options);
+if(datefrom.val()) {
+    datefrom_val = datefrom.val();
+    if(datefrom_val.indexOf('-')) datefrom_val = datefrom_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+    datefrom.data('datepicker').selectDate(new Date(datefrom_val));
+    documentDirty = false;
+}
+
+dateto.datepicker(options);
+if(dateto.val()) {
+    dateto_val = dateto.val();
+    if(dateto_val.indexOf('-')) dateto_val = dateto_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+    dateto.data('datepicker').selectDate(new Date(dateto_val));
+    documentDirty = false;
+}
+
+blockedafter.datepicker(options);
+if(blockedafter.val()) {
+    blockedafter_val = blockedafter.val();
+    if(blockedafter_val.indexOf('-')) blockedafter_val = blockedafter_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+    blockedafter.data('datepicker').selectDate(new Date(blockedafter_val));
+    documentDirty = false;
+}
+
+blockeduntil.datepicker(options);
+if(blockeduntil.val()) {
+    blockeduntil_val = blockeduntil.val();
+    if(blockeduntil_val.indexOf('-')) blockeduntil_val = blockeduntil_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+    blockeduntil.data('datepicker').selectDate(new Date(blockeduntil_val));
     documentDirty = false;
 }
 

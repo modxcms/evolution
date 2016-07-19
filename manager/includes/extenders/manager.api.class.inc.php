@@ -243,4 +243,11 @@ class ManagerAPI {
             }
         }
     }
+    
+    function loadDatePicker($path) {
+        global $modx;
+        include_once($path);
+        $dp = new DATEPICKER();
+        return $modx->mergeSettingsContent($dp->getDP());
+    }
 }

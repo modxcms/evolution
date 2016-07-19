@@ -89,20 +89,7 @@ if($manager_language!="english" && file_exists($modx->config['site_manager_path'
 
 $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 ?>
-<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
-  window.addEvent('domready', function() {
-    var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-    var dpformat = "<?php echo $modx->config['datetime_format']; ?>";
-    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
-    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
-    new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-    if ($('blockeduntil')) {
-      new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-      new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00', 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-    }
-  });
 
   function changestate(element) {
     documentDirty=true;
@@ -969,5 +956,6 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
   ));
   if (is_array($evtOut))
     echo implode("", $evtOut);
+  echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
   ?>
 </form>

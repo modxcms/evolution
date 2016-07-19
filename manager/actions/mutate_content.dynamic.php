@@ -1232,9 +1232,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
             }
         }
     }
-    if(!isset($modx->config['mgr_date_picker_path']))
-        $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
-    echo loadDatePicker($modx->config['mgr_date_picker_path']);
+    echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
 {
@@ -1275,11 +1273,4 @@ function getDefaultTemplate()
 	if(!isset($default_template)) $default_template = $modx->config['default_template']; // default_template is already set
 	
 	return $default_template;
-}
-
-function loadDatePicker($path) {
-    global $modx;
-    include_once($path);
-    $dp = new DATEPICKER();
-    return $modx->mergeSettingsContent($dp->getDP());
 }
