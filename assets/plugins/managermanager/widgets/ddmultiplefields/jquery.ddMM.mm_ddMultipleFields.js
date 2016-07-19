@@ -527,11 +527,6 @@ $.ddMM.mm_ddMultipleFields = {
 	makeDate: function(value, title, $fieldCol){
 		//name нужен для DatePicker`а
 		var $field = $('<input type="text" title="' + title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(value).appendTo($fieldCol);
-
-		new DatePicker($field.get(0), {
-			'yearOffset': $.ddMM.config.datepicker_offset,
-			'format': $.ddMM.config.datetime_format + ' hh:mm:00'
-		});
 		
 		return $field;
 	},
