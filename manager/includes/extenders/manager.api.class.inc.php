@@ -165,7 +165,21 @@ class ManagerAPI {
 		}
 		return serialize($_);
 	}
-	
+
+	function getModifiedSystemFilesList($check_files, $checksum) {
+		$_ = array();
+		$check_files = trim($check_files);
+		$check_files = explode("\n", $check_files);
+		$checksum = unserialize($checksum);
+		foreach($check_files as $file) {
+			$file = trim($file);
+			$filePath = MODX_BASE_PATH . $file;
+			if(!is_file($filePath)) continue;
+			if(md5_file($filePath) != $checksum[$filePath]) $_[] = $file;
+		}
+		return $_;
+	}
+
 	function setSystemChecksum($checksum) {
 		global $modx;
 		$tbl_system_settings = $modx->getFullTableName('system_settings');
@@ -187,7 +201,9 @@ class ManagerAPI {
 			return '0';
 		}
 		if($current===$modx->config['sys_files_checksum']) $result = '0';
-		else                                               $result = 'modified';
+		else {
+			$result = $this->getModifiedSystemFilesList($modx->config['check_files_onlogin'], $modx->config['sys_files_checksum']);
+		} 
 
 		return $result;
 	}

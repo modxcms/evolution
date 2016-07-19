@@ -9,9 +9,10 @@ class MODIFIERS {
     var $srcValue;
     var $condition = array();
     
-    var $phxkey;
+    var $key;
     var $value;
     var $opt;
+    var $wrapat;
     
     function __construct()
     {
@@ -25,7 +26,7 @@ class MODIFIERS {
         global $modx;
         $this->srcValue = $value;
         $modifiers = str_replace(array("\r\n","\r"), "\n", $modifiers);
-        $modifiers = $this->splitModifiers($modifiers);
+        $modifiers = $this->splitEachModifiers($modifiers);
         $this->placeholders = array();
         $this->placeholders['phx'] = '';
         $this->placeholders['dummy'] = '';
@@ -37,7 +38,7 @@ class MODIFIERS {
         return $value;
     }
     
-    function splitModifiers($modifiers)
+    function splitEachModifiers($modifiers)
     {
         global $modx;
         
@@ -141,11 +142,11 @@ class MODIFIERS {
     }
     
     // Parser: modifier detection and eXtended processing if needed
-    function Filter($phxkey, $value, $cmd, $opt='')
+    function Filter($key, $value, $cmd, $opt='')
     {
         global $modx;
         
-        if($phxkey==='documentObject') $value = $modx->documentIdentifier;
+        if($key==='documentObject') $value = $modx->documentIdentifier;
         $cmd = $this->parseDocumentSource($cmd);
         if(preg_match('@^[1-9][/0-9]*$@',$cmd))
         {
@@ -159,18 +160,16 @@ class MODIFIERS {
         if(!$modx->chunkCache) $modx->setChunkCache();
         
         if(isset($modx->snippetCache["phx:{$cmd}"]))   $this->elmName = "phx:{$cmd}";
-        elseif(isset($modx->snippetCache[$cmd]))       $this->elmName = $cmd;
         elseif(isset($modx->chunkCache["phx:{$cmd}"])) $this->elmName = "phx:{$cmd}";
-        elseif(isset($modx->chunkCache[$cmd]))         $this->elmName = $cmd;
         else                                           $this->elmName = '';
         
         $cmd = strtolower($cmd);
         if($this->elmName!=='')
-            $value = $this->getValueFromElement($phxkey, $value, $cmd, $opt);
+            $value = $this->getValueFromElement($key, $value, $cmd, $opt);
         else
-            $value = $this->getValueFromPreset($phxkey, $value, $cmd, $opt);
+            $value = $this->getValueFromPreset($key, $value, $cmd, $opt);
         
-        $value = str_replace('[+key+]', $phxkey, $value);
+        $value = str_replace('[+key+]', $key, $value);
         
         return $value;
     }
@@ -184,13 +183,13 @@ class MODIFIERS {
         else                  return true;
     }
     
-    function getValueFromPreset($phxkey, $value, $cmd, $opt)
+    function getValueFromPreset($key, $value, $cmd, $opt)
     {
         global $modx;
         
         if($this->isEmpty($cmd,$value)) return;
         
-        $this->phxkey = $phxkey;
+        $this->key = $key;
         $this->value  = $value;
         $this->opt    = $opt;
         
@@ -411,29 +410,26 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $wrapat = intval($opt) ? intval($opt) : 70;
-                return preg_replace("~(\b\w+\b)~e","wordwrap('\\1',\$wrapat,' ',1)",$value);
+                  $this->wrapat = intval($opt) ? intval($opt) : 70;
+                return preg_replace_callback("~(\b\w+\b)~",function($m){return wordwrap($m[1],$this->wrapat,' ',1);},$value);
             case 'wrap_text':
-                  $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
-                  if($modx->config['manager_language']==='japanese-utf8')
-                {
+                $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
+                if($modx->config['manager_language']==='japanese-utf8') {
                     $chunk = array();
                     $c=0;
-                    while($c<10000)
-                      {
-                          $c++;
-                          if($this->strlen($value)<$width)
-                        {
+                    while($c<10000) {
+                        $c++;
+                        if($this->strlen($value)<$width) {
                             $chunk[] = $value;
                             break;
-                          }
-                          $chunk[] = $this->substr($value,0,$width);
-                          $value = $this->substr($value,$width);
+                        }
+                        $chunk[] = $this->substr($value,0,$width);
+                        $value = $this->substr($value,$width);
                     }
                     return join("\n",$chunk);
-                  }
-                  else
-                      return wordwrap($value,$width,"\n",true);
+                }
+                else
+                    return wordwrap($value,$width,"\n",true);
             case 'substr':
                 if(empty($opt)) break;
                 if(strpos($opt,',')!==false) {
@@ -587,7 +583,7 @@ class MODIFIERS {
                 return join($delim,$swap);
             #####  Resource fields
             case 'id':
-                if($opt) return $this->getDocumentObject($opt,$phxkey);
+                if($opt) return $this->getDocumentObject($opt,$key);
                 break;
             case 'type':
             case 'contenttype':
@@ -830,7 +826,7 @@ class MODIFIERS {
                 
             // If we haven't yet found the modifier, let's look elsewhere
             default:
-                $value = $this->getValueFromElement($phxkey, $value, $cmd, $opt);
+                $value = $this->getValueFromElement($key, $value, $cmd, $opt);
                 break;
         }
         return $value;
@@ -838,13 +834,13 @@ class MODIFIERS {
 
     function includeMdfFile($cmd) {
         global $modx;
-        $phxkey = $this->phxkey;
+        $key = $this->key;
         $value  = $this->value;
         $opt    = $this->opt;
     	return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
     }
     
-    function getValueFromElement($phxkey, $value, $cmd, $opt)
+    function getValueFromElement($key, $value, $cmd, $opt)
     {
         global $modx;
         if( isset($modx->snippetCache[$this->elmName]) )
@@ -899,7 +895,7 @@ class MODIFIERS {
             ob_start();
             $options = $opt;
             $output = $value;
-            $name   = $phxkey;
+            $name   = $key;
             $this->bt = $value;
             $this->vars['value']   = & $value;
             $this->vars['input']   = & $value;
@@ -925,10 +921,10 @@ class MODIFIERS {
     function _delimSplit($_tmp,$delim)
     {
         $debugbt = $_tmp;
-        $_tmp = $this->substr($_tmp,1);
+        $_tmp = substr($_tmp,1);
         $pos = strpos($_tmp,$delim);
-        $value = $this->substr($_tmp,0,$pos);
-        $_tmp  = $this->substr($_tmp,$pos+1);
+        $value = substr($_tmp,0,$pos);
+        $_tmp  = substr($_tmp,$pos+1);
         if(!empty($value)) {
             if(strpos($value,'[')!==false || strpos($value,'{')!==false)
                 $value = $this->parseDocumentSource($value);

@@ -147,18 +147,9 @@ if (isset ($_POST['which_editor'])) {
     $which_editor = $_POST['which_editor'];
 }
 ?>
-<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
 window.addEvent('domready', function(){
-    var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-    var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
-    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-
     if( !window.ie6 ) {
         $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
             help_img.removeProperty('onclick');
@@ -559,7 +550,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 <div id="actions">
       <ul class="actionButtons">
-          <li id="Button1">
+          <li id="Button1" class="transition">
             <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
               <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
             </a>
@@ -579,7 +570,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
           <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } ?>
-          <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <li id="Button4" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
 </div>
@@ -822,11 +813,12 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         } else {
                             $tvPBV = $row['value'];
                         }
-
+						
 						$tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
 						$tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-                       
-                        echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
+						$tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*'.$row['name'].'*]</small>' : '';
+						
+                        echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'].$tvName,"</span>\n",
                              "\t\t\t",$tvDescription,$tvInherited,"</td>\n",
                              "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? '' : ''),'">',"\n",
                              "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row),"\n",
@@ -1240,6 +1232,9 @@ if (is_array($evtOut)) echo implode('', $evtOut);
             }
         }
     }
+    if(!isset($modx->config['mgr_date_picker_path']))
+        $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
+    echo loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
 {
@@ -1280,4 +1275,11 @@ function getDefaultTemplate()
 	if(!isset($default_template)) $default_template = $modx->config['default_template']; // default_template is already set
 	
 	return $default_template;
+}
+
+function loadDatePicker($path) {
+    global $modx;
+    include_once($path);
+    $dp = new DATEPICKER();
+    return $modx->mergeSettingsContent($dp->getDP());
 }

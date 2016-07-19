@@ -403,7 +403,7 @@ var internal = <?php echo json_encode($internal); ?>;
 
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
@@ -421,7 +421,7 @@ var internal = <?php echo json_encode($internal); ?>;
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 

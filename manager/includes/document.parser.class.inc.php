@@ -1147,6 +1147,24 @@ class DocumentParser {
     }
     
     /**
+     * Remove Comment-Tags from output like <!--@- Comment -@-->
+     */
+    function ignoreCommentedTagsContent($content, $left='<!--@-', $right='-@-->') {
+        if(strpos($content,$left)===false) return $content;
+
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        if(!empty($matches)) {
+            foreach($matches[0] as $i=>$v) {
+                $addBreakMatches[$i] = $v."\n";
+            }
+            $content = str_replace($addBreakMatches,'',$content);
+            if(strpos($content,$left)!==false)
+                $content = str_replace($matches[0],'',$content);
+        }
+        return $content;
+    }
+    
+    /**
      * Detect PHP error according to MODX error level
      *
      * @param integer $error PHP error level
@@ -1342,6 +1360,7 @@ class DocumentParser {
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
+        $key = '';
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
@@ -1350,10 +1369,10 @@ class DocumentParser {
             if($char==='=')
             {
                 $_tmp = trim($_tmp);
-                $nextchar = substr($_tmp,0,1);
-                if(in_array($nextchar, array('"', "'", '`')))
+                $delim = substr($_tmp,0,1);
+                if(in_array($delim, array('"', "'", '`')))
                 {
-                    list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
+                    list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
@@ -1368,11 +1387,15 @@ class DocumentParser {
             }
             elseif($char==='&')
             {
-                if(trim($key)!=='') $value = '';
+                if(trim($key)!=='') $value = '1';
                 else continue;
             }
-            else
-                if($key!==''||trim($char)!=='') $key .= $char;
+            elseif($_tmp==='')
+            {
+                $key .= $char;
+                $value = '1';
+            }
+            elseif($key!==''||trim($char)!=='') $key .= $char;
             
             if(!is_null($value))
             {
@@ -1807,7 +1830,9 @@ class DocumentParser {
             $this->documentOutput= $source; // store source code so plugins can
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
-            
+
+            $source= $this->ignoreCommentedTagsContent($source);
+
             $source= $this->mergeConditionalTagsContent($source);
             
             $source = $this->mergeSettingsContent($source);
@@ -4080,11 +4105,11 @@ class DocumentParser {
             foreach( $jsonFormat as $key=>$row ) {
                 if (!empty($key)) {
                     if (is_array($row)) {
-                        $value = empty($row[0]['value'])? '' : $row[0]['value'];
+                        if (isset($row[0]['value'])) $value = $row[0]['value'];
                     } else {
                         $value = $row;
                     }
-                    if (!empty($value)) $property[$key] = $value;
+                    if (isset($value)) $property[$key] = $value;
                 }
             }
         }
@@ -4366,7 +4391,7 @@ class DocumentParser {
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
 
-        include_once('extenders/maketable.class.php');
+        if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');
@@ -4546,7 +4571,7 @@ class DocumentParser {
     }
 
     function get_backtrace($backtrace) {
-        include_once('extenders/maketable.class.php');
+        if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
         $MakeTable->setRowRegularClass('gridItem');

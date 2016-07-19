@@ -403,7 +403,7 @@ function SetUrl(url, width, height, alt) {
 
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
@@ -421,7 +421,7 @@ function SetUrl(url, width, height, alt) {
           <?php } else { ?>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button4" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
     <!-- end #actions -->

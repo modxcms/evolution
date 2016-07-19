@@ -185,7 +185,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -325,7 +325,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
