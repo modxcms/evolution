@@ -1,6 +1,6 @@
 # MODX Evolution
 
-*What is MODX*
+**What is MODX**
 
 MODX is an open source Content Management System and Application Framework. Initially inspired by Etomite 0.6, MODX is an ongoing project written by Raymond Irving and a core team of contributors at the MODX Project. MODX is distributed under the GPL license and is now run by a professional team of developers from all over the world. Visit the Forums for more information.
 
