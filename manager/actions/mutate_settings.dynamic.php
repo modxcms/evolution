@@ -602,8 +602,6 @@ function confirmLangChange(el, lkey, elupd){
               <td colspan="2"><div class='split'></div></td>
             </tr>
 <?php
-    $_lang["enable_filter_title"] = 'Enable filters';
-    $_lang["enable_filter_message"] = 'Filters allow you to manipulate the way data is presented or parsed in a tag. They allow you to modify values from inside your templates.';
     if(!isset($enable_filter)) $enable_filter = 1;
 ?>
             <tr>
