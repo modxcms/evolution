@@ -364,6 +364,11 @@ hr {
   background-color: rgba(255,255,255,.3);
 }
 
+#supplementalNav a:active {
+  background-color: rgba(255,255,255,.2);
+  box-shadow: inset 1px 1px 2px 0 rgba(0,0,0,.3);
+}
+
 #msgCounter,
 #newMail {
   margin: 0;
@@ -1710,15 +1715,53 @@ a.hometblink img {
   text-decoration: none !important;
 }
 
+.wm_header {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted #bbb;
+}
+
+.wm_header_title {
+  margin: 0;
+}
+
 .wm_button {
-  float: left;
+  display: inline-block;
   margin: 0 5px 2px 20px;
   text-align: center;
 }
 
+.wm_messages {
+  margin-left: 20px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dotted #bbb;
+}
+
+.wm_messages .comment {
+  font-size: 12px;
+}
+
+.wm_messages_inbox_link {
+  text-decoration: none !important;
+  color: #333 !important;
+}
+
+.wm_messages_inbox_link:hover {
+  color: gray !important;
+}
+
+.table--managerWelcome {
+  width: 100%;
+}
+
+.rtl .wm_buttons {
+  text-align: right;
+}
+
 .rtl .wm_button {
-  float: right;
-  margin: 0 5px 2px 6px;
+  text-align: right;
+  margin: 0 20px 2px 5px;
 }
 
 

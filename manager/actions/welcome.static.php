@@ -42,7 +42,7 @@ if($modx->hasPermission('messages')) {
 	$_SESSION['nrnewmessages'] = $nrnewmessages;
 
 	$msg = '<a href="index.php?a=10"><img src="'.$_style['icons_mail_large'].'" /></a>
-    <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;'.$_lang["inbox"].($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
+    <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10">'.$_lang["inbox"].'</a>'.($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
     <span class="comment">'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</span>';
 	$modx->setPlaceholder('MessageInfo',$msg);
 }
@@ -67,6 +67,10 @@ if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')
 if($modx->hasPermission('bk_manager')) {
 	$icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
 	$modx->setPlaceholder('BackupIcon',$icon);
+}
+if($modx->hasPermission('help')) {
+    $icon = '<a class="hometblink" href="index.php?a=9"><img src="'.$_style['icons_help_large'].'" alt="'.$_lang['help'].'" /><br />'.$_lang['help'].'</a>';
+	$modx->setPlaceholder('HelpIcon',$icon);
 }
 
 // do some config checks
