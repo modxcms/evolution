@@ -956,6 +956,5 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
   ));
   if (is_array($evtOut))
     echo implode("", $evtOut);
-  echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
   ?>
 </form>

@@ -152,8 +152,6 @@ $logs = $modx->db->makeArray($rs);
 </form>
 </div>
 
-<?php echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']); ?>
-
 <div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div><div class="sectionBody" id="lyr2">
 <?php
 if(isset($_REQUEST['log_submit'])) {

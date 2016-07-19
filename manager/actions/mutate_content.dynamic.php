@@ -1232,7 +1232,6 @@ if (is_array($evtOut)) echo implode('', $evtOut);
             }
         }
     }
-    echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
 {

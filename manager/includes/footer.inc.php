@@ -14,6 +14,10 @@ if (count($SystemAlertMsgQueque)>0) {
             }
         });
     </script>
+<?php
+    if(in_array($modx->manager->action,array(85,27,4,72,13,11,12,87,88)))
+        echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
+?>
 </body>
 </html>
 <!-- end footer -->

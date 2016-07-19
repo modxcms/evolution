@@ -643,7 +643,6 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
       $evtOut = $modx->invokeEvent("OnWUsrFormRender",array("id" => $user));
       if(is_array($evtOut)) echo implode("",$evtOut);
       
-      echo $modx->manager->loadDatePicker($modx->config['mgr_date_picker_path']);
       ?>
 
     </div>
