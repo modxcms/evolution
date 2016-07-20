@@ -117,10 +117,6 @@ var DatePicker = new Class({
 
         this.dp = dp;
         if (dp.calendar) return false;
-        // Hide select boxes while calendar is up
-        if(window.ie6){
-            $$('select').addClass('dp_hide');
-        }
 
         this.dp.dirty = false;
 
