@@ -48,29 +48,33 @@ if($modx->hasPermission('messages')) {
 }
 
 // setup icons
+function wrapIcon($i) {
+	return '<span class="wm_button" style="border:0">'.$i.'</span>';
+}
+
 if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=75"><img src="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'" /><br />'.$_lang['security'].'</a>';
-	$modx->setPlaceholder('SecurityIcon',$icon);
+	$modx->setPlaceholder('SecurityIcon',wrapIcon($icon));
 }
 if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=99"><img src="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
-	$modx->setPlaceholder('WebUserIcon',$icon);
+	$modx->setPlaceholder('WebUserIcon',wrapIcon($icon));
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
 	$icon = '<a class="hometblink" href="index.php?a=106"><img src="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
-	$modx->setPlaceholder('ModulesIcon',$icon);
+	$modx->setPlaceholder('ModulesIcon',wrapIcon($icon));
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
 	$icon = '<a class="hometblink" href="index.php?a=76"><img src="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
-	$modx->setPlaceholder('ResourcesIcon',$icon);
+	$modx->setPlaceholder('ResourcesIcon',wrapIcon($icon));
 }
 if($modx->hasPermission('bk_manager')) {
 	$icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
-	$modx->setPlaceholder('BackupIcon',$icon);
+	$modx->setPlaceholder('BackupIcon',wrapIcon($icon));
 }
 if($modx->hasPermission('help')) {
     $icon = '<a class="hometblink" href="index.php?a=9"><img src="'.$_style['icons_help_large'].'" alt="'.$_lang['help'].'" /><br />'.$_lang['help'].'</a>';
-	$modx->setPlaceholder('HelpIcon',$icon);
+	$modx->setPlaceholder('HelpIcon',wrapIcon($icon));
 }
 
 // do some config checks
