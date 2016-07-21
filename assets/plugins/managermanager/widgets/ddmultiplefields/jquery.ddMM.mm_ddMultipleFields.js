@@ -477,7 +477,7 @@ $.ddMM.mm_ddMultipleFields = {
 			//Вешаем на кнопку создание дубликата текущей строки
 		var _this = this;
 		var fieldBlocks = $('#' + id + 'ddMultipleField .ddFieldBlock');
-		var fieldBlocksLen = fieldBlocks.size();
+		var fieldBlocksLen = fieldBlocks.length;
 		var _inst = _this.instances[id];
 		return $('<input/>').attr({
 			"class": "ddCloneButton",
