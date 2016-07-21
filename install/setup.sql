@@ -417,6 +417,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `error_dialog` int(1) NOT NULL default '0',
   `about` int(1) NOT NULL default '0',
   `file_manager` int(1) NOT NULL default '0',
+  `assets_files` int(1) NOT NULL default '0',
+  `assets_images` int(1) NOT NULL default '0',
   `save_user` int(1) NOT NULL default '0',
   `delete_user` int(1) NOT NULL default '0',
   `save_password` int(11) NOT NULL default '0',
@@ -778,6 +780,12 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 
 ALTER TABLE  `{PREFIX}user_roles` 
   ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `assets_images` INT( 1 ) NOT NULL DEFAULT  '0' AFTER `file_manager`;
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `assets_files` INT( 1 ) NOT NULL DEFAULT  '0' AFTER `file_manager`;
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
  MODIFY COLUMN `value` mediumtext;
