@@ -1233,7 +1233,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
         }
     }
     if(!isset($modx->config['mgr_date_picker_path']))
-        $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
+        $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
     echo loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
