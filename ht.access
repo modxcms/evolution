@@ -1,0 +1,45 @@
+# For full documentation and other suggested options, please see
+# http://rtfm.modx.com/evolution/1.0/administration/friendly-url-solutions
+# including for unexpected logouts in multi-server/cloud environments
+# and especially for the first three commented out rules
+
+#php_flag register_globals Off
+AddDefaultCharset utf-8
+#php_value date.timezone Europe/Moscow
+
+#Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /
+
+# Fix Apache internal dummy connections from breaking [(site_url)] cache
+RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
+RewriteRule .* - [F,L]
+
+# Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
+#RewriteCond %{HTTP_HOST} !^$
+#RewriteCond %{HTTP_HOST} !^www\. [NC]
+#RewriteCond %{HTTP_HOST} (.+)$
+#RewriteRule ^(.*)$ http://www.%1/$1 [R=permanent,L] . 
+
+# without www
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} !^example\.com [NC]
+#RewriteRule (.*) http://example.com/$1 [R=301,L]
+
+# without www all domains
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} ^www.(.*)$ [NC]
+#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# Exclude /assets and /manager directories and images from rewrite rules
+RewriteRule ^(manager|assets)/.*$ - [L]
+RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
+
+# For Friendly URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
+# Reduce server overhead by enabling output compression if supported.
+#php_flag zlib.output_compression On
+#php_value zlib.output_compression_level 5

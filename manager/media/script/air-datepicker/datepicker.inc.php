@@ -7,7 +7,6 @@ class DATEPICKER {
         
         $load_script = file_get_contents(MODX_MANAGER_PATH . 'media/script/air-datepicker/datepicker.tpl');
         if(!isset($modx->config['lang_code'])) $modx->config['lang_code'] = $this->getLangCode();
-        echo $modx->config['lang_code'];
         return $modx->mergeSettingsContent($load_script);
     }
     function getLangCode() {

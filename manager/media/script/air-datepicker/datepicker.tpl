@@ -28,23 +28,14 @@ var options = {
     }
 };
 
-var pub_date   = jQuery('#pub_date');
-var unpub_date = jQuery('#unpub_date');
-
-pub_date.datepicker(options);
-if(pub_date.val()) {
-    pub_date_val = pub_date.val();
-    if(pub_date_val.indexOf('-')) pub_date_val = pub_date_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
-    pub_date.data('datepicker').selectDate(new Date(pub_date_val));
-    documentDirty = false;
-}
-
-unpub_date.datepicker(options);
-if(unpub_date.val()) {
-    unpub_date_val = unpub_date.val();
-    if(unpub_date_val.indexOf('-')) unpub_date_val = unpub_date_val.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
-    unpub_date.data('datepicker').selectDate(new Date(unpub_date_val));
-    documentDirty = false;
-}
+jQuery('.DatePicker').datepicker(options);
+jQuery('.DatePicker').each(function(i, elm){
+    var v=jQuery(elm).val();
+	if(v) {
+		if(v.indexOf('-')) v = v.replace(/(\d+)\-(\d+)\-(\d+)(.*)/g , "$3/$2/$1$4");
+		jQuery(elm).data('datepicker').selectDate(new Date(v));
+	}
+	documentDirty = false;
+});
 
 </script>

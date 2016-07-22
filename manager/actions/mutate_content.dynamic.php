@@ -150,17 +150,15 @@ if (isset ($_POST['which_editor'])) {
 <script type="text/javascript">
 /* <![CDATA[ */
 window.addEvent('domready', function(){
-    if( !window.ie6 ) {
-        $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
-            help_img.removeProperty('onclick');
-            help_img.removeProperty('onmouseover');
-            help_img.removeProperty('onmouseout');
-            help_img.setProperty('title', help_img.getProperty('alt') );
-            help_img.setProperty('class', 'tooltip' );
-            if (window.ie) help_img.removeProperty('alt');
-        });
-        new Tips($$('.tooltip'),{className:'custom'} );
-    }
+    $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
+        help_img.removeProperty('onclick');
+        help_img.removeProperty('onmouseover');
+        help_img.removeProperty('onmouseout');
+        help_img.setProperty('title', help_img.getProperty('alt') );
+        help_img.setProperty('class', 'tooltip' );
+        if (window.ie) help_img.removeProperty('alt');
+    });
+    new Tips($$('.tooltip'),{className:'custom'} );
 });
 
 // save tree folder state
@@ -1232,9 +1230,6 @@ if (is_array($evtOut)) echo implode('', $evtOut);
             }
         }
     }
-    if(!isset($modx->config['mgr_date_picker_path']))
-        $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
-    echo loadDatePicker($modx->config['mgr_date_picker_path']);
 
 function getDefaultTemplate()
 {
@@ -1275,11 +1270,4 @@ function getDefaultTemplate()
 	if(!isset($default_template)) $default_template = $modx->config['default_template']; // default_template is already set
 	
 	return $default_template;
-}
-
-function loadDatePicker($path) {
-    global $modx;
-    include_once($path);
-    $dp = new DATEPICKER();
-    return $modx->mergeSettingsContent($dp->getDP());
 }

@@ -210,7 +210,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
       echo '<span class="username">' . $modx->getLoginUserName() . '</span>' . ($modx->hasPermission('change_password') ? ' <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") 
       ?>
       <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-      <span class="systemversion" title="<?php echo $site_name ?> &ndash; <?php echo $modx->getVersionData('full_appname') ?>"><?php echo $modx->getVersionData('version') ?></span>&nbsp;
+      <?php $style = $modx->config['settings_version']!=$modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; ?>
+      <?php echo sprintf('<span class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);?>
     </div>
 
   </div>
