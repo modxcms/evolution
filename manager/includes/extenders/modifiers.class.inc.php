@@ -535,13 +535,13 @@ class MODIFIERS {
                 if(empty($opt)) $opt = $modx->toDateFormat(null, 'formatOnly');
                 if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
                 if(strpos($opt,'%')!==false)
-                    return $modx->mb_strftime($opt,0+$value);
+                    return strftime($opt,0+$value);
                 else
                     return date($opt,0+$value);
             case 'time':
                 if(empty($opt)) $opt = '%H:%M';
                 if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
-                return $modx->mb_strftime($opt,0+$value);
+                return strftime($opt,0+$value);
             case 'strtotime':
                 return strtotime($value);
             #####  mathematical function
