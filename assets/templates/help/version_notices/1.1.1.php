@@ -38,3 +38,13 @@ Sub page
 		<pre>&lt;!--@- This is a comment -@--&gt;</pre>
 	</li>
 </ul>
+
+<h3 style="text-decoration: underline;">New Manager Roles</h3>
+<ul>
+	<li><strong>change_resourcetype</strong>
+		<p>A user with this permission can change resource-type (webpage/weblink). More infos at <a href="https://github.com/modxcms/evolution/issues/531" target="_blank">Github #531</a></p>
+	</li>
+	<li><strong>assets_images, assets_files</strong>
+		<p>Grant/block access to KCFinder. More infos at <a href="https://github.com/modxcms/evolution/issues/681" target="_blank">Github #681</a></p>
+	</li>
+</ul>

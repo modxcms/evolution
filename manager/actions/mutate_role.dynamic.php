@@ -143,6 +143,16 @@ table td {vertical-align:top;}
 ?>
 </fieldset>
 </td>
+<td style="vertical-align: top">
+<fieldset>
+<h3><?php echo $_lang['role_file_management']; ?></h3>
+<?php
+	echo render_form('file_manager',    $_lang['role_file_manager']);
+	echo render_form('assets_files',    $_lang['role_assets_files']);
+	echo render_form('assets_images',   $_lang['role_assets_images']);
+?>
+</fieldset>
+</td>
 </tr>
 </table>
 
@@ -276,7 +286,6 @@ table td {vertical-align:top;}
 <?php
 	echo render_form('logs',            $_lang['role_view_logs']);
 	echo render_form('settings',        $_lang['role_edit_settings']);
-	echo render_form('file_manager',    $_lang['role_file_manager']);
 	echo render_form('bk_manager',      $_lang['role_bk_manager']);
 	echo render_form('manage_metatags', $_lang['role_manage_metatags']);
 	echo render_form('import_static',   $_lang['role_import_static']);

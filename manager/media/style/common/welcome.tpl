@@ -26,11 +26,11 @@
                         <br /><br />
                     </td>
                     <td valign="top">
-                        <span class="wm_button" style="border:0">[+SecurityIcon+]</span>
-                        <span class="wm_button" style="border:0">[+WebUserIcon+]</span>
-                        <span class="wm_button" style="border:0">[+ModulesIcon+]</span>
-                        <span class="wm_button" style="border:0">[+ResourcesIcon+]</span>
-                        <span class="wm_button" style="border:0">[+BackupIcon+]</span>
+                        [+SecurityIcon+]
+                        [+WebUserIcon+]
+                        [+ModulesIcon+]
+                        [+ResourcesIcon+]
+                        [+BackupIcon+]
                         <br style="clear:both" /><br />
                         [+MessageInfo+]
                     </td>
