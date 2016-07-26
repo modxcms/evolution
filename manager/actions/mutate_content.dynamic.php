@@ -91,6 +91,7 @@ if (!empty ($id)) {
 		"sc.id='{$id}' AND ({$access})"
 		);
     $content = $modx->db->getRow($rs);
+    $modx->documentObject = &$content;
     if (!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
