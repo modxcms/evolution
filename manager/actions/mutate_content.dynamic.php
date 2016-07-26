@@ -108,11 +108,7 @@ if (!empty ($id)) {
 }
 
 // restore saved form
-$formRestored = false;
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
-    $formRestored = true;
-}
+$formRestored = $modx->manager->loadFormValues();
 
 // retain form values if template was changed
 // edited to convert pub_date and unpub_date
