@@ -72,10 +72,11 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
-    }
+$where = sprintf("action=27 AND id='%s' AND internalKey!='%s'", $id, $modx->getLoginUserID());
+$rs = $modx->db->select('username', $tbl_active_users, $where);
+if ($username = $modx->db->getValue($rs)) {
+    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
+}
 
 // get document groups for current user
 if ($_SESSION['mgrDocgroups']) {
@@ -83,8 +84,8 @@ if ($_SESSION['mgrDocgroups']) {
 }
 
 if (!empty ($id)) {
-    $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" .
-        (!$docgrp ? '' : " OR dg.document_group IN ($docgrp)");
+    $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
+    if($docgrp) $access .= " OR dg.document_group IN ({$docgrp})";
 	$rs = $modx->db->select(
 		'sc.*',
 		"{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id",
@@ -625,13 +626,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 <td><select id="template" name="template" class="inputBox" onchange="templateWarning();">
                     <option value="0">(blank)</option>
 <?php
-                $rs = $modx->db->select(
-					"t.templatename, t.selectable, t.id, c.category",
-					"{$tbl_site_templates} AS t
-						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
-					'',
-					'c.category, t.templatename ASC'
-					);
+                $field = "t.templatename, t.selectable, t.id, c.category";
+                $from  = "{$tbl_site_templates} AS t LEFT JOIN {$tbl_categories} AS c ON t.category = c.id";
+                $rs = $modx->db->select($field,$from,'','c.category, t.templatename ASC');
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
                     if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
@@ -766,15 +763,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         $template = $content['template'];
                 }
 
-                $rs = $modx->db->select(
-                    "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
-                     "{$tbl_site_tmplvars} AS tv
-                         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
-                         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$id}'
-                         LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
-                     "tvtpl.templateid='{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)".(!$docgrp ? '' : " OR tva.documentgroup IN ({$docgrp})").")",
-                     'tvtpl.rank,tv.rank, tv.id'
-                     );
+                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value";
+                $vs = array($tbl_site_tmplvars, $tbl_site_tmplvar_templates, $tbl_site_tmplvar_contentvalues, $id, $tbl_site_tmplvar_access);
+                $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
+                         LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
+                         LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
+                $dgs = $docgrp ? " OR tva.documentgroup IN ({$docgrp})" : '';
+                $vs = array($template, $_SESSION['mgrRole'], $dgs);
+                $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
+                $rs = $modx->db->select($field,$from,$where,'tvtpl.rank,tv.rank, tv.id');
                 $limit = $modx->db->getRecordCount($rs);
                 if ($limit > 0) {
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
@@ -1060,21 +1057,12 @@ if ($use_udperms == 1) {
             $groupsarray[] = $currentgroup['document_group'].','.$currentgroup['id'];
 
         // Load up the current permissions and names
-	$rs = $modx->db->select(
-		'dgn.*, groups.id AS link_id',
-		"{$tbl_document_group_names} AS dgn
-			LEFT JOIN {$tbl_document_groups} AS groups ON groups.document_group = dgn.id  AND groups.document = '{$documentId}'",
-		'',
-		'name'
-		);
+        $vs = array($tbl_document_group_names, $tbl_document_groups, $documentId);
+        $from = vsprintf("%s AS dgn LEFT JOIN %s AS groups ON groups.document_group=dgn.id AND groups.document='%s'",$vs);
+    	$rs = $modx->db->select('dgn.*, groups.id AS link_id',$from,'','name');
     } else {
         // Just load up the names, we're starting clean
-	$rs = $modx->db->select(
-		'*, NULL AS link_id',
-		$tbl_document_group_names,
-		'',
-		'name'
-		);
+        $rs = $modx->db->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
     }
 
     // retain selected doc groups between post
@@ -1124,11 +1112,10 @@ if ($use_udperms == 1) {
         $inputHTML = '<input '.implode(' ', $inputString).' />';
 
         // does user have this permission?
-        $rsp = $modx->db->select(
-			'COUNT(mg.id)',
-			"{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg",
-			"mga.membergroup = mg.user_group AND mga.documentgroup = {$row['id']} AND mg.member = {$_SESSION['mgrInternalKey']}"
-			);
+        $from = "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg";
+        $vs = array($row['id'], $_SESSION['mgrInternalKey']);
+        $where = vsprintf("mga.membergroup=mg.user_group AND mga.documentgroup=%s AND mg.member=%s", $vs);
+        $rsp = $modx->db->select('COUNT(mg.id)',$from,$where);
         $count = $modx->db->getValue($rsp);
         if($count > 0) {
             ++$permissions_yes;
