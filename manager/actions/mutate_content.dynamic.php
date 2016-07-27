@@ -529,8 +529,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
             $parents = implode(',', $temp);
 
             if (!empty($parents)) {
-                $query = $modx->db->query("SELECT id, pagetitle FROM " . $modx->getFullTableName("site_content") . " WHERE id IN (" . $parents . ") ORDER BY FIND_IN_SET(id, '" . $parents . "') DESC");
-                while ($row = $modx->db->getRow($query)) {
+                $where = "FIND_IN_SET(id,'{$parents}') DESC";
+                $rs = $modx->db->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
+                while ($row = $modx->db->getRow($rs)) {
                     $out .= '<li class="breadcrumbs__li">
                                         <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
                                         <span class="breadcrumbs__sep">></span>
