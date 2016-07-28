@@ -57,7 +57,7 @@ $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentv
 $tbl_site_tmplvar_templates     = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
 
-if ($action == 27) {
+if ($modx->manager->action == 27) {
     //editing an existing document
     // check permissions on the document
     include_once(MODX_MANAGER_PATH.'processors/user_documents_permissions.class.php');
@@ -309,7 +309,7 @@ function templateWarning() {
     if(documentDirty===true) {
         if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
             documentDirty=false;
-            document.mutate.a.value = <?php echo $action?>;
+            document.mutate.a.value = <?php echo $modx->manager->action; ?>;
             document.mutate.newtemplate.value = newTemplate;
             document.mutate.submit();
         } else {
@@ -317,7 +317,7 @@ function templateWarning() {
         }
     }
     else {
-        document.mutate.a.value = <?php echo $action?>;
+        document.mutate.a.value = <?php echo $modx->manager->action; ?>;
         document.mutate.newtemplate.value = newTemplate;
         document.mutate.submit();
     }
@@ -345,7 +345,7 @@ function changeRTE() {
     }
 
     documentDirty=false;
-    document.mutate.a.value = <?php echo $action?>;
+    document.mutate.a.value = <?php echo $modx->manager->action; ?>;
     document.mutate.newtemplate.value = newTemplate;
     document.mutate.which_editor.value = newEditor;
     document.mutate.submit();
