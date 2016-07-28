@@ -537,7 +537,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 while ($row = $modx->db->getRow($rs)) {
                     $out .= '<li class="breadcrumbs__li">
                                 <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
-                                <span class="breadcrumbs__sep">></span>
+                                <span class="breadcrumbs__sep">&gt;</span>
                             </li>';
                 }
             }
