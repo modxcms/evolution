@@ -91,6 +91,7 @@ if (!empty ($id)) {
 		"{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id",
 		"sc.id='{$id}' AND ({$access})"
 		);
+	$content = array();
     $content = $modx->db->getRow($rs);
     $modx->documentObject = &$content;
     if (!$content) {
@@ -111,11 +112,12 @@ if (!empty ($id)) {
 
 // restore saved form
 $formRestored = $modx->manager->loadFormValues();
+if(isset($_REQUEST['newtemplate'])) $formRestored = true;
 
 // retain form values if template was changed
 // edited to convert pub_date and unpub_date
 // sottwell 02-09-2006
-if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
+if ($formRestored == true) {
     $content = array_merge($content, $_POST);
     $content['content'] = $_POST['ta'];
     if (empty ($content['pub_date'])) {
@@ -132,7 +134,8 @@ if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
 
 // increase menu index if this is a new document
 if (!isset ($_REQUEST['id'])) {
-    if (!isset ($auto_menuindex) || $auto_menuindex) {
+    if (!isset ($modx->config['auto_menuindex'])) $modx->config['auto_menuindex'] = 1;
+    if ($modx->config['auto_menuindex']) {
         $pid = intval($_REQUEST['pid']);
         $rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
         $content['menuindex'] = $modx->db->getValue($rs);
@@ -142,13 +145,13 @@ if (!isset ($_REQUEST['id'])) {
 }
 
 if (isset ($_POST['which_editor'])) {
-    $which_editor = $_POST['which_editor'];
+    $modx->config['which_editor'] = $_POST['which_editor'];
 }
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
 window.addEvent('domready', function(){
-    $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
+    $$('img[src=<?php echo $_style["icons_tooltip_over"]; ?>]').each(function(help_img) {
         help_img.removeProperty('onclick');
         help_img.removeProperty('onmouseover');
         help_img.removeProperty('onmouseout');
@@ -500,7 +503,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : 1048576?>" />
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
 <input type="hidden" name="dir" value="<?php echo $dir;?>" />
@@ -533,9 +536,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $rs = $modx->db->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
                 while ($row = $modx->db->getRow($rs)) {
                     $out .= '<li class="breadcrumbs__li">
-                                        <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
-                                        <span class="breadcrumbs__sep">></span>
-                                    </li>';
+                                <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
+                                <span class="breadcrumbs__sep">></span>
+                            </li>';
                 }
             }
         }
@@ -549,7 +552,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
       <ul class="actionButtons">
           <li id="Button1" class="transition">
             <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
-              <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+              <img alt="icons_save" src="<?php echo $_style["icons_save"]; ?>" /> <?php echo $_lang['save']; ?>
             </a>
             <span class="plus"> + </span>
             <select id="stay" name="stay">
@@ -615,7 +618,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <?php if ($content['type'] == 'reference' || $_REQUEST['a'] == '72') { // Web Link specific ?>
 
             <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" alt="tree_folder" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
-                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" onchange="documentDirty=true;" />
+                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
 <?php } ?>
@@ -632,7 +635,8 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $rs = $modx->db->select($field,$from,'','c.category, t.templatename ASC');
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
-                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
+                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; };
+                    // Skip if not selectable but show if selected!
                     $thisCategory = $row['category'];
                     if($thisCategory == null) {
                         $thisCategory = $_lang["no_category"];
@@ -732,7 +736,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         if (is_array($evtOut)) {
                             for ($i = 0; $i < count($evtOut); $i++) {
                                 $editor = $evtOut[$i];
-                                echo "\t\t\t",'<option value="',$editor,'"',($which_editor == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
+                                echo "\t\t\t",'<option value="',$editor,'"',($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
                             }
                         }
 ?>
@@ -742,8 +746,8 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 // Richtext-[*content*]
                 $richtexteditorIds = array();
                 $richtexteditorOptions = array();
-                $richtexteditorIds[$which_editor][] = 'ta';
-                $richtexteditorOptions[$which_editor]['ta'] = '';
+                $richtexteditorIds[$modx->config['which_editor']][] = 'ta';
+                $richtexteditorOptions[$modx->config['which_editor']]['ta'] = '';
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -786,7 +790,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                             $tvOptions = $modx->parseProperties($row['elements']);
                             if(!empty($tvOptions)) {
                                 // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
-                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $which_editor;
+                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $modx->config['which_editor'];
                             };
                             // Add richtext editor to the list
                             $richtexteditorIds[$editor][] = "tv".$row['id'];
