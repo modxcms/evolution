@@ -439,30 +439,40 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
 <?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 <script>
-	jQuery('#Button12').click(function(e) {
-		e.preventDefault();
-		var randomNum = 'gener';
-		if (e.shiftKey) {
-			randomNum = Math.floor((Math.random()*999999)+1);
-		}
-		window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
-	});
-	jQuery('#Button13').click(function(e) {
-		e.preventDefault();
-		var randomNum = 'gener';
-		if (e.shiftKey) {
-			randomNum = Math.floor((Math.random()*999999)+1);
-		}
-      window.open('media/browser/mcpuk/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
-	});
-	jQuery('#Button14').click(function(e) {
-		e.preventDefault();
-		var randomNum = 'gener';
-		if (e.shiftKey) {
-			randomNum = Math.floor((Math.random()*999999)+1);
-		}
-      window.open('media/browser/mcpuk/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
-	});
+  jQuery('#Button12').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+      window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($modx->hasPermission('assets_images')) { ?>
+<script>
+  jQuery('#Button13').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/mcpuk/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($modx->hasPermission('assets_files')) { ?>
+<script>
+  jQuery('#Button14').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/mcpuk/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
 </script>
 <?php } ?>
 
