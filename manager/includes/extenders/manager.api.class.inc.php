@@ -53,11 +53,15 @@ class ManagerAPI {
 	}		
 	// load saved form values into $_POST
 	function loadFormValues(){
-		if($this->hasFormValues()) {
-			$p = $_SESSION["mgrFormValues"];
-			foreach($p as $k=>$v) $_POST[$k]=$v;
-			$this->clearSavedFormValues();
+		
+		if(!$this->hasFormValues()) return false;
+		
+		$p = $_SESSION["mgrFormValues"];
+		$this->clearSavedFormValues();
+		foreach($p as $k=>$v) {
+			$_POST[$k]=$v;
 		}
+		return true;
 	}
 	// clear form post
 	function clearSavedFormValues(){

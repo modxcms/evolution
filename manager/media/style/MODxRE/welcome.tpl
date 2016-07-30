@@ -31,12 +31,12 @@
             </td>
             <td valign="top">
               <div class="wm_buttons">
-                <span class="wm_button">[+SecurityIcon+]</span>
-                <span class="wm_button">[+WebUserIcon+]</span>
-                <span class="wm_button">[+ModulesIcon+]</span>
-                <span class="wm_button">[+ResourcesIcon+]</span>
-                <span class="wm_button">[+BackupIcon+]</span>
-                <span class="wm_button">[+HelpIcon+]</span>
+                [+SecurityIcon+]
+                [+WebUserIcon+]
+                [+ModulesIcon+]
+                [+ResourcesIcon+]
+                [+BackupIcon+]
+                [+HelpIcon+]
               </div>
               <div class="wm_messages">
                 [+MessageInfo+]

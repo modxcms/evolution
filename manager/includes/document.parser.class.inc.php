@@ -3986,9 +3986,6 @@ class DocumentParser {
         if (!isset ($this->pluginEvent[$evtName]))
             return false;
         
-        if($evtName=='OnParseDocument' && class_exists('PHxParser'))
-            $this->config['enable_filter'] = 0;
-        
         $el= $this->pluginEvent[$evtName];
         $results= array ();
         $numEvents= count($el);
@@ -4018,6 +4015,9 @@ class DocumentParser {
 
                 // eval plugin
                 $this->evalPlugin($pluginCode, $parameter);
+
+                if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
+
                 if ($this->dumpPlugins == 1) {
                     $eventtime = $this->getMicroTime() - $eventtime;
                     $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';

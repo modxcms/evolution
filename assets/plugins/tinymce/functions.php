@@ -425,7 +425,11 @@ class TinyMCE
 		$ph['schema']                  = $modx->config['mce_schema'];
 		
 		$ph['toolbar_align']           = $params['toolbar_align'];
-		$ph['file_browser_callback']   = 'mceOpenServerBrowser';
+		
+		$ph['file_browser_callback']   = !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_images')
+		                               ? ''
+		                               : "file_browser_callback            : 'mceOpenServerBrowser',";
+		
 		$ph['plugins']                 = $plugins;
 		$ph['buttons1']                = $buttons1;
 		$ph['buttons2']                = $buttons2;

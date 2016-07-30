@@ -119,7 +119,7 @@ class MODIFIERS {
     function parsePhx($key,$value,$modifiers)
     {
         global $modx;
-        if(empty($modifiers)) return;
+        if(empty($modifiers)) return '';
         
         foreach($modifiers as $m)
         {
@@ -187,7 +187,7 @@ class MODIFIERS {
     {
         global $modx;
         
-        if($this->isEmpty($cmd,$value)) return;
+        if($this->isEmpty($cmd,$value)) return '';
         
         $this->key = $key;
         $this->value  = $value;
@@ -331,6 +331,7 @@ class MODIFIERS {
             case 'remove_html':
                 if($opt!=='')
                 {
+                    $param = array();
                     foreach(explode(',',$opt) as $v)
                     {
                         $v = trim($v,'</> ');
@@ -434,9 +435,9 @@ class MODIFIERS {
                 if(empty($opt)) break;
                 if(strpos($opt,',')!==false) {
                     list($b,$e) = explode(',',$opt,2);
-                    return $this->substr($value,$b,$e);
+                    return $this->substr($value,$b,(int)$e);
                 }
-                else return $this->substr($value,$b);
+                else return $this->substr($value,$opt);
             case 'limit':
             case 'trim_to': // http://www.movabletype.jp/documentation/appendices/modifiers/trim_to.html
                 if(strpos($opt,'+')!==false)
@@ -535,13 +536,13 @@ class MODIFIERS {
                 if(empty($opt)) $opt = $modx->toDateFormat(null, 'formatOnly');
                 if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
                 if(strpos($opt,'%')!==false)
-                    return $modx->mb_strftime($opt,0+$value);
+                    return strftime($opt,0+$value);
                 else
                     return date($opt,0+$value);
             case 'time':
                 if(empty($opt)) $opt = '%H:%M';
                 if(!preg_match('@^[0-9]+$@',$value)) $value = strtotime($value);
-                return $modx->mb_strftime($opt,0+$value);
+                return strftime($opt,0+$value);
             case 'strtotime':
                 return strtotime($value);
             #####  mathematical function
@@ -656,6 +657,7 @@ class MODIFIERS {
                 }
                 $where = join(' AND ', $where);
                 $children = $modx->getDocumentChildren($value, $published, '0', 'id', $where);
+                $result = array();
                 foreach((array)$children as $child){ // $children が null だった時にエラーになるため型キャスト
                     $result[] = $child['id'];
                 }
@@ -805,13 +807,13 @@ class MODIFIERS {
             //case 'youtube4x3':%s*0.75＋25
             case 'setvar':
                 $modx->placeholders[$opt] = $value;
-                return;
+                return '';
             case 'csstohead':
                 $modx->regClientCSS($value);
                 return '';
             case 'htmltohead':
                 $modx->regClientStartupHTMLBlock($value);
-                return;
+                return '';
             case 'htmltobottom':
                 $modx->regClientHTMLBlock($value);
                 return '';
@@ -822,7 +824,7 @@ class MODIFIERS {
                 $modx->regClientScript($value);
                 return '';
             case 'dummy':
-                    return $value;
+                return $value;
                 
             // If we haven't yet found the modifier, let's look elsewhere
             default:

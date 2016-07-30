@@ -419,8 +419,12 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
             <?php if ($modx->hasPermission('edit_document')) { ?>
                 <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
             <?php } ?>
+			<?php if ($modx->hasPermission('file_manager') || $modx->hasPermission('assets_images')) { ?>
                 <td><a href="#" id="Button13" class="treeButton" title="<?php echo $_lang["images_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['images_management'] ; ?></a></td>
+			<?php } ?>
+			<?php if ($modx->hasPermission('file_manager') || $modx->hasPermission('assets_files')) { ?>
                 <td><a href="#" id="Button14" class="treeButton" title="<?php echo $_lang["files_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['files_management'] ; ?></a></td>
+			<?php } ?>
 			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
                 <td><a href="#" id="Button12" class="treeButton" title="<?php echo $_lang["element_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['element_management'] ; ?></a></td>
             <?php } ?>
