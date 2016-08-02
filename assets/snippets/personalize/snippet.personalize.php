@@ -23,16 +23,12 @@ if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 # prepare params and variables
 
-if     ($this->isFrontend() && isset($_SESSION['webValidated'])) $detected_context = 'web';
-elseif ($this->isBackend()  && isset($_SESSION['mgrValidated'])) $detected_context = 'mgr';
-else                                                             $detected_context = '';
-
-$yesChunk = (isset($yesChunk)) ? $yesChunk : '';
-$noChunk  = (isset($noChunk))  ? $noChunk  : '';
-$ph       = (isset($ph))       ? $ph       : 'username';
-$context  = (isset($context))  ? $context  : $detected_context;
-$yesTV    = (isset($yesTV))    ? $yesTV    : '';
-$noTV     = (isset($noTV))     ? $noTV     : '';
+if(!isset($ph)) $ph = 'username';
+if(!isset($context)) {
+    if     ($this->isFrontend() && isset($_SESSION['webValidated'])) $context = 'web';
+    elseif ($this->isBackend()  && isset($_SESSION['mgrValidated'])) $context = 'mgr';
+    else                                                             $context = '';
+}
 
 $output = '';
 switch($context) {
@@ -58,17 +54,17 @@ $modx->setPlaceholder('short_name', $short_name);
 if(isset($full_name)) $modx->setPlaceholder('full_name', $full_name);
 if(isset($email))     $modx->setPlaceholder('email',     $email);
 
-if (!empty($context)) {
-    if($yesTV !== '')        $output = $modx->getField($yesTV);
-    elseif($yesChunk !== '') $output = $modx->getChunk($yesChunk);
+if(!empty($context)) {
+    if(isset($yesTV))        $output = $modx->getField($yesTV);
+    elseif(isset($yesChunk)) $output = $modx->getChunk($yesChunk);
     else                     $output = "username : {$short_name}";
 } else {
-    if($noTV !== '')         $output = $modx->getField($noTV);
-    elseif($noChunk !== '')  $output = $modx->getChunk($noChunk);
+    if(isset($noTV))         $output = $modx->getField($noTV);
+    elseif(isset($noChunk))  $output = $modx->getChunk($noChunk);
     else                     $output = 'guest';
 }
 
-if (!empty($context)) {
+if(!empty($context)) {
     if(empty($last_login)) $modx->setPlaceholder('last_login', 'first login');
     else                   $modx->setPlaceholder('last_login', $modx->toDateFormat($last_login));
 }
