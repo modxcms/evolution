@@ -23,9 +23,9 @@ if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 # prepare params and variables
 
-if     ($this->isFrontend() && isset ($_SESSION['webValidated'])) $detected_context = 'web';
-elseif ($this->isBackend()  && isset ($_SESSION['mgrValidated'])) $detected_context = 'mgr';
-else                                                              $detected_context = '';
+if     ($this->isFrontend() && isset($_SESSION['webValidated'])) $detected_context = 'web';
+elseif ($this->isBackend()  && isset($_SESSION['mgrValidated'])) $detected_context = 'mgr';
+else                                                             $detected_context = '';
 
 $yesChunk = (isset($yesChunk)) ? $yesChunk : '';
 $noChunk  = (isset($noChunk))  ? $noChunk  : '';
@@ -52,30 +52,26 @@ switch($context) {
     default:
         $short_name = '';
 }
+
+$modx->setPlaceholder($ph,          $short_name);
+$modx->setPlaceholder('short_name', $short_name);
+if(isset($full_name)) $modx->setPlaceholder('full_name', $full_name);
+if(isset($email))     $modx->setPlaceholder('email',     $email);
+
 if (!empty($context)) {
-    if($yesTV !== '') {
-        $pre_output = $modx->documentObject[$yesTV];
-        if(is_array($pre_output)) $output = $pre_output[1];
-        else                      $output = $pre_output;
-    }
-    elseif($yesChunk !== '')      $output = $modx->getChunk($yesChunk);
-    else                          $output = "username : {$short_name}";
-
-    if(empty($last_login)) $last_login_text = 'first login';
-    else                   $last_login_text = $modx->toDateFormat($last_login);
-
-    $modx->setPlaceholder($ph,          $short_name);
-    $modx->setPlaceholder('short_name', $short_name);
-    $modx->setPlaceholder('full_name',  $full_name);
-    $modx->setPlaceholder('email',      $email);
-    $modx->setPlaceholder('last_login', $last_login_text);
+    if($yesTV !== '')        $output = $modx->getField($yesTV);
+    elseif($yesChunk !== '') $output = $modx->getChunk($yesChunk);
+    else                     $output = "username : {$short_name}";
 } else {
-    if($noTV !== '') {
-        $pre_output = $modx->documentObject[$noTV];
-        if(is_array($pre_output)) $output = $pre_output[1];
-        else                      $output = $pre_output;
-    }
-    elseif($noChunk!=='')         $output = $modx->getChunk($noChunk);
-    else                          $output = 'guest';
+    if($noTV !== '')         $output = $modx->getField($noTV);
+    elseif($noChunk !== '')  $output = $modx->getChunk($noChunk);
+    else                     $output = 'guest';
 }
+
+if (!empty($context)) {
+    if(empty($last_login)) $modx->setPlaceholder('last_login', 'first login');
+    else                   $modx->setPlaceholder('last_login', $modx->toDateFormat($last_login));
+}
+else                       $modx->setPlaceholder('last_login', '');
+
 return $output;
