@@ -469,10 +469,7 @@ class DocumentParser {
         (!empty($qOrig)) or $qOrig = $this->config['site_start'];
         $q= $qOrig;
         /* First remove any / before or after */
-        if ($q[strlen($q) - 1] == '/')
-            $q= substr($q, 0, -1);
-        if ($q[0] == '/')
-            $q= substr($q, 1);
+        $q = trim($q,'/');
         /* Save path if any */
         /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
         if ($this->config['use_alias_path'] == 1) {
