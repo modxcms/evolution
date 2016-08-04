@@ -1085,13 +1085,11 @@ class DocumentParser {
     {
         if ($this->debug) $fstart = $this->getMicroTime();
         
-        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ','<!--@IF:',$content);
-        if(strpos($content,'<!--@IF:')===false)      return $content;
-        if(strpos($content,'<!--@ELSEIF')!==false)   $content = str_replace('<!--@ELSEIF',  '<@ELSEIF',  $content);
-        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', '<@ELSE>',   $content);
-        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->','<@ENDIF-->',$content);
+        if(strpos($content,'<!--@IF:')!==false)       $content = str_replace('<!--@IF:',    '<@IF:',$content);
+        if(strpos($content,'<@IF:')===false)         return $content;
+        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',   '<@ENDIF>',$content);
         
-        $s = array('<!--@IF:',        '<@ELSE',            '<@ENDIF-->');
+        $s = array('<@IF:',           '<@ELSE',            '<@ENDIF>');
         $r = array('<!--@CONDTAG@IF:','<!--@CONDTAG@ELSE', '<!--@CONDTAG@ENDIF-->');
         $content = str_replace($s, $r, $content);
         $splits = explode('<!--@CONDTAG@', $content);
