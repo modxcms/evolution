@@ -1890,6 +1890,8 @@ class DocumentParser {
             $this->getSettings();
         }
 
+        $_REQUEST['q'] = $this->setRequestQ($_SERVER['REQUEST_URI']);
+        
         // IIS friendly url fix
         if ($this->config['friendly_urls'] == 1 && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false) {
             $url= $_SERVER['QUERY_STRING'];
@@ -1999,6 +2001,16 @@ class DocumentParser {
         $this->prepareResponse();
     }
 
+    function setRequestQ($request_uri) {
+        if(isset($_REQUEST['id'])) $q = null;
+        else {
+            $q = substr($request_uri,strlen($this->config['base_url']));
+            if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
+            if($q=='index.php')        $q = '';
+        }
+        return $q;
+    }
+    
     /**
      * The next step called at the end of executeParser()
      *
