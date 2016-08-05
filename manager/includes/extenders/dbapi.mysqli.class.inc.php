@@ -382,11 +382,14 @@ class DBAPI {
 		}
 	}
 
-	function makeArray($rs=''){
+	function makeArray($rs='',$index=false){
 		if (!$rs) return false;
 		$rsArray = array();
+		$iterator = 0;
 		while ($row = $this->getRow($rs)) {
-			$rsArray[] = $row;
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator; 
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
 		}
 		return $rsArray;
 	}

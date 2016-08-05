@@ -605,14 +605,17 @@ class DBAPI {
    *          was passed
    * @param: $rs Recordset to be packaged into an array
    */
-   function makeArray($rs=''){
-      if(!$rs) return false;
-      $rsArray = array();
-      while ($row = $this->getRow($rs)) {
-            $rsArray[] = $row;
-      }
-      return $rsArray;
-   }
+	function makeArray($rs='',$index=false){
+		if (!$rs) return false;
+		$rsArray = array();
+		$iterator = 0;
+		while ($row = $this->getRow($rs)) {
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator;
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
+		}
+		return $rsArray;
+	}
    
    /**
     * @name	getVersion
