@@ -14,7 +14,7 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
-function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
+function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
     $etomite = & $modx;
     $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
@@ -27,6 +27,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
     else {
         list ($cmd, $param) = ParseCommand($nvalue);
         $cmd = trim($cmd);
+        $param = parseTvValues($param, $tvsArray);
         switch ($cmd) {
             case "FILE" :
                 $output = ProcessFile(trim($param));
@@ -114,7 +115,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
         }
         // support for nested bindings
-        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src) : $output;
+        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src, $tvsArray) : $output;
     }
 }
 
@@ -140,4 +141,18 @@ function ParseCommand($binding_string)
         }
     }
     return $binding_array;
+}
+
+// ParseTvValues
+function parseTvValues($param, $tvsArray)
+{
+	global $modx;
+	if (strpos($param, '[+') !== false) {
+		$matches = $modx->getTagsFromContent($param, '[+', '+]');
+		foreach ($matches[0] as $i=>$match) {
+			if(isset($tvsArray[ $matches[1][$i] ]))
+				$param = str_replace($match, $tvsArray[ $matches[1][$i] ]['value'], $param);
+		}
+	}
+	return $param;
 }
