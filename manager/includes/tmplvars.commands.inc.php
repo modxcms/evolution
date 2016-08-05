@@ -150,8 +150,11 @@ function parseTvValues($param, $tvsArray)
 	if (strpos($param, '[+') !== false) {
 		$matches = $modx->getTagsFromContent($param, '[+', '+]');
 		foreach ($matches[0] as $i=>$match) {
-			if(isset($tvsArray[ $matches[1][$i] ]))
-				$param = str_replace($match, $tvsArray[ $matches[1][$i] ]['value'], $param);
+			if(isset($tvsArray[ $matches[1][$i] ])) {
+				$value = $tvsArray[ $matches[1][$i] ]['value'];
+				$value = $value === '' ? $tvsArray[ $matches[1][$i] ]['default_text'] : $value;
+				$param = str_replace($match, $value, $param);
+			}
 		}
 	}
 	return $param;
