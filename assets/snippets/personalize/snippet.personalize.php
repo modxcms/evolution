@@ -5,7 +5,7 @@
  * Checks to see if web- / mgr-users are logged in or not, to display accordingly yesChunk/noChunk
  *
  * @category    snippet
- * @version     2.1
+ * @version     2.2
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Login
@@ -18,45 +18,20 @@
  * @author      Refactored 2013 by Dmi3yy
  * @lastupdate  11/08/2013
  */
-if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+
+if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 # prepare params and variables
 
-if     ($this->isFrontend() && isset ($_SESSION['webValidated'])) $current_context = 'web';
-elseif ($this->isBackend()  && isset ($_SESSION['mgrValidated'])) $current_context = 'mgr';
+if(!isset($ph)) $ph = 'username';
+if(!isset($context)) {
+    if     ($this->isFrontend() && isset($_SESSION['webValidated'])) $context = 'web';
+    elseif ($this->isBackend()  && isset($_SESSION['mgrValidated'])) $context = 'mgr';
+    else                                                             $context = '';
+}
 
 $output = '';
-$yesChunk = (isset($yesChunk))? $yesChunk : '';
-$noChunk  = (isset($noChunk)) ? $noChunk  : '';
-$ph       = (isset($ph))      ? $ph       : 'username';
-$context  = (isset($context)) ? $context     : $current_context;
-$yesTV    = (isset($yesTV))   ? $yesTV : '';
-$noTV     = (isset($noTV))    ? $noTV  : '';
-
-/*
-$referer = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
-$ua =      htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
-$ip =      htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_QUOTES);
-$host =    htmlspecialchars($_SERVER['REMOTE_HOST'], ENT_QUOTES);
-
-$ua_strtolower = strtolower($_SERVER['HTTP_USER_AGENT']);
-if    (strpos($ua_strtolower, 'firefox') !== false)     $browser = 'firefox';
-elseif(strpos($ua_strtolower, 'trident/4.0') !== false) $browser = 'internet explorer 8';
-elseif(strpos($ua_strtolower, 'msie') !== false)        $browser = 'internet explorer';
-elseif(strpos($ua_strtolower, 'chrome') !== false)      $browser = 'chrome';
-elseif(strpos($ua_strtolower, 'safari') !== false)      $browser = 'safari';
-elseif(strpos($ua_strtolower, 'opera') !== false)       $browser = 'opera';
-else $browser = 'other';
-
-$modx->setPlaceholder('referer', $referer);
-$modx->setPlaceholder('ua',      $ua);
-$modx->setPlaceholder('browser', $browser);
-$modx->setPlaceholder('ip',      $ip);
-$modx->setPlaceholder('host',    $host);
-*/
-
-switch($context)
-{
+switch($context) {
     case 'web':
         $short_name = $_SESSION['webShortname'];
         $full_name  = $_SESSION['webFullname'];
@@ -73,60 +48,26 @@ switch($context)
     default:
         $short_name = '';
 }
-if (!empty($context))
-{
-    if($yesTV !== '')
-    {
-        $pre_output = $modx->documentObject[$yesTV];
-        if(is_array($pre_output))
-        {
-            $output = $pre_output[1];
-        }
-        else
-        {
-            $output = $pre_output;
-        }
-    }
-    elseif($yesChunk !== '')
-    {
-        $output = $modx->getChunk($yesChunk);
-    }
-    else
-    {
-        $output = 'username : ' . $short_name;
-    }
 
-    if(empty($last_login)) $last_login_text = 'first login';
-    else                   $last_login_text = $modx->toDateFormat($last_login);
+$modx->setPlaceholder($ph,          $short_name);
+$modx->setPlaceholder('short_name', $short_name);
+if(isset($full_name)) $modx->setPlaceholder('full_name', $full_name);
+if(isset($email))     $modx->setPlaceholder('email',     $email);
 
-    $modx->setPlaceholder($ph,$short_name);
-    $modx->setPlaceholder('short_name',  $short_name);
-    $modx->setPlaceholder('full_name',   $full_name);
-    $modx->setPlaceholder('email',       $email);
-    $modx->setPlaceholder('last_login', $last_login_text);
+if(!empty($context)) {
+    if(isset($yesTV))        $output = $modx->getField($yesTV);
+    elseif(isset($yesChunk)) $output = $modx->getChunk($yesChunk);
+    else                     $output = "username : {$short_name}";
+} else {
+    if(isset($noTV))         $output = $modx->getField($noTV);
+    elseif(isset($noChunk))  $output = $modx->getChunk($noChunk);
+    else                     $output = 'guest';
 }
-else
-{
-    if($noTV !== '')
-    {
-        $pre_output = $modx->documentObject[$noTV];
-        if(is_array($pre_output))
-        {
-            $output = $pre_output[1];
-        }
-        else
-        {
-            $output = $pre_output;
-        }
-    }
-    elseif($noChunk!=='')
-    {
-        $output = $modx->getChunk($noChunk);
-    }
-    else
-    {
-        $output = 'guest';
-    }
+
+if(!empty($context)) {
+    if(empty($last_login)) $modx->setPlaceholder('last_login', 'first login');
+    else                   $modx->setPlaceholder('last_login', $modx->toDateFormat($last_login));
 }
+else                       $modx->setPlaceholder('last_login', '');
+
 return $output;
-?>
