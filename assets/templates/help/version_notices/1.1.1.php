@@ -50,3 +50,11 @@ Sub page
 		<p>Controls the display of 2 new buttons in resource-tree and grants/blocks access to KCFinder. More infos at <a href="https://github.com/modxcms/evolution/issues/681" target="_blank">Github #681</a></p>
 	</li>
 </ul>
+
+<h3 style="text-decoration: underline;">Template-Variables</h3>
+<ul>
+	<li><strong>@BINDINGS providing TV-values</strong>
+		<p>[+tv_name+] will be replaced by its value taken from actual resource. Beware of SQL-Errors in case no or wrong value is given (set a reasonable default-value to avoid errors). More infos at <a href="https://github.com/modxcms/evolution/issues/699" target="_blank">Github #699</a>. Example:</p>
+		<pre>@SELECT name,value FROM xxx WHERE yyy = [+tv_name+]</pre>
+	</li>
+</ul>
