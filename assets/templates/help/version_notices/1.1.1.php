@@ -34,10 +34,22 @@ Top page
 Sub page
 <@ENDIF--&gt;</pre>
 	</li>
+
 	<li><strong>New Comment Tag</strong>
 		<p>Comment-Tags will be completely removed from output. More infos at <a href="https://github.com/modxcms/evolution/issues/680" target="_blank">Github #680</a>. Example:</p>
 		<pre>&lt;!--@- This is a comment -@--&gt;</pre>
 		<pre>&lt;!--@- Or HTML-Code / Snippets etc you want to disable temporarily -@--&gt;</pre>
+	</li>
+
+	<li><strong>New Chunk Parameters</strong>
+		<p>It is possible to pass properties/values to a chunk. More infos at <a href="https://github.com/modxcms/evolution/issues/625" target="_blank">Github #625</a>. Example:</p>
+		<strong>Chunk:</strong>
+		<pre>
+&lt;h3&gt;[+title+]&lt;/h3&gt;
+&lt;p&gt;[+body+]&lt;/p&gt;
+		</pre>
+		<strong>Call:</strong>
+		<pre>{{chunkName?title='First post'&body='Hello World!'}}</pre>
 	</li>
 </ul>
 
