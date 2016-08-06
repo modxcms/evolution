@@ -143,16 +143,21 @@ function ParseCommand($binding_string)
     return $binding_array;
 }
 
-// ParseTvValues
+// Parse MODX Template-Variables
 function parseTvValues($param, $tvsArray)
 {
 	global $modx;
-	if (strpos($param, '[+') !== false) {
-		$matches = $modx->getTagsFromContent($param, '[+', '+]');
+	$tvsArray = array_merge($tvsArray, $modx->documentObject);
+	if (strpos($param, '[*') !== false) {
+		$matches = $modx->getTagsFromContent($param, '[*', '*]');
 		foreach ($matches[0] as $i=>$match) {
 			if(isset($tvsArray[ $matches[1][$i] ])) {
-				$value = $tvsArray[ $matches[1][$i] ]['value'];
-				$value = $value === '' ? $tvsArray[ $matches[1][$i] ]['default_text'] : $value;
+				if(is_array($tvsArray[ $matches[1][$i] ])) {
+					$value = $tvsArray[$matches[1][$i]]['value'];
+					$value = $value === '' ? $tvsArray[$matches[1][$i]]['default_text'] : $value;
+				} else {
+					$value = $tvsArray[ $matches[1][$i] ];
+				}
 				$param = str_replace($match, $value, $param);
 			}
 		}

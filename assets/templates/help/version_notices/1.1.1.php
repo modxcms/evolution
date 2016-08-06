@@ -65,7 +65,7 @@ Sub page
 <h1>Template-Variables</h1>
 <ul>
 	<li><strong>@BINDINGS providing TV-values</strong>
-		<p>[+tv_name+] will be replaced by its value taken from actual resource. Beware of SQL-Errors in case no or wrong value is given (set a reasonable default-value to avoid errors). More infos at <a href="https://github.com/modxcms/evolution/issues/699" target="_blank">#699</a>. Example:</p>
-		<pre>@SELECT name,value FROM xxx WHERE yyy = [+tv_name+]</pre>
+		<p>[*tv_name*] will be replaced by its value taken from actual resource. Beware of SQL-Errors in case no or wrong value is given (set a reasonable default-value to avoid errors). More infos at <a href="https://github.com/modxcms/evolution/issues/699" target="_blank">#699</a>. Example:</p>
+		<pre>@SELECT name,value FROM xxx WHERE yyy = [*tv_name*]</pre>
 	</li>
 </ul>
