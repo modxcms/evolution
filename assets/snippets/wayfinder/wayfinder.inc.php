@@ -40,7 +40,7 @@ class Wayfinder {
 				'[+wf.subitemcount+]',
 				'[+wf.refid+]',
 				'[+wf.menuindex+]',
-		'[+wf.iterator+]'
+				'[+wf.iterator+]'
 			),
 			'wrapperLevel' => array(
 				'[+wf.wrapper+]',
@@ -248,12 +248,15 @@ class Wayfinder {
 		//Load row values into placholder array
 		$charset = $modx->config['modx_charset'];
 		if ($this->_config['entityEncode']) {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset),$numChildren,$refid);
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset));
 		} else {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren,$refid);
+			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description']);
 		}
-	//add iterator in phArray
-	$phArray[] = $curNum;
+		$phArray[] = $numChildren;
+		$phArray[] = $refid;
+		$phArray[] = $resource['menuindex'];
+		$phArray[] = $curNum;
+
 		$usePlaceholders = $this->placeHolders['rowLevel'];
 		//Add document variables to the placeholder array
 		foreach ($resource as $dvName => $dvVal) {
