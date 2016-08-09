@@ -48,7 +48,7 @@ Sub page
 &lt;h1&gt;[+title+]&lt;/h1&gt;
 &lt;p&gt;[+body+]&lt;/p&gt;</pre>
 		<strong>Call:</strong>
-		<pre>{{chunkName?title='First post'&body='Hello World!'}}</pre>
+		<pre>{{chunkName? &title='First post' &body='Hello World!'}}</pre>
 	</li>
 </ul>
 
