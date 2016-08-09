@@ -160,7 +160,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			break;
 		case "image":	// handles image fields using htmlarea image manager
 			global $ResourceManagerLoaded;
-			global $content,$use_editor,$which_editor;
+			global $content,$use_editor,$which_editor,$which_browser;
 			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 				$field_html .="
 				<script type=\"text/javascript\">
@@ -182,14 +182,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=images', w, h);
 						}
 						
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){
@@ -237,14 +237,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=images', w, h);
 						}
 									
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){

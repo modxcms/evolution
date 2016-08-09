@@ -458,7 +458,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/mcpuk/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>
@@ -471,7 +471,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/mcpuk/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>

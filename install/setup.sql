@@ -878,6 +878,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('number_of_results','20'),
 ('use_editor','1'),
 ('use_browser','1'),
+('which_browser','mcpuk'),
 ('rb_base_dir',''),
 ('rb_base_url',''),
 ('which_editor','TinyMCE'),
