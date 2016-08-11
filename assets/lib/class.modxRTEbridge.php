@@ -202,7 +202,7 @@ class modxRTEbridge
     // Renders complete JS-Script
     public function getEditorScript()
     {
-        global $modx;
+        global $modx, $which_browser;
         $ph = array();
         $output = "<!-- modxRTEbridge {$this->editorKey} -->\n";
 
@@ -228,6 +228,7 @@ class modxRTEbridge
                 $ph['selector'] = $selector;
                 $ph['documentIdentifier'] = $modx->documentIdentifier;
                 $ph['manager_path'] = MGR_DIR;
+                $ph['which_browser'] = !empty($which_browser) ? $which_browser : 'mcpuk';
 
                 $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
 
@@ -257,7 +258,21 @@ class modxRTEbridge
             }
 
         } else {
-           exit; // @todo: prepare for editors that need no elements
+			// No elements given - create Config-Object only 
+			$this->theme = $this->tvOptions['theme'];
+			$this->initTheme('noselector');
+			$this->renderBridgeParams('noselector');
+
+			$ph['configString'] = $this->renderConfigString();
+			$ph['configRawString'] = $this->renderConfigRawString();
+			$ph['editorKey'] = $this->editorKey;
+			$ph['themeKey'] = $this->theme;
+			
+			if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
+				define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
+				$output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
+				$output  = $modx->parseText($output, $ph);
+			}
         }
 
         // Remove empty placeholders !

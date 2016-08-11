@@ -5,6 +5,7 @@
 		global $_style;
 		global $_lang;
 		global $content;
+		global $which_browser;
 
 		if(substr($default_text, 0, 6) === '@@EVAL' && $field_value===$default_text) {
 	     	$eval_str = trim(substr($default_text, 7));
@@ -139,13 +140,13 @@
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {
@@ -209,13 +210,13 @@
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {

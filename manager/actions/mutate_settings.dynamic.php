@@ -79,6 +79,7 @@ if(!isset($upload_maxsize))          $upload_maxsize='1048576';
 if(!isset($new_file_permissions))    $new_file_permissions='0644';
 if(!isset($new_folder_permissions))  $new_folder_permissions='0755';
 if(!isset($use_browser))             $use_browser=1;
+if(!isset($which_browser))           $which_browser='mcpuk';
 if(!isset($rb_webuser))              $rb_webuser=0;
 if(!isset($rb_base_dir))             $rb_base_dir='[(base_path)]assets/';
 if(!isset($clean_uploaded_filename)) $clean_uploaded_filename=0;
@@ -1655,7 +1656,28 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           
-          
+          <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
+            <td nowrap class="warning"><?php echo $_lang["which_browser_default_title"]?></td>
+            <td>
+				<select name="which_browser" size="1" class="inputBox" onchange="documentDirty=true;">
+					<?php
+					foreach (glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
+						$dir = str_replace('\\', '/', $dir);
+						$browser_name = substr($dir, strrpos($dir, '/') + 1);
+						$selected = $browser_name == $which_browser ? ' selected="selected"' : '';
+						echo '<option value="' . $browser_name . '"' . $selected . '>' . "{$browser_name}</option>\n";
+					}
+					?>
+				</select>
+            </td>
+          </tr>
+          <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?php echo $_lang["which_browser_default_msg"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
           <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
             <td nowrap class="warning"><?php echo $_lang["rb_webuser_title"]?></td>
             <td>

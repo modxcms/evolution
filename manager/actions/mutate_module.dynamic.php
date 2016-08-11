@@ -375,7 +375,7 @@ function OpenServerBrowser(url, width, height ) {
 function BrowseServer() {
     var w = screen.width * 0.7;
     var h = screen.height * 0.7;
-    OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.php?Type=images", w, h);
+    OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
 }
 function SetUrl(url, width, height, alt) {
     document.mutate.icon.value = url;

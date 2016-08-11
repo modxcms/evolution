@@ -419,10 +419,10 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
             <?php if ($modx->hasPermission('edit_document')) { ?>
                 <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
             <?php } ?>
-			<?php if ($modx->hasPermission('assets_images')) { ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
                 <td><a href="#" id="Button13" class="treeButton" title="<?php echo $_lang["images_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['images_management'] ; ?></a></td>
 			<?php } ?>
-			<?php if ($modx->hasPermission('assets_files')) { ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
                 <td><a href="#" id="Button14" class="treeButton" title="<?php echo $_lang["files_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['files_management'] ; ?></a></td>
 			<?php } ?>
 			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
@@ -450,7 +450,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 </script>
 <?php } ?>
 
-<?php if ($modx->hasPermission('assets_images')) { ?>
+<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
 <script>
   jQuery('#Button13').click(function(e) {
       e.preventDefault();
@@ -458,12 +458,12 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/mcpuk/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>
 
-<?php if ($modx->hasPermission('assets_files')) { ?>
+<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
 <script>
   jQuery('#Button14').click(function(e) {
       e.preventDefault();
@@ -471,7 +471,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/mcpuk/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>
