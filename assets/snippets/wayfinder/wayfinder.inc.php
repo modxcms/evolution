@@ -69,11 +69,10 @@ class Wayfinder {
 		}
 		//Get all of the documents
 		$this->docs = $this->getData();
+		
 		if (!empty($this->docs)) {
-			//Sort documents by level for proper wrapper substitution
-			ksort($this->docs);
-			//build the menu
-			return $this->buildMenu();
+			ksort($this->docs);                   //Sort documents by level for proper wrapper substitution
+			return $this->buildMenu(); //build the menu
 		} else {
 			$noneReturn = $this->_config['debug'] ? '<p style="color:red">No documents found for menu.</p>' : '';
 			return $noneReturn;
@@ -85,13 +84,13 @@ class Wayfinder {
 		//Loop through all of the menu levels
 		foreach ($this->docs as $level => $subDocs) {
 			//Loop through each document group (grouped by parent doc)
-			foreach ($subDocs as $parentId => $docs) {
+			foreach ($subDocs as $parentId => $subDocs) {
 				//only process document group, if starting at root, hidesubmenus is off, or is in current parenttree
 				if (!$this->_config['hideSubMenus'] || $this->isHere($parentId) || $level <= 1) {
 					//Build the output for the group of documents
-					$menuPart = $this->buildSubMenu($docs,$level);
+					$menuPart = $this->buildSubMenu($subDocs,$level);
 					//If we are at the top of the menu start the output, otherwise replace the wrapper with the submenu
-					if (($level == 1 && (!$this->_config['displayStart'] || $this->_config['id'] == 0)) || ($level == 0 && $this->_config['displayStart'])) {
+					if(($level==1 && (!$this->_config['displayStart'] || $this->_config['id']==0)) || ($level==0 && $this->_config['displayStart'])) {
 						$output = $menuPart;
 					} else {
 						$output = str_replace("[+wf.wrapper.{$parentId}+]",$menuPart,$output);
@@ -103,14 +102,14 @@ class Wayfinder {
 		return $output;
 	}
 
-	function buildSubMenu($menuDocs,$level) {
+	function buildSubMenu($subDocs,$level) {
 		global $modx;
 		$subMenuOutput = '';
 		$firstItem = 1;
 		$counter = 1;
-		$numSubItems = count($menuDocs);
+		$numSubItems = count($subDocs);
 		//Loop through each document to render output
-		foreach ($menuDocs as $docId => $docInfo) {
+		foreach ($subDocs as $docId => $docInfo) {
 			$docInfo['level'] = $level;
 			$docInfo['first'] = $firstItem;
 			$firstItem = 0;
@@ -146,7 +145,7 @@ class Wayfinder {
 			}
 			//Get the class names for the wrapper
 			$classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
-			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
+			$useClass = ($classNames) ? sprintf(' class="%s"',$classNames) : '';
 			
 			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
 			//Process the wrapper
@@ -170,15 +169,14 @@ class Wayfinder {
 	//render each rows output
 	function renderRow(&$resource,$numChildren,$curNum) {
 		global $modx;
-		$output = '';
-		$refid = $resource["id"];
+		$refid = $resource['id'];
 
 		// Determine fields for use from referenced resource
 		if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
-			if ($this->_config['useReferenced'] == "id") {
+			if ($this->_config['useReferenced'] == 'id') {
 				// if id only, do not need get referenced data
-				$resource["id"] = $resource['content'];
-			} else if ($referenced = $modx->getDocument($resource['content'])) {
+				$resource['id'] = $resource['content'];
+			} elseif ($referenced = $modx->getDocument($resource['content'])) {
 					if (in_array($this->_config['useReferenced'], explode(",", "1,*"))) {
 						$this->_config['useReferenced'] = array_keys($resource);
 					}
@@ -246,12 +244,19 @@ class Wayfinder {
 			$useId = '';
 		}
 		//Load row values into placholder array
-		$charset = $modx->config['modx_charset'];
-		if ($this->_config['entityEncode']) {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],htmlspecialchars($resource['title'], ENT_COMPAT, $charset),htmlspecialchars($resource['linktext'], ENT_COMPAT, $charset),$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],htmlspecialchars($resource['introtext'], ENT_COMPAT, $charset),htmlspecialchars($resource['description'], ENT_COMPAT, $charset));
-		} else {
-			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description']);
-		}
+		$phArray = array();
+		$phArray[] = $useSub;
+		$phArray[] = $useClass;
+		$phArray[] = $classNames;
+		$phArray[] = $resource['link'];
+		$phArray[] = !$this->_config['entityEncode'] ? $resource['title']       : $this->hsc($resource['title']);
+		$phArray[] = !$this->_config['entityEncode'] ? $resource['linktext']    : $this->hsc($resource['linktext']);
+		$phArray[] = $useId;
+		$phArray[] = $resource['alias'];
+		$phArray[] = $resource['link_attributes'];
+		$phArray[] = $resource['id'];
+		$phArray[] = !$this->_config['entityEncode'] ? $resource['introtext']   : $this->hsc($resource['introtext']);
+		$phArray[] = !$this->_config['entityEncode'] ? $resource['description'] : $this->hsc($resource['description']);
 		$phArray[] = $numChildren;
 		$phArray[] = $refid;
 		$phArray[] = $resource['menuindex'];
@@ -260,9 +265,10 @@ class Wayfinder {
 		$usePlaceholders = $this->placeHolders['rowLevel'];
 		//Add document variables to the placeholder array
 		foreach ($resource as $dvName => $dvVal) {
-			$usePlaceholders[] = '[+' . $dvName . '+]';
+			$usePlaceholders[] = "[+{$dvName}+]";
 			$phArray[] = $dvVal;
 		}
+		
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
 			$usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
@@ -281,7 +287,7 @@ class Wayfinder {
 			$this->addDebugInfo("rowdata","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were retrieved from the database for this document.",$resource);
 		}
 		//Process the row
-		$output .= str_replace($usePlaceholders,$phArray,$useChunk);
+		$output = str_replace($usePlaceholders,$phArray,$useChunk);
 		//Return the row
 		return $output . $this->_config['nl'];
 	}
@@ -617,15 +623,13 @@ class Wayfinder {
 		foreach ($this->_templates as $n => $v) {
 			$templateCheck = $this->fetch($v);
 			if (empty($v) || !$templateCheck) {
-				if ($n === 'outerTpl') {
-					$this->_templates[$n] = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';
-				} elseif ($n === 'rowTpl') {
-					$this->_templates[$n] = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';
-				} elseif ($n === 'startItemTpl') {
-					$this->_templates[$n] = '<h2[+wf.id+][+wf.classes+]>[+wf.linktext+]</h2>[+wf.wrapper+]';
-				} else {
-					$this->_templates[$n] = FALSE;
+				switch($n) {
+					case 'outerTpl'    : $_ = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';break;
+					case 'rowTpl'      : $_ = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';break;
+					case 'startItemTpl': $_ = '<h2[+wf.id+][+wf.classes+]>[+wf.linktext+]</h2>[+wf.wrapper+]';break;
+					default:$_ = FALSE;
 				}
+				$this->_templates[$n] = $_;
 				if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"No template found, using default.",array($n => $this->_templates[$n])); }
 			} else {
 				$this->_templates[$n] = $templateCheck;
@@ -716,27 +720,28 @@ class Wayfinder {
 		foreach ($this->debugInfo as $group => $item) {
 			switch ($group) {
 				case 'template':
-					$output .= "<tr><th style=\"background:#C3D9FF;font-size:200%;\">Template Processing</th></tr>";
+					$output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Template Processing</th></tr>';
 					foreach ($item as $parentId => $info) {
-						$output .= "
-							<tr style=\"background:#336699;color:#fff;\"><th>{$info['header']} - <span style=\"font-weight:normal;\">{$info['message']}</span></th></tr>
-							<tr><td>{$info['info']}</td></tr>";
+						$output .= sprintf('
+							<tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
+							<tr><td>%s</td></tr>', $info['header'], $info['message'], $info['info']);
 					}
 					break;
 				case 'wrapper':
-					$output .= "<tr><th style=\"background:#C3D9FF;font-size:200%;\">Document Processing</th></tr>";
+					$output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Document Processing</th></tr>';
 
 					foreach ($item as $parentId => $info) {
-						$output .= "<tr><table border=\"1\" cellpadding=\"3px\" style=\"margin-bottom: 10px;\" width=\"100%\">
-									<tr style=\"background:#336699;color:#fff;\"><th>{$info['header']} - <span style=\"font-weight:normal;\">{$info['message']}</span></th></tr>
-									<tr><td>{$info['info']}</td></tr>
-									<tr style=\"background:#336699;color:#fff;\"><th>Documents included in this wrapper:</th></tr>";
+						$output .= sprintf('<tr><table border="1" cellpadding="3px" style="margin-bottom: 10px;width:100%">
+									<tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
+									<tr><td>%s</td></tr>
+									<tr style="background:#336699;color:#fff;"><th>Documents included in this wrapper:</th></tr>',$info['header'],$info['message'],$info['info']);
 
 						foreach ($this->debugInfo['row'] as $key => $value) {
 							$keyParts = explode(':',$key);
 							if ($parentId == $keyParts[0]) {
-								$output .= "<tr style=\"background:#eee;\"><th>{$value['header']}</th></tr>
-									<tr><td><div style=\"float:left;margin-right:1%;\">{$value['message']}<br />{$value['info']}</div><div style=\"float:left;\">{$this->debugInfo['rowdata'][$key]['message']}<br />{$this->debugInfo['rowdata'][$key]['info']}</div></td></tr>";
+								$param = array($value['header'],$value['message'],$value['info'],$this->debugInfo['rowdata'][$key]['message'],$this->debugInfo['rowdata'][$key]['info']);
+								$output .= vsprintf('<tr style="background:#eee;"><th>%s</th></tr>
+									<tr><td><div style="float:left;margin-right:1%;">%s<br />%s</div><div style="float:left;">%s<br />%s</div></td></tr>',$param);
 							}
 						}
 
@@ -745,11 +750,11 @@ class Wayfinder {
 
 					break;
 				case 'settings':
-					$output .= "<tr><th style=\"background:#C3D9FF;font-size:200%;\">Settings</th></tr>";
+					$output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Settings</th></tr>';
 					foreach ($item as $parentId => $info) {
-						$output .= "
-							<tr style=\"background:#336699;color:#fff;\"><th>{$info['header']} - <span style=\"font-weight:normal;\">{$info['message']}</span></th></tr>
-							<tr><td>{$info['info']}</td></tr>";
+						$output .= sprintf('
+							<tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
+							<tr><td>%s</td></tr>',$info['header'],$info['message'],$info['info']);
 					}
 					break;
 				default:
@@ -769,5 +774,9 @@ class Wayfinder {
 		$value = str_replace('{','&#123;',$value);
 		$value = str_replace('}','&#125;',$value);
 		return $value;
+	}
+	function hsc($string) {
+		global $modx;
+		return htmlspecialchars($string, ENT_COMPAT, $modx->config['modx_charset']);
 	}
 }
