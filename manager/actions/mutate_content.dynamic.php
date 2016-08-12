@@ -768,7 +768,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         $template = $content['template'];
                 }
 
-                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value";
+                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                 $vs = array($tbl_site_tmplvars, $tbl_site_tmplvar_templates, $tbl_site_tmplvar_contentvalues, $id, $tbl_site_tmplvar_access);
                 $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
                          LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
