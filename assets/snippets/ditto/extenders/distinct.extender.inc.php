@@ -14,8 +14,8 @@
  * 	e.g. [[Ditto? &tpl=`myTemplate` &extenders=`distinct` &distinct=`pagetitle,pub_date`]] -- will return only unique page titles for each date.
  * 
  * @Changelog:
- * 	1.0.3 (2012-04-05) by DivanDesign: Now use the DittoID (need for many Ditto calls).
- * 	1.0.2 (2011-12-30) By Sergey Davydov: Set placeholders distinctCount - common count and  distinctIds - ids of distinted items 
+ * 	1.0.3 (2011-12-30) By Sergey Davydov: Set placeholders distinctCount - common count and  distinctIds - ids of distinted items 
+ * 	1.0.2 (2012-04-05) by DivanDesign: Now use the DittoID (need for many Ditto calls).
  * 	1.0.1 by Nick Crossland: Bugfixes only.
  * 	1.0 by Nick Crossland: initial release.
  * 
