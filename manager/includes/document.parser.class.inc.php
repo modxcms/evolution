@@ -2003,6 +2003,8 @@ class DocumentParser {
             if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
             if($q=='index.php')        $q = '';
         }
+        
+        $_REQUEST['q'] = $_GET['q'] = $q;
         return $q;
     }
     
