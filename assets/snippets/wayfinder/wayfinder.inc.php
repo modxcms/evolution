@@ -202,7 +202,7 @@ class Wayfinder {
             $usedTemplate = 'parentRowTpl';
         } elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
             $usedTemplate = 'innerRowTpl';
-    } elseif ($resource['last'] && $this->_templates['lastRowTpl']) {
+        } elseif ($resource['last'] && $this->_templates['lastRowTpl']) {
             $usedTemplate = 'lastRowTpl';
         } else {
             $usedTemplate = 'rowTpl';
