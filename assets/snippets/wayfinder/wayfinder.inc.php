@@ -539,6 +539,9 @@ class Wayfinder {
     function appendTV($tvname,$docIDs){
         global $modx;
 
+        $base_path= MODX_MANAGER_PATH . 'includes';
+        include_once $base_path . '/tmplvars.format.inc.php';
+        include_once $base_path . '/tmplvars.commands.inc.php';
 
         $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
         $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
