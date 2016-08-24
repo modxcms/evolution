@@ -104,63 +104,70 @@ class Wayfinder {
 
     function buildSubMenu($subDocs,$level) {
         global $modx;
+        
         $subMenuOutput = '';
-        $firstItem = 1;
         $counter = 1;
-        $numSubItems = count($subDocs);
+        $total = count($subDocs);
+        
         //Loop through each document to render output
         foreach ($subDocs as $docId => $docInfo) {
             $docInfo['level'] = $level;
-            $docInfo['first'] = $firstItem;
-            $firstItem = 0;
+            $docInfo['first'] = $counter==1 ? 1 : 0;
+            
             //Determine if last item in group
-            if ($counter == $numSubItems && 0 < $numSubItems) {
-                $docInfo['last'] = 1;
-            } else {
-                $docInfo['last'] = 0;
-            }
+            if ($counter == $total && 0 < $total) $docInfo['last'] = 1;
+            else                                  $docInfo['last'] = 0;
+            
             //Determine if document has children
-            $docInfo['hasChildren'] = in_array($docInfo['id'],$this->hasChildren) ? 1 : 0;
-            $numChildren = $docInfo['hasChildren'] ? count($this->docs[$level+1][$docInfo['id']]) : 0;
+            if(in_array($docInfo['id'],$this->hasChildren)) {
+                $docInfo['hasChildren'] = 1;
+                $numChildren            = count($this->docs[$level+1][$docInfo['id']]);
+            }
+            else {
+                $docInfo['hasChildren'] = 0;
+                $docInfo['hasChildren'] = 0;
+            }
+            
             //Render the row output
             $subMenuOutput .= $this->renderRow($docInfo,$numChildren,$counter);
             //Update counter for last check
             $counter++;
         }
         
-        if ($level > 0) {
-            //Determine which wrapper template to use
-            if ($this->_templates['innerTpl'] && $level > 1) {
-                $useChunk = $this->_templates['innerTpl'];
-                $usedTemplate = 'innerTpl';
-            } else {
-                $useChunk = $this->_templates['outerTpl'];
-                $usedTemplate = 'outerTpl';
+        if ($level < 1) return $subMenuOutput;
+        
+        //Determine wrapper class
+        if ($level > 1) $wrapperClass = 'innercls';
+        else            $wrapperClass = 'outercls';
+        
+        //Get the class names for the wrapper
+        $classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
+        $useClass = ($classNames) ? sprintf(' class="%s"',$classNames) : '';
+        
+        $phArray = array($subMenuOutput,$useClass,$classNames,$level);
+        
+        //Determine which wrapper template to use
+        if ($this->_templates['innerTpl'] && $level > 1) {
+            $useChunk = $this->_templates['innerTpl'];
+            $usedTemplate = 'innerTpl';
+        } else {
+            $useChunk = $this->_templates['outerTpl'];
+            $usedTemplate = 'outerTpl';
+        }
+        
+        //Process the wrapper
+        $subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
+        //Debug
+        if ($this->_config['debug']) {
+            $info = array();
+            $info['template'] = $usedTemplate;
+            foreach ($this->placeHolders['wrapperLevel'] as $n => $v) {
+                if ($v !== '[+wf.wrapper+]') $info[$v] = $phArray[$n];
             }
-            //Determine wrapper class
-            if ($level > 1) {
-                $wrapperClass = 'innercls';
-            } else {
-                $wrapperClass = 'outercls';
-            }
-            //Get the class names for the wrapper
-            $classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
-            $useClass = ($classNames) ? sprintf(' class="%s"',$classNames) : '';
-            
-            $phArray = array($subMenuOutput,$useClass,$classNames,$level);
-            //Process the wrapper
-            $subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
-            //Debug
-            if ($this->_config['debug']) {
-                $debugParent = $docInfo['parent'];
-                $debugDocInfo = array();
-                $debugDocInfo['template'] = $usedTemplate;
-                foreach ($this->placeHolders['wrapperLevel'] as $n => $v) {
-                    if ($v !== '[+wf.wrapper+]')
-                        $debugDocInfo[$v] = $phArray[$n];
-                }
-                $this->addDebugInfo('wrapper',$debugParent,"Wrapper for items with parent {$debugParent}.","These fields were used when processing the wrapper for the following documents.",$debugDocInfo);
-            }
+            $groupkey = $docInfo['parent'];
+            $header  = "Wrapper for items with parent {$groupkey}.";
+            $message = "These fields were used when processing the wrapper for the following documents.";
+            $this->addDebugInfo('wrapper',$groupkey,$header,$message,$info);
         }
         //Return the submenu
         return $subMenuOutput;
