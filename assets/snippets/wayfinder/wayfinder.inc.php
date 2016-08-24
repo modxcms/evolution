@@ -709,10 +709,9 @@ class Wayfinder {
     function modxPrep($value) {
         global $modx;
         $value = (strpos($value,'<') !== FALSE) ? htmlentities($value,ENT_NOQUOTES,$modx->config['modx_charset']) : $value;
-        $value = str_replace('[','&#091;',$value);
-        $value = str_replace(']','&#093;',$value);
-        $value = str_replace('{','&#123;',$value);
-        $value = str_replace('}','&#125;',$value);
+        $s = array('[', ']', '{', '}');
+        $r = array('&#091;', '&#093;', '&#123;', '&#125;');
+        $value = str_replace($s, $r, $value);
         return $value;
     }
     function hsc($string) {
