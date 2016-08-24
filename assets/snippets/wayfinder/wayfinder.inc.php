@@ -179,40 +179,40 @@ class Wayfinder {
         $refid = $resource['id'];
 
         // Determine fields for use from referenced resource
-        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && preg_match('@^[1-9][0-9]*$@',$resource['content'])) {
             if ($this->_config['useReferenced'] == 'id') {
                 // if id only, do not need get referenced data
                 $resource['id'] = $resource['content'];
             } elseif ($referenced = $modx->getDocument($resource['content'])) {
-                    if (in_array($this->_config['useReferenced'], explode(",", "1,*"))) {
-                        $this->_config['useReferenced'] = array_keys($resource);
-                    }
-                    if (!is_array($this->_config['useReferenced'])) {
-                        $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
-                    }
-                    $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'], explode(",", "content,parent,isfolder"));
-
-                    foreach ($this->_config['useReferenced'] as $field) {
-                        if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
-                        $linkTextField = empty($resource[$this->_config['textOfLinks']]) ? 'pagetitle' : $this->_config['textOfLinks'];
-                        if (in_array($field,array("linktext",$linkTextField))) $resource['linktext'] = $referenced[$linkTextField];
-                        if (in_array($field,array("title",$this->_config['titleOfLinks']))) $resource['title'] = $referenced[$this->_config['titleOfLinks']];
-                    }
+                if (in_array($this->_config['useReferenced'], explode(",", "1,*"))) {
+                    $this->_config['useReferenced'] = array_keys($resource);
+                }
+                if (!is_array($this->_config['useReferenced'])) {
+                    $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
+                }
+                $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'], explode(",", "content,parent,isfolder"));
+                
+                foreach ($this->_config['useReferenced'] as $field) {
+                    if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
+                    $linkTextField = empty($resource[$this->_config['textOfLinks']]) ? 'pagetitle' : $this->_config['textOfLinks'];
+                    if (in_array($field,array("linktext",$linkTextField))) $resource['linktext'] = $referenced[$linkTextField];
+                    if (in_array($field,array("title",$this->_config['titleOfLinks']))) $resource['title'] = $referenced[$this->_config['titleOfLinks']];
                 }
             }
-
+        }
+        
         //Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
             $usedTemplate = 'startItemTpl';
-        } elseif ($resource['id'] == $modx->documentObject['id']
+        } elseif ($resource['id'] == $modx->documentIdentifier
             && $resource['isfolder']
             && $this->_templates['parentRowHereTpl']
             && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
             && $numChildren) {
             $usedTemplate = 'parentRowHereTpl';
-        } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['innerHereTpl'] && $resource['level'] > 1) {
+        } elseif ($resource['id'] == $modx->documentIdentifier && $this->_templates['innerHereTpl'] && $resource['level'] > 1) {
             $usedTemplate = 'innerHereTpl';
-        } elseif ($resource['id'] == $modx->documentObject['id'] && $this->_templates['hereTpl']) {
+        } elseif ($resource['id'] == $modx->documentIdentifier && $this->_templates['hereTpl']) {
             $usedTemplate = 'hereTpl';
         } elseif ($resource['isfolder']
             && $this->_templates['activeParentRowTpl']
@@ -242,14 +242,12 @@ class Wayfinder {
         //Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$refid}+]" : "";
         $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
-        $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
+        $useClass = ($classNames) ? $useClass = sprintf(' class="%s"',$classNames) : '';
         
         //Setup the row id if a prefix is specified
-        if ($this->_config['rowIdPrefix']) {
-            $useId = ' id="' . $this->_config['rowIdPrefix'] . $resource['id'] . '"';
-        } else {
-            $useId = '';
-        }
+        if ($this->_config['rowIdPrefix']) $useId = sprintf(' id="%s%s"', $this->_config['rowIdPrefix'], $resource['id']);
+        else                               $useId = '';
+        
         //Load row values into placholder array
         $phArray = array();
         $phArray[] = $useSub;
