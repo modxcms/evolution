@@ -54,9 +54,9 @@ class Wayfinder {
     function buildMenu() {
         global $modx;
         //Loop through all of the menu levels
-        foreach ($this->docs as $level => $subDocs) {
+        foreach ($this->docs as $level => $subParents) {
             //Loop through each document group (grouped by parent doc)
-            foreach ($subDocs as $parentId => $subDocs) {
+            foreach ($subParents as $parentId => $subDocs) {
                 //only process document group, if starting at root, hidesubmenus is off, or is in current parenttree
                 if ($this->_config['hideSubMenus'] && !$this->isHere($parentId) && 1<$level) continue;
                 
