@@ -302,32 +302,36 @@ class Wayfinder {
         global $modx;
         
         $classNames = array();
+        $class  = &$this->_css;
+        $config = &$this->_config;
         
-        if($classType === 'outercls') {
-            if(!empty($this->_css['outer']))               $classNames[] = $this->_css['outer']; //Set outer class if specified
-        }
-        elseif($classType === 'innercls') {
-            if( !empty($this->_css['inner']))              $classNames[] = $this->_css['inner']; //Set inner class if specified
-            if(!empty($this->_css['outerLevel']))          $classNames[] = $this->_css['outerLevel'].$level; //Set level class if specified
-        }
-        elseif($classType === 'rowcls') {
-            if(!empty($this->_css['row']))                 $classNames[] = $this->_css['row'];          //Set row class if specified
-            if($first && !empty($this->_css['first']))     $classNames[] = $this->_css['first'];        //Set first class if specified
-            if($last && !empty($this->_css['last']))       $classNames[] = $this->_css['last'];         //Set last class if specified
-            if(!empty($this->_css['level']))               $classNames[] = $this->_css['level'].$level; //Set level class if specified
-            
-            if(!empty($this->_css['here']) && $this->isHere($docId))             $classNames[]=$this->_css['here'];    //Set here class if specified
-            if(!empty($this->_css['self']) && $docId==$this->_config['hereId'])  $classNames[]=$this->_css['self'];    //Set self class if specified
-            if(!empty($this->_css['weblink']) && $type=='reference')             $classNames[]=$this->_css['weblink']; //Set class for weblink
-            
-            if($isFolder && !empty($this->_css['parent'])) {
-                if($level < $this->_config['level'] || $this->_config['level'] == 0) {
-                    // Set parentFolder class if specified
-                    if($this->isHere($docId) || !$this->_config['hideSubMenus']) $classNames[]=$this->_css['parent'];
+        switch($classType) {
+            case 'outercls':
+                if(!empty($class['outer']))                                   $classNames[] = $class['outer'];             //Set outer class if specified
+                break;
+            case 'innercls':
+                if( !empty($class['inner']))                                  $classNames[] = $class['inner'];             //Set inner class if specified
+                if(!empty($class['outerLevel']))                              $classNames[] = $class['outerLevel'].$level; //Set level class if specified
+                break;
+            case 'rowcls':
+                if(!empty($class['row']))                                     $classNames[] = $class['row'];          //Set row class if specified
+                if($first && !empty($class['first']))                         $classNames[] = $class['first'];        //Set first class if specified
+                if($last  && !empty($class['last']))                          $classNames[] = $class['last'];         //Set last class if specified
+                if(!empty($class['level']))                                   $classNames[] = $class['level'].$level; //Set level class if specified
+                
+                if(!empty($class['here'])    && $this->isHere($docId))        $classNames[] = $class['here'];    //Set here class if specified
+                if(!empty($class['self'])    && $docId==$config['hereId'])    $classNames[] = $class['self'];    //Set self class if specified
+                if(!empty($class['weblink']) && $type=='reference')           $classNames[] = $class['weblink']; //Set class for weblink
+                
+                if($isFolder && !empty($class['parent'])) {
+                    if($level < $config['level'] || $config['level']==0) {
+                        if($this->isHere($docId) || !$config['hideSubMenus']) $classNames[] = $class['parent'];  // Set parentFolder class if specified
+                    }
                 }
-            }
+                break;
+            default:
+                return;
         }
-        else return;
 
         if($classNames) return join(' ', $classNames);
     }
