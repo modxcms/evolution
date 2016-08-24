@@ -300,71 +300,36 @@ class Wayfinder {
     //determine style class for current item being processed
     function setItemClass($classType, $docId = 0, $first = 0, $last = 0, $level = 0, $isFolder = 0, $type = 'document') {
         global $modx;
-        $returnClass = '';
-        $hasClass = 0;
-
-        if ($classType === 'outercls' && !empty($this->_css['outer'])) {
-            //Set outer class if specified
-            $returnClass .= $this->_css['outer'];
-            $hasClass = 1;
-        } elseif ($classType === 'innercls') {
-
-            if ( !empty($this->_css['inner'])) {
-                //Set inner class if specified
-                $returnClass .= $this->_css['inner'];
-                $hasClass = 1;
-            }
-
-            //Set level class if specified
-            if (!empty($this->_css['outerLevel'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
-                $hasClass = 1;
-            }
-
-        } elseif ($classType === 'rowcls') {
-            //Set row class if specified
-            if (!empty($this->_css['row'])) {
-                $returnClass .= $this->_css['row'];
-                $hasClass = 1;
-            }
-            //Set first class if specified
-            if ($first && !empty($this->_css['first'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['first'] : $this->_css['first'];
-                $hasClass = 1;
-            }
-            //Set last class if specified
-            if ($last && !empty($this->_css['last'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['last'] : $this->_css['last'];
-                $hasClass = 1;
-            }
-            //Set level class if specified
-            if (!empty($this->_css['level'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['level'] . $level : $this->_css['level'] . $level;
-                $hasClass = 1;
-            }
-            //Set parentFolder class if specified
-            if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0) && ($this->isHere($docId) || !$this->_config['hideSubMenus'])) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['parent'] : $this->_css['parent'];
-                $hasClass = 1;
-            }
-            //Set here class if specified
-            if (!empty($this->_css['here']) && $this->isHere($docId)) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['here'] : $this->_css['here'];
-                $hasClass = 1;
-            }
-            //Set self class if specified
-            if (!empty($this->_css['self']) && $docId == $this->_config['hereId']) {
-                $returnClass .= $hasClass ? ' ' . $this->_css['self'] : $this->_css['self'];
-                $hasClass = 1;
-            }
-            //Set class for weblink
-            if (!empty($this->_css['weblink']) && $type == 'reference') {
-                $returnClass .= $hasClass ? ' ' . $this->_css['weblink'] : $this->_css['weblink'];
-                $hasClass = 1;
+        
+        $classNames = array();
+        
+        if($classType === 'outercls') {
+            if(!empty($this->_css['outer']))               $classNames[] = $this->_css['outer']; //Set outer class if specified
+        }
+        elseif($classType === 'innercls') {
+            if( !empty($this->_css['inner']))              $classNames[] = $this->_css['inner']; //Set inner class if specified
+            if(!empty($this->_css['outerLevel']))          $classNames[] = $this->_css['outerLevel'].$level; //Set level class if specified
+        }
+        elseif($classType === 'rowcls') {
+            if(!empty($this->_css['row']))                 $classNames[] = $this->_css['row'];          //Set row class if specified
+            if($first && !empty($this->_css['first']))     $classNames[] = $this->_css['first'];        //Set first class if specified
+            if($last && !empty($this->_css['last']))       $classNames[] = $this->_css['last'];         //Set last class if specified
+            if(!empty($this->_css['level']))               $classNames[] = $this->_css['level'].$level; //Set level class if specified
+            
+            if(!empty($this->_css['here']) && $this->isHere($docId))             $classNames[]=$this->_css['here'];    //Set here class if specified
+            if(!empty($this->_css['self']) && $docId==$this->_config['hereId'])  $classNames[]=$this->_css['self'];    //Set self class if specified
+            if(!empty($this->_css['weblink']) && $type=='reference')             $classNames[]=$this->_css['weblink']; //Set class for weblink
+            
+            if($isFolder && !empty($this->_css['parent'])) {
+                if($level < $this->_config['level'] || $this->_config['level'] == 0) {
+                    // Set parentFolder class if specified
+                    if($this->isHere($docId) || !$this->_config['hideSubMenus']) $classNames[]=$this->_css['parent'];
+                }
             }
         }
+        else return;
 
-        return $returnClass;
+        if($classNames) return join(' ', $classNames);
     }
 
     //determine "you are here"
