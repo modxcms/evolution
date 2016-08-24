@@ -166,7 +166,7 @@ class Wayfinder {
             }
             $groupkey = $docInfo['parent'];
             $header  = "Wrapper for items with parent {$groupkey}.";
-            $message = "These fields were used when processing the wrapper for the following documents.";
+            $message = 'These fields were used when processing the wrapper for the following documents.';
             $this->addDebugInfo('wrapper',$groupkey,$header,$message,$info);
         }
         //Return the submenu
@@ -184,19 +184,19 @@ class Wayfinder {
                 // if id only, do not need get referenced data
                 $resource['id'] = $resource['content'];
             } elseif ($referenced = $modx->getDocument($resource['content'])) {
-                if (in_array($this->_config['useReferenced'], explode(",", "1,*"))) {
+                if (in_array($this->_config['useReferenced'], explode(',', '1,*'))) {
                     $this->_config['useReferenced'] = array_keys($resource);
                 }
                 if (!is_array($this->_config['useReferenced'])) {
                     $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
                 }
-                $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'], explode(",", "content,parent,isfolder"));
+                $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'], explode(',', 'content,parent,isfolder'));
                 
                 foreach ($this->_config['useReferenced'] as $field) {
                     if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
                     $linkTextField = empty($resource[$this->_config['textOfLinks']]) ? 'pagetitle' : $this->_config['textOfLinks'];
-                    if (in_array($field,array("linktext",$linkTextField))) $resource['linktext'] = $referenced[$linkTextField];
-                    if (in_array($field,array("title",$this->_config['titleOfLinks']))) $resource['title'] = $referenced[$this->_config['titleOfLinks']];
+                    if (in_array($field,array('linktext',$linkTextField))) $resource['linktext'] = $referenced[$linkTextField];
+                    if (in_array($field,array('title',$this->_config['titleOfLinks']))) $resource['title'] = $referenced[$this->_config['titleOfLinks']];
                 }
             }
         }
@@ -221,7 +221,7 @@ class Wayfinder {
             && $numChildren) {
             $usedTemplate = 'activeParentRowTpl';
         } elseif ($resource['isfolder']
-            && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
+            && ($resource['template']=='0' || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
             && $this->_templates['categoryFoldersTpl']
             && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)) {
             $usedTemplate = 'categoryFoldersTpl';
@@ -240,7 +240,7 @@ class Wayfinder {
         //Get the template
         $useChunk = $this->_templates[$usedTemplate];
         //Setup the new wrapper name and get the class names
-        $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$refid}+]" : "";
+        $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$refid}+]" : '';
         $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
         $useClass = ($classNames) ? $useClass = sprintf(' class="%s"',$classNames) : '';
         
@@ -288,8 +288,8 @@ class Wayfinder {
             foreach ($usePlaceholders as $n => $v) {
                 $debugDocInfo[$v] = $phArray[$n];
             }
-            $this->addDebugInfo("row","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were used when processing this document.",$debugDocInfo);
-            $this->addDebugInfo("rowdata","{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}","The following fields were retrieved from the database for this document.",$resource);
+            $this->addDebugInfo('row',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were used when processing this document.',$debugDocInfo);
+            $this->addDebugInfo('rowdata',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were retrieved from the database for this document.',$resource);
         }
         //Process the row
         $output = str_replace($usePlaceholders,$phArray,$useChunk);
@@ -369,7 +369,7 @@ class Wayfinder {
             }
         }
         //Debug
-        if ($this->_config['debug']) {$this->addDebugInfo("settings","JSCSS","JS/CSS Includes","Results of CSS & Javascript includes.",$jsCssDebug);}
+        if ($this->_config['debug']) $this->addDebugInfo('settings','JSCSS','JS/CSS Includes','Results of CSS & Javascript includes.',$jsCssDebug);
     }
 
     //Get all of the documents from the database
@@ -430,7 +430,7 @@ class Wayfinder {
             }
 
             // get document groups for current user
-            if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
+            if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(',',$docgrp);
             // build query
             if($modx->isFrontend())
                 $access = 'sc.privateweb=0';
@@ -539,18 +539,15 @@ class Wayfinder {
     function appendTV($tvname,$docIDs){
         global $modx;
 
-        $baspath= MODX_MANAGER_PATH."includes";
-        include_once $baspath . "/tmplvars.format.inc.php";
-        include_once $baspath . "/tmplvars.commands.inc.php";
 
         $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
         $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
         $rs = $modx->db->select(
-            "stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
+            'stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value',
             "{$tbl_site_tmplvar_contentvalues} stc LEFT JOIN {$tbl_site_tmplvars} stv ON stv.id=stc.tmplvarid ",
             "stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
-            "stc.contentid ASC"
+            'stc.contentid ASC'
             );
         $resourceArray = array();
         while ($row = $modx->db->getRow($rs))  {
@@ -585,7 +582,7 @@ class Wayfinder {
 
     function getTVList() {
         global $modx;
-        $tvs = $modx->db->select("name", $modx->getFullTableName('site_tmplvars'));
+        $tvs = $modx->db->select('name', $modx->getFullTableName('site_tmplvars'));
             // TODO: make it so that it only pulls those that apply to the current template
         $dbfields = $modx->db->getColumn('name', $tvs); 
         return $dbfields;
@@ -606,14 +603,14 @@ class Wayfinder {
                     default:$_ = FALSE;
                 }
                 $this->_templates[$n] = $_;
-                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"No template found, using default.",array($n => $this->_templates[$n])); }
+                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,'No template found, using default.',array($n => $this->_templates[$n])); }
             } else {
                 $this->_templates[$n] = $templateCheck;
                 $check = $this->findTemplateVars($templateCheck);
                 if (is_array($check)) {
                     $nonWayfinderFields = array_merge($check, $nonWayfinderFields);
                 }
-                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,"Template Found.",array($n => $this->_templates[$n])); }
+                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,'Template Found.',array($n => $this->_templates[$n])); }
             }
         }
 
@@ -627,7 +624,7 @@ class Wayfinder {
                     $this->tvList[] = $field;
                 }
             }
-            if ($this->_config['debug']) { $this->addDebugInfo('tvars','tvs','Template Variables',"The following template variables were found in your templates.",$this->tvList); }
+            if ($this->_config['debug']) { $this->addDebugInfo('tvars','tvs','Template Variables','The following template variables were found in your templates.',$this->tvList); }
         }
     }
 
@@ -635,11 +632,11 @@ class Wayfinder {
         // based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
         global $modx;
         $template = '';
-        if ($modx->getChunk($tpl) != "") {
+        if ($modx->getChunk($tpl) != '') {
             $template = $modx->getChunk($tpl);
-        } else if(substr($tpl, 0, 6) == "@FILE:") {
+        } else if(substr($tpl, 0, 6) == '@FILE:') {
             $template = file_get_contents(substr($tpl, 6));
-        } else if(substr($tpl, 0, 6) == "@CODE:") {
+        } else if(substr($tpl, 0, 6) == '@CODE:') {
             $template = substr($tpl, 6);
         } else {
             $template = FALSE;
