@@ -86,15 +86,15 @@ class Wayfinder {
             //Loop through each document group (grouped by parent doc)
             foreach ($subDocs as $parentId => $subDocs) {
                 //only process document group, if starting at root, hidesubmenus is off, or is in current parenttree
-                if (!$this->_config['hideSubMenus'] || $this->isHere($parentId) || $level <= 1) {
-                    //Build the output for the group of documents
-                    $menuPart = $this->buildSubMenu($subDocs,$level);
-                    //If we are at the top of the menu start the output, otherwise replace the wrapper with the submenu
-                    if(($level==1 && (!$this->_config['displayStart'] || $this->_config['id']==0)) || ($level==0 && $this->_config['displayStart'])) {
-                        $output = $menuPart;
-                    } else {
-                        $output = str_replace("[+wf.wrapper.{$parentId}+]",$menuPart,$output);
-                    }
+                if ($this->_config['hideSubMenus'] && !$this->isHere($parentId) && 1<$level) continue;
+                
+                //Build the output for the group of documents
+                $menuPart = $this->buildSubMenu($subDocs,$level);
+                //If we are at the top of the menu start the output, otherwise replace the wrapper with the submenu
+                if(($level==1 && (!$this->_config['displayStart'] || $this->_config['id']==0)) || ($level==0 && $this->_config['displayStart'])) {
+                    $output = $menuPart;
+                } else {
+                    $output = str_replace("[+wf.wrapper.{$parentId}+]",$menuPart,$output);
                 }
             }
         }
