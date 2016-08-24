@@ -507,43 +507,11 @@ class Wayfinder {
 
     function appendTV($tvname,$docIDs){
         global $modx;
-
-        $base_path= MODX_MANAGER_PATH . 'includes';
-        include_once $base_path . '/tmplvars.format.inc.php';
-        include_once $base_path . '/tmplvars.commands.inc.php';
-
-        $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
-        $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-
-        $rs = $modx->db->select(
-            'stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value',
-            "{$tbl_site_tmplvar_contentvalues} stc LEFT JOIN {$tbl_site_tmplvars} stv ON stv.id=stc.tmplvarid ",
-            "stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
-            'stc.contentid ASC'
-            );
+        
         $resourceArray = array();
-        while ($row = $modx->db->getRow($rs))  {
-            $resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
-        }
-
-        if (count($resourceArray) != count($docIDs)) {
-            $rs = $modx->db->select('name,type,display,display_params,default_text', $tbl_site_tmplvars, "name='{$tvname}'", 1);
-            $row = $modx->db->getRow($rs);
-            if (strtoupper($row['default_text']) == '@INHERIT') {
-                foreach ($docIDs as $id) {
-                    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
-                    if (!isset($resourceArray["#{$id}"])) {
-                        $resourceArray["#{$id}"][$tvname] = $output;
-                    }
-                }
-            } else {
-                $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
-                foreach ($docIDs as $id) {
-                    if (!isset($resourceArray["#{$id}"])) {
-                        $resourceArray["#{$id}"][$tvname] = $output;
-                    }
-                }
-            }
+        foreach($docIDs as $id) {
+            $tv = $modx->getTemplateVarOutput($tvname, $id);
+            $resourceArray["#{$id}"][$tvname] = $tv[$tvname];
         }
         return $resourceArray;
     }
