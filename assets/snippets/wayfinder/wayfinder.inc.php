@@ -18,38 +18,10 @@ class Wayfinder {
     var $docs = array();
     var $parentTree = array();
     var $hasChildren = array();
-    var $placeHolders = array();
     var $tvList = array();
     var $debugInfo = array();
     
     function __construct() {
-        $this->placeHolders = array(
-            'rowLevel' => array(
-                '[+wf.wrapper+]',
-                '[+wf.classes+]',
-                '[+wf.classnames+]',
-                '[+wf.link+]',
-                '[+wf.title+]',
-                '[+wf.linktext+]',
-                '[+wf.id+]',
-                '[+wf.alias+]',
-                '[+wf.attributes+]',
-                '[+wf.docid+]',
-                '[+wf.introtext+]',
-                '[+wf.description+]',
-                '[+wf.subitemcount+]',
-                '[+wf.refid+]',
-                '[+wf.menuindex+]',
-                '[+wf.iterator+]'
-            ),
-            'wrapperLevel' => array(
-                '[+wf.wrapper+]',
-                '[+wf.classes+]',
-                '[+wf.classnames+]',
-                '[+wf.level+]'
-            ),
-            'tvs' => array()
-        );
     }
     
     function run() {
@@ -137,32 +109,30 @@ class Wayfinder {
         if ($level < 1) return $subMenuOutput;
         
         //Determine wrapper class
-        if ($level > 1) $wrapperClass = 'innercls';
-        else            $wrapperClass = 'outercls';
+        if ($level==1) $wrapperClass = 'outercls';
+        else           $wrapperClass = 'innercls'; // 1<$level
         
         //Get the class names for the wrapper
         $classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
-        $useClass = ($classNames) ? sprintf(' class="%s"',$classNames) : '';
         
-        $phArray = array($subMenuOutput,$useClass,$classNames,$level);
+        $ph = array();
+        $ph['wf.wrapper']    = $subMenuOutput;
+        $ph['wf.classes']    = $classNames ? sprintf(' class="%s"',$classNames) : '';
+        $ph['wf.classnames'] = $classNames;
+        $ph['wf.level']      = $level;
         
         //Determine which wrapper template to use
-        if ($this->_templates['innerTpl'] && $level > 1) {
-            $useChunk = $this->_templates['innerTpl'];
-            $usedTemplate = 'innerTpl';
-        } else {
-            $useChunk = $this->_templates['outerTpl'];
-            $usedTemplate = 'outerTpl';
-        }
+        if ($this->_templates['innerTpl'] && $wrapperClass=='innercls') $tpl = $this->_templates['innerTpl'];
+        else                                                            $tpl = $this->_templates['outerTpl'];
         
         //Process the wrapper
-        $subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
+        $subMenuOutput = $modx->parseText($tpl,$ph);
         //Debug
         if ($this->_config['debug']) {
             $info = array();
-            $info['template'] = $usedTemplate;
-            foreach ($this->placeHolders['wrapperLevel'] as $n => $v) {
-                if ($v !== '[+wf.wrapper+]') $info[$v] = $phArray[$n];
+            $info['template'] = ($tpl==$this->_templates['innerTpl']) ? 'innerTpl':'outerTpl';
+            foreach ($ph as $k=>$v) {
+                if ($k !== 'wf.wrapper') $info[$k] = $v;
             }
             $groupkey = $docInfo['parent'];
             $header  = "Wrapper for items with parent {$groupkey}.";
@@ -237,8 +207,6 @@ class Wayfinder {
         } else {
             $usedTemplate = 'rowTpl';
         }
-        //Get the template
-        $useChunk = $this->_templates[$usedTemplate];
         //Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$refid}+]" : '';
         $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
@@ -249,51 +217,50 @@ class Wayfinder {
         else                               $useId = '';
         
         //Load row values into placholder array
-        $phArray = array();
-        $phArray[] = $useSub;
-        $phArray[] = $useClass;
-        $phArray[] = $classNames;
-        $phArray[] = $resource['link'];
-        $phArray[] = !$this->_config['entityEncode'] ? $resource['title']       : $this->hsc($resource['title']);
-        $phArray[] = !$this->_config['entityEncode'] ? $resource['linktext']    : $this->hsc($resource['linktext']);
-        $phArray[] = $useId;
-        $phArray[] = $resource['alias'];
-        $phArray[] = $resource['link_attributes'];
-        $phArray[] = $resource['id'];
-        $phArray[] = !$this->_config['entityEncode'] ? $resource['introtext']   : $this->hsc($resource['introtext']);
-        $phArray[] = !$this->_config['entityEncode'] ? $resource['description'] : $this->hsc($resource['description']);
-        $phArray[] = $numChildren;
-        $phArray[] = $refid;
-        $phArray[] = $resource['menuindex'];
-        $phArray[] = $curNum;
-
-        $usePlaceholders = $this->placeHolders['rowLevel'];
+        $ph = array();
+        $ph['wf.wrapper']      = $useSub;
+        $ph['wf.classes']      = $useClass;
+        $ph['wf.classnames']   = $classNames;
+        $ph['wf.link']         = $resource['link'];
+        $ph['wf.title']        = !$this->_config['entityEncode'] ? $resource['title']       : $this->hsc($resource['title']);
+        $ph['wf.linktext']     = !$this->_config['entityEncode'] ? $resource['linktext']    : $this->hsc($resource['linktext']);
+        $ph['wf.id']           = $useId;
+        $ph['wf.alias']        = $resource['alias'];
+        $ph['wf.attributes']   = $resource['link_attributes'];
+        $ph['wf.docid']        = $resource['id'];
+        $ph['wf.introtext']    = !$this->_config['entityEncode'] ? $resource['introtext']   : $this->hsc($resource['introtext']);
+        $ph['wf.description']  = !$this->_config['entityEncode'] ? $resource['description'] : $this->hsc($resource['description']);
+        $ph['wf.subitemcount'] = $numChildren;
+        $ph['wf.refid']        = $refid;
+        $ph['wf.menuindex']    = $resource['menuindex'];
+        $ph['wf.iterator']     = $curNum;
+        
         //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {
-            $usePlaceholders[] = "[+{$dvName}+]";
-            $phArray[] = $dvVal;
+            $ph[$dvName] = $dvVal;
         }
         
         //If tvs are used add them to the placeholder array
         if (!empty($this->tvList)) {
-            $usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
             foreach ($this->tvList as $tvName) {
-                $phArray[] = $resource[$tvName];
+                $ph[$tvName] = $resource[$tvName];
             }
         }
         //Debug
         if ($this->_config['debug']) {
             $debugDocInfo = array();
             $debugDocInfo['template'] = $usedTemplate;
-            foreach ($usePlaceholders as $n => $v) {
-                $debugDocInfo[$v] = $phArray[$n];
+            foreach ($ph as $k=>$v) {
+                $k = "[+{$k}+]";
+                $debugDocInfo[$k] = $v;
             }
             $this->addDebugInfo('row',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were used when processing this document.',$debugDocInfo);
             $this->addDebugInfo('rowdata',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were retrieved from the database for this document.',$resource);
         }
         //Process the row
-        $output = str_replace($usePlaceholders,$phArray,$useChunk);
-        //Return the row
+        
+        $output = $modx->parseText($this->_templates[$usedTemplate],$ph);
+        
         return $output . $this->_config['nl'];
     }
     
@@ -353,20 +320,18 @@ class Wayfinder {
             $cssChunk = $this->fetch($this->_config['cssTpl']);
             if ($cssChunk) {
                 $modx->regClientCSS($cssChunk);
-                if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was registered.";}
-            } else {
-                if ($this->_config['debug']) {$jsCssDebug['css'] = "The CSS in {$this->_config['cssTpl']} was not found.";}
+                if ($this->_config['debug']) $jsCssDebug['css'] = sprintf('The CSS in %s was registered.', $this->_config['cssTpl']);
             }
+            elseif ($this->_config['debug']) $jsCssDebug['css'] = sprintf('The CSS in %s was not found.',  $this->_config['cssTpl']);
         }
         //Check and load the Javascript
         if ($this->_config['jsTpl']) {
             $jsChunk = $this->fetch($this->_config['jsTpl']);
             if ($jsChunk) {
                 $modx->regClientStartupScript($jsChunk);
-                if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was registered.";}
-            } else {
-                if ($this->_config['debug']) {$jsCssDebug['js'] = "The Javascript in {$this->_config['jsTpl']} was not found.";}
+                if ($this->_config['debug']) $jsCssDebug['js'] = sprintf('The Javascript in %s was registered.', $this->_config['jsTpl']);
             }
+            elseif ($this->_config['debug']) $jsCssDebug['js'] = sprintf('The Javascript in %s was not found.',  $this->_config['jsTpl']);
         }
         //Debug
         if ($this->_config['debug']) $this->addDebugInfo('settings','JSCSS','JS/CSS Includes','Results of CSS & Javascript includes.',$jsCssDebug);
@@ -623,7 +588,6 @@ class Wayfinder {
 
             foreach ($nonWayfinderFields as $field) {
                 if (in_array($field, $allTvars)) {
-                    $this->placeHolders['tvs'][] = "[+{$field}+]";
                     $this->tvList[] = $field;
                 }
             }
