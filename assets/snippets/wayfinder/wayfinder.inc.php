@@ -97,7 +97,7 @@ class Wayfinder {
             }
             else {
                 $docInfo['hasChildren'] = 0;
-                $docInfo['hasChildren'] = 0;
+                $numChildren            = 0;
             }
             
             //Render the row output
