@@ -409,55 +409,61 @@ class Wayfinder {
         }
         if (!empty($ids)) {
             //Setup the fields for the query
-            $fields = "DISTINCT sc.id, sc.menutitle, sc.pagetitle, sc.introtext, sc.menuindex, sc.published, sc.hidemenu, sc.parent, sc.isfolder, sc.description, IF(sc.alias='', sc.id, sc.alias) AS alias, sc.longtitle, sc.type,if(sc.type='reference',sc.content,'') as content, sc.template, sc.link_attributes";
-            //Get the table names
-            $tbl_site_content = $modx->getFullTableName('site_content');
-            $tbl_document_groups = $modx->getFullTableName('document_groups');
-            //Add the ignore hidden option to the where clause
-            if ($this->_config['ignoreHidden']) {
-                $menuWhere = '';
-            } else {
-                $menuWhere = ' AND sc.hidemenu=0';
+            $fields = explode(',','id,menutitle,pagetitle,introtext,menuindex,published,hidemenu,parent,isfolder,description,alias,longtitle,type,content,template,link_attributes');
+            foreach($fields as $i=>$v) {
+                if    ($v=='alias')   $fields[$i] = "IF(sc.alias='', sc.id, sc.alias) AS alias";
+                elseif($v=='content') $fields[$i] = "IF(sc.type='reference',sc.content,'') AS content";
+                else                  $fields[$i] = 'sc.'.$v;
             }
-            //add the include docs to the where clause
-            if ($this->_config['includeDocs']) {
-                $menuWhere .= " AND sc.id IN ({$this->_config['includeDocs']})";
-            }
-            //add the exclude docs to the where clause
-            if ($this->_config['excludeDocs']) {
-                $menuWhere .= " AND (sc.id NOT IN ({$this->_config['excludeDocs']}))";
-            }
-            //add custom where conditions
-            if (!empty($this->_config['where'])) {
-                $menuWhere .= " AND ({$this->_config['where']})";
-            }
-            //add the limit to the query
-            if ($this->_config['limit']) {
-                $sqlLimit = "0, {$this->_config['limit']}";
-            } else {
-                $sqlLimit = '';
-            }
+            $fields = join(',', $fields);
+            
             //Determine sorting
-            if (strtolower($this->_config['sortBy']) == 'random') {
+            if (strtolower($this->_config['sortBy'])=='random')
                 $sort = 'rand()';
-                $dir = '';
-            } else {
+            else {
                 // modify field names to use sc. table reference
-                $sort = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $this->_config['sortBy']))));
+                $_ = explode(',', $this->_config['sortBy']);
+                foreach($_ as $i=>$v) {
+                    $_[$i] = 'sc.' . trim($v);
+                }
+                $sort = implode(',', $_);
             }
 
             // get document groups for current user
             if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
             // build query
-            $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
+            if($modx->isFrontend())
+                $access = 'sc.privateweb=0';
+            else {
+                $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
+                if($docgrp) $access .= sprintf(' OR dg.document_group IN (%s)', $docgrp);
+            }
+            
+            //Add the ignore hidden option to the where clause
+            if ($this->_config['ignoreHidden'])  $menuWhere = '';
+            else                                 $menuWhere = ' AND sc.hidemenu=0';
+            
+            //add the include docs to the where clause
+            if ($this->_config['includeDocs'])   $menuWhere .= sprintf(' AND sc.id IN (%s)', $this->_config['includeDocs']);
+            
+            //add the exclude docs to the where clause
+            if ($this->_config['excludeDocs'])   $menuWhere .= sprintf(' AND (sc.id NOT IN (%s))', $this->_config['excludeDocs']);
+            
+            //add custom where conditions
+            if (!empty($this->_config['where'])) $menuWhere .= sprintf(' AND (%s)', $this->_config['where']);
+            
+            //add the limit to the query
+            if ($this->_config['limit']) $limit = sprintf('0, %s', $this->_config['limit']);
+            else                         $limit = '';
+            
+            $fields = "DISTINCT {$fields}";
+            $from   = '[+prefix+]site_content sc LEFT JOIN [+prefix+]document_groups dg ON dg.document=sc.id';
+            $where  = sprintf('sc.published=1 AND sc.deleted=0 AND (%s) %s AND sc.id IN (%s) GROUP BY sc.id', $access, $menuWhere, implode(',',$ids));
+            $sort   = "{$sort} {$this->_config['sortOrder']}";
+            
             //run the query
-            $result = $modx->db->select(
-                "DISTINCT {$fields}",
-                "{$tbl_site_content} sc LEFT JOIN {$tbl_document_groups} dg ON dg.document = sc.id",
-                "sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id",
-                "{$sort} {$this->_config['sortOrder']}",
-                $sqlLimit
-                );
+            $result = $modx->db->select($fields,$from,$where,$sort,$limit);
+            
             $resourceArray = array();
             $level = 1;
             $prevParent = -1;
@@ -470,41 +476,37 @@ class Wayfinder {
             }
             $resultIds = array();
             //loop through the results
-            while($tempDocInfo = $modx->db->getRow($result)) {
-                $resultIds[] = $tempDocInfo['id'];
+            while($row = $modx->db->getRow($result)) {
+                $resultIds[] = $row['id'];
                 //Create the link
                 $linkScheme = $this->_config['fullLink'] ? 'full' : '';
-                if ($this->_config['useWeblinkUrl'] && $tempDocInfo['type'] == 'reference') {
-                    if (is_numeric($tempDocInfo['content'])) {
-                        $tempDocInfo['link'] = $modx->makeUrl(intval($tempDocInfo['content']),'','',$linkScheme);
-                    } else {
-                        $tempDocInfo['link'] = $tempDocInfo['content'];
-                    }
-                } elseif ($tempDocInfo['id'] == $modx->config['site_start']) {
-                    $tempDocInfo['link'] = $modx->config['site_url'];
-                } else {
-                    $tempDocInfo['link'] = $modx->makeUrl($tempDocInfo['id'],'','',$linkScheme);
+                if ($this->_config['useWeblinkUrl'] && $row['type'] == 'reference') {
+                    if (preg_match('@^[1-9][0-9]*$@',$row['content'])) $row['link'] = $modx->makeUrl(intval($row['content']),'','',$linkScheme);
+                    else                                               $row['link'] = $row['content'];
                 }
+                elseif ($row['id'] == $modx->config['site_start'])     $row['link'] = $modx->config['site_url'];
+                else                                                   $row['link'] = $modx->makeUrl($row['id'],'','',$linkScheme);
+                
                 //determine the level, if parent has changed
-                if ($prevParent !== $tempDocInfo['parent']) {
-                    $level = count($modx->getParentIds($tempDocInfo['id'])) + 1 - $startLevel;
+                if ($prevParent !== $row['parent']) {
+                    $level = count($modx->getParentIds($row['id'])) + 1 - $startLevel;
                 }
                 //add parent to hasChildren array for later processing
-                if (($level > 1 || $this->_config['displayStart']) && !in_array($tempDocInfo['parent'],$this->hasChildren)) {
-                    $this->hasChildren[] = $tempDocInfo['parent'];
+                if (($level > 1 || $this->_config['displayStart']) && !in_array($row['parent'],$this->hasChildren)) {
+                    $this->hasChildren[] = $row['parent'];
                 }
                 //set the level
-                $tempDocInfo['level'] = $level;
-                $prevParent = $tempDocInfo['parent'];
+                $row['level'] = $level;
+                $prevParent = $row['parent'];
                 //determine other output options
-                $useTextField = (empty($tempDocInfo[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks'];
-                $tempDocInfo['linktext'] = $tempDocInfo[$useTextField];
-                $tempDocInfo['title'] = $tempDocInfo[$this->_config['titleOfLinks']];
+                $useTextField = (empty($row[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks'];
+                $row['linktext'] = $row[$useTextField];
+                $row['title'] = $row[$this->_config['titleOfLinks']];
                 //If tvs were specified keep array flat otherwise array becomes level->parent->doc
                 if (!empty($this->tvList)) {
-                    $tempResults[] = $tempDocInfo;
+                    $tempResults[] = $row;
                 } else {
-                    $resourceArray[$tempDocInfo['level']][$tempDocInfo['parent']][] = $tempDocInfo;
+                    $resourceArray[$row['level']][$row['parent']][] = $row;
                 }
             }
             //Process the tvs
@@ -516,7 +518,7 @@ class Wayfinder {
                 }
                 //loop through the document array and add the tvar values to each document
                 foreach ($tempResults as $tempDocInfo) {
-                    if (array_key_exists("#{$tempDocInfo['id']}",$tvValues)) {
+                    if (isset($tvValues["#{$tempDocInfo['id']}"])) {
                         foreach ($tvValues["#{$tempDocInfo['id']}"] as $tvName => $tvValue) {
                             $tempDocInfo[$tvName] = $tvValue;
                         }
