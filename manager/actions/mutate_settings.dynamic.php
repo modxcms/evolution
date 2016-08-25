@@ -679,9 +679,8 @@ function confirmLangChange(el, lkey, elupd){
               <td >
 				<?php
 					// Check if PHX is enabled
-					$phx = $modx->getPluginCode('PHX');
-					$disabledFilters = 0;
-					if(!empty($phx['props'])) {
+					$modx->invokeEvent("OnParseDocument");
+					if(class_exists('PHxParser')) {
 						$disabledFilters = 1;
 						echo '<b>'.$_lang["enable_filter_phx_warning"].'</b><br/>';
 					}
