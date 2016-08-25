@@ -677,8 +677,17 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td nowrap class="warning"><?php echo $_lang["enable_filter_title"] ?></td>
               <td >
-                <?php echo wrap_label($_lang["yes"],form_radio('enable_filter', 1));?><br />
-                <?php echo wrap_label($_lang["no"], form_radio('enable_filter', 0));?>
+				<?php
+					// Check if PHX is enabled
+					$phx = $modx->getPluginCode('PHX');
+					$disabledFilters = 0;
+					if(!empty($phx['props'])) {
+						$disabledFilters = 1;
+						echo '<b>'.$_lang["enable_filter_phx_warning"].'</b><br/>';
+					}
+				?>
+                <?php echo wrap_label($_lang["yes"],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
+                <?php echo wrap_label($_lang["no"], form_radio('enable_filter', 0, '', $disabledFilters));?>
               </td>
             </tr>
             <tr>
