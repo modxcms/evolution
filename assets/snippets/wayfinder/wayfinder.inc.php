@@ -407,6 +407,7 @@ class Wayfinder {
                 $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
                 if($docgrp) $access .= sprintf(' OR dg.document_group IN (%s)', $docgrp);
             }
+            if($access) $access = "AND({$access})";
             
             //Add the ignore hidden option to the where clause
             if ($this->_config['ignoreHidden'])  $menuWhere = '';
@@ -427,7 +428,7 @@ class Wayfinder {
             
             $fields = "DISTINCT {$fields}";
             $from   = '[+prefix+]site_content sc LEFT JOIN [+prefix+]document_groups dg ON dg.document=sc.id';
-            $where  = sprintf('sc.published=1 AND sc.deleted=0 AND (%s) %s AND sc.id IN (%s) GROUP BY sc.id', $access, $menuWhere, implode(',',$ids));
+            $where  = sprintf('sc.published=1 AND sc.deleted=0 %s %s AND sc.id IN (%s) GROUP BY sc.id', $access, $menuWhere, implode(',',$ids));
             $sort   = "{$sort} {$this->_config['sortOrder']}";
             
             //run the query
