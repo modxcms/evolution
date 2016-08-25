@@ -571,12 +571,12 @@ class Wayfinder {
         // based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
         global $modx;
         $template = '';
-        if ($modx->getChunk($tpl) != '') {
-            $template = $modx->getChunk($tpl);
-        } else if(substr($tpl, 0, 6) == '@FILE:') {
+        if(substr($tpl, 0, 5) == '@FILE') {
             $template = file_get_contents(substr($tpl, 6));
-        } else if(substr($tpl, 0, 6) == '@CODE:') {
+        } elseif(substr($tpl, 0, 5) == '@CODE') {
             $template = substr($tpl, 6);
+        } elseif($modx->getChunk($tpl) != '') {
+            $template = $modx->getChunk($tpl);
         } else {
             $template = FALSE;
         }
