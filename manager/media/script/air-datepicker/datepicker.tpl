@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
 jQuery(function(){
-    var dateFormat = '[(datetime_format:strtolower)]';
+    var dateFormat = '[(datetime_format_lc)]';
     var start = new Date();
     start.setHours(0);
     start.setMinutes(0);
