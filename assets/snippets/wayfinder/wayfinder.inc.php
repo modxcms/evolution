@@ -254,8 +254,11 @@ class Wayfinder {
                 $k = "[+{$k}+]";
                 $debugDocInfo[$k] = $v;
             }
-            $this->addDebugInfo('row',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were used when processing this document.',$debugDocInfo);
-            $this->addDebugInfo('rowdata',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",'The following fields were retrieved from the database for this document.',$resource);
+            if(count($resource)%2!=0) $resource['-']='';
+            $msg = 'The following fields were used when processing this document.';
+            $this->addDebugInfo('row',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",$msg,$debugDocInfo);
+            $msg = 'The following fields were retrieved from the database for this document.';
+            $this->addDebugInfo('rowdata',"{$resource['parent']}:{$resource['id']}","Doc: #{$resource['id']}",$msg,$resource);
         }
         //Process the row
         
@@ -637,7 +640,7 @@ class Wayfinder {
     }
 
     function addDebugInfo($group,$groupkey,$header,$message,$info) {
-        $infoString = '<table border="1" cellpadding="3px">';
+        $infoString = '<table>';
         $numInfo = count($info);
         $count = 0;
 
@@ -650,7 +653,7 @@ class Wayfinder {
             }
             if ($count == 2) { $infoString .= '</tr>'; $count = 0; }
             if ($count == 0) { $infoString .= '<tr>'; }
-            $value = empty($value) ? '&nbsp;' : $value;
+            $value = $value=='' ? '&nbsp;' : $value;
             $infoString .= "<td><strong>{$key}</strong></td><td>{$value}</td>";
             $count++;
         }
@@ -664,32 +667,38 @@ class Wayfinder {
     }
 
     function renderDebugOutput() {
-        $output = '<table border="1" cellpadding="3px" width="100%">';
+        global $modx;
+        
+        $output = '<style>.wfdebug {background-color:#fff;margin:2em;border-collapse:collapse;box-sizing: border-box;} .wfdebug * {box-sizing: border-box;} .wfdebug td,.wfdebug th {padding:3px;border:1px solid #ccc;}</style>';
+        $output .= '<table class="wfdebug">';
         foreach ($this->debugInfo as $group => $item) {
             switch ($group) {
                 case 'template':
                     $output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Template Processing</th></tr>';
                     foreach ($item as $parentId => $info) {
-                        $output .= sprintf('
-                            <tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
-                            <tr><td>%s</td></tr>', $info['header'], $info['message'], $info['info']);
+                        $output .= $modx->parseText('
+                            <tr style="background:#336699;color:#fff;"><th>[+header+] - <span style="font-weight:normal;">[+message+]</span></th></tr>
+                            <tr><td>[+info+]</td></tr>', $info);
                     }
                     break;
                 case 'wrapper':
                     $output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Document Processing</th></tr>';
 
                     foreach ($item as $parentId => $info) {
-                        $output .= sprintf('<tr><table border="1" cellpadding="3px" style="margin-bottom: 10px;width:100%">
-                                    <tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
-                                    <tr><td>%s</td></tr>
-                                    <tr style="background:#336699;color:#fff;"><th>Documents included in this wrapper:</th></tr>',$info['header'],$info['message'],$info['info']);
+                        $output .= $modx->parseText('<tr><table class="wfdebug">
+                                    <tr style="background:#336699;color:#fff;"><th>[+header+] - <span style="font-weight:normal;">[+message+]</span></th></tr>
+                                    <tr><td>[+info+]</td></tr>
+                                    <tr style="background:#336699;color:#fff;"><th>Documents included in this wrapper:</th></tr>',$info);
 
                         foreach ($this->debugInfo['row'] as $key => $value) {
+                            $value['message_v'] = $this->debugInfo['rowdata'][$key]['message'];
+                            $value['info_v']    = $this->debugInfo['rowdata'][$key]['info'];
                             $keyParts = explode(':',$key);
                             if ($parentId == $keyParts[0]) {
-                                $param = array($value['header'],$value['message'],$value['info'],$this->debugInfo['rowdata'][$key]['message'],$this->debugInfo['rowdata'][$key]['info']);
-                                $output .= vsprintf('<tr style="background:#eee;"><th>%s</th></tr>
-                                    <tr><td><div style="float:left;margin-right:1%;">%s<br />%s</div><div style="float:left;">%s<br />%s</div></td></tr>',$param);
+                                $output .= $modx->parseText('<tr style="background:#eee;"><th>[+header+]</th></tr>
+                                    <tr><td>
+                                    <div style="float:left;margin-right:1%;">[+message+]<br />[+message_v+]</div>
+                                    <div style="float:left;">[+info+]<br />[+info_v+]</div></td></tr>',$value);
                             }
                         }
 
@@ -700,9 +709,9 @@ class Wayfinder {
                 case 'settings':
                     $output .= '<tr><th style="background:#C3D9FF;font-size:200%;">Settings</th></tr>';
                     foreach ($item as $parentId => $info) {
-                        $output .= sprintf('
-                            <tr style="background:#336699;color:#fff;"><th>%s - <span style="font-weight:normal;">%s</span></th></tr>
-                            <tr><td>%s</td></tr>',$info['header'],$info['message'],$info['info']);
+                        $output .= $modx->parseText('
+                            <tr style="background:#336699;color:#fff;"><th>[+header+] - <span style="font-weight:normal;">[+message+]</span></th></tr>
+                            <tr><td>[+info+]</td></tr>',$info);
                     }
                     break;
                 default:
