@@ -100,7 +100,7 @@ $wf->_templates = array(
 $output = $wf->run();
 
 if ($wf->_config['debug']) {
-	$output .= $wf->renderDebugOutput();
+	$modx->regClientHTMLBlock($wf->renderDebugOutput());
 }
 
 //Output Results
