@@ -274,26 +274,26 @@ class Wayfinder {
         
         switch($classType) {
             case 'outercls':
-                if(!empty($class['outer']))                                   $classNames[] = $class['outer'];             //Set outer class if specified
+                if(!empty($class['outer']))                                $classNames[]=$class['outer'];             //Set outer class
                 break;
             case 'innercls':
-                if( !empty($class['inner']))                                  $classNames[] = $class['inner'];             //Set inner class if specified
-                if(!empty($class['outerLevel']))                              $classNames[] = $class['outerLevel'].$level; //Set level class if specified
+                if(!empty($class['inner']))                                $classNames[]=$class['inner'];             //Set inner class
+                if(!empty($class['outerLevel']))                           $classNames[]=$class['outerLevel'].$level; //Set level class
                 break;
             case 'rowcls':
-                if(!empty($class['row']))                                     $classNames[] = $class['row'];          //Set row class if specified
-                if($first && !empty($class['first']))                         $classNames[] = $class['first'];        //Set first class if specified
-                if($last  && !empty($class['last']))                          $classNames[] = $class['last'];         //Set last class if specified
-                if(!empty($class['level']))                                   $classNames[] = $class['level'].$level; //Set level class if specified
+                if(!empty($class['row']))                                  $classNames[]=$class['row'];               //Set row class
+                if($first && !empty($class['first']))                      $classNames[]=$class['first'];             //Set first class
+                if($last  && !empty($class['last']))                       $classNames[]=$class['last'];              //Set last class
+                if(!empty($class['level']))                                $classNames[]=$class['level'].$level;      //Set level class
                 
-                if(!empty($class['here'])    && $this->isHere($docId))        $classNames[] = $class['here'];    //Set here class if specified
-                if(!empty($class['self'])    && $docId==$config['hereId'])    $classNames[] = $class['self'];    //Set self class if specified
-                if(!empty($class['weblink']) && $type=='reference')           $classNames[] = $class['weblink']; //Set class for weblink
+                if(!empty($class['here'])    && $this->isHere($docId))     $classNames[]=$class['here'];              //Set here class
+                if(!empty($class['self'])    && $docId==$config['hereId']) $classNames[]=$class['self'];              //Set self class
+                if(!empty($class['weblink']) && $type=='reference')        $classNames[]=$class['weblink'];           //Set class for weblink
                 
                 if($isFolder && !empty($class['parent'])) {
-                    if($level < $config['level'] || $config['level']==0) {
-                        if($this->isHere($docId) || !$config['hideSubMenus']) $classNames[] = $class['parent'];  // Set parentFolder class if specified
-                    }
+                  if($level < $config['level'] || $config['level']==0) {
+                    if($this->isHere($docId) || !$config['hideSubMenus'])  $classNames[]=$class['parent'];            // Set parentFolder class
+                  }
                 }
                 break;
             default:
@@ -401,8 +401,11 @@ class Wayfinder {
             // get document groups for current user
             if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(',',$docgrp);
             // build query
-            if($modx->isFrontend())
-                $access = 'sc.privateweb=0';
+            if($modx->isFrontend()) {
+                if(!$this->_config['showPrivate']) {
+                    $access = "sc.privateweb=0";
+                }
+            }
             else {
                 $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
                 if($docgrp) $access .= sprintf(' OR dg.document_group IN (%s)', $docgrp);
@@ -469,15 +472,42 @@ class Wayfinder {
                 $row['level'] = $level;
                 $prevParent = $row['parent'];
                 //determine other output options
-                $useTextField = (empty($row[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks'];
-                $row['linktext'] = $row[$useTextField];
-                $row['title'] = $row[$this->_config['titleOfLinks']];
-                //If tvs were specified keep array flat otherwise array becomes level->parent->doc
-                if (!empty($this->tvList)) {
-                    $tempResults[] = $row;
-                } else {
-                    $resourceArray[$row['level']][$row['parent']][] = $row;
+                if(strpos($this->_config['textOfLinks'],',')!==false) {
+                    $_ = explode(',', $this->_config['textOfLinks']);
+                    foreach($_ as $v) {
+                        $v = trim($v);
+                        if(!empty($row[$v])) {
+                            $useTextField = $v;
+                            break;
+                        }
+                    }
+                    if(empty($useTextField)) $useTextField = 'pagetitle';
                 }
+                elseif(!empty($row[$this->_config['textOfLinks']])) {
+                    $useTextField = $this->_config['textOfLinks'];
+                }
+                else $useTextField = 'pagetitle';
+                
+                $row['linktext'] = $row[$useTextField];
+                
+                if(strpos($this->_config['titleOfLinks'],',')!==false) {
+                    $_ = explode(',', $this->_config['titleOfLinks']);
+                    foreach($_ as $v) {
+                        $v = trim($v);
+                        if(!empty($row[$v])) {
+                            $useTitleField = $v;
+                            break;
+                        }
+                    }
+                    if(empty($useTitleField)) $useTitleField = $this->_config['titleOfLinks'];
+                }
+                else $useTitleField = $this->_config['titleOfLinks'];
+                
+                $row['title'] = $row[$useTitleField];
+                
+                //If tvs were specified keep array flat otherwise array becomes level->parent->doc
+                if (!empty($this->tvList)) $tempResults[] = $row;
+                else                       $resourceArray[$row['level']][$row['parent']][] = $row;
             }
             //Process the tvs
             if (!empty($this->tvList) && !empty($resultIds)) {
@@ -534,53 +564,58 @@ class Wayfinder {
         global $modx;
         $nonWayfinderFields = array();
 
+        $outerTpl     = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';
+        $rowTpl       = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';
+        $startItemTpl = '<h2[+wf.id+][+wf.classes+]>[+wf.linktext+]</h2>[+wf.wrapper+]';
+        
         foreach ($this->_templates as $n => $v) {
             $templateCheck = $this->fetch($v);
             if (empty($v) || !$templateCheck) {
                 switch($n) {
-                    case 'outerTpl'    : $_ = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';break;
-                    case 'rowTpl'      : $_ = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';break;
-                    case 'startItemTpl': $_ = '<h2[+wf.id+][+wf.classes+]>[+wf.linktext+]</h2>[+wf.wrapper+]';break;
+                    case 'outerTpl'    : $_ = $outerTpl;    break;
+                    case 'rowTpl'      : $_ = $rowTpl;      break;
+                    case 'startItemTpl': $_ = $startItemTpl;break;
                     default:$_ = FALSE;
                 }
                 $this->_templates[$n] = $_;
-                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,'No template found, using default.',array($n => $this->_templates[$n])); }
+                if ($this->_config['debug']) {
+                    $this->addDebugInfo('template',$n,$n,'No template found, using default.',array($n => $this->_templates[$n]));
+                }
             } else {
                 $this->_templates[$n] = $templateCheck;
                 $check = $this->findTemplateVars($templateCheck);
                 if (is_array($check)) {
                     $nonWayfinderFields = array_merge($check, $nonWayfinderFields);
                 }
-                if ($this->_config['debug']) { $this->addDebugInfo('template',$n,$n,'Template Found.',array($n => $this->_templates[$n])); }
+                if ($this->_config['debug']) {
+                    $this->addDebugInfo('template',$n,$n,'Template Found.',array($n => $this->_templates[$n]));
+                }
             }
         }
-
+        
         if (!empty($nonWayfinderFields)) {
             $nonWayfinderFields = array_unique($nonWayfinderFields);
             $allTvars = $this->getTVList();
-
+            
             foreach ($nonWayfinderFields as $field) {
                 if (in_array($field, $allTvars)) {
                     $this->tvList[] = $field;
                 }
             }
-            if ($this->_config['debug']) { $this->addDebugInfo('tvars','tvs','Template Variables','The following template variables were found in your templates.',$this->tvList); }
+            if ($this->_config['debug']) {
+                $this->addDebugInfo('tvars','tvs','Template Variables','The following template variables were found in your templates.',$this->tvList);
+            }
         }
     }
 
     function fetch($tpl){
-        // based on version by Doze at http://forums.modx.com/thread/41066/support-comments-for-ditto?page=2#dis-post-237942
         global $modx;
-        $template = '';
-        if(substr($tpl, 0, 5) == '@FILE') {
-            $template = file_get_contents(substr($tpl, 6));
-        } elseif(substr($tpl, 0, 5) == '@CODE') {
-            $template = substr($tpl, 6);
-        } elseif($modx->getChunk($tpl) != '') {
-            $template = $modx->getChunk($tpl);
-        } else {
-            $template = FALSE;
-        }
+        
+        if    (substr($tpl,0,5) == '@FILE') $template = file_get_contents(substr($tpl, 6));
+        elseif(substr($tpl,0,5) == '@CODE') $template = substr($tpl, 6);
+        elseif($modx->getChunk($tpl) != '') $template = $modx->getChunk($tpl);
+        else                                $template = FALSE;
+        
         return $template;
     }
 
@@ -678,7 +713,7 @@ class Wayfinder {
         $output .= '</table>';
         return $output;
     }
-
+    
     function modxPrep($value) {
         global $modx;
         $value = (strpos($value,'<') !== FALSE) ? htmlentities($value,ENT_NOQUOTES,$modx->config['modx_charset']) : $value;
@@ -687,12 +722,13 @@ class Wayfinder {
         $value = str_replace($s, $r, $value);
         return $value;
     }
+    
     function hsc($string) {
         global $modx;
         return htmlspecialchars($string, ENT_COMPAT, $modx->config['modx_charset']);
     }
-    function getParentID($id)
-    {
+    
+    function getParentID($id) {
         global $modx;
         if($modx->documentObject['parent']==0)   return $id;
         return $modx->documentObject['parent'];
