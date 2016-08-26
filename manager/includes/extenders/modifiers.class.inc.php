@@ -1,5 +1,7 @@
 <?php
 
+if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_BASE_PATH.'manager/includes/');
+
 class MODIFIERS {
     
     var $placeholders = array();
