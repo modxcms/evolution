@@ -64,6 +64,7 @@ $wf->_config = array(
 	'textOfLinks' => isset($textOfLinks) ? $textOfLinks : 'menutitle',
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
+	'showPrivate' => isset($showPrivate) ? $showPrivate : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
 	// for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr, etc)
 	'useReferenced' => isset($useReferenced) ? $useReferenced: "id", 
