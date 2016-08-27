@@ -31,6 +31,7 @@ $config = (!isset($config)) ? 'default' : trim($config);
 $config = ltrim($config,'/');
 
 if(substr($config, 0, 6) == '@CHUNK')               eval('?>' . $modx->getChunk(trim(substr($config, 7))));
+elseif(substr($config, 0, 5) == '@FILE')            include($modx->config['base_path'] . trim(substr($config, 6)));
 elseif($config!='default'&&is_file("{$conf_path}{$config}.config.php"))
                                                     include("{$conf_path}{$config}.config.php");
 elseif(is_file("{$conf_path}{$config}"))            include("{$conf_path}{$config}");
