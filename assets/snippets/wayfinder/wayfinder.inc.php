@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.5
+ Version: 2.1
  Authors: 
     Kyle Jaebker (muddydogpaws.com)
     Ryan Thrash (vertexworks.com)
