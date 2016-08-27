@@ -30,7 +30,8 @@ $conf_path = "{$wf_base_path}configs/";
 $config = (!isset($config)) ? 'default' : trim($config);
 $config = ltrim($config,'/');
 
-if($config!='default'&&is_file("{$conf_path}{$config}.config.php"))
+if(substr($config, 0, 6) == '@CHUNK')               eval('?>' . $modx->getChunk(trim(substr($config, 7))));
+elseif($config!='default'&&is_file("{$conf_path}{$config}.config.php"))
                                                     include("{$conf_path}{$config}.config.php");
 elseif(is_file("{$conf_path}{$config}"))            include("{$conf_path}{$config}");
 elseif(is_file($modx->config['base_path'].$config)) include($modx->config['base_path'] . $config);
