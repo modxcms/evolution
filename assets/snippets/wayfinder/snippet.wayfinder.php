@@ -22,12 +22,18 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 $wf_base_path = $modx->config['base_path'] . 'assets/snippets/wayfinder/';
+$conf_path = "{$wf_base_path}configs/";
 
 //Include a custom config file if specified
-$config = (isset($config)) ? "{$wf_base_path}configs/{$config}.config.php" : "{$wf_base_path}configs/default.config.php";
-if (is_file($config)) {
-	include("$config");
-}
+@include("{$conf_path}default.config.php");
+
+$config = (!isset($config)) ? 'default' : trim($config);
+$config = ltrim($config,'/');
+
+if($config!='default'&&is_file("{$conf_path}{$config}.config.php"))
+                                                    include("{$conf_path}{$config}.config.php");
+elseif(is_file("{$conf_path}{$config}"))            include("{$conf_path}{$config}");
+elseif(is_file($modx->config['base_path'].$config)) include($modx->config['base_path'] . $config);
 
 include_once("{$wf_base_path}wayfinder.inc.php");
 
