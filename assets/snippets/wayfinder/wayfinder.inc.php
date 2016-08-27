@@ -640,8 +640,9 @@ class Wayfinder {
     }
 
     function addDebugInfo($group,$groupkey,$header,$message,$info) {
-        $infoString = '<table>';
-        $numInfo = count($info);
+        $infoString = '<table style="margin-bottom:1em;">';
+        $total = count($info);
+        if($total!=1 && $total%2!=0) $info['-'] = '';
         $count = 0;
 
         foreach ($info as $key => $value) {
@@ -698,7 +699,7 @@ class Wayfinder {
                                 $output .= $modx->parseText('<tr style="background:#eee;"><th>[+header+]</th></tr>
                                     <tr><td>
                                     <div style="float:left;margin-right:1%;">[+message+]<br />[+message_v+]</div>
-                                    <div style="float:left;">[+info+]<br />[+info_v+]</div></td></tr>',$value);
+                                    <div style="float:left;">[+info+][+info_v+]</div></td></tr>',$value);
                             }
                         }
 
