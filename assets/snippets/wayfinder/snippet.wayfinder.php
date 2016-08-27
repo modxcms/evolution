@@ -21,21 +21,18 @@
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
-$wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
+$wf_base_path = $modx->config['base_path'] . 'assets/snippets/wayfinder/';
 
 //Include a custom config file if specified
-$config = (isset($config)) ? "{$wayfinder_base}configs/{$config}.config.php" : "{$wayfinder_base}configs/default.config.php";
-if (file_exists($config)) {
+$config = (isset($config)) ? "{$wf_base_path}configs/{$config}.config.php" : "{$wf_base_path}configs/default.config.php";
+if (is_file($config)) {
 	include("$config");
 }
 
-include_once("{$wayfinder_base}wayfinder.inc.php");
+include_once("{$wf_base_path}wayfinder.inc.php");
 
-if (class_exists('Wayfinder')) {
-   $wf = new Wayfinder();
-} else {
-    return 'error: Wayfinder class not found';
-}
+if (class_exists('Wayfinder')) $wf = new Wayfinder();
+else                           return 'error: Wayfinder class not found';
 
 $wf->_config = array(
 	'id' => isset($startId) ? intval($startId) : $modx->documentIdentifier,
@@ -110,4 +107,3 @@ if ($wf->_config['ph']) {
 } else {
     return $output;
 }
-?>
