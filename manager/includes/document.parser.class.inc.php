@@ -415,7 +415,7 @@ class DocumentParser {
      * @return boolean
      */
     function checkSession() {
-        if (isset ($_SESSION['mgrValidated'])) {
+        if (isset ($_SESSION['mgrValidated']) && !empty($_SESSION['mgrValidated'])) {
             return true;
         } else {
             return false;
