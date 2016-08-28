@@ -132,7 +132,7 @@ class Wayfinder {
             $info = array();
             $info['template'] = ($tpl==$this->_templates['innerTpl']) ? 'innerTpl':'outerTpl';
             foreach ($ph as $k=>$v) {
-                if ($k !== 'wf.wrapper') $info[$k] = $v;
+                if ($k !== 'wf.wrapper') $info["[+$k+]"] = $v;
             }
             $groupkey = $docInfo['parent'];
             $header  = "Wrapper for items with parent {$groupkey}.";
@@ -640,7 +640,7 @@ class Wayfinder {
     }
 
     function addDebugInfo($group,$groupkey,$header,$message,$info) {
-        $infoString = '<table style="margin-bottom:1em;">';
+        $infoString = '<table class="wfdebug" style="margin-bottom:1em;">';
         $total = count($info);
         if($total!=1 && $total%2!=0) $info['-'] = '';
         $count = 0;
@@ -648,21 +648,30 @@ class Wayfinder {
         foreach ($info as $key => $value) {
             $key = $this->modxPrep($key);
             if ($value === TRUE || $value === FALSE) {
-                $value = $value ? 'TRUE' : 'FALSE';
+                $value = $value ? 'true' : 'false';
+                $value = sprintf('<span class="bool %s">%s</span>',$value,$value);
             } else {
+                if($key=='nl') {
+                    $key = 'removeNewLines';
+                    $value = str_replace("\n",'\\n',$value);
+                }
                 $value = $this->modxPrep($value);
+                $value = str_replace(array(' ',"\n"),array('&nbsp;',"<br />\n"),$value);
             }
             if ($count == 2) { $infoString .= '</tr>'; $count = 0; }
             if ($count == 0) { $infoString .= '<tr>'; }
             $value = $value=='' ? '&nbsp;' : $value;
-            $infoString .= "<td><strong>{$key}</strong></td><td>{$value}</td>";
+            if($key!='-' && ($group=='settings'||$group=='template')) $key = '&'.$key;
+            $infoString .= "<th>{$key}</th><td>{$value}</td>";
             $count++;
         }
         $infoString .= '</tr></table>';
 
+        $message = $this->modxPrep($message);
+        if($group=='row') $message = "<div>{$message}</div>";
         $this->debugInfo[$group][$groupkey] = array(
             'header' => $this->modxPrep($header),
-            'message' => $this->modxPrep($message),
+            'message' =>  $message,
             'info' => $infoString,
         );
     }
@@ -670,7 +679,7 @@ class Wayfinder {
     function renderDebugOutput() {
         global $modx;
         
-        $output = '<style>.wfdebug {background-color:#fff;margin:2em;border-collapse:collapse;box-sizing: border-box;} .wfdebug * {box-sizing: border-box;} .wfdebug td,.wfdebug th {padding:3px;border:1px solid #ccc;}</style>';
+        $output = '<style>table.wfdebug {font-family:verdana,sans-serif;background-color:#fff;margin:1em;border-collapse:collapse !important;box-sizing: border-box;} table.wfdebug * {box-sizing: border-box;} table.wfdebug td,table.wfdebug th {padding:3px;border:1px solid #ccc;}table.wfdebug th {background-color:#eee;color:#333;font-weight:normal;} table.wfdebug td span.bool{border-radius: 4px;font-size: 90%;padding: 2px 4px;}table.wfdebug td span.true{background-color: #dff0d8;color: #3c763d;}table.wfdebug td span.false{background-color: #f9f2f4;color: #c7254e;}</style>';
         $output .= '<table class="wfdebug">';
         foreach ($this->debugInfo as $group => $item) {
             switch ($group) {
@@ -698,8 +707,8 @@ class Wayfinder {
                             if ($parentId == $keyParts[0]) {
                                 $output .= $modx->parseText('<tr style="background:#eee;"><th>[+header+]</th></tr>
                                     <tr><td>
-                                    <div style="float:left;margin-right:1%;">[+message+]<br />[+message_v+]</div>
-                                    <div style="float:left;">[+info+][+info_v+]</div></td></tr>',$value);
+                                    <div>[+message+] [+message_v+]</div>
+                                    <div>[+info+] [+info_v+]</div></td></tr>',$value);
                             }
                         }
 
