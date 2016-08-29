@@ -21,6 +21,7 @@ class modxRTEbridge
     public $langArr = array();                  // Holds lang strings
     public $debug = false;                      // Enable/disable debug messages via HTML-comment
     public $debugMessages = array();            // Holds all messages - added by    $this->debugMessages[] = 'Message';
+	public $ajaxSecHash = array();              // Holds security-hashes
 
     public function __construct($editorKey = NULL, $bridgeConfig=array(), $tvOptions=array(), $basePath='')
     {
@@ -778,16 +779,17 @@ class modxRTEbridge
         return implode(',', $elements);
     }
 
-    public function parseEditableIds($source)
+    public function parseEditableIds($source, $attrContentEditable=false)
     {
         if(!isset($_SESSION['mgrValidated'])) return $source;
-
+		$attrContentEditable = $attrContentEditable == true ? ' contenteditable="true"' : '';
+			
         $matchPhs = '~\[\*#(.*?)\*\]~'; // match [*#content*] / content
-        
         preg_match_all($matchPhs, $source, $editableIds);
+		
         $this->setEditableIds($editableIds);
         
-        $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1">[*$1*]</div>', $source);
+        $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1"'.$attrContentEditable.'>[*$1*]</div>', $source);
         
         return $source;
     }
@@ -834,8 +836,12 @@ class modxRTEbridge
 
     public function prepareAjaxSecHash($docId)
     {
-        $secHash = md5(rand(0, 999999999)+rand(0, 999999999));
-        $_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
+    	if(isset($this->ajaxSecHash[$docId])) return $this->ajaxSecHash[$docId];
+
+		$secHash = md5(rand(0, 999999999) + rand(0, 999999999));
+		$_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
+		$this->ajaxSecHash[$docId] = $secHash;
+
         return $secHash;
     }
 

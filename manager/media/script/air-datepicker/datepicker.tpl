@@ -1,4 +1,5 @@
 <link href="media/script/air-datepicker/css/datepicker.min.css" rel="stylesheet" type="text/css">
+<style>.datepickers-container{z-index:99999;}</style>
 <script type="text/javascript" src="media/script/air-datepicker/datepicker.min.js"></script>
 <script src="media/script/air-datepicker/i18n/datepicker.[(lang_code)].js"></script>
 <script type="text/javascript">
