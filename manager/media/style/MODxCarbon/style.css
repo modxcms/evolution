@@ -1575,7 +1575,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal {
 	background-color: #fff;
-	border: 1px solid #0070bf;
+	border: 1px solid #7ca3ce;
 	position: absolute;
 	width: 177px;
 	top: 24px;
@@ -1623,6 +1623,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal td {
 	cursor: pointer;
+	text-align:right !important;
 }
 .dp_cal thead th {
 	background: #d9eefc;
