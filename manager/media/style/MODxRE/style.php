@@ -9,6 +9,7 @@
  * MODX version:   1.0.3
 */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$modx->config['mgr_date_picker_path'] = sprintf('media/style/%s/moo-datepicker/datepicker.inc.php',$modx->config['manager_theme']);
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px; height:16px" />';
@@ -28,21 +29,21 @@ $_style['files_management']         = '<img src="'.$style_path.'icons/files.png"
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
-$_style['tree_folder']              = $style_path.'tree/application_double.png'; /* folder.png */
-$_style['tree_folderopen']          = $style_path.'tree/application_double.png'; /* folder-open.png */
+$_style['tree_folder']              = $style_path.'tree/folder.gif'; /* old - application_double.png */
+$_style['tree_folderopen']          = $style_path.'tree/folderopen.gif'; /*old - application_double.png */
 $_style['tree_folder_secure']       = $style_path.'tree/application_double_key.png';
 $_style['tree_folderopen_secure']   = $style_path.'tree/application_double_key.png';
 $_style['tree_globe']               = $style_path.'tree/globe.gif';
 $_style['tree_linkgo']              = $style_path.'tree/link_go.png';
 $_style['tree_minusnode']           = $style_path.'tree/minusnode.gif';
-$_style['tree_page']                = $style_path.'tree/application.png';
+$_style['tree_page']                = $style_path.'tree/application.png'; /* old - application.png */
 $_style['tree_page_home']           = $style_path.'tree/application_home.gif';
 $_style['tree_page_404']            = $style_path.'tree/application_404.gif';
 $_style['tree_page_hourglass']      = $style_path.'tree/application_hourglass.gif';
 $_style['tree_page_info']           = $style_path.'tree/application_info.gif';
 $_style['tree_page_blank']          = $style_path.'tree/application.png';
 $_style['tree_page_css']            = $style_path.'tree/application_css.png';
-$_style['tree_page_html']           = $style_path.'tree/application_html.png';
+$_style['tree_page_html']           = $style_path.'tree/page-html.gif'; /* old - application_html.png */
 $_style['tree_page_xml']            = $style_path.'tree/application_xml.png';
 $_style['tree_page_js']             = $style_path.'tree/application_js.png';
 $_style['tree_page_rss']            = $style_path.'tree/application_rss.png';
