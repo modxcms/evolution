@@ -768,7 +768,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         $template = $content['template'];
                 }
 
-                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value";
+                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
                 $vs = array($tbl_site_tmplvars, $tbl_site_tmplvar_templates, $tbl_site_tmplvar_contentvalues, $id, $tbl_site_tmplvar_access);
                 $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
                          LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
@@ -779,11 +779,12 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $rs = $modx->db->select($field,$from,$where,'tvtpl.rank,tv.rank, tv.id');
                 $limit = $modx->db->getRecordCount($rs);
                 if ($limit > 0) {
+                	$tvsArray = $modx->db->makeArray($rs,'name');
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
                     $i = 0;
-                    while ($row = $modx->db->getRow($rs)) {
+                    foreach ($tvsArray as $row) {
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                             // determine TV-options
@@ -818,7 +819,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'].$tvName,"</span>\n",
                              "\t\t\t",$tvDescription,$tvInherited,"</td>\n",
                              "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? '' : ''),'">',"\n",
-                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row),"\n",
+                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray),"\n",
                              "\t\t</td></tr>\n";
                     }
                     echo "\t</table>\n";

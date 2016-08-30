@@ -32,12 +32,12 @@
 
 	/* NAV - top horizontal nav */
 	#nav, #nav ul {padding: 0;margin: 0;list-style: none}
-	#nav {font-weight:bold;height:2.09em;font: bold 96% arial;margin: 0 105px 0 40px}
+	#nav {height:2.09em;}
 	#nav li {position:relative;background: #999;float: left;width: 10em;display:block;margin: 0;border-bottom: 3px solid #666;border-right: 3px solid #252525;padding:0}
 	#nav a, #nav a:link, #nav a:visited, #nav a:hover, #nav a:active {text-decoration:none;cursor:pointer;color:#fff;display: block;padding: 4px 10px 2px}
 	#nav a:hover {color:#000}
 
-	#nav li ul {border-left: 1px solid #c00;background: #f6f6f6 url("assets/snippets/wayfinder/examples/mollio/images/featurebox_bg.gif") no-repeat 100% 100%;width:15.8em;font-size:90%;margin-top:3px;position: absolute;font-weight:normal;left: -999em}
+	#nav li ul {border-left: 1px solid #c00;background: #f6f6f6 url("assets/snippets/wayfinder/examples/mollio/images/featurebox_bg.png") no-repeat 100% 100%;width:15.8em;margin-top:3px;position: absolute;left: -999em}
 	#nav li:hover ul, #nav li.sfhover ul {left: 0;z-index:99999}
 
 	#nav li li {background:none;float:none;border:none;border: 1px solid #999;border-top:1px solid #fff;border-right:none;border-left:none;padding-left:0}
@@ -46,16 +46,16 @@
 	#nav li li a:hover {color:#fff;background:#c00}
 
 	#nav li.active {background: #c00;border-bottom: 3px solid #c00}
-	#nav li.active ul {border:none;background: #c00 url("assets/snippets/wayfinder/examples/mollio/images/featurebox2_bg.gif") no-repeat 100% 100%}
+	#nav li.active ul {border:none;background: #c00 url("assets/snippets/wayfinder/examples/mollio/images/featurebox2_bg.png") no-repeat 100% 100%}
 	#nav li.active a:link, #nav li.active a:visited, #nav li.active a:hover, #nav li.active a:active {}
 	#nav li.active a:hover {color:#000}
 
 	#nav li.active li {border:none;border-top: 1px solid #c15c5c;border-bottom: 1px solid #870000}
 	#nav li.active li.last {border-bottom: none}
 	#nav li.active li a:link, #nav li.active li a:visited, #nav li.active li a:hover, #nav li.active li a:active {color:#fff}
-	#nav li.active li a:hover {background: #666 url("assets/snippets/wayfinder/examples/mollio/images/sprites.gif") repeat-x 0 99%;color:#fff}
+	#nav li.active li a:hover {background: #666 url("assets/snippets/wayfinder/examples/mollio/images/sprites.png") repeat-x 0 99%;color:#fff}
 
-	#nav li.active li.active a:link, #nav li.active li.active a:visited, #nav li.active li.active a:hover, #nav li.active li.active a:active {color:#fff;font-weight:bold;background: #666 url("assets/snippets/wayfinder/examples/mollio/images/sprites.gif") repeat-x 0 99%}
+	#nav li.active li.active a:link, #nav li.active li.active a:visited, #nav li.active li.active a:hover, #nav li.active li.active a:active {color:#fff;background: #666 url("assets/snippets/wayfinder/examples/mollio/images/sprites.png") repeat-x 0 99%}
 
 	</style>';
 ?>

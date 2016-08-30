@@ -21,6 +21,7 @@ class modxRTEbridge
     public $langArr = array();                  // Holds lang strings
     public $debug = false;                      // Enable/disable debug messages via HTML-comment
     public $debugMessages = array();            // Holds all messages - added by    $this->debugMessages[] = 'Message';
+	public $ajaxSecHash = array();              // Holds security-hashes
 
     public function __construct($editorKey = NULL, $bridgeConfig=array(), $tvOptions=array(), $basePath='')
     {
@@ -202,7 +203,7 @@ class modxRTEbridge
     // Renders complete JS-Script
     public function getEditorScript()
     {
-        global $modx;
+        global $modx, $which_browser;
         $ph = array();
         $output = "<!-- modxRTEbridge {$this->editorKey} -->\n";
 
@@ -228,6 +229,7 @@ class modxRTEbridge
                 $ph['selector'] = $selector;
                 $ph['documentIdentifier'] = $modx->documentIdentifier;
                 $ph['manager_path'] = MGR_DIR;
+                $ph['which_browser'] = !empty($which_browser) ? $which_browser : 'mcpuk';
 
                 $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
 
@@ -257,7 +259,21 @@ class modxRTEbridge
             }
 
         } else {
-           exit; // @todo: prepare for editors that need no elements
+			// No elements given - create Config-Object only 
+			$this->theme = $this->tvOptions['theme'];
+			$this->initTheme('noselector');
+			$this->renderBridgeParams('noselector');
+
+			$ph['configString'] = $this->renderConfigString();
+			$ph['configRawString'] = $this->renderConfigRawString();
+			$ph['editorKey'] = $this->editorKey;
+			$ph['themeKey'] = $this->theme;
+			
+			if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
+				define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
+				$output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
+				$output  = $modx->parseText($output, $ph);
+			}
         }
 
         // Remove empty placeholders !
@@ -763,16 +779,17 @@ class modxRTEbridge
         return implode(',', $elements);
     }
 
-    public function parseEditableIds($source)
+    public function parseEditableIds($source, $attrContentEditable=false)
     {
         if(!isset($_SESSION['mgrValidated'])) return $source;
-
+		$attrContentEditable = $attrContentEditable == true ? ' contenteditable="true"' : '';
+			
         $matchPhs = '~\[\*#(.*?)\*\]~'; // match [*#content*] / content
-        
         preg_match_all($matchPhs, $source, $editableIds);
+		
         $this->setEditableIds($editableIds);
         
-        $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1">[*$1*]</div>', $source);
+        $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1"'.$attrContentEditable.'>[*$1*]</div>', $source);
         
         return $source;
     }
@@ -819,8 +836,12 @@ class modxRTEbridge
 
     public function prepareAjaxSecHash($docId)
     {
-        $secHash = md5(rand(0, 999999999)+rand(0, 999999999));
-        $_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
+    	if(isset($this->ajaxSecHash[$docId])) return $this->ajaxSecHash[$docId];
+
+		$secHash = md5(rand(0, 999999999) + rand(0, 999999999));
+		$_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
+		$this->ajaxSecHash[$docId] = $secHash;
+
         return $secHash;
     }
 

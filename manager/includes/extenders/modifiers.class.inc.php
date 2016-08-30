@@ -1,5 +1,7 @@
 <?php
 
+if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_BASE_PATH.'manager/includes/');
+
 class MODIFIERS {
     
     var $placeholders = array();
@@ -412,7 +414,8 @@ class MODIFIERS {
             case 'wordwrap':
                 // default: 70
                   $this->wrapat = intval($opt) ? intval($opt) : 70;
-                return preg_replace_callback("~(\b\w+\b)~",function($m){return wordwrap($m[1],$this->wrapat,' ',1);},$value);
+                if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
+                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$this->wrapat,' ',1)",$value);
             case 'wrap_text':
                 $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
                 if($modx->config['manager_language']==='japanese-utf8') {

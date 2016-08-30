@@ -5,7 +5,7 @@
  * Completely template-driven and highly flexible menu builder
  *
  * @category 	snippet
- * @version 	2.0.5
+ * @version 	2.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Navigation
@@ -21,21 +21,26 @@
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
-$wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
+$wf_base_path = $modx->config['base_path'] . 'assets/snippets/wayfinder/';
+$conf_path = "{$wf_base_path}configs/";
 
 //Include a custom config file if specified
-$config = (isset($config)) ? "{$wayfinder_base}configs/{$config}.config.php" : "{$wayfinder_base}configs/default.config.php";
-if (file_exists($config)) {
-	include("$config");
-}
+@include("{$conf_path}default.config.php");
 
-include_once("{$wayfinder_base}wayfinder.inc.php");
+$config = (!isset($config)) ? 'default' : trim($config);
+$config = ltrim($config,'/');
 
-if (class_exists('Wayfinder')) {
-   $wf = new Wayfinder();
-} else {
-    return 'error: Wayfinder class not found';
-}
+if(substr($config, 0, 6) == '@CHUNK')               eval('?>' . $modx->getChunk(trim(substr($config, 7))));
+elseif(substr($config, 0, 5) == '@FILE')            include($modx->config['base_path'] . trim(substr($config, 6)));
+elseif($config!='default'&&is_file("{$conf_path}{$config}.config.php"))
+                                                    include("{$conf_path}{$config}.config.php");
+elseif(is_file("{$conf_path}{$config}"))            include("{$conf_path}{$config}");
+elseif(is_file($modx->config['base_path'].$config)) include($modx->config['base_path'] . $config);
+
+include_once("{$wf_base_path}wayfinder.inc.php");
+
+if (class_exists('Wayfinder')) $wf = new Wayfinder();
+else                           return 'error: Wayfinder class not found';
 
 $wf->_config = array(
 	'id' => isset($startId) ? intval($startId) : $modx->documentIdentifier,
@@ -59,6 +64,7 @@ $wf->_config = array(
 	'textOfLinks' => isset($textOfLinks) ? $textOfLinks : 'menutitle',
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
+	'showPrivate' => isset($showPrivate) ? $showPrivate : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
 	// for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr, etc)
 	'useReferenced' => isset($useReferenced) ? $useReferenced: "id", 
@@ -99,8 +105,8 @@ $wf->_templates = array(
 //Process Wayfinder
 $output = $wf->run();
 
-if ($wf->_config['debug']) {
-	$output .= $wf->renderDebugOutput();
+if ($wf->_config['debug'] && $modx->checkSession()) {
+	$modx->regClientHTMLBlock($wf->renderDebugOutput());
 }
 
 //Output Results
@@ -110,4 +116,3 @@ if ($wf->_config['ph']) {
 } else {
     return $output;
 }
-?>

@@ -1575,7 +1575,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal {
 	background-color: #fff;
-	border: 1px solid #0070bf;
+	border: 1px solid #7ca3ce;
 	position: absolute;
 	width: 177px;
 	top: 24px;
@@ -1623,6 +1623,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal td {
 	cursor: pointer;
+	text-align:right !important;
 }
 .dp_cal thead th {
 	background: #d9eefc;
@@ -1738,3 +1739,9 @@ li.breadcrumbs__li_current {
 	font-weight: bold;
 }
 /* end breadcrumbs */
+
+/* STYLES FOR HELP */
+#helpPane h1 { font-size:20px; display:block; border-bottom:1px solid #888; margin-bottom:1em; font-weight:bold; }
+#helpPane li:not(:first-child) > strong { margin-top:1.4em; }
+#helpPane li > strong { display:block; font-size:14px; }
+#helpPane pre { font-size:12px; border:1px solid #888; padding:1em; }

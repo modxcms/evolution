@@ -681,7 +681,34 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+
+          <tr>
+            <th><?php echo $_lang["which_browser_title"]?></th>
+            <td>
+				<select name="which_browser" size="1" class="inputBox" onchange="documentDirty=true;">
+					<?php
+					$selected = 'default' == $usersettings['which_browser'] || !$usersettings['which_browser'] ? ' selected="selected"' : '';
+					echo '<option value="default"'. $selected .'>'. $_lang['option_default'] ."</option>\n";
+					foreach (glob("media/browser/*", GLOB_ONLYDIR) as $dir) {
+						$dir = str_replace('\\', '/', $dir);
+						$browser_name = substr($dir, strrpos($dir, '/') + 1);
+						$selected = $browser_name == $usersettings['which_browser'] ? ' selected="selected"' : '';
+						echo '<option value="' . $browser_name . '"' . $selected . '>' . "{$browser_name}</option>\n";
+					}
+					?>
+				</select>
+            </td>
+          </tr>
           
+          <tr>
+            <td>&nbsp;</td>
+            <td class='comment'><?php echo $_lang["which_browser_msg"]?></td>
+          </tr>
+          
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+
           <tr>
             <th><?php echo $_lang["filemanager_path_title"]?></th>
             <td>
@@ -888,7 +915,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
           function BrowseServer() {
             var w = screen.width * 0.7;
             var h = screen.height * 0.7;
-            OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/mcpuk/browser.php?Type=images", w, h);
+            OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/<?php echo $which_browser;?>/browser.php?Type=images", w, h);
           }
           function SetUrl(url, width, height, alt){
             document.userform.photo.value = url;
