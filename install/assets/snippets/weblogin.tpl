@@ -5,54 +5,20 @@
  * Allows webusers to login to protected pages in the website, supporting multiple user groups
  *
  * @category 	snippet
- * @version 	1.1.1
+ * @version 	1.1.3
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;
  * @internal	@modx_category Login
  * @internal    @installset base, sample
+ * @documentation [+site_url+]assets/snippets/weblogin/docs/weblogin.html
+ * @documentation http://www.opensourcecms.com/news/details.php?newsid=660
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Created By Raymond Irving April, 2005
+ * @author      Ryan Thrash http://thrash.me
+ * @author      Jason Coward http://opengeek.com
+ * @author      Shaun McCormick, garryn, Dmi3yy
+ * @lastupdate  19/04/2016
  */
-
-# Created By Raymond Irving 2004
-#::::::::::::::::::::::::::::::::::::::::
-# Params:	
-#
-#	&loginhomeid 	- (Optional)
-#		redirects the user to first authorized page in the list.
-#		If no id was specified then the login home page id or 
-#		the current document id will be used
-#
-#	&logouthomeid 	- (Optional)
-#		document id to load when user logs out	
-#
-#	&pwdreqid 	- (Optional)
-#		document id to load after the user has submited
-#		a request for a new password
-#
-#	&pwdactid 	- (Optional)
-#		document id to load when the after the user has activated
-#		their new password
-#
-#	&logintext		- (Optional) 
-#		Text to be displayed inside login button (for built-in form)
-#
-#	&logouttext 	- (Optional)
-#		Text to be displayed inside logout link (for built-in form)
-#	
-#	&tpl			- (Optional)
-#		Chunk name or document id to as a template
-#				  
-#	Note: Templats design:
-#			section 1: login template
-#			section 2: logout template 
-#			section 3: password reminder template 
-#
-#			See weblogin.tpl for more information
-#
-# Examples:
-#
-#	[[WebLogin? &loginhomeid=`8` &logouthomeid=`1`]] 
-#
-#	[[WebLogin? &loginhomeid=`8,18,7,5` &tpl=`Login`]] 
 
 # Set Snippet Paths 
 $snipPath = $modx->config['base_path'] . "assets/snippets/";
@@ -72,9 +38,10 @@ $liHomeId	= isset($loginhomeid)? array_filter(array_map('intval', explode(',', $
 $loHomeId	= isset($logouthomeid)? $logouthomeid:$modx->documentIdentifier;
 $pwdReqId	= isset($pwdreqid)? $pwdreqid:0;
 $pwdActId	= isset($pwdactid)? $pwdactid:0;
-$loginText	= isset($logintext)? $logintext:'Login';
-$logoutText	= isset($logouttext)? $logouttext:'Logout';
+$loginText	= isset($logintext) && $logintext!='' ? $logintext:'Login';
+$logoutText	= isset($logouttext) && $logouttext!='' ? $logouttext:'Logout';
 $tpl		= isset($tpl)? $tpl:"";
+$focusInput = isset($focusInput)? $focusInput : 1;
 
 # System settings
 $webLoginMode = isset($_REQUEST['webloginmode'])? $_REQUEST['webloginmode']: '';

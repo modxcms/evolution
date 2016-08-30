@@ -57,7 +57,7 @@ $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentv
 $tbl_site_tmplvar_templates     = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
 
-if ($action == 27) {
+if ($modx->manager->action == 27) {
     //editing an existing document
     // check permissions on the document
     include_once(MODX_MANAGER_PATH.'processors/user_documents_permissions.class.php');
@@ -72,10 +72,11 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=27 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
-    }
+$where = sprintf("action=27 AND id='%s' AND internalKey!='%s'", $id, $modx->getLoginUserID());
+$rs = $modx->db->select('username', $tbl_active_users, $where);
+if ($username = $modx->db->getValue($rs)) {
+    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
+}
 
 // get document groups for current user
 if ($_SESSION['mgrDocgroups']) {
@@ -83,14 +84,16 @@ if ($_SESSION['mgrDocgroups']) {
 }
 
 if (!empty ($id)) {
-    $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" .
-        (!$docgrp ? '' : " OR dg.document_group IN ($docgrp)");
+    $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
+    if($docgrp) $access .= " OR dg.document_group IN ({$docgrp})";
 	$rs = $modx->db->select(
 		'sc.*',
 		"{$tbl_site_content} AS sc LEFT JOIN {$tbl_document_groups} AS dg ON dg.document=sc.id",
 		"sc.id='{$id}' AND ({$access})"
 		);
+	$content = array();
     $content = $modx->db->getRow($rs);
+    $modx->documentObject = &$content;
     if (!$content) {
         $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
@@ -108,16 +111,13 @@ if (!empty ($id)) {
 }
 
 // restore saved form
-$formRestored = false;
-if ($modx->manager->hasFormValues()) {
-    $modx->manager->loadFormValues();
-    $formRestored = true;
-}
+$formRestored = $modx->manager->loadFormValues();
+if(isset($_REQUEST['newtemplate'])) $formRestored = true;
 
 // retain form values if template was changed
 // edited to convert pub_date and unpub_date
 // sottwell 02-09-2006
-if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
+if ($formRestored == true) {
     $content = array_merge($content, $_POST);
     $content['content'] = $_POST['ta'];
     if (empty ($content['pub_date'])) {
@@ -134,7 +134,8 @@ if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
 
 // increase menu index if this is a new document
 if (!isset ($_REQUEST['id'])) {
-    if (!isset ($auto_menuindex) || $auto_menuindex) {
+    if (!isset ($modx->config['auto_menuindex'])) $modx->config['auto_menuindex'] = 1;
+    if ($modx->config['auto_menuindex']) {
         $pid = intval($_REQUEST['pid']);
         $rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
         $content['menuindex'] = $modx->db->getValue($rs);
@@ -144,32 +145,21 @@ if (!isset ($_REQUEST['id'])) {
 }
 
 if (isset ($_POST['which_editor'])) {
-    $which_editor = $_POST['which_editor'];
+    $modx->config['which_editor'] = $_POST['which_editor'];
 }
 ?>
-<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
 window.addEvent('domready', function(){
-    var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-    var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
-    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
-
-    if( !window.ie6 ) {
-        $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
-            help_img.removeProperty('onclick');
-            help_img.removeProperty('onmouseover');
-            help_img.removeProperty('onmouseout');
-            help_img.setProperty('title', help_img.getProperty('alt') );
-            help_img.setProperty('class', 'tooltip' );
-            if (window.ie) help_img.removeProperty('alt');
-        });
-        new Tips($$('.tooltip'),{className:'custom'} );
-    }
+    $$('img[src=<?php echo $_style["icons_tooltip_over"]; ?>]').each(function(help_img) {
+        help_img.removeProperty('onclick');
+        help_img.removeProperty('onmouseover');
+        help_img.removeProperty('onmouseout');
+        help_img.setProperty('title', help_img.getProperty('alt') );
+        help_img.setProperty('class', 'tooltip' );
+        if (window.ie) help_img.removeProperty('alt');
+    });
+    new Tips($$('.tooltip'),{className:'custom'} );
 });
 
 // save tree folder state
@@ -322,7 +312,7 @@ function templateWarning() {
     if(documentDirty===true) {
         if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
             documentDirty=false;
-            document.mutate.a.value = <?php echo $action?>;
+            document.mutate.a.value = <?php echo $modx->manager->action; ?>;
             document.mutate.newtemplate.value = newTemplate;
             document.mutate.submit();
         } else {
@@ -330,7 +320,7 @@ function templateWarning() {
         }
     }
     else {
-        document.mutate.a.value = <?php echo $action?>;
+        document.mutate.a.value = <?php echo $modx->manager->action; ?>;
         document.mutate.newtemplate.value = newTemplate;
         document.mutate.submit();
     }
@@ -358,7 +348,7 @@ function changeRTE() {
     }
 
     documentDirty=false;
-    document.mutate.a.value = <?php echo $action?>;
+    document.mutate.a.value = <?php echo $modx->manager->action; ?>;
     document.mutate.newtemplate.value = newTemplate;
     document.mutate.which_editor.value = newEditor;
     document.mutate.submit();
@@ -513,7 +503,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : 1048576?>" />
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
 <input type="hidden" name="dir" value="<?php echo $dir;?>" />
@@ -523,11 +513,46 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <fieldset id="create_edit">
     <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
 
+    <?php
+    // breadcrumbs
+    if ($modx->config['use_breadcrumbs']) {
+        $temp = array();
+        $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
+
+        if (isset($_REQUEST['id']) && $content['parent'] != 0) {
+            $bID = (int)$_REQUEST['id'];
+            $temp = $modx->getParentIds($bID);
+        } else if (isset($_REQUEST['pid'])) {
+            $bID = (int)$_REQUEST['pid'];
+            $temp = $modx->getParentIds($bID);
+            array_unshift($temp, $bID);
+        }
+
+        if ($temp) {
+            $parents = implode(',', $temp);
+
+            if (!empty($parents)) {
+                $where = "FIND_IN_SET(id,'{$parents}') DESC";
+                $rs = $modx->db->select('id, pagetitle', $tbl_site_content, "id IN ({$parents})", $where);
+                while ($row = $modx->db->getRow($rs)) {
+                    $out .= '<li class="breadcrumbs__li">
+                                <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->config['modx_charset']) . '</a>
+                                <span class="breadcrumbs__sep">&gt;</span>
+                            </li>';
+                }
+            }
+        }
+
+        $out .= '<li class="breadcrumbs__li breadcrumbs__li_current">' . $title . '</li>';
+        echo '<ul class="breadcrumbs">' . $out . '</ul>';
+    }
+    ?>
+
 <div id="actions">
       <ul class="actionButtons">
-          <li id="Button1">
+          <li id="Button1" class="transition">
             <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
-              <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+              <img alt="icons_save" src="<?php echo $_style["icons_save"]; ?>" /> <?php echo $_lang['save']; ?>
             </a>
             <span class="plus"> + </span>
             <select id="stay" name="stay">
@@ -545,7 +570,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
           <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } ?>
-          <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <li id="Button4" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
 </div>
@@ -575,7 +600,8 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
         <table width="99%" border="0" cellspacing="5" cellpadding="0">
             <tr style="height: 24px;"><td width="100" align="left"><span class="warning"><?php echo $_lang['resource_title']?></span></td>
                 <td><input name="pagetitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['pagetitle']))?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
-                &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+                &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
+                <?php if(strpos($content['pagetitle'],'Duplicate of')!==false) echo '<script>document.getElementsByName("pagetitle")[0].focus();</script>'?></td></tr>
             <tr style="height: 24px;"><td align="left"><span class="warning"><?php echo $_lang['long_title']?></span></td>
                 <td><input name="longtitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['longtitle']))?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_long_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
@@ -592,28 +618,25 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <?php if ($content['type'] == 'reference' || $_REQUEST['a'] == '72') { // Web Link specific ?>
 
             <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" alt="tree_folder" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
-                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" onchange="documentDirty=true;" />
+                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
 <?php } ?>
 
             <tr style="height: 24px;"><td valign="top" width="100" align="left"><span class="warning"><?php echo $_lang['resource_summary']?></span></td>
-                <td valign="top"><textarea name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars(stripslashes($content['introtext']))?></textarea>
+                <td valign="top"><textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars(stripslashes($content['introtext']))?></textarea>
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_summary_help']?>" onclick="alert(this.alt);" style="cursor:help;" spellcheck="true"/></td></tr>
             <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_template']?></span></td>
-                <td><select id="template" name="template" class="inputBox" onchange="templateWarning();" style="width:308px">
+                <td><select id="template" name="template" class="inputBox" onchange="templateWarning();">
                     <option value="0">(blank)</option>
 <?php
-                $rs = $modx->db->select(
-					"t.templatename, t.selectable, t.id, c.category",
-					"{$tbl_site_templates} AS t
-						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
-					'',
-					'c.category, t.templatename ASC'
-					);
+                $field = "t.templatename, t.selectable, t.id, c.category";
+                $from  = "{$tbl_site_templates} AS t LEFT JOIN {$tbl_categories} AS c ON t.category = c.id";
+                $rs = $modx->db->select($field,$from,'','c.category, t.templatename ASC');
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
-                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
+                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; };
+                    // Skip if not selectable but show if selected!
                     $thisCategory = $row['category'];
                     if($thisCategory == null) {
                         $thisCategory = $_lang["no_category"];
@@ -702,7 +725,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $htmlContent = $content['content'];
 ?>
                 <div style="width:100%">
-                    <textarea id="ta" name="ta" cols="" rows="" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
+                    <textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
                     <span class="warning"><?php echo $_lang['which_editor_title']?></span>
 
                     <select id="which_editor" name="which_editor" onchange="changeRTE();">
@@ -713,16 +736,18 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         if (is_array($evtOut)) {
                             for ($i = 0; $i < count($evtOut); $i++) {
                                 $editor = $evtOut[$i];
-                                echo "\t\t\t",'<option value="',$editor,'"',($which_editor == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
+                                echo "\t\t\t",'<option value="',$editor,'"',($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
                             }
                         }
 ?>
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array(
-                    'ta',
-                );
+                // Richtext-[*content*]
+                $richtexteditorIds = array();
+                $richtexteditorOptions = array();
+                $richtexteditorIds[$modx->config['which_editor']][] = 'ta';
+                $richtexteditorOptions[$modx->config['which_editor']]['ta'] = '';
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -743,34 +768,34 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         $template = $content['template'];
                 }
 
-                $rs = $modx->db->select(
-                    "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value",
-                     "{$tbl_site_tmplvars} AS tv
-                         INNER JOIN {$tbl_site_tmplvar_templates} AS tvtpl ON tvtpl.tmplvarid = tv.id
-                         LEFT JOIN {$tbl_site_tmplvar_contentvalues} AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$id}'
-                         LEFT JOIN {$tbl_site_tmplvar_access} AS tva ON tva.tmplvarid=tv.id",
-                     "tvtpl.templateid='{$template}' AND (1='{$_SESSION['mgrRole']}' OR ISNULL(tva.documentgroup)".(!$docgrp ? '' : " OR tva.documentgroup IN ({$docgrp})").")",
-                     'tvtpl.rank,tv.rank, tv.id'
-                     );
+                $field = "DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value, tvtpl.rank as tvrank";
+                $vs = array($tbl_site_tmplvars, $tbl_site_tmplvar_templates, $tbl_site_tmplvar_contentvalues, $id, $tbl_site_tmplvar_access);
+                $from = vsprintf("%s AS tv INNER JOIN %s AS tvtpl ON tvtpl.tmplvarid = tv.id
+                         LEFT JOIN %s AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='%s'
+                         LEFT JOIN %s AS tva ON tva.tmplvarid=tv.id", $vs);
+                $dgs = $docgrp ? " OR tva.documentgroup IN ({$docgrp})" : '';
+                $vs = array($template, $_SESSION['mgrRole'], $dgs);
+                $where = vsprintf("tvtpl.templateid='%s' AND (1='%s' OR ISNULL(tva.documentgroup) %s)", $vs);
+                $rs = $modx->db->select($field,$from,$where,'tvtpl.rank,tv.rank, tv.id');
                 $limit = $modx->db->getRecordCount($rs);
                 if ($limit > 0) {
+                	$tvsArray = $modx->db->makeArray($rs,'name');
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
                     $i = 0;
-                    while ($row = $modx->db->getRow($rs)) {
+                    foreach ($tvsArray as $row) {
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                            // determine TV-options
+                            $tvOptions = $modx->parseProperties($row['elements']);
+                            if(!empty($tvOptions)) {
+                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $modx->config['which_editor'];
+                            };
                             // Add richtext editor to the list
-                            if (is_array($replace_richtexteditor)) {
-                                $replace_richtexteditor = array_merge($replace_richtexteditor, array(
-                                    "tv" . $row['id'],
-                                ));
-                            } else {
-                                $replace_richtexteditor = array(
-                                    "tv" . $row['id'],
-                                );
-                            }
+                            $richtexteditorIds[$editor][] = "tv".$row['id'];
+                            $richtexteditorOptions[$editor]["tv".$row['id']] = $tvOptions;
                         }
                         // splitter
                         if ($i++ > 0)
@@ -786,14 +811,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         } else {
                             $tvPBV = $row['value'];
                         }
-
+						
 						$tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
 						$tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-                       
-                        echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
+						$tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*'.$row['name'].'*]</small>' : '';
+						
+                        echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'].$tvName,"</span>\n",
                              "\t\t\t",$tvDescription,$tvInherited,"</td>\n",
                              "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? '' : ''),'">',"\n",
-                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row),"\n",
+                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, '', $row, $tvsArray),"\n",
                              "\t\t</td></tr>\n";
                     }
                     echo "\t</table>\n";
@@ -852,7 +878,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 <?php
 
-if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
+if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
 ?>
             <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_type']?></span></td>
                 <td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
@@ -1037,21 +1063,12 @@ if ($use_udperms == 1) {
             $groupsarray[] = $currentgroup['document_group'].','.$currentgroup['id'];
 
         // Load up the current permissions and names
-	$rs = $modx->db->select(
-		'dgn.*, groups.id AS link_id',
-		"{$tbl_document_group_names} AS dgn
-			LEFT JOIN {$tbl_document_groups} AS groups ON groups.document_group = dgn.id  AND groups.document = '{$documentId}'",
-		'',
-		'name'
-		);
+        $vs = array($tbl_document_group_names, $tbl_document_groups, $documentId);
+        $from = vsprintf("%s AS dgn LEFT JOIN %s AS groups ON groups.document_group=dgn.id AND groups.document='%s'",$vs);
+    	$rs = $modx->db->select('dgn.*, groups.id AS link_id',$from,'','name');
     } else {
         // Just load up the names, we're starting clean
-	$rs = $modx->db->select(
-		'*, NULL AS link_id',
-		$tbl_document_group_names,
-		'',
-		'name'
-		);
+        $rs = $modx->db->select('*, NULL AS link_id', $tbl_document_group_names, '', 'name');
     }
 
     // retain selected doc groups between post
@@ -1101,11 +1118,10 @@ if ($use_udperms == 1) {
         $inputHTML = '<input '.implode(' ', $inputString).' />';
 
         // does user have this permission?
-        $rsp = $modx->db->select(
-			'COUNT(mg.id)',
-			"{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg",
-			"mga.membergroup = mg.user_group AND mga.documentgroup = {$row['id']} AND mg.member = {$_SESSION['mgrInternalKey']}"
-			);
+        $from = "{$tbl_membergroup_access} AS mga, {$tbl_member_groups} AS mg";
+        $vs = array($row['id'], $_SESSION['mgrInternalKey']);
+        $where = vsprintf("mga.membergroup=mg.user_group AND mga.documentgroup=%s AND mg.member=%s", $vs);
+        $rsp = $modx->db->select('COUNT(mg.id)',$from,$where);
         $count = $modx->db->getValue($rsp);
         if($count > 0) {
             ++$permissions_yes;
@@ -1191,14 +1207,17 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </script>
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
-        if (is_array($replace_richtexteditor)) {
-            // invoke OnRichTextEditorInit event
-            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                'editor' => $which_editor,
-                'elements' => $replace_richtexteditor
-            ));
-            if (is_array($evtOut))
-                echo implode('', $evtOut);
+        if (is_array($richtexteditorIds)) {
+            foreach($richtexteditorIds as $editor=>$elements) {
+                // invoke OnRichTextEditorInit event
+                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+                    'editor' => $editor,
+                    'elements' => $elements,
+                    'options' => $richtexteditorOptions[$editor]
+                ));
+                if (is_array($evtOut))
+                    echo implode('', $evtOut);
+            }
         }
     }
 

@@ -145,7 +145,8 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
                 $params['guid'],
                 $params['modx_category'],
                 $params['legacy_names'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                intval($params['disabled'])
             );
         }
     }

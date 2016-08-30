@@ -1,17 +1,28 @@
 <?php
 if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
-
-/* Description:
- *      Aggregates documents to create blogs, article/news
- *      collections, and more,with full support for templating.
- * 
- * Author: 
- *      Mark Kaplan for MODX CMF
-*/
+/**
+ * Ditto
+ *
+ * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
+ *
+ * @category    snippet
+ * @version 	2.1.2
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @properties
+ * @internal    @modx_category Content
+ * @internal    @installset base, sample
+ * @documentation MODX Docs https://rtfm.modx.com/extras/evo/ditto
+ * @documentation MODX Wiki http://wiki.modxcms.com/index.php/Ditto
+ * @documentation Pogwatch http://www.pogwatch.com/ditto.html
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Mark Kaplan
+ * @author      and many others since 2006
+ * @lastupdate  30/03/2016
+ */
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.1.1";
+$ditto_version = "2.1.2";
     // Ditto version being executed
 
 $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";

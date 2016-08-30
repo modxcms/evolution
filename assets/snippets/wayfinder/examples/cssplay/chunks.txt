@@ -23,19 +23,7 @@ wfParentRow:
 ------------
 
 <li><a [+wf.classes+] href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>
-
-    <!--[if lte IE 6]>
-    <a class="sub" href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]
-    <table><tr><td>
-    <![endif]-->
-
     [+wf.wrapper+]
-
-    <!--[if lte IE 6]>
-	</td></tr></table>
-    </a>
-    <![endif]-->
-
 </li>
 
 wfRow:
@@ -52,12 +40,9 @@ This chunk is meant for the menus that are in template_revisited.html !!        
 wfParentRow:
 ------------
 
-<li><a [+wf.classes+] href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]<!--[if IE 7]><!--></a><!--<![endif]-->
+<li><a [+wf.classes+] href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>
 <table><tr><td>
-
 [+wf.wrapper+]
-
 </td></tr></table>
-<!--[if lte IE 6]></a><![endif]-->
 
 </li>

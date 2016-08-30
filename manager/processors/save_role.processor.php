@@ -51,6 +51,8 @@ $fields = array (
     'error_dialog' => $error_dialog,
     'about' => $about,
     'file_manager' => $file_manager,
+    'assets_files' => $assets_files,
+    'assets_images' => $assets_images,
     'save_user' => $save_user,
     'delete_user' => $delete_user,
     'save_password' => $save_password,
@@ -81,7 +83,8 @@ $fields = array (
     'view_unpublished' => $view_unpublished,
 	'import_static' => $import_static,
 	'export_static' => $export_static,
-    'remove_locks' => $remove_locks
+    'remove_locks' => $remove_locks,
+    'change_resourcetype' => $change_resourcetype
 );
 
 $fields = $modx->db->escape($fields);

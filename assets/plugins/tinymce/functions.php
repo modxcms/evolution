@@ -261,17 +261,17 @@ class TinyMCE
 		{
 			$frontend_language = isset($modx->config['fe_editor_lang']) ? $modx->config['fe_editor_lang']:'';
 			$webuser = (isset($modx->config['rb_webuser']) ? $modx->config['rb_webuser'] : null);
-			
-			$params['theme']           = $webtheme;
-			$params['webuser']         = $webuser;
-			$params['language']        = $this->get_lang($frontend_language);
-			$params['frontend']        = true;
-			$params['custom_plugins']  = $webPlugins;
-			$params['custom_buttons1'] = $webButtons1;
-			$params['custom_buttons2'] = $webButtons2;
-			$params['custom_buttons3'] = $webButtons3;
-			$params['custom_buttons4'] = $webButtons4;
-			$params['toolbar_align']   = $webAlign;
+
+            $params['theme']           = $params['webtheme'];
+            $params['webuser']         = $webuser;
+            $params['language']        = $this->get_lang($frontend_language);
+            $params['frontend']        = true;
+            $params['custom_plugins']  = $params['webPlugins'];
+            $params['custom_buttons1'] = $params['webButtons1'];
+            $params['custom_buttons2'] = $params['webButtons2'];
+            $params['custom_buttons3'] = $params['webButtons3'];
+            $params['custom_buttons4'] = $params['webButtons4'];
+            $params['toolbar_align']   = $params['webAlign'];
 			
 		}
 		
@@ -425,7 +425,11 @@ class TinyMCE
 		$ph['schema']                  = $modx->config['mce_schema'];
 		
 		$ph['toolbar_align']           = $params['toolbar_align'];
-		$ph['file_browser_callback']   = 'mceOpenServerBrowser';
+		
+		$ph['file_browser_callback']   = !$modx->hasPermission('file_manager') && !$modx->hasPermission('assets_images')
+		                               ? ''
+		                               : "file_browser_callback            : 'mceOpenServerBrowser',";
+		
 		$ph['plugins']                 = $plugins;
 		$ph['buttons1']                = $buttons1;
 		$ph['buttons2']                = $buttons2;
@@ -471,13 +475,13 @@ class TinyMCE
 	
 	function build_tiny_callback()
 	{
-		global $modx;
+		global $modx,$which_browser;
 		$params = $this->params;
 		$mce_path = $params['mce_path'];
 		$mce_url  = $params['mce_url'];
 		
-		$ph['cmsurl']  = MODX_MANAGER_URL . 'media/browser/mcpuk/browser.php?Connector=';
-		$ph['cmsurl'] .= MODX_MANAGER_URL . 'media/browser/mcpuk/connectors/php/connector.php&manager_url=';
+		$ph['cmsurl']  = MODX_MANAGER_URL . "media/browser/{$which_browser}/browser.php?Connector=";
+		$ph['cmsurl'] .= MODX_MANAGER_URL . "media/browser/{$which_browser}/connectors/php/connector.php&manager_url=";
 		$ph['cmsurl'] .= MODX_MANAGER_URL . "&editor=tinymce&editorpath={$mce_url}";
 		$modx_fb = file_get_contents("{$mce_path}js/modx_fb.js.inc");
 		

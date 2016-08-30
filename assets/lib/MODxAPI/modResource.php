@@ -175,24 +175,20 @@ class modResource extends MODxAPI
     {
         if (is_scalar($value) && is_scalar($key) && !empty($key)) {
             switch ($key) {
-                case 'parent':{
+                case 'parent':
                     $value = (int)$value;
                     break;
-                }
                 case 'template':
-                {
                     $value = trim($value);
                     $value = $this->setTemplate($value);
                     break;
-                }
-                case 'published':{
+                case 'published':
                     $value = (int)((bool)$value);
                     if($value){
                         $this->field['publishedon'] = time() + $this->modxConfig('server_offset_time');
                     }
                     break;
-                }
-                case 'publishedon':{
+                case 'publishedon':
                     $value = $this->getTime($value);
                     if($value){
                         $this->field['published'] = 1;
@@ -200,24 +196,21 @@ class modResource extends MODxAPI
                         $this->field['published'] = 0;
                     }
                     break;
-                }
-                case 'pub_date':{
+                case 'pub_date':
                     $value = $this->getTime($value);
                     if($value > 0 && time() + $this->modxConfig('server_offset_time') > $value){
                         $this->field['published'] = 1;
                         $this->field['publishedon'] = $value;
                     }
                     break;
-                }
-                case 'unpub_date':{
+                case 'unpub_date':
                     $value = $this->getTime($value);
                     if($value > 0 && time() + $this->modxConfig('server_offset_time') > $value){
                         $this->field['published'] = 0;
                         $this->field['publishedon'] = 0;
                     }
                     break;
-                }
-                case 'deleted':{
+                case 'deleted':
                     $value = (int)((bool)$value);
                     if($value){
                         $this->field['deletedon'] = time() + $this->modxConfig('server_offset_time');
@@ -225,8 +218,7 @@ class modResource extends MODxAPI
                         $this->field['deletedon'] = 0;
                     }
                     break;
-                }
-                case 'deletedon':{
+                case 'deletedon':
                     $value = $this->getTime($value);
                     if($value > 0 && time() + $this->modxConfig('server_offset_time') < $value){
                         $value = 0;
@@ -235,19 +227,16 @@ class modResource extends MODxAPI
                         $this->field['deleted'] = 1;
                     }
                     break;
-                }
                 case 'editedon':
-                case 'createdon':{
+                case 'createdon':
                     $value = $this->getTime($value);
                     break;
-                }
                 case 'publishedby':
                 case 'editedby':
                 case 'createdby':
-                case 'deletedby':{
+                case 'deletedby':
                     $value = $this->getUser($value, $this->default_field[$key]);
                     break;
-                }
             }
             $this->field[$key] = $value;
         }
@@ -359,36 +348,26 @@ class modResource extends MODxAPI
                 if($tmp == $value){
                     switch ($key) {
                         case 'cacheable':
-                        {
                             $value = $this->modxConfig('cache_default');
                             break;
-                        }
                         case 'template':
-                        {
                             $value = $value = $this->modxConfig('default_template');
                             break;
-                        }
                         case 'published':
-                        {
                             $value = $this->modxConfig('publish_default');
                             break;
-                        }
                         case 'searchable':
-                        {
                             $value = $this->modxConfig('search_default');
                             break;
-                        }
                         case 'donthit':
-                        {
                             $value = $this->modxConfig('track_visitors');
                             break;
-                        }
                     }
                 }
                 $this->field[$key] = $value;
             }
             switch(true){
-                case $key == 'parent':{
+                case $key == 'parent':
                     $parent = (int)$this->get($key);
                     $q = $this->query("SELECT count(`id`) FROM {$this->makeTable('site_content')} WHERE `id`='{$parent}'");
                     if($this->modx->db->getValue($q)!=1){
@@ -397,14 +376,11 @@ class modResource extends MODxAPI
                     $this->field[$key] = $parent;
                     $this->Uset($key);
                     break;
-                }
-                case ($key == 'alias_visible' && !$this->checkVersion('1.0.10', true)):{
+                case ($key == 'alias_visible' && !$this->checkVersion('1.0.10', true)):
                     $this->eraseField('alias_visible');
                     break;
-                }
-                default:{
+                default:
                     $this->Uset($key);
-                }
             }
             unset($fld[$key]);
         }
@@ -429,14 +405,14 @@ class modResource extends MODxAPI
         foreach ($fld as $key => $value) {
             if (empty($this->tv[$key])) continue;
             if ($value === '') {
-                $result = $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}'");
+                $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}'");
             } else {
                 $value = $this->escape($value);
                 $result = $this->query("SELECT `value` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}'");
                 if ($this->modx->db->getRecordCount($result) > 0) {
-                    $result = $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
+                    $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
                 } else {
-                    $result = $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
+                    $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
                 }
             }
         }
@@ -455,14 +431,10 @@ class modResource extends MODxAPI
     public function toTrash($ids){
         $ignore = $this->systemID();
         $_ids = $this->cleanIDs($ids, ',', $ignore);
-        try {
-            if (is_array($_ids) && $_ids != array()) {
-                $id = $this->sanitarIn($_ids);
-                $this->query("UPDATE {$this->makeTable('site_content')} SET `deleted`='1' WHERE `id` IN ({$id})");
-            } else throw new Exception('Invalid IDs list for mark trash: <pre>' . print_r($ids, 1) . '</pre> please, check ignore list: <pre>' . print_r($ignore, 1) . '</pre>');
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+        if (is_array($_ids) && $_ids != array()) {
+        	$id = $this->sanitarIn($_ids);
+            $this->query("UPDATE {$this->makeTable('site_content')} SET `deleted`='1' WHERE `id` IN ({$id})");
+		} else throw new Exception('Invalid IDs list for mark trash: <pre>' . print_r($ids, 1) . '</pre> please, check ignore list: <pre>' . print_r($ignore, 1) . '</pre>');
         return $this;
     }
     public function clearTrash($fire_events = null){
@@ -492,24 +464,20 @@ class modResource extends MODxAPI
     {
         $ignore = $this->systemID();
         $_ids = $this->cleanIDs($ids, ',', $ignore);
-        try {
-            if (is_array($_ids) && $_ids != array()) {
-                $this->invokeEvent('OnBeforeEmptyTrash', array(
-                    "ids" => $_ids
-                ), $fire_events);
+        if (is_array($_ids) && $_ids != array()) {
+        	$this->invokeEvent('OnBeforeEmptyTrash', array(
+            	"ids" => $_ids
+			), $fire_events);
 
-                $id = $this->sanitarIn($_ids);
-                if(!empty($id)){
-                    $this->query("DELETE from {$this->makeTable('site_content')} where `id` IN ({$id})");
-                    $this->query("DELETE from {$this->makeTable('site_tmplvar_contentvalues')} where `contentid` IN ({$id})");
-                    $this->invokeEvent('OnEmptyTrash', array(
-                        "ids" => $_ids
-                    ), $fire_events);
-                }
-            } else throw new Exception('Invalid IDs list for delete: <pre>' . print_r($ids, 1) . '</pre> please, check ignore list: <pre>' . print_r($ignore, 1) . '</pre>');
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+			$id = $this->sanitarIn($_ids);
+			if(!empty($id)){
+				$this->query("DELETE from {$this->makeTable('site_content')} where `id` IN ({$id})");
+				$this->query("DELETE from {$this->makeTable('site_tmplvar_contentvalues')} where `contentid` IN ({$id})");
+				$this->invokeEvent('OnEmptyTrash', array(
+					"ids" => $_ids
+				), $fire_events);
+			}
+		} else throw new Exception('Invalid IDs list for delete: <pre>' . print_r($ids, 1) . '</pre> please, check ignore list: <pre>' . print_r($ignore, 1) . '</pre>');
 
         return $this;
     }
@@ -536,7 +504,6 @@ class modResource extends MODxAPI
     {
         $alias = strtolower($alias);
         if ($this->modxConfig('friendly_urls')) {
-            $flag = false;
             $_alias = $this->escape($alias);
             if ((!$this->modxConfig('allow_duplicate_alias') && !$this->modxConfig('use_alias_path')) || ($this->modxConfig('allow_duplicate_alias') && $this->modxConfig('use_alias_path'))) {
                 $flag = $this->modx->db->getValue($this->query("SELECT `id` FROM {$this->makeTable('site_content')} WHERE `alias`='{$_alias}' AND `parent`={$this->get('parent')} LIMIT 1"));
@@ -580,7 +547,7 @@ class modResource extends MODxAPI
     protected function loadTVTemplate(){
         $q = $this->query("SELECT `tmplvarid`, `templateid` FROM ".$this->makeTable('site_tmplvar_templates'));
         $q = $this->modx->db->makeArray($q);
-        $this->tpl = array();
+        $this->tvTpl = array();
         foreach($q as $item){
             $this->tvTpl[$item['templateid']][] = $item['tmplvarid'];
         }
@@ -604,17 +571,14 @@ class modResource extends MODxAPI
     public function setTemplate($tpl)
     {
         if (!is_numeric($tpl) || $tpl != (int)$tpl) {
-            try {
-                if (is_scalar($tpl)) {
-                    $sql = "SELECT `id` FROM {$this->makeTable('site_templates')} WHERE `templatename` = '".$this->escape($tpl)."'";
-                    $rs = $this->query($sql);
-                    if (!$rs || $this->modx->db->getRecordCount($rs) <= 0) throw new Exception("Template {$tpl} is not exists");
-                    $tpl = $this->modx->db->getValue($rs);
-                } else throw new Exception("Invalid template name: " . print_r($tpl, 1));
-            } catch (Exception $e) {
-                $tpl = 0;
-                die($e->getMessage());
-            }
+            if (is_scalar($tpl)) {
+            	$sql = "SELECT `id` FROM {$this->makeTable('site_templates')} WHERE `templatename` = '".$this->escape($tpl)."'";
+				$rs = $this->query($sql);
+				if (!$rs || $this->modx->db->getRecordCount($rs) <= 0) throw new Exception("Template {$tpl} is not exists");
+				$tpl = $this->modx->db->getValue($rs);
+			} else {
+				throw new Exception("Invalid template name: " . print_r($tpl, 1));
+			}
         }
         return (int)$tpl;
     }

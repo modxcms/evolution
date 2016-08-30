@@ -1,0 +1,17 @@
+<html>
+<body>
+<div style="max-width:1100px;margin:auto;font-family:sans-serif">
+    <p><strong>WebLogin 1.1.3</strong></p>
+    <p>Allows webusers to login to protected pages in the website, supporting multiple user groups</p>
+    <p>&nbsp;</p>
+    <p><span style="text-decoration: underline;"><strong>Parameter</strong></span><br /><br /><strong>&amp;loginhomeid</strong> redirects the user to first authorized page in the list (Optional)<br />If no id was specified then the login home page id or the current document id will be used.<br /><br /><strong>&amp;logouthomeid</strong> document id to load when user logs out (Optional)<br /><br /><strong>&amp;pwdreqid</strong> document id to load after the user has submited a request for a new password (Optional)<br /><br /><strong>&amp;pwdactid</strong> document id to load when the after the user has activated their new password (Optional)<br /><br /><strong>&amp;logintext</strong> Text to be displayed inside login button (for built-in form) (Optional)&nbsp;<br /><br /><strong>&amp;logouttext</strong> Text to be displayed inside logout link (for built-in form) (Optional)&nbsp;<br /><br /><strong>&amp;tpl</strong> Chunk name or document id to as a template (Optional)&nbsp;<br /><br /><strong>&amp;focusInput</strong> Focus input-field on page load, use 0 or 1 (Optional)&nbsp;<br /><br /><br />Note - Templates design:</p>
+    <ul>
+        <li>section 1: login template</li>
+        <li>section 2: logout template</li>
+        <li>section 3: password reminder template</li>
+    </ul>
+    <p><br />See weblogin.tpl for more information<br /><br /></p>
+    <p><span style="text-decoration: underline;"><strong>Examples</strong></span><br /><br />[[WebLogin? &amp;loginhomeid=`8` &amp;logouthomeid=`1`]] <br /><br />[[WebLogin? &amp;loginhomeid=`8,18,7,5` &amp;tpl=`Login`]]</p>
+</div>
+</body>
+</html>

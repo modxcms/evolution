@@ -767,6 +767,7 @@ $_lang["role_actionok"] = 'Pokazuj ekran zakończenia zadania';
 $_lang["role_bk_manager"] = 'Użyj menedżera backup-u';
 $_lang["role_cache_refresh"] = 'Czyszczenie cache\'u witryny';
 $_lang["role_change_password"] = 'Zmienianie hasła';
+$_lang["role_change_resourcetype"] = 'Zmien Typ zasobu';
 $_lang["role_chunk_management"] = 'Zarządzanie chunkami';
 $_lang["role_config_management"] = 'Zarządzanie konfiguracją';
 $_lang["role_content_management"] = 'Zarządzanie zawartością';

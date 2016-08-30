@@ -22,13 +22,13 @@ function mm_hideEmpty($roles = '', $templates = ''){
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		$output = "//---------- mm_hideEmpty :: Begin -----\n";
 		$output .= '
-		$j(".sectionBody[id]:not(:has([name]))").each(function(){ 
+		$j(".sectionBody[id]:not(:has([name])):not(:has(iframe))").each(function(){
 			var t = $j(this);
 			var id = t.attr("id").match(/(.+)_[^_]+$/)[1];
 			$j("#"+id+"_header").hide();
 			t.hide();
 		});
-		$j(".tab-pane .tab-page:not(:has([name]))").each(function(){
+		$j(".tab-pane .tab-page:not(:has([name])):not(:has(iframe))").each(function(){
 			var t = $j(this);
 			t.hide();
 			$j(".tab-pane .tab-row .tab").eq(t.get(0).tabPage.index).hide();

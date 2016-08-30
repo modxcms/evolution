@@ -1,8 +1,9 @@
 /* common styling */
-.menu {font-family: arial, sans-serif; width:750px; position:relative; margin:0; font-size:11px; margin:2px 0 100px 0; z-index:100;}
-.menu ul li a, .menu ul li a:visited {display:block; text-decoration:none; color:#000;width:104px; height:20px; text-align:center; color:#fff; border:1px solid #fff; background:#710069; line-height:20px; font-size:11px; overflow:hidden;}
-.menu ul {padding:0; margin:0;list-style-type: none; }
-.menu ul li {float:left; margin-right:1px; position:relative;}
+.menu {width:750px; position:relative; margin:0; z-index:100;}
+.menu ul li a, .menu ul li a:visited, .menu ul li a:link {display:block; text-decoration:none; color:#000;width:104px; height:20px; text-align:center; color:#fff;  background:#710069; line-height:20px; overflow:hidden;}
+.menu ul, .menu ul li {padding:0; margin:0;}
+.menu ul {list-style-type: none; }
+.menu ul li {float:left; position:relative;}
 .menu ul li ul {display: none;}
 
 /* specific to non IE browsers */

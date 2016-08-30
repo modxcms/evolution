@@ -76,7 +76,7 @@ class APIhelpers
     public static function emailValidate($email, $dns = true)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            list($user, $domain) = explode("@", $email, 2);
+            list(,$domain) = explode("@", $email, 2);
             if (!$dns || ($dns && checkdnsrr($domain, "MX") && checkdnsrr($domain, "A"))) {
                 $error = false;
             } else {
@@ -125,24 +125,16 @@ class APIhelpers
         for ($i = $len; $i > 0; $i--) {
             switch ($data[rand(0, ($opt - 1))]) {
                 case 'A':
-                {
-                    $tmp = rand(65, 90);
+                	$tmp = rand(65, 90);
                     break;
-                }
                 case 'a':
-                {
                     $tmp = rand(97, 122);
                     break;
-                }
                 case '0':
-                {
                     $tmp = rand(48, 57);
                     break;
-                }
                 default:
-                    {
                     $tmp = rand(33, 126);
-                    }
             }
             $pass[] = chr($tmp);
         }
@@ -152,7 +144,6 @@ class APIhelpers
 
     private function _getEnv($data)
     {
-        $out = false;
         switch (true) {
             case (isset($_SERVER[$data])):
                 $out = $_SERVER[$data];
@@ -179,13 +170,13 @@ class APIhelpers
      * @category   validate
      * @version   0.1
      * @license    GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
-     * @param string $out IP адрес который будет отдан функцией, если больше ничего не обнаружено
+     * @param string $default IP адрес который будет отдан функцией, если больше ничего не обнаружено
      * @return string IP пользователя
      * @author Agel_Nash <Agel_Nash@xaker.ru>
      *
      * @see http://stackoverflow.com/questions/5036443/php-how-to-block-proxies-from-my-site
      */
-    public static function getUserIP($out = '127.0.0.1')
+    public static function getUserIP($default = '127.0.0.1')
     {
         //Порядок условий зависит от приоритетов
         switch (true) {
@@ -218,7 +209,7 @@ class APIhelpers
         }
         unset($tmp);
 
-        return (false !== $out && preg_match('|^(?:[0-9]{1,3}\.){3,3}[0-9]{1,3}$|', $out, $matches)) ? $out : false;
+        return (false !== $out && preg_match('|^(?:[0-9]{1,3}\.){3,3}[0-9]{1,3}$|', $out, $matches)) ? $out : $default;
     }
 
     public static function sanitarTag($data, $charset = 'UTF-8', $chars = array(
@@ -227,43 +218,40 @@ class APIhelpers
         '`' => '&#96;', '%60' => '&#96;'
     )){
         switch(true){
-            case is_scalar($data):{
+            case is_scalar($data):
                 $out = str_replace(
                     array_keys($chars),
                     array_values($chars),
                     is_null($charset) ? $data : self::e($data, $charset)
                 );
                 break;
-            }
-            case is_array($data):{
+            case is_array($data):
                 $out = $data;
                 foreach($out as $key => &$val){
                     $val = self::sanitarTag($val, $charset, $chars);
                 }
                 break;
-            }
-            default:{
+            default:
                 $out = '';
-            }
         }
         return $out;
     }
 
     public static function e($text, $charset = 'UTF-8'){
-        return is_scalar($text) ? htmlspecialchars($text, ENT_COMPAT, $charset, false) : '';
+        return is_scalar($text) ? htmlspecialchars($text, ENT_QUOTES, $charset, false) : '';
     }
     /**
      * Проверка строки на наличе запрещенных символов
      * Проверка конечно круто, но валидация русских символов в строке порой завершается не удачей по разным причинам
      * (начиная от кривых настроек сервера и заканчивая кривыми настройками кодировки на сайте)
      *
-     * @param $value Проверяемая строка
+     * @param string $value Проверяемая строка
      * @param int $minLen Минимальная длина строки
      * @param array $alph Разрешенные алфавиты
      * @param array $mixArray Примесь символов, которые так же могут использоваться в строке
      * @return bool
      */
-    public static function checkString($value, $minLen = 1, $alph = array(), $mixArray = array(), $debug = false)
+    public static function checkString($value, $minLen = 1, $alph = array(), $mixArray = array())
     {
         $flag = true;
         $len = mb_strlen($value, 'UTF-8');
@@ -275,16 +263,13 @@ class APIhelpers
                 $item = strtolower($item);
                 switch ($item) {
                     case 'rus':
-                    {
                         $data = array_merge($data, array(
                             'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й',
                             'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф',
                             'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'
                         ));
                         break;
-                    }
                     case 'num':
-                    {
                         $tmp = range('0', '9');
                         foreach ($tmp as $t) {
                             $data[] = (string)$t;
@@ -294,9 +279,7 @@ class APIhelpers
                             '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
                         ));*/
                         break;
-                    }
                     case 'eng':
-                    {
                         $data = array_merge($data, range('A', 'Z'));
                         /*$data = array_merge($data, array(
                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
@@ -304,7 +287,6 @@ class APIhelpers
                             'W', 'X', 'Y', 'Z'
                         ));*/
                         break;
-                    }
                 }
             }
             for ($i = 0; $i < $len; $i++) {
@@ -343,16 +325,14 @@ class APIhelpers
                 $key = $InsertPrefix . $key;
                 $val = null;
                 switch(true){
-                    case is_scalar($item):{
+                    case is_scalar($item):
                         $val = $item;
                         break;
-                    }
-                    case is_array($item):{
+                    case is_array($item):
                         $val = self::renameKeyArr($item, $key.$sep, $InsertSuffix, '', $sep);
                         $out = array_merge($out, $val);
                         $val = '';
                         break;
-                    }
                 }
                 $out[$key . $InsertSuffix] = $val;
             }

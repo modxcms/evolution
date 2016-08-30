@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'View action completed screen';
 $_lang["role_bk_manager"] = 'Use the Backup Manager';
 $_lang["role_cache_refresh"] = 'Empty the site\'s cache';
 $_lang["role_change_password"] = 'שנה סיסמה';
+$_lang["role_change_resourcetype"] = 'סוג משאב שינוי';
 $_lang["role_chunk_management"] = 'ניהול מיני תבניות';
 $_lang["role_config_management"] = 'ניהול הגדרות';
 $_lang["role_content_management"] = 'ניהול תכנים';

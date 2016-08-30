@@ -84,11 +84,6 @@ class DLdebug
     }
 
 
-    public function critical($message, $title = '')
-    {
-        //@TODO: dump $_SERVER/$_POST/$_GET/$_COOKIE
-    }
-
     public function info($message, $title = '')
     {
         $this->_sendLogEvent(1, $message, $title);
@@ -130,18 +125,15 @@ class DLdebug
                     foreach($item['msg'] as $title => $msg){
                         $format = isset($item['format'][$i]) ? $item['format'][$i] : null;
                         switch($format){
-                            case 'sql':{
+                            case 'sql':
                                 $msg = $this->dumpData(Formatter\SqlFormatter::format($msg), '', null);
                                 break;
-                            }
-                            case 'html':{
+                            case 'html':
                                 $msg = is_numeric($msg) ? $msg : $this->dumpData(Formatter\HtmlFormatter::format($msg), '', null);
                                 break;
-                            }
-                            default:{
+                            default:
                                 $msg = $this->dumpData($msg);
                                 break;
-                            }
                         }
                         if(!empty($title) && !is_numeric($title)){
                             $message .= $this->DocLister->parseChunk('@CODE:<strong>[+title+]</strong>: [+msg+]<br />', compact('msg', 'title'));

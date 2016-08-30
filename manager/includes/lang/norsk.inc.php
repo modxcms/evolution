@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Vis \'Handling utført\'-siden';
 $_lang["role_bk_manager"] = 'Bruke håndtereren for sikkerhetskopierng';
 $_lang["role_cache_refresh"] = 'Tøm webplassens cache';
 $_lang["role_change_password"] = 'Bytt passord';
+$_lang["role_change_resourcetype"] = 'Endre ressurstype';
 $_lang["role_chunk_management"] = 'Chunk management';
 $_lang["role_config_management"] = 'Konfigurasjonshåndtering';
 $_lang["role_content_management"] = 'Innholdshåndtering';

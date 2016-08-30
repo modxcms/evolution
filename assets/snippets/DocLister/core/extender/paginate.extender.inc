@@ -10,7 +10,7 @@ if (!defined('MODX_BASE_PATH')) {
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  * @see http://mis-algoritmos.com/2007/05/27/digg-style-pagination-class
-*/
+ */
 include_once(MODX_BASE_PATH . "assets/snippets/DocLister/lib/DLpaginate.class.php");
 
 class paginate_DL_Extender extends extDocLister
@@ -32,22 +32,20 @@ class paginate_DL_Extender extends extDocLister
         $pages = 0;
         $display = $this->DocLister->getCFGDef('display', 0);
         switch ($paginate) {
-            case 'offset': {
+            case 'offset':
                 $requestName = $this->getRequestName('start');
                 $start = (isset($_GET[$requestName]) && intval($_GET[$requestName]) > 1) ? intval($_GET[$requestName]) : 0;
                 $this->_pages['current'] = ceil($start / $display) + 1;
                 $this->DocLister->setConfig(array('start' => $start));
                 break;
-            }
             case 'pages':
-            default: {
+            default:
                 $paginate = 'pages';
                 $requestName = $this->getRequestName('page');
                 $start = (isset($_GET[$requestName]) && intval($_GET[$requestName]) > 1) ? (intval($_GET[$requestName]) - 1) : 0;
                 $this->_pages['current'] = $start + 1;
                 $this->DocLister->setConfig(array('start' => $start * $display));
                 break;
-            }
         }
 
         $pages = $this->getListPages($paginate, 'total');
@@ -116,14 +114,20 @@ class paginate_DL_Extender extends extDocLister
         $p = new DLpaginate;
         $p->nextT = $this->DocLister->getChunkByParam('TplNextP', '@CODE: <a href="[+link+]">[%paginate.next%] ></a>');
         $p->prevT = $this->DocLister->getChunkByParam('TplPrevP', '@CODE: <a href="[+link+]">< [%paginate.prev%]</a>');
+        $p->firstT = $this->DocLister->getChunkByParam('TplFirstP', '@CODE: <a href="[+link+]"><< [%paginate.first%]</a>');
+        $p->lastT = $this->DocLister->getChunkByParam('TplLastP', '@CODE: <a href="[+link+]">[%paginate.last%] >></a>');
         $p->numberT = $this->DocLister->getChunkByParam('TplPage', '@CODE: <a href="[+link+]" class="page">[+num+]</a>');
         $p->currentT = $this->DocLister->getChunkByParam('TplCurrentPage', '@CODE: <b class="current">[+num+]</b>');
         $p->dotsT = $this->DocLister->getChunkByParam('TplDotsPage', '@CODE: ...');
         $p->prevI = '';
         $p->nextI = '';
+        $p->firstI = '';
+        $p->lastI = '';
         if ($this->DocLister->getCFGDef("PrevNextAlwaysShow", 0) == '1') {
             $p->nextI = $this->DocLister->getChunkByParam('TplNextI', '@CODE: [%paginate.next%] >');
             $p->prevI = $this->DocLister->getChunkByParam('TplPrevI', '@CODE: < [%paginate.prev%]');
+            $p->firstI = $this->DocLister->getChunkByParam('TplFirstI', '@CODE: << [%paginate.first%]');
+            $p->lastI = $this->DocLister->getChunkByParam('TplLastI', '@CODE: >> [%paginate.last%]');
         }
         $p->changeClass($this->DocLister->getCFGDef('PaginateClass', $p->className));
         $p->mainTpl = $this->DocLister->getChunkByParam('TplWrapPaginate', '@CODE: <div class="[+class+]">[+wrap+]</div>');
@@ -134,16 +138,14 @@ class paginate_DL_Extender extends extDocLister
         $p->currentPage($this->currentPage());
 
         switch (true) {
-            case ($mode == 'offset' && $this->totalPage() > 1): {
+            case ($mode == 'offset' && $this->totalPage() > 1):
                 $p->setMode('offset', array(
                     'display' => $this->DocLister->getCFGDef('display', 0)
                 ))->parameterName($this->getRequestName('start'));
                 break;
-            }
-            case ($mode == 'pages' && $this->totalPage() > 1):{
+            case ($mode == 'pages' && $this->totalPage() > 1):
                 $p->parameterName($this->getRequestName('page'));
                 break;
-            }
         }
         return $p->getOutput();
     }
@@ -155,15 +157,13 @@ class paginate_DL_Extender extends extDocLister
         parse_str(html_entity_decode($params), $params);
         if ($requestName == '') {
             switch ($this->DocLister->getCFGDef('paginate', '')) {
-                case 'offset': {
+                case 'offset':
                     $requestName = 'start';
                     break;
-                }
                 case 'pages':
-                default: {
+                default:
                     $requestName = 'page';
                     break;
-                }
             }
         }
         if ($requestName != '' && is_array($params)) {

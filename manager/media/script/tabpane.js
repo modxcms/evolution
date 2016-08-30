@@ -51,22 +51,9 @@ function hasSupport() {
 	if (typeof hasSupport.support != "undefined")
 		return hasSupport.support;
 	
-	var ie55 = /msie 5\.[56789]/i.test( navigator.userAgent );
-	
 	hasSupport.support = ( typeof document.implementation != "undefined" &&
-			document.implementation.hasFeature( "html", "1.0" ) || ie55 )
+			document.implementation.hasFeature( "html", "1.0" ) )
 			
-	// IE55 has a serious DOM1 bug... Patch it!
-	if ( ie55 ) {
-		document._getElementsByTagName = document.getElementsByTagName;
-		document.getElementsByTagName = function ( sTagName ) {
-			if ( sTagName == "*" )
-				return document.all;
-			else
-				return document._getElementsByTagName( sTagName );
-		};
-	}
-
 	return hasSupport.support;
 }
 
@@ -153,7 +140,7 @@ WebFXTabPane.prototype.addTabPage = function ( oElement, callBackFnc) { // modif
 	
 WebFXTabPane.prototype.dispose = function () {
 	this.element.tabPane = null;
-	this.element = null;		
+	this.element = null;
 	this.tabRow = null;
 	
 	for (var i = 0; i < this.pages.length; i++) {
@@ -313,7 +300,7 @@ function setupAllTabs() {
 		// unitiated tab page wit a valid tab pane parent
 		else if ( tabPageRe.test( cn ) && !el.tabPage &&
 					tabPaneRe.test( el.parentNode.className ) ) {
-			el.parentNode.tabPane.addTabPage( el );			
+			el.parentNode.tabPane.addTabPage( el );
 		}
 	}
 }

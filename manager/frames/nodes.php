@@ -20,15 +20,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     $theme = $manager_theme ? "$manager_theme/":"";
 
     // setup sorting
-    if(isset($_REQUEST['tree_sortby'])) {
-        $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
-    }
-    if(isset($_REQUEST['tree_sortdir'])) {
-        $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-    }
+    $sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
+    foreach($sortParams as $param)
+        if(isset($_REQUEST[$param])) { $_SESSION[$param] = $_REQUEST[$param]; $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]); }
 
     // icons by content type
-
     $icons = array(
         'application/rss+xml' => $_style["tree_page_rss"],
         'application/pdf' => $_style["tree_page_pdf"],
@@ -89,18 +85,33 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $spacer .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         }
 
-    if (!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
-        // This is the first startup, set default sort order
-        $_SESSION['tree_sortby'] = 'menuindex';
-        $_SESSION['tree_sortdir'] = 'ASC';
-    }
-    $orderby = $modx->db->escape($_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir']);
+        // manage order-by
+        if (!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
+            // This is the first startup, set default sort order
+            $_SESSION['tree_sortby'] = 'menuindex';
+            $_SESSION['tree_sortdir'] = 'ASC';
+        }
+
+        switch($_SESSION['tree_sortby']) {
+            case 'createdon':
+            case 'editedon':
+            case 'publishedon':
+            case 'pub_date':
+            case 'unpub_date':
+                $sortby = 'CASE WHEN '.$_SESSION['tree_sortby'].' IS NULL THEN 1 ELSE 0 END, '.$_SESSION['tree_sortby'];
+                break;
+            default:
+                $sortby = $_SESSION['tree_sortby'];
+        };
+
+        $orderby = $modx->db->escape($sortby." ".$_SESSION['tree_sortdir']);
 
     // Folder sorting gets special setup ;) Add menuindex and pagetitle
     if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');
+        $tblst = $modx->getFullTableName('site_templates');
         // get document groups for current user
         $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
         $showProtected= false;
@@ -115,9 +126,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = '';
         }
         $result = $modx->db->select(
-			"DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, template, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+			"DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
 				MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access",
-			"{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"{$tblsc} AS sc
+			 LEFT JOIN {$tbldg} dg on dg.document = sc.id
+			 LEFT JOIN {$tblst} st on st.id = sc.template",
 			"(parent={$parent}) {$access} GROUP BY sc.id",
 			$orderby
 			);
@@ -128,9 +141,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         // Make sure to pass in the $modx_textdir variable to the node builder
         global $modx_textdir;
 
-        $node_name_source = $modx->config['resource_tree_node_name'];
-        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$template,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
+        $node_name_source = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
+        while(list($id,$pagetitle,$longtitle,$menutitle,$parent,$isfolder,$published,$pub_date,$unpub_date,$richtext,$searchable,$cacheable,$deleted,$type,$template,$templatename,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
+            $dateNode = false;
             switch($node_name_source)
             {
                 case 'menutitle':
@@ -148,11 +162,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 case 'pagetitle':
                     $nodetitle = $pagetitle;
                     break;
+                case 'longtitle':
+                    $nodetitle = $longtitle;
+                    break;
                 case 'createdon':
                 case 'editedon':
                 case 'publishedon':
                 case 'pub_date':
                 case 'unpub_date':
+                    $dateNode = true;
                     $doc = $modx->getDocumentObject('id',$id);
                     $date = $doc[$node_name_source];
                     if(!empty($date)) $nodetitle = $modx->toDateFormat($date);
@@ -170,14 +188,22 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
             $url = $modx->makeUrl($id);
 
-            $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": -";
-            $alt.= " ".$_lang['resource_opt_menu_index'].": ".$menuindex;
-            $alt.= " ".$_lang['resource_opt_show_menu'].": ".($hidemenu==1 ? $_lang['no']:$_lang['yes']);
-            $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
-            $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
+            $alt = $dateNode == true ? $_lang["pagetitle"].": ".$pagetitle."[+lf+]" : "";
+            $alt.= $_lang['resource_opt_menu_title'].": ".$menutitle;
+            $alt.= "[+lf+]".$_lang['resource_opt_menu_index'].": ".$menuindex;
+            $alt.= "[+lf+]".$_lang['alias'].": ".(!empty($alias) ? $alias : "-");
+            $alt.= "[+lf+]".$_lang['template'].": ".$templatename;
+            $alt.= "[+lf+]".$_lang['publish_date'].": ".$modx->toDateFormat($pub_date);
+            $alt.= "[+lf+]".$_lang['unpublish_date'].": ".$modx->toDateFormat($unpub_date);
+            $alt.= "[+lf+]".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
+            $alt.= "[+lf+]".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
+            $alt.= "[+lf+]".$_lang['resource_opt_richtext'].": ".($richtext==0 ? $_lang['no']:$_lang['yes']);
+            $alt.= "[+lf+]".$_lang['page_data_searchable'].": ".($searchable==0 ? $_lang['no']:$_lang['yes']);
+            $alt.= "[+lf+]".$_lang['page_data_cacheable'].": ".($cacheable==0 ? $_lang['no']:$_lang['yes']);
             $alt = $modx->htmlspecialchars($alt);
+            $alt = str_replace('[+lf+]', ' &#13;', $alt);   // replace line-breaks with empty space as fall-back
 
-            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,
+            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'longtitle' => $longtitle, 'menutitle' => $menutitle,'parent' =>$parent,
                 'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,
                 'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,
                 'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template,

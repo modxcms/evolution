@@ -763,6 +763,7 @@ $_lang["role_actionok"] = 'Visa "Åtgärd utförd"-sidan';
 $_lang["role_bk_manager"] = 'Använda hanteraren för säkerhetskopiering';
 $_lang["role_cache_refresh"] = 'Tömma webbplatsens cache';
 $_lang["role_change_password"] = 'Byta lösenord';
+$_lang["role_change_resourcetype"] = 'Förändring resurstyp';
 $_lang["role_chunk_management"] = 'Chunk-hantering';
 $_lang["role_config_management"] = 'Konfigurationshantering';
 $_lang["role_content_management"] = 'Innehållshantering';

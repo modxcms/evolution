@@ -1,10 +1,24 @@
 <?php
+/**
+ * ListIndexer
+ *
+ * A flexible way to show the most recent Resources and other Resource lists
+ *
+ * @category  snippet
+ * @version   1.1.0
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal  @properties
+ * @internal  @modx_category Navigation
+ * @internal  @installset base
+ * @documentation Inside snippet-code with ability to set custom default-values
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Derived from ListIndex 0.6j by jaredc@honeydewdesign.com
+ * @author      1.1.0 Refactored from ListIndexer 1.0.1 by Dmi3yy on 11.08.2013
+ * @author      Since 2013: Yama, Segr, Jako
+ * @lastupdate  25/02/2016
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-// added in 1.0.1: hidePrivate (hide items from unauthorized users)
-//
-// Derived from ListIndex 0.6j by jaredc@honeydewdesign.com
-// Now supports Show In Menu
-//
+
 // This snippet was designed to be a VERY flexible way
 // of showing what has been recently added. You can use
 // this snippet to show news from one folder, or what has

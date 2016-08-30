@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Ver la pantalla de acción completada';
 $_lang["role_bk_manager"] = 'Usar el Administrador de Respaldo';
 $_lang["role_cache_refresh"] = 'Vaciar la cache del sitio';
 $_lang["role_change_password"] = 'Cambiar la contraseña';
+$_lang["role_change_resourcetype"] = 'Cambio del tipo de recurso';
 $_lang["role_chunk_management"] = 'Administración de Chunks';
 $_lang["role_config_management"] = 'Administración de la configuración';
 $_lang["role_content_management"] = 'Administración de contenido';

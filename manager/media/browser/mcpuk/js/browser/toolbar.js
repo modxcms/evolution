@@ -1,5 +1,3 @@
-<?php
-
 /** This file is part of KCFinder project
   *
   *      @desc Toolbar functionality
@@ -10,7 +8,7 @@
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
-  */?>
+  */
 
 browser.initToolbar = function() {
     $('#toolbar a').click(function() {
@@ -179,16 +177,26 @@ browser.maximize = function(button) {
             height -= 50;
         window.resizeTo(width, height);
 
-    } else if (browser.opener.TinyMCE) {
+    } else if (browser.opener.TinyMCE || browser.opener.TinyMCE4) {
         var win, ifr, id;
-
-        $('iframe', window.parent.document).each(function() {
-            if (/^mce_\d+_ifr$/.test($(this).attr('id'))) {
-                id = parseInt($(this).attr('id').replace(/^mce_(\d+)_ifr$/, "$1"));
-                win = $('#mce_' + id, window.parent.document);
-                ifr = $('#mce_' + id + '_ifr', window.parent.document);
-            }
-        });
+    
+        if(browser.opener.TinyMCE) {
+            $('iframe', window.parent.document).each(function() {
+                if (/^mce_\d+_ifr$/.test($(this).attr('id'))) {
+                    id = parseInt($(this).attr('id').replace(/^mce_(\d+)_ifr$/, "$1"));
+                    win = $('#mce_' + id, window.parent.document);
+                    ifr = $('#mce_' + id + '_ifr', window.parent.document);
+                }
+            });
+        } else {
+            $('.mce-window', window.parent.document).each(function() {
+                if (/^mceu_\d/.test($(this).attr('id'))) {
+                    id = parseInt($(this).attr('id').replace(/^mceu_(\d+)/, "$1"));
+                    win = $('#mceu_' + id, window.parent.document);
+                    ifr = $('#mceu_' + id + '-body', window.parent.document);
+                }
+            });
+        }
 
         if ($(button).hasClass('selected')) {
             $(button).removeClass('selected');
@@ -226,7 +234,6 @@ browser.maximize = function(button) {
                 height: height - browser.maximizeMCE.Vspace + 'px'
             });
         }
-
     } else if ($('iframe', window.parent.document).get(0)) {
         var ifrm = $('iframe[name="' + window.name + '"]', window.parent.document);
         var parent = ifrm.parent();

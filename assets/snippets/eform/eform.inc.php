@@ -84,7 +84,7 @@ $_dfnMaxlength = 6;
 
 
 	# load templates
-	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
+	if($tpl==$modx->documentIdentifier && $modx->documentIdentifier > 0) return $_lang['ef_is_own_id']."'$tpl'";
 
 	//required
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
@@ -368,7 +368,7 @@ $_dfnMaxlength = 6;
 							break;
 						case "file":
 							// set file name
-							if($value['type']!="" && $value['type']!=""){
+							if($value['type']!="" && $value['error']==0){
 								$value = $value["name"];
 								$patharray = explode(((strpos($value,"/")===false)? "\\":"/"), $value);
 								$value = $patharray[count($patharray)-1];

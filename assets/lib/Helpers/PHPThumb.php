@@ -1,22 +1,24 @@
-<?php
-
-namespace Helpers;
+<?php namespace Helpers;
 
 include_once(MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php');
+require_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
 
 class PHPThumb{
 
     private $thumb = null;
-    public $debugMessages = '';
+    protected $fs = null;
+	public $debugMessages = '';
 
     public function __construct()
     {
-       $this->thumb = new \phpthumb();
+       	$this->thumb = new \phpthumb();
+		$this->fs = FS::getInstance();
     }
 
     public function create($inputFile, $outputFile, $options) {
         $this->thumb->sourceFilename = $inputFile;
-        $ext = str_replace('jpeg','jpg',strtolower(array_pop(explode('.',$inputFile))));
+		$ext = explode('.',$inputFile);
+        $ext = str_replace('jpeg','jpg',strtolower(array_pop($ext)));
         $options = 'f='.$ext.'&'.$options;
         $this->setOptions($options);
         if ($this->thumb->GenerateThumbnail() && $this->thumb->RenderToFile($outputFile)) {
@@ -30,14 +32,14 @@ class PHPThumb{
     public function optimize($file, $type = 'jpg') {
         switch ($type) {
             case 'jpg':
-                $ext = strtolower(end(explode('.', $file)));
+				$ext = $this->fs->takeFileExt($file);
                 if ($ext == 'jpeg' || $ext == 'jpg') {
                     $cmd = '/usr/bin/jpegtran -optimize -progressive -copy none -outfile '.escapeshellarg($file.'_').' '.escapeshellarg($file);
                     exec($cmd, $result, $return_var);
-                    if (filesize($file) > filesize($file.'_')) {
-                        @rename($file.'_',$file);
+                    if ($this->fs->fileSize($file) > $this->fs->fileSize($file.'_')) {
+                        $this->fs->moveFile($file.'_', $file);
                     } else {
-                        @unlink($file.'_');
+                        $this->fs->unlink($file.'_');
                     }
                 }
                 break;

@@ -10,22 +10,24 @@
  * @internal	@properties
  * @internal	@modx_category Content
  * @internal    @installset base, sample
+ * @documentation Cheatsheet https://de.scribd.com/doc/55919355/MODx-Ditto-and-Reflect-Cheatsheet-v1-2
+ * @documentation Inside snippet-code
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Mark Kaplan
+ * @author      Ryan Thrash http://thrash.me
+ * @author      netProphET, Dmi3yy, bossloper
+ * @lastupdate  05/12/2008
  */
 
-
 /*
- * Author: 
- *      Mark Kaplan for MODX CMF
- * 
- * Note: 
- *      If Reflect is not retrieving its own documents, make sure that the
- *          Ditto call feeding it has all of the fields in it that you plan on
- *       calling in your Reflect template. Furthermore, Reflect will ONLY
- *          show what is currently in the Ditto result set.
- *       Thus, if pagination is on it will ONLY show that page's items.
+ *  Note: 
+ *  If Reflect is not retrieving its own documents, make sure that the
+ *  Ditto call feeding it has all of the fields in it that you plan on
+ *  calling in your Reflect template. Furthermore, Reflect will ONLY
+ *  show what is currently in the Ditto result set.
+ *  Thus, if pagination is on it will ONLY show that page's items.
 */
  
-
 // ---------------------------------------------------
 //  Includes
 // ---------------------------------------------------

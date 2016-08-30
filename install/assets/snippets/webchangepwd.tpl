@@ -5,28 +5,20 @@
  * Allows Web User to change their password from the front-end of the website
  *
  * @category 	snippet
- * @version 	1.0.1
+ * @version 	1.1.2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Login
  * @internal    @installset base
+ * @documentation [+site_url+]assets/snippets/weblogin/docs/webchangepwd.html
+ * @documentation http://www.opensourcecms.com/news/details.php?newsid=660
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Created By Raymond Irving April, 2005
+ * @author      Ryan Thrash http://thrash.me
+ * @author      Jason Coward http://opengeek.com
+ * @author      Shaun McCormick, garryn, Dmi3yy
+ * @lastupdate  09/02/2016
  */
-
-
-# Created By Raymond Irving April, 2005
-#::::::::::::::::::::::::::::::::::::::::
-# Params:	
-#
-#	&tpl			- (Optional)
-#		Chunk name or document id to use as a template
-#				  
-#	Note: Templats design:
-#			section 1: change pwd template
-#			section 2: notification template 
-#
-# Examples:
-#
-#	[[WebChangePwd? &tpl=`ChangePwd`]] 
 
 # Set Snippet Paths 
 $snipPath  = (($modx->isBackend())? "../":"");

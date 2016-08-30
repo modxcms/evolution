@@ -14,7 +14,6 @@ class DocManagerFrontend {
     	$this->renderTemplates();
     	$this->renderTemplateVars();
     	$this->renderDocGroups();
-    	$this->renderSort();
     	$this->renderMisc();
     	$this->renderChangeAuthors();
     	$this->renderDocumentSelect();
@@ -78,9 +77,6 @@ class DocManagerFrontend {
 		$this->dm->ph['view.documents'] = $this->dm->parseTemplate('documents.tpl', $this->dm->ph);
 	}
 	
-	function renderSort() {
-		$this->dm->ph['view.sort'] = $this->dm->parseTemplate('sort.tpl', $this->dm->ph);
-	}
 	
 	function renderMisc() {
 		$this->dm->ph['view.misc'] = $this->dm->parseTemplate('misc.tpl', $this->dm->ph);

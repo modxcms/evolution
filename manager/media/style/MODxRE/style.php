@@ -11,17 +11,20 @@
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 
 // Tree Menu Toolbar
-$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px;height:16px" />';
-$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px;height:16px" />';
-$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px;height:16px" />';
-$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px;height:16px" />';
-$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px;height:16px" />';
-$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px;height:16px" />';
+$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px; height:16px" />';
+$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px; height:16px" />';
+$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px; height:16px" />';
+$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px; height:16px" />';
+$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px; height:16px" />';
+$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px; height:16px" />';
 $_style['show_tree']                = $style_path.'icons/application_side_expand.png';
-$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px;height:16px" />';
-
+$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px; height:16px" />';
+$_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px; height:16px" />';
+$_style['element_management']       = '<img src="'.$style_path.'icons/brick.png" style="width:16px; height:16px" />';
+$_style['images_management']        = '<img src="'.$style_path.'icons/camera.png" style="width:16px; height:16px" />';
+$_style['files_management']         = '<img src="'.$style_path.'icons/files.png" style="width:16px; height:16px" />';
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
@@ -91,6 +94,7 @@ $_style['icons_publish_document']   = $style_path.'icons/clock_play.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
+$_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
 $_style['icons_table']              = $style_path.'icons/table.gif'; 
 $_style['icons_undelete_resource']  = $style_path.'icons/b092.gif';
 $_style['icons_unpublish_resource'] = $style_path.'icons/clock_stop.png';
@@ -116,6 +120,7 @@ $_style['icons_modules_large']      = $style_path.'icons/modules.gif';
 $_style['icons_resources_large']    = $style_path.'icons/resources.gif';
 $_style['icons_security_large']     = $style_path.'icons/security.gif';
 $_style['icons_webusers_large']     = $style_path.'icons/web_users.gif';
+$_style['icons_help_large']         = $style_path.'icons/help.png';
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';

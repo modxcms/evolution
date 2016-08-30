@@ -1,10 +1,11 @@
 <?php
 	// DISPLAY FORM ELEMENTS
-	function renderFormElement($field_type, $field_id, $default_text='', $field_elements = '', $field_value='', $field_style='', $row = array()) {
+	function renderFormElement($field_type, $field_id, $default_text='', $field_elements = '', $field_value='', $field_style='', $row = array(), $tvsArray = array()) {
 		global $modx;
 		global $_style;
 		global $_lang;
 		global $content;
+		global $which_browser;
 
 		if(substr($default_text, 0, 6) === '@@EVAL' && $field_value===$default_text) {
 	     	$eval_str = trim(substr($default_text, 7));
@@ -42,16 +43,10 @@
 					$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
 					$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="'.$_style["icons_cal_nodate"].'" border="0" alt="No date" /></a>';
 
-					$field_html .=  '<script type="text/javascript">';
-					$field_html .=  '	window.addEvent(\'domready\', function() {';
-					$field_html .=  '	  	new DatePicker($(\'tv'.$field_id.'\'), {\'dayNames\' : '.$_lang['dp_dayNames'] . ', \'startDay\' : ' .$_lang['dp_startDay'] . ', \'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
-					$field_html .=  '});';
-					$field_html .=  '</script>';
-
 					break;
 				case "dropdown": // handler for select boxes
 					$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" size="1" onchange="documentDirty=true;">';
-					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
+					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform',$tvsArray));
 					while (list($item, $itemvalue) = each ($index_list))
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -62,7 +57,7 @@
 					break;
 				case "listbox": // handler for select boxes
 					$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="8">';	
-					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
+					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform',$tvsArray));
 					while (list($item, $itemvalue) = each ($index_list))
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -74,7 +69,7 @@
 				case "listbox-multiple": // handler for select boxes where you can choose multiple items
 					$field_value = explode("||",$field_value);
 					$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
-					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
+					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform',$tvsArray));
 					while (list($item, $itemvalue) = each ($index_list))
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -98,24 +93,24 @@
 					break;
 				case "checkbox": // handles check boxes
 					$field_value = !is_array($field_value) ? explode("||",$field_value) : $field_value;
-					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
+					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform',$tvsArray));
 					static $i=0;
 					while (list($item, $itemvalue) = each ($index_list))
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'" class="checkbox">'.$item.'</label><br />';
 						$i++;
 					}
 					break;
 				case "option": // handles radio buttons
-					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
+					$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform',$tvsArray));
 					static $i=0;
 					while (list($item, $itemvalue) = each ($index_list))
 					{
 						list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 						if (strlen($itemvalue)==0) $itemvalue = $item;
-						$field_html .=  '<input type="radio" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+						$field_html .=  '<input type="radio" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" /><label for="tv_'.$i.'" class="radio">'.$item.'</label><br />';
 						$i++;
 					}
 					break;
@@ -145,13 +140,13 @@
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {
@@ -215,13 +210,13 @@
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=images', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.php?Type=files', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {

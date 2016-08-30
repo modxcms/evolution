@@ -585,16 +585,24 @@ a img {
 	.rtl #treeRoot div img {
 		margin: 0;
 	}
-#floater {
-	display: none;
-	position: absolute;
-	width: 200px;
-	height: 50px;
-	top: 25px;
-	left: 4px;
-	background: #fff;
+#floater{
+	display:none;
+	position:absolute;
+	top:25px;
+	left:0;
+	width:auto;
+	height:auto;
+	padding:5px 5px 5px 0;
+	background-color:#fff;
 	border-bottom: 1px solid #666;
-	z-index: 500;
+	z-index:500;
+}
+
+#floater table{
+    background:inherit;
+}
+#floater table select{
+    display:block;
 }
 	.rtl #floater {
 		right: 4px
@@ -656,6 +664,9 @@ a img {
 .disabledPlugin a {
 	color: #aaa;
 	text-decoration: line-through;
+}
+label.disabled {
+    color: #aaa;
 }
 /* -------------------------[ grid style ]--- */
 table.grid {
@@ -1094,7 +1105,6 @@ a.hometblink:hover {
 	border-style: solid;
 	border-width: 1px;
 	top: 0;
-	z-index: 3;
 }
 .dynamic-tab-pane-control .tab-row .tab.selected span {
 	color: #111;
@@ -1325,6 +1335,7 @@ ul.actionButtons {
 	-moz-box-shadow: 0 0 10px #b8c7d6;
 	box-shadow:  0 0 10px #b8c7d6;
 	-webkit-transition: -webkit-box-shadow 0.2s linear;
+	text-decoration:none !important;
 }
 .actionButtons a:active {
 	background-color: #92aac4;
@@ -1564,7 +1575,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal {
 	background-color: #fff;
-	border: 1px solid #0070bf;
+	border: 1px solid #7ca3ce;
 	position: absolute;
 	width: 177px;
 	top: 24px;
@@ -1612,6 +1623,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 .dp_cal td {
 	cursor: pointer;
+	text-align:right !important;
 }
 .dp_cal thead th {
 	background: #d9eefc;
@@ -1696,3 +1708,40 @@ optgroup {font-style:normal;}
 /*Refactor #4440*/
 table.fields {border: 0px solid #fff;}
 table.fields td {border: 0px solid #fff;}
+
+/* breadcrumbs */
+ul.breadcrumbs {
+	margin: 0 0 10px 15px;
+	padding: 0;
+	line-height: normal;
+	font-size: 0;
+}
+
+li.breadcrumbs__li {
+	list-style: none;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+a.breadcrumbs__a {
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.breadcrumbs__sep {
+	font-size: 14px;
+	margin: 0 6px;
+}
+
+li.breadcrumbs__li_current {
+	font-size: 12px;
+	font-weight: bold;
+}
+/* end breadcrumbs */
+
+/* STYLES FOR HELP */
+#helpPane h1 { font-size:20px; display:block; border-bottom:1px solid #888; margin-bottom:1em; font-weight:bold; }
+#helpPane li:not(:first-child) > strong { margin-top:1.4em; }
+#helpPane li > strong { display:block; font-size:14px; }
+#helpPane pre { font-size:12px; border:1px solid #888; padding:1em; }

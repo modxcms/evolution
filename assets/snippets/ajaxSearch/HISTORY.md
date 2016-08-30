@@ -1,5 +1,10 @@
 #Changelog:
 
+12-apr-16 (1.10.2)
+
+- Bug fixes
+- see Github 05.06.14 - 12.04.16: https://github.com/modxcms/evolution/commits/develop/assets/snippets/ajaxSearch
+
 05-jun-14 (1.10.1)
 
 - Security/Bug fixes
