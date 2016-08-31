@@ -222,6 +222,7 @@ class Wayfinder {
         $ph['wf.classes']      = $useClass;
         $ph['wf.classnames']   = $classNames;
         $ph['wf.link']         = $resource['link'];
+        $ph['url']             = $resource['link'];
         $ph['wf.title']        = !$this->_config['entityEncode'] ? $resource['title']       : $this->hsc($resource['title']);
         $ph['wf.linktext']     = !$this->_config['entityEncode'] ? $resource['linktext']    : $this->hsc($resource['linktext']);
         $ph['wf.id']           = $useId;
