@@ -83,20 +83,20 @@ $GLOBALS["dateSource"] = isset($dateSource) ? $dateSource : "createdon";
 // set tpl rss placeholders
 $placeholders['rss_date'] = array($GLOBALS["dateSource"],"rss_date");
 $placeholders['rss_pagetitle'] = array("pagetitle","rss_pagetitle");
-$placeholders['rss_author'] = array("createdby","rss_author"); 
+$placeholders['rss_author'] = array("createdby","rss_author");
 
-if(!function_exists("rss_date")) { 
+if(!function_exists("rss_date")) {
 	function rss_date($resource) {
 		global $dateSource;
 		return date("r",  intval($resource[$dateSource]) + $modx->config["server_offset_time"]);
 	}
 }
-if(!function_exists("rss_pagetitle")) { 
+if(!function_exists("rss_pagetitle")) {
 	function rss_pagetitle($resource) {
 		return htmlspecialchars(html_entity_decode($resource['pagetitle'], ENT_QUOTES));
 	}
 }
-if(!function_exists("rss_author")) { 
+if(!function_exists("rss_author")) {
 	function rss_author($resource) {
 		return htmlspecialchars(html_entity_decode(ditto::getAuthor($resource['createdby']), ENT_QUOTES));
 	}
@@ -112,26 +112,26 @@ $rss_header = <<<TPL
 <?xml version="1.0" encoding="[+rss_charset+]" ?>[+rss_xsl+]
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<channel>
-			<title>[*pagetitle*]</title>
-			<link>[(site_url)]</link>
-			<description>[*description*]</description>
-			<language>[+rss_lang+]</language>
-			<copyright>[+rss_copyright+]</copyright>
-			<ttl>[+rss_ttl+]</ttl>
+		<title>[*pagetitle*]</title>
+		<link>[(site_url)]</link>
+		<description>[*description*]</description>
+		<language>[+rss_lang+]</language>
+		<copyright>[+rss_copyright+]</copyright>
+		<ttl>[+rss_ttl+]</ttl>
 TPL;
 
 $rss_tpl = <<<TPL
 
-			<item>
-				<title>[+rss_pagetitle+]</title>
-				<link>[(site_url)][~[+id+]~]</link>
-				<description><![CDATA[ [+summary+] ]]></description>
-				<pubDate>[+rss_date+]</pubDate>
-				<guid isPermaLink="false">[(site_url)][~[+id+]~]</guid>
-				<dc:creator>[+rss_author+]</dc:creator>
-				[+tagLinks+]
-			</item>
-		
+		<item>
+			<title>[+rss_pagetitle+]</title>
+			<link>[(site_url)][~[+id+]~]</link>
+			<description><![CDATA[ [+summary+] ]]></description>
+			<pubDate>[+rss_date+]</pubDate>
+			<guid isPermaLink="false">[(site_url)][~[+id+]~]</guid>
+			<dc:creator>[+rss_author+]</dc:creator>
+			[+tagLinks+]
+		</item>
+	
 TPL;
 
 $rss_footer = <<<TPL
@@ -148,5 +148,3 @@ $footer = isset($footer) ? $footer : $rss_footer;
 
 // set emptytext
 $noResults = "      ";
-
-?>

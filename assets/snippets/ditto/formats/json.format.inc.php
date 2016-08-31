@@ -62,7 +62,7 @@ if(!function_exists("json_parameters")) {
 			$jsonArr["json_".$name] = addslashes($value);
 		}
 		$placeholders = array_merge($jsonArr,$placeholders);
-		return $placeholders;	
+		return $placeholders;
 	}
 }
 // ---------------------------------------------------
