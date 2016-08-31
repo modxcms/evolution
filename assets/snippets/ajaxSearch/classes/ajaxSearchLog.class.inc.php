@@ -39,7 +39,7 @@ class AjaxSearchLog {
     *  @access public
     *  @param string $log log parameter
     */
-    function AjaxSearchLog($log='0:0') {
+    function __construct($log='0:0') {
         global $modx;
         $this->_tbName = $modx->getFullTableName(LOG_TABLE_NAME);
         $asLog_array = explode(':', $log);

@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 if(!class_exists('ForgotManagerPassword')) {
     class ForgotManagerPassword{
-        function ForgotManagerPassword(){
+        function __construct(){
             $this->errors = array();
             $this->checkLang();
         }

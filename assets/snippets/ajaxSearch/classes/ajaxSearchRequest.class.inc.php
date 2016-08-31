@@ -33,7 +33,7 @@ class AjaxSearchRequest {
     var $dbg;
     var $pgCharset;
 
-    function AjaxSearchRequest(&$asUtil, $pgCharset) {
+    function __construct(&$asUtil, $pgCharset) {
         $this->asUtil =& $asUtil;
         $this->dbg = $asUtil->dbg;
         $this->pgCharset = $pgCharset;

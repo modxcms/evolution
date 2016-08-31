@@ -16,7 +16,7 @@
 class asPHxParser {
     var $placeholders = array();
 
-    function asPHxParser($template='',$maxpass=500) {
+    function __construct($template='',$maxpass=500) {
         global $modx;
         $this->name = "PHx";
         $this->version = "2.1.3";

@@ -38,7 +38,7 @@ class AjaxSearchCtrl {
     var $fClause;
     var $fParams = array();
 
-    function AjaxSearchCtrl() {
+    function __construct() {
     }
     function init(&$asCfg, &$asInput, &$asResults, &$asOutput, &$asUtil, &$asLog){
         // initialize the controler instance

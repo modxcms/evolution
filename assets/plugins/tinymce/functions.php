@@ -4,7 +4,7 @@ class TinyMCE
 {
 	var $params;
 	
-	function TinyMCE()
+	function __construct()
 	{
 		global $modx;
 		$this->params = $modx->event->params;

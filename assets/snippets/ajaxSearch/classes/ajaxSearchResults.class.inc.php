@@ -51,7 +51,7 @@ class AjaxSearchResults {
     *
     *  @access public
     */
-    function AjaxSearchResults() {
+    function __construct() {
     }
     /*
     *  Initializes the class into the proper context

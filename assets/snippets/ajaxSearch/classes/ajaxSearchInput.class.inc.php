@@ -33,7 +33,7 @@ class AjaxSearchInput {
     *
     * @access public
     */
-    function AjaxSearchInput() {
+    function __construct() {
     }
     /*
     * Initializes the class into the proper context

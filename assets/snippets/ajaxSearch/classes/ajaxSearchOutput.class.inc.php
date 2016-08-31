@@ -64,7 +64,7 @@ class AjaxSearchOutput {
     // private variables
     var $_needsConvert;
 
-    function AjaxSearchOutput() {
+    function __construct() {
     }
     function init(&$asCfg, &$asCtrl, &$asInput, &$asResults, &$asUtil, &$asLog, $log) {
         // initialize the output instance

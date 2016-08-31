@@ -14,7 +14,7 @@ class template{
 	// Function: template
 	// Set the class language and fields variables
 	// ---------------------------------------------------
-	function template() {
+	function __construct() {
 		$this->language = $GLOBALS["ditto_lang"];
 		$this->fields = array (
 			"db" => array (),
