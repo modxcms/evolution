@@ -7,7 +7,7 @@ class DocManager {
 	var $theme = '';
 	var $fileRegister = array();
 	
-    function DocManager(&$modx) {
+    function __construct(&$modx) {
     	$this->modx = $modx;
     }
     

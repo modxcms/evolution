@@ -31,7 +31,7 @@ class AjaxSearchConfig {
     // Some others conversions should be added if needed. Otherwise Page charset = Database charset
     var $_pageCharset = array('utf8' => 'UTF-8', 'latin1' => 'ISO-8859-1', 'latin2' => 'ISO-8859-2', 'cp1251' => 'windows-1251');
 
-    function AjaxSearchConfig($dcfg, $cfg) {
+    function __construct($dcfg, $cfg) {
         global $modx;
         $this->dbCharset = $modx->db->config['charset'];
         $this->pcreModifier = ($this->dbCharset == "utf8") ? 'iu' : 'i';

@@ -40,7 +40,7 @@ class Document{
 	  $id   - existing doc id or 0 for new doc
 	  $fields - comma delimited field list
 	************************************************/	
-	function Document($id=0,$fields="*"){
+	function __construct($id=0,$fields="*"){
 		global $modx;
 		$this->isNew = $id==0;
 		if(!$this->isNew){

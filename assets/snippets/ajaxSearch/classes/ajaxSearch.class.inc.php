@@ -50,7 +50,7 @@ class AjaxSearch {
     *
     *  @access public
     */
-    function AjaxSearch() {
+    function __construct() {
     }
     /*
     *  Run ajaxSearch

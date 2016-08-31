@@ -52,7 +52,7 @@ if (!class_exists('MemberCheck')) {
 			return $instance;
 		}
 
-		function MemberCheck($debug = false) {
+		function __construct($debug = false) {
 			global $modx;
 
 			$this->debug = $debug;

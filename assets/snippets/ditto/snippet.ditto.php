@@ -135,7 +135,7 @@ $phx = (isset($phx))? $phx : 1;
     
     Default:
     1 - on
-*/      
+*/
 $extenders = isset($extenders) ? explode(",",$extenders) : array();
 /*
     Param: extenders
@@ -161,7 +161,7 @@ $placeholders = array();
 
 $filters = array("custom"=>array(),"parsed"=>array());
     // Variable: filters
-    // Holds both the custom filters array for configs or extenders to add to 
+    // Holds both the custom filters array for configs or extenders to add to
     // and the parsed filters array. To add to this array, use the following format
     // (code)
     // $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
@@ -169,7 +169,7 @@ $filters = array("custom"=>array(),"parsed"=>array());
 
 $orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>$orderBy);
     // Variable: orderBy
-    // An array that holds all criteria to sort the result set by. 
+    // An array that holds all criteria to sort the result set by.
     // Note that using a custom sort will disable all other sorting.
     // (code)
     // $orderBy["parsed"][] = array("sortBy","sortDir");
@@ -243,8 +243,8 @@ if(count($extenders) > 0) {
             } else {
                 $modx->logEvent(1, 3, $extender . " " . $_lang['extender_does_not_exist'], "Ditto ".$ditto_version);
                 return $extender . " " . $_lang['extender_does_not_exist'];
-            }       
-    }   
+            }
+    }
 }
 
 //---Parameters------------------------------------------------------- /*
@@ -666,10 +666,10 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     - <parseFilters>
 */
 $keywords = (isset($keywords))? $keywords : 0;
-/*  
+/*
     Param: keywords
     
-    Purpose: 
+    Purpose:
     Enable fetching of associated keywords for each document
     Can be used as [+keywords+] or as a tagData source
     
@@ -682,10 +682,10 @@ $keywords = (isset($keywords))? $keywords : 0;
 */
 
 $randomize = (isset($randomize))? $randomize : 0;
-/*  
+/*
     Param: randomize
     
-    Purpose: 
+    Purpose:
     Randomize the order of the output
     
     Options:
@@ -725,7 +725,7 @@ $templates = array(
     Param: tpl
 
     Purpose:
-    User defined chunk to format the documents 
+    User defined chunk to format the documents
 
     Options:
     - Any valid chunk name
@@ -753,7 +753,7 @@ $templates = array(
     Param: tplFirst
 
     Purpose:
-    User defined chunk to format the first document 
+    User defined chunk to format the first document
 
     Options:
     - Any valid chunk name
@@ -767,7 +767,7 @@ $templates = array(
     Param: tplLast
 
     Purpose:
-    User defined chunk to format the last document 
+    User defined chunk to format the last document
 
     Options:
     - Any valid chunk name
@@ -1099,4 +1099,3 @@ if (isset($outerTpl) && $resource) {
 }
 
 return ($save != 3) ? $output : "";
-?>

@@ -3,7 +3,7 @@
 ////
 ////            Unsharp Mask for PHP - version 2.1.1
 ////
-////    Unsharp mask algorithm by Torstein Hønsi 2003-07.
+////    Unsharp mask algorithm by Torstein H?nsi 2003-07.
 ////             thoensi_at_netcom_dot_no.
 ////               Please leave this notice.
 ////
@@ -43,7 +43,7 @@ and the roundoff errors in the Gaussian blur process, are welcome.
 
 class phpUnsharpMask {
 
-	static function applyUnsharpMask(&$img, $amount, $radius, $threshold) {
+	static function __construct(&$img, $amount, $radius, $threshold) {
 
 		// $img is an image that is already created within php using
 		// imgcreatetruecolor. No url! $img must be a truecolor image.

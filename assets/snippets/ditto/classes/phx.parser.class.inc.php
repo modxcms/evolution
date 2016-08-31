@@ -11,7 +11,7 @@
 class PHxParser {
 	var $placeholders = array();
 	
-	function PHxParser($debug=0,$maxpass=50) {
+	function __construct($debug=0,$maxpass=50) {
 		global $modx;
 		$this->name = "PHx";
 		$this->version = "2.1.2";

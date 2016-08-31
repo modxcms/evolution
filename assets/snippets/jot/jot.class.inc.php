@@ -22,7 +22,7 @@ class CJot {
 	var $templates = array();
 	var $_link = array();
 	
-	function CJot() {
+	function __construct() {
 		global $modx;
 		$path = strtr(realpath(dirname(__FILE__)), '\\', '/');
 		include_once($path . '/includes/jot.db.class.inc.php');

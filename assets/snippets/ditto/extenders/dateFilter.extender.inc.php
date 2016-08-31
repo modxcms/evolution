@@ -14,7 +14,7 @@ if (!class_exists("dateFilter")) {
 	class dateFilter {
 		var $month,$year,$day,$dateSource;
 	
-		function dateFilter($month,$year,$day,$dateSource) {
+		function __construct($month,$year,$day,$dateSource) {
 			$this->month = $month;
 			$this->year = $year;
 			$this->day = $day;

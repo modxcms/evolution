@@ -20,7 +20,7 @@
 
 class phpthumb_bmp {
 
-	function phpthumb_bmp() {
+	function __construct() {
 		return true;
 	}
 

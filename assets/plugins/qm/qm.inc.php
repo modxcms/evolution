@@ -13,34 +13,34 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function Qm(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
         $this->modx = $modx;
         
         // Get plugin parameters
         $this->jqpath = $jqpath;
         $this->loadmanagerjq = $loadmanagerjq;
         $this->loadfrontendjq = $loadfrontendjq;
-        $this->noconflictjq = $noconflictjq;  
+        $this->noconflictjq = $noconflictjq;
         $this->loadtb = $loadtb;
         $this->tbwidth = $tbwidth;
         $this->tbheight = $tbheight;
         $this->usemm = null;
-        $this->hidefields = $hidefields;  
+        $this->hidefields = $hidefields;
         $this->hidetabs = $hidetabs;  
         $this->hidesections = $hidesections;     
-        $this->addbutton = $addbutton;       
-        $this->tpltype = $tpltype;       
+        $this->addbutton = $addbutton;
+        $this->tpltype = $tpltype;
         $this->tplid = $tplid;
         $this->custombutton = $custombutton;
         $this->managerbutton = $managerbutton;
         $this->logout = $logout;
-        $this->autohide = $autohide; 
+        $this->autohide = $autohide;
         $this->editbuttons = $editbuttons;
         $this->editbclass = $editbclass;
         $this->newbuttons = $newbuttons;
         $this->newbclass = $newbclass;
         $this->tvbuttons = $tvbuttons;
-        $this->tvbclass = $tvbclass;      
+        $this->tvbclass = $tvbclass;
         
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
@@ -104,7 +104,7 @@ class Qm {
                     // Different doc to be refreshed than the one we are editing?
                     if (isset($_POST['qmrefresh'])) {
                         $id = intval($_POST['qmrefresh']);
-                    }   
+                    }
                     
                     // Redirect to clearer page which refreshes parent window and closes modal box frame
                     if ($this->modx->config['friendly_urls'] == 1){
@@ -133,17 +133,16 @@ class Qm {
                     $url = $this->modx->makeUrl($docID, '', '', 'full');
                     
                     $output = '
-                    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                    <html xmlns="http://www.w3.org/1999/xhtml">
-                    <head>
-                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title></title>
-                    </head>
-                    <body onload="javascript: parent.location.href = \''.$url.'\';">
-                    </body>
-                    </html>
-                    ';
-                    
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body onload="javascript: parent.location.href = \''.$url.'\';">
+</body>
+</html>
+';
                     break;
                 }
                 
@@ -1034,4 +1033,3 @@ class Qm {
 	
 }
 }
-?>

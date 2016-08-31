@@ -11,7 +11,7 @@
 class CChunkie {
  	var $template, $phx, $phxreq, $phxerror, $check;
 	
-	function CChunkie($template = '') {
+	function __construct($template = '') {
 		if (!class_exists("PHxParser")) include_once(strtr(realpath(dirname(__FILE__))."/phx.parser.class.inc.php", '\\', '/')); 
 		$this->template = $this->getTemplate($template);
 		$this->phx = new PHxParser();
