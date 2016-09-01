@@ -659,6 +659,7 @@ class Wayfinder {
                     $key = 'removeNewLines';
                     $value = str_replace("\n",'\\n',$value);
                 }
+                elseif($key=='id') $key='startId';
                 $value = $this->modxPrep($value);
                 $value = str_replace(array(' ',"\n"),array('&nbsp;',"<br />\n"),$value);
             }
