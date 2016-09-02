@@ -56,13 +56,21 @@ class AssetsHelper
 
     }
 
-        /**
-     * @param $name
-     * @param array $params
-     * @return string
-     */
+    public function registerJQuery() {
+        $output = '';
+        $plugins = $this->modx->pluginEvent;
+        if((array_search('ManagerManager', $plugins['OnDocFormRender']) === false)) {
+            $output .= $this->registerScript('jQuery',array(
+                'src'=>'assets/js/jquery/jquery-1.9.1.min.js',
+                'version'=>'1.9.1'
+            ));
+            $output .='<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';
+        }
+        return $output;
+    }
 
     public function registerScript($name, $params) {
+        $out = '';
         if (!isset($this->modx->loadedjscripts[$name])) {
             $src = $params['src'];
             $remote = strpos($src, "http") !== false;
@@ -70,7 +78,7 @@ class AssetsHelper
                 $src = $this->modx->config['site_url'].$src;
                 if (!$this->fs->checkFile($params['src'])) {
                     $this->modx->logEvent(0, 3, 'Cannot load '.$src, 'Assets helper');
-                    return false;    
+                    return $out;
                 }
             }
 
@@ -84,8 +92,14 @@ class AssetsHelper
 
             $this->modx->loadedjscripts[$name] = $params;
 
-        } else {
-            $out = false;
+        }
+        return $out;
+    }
+    
+    public function registerScriptsList($list = array()) {
+        $out = '';
+        foreach ($list as $script=>$params) {
+            $out .= $this->registerScript($script, $params);
         }
         return $out;
     }
