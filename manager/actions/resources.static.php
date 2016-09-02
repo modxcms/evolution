@@ -10,8 +10,10 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $tvjoin = '';
     if($resourceTable == 'site_tmplvars') {
         $tvsql = 'site_tmplvars.caption, ';
-        $tvjoin = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id', $modx->getFullTableName('site_tmplvar_templates'));
+        $tvjoin = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getFullTableName('site_tmplvar_templates'));
+        $sttfield = 'IF(stt.templateid,1,0) AS reltpl,';
     }
+    else $sttfield = '';
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
@@ -29,7 +31,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
     
     $rs = $modx->db->select(
-        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
+        "{$sttfield} {$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
             LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
         "",
@@ -51,6 +53,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         }
 
         if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
+        if ($resourceTable == 'site_tmplvars') $class = $row['reltpl'] ? '' : ' class="disabledPlugin"';
         if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
