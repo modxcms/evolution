@@ -1351,7 +1351,7 @@ abstract class DocLister
                 break;
             case 'doclist':
                 $idList = $this->sanitarIn($this->IDs, ',', false);
-                $out = array('orderBy' => "FIND_IN_SET({$this->getPK()}, '{$idList}')");
+                $out = array('orderBy' => "FIND_IN_SET({$this->getCFGDef('sortBy', $this->getPK())}, '{$idList}')");
                 $this->setConfig($out); //reload config;
                 $sort = "ORDER BY " . $out['orderBy'];
                 break;
