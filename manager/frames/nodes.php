@@ -195,13 +195,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                     $icon = ($privateweb||$privatemgr) ? $_style["tree_page_secure"] : $_style["tree_page"];
                     
                     if ($privateweb||$privatemgr) {
-                        if (isset($iconsPrivate[$contenttype])) {
-                            $icon = $iconsPrivate[$contenttype];
-                        }
-                    } else {
-                        if (isset($icons[$contenttype])) {
-                            $icon = $icons[$contenttype];
-                        }
+                        if (isset($iconsPrivate[$contenttype])) $icon = $iconsPrivate[$contenttype];
+                    }
+                    else {
+                        if (isset($icons[$contenttype]))        $icon = $icons[$contenttype];
                     }
                     if($id == $modx->config['site_start'])                $icon = $_style["tree_page_home"];
                     elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
