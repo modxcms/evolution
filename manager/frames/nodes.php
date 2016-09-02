@@ -7,22 +7,23 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
     // save folderstate
-    if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
-    if (isset($_GET['savestateonly'])) {
-        echo 'send some data'; //??
-        exit;
-    }
+    if (isset($_GET['opened']))        $_SESSION['openedArray'] = $_GET['opened'];
+    if (isset($_GET['savestateonly'])) exit('send some data'); //??
 
     $indent    = intval($_GET['indent']);
     $parent    = intval($_GET['parent']);
     $expandAll = intval($_GET['expandAll']);
     $output    = "";
-    $theme = $manager_theme ? "$manager_theme/":"";
+    $theme = "{$manager_theme}/";
 
     // setup sorting
     $sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
-    foreach($sortParams as $param)
-        if(isset($_REQUEST[$param])) { $_SESSION[$param] = $_REQUEST[$param]; $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]); }
+    foreach($sortParams as $param) {
+        if(isset($_REQUEST[$param])) {
+            $_SESSION[$param] = $_REQUEST[$param];
+            $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+        }
+    }
 
     // icons by content type
     $icons = array(
@@ -106,8 +107,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
         $orderby = $modx->db->escape($sortby." ".$_SESSION['tree_sortdir']);
 
-    // Folder sorting gets special setup ;) Add menuindex and pagetitle
-    if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
+        // Folder sorting gets special setup ;) Add menuindex and pagetitle
+        if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
         $tblsc = $modx->getFullTableName('site_content');
         $tbldg = $modx->getFullTableName('document_groups');
@@ -126,14 +127,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = '';
         }
         $result = $modx->db->select(
-			"DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
-				MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access",
-			"{$tblsc} AS sc
-			 LEFT JOIN {$tbldg} dg on dg.document = sc.id
-			 LEFT JOIN {$tblst} st on st.id = sc.template",
-			"(parent={$parent}) {$access} GROUP BY sc.id",
-			$orderby
-			);
+            "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+                MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access",
+            "{$tblsc} AS sc
+             LEFT JOIN {$tbldg} dg on dg.document = sc.id
+             LEFT JOIN {$tblst} st on st.id = sc.template",
+            "(parent={$parent}) {$access} GROUP BY sc.id",
+            $orderby
+            );
         if($modx->db->getRecordCount($result)==0) {
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
@@ -271,13 +272,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             if ($expandAll == 1) {
                 echo '<script type="text/javascript"> ';
                 foreach ($opened2 as $item) {
-                         printf("parent.openedArray[%d] = 1; ", $item);
+                     printf("parent.openedArray[%d] = 1; ", $item);
                 }
                 echo '</script> ';
             } elseif ($expandAll == 0) {
                 echo '<script type="text/javascript"> ';
                 foreach ($closed2 as $item) {
-                         printf("parent.openedArray[%d] = 0; ", $item);
+                     printf("parent.openedArray[%d] = 0; ", $item);
                 }
                 echo '</script> ';
             }
