@@ -562,9 +562,13 @@ class Mysqldumper {
 				$insertdump .= "INSERT INTO `{$tblval}` VALUES (";
 				$arr = $this->object2Array($row);
 				foreach($arr as $key => $value) {
-					$value = addslashes($value);
-					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
-					$insertdump .= "'$value',";
+					if(is_null($value)) $value = 'NULL';
+					else {
+    					$value = addslashes($value);
+    					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
+    					$value = "'{$value}'";
+					}
+					$insertdump .= $value .',';
 				}
 				$output .= rtrim($insertdump,',') . ");";
 				if(1048576 < strlen($output))
