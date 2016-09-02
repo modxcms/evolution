@@ -26,40 +26,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     }
 
     // icons by content type
-    $icons = array(
-        'application/rss+xml' => $_style["tree_page_rss"],
-        'application/pdf' => $_style["tree_page_pdf"],
-        'application/vnd.ms-word' => $_style["tree_page_word"],
-        'application/vnd.ms-excel' => $_style["tree_page_excel"],
-        'text/css' => $_style["tree_page_css"],
-        'text/html' => $_style["tree_page_html"],
-        'text/plain' => $_style["tree_page"],
-        'text/xml' => $_style["tree_page_xml"],
-        'text/javascript' => $_style["tree_page_js"],
-        'image/gif' => isset($_style["tree_page_gif"]) ? $_style["tree_page_gif"] : $_style["tree_page"],
-        'image/jpg' => isset($_style["tree_page_jpg"]) ? $_style["tree_page_jpg"] :  $_style["tree_page"],
-        'image/png' => isset($_style["tree_page_png"]) ? $_style["tree_page_png"] : $_style["tree_page"]
-    );
-    $iconsPrivate = array(
-        'application/rss+xml' => $_style["tree_page_rss_secure"],
-        'application/pdf' => $_style["tree_page_pdf_secure"],
-        'application/vnd.ms-word' => $_style["tree_page_word_secure"],
-        'application/vnd.ms-excel' => $_style["tree_page_excel_secure"],
-        'text/css' => $_style["tree_page_css_secure"],
-        'text/html' => $_style["tree_page_html_secure"],
-        'text/plain' => $_style["tree_page_secure"],
-        'text/xml' => $_style["tree_page_xml_secure"],
-        'text/javascript' => $_style["tree_page_js_secure"],
-        'image/gif' => isset($_style["tree_page_gif_secure"]) ? $_style["tree_page_gif_secure"] : $_style["tree_page_secure"],
-        'image/jpg' => isset($_style["tree_page_jpg_secure"]) ? $_style["tree_page_jpg_secure"] : $_style["tree_page_secure"],
-        'image/png' => isset($_style["tree_page_png_secure"]) ? $_style["tree_page_png_secure"] : $_style["tree_page_secure"]
-    );
+    $icons        = getIconInfo($_style);
+    $iconsPrivate = getPrivateIconInfo($_style);
 
-    if (isset($_SESSION['openedArray'])) {
-            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
-    } else {
-            $opened = array();
-    }
+    if (isset($_SESSION['openedArray'])) $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
+    else                                 $opened = array();
+    
     $opened2 = array();
     $closed2 = array();
 
@@ -283,4 +255,46 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 echo '</script> ';
             }
         }
+    }
+    
+    function getIconInfo($_style) {
+        if(!isset($_style['tree_page_gif'])) $_style['tree_page_gif'] = $_style['tree_page'];
+        if(!isset($_style['tree_page_jpg'])) $_style['tree_page_jpg'] = $_style['tree_page'];
+        if(!isset($_style['tree_page_png'])) $_style['tree_page_png'] = $_style['tree_page'];
+        $icons = array(
+            'text/html'                => $_style['tree_page_html'],
+            'text/plain'               => $_style['tree_page'],
+            'text/xml'                 => $_style['tree_page_xml'],
+            'text/css'                 => $_style['tree_page_css'],
+            'text/javascript'          => $_style['tree_page_js'],
+            'application/rss+xml'      => $_style['tree_page_rss'],
+            'application/pdf'          => $_style['tree_page_pdf'],
+            'application/vnd.ms-word'  => $_style['tree_page_word'],
+            'application/vnd.ms-excel' => $_style['tree_page_excel'],
+            'image/gif'                => $_style['tree_page_gif'],
+            'image/jpg'                => $_style['tree_page_jpg'],
+            'image/png'                => $_style['tree_page_png']
+        );
+        return $icons;
+    }
+    
+    function getPrivateIconInfo($_style) {
+        if(!isset($_style['tree_page_gif_secure'])) $_style['tree_page_gif_secure'] = $_style['tree_page_secure'];
+        if(!isset($_style['tree_page_jpg_secure'])) $_style['tree_page_jpg_secure'] = $_style['tree_page_secure'];
+        if(!isset($_style['tree_page_png_secure'])) $_style['tree_page_png_secure'] = $_style['tree_page_secure'];
+        $iconsPrivate = array(
+            'text/html'                => $_style['tree_page_html_secure'],
+            'text/plain'               => $_style['tree_page_secure'],
+            'text/xml'                 => $_style['tree_page_xml_secure'],
+            'text/css'                 => $_style['tree_page_css_secure'],
+            'text/javascript'          => $_style['tree_page_js_secure'],
+            'application/rss+xml'      => $_style['tree_page_rss_secure'],
+            'application/pdf'          => $_style['tree_page_pdf_secure'],
+            'application/vnd.ms-word'  => $_style['tree_page_word_secure'],
+            'application/vnd.ms-excel' => $_style['tree_page_excel_secure'],
+            'image/gif'                => $_style['tree_page_gif_secure'],
+            'image/jpg'                => $_style['tree_page_jpg_secure'],
+            'image/png'                => $_style['tree_page_png_secure']
+        );
+        return $iconsPrivate;
     }
