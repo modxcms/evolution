@@ -9,8 +9,8 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     $tvsql = '';
     $tvjoin = '';
     if($resourceTable == 'site_tmplvars') {
-        $tvsql = $resourceTable . '.caption, stt.templateid AS notassigned, ';
-        $tvjoin = "LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS stt ON {$resourceTable}.id = stt.tmplvarid GROUP BY {$resourceTable}.id";
+        $tvsql = 'site_tmplvars.caption, ';
+        $tvjoin = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id', $modx->getFullTableName('site_tmplvar_templates'));
     }
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
@@ -52,7 +52,6 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 
         if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
         if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
-        if ($resourceTable == 'site_tmplvars') $class = $row['notassigned'] ? '' : ' class="disabledPlugin"';
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
