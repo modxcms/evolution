@@ -186,12 +186,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		if(element) element.blur();
 	}
 	</script>
-	<!--[if lt IE 7]>
-	<style type="text/css">
-	body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
-	img { behavior: url(media/script/forIE/htcmime.php?file=pngbehavior.htc); }
-	</style>
-	<![endif]-->
 </head>
 
 <body id="topMenu" class="<?php echo $modx_textdir ? 'rtl':'ltr'?>">
