@@ -102,7 +102,7 @@ else $webstart_path = '../'.$webstart_path;
 <div id="actions">
   <ul class="actionButtons">
 <?php if($_POST['mode']=='save'||$_GET['mode']=='edit') :?>
-	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
+	<li><a href="#" onclick="documentDirty=false;document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
 <?php endif; ?>
 <?php
 if(isset($_GET['mode'])&&$_GET['mode']!=='drill') $href= 'a=31&path=' . urlencode($_REQUEST['path']);
