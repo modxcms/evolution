@@ -382,14 +382,6 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
 </script>
 
-<!--[if lt IE 7]>
-    <style type="text/css">
-      body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
-      img { behavior: url(media/script/forIE/htcmime.php?file=pngbehavior.htc); }
-    </style>
-<![endif]-->
-
-
 </head>
 <body onClick="hideMenu(1);" class="<?php echo $modx_textdir ? ' rtl':''?>">
 

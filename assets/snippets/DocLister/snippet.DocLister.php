@@ -1,19 +1,9 @@
 <?php
 /**
- * DocLister
+ * DocLister snippet
  *
- * Snippet to display the information of the tables by the description rules. The main goal - replacing Ditto and CatalogView
- *
- * @category 	snippet
- * @version 	2.1.30
- * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal	@properties
- * @internal	@modx_category Content
- * @internal    @installset base, sample
- * @documentation MODX Docs https://rtfm.modx.com/extras/evo/doclister/
- * @reportissues https://github.com/AgelxNash/DocLister
- * @author      Agel_Nash Agel_Nash@xaker.ru
- * @lastupdate  11/04/2016
+ * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
+ * @author Agel_Nash <Agel_Nash@xaker.ru>
  */
 if (!defined('MODX_BASE_PATH')) {
     die('HACK???');
@@ -42,7 +32,7 @@ if ($classname != 'DocLister' && file_exists($dir . $controller . ".php") && !cl
 if (class_exists($classname, false) && $classname != 'DocLister') {
     $DocLister = new $classname($modx, $modx->Event->params, $_time);
     $data = $DocLister->getDocs();
-    $out = isset($modx->Event->params['api']) ? $DocLister->getJSON($data, $modx->Event->params['api']) : $DocLister->render();
+    $out = isset($modx->Event->params['api']) ? jsonHelper::json_format($DocLister->getJSON($data, $modx->Event->params['api'])) : $DocLister->render();
     if (isset($_SESSION['usertype']) && $_SESSION['usertype'] == 'manager') {
         $debug = $DocLister->debug->showLog();
     } else {

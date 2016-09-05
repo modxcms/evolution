@@ -60,7 +60,8 @@ switch ($modx->Event->name) {
         $object_name = $content['pagetitle'];
         $rte = 'none';
         $tvMode = true;
-        $contentType = $content['contentType'];
+        $contentType = $content['contentType'] ? $content['contentType'] : $modx->event->params['contentType'];
+
         /*
         * Switch contentType for doc
         */
@@ -77,6 +78,10 @@ switch ($modx->Event->name) {
                 $mode = "application/json";
                 $lang = "javascript";
                 break;
+			case "application/x-httpd-php":
+				$mode = "application/x-httpd-php";
+				$lang = "php";
+				break;
         }
         break;
     case 'OnDocFormRender'     :
@@ -134,8 +139,11 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
-    <script src="{$_CM_URL}cm/mode/clike-compressed.js"></script> <!-- required by mode php -->
+    <script src="{$_CM_URL}cm/mode/javascript-compressed.js"></script> <!-- required by mode htmlmixed -->
     <script src="{$_CM_URL}cm/mode/css-compressed.js"></script>
+    <script src="{$_CM_URL}cm/mode/clike-compressed.js"></script> <!-- required by mode php -->
+    <script src="{$_CM_URL}cm/mode/php-compressed.js"></script>
+    <script src="{$_CM_URL}cm/mode/sql-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
     {$emmet}{$search}
     

@@ -43,7 +43,7 @@ if (class_exists('Wayfinder')) $wf = new Wayfinder();
 else                           return 'error: Wayfinder class not found';
 
 $wf->_config = array(
-	'id' => isset($startId) ? intval($startId) : $modx->documentIdentifier,
+	'id' => isset($startId) ? $startId : $modx->documentIdentifier,
 	'level' => isset($level) ? intval($level) : 0,
 	'includeDocs' => isset($includeDocs) ? $includeDocs : 0,
 	'excludeDocs' => isset($excludeDocs) ? $excludeDocs : 0,

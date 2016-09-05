@@ -102,7 +102,7 @@ else $webstart_path = '../'.$webstart_path;
 <div id="actions">
   <ul class="actionButtons">
 <?php if($_POST['mode']=='save'||$_GET['mode']=='edit') :?>
-	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
+	<li><a href="#" onclick="documentDirty=false;document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
 <?php endif; ?>
 <?php
 if(isset($_GET['mode'])&&$_GET['mode']!=='drill') $href= 'a=31&path=' . urlencode($_REQUEST['path']);
@@ -420,7 +420,6 @@ logFileChange('view', $filename);
 if($buffer===false) {
 	$modx->webAlertAndQuit("Error opening file for reading.");
 }
-
 ?>
 <form action="index.php" method="post" name="editFile">
 <input type="hidden" name="a" value="31" />
@@ -435,11 +434,25 @@ if($buffer===false) {
 </div>
 </div>
 <?php
+$pathinfo = pathinfo($filename);
+switch($pathinfo['extension']) {
+	case "css":
+		$contentType = "text/css"; break;
+	case "js":
+		$contentType = "text/javascript"; break;
+	case "json":
+		$contentType = "application/json"; break;
+	case "php":
+		$contentType = "application/x-httpd-php"; break;
+	default:
+		$contentType = 'htmlmixed';
+};
 $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
     'editor' => 'Codemirror',
     'elements' => array(
         'content',
     ),
+	'contentType'=>$contentType,
     'readOnly'=>$_REQUEST['mode']=='edit' ? false : true
 ));
 if (is_array($evtOut))

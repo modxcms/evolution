@@ -5,7 +5,7 @@ class DATEPICKER {
     function getDP() {
         global $modx,$_lang;
         
-        $tpl = file_get_contents(MODX_MANAGER_PATH . 'media/style/MODxCarbon/moo-datepicker/datepicker.tpl');
+        $tpl = file_get_contents(dirname(__FILE__).'/datepicker.tpl');
         return $modx->parseText($tpl,$_lang,'[%','%]');
     }
 }

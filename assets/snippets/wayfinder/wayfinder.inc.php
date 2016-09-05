@@ -344,11 +344,14 @@ class Wayfinder {
     //Get all of the documents from the database
     function getData() {
         global $modx;
+        
         $depth = !empty($this->_config['level']) ? $this->_config['level'] : 10;
         $ids = array();
         
         if(strtolower(substr($this->_config['id'],0,1))==='p')
             $this->_config['id'] = $this->getParentID($modx->documentIdentifier);
+        elseif(!preg_match('@^[0-9]+$@',$this->_config['id']))
+            exit('Wayfinder &startId error');
         
         if (!$this->_config['hideSubMenus']) {
             $ids = $modx->getChildIds($this->_config['id'],$depth);
@@ -656,6 +659,7 @@ class Wayfinder {
                     $key = 'removeNewLines';
                     $value = str_replace("\n",'\\n',$value);
                 }
+                elseif($key=='id') $key='startId';
                 $value = $this->modxPrep($value);
                 $value = str_replace(array(' ',"\n"),array('&nbsp;',"<br />\n"),$value);
             }
