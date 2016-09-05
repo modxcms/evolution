@@ -25,7 +25,7 @@ if(!isset($modx->config['mgr_date_picker_path'])) $modx->config['mgr_date_picker
 		/* <![CDATA[ */
 	
         jQuery(function(){
-        jQuery('.transition a').click(function(){
+        jQuery(window).on('beforeunload',function(){
                 jQuery('#actions').fadeOut(100);
             });
         });
