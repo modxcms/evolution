@@ -50,6 +50,19 @@ Sub page
 		<strong>Call:</strong>
 		<pre>{{chunkName? &title='First post' &body='Hello World!'}}</pre>
 	</li>
+
+	<li><strong>File-binded Templates via @INCLUDE</strong>
+		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Example:</p>
+		<p>MODX-Template:</p>
+		<pre>@INCLUDE:assets/templates/mydesign/template.inc.php</pre>
+		<p>template.inc.php :</p>
+		<pre>switch($modx->documentIdentifier) {
+    case $modx->config['site_start']:
+        return file_get_contents('assets/templates/mydesign/top.html');
+    default:
+        return file_get_contents('assets/templates/mydesign/page.html');
+}</pre>
+	</li>
 </ul>
 
 <h1>New Manager Roles</h1>
