@@ -45,6 +45,9 @@
           </tr>
         </table>
       </div>
+      <div class="sectionHeader">[+onlineusers_title+]</div><div class="sectionBody">
+      [+OnlineInfo+]
+      </div>
       [+OnManagerWelcomeHome+]
     </div>
 
@@ -95,14 +98,6 @@
       </div>
     </div>
 
-    <!-- online info -->
-    <div class="tab-page" id="tabOnline" style="padding-left:0; padding-right:0">
-      <h2 class="tab">[+online+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabOnline" ) );</script>
-      <div class="sectionHeader">[+onlineusers_title+]</div><div class="sectionBody">
-      [+OnlineInfo+]
-      </div>
-    </div>
     [+OnManagerWelcomeRender+]
   </div>
 </div>
