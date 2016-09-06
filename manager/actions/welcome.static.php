@@ -148,6 +148,12 @@ $html = '
         <td>&nbsp;</td>
         <td><b>'.($_SESSION['mgrLogincount']+1).'</b></td>
       </tr>
+      <tr>
+        <td>'.$_lang["inbox"].'</td>
+        <td>&nbsp;</td>
+        <td><b>'.($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span>
+    '.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."").'</span></b></td>
+      </tr>
     </table>
 ';
 $modx->setPlaceholder('UserInfo',$html);
