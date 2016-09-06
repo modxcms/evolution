@@ -190,7 +190,7 @@
   </div>
     </div>
 
-<script src="../assets/plugins/dashboard/plugins/jquery-2.1.4.min.js"></script>
+<script src="media/style/[+theme+]/dashboard/plugins/jquery-2.1.4.min.js"></script>
 <script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.js'></script>
 <script src='media/style/[+theme+]/dashboard/js/evodashboard.js'></script>
 <script src="media/style/[+theme+]/dashboard/bootstrap/js/bootstrap.min.js"></script>
