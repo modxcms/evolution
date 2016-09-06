@@ -126,7 +126,6 @@ $modx->setPlaceholder('RecentInfo',$html);
 $modx->setPlaceholder('info',$_lang['info']);
 $modx->setPlaceholder('yourinfo_title',$_lang['yourinfo_title']);
 $html = '
-    <p>'.$_lang["yourinfo_message"].'</p>
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td width="150">'.$_lang["yourinfo_username"].'</td>
@@ -147,6 +146,11 @@ $html = '
         <td>'.$_lang["yourinfo_total_logins"].'</td>
         <td>&nbsp;</td>
         <td><b>'.($_SESSION['mgrLogincount']+1).'</b></td>
+      </tr>
+      <tr>
+        <td>'.$_lang["inbox"].'</td>
+        <td>&nbsp;</td>
+        <td><b>'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</b></td>
       </tr>
     </table>
 ';
