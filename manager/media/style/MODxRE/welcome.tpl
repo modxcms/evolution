@@ -1,13 +1,17 @@
-        <link rel="stylesheet" type="text/css" href="media/style/[+theme+]/dashboard/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.css" />
-        <link rel="stylesheet" href="media/style/[+theme+]/dashboard/css/dashboard.css" />
-        <link rel="stylesheet" href="media/style/[+theme+]/dashboard/fontaw/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="media/style/[+theme+]/dashboard/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/css/dashboard.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/fontaw/css/font-awesome.min.css" />
+
 <div class="container-fluid dashboard">
 
-      <!-- title-->
+<!-- title-->
 
      <div class="col-sm-12">
      [+OnManagerWelcomePrerender+]
+     <div class="wm_logo">
+     	<img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
+     </div>
     <h1>[+site_name+] / Dashboard</h1>
      </div>
      <!-- alert -->
@@ -18,17 +22,16 @@
     </div>
  </div>
 
-       <!-- end  title -->
+<!-- end  title -->
 <div class="container-fluid dashboard">
        <div class="col-sm-12">
  <!-- GridSter widgets -->
                 <div class="gridster margin-bottom-30">
-                  
                      <ul>
                     [+OnManagerWelcomeHome+]
                   <!---Welcome Logo and buttons---> 
                   <!--- panel -->
-                  				<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="3">
+                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="2" data-sizey="4">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
@@ -37,50 +40,43 @@
 									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxwelcome_widget"></a>
 								</div>	  
 							</div>
-
 					  </div>
 					  <div class="panel-body widget-stage sectionBody">
-                                  <div class="wm_logo">
-                                        <img src='media/style/[+theme+]/images/misc/logo.png' alt='[+logo_slogan+]' />
-                                  </div>
-             <div class="wm_buttons">
-                [+SecurityIcon+]
-                [+WebUserIcon+]
-                [+ModulesIcon+]
-                [+ResourcesIcon+]
-                [+BackupIcon+]
-                [+HelpIcon+]
-              </div>
-                       
+			             <div class="wm_buttons">
+			                [+SecurityIcon+]
+			                [+WebUserIcon+]
+			                [+ModulesIcon+]
+			                [+ResourcesIcon+]
+			                [+BackupIcon+]
+			                [+HelpIcon+]
+			              </div>
 					  </div>
 					</div>			
 				</li>
-                  <!--- /panel --->                   
-                     
-                   <!---Messages--->
-                    <!--- panel --->
-                   <li id="modxinbox_widget" data-row="1" data-col="2" data-sizex="1" data-sizey="3">
+                <!--- /panel --->
+                
+                <!---User Info--->
+                <!--- panel --->
+                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="2" data-sizey="4">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
-						  <span class="panel-handel pull-left"><i class="fa fa-inbox"></i> Inbox</span>
+						  <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> [+info+]</span>
 							<div class="widget-controls pull-right">
 								<div class="btn-group">
-									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxinbox_widget"></a>
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxinfo_widget"></a>
 								</div>	  
 							</div>
 					  </div>
                         <div class="panel-body widget-stage sectionBody">
-							<ul class="list-group">
-							[+MessageInfo+]
-							</ul>
+						[+UserInfo+]
 					  </div>
 					</div>			
 				</li>
                  <!--- /panel --->
-                   
-                 <!---Online Users--->
-                                  <!--- panel --->
-                   <li id="modxonlineusers_widget" data-row="2" data-col="1" data-sizex="2" data-sizey="5">
+                 
+                <!---Online Users--->
+                <!--- panel --->
+                <li id="modxonlineusers_widget" data-row="2" data-col="1" data-sizex="4" data-sizey="4">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-users"></i> [+onlineusers_title+]</span>
@@ -95,30 +91,11 @@
 									  </div>
 					</div>			
 				</li>
-                 <!--- /panel --->
-                    <!---User Info--->
-                                                  <!--- panel --->
-                   <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="2" data-sizey="5">
-					<div class="panel panel-default widget-wrapper">
-					  <div class="panel-headingx widget-title sectionHeader clearfix">
-						  <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> Info</span>
-							<div class="widget-controls pull-right">
-								<div class="btn-group">
-									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxinfo_widget"></a>
-								</div>	  
-							</div>
-					  </div>
-                        <div class="panel-body widget-stage sectionBody">
-						<i class="fa fa-info-circle fa-5x  icon-color-verylight"></i>	   [+UserInfo+]
-					  </div>
-					</div>			
-				</li>
-                 <!--- /panel --->
-                          
-                    
-                    <!---Recent Resources--->
-                   <!--- panel --->
-                   <li id="modxrecent_widget" data-row="3" data-col="1" data-sizex="4" data-sizey="5">
+                <!--- /panel --->  
+
+                <!---Recent Resources--->
+                <!--- panel --->
+                <li id="modxrecent_widget" data-row="3" data-col="1" data-sizex="4" data-sizey="5">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-pencil-square-o"></i> [+activity_title+]</span>
@@ -133,12 +110,11 @@
 					  </div>
 					</div>			
 				</li>
-                 <!--- /panel --->
-                     
-                    
-                    <!---MODX News--->
-                  <!--- panel --->
-                   <li id="modxnews_widget" data-row="4" data-col="1" data-sizex="2" data-sizey="5">
+                <!--- /panel --->                        
+                   
+                <!---MODX News--->
+                <!--- panel --->
+                <li id="modxnews_widget" data-row="4" data-col="1" data-sizex="2" data-sizey="5">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-rss"></i> [+modx_news_title+]</span>
@@ -194,6 +170,7 @@
 <script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.js'></script>
 <script src='media/style/[+theme+]/dashboard/js/evodashboard.js'></script>
 <script src="media/style/[+theme+]/dashboard/bootstrap/js/bootstrap.min.js"></script>
+
 		<script type="text/javascript">
 			//localStorage.clear();
 
