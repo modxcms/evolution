@@ -1160,6 +1160,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
 $_lang["enable_bindings_title"] = 'Włącz komendy @Bindings';
 $_lang["enable_bindings_message"] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Po włączeniu wtyczki PHx, filtry wbudowane są domyślnie wyłączone';
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
 $_lang["bkmgr_restore_title"] = 'Przywróć';
