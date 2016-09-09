@@ -1166,6 +1166,7 @@ $_lang["pwd_hash_algo_message"] = 'パスワード文字列はここで設定し
 $_lang["enable_bindings_title"] = '@Bindingsを有効にする';
 $_lang["enable_bindings_message"] = '<a href="http://www.google.com/cse?cx=007286147079563201032%3Aigbcdgg0jyo&q=Bindings" target="_blank">@Bindings機能</a>を有効にします。この機能は、投稿画面上の入力フィールド(テンプレート変数)に任意のコマンドを記述し、実行するものです。PHP文の実行などが可能なため、複数メンバーでサイトを運用する場合、当機能の運用には注意が必要です。';
 
+$_lang["enable_filter_phx_warning"] = 'PHxのプラグインが有効になっている場合、内蔵のフィルタはデフォルトで無効になっています';
 $_lang["bkmgr_alert_mkdir"] = 'ディレクトリにファイルを作成できません。[+snapshot_path+]のパーミッションを確認してください。';
 $_lang["bkmgr_restore_msg"] = '<p>「バックアップ」で取得したSQLファイルを用いて、サイトをリストアできます。<br />※SQL文を実行するだけなので、他の用途にも使えます(拡張機能のインストールなど)。</p>';
 $_lang["bkmgr_restore_title"] = 'リストア';

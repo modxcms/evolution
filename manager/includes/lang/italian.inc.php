@@ -1130,6 +1130,7 @@ $_lang["pwd_hash_algo_message"] = 'Password algoritmo di hash.';
 $_lang["enable_bindings_title"] = 'Abilita comandi @Bindings:';
 $_lang["enable_bindings_message"] = 'Impedisce l\'esecuzione di funzioni PHP attraverso Variabili di Template di tipo @Bindings. Utile se avete utenti del manager che non devono poter creare codice PHP, ma che possono creare o modificare le Variabili di Template. L\'output di qualsiasi Variabile di Template @Bindings risulta "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Quando PHx plug-abilitato, filtri incorporati sono disabilitati di default';
 $_lang["bkmgr_alert_mkdir"] = 'Non è possibile creare un file nella cartella. Controlla i permessi di scrittura di [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Tabelle del database che potrebbero essere recuperate dall\'SQL:</p>';
 $_lang["bkmgr_restore_title"] = 'Ripristina';

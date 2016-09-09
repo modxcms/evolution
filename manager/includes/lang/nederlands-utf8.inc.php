@@ -1154,6 +1154,7 @@ $_lang["pwd_hash_algo_message"] = 'Wachtwoord hash algoritme.';
 $_lang["enable_bindings_title"] = '@Bindings commando\'s aanzetten';
 $_lang["enable_bindings_message"] = 'Voorkom het uitvoeren van PHP-functies via TV @Bindings. Handig wanneer u Manager gebruikers heeft die niet PHP-code kunnen creëren, maar wel in staat zijn om TV\'s te maken of te bewerken. Het tonen van een TV met een @Binding zal worden uitgeschakeld.';
 
+$_lang["enable_filter_phx_warning"] = 'Wanneer de PHx plugin is ingeschakeld dan zijn de ingebouwde filters standaard uitgeschakeld';
 $_lang["bkmgr_alert_mkdir"] = 'Een bestand kan niet worden gemaakt in een directory. Kijk wat de toestemming (permission) is van [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Een website kan worden hersteld door het gebruik van een SQL bestand.</p>';
 $_lang["bkmgr_restore_title"] = 'Herstellen';
