@@ -6,7 +6,6 @@
         <script type="text/javascript" src="media/script/tabpane.js"></script>
         <script type="text/javascript" src="[(mgr_jquery_path)]"></script>
         <script type="text/javascript" src="media/script/mootools/mootools.js"></script>
-        <script type="text/javascript" src="media/script/mootools/moodx.js"></script>
         <script type="text/javascript" src="../assets/modules/docmanager/js/docmanager.js"></script>
         <script type="text/javascript">
             function loadTemplateVars(tplId) {
