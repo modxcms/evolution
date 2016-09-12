@@ -30,11 +30,23 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             width: 16px;
             height: 16px;
         }
+        #resizer2 { position: absolute; top: 65px; right: 50px; width: 3px; z-index: 999;}
+        #resizer2 #hideTopMenu {display:block;
+            margin-top:-4px;
+            margin-left:px;
+            cursor:pointer;
+            background:transparent url(media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_get.png)!important;
+            width:16px;
+            height:16px;
+        }
     </style>
 </head>
 <body>
     <div id="resizer">
         <a id="hideMenu" onclick="mainMenu.toggleTreeFrame();"></a>
+    </div>
+    <div id="resizer2">
+        <a id="hideTopMenu" onclick="mainMenu.toggleMenuFrame();"></a>
     </div>
     <div id="mainMenu">
         <iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize"></iframe>
