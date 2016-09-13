@@ -875,7 +875,7 @@ div.treeframebody {
   cursor: default;
   height: 100%;
   padding: 6px 8px 0;
-  line-height: 1.3em;
+  line-height: 1.5em;
 }
 
 #treeHolder {
@@ -1727,7 +1727,7 @@ a.hometblink img {
 
 .wm_button {
   display: inline-block;
-  margin: 0 5px 2px 20px;
+  margin: 0px 20px 20px 0px;
   text-align: center;
 }
 

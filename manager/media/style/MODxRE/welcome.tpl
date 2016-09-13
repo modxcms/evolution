@@ -31,7 +31,7 @@
                     [+OnManagerWelcomeHome+]
                   <!---Welcome Logo and buttons---> 
                   <!--- panel -->
-                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="2" data-sizey="4">
+                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="6">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
@@ -50,6 +50,9 @@
 			                [+BackupIcon+]
 			                [+HelpIcon+]
 			              </div>
+                        <div class="userstable">
+							[+OnlineInfo+]
+						</div>
 					  </div>
 					</div>			
 				</li>
@@ -57,7 +60,7 @@
                 
                 <!---User Info--->
                 <!--- panel --->
-                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="2" data-sizey="4">
+                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="1" data-sizey="6">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> [+info+]</span>
@@ -72,30 +75,11 @@
 					  </div>
 					</div>			
 				</li>
-                 <!--- /panel --->
-                 
-                <!---Online Users--->
-                <!--- panel --->
-                <li id="modxonlineusers_widget" data-row="2" data-col="1" data-sizex="4" data-sizey="4">
-					<div class="panel panel-default widget-wrapper">
-					  <div class="panel-headingx widget-title sectionHeader clearfix">
-						  <span class="panel-handel pull-left"><i class="fa fa-users"></i> [+onlineusers_title+]</span>
-							<div class="widget-controls pull-right">
-								<div class="btn-group">
-									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxonlineusers_widget"></a>
-								</div>	  
-							</div>
-					  </div>
-                        <div class="panel-body widget-stage sectionBody userstable">
-												[+OnlineInfo+]
-									  </div>
-					</div>			
-				</li>
-                <!--- /panel --->  
+                <!--- /panel --->
 
                 <!---Recent Resources--->
                 <!--- panel --->
-                <li id="modxrecent_widget" data-row="3" data-col="1" data-sizex="4" data-sizey="5">
+                <li id="modxrecent_widget" data-row="3" data-col="1" data-sizex="4" data-sizey="7">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-pencil-square-o"></i> [+activity_title+]</span>
@@ -106,7 +90,7 @@
 							</div>
 					  </div>
                         <div class="panel-body widget-stage sectionBody">
-							    [+RecentInfo+]
+							[+RecentInfo+]
 					  </div>
 					</div>			
 				</li>
