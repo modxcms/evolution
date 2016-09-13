@@ -34,6 +34,7 @@ $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
 $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
+$modx->setPlaceholder('resetgrid',$_lang['reset']);
 
 // setup message info
 if($modx->hasPermission('messages')) {
@@ -114,7 +115,7 @@ if($limit<1) {
 	$html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
 	while ($content = $modx->db->getRow($rs)) {
-		$html.='<li><a href="index.php?a=3&id='.$content['id'].'">'.$content['id'].' - '.$content['pagetitle'].'</a>'.'</li>';
+		$html.='<li>'.$content['id'].' - <a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a>'.'</li>';
 	}
 }
 $html.='</ul>';
@@ -148,6 +149,11 @@ $html = '
         <td>&nbsp;</td>
         <td><b>'.($_SESSION['mgrLogincount']+1).'</b></td>
       </tr>
+-      <tr>
+-        <td>'.$_lang["inbox"].'</td>
+-        <td>&nbsp;</td>
+-        <td><b>'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</b></td>
+-      </tr>
     </table>
 ';
 $modx->setPlaceholder('UserInfo',$html);
