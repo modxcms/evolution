@@ -31,7 +31,7 @@
                     [+OnManagerWelcomeHome+]
                   <!---Welcome Logo and buttons---> 
                   <!--- panel -->
-                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="5">
+                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="6">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
@@ -60,7 +60,7 @@
                 
                 <!---User Info--->
                 <!--- panel --->
-                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="1" data-sizey="5">
+                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="1" data-sizey="6">
 					<div class="panel panel-default widget-wrapper">
 					  <div class="panel-headingx widget-title sectionHeader clearfix">
 						  <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> [+info+]</span>

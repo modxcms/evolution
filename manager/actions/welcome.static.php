@@ -114,7 +114,7 @@ if($limit<1) {
 	$html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
 	while ($content = $modx->db->getRow($rs)) {
-		$html.='<li><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['id'].' - '.$content['pagetitle'].'</li>';
+		$html.='<li><a href="index.php?a=3&id='.$content['id'].'">'.$content['id'].' - '.$content['pagetitle'].'</a>'.'</li>';
 	}
 }
 $html.='</ul>';
