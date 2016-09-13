@@ -108,13 +108,13 @@ $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_n
 
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
-$rs = $modx->db->select('id, pagetitle, description', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
+$rs = $modx->db->select('id, pagetitle', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
 	$html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
 	while ($content = $modx->db->getRow($rs)) {
-		$html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
+		$html.='<li><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['id'].' - '.$content['pagetitle'].'</li>';
 	}
 }
 $html.='</ul>';
