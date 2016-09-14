@@ -44,3 +44,6 @@ foreach($help as $k=>$v) {
 ?>
     </div>
 </div>
+<script>
+	if(window.location.hash == '#version_notices') tp.setSelectedIndex(1);
+</script>
