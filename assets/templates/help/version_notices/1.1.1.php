@@ -82,3 +82,8 @@ Sub page
 		<pre>@SELECT name,value FROM xxx WHERE yyy = [*tv_name*]</pre>
 	</li>
 </ul>
+
+<h1>Important Details for Developers</h1>
+<ul>
+	<li>jQuery updated to v3.1 and loaded into manager by default.<br/><u>Known issues:</u> MultiTV 2.0.8 has problems with row-reordering and requires an update.</li>
+</ul>
