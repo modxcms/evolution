@@ -34,6 +34,7 @@ $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
 $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
+$modx->setPlaceholder('resetgrid',$_lang['reset']);
 
 // setup message info
 if($modx->hasPermission('messages')) {
@@ -107,14 +108,14 @@ $modx->setPlaceholder('modx_security_notices_title',$_lang["security_notices_tit
 $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_notices_content']);
 
 // recent document info
-$html = $_lang["activity_message"].'<br /><br /><ul>';
-$rs = $modx->db->select('id, pagetitle, description', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
+$html = '<ul>';
+$rs = $modx->db->select('id, pagetitle', $modx->getFullTableName('site_content'), "deleted=0 AND (editedby=".$modx->getLoginUserID()." OR createdby=".$modx->getLoginUserID().")", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
 	$html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
 	while ($content = $modx->db->getRow($rs)) {
-		$html.='<li><span style="width: 40px; text-align:right;">'.$content['id'].'</span> - <span style="width: 200px;"><a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a></span>'.($content['description']!='' ? ' - '.$content['description'] : '').'</li>';
+		$html.='<li>'.$content['id'].' - <a href="index.php?a=3&amp;id='.$content['id'].'">'.$content['pagetitle'].'</a>'.'</li>';
 	}
 }
 $html.='</ul>';
@@ -126,7 +127,6 @@ $modx->setPlaceholder('RecentInfo',$html);
 $modx->setPlaceholder('info',$_lang['info']);
 $modx->setPlaceholder('yourinfo_title',$_lang['yourinfo_title']);
 $html = '
-    <p>'.$_lang["yourinfo_message"].'</p>
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td width="150">'.$_lang["yourinfo_username"].'</td>
@@ -147,6 +147,11 @@ $html = '
         <td>'.$_lang["yourinfo_total_logins"].'</td>
         <td>&nbsp;</td>
         <td><b>'.($_SESSION['mgrLogincount']+1).'</b></td>
+      </tr>
+      <tr>
+        <td>'.$_lang["inbox"].'</td>
+        <td>&nbsp;</td>
+        <td><b>'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</b></td>
       </tr>
     </table>
 ';

@@ -1,103 +1,175 @@
-<!-- welcome -->
-<div style="margin: 20px 12px;">
-  <script type="text/javascript" src="media/script/tabpane.js"></script>
-  <div class="tab-pane" id="welcomePane" style="border:0">
-    <script type="text/javascript">
-      tpPane = new WebFXTabPane(document.getElementById( "welcomePane" ),false);
-    </script>
+<link rel="stylesheet" type="text/css" href="media/style/[+theme+]/dashboard/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/css/dashboard.css" />
+<link rel="stylesheet" href="media/style/[+theme+]/dashboard/fontaw/css/font-awesome.min.css" />
 
-    <!-- home tab -->
-    <div class="tab-page" id="tabhome" style="padding-left:0; padding-right:0;">
-      [+OnManagerWelcomePrerender+]			
-      <h2 class="tab">[+site_name+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabhome" ) );</script>
-      <div class="sectionHeader">[+welcome_title+]</div>
-      <div class="sectionBody">
-        <table border="0" cellpadding="5" class="table table--managerWelcome">
-          <tr>
-            <td colspan="2">
-              <div class="wm_header">
-                <h1 class="wm_header_title">[+site_name+]</h1>
-                <p class="wm_header_lead">[+welcome_title+]</p>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td width="100" align="right">
-              <div class="wm_logo">
-                <img src='media/style/[+theme+]/images/misc/logo.png' alt='[+logo_slogan+]' />
-              </div>
-              <br /><br />
-            </td>
-            <td valign="top">
-              <div class="wm_buttons">
-                [+SecurityIcon+]
-                [+WebUserIcon+]
-                [+ModulesIcon+]
-                [+ResourcesIcon+]
-                [+BackupIcon+]
-                [+HelpIcon+]
-              </div>
-              <div class="wm_messages">
-                [+MessageInfo+]
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="sectionHeader">[+onlineusers_title+]</div><div class="sectionBody">
-      [+OnlineInfo+]
-      </div>
-      [+OnManagerWelcomeHome+]
+<div class="container-fluid dashboard">
+
+<!-- title-->
+
+     <div class="col-sm-12">
+     [+OnManagerWelcomePrerender+]
+     <div class="wm_logo">
+     	<img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
+     </div>
+    <h1>[+site_name+] / Dashboard</h1>
+     </div>
+     <!-- alert -->
+     <div class="container col-sm-12" style="display:[+config_display+]">
+           <div class="widget-wrapper alert alert-warning">
+             [+config_check_results+]
+          </div>
     </div>
+ </div>
 
-    <!-- system check -->
-    <div class="tab-page" id="tabcheck" style="display:[+config_display+]; padding-left:0; padding-right:0;">
-      <h2 class="tab" style="display:[+config_display+]"><strong style="color:#ffeb00;">[+settings_config+]</strong></h2>
-      <script type="text/javascript"> if('[+config_display+]'=='block') tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
-      <div class="sectionHeader">[+configcheck_title+]</div>
-      <div class="sectionBody">
-        <img src="media/style/[+theme+]/images/icons/error.png" />
-        [+config_check_results+]
-      </div>
-    </div>
+<!-- end  title -->
+<div class="container-fluid dashboard">
+       <div class="col-sm-12">
+ <!-- GridSter widgets -->
+                <div class="gridster margin-bottom-30">
+                     <ul>
+                    [+OnManagerWelcomeHome+]
+                  <!---Welcome Logo and buttons---> 
+                  <!--- panel -->
+                  	<li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="6">
+					<div class="panel panel-default widget-wrapper">
+					  <div class="panel-headingx widget-title sectionHeader clearfix">
+						  <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
+							<div class="widget-controls pull-right">
+								<div class="btn-group">
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxwelcome_widget"></a>
+								</div>	  
+							</div>
+					  </div>
+					  <div class="panel-body widget-stage sectionBody">
+			             <div class="wm_buttons">
+			                [+SecurityIcon+]
+			                [+WebUserIcon+]
+			                [+ModulesIcon+]
+			                [+ResourcesIcon+]
+			                [+BackupIcon+]
+			                [+HelpIcon+]
+			              </div>
+                        <div class="userstable">
+							[+OnlineInfo+]
+						</div>
+					  </div>
+					</div>			
+				</li>
+                <!--- /panel --->
+                
+                <!---User Info--->
+                <!--- panel --->
+                <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="1" data-sizey="6">
+					<div class="panel panel-default widget-wrapper">
+					  <div class="panel-headingx widget-title sectionHeader clearfix">
+						  <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> [+info+]</span>
+							<div class="widget-controls pull-right">
+								<div class="btn-group">
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxinfo_widget"></a>
+								</div>	  
+							</div>
+					  </div>
+                        <div class="panel-body widget-stage sectionBody">
+						[+UserInfo+]
+					  </div>
+					</div>			
+				</li>
+                <!--- /panel --->
 
-    <!-- modx news -->
-    <div class="tab-page" id="tabNews" style="padding-left:0; padding-right:0">
-      <h2 class="tab">[+modx_news+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabNews" ) );</script>
-      <div class="sectionHeader">[+modx_news_title+]</div><div class="sectionBody">
-      [+modx_news_content+]
-      </div>
-    </div>	
-
-    <!-- security notices -->
-    <div class="tab-page" id="tabSecurityNotices" style="padding-left:0; padding-right:0">
-      <h2 class="tab">[+modx_security_notices+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabSecurityNotices" ) );</script>
-      <div class="sectionHeader">[+modx_security_notices_title+]</div><div class="sectionBody">
-      [+modx_security_notices_content+]
-      </div>
-    </div>
-
-    <!-- recent activities -->
-    <div class="tab-page" id="tabAct" style="padding-left:0; padding-right:0">
-      <h2 class="tab">[+recent_docs+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabAct" ) );</script>
-      <div class="sectionHeader">[+activity_title+]</div><div class="sectionBody">
-      [+RecentInfo+]
-      </div>
-    </div>
-
-    <!-- user info -->
-    <div class="tab-page" id="tabYour" style="padding-left:0; padding-right:0">
-      <h2 class="tab">[+info+]</h2>
-      <script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabYour" ) );</script>
-      <div class="sectionHeader">[+yourinfo_title+]</div><div class="sectionBody">
-      [+UserInfo+]
-      </div>
-    </div>
-
-    [+OnManagerWelcomeRender+]
+                <!---Recent Resources--->
+                <!--- panel --->
+                <li id="modxrecent_widget" data-row="3" data-col="1" data-sizex="4" data-sizey="7">
+					<div class="panel panel-default widget-wrapper">
+					  <div class="panel-headingx widget-title sectionHeader clearfix">
+						  <span class="panel-handel pull-left"><i class="fa fa-pencil-square-o"></i> [+activity_title+]</span>
+							<div class="widget-controls pull-right">
+								<div class="btn-group">
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxrecent_widget"></a>
+								</div>	  
+							</div>
+					  </div>
+                        <div class="panel-body widget-stage sectionBody">
+							[+RecentInfo+]
+					  </div>
+					</div>			
+				</li>
+                <!--- /panel --->                        
+                   
+                <!---MODX News--->
+                <!--- panel --->
+                <li id="modxnews_widget" data-row="4" data-col="1" data-sizex="2" data-sizey="5">
+					<div class="panel panel-default widget-wrapper">
+					  <div class="panel-headingx widget-title sectionHeader clearfix">
+						  <span class="panel-handel pull-left"><i class="fa fa-rss"></i> [+modx_news_title+]</span>
+							<div class="widget-controls pull-right">
+								<div class="btn-group">
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxnews_widget"></a>
+								</div>	  
+							</div>
+					  </div>
+                        <div class="panel-body widget-stage sectionBody">
+						 <i class="fa fa-rss fa-5x icon-color-verylight"></i> [+modx_news_content+]
+					  </div>
+					</div>			
+				</li>
+                 <!--- /panel --->
+                    
+                    <!---Security News--->
+                 <!--- panel --->
+                   <li id="modxsecurity_widget" data-row="4" data-col="2" data-sizex="2" data-sizey="5">
+					<div class="panel panel-default widget-wrapper">
+					  <div class="panel-headingx widget-title sectionHeader clearfix">
+						  <span class="panel-handel pull-left"><i class="fa fa-exclamation-triangle"></i> [+modx_security_notices_title+]</span>
+							<div class="widget-controls pull-right">
+								<div class="btn-group">
+									<a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxsecurity_widget"></a>
+								</div>	  
+							</div>
+					  </div>
+                        <div class="panel-body widget-stage sectionBody">
+						<i class="fa fa-exclamation-triangle fa-5x icon-color-verylight"></i> [+modx_security_notices_content+]
+					  </div>
+					</div>			
+				</li>
+                 <!--- /panel --->
+                                  
+                </div>
+                <!-- / GridStack widgets -->
+ </div>
+<div class="container-fluid dashboard">
+ [+OnManagerWelcomeRender+] 
+      <!-- row title-->
+    <div class="row">
+     <div class="container col-sm-12 margin-bottom-30">
+ 
+     <p class=" text-muted pull-right">
+<a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[+site_name+]-evodashboard.grid,[+site_name+]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [+resetgrid+]</a>
+</p>
+ </div>
   </div>
-</div>
+    </div>
+
+<script src="media/style/[+theme+]/dashboard/plugins/jquery-2.1.4.min.js"></script>
+<script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.js'></script>
+<script src='media/style/[+theme+]/dashboard/js/evodashboard.js'></script>
+<script src="media/style/[+theme+]/dashboard/bootstrap/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript">
+			//localStorage.clear();
+
+			var localdata_position = JSON.parse(localStorage.getItem('[+site_name+]-evodashboard.grid'));
+			var localdata_states = JSON.parse(localStorage.getItem('[+site_name+]-evodashboard.states'));
+
+
+			fnCreateGridster('[+site_name+]-evodashboard.grid', '[+site_name+]-evodashboard.states');
+		</script>
+        
+		<script type="text/javascript">        
+        function cleanLocalStorage() {
+    for(key in localStorage) {
+        delete localStorage[key];
+    }
+    location.reload();
+}
+ </script>

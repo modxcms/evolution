@@ -127,6 +127,7 @@ $_style['icons_modules_large']      = $style_path.'icons/modules.gif';
 $_style['icons_resources_large']    = $style_path.'icons/resources.gif';
 $_style['icons_security_large']     = $style_path.'icons/security.gif';
 $_style['icons_webusers_large']     = $style_path.'icons/web_users.gif';
+$_style['icons_help_large']         = $style_path.'icons/help.png';
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';

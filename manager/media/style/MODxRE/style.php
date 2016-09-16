@@ -29,21 +29,21 @@ $_style['files_management']         = '<img src="'.$style_path.'icons/files.png"
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
-$_style['tree_folder']              = $style_path.'tree/folder.gif'; /* old - application_double.png */
-$_style['tree_folderopen']          = $style_path.'tree/folderopen.gif'; /*old - application_double.png */
+$_style['tree_folder']              = $style_path.'tree/folder.gif';
+$_style['tree_folderopen']          = $style_path.'tree/folderopen.gif';
 $_style['tree_folder_secure']       = $style_path.'tree/folder_secure.png';
 $_style['tree_folderopen_secure']   = $style_path.'tree/folderopen_secure.png';
 $_style['tree_globe']               = $style_path.'tree/globe.gif';
 $_style['tree_linkgo']              = $style_path.'tree/link_go.png';
 $_style['tree_minusnode']           = $style_path.'tree/minusnode.gif';
-$_style['tree_page']                = $style_path.'tree/application.png'; /* old - application.png */
+$_style['tree_page']                = $style_path.'tree/application.png';
 $_style['tree_page_home']           = $style_path.'tree/application_home.gif';
 $_style['tree_page_404']            = $style_path.'tree/application_404.gif';
 $_style['tree_page_hourglass']      = $style_path.'tree/application_hourglass.gif';
 $_style['tree_page_info']           = $style_path.'tree/application_info.gif';
 $_style['tree_page_blank']          = $style_path.'tree/application.png';
 $_style['tree_page_css']            = $style_path.'tree/application_css.png';
-$_style['tree_page_html']           = $style_path.'tree/page_html.gif'; /* old - application_html.png */
+$_style['tree_page_html']           = $style_path.'tree/page_html.gif';
 $_style['tree_page_xml']            = $style_path.'tree/application_xml.png';
 $_style['tree_page_js']             = $style_path.'tree/application_js.png';
 $_style['tree_page_rss']            = $style_path.'tree/application_rss.png';
@@ -57,7 +57,7 @@ $_style['tree_weblink']             = $style_path.'tree/link_go.png';
 $_style['tree_page_secure']         = $style_path.'tree/application_key.png';
 $_style['tree_page_blank_secure']   = $style_path.'tree/application_html_secure.png';
 $_style['tree_page_css_secure']     = $style_path.'tree/application_css_secure.png';
-$_style['tree_page_html_secure']    = $style_path.'tree/page_html_secure.png'; /* old - application_html_secure.png */
+$_style['tree_page_html_secure']    = $style_path.'tree/page_html_secure.png';
 $_style['tree_page_xml_secure']     = $style_path.'tree/application_xml_secure.png';
 $_style['tree_page_js_secure']      = $style_path.'tree/application_js_secure.png';
 $_style['tree_page_rss_secure']     = $style_path.'tree/application_rss_secure.png';

@@ -58,27 +58,55 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	});
 
 
-    function setTreeFrameWidth(pos) {
-        parent.document.getElementById('tree').style.width    = pos + 'px';
-        parent.document.getElementById('resizer').style.left = pos + 'px';
-        parent.document.getElementById('main').style.left    = pos + 'px';
+	function setTreeFrameWidth(pos) {
+		parent.document.getElementById('tree').style.width    = pos + 'px';
+		parent.document.getElementById('resizer').style.left = pos + 'px';
+		parent.document.getElementById('main').style.left    = pos + 'px';
 
-    }
+	}
 
-    function toggleTreeFrame() {
-        var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:320;
-        setTreeFrameWidth(pos);
-    }
+	function toggleTreeFrame() {
+		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:320;
+		setTreeFrameWidth(pos);
+	}
 
-    function hideTreeFrame() {
-        var pos = 0;
-        setTreeFrameWidth(pos);
-    }
 
-    function defaultTreeFrame() {
-        var pos = 250;
-        setTreeFrameWidth(pos);
-    }
+	function hideTreeFrame() {
+		var pos = 0;
+		setTreeFrameWidth(pos);
+	}
+
+	function defaultTreeFrame() {
+		var pos = 300;
+		setTreeFrameWidth(pos);
+	}
+
+
+	//toggle TopMenu Frame
+		function setMenuFrameHeight(pos) {
+		parent.document.getElementById('tree').style.top    = pos + 'px';
+		parent.document.getElementById('resizer').style.top = pos + 'px';
+		parent.document.getElementById('resizer2').style.top = pos + 'px';
+		parent.document.getElementById('main').style.top    = pos + 'px';
+		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
+	}
+
+	function toggleMenuFrame() {
+		var pos = parseInt(parent.document.getElementById('mainMenu').style.height) != 5?5:70;
+		setMenuFrameHeight(pos);
+	}
+
+	function hideMenuFrame() {
+		var pos = 5;
+		setMenuFrameHeight(pos);
+	}
+
+	function defaultMenuFrame() {
+		var pos = 65;
+		setMenuFrameHeight(pos);
+	}
+
+
 
 	// TREE FUNCTIONS - Expand/ Collapse
 	// These functions affect the expanded/collapsed state of the tree and any items that may be pointing to it
@@ -205,7 +233,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
       ?>
       <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
       <?php $style = $modx->config['settings_version']!=$modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; ?>
-      <?php echo sprintf('<span class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);?>
+      <?php echo sprintf('<span onclick="top.main.document.location.href=\'index.php?a=9#version_notices\'" style="cursor:pointer" class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);?>
     </div>
 
   </div>
