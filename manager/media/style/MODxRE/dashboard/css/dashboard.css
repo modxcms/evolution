@@ -214,3 +214,15 @@ table > tbody > tr > td a.btn {
 	opacity : 0.3;
 	position : absolute;
 }
+
+#modxnews_widget ul,
+#modxsecurity_widget ul {
+  margin: 0;
+}
+
+#modxnews_widget ul li,
+#modxsecurity_widget ul li {
+  padding: 0;
+  padding-bottom: 7px;
+  margin-bottom: 7px;
+}
