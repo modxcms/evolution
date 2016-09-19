@@ -14,8 +14,7 @@ function link(){
 	mass = location.href.split('?');
 	return mass[0]+'?id='+_GET['id']+'&a='+_GET['a'];
 }
-		
-		
+
 function store_search(val){
 	$('.item_list .catalog_item').each(function(){
 		var search_name = $(this).find('h3').html();
@@ -27,10 +26,6 @@ function store_search(val){
 		}
 	})
 }	
-
-
-
-
 	
 store = {
 	categories:{},
@@ -134,8 +129,6 @@ store = {
 			return false;
 		});
 		
-		
-		
 		$('.item-install2').live('click',function(){
 			tpl = '<li data-id="'+$(this).attr('data-id')+'">'+$(this).parent().find('.row-category').text()+'<a href="#">X</a></li>';
 			$('.cart_list ul').append(tpl);
@@ -155,24 +148,19 @@ store = {
 			store.get_own_list({}, store.updateUserPack );
 			return false;
 		});
-		
-		
-		
-		
+				
 		$('.item_header :input').change(function(){
 			store.get_list({}, store.update_list );
 		});
 		
 	},
 	install:function(elm){
-		
-		
+			
 		var el = $(elm).closest('.catalog_item').find('.informer');
 		var file = $(elm).closest('.catalog_item').find('[name="link"]').val();
 		store.query('download',{id:$(elm).attr('data-id')},function(data){
 			//el.find('.download').html( parseInt(el.find('.download').html())+1 );
 		});
-		
 		
 		if ($(elm).attr('data-method') == "package"){
 			var install_url = link() + "&action=install&cid="+$(elm).attr('data-id')+"&name="+$(elm).attr('data-name')+"&file="+file;
@@ -197,7 +185,6 @@ store = {
 				}
 		
 			})
-			
 			
 		}
 	
@@ -230,10 +217,6 @@ store = {
 		callback(data)
 		});
 	},
-	
-	
-	
-	
 	
 	update_category: function(data){
 		$('.category_list').html( '<ul>' +store.parse_list1( data , $('.tpl #tpl_category').html() ) + '</ul>' );
@@ -304,8 +287,7 @@ store = {
 			str = $str.wrapAll('<div></div>').parent().html();
 			
 		}
-		
-		
+			
 		if ( array.type ) {
 			array.type = array.type == 'snippet'?'snippets':array.type;
 			array.type = array.type == 'module'?'modules':array.type;
@@ -343,7 +325,6 @@ store = {
             return inputArray && !(inputArray.propertyIsEnumerable('length')) && typeof inputArray === 'object' && typeof inputArray.length === 'number';
         }
 };
-
 
 $(function(){
 	store.init();
