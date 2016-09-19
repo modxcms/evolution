@@ -38,6 +38,29 @@ div.widget-stage.sectionBody li span a {
 	font-weight : bold;
     text-decoration: none;
 }
+.disabled {
+	background:#c8c8c8;
+	border-color: #c8c8c8;
+}
+
+ a.deleted {
+	color:#ca2626;
+    text-decoration: line-through;
+}
+ a.unpublished {
+	color:#999999;
+    font-style: italic;
+}
+[data-toggle="collapse"] {cursor: pointer;}
+.hiddenRow {
+    padding: 0 !important;
+    border-top:0 !important;
+}
+.hiddenRow:hover {
+    background:#FFF;
+}
+.resource-overview-accordian {padding-bottom:3px;border: 1px solid #ededed; }
+.panel-custom > .panel-body {margin-bottom:0; padding-bottom:0;}
 #modxrecent_widget > div > div > ul > li:before{
     content:'\f0c8';
     font-family: FontAwesome;
@@ -50,6 +73,7 @@ div.widget-stage.sectionBody li span a {
 #modxrecent_widget > div > div > ul > li:hover{
     background: #fbfbfb;
 }
+
 div.widget-stage.sectionBody ul li a {
 	margin : 3px 8px 8px 0px;
 	padding-left : 0px;
@@ -147,6 +171,11 @@ i.icon-color-verylight {
 .btn-group .panel-hide {
 	margin-top : -5px;
 }
+
+.btn-action {
+    padding: 1px 1px !important;
+        width:28px;
+}
 .userstable > table {
 	background : #eaebec;
 	border : #ccc 1px solid;
@@ -236,6 +265,9 @@ i.icon-color-verylight {
 	background : -webkit-linear-gradient(top, #f2f2f2 0%,#f0f0f0 100%);
 	filter : progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#f0f0f0',GradientType=0 );
 }
+
+table > tbody > tr > td a.btn {
+    color: #fff;}
 .gridster ul, .gridster ol {
 	list-style : none;
 }
