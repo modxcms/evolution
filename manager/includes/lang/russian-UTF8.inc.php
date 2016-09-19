@@ -1304,9 +1304,9 @@ $_lang["em_button_shift"] = " (Shift-Клик мышкой, чтобы откр�
 $_lang["reset_sysfiles_checksum_button"] = "Пересчитать контрольную сумму";
 $_lang["reset_sysfiles_checksum_alert"] = "Вы уверенны что хотите сбросить контрольную сумму системных файлов?";
 
-$_lang["file_browser_disabled_msg"] = "The File Browser Feature is not enabled.";
-$_lang["which_browser_default_title"]= "Default File Browser";
-$_lang["which_browser_default_msg"]= "Choose the File Browser you prefer as default. In User-Settings you can choose a Custom Browser per User, or leave it on &quot;default&quot;.";
-$_lang["which_browser_title"]= "File Browser";
-$_lang["which_browser_msg"]= "You can choose a custom File Browser for this user. To use the System´s default Browser, leave it on &quot;Default&quot;.";
-$_lang["option_default"] = "Default";
+$_lang["File_browser_disabled_msg"] = "Файл браузер не включен.";
+$_lang["Which_browser_default_title"] = "Файл браузер по умолчанию";
+$_lang["Which_browser_default_msg"] = "Выберите Файл браузер по умолчанию в пользовательских настройках, так же вы можете выбрать файл браузер для каждого пользователя, или оставить его по умолчанию;.";
+$_lang["Which_browser_title"] = "Файл браузер";
+$_lang["Which_browser_msg"] = "Вы можете выбрать браузер пользовательских файлов для этого пользователя. Или использовать указанный в общих настройках";
+$_lang["Option_default"] = "По умолчанию";
