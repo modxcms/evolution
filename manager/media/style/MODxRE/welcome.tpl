@@ -1,7 +1,7 @@
-<link rel="stylesheet" type="text/css" href="media/style/[+theme+]/dashboard/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.css" />
 <link rel="stylesheet" href="media/style/[+theme+]/dashboard/css/dashboard.css" />
-<link rel="stylesheet" href="media/style/[+theme+]/dashboard/fontaw/css/font-awesome.min.css" />
+<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 
 <div class="container-fluid dashboard">
 
@@ -151,10 +151,9 @@
     </div>
 
 <script src="media/style/[+theme+]/dashboard/plugins/jquery-2.1.4.min.js"></script>
-<script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.js'></script>
+<script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.min.js'></script>
 <script src='media/style/[+theme+]/dashboard/js/evodashboard.js'></script>
-<script src="media/style/[+theme+]/dashboard/bootstrap/js/bootstrap.min.js"></script>
-
+<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			//localStorage.clear();
 

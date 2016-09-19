@@ -117,7 +117,7 @@ function fnCreateGridster(page, states){
 		$('#'+panel +' .panel-body').slideDown();
 		$('#'+panel +' .panel-hide').removeClass('glyphicon-plus').addClass('glyphicon-minus');
 		$('#'+panel +' .gs-resize-handle').show();
-		$('#'+panel +' .panel-color, #'+panel +' .panel-max, #'+panel +' .panel-close').show();
+		$('#'+panel +' .panel-max, #'+panel +' .panel-close').show();
 	}
 
 	function _state_minimize(panel){
@@ -129,7 +129,7 @@ function fnCreateGridster(page, states){
 		$('#'+panel +' .panel-body').slideUp();
 		$('#'+panel +' .panel-hide').removeClass('glyphicon-minus').addClass('glyphicon-plus');
 		$('#'+panel +' .panel').css('padding-bottom', '0px');
-		$('#'+panel +' .panel-color, #'+panel +' .panel-max, #'+panel +' .panel-close').hide();
+		$('#'+panel +' .panel-max, #'+panel +' .panel-close').hide();
 	}
 
 	function _resize_gridster(){
@@ -143,9 +143,10 @@ function fnCreateGridster(page, states){
 	/* we're ready for the show */
 	$(window).on('resize load',_resize_gridster);
 
-	/* give it a bit to fully load then fade in */
+	/* start welcome with fade in fx*/
 	setTimeout(function(){
 		$('.gridster').fadeIn('fast');
 	}, 400);
 
 }
+
