@@ -28,11 +28,7 @@ function store_search(val){
 	})
 }	
 
-/*MUST DELETED*/
 
-var admin_send = '';
-
-/* ========== */
 
 
 	
