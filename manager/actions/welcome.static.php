@@ -109,7 +109,7 @@ $modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_ti
 $modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
 
 // recent document info
-$html  = '<table class="table table-hover table-condensed table-responsive"><thead><tr><th class="center">' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["settings_users"] . '</th><th class="text-right">' . $_lang["mgrlog_action"] . '</th><th></th></tr></thead>
+$html  = '<table class="table table-hover table-condensed table-responsive"><thead><tr><th class="center">' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th class="text-right">' . $_lang["mgrlog_action"] . '</th><th></th></tr></thead>
 ';
 $rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
