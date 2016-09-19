@@ -206,7 +206,7 @@ store = {
 	query:function(action,param,callback){
 		param = store.extend(param);
 		$.ajax({
-			url:'http://extras.evolution-cms.com/get.php?get=' + action+admin_send,
+			url:'http://extras.evolution-cms.com/get.php?get=' + action,
 			cache:false,
 			data:param,
 			dataType: "json",
