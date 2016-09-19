@@ -1296,3 +1296,17 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Включить все";
 $_lang["check_none"] = "Выключить все";
 $_lang["check_toggle"] = "Переключить";
+
+$_lang["version_notices"] = "Версия уведомления";
+
+$_lang["em_button_shift"] = " (Shift-Клик мышкой, чтобы открыть несколько окон)";
+
+$_lang["reset_sysfiles_checksum_button"] = "Пересчитать контрольную сумму";
+$_lang["reset_sysfiles_checksum_alert"] = "Вы уверенны что хотите сбросить контрольную сумму системных файлов?";
+
+$_lang["file_browser_disabled_msg"] = "The File Browser Feature is not enabled.";
+$_lang["which_browser_default_title"]= "Default File Browser";
+$_lang["which_browser_default_msg"]= "Choose the File Browser you prefer as default. In User-Settings you can choose a Custom Browser per User, or leave it on &quot;default&quot;.";
+$_lang["which_browser_title"]= "File Browser";
+$_lang["which_browser_msg"]= "You can choose a custom File Browser for this user. To use the System´s default Browser, leave it on &quot;Default&quot;.";
+$_lang["option_default"] = "Default";
