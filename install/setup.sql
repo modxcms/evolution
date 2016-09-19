@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `id` int(10) NOT NULL auto_increment,
-  `name` varchar(50) NOT NULL default '',
+  `name` varchar(100) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Chunk',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none',
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `id` int(10) NOT NULL auto_increment,
-  `templatename` varchar(50) NOT NULL default '',
+  `templatename` varchar(100) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Template',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`id` INT(11) NOT NULL auto_increment,
 	`type` varchar(50) NOT NULL default '',
-	`name` varchar(50) NOT NULL default '',
+	`name` varchar(100) NOT NULL default '',
 	`caption` varchar(80) NOT NULL default '',
 	`description` varchar(255) NOT NULL default '',
 	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
