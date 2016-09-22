@@ -53,7 +53,7 @@ if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confi
 }
 
 // verify email
-if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
