@@ -248,7 +248,7 @@ $_dfnMaxlength = 6;
 						case "email":
 							//stricter email validation - udated to allow + in local name part
 							if (strlen($value)>0 &&  !preg_match(
-							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
+							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,24}$/i', $value) ){
 								$vMsg[count($vMsg)] = isset($formats[$name][4]) ? $formats[$name][4] : $desc . $_lang["ef_invalid_email"];
 								$rClass[$name]=$invalidClass;
 							}
