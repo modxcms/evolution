@@ -2436,7 +2436,7 @@ input#dateto:focus.DatePicker {
 .sectionBody th {
   padding: 1px 5px;
   text-align: left;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .sectionBody .displayparams,
@@ -2547,7 +2547,7 @@ li.breadcrumbs__li_current {
 .table th,
 .table td {
   text-align: left;
-  vertical-align: middle;
+  vertical-align: top;
 }
   
 .table--edit th {
