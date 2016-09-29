@@ -109,7 +109,7 @@ $modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_ti
 $modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
 
 // recent document info
-$html  = '<table class="table table-hover table-condensed table-responsive"><thead><tr><th class="center">' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th class="text-right">' . $_lang["mgrlog_action"] . '</th><th></th></tr></thead>
+$html  = '<div class="table-responsive"><table class="table table-hover table-condensed"><thead><tr><th class="center">' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th class="text-right">' . $_lang["mgrlog_action"] . '</th><th></th></tr></thead>
 ';
 $rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
@@ -204,7 +204,7 @@ if ($limit < 1) {
     }
 }
 
-$html .= '</table>';
+$html .= '</table></div>';
 $modx->setPlaceholder('recent_docs', $_lang['recent_docs']);
 $modx->setPlaceholder('activity_title', $_lang['activity_title']);
 $modx->setPlaceholder('RecentInfo', $html);
@@ -213,30 +213,25 @@ $modx->setPlaceholder('RecentInfo', $html);
 $modx->setPlaceholder('info', $_lang['info']);
 $modx->setPlaceholder('yourinfo_title', $_lang['yourinfo_title']);
 $html = '
-    <table border="0" cellspacing="0" cellpadding="0">
+    <table class="table table-hover table-condensed">
       <tr>
         <td width="150">' . $_lang["yourinfo_username"] . '</td>
-        <td width="20">&nbsp;</td>
         <td><b>' . $modx->getLoginUserName() . '</b></td>
       </tr>
       <tr>
         <td>' . $_lang["yourinfo_role"] . '</td>
-        <td>&nbsp;</td>
         <td><b>' . $_SESSION['mgrPermissions']['name'] . '</b></td>
       </tr>
       <tr>
         <td>' . $_lang["yourinfo_previous_login"] . '</td>
-        <td>&nbsp;</td>
         <td><b>' . $modx->toDateFormat($_SESSION['mgrLastlogin'] + $server_offset_time) . '</b></td>
       </tr>
       <tr>
         <td>' . $_lang["yourinfo_total_logins"] . '</td>
-        <td>&nbsp;</td>
         <td><b>' . ($_SESSION['mgrLogincount'] + 1) . '</b></td>
       </tr>
       <tr>
         <td>' . $_lang["inbox"] . '</td>
-        <td>&nbsp;</td>
         <td><b>' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</b></td>
       </tr>
     </table>
@@ -256,14 +251,15 @@ if ($limit < 1) {
     $html = "<p>" . $_lang['no_active_users_found'] . "</p>";
 } else {
     $html = $_lang["onlineusers_message"] . '<b>' . strftime('%H:%M:%S', time() + $server_offset_time) . '</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
+                <div class="table-responsive">
+                <table class="table table-hover table-condensed">
                   <thead>
                     <tr>
-                      <td><b>' . $_lang["onlineusers_user"] . '</b></td>
-                      <td><b>' . $_lang["onlineusers_userid"] . '</b></td>
-                      <td><b>' . $_lang["onlineusers_ipaddress"] . '</b></td>
-                      <td><b>' . $_lang["onlineusers_lasthit"] . '</b></td>
-                      <td><b>' . $_lang["onlineusers_action"] . '</b></td>
+                      <th>' . $_lang["onlineusers_user"] . '</th>
+                      <th>' . $_lang["onlineusers_userid"] . '</th>
+                      <th>' . $_lang["onlineusers_ipaddress"] . '</th>
+                      <th>' . $_lang["onlineusers_lasthit"] . '</th>
+                      <th>' . $_lang["onlineusers_action"] . '</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -271,11 +267,12 @@ if ($limit < 1) {
     while ($activeusers = $modx->db->getRow($rs)) {
         $currentaction = getAction($activeusers['action'], $activeusers['id']);
         $webicon       = ($activeusers['internalKey'] < 0) ? "<img src='" . $_style["tree_globe"] . "' alt='Web user' />" : "";
-        $html .= "<tr bgcolor='#FFFFFF'><td><b>" . $activeusers['username'] . "</b></td><td>$webicon&nbsp;" . abs($activeusers['internalKey']) . "</td><td>" . $activeusers['ip'] . "</td><td>" . strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time) . "</td><td>$currentaction</td></tr>";
+      $html .= "<tr><td><strong>" . $activeusers['username'] . "</strong></td><td>$webicon&nbsp;" . abs($activeusers['internalKey']) . "</td><td>" . $activeusers['ip'] . "</td><td>" . strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time) . "</td><td>$currentaction</td></tr>";
     }
     $html .= '
                 </tbody>
                 </table>
+                </div>
         ';
 }
 $modx->setPlaceholder('OnlineInfo', $html);
