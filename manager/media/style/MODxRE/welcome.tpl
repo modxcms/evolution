@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
-<link rel="stylesheet" href="media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.css" />
+<link rel="stylesheet" href="media/script/gridster/jquery.gridster.css" />
 <link rel="stylesheet" href="media/style/[+theme+]/dashboard/css/dashboard.css" />
 <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 
@@ -7,10 +7,25 @@
 
   <!-- title-->
   [+OnManagerWelcomePrerender+]
+<div class="dashboard_header">
+<div class="col-sm-6">
   <div class="wm_logo">
     <img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
   </div>
   <h1>[+site_name+] / Dashboard</h1>
+ </div>
+     <div class="col-sm-6 dashboard_search">
+           <form  action="index.php?a=71#results" method="post" target="main">
+                <div class="form-group has-feedback">
+            		<label for="search" class="sr-only">Search</label>
+                    <input type="hidden" value="Search" name="submitok" />
+            		<input type="text" name="searchid" size="25" class="form-control input-sm"  placeholder="[+search+]">           
+              		<span class="text-muted glyphicon glyphicon-search form-control-feedback"></span>
+            	</div>
+            </form>
+        </div>
+    </div>
+</div>
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">
@@ -28,7 +43,7 @@
       [+OnManagerWelcomeHome+]
       <!---Welcome Logo and buttons---> 
       <!--- panel -->
-      <li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="3" data-sizey="6">
+      <li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="2" data-sizey="6">
         <div class="panel panel-default widget-wrapper">
           <div class="panel-headingx widget-title sectionHeader clearfix">
             <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
@@ -48,7 +63,7 @@
               [+HelpIcon+]
             </div>
             <div class="userstable">
-              [+OnlineInfo+]
+             [+UserInfo+]
             </div>
           </div>
         </div>			
@@ -57,18 +72,20 @@
 
       <!---User Info--->
       <!--- panel --->
-      <li id="modxinfo_widget" data-row="2" data-col="2" data-sizex="1" data-sizey="6">
+      <li id="modxonline_widget" data-row="2" data-col="2" data-sizex="2" data-sizey="6">
         <div class="panel panel-default widget-wrapper">
           <div class="panel-headingx widget-title sectionHeader clearfix">
-            <span class="panel-handel pull-left"><i class="fa fa-info-circle"></i> [+info+]</span>
+            <span class="panel-handel pull-left"><i class="fa fa-user"></i> [+onlineusers_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxinfo_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxonline_widget"></a>
               </div>	  
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-            [+UserInfo+]
+          <div class="userstable">
+             [+OnlineInfo+]
+          </div>
           </div>
         </div>			
       </li>
@@ -106,7 +123,7 @@
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-            [+modx_news_content+]
+            <i class="fa fa-rss fa-5x icon-color-verylight"></i> [+modx_news_content+]
           </div>
         </div>			
       </li>
@@ -125,7 +142,7 @@
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-            [+modx_security_notices_content+]
+            <i class="fa fa-exclamation-triangle fa-5x icon-color-verylight"></i> [+modx_security_notices_content+]
           </div>
         </div>			
       </li>
@@ -143,8 +160,8 @@
   
 </div>
 
-<script src="media/style/[+theme+]/dashboard/plugins/jquery-2.1.4.min.js"></script>
-<script src='media/style/[+theme+]/dashboard/plugins/gridster/jquery.gridster.min.js'></script>
+<script src="media/script/jquery/jquery.min.js"></script>
+<script src='media/script/gridster/jquery.gridster.min.js'></script>
 <script src='media/style/[+theme+]/dashboard/js/evodashboard.js'></script>
 <script src="media/script/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
