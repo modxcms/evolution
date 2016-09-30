@@ -63,7 +63,7 @@
               [+BackupIcon+]
               [+HelpIcon+]
             </div>
-            <div class="userstable">
+            <div class="userprofiletable">
               [+UserInfo+]
             </div>
           </div>
