@@ -138,8 +138,15 @@ div.wm_logo {
 	font-size : 18px;
 	margin-bottom : 5px;
 }
-.dashboard_header {margin:0;}
-.dashboard_search {padding:20px 8px 0 8px;}
+
+.dashboard_header {
+  margin: 0;
+}
+
+.dashboard_search {
+  margin-top: 25px;
+}
+
 .panel-heading {
 	background-color : transparent;
 }
