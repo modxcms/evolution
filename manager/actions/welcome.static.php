@@ -36,6 +36,7 @@ $modx->setPlaceholder('logo_slogan', $_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name', $site_name);
 $modx->setPlaceholder('welcome_title', $_lang['welcome_title']);
 $modx->setPlaceholder('resetgrid', $_lang['reset']);
+$modx->setPlaceholder('search', $_lang['search']);
 
 // setup message info
 if ($modx->hasPermission('messages')) {
@@ -54,32 +55,31 @@ function wrapIcon($i)
 {
     return '<span class="wm_button" style="border:0">' . $i . '</span>';
 }
-
-if ($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-    $icon = '<a class="hometblink" href="index.php?a=75"><img src="' . $_style['icons_security_large'] . '" alt="' . $_lang['user_management_title'] . '" /><br />' . $_lang['security'] . '</a>';
-    $modx->setPlaceholder('SecurityIcon', wrapIcon($icon));
+// setup icons
+if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) {
+	$icon = '<a class="hometblink" href="index.php?a=75"><i class="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'"> </i><br />'.$_lang['security'].'</a>';
+	$modx->setPlaceholder('SecurityIcon',wrapIcon($icon));
 }
-if ($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-    $icon = '<a class="hometblink" href="index.php?a=99"><img src="' . $_style['icons_webusers_large'] . '" alt="' . $_lang['web_user_management_title'] . '" /><br />' . $_lang['web_users'] . '</a>';
-    $modx->setPlaceholder('WebUserIcon', wrapIcon($icon));
+if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) {
+	$icon = '<a class="hometblink" href="index.php?a=99"><i class="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'"> </i><br />'.$_lang['web_users'].'</a>';
+	$modx->setPlaceholder('WebUserIcon',wrapIcon($icon));
 }
-if ($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-    $icon = '<a class="hometblink" href="index.php?a=106"><img src="' . $_style['icons_modules_large'] . '" alt="' . $_lang['manage_modules'] . '" /><br />' . $_lang['modules'] . '</a>';
-    $modx->setPlaceholder('ModulesIcon', wrapIcon($icon));
+if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
+	$icon = '<a class="hometblink" href="index.php?a=106"><i class="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'"> </i><br />'.$_lang['modules'].'</a>';
+	$modx->setPlaceholder('ModulesIcon',wrapIcon($icon));
 }
-if ($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-    $icon = '<a class="hometblink" href="index.php?a=76"><img src="' . $_style['icons_resources_large'] . '" alt="' . $_lang['element_management'] . '" /><br />' . $_lang['elements'] . '</a>';
-    $modx->setPlaceholder('ResourcesIcon', wrapIcon($icon));
+if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
+	$icon = '<a class="hometblink" href="index.php?a=76"><i class="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'"> </i><br />'.$_lang['elements'].'</a>';
+	$modx->setPlaceholder('ResourcesIcon',wrapIcon($icon));
 }
-if ($modx->hasPermission('bk_manager')) {
-    $icon = '<a class="hometblink" href="index.php?a=93"><img src="' . $_style['icons_backup_large'] . '" alt="' . $_lang['bk_manager'] . '" /><br />' . $_lang['backup'] . '</a>';
-    $modx->setPlaceholder('BackupIcon', wrapIcon($icon));
+if($modx->hasPermission('bk_manager')) {
+	$icon = '<a class="hometblink" href="index.php?a=93"><i class="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'"> </i><br />'.$_lang['backup'].'</a>';
+	$modx->setPlaceholder('BackupIcon',wrapIcon($icon));
 }
 if ($modx->hasPermission('help')) {
-    $icon = '<a class="hometblink" href="index.php?a=9"><img src="' . $_style['icons_help_large'] . '" alt="' . $_lang['help'] . '" /><br />' . $_lang['help'] . '</a>';
+    $icon = '<a class="hometblink" href="index.php?a=9"><i class="'.$_style['icons_help_large'].'" alt="'. $_lang['help'].'" /> </i><br />' . $_lang['help'] . '</a>';
     $modx->setPlaceholder('HelpIcon', wrapIcon($icon));
 }
-
 // do some config checks
 if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
     include_once "config_check.inc.php";
@@ -109,9 +109,9 @@ $modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_ti
 $modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
 
 // recent document info
-$html  = '<div class="table-responsive"><table class="table table-hover table-condensed"><thead><tr><th class="center">' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th class="text-right">' . $_lang["mgrlog_action"] . '</th><th></th></tr></thead>
+$html  = '<div class="table-responsive"><table class="table table-hover table-condensed"><thead><tr><th>' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th style="text-align: right;">' . $_lang["mgrlog_action"] . '</th></tr></thead>
 ';
-$rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
+$rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable, template', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
 $limit = $modx->db->getRecordCount($rs);
 if ($limit < 1) {
     $html .= '<tr><td>' . $_lang['no_activity_message'] . '</td></tr>';
@@ -119,9 +119,9 @@ if ($limit < 1) {
     while ($content = $modx->db->getRow($rs)) {
         $editedby  = $content['editedby'];
         $editedbyu = $modx->getUserInfo($editedby);
-        $html .= '<tr><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
+        $html .= '<tr><td style="width: 5%" data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
       
-        <span class="label label-info">' . $content['id'] . '</span></td><td>';
+        <span class="label label-info">' . $content['id'] . '</span></td><td style="width: 45%" >';
         if ($content['deleted'] == 1) {
             $html .= '<a class="deleted" ';
         } else if ($content['published'] == 0) {
@@ -129,11 +129,11 @@ if ($limit < 1) {
         } else {
             $html .= '<a class="published" ';
         }
-        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
-        <td>';
+        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td style="width: 15% data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td style="width: 10% data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
+        <td style="text-align: right; width: 25%">';
         
         if ($modx->hasPermission('edit_document')) {
-            $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
         }
         
         if ($content['deleted'] == 1) {
@@ -157,7 +157,7 @@ if ($limit < 1) {
         } else {
             $html .= '<a class="btn btn-xs btn-warning"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=62&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
         }
-        $html .= '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="text-muted fa fa-info-circle" aria-hidden="true"></i></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
+        $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="' . $_lang["resource_overview"] . '" data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="fa fa-info" aria-hidden="true"></i></button></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
 <li><b>' . $_lang["long_title"] . '</b>: ';
         if ($content['longtitle'] == "") {
             $html .= '(<i>'.$_lang['not_set'].'</i>)';
@@ -182,8 +182,13 @@ if ($limit < 1) {
         } else {
             $html .= '' . $_lang['resource'] . '</li>';
         }
-        $html .= '<li><b>' . $_lang["resource_alias"] . '</b>: ' . $content['alias'] . '</li>
-<li><b>' . $_lang['page_data_cacheable'] . '</b>: ';
+        $html .= '<li><b>' . $_lang["resource_alias"] . '</b>: ';
+        if ($content['resource_alias'] == "") {
+            $html .= '(<i>'.$_lang['not_set'].'</i>)';
+        } else { 
+           $html .= '' . $content['alias'] . '</li>';
+               }
+        $html .= '<li><b>' . $_lang['page_data_cacheable'] . '</b>: '; 
         if ($content['cacheable'] == 0) {
             $html .= '' . $_lang['no'] . '<br/>';
         } else {
@@ -196,7 +201,7 @@ if ($limit < 1) {
             $html .= '' . $_lang['yes'] . '</li>';
         }
         // Get Template name
-        $rst          = $modx->db->select('templatename', $modx->getFullTableName('site_templates'), $content['template']);
+        $rst          = $modx->db->select('templatename', $modx->getFullTableName('site_templates'), 'id=' . $content['template'] .'');
         $templatename = $modx->db->getValue($rst);
         $html .= '<li><b>' . $_lang['page_data_template'] . '</b>: ' . $templatename . '</li>';
         $html .= '</ul></div></div></td></tr>';
