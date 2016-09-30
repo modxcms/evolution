@@ -1,4 +1,13 @@
-body {-moz-osx-font-smoothing: grayscale;}
+body {
+	font-size: 62.5%;
+	font-size: 68.75%;
+	font-size: 75%;
+	height: 100%;
+	color:#333333;
+	background: #f7f7f7;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .dashboard {
   padding-top: 15px;
 }
@@ -114,10 +123,13 @@ div.wm_buttons a {
 	text-align : center;
 
 }
-div.wm_buttons > a > i {
+ a.hometblink > i {
 	margin-bottom : 8px;
 	text-align : center;
-    color: #666;
+    color: #31405f;
+}
+ a.hometblink > i:hover {
+    color: #333;
 }
 div.wm_logo {
 	float : left;

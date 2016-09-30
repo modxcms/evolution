@@ -972,9 +972,11 @@ a.hometblink:hover {
 	-webkit-box-shadow: 2px 2px 20px #eaeaea;
 }
 #mx_contextmenu .menuLink {
-	cursor: pointer;
-	color: #222;
-	padding: 3px 5px 3px 4px;
+  cursor: pointer;
+  color: #222;
+  padding: 3px 2px 2px 4px;
+  line-height: 16px;
+  border: 1px solid #fff;
 }
 #mx_contextmenu .menuLink:hover {
 	background: #DDE4EB;
@@ -985,23 +987,23 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink:hover,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
-	padding: 2px 4px 2px 3px;
+  padding: 3px 2px 2px 4px;
 }
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
 	color: #787878;
 }
-#mx_contextmenu .menuLink img,
-#mx_contextmenu .menuLink:hover img,
-#mx_contextmenu .menuLinkDisabled img {
+#mx_contextmenu .menuLink i,
+#mx_contextmenu .menuLink:hover i,
+#mx_contextmenu .menuLinkDisabled i {
 	margin-right: 5px;
 }
 #mx_contextmenu .menuLink img,
-#mx_contextmenu .menuLinkDisabled img {
+#mx_contextmenu .menuLinkDisabled i {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
-#mx_contextmenu .menuLink:hover img {
+#mx_contextmenu .menuLink:hover i {
 	opacity: 1;
 	filter: alpha(opacity=100);
 }
@@ -1140,31 +1142,45 @@ a.hometblink:hover {
 	padding-right: 5px;
 }
 /* -------------------------[ Tree buttons ]--- */
-.treeButton {
-	display: block;
-	cursor: default;
-	color: #333;
-	border: 1px;
-	border-bottom-color: #809c47;
-	padding: 3px 5px;
-	white-space: nowrap;
-	vertical-align: middle;
+
+.treeButton,
+a.treeButtonDisabled {
+  display: block;
+  min-width: 15px;
+  cursor: pointer;
+  cursor: hand;
+  text-align:center;
+  border-color: #565f69;
+  background-color: #fff;
+  background-color: rgba(255,255,255,.7);
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin-right: 2px;
+  white-space: nowrap;
+  vertical-align: middle;
 }
-.treeButton:hover {
-	border: 1px solid #88939E;
-	padding: 2px 4px;
-	background: #fff;
+a.treeButton {
+    color: #31405f;
 }
+.treeButton i:hover {
+  border-color: #53585d;
+  background-color: #fff;
+  background-color: rgba(255,255,255,1);
+  color: #333;
+}
+
+.treeButton:active {
+  background-color: #fff;
+}
+
 .treeButtonDisabled {
-	cursor: default;
-	border: 1px solid #657587;
-	padding: 2px 4px;
-	color: #777;
-	border-width: 0;
-	opacity: .5;
-	filter: alpha(opacity=50);
+  cursor: default;
+  color: #777;
+  opacity: .5;
+  filter: alpha(opacity=50);
 }
 /* -------------------------[ Welcome Page ]--- */
+html > body > div.dashboard > div.gridster.ready > ul > li#modxwelcome_widget.gs-w > div.panel.panel-default.widget-wrapper > div.panel-body.widget-stage.sectionBody > div.wm_buttons > span.wm_button
 a.hometblink, a.hometblink img {
 	border: 0 !important;
 	text-decoration: none !important;
