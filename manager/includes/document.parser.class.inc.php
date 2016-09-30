@@ -697,7 +697,10 @@ class DocumentParser {
 
         // invoke OnWebPagePrerender event
         if (!$noEvent) {
-            $this->invokeEvent('OnWebPagePrerender');
+            $evtOut = $this->invokeEvent('OnWebPagePrerender', array('documentOutput'=>$this->documentOutput));
+            if (is_array($evtOut) && count($evtOut) > 0){
+                $this->documentOutput = $evtOut['0'];
+            }   
         }
         global $sanitize_seed;
         if(strpos($this->documentOutput, $sanitize_seed)!==false) {
