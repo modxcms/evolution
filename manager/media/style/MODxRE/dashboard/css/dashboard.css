@@ -1,3 +1,4 @@
+body {-moz-osx-font-smoothing: grayscale;}
 .dashboard {
   padding-top: 15px;
 }
@@ -13,6 +14,9 @@
 .dashrow {
 	clear : both;
 }
+.dashboard_header {margin:0; padding-right:0;}
+.dashboard_search {padding-right: -16px%;}
+
 .overflowscroll {
 	max-height : 270px;
 	overflow-y : auto!important;
@@ -95,7 +99,7 @@ div.wm_button {
 	text-align : center;
 	webkit-border-radius : 3px;
 }
-.wm_button > a.hometblink img {
+div.wm_buttons > a.hometblink{
 	border-radius : 3px;
 	display : inline-block;
 	line-height : 64px;
@@ -103,14 +107,17 @@ div.wm_button {
 	padding : 10px;
 	position : relative;
 	webkit-border-radius : 3px;
+
 }
-div.wm_button a {
+div.wm_buttons a {
 	font-weight : bold;
 	text-align : center;
+
 }
-div.wm_button > a > i {
+div.wm_buttons > a > i {
 	margin-bottom : 8px;
 	text-align : center;
+    color: #666;
 }
 div.wm_logo {
 	float : left;
@@ -131,6 +138,8 @@ div.wm_logo {
 	font-size : 18px;
 	margin-bottom : 5px;
 }
+.dashboard_header {margin:0;}
+.dashboard_search {padding:20px 8px 0 8px;}
 .panel-heading {
 	background-color : transparent;
 }
@@ -150,7 +159,7 @@ div.wm_logo {
 .widget-wrapper .widget-title {
 	border-bottom : 1px solid #d7d7d7;
 	font-size : 14px;
-	font-weight : 200;
+	font-weight : 300;
     padding : 7px 5px 4px 10px;
 }
 .widget-wrapper .widget-stage {
@@ -180,7 +189,14 @@ i.icon-color-verylight {
 
 .btn-action {
     padding: 1px 1px !important;
-        width:28px;
+    width:28px;
+}
+.btn-expand i{
+    color : #afafaf;
+}
+.btn-expand:hover{
+    color : #4d4d4d;
+    background : #fbfbfb;
 }
 
 table > tbody > tr > td a.btn {
@@ -213,16 +229,4 @@ table > tbody > tr > td a.btn {
 	border-color : #000;
 	opacity : 0.3;
 	position : absolute;
-}
-
-#modxnews_widget ul,
-#modxsecurity_widget ul {
-  margin: 0;
-}
-
-#modxnews_widget ul li,
-#modxsecurity_widget ul li {
-  padding: 0;
-  padding-bottom: 7px;
-  margin-bottom: 7px;
 }
