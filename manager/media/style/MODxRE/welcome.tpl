@@ -7,25 +7,26 @@
 
   <!-- title-->
   [+OnManagerWelcomePrerender+]
-<div class="dashboard_header">
-<div class="col-sm-6">
-  <div class="wm_logo">
-    <img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
-  </div>
-  <h1>[+site_name+] / Dashboard</h1>
- </div>
-     <div class="col-sm-6 dashboard_search">
-           <form  action="index.php?a=71#results" method="post" target="main">
-                <div class="form-group has-feedback">
-            		<label for="search" class="sr-only">Search</label>
-                    <input type="hidden" value="Search" name="submitok" />
-            		<input type="text" name="searchid" size="25" class="form-control input-sm"  placeholder="[+search+]">           
-              		<span class="text-muted glyphicon glyphicon-search form-control-feedback"></span>
-            	</div>
-            </form>
+  <div class="dashboard_header">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="wm_logo">
+          <img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
         </div>
+        <h1>[+site_name+] / Dashboard</h1>
+      </div>
+      <div class="col-sm-6 dashboard_search">
+        <form  action="index.php?a=71#results" method="post" target="main">
+          <div class="form-group has-feedback">
+            <label for="search" class="sr-only">Search</label>
+            <input type="hidden" value="Search" name="submitok" />
+            <input type="text" name="searchid" size="25" class="form-control input-sm"  placeholder="[+search+]">           
+            <span class="text-muted glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">
@@ -63,7 +64,7 @@
               [+HelpIcon+]
             </div>
             <div class="userstable">
-             [+UserInfo+]
+              [+UserInfo+]
             </div>
           </div>
         </div>			
@@ -83,9 +84,9 @@
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-          <div class="userstable">
-             [+OnlineInfo+]
-          </div>
+            <div class="userstable">
+              [+OnlineInfo+]
+            </div>
           </div>
         </div>			
       </li>
@@ -157,7 +158,7 @@
       <a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[+site_name+]-evodashboard.grid,[+site_name+]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [+resetgrid+]</a>
     </p>
   </div>
-  
+
 </div>
 
 <script src="media/script/jquery/jquery.min.js"></script>
