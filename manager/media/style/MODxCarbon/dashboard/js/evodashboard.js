@@ -13,7 +13,7 @@ function fnCreateGridster(page, states){
 		var offset=60;
 	} else {
 		var cols=4
-		var offset=25;
+		var offset=19;
 	}
 
 

@@ -1123,10 +1123,9 @@ a.hometblink:visited,
 a.hometblink:link,
 .hometblink {
   text-decoration: underline;
-  color: #333;
+  color: #434343;
   font-weight: bold;
 }
-
 a.hometblink:hover {
   text-decoration: underline;
   color: Gray;
@@ -1446,7 +1445,7 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink {
   cursor: pointer;
   color: #222;
-  padding: 4px 2px 4px 4px;
+  padding: 4px 2px 2px 4px;
   line-height: 16px;
   border: 1px solid #fff;
 }
@@ -1465,25 +1464,28 @@ a.hometblink:hover {
 #mx_contextmenu .menuLinkDisabled {
   cursor: default;
   color: #787878;
-  padding: 3px 2px 4px 4px;
+  padding: 4px 2px 2px 4px;
   line-height: 16px;
   border: 1px solid #fff;
 }
 
-#mx_contextmenu .menuLink img,
-#mx_contextmenu .menuLink:hover img,
-#mx_contextmenu .menuLinkDisabled img {
-  margin-right: 8px;
+#mx_contextmenu .menuLink i,
+#mx_contextmenu .menuLink:hover i,
+#mx_contextmenu .menuLinkDisabled i {
+  margin-right: 2px;
+  display: inline-block;
+  min-width: 12px;
+
 }
 
-#mx_contextmenu .menuLink img,
-#mx_contextmenu .menuLinkDisabled img {
+#mx_contextmenu .menuLink i,
+#mx_contextmenu .menuLinkDisabled i {
   /* 	opacity: .3;
 	filter: alpha(opacity=30); */
   vertical-align: top;
 }
 
-#mx_contextmenu .menuLink:hover img {
+#mx_contextmenu .menuLink:hover i {
   /* 	opacity: 1;
 	filter: alpha(opacity=100); */
 }
@@ -1515,10 +1517,10 @@ a.hometblink:hover {
   padding: 2px 1px 2px 15px;
 }
 
-.rtl #mx_contextmenu .menuLink img,
-.rtl #mx_contextmenu .menuLink:hover img,
-.rtl #mx_contextmenu .menuLinkDisabled img {
-  margin-right: 8px;
+.rtl #mx_contextmenu .menuLink i,
+.rtl #mx_contextmenu .menuLink:hover i,
+.rtl #mx_contextmenu .menuLinkDisabled i {
+  margin-right: 2px;
 }
 
 .rtl #mx_contextmenu #nameHolder {
@@ -1678,22 +1680,29 @@ a.hometblink:hover {
 /* -------------------------[ Tree buttons ]--- */
 
 .treeButton,
-.treeButtonDisabled {
+a.treeButtonDisabled {
   display: block;
+  min-width: 15px;
   cursor: pointer;
   cursor: hand;
   color: #333;
-  border: 1px solid transparent;
+  text-align:center;
+  border-color: #6e7a86;
+  background-color: #fff;
+  background-color: rgba(255,255,255,.7);
   border-radius: 3px;
   padding: 3px 5px;
+  margin-right: 2px;
   white-space: nowrap;
   vertical-align: middle;
 }
-
+a.treeButton {
+  color: #333;
+}
 .treeButton:hover {
   border-color: #6e7a86;
   background-color: #fff;
-  background-color: rgba(255,255,255,.5);
+  background-color: rgba(255,255,255,1);
 }
 
 .treeButton:active {
@@ -2437,7 +2446,7 @@ input#dateto:focus.DatePicker {
 .sectionBody th {
   padding: 1px 5px;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .sectionBody .displayparams,
@@ -2548,7 +2557,7 @@ li.breadcrumbs__li_current {
 .table th,
 .table td {
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
 }
   
 .table--edit th {
