@@ -338,6 +338,7 @@ $_lang["files_filename"] = 'Имя файла';
 $_lang["files_fileoptions"] = 'Параметры';
 $_lang["files_files"] = 'Файлы';
 $_lang["files_filesize"] = 'Размер файла';
+$_lang["files_management"] = 'Управление файлами';
 $_lang["files_filetype_notok"] = 'Загрузка файлов такого типа запрещена';
 $_lang["files_modified"] = 'Изменен';
 $_lang["files_top_level"] = 'На корневой уровень';
