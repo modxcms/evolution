@@ -1334,8 +1334,11 @@ a.hometblink, a.hometblink img {
 }
 .wm_button {
 	float: left;
-	margin: 0 5px 2px 20px;
+	margin: 0 5px 10px 5px;
 	text-align: center;
+	width: 70px;
+	height:60px;
+	line-height: 1.2;
 }
 	.rtl .wm_button {
 	    float: right;
