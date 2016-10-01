@@ -111,12 +111,13 @@ $_style['icons_tooltip']            = $style_path.'icons/b02.gif';
 $_style['icons_tooltip_over']       = $style_path.'icons/b02_trans.gif';
 
 // Large Icons
-$_style['icons_backup_large']       = $style_path.'icons/backup.gif';
-$_style['icons_mail_large']         = $style_path.'icons/mail_generic.gif';
-$_style['icons_modules_large']      = $style_path.'icons/modules.gif';
-$_style['icons_resources_large']    = $style_path.'icons/resources.gif';
-$_style['icons_security_large']     = $style_path.'icons/security.gif';
-$_style['icons_webusers_large']     = $style_path.'icons/web_users.gif';
+$_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
+$_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
+$_style['icons_modules_large']      = 'fa fa-th-large fa-fw fa-2x';
+$_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
+$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-2x';
+$_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
+$_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';
