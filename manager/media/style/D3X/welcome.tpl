@@ -53,7 +53,7 @@
               [+BackupIcon+]
               [+HelpIcon+]
             </div>
-            <div class="userprofiletable">
+            <div class="userprofiletable" style="margin-bottom:-20px;">
               [+UserInfo+]
             </div>
           </div>
