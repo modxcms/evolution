@@ -1,4 +1,4 @@
-<script type="text/javascript" src="media/style/[(manager_theme)]/moo-datepicker/datepicker.js"></script>
+<script type="text/javascript" src="media/style/MODxCarbon/moo-datepicker/datepicker.js"></script>
 <script>
     var dpOffset = [(datepicker_offset)];
     var dpformat = "[(datetime_format)]" + ' hh:mm:00';
@@ -8,4 +8,5 @@
     $$('input.DatePicker').each(function(el){
         new DatePicker(el, {yearOffset:dpOffset, format:dpformat, dayNames:dpdayNames, monthNames:dpmonthNames, startDay:dpstartDay});
 });
+    
 </script>

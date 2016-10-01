@@ -1,13 +1,4 @@
-body {
-	font-size: 62.5%;
-	font-size: 68.75%;
-	font-size: 75%;
-	height: 100%;
-	color:#333333;
-	background: #f7f7f7;
-    -moz-osx-font-smoothing: grayscale;
-}
-
+body {-moz-osx-font-smoothing: grayscale;}
 .dashboard {
   padding-top: 15px;
 }
@@ -123,13 +114,10 @@ div.wm_buttons a {
 	text-align : center;
 
 }
- a.hometblink > i {
+div.wm_buttons > a > i {
 	margin-bottom : 8px;
 	text-align : center;
-    color: #31405f;
-}
- a.hometblink > i:hover {
-    color: #333;
+    color: #666;
 }
 div.wm_logo {
 	float : left;
@@ -150,8 +138,15 @@ div.wm_logo {
 	font-size : 18px;
 	margin-bottom : 5px;
 }
-.dashboard_header {margin:0;}
-.dashboard_search {padding:20px 8px 0 8px;}
+
+.dashboard_header {
+  margin: 0;
+}
+
+.dashboard_search {
+  margin-top: 25px;
+}
+
 .panel-heading {
 	background-color : transparent;
 }
