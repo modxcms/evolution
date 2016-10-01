@@ -2030,3 +2030,6 @@ li.breadcrumbs__li_current {
 	font-weight: bold;
 }
 /* end breadcrumbs */
+
+/*missing img*/
+#treeMenu #Button12 {width: 16px; height: 16px; background: url(images/icons/comment.gif) no-repeat center center;}
