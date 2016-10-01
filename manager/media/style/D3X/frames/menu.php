@@ -66,7 +66,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	}
 
 	function toggleTreeFrame() {
-		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:250;
+		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:275;
 		setTreeFrameWidth(pos);
 	}
 
