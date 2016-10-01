@@ -815,6 +815,7 @@ a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hom
 	text-decoration: underline;
 	color: #333;
 	font-weight: bold;
+	font-size:12px;
 }
 a.hometblink:hover {
 	text-decoration: underline;
