@@ -1070,6 +1070,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('212','OnManagerNodePrerender','2',''),
 ('213','OnManagerNodeRender','2',''),
 ('214','OnManagerMenuPrerender','2',''),
+('215','OnManagerTopPrerender','2',''),
 ('224','OnDocFormTemplateRender','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1',''),
