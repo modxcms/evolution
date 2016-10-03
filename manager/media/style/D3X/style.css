@@ -14,13 +14,16 @@ html {
 	color: #111;
 }
 body {
-	font-family:  Ubuntu, Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+	font-family:  Ubuntu, Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 62.5%;
 	font-size: 68.75%;
 	font-size: 75%;
 	height: 100%;
 	color:#333333;
 	background: #eeeeee url(images/misc/mainbg.png);
+}
+html:lang(ja) body {
+	font-family: Meiryo, "Hiragino Kaku Gothic Pro", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 img, a img {
 	border: 0 !important;
@@ -285,7 +288,6 @@ form select{
     -webkit-box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
     box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
     font-size: 13px;
-    font-family: Ubuntu, "Helvetica Neue",Helvetica,Arial,sans-serif;
     height:27px;
     vertical-align:middle;
     padding:4px;
