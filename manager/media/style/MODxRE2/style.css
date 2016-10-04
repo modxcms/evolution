@@ -2075,7 +2075,8 @@ form#mutate .multitv input[type="text"] {
 }
 
 form#mutate .imageField {
-  width: 75%;
+  width: 50%;
+  min-width: 300px;
 }
 
 form#mutate select.inputBox {
