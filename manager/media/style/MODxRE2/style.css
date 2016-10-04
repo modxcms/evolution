@@ -2950,9 +2950,10 @@ input[type="submit"]:active {
   border: 1px solid #3189ba;
 }
 
+form select,
+input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="text"],
 input[type="url"],
 input[type="number"],
 textarea,
@@ -2960,15 +2961,39 @@ form input[type="text"],
 form input[type="password"], 
 form input[type="number"], 
 form textarea,
+#tv_body select, 
 #tv_body input[type="text"], 
+#tv_body input[type="email"], 
 #tv_body input[type="password"], 
+#tv_body input[type="url"], 
 #tv_body input[type="number"], 
 #tv_body textarea {
   background-color: #FBFBFB;
   box-shadow: none;
   transition: all .3s;
   border-color: #dbdbdb;
-  /*border-radius: 3px !important;*/
+}
+
+#tv_body select, 
+#tv_body input[type="text"], 
+#tv_body input[type="email"], 
+#tv_body input[type="password"], 
+#tv_body input[type="url"], 
+#tv_body input[type="number"], 
+#tv_body textarea {
+  background-color: #fff;
+  border-color: #cfcfcf;
+}
+
+#tmplvars-pane select, 
+#tmplvars-pane input[type="text"], 
+#tmplvars-pane input[type="email"], 
+#tmplvars-pane input[type="password"], 
+#tmplvars-pane input[type="url"], 
+#tmplvars-pane input[type="number"], 
+#tmplvars-pane textarea {
+  background-color: #FBFBFB;
+  border-color: #dbdbdb;
 }
 
 input[type="email"]:focus,
@@ -2981,10 +3006,14 @@ textarea:focus,
 select:focus,
 form input[type="text"]:focus, 
 form input[type="password"]:focus, 
+form input[type="email"]:focus, 
+form input[type="url"]:focus, 
 form input[type="number"]:focus, 
 form textarea:focus,
 #tv_body input[type="text"]:focus, 
 #tv_body input[type="password"]:focus, 
+#tv_body input[type="email"]:focus, 
+#tv_body input[type="url"]:focus, 
 #tv_body input[type="number"]:focus, 
 #tv_body textarea:focus {
   border-color: #3697CD;
