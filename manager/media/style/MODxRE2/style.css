@@ -2928,6 +2928,13 @@ div.treeframebody {
 .treeButton, 
 .treeButtonDisabled {
   color: #576B75 !important;
+  border-radius: 2px !important;
+  min-width: 15px;
+  text-align: center;
+}
+
+.treeButton:active {
+  background-color: #d5d5d5;
 }
 
 input[type="button"],
