@@ -2067,8 +2067,16 @@ form#mutate input.disabled {
   background-color: #f5f5f5 !important;
 }
 
+form#mutate select {
+  width: 308px;
+}
+
 form#mutate .inputBox {
   width: 93%;
+}
+
+form#mutate select.inputBox {
+  margin-right: 5px;
 }
 
 form#mutate .multitv input[type="text"] {
@@ -2078,14 +2086,6 @@ form#mutate .multitv input[type="text"] {
 form#mutate .imageField {
   width: 50%;
   min-width: 300px;
-}
-
-form#mutate select.inputBox {
-  width: 300px;
-}
-
-form#mutate select {
-  width: 308px;
 }
 
 form#mutate input[name="menuindex"].inputBox {
