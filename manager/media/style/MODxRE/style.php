@@ -129,6 +129,7 @@ $_style['icons_event1']             = $style_path.'icons/event1.png';
 $_style['icons_event2']             = $style_path.'icons/event2.png';
 $_style['icons_event3']             = $style_path.'icons/event3.png';
 $_style['icons_secured']            = $style_path.'icons/secured.gif';
+$_style['icons_run']                = $style_path.'icons/run.png';
 
 // Tabs
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png';
