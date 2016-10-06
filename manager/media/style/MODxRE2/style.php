@@ -97,10 +97,10 @@ $_style['icons_cal']                = $style_path.'icons/cal.gif';
 $_style['icons_cal_nodate']         = $style_path.'icons/cal_nodate.gif';
 $_style['icons_cancel']             = $style_path.'icons/stop.png';
 $_style['icons_close']              = $style_path.'icons/stop.png';
-$_style['icons_delete']             = $style_path.'icons/delete.png';
+$_style['icons_delete']             = $style_path.'icons/trash.png';
 $_style['icons_delete_document']    = $style_path.'icons/delete.png';
 $_style['icons_resource_overview']  = $style_path.'icons/information.png';
-$_style['icons_resource_duplicate'] = $style_path.'icons/page_white_copy.png';
+$_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
 $_style['icons_email']              = $style_path.'icons/email.png';
 $_style['icons_folder']             = $style_path.'icons/folder.gif';
@@ -130,6 +130,7 @@ $_style['icons_event1']             = $style_path.'icons/event1.png';
 $_style['icons_event2']             = $style_path.'icons/event2.png';
 $_style['icons_event3']             = $style_path.'icons/event3.png';
 $_style['icons_secured']            = $style_path.'icons/secured.gif';
+$_style['icons_run']                = $style_path.'icons/play.png';
 
 // Tabs
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png';
