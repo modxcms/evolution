@@ -26,7 +26,9 @@ if(!isset($modx->config['mgr_date_picker_path'])) $modx->config['mgr_date_picker
 	
         jQuery(function(){
         jQuery(window).on('beforeunload',function(){
+        	if(documentDirty) {stopWorker();return '<?php echo addslashes($_lang['warning_not_saved']);?>';}
                 jQuery('#actions').fadeOut(100);
+            	jQuery('input,textarea,select').addClass('readonly');
             });
         });
         

@@ -1162,6 +1162,12 @@ a.treeButtonDisabled {
 a.treeButton {
     color: #31405f;
 }
+
+.treeButton .fa,
+.treeButton .fa-lg {
+  font-size: 14px;
+}
+
 .treeButton i:hover {
   border-color: #53585d;
   background-color: #fff;

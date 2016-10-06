@@ -378,7 +378,7 @@ class DocumentParser {
         if (!empty ($_REQUEST['q'])) { //LANG
             return "alias";
         }
-        elseif (isset ($_REQUEST['id'])) {
+        elseif (isset ($_GET['id'])) {
             return "id";
         } else {
             return "none";
@@ -399,10 +399,10 @@ class DocumentParser {
                 $docIdentifier= $this->db->escape($_REQUEST['q']);
                 break;
             case 'id' :
-                if (!is_numeric($_REQUEST['id'])) {
+                if (!is_numeric($_GET['id'])) {
                     $this->sendErrorPage();
                 } else {
-                    $docIdentifier= intval($_REQUEST['id']);
+                    $docIdentifier= intval($_GET['id']);
                 }
                 break;
         }
@@ -2000,7 +2000,7 @@ class DocumentParser {
     }
 
     function setRequestQ($request_uri) {
-        if(isset($_REQUEST['id'])) $q = null;
+        if(isset($_GET['id'])) $q = null;
         else {
             $q = substr($request_uri,strlen($this->config['base_url']));
             if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
