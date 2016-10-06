@@ -426,7 +426,7 @@ function SetUrl(url, width, height, alt) {
     </div>
     <!-- end #actions -->
 
-<div class="sectionBody"><p><img class="icon" src="<?php echo $_style["icons_modules_large"]?>" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
+<div class="sectionBody"><p><img class="icon" src="<?php echo $_style["icons_modules"]?>" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
     <script type="text/javascript">
