@@ -29,7 +29,7 @@ $_style['empty_recycle_bin_empty']  = '<i class="fa fa-trash-o fa-lg"></i>';
 $_style['expand_tree']              = '<i class="fa fa-arrow-circle-down fa-lg"></i>';
 $_style['hide_tree']                = '<i class="fa fa-caret-square-o-left fa-lg"></i>';
 $_style['refresh_tree']             = '<i class="fa fa-refresh fa-lg"></i>';
-$_style['show_tree']                = $style_path.'fontaw/expand.png';
+$_style['show_tree']                = $style_path.'tree/expand.png';
 $_style['sort_tree']                = '<i class="fa fa-sort fa-lg"></i>';
 $_style['sort_menuindex']           = '<i class="fa fa-sort-numeric-asc fa-lg"></i>';
 $_style['element_management']       = '<i class="fa fa-th fa-lg"></i>';
@@ -51,43 +51,42 @@ $_style['ctx_resource_overview']    = 'fa fa-info fa-fw fa-lg';
 $_style['ctx_preview_resource']     = 'fa fa-eye fa-fw fa-lg';
 
 // Tree Icons
-$_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
-$_style['tree_folder']              = $style_path.'tree/folder.gif';
-$_style['tree_folderopen']          = $style_path.'tree/folderopen.gif';
-$_style['tree_folder_secure']       = $style_path.'tree/folder_secure.png';
-$_style['tree_folderopen_secure']   = $style_path.'tree/folderopen_secure.png';
-$_style['tree_globe']               = $style_path.'tree/globe.gif';
-$_style['tree_linkgo']              = $style_path.'tree/link_go.png';
-$_style['tree_minusnode']           = $style_path.'tree/minusnode.gif';
-$_style['tree_page']                = $style_path.'tree/application.png';
-$_style['tree_page_home']           = $style_path.'tree/application_home.gif';
-$_style['tree_page_404']            = $style_path.'tree/application_404.gif';
-$_style['tree_page_hourglass']      = $style_path.'tree/application_hourglass.gif';
-$_style['tree_page_info']           = $style_path.'tree/application_info.gif';
-$_style['tree_page_blank']          = $style_path.'tree/application.png';
-$_style['tree_page_css']            = $style_path.'tree/application_css.png';
-$_style['tree_page_html']           = $style_path.'tree/page_html.gif';
-$_style['tree_page_xml']            = $style_path.'tree/application_xml.png';
-$_style['tree_page_js']             = $style_path.'tree/application_js.png';
-$_style['tree_page_rss']            = $style_path.'tree/application_rss.png';
-$_style['tree_page_pdf']            = $style_path.'tree/application_pdf.png';
-$_style['tree_page_word']           = $style_path.'tree/application_word.png';
-$_style['tree_page_excel']          = $style_path.'tree/application_excel.png';
-$_style['tree_plusnode']            = $style_path.'tree/plusnode.gif';
+$_style['tree_deletedpage']         = $style_path.'tree/file.png';
+$_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
+$_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
+$_style['tree_folder_secure']       = $style_path.'tree/folder-close.png';
+$_style['tree_folderopen_secure']   = $style_path.'tree/folder-open.png';
+$_style['tree_globe']               = $style_path.'tree/globe.png';
+$_style['tree_linkgo']              = $style_path.'tree/link.png';
+$_style['tree_minusnode']           = $style_path.'tree/angle-down.png';
+$_style['tree_page']                = $style_path.'tree/file-alt.png';
+$_style['tree_page_home']           = $style_path.'tree/home.png';
+$_style['tree_page_404']            = $style_path.'tree/warning-sign.png';
+$_style['tree_page_hourglass']      = $style_path.'tree/time.png';
+$_style['tree_page_info']           = $style_path.'tree/info.png';
+$_style['tree_page_blank']          = $style_path.'tree/file.png';
+$_style['tree_page_css']            = $style_path.'tree/file-text-alt.png';
+$_style['tree_page_html']           = $style_path.'tree/file-alt.png';
+$_style['tree_page_xml']            = $style_path.'tree/file-code.png';
+$_style['tree_page_js']             = $style_path.'tree/file-code.png';
+$_style['tree_page_rss']            = $style_path.'tree/file-rss.png';
+$_style['tree_page_pdf']            = $style_path.'tree/file-pdf.png';
+$_style['tree_page_word']           = $style_path.'tree/file-word.png';
+$_style['tree_page_excel']          = $style_path.'tree/file-excel.png';
+$_style['tree_plusnode']            = $style_path.'tree/angle-right.png';
 $_style['tree_showtree']            = '<img src="'.$style_path.'tree/sitemap.png" width="16" height="16" align="absmiddle" />';
-$_style['tree_weblink']             = $style_path.'tree/link_go.png';
+$_style['tree_weblink']             = $style_path.'tree/link.png';
 
-$_style['tree_page_secure']         = $style_path.'tree/application_key.png';
-$_style['tree_page_blank_secure']   = $style_path.'tree/application_html_secure.png';
-$_style['tree_page_css_secure']     = $style_path.'tree/application_css_secure.png';
-$_style['tree_page_html_secure']    = $style_path.'tree/page_html_secure.png';
-$_style['tree_page_xml_secure']     = $style_path.'tree/application_xml_secure.png';
-$_style['tree_page_js_secure']      = $style_path.'tree/application_js_secure.png';
-$_style['tree_page_rss_secure']     = $style_path.'tree/application_rss_secure.png';
-$_style['tree_page_pdf_secure']     = $style_path.'tree/application_pdf_secure.png';
-$_style['tree_page_word_secure']    = $style_path.'tree/application_word_secure.png';
-$_style['tree_page_excel_secure']   = $style_path.'tree/application_excel_secure.png';
-
+$_style['tree_page_secure']         = $style_path.'tree/file-secure.png';
+$_style['tree_page_blank_secure']   = $style_path.'tree/file-secure.png';
+$_style['tree_page_css_secure']     = $style_path.'tree/file-code-secure.png';
+$_style['tree_page_html_secure']    = $style_path.'tree/file-secure.png';
+$_style['tree_page_xml_secure']     = $style_path.'tree/file-code-secure.png';
+$_style['tree_page_js_secure']      = $style_path.'tree/file-code-secure.png';
+$_style['tree_page_rss_secure']     = $style_path.'tree/file-rss-secure.png';
+$_style['tree_page_pdf_secure']     = $style_path.'tree/file-pdf-secure.png';
+$_style['tree_page_word_secure']    = $style_path.'tree/file-word-secure.png';
+$_style['tree_page_excel_secure']   = $style_path.'tree/file-excel-secure.png';
 
 // Icons
 $_style['icons_add']                = $style_path.'icons/save.png';
@@ -122,7 +121,7 @@ $_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
 $_style['icons_table']              = $style_path.'icons/table.gif'; 
 $_style['icons_undelete_resource']  = $style_path.'icons/b092.gif';
 $_style['icons_unpublish_resource'] = $style_path.'icons/clock_stop.png';
-$_style['icons_user']               = $style_path.'icons/user.gif';
+$_style['icons_user']               = $style_path.'icons/user.png';
 $_style['icons_weblink']            = $style_path.'icons/world_link.png';
 $_style['icons_working']            = $style_path.'icons/exclamation.png'; // top bar
 $_style['icons_event1']             = $style_path.'icons/event1.png';
@@ -134,8 +133,8 @@ $_style['icons_secured']            = $style_path.'icons/secured.gif';
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png';
 
 // Indicators
-$_style['icons_tooltip']            = $style_path.'icons/b02.gif';
-$_style['icons_tooltip_over']       = $style_path.'icons/b02_trans.gif';
+$_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png';
+$_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';
