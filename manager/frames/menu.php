@@ -217,7 +217,12 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 </head>
 
 <body id="topMenu" class="<?php echo $modx_textdir ? 'rtl':'ltr'?>">
-
+<?php
+    // invoke OnManagerTopPrerender event
+    $evtOut = $modx->invokeEvent('OnManagerTopPrerender',$_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
 <div id="tocText" <?php echo $modx_textdir ? ' class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">
   <div id="topbar-container">
