@@ -203,7 +203,7 @@ class modxRTEbridge
     // Renders complete JS-Script
     public function getEditorScript()
     {
-        global $modx, $which_browser;
+        global $modx;
         $ph = array();
         $output = "<!-- modxRTEbridge {$this->editorKey} -->\n";
 
@@ -222,15 +222,7 @@ class modxRTEbridge
                 $this->renderBridgeParams($selector);
 
                 // Prepare config output
-                $ph['configString'] = $this->renderConfigString();
-                $ph['configRawString'] = $this->renderConfigRawString();
-                $ph['editorKey'] = $this->editorKey;
-                $ph['themeKey'] = $this->theme;
-                $ph['selector'] = $selector;
-                $ph['documentIdentifier'] = $modx->documentIdentifier;
-                $ph['manager_path'] = MGR_DIR;
-                $ph['which_browser'] = !empty($which_browser) ? $which_browser : 'mcpuk';
-
+                $ph = $this->prepareDefaultPlaceholders($selector);
                 $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
 
                 // Init only once at all - Load Editors-Library, CSS etc
@@ -259,21 +251,20 @@ class modxRTEbridge
             }
 
         } else {
-			// No elements given - create Config-Object only 
-			$this->theme = $this->tvOptions['theme'];
-			$this->initTheme('noselector');
-			$this->renderBridgeParams('noselector');
-
-			$ph['configString'] = $this->renderConfigString();
-			$ph['configRawString'] = $this->renderConfigRawString();
-			$ph['editorKey'] = $this->editorKey;
-			$ph['themeKey'] = $this->theme;
-			
-			if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
-				define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
-				$output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
-				$output  = $modx->parseText($output, $ph);
-			}
+            // No elements given - create Config-Object only 
+            $this->theme = $this->tvOptions['theme'];
+            $this->initTheme('noselector');
+            $this->renderBridgeParams('noselector');
+            
+            // Prepare config output
+            $ph = $this->prepareDefaultPlaceholders();
+            $ph = array_merge($ph, $this->customPlaceholders, $this->mergeParamArrays());   // Big list..
+            
+            if (!defined($this->editorKey . '_INIT_CONFIG_' . $this->theme)) {
+                define($this->editorKey . '_INIT_CONFIG_' . $this->theme, 1);
+                $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.config.html") ."\n";
+                $output  = $modx->parseText($output, $ph);
+            }
         }
 
         // Remove empty placeholders !
@@ -289,6 +280,26 @@ class modxRTEbridge
         $output .= "<!-- / modxRTEbridge {$this->editorKey} -->\n";
 
         return $output;
+    }
+
+    /**
+     * @return array
+     */
+    public function prepareDefaultPlaceholders($selector='')
+    {
+        global $modx;
+
+        $ph['configString'] = $this->renderConfigString();
+        $ph['configRawString'] = $this->renderConfigRawString();
+        $ph['editorKey'] = $this->editorKey;
+        $ph['themeKey'] = $this->theme;
+        $ph['selector'] = $selector;
+        $ph['documentIdentifier'] = $modx->documentIdentifier;
+        $ph['manager_path'] = MGR_DIR;
+        $ph['site_manager_url'] = MODX_MANAGER_URL;
+        $ph['which_browser'] = !empty($modx->config['which_browser']) ? $modx->config['which_browser'] : 'mcpuk';
+
+        return $ph;
     }
     
     // Init/load theme
