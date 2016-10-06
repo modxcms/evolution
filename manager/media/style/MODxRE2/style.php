@@ -14,7 +14,7 @@ $modx->config['mgr_date_picker_path'] = sprintf('media/style/%s/moo-datepicker/d
 // Large Icons
 $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-3x';
 $_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-3x';
-$_style['icons_modules_large']      = 'fa fa-th-large fa-fw fa-3x';
+$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-3x';
 $_style['icons_resources_large']    = 'fa fa-th fa-fw fa-3x';
 $_style['icons_security_large']     = 'fa fa-lock fa-fw fa-3x';
 $_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-3x';
@@ -88,6 +88,9 @@ $_style['tree_page_pdf_secure']     = $style_path.'tree/file-pdf-secure.png';
 $_style['tree_page_word_secure']    = $style_path.'tree/file-word-secure.png';
 $_style['tree_page_excel_secure']   = $style_path.'tree/file-excel-secure.png';
 
+//Manage Files
+$_style['icons_save']               = $style_path.'icons/save.png';
+
 // Icons
 $_style['icons_add']                = $style_path.'icons/save.png';
 $_style['icons_cal']                = $style_path.'icons/cal.gif';
@@ -108,14 +111,13 @@ $_style['icons_mail']               = $style_path.'icons/email.png'; // top bar
 $_style['icons_message_unread']     = $style_path.'icons/email.png';
 $_style['icons_message_forward']    = $style_path.'icons/forward.gif';
 $_style['icons_message_reply']      = $style_path.'icons/reply.gif';
-$_style['icons_modules']            = $style_path.'icons/modules.gif';
+$_style['icons_modules']            = $style_path.'icons/modules.png';
 $_style['icons_move_document']      = $style_path.'icons/page_white_go.png';
 $_style['icons_new_document']       = $style_path.'icons/page_white_add.png';
 $_style['icons_new_weblink']        = $style_path.'icons/world_link.png';
 $_style['icons_preview_resource']   = $style_path.'icons/page_white_magnify.png';
 $_style['icons_publish_document']   = $style_path.'icons/clock_play.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
-$_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
 $_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
 $_style['icons_table']              = $style_path.'icons/table.gif'; 
