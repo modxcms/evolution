@@ -51,7 +51,7 @@ $_style['ctx_resource_overview']    = 'fa fa-info fa-fw fa-lg';
 $_style['ctx_preview_resource']     = 'fa fa-eye fa-fw fa-lg';
 
 // Tree Icons
-$_style['tree_deletedpage']         = $style_path.'tree/file.png';
+$_style['tree_deletedpage']         = $style_path.'tree/file-alt-deleted.png';
 $_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
 $_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
 $_style['tree_folder_secure']       = $style_path.'tree/folder-close-alt-secure.png';
@@ -64,8 +64,8 @@ $_style['tree_page_home']           = $style_path.'tree/home.png';
 $_style['tree_page_404']            = $style_path.'tree/warning-sign.png';
 $_style['tree_page_hourglass']      = $style_path.'tree/time.png';
 $_style['tree_page_info']           = $style_path.'tree/info.png';
-$_style['tree_page_blank']          = $style_path.'tree/file.png';
-$_style['tree_page_css']            = $style_path.'tree/file-text-alt.png';
+$_style['tree_page_blank']          = $style_path.'tree/file-alt.png';
+$_style['tree_page_css']            = $style_path.'tree/file-text.png';
 $_style['tree_page_html']           = $style_path.'tree/file-alt.png';
 $_style['tree_page_xml']            = $style_path.'tree/file-code.png';
 $_style['tree_page_js']             = $style_path.'tree/file-code.png';
@@ -77,10 +77,10 @@ $_style['tree_plusnode']            = $style_path.'tree/angle-right.png';
 $_style['tree_showtree']            = '<img src="'.$style_path.'tree/sitemap.png" width="16" height="16" align="absmiddle" />';
 $_style['tree_weblink']             = $style_path.'tree/link.png';
 
-$_style['tree_page_secure']         = $style_path.'tree/file-secure.png';
-$_style['tree_page_blank_secure']   = $style_path.'tree/file-secure.png';
+$_style['tree_page_secure']         = $style_path.'tree/file-alt-secure.png';
+$_style['tree_page_blank_secure']   = $style_path.'tree/file-alt-secure.png';
 $_style['tree_page_css_secure']     = $style_path.'tree/file-code-secure.png';
-$_style['tree_page_html_secure']    = $style_path.'tree/file-secure.png';
+$_style['tree_page_html_secure']    = $style_path.'tree/file-alt-secure.png';
 $_style['tree_page_xml_secure']     = $style_path.'tree/file-code-secure.png';
 $_style['tree_page_js_secure']      = $style_path.'tree/file-code-secure.png';
 $_style['tree_page_rss_secure']     = $style_path.'tree/file-rss-secure.png';
