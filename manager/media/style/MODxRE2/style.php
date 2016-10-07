@@ -54,8 +54,8 @@ $_style['ctx_preview_resource']     = 'fa fa-eye fa-fw fa-lg';
 $_style['tree_deletedpage']         = $style_path.'tree/file.png';
 $_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
 $_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
-$_style['tree_folder_secure']       = $style_path.'tree/folder-close.png';
-$_style['tree_folderopen_secure']   = $style_path.'tree/folder-open.png';
+$_style['tree_folder_secure']       = $style_path.'tree/folder-close-alt-secure.png';
+$_style['tree_folderopen_secure']   = $style_path.'tree/folder-open-alt-secure.png';
 $_style['tree_globe']               = $style_path.'tree/globe.png';
 $_style['tree_linkgo']              = $style_path.'tree/link.png';
 $_style['tree_minusnode']           = $style_path.'tree/angle-down.png';
@@ -96,10 +96,13 @@ $_style['icons_delete_document']    = $style_path.'icons/trash.png';
 $_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
 $_style['icons_resource_overview']  = $style_path.'icons/info-sign.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
+$_style['icons_preview_resource']   = $style_path.'icons/eye.png';
 
 //Manage Files
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_delete']             = $style_path.'icons/trash.png';
+$_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
+$_style['icons_unzip']              = $style_path.'icons/download-alt.png';
 
 // Indicators
 $_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png';
@@ -126,7 +129,7 @@ $_style['icons_message_forward']    = $style_path.'icons/forward.gif';
 $_style['icons_message_reply']      = $style_path.'icons/reply.gif';
 $_style['icons_new_document']       = $style_path.'icons/page_white_add.png';
 $_style['icons_new_weblink']        = $style_path.'icons/world_link.png';
-$_style['icons_preview_resource']   = $style_path.'icons/page_white_magnify.png';
+
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
 $_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
 $_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
