@@ -130,6 +130,8 @@ $_style['icons_event2']             = $style_path.'icons/event2.png';
 $_style['icons_event3']             = $style_path.'icons/event3.png';
 $_style['icons_secured']            = $style_path.'icons/secured.gif';
 $_style['icons_run']                = $style_path.'icons/run.png';
+$_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.gif';
+$_style['icons_unzip']              = $style_path.'icons/unzip.gif';
 
 // Tabs
 $_style['icons_tab_preview']        = $style_path.'icons/preview.png';
