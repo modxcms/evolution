@@ -26,7 +26,7 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH."includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_save'],(!$modx->hasPermission('exec_module') ? 1:0));
+$cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_run'],(!$modx->hasPermission('exec_module') ? 1:0));
 $cm->addSeparator();
 $cm->addItem($_lang["edit"],"js:menuAction(2)",$_style['icons_edit_document'],(!$modx->hasPermission('edit_module') ? 1:0));
 $cm->addItem($_lang["duplicate"],"js:menuAction(3)",$_style['icons_resource_duplicate'],(!$modx->hasPermission('new_module') ? 1:0));
