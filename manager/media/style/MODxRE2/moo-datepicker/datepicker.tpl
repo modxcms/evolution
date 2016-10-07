@@ -1,4 +1,4 @@
-<script type="text/javascript" src="media/style/MODxCarbon/moo-datepicker/datepicker.js"></script>
+<script type="text/javascript" src="media/style/common/moo-datepicker/datepicker.js"></script>
 <script>
     var dpOffset = [(datepicker_offset)];
     var dpformat = "[(datetime_format)]" + ' hh:mm:00';
