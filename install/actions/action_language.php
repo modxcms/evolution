@@ -1,24 +1,23 @@
 <?php
-$langs = array();
-if( $handle = opendir('lang/') ) {
-	while( false !== ( $file = readdir( $handle ) ) ) {
-		if( strpos( $file, '.' ) ) $langs[] = str_replace('.inc.php', '', $file);
-	}
-	closedir( $handle );
+$content = file_get_contents('actions/tpl_language.html');
+$content = parse($content,array('langOptions'=>getLangOptions($install_language)));
+$content = parse($content,$_lang,'[%','%]');
+echo $content;
+
+function getLangOptions($install_language='english') {
+    $langs = array();
+    if( $handle = opendir('lang/') ) {
+    	while( false !== ( $file = readdir( $handle ) ) ) {
+    		if( strpos( $file, '.' ) ) $langs[] = str_replace('.inc.php', '', $file);
+    	}
+    	closedir( $handle );
+    }
+    sort( $langs );
+    $_ = array();
+    foreach ($langs as $language) {
+        $abrv_language = explode('-',$language);
+        $selected =  ($language == $install_language) ? 'selected' : '';
+        $_[] = sprintf('<option value="%s" %s>%s</option>', $language, $selected, ucwords($abrv_language[0]))."\n";
+    }
+    return join("\n", $_);
 }
-sort( $langs );
-?>
-<form name="install" id="install_form" action="index.php?action=mode" method="post">
-    <h2 style="display:inline;"><?php echo $_lang['choose_language'];?>:&nbsp;&nbsp;</h2>
-    <select name="language">
-<?php
-foreach ($langs as $language) {
-    $abrv_language = explode('-',$language);
-	echo '<option value="' . $language . '"'. ( ($language == $install_language) ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
-}
-?>
-    </select>
-        <p class="buttonlinks">
-            <a style="display:inline;" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['begin']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
-        </p>
-</form>

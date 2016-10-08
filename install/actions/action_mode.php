@@ -1,30 +1,25 @@
 <?php
 
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+if (is_file(dirname(__FILE__)."/../assets/cache/siteManager.php"))
     include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-    define('MGR_DIR', 'manager');
-}
+
+if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
 
 // Determine upgradeability
 $upgradeable = 0;
-if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
-    // Include the file so we can test its validity
+if (is_file("../".MGR_DIR."/includes/config.inc.php")) { // Include the file so we can test its validity
     include "../".MGR_DIR."/includes/config.inc.php";
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
-    if ($dbase) {
-        if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;	
-            echo '2';
-        }
-        elseif (!mysqli_select_db($conn, trim($dbase, '`'))) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-        } else {
+    if (isset($dbase)) {
+        if (!$conn = mysqli_connect($database_server, $database_user, $database_password))
+            $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;	
+        elseif (!mysqli_select_db($conn, trim($dbase, '`')))
+            $upgradeable = isset($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
+        else
             $upgradeable = 1;
-        }
-    } else {
-        $upgradeable= 2;
     }
+    else
+        $upgradeable= 2;
 }
 ?>
 <form name="install" id="install_form" action="index.php?action=connection" method="post">
