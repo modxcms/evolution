@@ -27,6 +27,9 @@ font-variant:normal;
 font-weight:normal;
 line-height:1.5;
 }
+html:lang(ja) body {
+font-family:Meiryo,"Hiragino Kaku Gothic Pro",Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
 label {
 cursor:pointer;
 }
