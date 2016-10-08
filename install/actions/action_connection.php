@@ -1,38 +1,33 @@
 <?php
 $installMode = intval($_POST['installmode']);
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-define('MGR_DIR', 'manager');
-}
+if(is_file($$base_path."assets/cache/siteManager.php")) include_once($base_path.'assets/cache/siteManager.php');
+if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
 
 // Determine upgradeability
 $upgradeable= 0;
-if ($installMode > 0) {
-  if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
-      // Include the file so we can test its validity
-      include "../".MGR_DIR."/includes/config.inc.php";
-      // We need to have all connection settings - but prefix may be empty so we have to ignore it
-      if ($dbase) {
-          if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
-              $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-          }
-          elseif (! mysqli_select_db($conn, trim($dbase, '`'))) {
-              $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-          } else {
-              $upgradeable = 1;
-          }
-          $database_name= trim($dbase, '`');
-      } else {
-          $upgradable= 2;
-      }
-  }
-} else {
+if ($installMode == 0) {
     $database_name= '';
     $database_server= 'localhost';
     $table_prefix= 'modx_';
+} else {
+    $database_name = '';
+    if (!is_file($base_path.MGR_DIR.'/includes/config.inc.php')) $upgradeable = 0;
+    else {
+        // Include the file so we can test its validity
+        include($base_path.MGR_DIR.'/includes/config.inc.php');
+        // We need to have all connection settings - but prefix may be empty so we have to ignore it
+        if ($dbase) {
+          $database_name = trim($dbase, '`');
+          if (!$conn = mysqli_connect($database_server, $database_user, $database_password))
+              $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
+          elseif (! mysqli_select_db($conn, trim($dbase, '`')))
+              $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
+          else
+              $upgradeable = 1;
+        }
+        else $upgradable= 2;
+    }
 }
-
 // check the database collation if not specified in the configuration
 if ($upgradeable && (!isset ($database_connection_charset) || empty($database_connection_charset))) {
     if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
@@ -55,336 +50,55 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
     $database_connection_method = 'SET CHARACTER SET';
 }
 
-?>
-<form name="install" id="install_form" action="index.php?action=options" method="post">
-  <div>
-    <input type="hidden" value="<?php echo $install_language?>" name="language" />
-    <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
-    <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
-    <input type="hidden" value="<?php echo isset($database_connection_method) ? $database_connection_method : ''; ?>" name="database_connection_method" />
-  </div>
+$ph['database_name'] = isset($_POST['database_name']) ? $_POST['database_name']: $database_name;
+$ph['tableprefix'] = isset($_POST['tableprefix']) ? $_POST['tableprefix']: $table_prefix;
+$ph['selected_set_character_set'] = isset($database_connection_method) && $database_connection_method == 'SET CHARACTER SET' ? 'selected' : '';
+$ph['selected_set_names'] = isset($database_connection_method) && $database_connection_method == 'SET NAMES' ? 'selected' : '';
+$ph['show#connection_method'] = (($installMode == 0) || ($installMode == 2)) ? 'block' : 'none';
+$ph['database_collation'] = isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation;
+$ph['show#AUH'] = ($installMode == 0) ? 'block':'none';
+$ph['cmsadmin'] = isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:'admin';
+$ph['cmsadminemail'] = isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"";
+$ph['cmspassword'] = isset($_POST['cmspassword']) ? $_POST['cmspassword']:"";
+$ph['cmspasswordconfirm'] = isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"";
+$ph['managerLangs'] = getLangs($install_language);
+$ph['install_language'] = $install_language;
+$ph['installMode'] = $installMode;
+$ph['checkedChkagree']  = isset($_POST['chkagree']) ? 'checked':"";
+$ph['database_connection_method'] = isset($database_connection_method) ? $database_connection_method : '';
+$ph['databasehost'] = isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server;
+$ph['databaseloginname'] = isset($_SESSION['databaseloginname']) ? $_SESSION['databaseloginname']: '';
+$ph['databaseloginpassword'] = isset($_SESSION['databaseloginpassword']) ? $_SESSION['databaseloginpassword']: "";
+$ph['MGR_DIR'] = MGR_DIR;
 
-  <h2><?php echo $_lang['connection_screen_database_info']?></h2>
-  <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
-  <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
+$content = file_get_contents('./actions/tpl_connection.html');
+$content = parse($content, $_lang, '[%','%]');
+$content = parse($content, $ph);
+echo $content;
 
-  <p class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
-    <input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server ?>" name="databasehost" />
-  </p>
-  <p class="labelHolder"><label for="databaseloginname"><?php echo $_lang['connection_screen_database_login']?></label>
-    <input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_SESSION['databaseloginname']) ? $_SESSION['databaseloginname']: "" ?>" />
-  </p>
-  <p class="labelHolder"><label for="databaseloginpassword"><?php echo $_lang['connection_screen_database_pass']?></label>
-    <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="<?php echo isset($_SESSION['databaseloginpassword']) ? $_SESSION['databaseloginpassword']: "" ?>" />
-  </p>
-
-<!-- connection test action/status message -->
-  <div class="clickHere">
-	&rarr; <a id="servertest" href="javascript:void(0);"><?php echo $_lang['connection_screen_server_test_connection']?></a>
-  </div>
-  <div class="status" id="serverstatus"></div>
-<!-- end connection test action/status message -->
-
-
-<div id="setCollation"><div id="collationMask">
-  <h3><?php echo $_lang['connection_screen_database_connection_information']?></h3>
-  <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
-  <p class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
-    <input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']: $database_name ?>" name="database_name" />
-  </p>
-  <p class="labelHolder"><label for="tableprefix"><?php echo $_lang['connection_screen_table_prefix']?></label>
-    <input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']: $table_prefix ?>" name="tableprefix" />
-  </p>
-<?php
-  if (($installMode == 0) || ($installMode == 2)) {
-?>
-  <p class="labelHolder"><label for="database_connection_method"><?php echo $_lang['connection_screen_connection_method']?></label>
-    <div id="connection_method" name="connection_method">
-      <select id="database_connection_method" name="database_connection_method">
-        <option value="SET CHARACTER SET" <?php echo isset($database_connection_method) && $database_connection_method == 'SET CHARACTER SET' ? 'selected="selected"' : '' ?>>
-          SET CHARACTER SET
-        </option>
-        <option value="SET NAMES" <?php echo isset($database_connection_method) && $database_connection_method == 'SET NAMES' ? 'selected="selected"' : '' ?>>
-          SET NAMES
-        </option>
-      </select>
-    </div>
-  </p>
-<?php
-  }
-?>
-  <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
-    <div id="collation">
-		<select id="database_collation" name="database_collation">
-        	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected="selected">
-          	<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
-        	</option>
-    	</select>
-	</div>
-  </p>
-
-  <div class="clickHere">
-	&rarr; <a id="databasetest" href="javascript:void(0);"><?php echo $_lang['connection_screen_database_test_connection']?></a>
-  </div>
-  <div class="status" id="databasestatus">&nbsp;</div>
-</div></div>
-
-
-<?php
-  if ($installMode == 0) {
-?>
-
-  <div id="AUH" style="margin-top:1.5em;"><div id="AUHMask">
-  	<h2><?php echo $_lang['connection_screen_defaults']?></h2>
-    <h3><?php echo $_lang['connection_screen_default_admin_user']?></h3>
-    <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
-    <p class="labelHolder"><label for="cmsadmin"><?php echo $_lang['connection_screen_default_admin_login']?></label>
-      <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" />
-    </p>
-    <p class="labelHolder"><label for="cmsadminemail"><?php echo $_lang['connection_screen_default_admin_email']?></label>
-      <input id="cmsadminemail" value="<?php echo isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"" ?>" name="cmsadminemail" style="width:250px;" />
-    </p>
-    <p class="labelHolder"><label for="cmspassword"><?php echo $_lang['connection_screen_default_admin_password']?></label>
-      <input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" />
-    </p>
-    <p class="labelHolder"><label for="cmspasswordconfirm"><?php echo $_lang['connection_screen_default_admin_password_confirm']?></label>
-      <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
-    </p>
-
-    <h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
-    <p><?php echo $_lang["default_language_description"] ?></p>
-    <p class="labelHolder"><label for="managerlanguage_select">&nbsp;</label>
-    <select name="managerlanguage" id="managerlanguage_select">
-<?php
+function getLangs($install_language) {
+	if (isset($_POST['managerlanguage']))   $manager_language = $_POST['managerlanguage'];
+	elseif(isset($_GET['managerlanguage'])) $manager_language = $_GET['managerlanguage'];
+	if ($install_language != "english" && is_file(sprintf("../%s/includes/lang/%s.inc.php",MGR_DIR,$install_language)))
+		$manager_language = $install_language;
+	else
+		$manager_language = "english";
 	
-	if (isset($_POST['managerlanguage'])) {
-	    $manager_language = $_POST['managerlanguage'];
-	} else {
-	    if (isset($_GET['managerlanguage']))
-	        $manager_language = $_GET['managerlanguage'];
-	}
 	$langs = array();
 	if ($handle = opendir("../".MGR_DIR."/includes/lang")) {
 	    while (false !== ($file = readdir($handle))) {
-	        if (!strpos($file, 'inc') === false) {
+	        if (strpos($file, '.inc.') !== false)
 	            $langs[] = $file;
-	        }
 	    }
 	    closedir($handle);
 	}
 	sort($langs);
 	
-	if ($install_language != "english" && file_exists("../".MGR_DIR."/includes/lang/".$install_language.".inc.php")) {
-		$manager_language = $install_language;
-	} else {
-		$manager_language = "english";
-	}
-
+	$_ = array();
 	foreach ($langs as $language) {
 	    $abrv_language = explode('.', $language);
-	        echo '<option value="' . $abrv_language[0] . '"'. ( (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ) . '</option>' . "\n";
+	    $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
+        $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected, ucwords($abrv_language[0]));
 	}
-?>
-  </select><br /><br />
-  </p>
-</div></div>
-
-<?php
+	return join("\n", $_);
 }
-?>
-
-
-
-
-    <p class="buttonlinks">
-        <a href="javascript:void(0);" class="prev" id="prevlink" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-        <a style="display:inline;" id="nextlink" href="javascript:void(0);" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
-    </p>
-</form>
-
-
-<script type="text/javascript" src="../<?php echo MGR_DIR;?>/media/script/mootools/mootools.js"></script>
-<script type="text/javascript">
-language ='<?php echo $install_language?>';
-installMode ='<?php echo $installMode ?>';
-</script>
-
-<script type="text/javascript">
-function testServer(){
-// get the server test status as soon as collation received
-    var url = "connection.servertest.php";
-
-    host = $('databasehost').value;
-    uid  = $('databaseloginname').value;
-    pwd  = $('databaseloginpassword').value;
-        
-    var pars = Object.toQueryString({
-        q: url,
-        host: host,
-        uid: uid,
-        pwd: pwd,
-        language: language
-    });
-         
-    new Ajax(url, { postBody: pars, update: $('serverstatus'), onComplete: setColor } ).request();
-}
-
-function setDefaults(){
-	if($('database_pass') !== null && document.getElementById('AUH')) {
-		window.Slider2.slideIn();
-		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
-		Slider2FX.start({'opacity':[0,1]});
-		window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
-		Slider2Scroll = new Fx.Scroll(window);
-		Slider2Scroll.toElement('managerlanguage_select');
-	}
-}
-
-function setColor(){
-	var col = $('database_collation');
-
-	ss = document.getElementById('serverstatus');
-	ssv = ss.innerHTML;
-	if ($('server_pass') !== null) {
-		col.setStyle('background-color', '#9CCD00');
-		col.setStyle('border-width', '1px');
-		col.setStyle('font-weight','bold');
-
-		window.Slider1.slideIn(); //toggle the slider up and down.
-		var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
-		Slider1FX.start({'opacity':[0,1]});
-		window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
-		Slider1Scroll = new Fx.Scroll(window);
-		Slider1Scroll.toElement('databasestatus');
-		$('database_name').focus();
-    }
-}
-
-    var f = document.install;
-    // get collation from the database server
-    $('servertest').addEvent('click', function(e) {
-    
-        if(f.databasehost.value=="") {
-          alert("<?php echo $_lang['alert_enter_host']?>");
-          f.databasehost.focus();
-          return false;
-        }
-        if(f.databaseloginname.value=="") {
-          alert("<?php echo $_lang['alert_enter_login']?>");
-          f.databaseloginname.focus();
-          return false;
-        }
-        
-        e = new Event(e).stop();
-
-        var url = "connection.collation.php";
-
-        host = $('databasehost').value;
-        uid = $('databaseloginname').value;
-        pwd = $('databaseloginpassword').value;
-        database_collation = $('database_collation').value;
-        database_connection_method = $('database_connection_method').value;
-                
-        var pars = Object.toQueryString({
-            q: url,
-            host: host,
-            uid: uid,
-            pwd: pwd,
-            database_collation: database_collation,
-            database_connection_method: database_connection_method,
-            language: language
-        });
-         
-        new Ajax(url, { postBody: pars, update: $('collation'), onComplete: testServer } ).request();
-    });
-
-    // database test
-    $('databasetest').addEvent('click', function(e) {
-        
-        if(f.database_name.value=="") {
-          alert("<?php echo $_lang['alert_enter_database_name']?>");
-          f.database_name.focus();
-          return false;
-        }
-        
-        e = new Event(e).stop();
-
-        var url = "connection.databasetest.php";
-
-        host = $('databasehost').value;
-        uid  = $('databaseloginname').value;
-        pwd  = $('databaseloginpassword').value;
-        database_name = $('database_name').value;
-        tableprefix   = $('tableprefix').value;
-        database_collation = $('database_collation').value;
-        database_connection_method = $('database_connection_method').value;
-
-        var pars = Object.toQueryString({
-            q: url,
-            host: host,
-            uid: uid,
-            pwd: pwd,
-            database_name: database_name,
-            tableprefix: tableprefix,
-            database_collation: database_collation,
-            database_connection_method: database_connection_method,
-            language: language,
-            installMode: installMode
-        });
-        new Ajax(url, { postBody: pars, update: $('databasestatus'), onComplete: setDefaults } ).request();
-    });
-
-   
-	Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
-	Slider1.hide();
-	$('setCollation').style.backgroundColor = '#ffff00';
-	$('setCollation').style.display = 'block';
-	if(document.getElementById('AUH')) {
-		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
-		Slider2.hide();
-		$('AUH').style.display = 'block';
-		$('AUH').style.backgroundColor = '#ffff00';
-	}
-	
-    $('prevlink').addEvent('click', function(e) {
-        document.getElementById('install_form').action='index.php?action=mode';
-        document.getElementById('install_form').submit();
-    });
-	
-    $('nextlink').addEvent('click', function(e) {
-        var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
-          alert("<?php echo $_lang['alert_table_prefixes']?>");
-          f.tableprefix.focus();
-          return false;
-        }
-        dbs = document.getElementById('databasestatus');
-        dbsv = dbs.innerHTML;
-        if(dbsv.length==0 || dbsv == '&nbsp;') {
-          alert("<?php echo $_lang['alert_database_test_connection']?>");
-          return false;
-        }
-        if (dbsv.indexOf("failed") >=0) {
-          alert("<?php echo $_lang['alert_database_test_connection_failed']?>");
-          return false;
-        }   
-        if(f.cmsadmin && f.cmsadmin.value=="") {
-          alert("<?php echo $_lang['alert_enter_adminlogin']?>");
-          f.cmsadmin.focus();
-          return false;
-        }
-        if(f.cmspassword && f.cmspassword.value=="") {
-          alert("<?php echo $_lang['alert_enter_adminpassword']?>");
-          f.cmspassword.focus();
-          return false;
-        }
-        if(f.cmspassword && f.cmspassword.value!=f.cmspasswordconfirm.value) {
-          alert("<?php echo $_lang['alert_enter_adminconfirm']?>");
-          f.cmspassword.focus();
-          return false;
-        }
-    	document.getElementById('install_form').action='index.php?action=options';
-    	document.getElementById('install_form').submit();
-    });
-	
-</script>
