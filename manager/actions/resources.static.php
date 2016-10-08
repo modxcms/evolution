@@ -114,12 +114,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p><?php echo $_lang['tmplvars_management_msg'];
-                 echo sprintf(' (<a href="index.php?a=305">%s</a>)',$_lang['template_tv_edit']); ?></p>
-			<ul class="actionButtons">
-                <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
-            </ul>
-            <?php echo createResourceList('site_tmplvars',301); ?>
+        <p><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        <ul class="actionButtons">
+            <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
+            <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
+        </ul>
+        <?php echo createResourceList('site_tmplvars',301); ?>
     </div>
 <?php } ?>
 
