@@ -163,11 +163,11 @@ $header .= '</head>
 <div class="section">
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
-<ul class="actionButtons" style="float:right">
+<br/><p>'.$_lang["tmplvars_rank_edit_message"].'</p>
+<ul class="actionButtons">
 	<li><a href="#" onclick="sort();return false;">'.$_lang['sort_alphabetically'].'</a></li>
     <li><a href="#" onclick="resetSortOrder();return false;">'.$_lang['reset_sort_order'].'</a></li>
-</ul>
-<p>'.$_lang["tmplvars_rank_edit_message"].'</p>';
+</ul>';
 
 echo $header;
 
