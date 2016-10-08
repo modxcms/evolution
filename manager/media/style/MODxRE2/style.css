@@ -970,7 +970,9 @@ div.treeNode {
 }
 
 .publishedNode {
-  color: #4078c0;
+  /*color: #4078c0;*/
+  color: #3697cd;;
+  font-weight: bold;
 }
 
 .emptyNode {
@@ -981,6 +983,7 @@ div.treeNode {
 .notInMenuNode {
   color: #777;
   text-decoration: none;
+  font-weight: normal;
 }
 
 .protectedNode {
@@ -999,8 +1002,8 @@ div.treeNode {
 }
 
 .disabledPlugin a {
-  color: #aaa;
-  text-decoration: line-through;
+  color: #B68282;
+  font-style: italic;
 }
 
 label.disabled {
