@@ -982,7 +982,6 @@ div.treeNode {
 .notInMenuNode {
   color: #777;
   text-decoration: none;
-  font-weight: normal;
 }
 
 .protectedNode {
