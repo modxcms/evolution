@@ -77,7 +77,7 @@ elseif ($installMode == 1) {
 
 
 # load setup information file
-$setupPath = realpath(dirname(__FILE__));
+$setupPath = realpath(dirname(dirname(__FILE__)));
 include "{$setupPath}/setup.info.php";
 
 echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
@@ -198,47 +198,43 @@ if ($limit > 0) {
     </p>
 
 </form>
-<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
 <script type="text/javascript">
-    jQuery(function(){
-
-        jQuery('#toggle_check_all').click(function(evt){
-            evt.preventDefault();
-            demo = jQuery('#installdata_field').attr('checked');
-            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', true);
+    jQuery('#toggle_check_all').click(function(evt){
+        evt.preventDefault();
+        demo = jQuery('#installdata_field').attr('checked');
+        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', true);
+    });
+    jQuery('#toggle_check_none').click(function(evt){
+        evt.preventDefault();
+        demo = jQuery('#installdata_field').attr('checked');
+        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', false);
+    });
+    jQuery('#toggle_check_toggle').click(function(evt){
+        evt.preventDefault();
+        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', function(){
+            return !jQuery(this).attr('checked');
         });
-        jQuery('#toggle_check_none').click(function(evt){
-            evt.preventDefault();
-            demo = jQuery('#installdata_field').attr('checked');
-            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', false);
-        });
-        jQuery('#toggle_check_toggle').click(function(evt){
-            evt.preventDefault();
-            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', function(){
-                return !jQuery(this).attr('checked');
-            });
-        });
-        jQuery('#installdata_field').click(function(evt){
-            handleSampleDataCheckbox();
-        });
-
-        var handleSampleDataCheckbox = function(){
-            demo = jQuery('#installdata_field').attr('checked');
-            jQuery('input:checkbox.toggle.demo').each(function(ix, el){
-                if(demo) {
-                    jQuery(this)
-                        .attr('checked', true)
-                        .attr('disabled', true)
-                    ;
-                } else {
-                    jQuery(this)
-                        .attr('disabled', false)
-                    ;
-                }
-            });
-        }
-
-        // handle state of demo content checkbox on page load
+    });
+    jQuery('#installdata_field').click(function(evt){
         handleSampleDataCheckbox();
     });
+
+    var handleSampleDataCheckbox = function(){
+        demo = jQuery('#installdata_field').attr('checked');
+        jQuery('input:checkbox.toggle.demo').each(function(ix, el){
+            if(demo) {
+                jQuery(this)
+                    .attr('checked', true)
+                    .attr('disabled', true)
+                ;
+            } else {
+                jQuery(this)
+                    .attr('disabled', false)
+                ;
+            }
+        });
+    }
+
+    // handle state of demo content checkbox on page load
+    handleSampleDataCheckbox();
 </script>

@@ -51,19 +51,13 @@ $errors= 0;
 // get post back status
 $isPostBack = (count($_POST));
 
-$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
-
-// make sure they agree to the license
-#if (!in_array($action, array ('language', 'welcome', 'connection', 'options', 'license', 'mode', 'summary'))) {
-#    if (!isset ($_POST['chkagree'])) $action= 'license';
-#}
-
 $ph = ph();
 $ph = array_merge($ph,$_lang);
 $ph['install_language'] = $install_language;
 
 ob_start();
-if (!@include_once("action.{$action}.php")) {
+$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
+if (!@include_once("actions/action_{$action}.php")) {
     die ("Invalid install action attempted. [action={$action}]");
 }
 $ph['content'] = ob_get_contents();
