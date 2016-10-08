@@ -337,7 +337,7 @@ function createAssignEventsButton() {
     if(document.getElementById('assignEvents') === null) {
         var button = document.createElement("div");
         button.setAttribute('id', 'assignEvents');
-        button.innerHTML = '<button type="button" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></button><br/><br/>';
+        button.innerHTML = '<ul class="actionButtons"><li><a href="#" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a></li></ul>';
         var tab = document.getElementById("tabEvents");
         tab.insertBefore(button, tab.firstChild);
     }
