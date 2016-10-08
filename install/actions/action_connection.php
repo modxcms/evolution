@@ -56,7 +56,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 }
 
 ?>
-<form name="install" id="install_form" action="index.php?action=options" onsubmit="return validate();" method="post">
+<form name="install" id="install_form" action="index.php?action=options" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
@@ -80,7 +80,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 
 <!-- connection test action/status message -->
   <div class="clickHere">
-	&rarr; <a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a>
+	&rarr; <a id="servertest" href="javascript:void(0);"><?php echo $_lang['connection_screen_server_test_connection']?></a>
   </div>
   <div class="status" id="serverstatus"></div>
 <!-- end connection test action/status message -->
@@ -114,7 +114,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
   }
 ?>
   <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
-    <div id="collation" name="collation">
+    <div id="collation">
 		<select id="database_collation" name="database_collation">
         	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected="selected">
           	<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
@@ -124,7 +124,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
   </p>
 
   <div class="clickHere">
-	&rarr; <a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a>
+	&rarr; <a id="databasetest" href="javascript:void(0);"><?php echo $_lang['connection_screen_database_test_connection']?></a>
   </div>
   <div class="status" id="databasestatus">&nbsp;</div>
 </div></div>
@@ -197,81 +197,194 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 
 
     <p class="buttonlinks">
-        <a href="javascript:document.getElementById('install_form').action='index.php?action=mode';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-        <a style="display:inline;" href="javascript:if(validate()){document.getElementById('install_form').action='index.php?action=options';document.getElementById('install_form').submit();}" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
+        <a href="javascript:void(0);" class="prev" id="prevlink" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a style="display:inline;" id="nextlink" href="javascript:void(0);" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 </form>
 
 
 <script type="text/javascript" src="../<?php echo MGR_DIR;?>/media/script/mootools/mootools.js"></script>
-<script type="text/javascript" src="connection.js"></script>
 <script type="text/javascript">
 language ='<?php echo $install_language?>';
 installMode ='<?php echo $installMode ?>';
 </script>
 
 <script type="text/javascript">
-/* <![CDATA[ */
-  // validate
-  function validate() {
+function testServer(){
+// get the server test status as soon as collation received
+    var url = "connection.servertest.php";
+
+    host = $('databasehost').value;
+    uid  = $('databaseloginname').value;
+    pwd  = $('databaseloginpassword').value;
+        
+    var pars = Object.toQueryString({
+        q: url,
+        host: host,
+        uid: uid,
+        pwd: pwd,
+        language: language
+    });
+         
+    new Ajax(url, { postBody: pars, update: $('serverstatus'), onComplete: setColor } ).request();
+}
+
+function setDefaults(){
+	if($('database_pass') !== null && document.getElementById('AUH')) {
+		window.Slider2.slideIn();
+		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
+		Slider2FX.start({'opacity':[0,1]});
+		window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
+		Slider2Scroll = new Fx.Scroll(window);
+		Slider2Scroll.toElement('managerlanguage_select');
+	}
+}
+
+function setColor(){
+	var col = $('database_collation');
+
+	ss = document.getElementById('serverstatus');
+	ssv = ss.innerHTML;
+	if ($('server_pass') !== null) {
+		col.setStyle('background-color', '#9CCD00');
+		col.setStyle('border-width', '1px');
+		col.setStyle('font-weight','bold');
+
+		window.Slider1.slideIn(); //toggle the slider up and down.
+		var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
+		Slider1FX.start({'opacity':[0,1]});
+		window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
+		Slider1Scroll = new Fx.Scroll(window);
+		Slider1Scroll.toElement('databasestatus');
+		$('database_name').focus();
+    }
+}
+
     var f = document.install;
-    if(f.databasehost.value=="") {
-      alert("<?php echo $_lang['alert_enter_host']?>");
-      f.databasehost.focus();
-      return false;
-    }
-    if(f.databaseloginname.value=="") {
-      alert("<?php echo $_lang['alert_enter_login']?>");
-      f.databaseloginname.focus();
-      return false;
-    }
-    ss = document.getElementById('serverstatus');
-    ssv = ss.innerHTML;
-    if(ssv.length==0) {
-      alert("<?php echo $_lang['alert_server_test_connection']?>");
-      return false;
-    }
-    if (ssv.indexOf("failed") >=0) {
-      alert("<?php echo $_lang['alert_server_test_connection_failed']?>");
-      return false;
-    }   
-    if(f.database_name.value=="") {
-      alert("<?php echo $_lang['alert_enter_database_name']?>");
-      f.database_name.focus();
-      return false;
-    }
-    var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
-      alert("<?php echo $_lang['alert_table_prefixes']?>");
-      f.tableprefix.focus();
-      return false;
-    }
-    dbs = document.getElementById('databasestatus');
-    dbsv = dbs.innerHTML;
-    if(dbsv.length==0 || dbsv == '&nbsp;') {
-      alert("<?php echo $_lang['alert_database_test_connection']?>");
-      return false;
-    }
-    if (dbsv.indexOf("failed") >=0) {
-      alert("<?php echo $_lang['alert_database_test_connection_failed']?>");
-      return false;
-    }   
-    if(f.cmsadmin && f.cmsadmin.value=="") {
-      alert("<?php echo $_lang['alert_enter_adminlogin']?>");
-      f.cmsadmin.focus();
-      return false;
-    }
-    if(f.cmspassword && f.cmspassword.value=="") {
-      alert("<?php echo $_lang['alert_enter_adminpassword']?>");
-      f.cmspassword.focus();
-      return false;
-    }
-    if(f.cmspassword && f.cmspassword.value!=f.cmspasswordconfirm.value) {
-      alert("<?php echo $_lang['alert_enter_adminconfirm']?>");
-      f.cmspassword.focus();
-      return false;
-    }
-    return true;
-  }
-  /* ]]> */
+    // get collation from the database server
+    $('servertest').addEvent('click', function(e) {
+    
+        if(f.databasehost.value=="") {
+          alert("<?php echo $_lang['alert_enter_host']?>");
+          f.databasehost.focus();
+          return false;
+        }
+        if(f.databaseloginname.value=="") {
+          alert("<?php echo $_lang['alert_enter_login']?>");
+          f.databaseloginname.focus();
+          return false;
+        }
+        
+        e = new Event(e).stop();
+
+        var url = "connection.collation.php";
+
+        host = $('databasehost').value;
+        uid = $('databaseloginname').value;
+        pwd = $('databaseloginpassword').value;
+        database_collation = $('database_collation').value;
+        database_connection_method = $('database_connection_method').value;
+                
+        var pars = Object.toQueryString({
+            q: url,
+            host: host,
+            uid: uid,
+            pwd: pwd,
+            database_collation: database_collation,
+            database_connection_method: database_connection_method,
+            language: language
+        });
+         
+        new Ajax(url, { postBody: pars, update: $('collation'), onComplete: testServer } ).request();
+    });
+
+    // database test
+    $('databasetest').addEvent('click', function(e) {
+        
+        if(f.database_name.value=="") {
+          alert("<?php echo $_lang['alert_enter_database_name']?>");
+          f.database_name.focus();
+          return false;
+        }
+        
+        e = new Event(e).stop();
+
+        var url = "connection.databasetest.php";
+
+        host = $('databasehost').value;
+        uid  = $('databaseloginname').value;
+        pwd  = $('databaseloginpassword').value;
+        database_name = $('database_name').value;
+        tableprefix   = $('tableprefix').value;
+        database_collation = $('database_collation').value;
+        database_connection_method = $('database_connection_method').value;
+
+        var pars = Object.toQueryString({
+            q: url,
+            host: host,
+            uid: uid,
+            pwd: pwd,
+            database_name: database_name,
+            tableprefix: tableprefix,
+            database_collation: database_collation,
+            database_connection_method: database_connection_method,
+            language: language,
+            installMode: installMode
+        });
+        new Ajax(url, { postBody: pars, update: $('databasestatus'), onComplete: setDefaults } ).request();
+    });
+
+   
+	Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
+	Slider1.hide();
+	$('setCollation').style.backgroundColor = '#ffff00';
+	$('setCollation').style.display = 'block';
+	if(document.getElementById('AUH')) {
+		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
+		Slider2.hide();
+		$('AUH').style.display = 'block';
+		$('AUH').style.backgroundColor = '#ffff00';
+	}
+	
+    $('prevlink').addEvent('click', function(e) {
+        document.getElementById('install_form').action='index.php?action=mode';
+        document.getElementById('install_form').submit();
+    });
+	
+    $('nextlink').addEvent('click', function(e) {
+        var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
+          alert("<?php echo $_lang['alert_table_prefixes']?>");
+          f.tableprefix.focus();
+          return false;
+        }
+        dbs = document.getElementById('databasestatus');
+        dbsv = dbs.innerHTML;
+        if(dbsv.length==0 || dbsv == '&nbsp;') {
+          alert("<?php echo $_lang['alert_database_test_connection']?>");
+          return false;
+        }
+        if (dbsv.indexOf("failed") >=0) {
+          alert("<?php echo $_lang['alert_database_test_connection_failed']?>");
+          return false;
+        }   
+        if(f.cmsadmin && f.cmsadmin.value=="") {
+          alert("<?php echo $_lang['alert_enter_adminlogin']?>");
+          f.cmsadmin.focus();
+          return false;
+        }
+        if(f.cmspassword && f.cmspassword.value=="") {
+          alert("<?php echo $_lang['alert_enter_adminpassword']?>");
+          f.cmspassword.focus();
+          return false;
+        }
+        if(f.cmspassword && f.cmspassword.value!=f.cmspasswordconfirm.value) {
+          alert("<?php echo $_lang['alert_enter_adminconfirm']?>");
+          f.cmspassword.focus();
+          return false;
+        }
+    	document.getElementById('install_form').action='index.php?action=options';
+    	document.getElementById('install_form').submit();
+    });
+	
 </script>

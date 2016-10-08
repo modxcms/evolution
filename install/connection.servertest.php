@@ -15,7 +15,7 @@ if(!defined('MGR_DIR') && is_dir("{$base_path}manager")) {
 require_once("lang.php");
 
 $output = $_lang["status_connecting"];
-if (!$conn = mysqli_connect($host, $uid, $pwd)) {
+if (!$conn = @mysqli_connect($host, $uid, $pwd)) {
     $output .= '<span id="server_fail" style="color:#FF0000;"> '.$_lang['status_failed'].'</span>';
 }
 else {
