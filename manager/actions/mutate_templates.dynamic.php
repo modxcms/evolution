@@ -215,7 +215,7 @@ $total = count($selectedTvs);
 <?php
 if ($total > 0) echo '<p>' . $_lang['template_tv_msg'] . '</p>';
 if($modx->hasPermission('save_template') && $total > 1 && $id) {
-    echo sprintf('<p><a href="index.php?a=117&amp;id=%s">%s</a></p>',$id,$_lang['template_tv_edit']);
+    echo sprintf('<ul class="actionButtons"><li><a href="index.php?a=117&amp;id=%s">%s</a></li></ul>',$id,$_lang['template_tv_edit']);
 }
 
 // Selected TVs
