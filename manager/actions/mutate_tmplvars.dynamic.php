@@ -419,7 +419,11 @@ function decode(s){
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
-    <p><a href="#" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a> <a href="#" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a> <a href="#" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a></p>
+    <ul class="actionButtons">
+	    <li><a href="#" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a></li>
+	    <li><a href="#" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a></li>
+	    <li><a href="#" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a></li>
+    </ul>
 	<style type="text/css">
 		label {display:block;}
 	</style>
