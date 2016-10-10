@@ -92,7 +92,7 @@ abstract class Plugin {
 		if(($this->renderEvent!=='OnDocFormRender' || (array_search('ManagerManager', $plugins['OnDocFormRender']) === false))) {
 			$jquery = $this->assets->registerScript('jQuery',array(
                 'version' => '1.9.1',
-                'src'     => 'assets/js/jquery/jquery-1.9.1.min.js'
+                'src'     => 'assets/js/jquery/jquery.min.js'
             ));
             if ($jquery !== false) {
                 $output .= $jquery;
