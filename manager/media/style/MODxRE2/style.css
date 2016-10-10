@@ -3185,3 +3185,16 @@ table.actionButtons .searchtext {
   margin-top: 20px;
   margin-bottom: 15px;
 }
+
+/* filter elements */
+
+.filterElements-form {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.filterElements-form .form-control {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+}
