@@ -426,7 +426,7 @@ class DBAPI {
 	}
 
 	function dataSeek($result, $row_number) {
-		return mysqli_data_seek($result, $row_number);
+		return $result->data_seek($row_number);
 	}
 }
 ?>
