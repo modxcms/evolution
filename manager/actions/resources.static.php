@@ -41,7 +41,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     if($limit<1){
         echo $_lang['no_results'];
     } else {
-    $output = '<ul>';
+    $output = '<ul id="'.$resourceTable.'">';
     $preCat = '';
     $insideUl = 0;
     while ($row = $modx->db->getRow($rs)) {
@@ -81,6 +81,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 ?>
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
+<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
 
 <h1><?php echo $_lang['element_management']; ?></h1>
 
@@ -101,7 +102,18 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 		<ul class="actionButtons">
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
         </ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
+        </form>
+        
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
+    
+        <script>
+          jQuery('#site_templates_search').quicksearch('#site_templates ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
@@ -119,7 +131,18 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
         </ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
+        </form>
+        
         <?php echo createResourceList('site_tmplvars',301); ?>
+    
+        <script>
+          jQuery('#site_tmplvars_search').quicksearch('#site_tmplvars ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
@@ -130,10 +153,23 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
         <p><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
-		<ul class="actionButtons">
+        <ul class="actionButtons">
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
         </ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
+        </form>
+        
         <?php echo createResourceList('site_htmlsnippets',78); ?>
+    
+        <script>
+          jQuery('#site_htmlsnippets_search').quicksearch('#site_htmlsnippets ul li', {
+            selector: 'a'
+          });
+        </script>
+    
+    
     </div>
 <?php } ?>
 
@@ -147,7 +183,18 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 		<ul class="actionButtons">
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
         </ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
+        </form>
+        
         <?php echo createResourceList('site_snippets',22); ?>
+    
+        <script>
+          jQuery('#site_snippets_search').quicksearch('#site_snippets ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
@@ -168,7 +215,18 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <?php       }
         } ?>
         </ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
+        </form>
+        
         <?php echo createResourceList('site_plugins',102); ?>
+    
+        <script>
+          jQuery('#site_plugins_search').quicksearch('#site_plugins ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
@@ -178,7 +236,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
         <p><?php echo $_lang['category_msg']; ?></p>
         <br />
-        <ul>
+        
+        <form class="filterElements-form">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
+        </form>
+    
+        <div id="categories_list">
         <?php
         $displayInfo = array();
         $hasPermission = 0;
@@ -270,7 +333,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php
         }
         ?>
-        </ul>
+        </div>
+        <script>
+          jQuery('#categories_list_search').quicksearch('#categories_list ul ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php
     if (is_numeric($_GET['tab'])) {
