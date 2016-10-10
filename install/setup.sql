@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
-  `cache_type`	tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
+  `cache_type`  tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
   `snippet` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -298,39 +298,39 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_access` (
 ) ENGINE=MyISAM COMMENT='Contains data used for template variable access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
-	`id` int(11) NOT NULL auto_increment,
-	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
-	`contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
-	`value` mediumtext,
-	PRIMARY KEY  (id),
-	KEY idx_tmplvarid (tmplvarid),
-	KEY idx_id (contentid),
-	FULLTEXT KEY `value_ft_idx` (`value`)
+  `id` int(11) NOT NULL auto_increment,
+  `tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
+  `contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
+  `value` mediumtext,
+  PRIMARY KEY  (id),
+  KEY idx_tmplvarid (tmplvarid),
+  KEY idx_id (contentid),
+  FULLTEXT KEY `value_ft_idx` (`value`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
-	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
-	`templateid` int(11) NOT NULL default '0',
-	`rank` int(11) NOT NULL default '0',
-	PRIMARY KEY (`tmplvarid`, `templateid`)
+  `tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
+  `templateid` int(11) NOT NULL default '0',
+  `rank` int(11) NOT NULL default '0',
+  PRIMARY KEY (`tmplvarid`, `templateid`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables Templates Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
-	`id` INT(11) NOT NULL auto_increment,
-	`type` varchar(50) NOT NULL default '',
-	`name` varchar(100) NOT NULL default '',
-	`caption` varchar(80) NOT NULL default '',
-	`description` varchar(255) NOT NULL default '',
-	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-	`category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
-	`locked` tinyint(4) NOT NULL default '0',
-	`elements` text,
-	`rank` int(11) NOT NULL default '0',
-	`display` varchar(20) NOT NULL default '' COMMENT 'Display Control',
-	`display_params` text COMMENT 'Display Control Properties',
-	`default_text` text,
-	PRIMARY KEY  (id),
-	KEY `indx_rank`(`rank`)
+  `id` INT(11) NOT NULL auto_increment,
+  `type` varchar(50) NOT NULL default '',
+  `name` varchar(100) NOT NULL default '',
+  `caption` varchar(80) NOT NULL default '',
+  `description` varchar(255) NOT NULL default '',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `locked` tinyint(4) NOT NULL default '0',
+  `elements` text,
+  `rank` int(11) NOT NULL default '0',
+  `display` varchar(20) NOT NULL default '' COMMENT 'Display Control',
+  `display_params` text COMMENT 'Display Control Properties',
+  `default_text` text,
+  PRIMARY KEY  (id),
+  KEY `indx_rank`(`rank`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
@@ -580,15 +580,6 @@ ALTER TABLE `{PREFIX}web_user_attributes`
   ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
   ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
-ALTER TABLE `{PREFIX}site_tmplvar_templates`
-  DROP INDEX `idx_tmplvarid`,
-  DROP INDEX `idx_templateid`,
-  ADD PRIMARY KEY (`tmplvarid`, `templateid`);
-
-ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
-
-ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
-
 # Set the private manager group flag
 
 UPDATE {PREFIX}documentgroup_names AS dgn
@@ -615,29 +606,6 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/javascr
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WHERE `type`='' AND `alias` REGEXP '\.css$';
 
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
-
-ALTER TABLE `{PREFIX}site_content` ADD INDEX `typeidx` (`type`);
-
-ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
-
-ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
-
-ALTER TABLE `{PREFIX}user_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}user_settings` ADD PRIMARY KEY (`user`, `setting_name`);
-
-ALTER TABLE `{PREFIX}web_user_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}web_user_settings` ADD PRIMARY KEY (`webuser`, `setting_name`);
-
-ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
-
-ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
-  ADD FULLTEXT `value_ft_idx` (`value`);
 
 ALTER TABLE `{PREFIX}active_users`
   MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
@@ -754,6 +722,37 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 ALTER TABLE `{PREFIX}webgroup_names`
  MODIFY COLUMN `name` varchar(245) NOT NULL default '';
 
+ALTER TABLE `{PREFIX}site_content` ADD INDEX `typeidx` (`type`);
+
+ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
+
+ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
+
+ALTER TABLE `{PREFIX}user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}user_settings` ADD PRIMARY KEY (`user`, `setting_name`);
+
+ALTER TABLE `{PREFIX}web_user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}web_user_settings` ADD PRIMARY KEY (`webuser`, `setting_name`);
+
+ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
+  ADD FULLTEXT `value_ft_idx` (`value`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates`
+  DROP INDEX `idx_tmplvarid`,
+  DROP INDEX `idx_templateid`,
+  ADD PRIMARY KEY (`tmplvarid`, `templateid`);
+
+ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
+
+ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
 # ]]upgrade-able
 
@@ -1049,39 +1048,39 @@ REPLACE INTO `{PREFIX}system_eventnames`
 
 
 UPDATE `{PREFIX}user_roles` SET 
-	bk_manager=1,
-	new_plugin=1,
-	edit_plugin=1,
-	save_plugin=1,
-	delete_plugin=1,
-	new_module=1,
-	edit_module=1,
-	save_module=1,
-	delete_module=1,
-	exec_module=1,
-	view_eventlog = 1,
-	delete_eventlog = 1,
-	manage_metatags = 1,
-	edit_doc_metatags = 1,
-	new_web_user = 1,
-	edit_web_user = 1,
-	save_web_user = 1,
-	delete_web_user = 1,
-	new_chunk = 1,
-	edit_chunk = 1,
-	save_chunk = 1,
-	delete_chunk = 1,
-	web_access_permissions = 1,
-	view_unpublished = 1,
-	publish_document = 1,
-	import_static = 1,
-	export_static = 1,
-	empty_trash = 1,
-	remove_locks = 1,
+  bk_manager=1,
+  new_plugin=1,
+  edit_plugin=1,
+  save_plugin=1,
+  delete_plugin=1,
+  new_module=1,
+  edit_module=1,
+  save_module=1,
+  delete_module=1,
+  exec_module=1,
+  view_eventlog = 1,
+  delete_eventlog = 1,
+  manage_metatags = 1,
+  edit_doc_metatags = 1,
+  new_web_user = 1,
+  edit_web_user = 1,
+  save_web_user = 1,
+  delete_web_user = 1,
+  new_chunk = 1,
+  edit_chunk = 1,
+  save_chunk = 1,
+  delete_chunk = 1,
+  web_access_permissions = 1,
+  view_unpublished = 1,
+  publish_document = 1,
+  import_static = 1,
+  export_static = 1,
+  empty_trash = 1,
+  remove_locks = 1,
   assets_images = 1,
   assets_files = 1,
   change_resourcetype = 1
-	WHERE `id`=1;
+  WHERE `id`=1;
 
 
 # Update any invalid Manager Themes in User Settings and reset the default theme

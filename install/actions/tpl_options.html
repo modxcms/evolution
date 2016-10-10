@@ -49,39 +49,33 @@
 <script type="text/javascript">
     jQuery('#toggle_check_all').click(function(evt){
         evt.preventDefault();
-        demo = jQuery('#installdata_field').attr('checked');
-        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', true);
+        jQuery('input:checkbox.toggle:not(:disabled)').prop('checked', true);
     });
     jQuery('#toggle_check_none').click(function(evt){
         evt.preventDefault();
-        demo = jQuery('#installdata_field').attr('checked');
-        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', false);
+        jQuery('input:checkbox.toggle:not(:disabled)').prop('checked', false);
     });
     jQuery('#toggle_check_toggle').click(function(evt){
         evt.preventDefault();
-        jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', function(){
-            return !jQuery(this).attr('checked');
+        jQuery('input:checkbox.toggle:not(:disabled)').prop('checked', function(){
+            return !jQuery(this).prop('checked');
         });
     });
-    jQuery('#installdata_field').click(function(evt){
+    jQuery('#installdata_field').click(function(){
         handleSampleDataCheckbox();
     });
-
+    
     var handleSampleDataCheckbox = function(){
-        demo = jQuery('#installdata_field').attr('checked');
+        demo = jQuery('#installdata_field').prop('checked');
         jQuery('input:checkbox.toggle.demo').each(function(ix, el){
             if(demo) {
-                jQuery(this)
-                    .attr('checked', true)
-                    .attr('disabled', true)
-                ;
-            } else {
-                jQuery(this)
-                    .attr('disabled', false)
-                ;
-            }
+                jQuery(this).prop('checked', true).prop('disabled', true);
+    } else {
+                jQuery(this).prop('disabled', false);
+    }
         });
     }
+    
     // handle state of demo content checkbox on page load
     handleSampleDataCheckbox();
 </script>

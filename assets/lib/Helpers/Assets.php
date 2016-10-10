@@ -61,7 +61,7 @@ class AssetsHelper
         $plugins = $this->modx->pluginEvent;
         if((array_search('ManagerManager', $plugins['OnDocFormRender']) === false)) {
             $output .= $this->registerScript('jQuery',array(
-                'src'=>'assets/js/jquery/jquery-1.9.1.min.js',
+                'src'=>'assets/js/jquery/jquery.min.js',
                 'version'=>'1.9.1'
             ));
             $output .='<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';

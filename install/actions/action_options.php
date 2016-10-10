@@ -1,9 +1,4 @@
 <?php
-if(is_file($base_path . 'assets/cache/siteManager.php'))
-    include_once($base_path . 'assets/cache/siteManager.php');
-
-if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
-
 $installMode = intval($_POST['installmode']);
 
 if ($installMode == 0 || $installMode == 2) {
