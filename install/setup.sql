@@ -580,15 +580,6 @@ ALTER TABLE `{PREFIX}web_user_attributes`
   ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
   ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
-ALTER TABLE `{PREFIX}site_tmplvar_templates`
-  DROP INDEX `idx_tmplvarid`,
-  DROP INDEX `idx_templateid`,
-  ADD PRIMARY KEY (`tmplvarid`, `templateid`);
-
-ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
-
-ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
-
 # Set the private manager group flag
 
 UPDATE {PREFIX}documentgroup_names AS dgn
@@ -615,29 +606,6 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/javascr
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WHERE `type`='' AND `alias` REGEXP '\.css$';
 
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
-
-ALTER TABLE `{PREFIX}site_content` ADD INDEX `typeidx` (`type`);
-
-ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
-
-ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
-
-ALTER TABLE `{PREFIX}user_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}user_settings` ADD PRIMARY KEY (`user`, `setting_name`);
-
-ALTER TABLE `{PREFIX}web_user_settings` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}web_user_settings` ADD PRIMARY KEY (`webuser`, `setting_name`);
-
-ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
-
-ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
-
-ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
-  ADD FULLTEXT `value_ft_idx` (`value`);
 
 ALTER TABLE `{PREFIX}active_users`
   MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
@@ -754,6 +722,37 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 ALTER TABLE `{PREFIX}webgroup_names`
  MODIFY COLUMN `name` varchar(245) NOT NULL default '';
 
+ALTER TABLE `{PREFIX}site_content` ADD INDEX `typeidx` (`type`);
+
+ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
+
+ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
+
+ALTER TABLE `{PREFIX}user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}user_settings` ADD PRIMARY KEY (`user`, `setting_name`);
+
+ALTER TABLE `{PREFIX}web_user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}web_user_settings` ADD PRIMARY KEY (`webuser`, `setting_name`);
+
+ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
+  ADD FULLTEXT `value_ft_idx` (`value`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates`
+  DROP INDEX `idx_tmplvarid`,
+  DROP INDEX `idx_templateid`,
+  ADD PRIMARY KEY (`tmplvarid`, `templateid`);
+
+ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
+
+ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
 # ]]upgrade-able
 
