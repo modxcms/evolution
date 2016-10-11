@@ -86,7 +86,7 @@ echo $cm->render();
 
 <h1 class="pagetitle">
   <span class="pagetitle-icon">
-    <i class="fa fa fa-users"></i>
+    <i class="fa fa-users"></i>
   </span>
   <span class="pagetitle-text">
     <?php echo $_lang['web_user_management_title']; ?>
