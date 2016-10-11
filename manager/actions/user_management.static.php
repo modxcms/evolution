@@ -84,7 +84,14 @@ echo $cm->render();
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
 
-<h1><?php echo $_lang['user_management_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa fa-user"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['user_management_title']; ?>
+  </span>
+</h1>
 <div class="section">
 <div class="sectionBody">
 	<p><?php echo $_lang['user_management_msg']; ?></p>
