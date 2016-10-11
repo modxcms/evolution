@@ -2045,6 +2045,19 @@ ul.actionButtons {
   font-weight: bold;
 }
 
+#resourcesPane .actionButtons {
+  padding-top: 0;
+  min-height: 48px;
+}
+
+#resourcesPane .actionButtons li {
+  margin-right: 10px;
+}
+
+#resourcesPane .actionButtons a {
+  display: inline-block;
+}
+
 
 /*
 * Generic styles for all form elements
@@ -3198,10 +3211,23 @@ table.actionButtons .searchtext {
   margin-top: 5px;
 }
 
+.actionButtons .filterElements-form {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .filterElements-form .form-control {
   display: block;
   width: 100%;
   max-width: 500px;
+  font-size: 13px;
+}
+
+.actionButtons .filterElements-form .form-control {
+  width: 200px;
+  height: 37px;
+  padding-left: 10px;
+  box-sizing: border-box;
 }
 
 /* pagetitle-icon */
