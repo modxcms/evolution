@@ -74,7 +74,14 @@ echo $cm->render();
 	});
 </script>
 
-<h1><?php echo $_lang['module_management']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa fa-cogs"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['module_management']; ?>
+  </span>
+</h1>
 <div class="section">
 <div class="sectionBody">
 	<!-- load modules -->

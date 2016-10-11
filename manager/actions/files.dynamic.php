@@ -97,8 +97,14 @@ else $webstart_path = '../'.$webstart_path;
 <style type="text/css">
 .warning {color:#c00;}
 </style>
-<h1><?php echo $_lang['manage_files']?></h1>
-
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-folder-open-o"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['manage_files']; ?>
+  </span>
+</h1>
 <div id="actions">
   <ul class="actionButtons">
 <?php if($_POST['mode']=='save'||$_GET['mode']=='edit') :?>

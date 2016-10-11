@@ -20,7 +20,14 @@ $allowedfiles = array('html','htm','shtml','xml');
     }
 </script>
 
-<h1><?php echo $_lang['import_site_html']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-upload"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['import_site_html']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">

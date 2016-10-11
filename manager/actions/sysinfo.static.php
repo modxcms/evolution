@@ -31,7 +31,14 @@ $serverArr = array(
 	$_lang['cfg_site_url']       => MODX_SITE_URL
 );
 ?>
-<h1><?php echo $_lang["view_sysinfo"]; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-info-circle"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['view_sysinfo']; ?>
+  </span>
+</h1>
 
 <script type="text/javascript">
 	function viewPHPInfo() {
