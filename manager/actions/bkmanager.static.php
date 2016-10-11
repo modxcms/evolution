@@ -175,7 +175,14 @@ else
 	<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>
 
 </script>
-<h1><?php echo $_lang['bk_manager']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-database"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['bk_manager']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
