@@ -67,7 +67,7 @@ function deletegroup(groupid,type) {
 <?php
 // User Groups
 
-	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_users_tab'].'</p>';
 
 ?>
 	<table class="permissiongroup">
@@ -138,7 +138,7 @@ function deletegroup(groupid,type) {
 <?php
 // Document Groups
 
-	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_resources_tab'].'</p>';
 ?>
 	<table class="permissiongroup">
 		<thead>
@@ -207,7 +207,7 @@ function deletegroup(groupid,type) {
 <?php
 // User/Document Group Links
 
-	echo '<p>'.$_lang['access_permissions_links_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_links_tab'].'</p>';
 
 	$rs = $modx->db->select(
 		"groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name",

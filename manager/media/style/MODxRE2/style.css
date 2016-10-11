@@ -723,8 +723,7 @@ input.submit {
 
 .section .sectionBody {
   margin: 0 15px 15px;
-  padding: 7px;
-  padding-left: 15px;
+  padding: 15px;
   background-color: #fff;
   border: 1px solid #CCCCCC;
 }
@@ -2944,7 +2943,7 @@ div.treeframebody {
   display: inline;
 }
 
-.actionButtons--user-mgm .fa {
+.actionButtons--tableheader .fa {
   font-size: 14px;
 }
 

@@ -85,7 +85,7 @@ echo $cm->render();
 <div class="section">
 <div class="sectionBody">
 	<!-- load modules -->
-	<p><?php echo $_lang['module_management_msg']; ?></p>
+    <p class="element-edit-message"><?php echo $_lang['module_management_msg']; ?></p>
 
 	<div id="actions">
 		<ul class="actionButtons">

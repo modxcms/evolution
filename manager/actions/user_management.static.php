@@ -94,9 +94,9 @@ echo $cm->render();
 </h1>
 <div class="section">
 <div class="sectionBody">
-	<p><?php echo $_lang['user_management_msg']; ?></p>
+    <p class="element-edit-message"><?php echo $_lang['user_management_msg']; ?></p>
 	<div class="searchbar">
-        <table border="0" style="width:100%" class="actionButtons actionButtons--user-mgm">
+        <table border="0" style="width:100%" class="actionButtons actionButtons--tableheader">
 			<tr>
 			<td><a href="index.php?a=11"><?php echo $_lang['new_user']; ?></a></td>
 			<td nowrap="nowrap">
