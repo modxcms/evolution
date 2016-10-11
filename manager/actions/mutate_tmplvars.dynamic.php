@@ -259,7 +259,14 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
-	<h1><?php echo $_lang['tmplvars_title']; ?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-list-alt"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['tmplvars_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
@@ -294,7 +301,11 @@ function decode(s){
 	<div class="tab-page" id="tabGeneral">
 	<h2 class="tab"><?php echo $_lang['settings_general'];?></h2>
 	<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabGeneral" ) );</script>
-<p><?php echo $_lang['tmplvars_msg']; ?></p>
+
+    <p class="element-edit-message">
+      <?php echo $_lang['tmplvars_msg']; ?>
+    </p>
+      
 <table>
   <tr>
     <th><?php echo $_lang['tmplvars_name']; ?>:</th>
