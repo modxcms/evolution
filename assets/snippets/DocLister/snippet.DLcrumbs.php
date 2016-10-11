@@ -18,8 +18,8 @@ if ($hideMain) {
 $id = isset($id) ? $id : $modx->documentObject['id'];
 $tmp = $modx->getParentIds($id);
 $_parents = array_merge($_parents, array_reverse(array_values($tmp)));
-foreach($_parents as $i => $num){
-    if($num == $modx->config['site_start'] && !$hideMain){
+foreach ($_parents as $i => $num) {
+    if ($num == $modx->config['site_start'] && !$hideMain) {
         unset($_parents[$i]);
     }
 }
@@ -34,8 +34,8 @@ if (!empty($_parents) && count($_parents) >= (empty($minDocs) ? 0 : (int)$minDoc
         ),
         !empty($modx->event->params) ? $modx->event->params : array(),
         array(
-            'idType' => 'documents',
-            'sortType' => 'doclist',
+            'idType'    => 'documents',
+            'sortType'  => 'doclist',
             'documents' => implode(",", $_parents)
         )
     );

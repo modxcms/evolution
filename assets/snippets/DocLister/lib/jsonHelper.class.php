@@ -1,9 +1,17 @@
 <?php
-if (!defined("JSON_ERROR_UTF8")) define("JSON_ERROR_UTF8", 5); //PHP < 5.3.3
+if (!defined("JSON_ERROR_UTF8")) {
+    define("JSON_ERROR_UTF8", 5);
+} //PHP < 5.3.3
 include_once("xnop.class.php");
 
+/**
+ * Class jsonHelper
+ */
 class jsonHelper
 {
+    /**
+     * @var array
+     */
     protected static $_error = array(
         0 => 'error_none', //JSON_ERROR_NONE
         1 => 'error_depth', //JSON_ERROR_DEPTH
@@ -34,13 +42,13 @@ class jsonHelper
         } else {
             $depth = 512;
         }
-        if(is_scalar($json)){
+        if (is_scalar($json)) {
             if (version_compare(phpversion(), '5.3.0', '<')) {
                 $out = json_decode($json, $assoc);
             } else {
                 $out = json_decode($json, $assoc, $depth);
             }
-        }else{
+        } else {
             $out = null;
         }
 
@@ -51,6 +59,7 @@ class jsonHelper
                 $out = new xNop();
             }
         }
+
         return $out;
     }
 
@@ -66,73 +75,87 @@ class jsonHelper
         } else {
             $error = 999;
         }
+
         return isset(self::$_error[$error]) ? self::$_error[$error] : 'other';
     }
-	
-	public static function toJSON(array $data = array()){
+
+    /**
+     * @param array $data
+     * @return bool|string
+     */
+    public static function toJSON(array $data = array())
+    {
         if (version_compare(PHP_VERSION, '5.4.0') < 0) {
             $out = json_encode($data);
             $out = str_replace('\\/', '/', $out);
-        }else{
+        } else {
             $out = json_encode($data, JSON_UNESCAPED_SLASHES);
         }
+
         return self::json_format($out);
     }
-	
-	 public static function json_format($json){
+
+    /**
+     * @param $json
+     * @return bool|string
+     */
+    public static function json_format($json)
+    {
         $tab = "  ";
         $new_json = "";
         $indent_level = 0;
         $in_string = false;
         $json_obj = json_decode($json);
-        if($json_obj === false) return false;
+        if ($json_obj === false) {
+            return false;
+        }
         $len = strlen($json);
-        for($c = 0; $c < $len; $c++){
+        for ($c = 0; $c < $len; $c++) {
             $char = $json[$c];
-            switch($char){
+            switch ($char) {
                 case '{':
                 case '[':
-                    if(!$in_string){
-                        $new_json .= $char . "\n" . str_repeat($tab, $indent_level+1);
+                    if (!$in_string) {
+                        $new_json .= $char . "\n" . str_repeat($tab, $indent_level + 1);
                         $indent_level++;
-                    }
-                    else{
+                    } else {
                         $new_json .= $char;
                     }
                     break;
                 case '}':
                 case ']':
-                    if(!$in_string){
+                    if (!$in_string) {
                         $indent_level--;
                         $new_json .= "\n" . str_repeat($tab, $indent_level) . $char;
-                    }else{
+                    } else {
                         $new_json .= $char;
                     }
                     break;
                 case ',':
-                    if(!$in_string){
+                    if (!$in_string) {
                         $new_json .= ",\n" . str_repeat($tab, $indent_level);
-                    }else{
+                    } else {
                         $new_json .= $char;
                     }
                     break;
                 case ':':
-                    if(!$in_string){
+                    if (!$in_string) {
                         $new_json .= ": ";
-                    }else{
+                    } else {
                         $new_json .= $char;
                     }
                     break;
                 case '"':
-                    if($c > 0 && $json[$c-1] != '\\'){
+                    if ($c > 0 && $json[$c - 1] != '\\') {
                         $in_string = !$in_string;
                     }
-					// no break ???
+                    // no break ???
                 default:
                     $new_json .= $char;
                     break;
             }
         }
+
         return $new_json;
     }
 }

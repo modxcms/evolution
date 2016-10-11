@@ -7,6 +7,9 @@ if (!defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 
+/**
+ * Class filterDocLister
+ */
 abstract class filterDocLister
 {
     /**
@@ -61,8 +64,8 @@ abstract class filterDocLister
     /**
      * Запуск фильтра
      *
-     * @param $DocLister экземпляр класса DocLister
-     * @param $filter строка с условиями фильтрации
+     * @param DocLister $DocLister экземпляр класса DocLister
+     * @param string $filter строка с условиями фильтрации
      * @return bool
      */
     public function init(DocLister $DocLister, $filter)
@@ -70,6 +73,7 @@ abstract class filterDocLister
         $this->DocLister = $DocLister;
         $this->modx = $this->DocLister->getMODX();
         $this->totalFilters = $this->DocLister->getCountFilters();
+
         return $this->parseFilter($filter);
     }
 
@@ -90,7 +94,7 @@ abstract class filterDocLister
     /**
      * Разбор строки фильтрации
      *
-     * @param $filter строка фильтрации
+     * @param string $filter строка фильтрации
      * @return bool результат разбора фильтра
      */
     protected function parseFilter($filter)
@@ -100,6 +104,7 @@ abstract class filterDocLister
         $this->field = APIHelpers::getkey($parsed, 1);
         $this->operator = APIHelpers::getkey($parsed, 2);
         $this->value = APIHelpers::getkey($parsed, 3);
+
         // exit if something is wrong
         return !(empty($this->field) || empty($this->operator) || is_null($this->value));
     }
@@ -116,15 +121,16 @@ abstract class filterDocLister
     /**
      * Конструктор условий для WHERE секции
      *
-     * @param $table_alias алиас таблицы
-     * @param $field поле для фильтрации
-     * @param $operator оператор сопоставления
-     * @param $value искомое значение
+     * @param string $table_alias алиас таблицы
+     * @param string $field поле для фильтрации
+     * @param string $operator оператор сопоставления
+     * @param string $value искомое значение
      * @return string
      */
     protected function build_sql_where($table_alias, $field, $operator, $value)
     {
-        $this->DocLister->debug->debug('Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()), 'buildQuery', 2);
+        $this->DocLister->debug->debug('Build SQL query for filters: ' . $this->DocLister->debug->dumpData(func_get_args()),
+            'buildQuery', 2);
         $output = sqlHelper::tildeField($field, $table_alias);
 
         switch ($operator) {
@@ -140,19 +146,19 @@ abstract class filterDocLister
                 break;
             case '>':
             case 'gt':
-                $output .= ' > ' . str_replace(',','.',floatval($value));
+                $output .= ' > ' . str_replace(',', '.', floatval($value));
                 break;
             case '<':
             case 'lt':
-                $output .= ' < ' . str_replace(',','.',floatval($value));
+                $output .= ' < ' . str_replace(',', '.', floatval($value));
                 break;
             case '<=':
             case 'elt':
-                $output .= ' <= ' . str_replace(',','.',floatval($value));
+                $output .= ' <= ' . str_replace(',', '.', floatval($value));
                 break;
             case '>=':
             case 'egt':
-                $output .= ' >= ' . str_replace(',','.',floatval($value));
+                $output .= ' >= ' . str_replace(',', '.', floatval($value));
                 break;
             case '%':
             case 'like':
@@ -203,6 +209,7 @@ abstract class filterDocLister
                 $output = '';
         }
         $this->DocLister->debug->debugEnd("buildQuery");
+
         return $output;
     }
 

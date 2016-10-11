@@ -4,7 +4,7 @@ header("X-XSS-Protection: 0");
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
-if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '275';
+if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '300';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
 <!DOCTYPE html>
@@ -19,9 +19,9 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
         #mainMenu { height: 85px; width: 100%; box-shadow: 0px 0px 8px #030303; z-index:1000;}
-        #tree { width: 275px; top: 85px; left: 0; bottom: 0; overflow:hidden;}
-        #main { top: 85px; left: 275px; right: 0; bottom: 0; }
-        #resizer { position: absolute; top: 85px; bottom: 0; left: 275px; width: 3px; cursor: col-resize; z-index: 999;border-left:1px solid #a4b9cc!important;}
+        #tree { width: 300px; top: 85px; left: 0; bottom: 0; overflow:hidden;}
+        #main { top: 85px; left: 300px; right: 0; bottom: 0; }
+        #resizer { position: absolute; top: 85px; bottom: 0; left: 300px; width: 3px; cursor: col-resize; z-index: 999;border-left:1px solid #a4b9cc!important;}
         #resizer #hideMenu {display:block;
             margin-top:10px;
             margin-left:-9px;

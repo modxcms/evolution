@@ -24,6 +24,20 @@ $_style['show_tree']                = $style_path.'icons/application_side_expand
 $_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px;height:16px" />';
 $_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px;height:16px" />';
 
+//Tree Contextual Menu Popup
+$_style['ctx_new_document']         = 'fa fa-file-o fa-fw fa-lg';
+$_style['ctx_edit_document']        = 'fa fa-pencil-square-o fa-fw fa-lg';
+$_style['ctx_move_document']        = 'fa fa-arrows fa-fw fa-lg';
+$_style['ctx_resource_duplicate']   = 'fa fa-clone fa-fw fa-lg';
+$_style['ctx_sort_menuindex']       = 'fa fa-sort-numeric-asc fa-fw fa-lg';
+$_style['ctx_publish_document']     = 'fa fa-arrow-up fa-fw fa-lg';
+$_style['ctx_unpublish_resource']   = 'fa fa-arrow-down fa-fw fa-lg';
+$_style['ctx_delete']               = 'fa fa-trash fa-fw fa-lg';
+$_style['ctx_undelete_resource']    = 'fa fa-arrow-circle-o-up fa-fw fa-lg';
+$_style['ctx_weblink']              = 'fa fa-link fa-fw fa-lg';
+$_style['ctx_resource_overview']    = 'fa fa-info fa-fw fa-lg';
+$_style['ctx_preview_resource']     = 'fa fa-eye fa-fw fa-lg';
+
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
 $_style['tree_folder']              = $style_path.'tree/application_double.png'; /* folder.png */
