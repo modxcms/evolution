@@ -83,7 +83,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
 
-<h1><?php echo $_lang['element_management']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-th"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['element_management']; ?>
+  </span>
+</h1>
 
 <div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">

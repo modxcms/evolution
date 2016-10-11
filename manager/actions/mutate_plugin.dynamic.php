@@ -399,7 +399,14 @@ var internal = <?php echo json_encode($internal); ?>;
     <input type="hidden" name="id" value="<?php echo $content['id'];?>">
     <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
-    <h1><?php echo $_lang['plugin_title']; ?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-plug"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['plugin_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
@@ -426,7 +433,7 @@ var internal = <?php echo json_encode($internal); ?>;
     </div>
 
 <div class="sectionBody">
-<p><?php echo $_lang['plugin_msg']; ?></p>
+  
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="pluginPane">
     <script type="text/javascript">
@@ -437,6 +444,11 @@ var internal = <?php echo json_encode($internal); ?>;
 <div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
     <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabPlugin" ) );</script>
+
+    <p class="element-edit-message">
+      <?php echo $_lang['plugin_msg']; ?>
+    </p>
+   
     <table>
       <tr>
         <th><?php echo $_lang['plugin_name']; ?>:</th>

@@ -104,7 +104,14 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
 
-    <h1><?php echo $_lang['htmlsnippet_title']?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-th-large"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['htmlsnippet_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
@@ -141,7 +148,11 @@ if (is_array($evtOut))
     <div class="tab-page" id="tabGeneral">
         <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
     	<script type="text/javascript">tpChunk.addTabPage( document.getElementById( "tabGeneral" ) );</script>
-    <p><?php echo $_lang['htmlsnippet_msg']?></p>
+
+        <p class="element-edit-message">
+          <?php echo $_lang['htmlsnippet_msg']?>
+        </p>
+      
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
             <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span>

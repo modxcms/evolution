@@ -3203,3 +3203,19 @@ table.actionButtons .searchtext {
   width: 100%;
   max-width: 500px;
 }
+
+/* pagetitle-icon */
+
+.pagetitle-icon {
+  margin-right: 2px;
+  color: #3697CD;
+}
+
+/* element-edit-message */
+
+.element-edit-message {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ededed;
+  margin-bottom: 15px;
+  color: #777;
+}

@@ -79,7 +79,14 @@ function deletedocument() {
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a'];?>">
 
-    <h1><?php echo $_lang['template_title']; ?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-newspaper-o"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['template_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
@@ -115,7 +122,10 @@ function deletedocument() {
         <h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 
-<?php echo '<div>' . $_lang['template_msg'] . '<br/><br/></div>'; ?>
+        <p class="element-edit-message">
+          <?php echo $_lang['template_msg']; ?>
+        </p>
+      
     <table>
       <tr>
         <th><?php echo $_lang['template_name']; ?>:</th>

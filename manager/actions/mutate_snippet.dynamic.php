@@ -390,10 +390,17 @@ function contains(a, obj) {
           </ul>
     </div>
 
-<h1><?php echo $_lang['snippet_title']?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-code"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['snippet_title']; ?>
+      </span>
+    </h1>
 
 <div class="sectionBody">
-<?php echo $_lang['snippet_msg']?>
+  
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
@@ -405,6 +412,11 @@ function contains(a, obj) {
     <div class="tab-page" id="tabSnippet">
         <h2 class="tab"><?php echo $_lang['settings_general']?></h2>
         <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
+
+        <p class="element-edit-message">
+          <?php echo $_lang['snippet_msg']?>
+        </p>
+       
         <table>
           <tr>
             <th><?php echo $_lang['snippet_name']?>:</th>
