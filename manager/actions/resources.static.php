@@ -107,12 +107,13 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
+              </form>
+            </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
         </ul>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
-        </form>
         
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
     
@@ -134,14 +135,16 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
         <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        
         <ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
+              </form>
+            </li>
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
         </ul>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
-        </form>
         
         <?php echo createResourceList('site_tmplvars',301); ?>
     
@@ -161,12 +164,13 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
         <ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
+              </form>
+            </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
         </ul>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
-        </form>
         
         <?php echo createResourceList('site_htmlsnippets',78); ?>
     
@@ -188,12 +192,13 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
+              </form>
+            </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
         </ul>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
-        </form>
         
         <?php echo createResourceList('site_snippets',22); ?>
     
@@ -213,6 +218,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
+              </form>
+            </li>
             <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
             <?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
 <?php   if($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
@@ -222,10 +232,6 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <?php       }
         } ?>
         </ul>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
-        </form>
         
         <?php echo createResourceList('site_plugins',102); ?>
     
@@ -242,10 +248,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
         <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
-        
-        <form class="filterElements-form">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
-        </form>
+
+        <ul class="actionButtons">
+          <li>
+            <form class="filterElements-form">
+              <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
+            </form>
+          </li>
+        </ul>
     
         <div id="categories_list">
         <?php
