@@ -2944,6 +2944,10 @@ div.treeframebody {
   display: inline;
 }
 
+.actionButtons--user-mgm .fa {
+  font-size: 14px;
+}
+
 .sectionBody .actionButtons {
   padding-top: 0;
   min-height: 48px;
