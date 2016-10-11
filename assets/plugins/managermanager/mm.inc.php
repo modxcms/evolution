@@ -31,7 +31,7 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
 	'jq' => array(
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.min.js',
 		'name' => 'jquery',
 		'version' => '1.9.1'
 	),

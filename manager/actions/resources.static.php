@@ -41,7 +41,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     if($limit<1){
         echo $_lang['no_results'];
     } else {
-    $output = '<ul>';
+    $output = '<ul id="'.$resourceTable.'">';
     $preCat = '';
     $insideUl = 0;
     while ($row = $modx->db->getRow($rs)) {
@@ -81,8 +81,16 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 ?>
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
+<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
 
-<h1><?php echo $_lang['element_management']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-th"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['element_management']; ?>
+  </span>
+</h1>
 
 <div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
@@ -94,71 +102,127 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- Templates -->
 <?php   if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')) { ?>
     <div class="tab-page" id="tabTemplates">
-        <h2 class="tab"><?php echo $_lang["manage_templates"] ?></h2>
+        <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
-        <p><?php echo $_lang['template_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
+              </form>
+            </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
         </ul>
+        
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
+    
+        <script>
+          jQuery('#site_templates_search').quicksearch('#site_templates ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
 <!-- Template variables -->
 <?php   if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')) { ?>
     <div class="tab-page" id="tabVariables">
-        <h2 class="tab"><?php echo $_lang["tmplvars"] ?></h2>
+        <h2 class="tab"><i class="fa fa-list-alt"></i> <?php echo $_lang["tmplvars"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabVariables" ) );</script>
         <!--//
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p><?php echo $_lang['tmplvars_management_msg'];
-                 echo sprintf(' (<a href="index.php?a=305">%s</a>)',$_lang['template_tv_edit']); ?></p>
-			<ul class="actionButtons">
-                <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
-            </ul>
-            <?php echo createResourceList('site_tmplvars',301); ?>
+        <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        
+        <ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
+              </form>
+            </li>
+            <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
+            <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
+        </ul>
+        
+        <?php echo createResourceList('site_tmplvars',301); ?>
+    
+        <script>
+          jQuery('#site_tmplvars_search').quicksearch('#site_tmplvars ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
 <!-- chunks -->
 <?php   if($modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk')) { ?>
     <div class="tab-page" id="tabChunks">
-        <h2 class="tab"><?php echo $_lang["manage_htmlsnippets"] ?></h2>
+        <h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
-        <p><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
-		<ul class="actionButtons">
+        <ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
+              </form>
+            </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
         </ul>
+        
         <?php echo createResourceList('site_htmlsnippets',78); ?>
+    
+        <script>
+          jQuery('#site_htmlsnippets_search').quicksearch('#site_htmlsnippets ul li', {
+            selector: 'a'
+          });
+        </script>
+    
+    
     </div>
 <?php } ?>
 
 <!-- snippets -->
 <?php   if($modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet')) { ?>
     <div class="tab-page" id="tabSnippets">
-        <h2 class="tab"><?php echo $_lang["manage_snippets"] ?></h2>
+        <h2 class="tab"><i class="fa fa-code"></i> <?php echo $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
-        <p><?php echo $_lang['snippet_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
+              </form>
+            </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
         </ul>
+        
         <?php echo createResourceList('site_snippets',22); ?>
+    
+        <script>
+          jQuery('#site_snippets_search').quicksearch('#site_snippets ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
 <!-- plugins -->
 <?php   if($modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) { ?>
     <div class="tab-page" id="tabPlugins">
-        <h2 class="tab"><?php echo $_lang["manage_plugins"] ?></h2>
+        <h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
-        <p><?php echo $_lang['plugin_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
 
 		<ul class="actionButtons">
+            <li>
+              <form class="filterElements-form">
+                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
+              </form>
+            </li>
             <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
             <?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
 <?php   if($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
@@ -168,7 +232,14 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <?php       }
         } ?>
         </ul>
+        
         <?php echo createResourceList('site_plugins',102); ?>
+    
+        <script>
+          jQuery('#site_plugins_search').quicksearch('#site_plugins ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php } ?>
 
@@ -176,9 +247,17 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabCategory">
         <h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
-        <p><?php echo $_lang['category_msg']; ?></p>
-        <br />
-        <ul>
+        <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
+
+        <ul class="actionButtons">
+          <li>
+            <form class="filterElements-form">
+              <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
+            </form>
+          </li>
+        </ul>
+    
+        <div id="categories_list">
         <?php
         $displayInfo = array();
         $hasPermission = 0;
@@ -270,7 +349,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php
         }
         ?>
-        </ul>
+        </div>
+        <script>
+          jQuery('#categories_list_search').quicksearch('#categories_list ul ul li', {
+            selector: 'a'
+          });
+        </script>
     </div>
 <?php
     if (is_numeric($_GET['tab'])) {

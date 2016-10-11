@@ -78,7 +78,6 @@ $header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/
 		}
 
 		ul.sortableList {
-			padding-left: 20px;
 			margin: 0px;
 			width: 300px;
 			font-family: Arial, sans-serif;

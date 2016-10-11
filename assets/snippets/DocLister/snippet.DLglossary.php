@@ -1,17 +1,17 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
+if ( ! defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 
 require_once(MODX_BASE_PATH . "assets/snippets/DocLister/lib/sqlHelper.class.php");
 
 switch (true) {
-    case (!empty($fromget)):
+    case ( ! empty($fromget)):
         /** Брать ли данные из GET */
         $data = $_GET;
         $from = $fromget;
         break;
-    case (!empty($frompost)):
+    case ( ! empty($frompost)):
         /** Брать ли данные из POST */
         $data = $_POST;
         $from = $frompost;
@@ -19,40 +19,42 @@ switch (true) {
     default:
         $from = $data = null;
 }
-if (!empty($from)) {
+if ( ! empty($from)) {
     $char = (isset($data[$from]) && is_scalar($data[$from])) ? $data[$from] : null;
 }
-$char = (!empty($char) || (isset($char) && $char == 0)) ? $char : '';
+$char = ( ! empty($char) || (isset($char) && $char == 0)) ? $char : '';
 /** С какого символа должен начинаться текст */
 
-$field = !empty($field) ? $field : 'c.pagetitle';
+$field = ! empty($field) ? $field : 'c.pagetitle';
 /** Поле по которому фильтровать */
 
-$setActive = !empty($setActive) ? true : false;
+$setActive = ! empty($setActive) ? true : false;
 /** Активировать наборы символов */
 
-$regexpSep = !empty($regexpSep) ? $regexpSep : '||';
+$regexpSep = ! empty($regexpSep) ? $regexpSep : '||';
 /** Разделитель в наборах регулярок */
 
-$regexp = !empty($regexp) ? $regexp : 'a-z||0-9||а-я';
+$regexp = ! empty($regexp) ? $regexp : 'a-z||0-9||а-я';
 /** Наборы поддерживаемых регулярок */
 $regexp = explode($regexpSep, $regexp);
 
-$loadfilter = !empty($loadfilter) ? $loadfilter : '';
+$loadfilter = ! empty($loadfilter) ? $loadfilter : '';
 /** Какой фильтр загружать */
 
 $register = empty($register) ? true : false; //Чувствительность к регистру.
 
 if (preg_match("/\s+/", $field)) {
     /** SQL-injection protection :-)  */
-$char = '';
+    $char = '';
 }
 
 $out = $where = '';
 $action = "like-r";
 
-if (!is_null($char)) {
-    if ($register) $char = mb_strtolower($char, 'UTF-8');
+if ( ! is_null($char)) {
+    if ($register) {
+        $char = mb_strtolower($char, 'UTF-8');
+    }
 
     if (mb_strlen($char, 'UTF-8') == 1) {
         $char = preg_match('/^[а-яa-z0-9]/iu', $char) ? $char : null;
@@ -66,16 +68,18 @@ if (!is_null($char)) {
     }
 }
 
-if (is_null($char)) $modx->sendErrorPage();
+if (is_null($char)) {
+    $modx->sendErrorPage();
+}
 
 $p = &$modx->event->params;
-if(!is_array($p)){
+if ( ! is_array($p)) {
     $p = array();
 }
-if (!empty($loadfilter)) {
-	$field = explode(".", $field);
+if ( ! empty($loadfilter)) {
+    $field = explode(".", $field);
     $field = end($field);
-    if (!empty($p['filters'])) {
+    if ( ! empty($p['filters'])) {
         $p['filters'] = rtrim(trim($p['filters']), ";") . ";";
     }
     $p['filters'] = "AND({$loadfilter}:{$field}:{$action}:{$char})";

@@ -65,7 +65,6 @@ $header = '
         li {list-style:none;}
 
         ul.sortableList {
-            padding-left: 20px;
             margin: 0px;
             width: 500px;
             font-family: Arial, sans-serif;
@@ -164,8 +163,11 @@ $header .= '</head>
 <div class="section">
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
-<button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
-<p>'.$_lang["tmplvars_rank_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
+<br/><p>'.$_lang["tmplvars_rank_edit_message"].'</p>
+<ul class="actionButtons">
+	<li><a href="#" onclick="sort();return false;">'.$_lang['sort_alphabetically'].'</a></li>
+    <li><a href="#" onclick="resetSortOrder();return false;">'.$_lang['reset_sort_order'].'</a></li>
+</ul>';
 
 echo $header;
 

@@ -5,6 +5,10 @@
 <title>[+pagetitle+]</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<script src="../assets/js/jquery.min.js" type="text/javascript"></script>
+<script>
+	jQuery.noConflict();
+</script>
 </head>
 <body [+textdir+]>
 <div id="header">

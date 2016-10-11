@@ -59,8 +59,7 @@ $_SESSION['itemname'] = $content['pagetitle'];
 $maxpageSize = $modx->config['number_of_results'];
 define('MAX_DISPLAY_RECORDS_NUM',$maxpageSize);
 
-if (!class_exists('makeTable')) include_once $modx->config['site_manager_path'].'includes/extenders/maketable.class.php';
-$childsTable = new makeTable();
+$modx->loadExtension('makeTable');
 
 // Get child document count
 $rs = $modx->db->select(
@@ -81,7 +80,7 @@ $rs = $modx->db->select(
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
 	"sc.parent='{$content['id']}' AND ({$access})",
 	"{$sort} {$dir}",
-	$childsTable->handlePaging() // add limit clause
+	$modx->table->handlePaging() // add limit clause
 	);
 $filter_sort='';
 $filter_dir='';
@@ -107,10 +106,10 @@ if ($numRecords > 0) {
 		$rowRegularClass = 'gridItem';
 		$rowAlternateClass = 'gridAltItem';
 
-		$childsTable->setTableClass($tableClass);
-		$childsTable->setRowHeaderClass($rowHeaderClass);
-		$childsTable->setRowRegularClass($rowRegularClass);
-		$childsTable->setRowAlternateClass($rowAlternateClass);
+		$modx->table->setTableClass($tableClass);
+		$modx->table->setRowHeaderClass($rowHeaderClass);
+		$modx->table->setRowRegularClass($rowRegularClass);
+		$modx->table->setRowAlternateClass($rowAlternateClass);
 
 		// Table header
 		$listTableHeader = array(
@@ -122,7 +121,7 @@ if ($numRecords > 0) {
 			'edit' =>   $_lang['mgrlog_action'],
 		);
 		$tbWidth = array('2%', '', '10%', '10%', '90', '150');
-		$childsTable->setColumnWidths($tbWidth);
+		$modx->table->setColumnWidths($tbWidth);
 
 $sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
 $sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';
@@ -166,8 +165,8 @@ $add_path=$sd.$sb.$pg;
 			/****************/
 		}
 
-		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
-		$children_output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
+		$modx->table->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
+		$children_output = $modx->table->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
 } else {
 	// No Child documents
 	$children_output = "<p>".$_lang['resources_in_container_no']."</p>";

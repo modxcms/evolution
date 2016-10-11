@@ -970,7 +970,8 @@ div.treeNode {
 }
 
 .publishedNode {
-  color: #222;
+  /*color: #4078c0;*/
+  color: #3697cd;
 }
 
 .emptyNode {
@@ -999,8 +1000,8 @@ div.treeNode {
 }
 
 .disabledPlugin a {
-  color: #aaa;
-  text-decoration: line-through;
+  color: #B68282;
+  font-style: italic;
 }
 
 label.disabled {
@@ -1663,6 +1664,11 @@ a.hometblink:hover {
   white-space: nowrap;
 }
 
+.dynamic-tab-pane-control .tab-row .fa {
+  margin-right: 3px;
+  font-size: 14px;
+}
+
 .dynamic-tab-pane-control ul {
   padding-left: 5px;
   padding-right: 10px;
@@ -2037,6 +2043,19 @@ ul.actionButtons {
   margin: 0 2px 0 5px;
   color: #3b454f;
   font-weight: bold;
+}
+
+#resourcesPane .actionButtons {
+  padding-top: 0;
+  min-height: 48px;
+}
+
+#resourcesPane .actionButtons li {
+  margin-right: 10px;
+}
+
+#resourcesPane .actionButtons a {
+  display: inline-block;
 }
 
 
@@ -3183,4 +3202,46 @@ table.actionButtons .searchtext {
 #tabBackup p.actionButtons {
   margin-top: 20px;
   margin-bottom: 15px;
+}
+
+/* filter elements */
+
+.filterElements-form {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.actionButtons .filterElements-form {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.filterElements-form .form-control {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  font-size: 13px;
+}
+
+.actionButtons .filterElements-form .form-control {
+  width: 200px;
+  height: 37px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+/* pagetitle-icon */
+
+.pagetitle-icon {
+  margin-right: 2px;
+  color: #3697CD;
+}
+
+/* element-edit-message */
+
+.element-edit-message {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ededed;
+  margin-bottom: 15px;
+  color: #777;
 }

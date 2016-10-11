@@ -178,8 +178,11 @@ $header .= '</head>
 <div class="sectionBody">';
 
 if(!$disabled) {
-    $header .= '<ul class="actionButtons"><li><a href="#" onclick="resetSortOrder();"><img src="'.$_style["icons_refresh"].'" /> ' . $_lang['reset_sort_order'] . '</a></li></ul>
-    <p>' . $_lang["sort_elements_msg"] . ' (<a href="#" onclick="sort();">' . $_lang["sort_alphabetically"] . '</a>)</p>';
+    $header .= '<br/><p>' . $_lang["sort_elements_msg"] . '</p>
+    <ul class="actionButtons">
+	    <li><a href="#" onclick="resetSortOrder();return false;">' . $_lang['reset_sort_order'] . '</a></li>
+	    <li><a href="#" onclick="sort();return false;">' . $_lang['sort_alphabetically'] . '</a></li>
+	</ul>';
 };
 
 echo $header;

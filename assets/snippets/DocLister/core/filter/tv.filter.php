@@ -4,6 +4,7 @@ if (!defined('MODX_BASE_PATH')) {
 }
 
 require_once 'content.filter.php';
+
 /**
  * Filters DocLister results by value of a given MODx Template Variables (TVs).
  * @author kabachello <kabachnik@hotmail.com>
@@ -11,19 +12,37 @@ require_once 'content.filter.php';
  */
 class tv_DL_filter extends content_DL_filter
 {
+    /**
+     * @var
+     */
     protected $tv_id;
+
+    /**
+     * @var null|string
+     */
     protected $tvName = null;
+
     /**
      * @var tv_DL_Extender
      */
     protected $extTV = null;
 
+    /**
+     * @param DocLister $DocLister
+     * @param string $filter
+     * @return bool
+     */
     public function init(DocLister $DocLister, $filter)
     {
         $this->extTV = $DocLister->getExtender('tv', true, true);
+
         return parent::init($DocLister, $filter);
     }
 
+    /**
+     * @param string $filter
+     * @return bool
+     */
     protected function parseFilter($filter)
     {
         $return = false;
@@ -61,6 +80,9 @@ class tv_DL_filter extends content_DL_filter
         return $return;
     }
 
+    /**
+     * @return string
+     */
     public function get_join()
     {
         $join = '';
@@ -68,10 +90,12 @@ class tv_DL_filter extends content_DL_filter
         $alias = $this->DocLister->TableAlias($this->tvName, $this->extTV->tvValuesTable(), $this->getTableAlias());
         $this->field = $alias . ".value";
         if (!$exists) {
-            $join = 'LEFT JOIN ' . $this->DocLister->getTable($this->extTV->tvValuesTable(), $alias) . ' ON `' . $alias . '`.`contentid`=`' . content_DL_filter::TableAlias . '`.`id` AND `' . $alias . '`.`tmplvarid`=' . $this->tv_id;
+            $join = 'LEFT JOIN ' . $this->DocLister->getTable($this->extTV->tvValuesTable(),
+                    $alias) . ' ON `' . $alias . '`.`contentid`=`' . content_DL_filter::TableAlias . '`.`id` AND `' . $alias . '`.`tmplvarid`=' . $this->tv_id;
         } else {
             $this->setTableAlias($alias);
         }
+
         return $join;
     }
 }

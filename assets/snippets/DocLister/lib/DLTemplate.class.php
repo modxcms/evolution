@@ -1,8 +1,17 @@
 <?php
 
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
+
+/**
+ * Class DLTemplate
+ */
 class DLTemplate
 {
+    /**
+     * Объект DocumentParser - основной класс MODX
+     * @var \DocumentParser
+     * @access protected
+     */
     protected $modx = null;
 
     /**
@@ -23,6 +32,7 @@ class DLTemplate
         if (null === self::$instance) {
             self::$instance = new self($modx);
         }
+
         return self::$instance;
     }
 
@@ -72,6 +82,7 @@ class DLTemplate
         } else {
             $out = $data;
         }
+
         return $out;
     }
 
@@ -85,13 +96,17 @@ class DLTemplate
     {
         $tpl = '';
         if ($name != '' && !isset($this->modx->chunkCache[$name])) {
-            $mode = (preg_match('/^((@[A-Z]+)[:]{0,1})(.*)/Asu', trim($name), $tmp) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
+            $mode = (preg_match('/^((@[A-Z]+)[:]{0,1})(.*)/Asu', trim($name),
+                    $tmp) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
             switch ($mode) {
                 case '@FILE':
                     if ($subTmp != '') {
                         $real = realpath(MODX_BASE_PATH . 'assets/templates');
-                        $path = realpath(MODX_BASE_PATH . 'assets/templates/' . preg_replace(array('/\.*[\/|\\\]/i', '/[\/|\\\]+/i'), array('/', '/'), $subTmp) . '.html');
+                        $path = realpath(MODX_BASE_PATH . 'assets/templates/' . preg_replace(array(
+                                '/\.*[\/|\\\]/i',
+                                '/[\/|\\\]+/i'
+                            ), array('/', '/'), $subTmp) . '.html');
                         $fname = explode(".", $path);
                         if ($real == substr($path, 0, strlen($real)) && end($fname) == 'html' && file_exists($path)) {
                             $tpl = file_get_contents($path);
@@ -99,7 +114,9 @@ class DLTemplate
                     }
                     break;
                 case '@CHUNK':
-                    if ($subTmp != '') $tpl = $this->modx->getChunk($subTmp);
+                    if ($subTmp != '') {
+                        $tpl = $this->modx->getChunk($subTmp);
+                    }
                     break;
                 case '@INLINE':
                 case '@TPL':
@@ -120,15 +137,21 @@ class DLTemplate
                     break;
                 case '@PLH':
                 case '@PLACEHOLDER':
-                    if ($subTmp != '') $tpl = $this->modx->getPlaceholder($subTmp);
+                    if ($subTmp != '') {
+                        $tpl = $this->modx->getPlaceholder($subTmp);
+                    }
                     break;
                 case '@CFG':
                 case '@CONFIG':
                 case '@OPTIONS':
-                    if ($subTmp != '') $tpl = $this->modx->getConfig($subTmp);
+                    if ($subTmp != '') {
+                        $tpl = $this->modx->getConfig($subTmp);
+                    }
                     break;
                 case '@SNIPPET':
-                    if ($subTmp != '') $tpl = $this->modx->runSnippet($subTmp, $this->modx->event->params);
+                    if ($subTmp != '') {
+                        $tpl = $this->modx->runSnippet($subTmp, $this->modx->event->params);
+                    }
                     break;
                 case '@RENDERPAGE':
                     $tpl = $this->renderDoc($subTmp, false);
@@ -148,34 +171,39 @@ class DLTemplate
                 $tpl = $this->modx->getChunk($name);
             }
         }
+
         return $tpl;
     }
+
     /**
-    * Рендер документа с подстановкой плейсхолдеров и выполнением сниппетов
-    *
-    * @param int $id ID документа
-    * @param bool $events Во время рендера документа стоит ли вызывать события OnLoadWebDocument и OnLoadDocumentObject (внутри метода getDocumentObject).
-    * @param mixed $tpl Шаблон с которым необходимо отрендерить документ. Возможные значения:
-    *                       null - Использовать шаблон который назначен документу
-    *                       int(0-n) - Получить шаблон из базы данных с указанным ID и применить его к документу
-    *                       string - Применить шаблон указанный в строке к документу
-    * @return string
-    *
-    * Событие OnLoadWebDocument дополнительно передает параметры:
-    *       - с источиком от куда произошел вызов события
-    *       - оригинальный экземпляр класса DocumentParser
-    */
-    public function renderDoc($id, $events = false, $tpl = null){
-        if((int)$id <= 0) return '';
+     * Рендер документа с подстановкой плейсхолдеров и выполнением сниппетов
+     *
+     * @param int $id ID документа
+     * @param bool $events Во время рендера документа стоит ли вызывать события OnLoadWebDocument и OnLoadDocumentObject (внутри метода getDocumentObject).
+     * @param mixed $tpl Шаблон с которым необходимо отрендерить документ. Возможные значения:
+     *                       null - Использовать шаблон который назначен документу
+     *                       int(0-n) - Получить шаблон из базы данных с указанным ID и применить его к документу
+     *                       string - Применить шаблон указанный в строке к документу
+     * @return string
+     *
+     * Событие OnLoadWebDocument дополнительно передает параметры:
+     *       - с источиком от куда произошел вызов события
+     *       - оригинальный экземпляр класса DocumentParser
+     */
+    public function renderDoc($id, $events = false, $tpl = null)
+    {
+        if ((int)$id <= 0) {
+            return '';
+        }
 
         $m = clone $this->modx; //Чтобы была возможность вызывать события
-        $m->documentObject = $m->getDocumentObject('id', (int)$id , $events ? 'prepareResponse' : null);
+        $m->documentObject = $m->getDocumentObject('id', (int)$id, $events ? 'prepareResponse' : null);
         if ($m->documentObject['type'] == "reference") {
             if (is_numeric($m->documentObject['content']) && $m->documentObject['content'] > 0) {
                 $m->documentObject['content'] = $this->renderDoc($m->documentObject['content'], $events);
             }
         }
-        switch(true){
+        switch (true) {
             case is_integer($tpl):
                 $tpl = $this->getTemplate($tpl);
                 break;
@@ -186,30 +214,34 @@ class DLTemplate
                 $tpl = $this->getTemplate($m->documentObject['template']);
         }
         $m->documentContent = $tpl;
-        if($events){
+        if ($events) {
             $m->invokeEvent("OnLoadWebDocument", array(
-                'source' => 'DLTemplate',
+                'source'   => 'DLTemplate',
                 'mainModx' => $this->modx,
             ));
         }
+
         return $this->parseDocumentSource($m->documentContent, $m);
     }
 
     /**
-    * Получить содержимое шаблона с определенным номером
-    * @param int $id Номер шаблона
-    * @return string HTML код шаблона
-    */
-    public function getTemplate($id){
+     * Получить содержимое шаблона с определенным номером
+     * @param int $id Номер шаблона
+     * @return string HTML код шаблона
+     */
+    public function getTemplate($id)
+    {
         $tpl = null;
-		if ($id > 0){
+        if ($id > 0) {
             $tpl = $this->modx->db->getValue("SELECT `content` FROM {$this->modx->getFullTableName("site_templates")} WHERE `id` = '{$id}'");
         }
-        if(is_null($tpl)){
+        if (is_null($tpl)) {
             $tpl = '[*content*]';
         }
+
         return $tpl;
     }
+
     /**
      * refactor $modx->parseChunk();
      *
@@ -239,12 +271,13 @@ class DLTemplate
         if ($parseDocumentSource) {
             $out = $this->parseDocumentSource($out);
         }
+
         return $out;
     }
 
     /**
      *
-     * @param string $value
+     * @param string|array $value
      * @param string $key
      * @param string $path
      */
@@ -272,21 +305,28 @@ class DLTemplate
         if ($matches[0]) {
             $string = str_replace($matches[0], '', $string);
         }
+
         return $string;
     }
 
+    /**
+     * @param int $debug
+     * @param int $maxpass
+     * @return DLphx
+     */
     public function createPHx($debug = 0, $maxpass = 50)
     {
         if (!class_exists('DLphx', false)) {
             include_once(dirname(__FILE__) . '/DLphx.class.php');
         }
+
         return new DLphx($debug, $maxpass);
     }
 
     /**
      * Переменовывание элементов массива
      *
-     * @param $data массив с данными
+     * @param array $data массив с данными
      * @param string $prefix префикс ключей
      * @param string $suffix суффикс ключей
      * @param string $sep разделитель суффиксов, префиксов и ключей массива
@@ -297,28 +337,34 @@ class DLTemplate
         return APIhelpers::renameKeyArr($data, $prefix, $suffix, $sep);
     }
 
+    /**
+     * @param $out
+     * @param DocumentParser|null $modx
+     * @return mixed|string
+     */
     public function parseDocumentSource($out, $modx = null)
     {
-        if(!is_object($modx)){
+        if (!is_object($modx)) {
             $modx = $this->modx;
         }
         $minPasses = empty ($modx->minParserPasses) ? 2 : $modx->minParserPasses;
         $maxPasses = empty ($modx->maxParserPasses) ? 10 : $modx->maxParserPasses;
         $site_status = $modx->getConfig('site_status');
         $modx->config['site_status'] = 0;
-        for($i=1; $i<=$maxPasses; $i++){
+        for ($i = 1; $i <= $maxPasses; $i++) {
             $html = $out;
-            if(preg_match('/\[\!(.*)\!\]/us', $out)){
+            if (preg_match('/\[\!(.*)\!\]/us', $out)) {
                 $out = str_replace(array('[!', '!]'), array('[[', ']]'), $out);
             }
-            if($i <= $minPasses || $out != $html){
+            if ($i <= $minPasses || $out != $html) {
                 $out = $modx->parseDocumentSource($out);
-            }else{
+            } else {
                 break;
             }
         }
         $out = $modx->rewriteUrls($out);
         $modx->config['site_status'] = $site_status;
+
         return $out;
     }
 }

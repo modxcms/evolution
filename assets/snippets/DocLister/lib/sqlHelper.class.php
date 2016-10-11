@@ -1,6 +1,15 @@
 <?php
+
+/**
+ * Class sqlHelper
+ */
 class sqlHelper
 {
+    /**
+     * @param $field
+     * @param string $table
+     * @return bool|float|int|string
+     */
     public static function tildeField($field, $table = '')
     {
         $out = '';
@@ -23,9 +32,15 @@ class sqlHelper
                 $out = implode(".", $field);
             }
         }
+
         return $out;
     }
 
+    /**
+     * @param $string
+     * @param string $mode
+     * @return mixed|string
+     */
     public static function trimLogicalOp($string, $mode = '')
     {
         $regex = 'AND|and|OR|or|\&\&|\|\||NOT|not|\!';
@@ -40,6 +55,7 @@ class sqlHelper
                 $regex = '(^\s*(' . $regex . ')\s+)|(\s+(' . $regex . ')\s*$)';
                 break;
         }
+
         return is_scalar($string) ? preg_replace("/{$regex}/", "", $string) : "";
     }
 
@@ -54,14 +70,15 @@ class sqlHelper
      * @param string $tpl шаблон подстановки значения в SQL запрос
      * @return string строка для подстановки в SQL запрос
      */
-    public static function LikeEscape($modx, $field, $value, $escape = '=', $tpl = '%[+value+]%')
+    public static function LikeEscape(DocumentParser $modx, $field, $value, $escape = '=', $tpl = '%[+value+]%')
     {
         $str = '';
         $escaped = false;
         if (!empty($field) && is_string($field) && is_scalar($value) && $value !== '') {
             $field = sqlHelper::tildeField($field);
             if (is_scalar($escape) && !empty($escape) && !in_array($escape, array("_", "%", "'"))) {
-                $str = str_replace(array($escape, '_', '%'), array($escape . $escape, $escape . '_', $escape . '%'), $value);
+                $str = str_replace(array($escape, '_', '%'), array($escape . $escape, $escape . '_', $escape . '%'),
+                    $value);
                 $escaped = true;
             }
             $str = $modx->db->escape($str);
@@ -73,6 +90,7 @@ class sqlHelper
                 $str = "{$field} LIKE '{$str}'";
             }
         }
+
         return $str;
     }
-} 
+}

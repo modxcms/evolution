@@ -2043,7 +2043,7 @@ li.breadcrumbs__li_current {
 #treeMenu #Button12 {width: 16px; height: 16px; background: url(images/icons/comment.gif) no-repeat center center;}
 #treeMenu #Button13 {width: 16px; height: 16px; background: url(images/icons/table.gif) no-repeat center center;}
 #treeMenu #Button14 {width: 16px; height: 16px; background: url(images/icons/files.png) no-repeat center center;}
-
+.menuLink i {color:#636f7b;}
 
 
 

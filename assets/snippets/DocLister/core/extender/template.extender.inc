@@ -10,16 +10,21 @@ if (!defined('MODX_BASE_PATH')) {
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  */
-
 class template_DL_Extender extends extDocLister
 {
 
+    /**
+     * @return string
+     */
     protected function run()
     {
         return ($this->_cfg != '') ? $this->getTemplate($this->_cfg) : '';
     }
 
-    //@TODO load custom rulez for template. For example - load from other DB/Table OR template directory
+    /**
+     * @param $name
+     * @return string
+     */
     private function getTemplate($name)
     {
         return '';
