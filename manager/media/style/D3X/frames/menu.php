@@ -19,8 +19,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	// TREE FUNCTIONS - FRAME
 	// These functions affect the tree frame and any items that may be pointing to the tree.
 	var currentFrameState = 'open';
-	var defaultFrameWidth = '<?php echo !$modx_textdir ? '275,*' : '*,275'?>';
-	var userDefinedFrameWidth = '<?php echo !$modx_textdir ? '275,*' : '*,275'?>';
+	var defaultFrameWidth = '<?php echo !$modx_textdir ? '300,*' : '*,300'?>';
+	var userDefinedFrameWidth = '<?php echo !$modx_textdir ? '300,*' : '*,300'?>';
 
 	var workText;
 	var buildText;
@@ -66,7 +66,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	}
 
 	function toggleTreeFrame() {
-		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:275;
+		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:300;
 		setTreeFrameWidth(pos);
 	}
 
@@ -77,7 +77,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	}
 
 	function defaultTreeFrame() {
-		var pos = 250;
+		var pos = 300;
 		setTreeFrameWidth(pos);
 	}
 
