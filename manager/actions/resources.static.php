@@ -104,7 +104,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabTemplates">
         <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
-        <p><?php echo $_lang['template_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
 
 		<ul class="actionButtons">
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
@@ -133,7 +133,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
         <ul class="actionButtons">
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
@@ -158,7 +158,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabChunks">
         <h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
-        <p><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
         <ul class="actionButtons">
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
@@ -185,7 +185,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabSnippets">
         <h2 class="tab"><i class="fa fa-code"></i> <?php echo $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
-        <p><?php echo $_lang['snippet_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
 
 		<ul class="actionButtons">
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
@@ -210,7 +210,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabPlugins">
         <h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
-        <p><?php echo $_lang['plugin_management_msg']; ?></p>
+        <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
 
 		<ul class="actionButtons">
             <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
@@ -241,8 +241,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabCategory">
         <h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
-        <p><?php echo $_lang['category_msg']; ?></p>
-        <br />
+        <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
         
         <form class="filterElements-form">
           <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">

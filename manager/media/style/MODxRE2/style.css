@@ -2045,6 +2045,10 @@ ul.actionButtons {
   font-weight: bold;
 }
 
+#resourcesPane .actionButtons li {
+  margin-right: 10px;
+}
+
 
 /*
 * Generic styles for all form elements
