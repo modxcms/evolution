@@ -16,6 +16,7 @@ if(!isset($modx->config['mgr_date_picker_path'])) $modx->config['mgr_date_picker
     <title>MODX</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+    <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
     <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
