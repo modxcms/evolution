@@ -95,7 +95,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- Templates -->
 <?php   if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')) { ?>
     <div class="tab-page" id="tabTemplates">
-        <h2 class="tab"><?php echo $_lang["manage_templates"] ?></h2>
+        <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
         <p><?php echo $_lang['template_management_msg']; ?></p>
 
@@ -120,7 +120,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- Template variables -->
 <?php   if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')) { ?>
     <div class="tab-page" id="tabVariables">
-        <h2 class="tab"><?php echo $_lang["tmplvars"] ?></h2>
+        <h2 class="tab"><i class="fa fa-list-alt"></i> <?php echo $_lang["tmplvars"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabVariables" ) );</script>
         <!--//
             Modified By Raymond for Template Variables
@@ -149,7 +149,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- chunks -->
 <?php   if($modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk')) { ?>
     <div class="tab-page" id="tabChunks">
-        <h2 class="tab"><?php echo $_lang["manage_htmlsnippets"] ?></h2>
+        <h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
         <p><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
@@ -176,7 +176,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- snippets -->
 <?php   if($modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet')) { ?>
     <div class="tab-page" id="tabSnippets">
-        <h2 class="tab"><?php echo $_lang["manage_snippets"] ?></h2>
+        <h2 class="tab"><i class="fa fa-code"></i> <?php echo $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
         <p><?php echo $_lang['snippet_management_msg']; ?></p>
 
@@ -201,7 +201,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <!-- plugins -->
 <?php   if($modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) { ?>
     <div class="tab-page" id="tabPlugins">
-        <h2 class="tab"><?php echo $_lang["manage_plugins"] ?></h2>
+        <h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
         <p><?php echo $_lang['plugin_management_msg']; ?></p>
 

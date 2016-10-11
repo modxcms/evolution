@@ -1664,6 +1664,11 @@ a.hometblink:hover {
   white-space: nowrap;
 }
 
+.dynamic-tab-pane-control .tab-row .fa {
+  margin-right: 3px;
+  font-size: 14px;
+}
+
 .dynamic-tab-pane-control ul {
   padding-left: 5px;
   padding-right: 10px;
