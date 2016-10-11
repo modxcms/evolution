@@ -2,9 +2,19 @@
 include_once(MODX_BASE_PATH . 'assets/lib/Formatter/SqlFormatter.php');
 include_once(MODX_BASE_PATH . 'assets/lib/Formatter/HtmlFormatter.php');
 
+/**
+ * Class DLdebug
+ */
 class DLdebug
 {
+    /**
+     * @var array
+     */
     private $_log = array();
+
+    /**
+     * @var array
+     */
     private $_calcLog = array();
 
     /**
@@ -21,6 +31,10 @@ class DLdebug
      */
     protected $modx = null;
 
+    /**
+     * DLdebug constructor.
+     * @param $DocLister
+     */
     public function __construct($DocLister)
     {
         if ($DocLister instanceof DocLister) {
@@ -30,28 +44,49 @@ class DLdebug
 
     }
 
-    public function getLog(){
+    /**
+     * @return array
+     */
+    public function getLog()
+    {
         return $this->_log;
     }
-    public function clearLog(){
+
+    /**
+     * @return $this
+     */
+    public function clearLog()
+    {
         $this->_log = array();
+
         return $this;
     }
-    public function countLog(){
+
+    /**
+     * @return int
+     */
+    public function countLog()
+    {
         return count($this->_log);
     }
-    /*
+
+    /**
      * 1 - SQL
      * 2 - Full debug
+     *
+     * @param $message
+     * @param null $key
+     * @param int $mode
+     * @param bool $format
      */
     public function debug($message, $key = null, $mode = 0, $format = false)
     {
         $mode = (int)$mode;
         if ($mode > 0 && $this->DocLister->getDebug() >= $mode) {
             $data = array(
-                'msg' => $message,
+                'msg'    => $message,
                 'format' => $format,
-                'start' => microtime(true) - $this->DocLister->getTimeStart()
+                'start'  => microtime(true) - $this->DocLister->getTimeStart()
             );
             if (is_scalar($key) && !empty($key)) {
                 $data['time'] = microtime(true);
@@ -61,22 +96,34 @@ class DLdebug
             }
         }
     }
-    public function updateMessage($message, $key, $format = null){
+
+    /**
+     * @param $message
+     * @param $key
+     * @param null $format
+     */
+    public function updateMessage($message, $key, $format = null)
+    {
         if (is_scalar($key) && !empty($key) && isset($this->_calcLog[$key])) {
             $this->_calcLog[$key]['msg'] = $message;
-            if(!is_null($format)){
+            if (!is_null($format)) {
                 $this->_calcLog[$key]['format'] = $format;
             }
         }
     }
 
+    /**
+     * @param $key
+     * @param null $msg
+     * @param null $format
+     */
     public function debugEnd($key, $msg = null, $format = null)
     {
         if (is_scalar($key) && isset($this->_calcLog[$key], $this->_calcLog[$key]['time']) && $this->DocLister->getDebug() > 0) {
             $this->_log[$this->countLog()] = array(
-                'msg' => isset($msg) ? $msg : $this->_calcLog[$key]['msg'],
-                'start' => $this->_calcLog[$key]['start'],
-                'time' => microtime(true) - $this->_calcLog[$key]['time'],
+                'msg'    => isset($msg) ? $msg : $this->_calcLog[$key]['msg'],
+                'start'  => $this->_calcLog[$key]['start'],
+                'time'   => microtime(true) - $this->_calcLog[$key]['time'],
                 'format' => is_null($format) ? $this->_calcLog[$key]['format'] : $format
             );
             unset($this->_calcLog[$key]['time']);
@@ -84,27 +131,47 @@ class DLdebug
     }
 
 
+    /**
+     * @param $message
+     * @param string $title
+     */
     public function info($message, $title = '')
     {
         $this->_sendLogEvent(1, $message, $title);
     }
 
+    /**
+     * @param $message
+     * @param string $title
+     */
     public function warning($message, $title = '')
     {
         $this->_sendLogEvent(2, $message, $title);
     }
 
+    /**
+     * @param $message
+     * @param string $title
+     */
     public function error($message, $title = '')
     {
         $this->_sendLogEvent(3, $message, $title);
     }
 
+    /**
+     * @param $type
+     * @param $message
+     * @param string $title
+     */
     private function _sendLogEvent($type, $message, $title = '')
     {
         $title = "DocLister" . (!empty($title) ? ' - ' . $title : '');
         $this->modx->logEvent(0, $type, $message, $title);
     }
 
+    /**
+     * @return string
+     */
     public function showLog()
     {
         $out = "";
@@ -114,30 +181,32 @@ class DLdebug
                 $item['start'] = isset($item['start']) ? round(floatval($item['start']), 5) : 0;
 
                 if (isset($item['msg'])) {
-                    if(is_scalar($item['msg'])){
+                    if (is_scalar($item['msg'])) {
                         $item['msg'] = array($item['msg']);
                     }
-                    if(is_scalar($item['format'])){
+                    if (is_scalar($item['format'])) {
                         $item['format'] = array($item['format']);
                     }
                     $message = '';
                     $i = 0;
-                    foreach($item['msg'] as $title => $msg){
+                    foreach ($item['msg'] as $title => $msg) {
                         $format = isset($item['format'][$i]) ? $item['format'][$i] : null;
-                        switch($format){
+                        switch ($format) {
                             case 'sql':
                                 $msg = $this->dumpData(Formatter\SqlFormatter::format($msg), '', null);
                                 break;
                             case 'html':
-                                $msg = is_numeric($msg) ? $msg : $this->dumpData(Formatter\HtmlFormatter::format($msg), '', null);
+                                $msg = is_numeric($msg) ? $msg : $this->dumpData(Formatter\HtmlFormatter::format($msg),
+                                    '', null);
                                 break;
                             default:
                                 $msg = $this->dumpData($msg);
                                 break;
                         }
-                        if(!empty($title) && !is_numeric($title)){
-                            $message .= $this->DocLister->parseChunk('@CODE:<strong>[+title+]</strong>: [+msg+]<br />', compact('msg', 'title'));
-                        }else{
+                        if (!empty($title) && !is_numeric($title)) {
+                            $message .= $this->DocLister->parseChunk('@CODE:<strong>[+title+]</strong>: [+msg+]<br />',
+                                compact('msg', 'title'));
+                        } else {
                             $message .= $msg;
                         }
                         $i++;
@@ -197,15 +266,23 @@ class DLdebug
                 <div class=\"dlDebug\"><ul>[+wrap+]</ul></div>", array('wrap' => $out));
             }
         }
+
         return $out;
     }
 
+    /**
+     * @param $data
+     * @param string $wrap
+     * @param string $charset
+     * @return string
+     */
     public function dumpData($data, $wrap = '', $charset = 'UTF-8')
     {
         $out = $this->DocLister->sanitarData(print_r($data, 1), $charset);
         if (!empty($wrap) && is_string($wrap)) {
             $out = "<{$wrap}>{$out}</{$wrap}>";
         }
+
         return $out;
     }
 }

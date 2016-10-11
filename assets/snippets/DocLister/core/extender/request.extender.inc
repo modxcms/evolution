@@ -10,15 +10,17 @@ if (!defined('MODX_BASE_PATH')) {
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  */
-
 //&requestActive=`order:g:(ASC,DESC)||display:g:(*):int`
-/*
- * @TODO: не юзать. сырой, дырявый и вообще удалить нафиг
- */
 class request_DL_Extender extends extDocLister
 {
+    /**
+     * @var array
+     */
     private $param = array();
 
+    /**
+     * @return array|int
+     */
     protected function run()
     {
         $count = 0;
@@ -28,9 +30,14 @@ class request_DL_Extender extends extDocLister
                 $count = $this->parseParam($item);
             }
         }
+
         return $count;
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     private function parseParam($data)
     {
         $GLOBArr = array();
@@ -43,30 +50,30 @@ class request_DL_Extender extends extDocLister
         switch ($tmp[1]) {
             case 'r':
             case 'request':
-              //$_REQUEST;
+                //$_REQUEST;
                 $GLOBArr = $_REQUEST;
                 $name = "request";
                 break;
             case 'c':
             case 'cookie':
-            //$_COOKIE;
+                //$_COOKIE;
                 $GLOBArr = $_COOKIE;
                 $name = "cookie";
                 break;
             case 'p':
             case 'post':
-            //$_POST;
+                //$_POST;
                 $GLOBArr = $_POST;
                 $name = "post";
                 break;
             case 'session':
-            //$_SESSION;
+                //$_SESSION;
                 $GLOBArr = $_SESSION;
                 $name = "session";
                 break;
             case 'g':
             case 'get':
-            //$_GET;
+                //$_GET;
                 $GLOBArr = $_GET;
                 $name = "get";
         }
@@ -91,9 +98,15 @@ class request_DL_Extender extends extDocLister
         }
 
         $this->setCFG();
+
         return $this->param;
     }
 
+    /**
+     * @param $data
+     * @param $val
+     * @return bool
+     */
     private function parseValidate($data, $val)
     {
         $out = false;
@@ -116,14 +129,18 @@ class request_DL_Extender extends extDocLister
                 $out = $val;
             } else {
                 $tmp = explode(",", $data[1]);
-                if (in_array($val, $tmp, TRUE)) {
+                if (in_array($val, $tmp, true)) {
                     $out = $val;
                 }
             }
         }
+
         return $out;
     }
 
+    /**
+     *
+     */
     private function setCFG()
     {
         foreach ($this->param as $name => $item) {
@@ -131,6 +148,9 @@ class request_DL_Extender extends extDocLister
         }
     }
 
+    /**
+     * @return string
+     */
     public function getLink()
     {
         $link = array();
@@ -139,9 +159,15 @@ class request_DL_Extender extends extDocLister
                 $link[] = $this->_getLink($item, $name);
             }
         }
+
         return (count($link) > 0) ? implode("&", $link) : "";
     }
 
+    /**
+     * @param $item
+     * @param string $name
+     * @return array|string
+     */
     private function _getLink($item, $name = '')
     {
         $link = '';
@@ -157,6 +183,7 @@ class request_DL_Extender extends extDocLister
                 $link = $name . "=" . urlencode($item);
             }
         }
+
         return $link;
     }
 }
