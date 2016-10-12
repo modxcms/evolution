@@ -1,12 +1,13 @@
 <script type="text/javascript" src="media/style/common/moo-datepicker/datepicker.js"></script>
 <script>
-    var dpOffset = [(datepicker_offset)];
-    var dpformat = "[(datetime_format)]" + ' hh:mm:00';
-    var dpdayNames = [%dp_dayNames%];
-    var dpmonthNames = [%dp_monthNames%];
-    var dpstartDay = [%dp_startDay%];
     $$('input.DatePicker').each(function(el){
-        new DatePicker(el, {yearOffset:dpOffset, format:dpformat, dayNames:dpdayNames, monthNames:dpmonthNames, startDay:dpstartDay});
-});
-    
+        new DatePicker(el,
+        {
+            yearOffset : [(datepicker_offset)],
+            format     : '[(datetime_format)]' + ' hh:mm:00',
+            dayNames   : [%dp_dayNames%],
+            monthNames : [%dp_monthNames%],
+            startDay   : [%dp_startDay%]
+        });
+    });
 </script>

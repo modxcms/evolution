@@ -511,8 +511,14 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <input type="hidden" name="page" value="<?php echo $page;?>" />
 
 <fieldset id="create_edit">
-    <h1><?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?></h1>
-
+    <h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-pencil-square-o"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php if ($_REQUEST['id']){echo $_lang['edit_resource_title'] . ' <small>('. $_REQUEST['id'].')</small>'; } else { echo $_lang['create_resource_title'];}?>
+  </span>
+    </h1>
     <?php
     // breadcrumbs
     if ($modx->config['use_breadcrumbs']) {

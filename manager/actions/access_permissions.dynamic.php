@@ -39,7 +39,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
-<h1><?php echo $_lang['mgr_access_permissions']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-male"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['mgr_access_permissions']; ?>
+  </span>
+</h1>
 
 <div class="sectionBody">
 <p><?php echo $_lang['access_permissions_introtext']?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : ''?>

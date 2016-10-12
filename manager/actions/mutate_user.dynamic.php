@@ -201,7 +201,14 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
   <input type="hidden" name="id" value="<?php echo $user ?>">
   <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
-  <h1><?php echo $_lang['user_title']; ?></h1>
+  <h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa fa-user"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['user_title']; ?>
+  </span>
+</h1>
   <div id="actions">
     <ul class="actionButtons">
       <li id="Button1" class="transition">

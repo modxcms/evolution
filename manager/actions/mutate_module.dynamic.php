@@ -399,8 +399,14 @@ function SetUrl(url, width, height, alt) {
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
 
-    <h1><?php echo $_lang['module_title']?></h1>
-
+  <h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['module_title']; ?>
+  </span>
+</h1>
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
@@ -426,7 +432,7 @@ function SetUrl(url, width, height, alt) {
     </div>
     <!-- end #actions -->
 
-<div class="sectionBody"><p><img class="icon" src="<?php echo $_style["icons_modules"]?>" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
+<div class="sectionBody"><p><?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
     <script type="text/javascript">

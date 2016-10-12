@@ -237,7 +237,7 @@ $html = '
       </tr>
       <tr>
         <td>' . $_lang["inbox"] . '</td>
-        <td><b>' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</b></td>
+        <td><a href="index.php?a=10"><b>' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</b></a></td>
       </tr>
     </table>
 ';
