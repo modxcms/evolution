@@ -8,7 +8,14 @@ if(isset($_REQUEST['searchid'])) {
 }
 ?>
 
-<h1><?php echo $_lang['search_criteria']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['search_criteria']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
