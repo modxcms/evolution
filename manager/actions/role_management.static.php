@@ -17,7 +17,7 @@ if(!$modx->hasPermission('edit_user')) {
 </h1>
 <div class="section">
 <div class="sectionBody">
-<p><?php echo $_lang['role_management_msg']; ?></p>
+<p class="element-edit-message"><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul class="actionButtons">
 	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
