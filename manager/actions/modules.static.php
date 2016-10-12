@@ -76,7 +76,7 @@ echo $cm->render();
 
 <h1 class="pagetitle">
   <span class="pagetitle-icon">
-    <i class="fa fa fa-cogs"></i>
+    <i class="fa fa-cogs"></i>
   </span>
   <span class="pagetitle-text">
     <?php echo $_lang['module_management']; ?>

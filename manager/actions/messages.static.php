@@ -4,7 +4,14 @@ if(!$modx->hasPermission('messages')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 ?>
-<h1><?php echo $_lang['messages_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-envelope"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['messages_title']; ?>
+  </span>
+</h1>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
 <div class="section">

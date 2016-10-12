@@ -243,8 +243,14 @@ function confirmLangChange(el, lkey, elupd){
 </script>
 <form name="settings" action="index.php?a=30" method="post">
 
-    <h1><?php echo $_lang['settings_title']; ?></h1>
-
+    <h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-sliders"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['settings_title']; ?>
+  </span>
+    </h1>
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
