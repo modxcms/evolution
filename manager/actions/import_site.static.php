@@ -40,7 +40,7 @@ $allowedfiles = array('html','htm','shtml','xml');
 <?php
 
 if(!isset($_POST['import'])) {
-    echo "<p>".$_lang['import_site_message']."</p>";
+    echo "<div class=\"element-edit-message\">".$_lang['import_site_message']."</div>";
 ?>
 
 <fieldset style="padding:10px;border:1px solid #ccc;background-color:#fff;"><legend><?php echo $_lang['import_site']; ?></legend>
