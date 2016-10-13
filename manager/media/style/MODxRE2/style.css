@@ -1478,14 +1478,14 @@ a.hometblink:hover {
 
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLinkDisabled img {
-  /* 	opacity: .3;
-	filter: alpha(opacity=30); */
+  /*  opacity: .3;
+  filter: alpha(opacity=30); */
   vertical-align: top;
 }
 
 #mx_contextmenu .menuLink:hover img {
-  /* 	opacity: 1;
-	filter: alpha(opacity=100); */
+  /*  opacity: 1;
+  filter: alpha(opacity=100); */
 }
 
 #mx_contextmenu #nameHolder {
@@ -1738,7 +1738,7 @@ a.hometblink img {
 
 .wm_button {
   display: inline-block;
-  margin: 0px 20px 20px 0px;
+  margin: 0px 15px 15px 0px;
   text-align: center;
 }
 
@@ -2047,7 +2047,7 @@ ul.actionButtons {
 
 /*
 * Generic styles for all form elements
-		*/
+    */
 
 form#mutate dt,
 form#mutate dd {
@@ -2699,7 +2699,7 @@ div.treeframebody {
 #nav > li > a {
   height: 33px;
   line-height: 34px;
-  color: #FFF;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: bold;
 }
 
@@ -2718,7 +2718,7 @@ div.treeframebody {
 #nav li.active ul.subnav, 
 #nav li.active ul.subnav a {
   color: #C9D4E1;
-  color: #fff;
+  color: rgba(255,255,255,0.95);
   filter: none;
   background: none;
   background-color: transparent;
@@ -3253,3 +3253,5 @@ table.actionButtons .searchtext {
   margin-bottom: 15px;
   color: #777;
 }
+
+.userprofiletable {margin-bottom:-20px;}
