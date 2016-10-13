@@ -17,7 +17,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         body { position: relative }
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
-        #mainMenu { height: 70px; width: 100%;}
+        #mainMenu { height: 70px; width: 100%; box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.9); z-index: 10;}
         #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; }
         #main { top: 70px; left: <?php echo $modx->config['manager_tree_width'];?>px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 12px; cursor: col-resize; z-index: 999 }
