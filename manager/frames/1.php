@@ -30,7 +30,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             width: 16px;
             height: 16px;
         }
-        #resizer2 { position: absolute; top: 65px; right: 50px; width: 3px; z-index: 999;}
+        #resizer2 { position: absolute; top: 65px; right: 20px; width: 3px; z-index: 999;}
         #resizer2 #hideTopMenu {display:block;
             margin-top:-4px;
             margin-left:px;
