@@ -12,13 +12,13 @@ $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/style/common/moo-datepicker/datepicker.inc.php';
 
 // Large Icons
-$_style['icons_backup_large']       = 'fa fa-database fa-fw fa-3x';
-$_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-3x';
-$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-3x';
-$_style['icons_resources_large']    = 'fa fa-th fa-fw fa-3x';
-$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-3x';
-$_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-3x';
-$_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-3x';
+$_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
+$_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
+$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-2x';
+$_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
+$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-2x';
+$_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
+$_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file fa-lg"></i>';
