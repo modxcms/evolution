@@ -177,8 +177,8 @@ if($_SESSION['browser']==='legacy_IE') {
 <input type="hidden" name="sm" value="<?php echo $sm; ?>" />
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
 <div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['element_selector_title']; ?></div>
-<div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['element_selector_msg']; ?></p>
+<div class="sectionBody">
+<p><?php echo $_lang['element_selector_msg']; ?></p>
 <br />
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
@@ -188,7 +188,7 @@ if($_SESSION['browser']==='legacy_IE') {
 		<table border="0" width="100%">
 			<tr>
 			<td nowrap="nowrap">
-				<table border="0"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
+				<table border="0"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="form-control" name="search" type="text" size="20" value="<?php echo $query; ?>" /></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" width="16" height="16"/></a></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" width="16" height="16"/></a></td>
