@@ -131,7 +131,7 @@ $_style['icons_message_forward']    = $style_path.'icons/forward.png';
 $_style['icons_message_reply']      = $style_path.'icons/reply.png';
 
 // Icons
-$_style['icons_add']                = $style_path.'icons/save.png';
+$_style['icons_add']                = $style_path.'icons/add.png';
 $_style['icons_cancel']             = $style_path.'icons/cancel.png';
 $_style['icons_close']              = $style_path.'icons/stop.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
