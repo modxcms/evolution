@@ -3,6 +3,7 @@
 <head>
     <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
+    <meta name="viewport" content="width=device-width">
     <meta name="robots" content="noindex, nofollow" />
     <style type="text/css">
 		body {
@@ -176,6 +177,9 @@
     .caption {font-size: 11px; color: #666; padding-right: 25px;}
     .clear {clear: both;}
     .form-footer {padding-top: 15px; padding-bottom: 10px;}
+    input {
+        -webkit-appearance: none;
+      }
     </style>
 
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
