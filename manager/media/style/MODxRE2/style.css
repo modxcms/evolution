@@ -2667,9 +2667,13 @@ form select {
   border-radius: 0 !important;
 }
 
-body,
-div.treeframebody {
+body
+{
   background-color: #F2F2F2 !important;
+  background-image: none !important;
+}
+div.treeframebody {
+  background-color: #ebebeb !important;
   background-image: none !important;
 }
 
