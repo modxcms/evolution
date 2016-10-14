@@ -41,7 +41,7 @@ if(is_dir($templatePath) && is_readable($templatePath)) {
                 $params['modx_category'],
                 $params['lock_template'],
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
-	            isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : NULL // Nessecary to fix template-ID for demo-site
+                isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : NULL // Nessecary to fix template-ID for demo-site
             );
         }
     }
