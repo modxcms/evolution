@@ -2653,13 +2653,13 @@ form select {
 
 
 #searchform {z-index: 1000;position: absolute;right:4px;top:17px;}
-@media (max-width: 920px) {
+@media (max-width: 958px) {
   #searchform {display:none;}
 }
 #searchform input[type=text]{
   margin-top: 22px;
   height: 28px;
-  width: 170px;
+  width: 100px;
   box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
   -moz-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
   -webkit-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
@@ -2670,7 +2670,7 @@ form select {
   -moz-transition-duration: 0.3s;
   -webkit-transition-duration: 0.3s;
   border: none;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.15);
   color: white;
   text-align: left;
 }
