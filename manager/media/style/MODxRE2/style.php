@@ -109,49 +109,59 @@ $_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png
 $_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
 $_style['icons_cal']                = $style_path.'icons/calendar.png';
 $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
+$_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
 
 //modules
 $_style['icons_modules']            = $style_path.'icons/modules.png';
 $_style['icons_run']                = $style_path.'icons/play.png';
 
-// Icons
-$_style['icons_add']                = $style_path.'icons/save.png';
-$_style['icons_cancel']             = $style_path.'icons/stop.png';
-$_style['icons_close']              = $style_path.'icons/stop.png';
-$_style['icons_email']              = $style_path.'icons/email.png';
-$_style['icons_folder']             = $style_path.'icons/folder.gif';
-$_style['icons_home']               = $style_path.'icons/home.gif';
-$_style['icons_information']        = $style_path.'icons/info-sign.png';
-$_style['icons_loading_doc_tree']   = $style_path.'icons/info-sign.png'; // top bar
-$_style['icons_mail']               = $style_path.'icons/email.png'; // top bar
-$_style['icons_message_unread']     = $style_path.'icons/email.png';
-$_style['icons_message_forward']    = $style_path.'icons/forward.gif';
-$_style['icons_message_reply']      = $style_path.'icons/reply.gif';
-$_style['icons_new_document']       = $style_path.'icons/page_white_add.png';
-$_style['icons_new_weblink']        = $style_path.'icons/world_link.png';
+//View Resource data 
+$_style['icons_new_document']       = $style_path.'icons/save.png'; 
+$_style['icons_new_weblink']        = $style_path.'icons/link.png';
+$_style['icons_undelete_resource']  = $style_path.'icons/undelete.png';
+$_style['icons_secured']            = $style_path.'icons/lock.png';
 
-$_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
-$_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
-$_style['icons_sort_menuindex']     = $style_path.'icons/table_refresh.png';
-$_style['icons_table']              = $style_path.'icons/table.gif'; 
-$_style['icons_undelete_resource']  = $style_path.'icons/b092.gif';
+
+//users and webusers
 $_style['icons_user']               = $style_path.'icons/user.png';
+
+//Messages
+$_style['icons_message_unread']     = $style_path.'icons/email.png';
+$_style['icons_message_forward']    = $style_path.'icons/forward.png';
+$_style['icons_message_reply']      = $style_path.'icons/reply.png';
+
+// Icons
+$_style['icons_add']                = $style_path.'icons/add.png';
+$_style['icons_cancel']             = $style_path.'icons/cancel.png';
+$_style['icons_close']              = $style_path.'icons/stop.png';
+$_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
+$_style['icons_table']              = $style_path.'icons/table.png'; 
+
+// top bar
+$_style['icons_loading_doc_tree']   = $style_path.'icons/info-sign.png'; 
+$_style['icons_mail']               = $style_path.'icons/email.png';
+$_style['icons_working']            = $style_path.'icons/exclamation.png';
+
+//event log
+$_style['icons_event1']             = $style_path.'icons/event1.png'; 
+$_style['icons_event2']             = $style_path.'icons/event2.png'; 
+$_style['icons_event3']             = $style_path.'icons/event3.png'; 
+
+
+//nowhere in the manager
+$_style['icons_folder']             = $style_path.'icons/folder.png';
+$_style['icons_email']              = $style_path.'icons/email.png';
+$_style['icons_home']               = $style_path.'icons/home.png';
+$_style['icons_sort_menuindex']     = $style_path.'icons/sort_index.png';
 $_style['icons_weblink']            = $style_path.'icons/world_link.png';
-$_style['icons_working']            = $style_path.'icons/exclamation.png'; // top bar
-$_style['icons_event1']             = $style_path.'icons/event1.png';
-$_style['icons_event2']             = $style_path.'icons/event2.png';
-$_style['icons_event3']             = $style_path.'icons/event3.png';
-$_style['icons_secured']            = $style_path.'icons/secured.gif';
-
-
-// Tabs
-$_style['icons_tab_preview']        = $style_path.'icons/preview.png';
+$_style['icons_tab_preview']        = $style_path.'icons/preview.png'; // Tabs
+$_style['icons_information']        = $style_path.'icons/info-sign.png';
 
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';
 $_style['tx']                       = $style_path.'misc/_tx_.gif';
-$_style['icons_right_arrow']        = $style_path.'icons/circlerightarrow.gif';
+$_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
 $_style['ed_save']                  = $style_path.'misc/ed_save.gif';
 

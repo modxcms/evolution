@@ -158,8 +158,14 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <input type="hidden" name="rt" value="" />
 <input type="hidden" name="newids" value="" />
 <input type="hidden" name="id" value="<?php echo $content['id'];?>" />
-	<h1><?php echo $_lang['module_resource_title']; ?></h1>
-
+	<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['module_resource_title']; ?>
+  </span>
+    </h1>
 <div id="actions">
 	<ul class="actionButtons">
 		<li class="transition"><a href="index.php?a=106"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['close']; ?></a>
@@ -169,7 +175,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <div class="section">
 <div class="sectionHeader"><?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div>
 <div class="sectionBody">
-<p><img src="<?php echo $_style["icons_modules"] ?>" alt="" align="left" /><?php echo $_lang['module_resource_msg']; ?></p>
+<p><?php echo $_lang['module_resource_msg']; ?></p>
 <br />
 <!-- Dependencies -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
