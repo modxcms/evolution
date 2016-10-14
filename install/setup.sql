@@ -540,9 +540,15 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 ALTER TABLE `{PREFIX}site_content`
-  ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`,
-  ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`,
-  ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`,
+  ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
+
+ALTER TABLE `{PREFIX}site_content`
+  ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
+
+ALTER TABLE `{PREFIX}site_content`
+  ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
+
+ALTER TABLE `{PREFIX}site_content`
   ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
 ALTER TABLE `{PREFIX}site_htmlsnippets`
@@ -558,26 +564,54 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates`
   ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
 
 ALTER TABLE `{PREFIX}user_attributes`
-  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+
+ALTER TABLE `{PREFIX}user_attributes`
   ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN `edit_chunk` int(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`,
-  ADD COLUMN `new_chunk` int(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`,
-  ADD COLUMN `save_chunk` int(1) NOT NULL DEFAULT '0' AFTER `new_chunk`,
-  ADD COLUMN `delete_chunk` int(1) NOT NULL DEFAULT '0' AFTER `save_chunk`,
-  ADD COLUMN `empty_trash` int(1) NOT NULL DEFAULT '0' AFTER `delete_document`,
-  ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`,
-  ADD COLUMN `import_static` int(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`,
-  ADD COLUMN `export_static` int(1) NOT NULL DEFAULT '0' AFTER `import_static`,
-  ADD COLUMN `remove_locks` int(1) NOT NULL DEFAULT '0',
-  ADD COLUMN `publish_document` int(1) NOT NULL DEFAULT '0' AFTER `save_document`,
-  ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0',
-  ADD COLUMN `assets_images` INT( 1 ) NOT NULL DEFAULT  '1' AFTER `file_manager`,
-  ADD COLUMN `assets_files` INT( 1 ) NOT NULL DEFAULT  '1' AFTER `file_manager`;
+  ADD COLUMN `edit_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `new_chunk`           INT(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `save_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `new_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `delete_chunk`        INT(1) NOT NULL DEFAULT '0' AFTER `save_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `empty_trash`         INT(1) NOT NULL DEFAULT '0' AFTER `delete_document`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `view_unpublished`    INT(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `import_static`       INT(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `export_static`       INT(1) NOT NULL DEFAULT '0' AFTER `import_static`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `remove_locks`        INT(1) NOT NULL DEFAULT '0' AFTER `export_static`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `publish_document`    INT(1) NOT NULL DEFAULT '0' AFTER `save_document`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `change_resourcetype` INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `assets_images`       INT(1) NOT NULL DEFAULT '1' AFTER `file_manager`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `assets_files`        INT(1) NOT NULL DEFAULT '1' AFTER `assets_images`;
 
 ALTER TABLE `{PREFIX}web_user_attributes`
-  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
   ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 # Set the private manager group flag
@@ -742,13 +776,15 @@ ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
 
 ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
 
-ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
-  ADD FULLTEXT `value_ft_idx` (`value`);
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues` ADD FULLTEXT `value_ft_idx` (`value`);
 
-ALTER TABLE `{PREFIX}site_tmplvar_templates`
-  DROP INDEX `idx_tmplvarid`,
-  DROP INDEX `idx_templateid`,
-  ADD PRIMARY KEY (`tmplvarid`, `templateid`);
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_templateid`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD PRIMARY KEY (`tmplvarid`, `templateid`);
 
 ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
 
