@@ -114,7 +114,7 @@
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-            <i class="fa fa-rss fa-5x icon-color-verylight"></i> [+modx_news_content+]
+            [+modx_news_content+]
           </div>
         </div>      
       </li>
@@ -133,7 +133,7 @@
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
-            <i class="fa fa-exclamation-triangle fa-5x icon-color-verylight"></i> [+modx_security_notices_content+]
+            [+modx_security_notices_content+]
           </div>
         </div>      
       </li>
