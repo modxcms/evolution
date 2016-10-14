@@ -1364,8 +1364,8 @@ a.hometblink:hover {
 
 #nav li.active ul.subnav {
   display: block;
-  position: absolute;
-  top: 29px;
+  position: fixed;
+  top: 37px;
   width: 200%;
   left: 0;
   border-top: 1px solid #999;
@@ -2735,7 +2735,7 @@ div.treeframebody {
 }
 
 #nav li.active ul.subnav {
-  top: 33px;
+  top: 37px;
   background-color: rgba(255,255,255,0.15);
   /*border-top-color: rgba(255,255,255,0.15);*/
   border-top-color: transparent;
