@@ -992,7 +992,6 @@ div.treeNode {
   height: 100%;
   position: absolute;
   right: -10px;
-
 }
 
 .rtl #treeSplitter {
@@ -1365,8 +1364,8 @@ a.hometblink:hover {
 
 #nav li.active ul.subnav {
   display: block;
-  position: fixed;
-  top: 37px;
+  position: absolute;
+  top: 29px;
   width: 200%;
   left: 0;
   border-top: 1px solid #999;
@@ -2612,46 +2611,7 @@ form select {
 #helpPane li > strong { display:block; font-size:14px; }
 #helpPane pre { font-size:12px; border:1px solid #888; padding:1em; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* searchform */
 #searchform {z-index: 1000;position: absolute;right:4px;top:17px;}
 @media (max-width: 958px) {
   #searchform {display:none;}
@@ -2679,10 +2639,6 @@ form select {
   text-align: left;
 }
 
-
-
-
-
 /*
  * MODxRE2 styles
  * css above is original MODxRE
@@ -2693,13 +2649,9 @@ form select {
   border-radius: 0 !important;
 }
 
-body
-{
-  background-color: #F2F2F2 !important;
-  background-image: none !important;
-}
+body,
 div.treeframebody {
-  background-color: #ebebeb !important;
+  background-color: #F2F2F2 !important;
   background-image: none !important;
 }
 
@@ -2765,7 +2717,7 @@ div.treeframebody {
 }
 
 #nav li.active ul.subnav {
-  top: 37px;
+  top: 33px;
   background-color: rgba(255,255,255,0.15);
   /*border-top-color: rgba(255,255,255,0.15);*/
   border-top-color: transparent;

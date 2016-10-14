@@ -14,11 +14,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100% }
-        body { position: relative; background-color: #F2F2F2 !important; }
-        #mainMenu, #tree, #main { position: absolute; }
+        body { position: relative }
+        #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
-        #mainMenu { height: 70px; width: 100%; box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.9); z-index: 100;}
-        #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; overflow:hidden;}
+        #mainMenu { height: 70px; width: 100%; box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25); z-index: 10;}
+        #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; }
         #main { top: 70px; left: <?php echo $modx->config['manager_tree_width'];?>px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 12px; cursor: col-resize; z-index: 999 }
         #resizer #hideMenu {
@@ -30,7 +30,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             width: 16px;
             height: 16px;
         }
-        #resizer2 { position: absolute; top: 65px; right: 20px; width: 3px; z-index: 99;}
+        #resizer2 { position: absolute; top: 65px; right: 20px; width: 3px; z-index: 999;}
         #resizer2 #hideTopMenu {display:block;
             margin-top:-4px;
             margin-left:px;
