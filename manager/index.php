@@ -166,7 +166,7 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 }
 
 // allow custom language overrides not altered by future MODX-updates
-if(is_readable(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
+if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
 	include_once "lang/override/".$manager_language.".inc.php";
 }
 
