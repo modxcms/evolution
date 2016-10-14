@@ -7,32 +7,16 @@
 
   <!-- title-->
   [+OnManagerWelcomePrerender+]
-  <div class="dashboard_header">
+  <!--div class="dashboard_header">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <div class="wm_logo">
           <img src='media/style/[+theme+]/images/misc/logo-dashboard.png' alt='[+logo_slogan+]' />
         </div>
-        <h1>[+site_name+] / Dashboard</h1>
-      </div>
-      <div class="col-sm-6">
-        <div class="dashboard_search">
-          <form  action="index.php?a=71#results" method="post" target="main">
-            <div class="form-group">
-              <label for="search" class="sr-only">Search</label>
-              <input type="hidden" value="Search" name="submitok" />
-              <div class="input-group">
-                <input type="text" name="searchid" class="form-control input-sm" placeholder="[+search+]" style="height: 32px;">
-                <span class="input-group-btn">
-                  <button class="btn btn-default btn-sm" type="submit" style="width: auto;"><i class="fa fa-fw fa-search"></i></button>
-                </span>
-              </div>
-            </div>
-          </form>
-        </div>
+        <h1>[+site_name+]</h1>
       </div>
     </div>
-  </div>
+  </div-->
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">
@@ -57,7 +41,7 @@
             <div class="widget-controls pull-right">
               <div class="btn-group">
                 <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxwelcome_widget"></a>
-              </div>	  
+              </div>    
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
@@ -73,7 +57,7 @@
               [+UserInfo+]
             </div>
           </div>
-        </div>			
+        </div>      
       </li>
       <!--- /panel --->
 
@@ -86,7 +70,7 @@
             <div class="widget-controls pull-right">
               <div class="btn-group">
                 <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxonline_widget"></a>
-              </div>	  
+              </div>    
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
@@ -94,7 +78,7 @@
               [+OnlineInfo+]
             </div>
           </div>
-        </div>			
+        </div>      
       </li>
       <!--- /panel --->
 
@@ -107,13 +91,13 @@
             <div class="widget-controls pull-right">
               <div class="btn-group">
                 <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxrecent_widget"></a>
-              </div>	  
+              </div>    
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
             [+RecentInfo+]
           </div>
-        </div>			
+        </div>      
       </li>
       <!--- /panel --->                        
 
@@ -126,13 +110,13 @@
             <div class="widget-controls pull-right">
               <div class="btn-group">
                 <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxnews_widget"></a>
-              </div>	  
+              </div>    
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
             <i class="fa fa-rss fa-5x icon-color-verylight"></i> [+modx_news_content+]
           </div>
-        </div>			
+        </div>      
       </li>
       <!--- /panel --->
 
@@ -145,13 +129,13 @@
             <div class="widget-controls pull-right">
               <div class="btn-group">
                 <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxsecurity_widget"></a>
-              </div>	  
+              </div>    
             </div>
           </div>
           <div class="panel-body widget-stage sectionBody">
             <i class="fa fa-exclamation-triangle fa-5x icon-color-verylight"></i> [+modx_security_notices_content+]
           </div>
-        </div>			
+        </div>      
       </li>
       <!--- /panel --->
     </ul>           
