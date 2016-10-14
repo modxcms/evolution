@@ -4,12 +4,14 @@
     <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
     <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width">
     <style type="text/css">
       body {
         font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
       }
       input {
         font-family:inherit;
+        -webkit-appearance: none;
       }
       #login {
         background-color: #F2F2F2;
