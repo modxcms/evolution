@@ -741,6 +741,8 @@ if ($installData && $moduleSQLDataFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
+        $sql = sprintf('UPDATE %s.`%ssite_content` SET template=5 WHERE template=4', $dbase, $sqlParser->prefix);
+        mysqli_query($sqlParser->conn, $sql);
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
 }
