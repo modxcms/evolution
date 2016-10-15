@@ -1,7 +1,7 @@
 /**
  * MODX startup - Bootstrap
  *
- * <strong>1.0</strong> Sample template in Bootstrap
+ * Sample template in Bootstrap
  *
  * @category	template
  * @version 	1.0
@@ -9,6 +9,7 @@
  * @internal	@lock_template 0
  * @internal 	@modx_category Demo Content
  * @internal    @installset sample
+ * @internal	@save_sql_id_as BOOTSTRAP_SQL_ID
  */
 <!DOCTYPE html>
 <html lang="en">
