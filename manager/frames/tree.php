@@ -485,8 +485,8 @@ foreach($sortParams as $param) {
 <input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
-        <select name="sortby">
+    <td style="padding-left: 10px;padding-top: 1px;">
+        <select name="sortby" style="width: 100%;">
             <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="longtitle" <?php echo $_SESSION['tree_sortby']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -499,19 +499,25 @@ foreach($sortParams as $param) {
     </td>
   </tr>
   <tr>
-    <td width="99%" style="padding-left: 10px;padding-top: 1px;">
-        <select name="sortdir">
+    <td style="padding-left: 10px;padding-top: 1px;">
+        <select name="sortdir" style="width: 100%;">
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
     </td>
-    <td width="1%"><ul class="actionButtons"><li><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></li></ul></td>
+  </tr>
+  <tr>
+    <td style="padding-left: 10px;padding-top: 1px;">
+      <ul class="actionButtons">
+        <li><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></li>
+      </ul>
+      </td>
   </tr>
   <tr>
     <td width="99%" style="padding-left: 10px;padding-top: 1px;" colspan="2">
         <br/>
         <?php echo $_lang["setting_resource_tree_node_name"] ?>
-        <select name="nodename" style="margin-top:5px;">
+        <select name="nodename" style="margin-top:5px; width: 100%;">
             <option value="default" <?php echo $_SESSION['tree_nodename']=='default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_nodename']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="longtitle" <?php echo $_SESSION['tree_nodename']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>

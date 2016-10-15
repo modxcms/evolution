@@ -109,19 +109,33 @@ $modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_ti
 $modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
 
 // recent document info
-$html  = '<div class="table-responsive"><table class="table table-hover table-condensed"><thead><tr><th>' . $_lang["id"] . '</th><th>' . $_lang["resource_title"] . '</th><th>' . $_lang['page_data_edited'] . '</th><th>' . $_lang["user"] . '</th><th style="text-align: right;">' . $_lang["mgrlog_action"] . '</th></tr></thead>
-';
+$html  = '<div class="table-responsive">
+<table class="table table-hover table-condensed">
+<thead>
+<tr>
+<th style="width: 50px;">' . $_lang["id"] . '</th>
+<th>' . $_lang["resource_title"] . '</th>
+<th style="width: 140px;">' . $_lang['page_data_edited'] . '</th>
+<th style="width: 180px;">' . $_lang["user"] . '</th>
+<th style="width: 180px; text-align: right;">' . $_lang["mgrlog_action"] . '</th>
+</tr>
+</thead>';
+
 $rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable, template', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
+
 $limit = $modx->db->getRecordCount($rs);
+
 if ($limit < 1) {
     $html .= '<tr><td>' . $_lang['no_activity_message'] . '</td></tr>';
-} else {
+} 
+
+else {
     while ($content = $modx->db->getRow($rs)) {
         $editedby  = $content['editedby'];
         $editedbyu = $modx->getUserInfo($editedby);
-        $html .= '<tr><td style="width: 5%" data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
+        $html .= '<tr><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
       
-        <span class="label label-info">' . $content['id'] . '</span></td><td style="width: 45%" >';
+        <span class="label label-info">' . $content['id'] . '</span></td><td>';
         if ($content['deleted'] == 1) {
             $html .= '<a class="deleted" ';
         } else if ($content['published'] == 0) {
@@ -129,8 +143,8 @@ if ($limit < 1) {
         } else {
             $html .= '<a class="published" ';
         }
-        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td style="width: 15% data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td style="width: 10% data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
-        <td style="text-align: right; width: 25%">';
+        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
+        <td style="text-align: right;">';
         
         if ($modx->hasPermission('edit_document')) {
             $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
