@@ -581,7 +581,7 @@ class Mysqldumper {
 					}
 					$insertdump .= $value .',';
 				}
-				$output .= rtrim($insertdump,',') . ");";
+				$output .= rtrim($insertdump,',') . ");\n";
 				if(1048576 < strlen($output))
 				{
 					file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
