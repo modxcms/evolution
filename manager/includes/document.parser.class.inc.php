@@ -4110,12 +4110,12 @@ class DocumentParser {
                     case 'list-multi':
                     case 'checkbox':
                     case 'radio':
-                        $value = $p[3];
+                        $value = !isset($p[3]) ? '' : $p[3];
                         break;
                     default:
-                        $value = $p[2];
+                        $value = !isset($p[2]) ? '' : $p[2];
                 }
-                if (!empty($key) && $value != '') $property[$key] = $value;
+                if (!empty($key)) $property[$key] = $value;
             }
         // new json-format
         } else if(!empty($jsonFormat)){
