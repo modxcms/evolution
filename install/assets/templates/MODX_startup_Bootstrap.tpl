@@ -1,7 +1,7 @@
 /**
  * MODX startup - Bootstrap
  *
- * <strong>1.0</strong> Sample template in Bootstrap
+ * Sample template in Bootstrap
  *
  * @category	template
  * @version 	1.0
