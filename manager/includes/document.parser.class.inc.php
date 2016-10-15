@@ -1259,7 +1259,6 @@ class DocumentParser {
         
         $etomite= & $this;
         
-        if(!$this->snippetCache) $this->setSnippetCache();
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
         if(!$matches) return $content;
