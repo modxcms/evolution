@@ -4096,7 +4096,8 @@ class DocumentParser {
             $props= explode('&', $propertyString);
             foreach ($props as $prop) {
 
-                if (strpos($prop, '=')===false) {
+                if(empty($prop)) continue;
+                elseif(strpos($prop, '=')===false) {
                     $property[trim($prop)]='';
                     continue;
                 }
