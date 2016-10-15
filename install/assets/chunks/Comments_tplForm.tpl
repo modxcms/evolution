@@ -4,7 +4,8 @@
  * Comments (Jot) Form-Template
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 <a name="jf[+jot.link.id+]"></a>
 <h2>[+form.edit:is=`1`:then=`Edit comment`:else=`Write a comment`+]</h2>

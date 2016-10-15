@@ -4,7 +4,8 @@
  * Input-Form for AjaxSearch
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 [+as.showInputForm:is=`1`:then=`
 <form id="[+as.formId+]" action="[+as.formAction+]" method="post">

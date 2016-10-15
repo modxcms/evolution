@@ -2960,7 +2960,8 @@ class DocumentParser {
             if ($this->db->getRecordCount($result) == 1) {
                 $row = $this->db->getRow($result);
                 $snippet =  $this->snippetCache[$snippetName]= $row['snippet'];
-                $properties = $this->snippetCache[$snippetName . "Props"]= $row['properties']." ".$row['sharedproperties'];
+                $mergedProperties = array_merge($this->parseProperties($row['properties']), $this->parseProperties($row['sharedproperties']));
+                $properties = $this->snippetCache[$snippetName . "Props"]= json_encode($mergedProperties);
             } else {
                 $snippet = $this->snippetCache[$snippetName]= "return false;";
                 $properties = $this->snippetCache[$snippetName . "Props"]= '';
