@@ -9,6 +9,7 @@ global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;
 global $moduleSQLDataFile;
+global $moduleSQLResetFile;
 
 global $moduleChunks;
 global $moduleTemplates;
@@ -381,6 +382,26 @@ if ($installMode == 0) {
     }
 }
 
+// Reset database for installation of demo-site 
+if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
+	echo "<p>" . $_lang['resetting_database'];
+	$sqlParser->process($moduleSQLResetFile);
+	// display database results
+	if ($sqlParser->installFailed == true) {
+		$errors += 1;
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
+		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+		}
+		echo "</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
+		return;
+	} else {
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+	}
+}
 
 // Install Templates
 if (isset ($_POST['template']) || $installData) {
@@ -736,7 +757,7 @@ if (isset ($_POST['snippet']) || $installData) {
     }
 }
 
-// install data
+// Install demo-site
 if ($installData && $moduleSQLDataFile) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($moduleSQLDataFile);
