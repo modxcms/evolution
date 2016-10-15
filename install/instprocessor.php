@@ -514,6 +514,7 @@ if (isset ($_POST['chunk']) || $installData) {
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
+        $count_new_name = 0;
         if($installSample || in_array($k, $selChunks)) {
 
             $name = mysqli_real_escape_string($conn, $moduleChunk[0]);
