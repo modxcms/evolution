@@ -3171,6 +3171,20 @@ form textarea:focus,
   padding: 3px 4px;
 }
 
+#modxrecent_widget table ul {
+  margin: 0;
+  padding: 0;
+}
+
+#modxrecent_widget table li {
+  padding: 3px 5px;
+}
+
+#modxrecent_widget table li:last-child {
+  border-bottom-width: 0;
+  padding-bottom: 0;
+}
+
 #content_body #which_editor {
   margin-top: 12px;
 }
