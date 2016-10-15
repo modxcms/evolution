@@ -3158,6 +3158,19 @@ form textarea:focus,
   border-color: #3697CD !important;
 }
 
+#modxrecent_widget table {
+  margin-bottom: 0;
+}
+
+#modxrecent_widget .table-condensed > tbody > tr > td, 
+#modxrecent_widget .table-condensed > tbody > tr > th, 
+#modxrecent_widget .table-condensed > tfoot > tr > td, 
+#modxrecent_widget .table-condensed > tfoot > tr > th, 
+#modxrecent_widget .table-condensed > thead > tr > td, 
+#modxrecent_widget .table-condensed > thead > tr > th {
+  padding: 3px 4px;
+}
+
 #content_body #which_editor {
   margin-top: 12px;
 }
