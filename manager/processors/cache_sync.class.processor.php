@@ -215,8 +215,7 @@ if(!class_exists('synccache')) {
         // WRITE snippets to cache file
         $rs = $modx->db->select(
 			'ss.*, sm.properties as sharedproperties',
-			$modx->getFullTableName('site_snippets').' ss
-				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid'
+			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($tmp1 = $modx->db->getRow($rs)) {
