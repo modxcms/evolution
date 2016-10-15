@@ -4,7 +4,8 @@
  * Results Tpl for AjaxSearch
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 <div id="search_results" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog">

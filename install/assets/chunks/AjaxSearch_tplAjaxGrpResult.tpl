@@ -4,7 +4,8 @@
  * Grp Result Tpl for AjaxSearch
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 [+as.grpResultsDef:is=`1`:then=`
 <div id="[+as.grpResultId+]" class="AS_ajax_grpResult">
