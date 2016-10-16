@@ -5,7 +5,7 @@
  * Get access to all Elements inside Manager sidebar
  *
  * @category    plugin
- * @version     1.0.0
+ * @version     1.1.1
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &useIcons=Use icons in tabs;list;yes,no;yes;desc;Icons available in MODX version 1.1.1 or newer
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
@@ -17,7 +17,7 @@
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  13/10/2016
+ * @lastupdate  16/10/2016
  */
 
 $e = &$modx->Event;
@@ -58,8 +58,13 @@ if($e->name == 'OnManagerTreePrerender'){
 }
 
 #treePane .tab {
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+#treePane .tab > span > .fa {
+  margin-right: 2px;
+  margin-left: 2px;
 }
 
 #treePane .tab.selected {
@@ -163,6 +168,7 @@ if($e->name == 'OnManagerTreePrerender'){
 #tabSN   li.eltree:before {content: "\f121";}
 #tabTV   li.eltree:before {content: "\f022";}
 #tabPL   li.eltree:before {content: "\f1e6";}
+#tabMD   li.eltree:before {content: "\f085";}
 </style>
 
 <div class="tab-pane" id="treePane" style="border:0;">
@@ -179,7 +185,7 @@ treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
 	$e->output($output);
 }
 
-if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') ) {
+if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 	if($e->name == 'OnManagerTreeRender'){
 		
 		if ($useIcons=='yes') {
@@ -188,6 +194,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_chunk     = '<i class="fa fa-th-large"></i>';
 			$tabLabel_snippet   = '<i class="fa fa-code"></i>';
 			$tabLabel_plugin    = '<i class="fa fa-plug"></i>';
+			$tabLabel_module    = '<i class="fa fa-cogs"></i>';
 			$tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
 		}
 		else {
@@ -196,6 +203,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_chunk     = 'CH';
 			$tabLabel_snippet   = 'SN';
 			$tabLabel_plugin    = 'PL';
+			$tabLabel_module    = 'MD';
 			$tabLabel_refresh   = 'Refresh';
 		}
 		
@@ -237,7 +245,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				}
 				if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
 				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
-<a class="ext-ico" href="#" title="Edit in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+<a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				/*
 //@TODO: add description as title to link
 if ($resourceTable == 'site_tmplvars') {
@@ -268,8 +276,9 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
 		$chunk = createResourceList('site_htmlsnippets',78,$tablePre);
 		$snippet = createResourceList('site_snippets',22,$tablePre);
 		$plugin = createResourceList('site_plugins',102,$tablePre);
+		$module = createResourceList('site_modules',112,$tablePre);
 
-		if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') ) {
+		if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 			$output = '</div>';
 		}
 
@@ -342,8 +351,23 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
 </div>
 	';
 		}
+		
+		if ($modx->hasPermission('exec_module')) {
+			$output .= '
+<div class="tab-page" id="tabMD" style="padding-left:0; padding-right:0;">
+<h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
+<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
+'.$module.'
+<br/>
+<ul class="actionButtons">
+<li><a href="index.php?a=107" target="main">New Module</a></li>
+<li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+</ul>
+</div>
+	';
+		}
 
-		if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') ) {
+        if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 			$output .= '</div>';
 			$e->output($output);
 		}
