@@ -1,19 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
-
-    $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
-    function constructLink($action, $img, $text, $allowed) {
-        if($allowed==1) { ?>
-            <div class="menuLink" id="item<?php echo $action;?>" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
-        <?php } else { ?>
-            <div class="menuLinkDisabled">
-        <?php } ?>
-                <i class="<?php echo $img; ?>"></i> <?php echo $text; ?>
-            </div>
-        <?php
-    }
-    $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+$modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
@@ -27,14 +16,10 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
     <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
-    window.addEvent('load', function(){
-        resizeTree();
-        restoreTree();
-        window.addEvent('resize', resizeTree);
-    });
 
+    jQuery.noConflict();
+    
     // preload images
     var i = new Image(18,18);
     i.src="<?php echo $_style["tree_page"]?>";
@@ -580,6 +565,11 @@ foreach($sortParams as $param) {
 </div>
 
 <script type="text/javascript">
+    
+    resizeTree();
+    restoreTree();
+    window.addEvent('resize', resizeTree);
+    
 // Set 'treeNodeSelected' class on document node when editing via Context Menu
 function setActiveFromContextMenu( doc_id ){
     $$('.treeNodeSelected').removeClass('treeNodeSelected');
@@ -685,6 +675,14 @@ function menuHandler(action) {
     ?>
 </div>
 </div>
-
 </body>
 </html>
+<?php
+function constructLink($action, $img, $text, $allowed) {
+    if($allowed==1) {
+        echo sprintf('<div class="menuLink" id="item%s" onclick="menuHandler(%s); hideMenu();">', $action, $action);
+    } else {
+        echo '<div class="menuLinkDisabled">';
+    }
+    echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+}
