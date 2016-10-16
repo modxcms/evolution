@@ -127,6 +127,8 @@ if(!isset($_SESSION['mgrValidated'])){
 			$login_tpl = file_get_contents($target);
 		}
 	} else {
+		if(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/style.php'))
+			include(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/style.php');
 		$chunk = $modx->getChunk($target);
 		if($chunk!==false && !empty($chunk)) {
 			$login_tpl = $chunk;
