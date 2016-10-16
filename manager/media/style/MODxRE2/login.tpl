@@ -10,7 +10,7 @@
         font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
       }
       html:lang(ja) body {
-        font-family: Meiryo, "Hiragino Kaku Gothic Pro", Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
+        font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
       }
       input {
         font-family:inherit;
