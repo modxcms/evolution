@@ -992,6 +992,7 @@ div.treeNode {
   height: 100%;
   position: absolute;
   right: -10px;
+
 }
 
 .rtl #treeSplitter {
@@ -1364,8 +1365,8 @@ a.hometblink:hover {
 
 #nav li.active ul.subnav {
   display: block;
-  position: absolute;
-  top: 29px;
+  position: fixed;
+  top: 37px;
   width: 200%;
   left: 0;
   border-top: 1px solid #999;
@@ -1478,14 +1479,14 @@ a.hometblink:hover {
 
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLinkDisabled img {
-  /* 	opacity: .3;
-	filter: alpha(opacity=30); */
+  /*  opacity: .3;
+  filter: alpha(opacity=30); */
   vertical-align: top;
 }
 
 #mx_contextmenu .menuLink:hover img {
-  /* 	opacity: 1;
-	filter: alpha(opacity=100); */
+  /*  opacity: 1;
+  filter: alpha(opacity=100); */
 }
 
 #mx_contextmenu #nameHolder {
@@ -1738,7 +1739,7 @@ a.hometblink img {
 
 .wm_button {
   display: inline-block;
-  margin: 0px 20px 20px 0px;
+  margin: 0px 15px 15px 0px;
   text-align: center;
 }
 
@@ -2047,7 +2048,7 @@ ul.actionButtons {
 
 /*
 * Generic styles for all form elements
-		*/
+    */
 
 form#mutate dt,
 form#mutate dd {
@@ -2651,7 +2652,32 @@ form select {
 
 
 
-
+#searchform {z-index: 1000;position: absolute;right:4px;top:17px;}
+@media (max-width: 958px) {
+  #searchform {display:none;}
+}
+#searchform input[type=text]{
+  margin-top: 22px;
+  height: 28px;
+  width: 100px;
+  box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+  -moz-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+  -webkit-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+  border-radius: 2px!important;
+  -moz-border-radius: 2px!important;
+  -webkit-border-radius: 2px!important;
+  transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: white;
+  text-align: left;
+}
+#searchform input[type=text]:focus{
+  width: 250px;
+  text-align: left;
+}
 
 
 
@@ -2667,9 +2693,13 @@ form select {
   border-radius: 0 !important;
 }
 
-body,
-div.treeframebody {
+body
+{
   background-color: #F2F2F2 !important;
+  background-image: none !important;
+}
+div.treeframebody {
+  background-color: #ebebeb !important;
   background-image: none !important;
 }
 
@@ -2699,7 +2729,7 @@ div.treeframebody {
 #nav > li > a {
   height: 33px;
   line-height: 34px;
-  color: #FFF;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: bold;
 }
 
@@ -2718,7 +2748,7 @@ div.treeframebody {
 #nav li.active ul.subnav, 
 #nav li.active ul.subnav a {
   color: #C9D4E1;
-  color: #fff;
+  color: rgba(255,255,255,0.95);
   filter: none;
   background: none;
   background-color: transparent;
@@ -2735,7 +2765,7 @@ div.treeframebody {
 }
 
 #nav li.active ul.subnav {
-  top: 33px;
+  top: 37px;
   background-color: rgba(255,255,255,0.15);
   /*border-top-color: rgba(255,255,255,0.15);*/
   border-top-color: transparent;
@@ -3253,3 +3283,5 @@ table.actionButtons .searchtext {
   margin-bottom: 15px;
   color: #777;
 }
+
+.userprofiletable {margin-bottom:-20px;}

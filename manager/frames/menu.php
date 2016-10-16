@@ -86,7 +86,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		function setMenuFrameHeight(pos) {
 		parent.document.getElementById('tree').style.top    = pos + 'px';
 		parent.document.getElementById('resizer').style.top = pos + 'px';
-		parent.document.getElementById('resizer2').style.top = pos + 'px';
+		parent.document.getElementById('resizer2').style.top = pos-5 + 'px';
 		parent.document.getElementById('main').style.top    = pos + 'px';
 		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
 	}
@@ -243,7 +243,12 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
   </div>
 </div>
-
+<div id="searchform">
+			<form  action="index.php?a=71#results" method="post" target="main">
+				<input type="hidden" value="Search" name="submitok" />
+				<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search']?>">
+			</form>
+		</div>
 <form name="menuForm" action="l4mnu.php" class="clear">
     <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
 <div id="Navcontainer">
