@@ -295,18 +295,22 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				
 			$output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$resourceTable.'">';
 
-            $orderby= '5,1';
-
 			if ($_SESSION['mgrRole'] != 1) {
-				$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.category, mg.member
+				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-				WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1');
+				LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS cats ON sm.category = cats.id
+				WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
+				ORDER BY 5,1');
 			} 
 			
 			else {
-				$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
+				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid
+				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
+				LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS cats ON sm.category = cats.id
+				WHERE sm.disabled != 1
+				ORDER BY 5,1');
 			}
 			
 			$limit = $modx->db->getRecordCount($rs);
@@ -315,24 +319,22 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				echo $_lang['no_results'];
 			}
 			
-			$preCat = '';
+			$preCat   = '';
 			$insideUl = 0;
 			
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
-				$row['category'] = stripslashes($row['category']);
-				$rs_category = $modx->db->select("category", $modx->getFullTableName('categories'), "id = '".$row['category']."'");
-				$rs_category_row = $modx->db->getRow($rs_category);
-				if ($preCat !== $row['category']) {
+				$row['catid'] = stripslashes($row['catid']);
+				if ($preCat !== $row['catid']) {
 					$output .= $insideUl? '</div>': '';
-					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$rs_category_row['category'].' </a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['catid'].'"><ul>';
+					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['category'].'"><ul>';
 					$insideUl = 1;
 				}
 				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
 				$output .= '</li>';
-				$preCat = $row['category'];
+				$preCat  = $row['catid'];
 			}
 			$output .= $insideUl? '</ul></div></div>': '';
 			$output .= '</div>';
