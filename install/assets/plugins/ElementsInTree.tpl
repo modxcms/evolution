@@ -185,7 +185,7 @@ treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
 	$e->output($output);
 }
 
-if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') ) {
+if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 	if($e->name == 'OnManagerTreeRender'){
 		
 		if ($useIcons=='yes') {
@@ -278,7 +278,7 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
 		$plugin = createResourceList('site_plugins',102,$tablePre);
 		$module = createResourceList('site_modules',112,$tablePre);
 
-		if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module')) {
+		if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 			$output = '</div>';
 		}
 
@@ -367,7 +367,7 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
 	';
 		}
 
-		if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') ) {
+        if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 			$output .= '</div>';
 			$e->output($output);
 		}
