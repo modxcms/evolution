@@ -2,10 +2,10 @@
 /**
  * ElementsInTree
  *
- * Get access to all Elements inside Manager sidebar
+ * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.1
+ * @version     1.1.2
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &useIcons=Use icons in tabs;list;yes,no;yes;desc;Icons available in MODX version 1.1.1 or newer
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
@@ -20,7 +20,10 @@
  * @lastupdate  16/10/2016
  */
 
+global $_lang;
+
 $e = &$modx->Event;
+
 if($e->name == 'OnManagerTreePrerender'){
 	
 		if ($useIcons=='yes') {
@@ -208,13 +211,19 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 		}
 		
 		//global $modx;
+		
 		$tablePre = $modx->db->config['dbase'] . '.`' . $modx->db->config['table_prefix'];
+		
+		// createResourceList function
+		
 		function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name') {
 			global $modx, $_lang;
+			
 			$output  = '
 				<form class="filterElements-form" style="margin-top: 0;">
 				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
 				</form>';
+				
 			$output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$resourceTable.'">';
 			$pluginsql = $resourceTable == 'site_plugins' ? $tablePre.$resourceTable.'`.disabled, ' : '';
 			$tvsql = $resourceTable == 'site_tmplvars' ? $tablePre.$resourceTable.'`.caption, ' : '';
@@ -223,18 +232,23 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
 				$orderby= '6,2';
 			}
+			
 			else{
 				$orderby= '5,1';
 			}
 
 			$sql = 'SELECT '.$pluginsql.$tvsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category, '.$tablePre.'categories`.id  as catid FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
+			
 			$rs = $modx->db->query($sql);
 			$limit = $modx->db->getRecordCount($rs);
+			
 			if($limit<1){
 				echo $_lang['no_results'];
 			}
+			
 			$preCat = '';
 			$insideUl = 0;
+			
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
 				$row['category'] = stripslashes($row['category']); //pixelchutes
@@ -245,14 +259,8 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				}
 				if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
 				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
-<a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
-				/*
-//@TODO: add description as title to link
-if ($resourceTable == 'site_tmplvars') {
-$output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small> ('.$row['description'].')</small>' : ' - '.$row['caption'];
-}else{
-$output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
-}*/
+                  <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+				
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
 				$output .= '</li>';
 				$preCat = $row['category'];
@@ -266,17 +274,89 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
             selector: \'.elementname\'
           });
 		  jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
-    jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
-});
+            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
+          });
         </script>';
 			return $output;
 		}
-		$temp = createResourceList('site_templates',16,$tablePre,'templatename');
-		$tv = createResourceList('site_tmplvars',301,$tablePre);
-		$chunk = createResourceList('site_htmlsnippets',78,$tablePre);
+		
+		// end createResourceList function
+		
+		// createModulesList function
+		
+		function createModulesList($resourceTable,$action,$tablePre,$nameField = 'name') {
+		
+			global $modx, $_lang;
+			
+			$output  = '
+				<form class="filterElements-form" style="margin-top: 0;">
+				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
+				</form>';
+				
+			$output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$resourceTable.'">';
+
+            $orderby= '5,1';
+
+			if ($_SESSION['mgrRole'] != 1) {
+				$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.category, mg.member
+				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
+				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
+				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
+				WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1');
+			} 
+			
+			else {
+				$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
+			}
+			
+			$limit = $modx->db->getRecordCount($rs);
+			
+			if($limit<1){
+				echo $_lang['no_results'];
+			}
+			
+			$preCat = '';
+			$insideUl = 0;
+			
+			for($i=0; $i<$limit; $i++) {
+				$row = $modx->db->getRow($rs);
+				$row['category'] = stripslashes($row['category']);
+				$rs_category = $modx->db->select("category", $modx->getFullTableName('categories'), "id = '".$row['category']."'");
+				$rs_category_row = $modx->db->getRow($rs_category);
+				if ($preCat !== $row['category']) {
+					$output .= $insideUl? '</div>': '';
+					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$rs_category_row['category'].' </a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['catid'].'"><ul>';
+					$insideUl = 1;
+				}
+				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+                  <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+				$output .= '</li>';
+				$preCat = $row['category'];
+			}
+			$output .= $insideUl? '</ul></div></div>': '';
+			$output .= '</div>';
+			$output .= '
+    
+        <script>
+          jQuery(\'#tree_'.$resourceTable.'_search\').quicksearch(\'#tree_'.$resourceTable.' ul li\', {
+            selector: \'.elementname\'
+          });
+          jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
+            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
+          });
+        </script>';
+			return $output;
+		}
+		
+		// end createModulesList function
+		
+		$temp    = createResourceList('site_templates',16,$tablePre,'templatename');
+		$tv      = createResourceList('site_tmplvars',301,$tablePre);
+		$chunk   = createResourceList('site_htmlsnippets',78,$tablePre);
 		$snippet = createResourceList('site_snippets',22,$tablePre);
-		$plugin = createResourceList('site_plugins',102,$tablePre);
-		$module = createResourceList('site_modules',112,$tablePre);
+		$plugin  = createResourceList('site_plugins',102,$tablePre);
+		$module  = createModulesList('site_modules',112,$tablePre);
 
 		if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
 			$output = '</div>';
@@ -284,87 +364,94 @@ $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
 
 		if ($modx->hasPermission('edit_template')) {
 			$output .= '
-	<div class="tab-page" id="tabTemp" style="padding-left:0; padding-right:0;">
-	<h2 class="tab" title="Templates">'.$tabLabel_template.'</h2>
-	<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
-	'.$temp.'
-	<br/>
-	<ul class="actionButtons">
-	<li><a href="index.php?a=19" target="main">New Template</a></li>
-	<li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-	</ul>
-	</div>
-	<div class="tab-page" id="tabTV" style="padding-left:0; padding-right:0;">
-	<h2 class="tab" title="Template Variables">'.$tabLabel_tv.'</h2>
-	<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
-	'.$tv.'
-	<br/>
-	<ul class="actionButtons">
-	<li><a href="index.php?a=300" target="main">New TV</a></li>
-	<li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-	</ul>
-	</div>
-	';
+              <div class="tab-page" id="tabTemp" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Templates">'.$tabLabel_template.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
+              '.$temp.'
+              <br/>
+              <ul class="actionButtons">
+              <li><a href="index.php?a=19" target="main">'.$_lang['new_template'].'</a></li>
+              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+              <div class="tab-page" id="tabTV" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Template Variables">'.$tabLabel_tv.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
+              '.$tv.'
+              <br/>
+              <ul class="actionButtons">
+              <li><a href="index.php?a=300" target="main">'.$_lang['new_tmplvars'].'</a></li>
+              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+	        ';
 		}
 
 		if ($modx->hasPermission('edit_chunk')) {
 			$output .= '
-<div class="tab-page" id="tabCH" style="padding-left:0; padding-right:0;">
-<h2 class="tab" title="Chunks">'.$tabLabel_chunk.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
-'.$chunk.'
-<br/>
-<ul class="actionButtons">
-<li><a href="index.php?a=77" target="main">New Chunk</a></li>
-<li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-</ul>
-</div>
-	';
+              <div class="tab-page" id="tabCH" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Chunks">'.$tabLabel_chunk.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
+              '.$chunk.'
+              <br/>
+              <ul class="actionButtons">
+              <li><a href="index.php?a=77" target="main">'.$_lang['new_htmlsnippet'].'</a></li>
+              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+	        ';
 		}
 
 		if ($modx->hasPermission('edit_snippet')) {
 			$output .= '
-<div class="tab-page" id="tabSN" style="padding-left:0; padding-right:0;">
-<h2 class="tab" title="Snippets">'.$tabLabel_snippet.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
-'.$snippet.'
-<br/>
-<ul class="actionButtons">
-<li><a href="index.php?a=23" target="main">New Snippet</a></li>
-<li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-</ul>
-</div>
-	';
+              <div class="tab-page" id="tabSN" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Snippets">'.$tabLabel_snippet.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
+              '.$snippet.'
+              <br/>
+              <ul class="actionButtons">
+              <li><a href="index.php?a=23" target="main">'.$_lang['new_snippet'].'</a></li>
+              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+	        ';
 		}
 
 		if ($modx->hasPermission('edit_plugin')) {
 			$output .= '
-<div class="tab-page" id="tabPL" style="padding-left:0; padding-right:0;">
-<h2 class="tab" title="Plugins">'.$tabLabel_plugin.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
-'.$plugin.'
-<br/>
-<ul class="actionButtons">
-<li><a href="index.php?a=101" target="main">New Plugin</a></li>
-<li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-</ul>
-</div>
-	';
+              <div class="tab-page" id="tabPL" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Plugins">'.$tabLabel_plugin.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
+              '.$plugin.'
+              <br/>
+              <ul class="actionButtons">
+              <li><a href="index.php?a=101" target="main">'.$_lang['new_plugin'].'</a></li>
+              <li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+	        ';
 		}
 		
 		if ($modx->hasPermission('exec_module')) {
+			
+			$new_module_button = '';
+      
+			if ($modx->hasPermission('new_module')) {
+				$new_module_button = '<li><a href="index.php?a=107" target="main">'.$_lang['new_module'].'</a></li>';
+			}
+			
 			$output .= '
-<div class="tab-page" id="tabMD" style="padding-left:0; padding-right:0;">
-<h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
-'.$module.'
-<br/>
-<ul class="actionButtons">
-<li><a href="index.php?a=107" target="main">New Module</a></li>
-<li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
-</ul>
-</div>
-	';
+              <div class="tab-page" id="tabMD" style="padding-left:0; padding-right:0;">
+              <h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
+              <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
+              '.$module.'
+              <br/>
+              <ul class="actionButtons">
+              '.$new_module_button.'
+              <li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              </ul>
+              </div>
+	      ';
 		}
 
         if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
