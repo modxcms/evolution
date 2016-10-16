@@ -5,7 +5,7 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
     $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
         if($allowed==1) { ?>
-            <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
+            <div class="menuLink" id="item<?php echo $action;?>" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
         <?php } else { ?>
             <div class="menuLinkDisabled">
         <?php } ?>
@@ -120,9 +120,35 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       return scrOfY;
     }
 
-    function showPopup(id,title,e){
+    function showPopup(id,title,pub,del,folder,e){
         var x, y;
-        var mnu = $('mx_contextmenu');
+        
+        var mnu = document.getElementById('mx_contextmenu');
+        var permpub = <?php echo $modx->hasPermission('publish_document') ? 1:0; ?>;
+        var permdel = <?php echo $modx->hasPermission('delete_document') ? 1:0; ?>;
+        
+        if(permpub==1) {
+	        jQuery('#item9').show();
+	        jQuery('#item10').show();
+	        if(pub==1) jQuery('#item9').hide();
+	        else       jQuery('#item10').hide();
+        } else {
+        	if(jQuery('#item5') != null) jQuery('#item5').hide();
+        }
+        
+        if(permdel==1) {
+	        jQuery('#item4').show();
+	        jQuery('#item8').show();
+        	if(del==1) {
+        		jQuery('#item4').hide();
+    	        jQuery('#item9').hide();
+    	        jQuery('#item10').hide();
+        	}
+	        else jQuery('#item8').hide();
+        }
+        if(folder==1) jQuery('#item11').show();
+        else          jQuery('#item11').hide();
+        
         var bodyHeight = parseInt(document.body.offsetHeight);
         x = e.clientX>0 ? e.clientX:e.pageX;
         y = e.clientY>0 ? e.clientY:e.pageY;
