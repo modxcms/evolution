@@ -38,6 +38,6 @@ TRUNCATE TABLE `{PREFIX}site_tmplvars`;
 # TRUNCATE TABLE `{PREFIX}webgroup_access`;
 # TRUNCATE TABLE `{PREFIX}webgroup_names`;
 
-TRUNCATE TABLE `{PREFIX}jot_content`;
-
-TRUNCATE TABLE `{PREFIX}jot_subscriptions`;
+# Tables not existing at new installations
+# TRUNCATE TABLE `{PREFIX}jot_content`;
+# TRUNCATE TABLE `{PREFIX}jot_subscriptions`;
