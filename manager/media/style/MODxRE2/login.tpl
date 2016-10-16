@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="[(lang_code)]" xml:lang="[(lang_code)]">
   <head>
     <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width">
     <style type="text/css">
       body {
-        font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+        font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
+      }
+      html:lang(ja) body {
+        font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
       }
       input {
         font-family:inherit;
@@ -40,7 +43,7 @@
       .sectionBody label {
         color: #666666;
         display: block;
-        font: 14px Arial;
+        font-size: 14px;
         margin: 0 0 5px;
       }
       .sectionBody input[type="text"],
@@ -107,7 +110,7 @@
       }
       #FMP-email_label {
         color: #666666;
-        font: 13px Arial;
+        font-size: 13px;
         margin: 0 0 7px;
       }
       #FMP-email_button {
@@ -121,19 +124,19 @@
       .loginLicense a {
         color: #999999;
         display: block;
-        font: 13px Arial;
+        font-size: 13px;
         margin: 13px 0 0 21px;
         text-decoration: underline;
       }
       #ForgotManagerPassword-show_form {
         color: #999999;
         display: block;
-        font: 13px Arial;
+        font-size: 13px;
         margin: 0 0 20px;
         text-align: left;
       }
       .error {
-        font: 13px Arial;
+        font-size: 13px;
         color: #f00;
       }
       .gpl {

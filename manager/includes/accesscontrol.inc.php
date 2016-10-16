@@ -127,6 +127,8 @@ if(!isset($_SESSION['mgrValidated'])){
 			$login_tpl = file_get_contents($target);
 		}
 	} else {
+		$theme_path = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/';
+		if(is_file($theme_path . 'style.php')) include($theme_path . 'style.php');
 		$chunk = $modx->getChunk($target);
 		if($chunk!==false && !empty($chunk)) {
 			$login_tpl = $chunk;
@@ -135,14 +137,14 @@ if(!isset($_SESSION['mgrValidated'])){
 			$login_tpl = file_get_contents($target);
 		} elseif(is_file($target)) {
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
+		} elseif(is_file($theme_path . 'login.tpl')) {
+			$target = $theme_path . 'login.tpl';
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl')) {
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl';
+		} elseif(is_file($theme_path . 'templates/actions/login.tpl')) {
+			$target = $theme_path . 'templates/actions/login.tpl';
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
+		} elseif(is_file($theme_path . 'html/login.html')) { // ClipperCMS compatible
+			$target = $theme_path . 'html/login.html';
 			$login_tpl = file_get_contents($target);
 		} else {
 			$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';

@@ -10,6 +10,10 @@
 */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/style/common/moo-datepicker/datepicker.inc.php';
+if(!$modx->config['lang_code']) {
+    global $modx_lang_attribute;
+    $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+}
 
 // Large Icons
 $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';

@@ -6,14 +6,6 @@
 }
 
 
-/* for IE6 */
-
-*+html {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-
 /* for IE7 */
 
 html,
@@ -36,13 +28,17 @@ html {
 }
 
 body {
-  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 62.5%;
   font-size: 68.75%;
   font-size: 75%;
   height: 100%;
   color: #333333;
   background: #eeeeee url(images/body.jpg);
+}
+
+html:lang(ja) body {
+  font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
 }
 
 img,
@@ -2452,7 +2448,7 @@ input#dateto:focus.DatePicker {
 }
 
 .phptextarea {
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
 }
 
 
@@ -2510,7 +2506,7 @@ strong[style*='color:#EF1D1D'] {
 
 code {
   font-size: inherit;
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1px 2px;
