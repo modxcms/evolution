@@ -99,7 +99,12 @@ if($database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-	echo "
+	echo "<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>MODX is not installed!</title>
+<meta name='robots' content='noindex, nofollow'>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 <style type=\"text/css\">
 *{margin:0;padding:0}
@@ -108,10 +113,13 @@ body{margin:50px;background:#eee;}
 p{ margin:20px 0; }
 a{font-size:2em;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
 </style>
+</head>
+<body>
 <div class=\"install\">
 <p>MODX is not currently installed or the configuration file cannot be found.</p>
 <p>Do you want to <a href=\"install/index.php\">install now?</a></p>
-</div>";
+</div>
+</body></html>";
 		exit;
 	}
 }
