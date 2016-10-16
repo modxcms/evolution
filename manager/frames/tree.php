@@ -19,6 +19,10 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
+    <style>
+        #treeRoot {cursor: pointer;}
+        #treeRoot div {white-space: nowrap;}
+    </style>
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
     <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
