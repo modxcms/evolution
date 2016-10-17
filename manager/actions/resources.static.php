@@ -173,7 +173,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabChunks">
         <h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        <div id="chunks-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        </div>
 
         <ul class="actionButtons">
             <li>
@@ -182,6 +184,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
+             <li><a href="#" id="chunks-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_htmlsnippets',78); ?>
@@ -189,6 +192,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_htmlsnippets_search').quicksearch('#site_htmlsnippets ul li', {
             selector: 'a'
+          });
+          jQuery( "#chunks-help" ).click(function() {
+             jQuery( '#chunks-info').toggle();
           });
         </script>
     
