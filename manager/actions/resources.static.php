@@ -184,7 +184,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
-             <li><a href="#" id="chunks-help"><?php echo $_lang['help']; ?></a></li>
+            <li><a href="#" id="chunks-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_htmlsnippets',78); ?>
@@ -207,7 +207,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabSnippets">
         <h2 class="tab"><i class="fa fa-code"></i> <?php echo $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
+        <div id="snippets-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
+        </div>
 
 		<ul class="actionButtons">
             <li>
@@ -216,6 +218,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
+            <li><a href="#" id="snippets-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_snippets',22); ?>
@@ -223,6 +226,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_snippets_search').quicksearch('#site_snippets ul li', {
             selector: 'a'
+          });
+          jQuery( "#snippets-help" ).click(function() {
+             jQuery( '#snippets-info').toggle();
           });
         </script>
     </div>
