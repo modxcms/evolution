@@ -104,7 +104,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabTemplates">
         <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
+        <div id="template-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
+        </div>
 
 		<ul class="actionButtons">
             <li>
@@ -113,6 +115,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
+            <li><a href="#" id="template-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
@@ -120,6 +123,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_templates_search').quicksearch('#site_templates ul li', {
             selector: 'a'
+          });
+          jQuery( "#template-help" ).click(function() {
+             jQuery( '#template-info').toggle();
           });
         </script>
     </div>
@@ -134,7 +140,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        <div id="tv-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        </div>
         
         <ul class="actionButtons">
             <li>
@@ -144,6 +152,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             </li>
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
+            <li><a href="#" id="tv-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_tmplvars',301); ?>
@@ -151,6 +160,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_tmplvars_search').quicksearch('#site_tmplvars ul li', {
             selector: 'a'
+          });
+          jQuery( "#tv-help" ).click(function() {
+             jQuery( '#tv-info').toggle();
           });
         </script>
     </div>
@@ -161,7 +173,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabChunks">
         <h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        <div id="chunks-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+        </div>
 
         <ul class="actionButtons">
             <li>
@@ -170,6 +184,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
+            <li><a href="#" id="chunks-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_htmlsnippets',78); ?>
@@ -177,6 +192,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_htmlsnippets_search').quicksearch('#site_htmlsnippets ul li', {
             selector: 'a'
+          });
+          jQuery( "#chunks-help" ).click(function() {
+             jQuery( '#chunks-info').toggle();
           });
         </script>
     
@@ -189,7 +207,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabSnippets">
         <h2 class="tab"><i class="fa fa-code"></i> <?php echo $_lang["manage_snippets"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
+        <div id="snippets-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
+        </div>
 
 		<ul class="actionButtons">
             <li>
@@ -198,6 +218,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
+            <li><a href="#" id="snippets-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_snippets',22); ?>
@@ -205,6 +226,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_snippets_search').quicksearch('#site_snippets ul li', {
             selector: 'a'
+          });
+          jQuery( "#snippets-help" ).click(function() {
+             jQuery( '#snippets-info').toggle();
           });
         </script>
     </div>
@@ -215,8 +239,10 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabPlugins">
         <h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
-
+        <div id="plugins-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
+        </div>
+    
 		<ul class="actionButtons">
             <li>
               <form class="filterElements-form">
@@ -231,6 +257,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <li><a href="index.php?a=119"><?php echo $_lang['purge_plugin']; ?></a></li>
 <?php       }
         } ?>
+            <li><a href="#" id="plugins-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_plugins',102); ?>
@@ -238,6 +265,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_plugins_search').quicksearch('#site_plugins ul li', {
             selector: 'a'
+          });
+          jQuery( "#plugins-help" ).click(function() {
+             jQuery( '#plugins-info').toggle();
           });
         </script>
     </div>
