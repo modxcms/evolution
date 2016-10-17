@@ -3158,13 +3158,8 @@ form textarea:focus,
   margin-bottom: 0;
 }
 
-#modxrecent_widget .table-condensed > tbody > tr > td, 
-#modxrecent_widget .table-condensed > tbody > tr > th, 
-#modxrecent_widget .table-condensed > tfoot > tr > td, 
-#modxrecent_widget .table-condensed > tfoot > tr > th, 
-#modxrecent_widget .table-condensed > thead > tr > td, 
-#modxrecent_widget .table-condensed > thead > tr > th {
-  padding: 3px 4px;
+#modxrecent_widget .table-condensed > tbody > tr > td {
+  padding: 2px 3px;
 }
 
 #modxrecent_widget table ul {
