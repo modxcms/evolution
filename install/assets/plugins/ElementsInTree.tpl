@@ -5,9 +5,9 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.2
+ * @version     1.1.3
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &useIcons=Use icons in tabs;list;yes,no;yes;desc;Icons available in MODX version 1.1.1 or newer
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.1.1 or newer
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
@@ -17,7 +17,7 @@
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  16/10/2016
+ * @lastupdate  17/10/2016
  */
 
 global $_lang;
@@ -182,7 +182,7 @@ if($e->name == 'OnManagerTreePrerender'){
 treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
 </script>
 <div class="tab-page" id="tabDoc" style="padding-left:0; padding-right:0;">
-<h2 class="tab">Site Tree</h2>
+<h2 class="tab">'.$tabTreeTitle.'</h2>
 <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabDoc" ) );</script>
 ';
 	$e->output($output);
