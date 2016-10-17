@@ -104,7 +104,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabTemplates">
         <h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
+        <div id="template-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
+        </div>
 
 		<ul class="actionButtons">
             <li>
@@ -113,6 +115,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               </form>
             </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
+            <li><a href="#" id="template-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
@@ -120,6 +123,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_templates_search').quicksearch('#site_templates ul li', {
             selector: 'a'
+          });
+          jQuery( "#template-help" ).click(function() {
+             jQuery( '#template-info').toggle();
           });
         </script>
     </div>
