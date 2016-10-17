@@ -140,7 +140,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             Modified By Raymond for Template Variables
             Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
         -->
-        <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        <div id="tv-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+        </div>
         
         <ul class="actionButtons">
             <li>
@@ -150,6 +152,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             </li>
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             <li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
+            <li><a href="#" id="tv-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_tmplvars',301); ?>
@@ -157,6 +160,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_tmplvars_search').quicksearch('#site_tmplvars ul li', {
             selector: 'a'
+          });
+          jQuery( "#tv-help" ).click(function() {
+             jQuery( '#tv-info').toggle();
           });
         </script>
     </div>
