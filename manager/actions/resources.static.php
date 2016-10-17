@@ -239,8 +239,10 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabPlugins">
         <h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
-
+        <div id="plugins-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
+        </div>
+    
 		<ul class="actionButtons">
             <li>
               <form class="filterElements-form">
@@ -255,6 +257,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <li><a href="index.php?a=119"><?php echo $_lang['purge_plugin']; ?></a></li>
 <?php       }
         } ?>
+            <li><a href="#" id="plugins-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
         
         <?php echo createResourceList('site_plugins',102); ?>
@@ -262,6 +265,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <script>
           jQuery('#site_plugins_search').quicksearch('#site_plugins ul li', {
             selector: 'a'
+          });
+          jQuery( "#plugins-help" ).click(function() {
+             jQuery( '#plugins-info').toggle();
           });
         </script>
     </div>
