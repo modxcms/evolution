@@ -85,7 +85,7 @@ if(isset($_REQUEST['searchid'])) {
 <?php
 //TODO: сделать поиск по уму пока сделаю что б одно поле было для id,longtitle,pagetitle,alias далее нужно думаю добавить что б и в елементах искало
 if(isset($_REQUEST['submitok'])) {
-  $templateid = ($_REQUEST['templateid']!=='') ? intval($_REQUEST['templateid']) : '';
+  $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid']!=='') ? intval($_REQUEST['templateid']) : '';
   $searchfields = htmlentities($_POST['searchfields'], ENT_QUOTES, $modx_manager_charset);
   $search_alias = $modx->db->escape($_REQUEST['searchfields']);
   $searchcontent = $modx->db->escape($_REQUEST['content']);
