@@ -47,6 +47,7 @@ if (isset($_POST['language']) && !stristr($_POST['language'],"..")) {
 		$install_language = $_GET['language'];
 }
 # load language file
+require_once("lang/english.inc.php"); // As fallback
 require_once("lang/".$install_language.".inc.php");
 
 $manager_language = $install_language;

@@ -6,14 +6,6 @@
 }
 
 
-/* for IE6 */
-
-*+html {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-
 /* for IE7 */
 
 html,
@@ -36,13 +28,17 @@ html {
 }
 
 body {
-  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 62.5%;
   font-size: 68.75%;
   font-size: 75%;
   height: 100%;
   color: #333333;
   background: #eeeeee url(images/body.jpg);
+}
+
+html:lang(ja) body {
+  font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
 }
 
 img,
@@ -2452,7 +2448,7 @@ input#dateto:focus.DatePicker {
 }
 
 .phptextarea {
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
 }
 
 
@@ -2510,7 +2506,7 @@ strong[style*='color:#EF1D1D'] {
 
 code {
   font-size: inherit;
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1px 2px;
@@ -2612,76 +2608,43 @@ form select {
 #helpPane li > strong { display:block; font-size:14px; }
 #helpPane pre { font-size:12px; border:1px solid #888; padding:1em; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#searchform {z-index: 1000;position: absolute;right:4px;top:17px;}
-@media (max-width: 958px) {
-  #searchform {display:none;}
+/* Top nav search form */
+#searchform {
+  z-index: 1000;
+  position: absolute;
+  right: 7px;
+  top: 41px;
 }
-#searchform input[type=text]{
-  margin-top: 22px;
-  height: 28px;
-  width: 100px;
-  box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
-  -moz-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
-  -webkit-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
-  border-radius: 2px!important;
-  -moz-border-radius: 2px!important;
-  -webkit-border-radius: 2px!important;
+
+@media (max-width: 958px) {
+  #searchform {
+    display: none;
+  }
+}
+
+#searchform input[type=text] {
+  height: 24px;
+  width: 150px;
+  padding-left: 5px;
+  margin-right: 0;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 3px !important;
+  background: rgba(0, 0, 0, 0.15);
+  color: white;
+  text-align: left;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
+  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
   -webkit-transition-duration: 0.3s;
-  border: none;
-  background: rgba(0,0,0,0.15);
-  color: white;
-  text-align: left;
 }
-#searchform input[type=text]:focus{
+
+#searchform input[type=text]:focus {
   width: 250px;
+  border-color: rgba(255,255,255,0.5);
   text-align: left;
 }
-
-
-
-
 
 /*
  * MODxRE2 styles
@@ -3189,6 +3152,33 @@ form textarea:focus,
 }
 .widget-stage .btn:hover {
   border-color: #3697CD !important;
+}
+
+#modxrecent_widget table {
+  margin-bottom: 0;
+}
+
+#modxrecent_widget .table-condensed > tbody > tr > td, 
+#modxrecent_widget .table-condensed > tbody > tr > th, 
+#modxrecent_widget .table-condensed > tfoot > tr > td, 
+#modxrecent_widget .table-condensed > tfoot > tr > th, 
+#modxrecent_widget .table-condensed > thead > tr > td, 
+#modxrecent_widget .table-condensed > thead > tr > th {
+  padding: 3px 4px;
+}
+
+#modxrecent_widget table ul {
+  margin: 0;
+  padding: 0;
+}
+
+#modxrecent_widget table li {
+  padding: 3px 5px;
+}
+
+#modxrecent_widget table li:last-child {
+  border-bottom-width: 0;
+  padding-bottom: 0;
 }
 
 #content_body #which_editor {

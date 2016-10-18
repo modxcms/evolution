@@ -30,6 +30,7 @@ if(!class_exists('synccache')) {
 
 		function escapeSingleQuotes($s)
 		{
+			if($s=='') return $s;
 			$q1 = array("\\", "'");
 			$q2 = array("\\\\", "\\'");
 			return str_replace($q1, $q2, $s);
@@ -214,14 +215,20 @@ if(!class_exists('synccache')) {
         // WRITE snippets to cache file
         $rs = $modx->db->select(
 			'ss.*, sm.properties as sharedproperties',
-			$modx->getFullTableName('site_snippets').' ss
-				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid'
+			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
-			while ($tmp1 = $modx->db->getRow($rs)) {
-				$tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['snippet'])) . "';";
-				if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-					$tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . " " . $tmp1['sharedproperties']) . "';";
+			while ($row = $modx->db->getRow($rs)) {
+				$name = $this->escapeSingleQuotes($row['name']);
+				$code = $this->escapeSingleQuotes(trim($row['snippet']));
+				$properties       = $modx->parseProperties($row['properties']);
+				$sharedproperties = $modx->parseProperties($row['sharedproperties']);
+				$properties = array_merge($sharedproperties,$properties);
+				$tmpPHP .= sprintf("\$s['%s']='%s';", $name, $code);
+				if (0<count($properties)) {
+    				$properties = json_encode($properties);
+    				$properties = $this->escapeSingleQuotes($properties);
+					$tmpPHP .= sprintf("\$s['%sProps']='%s';", $this->escapeSingleQuotes($row['name']), $properties);
 				}
 			}
 

@@ -42,7 +42,7 @@ class SqlParser {
 	}
 
 	function process($filename) {
-	    global $modx_version;
+	    global $modx_version, $custom_placeholders;
 
 		// check to make sure file exists
 		if (!file_exists($filename)) {
@@ -81,6 +81,13 @@ class SqlParser {
 		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
 		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
 
+		// Replace custom placeholders 
+		foreach($custom_placeholders as $key=>$val) {
+			if (strpos($idata, '{'.$key.'}') !== false) {
+				$idata = str_replace('{'.$key.'}', $val, $idata);
+			}
+		}
+		
 		$sql_array = explode("\n\n", $idata);
 
 		$num = 0;

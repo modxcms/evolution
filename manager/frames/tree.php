@@ -1,36 +1,25 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
-
-    $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
-    function constructLink($action, $img, $text, $allowed) {
-        if($allowed==1) { ?>
-            <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
-        <?php } else { ?>
-            <div class="menuLinkDisabled">
-        <?php } ?>
-                <i class="<?php echo $img; ?>"></i> <?php echo $text; ?>
-            </div>
-        <?php
-    }
-    $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+$modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
+    <style>
+        #treeRoot {cursor: pointer;}
+        #treeRoot div {white-space: nowrap;}
+    </style>
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
     <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
-    window.addEvent('load', function(){
-        resizeTree();
-        restoreTree();
-        window.addEvent('resize', resizeTree);
-    });
 
+    jQuery.noConflict();
+    
     // preload images
     var i = new Image(18,18);
     i.src="<?php echo $_style["tree_page"]?>";
@@ -116,9 +105,35 @@ $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
       return scrOfY;
     }
 
-    function showPopup(id,title,e){
+    function showPopup(id,title,pub,del,folder,e){
         var x, y;
-        var mnu = $('mx_contextmenu');
+        
+        var mnu = document.getElementById('mx_contextmenu');
+        var permpub = <?php echo $modx->hasPermission('publish_document') ? 1:0; ?>;
+        var permdel = <?php echo $modx->hasPermission('delete_document') ? 1:0; ?>;
+        
+        if(permpub==1) {
+	        jQuery('#item9').show();
+	        jQuery('#item10').show();
+	        if(pub==1) jQuery('#item9').hide();
+	        else       jQuery('#item10').hide();
+        } else {
+        	if(jQuery('#item5') != null) jQuery('#item5').hide();
+        }
+        
+        if(permdel==1) {
+	        jQuery('#item4').show();
+	        jQuery('#item8').show();
+        	if(del==1) {
+        		jQuery('#item4').hide();
+    	        jQuery('#item9').hide();
+    	        jQuery('#item10').hide();
+        	}
+	        else jQuery('#item8').hide();
+        }
+        if(folder==1) jQuery('#item11').show();
+        else          jQuery('#item11').hide();
+        
         var bodyHeight = parseInt(document.body.offsetHeight);
         x = e.clientX>0 ? e.clientX:e.pageX;
         y = e.clientY>0 ? e.clientY:e.pageY;
@@ -485,8 +500,8 @@ foreach($sortParams as $param) {
 <input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
-        <select name="sortby">
+    <td style="padding-left: 10px;padding-top: 1px;">
+        <select name="sortby" style="width: 100%;">
             <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="longtitle" <?php echo $_SESSION['tree_sortby']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -499,19 +514,25 @@ foreach($sortParams as $param) {
     </td>
   </tr>
   <tr>
-    <td width="99%" style="padding-left: 10px;padding-top: 1px;">
-        <select name="sortdir">
+    <td style="padding-left: 10px;padding-top: 1px;">
+        <select name="sortdir" style="width: 100%;">
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
     </td>
-    <td width="1%"><ul class="actionButtons"><li><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></li></ul></td>
+  </tr>
+  <tr>
+    <td style="padding-left: 10px;padding-top: 1px;">
+      <ul class="actionButtons">
+        <li><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></li>
+      </ul>
+      </td>
   </tr>
   <tr>
     <td width="99%" style="padding-left: 10px;padding-top: 1px;" colspan="2">
         <br/>
         <?php echo $_lang["setting_resource_tree_node_name"] ?>
-        <select name="nodename" style="margin-top:5px;">
+        <select name="nodename" style="margin-top:5px; width: 100%;">
             <option value="default" <?php echo $_SESSION['tree_nodename']=='default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_nodename']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="longtitle" <?php echo $_SESSION['tree_nodename']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -544,6 +565,11 @@ foreach($sortParams as $param) {
 </div>
 
 <script type="text/javascript">
+    
+    resizeTree();
+    restoreTree();
+    window.addEvent('resize', resizeTree);
+    
 // Set 'treeNodeSelected' class on document node when editing via Context Menu
 function setActiveFromContextMenu( doc_id ){
     $$('.treeNodeSelected').removeClass('treeNodeSelected');
@@ -649,6 +675,14 @@ function menuHandler(action) {
     ?>
 </div>
 </div>
-
 </body>
 </html>
+<?php
+function constructLink($action, $img, $text, $allowed) {
+    if($allowed==1) {
+        echo sprintf('<div class="menuLink" id="item%s" onclick="menuHandler(%s); hideMenu();">', $action, $action);
+    } else {
+        echo '<div class="menuLinkDisabled">';
+    }
+    echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+}

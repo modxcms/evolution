@@ -4,7 +4,8 @@
  * Result Tpl for AjaxSearch
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 <div class="[+as.resultClass+]">
   <strong><a class="[+as.resultLinkClass+]" href="[+as.resultLink+]" title="[+as.longtitle+]">[+as.pagetitle+]</a></strong>

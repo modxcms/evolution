@@ -4,7 +4,8 @@
  * Comments (Jot) Form-Template
  *
  * @category	chunk
- * @internal @modx_category Demo Content
+ * @internal    @modx_category Demo Content
+ * @internal    @installset base, sample
  */
 <a name="jc[+jot.link.id+][+comment.id+]"></a>
 	<div class="panel panel-[+chunk.rowclass:ne=``:then=`primary`:else=`info`+] [+comment.published:is=`0`:then=`jot-row-up`+]">
