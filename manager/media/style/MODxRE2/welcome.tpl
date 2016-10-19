@@ -40,7 +40,7 @@
             <span class="panel-handel pull-left"><i class="fa fa-home"></i> [+welcome_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxwelcome_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full fa fa-minus" data-id="modxwelcome_widget"></a>
               </div>    
             </div>
           </div>
@@ -69,7 +69,7 @@
             <span class="panel-handel pull-left"><i class="fa fa-user"></i> [+onlineusers_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxonline_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full fa fa-minus" data-id="modxonline_widget"></a>
               </div>    
             </div>
           </div>
@@ -90,7 +90,7 @@
             <span class="panel-handel pull-left"><i class="fa fa-pencil-square-o"></i> [+activity_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxrecent_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full fa fa-minus" data-id="modxrecent_widget"></a>
               </div>    
             </div>
           </div>
@@ -109,7 +109,7 @@
             <span class="panel-handel pull-left"><i class="fa fa-rss"></i> [+modx_news_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxnews_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full fa fa-minus" data-id="modxnews_widget"></a>
               </div>    
             </div>
           </div>
@@ -128,7 +128,7 @@
             <span class="panel-handel pull-left"><i class="fa fa-exclamation-triangle"></i> [+modx_security_notices_title+]</span>
             <div class="widget-controls pull-right">
               <div class="btn-group">
-                <a href="#" class="btn btn-default btn-xs panel-hide hide-full glyphicon glyphicon-minus" data-id="modxsecurity_widget"></a>
+                <a href="#" class="btn btn-default btn-xs panel-hide hide-full fa fa-minus" data-id="modxsecurity_widget"></a>
               </div>    
             </div>
           </div>
