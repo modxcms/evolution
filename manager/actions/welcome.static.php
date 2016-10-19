@@ -164,14 +164,16 @@ else {
                 title="' . $_lang["undelete_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=delete&amp;value=' . $content['id'] . '" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
             }
         }
-        if ($content['deleted'] == "1" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
-            $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "0" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary btn-publish ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
-        } else {
-            $html .= '<a class="btn btn-xs btn-warning btn-publish ajaxTogglePublish"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+        if ($modx->hasPermission('edit_document')) {
+            if ($content['deleted'] == "1" AND $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
+                $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            } else if ($content['deleted'] == "0" AND $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary btn-publish ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+            } else {
+                $html .= '<a class="btn btn-xs btn-warning btn-publish ajaxTogglePublish"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+            }
         }
         $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="' . $_lang["resource_overview"] . '" data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="fa fa-info" aria-hidden="true"></i></button></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
 <li><b>' . $_lang["long_title"] . '</b>: ';
