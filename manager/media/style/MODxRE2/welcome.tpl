@@ -176,10 +176,14 @@
               // Resource is not deleted
               button.closest('tr').find("td.resourceTitle > a").removeClass('deleted');
               button.closest('tr').find("td.resourceActions > .btn-publish").removeClass('disabled');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").removeClass('fa-arrow-circle-o-up');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").addClass('fa-trash');
           } else if(result == 1) {
               // Resource is deleted
               button.closest('tr').find("td.resourceTitle > a").addClass('deleted');
               button.closest('tr').find("td.resourceActions > .btn-publish").addClass('disabled');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").addClass('fa-arrow-circle-o-up');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").removeClass('fa-trash');
           } else {
               // Error, nothing changed
               alert(result);
