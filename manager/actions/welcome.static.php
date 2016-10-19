@@ -319,6 +319,8 @@ if (is_array($evtOut)) {
     $modx->setPlaceholder('OnManagerWelcomeRender', $output);
 }
 
+$modx->setPlaceholder('confirm_msg', $_lang['are_you_sure']);
+
 // load template
 if (!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
     $modx->config['manager_welcome_tpl'] = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';

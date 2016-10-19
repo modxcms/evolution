@@ -166,6 +166,9 @@
   // Ajax-Button "Delete"  
   jQuery('.ajaxToggleDelete').click(function(e) {
       e.preventDefault();
+      r = confirm("[+confirm_msg+]");
+      if (r != true) return; 
+          
       var button = $(this); 
       jQuery.ajax({
           url: button.attr('href'),
@@ -199,6 +202,9 @@
   // Ajax-Button "Publish"  
   jQuery('.ajaxTogglePublish').click(function(e) {
       e.preventDefault();
+      r = confirm("[+confirm_msg+]");
+      if (r != true) return;
+      
       var button = $(this); 
       jQuery.ajax({
           url: button.attr('href'),
