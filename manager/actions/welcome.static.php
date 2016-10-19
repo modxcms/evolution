@@ -164,7 +164,7 @@ else {
                 title="' . $_lang["undelete_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=delete&amp;value=' . $content['id'] . '" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
             }
         }
-	    if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
+	    if($modx->hasPermission('save_document') && $modx->hasPermission('publish_document')) {
             if ($content['deleted'] == "1" AND $content['published'] == 0) {
                 $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
             } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
