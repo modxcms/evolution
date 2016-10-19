@@ -135,7 +135,7 @@ else {
         $editedbyu = $modx->getUserInfo($editedby);
         $html .= '<tr><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
       
-        <span class="label label-info">' . $content['id'] . '</span></td><td>';
+        <span class="label label-info">' . $content['id'] . '</span></td><td class="resourceTitle">';
         if ($content['deleted'] == 1) {
             $html .= '<a class="deleted" ';
         } else if ($content['published'] == 0) {
@@ -144,32 +144,34 @@ else {
             $html .= '<a class="published" ';
         }
         $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
-        <td style="text-align: right;">';
+        <td class="resourceActions" style="text-align: right;">';
         
         if ($modx->hasPermission('edit_document')) {
-            $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-success btn-edit" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
         }
         
         if ($content['deleted'] == 1) {
-            $html .= '<a class="btn btn-xs btn-info disabled"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-info disabled btn-preview"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
         } else {
-            $html .= '<a class="btn btn-xs btn-info"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-info btn-preview"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
         }
         if ($modx->hasPermission('delete_document')) {
             if ($content['deleted'] == 0) {
-                $html .= '<a class="btn btn-xs btn-danger"  title="' . $_lang["delete_resource"] . '" href="index.php?a=6&amp;id=' . $content['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+                $html .= '<a class="btn btn-xs btn-danger btn-delete ajaxToggleDelete"
+                title="' . $_lang["delete_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=delete&amp;value=' . $content['id'] . '" target="main"><i class="fa fa-trash fa-fw"></i></a> ';
             } else {
-                $html .= '<a class="btn btn-xs btn-success"  title="' . $_lang["undelete_resource"] . '" href="index.php?a=63&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+                $html .= '<a class="btn btn-xs btn-success btn-delete ajaxToggleDelete"
+                title="' . $_lang["undelete_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=delete&amp;value=' . $content['id'] . '" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
             }
         }
         if ($content['deleted'] == "1" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
         } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-primary btn-publish disabled ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
         } else if ($content['deleted'] == "0" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-primary btn-publish ajaxTogglePublish"  title="' . $_lang["publish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
         } else {
-            $html .= '<a class="btn btn-xs btn-warning"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=62&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+            $html .= '<a class="btn btn-xs btn-warning btn-publish ajaxTogglePublish"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=990&amp;api=resource&amp;action=publish&amp;value=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
         }
         $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="' . $_lang["resource_overview"] . '" data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="fa fa-info" aria-hidden="true"></i></button></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
 <li><b>' . $_lang["long_title"] . '</b>: ';
