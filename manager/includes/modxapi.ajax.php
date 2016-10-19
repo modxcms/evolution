@@ -37,6 +37,11 @@ switch($api) {
 				if($value == $site_start && $str == 0) {
 					$error = 'Resource "site_start" cannot be unpublished';
 				} else {
+					// Assure modResource does not rely on pub_date to re-publish a resource 
+					if($str == 0 && $modx->doc->get('pub_date') < time() + $server_offset_time) {
+						$modx->doc->set('pub_date', 0);
+						$modx->doc->set('publishedon', 0);
+					}
 					$modx->doc->set('published', $str);
 					$success = $modx->doc->save(true, true);
 				}
