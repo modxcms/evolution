@@ -1,13 +1,12 @@
-//<?php
 /**
  * ElementsInTree
  *
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.3
+ * @version     1.1.4
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.1.1 or newer
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.1.1 or newer. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
@@ -17,174 +16,200 @@
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  17/10/2016
+ * @lastupdate  19/10/2016
  */
 
 global $_lang;
 
 $e = &$modx->Event;
 
-if($e->name == 'OnManagerTreePrerender'){
+if ($e->name == 'OnManagerTreePrerender') {
 	
-		if ($useIcons=='yes') {
-			$tabPadding = '10px';
-		}
-		else {
-			$tabPadding = '9px';
-		}
+	// useIcons
+	if ($useIcons == 'yes') {
+		$tabPadding = '10px';
+	}
+	else {
+		$tabPadding = '9px';
+	}
 	
+	// unifyFrames
+	if ($unifyFrames == 'yes') {
+	  $unifyFrames_css = '
+			body,
+			div.treeframebody {
+				background-color: #f2f2f2 !important;
+			}
+      
+			div.treeframebody {
+				background-color: transparent !important;
+				-webkit-box-shadow: none !important;
+				box-shadow: none !important;
+			}
+      
+			#treeMenu {
+				background-color: transparent !important;
+				border-bottom-color: transparent !important;
+			}
+	  ';
+	}
+	
+	// main output
 	$output = '
-<style>
-#treePane .tab-page ul {
-  margin: 0;
-  margin-bottom: 5px;
-  padding: 0;
-}
+		<style>
+		#treePane .tab-page ul {
+			margin: 0;
+			margin-bottom: 5px;
+			padding: 0;
+		}
 
-#treePane .tab-page ul li {
-  list-style: none;
-  padding-left: 10px;
-}
+		#treePane .tab-page ul li {
+			list-style: none;
+			padding-left: 10px;
+		}
 
-#treePane .tab-page ul li li {
-  list-style: none;
-  padding-left: 5px;
-  line-height: 1.6;
-}
+		#treePane .tab-page ul li li {
+			list-style: none;
+			padding-left: 5px;
+			line-height: 1.6;
+		}
 
-#treePane .tab-page ul li a {
-  text-decoration: none;
-}
+		#treePane .tab-page ul li a {
+			text-decoration: none;
+		}
 
-#treePane .tab-page ul li a:hover {
-  text-decoration: underline;
-}
+		#treePane .tab-page ul li a:hover {
+			text-decoration: underline;
+		}
 
-#treePane .tab {
-  padding-left: 7px;
-  padding-right: 7px;
-}
+		#treePane .tab {
+			padding-left: 7px;
+			padding-right: 7px;
+		}
 
-#treePane .tab > span > .fa {
-  margin-right: 2px;
-  margin-left: 2px;
-}
+		#treePane .tab > span > .fa {
+			margin-right: 2px;
+			margin-left: 2px;
+		}
 
-#treePane .tab.selected {
-	padding-bottom: 6px;
-}
+		#treePane .tab.selected {
+			padding-bottom: 6px;
+		}
 
-#treePane .tab-row .tab span {
-	font-size: 14px;
-}
+		#treePane .tab-row .tab span {
+			font-size: 14px;
+		}
 
-#tabDoc {
-	 overflow: hidden;
-}
+		#tabDoc {
+			 overflow: hidden;
+		}
 
-#treePane .ext-ico {
-	text-decoration:none!important;
-	color:#97D19C!important;
-}
+		#treePane .ext-ico {
+			text-decoration:none!important;
+			color:#97D19C!important;
+		}
 
-#treePane ul > li > strong > a.catname
-{
-	color: #444;
-}
+		#treePane ul > li > strong > a.catname
+		{
+			color: #444;
+		}
 
-#treePane .fade {
-  opacity: 0;
-  -webkit-transition: opacity .15s linear;
-  -o-transition: opacity .15s linear;
-  transition: opacity .15s linear;
-}
+		#treePane .fade {
+			opacity: 0;
+			-webkit-transition: opacity .15s linear;
+			-o-transition: opacity .15s linear;
+			transition: opacity .15s linear;
+		}
 
-#treePane .fade.in {
-  opacity: 1;
-}
+		#treePane .fade.in {
+			opacity: 1;
+		}
 
-#treePane .collapse {
-  display: none;
-}
+		#treePane .collapse {
+			display: none;
+		}
 
-#treePane .collapse.in {
-  display: block;
-}
+		#treePane .collapse.in {
+			display: block;
+		}
 
-#treePane tr.collapse.in {
-  display: table-row;
-}
+		#treePane tr.collapse.in {
+			display: table-row;
+		}
 
-#treePane tbody.collapse.in {
-  display: table-row-group;
-}
+		#treePane tbody.collapse.in {
+			display: table-row-group;
+		}
 
-#treePane .collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  -webkit-transition-timing-function: ease;
-       -o-transition-timing-function: ease;
-          transition-timing-function: ease;
-  -webkit-transition-duration: .35s;
-       -o-transition-duration: .35s;
-          transition-duration: .35s;
-  -webkit-transition-property: height;
-  -o-transition-property: height;
-  transition-property: height;
-}
+		#treePane .collapsing {
+			position: relative;
+			height: 0;
+			overflow: hidden;
+			-webkit-transition-timing-function: ease;
+					 -o-transition-timing-function: ease;
+							transition-timing-function: ease;
+			-webkit-transition-duration: .35s;
+					 -o-transition-duration: .35s;
+							transition-duration: .35s;
+			-webkit-transition-property: height;
+			-o-transition-property: height;
+			transition-property: height;
+		}
 
-#treePane .panel-title a{
-	display: block;
-	padding: 4px 0 4px 15px;
-	color: #657587;
-	font-weight: bold;
-}
+		#treePane .panel-title a{
+			display: block;
+			padding: 4px 0 4px 15px;
+			color: #657587;
+			font-weight: bold;
+		}
 
-#treePane .panel-title > a::before {
-	content: "\f107"; /* fa-angle-down */
-  font-family: "FontAwesome";
-  position: absolute;
-  left: 15px;
-}
-#treePane .panel-title > a[aria-expanded="false"]::before {
-  content: "\f105"; /* fa-angle-right */
-}
-#treePane .panel-title > a[aria-expanded="true"] {
-	color: #657587;
-}
+		#treePane .panel-title > a::before {
+			content: "\f107"; /* fa-angle-down */
+			font-family: "FontAwesome";
+			position: absolute;
+			left: 15px;
+		}
+		#treePane .panel-title > a[aria-expanded="false"]::before {
+			content: "\f105"; /* fa-angle-right */
+		}
+		#treePane .panel-title > a[aria-expanded="true"] {
+			color: #657587;
+		}
 
-#treePane li.eltree {
-  margin-left: 5px;
-	line-height: 1.4em;
-}
+		#treePane li.eltree {
+			margin-left: 5px;
+			line-height: 1.4em;
+		}
 
-#treePane li.eltree:before {
-  font-family: FontAwesome;
-  padding:0 5px 0 0;
-  margin-right:2px;
-  color: #657587;
-}
+		#treePane li.eltree:before {
+			font-family: FontAwesome;
+			padding:0 5px 0 0;
+			margin-right:2px;
+			color: #657587;
+		}
 
-#tabTemp li.eltree:before {content: "\f1ea";}
-#tabCH   li.eltree:before {content: "\f009";}
-#tabSN   li.eltree:before {content: "\f121";}
-#tabTV   li.eltree:before {content: "\f022";}
-#tabPL   li.eltree:before {content: "\f1e6";}
-#tabMD   li.eltree:before {content: "\f085";}
-</style>
+		#tabTemp li.eltree:before {content: "\f1ea";}
+		#tabCH   li.eltree:before {content: "\f009";}
+		#tabSN   li.eltree:before {content: "\f121";}
+		#tabTV   li.eltree:before {content: "\f022";}
+		#tabPL   li.eltree:before {content: "\f1e6";}
+		#tabMD   li.eltree:before {content: "\f085";}
+		
+		'.$unifyFrames_css.'
+		
+		</style>
 
-<div class="tab-pane" id="treePane" style="border:0;">
-<script type="text/javascript" src="media/script/tabpane.js"></script>
-<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
-<script type="text/javascript">
-treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
-</script>
-<div class="tab-page" id="tabDoc" style="padding-left:0; padding-right:0;">
-<h2 class="tab">'.$tabTreeTitle.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabDoc" ) );</script>
-';
+		<div class="tab-pane" id="treePane" style="border:0;">
+		<script type="text/javascript" src="media/script/tabpane.js"></script>
+		<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+		<script type="text/javascript">
+		treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
+		</script>
+		<div class="tab-page" id="tabDoc" style="padding-left:0; padding-right:0;">
+		<h2 class="tab">'.$tabTreeTitle.'</h2>
+		<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabDoc" ) );</script>
+	';
 	$e->output($output);
 }
 
