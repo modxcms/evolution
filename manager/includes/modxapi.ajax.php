@@ -32,6 +32,7 @@ switch($api) {
 		$modx->doc->edit($value);
 		switch($action) {
 			case 'publish':
+				if (!$modx->hasPermission('edit_document')) { $error = 'No permission'; break; };  
 				$published = $modx->doc->get('published');
 				$str = $published == 0 ? 1 : 0;
 				if($value == $site_start && $str == 0) {
@@ -47,6 +48,7 @@ switch($api) {
 				}
 				break;
 			case 'delete':
+				if (!$modx->hasPermission('delete_document')) { $error = 'No permission'; break; };
 				$deleted = $modx->doc->get('deleted');
 				$str = $deleted == 0 ? 1 : 0;
 				if($value == $site_start && $str == 1) {
