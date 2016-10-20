@@ -2205,7 +2205,8 @@ class DocumentParser {
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    function webAlertAndQuit($msg, $url= "") {
+    function webAlertAndQuit($msg, $url= "", $ajaxResponse=false) {
+        if($ajaxResponse) {	echo $msg; exit; }
         global $modx_manager_charset;
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $fnc = substr($url, 11);

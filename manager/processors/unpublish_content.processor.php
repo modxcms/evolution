@@ -1,12 +1,15 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+
+$ajaxResponse = isset($ajaxResponse) ? $ajaxResponse : false;
+
 if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+	$modx->webAlertAndQuit($_lang["error_no_privileges"], "", $ajaxResponse);
 }
 
 $id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
 if($id==0) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
+	$modx->webAlertAndQuit($_lang["error_no_id"], "", $ajaxResponse);
 }
 
 /************webber ********/
@@ -21,7 +24,21 @@ $add_path=$sd.$sb.$pg;
 
 /***********************************/
 
+if($site_start==$id){
+	$modx->webAlertAndQuit("Document is 'Site start' and cannot be unpublished!", "", $ajaxResponse);
+}
 
+if($site_unavailable_page==$id){
+	$modx->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be unpublished!", "", $ajaxResponse);
+}
+
+if($error_page==$id) {
+	$modx->webAlertAndQuit("Document is used as the 'Site error page' and cannot be unpublished!", "", $ajaxResponse);
+}
+
+if($unauthorized_page==$id){
+	$modx->webAlertAndQuit("Document is used as the 'Site unauthorized page' and cannot be unpublished!", "", $ajaxResponse);
+}
 
 // check permissions on the document
 include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
@@ -31,7 +48,7 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
+	$modx->webAlertAndQuit($_lang["access_permission_denied"], "", $ajaxResponse);
 }
 
 // update the document
@@ -55,10 +72,11 @@ $_SESSION['itemname'] = $content['pagetitle'];
 // empty cache
 $modx->clearCache('full');
 
-//$header="Location: index.php?r=1&id=$id&a=7";
-
-// webber
-$header="Location: index.php?r=1&id=$pid&a=7&dv=1".$add_path;
-
-header($header);
+// finished emptying cache - redirect
+if(isset($ajaxResponse) && $ajaxResponse == true) {
+	$response = 0;
+} else {
+	$header = "Location: index.php?r=1&id=$pid&a=7&dv=1" . $add_path;
+	header($header);
+}
 ?>
