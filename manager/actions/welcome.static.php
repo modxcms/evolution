@@ -189,7 +189,7 @@ else {
             $html .= '' . $content['description'] . '</li> ';
         }
         $html .= '<li><b>' . $_lang["resource_summary"] . '</b>: ';
-        if ($content['resource_summary'] == "") {
+        if ($content['introtext'] == "") {
             $html .= '(<i>'.$_lang['not_set'].'</i>)';
         } else {   
             $html .= '' . $content['introtext'] . '</li> ';
@@ -201,7 +201,7 @@ else {
             $html .= '' . $_lang['resource'] . '</li>';
         }
         $html .= '<li><b>' . $_lang["resource_alias"] . '</b>: ';
-        if ($content['resource_alias'] == "") {
+        if ($content['alias'] == "") {
             $html .= '(<i>'.$_lang['not_set'].'</i>)';
         } else { 
            $html .= '' . $content['alias'] . '</li>';
