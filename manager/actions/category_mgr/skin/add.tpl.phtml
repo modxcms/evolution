@@ -1,7 +1,17 @@
-<form action="<?php $view->get('url'); ?>" method="post">
- 
-  <p class="element-edit-message">Add a new category to the Manager.</p>
-  
+<form action="<?php $view->get('url'); ?>" method="post" id="add_form">
+	<input name="<?php echo $view->get('request_key'); ?>[add][submit]" type="hidden" value="1" />
+	<ul class="actionButtons">
+		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('add_form').submit();"><?php echo $view->txt('Create the new category'); ?></a></li>
+		<li><a href="#" id="add-help"><?php echo $_lang['help']; ?></a></li>
+	</ul>
+	<div id="add-info" style="display:none">
+		<p class="element-edit-message">Add a new category to the Manager.</p>
+	</div>
+	<script>
+		jQuery( "#add-help" ).click(function() {
+			jQuery( '#add-info').toggle();
+		});
+	</script>
   <table id="category-add" class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
@@ -15,12 +25,5 @@
         <td class="gridAltItem"><input type="text" name="<?php echo $view->get('request_key'); ?>[add][data][rank]" /></td>
       </tr> 
     </tbody>
-    <tfoot>
-      <tr> 
-        <td colspan="2" class="submit">
-          <input type="submit" name="<?php echo $view->get('request_key'); ?>[add][submit]" value="<?php echo $view->txt('Create the new category'); ?>" />
-        </td>
-      </tr>
-    </tfoot> 
   </table>
 </form>

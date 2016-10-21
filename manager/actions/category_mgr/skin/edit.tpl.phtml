@@ -1,7 +1,17 @@
 <form id="category-edit-form" action="<?php echo $view->get('url'); ?>" method="post">
-
-  <p class="element-edit-message">Change category name or delete category from the Manager.</p>
-  
+	<input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
+	<ul class="actionButtons">
+		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('category-edit-form').submit();"><?php echo $view->txt('Update categories'); ?></a></li>
+		<li><a href="#" id="edit-help"><?php echo $_lang['help']; ?></a></li>
+	</ul>
+	<div id="edit-info" style="display:none">
+		<p class="element-edit-message">Change category name or delete category from the Manager.</p>
+	</div>
+	<script>
+		jQuery( "#edit-help" ).click(function() {
+			jQuery( '#edit-info').toggle();
+		});
+	</script>
   <table id="category-edit" class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
@@ -32,12 +42,5 @@
       </tr>
       <?php $i++; endforeach; ?>
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="4" class="submit">
-          <input type="submit" name="<?php echo $view->get('request_key'); ?>[edit][submit]" value="<?php echo $view->txt('Update categories'); ?>" />    
-        </td>
-      </tr>
-    </tfoot>
   </table>
 </form>

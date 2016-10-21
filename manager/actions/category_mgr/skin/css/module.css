@@ -152,21 +152,21 @@ div#section-body-categories table#category-edit td.delete a img {
 
 div#section-body-categories table#category-edit td.delete a {
   display: inline-block;
-  color: #3b454f;
+  color: #fff;
   font-weight: bold;
   font-size: 12px;
-  background: #fff;
+  background: #32AB9A;
   padding: 4px 6px;
   white-space: nowrap;
   text-decoration: none;
-  border: 1px solid #3697CD;
+  border: none;
   border-radius: 3px !important;
   outline: none;
 }
 
 div#section-body-categories table#category-edit td.delete a:hover {
   color: #fff;
-  background: #3697CD;
+  background: #35baa8;
 }
 
 
