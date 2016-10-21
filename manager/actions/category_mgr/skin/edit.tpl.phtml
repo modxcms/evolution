@@ -1,7 +1,7 @@
 <form id="category-edit-form" action="<?php echo $view->get('url'); ?>" method="post">
 	<input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('category-edit-form').submit();"><?php echo $view->txt('Update categories'); ?></a></li>
+		<li><a class="primary" href="#" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('Update categories'); ?></a></li>
 		<li><a href="#" id="edit-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="edit-info" style="display:none">
