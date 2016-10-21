@@ -1,0 +1,251 @@
+@charset 'utf-8';
+
+/**
+    $Id: module.css 3 2009-10-07 20:55:13Z stefan $
+----------------------------------------------------------------------------- */
+
+h1 span.version {
+  font-size: .6em;
+  margin-left: 3px;
+}
+
+div#section-body-categories .hidden {
+  display: none;
+}
+
+
+/* image to tab-headers
+h2#tab-header-add{ background: url(../img/add_soft.png) no-repeat 3px center; padding-left: 25px; }
+h2#tab-header-sort{ background: url(../img/sort_soft.png) no-repeat 3px center; padding-left: 25px; }
+h2#tab-header-edit{ background: url(../img/edit_soft.png) no-repeat 3px center; padding-left: 25px; }
+h2#tab-header-categorize{ background: url(../img/categorize_soft.png) no-repeat 3px center; padding-left: 25px; }
+h2#tab-header-translate{ background: url(../img/translate_soft.png) no-repeat 3px center; padding-left: 25px; }
+ */
+
+div#section-body-categories div.messages {
+  max-height: 100px;
+  overflow: auto;
+  padding: 6px;
+  padding-left: 0px;
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #748394
+}
+
+div#section-body-categories div.messages ul {
+  margin: 0;
+  padding: 0
+}
+
+div#section-body-categories div.messages ul li {
+  list-style-type: none;
+  list-style-image: none;
+  background: url(../img/information.png) no-repeat left center;
+  margin: 0;
+  padding: 5px;
+  padding-left: 20px;
+}
+
+div#section-body-categories div.messages ul li span.highlight {
+  background-color: #f5f5f5;
+  color: #222;
+  padding: 1px 3px;
+}
+
+div#section-body-categories fieldset {
+  margin: 0;
+  padding: 10px 0;
+}
+
+div#section-body-categories table tr td.gridHeader {
+  padding: 3px 5px;
+}
+
+div#section-body-categories table tr td.submit {
+  border-top: 1px solid #748394;
+  padding: 5px;
+  text-align: right;
+}
+
+div#section-body-categories table tr td.assigned {
+  width: 150px;
+}
+
+div#section-body-categories table tr td.assigned img {
+  cursor: help
+}
+
+div#section-body-categories table tr td.assigned div.assigned_elements {
+  display: none;
+}
+
+
+/* Translations */
+
+div#section-body-categories table tr td.native {
+  width: 30%
+}
+
+div#section-body-categories table tr td.translation input {
+  width: 90%;
+}
+
+div#section-body-categories table tr td.translation textarea {
+  background-color: #fff;
+  height: 3em;
+  width: 95%;
+}
+
+
+/* Edit */
+
+.assigned-tip {
+  z-index: 13000;
+}
+
+.assigned-tip,
+div#section-body-categories div.assigned_elements {
+  background-color: #fff;
+  border: 1px solid #748394;
+  padding: 10px 10px;
+}
+
+.assigned-tip h4,
+div#section-body-categories div.assigned_elements h4 {
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.assigned-tip ul,
+div#section-body-categories div.assigned_elements ul {
+  margin: 0;
+  padding: 0;
+}
+
+.assigned-tip ul li,
+div#section-body-categories div.assigned_elements ul li {
+  list-style-type: none;
+  list-style-image: none;
+  background: url(../img/bullet_black.png) no-repeat left center;
+  margin: 0;
+  margin-bottom: 0;
+  padding: 1px 5px;
+  padding-left: 18px;
+}
+
+.assigned-tip p.no_assigned_elements,
+div#section-body-categories div.assigned_elements p.no_assigned_elements {
+  color: #aaa;
+}
+
+div#section-body-categories tr.move td {
+  background-color: #88939E;
+  color: #fff;
+}
+
+div#section-body-categories table#category-edit td.input input {
+  width: 90%;
+}
+
+div#section-body-categories table#category-edit td.delete a img {
+  vertical-align: middle;
+}
+
+div#section-body-categories table#category-edit td.delete a {
+  display: inline-block;
+  color: #3b454f;
+  font-weight: bold;
+  font-size: 12px;
+  background: #fff;
+  padding: 4px 6px;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 1px solid #3697CD;
+  border-radius: 3px !important;
+  outline: none;
+}
+
+div#section-body-categories table#category-edit td.delete a:hover {
+  color: #fff;
+  background: #3697CD;
+}
+
+
+/* Categorization */
+
+div#section-body-categories div#categorize-workbench {
+  min-height: 50px;
+}
+
+div#section-body-categories div.drag {
+  padding: 2px 5px;
+  border: solid 1px #88939E;
+  cursor: move;
+  position: relative;
+  float: left;
+  margin: 3px;
+}
+
+div#section-body-categories div.drag h4 {
+  margin-bottom: 0;
+  font-size: 1em;
+}
+
+div#section-body-categories div.drag p {
+  display: none;
+  position: absolute;
+  z-index: 10000;
+  width: 250px;
+  background-color: #fff;
+  top: 30px;
+  left: 30px;
+  padding: 5px;
+  border: 1px solid #88939E;
+}
+
+div#section-body-categories div.drag:hover p {
+  display: block;
+}
+
+div#section-body-categories div.uncategorized_elements,
+div#section-body-categories div.drop {
+  width: 32%;
+  float: left;
+  min-height: 50px;
+  margin: .5%;
+  border: 1px solid #333;
+  position: relative;
+}
+
+div#section-body-categories div.uncategorized_elements {
+  width: auto;
+}
+
+div#section-body-categories div.uncategorized_elements h2,
+div#section-body-categories div.drop h2 {
+  padding: 5px 7px 6px 7px;
+  background: #555;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+div#section-body-categories div.over {
+  background-color: #E0E8EF
+}
+
+div#section-body-categories .ajax_loading {
+  background: url(../img/ajax_loading.gif) no-repeat center center
+}
+
+div#section-body-categories div.ok {
+  background: url(../img/ok.png) no-repeat 2px center;
+  padding-left: 20px;
+}
+
+div#section-body-categories div.nok {
+  background: url(../img/exclamation.png) no-repeat left top;
+}
+
+/* Avoid jumping when Tooltip is longer than viewport-bottom */
+html { overflow-y:scroll; }

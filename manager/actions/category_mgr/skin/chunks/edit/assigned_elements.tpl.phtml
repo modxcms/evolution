@@ -1,0 +1,14 @@
+<div class="assigned_elements">
+  <?php foreach( $data as $element => $items ) : ?>
+  <h4><?php echo $view->txt( $element ); ?></h4>
+  <?php if( empty( $items ) ) : ?>
+  <p class="no_assigned_elements"><?php echo sprintf( $view->txt('No %s assigned'), $element ); ?></p>
+  <?php else: ?>
+  <ul>
+    <?php foreach( $items as $item ) : ?>
+    <li><?php echo (strtolower($element)==='templates')? $item['templatename'] : $item['name']; ?></li>
+    <?php endforeach; ?>
+  </ul>
+  <?php endif; ?>
+  <?php endforeach; ?>
+</div>
