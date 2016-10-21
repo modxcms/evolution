@@ -212,7 +212,8 @@ div#section-body-categories div.drop {
   float: left;
   min-height: 50px;
   margin: .5%;
-  border: 1px solid #333;
+  border: 1px solid #C3C3C3;
+  background-color:#fff;
   position: relative;
 }
 
@@ -223,13 +224,15 @@ div#section-body-categories div.uncategorized_elements {
 div#section-body-categories div.uncategorized_elements h2,
 div#section-body-categories div.drop h2 {
   padding: 5px 7px 6px 7px;
-  background: #555;
-  color: #fff;
+  color: #3697CD;
+  border-bottom:2px solid #3697CD;
+  margin:0 2px;
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 0;
 }
-
+div#section-body-categories div {
+    
+}
 div#section-body-categories div.over {
   background-color: #E0E8EF
 }
@@ -249,3 +252,5 @@ div#section-body-categories div.nok {
 
 /* Avoid jumping when Tooltip is longer than viewport-bottom */
 html { overflow-y:scroll; }
+.grid { background-color: #f2f2f2; }
+.gridItem { background-color: transparent; }
