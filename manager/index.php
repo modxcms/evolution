@@ -445,6 +445,19 @@ switch ($action) {
 		include_once(includeFileProcessor("processors/delete_role.processor.php",$manager_theme));
 	break;
 /********************************************************************/
+/* category management                                               */
+/********************************************************************/
+	case 120:
+		// get the edit category page
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_categories.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+	break;
+	case 121:
+		// for ajax-requests
+		include_once(includeFileProcessor("actions/mutate_categories.dynamic.php",$manager_theme));
+	break;
+/********************************************************************/
 /* template management                                              */
 /********************************************************************/
 	case 16:
