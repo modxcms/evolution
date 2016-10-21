@@ -279,4 +279,4 @@ html { overflow-y:scroll; }
 .gridItem { background-color: transparent; }
 .drag h4 { float:left; }
 .inputBox { width:100%; }
-.grid tbody tr:hover td { color:#fff; background-color: #37bdf4; }
+#categories-sort tr:hover td { color:#fff; background-color: #37bdf4; }
