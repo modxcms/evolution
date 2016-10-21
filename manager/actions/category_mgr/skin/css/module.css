@@ -39,10 +39,20 @@ div#section-body-categories div.messages ul {
 div#section-body-categories div.messages ul li {
   list-style-type: none;
   list-style-image: none;
-  background: url(../img/information.png) no-repeat left center;
   margin: 0;
   padding: 5px;
-  padding-left: 20px;
+}
+
+div#section-body-categories div.messages ul li:before {
+    font-family: 'FontAwesome';
+    font-style: normal;
+    display: inline;
+    text-decoration: inherit;
+    content: "\f00c";
+    color:#3697CD;
+    font-weight:normal;
+    float:left;
+    margin-right:5px;
 }
 
 div#section-body-categories div.messages ul li span.highlight {
