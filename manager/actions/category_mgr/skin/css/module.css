@@ -138,7 +138,7 @@ div#section-body-categories div.assigned_elements p.no_assigned_elements {
 }
 
 div#section-body-categories tr.move td {
-  background-color: #88939E;
+  background-color: #3697CD;
   color: #fff;
 }
 
@@ -178,7 +178,7 @@ div#section-body-categories div#categorize-workbench {
 
 div#section-body-categories div.drag {
   padding: 2px 5px;
-  border: solid 1px #88939E;
+  background-color:#3697CD;
   cursor: move;
   position: relative;
   float: left;
@@ -188,6 +188,7 @@ div#section-body-categories div.drag {
 div#section-body-categories div.drag h4 {
   margin-bottom: 0;
   font-size: 1em;
+  color:#fff;
 }
 
 div#section-body-categories div.drag p {
@@ -215,6 +216,7 @@ div#section-body-categories div.drop {
   border: 1px solid #C3C3C3;
   background-color:#fff;
   position: relative;
+  padding:4px;
 }
 
 div#section-body-categories div.uncategorized_elements {
@@ -226,7 +228,7 @@ div#section-body-categories div.drop h2 {
   padding: 5px 7px 6px 7px;
   color: #3697CD;
   border-bottom:2px solid #3697CD;
-  margin:0 2px;
+  margin:0 0px 4px 0px;
   font-size: 12px;
   font-weight: bold;
 }
@@ -234,7 +236,7 @@ div#section-body-categories div {
     
 }
 div#section-body-categories div.over {
-  background-color: #E0E8EF
+  background-color: rgba(54,151,204,.2);
 }
 
 div#section-body-categories .ajax_loading {
@@ -242,8 +244,19 @@ div#section-body-categories .ajax_loading {
 }
 
 div#section-body-categories div.ok {
-  background: url(../img/ok.png) no-repeat 2px center;
-  padding-left: 20px;
+    background-color: #37bdf4;
+    
+}
+div#section-body-categories div.ok:before {
+    font-family: 'FontAwesome';
+    font-style: normal;
+    display: inline;
+    text-decoration: inherit;
+    content: "\f00c";
+    color:#fff;
+    font-weight:normal;
+    float:left;
+    margin-right:5px;
 }
 
 div#section-body-categories div.nok {
@@ -254,3 +267,6 @@ div#section-body-categories div.nok {
 html { overflow-y:scroll; }
 .grid { background-color: #f2f2f2; }
 .gridItem { background-color: transparent; }
+.drag h4 { float:left; }
+.inputBox { width:100%; }
+.grid tbody tr:hover td { color:#fff; background-color: #37bdf4; }

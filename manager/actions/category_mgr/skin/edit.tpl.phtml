@@ -37,7 +37,7 @@
           <input type="checkbox" name="<?php echo $view->get('request_key'); ?>[edit][data][<?php echo $category['id'] ?>][delete]" value="1" />              
         </td>
         <td class="delete <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
-          <a class="tooltip" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('Delete &quot;%s&quot; immediately'),htmlspecialchars( $category['category'] ) ); ?>"><?php echo $view->txt('Delete'); ?></a>             
+          <a class="tooltip" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('Delete &quot;%s&quot; immediately'),htmlspecialchars( $category['category'] ) ); ?>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $view->txt('Delete'); ?></a>             
         </td>
       </tr>
       <?php $i++; endforeach; ?>
