@@ -37,7 +37,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         "",
         $orderby
         );
-	$limit = $modx->db->getRecordCount($rs);
+    $limit = $modx->db->getRecordCount($rs);
     if($limit<1){
         echo $_lang['no_results'];
     } else {
@@ -82,6 +82,25 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+<script>
+    function initQuicksearch(inputId, listId) {
+        jQuery('#'+inputId).quicksearch('#'+listId+' ul li', {
+            selector: 'a',
+            'show': function () { jQuery(this).removeClass('hide'); },
+            'hide': function () { jQuery(this).addClass('hide'); },
+            'bind':'keyup',
+            'onAfter': function() {
+                jQuery('#'+listId).find('> li > ul').each( function() {
+                    var parentLI = jQuery(this).closest('li');
+                    var totalLI  = jQuery(this).children('li').length;
+                    var hiddenLI = jQuery(this).children('li.hide').length;
+                    if (hiddenLI == totalLI) { parentLI.addClass('hide'); }
+                    else { parentLI.removeClass('hide'); }
+                });
+            }
+        });
+    }
+</script>
 
 <h1 class="pagetitle">
   <span class="pagetitle-icon">
@@ -108,7 +127,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
         </div>
 
-		<ul class="actionButtons">
+        <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
                 <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
@@ -121,9 +140,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php echo createResourceList('site_templates',16,'templatename'); ?>
     
         <script>
-          jQuery('#site_templates_search').quicksearch('#site_templates ul li', {
-            selector: 'a'
-          });
+          initQuicksearch('site_templates_search', 'site_templates');
           jQuery( "#template-help" ).click(function() {
              jQuery( '#template-info').toggle();
           });
@@ -158,9 +175,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php echo createResourceList('site_tmplvars',301); ?>
     
         <script>
-          jQuery('#site_tmplvars_search').quicksearch('#site_tmplvars ul li', {
-            selector: 'a'
-          });
+          initQuicksearch('site_tmplvars_search', 'site_tmplvars');
           jQuery( "#tv-help" ).click(function() {
              jQuery( '#tv-info').toggle();
           });
@@ -190,15 +205,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php echo createResourceList('site_htmlsnippets',78); ?>
     
         <script>
-          jQuery('#site_htmlsnippets_search').quicksearch('#site_htmlsnippets ul li', {
-            selector: 'a'
-          });
+          initQuicksearch('site_htmlsnippets_search', 'site_htmlsnippets');
           jQuery( "#chunks-help" ).click(function() {
              jQuery( '#chunks-info').toggle();
           });
         </script>
-    
-    
     </div>
 <?php } ?>
 
@@ -211,7 +222,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <p class="element-edit-message"><?php echo $_lang['snippet_management_msg']; ?></p>
         </div>
 
-		<ul class="actionButtons">
+        <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
                 <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
@@ -224,9 +235,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php echo createResourceList('site_snippets',22); ?>
     
         <script>
-          jQuery('#site_snippets_search').quicksearch('#site_snippets ul li', {
-            selector: 'a'
-          });
+          initQuicksearch('site_snippets_search', 'site_snippets');
           jQuery( "#snippets-help" ).click(function() {
              jQuery( '#snippets-info').toggle();
           });
@@ -243,7 +252,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             <p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
         </div>
     
-		<ul class="actionButtons">
+        <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
                 <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
@@ -263,9 +272,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <?php echo createResourceList('site_plugins',102); ?>
     
         <script>
-          jQuery('#site_plugins_search').quicksearch('#site_plugins ul li', {
-            selector: 'a'
-          });
+          initQuicksearch('site_plugins_search', 'site_plugins');
           jQuery( "#plugins-help" ).click(function() {
              jQuery( '#plugins-info').toggle();
           });
@@ -381,9 +388,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         ?>
         </div>
         <script>
-          jQuery('#categories_list_search').quicksearch('#categories_list ul ul li', {
-            selector: 'a'
-          });
+            initQuicksearch('categories_list_search', 'categories_list ul');
         </script>
     </div>
 <?php
