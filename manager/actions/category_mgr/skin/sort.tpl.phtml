@@ -1,7 +1,7 @@
 <form id="categories-sort-form" method="post" action="<?php echo $view->get('url'); ?>">
 	<input name="<?php echo $view->get('request_key'); ?>[sort][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('categories-sort-form').submit();"><?php echo $view->txt('Save new sorting'); ?></a></li>
+		<li><a class="primary" href="#" onclick="document.getElementById('categories-sort-form').submit();return false;"><?php echo $view->txt('Save new sorting'); ?></a></li>
 		<li><a href="#" id="sort-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="sort-info" style="display:none">

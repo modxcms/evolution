@@ -1,7 +1,7 @@
 <form action="<?php $view->get('url'); ?>" method="post" id="add_form">
 	<input name="<?php echo $view->get('request_key'); ?>[add][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('add_form').submit();"><?php echo $view->txt('Create the new category'); ?></a></li>
+		<li><a class="primary" href="#" onclick="document.getElementById('add_form').submit();return false;"><?php echo $view->txt('Create the new category'); ?></a></li>
 		<li><a href="#" id="add-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="add-info" style="display:none">

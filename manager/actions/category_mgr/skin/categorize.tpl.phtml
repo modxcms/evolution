@@ -1,7 +1,7 @@
 <form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
 	<input name="<?php echo $view->get('request_key'); ?>[categorize][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a id="categorize-submit" class="primary" href="javascript:void();" onclick="document.getElementById('categorize-form').submit();"><?php echo $view->txt('Save categorization'); ?></a></li>
+		<li><a id="categorize-submit" class="primary" href="#" onclick="document.getElementById('categorize-form').submit();return false;"><?php echo $view->txt('Save categorization'); ?></a></li>
 		<li><a href="#" id="categorize-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="categorize-info" style="display:none">
