@@ -51,6 +51,9 @@ if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet'
 if ($modx->hasPermission('file_manager')) {
     $sitemenu['manage_files'] = array('manage_files', 'elements', $_lang['manage_files'], 'index.php?a=31', $_lang['manage_files'], 'this.blur();', 'file_manager', 'main', 0, 70, '');
 }
+if ($modx->hasPermission('category_manager')) {
+    $sitemenu['manage_categories'] = array('manage_categories', 'elements', $_lang['manage_categories'], 'index.php?a=120', $_lang['manage_categories'], 'this.blur();', 'category_manager', 'main', 0, 80, '');
+}
 // Modules Menu Items
 if ($modx->hasPermission('new_module')) {
     $sitemenu['new_module'] = array('new_module', 'modules', $_lang['module_management'], 'index.php?a=106', $_lang['module_management'], 'this.blur();', 'new_module,edit_module', 'main', 1, 0, '');
