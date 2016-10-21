@@ -2258,11 +2258,12 @@ form#mutate select.tv_url_select {
 
 .custom-title {
   font-weight: bold;
-  font-size: 1em;
-  margin: 0;
-  color: #fff;
-  padding: 6px 6px 4px;
-  background: #758CA2 url(images/misc/tab.gif);
+  font-size: 1.1em;
+  color: #3697CD;
+  border-bottom:2px solid #3697CD;
+  padding-bottom:4px;
+  margin: 6px 6px 4px;
+  background: #fff;
 }
 
 .custom-text {
