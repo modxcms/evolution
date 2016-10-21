@@ -1,12 +1,15 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_document')) {	
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+
+$ajaxResponse = isset($ajaxResponse) ? $ajaxResponse : false;
+
+if(!$modx->hasPermission('delete_document')) {
+	$modx->webAlertAndQuit($_lang["error_no_privileges"], "", $ajaxResponse);
 }
 
 $id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
 if($id==0) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
+	$modx->webAlertAndQuit($_lang["error_no_id"], "", $ajaxResponse);
 }
 
 /************ webber ********/
@@ -30,14 +33,14 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
+	$modx->webAlertAndQuit($_lang["access_permission_denied"], "", $ajaxResponse);
 }
 
 // get the timestamp on which the document was deleted.
 $rs = $modx->db->select('deletedon', $modx->getFullTableName('site_content'), "id='{$id}' AND deleted=1");
 $deltime = $modx->db->getValue($rs);
 if(!$deltime) {
-	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
+	$modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!", "", $ajaxResponse);
 }
 
 $children = array();
@@ -80,10 +83,13 @@ $modx->db->update(
 
 	// empty cache
 	$modx->clearCache('full');
-	// finished emptying cache - redirect
-	//$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 
-// webber
-	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
+
+// finished emptying cache - redirect
+if(isset($ajaxResponse) && $ajaxResponse == true) {
+	$response = 0;
+} else {
+	$header = "Location: index.php?r=1&a=7&id=$pid&dv=1" . $add_path;
 	header($header);
+}
 ?>

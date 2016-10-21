@@ -161,8 +161,79 @@
   var localdata_position = JSON.parse(localStorage.getItem('[+site_name+]-evodashboard.grid'));
   var localdata_states = JSON.parse(localStorage.getItem('[+site_name+]-evodashboard.states'));
 
-
   fnCreateGridster('[+site_name+]-evodashboard.grid', '[+site_name+]-evodashboard.states');
+  
+  // Ajax-Button "Delete"  
+  jQuery('.ajaxToggleDelete').click(function(e) {
+      e.preventDefault();
+      r = confirm("[+confirm_msg+]");
+      if (r != true) return; 
+          
+      var button = $(this); 
+      jQuery.ajax({
+          url: button.attr('href'),
+          type: 'GET'
+      })
+      .done(function(result) {
+          if(result == 0) {
+              // Resource is not deleted
+              button.closest('tr').find("td.resourceTitle > a").removeClass('deleted');
+              button.closest('tr').find("td.resourceActions > .btn-publish").removeClass('disabled');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").removeClass('fa-arrow-circle-o-up');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").addClass('fa-trash');
+          } else if(result == 1) {
+              // Resource is deleted
+              button.closest('tr').find("td.resourceTitle > a").addClass('deleted');
+              button.closest('tr').find("td.resourceActions > .btn-publish").addClass('disabled');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").addClass('fa-arrow-circle-o-up');
+              button.closest('tr').find("td.resourceActions > a.btn-delete > i").removeClass('fa-trash');
+          } else {
+              // Error, nothing changed
+              alert(result);
+          }
+          top.mainMenu.reloadtree();
+      })
+      .fail(function(result) {
+          // Error, nothing changed
+          alert('Failed: '+result);
+      });
+  });
+    
+  // Ajax-Button "Publish"  
+  jQuery('.ajaxTogglePublish').click(function(e) {
+      e.preventDefault();
+      r = confirm("[+confirm_msg+]");
+      if (r != true) return;
+      
+      var button = $(this); 
+      jQuery.ajax({
+          url: button.attr('href'),
+          type: 'GET'
+      })
+      .done(function(result) {
+          if(result == 0) {
+              // Resource is not published
+              button.closest('tr').find("td.resourceTitle > a").removeClass('published');
+              button.closest('tr').find("td.resourceTitle > a").addClass('unpublished');
+              button.closest('tr').find("td.resourceActions > a.btn-publish > i").removeClass('fa-arrow-down');
+              button.closest('tr').find("td.resourceActions > a.btn-publish > i").addClass('fa-arrow-up');
+          } else if(result == 1) {
+              // Resource is published
+              button.closest('tr').find("td.resourceTitle > a").removeClass('unpublished');
+              button.closest('tr').find("td.resourceTitle > a").addClass('published');
+              button.closest('tr').find("td.resourceActions > a.btn-publish > i").addClass('fa-arrow-down');
+              button.closest('tr').find("td.resourceActions > a.btn-publish > i").removeClass('fa-arrow-up');
+          } else {
+              // Error, nothing changed
+              alert(result);
+          }
+          top.mainMenu.reloadtree();
+      })
+      .fail(function(result) {
+          // Error, nothing changed
+          alert('Failed: '+result);
+      });
+  });
 </script>
 
 <script type="text/javascript">        

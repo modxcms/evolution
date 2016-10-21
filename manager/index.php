@@ -343,7 +343,7 @@ switch ($action) {
 		include_once(includeFileProcessor("processors/publish_content.processor.php",$manager_theme));
 	break;
 	case 62:
-		// get the processor for publishing content
+		// get the processor for unpublishing content
 		include_once(includeFileProcessor("processors/unpublish_content.processor.php",$manager_theme));
 	break;
 	case 56:
@@ -954,6 +954,14 @@ switch ($action) {
 		//delete category
 		include_once(includeFileProcessor("processors/delete_category.processor.php",$manager_theme));
 	break;
+/********************************************************************/
+/* MODxAPI via Ajax                                                 */
+/********************************************************************/
+	case 990:
+		// call modxapi ajax include
+		ob_clean();
+		include_once(includeFileProcessor("includes/modxapi.ajax.php",$manager_theme));
+		break;
 /********************************************************************/
 /* default action: show not implemented message                     */
 /********************************************************************/
