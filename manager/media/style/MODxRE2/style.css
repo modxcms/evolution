@@ -781,7 +781,7 @@ thead td {
 li {
   padding: 0;
   margin: 0;
-  list-style: disc outside url(images/misc/li.gif);
+  list-style: disc outside url(images/misc/li.png);
 }
 
 ul {
@@ -2876,7 +2876,76 @@ div.treeframebody {
   padding: 12px;
   background: #F9F9F9 !important;
 }
+/*category icons in manage elements */ 
 
+.tab-pane ul#site_templatess,
+.tab-pane ul#site_tmplvars,
+.tab-pane site_htmlsnippets,
+.tab-pane ul#site_snippets,
+.tab-pane ul#site_plugins,
+div#categories_list ul{
+padding-left:0px;}
+
+ul#site_templates li,
+ul#site_tmplvars li, 
+ul#site_htmlsnippets li, 
+ul#site_snippets li, 
+ul#site_snippets li, 
+ul#site_plugins li,
+div#categories_list li  {
+    list-style-type: none;
+    list-style: none;
+    margin-left: -15px;
+}
+ul#site_templates li strong:before,
+ul#site_tmplvars li strong:before, 
+ul#site_htmlsnippets li strong:before, 
+ul#site_snippets li strong:before, 
+ul#site_snippets li strong:before, 
+ul#site_plugins li strong:before,
+div#categories_list li strong:before{
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #5b6f7a;
+    padding: 0 5px 0 5px;
+    content:'\f105';
+}
+.tab-pane ul li ul li strong:before{
+    content:'';
+}
+/*elements icons in manage elements */ 
+
+.tab-pane ul li ul li {
+    list-style-type: none;
+    list-style: none;
+}
+.tab-pane ul li ul li:before{
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #5b6f7a;
+    padding: 0 5px 0 12px;
+}
+div#tabTemplates.tab-page ul li ul li:before{
+    content:'\f1ea';
+}
+div#tabVariables.tab-page ul li ul li:before{
+    content:'\f022';
+}
+div#tabChunks.tab-page ul li ul li:before{
+    content:'\f009';
+}
+div#tabSnippets.tab-page ul li ul li:before{
+    content:'\f121';
+}
+div#tabPlugins.tab-page ul li ul li:before{
+    content:'\f1e6';
+}
+div#tabCategory.tab-page ul li ul li:before{
+    content:'\f00a';
+    padding-left: 15px;
+}
 /* action buttons */
 
 .actionButtons a {
