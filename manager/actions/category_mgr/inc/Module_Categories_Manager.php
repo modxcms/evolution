@@ -75,6 +75,8 @@ class Module_Categories_Manager extends Categories
 
     function renderView( $view_name, $data = array() )
     {
+        global $_lang, $_style;
+    
         $filename = trim( $view_name ) . '.tpl.phtml';
         $file     = self::get('views_dir') . $filename;
         $view     = & $this;
