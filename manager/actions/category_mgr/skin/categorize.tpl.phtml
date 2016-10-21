@@ -1,7 +1,17 @@
 <form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
-
-  <p class="element-edit-message">Categorize elements easily by dragging them into categories.</p>
-
+	<input name="<?php echo $view->get('request_key'); ?>[categorize][submit]" type="hidden" value="1" />
+	<ul class="actionButtons">
+		<li><a id="categorize-submit" class="primary" href="javascript:void();" onclick="document.getElementById('categorize-form').submit();"><?php echo $view->txt('Save categorization'); ?></a></li>
+		<li><a href="#" id="categorize-help"><?php echo $_lang['help']; ?></a></li>
+	</ul>
+	<div id="categorize-info" style="display:none">
+        <p class="element-edit-message">Categorize elements easily by dragging them into categories.</p>
+	</div>
+	<script>
+		jQuery( "#categorize-help" ).click(function() {
+			jQuery( '#categorize-info').toggle();
+		});
+	</script>
   <div style="margin-bottom: 10px;">
     <?php $view->renderView('chunks/categorize/elements_select'); ?>
   </div>
@@ -10,17 +20,13 @@
     <div class="gridItem">
       <div id="categorize-workbench" style="position:relative">
         <p>
-          <img style="vertical-align:middle" src="../assets/modules/<?php echo $view->get('dirname'); ?>/skin/img/arrow_up.png" alt="<?php echo $view->txt('Select elements to categorize'); ?>" /><?php echo $view->txt('Select elements to categorize'); ?>
+          <img style="vertical-align:middle" src="actions/category_mgr/skin/img/arrow_up.png" alt="<?php echo $view->txt('Select elements to categorize'); ?>" /><?php echo $view->txt('Select elements to categorize'); ?>
         </p>
       </div>
       <div id="log"></div>
     </div>
     
     <div style="clear: both;"></div>
-  </div>
-
-  <div class="submit" style="text-align: right; margin-top: 10px;">
-    <input type="submit" name="<?php echo $view->get('request_key'); ?>[categorize][submit]" value="<?php echo $view->txt('Save categorization'); ?>" style="margin: 0;" />    
   </div>
 
   <fieldset id="categorize-formfields" class="hidden"></fieldset>

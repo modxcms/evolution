@@ -1,7 +1,17 @@
 <form id="categories-sort-form" method="post" action="<?php echo $view->get('url'); ?>">
-
-  <p class="element-edit-message">Drag category up or down to change its rank. Can be very useful when used with <a href="https://github.com/pmfx/CategorizedTabs" target="_blank">CategorizedTabs</a> plugin to change tabs order.</p>
-  
+	<input name="<?php echo $view->get('request_key'); ?>[sort][submit]" type="hidden" value="1" />
+	<ul class="actionButtons">
+		<li><a class="primary" href="javascript:void();" onclick="document.getElementById('categories-sort-form').submit();"><?php echo $view->txt('Save new sorting'); ?></a></li>
+		<li><a href="#" id="sort-help"><?php echo $_lang['help']; ?></a></li>
+	</ul>
+	<div id="sort-info" style="display:none">
+        <p class="element-edit-message">Drag category up or down to change its rank. Can be very useful when used with <a href="https://github.com/pmfx/CategorizedTabs" target="_blank">CategorizedTabs</a> plugin to change tabs order.</p>
+	</div>
+	<script>
+		jQuery( "#sort-help" ).click(function() {
+			jQuery( '#sort-info').toggle();
+		});
+	</script>
   <table class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
@@ -25,13 +35,6 @@
         </td>
       </tr>              
       <?php $i++; endforeach; ?>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="2" class="submit">
-          <input type="submit" name="<?php echo $view->get('request_key'); ?>[sort][submit]" value="<?php echo $view->txt('Save new sorting'); ?>" />
-        </td>
-      </tr>
-    </tfoot>
+    </tbody>    
   </table>
 </form>

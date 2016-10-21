@@ -104,7 +104,7 @@ var init_drag = function() {
  * 
  * @TODO collect them within a object and send by jason-request.
  */    
-$('categorize-form').getElement('input[type=submit]').addEvent('mouseenter',function() {
+$('categorize-submit').addEvent('mouseenter',function() {
 
     this.setProperty('disabled','disabled');
     this.setProperty('value','wait...');
