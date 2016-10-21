@@ -1,0 +1,28 @@
+<form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
+
+  <p class="element-edit-message">Categorize elements easily by dragging them into categories.</p>
+
+  <div style="margin-bottom: 10px;">
+    <?php $view->renderView('chunks/categorize/elements_select'); ?>
+  </div>
+
+  <div id="categorize-elements" class="grid hidden">
+    <div class="gridItem">
+      <div id="categorize-workbench" style="position:relative">
+        <p>
+          <img style="vertical-align:middle" src="../assets/modules/<?php echo $view->get('dirname'); ?>/skin/img/arrow_up.png" alt="<?php echo $view->txt('Select elements to categorize'); ?>" /><?php echo $view->txt('Select elements to categorize'); ?>
+        </p>
+      </div>
+      <div id="log"></div>
+    </div>
+    
+    <div style="clear: both;"></div>
+  </div>
+
+  <div class="submit" style="text-align: right; margin-top: 10px;">
+    <input type="submit" name="<?php echo $view->get('request_key'); ?>[categorize][submit]" value="<?php echo $view->txt('Save categorization'); ?>" style="margin: 0;" />    
+  </div>
+
+  <fieldset id="categorize-formfields" class="hidden"></fieldset>
+
+</form>

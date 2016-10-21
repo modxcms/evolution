@@ -1,0 +1,26 @@
+<form action="<?php $view->get('url'); ?>" method="post">
+ 
+  <p class="element-edit-message">Add a new category to the Manager.</p>
+  
+  <table id="category-add" class="grid" cellpadding="1" cellspacing="1">
+    <thead>
+      <tr>
+        <td class="gridHeader"><?php echo $view->txt('Category name'); ?></td>
+        <td class="gridHeader"><?php echo $view->txt('Category position'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="gridAltItem"><input type="text" name="<?php echo $view->get('request_key'); ?>[add][data][name]" /></td>
+        <td class="gridAltItem"><input type="text" name="<?php echo $view->get('request_key'); ?>[add][data][rank]" /></td>
+      </tr> 
+    </tbody>
+    <tfoot>
+      <tr> 
+        <td colspan="2" class="submit">
+          <input type="submit" name="<?php echo $view->get('request_key'); ?>[add][submit]" value="<?php echo $view->txt('Create the new category'); ?>" />
+        </td>
+      </tr>
+    </tfoot> 
+  </table>
+</form>
