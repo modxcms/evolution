@@ -2,7 +2,7 @@
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: Consolas, 'Courier New', 'Courier', monospace;
+  font-family: monospace, Consolas, 'Courier New', 'Courier';
   height: 300px;
   color: #000;
 }
@@ -343,7 +343,7 @@ span.CodeMirror-selectedtext { background: none; }
     clear: both;
     border: 1px solid #E3E3E3;
     margin-bottom: 8px;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 .CodeMirror {
   border: 1px solid #eee;
@@ -398,35 +398,35 @@ span.CodeMirror-selectedtext { background: none; }
 }
 .CodeMirror-activeline-background {background: #e8f2ff !important;}
 .CodeMirror-focused .cm-matchhighlight {
-	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
-	background-position: bottom;
-	background-repeat: repeat-x;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+  background-position: bottom;
+  background-repeat: repeat-x;
 }
 .CodeMirror-foldmarker {
-	color: blue;
-	text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
-	font-family: arial;
-	line-height: .3;
-	cursor: pointer;
+  color: blue;
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
+  font-family: arial;
+  line-height: .3;
+  cursor: pointer;
 }
 .CodeMirror-fullscreen {
-	display: block;
-	position: fixed;
-	top: 0; left: 0;
-	width: 100%;
-	z-index: 999;
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 999;
 }
 .action-opacity{
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);
-	-moz-opacity: 0.3;
-	-khtml-opacity: 0.3;
-	opacity: 0.3;
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);
+  -moz-opacity: 0.3;
+  -khtml-opacity: 0.3;
+  opacity: 0.3;
 }
 .action-opacity:hover{
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
-	-moz-opacity: 1;
-	-khtml-opacity: 1;
-	opacity: 1;
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+  -moz-opacity: 1;
+  -khtml-opacity: 1;
+  opacity: 1;
 }
 .cm-modxChunk, .cm-modxSnippet, .cm-modxTv,  .cm-modxPlaceholder,.cm-modxSnippetNoCache, .cm-modxVariable, .cm-modxUrl, .cm-modxConfig {
     color: #000;
