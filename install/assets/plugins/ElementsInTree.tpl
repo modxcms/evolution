@@ -5,7 +5,7 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.4
+ * @version     1.1.5
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
@@ -17,7 +17,8 @@
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  19/10/2016
+ * @author      Deesen https://github.com/Deesen
+ * @lastupdate  22/10/2016
  */
 
 global $_lang;
@@ -204,6 +205,25 @@ if ($e->name == 'OnManagerTreePrerender') {
 		<script type="text/javascript" src="media/script/tabpane.js"></script>
 		<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+        <script>
+            function initQuicksearch(inputId, listId) {
+                jQuery("#"+inputId).quicksearch("#"+listId+" ul li", {
+                    selector: ".elementname",
+                    "show": function () { jQuery(this).removeClass("hide"); },
+                    "hide": function () { jQuery(this).addClass("hide"); },
+                    "bind":"keyup",
+                    "onAfter": function() {
+                        jQuery("#"+listId).find(".panel-collapse").each( function() {
+                            var parentLI = jQuery(this);
+                            var totalLI  = jQuery(this).find("li").length;
+                            var hiddenLI = jQuery(this).find("li.hide").length;
+                            if (hiddenLI == totalLI) { parentLI.prev(".panel-heading").addClass("hide"); }
+                            else { parentLI.prev(".panel-heading").removeClass("hide"); }
+                        });
+                    }
+                });
+            }
+        </script>
 		<script type="text/javascript">
 		treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
 		</script>
@@ -296,9 +316,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$output .= '
     
         <script>
-          jQuery(\'#tree_'.$resourceTable.'_search\').quicksearch(\'#tree_'.$resourceTable.' ul li\', {
-            selector: \'.elementname\'
-          });
+          initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
 		  jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
             jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
           });
@@ -350,13 +368,17 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
-				$row['catid'] = stripslashes($row['catid']);
+				if($row['catid'] > 0) {
+					$row['catid'] = stripslashes($row['catid']);
+				} else {
+					$row['catname'] = $_lang["no_category"];
+				}
 				if ($preCat !== $row['catid']) {
 					$output .= $insideUl? '</div>': '';
 					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['category'].'"><ul>';
 					$insideUl = 1;
 				}
-				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+				$output .= '<li class="eltree"><span><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
 				$output .= '</li>';
@@ -367,9 +389,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$output .= '
     
         <script>
-          jQuery(\'#tree_'.$resourceTable.'_search\').quicksearch(\'#tree_'.$resourceTable.' ul li\', {
-            selector: \'.elementname\'
-          });
+          initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
           jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
             jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
           });
