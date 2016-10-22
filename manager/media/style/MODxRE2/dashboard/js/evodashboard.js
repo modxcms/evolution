@@ -76,7 +76,7 @@ function fnCreateGridster(page, states){
 	$(document).on("click", ".panel-hide", function(e) {
 		e.preventDefault();    
 		var panel = $(this).attr("data-id");
-		if($(this).hasClass('glyphicon-minus')){
+		if($(this).hasClass('fa-minus')){
 			_state_minimize(panel);
 			var _state=false;
 
@@ -115,7 +115,7 @@ function fnCreateGridster(page, states){
 		$(".gridster > ul").data('gridster').resize_widget($('#'+panel),$('#'+panel).attr('data-sizex'),_oldsize);
 		$('#'+panel +' .panel').css('padding-bottom', '60px');
 		$('#'+panel +' .panel-body').slideDown();
-		$('#'+panel +' .panel-hide').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+		$('#'+panel +' .panel-hide').removeClass('fa-plus').addClass('fa-minus');
 		$('#'+panel +' .gs-resize-handle').show();
 		$('#'+panel +' .panel-max, #'+panel +' .panel-close').show();
 	}
@@ -127,7 +127,7 @@ function fnCreateGridster(page, states){
 		$('#'+panel).attr('data-sizey', '1');
 		$('#'+panel +' .gs-resize-handle').hide();
 		$('#'+panel +' .panel-body').slideUp();
-		$('#'+panel +' .panel-hide').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+		$('#'+panel +' .panel-hide').removeClass('fa-minus').addClass('fa-plus');
 		$('#'+panel +' .panel').css('padding-bottom', '0px');
 		$('#'+panel +' .panel-max, #'+panel +' .panel-close').hide();
 	}
