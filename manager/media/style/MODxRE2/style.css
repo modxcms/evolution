@@ -2679,7 +2679,7 @@ div.treeframebody {
 
 #nav {
   height: 30px;
-  top: 4px;
+  top: 0;
 }
 
 #nav li a {
@@ -2704,8 +2704,8 @@ div.treeframebody {
 }
 
 #nav > li > a {
-  height: 33px;
-  line-height: 34px;
+  height: 37px;
+  line-height: 38px;
   color: rgba(255, 255, 255, 0.75);
   font-weight: bold;
 }
@@ -2719,7 +2719,7 @@ div.treeframebody {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  border-radius: 3px 3px 0 0 !important;
+  border-radius: 0 !important;
 }
 
 #nav li.active ul.subnav, 
