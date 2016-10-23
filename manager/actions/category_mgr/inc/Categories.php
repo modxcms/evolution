@@ -6,7 +6,7 @@ class Categories
 {
     var $db       = '';
     var $db_tbl   = array();    
-    var $elements = array( 'plugins', 'snippets', 'htmlsnippets', 'templates', 'tmplvars', 'modules' );
+    var $elements = array( 'templates', 'tmplvars', 'htmlsnippets', 'snippets', 'plugins', 'modules' );
 
     function __construct()
     {

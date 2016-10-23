@@ -1,3 +1,4 @@
+    <link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="actions/category_mgr/skin/css/module.css" />
     <script type="text/javascript" src="actions/category_mgr/skin/js/mootips.js"></script>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -75,11 +76,11 @@
     </div><!-- end __ #section-body-categories .sectionBody -->
 
     <script type="text/javascript">
-      var module_url  = 'index.php?a=121';
+      var ajax_url  = 'index.php?a=121';
       var request_key = '<?php echo $view->get('request_key'); ?>';
       $('elements-select').addEvent('change', function(e) {
         e = new Event(e).stop();
-        var load_elements = new Ajax(module_url, {
+        var load_elements = new Ajax(ajax_url, {
           method   : 'post',
           data     : { 
             '<?php echo $view->get('request_key'); ?>[ajax]' : 1, 
@@ -100,3 +101,4 @@
       });
     </script>    
     <script type="text/javascript" src="actions/category_mgr/skin/js/categories.js"></script>
+    <script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>
