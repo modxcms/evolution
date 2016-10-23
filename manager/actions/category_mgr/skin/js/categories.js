@@ -4,8 +4,8 @@
 /**
  * Tips
  */
-new Tips($$('.tooltip'),{className:'custom'} );
-new MooTips($$('.tooltip_dom'), {
+new Tips($$('.mootooltip'),{className:'custom'} );
+new MooTips($$('.mootooltip_dom'), {
     className :'assigned',
     showOnClick: true,
     showOnMouseEnter: true,
