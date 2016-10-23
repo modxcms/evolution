@@ -1,7 +1,7 @@
 <form id="category-edit-form" action="<?php echo $view->get('url'); ?>" method="post">
   <input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
   <ul class="actionButtons">
-    <li><a class="primary" href="#" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('Update categories'); ?></a></li>
+    <li><a class="primary" href="#" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('cm_update_categories'); ?></a></li>
     <li><a href="#" id="edit-help"><?php echo $_lang['help']; ?></a></li>
   </ul>
   <div id="edit-info" style="display:none">
@@ -15,10 +15,10 @@
   <table id="category-edit" class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
-        <td class="gridHeader"><?php echo $view->txt('Assigned elements'); ?></td>
-        <td class="gridHeader"><?php echo $view->txt('Edit name'); ?></td>
-        <td class="gridHeader"><?php echo $view->txt('Mark for deletion'); ?></td>
-        <td class="gridHeader"><?php echo $view->txt('Delete immediately'); ?></td>
+        <td class="gridHeader"><?php echo $view->txt('cm_assigned_elements'); ?></td>
+        <td class="gridHeader"><?php echo $view->txt('cm_edit_name'); ?></td>
+        <td class="gridHeader"><?php echo $view->txt('cm_mark_for_deletion'); ?></td>
+        <td class="gridHeader"><?php echo $view->txt('cm_delete_now'); ?></td>
       </tr>
     </thead>
     <tbody>
@@ -39,7 +39,7 @@
           <input type="checkbox" name="<?php echo $view->get('request_key'); ?>[edit][data][<?php echo $category['id'] ?>][delete]" value="1" />              
         </td>
         <td class="delete <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
-          <a class="mootooltip" onclick="return confirm('Are you sure?')" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('Delete &quot;%s&quot; immediately'),htmlspecialchars( $category['category'] ) ); ?>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $view->txt('Delete'); ?></a>             
+          <a class="mootooltip" onclick="return confirm('<?php echo $view->txt('are_you_sure'); ?>')" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('cm_delete_element_x_now'),htmlspecialchars( $category['category'] ) ); ?>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $view->txt('delete'); ?></a>             
         </td>
       </tr>
       <tr class="collapse" id="collapse-edit-<?php echo $i; ?>">

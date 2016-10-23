@@ -44,7 +44,7 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
 
     $cm->addMessage(
         sprintf( 
-            $cm->txt('Categorize <span class="highlight">%s</span>'), 
+            $cm->txt('cm_categorize_x'), 
             $cm->txt($_data['elementsgroup'])
         ),
         'categorize'
@@ -52,7 +52,7 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
     
     if( !isset( $_data['elements'] ) )
     {
-        $cm->addMessage( $cm->txt('Something went wrong.'), 'categorize' );
+        $cm->addMessage( $cm->txt('cm_unknown_error'), 'categorize' );
         return;
     }
 
@@ -62,7 +62,7 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
         {
             $cm->addMessage(
                 sprintf( 
-                    $cm->txt('<span class="highlight">%s(%s)</span> has been assigned to category <span class="highlight">%s(%s)</span>'), 
+                    $cm->txt('cm_x_assigned_to_category_y'), 
                     $data['element_name'], 
                     $element_id,
                     $data['category_name'],
@@ -76,14 +76,14 @@ if( isset( $_POST[$cm->get('request_key')]['categorize']['submit'] ) )
     
     if( $_changes === 0 )
     {
-        $cm->addMessage( $cm->txt('No categorization made.'), 'categorize' );
+        $cm->addMessage( $cm->txt('cm_no_categorization'), 'categorize' );
         return;
     }
     else
     {
         $cm->addMessage(
             sprintf( 
-                $cm->txt('<span class="highlight">%s</span> changes made'), 
+                $cm->txt('cm_x_changes_made'), 
                 $_changes
             ),
             'categorize'
@@ -102,13 +102,13 @@ if( isset( $_POST[$cm->get('request_key')]['add']['submit'] ) )
 
     if( empty( $category ) )
     {
-       $cm->addMessage( $cm->txt('Please enter a name for the new category.'), 'add' );
+       $cm->addMessage( $cm->txt('cm_enter_name_for_category'), 'add' );
        return;
     }
 
     if( $cm->isCategoryExists( $category ) )
     {
-       $cm->addMessage( sprintf( $cm->txt('Category <span class="highlight">%s</span> already exists.'), $category ), 'add' ); 
+       $cm->addMessage( sprintf( $cm->txt('cm_category_x_exists'), $category ), 'add' ); 
        return;
     }
     
@@ -116,7 +116,7 @@ if( isset( $_POST[$cm->get('request_key')]['add']['submit'] ) )
     {
         $cm->addMessage(
             sprintf( 
-                $cm->txt( 'The new category <span class="highlight">%s</span> was saved at position <span class="highlight">%s</span>.' ),
+                $cm->txt( 'cm_category_x_saved_at_position_y' ),
                 $category,
                 $rank
             ),
@@ -125,7 +125,7 @@ if( isset( $_POST[$cm->get('request_key')]['add']['submit'] ) )
     }
     else
     {
-        $cm->addMessage( $cm->txt('Something went wrong on adding a category.'), 'add' );
+        $cm->addMessage( $cm->txt('cm_unknown_error'), 'add' );
     }    
 }
 
@@ -148,7 +148,7 @@ if( isset( $_POST[$cm->get('request_key')]['sort']['submit'] ) )
         {
             $cm->addMessage(
                 sprintf( 
-                    $cm->txt('Category <span class="highlight">%s</span> was moved to position <span class="highlight">%s</span>'),
+                    $cm->txt('cm_category_x_moved_to_position_y'),
                     $data['category'],
                     $data['rank'] 
                 ),
@@ -160,13 +160,13 @@ if( isset( $_POST[$cm->get('request_key')]['sort']['submit'] ) )
         
     if( $_changes === 0 )
     {
-        $cm->addMessage( $cm->txt( 'Nothing to change, so no changes made.' ), 'sort');
+        $cm->addMessage( $cm->txt( 'cm_no_changes' ), 'sort');
     }
     else
     {
         $cm->addMessage(
             sprintf( 
-                $cm->txt('<span class="highlight">%s</span> changes made'), 
+                $cm->txt('cm_x_changes_made'), 
                 $_changes
             ),
             'sort'
@@ -190,7 +190,7 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
             {
                 $cm->addMessage(
                     sprintf(
-                        $cm->txt('Category <span class="highlight">%s</span> has been deleted'),
+                        $cm->txt('cm_category_x_deleted'),
                         urldecode( $_data['origin'] )
                     ),
                     'edit'
@@ -209,7 +209,7 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
         {
             $cm->addMessage(
                 sprintf( 
-                    $cm->txt('Category <span class="highlight">%s</span> was renamed to <span class="highlight">%s</span>'),
+                    $cm->txt('cm_category_x_renamed_to_y'),
                     urldecode( $_data['origin'] ),
                     $data['category']
                 ),
@@ -221,7 +221,7 @@ if( isset( $_POST[$cm->get('request_key')]['edit']['submit'] ) )
 
     if( $_changes === 0 )
     {
-        $cm->addMessage( $cm->txt( 'Nothing to change, so no changes made.' ), 'edit');
+        $cm->addMessage( $cm->txt( 'cm_no_changes' ), 'edit');
     }
 }
 
@@ -237,7 +237,7 @@ if( isset( $_GET[$cm->get('request_key')]['delete'] )
     {
         $cm->addMessage(
             sprintf(
-                $cm->txt('Category <span class="highlight">%s</span> has been deleted'), 
+                $cm->txt('cm_category_x_deleted'), 
                 urldecode( $_GET[$cm->get('request_key')]['category'] )
             ), 
             'edit'
@@ -261,7 +261,7 @@ if( isset( $_POST[$cm->get('request_key')]['translate']['submit'] ) )
             
             $cm->addMessage(
                 sprintf(
-                    $cm->txt('Translation for <span class="highlight">%s</span> was empty'), 
+                    $cm->txt('cm_translation_for_x_empty'), 
                     $native_phrase
                 ), 
                 'translate'
@@ -273,7 +273,7 @@ if( isset( $_POST[$cm->get('request_key')]['translate']['submit'] ) )
         
         $cm->addMessage(
             sprintf(
-                $cm->txt('Translation for <span class="highlight">%s</span> to <span class="highlight">%s</span> successfully saved'), 
+                $cm->txt('cm_translation_for_x_to_y_success'), 
                 $native_phrase,
                 $translation
             ), 

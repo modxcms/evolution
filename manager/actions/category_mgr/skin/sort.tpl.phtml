@@ -1,7 +1,7 @@
 <form id="categories-sort-form" method="post" action="<?php echo $view->get('url'); ?>">
 	<input name="<?php echo $view->get('request_key'); ?>[sort][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a class="primary" href="#" onclick="document.getElementById('categories-sort-form').submit();return false;"><?php echo $view->txt('Save new sorting'); ?></a></li>
+		<li><a class="primary" href="#" onclick="document.getElementById('categories-sort-form').submit();return false;"><?php echo $view->txt('cm_save_new_sorting'); ?></a></li>
 		<li><a href="#" id="sort-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="sort-info" style="display:none">
@@ -15,8 +15,8 @@
   <table class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
-        <td class="gridHeader"><?php echo $view->txt('Category') ?></td>
-        <td class="gridHeader"><?php echo $view->txt('Position') ?></td>
+        <td class="gridHeader"><?php echo $view->txt('category_heading') ?></td>
+        <td class="gridHeader"><?php echo $view->txt('position') ?></td>
       </tr>
     </thead>
     <tbody id="categories-sort">
