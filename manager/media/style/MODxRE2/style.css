@@ -2689,6 +2689,20 @@ div.treeframebody {
   padding: 0 18px;
 }
 
+@media (max-width: 991px) {
+  #nav li a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  #nav li a {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
 #nav > li > a {
   height: 33px;
   line-height: 34px;
@@ -2735,6 +2749,12 @@ div.treeframebody {
   border-top-width: 0;
 }
 
+@media (max-width: 767px) {
+  #nav li ul li a {
+    padding: 0 8px !important;
+  }
+}
+
 #supplementalNav {
   top: 6px;
   right: -1px;
@@ -2758,6 +2778,12 @@ div.treeframebody {
 
 #supplementalNav .systemversion:before {
   content: 'MODX Evolution ';
+}
+
+@media (max-width: 991px) {
+  #supplementalNav .systemversion {
+    display: none;
+  }
 }
 
 #statusbar {
