@@ -1177,37 +1177,42 @@ a.hometblink:hover {
 .contextMenu {
   background: #fff;
   margin: 0;
-  padding: 0;
-  border: 1px solid #039;
-  border-color: #eaeaea #909090 #707070 #eaeaea;
+  padding: 4px;
+  border: 1px solid #c9c9c9;
+  border-top-width: 3px;
+  border-top-color: #3697CD;
   position: absolute;
   z-index: 10000;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 }
 
 .cntxMnuItem {
   background-image: url(images/misc/_tx_.gif);
   cursor: pointer;
   color: #333;
-  padding: 3px 16px 3px 2px;
+  padding: 3px 5px;
+  border: 1px solid transparent;
 }
 
 .rtl .cntxMnuItem,
 .rtl .cntxMnuItemDisabled {
-  padding: 3px 2px 3px 16px;
+  padding: 3px 5px;
 }
 
 .cntxMnuItemDisabled {
   cursor: default;
-  padding: 3px 16px 3px 2px;
+  padding: 3px 5px;
   color: #111;
 }
 
 .cntxMnuItemOver {
-  cursor: pointer;
+  background: #E6F2FF;
+  border: 1px solid #BACCDB;
   color: #333;
-  background: #e3e3e3;
-  padding: 2px 15px 2px 1px;
-  border: 1px solid #c0c0c0;
+  padding: 3px 5px;
+  cursor: pointer;
 }
 
 .rtl .cntxMnuItemOver {
@@ -1228,16 +1233,15 @@ a.hometblink:hover {
 
 .cntxMnuItem img,
 .cntxMnuItemDisabled img {
-  opacity: .3;
-  filter: alpha(opacity=30);
+  
 }
 
 .cntxMnuSeparator {
   font-size: 0;
   height: 1px;
-  background-color: silver;
+  background-color: #D8D8D8;
   overflow: hidden;
-  margin: 3px 1px 3px 28px;
+  margin: 3px 0;
 }
 
 .rtl .cntxMnuSeparator {
