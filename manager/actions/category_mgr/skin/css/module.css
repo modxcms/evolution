@@ -276,3 +276,5 @@ h1 {
     line-height: 35px;
     margin: 15px 15px 10px 15px;
 }
+
+#category-edit table.grid .gridAltItem { background-color:#fff; }
