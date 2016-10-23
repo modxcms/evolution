@@ -1,6 +1,6 @@
 <div class="assigned_elements">
   <?php foreach( $data as $element => $items ) : ?>
-  <h4><?php echo $view->txt( $element ); ?></h4>
+  <h5><b><?php echo $view->txt( $element ); ?></b></h5>
   <?php if( empty( $items ) ) : ?>
   <p class="no_assigned_elements"><?php echo sprintf( $view->txt('No %s assigned'), $element ); ?></p>
   <?php else: ?>

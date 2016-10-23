@@ -1,17 +1,17 @@
 <form id="category-edit-form" action="<?php echo $view->get('url'); ?>" method="post">
-	<input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
-	<ul class="actionButtons">
-		<li><a class="primary" href="#" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('Update categories'); ?></a></li>
-		<li><a href="#" id="edit-help"><?php echo $_lang['help']; ?></a></li>
-	</ul>
-	<div id="edit-info" style="display:none">
-		<p class="element-edit-message">Change category name or delete category from the Manager.</p>
-	</div>
-	<script>
-		jQuery( "#edit-help" ).click(function() {
-			jQuery( '#edit-info').toggle();
-		});
-	</script>
+  <input name="<?php echo $view->get('request_key'); ?>[edit][submit]" type="hidden" value="1" />
+  <ul class="actionButtons">
+    <li><a class="primary" href="#" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('Update categories'); ?></a></li>
+    <li><a href="#" id="edit-help"><?php echo $_lang['help']; ?></a></li>
+  </ul>
+  <div id="edit-info" style="display:none">
+    <p class="element-edit-message">Change category name or delete category from the Manager.</p>
+  </div>
+  <script>
+    jQuery( "#edit-help" ).click(function() {
+      jQuery( '#edit-info').toggle();
+    });
+  </script>
   <table id="category-edit" class="grid" cellpadding="1" cellspacing="1">
     <thead>
       <tr>
@@ -25,7 +25,9 @@
       <?php $i = 0; foreach( $data as $category ) : ?>
       <tr>
         <td class="assigned <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
-          <img class="tooltip_dom" src="../assets/modules/<?php echo $view->get('dirname'); ?>/skin/img/information.png" alt="<?php echo $view->txt('Show assigned elements'); ?>" title="DOM:assigned-elements-<?php echo $category['id']; ?>" />
+            <button class="btn collapsed mootooltip_dom" type="button" data-toggle="collapse" data-target="#collapse-edit-<?php echo $i; ?>" aria-expanded="false" aria-controls="#collapse-edit-<?php echo $i; ?>" title="DOM:assigned-elements-<?php echo $category['id']; ?>">
+            <i class="fa fa-info-circle" aria-hidden="true" /></i>
+          </button>
           <div id="assigned-elements-<?php echo $category['id']; ?>"><?php $view->renderView( 'chunks/edit/assigned_elements', $view->getAllAssignedElements( $category['id'] ) ); ?></div> 
         </td>
         <td class="input <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
@@ -37,8 +39,13 @@
           <input type="checkbox" name="<?php echo $view->get('request_key'); ?>[edit][data][<?php echo $category['id'] ?>][delete]" value="1" />              
         </td>
         <td class="delete <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
-          <a class="tooltip" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('Delete &quot;%s&quot; immediately'),htmlspecialchars( $category['category'] ) ); ?>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $view->txt('Delete'); ?></a>             
+          <a class="mootooltip" href="<?php echo $view->get('url'); ?>&amp;<?php echo $view->get('request_key'); ?>[delete]=<?php echo $category['id']; ?>&amp;<?php echo $view->get('request_key'); ?>[category]=<?php echo urlencode($category['category']); ?>" title="<?php echo htmlspecialchars( $category['category'] ) ?>::<?php echo sprintf( $view->txt('Delete &quot;%s&quot; immediately'),htmlspecialchars( $category['category'] ) ); ?>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $view->txt('Delete'); ?></a>             
         </td>
+      </tr>
+      <tr class="collapse" id="collapse-edit-<?php echo $i; ?>">
+          <td colspan="4">
+            <?php $view->renderView( 'chunks/edit/assigned_elements_collapse', $view->getAllAssignedElements( $category['id'] ) ); ?>
+          </td>
       </tr>
       <?php $i++; endforeach; ?>
     </tbody>
