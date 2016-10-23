@@ -120,24 +120,8 @@ class Module_Categories_Manager extends Categories
 
     function txt( $txt )
     {
+        global $_lang;
+        if(isset($_lang[$txt])) return $_lang[$txt];
         return $txt;
-        
-        if( self::get('use_translator') === 'true'
-            && is_file( self::get('_libdir') . 'Translator.php' ) )
-        { 
-            if( !is_object( $translator ) )
-            {
-                include self::get('_libdir') . 'Translator.php';
-                $translator = new Translator('Module_Categories_Manager', self::get('manager_language') );
-                $translator->setType('phrase');
-            }
-            return $translator->txt( $txt );
-        }
-        elseif( is_file( self::get('languages_dir') . $modx->config['manager_language'] . '.txt' ) )
-        {
-            $_txt = file( self::get('languages_dir') . self::get('manager_language') . '.txt' );
-        }
-        
     }
-	
 }
