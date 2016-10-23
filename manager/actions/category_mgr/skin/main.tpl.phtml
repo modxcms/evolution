@@ -27,7 +27,7 @@
         </script>
 
         <div id="tab-add-category" class="tab-page">
-          <h2 id="tab-header-add" class="tab"><i class="fa fa-plus-square-o" aria-hidden="true"></i> <?php echo $view->txt('Add a new category'); ?></h2>
+          <h2 id="tab-header-add" class="tab"><i class="fa fa-plus-square-o" aria-hidden="true"></i> <?php echo $view->txt('cm_add_new_category'); ?></h2>
           <script type="text/javascript">tpCategories.addTabPage( $('tab-add-category') );</script>
           <?php $view->renderView('chunks/messages', $view->getMessages('add') ); ?>
           <?php $view->renderView('add'); ?>
@@ -36,21 +36,21 @@
         <?php if( is_array( $data ) && !empty( $data ) ) : ?>
 
         <div id="tab-edit-categories" class="tab-page">
-          <h2 id="tab-header-edit" class="tab"><i class="fa fa-pencil" aria-hidden="true"></i> <?php echo $view->txt('Edit categories'); ?></h2>  
+          <h2 id="tab-header-edit" class="tab"><i class="fa fa-pencil" aria-hidden="true"></i> <?php echo $view->txt('cm_edit_categories'); ?></h2>  
           <script type="text/javascript">tpCategories.addTabPage( $('tab-edit-categories') );</script>
           <?php $view->renderView('chunks/messages', $view->getMessages('edit') ); ?>
           <?php $view->renderView('edit', $data ); ?>
         </div><!-- end __ #tab-edit-categories .tab-page -->
 
         <div id="tab-sort-categories" class="tab-page">
-          <h2 id="tab-header-sort" class="tab"><i class="fa fa-sort" aria-hidden="true"></i> <?php echo $view->txt('Sort categories'); ?></h2>  
+          <h2 id="tab-header-sort" class="tab"><i class="fa fa-sort" aria-hidden="true"></i> <?php echo $view->txt('cm_sort_categories'); ?></h2>  
           <script type="text/javascript">tpCategories.addTabPage( $('tab-sort-categories') );</script>
           <?php $view->renderView('chunks/messages', $view->getMessages('sort') ); ?>
           <?php $view->renderView('sort', $data ); ?>
         </div><!-- end __ #tab-sort-categories .tab-page -->
 
         <div id="tab-categorize-elements" class="tab-page">
-          <h2 id="tab-header-categorize" class="tab"><i class="fa fa-arrows" aria-hidden="true"></i> <?php echo $view->txt('Categorize elements'); ?></h2>  
+          <h2 id="tab-header-categorize" class="tab"><i class="fa fa-arrows" aria-hidden="true"></i> <?php echo $view->txt('cm_categorize_elements'); ?></h2>  
           <script type="text/javascript">tpCategories.addTabPage( $('tab-categorize-elements') );</script>
           <?php $view->renderView('chunks/messages', $view->getMessages('categorize') ); ?>
           <?php $view->renderView('categorize', $data ); ?>
