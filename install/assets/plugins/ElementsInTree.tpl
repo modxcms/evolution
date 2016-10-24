@@ -96,6 +96,18 @@ if ($e->name == 'OnManagerTreePrerender') {
 		#tabDoc {
 			overflow: hidden;
 		}
+		
+		#tabDoc::before {
+			position: absolute;
+			content: "";
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 30px;
+			background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%, rgba(255,255,255,1) 100%);
+			background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+			background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+		}
 
 		#treePane .tab-page ul {
 			margin: 0;
