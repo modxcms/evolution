@@ -5,9 +5,9 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.2.0
+ * @version     1.2.1
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
@@ -18,7 +18,7 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  23/10/2016
+ * @lastupdate  24/10/2016
  */
 
 global $_lang;
@@ -27,7 +27,7 @@ $e = &$modx->Event;
 
 if ($e->name == 'OnManagerTreePrerender') {
 	
-	// useIcons
+	// use icons
 	if ($useIcons == 'yes') {
 		$tabPadding = '10px';
 	}
@@ -35,20 +35,20 @@ if ($e->name == 'OnManagerTreePrerender') {
 		$tabPadding = '9px';
 	}
 	
-	// unifyFrames
+	// unify frames
 	if ($unifyFrames == 'yes') {
-	  $unifyFrames_css = '
+		$unifyFrames_css = '
 			body,
 			div.treeframebody {
 				background-color: #f2f2f2 !important;
 			}
-      
+
 			div.treeframebody {
 				background-color: transparent !important;
 				-webkit-box-shadow: none !important;
 				box-shadow: none !important;
 			}
-      
+
 			#treeMenu {
 				background-color: transparent !important;
 				border-bottom-color: transparent !important;
@@ -56,9 +56,47 @@ if ($e->name == 'OnManagerTreePrerender') {
 	  ';
 	}
 	
-	// main output
+	// tree buttons in tab
+	if ($treeButtonsInTab == 'yes') {
+		$treeButtonsInTab_js  = 'jQuery("#treeMenu").detach().prependTo("#tabDoc");';
+		$treeButtonsInTab_css = '
+      #treeHolder {
+        padding-top: 10px;
+        padding-left: 10px;
+      }
+      
+      #treeMenu {
+        margin-left: 0;
+        margin-bottom: 6px;
+        background-color: transparent !important;
+        border-bottom-width: 0;
+      }
+
+      .treeButton,
+      .treeButtonDisabled {
+        padding: 2px 3px;
+      }
+
+      #tabDoc {
+        padding-top: 11px !important;
+        padding-left: 13px !important;
+        padding-right: 13px !important;
+      }
+      
+      #floater {
+        width: 99%;
+        top: 94px;
+      }
+	  ';
+	}
+	
+	// start main output
 	$output = '
 		<style>
+		#tabDoc {
+			overflow: hidden;
+		}
+
 		#treePane .tab-page ul {
 			margin: 0;
 			margin-bottom: 5px;
@@ -100,10 +138,6 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-row .tab span {
 			font-size: 14px;
-		}
-
-		#tabDoc {
-			 overflow: hidden;
 		}
 
 		#treePane .ext-ico {
@@ -198,6 +232,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 		#tabMD   li.eltree:before {content: "\f085";}
 		
 		'.$unifyFrames_css.'
+		'.$treeButtonsInTab_css.'
 		
 		</style>
 
@@ -241,8 +276,11 @@ if ($e->name == 'OnManagerTreePrerender') {
                     elementsInTreeParams = { "cat_collapsed": {} };
                 }
 	            jQuery(document).ready(function() {
-	                // Shift-Mouseclick opens/collapsed all categories
-	                jQuery(".accordion-toggle").click(function(e) {
+              
+                '.$treeButtonsInTab_js.'
+                
+                // Shift-Mouseclick opens/collapsed all categories
+                jQuery(".accordion-toggle").click(function(e) {
 					      e.preventDefault();
 					      var thisItemCollapsed = jQuery(this).hasClass("collapsed");
 					      if (e.shiftKey) {
