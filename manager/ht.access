@@ -1,7 +1,13 @@
 # For unexpected logouts in multi-server/cloud environments see:
 # http://rtfm.modx.com/evolution/1.0/administration/friendly-url-solutions
 
+# No redirect
 RewriteEngine Off
+
+# Redirect http to https
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 <IfModule mod_security.c>
 # Turn the filtering engine Off
