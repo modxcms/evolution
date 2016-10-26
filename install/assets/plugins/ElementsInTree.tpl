@@ -58,7 +58,12 @@ if ($e->name == 'OnManagerTreePrerender') {
 	
 	// tree buttons in tab
 	if ($treeButtonsInTab == 'yes') {
-		$treeButtonsInTab_js  = 'jQuery("#treeMenu").detach().prependTo("#tabDoc");';
+       
+        $treeButtonsInTab_js  = '
+          jQuery("#treeMenu").detach().prependTo("#tabDoc");
+          parent.tree.resizeTree();
+        ';
+        
 		$treeButtonsInTab_css = '
       #treeHolder {
         padding-top: 10px;
