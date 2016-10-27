@@ -192,6 +192,7 @@ i.icon-color-verylight {
 }
 .btn-group .panel-hide {
   margin-top : -7px;
+  padding-top: 3px;
 }
 
 .btn-action {
