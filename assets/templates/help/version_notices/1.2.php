@@ -10,10 +10,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		</p>
 	</li>
 	<li><strong>New "Manage Elements" Buttons (<a href="https://github.com/modxcms/evolution/issues/669" target="_blank">#669</a>)</strong>
-		<p>You can quick-access elements, files and images now directly from ressource-tree. Use Shift-Mouseclick to open multiple windows/elements.</p>
+		<p>You can quick-access elements, files and images now directly from ressource-tree. Use Shift-Mouseclick to open multiple windows/elements. Permission is granted using new roles "assets_images" and "assets_files".</p>
 	</li>
 	<li><strong>Remember last sort-options (<a href="https://github.com/modxcms/evolution/issues/618" target="_blank">#618</a>, <a href="https://github.com/modxcms/evolution/issues/636" target="_blank">#636</a>)</strong>
 		<p>The ressource-tree stores now the last set sort-options per user to database (Sort by, Asc/Desc, Display-Name). At manager log-in, last settings of each user get restored.</p>
+	</li>
+	<li><strong>New plugin "ElementsInTree" v1.2.0 (<a href="https://github.com/pmfx/ElementsInTree/" target="_blank">github.com/pmfx</a>)</strong>
+		<p>This plugin has been added to default installation. Use Shift-Mouseclick to collapse/expand all categories. Collapsed states per category will be remembered via browser´s localStorage.</p>
 	</li>
 </ul>
 
@@ -83,7 +86,8 @@ Sub page
 	</li>
 </ul>
 
-<h1>Important Details for Developers</h1>
+<h1>Other Important Details for Developers</h1>
 <ul>
-	<li>jQuery updated to v3.1 and loaded into manager by default.<br/><u>Known issues:</u> MultiTV 2.0.8 has problems with row-reordering and requires an update.</li>
+	<li><strong>jQuery updated to v3.1 and loaded into manager by default.</strong><u>Known issues:</u> MultiTV 2.0.8 has problems with row-reordering and requires an update. Meanwhile a workaround can be found <a href="https://github.com/Deesen/multiTvLayout/blob/master/assets/tvs/multitv/js/jquery-dataTables.rowReordering-1.1.0.js.BUGFIX" target="_blank">here</a>.</li>
+	<li><strong>Language Overrides</strong>Can be implemented by adding files to /manager/includes/lang/override/. Files in this directory will never get altered by future updates.</li>
 </ul>
