@@ -476,7 +476,7 @@ var internal = <?php echo json_encode($internal); ?>;
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
        <tr>
-        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
+        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span>":$_lang['plugin_disabled']; ?></label></td>
       </tr>
 <?php if($modx->hasPermission('save_role')):?>
       <tr>
@@ -602,9 +602,6 @@ var internal = <?php echo json_encode($internal); ?>;
     }
 ?>
     </table>
-            </td>
-          </tr>
-        </table>
 </div>
 
 <!-- docBlock Info -->

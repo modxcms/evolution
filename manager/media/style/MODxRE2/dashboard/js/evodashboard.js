@@ -8,11 +8,11 @@ function fnCreateGridster(page, states){
 	
 
 	/* force 1 column on mobile screen sizes */
-	if ($( window ).width() <= 480 || $( window ).width() == 840 ){
+	if ($( window ).width() <= 480){
 		var cols=1;
 		var offset=60;
 	} else {
-		var cols=4
+		var cols=4;
 		var offset=19;
 	}
 
@@ -48,7 +48,7 @@ function fnCreateGridster(page, states){
 				$.each(_positions, function(i,value){
 					_state=$('#'+ value.id).attr('data-state');
 					if(_state=='min'){
-						value.size_y=$('#'+ value.id).attr('data-sizey-old')
+						value.size_y=$('#'+ value.id).attr('data-sizey-old');
 						_positions[i]=value;
 					}
 				
@@ -99,7 +99,7 @@ function fnCreateGridster(page, states){
 		if(localdata_states){
 			$.each(localdata_states, function(i,value){
 				if(value){
-					if(value.panel == panel) localdata_states.splice(i, 1);		
+					if(value.panel == panel) localdata_states.splice(i, 1);
 				}
 			});
 		} else localdata_states=[];
@@ -134,7 +134,7 @@ function fnCreateGridster(page, states){
 
 	function _resize_gridster(){
 		gridster.resize_widget_dimensions({
-			widget_base_dimensions: [(((base_size*($( window ).width()/base_size))/cols)-offset), 50],
+			widget_base_dimensions: [(((base_size*($( window ).width()/base_size))/cols)-offset + 4), 50],
 			widget_margins: [5, 5],
 		});
 	}
@@ -146,7 +146,7 @@ function fnCreateGridster(page, states){
 	/* start welcome with fade in fx*/
 	setTimeout(function(){
 		$('.gridster').fadeIn('fast');
+        _resize_gridster();
 	}, 400);
 
 }
-
