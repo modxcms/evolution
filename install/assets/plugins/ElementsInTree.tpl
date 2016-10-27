@@ -5,9 +5,9 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.4
+ * @version     1.2.1
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
@@ -17,7 +17,8 @@
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  19/10/2016
+ * @author      Deesen https://github.com/Deesen
+ * @lastupdate  24/10/2016
  */
 
 global $_lang;
@@ -26,7 +27,7 @@ $e = &$modx->Event;
 
 if ($e->name == 'OnManagerTreePrerender') {
 	
-	// useIcons
+	// use icons
 	if ($useIcons == 'yes') {
 		$tabPadding = '10px';
 	}
@@ -34,20 +35,20 @@ if ($e->name == 'OnManagerTreePrerender') {
 		$tabPadding = '9px';
 	}
 	
-	// unifyFrames
+	// unify frames
 	if ($unifyFrames == 'yes') {
-	  $unifyFrames_css = '
+		$unifyFrames_css = '
 			body,
 			div.treeframebody {
 				background-color: #f2f2f2 !important;
 			}
-      
+
 			div.treeframebody {
 				background-color: transparent !important;
 				-webkit-box-shadow: none !important;
 				box-shadow: none !important;
 			}
-      
+
 			#treeMenu {
 				background-color: transparent !important;
 				border-bottom-color: transparent !important;
@@ -55,9 +56,64 @@ if ($e->name == 'OnManagerTreePrerender') {
 	  ';
 	}
 	
-	// main output
+	// tree buttons in tab
+	if ($treeButtonsInTab == 'yes') {
+       
+        $treeButtonsInTab_js  = '
+          jQuery("#treeMenu").detach().prependTo("#tabDoc");
+          parent.tree.resizeTree();
+        ';
+        
+		$treeButtonsInTab_css = '
+      #treeHolder {
+        padding-top: 10px;
+        padding-left: 10px;
+      }
+      
+      #treeMenu {
+        margin-left: 0;
+        margin-bottom: 6px;
+        background-color: transparent !important;
+        border-bottom-width: 0;
+      }
+
+      .treeButton,
+      .treeButtonDisabled {
+        padding: 2px 3px;
+      }
+
+      #tabDoc {
+        padding-top: 11px !important;
+        padding-left: 13px !important;
+        padding-right: 13px !important;
+      }
+      
+      #floater {
+        width: 99%;
+        top: 94px;
+      }
+	  ';
+	}
+	
+	// start main output
 	$output = '
 		<style>
+		#tabDoc {
+			overflow: hidden;
+		}
+		
+		#tabDoc::before {
+			position: absolute;
+			content: "";
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 30px;
+			background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%, rgba(255,255,255,1) 100%);
+			background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+			background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+		}
+
 		#treePane .tab-page ul {
 			margin: 0;
 			margin-bottom: 5px;
@@ -99,10 +155,6 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-row .tab span {
 			font-size: 14px;
-		}
-
-		#tabDoc {
-			 overflow: hidden;
 		}
 
 		#treePane .ext-ico {
@@ -170,7 +222,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 			position: absolute;
 			left: 15px;
 		}
-		#treePane .panel-title > a[aria-expanded="false"]::before {
+		#treePane .panel-title > a.collapsed::before {
 			content: "\f105"; /* fa-angle-right */
 		}
 		#treePane .panel-title > a[aria-expanded="true"] {
@@ -197,6 +249,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 		#tabMD   li.eltree:before {content: "\f085";}
 		
 		'.$unifyFrames_css.'
+		'.$treeButtonsInTab_css.'
 		
 		</style>
 
@@ -204,6 +257,112 @@ if ($e->name == 'OnManagerTreePrerender') {
 		<script type="text/javascript" src="media/script/tabpane.js"></script>
 		<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+        <script>
+            function initQuicksearch(inputId, listId) {
+                jQuery("#"+inputId).quicksearch("#"+listId+" ul li", {
+                    selector: ".elementname",
+                    "show": function () { jQuery(this).removeClass("hide"); },
+                    "hide": function () { jQuery(this).addClass("hide"); },
+                    "bind":"keyup",
+                    "onAfter": function() {
+                        jQuery("#"+listId).find(".panel-collapse").each( function() {
+                            var parentLI = jQuery(this);
+                            var totalLI  = jQuery(this).find("li").length;
+                            var hiddenLI = jQuery(this).find("li.hide").length;
+                            if (hiddenLI == totalLI) { parentLI.prev(".panel-heading").addClass("hide"); }
+                            else { parentLI.prev(".panel-heading").removeClass("hide"); }
+                        });
+                    }
+                });
+            }
+            
+			// Prepare remember collapsed categories function
+			var storageKey = "MODX_elementsInTreeParams";
+	        var storage = localStorage.getItem(storageKey);
+	        var elementsInTreeParams = {};
+	        
+			try {
+	            if(storage != null) {
+	                try {
+						elementsInTreeParams = JSON.parse( storage );
+	                } catch(err) {
+	                    console.log(err);
+	                    elementsInTreeParams = { "cat_collapsed": {} };
+	                }
+	            } else {
+                    elementsInTreeParams = { "cat_collapsed": {} };
+                }
+	            jQuery(document).ready(function() {
+              
+                '.$treeButtonsInTab_js.'
+                
+                // Shift-Mouseclick opens/collapsed all categories
+                jQuery(".accordion-toggle").click(function(e) {
+					      e.preventDefault();
+					      var thisItemCollapsed = jQuery(this).hasClass("collapsed");
+					      if (e.shiftKey) {
+					          // Shift-key pressed
+					          var toggleItems = jQuery(this).closest(".panel-group").find("> .panel .accordion-toggle");
+					          var collapseItems = jQuery(this).closest(".panel-group").find("> .panel > .panel-collapse");
+					          if(thisItemCollapsed) {
+					            toggleItems.removeClass("collapsed");
+					            collapseItems.collapse("show");
+					          } else {
+					            toggleItems.addClass("collapsed");
+					            collapseItems.collapse("hide");
+					          }
+					          // Save states to localStorage
+					          toggleItems.each(function() {
+					            state = jQuery(this).hasClass("collapsed") ? 1 : 0;
+					            setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
+					          });
+					          writeElementsInTreeParamsToStorage();
+					      } else {
+					        jQuery(this).toggleClass("collapsed");
+					        jQuery(jQuery(this).attr("href")).collapse("toggle");
+					        // Save state to localStorage
+					        state = thisItemCollapsed ? 0 : 1;
+					        setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
+					        writeElementsInTreeParamsToStorage();
+					      }
+					});
+					  
+	                // Remember collapsed categories function
+					for (var type in elementsInTreeParams.cat_collapsed) {
+						if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
+						for (var category in elementsInTreeParams.cat_collapsed[type]) {
+							if (!elementsInTreeParams.cat_collapsed[type].hasOwnProperty(category)) continue;
+							state = elementsInTreeParams.cat_collapsed[type][category];
+							if(state == null) continue;
+							var collapseItem = jQuery("#collapse" + type + category);
+							var toggleItem = jQuery("#toggle" + type + category);
+							if(state == 0) {
+								// Collapsed
+								collapseItem.collapse("hide");
+								toggleItem.addClass("collapsed");
+							} else {
+								// Open
+								collapseItem.collapse("show");
+								toggleItem.removeClass("collapsed");
+							} 
+						}
+					}
+
+	                function setLastCollapsedCategory(type, id, state) {
+	                  state = state != 1 ? 1 : 0;
+	                  if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
+	                  elementsInTreeParams.cat_collapsed[type][id] = state;
+	                }
+	                
+					function writeElementsInTreeParamsToStorage() {
+						var jsonString = JSON.stringify(elementsInTreeParams);
+						localStorage.setItem(storageKey, jsonString );
+					}
+	            });
+	        } catch(err) {
+	            alert("document.ready error: " + err);
+	        }
+        </script>
 		<script type="text/javascript">
 		treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
 		</script>
@@ -235,8 +394,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_module    = 'MD';
 			$tabLabel_refresh   = 'Refresh';
 		}
-		
-		//global $modx;
 		
 		$tablePre = $modx->db->config['dbase'] . '.`' . $modx->db->config['table_prefix'];
 		
@@ -280,7 +437,8 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				$row['category'] = stripslashes($row['category']); //pixelchutes
 				if ($preCat !== $row['category']) {
 					$output .= $insideUl? '</div>': '';
-					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$row['category'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['catid'].'"><ul>';
+					$row['catid'] = intval($row['catid']);
+                    $output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" id="toggle'.$resourceTable.$row['catid'].'" href="#collapse'.$resourceTable.$row['catid'].'" data-cattype="'.$resourceTable.'" data-catid="'.$row['catid'].'" title="Click to toggle collapse. Shift+Click to toggle all."> '.$row['category'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['catid'].'"><ul>';
 					$insideUl = 1;
 				}
 				if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
@@ -296,12 +454,8 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$output .= '
     
         <script>
-          jQuery(\'#tree_'.$resourceTable.'_search\').quicksearch(\'#tree_'.$resourceTable.' ul li\', {
-            selector: \'.elementname\'
-          });
-		  jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
-            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
-          });
+          jQuery(\'#collapse'.$resourceTable.$row['catid'].'\').collapse();
+          initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
         </script>';
 			return $output;
 		}
@@ -350,29 +504,29 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
-				$row['catid'] = stripslashes($row['catid']);
-				if ($preCat !== $row['catid']) {
+				if($row['catid'] > 0) {
+					$row['catid'] = stripslashes($row['catid']);
+				} else {
+					$row['catname'] = $_lang["no_category"];
+				}
+				if ($preCat !== $row['category']) {
 					$output .= $insideUl? '</div>': '';
-					$output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" href="#collapse'.$resourceTable.$row['catid'].'" data-toggle="collapse" data-parent="#accordion"> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['category'].'"><ul>';
+					$row['catid'] = intval($row['catid']);
+                    $output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" id="toggle'.$resourceTable.$row['catid'].'" href="#collapse'.$resourceTable.$row['catid'].'" data-cattype="'.$resourceTable.'" data-catid="'.$row['catid'].'" title="Click to toggle collapse. Shift+Click to toggle all."> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['category'].'"><ul>';
 					$insideUl = 1;
 				}
-				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+				$output .= '<li class="eltree"><span><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
 				$output .= '</li>';
-				$preCat  = $row['catid'];
+				$preCat  = $row['category'];
 			}
 			$output .= $insideUl? '</ul></div></div>': '';
 			$output .= '</div>';
 			$output .= '
     
         <script>
-          jQuery(\'#tree_'.$resourceTable.'_search\').quicksearch(\'#tree_'.$resourceTable.' ul li\', {
-            selector: \'.elementname\'
-          });
-          jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
-            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
-          });
+          initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
         </script>';
 			return $output;
 		}

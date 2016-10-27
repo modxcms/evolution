@@ -449,11 +449,11 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <script>
   jQuery('#Button12').click(function(e) {
       e.preventDefault();
-      var randomNum = 'gener';
+      var randomNum = 'gener1';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-      window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+      window.open('index.php?a=76',randomNum,'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>
@@ -462,11 +462,11 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <script>
   jQuery('#Button13').click(function(e) {
       e.preventDefault();
-      var randomNum = 'gener';
+      var randomNum = 'gener2';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>
@@ -475,11 +475,11 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <script>
   jQuery('#Button14').click(function(e) {
       e.preventDefault();
-      var randomNum = 'gener';
+      var randomNum = 'gener3';
       if (e.shiftKey) {
           randomNum = Math.floor((Math.random()*999999)+1);
       }
-    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
   });
 </script>
 <?php } ?>

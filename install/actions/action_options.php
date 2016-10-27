@@ -94,7 +94,7 @@ function getTemplates($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%templates%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%templates%]</h3>' . join("\n", $_);
 }
 
 function getTVs($presets=array()) {
@@ -113,7 +113,7 @@ function getTVs($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%tvs%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%tvs%]</h3>' . join("\n", $_);
 }
 
 // display chunks
@@ -132,7 +132,7 @@ function getChunks($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%chunks%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%chunks%]</h3>' . join("\n", $_);
 }
 
 // display modules
@@ -151,7 +151,7 @@ function getModules($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%modules%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%modules%]</h3>' . join("\n", $_);
 }
 
 // display plugins
@@ -170,7 +170,7 @@ function getPlugins($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%plugins%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%plugins%]</h3>' . join("\n", $_);
 }
 
 // display snippets
@@ -189,5 +189,5 @@ function getSnippets($presets=array()) {
         $_[] = parse($tpl,$ph);
         $i++;
     }
-    if(0<count($_)) return '<h3>[%snippets%]</h3><br />' . join("\n", $_);
+    if(0<count($_)) return '<h3>[%snippets%]</h3>' . join("\n", $_);
 }
