@@ -4125,7 +4125,7 @@ class DocumentParser {
                     } else {
                         $value = $row;
                     }
-                    if (isset($value)) $property[$key] = $value;
+                    if (isset($value) && $value !== "") $property[$key] = $value;
                 }
             }
         }
