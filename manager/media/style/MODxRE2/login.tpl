@@ -14,6 +14,7 @@
       }
       input {
         font-family:inherit;
+        -webkit-appearance: none;
       }
       #login {
         background-color: #F2F2F2;
