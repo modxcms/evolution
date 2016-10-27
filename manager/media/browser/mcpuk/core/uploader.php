@@ -658,7 +658,7 @@ class uploader {
             return true;
 
         // Images with smaller resolutions than thumbnails
-        if (($img->width <= $this->config['thumbWidth']) &&
+        /*if (($img->width <= $this->config['thumbWidth']) &&
             ($img->height <= $this->config['thumbHeight'])
         ) {
             list($tmp, $tmp, $type) = @getimagesize($file);
@@ -667,7 +667,8 @@ class uploader {
                 return true;
 
         // Resize image
-        } elseif (!$img->resizeFit($this->config['thumbWidth'], $this->config['thumbHeight']))
+        } else */
+        if (!$img->resizeFit($this->config['thumbWidth'], $this->config['thumbHeight']))
             return false;
 
         // Save thumbnail

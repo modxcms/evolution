@@ -3,6 +3,7 @@
     <head>
         <title>[+lang.DM_module_title+]</title>
         <link rel="stylesheet" type="text/css" href="media/style[+theme+]/style.css" /> 
+        <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
         <script type="text/javascript" src="media/script/tabpane.js"></script>
         <script type="text/javascript" src="[(mgr_jquery_path)]"></script>
         <script type="text/javascript" src="media/script/mootools/mootools.js"></script>
@@ -52,7 +53,14 @@
         </script>
     </head>
     <body>
-        <h1>[+lang.DM_module_title+]</h1>
+    <h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-file-text"></i>
+  </span>
+  <span class="pagetitle-text">
+    [+lang.DM_module_title+]
+  </span>
+</h1>
         <div id="actions">
             <ul class="actionButtons">
                 <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style[+theme+]/images/icons/stop.png" /> [+lang.DM_close+]</a></li>
@@ -65,25 +73,25 @@
 	        </script>
 	        
 	        <div class="tab-page" id="tabTemplates">  
-	            <h2 class="tab">[+lang.DM_change_template+]</h2>  
+	            <h2 class="tab"><i class="fa fa-newspaper-o"></i> [+lang.DM_change_template+]</h2>  
 	            <script type="text/javascript">tpResources.addTabPage(document.getElementById('tabTemplates'));</script>
 	           [+view.templates+]
 	        </div>
 	   
 	        <div class="tab-page" id="tabTemplateVariables">  
-	            <h2 class="tab">[+lang.DM_template_variables+]</h2>  
+	            <h2 class="tab"><i class="fa fa-list-alt"></i> [+lang.DM_template_variables+]</h2>  
 	            <script type="text/javascript">tpResources.addTabPage(document.getElementById("tabTemplateVariables" ));</script> 
 	           [+view.templatevars+]
 	        </div>
 	    
 	        <div class="tab-page" id="tabDocPermissions">  
-	            <h2 class="tab">[+lang.DM_doc_permissions+]</h2>  
+	            <h2 class="tab"><i class="fa fa-file-text"></i> [+lang.DM_doc_permissions+]</h2>  
 	            <script type="text/javascript">tpResources.addTabPage(document.getElementById("tabDocPermissions"));</script> 
 	           [+view.documentgroups+]
 	        </div>
          
 	        <div class="tab-page" id="tabOther">  
-	           <h2 class="tab">[+lang.DM_other+]</h2>  
+	           <h2 class="tab"><i class="fa fa-tasks"></i>[+lang.DM_other+]</h2>  
 	           <script type="text/javascript">tpResources.addTabPage(document.getElementById("tabOther"));</script>
 	           [+view.misc+]
 	           [+view.changeauthors+]

@@ -4085,6 +4085,7 @@ class DocumentParser {
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $propertyString = trim($propertyString);
+        $propertyString = str_replace('} {', ',', $propertyString );
         if(empty($propertyString)) return array();
         if($propertyString=='{}')  return array();
         
@@ -4125,7 +4126,7 @@ class DocumentParser {
                     } else {
                         $value = $row;
                     }
-                    if (isset($value)) $property[$key] = $value;
+                    if (isset($value) && $value !== "") $property[$key] = $value;
                 }
             }
         }
