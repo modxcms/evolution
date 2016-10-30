@@ -5,21 +5,43 @@ $downloadLinks = array(
 	0=>array('title'=>'Information','link'=>'https://modx.com/community/modx-evolution'),
 	1=>array('title'=>'Download','link'=>'https://modx.com/download/evolution/'),
 	2=>array('title'=>'Previous Releases','link'=>'https://modx.com/download/evolution/previous-releases.html'),
-	3=>array('title'=>'Extras','link'=>'https://modx.com/extras/?product=evolution'),
+	3=>array('title'=>'Extras','link'=>array(
+		'https://modx.com/extras/?product=evolution',
+		'http://extras.evolution-cms.com/',
+		'https://github.com/extras-evolution'
+	)),
 );
-?>
 
-<div class="sectionHeader">Evolution Downloads</div><div class="sectionBody">
-	<table width="500"  border="0" cellspacing="0" cellpadding="0">
-	<?php foreach($downloadLinks as $row) { ?>
+$translationLinks = array(
+	0=>array('title'=>'MODX Evolution','link'=>'https://www.transifex.com/modx/modx-evolution/'),
+	1=>array('title'=>'Extras','link'=>'https://www.transifex.com/modx/modx-evolution-extras/'),
+);
+
+function createList($sectionHeader, $linkArr) {
+	$output = '<div class="sectionHeader">'.$sectionHeader.'</div><div class="sectionBody">'."\n";
+	$output .= '<table width="500"  border="0" cellspacing="0" cellpadding="0">'."\n";
+	$links = '';
+	foreach($linkArr as $row) {
+		if (!is_array($row['link'])) $row['link'] = array($row['link']);
+		foreach ($row['link'] as $link) {
+			$links .= $links != '' ? '<br/>' : '';
+			$links .= '<a href="' . $link . '" target="_blank">' . $link . '</a>';
+		}
+		$output .= '
 		<tr>
-			<td align="left"><strong><?php echo $row["title"]; ?></strong></td>
-			<td align="left"><a href="<?php echo $row["link"]; ?>" target="_blank"><?php echo $row["link"]; ?></a></td>
-		</tr>
-	<?php } ?>
-		
-	</table> 
-</div>
+			<td align="left"><strong>' . $row["title"] . '</strong></td>
+			<td align="left">' . $links . '</td>
+		</tr>';
+		$links = '';
+	}
+	$output .= '</table></div>'."\n";
+	return $output;
+}
+
+echo createList($_lang['evo_downloads_title'], $downloadLinks);
+echo createList($_lang['help_translating_title'], $translationLinks);
+
+?>
 
 <div class="sectionHeader"><?php echo $_lang['about_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['about_msg']; ?> <?php echo $_lang['credits_shouts_msg']; ?>
