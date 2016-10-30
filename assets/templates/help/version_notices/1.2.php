@@ -28,6 +28,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	<li><strong>Snippet - Shortcut param = true</strong>
 		<p>[[snippetName?param1&amp;param2]] will automatically be handled as [[snippetName?param1=`1`&amp;param2=`1`]] while param=`` will still be handled as empty value.</p>
 	</li>
+	<li><strong>Output value of $_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION</strong>
+		<pre>[!$_SERVER['REQUEST_TIME']:dateFormat='Y'!]</pre>
+	</li>
 	<li><strong>New Conditional Tags / Modifiers</strong>
 		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. Example:</p>
 		<pre>[*longtitle:ifempty=[*pagetitle*]*]</pre>
@@ -35,6 +38,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 Top page
 <@ELSE>
 Sub page
+<@ENDIF--&gt;</pre>
+		<p>In combination with $_GET :</p>
+		<pre>&lt;!--@IF:[!$_GET['value']:preg('/^[0-9]+$/')!]>
+Value is numeric.
+<@ELSE>
+Value is not numeric.
+<@ENDIF--&gt;</pre>
+		<p>UltimateParent</p>
+		<pre>[[UltimateParent:is=`8`:then=`8`:else=`11`]]
+&lt;!--@IF:[[UltimateParent:is=8]]>
+8
+<@ELSE>
+11
 <@ENDIF--&gt;</pre>
 	</li>
 
@@ -55,8 +71,10 @@ Sub page
 	</li>
 
 	<li><strong>File-binded Templates via @INCLUDE</strong>
-		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Example:</p>
-		<p>MODX-Template:</p>
+		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Examples:</p>
+		<p>HTML Template:</p>
+		<pre>@INCLUDE:assets/templates/mydesign/template.html</pre>
+		<p>PHP Template:</p>
 		<pre>@INCLUDE:assets/templates/mydesign/template.inc.php</pre>
 		<p>template.inc.php :</p>
 		<pre>switch($modx->documentIdentifier) {
