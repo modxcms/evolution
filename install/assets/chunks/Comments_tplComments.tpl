@@ -19,7 +19,6 @@
    </div>
    <div class="panel-body">
       <div class="jot-comment">
-         >
          <div class="jot-user">
             [+comment.createdby:isnt=`0`:then=`<b>`+][+comment.createdby:userinfo=`username`:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+]
             [+comment.createdby:isnt=`0`:then=`</b>`+]
