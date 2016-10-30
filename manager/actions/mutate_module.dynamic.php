@@ -236,13 +236,13 @@ function showParameters(ctrl) {
                         c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
                         break;
                     default:  // string
-                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:80%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
                         break;
                 }
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></small>' : '';
+                sd = defaultVal != undefined ? ' <span style=float:right;><ul class="actionButtons" style="float:right;margin:0px 15px;"><li><a href="#" class="primary btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul><span>' : '';
 
                 t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             });

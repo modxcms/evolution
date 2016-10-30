@@ -222,13 +222,13 @@ function showParameters(ctrl) {
                         c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
                         break;
                     default:  // string
-                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:80%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
                         break;
                 }
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></small>' : '';
+                sd = defaultVal != undefined ? ' <span style=float:right;><ul class="actionButtons" style="float:right;margin:0px 15px;"><li><a href="#" class="primary btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul><span>' : '';
 
                 t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             });
@@ -483,8 +483,7 @@ var internal = <?php echo json_encode($internal); ?>;
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
       </tr>
 <?php if($modx->hasPermission('save_role')):?>
-          <tr>
-     
+          <tr>     
             <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
           </tr>
       <?php endif;?>
@@ -505,8 +504,7 @@ var internal = <?php echo json_encode($internal); ?>;
 <!-- Config -->
 <div class="tab-page" id="tabConfig">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabConfig" ) );</script>
-    
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabConfig" ) );</script>    
     <table border="0" cellspacing="0" cellpadding="6">
     <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
@@ -526,8 +524,7 @@ var internal = <?php echo json_encode($internal); ?>;
                     }
                 ?>
                 </select><br/>
-                <span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br />
-            </td>
+                <span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br />            </td>
           </tr>
         <tr>
             <td>
