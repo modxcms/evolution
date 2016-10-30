@@ -513,7 +513,57 @@ function SetUrl(url, width, height, alt) {
                 </td>
             </tr>
         </table>
-       <?php if ($use_udperms == 1) : ?>
+    </div>
+<?php if ($_REQUEST['a'] == '108'): ?>
+    <!-- Dependencies -->
+    <div class="tab-page" id="tabDepend">
+    <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
+    <table width="95%" border="0" cellspacing="0" cellpadding="0">
+    <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
+        <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
+    <tr><td valign="top" align="left">
+<?php
+$ds = $modx->db->select(
+    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+	CASE smd.type
+		WHEN 10 THEN 'Chunk'
+		WHEN 20 THEN 'Document'
+		WHEN 30 THEN 'Plugin'
+		WHEN 40 THEN 'Snippet'
+		WHEN 50 THEN 'Template'
+		WHEN 60 THEN 'TV'
+	END AS type",
+	"{$tbl_site_module_depobj} AS smd 
+		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
+		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
+		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
+		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
+		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
+		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
+	"smd.module='{$id}'",
+	'smd.type,name');
+    include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
+    $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
+    $grd->noRecordMsg = $_lang['no_records_found'];
+    $grd->cssClass = 'grid';
+    $grd->columnHeaderClass = 'gridHeader';
+    $grd->itemClass = 'gridItem';
+    $grd->altItemClass = 'gridAltItem';
+    $grd->columns = $_lang['element_name']." ,".$_lang['type'];
+    $grd->fields = "name,type";
+    echo $grd->render();
+?>
+        </td></tr>
+    </table>
+    </div>
+<?php endif; ?>
+<!-- access permission -->
+<div class="tab-page" id="tabPermissions">
+<h2 class="tab"><?php echo $_lang['access_permissions'];?></h2>
+<script type="text/javascript">tp.addTabPage( document.getElementById( "tabPermissions" ) );</script>
+<div class="section">
+               <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
     $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
@@ -567,53 +617,8 @@ function SetUrl(url, width, height, alt) {
 </div>
 </div>
 <?php endif; ?> 
-        
-    </div>
-<?php if ($_REQUEST['a'] == '108'): ?>
-    <!-- Dependencies -->
-    <div class="tab-page" id="tabDepend">
-    <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
-    <table width="95%" border="0" cellspacing="0" cellpadding="0">
-    <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
-        <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
-    <tr><td valign="top" align="left">
-<?php
-$ds = $modx->db->select(
-    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
-	CASE smd.type
-		WHEN 10 THEN 'Chunk'
-		WHEN 20 THEN 'Document'
-		WHEN 30 THEN 'Plugin'
-		WHEN 40 THEN 'Snippet'
-		WHEN 50 THEN 'Template'
-		WHEN 60 THEN 'TV'
-	END AS type",
-	"{$tbl_site_module_depobj} AS smd 
-		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
-		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
-		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
-		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
-		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
-		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
-	"smd.module='{$id}'",
-	'smd.type,name');
-    include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
-    $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
-    $grd->noRecordMsg = $_lang['no_records_found'];
-    $grd->cssClass = 'grid';
-    $grd->columnHeaderClass = 'gridHeader';
-    $grd->itemClass = 'gridItem';
-    $grd->altItemClass = 'gridAltItem';
-    $grd->columns = $_lang['element_name']." ,".$_lang['type'];
-    $grd->fields = "name,type";
-    echo $grd->render();
-?>
-        </td></tr>
-    </table>
-    </div>
-<?php endif; ?>
-
+</div>
+</div>
 <!-- docBlock Info -->
 <div class="tab-page" id="tabDocBlock">
 <h2 class="tab"><?php echo $_lang['information'];?></h2>
