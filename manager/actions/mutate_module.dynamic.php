@@ -447,95 +447,6 @@ function SetUrl(url, width, height, alt) {
     <table border="0" cellspacing="0" cellpadding="1">
         <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
             <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
-    </table>
-
-    <!-- PHP text editor start -->
-        <div class="sectionHeader">
-            <span style="float:right;><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox"<?php echo $content['wrap']== 1 ? ' checked="checked"' : ''?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-            <?php echo $_lang['module_code']?>
-        </div>
-        <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['modulecode'])?></textarea>
-        </div>
-    <!-- PHP text editor end -->
-    </div>
-    <!-- Configuration -->
-    <div class="tab-page" id="tabConfig">
-        <h2 class="tab"><?php echo $_lang['settings_config']?></h2>
-        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
-
-        <table width="90%" border="0" cellspacing="0" cellpadding="0">
-            <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
-                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
-            <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
-                <td align="left" valign="top"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
-            <tr>
-                <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
-                <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
-            </tr>
-            <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
-                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br />
-                    <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
-                    <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
-                </td>
-            </tr>
-            <tr id="displayparamrow"><td valign="top" align="left">&nbsp;</td>
-                <td align="left" id="displayparams">&nbsp;</td></tr>
-        </table>
-    </div>
-<?php if ($_REQUEST['a'] == '108'): ?>
-    <!-- Dependencies -->
-    <div class="tab-page" id="tabDepend">
-    <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
-    <table width="95%" border="0" cellspacing="0" cellpadding="0">
-    <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
-        <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
-    <tr><td valign="top" align="left">
-<?php
-$ds = $modx->db->select(
-    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
-	CASE smd.type
-		WHEN 10 THEN 'Chunk'
-		WHEN 20 THEN 'Document'
-		WHEN 30 THEN 'Plugin'
-		WHEN 40 THEN 'Snippet'
-		WHEN 50 THEN 'Template'
-		WHEN 60 THEN 'TV'
-	END AS type",
-	"{$tbl_site_module_depobj} AS smd 
-		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
-		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
-		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
-		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
-		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
-		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
-	"smd.module='{$id}'",
-	'smd.type,name');
-    include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
-    $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
-    $grd->noRecordMsg = $_lang['no_records_found'];
-    $grd->cssClass = 'grid';
-    $grd->columnHeaderClass = 'gridHeader';
-    $grd->itemClass = 'gridItem';
-    $grd->altItemClass = 'gridAltItem';
-    $grd->columns = $_lang['element_name']." ,".$_lang['type'];
-    $grd->fields = "name,type";
-    echo $grd->render();
-?>
-        </td></tr>
-    </table>
-    </div>
-<?php endif; ?>
-
-<!-- Properties -->
-<div class="tab-page" id="tabInfo">
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tp.addTabPage( document.getElementById( "tabInfo" ) );</script>
-<div class="section">
-<table>
-        <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
             <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
         <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
@@ -555,12 +466,54 @@ $ds = $modx->db->select(
             <td align="left"><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
         <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
             <td align="left"><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
+ <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
+            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span> <span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
-</table>
-</div>
+    </table>
 
-<?php if ($use_udperms == 1) : ?>
+    <!-- PHP text editor start -->
+        <div class="sectionHeader">
+            <span style="float:right;><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox"<?php echo $content['wrap']== 1 ? ' checked="checked"' : ''?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+            <?php echo $_lang['module_code']?>
+        </div>
+        <div class="sectionBody">
+        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['modulecode'])?></textarea>
+        </div>
+    <!-- PHP text editor end -->
+    </div>
+    <!-- Configuration -->
+        <div class="tab-page" id="tabConfig">
+            <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
+            <p></p>
+        <table border="0" cellspacing="0" cellpadding="6">
+            <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
+                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
+                <tr>
+        <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
+                <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
+            <tr><td><input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
+        <tr width="100" id="displayparamrow">
+                <td align="left" colspan="2" width="100%" id="displayparams">&nbsp;</td></tr>
+        </table>
+        </div>      
+    <!-- Properties -->
+    <div class="tab-page" id="tabParams">
+        <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
+        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
+        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
+                <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
+            </tr>
+            <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
+                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br />
+
+                    <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+                </td>
+            </tr>
+        </table>
+       <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
     $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
@@ -613,9 +566,54 @@ $ds = $modx->db->select(
 ?>
 </div>
 </div>
+<?php endif; ?> 
+        
+    </div>
+<?php if ($_REQUEST['a'] == '108'): ?>
+    <!-- Dependencies -->
+    <div class="tab-page" id="tabDepend">
+    <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
+    <table width="95%" border="0" cellspacing="0" cellpadding="0">
+    <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
+        <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
+    <tr><td valign="top" align="left">
+<?php
+$ds = $modx->db->select(
+    "smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS name, 
+	CASE smd.type
+		WHEN 10 THEN 'Chunk'
+		WHEN 20 THEN 'Document'
+		WHEN 30 THEN 'Plugin'
+		WHEN 40 THEN 'Snippet'
+		WHEN 50 THEN 'Template'
+		WHEN 60 THEN 'TV'
+	END AS type",
+	"{$tbl_site_module_depobj} AS smd 
+		LEFT JOIN {$tbl_site_htmlsnippets} AS sc ON sc.id = smd.resource AND smd.type = 10 
+		LEFT JOIN {$tbl_site_content} AS sd ON sd.id = smd.resource AND smd.type = 20
+		LEFT JOIN {$tbl_site_plugins} AS sp ON sp.id = smd.resource AND smd.type = 30
+		LEFT JOIN {$tbl_site_snippets} AS ss ON ss.id = smd.resource AND smd.type = 40
+		LEFT JOIN {$tbl_site_templates} AS st ON st.id = smd.resource AND smd.type = 50
+		LEFT JOIN {$tbl_site_tmplvars} AS sv ON sv.id = smd.resource AND smd.type = 60",
+	"smd.module='{$id}'",
+	'smd.type,name');
+    include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
+    $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
+    $grd->noRecordMsg = $_lang['no_records_found'];
+    $grd->cssClass = 'grid';
+    $grd->columnHeaderClass = 'gridHeader';
+    $grd->itemClass = 'gridItem';
+    $grd->altItemClass = 'gridAltItem';
+    $grd->columns = $_lang['element_name']." ,".$_lang['type'];
+    $grd->fields = "name,type";
+    echo $grd->render();
+?>
+        </td></tr>
+    </table>
+    </div>
 <?php endif; ?>
-</div>
-    
+
 <!-- docBlock Info -->
 <div class="tab-page" id="tabDocBlock">
 <h2 class="tab"><?php echo $_lang['information'];?></h2>
