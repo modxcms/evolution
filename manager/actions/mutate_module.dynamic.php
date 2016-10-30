@@ -236,13 +236,13 @@ function showParameters(ctrl) {
                         c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
                         break;
                     default:  // string
-                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:80%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
                         break;
                 }
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></small>' : '';
+                sd = defaultVal != undefined ? ' <span style=float:right;><ul class="actionButtons" style="float:right;margin:0px 15px;"><li><a href="#" class="primary btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul><span>' : '';
 
                 t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             });
@@ -447,6 +447,29 @@ function SetUrl(url, width, height, alt) {
     <table border="0" cellspacing="0" cellpadding="1">
         <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
             <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+        <tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
+            <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
+        <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
+            <td align="left">
+            <select name="categoryid" onchange="documentDirty=true;">
+                <option>&nbsp;</option>
+<?php
+                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+                foreach(getCategories() as $n => $v) {
+                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.$modx->htmlspecialchars($v['category'])."</option>\n";
+                }
+?>
+            </select></td></tr>
+        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
+            <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
+        <tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span>:&nbsp;&nbsp;</td>
+            <td align="left"><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
+        <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
+            <td align="left"><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
+ <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
+            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
+        <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
+            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span> <span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -460,27 +483,35 @@ function SetUrl(url, width, height, alt) {
     <!-- PHP text editor end -->
     </div>
     <!-- Configuration -->
-    <div class="tab-page" id="tabConfig">
-        <h2 class="tab"><?php echo $_lang['settings_config']?></h2>
-        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
-
-        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+        <div class="tab-page" id="tabConfig">
+            <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
+            <p></p>
+        <table border="0" cellspacing="0" cellpadding="6">
             <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
                 <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
-            <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
-                <td align="left" valign="top"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
-            <tr>
+                <tr>
+        <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
+                <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
+            <tr><td><input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
+        <tr width="100" id="displayparamrow">
+                <td align="left" colspan="2" width="100%" id="displayparams">&nbsp;</td></tr>
+        </table>
+        </div>      
+    <!-- Properties -->
+    <div class="tab-page" id="tabParams">
+        <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
+        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
+        <table width="90%" border="0" cellspacing="0" cellpadding="0">
                 <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
                 <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
             </tr>
             <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
                 <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br />
-                    <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
+
                     <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
                 </td>
             </tr>
-            <tr id="displayparamrow"><td valign="top" align="left">&nbsp;</td>
-                <td align="left" id="displayparams">&nbsp;</td></tr>
         </table>
     </div>
 <?php if ($_REQUEST['a'] == '108'): ?>
@@ -527,40 +558,12 @@ $ds = $modx->db->select(
     </table>
     </div>
 <?php endif; ?>
-
-<!-- Properties -->
-<div class="tab-page" id="tabInfo">
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tp.addTabPage( document.getElementById( "tabInfo" ) );</script>
+<!-- access permission -->
+<div class="tab-page" id="tabPermissions">
+<h2 class="tab"><?php echo $_lang['access_permissions'];?></h2>
+<script type="text/javascript">tp.addTabPage( document.getElementById( "tabPermissions" ) );</script>
 <div class="section">
-<table>
-        <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
-        <tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
-            <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
-            <td align="left">
-            <select name="categoryid" onchange="documentDirty=true;">
-                <option>&nbsp;</option>
-<?php
-                include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
-                foreach(getCategories() as $n => $v) {
-                    echo "\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] ? ' selected="selected"' : '').'>'.$modx->htmlspecialchars($v['category'])."</option>\n";
-                }
-?>
-            </select></td></tr>
-        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
-            <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span>:&nbsp;&nbsp;</td>
-            <td align="left"><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
-        <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
-            <td align="left"><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
-        <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span> <span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
-</table>
-</div>
-
-<?php if ($use_udperms == 1) : ?>
+               <?php if ($use_udperms == 1) : ?>
 <?php
     // fetch user access permissions for the module
     $rs = $modx->db->select('usergroup', $tbl_site_module_access, "module='{$id}'");
@@ -613,9 +616,9 @@ $ds = $modx->db->select(
 ?>
 </div>
 </div>
-<?php endif; ?>
+<?php endif; ?> 
 </div>
-    
+</div>
 <!-- docBlock Info -->
 <div class="tab-page" id="tabDocBlock">
 <h2 class="tab"><?php echo $_lang['information'];?></h2>
