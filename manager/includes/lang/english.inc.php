@@ -1336,3 +1336,6 @@ $_lang["which_browser_default_msg"]= "Choose the File Browser you prefer as defa
 $_lang["which_browser_title"]= "File Browser";
 $_lang["which_browser_msg"]= "You can choose a custom File Browser for this user. To use the System´s default Browser, leave it on &quot;Default&quot;.";
 $_lang["option_default"] = "Default";
+
+$_lang['evo_downloads_title'] = "Evolution Downloads";
+$_lang['help_translating_title'] = "Help translating MODX Evolution";
