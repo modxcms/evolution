@@ -5,7 +5,7 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.3.0
+ * @version     1.3.2
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
@@ -18,7 +18,7 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  30/10/2016
+ * @lastupdate  31/10/2016
  */
 
 global $_lang;
@@ -306,7 +306,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 		
 		</style>
 
-		<div class="tab-pane" id="treePane" style="border:0;">
+		<div class="tab-pane no-transition" id="treePane" style="border:0;">
 		<script type="text/javascript" src="media/script/tabpane.js"></script>
 		<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
@@ -327,11 +327,11 @@ if ($e->name == 'OnManagerTreePrerender') {
                         });
                     }
                 });
-			jQuery(".filterElements-form").keydown(function (e) {
-            if (e.keyCode == 13) {
-            e.preventDefault();
-            }
-            });
+				jQuery(".filterElements-form").keydown(function (e) {
+					if (e.keyCode == 13) {
+						e.preventDefault();
+					}
+				});
             }
             
             var storageKey = "MODX_elementsInTreeParams";
@@ -359,7 +359,6 @@ if ($e->name == 'OnManagerTreePrerender') {
                 // Remember collapsed categories functions
                 function setRememberCollapsedCategories(obj=null) {
                     obj = obj == null ? elementsInTreeParams.cat_collapsed : obj;
-                    jQuery("#treePane").addClass("no-transition");
 					for (var type in obj) {
 						if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
 						for (var category in elementsInTreeParams.cat_collapsed[type]) {
@@ -379,7 +378,10 @@ if ($e->name == 'OnManagerTreePrerender') {
 							} 
 						}
 					}
-					jQuery("#treePane").removeClass("no-transition");
+					// Avoid first category collapse-flicker on reload
+					setTimeout(function() {
+				       jQuery("#treePane").removeClass("no-transition");
+					}, 50);
 				}
 
                 function setLastCollapsedCategory(type, id, state) {
@@ -393,6 +395,10 @@ if ($e->name == 'OnManagerTreePrerender') {
 				}
 				
 	            jQuery(document).ready(function() {
+
+                jQuery(".filterElements-form").keydown(function (e) {
+                    if(e.keyCode == 13) e.preventDefault();
+                });
               
                 '.$treeButtonsInTab_js.'
                 
