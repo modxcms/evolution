@@ -518,10 +518,6 @@ function contains(a, obj) {
                 <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
             </td>
           </tr>
-          <tr>
-            <td valign="top">&nbsp;</td>
-            <td id="displayparams">&nbsp;</td>
-          </tr>
         </table>
     </div>
     
