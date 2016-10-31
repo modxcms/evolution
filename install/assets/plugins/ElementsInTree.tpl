@@ -327,6 +327,11 @@ if ($e->name == 'OnManagerTreePrerender') {
                         });
                     }
                 });
+			jQuery(".filterElements-form").keydown(function (e) {
+            if (e.keyCode == 13) {
+            e.preventDefault();
+            }
+            });
             }
             
             var storageKey = "MODX_elementsInTreeParams";
