@@ -479,8 +479,8 @@ function contains(a, obj) {
           </td>
         </tr>
         <tr id="displayparamrow">
-             <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
-          </tr>   
+           <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+        </tr>
     </table>
 </div> 
 
@@ -517,10 +517,6 @@ function contains(a, obj) {
             <td colspan="2"><textarea name="properties" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
                 <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
             </td>
-          </tr>
-          <tr id="displayparamrow">
-            <td valign="top">&nbsp;</td>
-            <td id="displayparams">&nbsp;</td>
           </tr>
         </table>
     </div>
