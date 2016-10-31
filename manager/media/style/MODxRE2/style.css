@@ -2962,25 +2962,30 @@ div.treeframebody {
     color: #5b6f7a;
     padding: 0 5px 0 12px;
 }
-div#tabTemplates.tab-page ul li ul li:before{
+div#tabTemplates.tab-page ul li ul li:before,
+div#tabCategory.tab-page ul li ul li.el-Templates:before{
     content:'\f1ea';
 }
-div#tabVariables.tab-page ul li ul li:before{
+div#tabVariables.tab-page ul li ul li:before,
+div#tabCategory.tab-page ul li ul li.el-Template.Variables:before{
     content:'\f022';
 }
-div#tabChunks.tab-page ul li ul li:before{
+div#tabChunks.tab-page ul li ul li:before,
+div#tabCategory.tab-page ul li ul li.el-Chunks:before{
     content:'\f009';
 }
-div#tabSnippets.tab-page ul li ul li:before{
+div#tabSnippets.tab-page ul li ul li:before,
+div#tabCategory.tab-page ul li ul li.el-Snippets:before{
     content:'\f121';
 }
-div#tabPlugins.tab-page ul li ul li:before{
+div#tabPlugins.tab-page ul li ul li:before,
+div#tabCategory.tab-page ul li ul li.el-Plugins:before{
     content:'\f1e6';
 }
-div#tabCategory.tab-page ul li ul li:before{
-    content:'\f00a';
-    padding-left: 15px;
+div#tabCategory.tab-page ul li ul li.el-Modules:before{
+    content:'\f085';
 }
+
 /* action buttons */
 
 .actionButtons a {
