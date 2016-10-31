@@ -128,7 +128,7 @@ function showParameters(ctrl) {
         currentParams = JSON.parse(props);
     }
 
-    t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+    t = '<table width="100%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
         var type, options, found, info, sd;
@@ -228,9 +228,9 @@ function showParameters(ctrl) {
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? ' <span style=float:right;><ul class="actionButtons" style="float:right;margin:0px 15px;"><li><a href="#" class="primary btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul><span>' : '';
+                sd = defaultVal != undefined ? ' <ul class="actionButtons" style="position:absolute;right:0px;bottom:6px;min-height:0;"><li><a href="#" class="primary btn-small btnSetDefault" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul>' : '';
 
-                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             });
 
         t += '</table>';
@@ -337,7 +337,7 @@ function createAssignEventsButton() {
     if(document.getElementById('assignEvents') === null) {
         var button = document.createElement("div");
         button.setAttribute('id', 'assignEvents');
-        button.innerHTML = '<ul class="actionButtons"><li><a href="#" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a></li></ul>';
+        button.innerHTML = '<ul class="actionButtons"><li><a class="primary" href="#" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a></li></ul>';
         var tab = document.getElementById("tabEvents");
         tab.insertBefore(button, tab.firstChild);
     }
@@ -482,11 +482,9 @@ var internal = <?php echo json_encode($internal); ?>;
       <tr>
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
       </tr>
-<?php if($modx->hasPermission('save_role')):?>
-          <tr>     
-            <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
-          </tr>
-      <?php endif;?>
+      <tr>     
+        <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
+      </tr>
 <?php endif;?>
     </table>
     <!-- PHP text editor start -->
@@ -496,17 +494,36 @@ var internal = <?php echo json_encode($internal); ?>;
             <?php echo $_lang['plugin_code']; ?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
         </div>
     </div>
     <!-- PHP text editor end -->
 </div>
+
 <!-- Config -->
 <div class="tab-page" id="tabConfig">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
     <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabConfig" ) );</script>    
-    <table border="0" cellspacing="0" cellpadding="6">
-    <tr>
+    <table border="0" cellspacing="0" cellpadding="6" width="100%">
+        <tr>
+          <td colspan="2">
+            <ul class="actionButtons"
+              <li><a href="#" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
+            </ul>
+          </td>
+        </tr>
+        <tr id="displayparamrow">
+             <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+          </tr>   
+    </table>
+</div>        
+
+<!-- Properties -->
+<div class="tab-page" id="tabProps">
+    <h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
+        <table border="0" cellspacing="0" cellpadding="6">
+          <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
@@ -523,33 +540,21 @@ var internal = <?php echo json_encode($internal); ?>;
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".$modx->htmlspecialchars($row["name"])."</option>";
                     }
                 ?>
-                </select><br/>
-                <span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br />            </td>
-          </tr>
-        <tr>
-            <td>
-        <input type="button" onclick='setDefaults(this)' value="<?php echo $_lang['set_default_all']; ?>" />
-         </td>
-            </tr>
-        <tr id="displayparamrow">
-             <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
-          </tr>   
-        </table>
-        </div>        
-
-<!-- Properties -->
-<div class="tab-page" id="tabProps">
-    <h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
-        <table border="0" cellspacing="0" cellpadding="6">
-          <tr>
-            <td valign="top" width="900" id="displayproperties"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br />
-                <input type="button" onclick='showParameters(this)' value="<?php echo $_lang['update_params']; ?>" />
+                </select>
             </td>
           </tr>
-          
+	        <tr>
+		        <td></td>
+		        <td><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span></td>
+	        </tr>
+          <tr>
+            <td colspan="2" valign="top" width="900" id="displayproperties"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br />
+                <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
+            </td>
+          </tr>
         </table>
-        </div>
+</div>
+
 <!-- System Events -->
 <div class="tab-page" id="tabEvents">
     <h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>

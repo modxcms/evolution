@@ -2,10 +2,10 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 $downloadLinks = array(
-	0=>array('title'=>'Information','link'=>'https://modx.com/community/modx-evolution'),
-	1=>array('title'=>'Download','link'=>'https://modx.com/download/evolution/'),
-	2=>array('title'=>'Previous Releases','link'=>'https://modx.com/download/evolution/previous-releases.html'),
-	3=>array('title'=>'Extras','link'=>array(
+	0=>array('title'=>$_lang["information"],'link'=>'https://modx.com/community/modx-evolution'),
+	1=>array('title'=>$_lang["download"],'link'=>'https://modx.com/download/evolution/'),
+	2=>array('title'=>$_lang["previous_releases"],'link'=>'https://modx.com/download/evolution/previous-releases.html'),
+	3=>array('title'=>$_lang["extras"],'link'=>array(
 		'https://modx.com/extras/?product=evolution',
 		'http://extras.evolution-cms.com/',
 		'https://github.com/extras-evolution'
@@ -14,7 +14,7 @@ $downloadLinks = array(
 
 $translationLinks = array(
 	0=>array('title'=>'MODX Evolution','link'=>'https://www.transifex.com/modx/modx-evolution/'),
-	1=>array('title'=>'Extras','link'=>'https://www.transifex.com/modx/modx-evolution-extras/'),
+	1=>array('title'=>$_lang["extras"],'link'=>'https://www.transifex.com/modx/modx-evolution-extras/'),
 );
 
 function createList($sectionHeader, $linkArr) {

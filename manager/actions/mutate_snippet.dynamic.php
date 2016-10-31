@@ -129,7 +129,7 @@ function showParameters(ctrl) {
         currentParams = JSON.parse(props);
     }
 
-    t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+    t = '<table width="100%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
         
@@ -230,9 +230,9 @@ function showParameters(ctrl) {
 
                 info = '';
                 info += desc ? '<br/><small>'+desc+'</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\''+ key +'\',1);return false;">Set Default</a></small>' : '';
+                sd = defaultVal != undefined ? ' <ul class="actionButtons" style="position:absolute;right:0px;bottom:6px;min-height:0;"><li><a href="#" class="primary btn-small btnSetDefault" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul>' : '';
 
-            t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+            t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             
         });
 
@@ -446,7 +446,10 @@ function contains(a, obj) {
           </tr>
 <?php if($modx->hasPermission('save_role')):?>
           <tr>
-            <td valign="top" colspan="2"><label style="display:block;"><input style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
+            <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
+          </tr>
+          <tr>
+            <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
           </tr>
 <?php endif;?>
         </table>
@@ -463,13 +466,31 @@ function contains(a, obj) {
         <!-- PHP text editor end -->
     </div>
 
+<!-- Config -->
+<div class="tab-page" id="tabConfig">
+    <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabConfig" ) );</script>    
+    <table border="0" cellspacing="0" cellpadding="6" width="100%">
+        <tr>
+          <td colspan="2">
+            <ul class="actionButtons"
+              <li><a href="#" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
+            </ul>
+          </td>
+        </tr>
+        <tr id="displayparamrow">
+             <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+          </tr>   
+    </table>
+</div> 
+
     <!-- Properties -->
     <div class="tab-page" id="tabProps">
         <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
         <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
           <tr>
-            <th><?php echo $_lang['import_params']?></th>
+            <th><?php echo $_lang['import_params']?>:&nbsp;&nbsp;</th>
             <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
@@ -493,14 +514,8 @@ function contains(a, obj) {
             <td valign="top"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
           </tr>
           <tr>
-            <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
-            <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
-          </tr>
-          <tr>
-            <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>
-            <td valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
-                <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
-                <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+            <td colspan="2"><textarea name="properties" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
+                <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
             </td>
           </tr>
           <tr id="displayparamrow">
@@ -508,7 +523,7 @@ function contains(a, obj) {
             <td id="displayparams">&nbsp;</td>
           </tr>
         </table>
-        </div>
+    </div>
     
         <!-- docBlock Info -->
         <div class="tab-page" id="tabDocBlock">
