@@ -389,6 +389,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         </div>
         <script>
             initQuicksearch('categories_list_search', 'categories_list ul');
+            jQuery('.filterElements-form').keydown(function (e) {
+            if (e.keyCode == 13) {
+            e.preventDefault();
+            }
+            });
         </script>
     </div>
 <?php
