@@ -113,7 +113,7 @@ switch ($modx->Event->name) {
     case 'OnPluginFormRender' :
     case 'OnModFormRender'    :
         $tvMode = true;
-        $limitedHeight = true;
+        // $limitedHeight = true; // No limited height since MODX 1.2
         $elements = array($textarea_name,'properties');
         $mode = 'application/x-httpd-php-open';
         $rte = ($prte ? $prte : 'none');

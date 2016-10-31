@@ -3379,3 +3379,6 @@ table.actionButtons .searchtext {
 }
 
 .userprofiletable {margin-bottom:-20px;}
+
+.btn-small { padding:2px 4px !important; font-size:11px !important; }
+.relative { position:relative; }
