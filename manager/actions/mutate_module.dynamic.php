@@ -142,7 +142,7 @@ function showParameters(ctrl) {
         currentParams = JSON.parse(props);
     }
 
-    t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+    t = '<table width="100%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
         var type, options, found, info, sd;
@@ -469,7 +469,8 @@ function SetUrl(url, width, height, alt) {
  <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span> <span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
+            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span><br/><span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
+        <tr><td align="left" valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -482,36 +483,39 @@ function SetUrl(url, width, height, alt) {
         </div>
     <!-- PHP text editor end -->
     </div>
+	
     <!-- Configuration -->
         <div class="tab-page" id="tabConfig">
             <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
             <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
             <p></p>
-        <table border="0" cellspacing="0" cellpadding="6">
-            <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
-                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
-                <tr>
-        <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
-                <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
-            <tr><td><input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" /></td></tr>
-        <tr width="100" id="displayparamrow">
-                <td align="left" colspan="2" width="100%" id="displayparams">&nbsp;</td></tr>
+        <table width="100%" border="0" cellspacing="0" cellpadding="6">
+            <tr><td>
+	            <ul class="actionButtons"
+		            <li><a href="#" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
+	            </ul>
+	        </td></tr>
+        <tr>
+                <td align="left" id="displayparams">&nbsp;</td></tr>
         </table>
         </div>      
     <!-- Properties -->
     <div class="tab-page" id="tabParams">
         <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
-        <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
-                <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
-            </tr>
-            <tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
-                <td align="left" valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea><br />
-
-                    <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	        <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
+                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
+                <tr>
+        <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
+                <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
+            <tr>
+                <td align="left" valign="top" colspan="2"><textarea name="properties" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea>
                 </td>
             </tr>
+            <tr><td>
+	            <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tp.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
+            </td></tr>
         </table>
     </div>
 <?php if ($_REQUEST['a'] == '108'): ?>
@@ -519,7 +523,7 @@ function SetUrl(url, width, height, alt) {
     <div class="tab-page" id="tabDepend">
     <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
-    <table width="95%" border="0" cellspacing="0" cellpadding="0">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
         <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
     <tr><td valign="top" align="left">
