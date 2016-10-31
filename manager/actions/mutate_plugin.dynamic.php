@@ -513,8 +513,8 @@ var internal = <?php echo json_encode($internal); ?>;
           </td>
         </tr>
         <tr id="displayparamrow">
-             <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
-          </tr>   
+           <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+        </tr>   
     </table>
 </div>        
 
