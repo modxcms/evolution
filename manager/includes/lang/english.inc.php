@@ -1339,3 +1339,7 @@ $_lang["option_default"] = "Default";
 
 $_lang['evo_downloads_title'] = "Evolution Downloads";
 $_lang['help_translating_title'] = "Help translating MODX Evolution";
+$_lang['download'] = "Download";
+$_lang['downloads'] = "Downloads";
+$_lang["previous_releases"] = "Previous Releases";
+$_lang["extras"] = "Extras";
