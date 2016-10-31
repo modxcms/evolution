@@ -6,4 +6,21 @@ MODX is an open source Content Management System and Application Framework. Init
 
 MODX provides a powerful framework on which to deploy and secure your website and web applications. For example, it gives you a true system for registered web users and groups that is separate from administration users. You can grant some web users access to one page and others access to another page. For content management, you can easily duplicate documents, folders (and all their children!), chunks and snippets. Most significant, though, is MODX's ability to empower you to quickly and easily create and maintain a rich and dynamic website like never before.
 
-MODX Evolution requires PHP version 5.3 and higher.
+MODX Evolution requires **PHP version 5.3 and higher**.
+
+### References
+
+Evo:
+https://modx.com/community/modx-evolution
+
+Download:
+https://modx.com/download/evolution/
+
+Previous Releases:
+https://modx.com/download/evolution/previous-releases.html
+
+Extras:
+https://modx.com/extras/?product=evolution
+
+Documentation:
+https://docs.modx.com/evolution/1.0
