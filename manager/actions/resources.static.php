@@ -376,7 +376,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $class = array_key_exists('disabled',$v) && $v['disabled'] ? ' class="disabledPlugin"' : '';
                 if ($v['id']) {
         ?>
-            <li><span<?php echo $class;?>><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo !empty($v['description']) ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ; ?></li>
+            <li class="el-<?php echo '' . $v['type'] . '';?>"><span<?php echo $class;?>><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo !empty($v['description']) ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ; ?></li>
         <?php
                 }
             $preCat = $v['category'];
@@ -389,6 +389,11 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         </div>
         <script>
             initQuicksearch('categories_list_search', 'categories_list ul');
+            jQuery('.filterElements-form').keydown(function (e) {
+            if (e.keyCode == 13) {
+            e.preventDefault();
+            }
+            });
         </script>
     </div>
 <?php
