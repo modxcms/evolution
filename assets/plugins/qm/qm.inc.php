@@ -542,7 +542,33 @@ class Qm {
                                     $'.$jvar.'("body").css({"overflow":"hidden"});
                                     $'.$jvar.'("html").css({"overflow":"hidden"});
                                     $'.$jvar.'("#qmEditor").css({"display":"none"});
-                                });  
+                                });
+				
+                                $'.$jvar.'(document).bind("cbox_cleanup", function(){ 
+                                    //window is closing and cannot be stopped so clear dirty settings for all fields and tinyMCE
+				    var foundit;
+				    
+                                    //loop through the iframes, checking their scr
+                                    iframearray = document.getElementsByTagName(\'iframe\');
+				    
+                                    for(var i=0; i < iframearray.length; i++) {
+                                        //if the matching colorbox src, we have found the correct iframe
+                                        haystack=iframearray[i].src;
+                                        needle="'.$this->modx->config["site_url"]."manager/index.php?a=27".'";
+                                        if(haystack.substr(0, needle.length) == needle){ 
+                                            foundit=iframearray[i]; //assign it to the foundit variable created earlier
+                                            break; //no need to keep looking
+                                        }
+                                    }
+                                    if (foundit) {
+                                        foundit.contentWindow.window.documentDirty=false; //clear document dirty for fields
+                                        //loop through tinyMCE editors and clear any dirty flags
+                                        if (typeof(foundit.contentWindow.window.tinyMCE)!==\'undefined\') {   
+                                            var i, t = foundit.contentWindow.window.tinyMCE.editors;for (i in t){    
+                                            if (t.hasOwnProperty(i)){    t[i].isNotDirty=true }}  
+                                        }
+                                    }
+                                });
                                 
                             	$'.$jvar.'(document).bind("cbox_closed", function(){      
                                     $'.$jvar.'("body").css({"overflow":"auto"});

@@ -242,9 +242,9 @@ function showParameters(ctrl) {
 
                 info = '';
                 info += desc ? '<br/><small>' + desc + '</small>' : '';
-                sd = defaultVal != undefined ? ' <span style=float:right;><ul class="actionButtons" style="float:right;margin:0px 15px;"><li><a href="#" class="primary btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul><span>' : '';
+	            sd = defaultVal != undefined ? ' <ul class="actionButtons" style="position:absolute;right:0px;bottom:6px;min-height:0;"><li><a href="#" class="primary btn-small btnSetDefault" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul>' : '';
 
-                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             });
 
         t += '</table>';
@@ -495,8 +495,9 @@ function SetUrl(url, width, height, alt) {
 		            <li><a href="#" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
 	            </ul>
 	        </td></tr>
-        <tr>
-                <td align="left" id="displayparams">&nbsp;</td></tr>
+          <tr id="displayparamrow">
+           <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+          </tr>
         </table>
         </div>      
     <!-- Properties -->
