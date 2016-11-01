@@ -17,7 +17,7 @@
  * @documentation Plugin docs https://github.com/extras-evolution/tinymce4-for-modx-evo
  * @documentation Official TinyMCE4-docs https://www.tinymce.com/docs/
  * @author      Deesen
- * @lastupdate  2016-10-06
+ * @lastupdate  2016-11-01
  */
 if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
