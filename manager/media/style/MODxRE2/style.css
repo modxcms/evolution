@@ -2461,6 +2461,7 @@ input#dateto:focus.DatePicker {
 
 /* normalize some td paddings */
 
+
 #tabTemplate tbody td,
 .sectionBody td,
 .sectionBody th {
@@ -2479,19 +2480,26 @@ input#dateto:focus.DatePicker {
 
 .sectionBody .displayparams th,
 .sectionBody .displayparams td {
-  padding: 2px 4px;
+  padding: 4px 4px;
 }
 
 .sectionBody .displayparams thead td,
 .sectionBody .permissiongroup thead td {
   border-top: none;
 }
-
+#displayparams table{
+  background: #fff;
+}
+#displayparams table tbody td {
+  border-bottom: 1px dotted #d3d3d3;
+}
 .sectionBody .permissiongroup input,
 .sectionBody .permissiongroups input {
   width: 200px;
 }
-
+td#displayparams > table.displayparams {
+border: none;
+}
 
 /* replace warning red color in tabs */
 
@@ -3382,3 +3390,4 @@ table.actionButtons .searchtext {
 
 .btn-small { padding:2px 4px !important; font-size:11px !important; }
 .relative { position:relative; }
+
