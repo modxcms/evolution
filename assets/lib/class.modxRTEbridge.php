@@ -365,7 +365,7 @@ class modxRTEbridge
             if ($value === NULL) { continue; }; // Skip none-allowed empty settings
 
             // Escape quotes
-            if (!is_array($value) && strpos($value, "'") !== false && $conf['type'] != 'raw')
+            if (!is_array($value) && strpos($value, "'") !== false && !in_array($conf['type'], array('raw','object','obj')) )
                 $value = str_replace("'", "\\'", $value);
 
             // Determine output-type
