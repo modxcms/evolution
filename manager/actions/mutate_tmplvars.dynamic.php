@@ -314,7 +314,7 @@ function decode(s){
   <tr>
     <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
     <td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
-    <?php if(strpos($content['caption'],'Duplicate of')!==false) echo '<script>document.getElementsByName("caption")[0].focus();</script>'?></td>
+    <script>document.getElementsByName("caption")[0].focus();</script></td>
   </tr>
 
   <tr>
