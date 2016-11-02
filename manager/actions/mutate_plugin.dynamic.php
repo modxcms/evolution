@@ -452,7 +452,8 @@ var internal = <?php echo json_encode($internal); ?>;
     <table>
       <tr>
         <th><?php echo $_lang['plugin_name']; ?>:</th>
-        <td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
+        <td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span>
+            <script>document.getElementsByName("name")[0].focus();</script></td>
       </tr>
       <tr>
         <th><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</th>

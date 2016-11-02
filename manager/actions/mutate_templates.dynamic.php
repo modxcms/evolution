@@ -131,7 +131,7 @@ function deletedocument() {
         <th><?php echo $_lang['template_name']; ?>:</th>
         <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
             <?php if($id == $modx->config['default_template']) echo ' <b>'.$_lang['defaulttemplate_title'].'</b>'; ?>
-            <?php if(strpos($content['templatename'],'Duplicate of')!==false) echo '<script>document.getElementsByName("templatename")[0].focus();</script>'?></td>
+            <script>document.getElementsByName("templatename")[0].focus();</script></td>
       </tr>
     <tr>
     <th><?php echo $_lang['template_desc']; ?>:</th>
