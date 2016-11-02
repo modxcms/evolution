@@ -2666,6 +2666,7 @@ form select {
 
 * {
   border-radius: 0 !important;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body
@@ -2778,6 +2779,11 @@ div.treeframebody {
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: 2px !important;
   font-weight: normal !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+#supplementalNav a:hover {
+  color: #fff !important;
 }
 
 #supplementalNav .systemversion {
