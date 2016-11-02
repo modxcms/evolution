@@ -156,7 +156,7 @@ if (is_array($evtOut))
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
             <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span>
-            <?php if(strpos($content['name'],'Duplicate of')!==false) echo '<script>document.getElementsByName("name")[0].focus();</script>'?></td></tr>
+            <script>document.getElementsByName("name")[0].focus();</script></td></tr>
     <tr>
         <th><?php echo $_lang['htmlsnippet_desc']?></th>
         <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
