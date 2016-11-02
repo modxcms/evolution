@@ -147,7 +147,7 @@ function ParseCommand($binding_string)
 function parseTvValues($param, $tvsArray)
 {
 	global $modx;
-	$tvsArray = array_merge($tvsArray, $modx->documentObject);
+	$tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
 	if (strpos($param, '[*') !== false) {
 		$matches = $modx->getTagsFromContent($param, '[*', '*]');
 		foreach ($matches[0] as $i=>$match) {
