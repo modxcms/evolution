@@ -22,6 +22,6 @@
 // @todo: layer-Plugin: Buttons broken
 
 $this->set('plugins', 'anchor save autolink autosave advlist layer fullscreen hr paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough styleselect fontsizeselect code', 'string');
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect styleselect fontsizeselect code', 'string');
 $this->set('toolbar2', 'image media youtube link unlink anchor | bullist numlist | blockquote outdent indent | alignleft aligncenter alignright | hr | styleprops removeformat | pastetext', 'string');
 $this->set('toolbar3', 'insertlayer absolute moveforward movebackward | table | fullscreen help', 'string');
