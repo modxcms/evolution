@@ -70,7 +70,7 @@ $this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h
 
 // @todo: final base-setup like tinymce3 "default"-theme?
 $this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough fontsizeselect pastetext code | fullscreen help', 'string');
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string');
 $this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string');
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..
