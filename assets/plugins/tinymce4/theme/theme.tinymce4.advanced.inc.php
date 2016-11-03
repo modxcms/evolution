@@ -18,6 +18,6 @@
 
 // @todo: Modify plugins-list?
 $this->set('plugins', 'anchor autolink lists spellchecker pagebreak layer table save hr modxlink image imagetools code emoticons insertdatetime preview media searchreplace print contextmenu paste directionality fullscreen noneditable visualchars nonbreaking youtube autosave advlist visualblocks charmap', 'string');
-$this->set('toolbar1', 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect', 'string');
+$this->set('toolbar1', 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect', 'string');
 $this->set('toolbar2', 'bullist numlist | outdent indent | undo redo | link unlink anchor image help code', 'string');
 $this->set('toolbar3', 'hr removeformat visualblocks | subscript superscript | charmap', 'string');

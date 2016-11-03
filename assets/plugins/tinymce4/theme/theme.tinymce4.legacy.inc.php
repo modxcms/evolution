@@ -21,4 +21,4 @@
 
 $this->set('plugins', 'anchor save autosave advlist modxlink image imagetools searchreplace print contextmenu paste fullscreen nonbreaking visualchars media youtube code', 'string');
 $this->set('toolbar1', 'undo redo selectall | pastetext | search replace | nonbreaking hr charmap | image link unlink anchor media youtube | removeformat | fullscreen print code help', 'string');
-$this->set('toolbar2', 'bold italic underline strikethrough subscript superscript | blockquote | bullist numlist outdent indent | alignleft aligncenter alignright alignjustify | styleselect | styleprops', 'string');
+$this->set('toolbar2', 'bold italic underline strikethrough subscript superscript | blockquote | bullist numlist outdent indent | alignleft aligncenter alignright alignjustify | styleselect formatselect | styleprops', 'string');
