@@ -84,6 +84,7 @@ $fields = array (
 	'import_static' => $import_static,
 	'export_static' => $export_static,
     'remove_locks' => $remove_locks,
+    'display_locks' => $display_locks,
     'change_resourcetype' => $change_resourcetype
 );
 

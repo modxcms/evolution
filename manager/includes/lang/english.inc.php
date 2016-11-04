@@ -1343,3 +1343,6 @@ $_lang['download'] = "Download";
 $_lang['downloads'] = "Downloads";
 $_lang["previous_releases"] = "Previous Releases";
 $_lang["extras"] = "Extras";
+
+$_lang["display_locks"] = "Display Locks";
+$_lang["role_display_locks"] = "Display Locks";
