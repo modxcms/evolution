@@ -115,7 +115,7 @@ class tinymce4bridge extends modxRTEbridge
                 $styles_formats = explode('|', $this->pluginParams['styleFormats']);
                 foreach ($styles_formats as $val) {
                     $style = explode(',', $val);
-                    $sfArray[] = array('title' => $style['0'], 'selector' => 'a,strong,em,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,tr,span,img', 'classes' => $style['1']);
+                    $sfArray[] = array('title' => $style['0'], 'inline' => 'span', 'classes' => $style['1']);
                 }
                 return $sfArray;    // return NULL would avoid bridging this parameter
             } else {
