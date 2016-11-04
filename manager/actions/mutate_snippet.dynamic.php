@@ -524,7 +524,7 @@ function contains(a, obj) {
         <!-- docBlock Info -->
         <div class="tab-page" id="tabDocBlock">
             <h2 class="tab"><?php echo $_lang['information'];?></h2>
-            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+            <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
             <div class="section">
                 <?php echo $docBlockList; ?>
             </div>
