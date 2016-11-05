@@ -105,6 +105,12 @@ if (isset($data) && count($data) > 0) {
 				}
 				$k = '';
 				break;
+			case 'lock_interval':
+				$v  = intval($v) < 5 ? 5 : $v; // Minimum interval 5 seconds to not hammer the server
+				break;
+			case 'lock_release_delay':
+				$v  = intval($v) < 10 ? 10 : $v; // Grant tolerance when having bad connection
+				break;
 			default:
 			break;
 		}
