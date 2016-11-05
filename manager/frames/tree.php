@@ -297,6 +297,26 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value + '&tree_nodename=' + document.sortFrm.nodename.value;
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
+    
+    function unlockResource(type, id, domEl) {
+	    <?php 
+	        // Prepare lang-strings
+	        $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"], 
+                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
+                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+	    ?>
+        var trans = <?php echo json_encode($unlockTranslations); ?>;
+	    var msg = trans.msg.replace('%d',id).replace('%s',trans['type'+type]);
+        if(confirm(msg)==true) {
+            jQuery.get( 'index.php?a=67&type='+type+'&id='+id, function( data ) {
+                if(data == 1) {
+                    jQuery(domEl).fadeOut();
+                    // top.main.document.location.href="index.php?a=27&id="+id; // Redirect to "Edit Resource" immediately
+                }
+                else alert( data );
+            });
+        }
+    }
 
     function emptyTrash() {
         if(confirm("<?php echo $_lang['confirm_empty_trash']; ?>")==true) {
@@ -315,7 +335,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         }
     }
 
-    function treeAction(id, name, treedisp_children) {
+    function treeAction(e, id, name, treedisp_children) {
         if(ca=="move") {
             try {
                 parent.main.setMoveValue(id, name);
@@ -329,11 +349,19 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 parent.main.location.href="index.php?a=2";
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
+                var href = '';
                 if(treedisp_children==0) {
-					parent.main.location.href="index.php?a=3&id=" + id + getFolderState();
-				} else {
-					parent.main.location.href="index.php?a=<?php echo (!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&id=" + id; // edit as default action
-				}
+                    href = "index.php?a=3&id=" + id + getFolderState();
+                } else {
+                    href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&id=" + id; // edit as default action
+                }
+                if (e.shiftKey) {
+                    window.getSelection().removeAllRanges(); // Remove unnessecary text-selection
+                    randomNum = Math.floor((Math.random()*999999)+1);
+                    window.open(href, 'res'+randomNum, 'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
+                } else {
+                    parent.main.location.href=href;
+                }
             }
         }
         if(ca=="parent") {
