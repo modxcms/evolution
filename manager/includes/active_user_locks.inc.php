@@ -9,7 +9,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			onComplete: function(sessionResponse) {
 				resp = Json.evaluate(sessionResponse);
 				if(resp.status != 'ok') {
-					alert('<?php echo sprintf($_lang["lock_element_unknown_error"], $lockElementType, $lockElementId);?>');
+					var errorMsg = '<?php echo sprintf($_lang["lock_element_unknown_error"], $lockElementType, $lockElementId, $_lang["lock_element_type_".$lockElementType]);?>';
+					jQuery('body').prepend('<div class="alert alert-error">'+errorMsg+'</div>');
+					alert(errorMsg);
 					clearInterval(keepMeLockedInterval);
 				}
 			}
