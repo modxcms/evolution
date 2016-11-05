@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}active_user_locks` (
   `internalKey` int(9) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
+  `firsthit` int(20) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
   `element` int(1) NOT NULL default '0',
   `id` int(10) default NULL,
