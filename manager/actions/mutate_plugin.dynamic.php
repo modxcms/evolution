@@ -23,12 +23,14 @@ $tbl_site_plugins       = $modx->getFullTableName('site_plugins');
 $tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
 $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
-// check to see the plugin editor isn't locked
-$rs = $modx->db->select('username',$tbl_active_users,"action='102' AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['plugin']));
-    }
+// check to see the plugin isn't locked
+if ($lockedEl = $modx->elementIsLocked(5, $id)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['plugin']));
+}
 // end check for lock
+
+// Lock plugin for other users to edit
+$modx->lockElement(5, $id);
 
 if(isset($_GET['id']))
 {
@@ -52,6 +54,11 @@ else
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 5;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script language="JavaScript">
 

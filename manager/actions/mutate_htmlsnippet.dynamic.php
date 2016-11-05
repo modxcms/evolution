@@ -22,11 +22,14 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
-// Check to see the snippet editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['chunk']));
-    }
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(3, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['chunk']));
+}
+// end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(3, $id);
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
@@ -54,6 +57,11 @@ if (isset($_POST['which_editor'])) {
 }
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 3;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 
 // Print RTE Javascript function
 ?>
