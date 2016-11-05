@@ -15,8 +15,8 @@ if ($conn = mysqli_connect($host, $uid, $pwd)) {
         }
         
         $database_collation = htmlentities($_POST['database_collation']);
-        if    (isset($_['utf8mb4_general_ci'])) $_['utf8mb4_general_ci'] = ' selected';
-        elseif(isset($_['utf8_general_ci']))    $_['utf8_general_ci']    = ' selected';
+        if    (isset($_['utf8_general_ci']))    $_['utf8_general_ci']    = ' selected';
+        elseif(isset($_['utf8mb4_general_ci'])) $_['utf8mb4_general_ci'] = ' selected';
         elseif(isset($_[$database_collation]))  $_[$database_collation]  = ' selected';
         
         $_ = sortItem($_,'utf8mb4,utf8,latin1');
