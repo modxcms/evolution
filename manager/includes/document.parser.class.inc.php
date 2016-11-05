@@ -2262,19 +2262,16 @@ class DocumentParser {
         
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
-
+        
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return false;
+  
         // Return Username if locked
         $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30);
-        if($this->lockedElements[$type][$id]['lasthit'] > $delay || 
-          ($includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId)) {
-            return array(
-                'username'=>$this->lockedElements[$type][$id]['username'],
-                'userid'=>$this->lockedElements[$type][$id]['internalKey'],
-                'lasthit' =>$this->lockedElements[$type][$id]['lasthit'],
-                'dateformat'=>$this->lockedElements[$type][$id]['dateformat'],
-            );
+        if($this->lockedElements[$type][$id]['lasthit'] > $delay) {
+            return $this->lockedElements[$type][$id];
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -2286,15 +2283,17 @@ class DocumentParser {
             $this->cleanupExpiredLocks();
 
             $rs = $this->db->select(
-                'internalKey,username,lasthit,element,id',
+                'internalKey,username,firsthit,lasthit,element,id',
                 $this->getFullTableName('active_user_locks')
             );
             while ($row = $this->db->getRow($rs)) {
                 $this->lockedElements[$row['element']][$row['id']] = array(
                     'internalKey' => $row['internalKey'],
                     'username'    => $row['username'],
+                    'firsthit'    => $row['firsthit'],
                     'lasthit'     => $row['lasthit'],
-                    'dateformat'  => $this->toDateFormat($row['lasthit'])
+                    'firsthit_df'  => $this->toDateFormat($row['firsthit']),
+                    'lasthit_df'  => $this->toDateFormat($row['lasthit'])
                 );
             }
         }
@@ -2306,21 +2305,36 @@ class DocumentParser {
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
      * @param int $id Element- / Resource-id                 
      */
-    function lockElement($type, $id) {
+    function lockElement($type, $id, $lastHitOnly=false) {
         $id = intval($id);
         $type = intval($type);
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
         if(!$type || !$id || !$userId) return false;
-
-        $sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, element, id)
-            VALUES (%d, \'%s\', %d, %d, %d)',
-            $this->getFullTableName('active_user_locks'),
-            $userId,
-            $_SESSION['mgrShortname'],
-            time(),
-            $type,
-            $id
-        );
+	    
+	    $time = time();
+	    if($lastHitOnly) {
+		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
+	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $_SESSION['mgrShortname'],
+			    !empty($this->lockedElements[$type][$id]['firsthit']) ? $this->lockedElements[$type][$id]['firsthit'] : $time,
+			    $time,
+			    $type,
+			    $id
+		    );
+	    } else {
+		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
+	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $_SESSION['mgrShortname'],
+			    $time,
+			    $time,
+			    $type,
+			    $id
+		    );
+	    }
         $this->db->query($sql);
     }
 
