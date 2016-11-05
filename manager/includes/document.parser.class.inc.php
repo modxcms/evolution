@@ -2249,25 +2249,29 @@ class DocumentParser {
      * Returns true if element is locked
      *
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
-     * @param int $id Element- / Resource-id                 
+     * @param int $id Element- / Resource-id
+     * @param bool $includeThisUser true = Return also info about actual user
      * @return string username
      */
-    function elementIsLocked($type, $id) {
+    function elementIsLocked($type, $id, $includeThisUser=false) {
         $id = intval($id);
         $type = intval($type);
+        if(!$type || !$id) return false;
+
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        if(!$type || !$id || !$userId) return false;
         
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
 
         // Return Username if locked
         $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30);
-        if($this->lockedElements[$type][$id]['lasthit'] > $delay) {
+        if($this->lockedElements[$type][$id]['lasthit'] > $delay || 
+          ($includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId)) {
             return array(
                 'username'=>$this->lockedElements[$type][$id]['username'],
+                'userid'=>$this->lockedElements[$type][$id]['internalKey'],
                 'lasthit' =>$this->lockedElements[$type][$id]['lasthit'],
-                'datetime'=>$this->lockedElements[$type][$id]['datetime'],
+                'dateformat'=>$this->lockedElements[$type][$id]['dateformat'],
             );
         }
         return false;
@@ -2281,22 +2285,17 @@ class DocumentParser {
             $this->lockedElements = array();
             $this->cleanupExpiredLocks();
 
-            $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-            
-            if($userId) {
-                $rs = $this->db->select(
-                    'internalKey,username,lasthit,element,id',
-                    $this->getFullTableName('active_user_locks'),
-                    "internalKey!='" . $userId . "'"
+            $rs = $this->db->select(
+                'internalKey,username,lasthit,element,id',
+                $this->getFullTableName('active_user_locks')
+            );
+            while ($row = $this->db->getRow($rs)) {
+                $this->lockedElements[$row['element']][$row['id']] = array(
+                    'internalKey' => $row['internalKey'],
+                    'username'    => $row['username'],
+                    'lasthit'     => $row['lasthit'],
+                    'dateformat'  => $this->toDateFormat($row['lasthit'])
                 );
-                while ($row = $this->db->getRow($rs)) {
-                    $this->lockedElements[$row['element']][$row['id']] = array(
-                        'internalKey' => $row['internalKey'],
-                        'username'    => $row['username'],
-                        'lasthit'     => $row['lasthit'],
-                        'datetime'    => date("Y-m-d H:i:s", $row['lasthit']),
-                    );
-                }
             }
         }
     }
@@ -2329,20 +2328,29 @@ class DocumentParser {
      * Unlocks an element
      *
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
-     * @param int $id Element- / Resource-id                 
+     * @param int $id Element- / Resource-id
+     * @param bool $includeAllUsers true = Deletes not only own user-locks
      */
-    function unlockElement($type, $id) {
+    function unlockElement($type, $id, $includeAllUsers=false) {
         $id = intval($id);
         $type = intval($type);
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        if(!$type || !$id || !$userId) return false;
-
-        $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND element = %d AND id = %d;',
-            $this->getFullTableName('active_user_locks'),
-            $userId,
-            $type,
-            $id
-        );
+        if(!$type || !$id) return false;
+	    
+	    if(!$includeAllUsers) {
+		    $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND element = %d AND id = %d;',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $type,
+			    $id
+		    );
+	    } else {
+		    $sql = sprintf('DELETE FROM %s WHERE element = %d AND id = %d;',
+			    $this->getFullTableName('active_user_locks'),
+			    $type,
+			    $id
+		    );
+	    }
         $this->db->query($sql);
     }
 
