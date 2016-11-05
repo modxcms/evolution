@@ -608,7 +608,7 @@ ALTER TABLE `{PREFIX}user_roles`
 
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `display_locks`       INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
-  
+
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `publish_document`    INT(1) NOT NULL DEFAULT '0' AFTER `save_document`;
 
