@@ -59,6 +59,7 @@ class DocumentParser {
     var $pluginsTime=array();
     var $pluginCache=array();
     var $aliasListing;
+    var $lockedElements=null;
     private $version=array();
     public $extensions = array();
     public $cacheKey = null;
@@ -2242,6 +2243,115 @@ class DocumentParser {
         if ($pms)
             $state= ($pms[$pm] == 1);
         return $state;
+    }
+        
+    /**
+     * Returns true if element is locked
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id                 
+     * @return string username
+     */
+    function elementIsLocked($type, $id) {
+        $id = intval($id);
+        $type = intval($type);
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        if(!$type || !$id || !$userId) return false;
+        
+        // Build lockedElements-Cache at first call
+        $this->buildLockedElementsCache();
+
+        // Return Username if locked
+        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30);
+        if($this->lockedElements[$type][$id]['lasthit'] > $delay) {
+            return array(
+                'username'=>$this->lockedElements[$type][$id]['username'],
+                'lasthit' =>$this->lockedElements[$type][$id]['lasthit'],
+                'datetime'=>$this->lockedElements[$type][$id]['datetime'],
+            );
+        }
+        return false;
+    }
+
+    /**
+     * Builds the Locked Elements Cache once
+     */
+    function buildLockedElementsCache() {
+        if(is_null($this->lockedElements)) {
+            $this->lockedElements = array();
+            $this->cleanupExpiredLocks();
+
+            $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+            
+            if($userId) {
+                $rs = $this->db->select(
+                    'internalKey,username,lasthit,element,id',
+                    $this->getFullTableName('active_user_locks'),
+                    "internalKey!='" . $userId . "'"
+                );
+                while ($row = $this->db->getRow($rs)) {
+                    $this->lockedElements[$row['element']][$row['id']] = array(
+                        'internalKey' => $row['internalKey'],
+                        'username'    => $row['username'],
+                        'lasthit'     => $row['lasthit'],
+                        'datetime'    => date("Y-m-d H:i:s", $row['lasthit']),
+                    );
+                }
+            }
+        }
+    }
+    
+    /**
+     * Locks an element
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id                 
+     */
+    function lockElement($type, $id) {
+        $id = intval($id);
+        $type = intval($type);
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        if(!$type || !$id || !$userId) return false;
+
+        $sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, element, id)
+            VALUES (%d, \'%s\', %d, %d, %d)',
+            $this->getFullTableName('active_user_locks'),
+            $userId,
+            $_SESSION['mgrShortname'],
+            time(),
+            $type,
+            $id
+        );
+        $this->db->query($sql);
+    }
+
+    /**
+     * Unlocks an element
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id                 
+     */
+    function unlockElement($type, $id) {
+        $id = intval($id);
+        $type = intval($type);
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        if(!$type || !$id || !$userId) return false;
+
+        $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND element = %d AND id = %d;',
+            $this->getFullTableName('active_user_locks'),
+            $userId,
+            $type,
+            $id
+        );
+        $this->db->query($sql);
+    }
+
+    /**
+     * Cleans up the active user locks table
+     */
+    function cleanupExpiredLocks() {
+        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30) * 2; // *2 as tolerance to avoid releasing locks too soon
+        $this->db->delete($this->getFullTableName('active_user_locks'), "lasthit < '{$delay}'");
     }
 
     /**
