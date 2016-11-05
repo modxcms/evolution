@@ -15,8 +15,8 @@ $tbl_manager_users         = $modx->getFullTableName('manager_users');
 $tbl_site_content          = $modx->getFullTableName('site_content');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
-
-
+// Unlock resource
+$modx->unlockElement(7, $id);
 
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
