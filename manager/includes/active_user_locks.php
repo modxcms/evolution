@@ -17,9 +17,10 @@ if ($rt = @ include_once('config.inc.php')) {
 	$modx = new DocumentParser;
 	$modx->db->connect();
 	
-	$modx->lockElement($_GET['type'], $_GET['id']);
-	  
-	$ok = true;
+	if($modx->elementIsLocked($_GET['type'], $_GET['id'])) {
+		$modx->lockElement($_GET['type'], $_GET['id']);
+		$ok = true;
+	}
   }
 }
 
