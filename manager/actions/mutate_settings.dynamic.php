@@ -93,6 +93,8 @@ if(!isset($jpegQuality))             $jpegQuality=90;
 if(!isset($denyZipDownload))         $denyZipDownload=1;
 if(!isset($denyExtensionRename))     $denyExtensionRename=1;
 if(!isset($showHiddenFiles))         $showHiddenFiles=1;
+if(!isset($lock_interval))           $lock_interval=15;
+if(!isset($lock_release_delay))      $lock_release_delay=30;
 
 $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 
@@ -1352,6 +1354,25 @@ function confirmLangChange(el, lkey, elupd){
 <tr>
   <td colspan="2"><div class='split'></div></td>
 </tr>
+            <tr>
+                <td nowrap class="warning"><?php echo $_lang["lock_interval"] ?></td>
+                <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="lock_interval" value="<?php echo $lock_interval; ?>" /></td>
+            </tr>
+            <tr>
+                <td width="200">&nbsp;</td>
+                <td class='comment'><?php echo $_lang["lock_interval_msg"]?></td>
+            </tr>
+            <tr>
+                <td nowrap class="warning"><?php echo $_lang["lock_release_delay"] ?></td>
+                <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="lock_release_delay" value="<?php echo $lock_release_delay; ?>" /></td>
+            </tr>
+            <tr>
+                <td width="200">&nbsp;</td>
+                <td class='comment'><?php echo $_lang["lock_release_delay_msg"]?></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div class='split'></div></td>
+            </tr>
              <tr>
                  <td nowrap class="warning"><?php echo $_lang["tree_show_protected"] ?></td>
                  <td> <input type="radio" name="tree_show_protected" value="1" <?php echo ($tree_show_protected=='1') ? 'checked="checked" ' : ''; ?>/>

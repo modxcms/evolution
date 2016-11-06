@@ -2,7 +2,7 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 function createResourceList($resourceTable,$action,$nameField = 'name') {
-    global $modx, $_lang, $modx_textdir;
+    global $modx, $_lang, $_style, $modx_textdir;
     
     $pluginsql = $resourceTable == 'site_plugins' ? $resourceTable.'.disabled, ' : '';
     
@@ -52,10 +52,43 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             $insideUl = 1;
         }
 
-        if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
-        if ($resourceTable == 'site_tmplvars') $class = $row['reltpl'] ? '' : ' class="disabledPlugin"';
-        if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
-        $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+        if ($resourceTable == 'site_templates') {
+            $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
+            $lockElementType = 1;
+        }
+        if ($resourceTable == 'site_tmplvars') {
+            $class = $row['reltpl'] ? '' : ' class="disabledPlugin"';
+            $lockElementType = 2;
+        }
+        if ($resourceTable == 'site_htmlsnippets') {
+            $lockElementType = 3;
+        }
+        if ($resourceTable == 'site_snippets') {
+            $lockElementType = 4;
+        }
+        if ($resourceTable == 'site_plugins') {
+            $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
+            $lockElementType = 5;
+        }        
+        
+        // Prepare displaying user-locks
+        $lockedByUser = '';
+        $rowLock = $modx->elementIsLocked($lockElementType, $row['id'], true);
+        if($rowLock && $modx->hasPermission('display_locks')) {
+            if($rowLock['internalKey'] == $modx->getLoginUserID()) {
+                $title = sprintf($_lang["lock_element_editing"], $_lang["lock_element_type_".$lockElementType], $rowLock['firsthit_df']);
+                $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
+            } else {
+                $title = sprintf($_lang["lock_element_locked_by"], $_lang["lock_element_type_".$lockElementType], $rowLock['username'], $rowLock['firsthit_df']); 
+                if($modx->hasPermission('remove_locks')) {
+                    $lockedByUser = '<a href="#" onclick="unlockResource('.$lockElementType.', '.$row['id'].', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
+                } else {
+                    $lockedByUser = '<span title="'.$title.'" class="lockedResource" style="cursor:context-menu;"><img src="'.$_style['icons_secured'].'" /></span>';
+                }
+            }
+        }
+        
+        $output .= '<li><span'.$class.'>'.$lockedByUser.'<a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
              $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>('.$row['description'].')</small>' : ' - '.$row['caption'];
@@ -99,6 +132,25 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 });
             }
         });
+    }
+
+    function unlockResource(type, id, domEl) {
+    <?php
+        // Prepare lang-strings
+        $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
+                                    'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
+                                    'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+        ?>
+        var trans = <?php echo json_encode($unlockTranslations); ?>;
+        var msg = trans.msg.replace('%d',id).replace('%s',trans['type'+type]);
+        if(confirm(msg)==true) {
+            jQuery.get( 'index.php?a=67&type='+type+'&id='+id, function( data ) {
+                if(data == 1) {
+                    jQuery(domEl).fadeOut();
+                }
+                else alert( data );
+            });
+        }
     }
 </script>
 

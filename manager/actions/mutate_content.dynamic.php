@@ -71,12 +71,14 @@ if ($modx->manager->action == 27) {
     }
 }
 
-// Check to see the document isn't locked
-$where = sprintf("action=27 AND id='%s' AND internalKey!='%s'", $id, $modx->getLoginUserID());
-$rs = $modx->db->select('username', $tbl_active_users, $where);
-if ($username = $modx->db->getValue($rs)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'document'));
+// check to see if resource isn't locked
+if ($lockedEl = $modx->elementIsLocked(7, $id)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['resource']));
 }
+// end check for lock
+
+// Lock resource for other users to edit
+$modx->lockElement(7, $id);
 
 // get document groups for current user
 if ($_SESSION['mgrDocgroups']) {
@@ -147,6 +149,11 @@ if (!isset ($_REQUEST['id'])) {
 if (isset ($_POST['which_editor'])) {
     $modx->config['which_editor'] = $_POST['which_editor'];
 }
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 7;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */

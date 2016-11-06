@@ -25,11 +25,13 @@ $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$username,$_lang['snippet']));
-    }
+if ($lockedEl = $modx->elementIsLocked(4, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['snippet']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(4, $id);
 
 $content = array();
 if(isset($_GET['id'])) {
@@ -52,6 +54,11 @@ if ($modx->manager->hasFormValues()) {
 }
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 4;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 
@@ -524,7 +531,7 @@ function contains(a, obj) {
         <!-- docBlock Info -->
         <div class="tab-page" id="tabDocBlock">
             <h2 class="tab"><?php echo $_lang['information'];?></h2>
-            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+            <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
             <div class="section">
                 <?php echo $docBlockList; ?>
             </div>

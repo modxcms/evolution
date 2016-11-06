@@ -35,12 +35,16 @@ function createGUID(){
     $m = md5 ($u);
     return $m;
 }
-// Check to see the editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=108 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['module']));
-    }
+
+// check to see the module editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(6, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['module']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(6, $id);
+
 if (isset($_GET['id'])) {
     $rs = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
     $content = $modx->db->getRow($rs);
@@ -59,6 +63,11 @@ if (isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 6;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 function loadDependencies() {

@@ -21,12 +21,14 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $tbl_active_users   = $modx->getFullTableName('active_users');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
-// check to see the template editor isn't locked
-$rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
-    }
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(1, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['template']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(1, $id);
 
 $content = array();
 if(!empty($id)) {
@@ -51,6 +53,10 @@ if ($modx->manager->hasFormValues()) {
 $content = array_merge($content, $_POST);
 $selectable = $_REQUEST['a'] == 19 ? 1 : $content['selectable'];
 
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 1;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 function duplicaterecord(){
