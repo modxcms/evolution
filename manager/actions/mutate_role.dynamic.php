@@ -24,14 +24,14 @@ $role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $tbl_active_users = $modx->getFullTableName('active_users');
 $tbl_user_roles   = $modx->getFullTableName('user_roles');
 
-// check to see the role editor isn't locked
-$rs = $modx->db->select('username',$tbl_active_users,"action=35 and id='{$role}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($username = $modx->db->getValue($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['role']));
-	}
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(8, $role)) {
+	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['role']));
+}
 // end check for lock
 
-
+// Lock snippet for other users to edit
+$modx->lockElement(8, $role);
 
 if($_REQUEST['a']=='35')
 {
@@ -46,8 +46,10 @@ if($_REQUEST['a']=='35')
 	$_SESSION['itemname']=$_lang["new_role"];
 }
 
-
-
+// Add lock-element JS-Script
+$lockElementId = $role;
+$lockElementType = 8;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 function changestate(element) {
@@ -291,6 +293,7 @@ table td {vertical-align:top;}
 	echo render_form('import_static',   $_lang['role_import_static']);
 	echo render_form('export_static',   $_lang['role_export_static']);
 	echo render_form('remove_locks',    $_lang['role_remove_locks']);
+	echo render_form('display_locks',    $_lang['role_display_locks']);
 ?>
 </fieldset>
 </td>

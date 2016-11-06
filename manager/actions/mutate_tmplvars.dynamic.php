@@ -16,12 +16,14 @@ $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
 
-// check to see the variable editor isn't locked
-$rs = $modx->db->select('username',$modx->getFullTableName('active_users'),"action=301 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-	if ($username = $modx->db->getValue($rs)) {
-			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template variable'));
-	}
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(2, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['tmplvar']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(2, $id);
 
 global $content;
 $content = array();
@@ -49,6 +51,11 @@ if ($modx->manager->hasFormValues()) {
 }
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 2;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 
 // get available RichText Editors
 $RTEditors = '';
