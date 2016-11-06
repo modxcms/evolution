@@ -63,10 +63,10 @@ function eForm($modx,$params) {
 	// include other language file if set.
 	$form_language = isset($language) ? $language : $modx->config['manager_language'];
 	if($form_language!='english' && $form_language!='') {
-		if(file_exists($snipPath ."lang/".$form_language.".inc.php"))
+		if(is_file($snipPath ."lang/".$form_language.".inc.php"))
 			include_once $snipPath ."lang/".$form_language.".inc.php";
 		else
-			if( $isDebug ) $debugText .= "<strong>Language file '$form_language.inc.php' not found!</strong><br />"; //always in english!
+			if( $isDebug ) $debugText .= sprintf("<strong>Language file '%s.inc.php' not found!</strong><br />", $form_language); //always in english!
 	}
 
 	// add debug warning - moved again...
@@ -155,8 +155,9 @@ function eForm($modx,$params) {
 
 	if ($efPostBack) {
 
-		foreach($formats as $k => $discard)
+		foreach($formats as $k => $discard) {
 			if(!isset($fields[$k])) $fields[$k] = ''; // store dummy value inside $fields
+		}
 
 		 $disclaimer = (($tmp=efLoadTemplate($disclaimer))!==false )? $tmp:'';
 
@@ -470,7 +471,7 @@ function eForm($modx,$params) {
 				$attachmentPath = realpath(MODX_BASE_PATH . $attachmentPath) . '/';
 				$filenames = explode(',', $fields[$attachmentField]);
 				foreach ($filenames as $filename) {
-					if (file_exists($attachmentPath . $filename)) {
+					if (is_file($attachmentPath . $filename)) {
 						$attachments[count($attachments)] = $attachmentPath . $filename;
 					}
 				}
@@ -742,7 +743,7 @@ function AddAddressToMailer(&$mail,$type,$addr){
 function AttachFilesToMailer(&$mail,&$attachFiles) {
 	if(count($attachFiles)>0){
 		foreach($attachFiles as $attachFile){
-			if(!file_exists($attachFile)) continue;
+			if(!is_file($attachFile)) continue;
 			$FileName = $attachFile;
 			$contentType = "application/octetstream";
 			if (is_uploaded_file($attachFile)){
