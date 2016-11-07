@@ -703,10 +703,8 @@ class DocumentParser {
                 $this->documentOutput = $evtOut['0'];
             }   
         }
-        global $sanitize_seed;
-        if(strpos($this->documentOutput, $sanitize_seed)!==false) {
-            $this->documentOutput = str_replace($sanitize_seed, '', $this->documentOutput);
-        }
+        
+        $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
 
         echo $this->documentOutput;
 
