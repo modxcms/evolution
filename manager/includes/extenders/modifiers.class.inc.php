@@ -419,9 +419,9 @@ class MODIFIERS {
                 $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
                 if($modx->config['manager_language']==='japanese-utf8') {
                     $chunk = array();
-                    $c=0;
-                    while($c<10000) {
-                        $c++;
+                    $bt='';
+                    while($bt!=$value) {
+                        $bt = $value;
                         if($this->strlen($value)<$width) {
                             $chunk[] = $value;
                             break;
@@ -943,8 +943,10 @@ class MODIFIERS {
         
         if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
         
-        $c=0;
-        while($c < 20)
+        if(!$modx->maxParserPasses) $modx->maxParserPasses = 20;
+        $bt='';
+        $i=0;
+        while($bt!==$content)
         {
             $bt = $content;
             if(strpos($content,'[*')!==false && $modx->documentIdentifier)
@@ -952,9 +954,10 @@ class MODIFIERS {
             if(strpos($content,'[(')!==false) $content = $modx->mergeSettingsContent($content);
             if(strpos($content,'{{')!==false) $content = $modx->mergeChunkContent($content);
             if(strpos($content,'[[')!==false) $content = $modx->evalSnippets($content);
-            if($content===$bt) break;
-            $c++;
-            if($c===20) exit('Parse over');
+            
+            if($content===$bt)              break;
+            if($modx->maxParserPasses < $i) break;
+            $i++;
         }
         return $content;
     }
