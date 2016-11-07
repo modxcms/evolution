@@ -935,11 +935,7 @@ class DocumentParser {
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
             
-            if($modifiers!==false)
-            {
-                $this->loadExtension('MODIFIERS');
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
-            }
+            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
             $content= str_replace($matches[0][$i], $value, $content);
         }
@@ -1009,10 +1005,7 @@ class DocumentParser {
             $key = trim($key);
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
-                if($modifiers!==false) {
-                    $this->loadExtension('MODIFIERS');
-                    $value = $this->filter->phxFilter($key,$value,$modifiers);
-                }
+                if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
             else $replace[$i]= '';
@@ -1074,9 +1067,8 @@ class DocumentParser {
             
             if($modifiers!==false)
             {
-                $this->loadExtension('MODIFIERS');
                 $modifiers = $this->mergePlaceholderContent($modifiers);
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
+                $value = $this->applyFilter($value,$modifiers,$key);
             }
             $content= str_replace($matches[0][$i], $value, $content);
         }
@@ -1302,11 +1294,7 @@ class DocumentParser {
         elseif(0<eval("return count({$key});"))
             $value = eval("return print_r({$key},true);");
         else $value = '';
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         return $value;
     }
     
@@ -1336,11 +1324,7 @@ class DocumentParser {
         $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         
         if($this->dumpSnippets == 1)
         {
@@ -3176,10 +3160,7 @@ class DocumentParser {
                 
                 if(isset($ph[$key])) {
                     $value = $ph[$key];
-                    if($modifiers!==false) {
-                        $this->loadExtension('MODIFIERS');
-                        $value = $this->filter->phxFilter($key,$value,$modifiers);
-                    }
+                    if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                     $replace[$i]= $value;
                 }
                 elseif($cleanup) $replace[$i] = '';
