@@ -920,11 +920,8 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            $key = trim($key);
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
             else                                   $value = '';
@@ -998,11 +995,9 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
                 if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
@@ -1056,11 +1051,9 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content, '[+', '+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
             elseif($key==='phx') $value = '';
             else continue;
@@ -1277,11 +1270,8 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-            list($key,$modifiers) = explode(':', $key, 2);
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $key = str_replace(array('(',')'),array("['","']"),$key);
-        $key = trim($key);
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
@@ -1303,13 +1293,8 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
         
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $key = trim($key);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
+        $snip_call['name'] = $key;
         
         $snippetObject = $this->_getSnippetObject($key);
         $this->currentSnippet = $snippetObject['name'];
@@ -3150,12 +3135,9 @@ class DocumentParser {
             $bt = md5($content);
             $replace= array ();
             foreach($matches[1] as $i=>$key) {
-                if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                    list($key,$modifiers) = explode(':', $key, 2);
-                else
-                    $modifiers = false;
                 
-                $key = trim($key);
+                list($key,$modifiers) = $this->splitKeyAndFilter($key);
+                
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
                 
                 if(isset($ph[$key])) {
@@ -4896,6 +4878,18 @@ class DocumentParser {
     function isJson($string, $returnData=false) {
         $data = json_decode($string, true);
         return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+    }
+    
+    function splitKeyAndFilter($key) {
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+            list($key,$modifiers) = explode(':', $key, 2);
+        else
+            $modifiers = false;
+        
+        $key = trim($key);
+        if($modifiers!==false) $modifiers = trim($modifiers);
+        
+        return array($key,$modifiers);
     }
     
     function applyFilter($value='', $modifiers=false, $key='') {
