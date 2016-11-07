@@ -12,7 +12,7 @@
  * @internal    @modx_category Manager and Admin
  * @internal    @legacy_names TinyMCE4
  * @internal    @installset base
- * @logo        /assets/plugins/tinymce4/tinymce/logo.png
+ * @logo        assets/plugins/tinymce4/tinymce/logo.png
  * @reportissues https://github.com/extras-evolution/tinymce4-for-modx-evo
  * @documentation Plugin docs https://github.com/extras-evolution/tinymce4-for-modx-evo
  * @documentation Official TinyMCE4-docs https://www.tinymce.com/docs/
