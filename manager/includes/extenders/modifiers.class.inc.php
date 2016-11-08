@@ -484,6 +484,14 @@ class MODIFIERS {
             case 'tpl':
                 if($value!=='') return str_replace(array('[+value+]','[+output+]','{value}'),$value,$opt);
                 break;
+            case 'eachtpl':
+                $value = explode('||',$value);
+                $_ = array();
+                foreach($value as $v) {
+                    $_[] = str_replace(array('[+value+]','[+output+]','{value}','%s'),$v,$opt);
+                }
+                return join("\n", $_);
+                break;
             case 'preg_replace':
             case 'regex_replace':
                 if(empty($opt) || strpos($opt,',')===false) break;
