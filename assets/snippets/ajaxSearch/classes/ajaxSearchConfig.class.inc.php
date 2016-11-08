@@ -34,6 +34,7 @@ class AjaxSearchConfig {
     function __construct($dcfg, $cfg) {
         global $modx;
         $this->dbCharset = $modx->db->config['charset'];
+        if($this->dbCharset=='utf8mb4') $this->dbCharset = 'utf8';
         $this->pcreModifier = ($this->dbCharset == "utf8") ? 'iu' : 'i';
         $this->dcfg = $dcfg;
         $this->cfg = $cfg;
