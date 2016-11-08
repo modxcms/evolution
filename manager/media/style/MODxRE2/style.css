@@ -1618,9 +1618,7 @@ a.hometblink:hover {
   border-width: 1px;
   border-bottom-style: solid;
   border-color: #ffcc72 #AAA #FFF #AAA;
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
+  border-radius: 0;
   border-width: 1px 1px 0;
   background: #fff;
   background-color: #fff;
@@ -2901,7 +2899,7 @@ div.treeframebody {
 .tab-page,
 .dynamic-tab-pane-control .tab-page {
   border: 0 none;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0;
   box-shadow: 0 0 5px 0 rgba(0,0,0,.1);
 }
 
