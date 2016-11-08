@@ -6,7 +6,7 @@ class MODIFIERS {
     
     var $placeholders = array();
     var $vars = array();
-    var $cache = array();
+    var $tmpCache = array();
     var $bt;
     var $srcValue;
     var $condition = array();
@@ -26,6 +26,7 @@ class MODIFIERS {
     {
         global $modx;
         $this->srcValue = $value;
+        $modifiers = trim($modifiers);
         $modifiers = str_replace(array("\r\n","\r"), "\n", $modifiers);
         $modifiers = $this->splitEachModifiers($modifiers);
         $this->placeholders = array();
@@ -120,11 +121,13 @@ class MODIFIERS {
     function parsePhx($key,$value,$modifiers)
     {
         global $modx;
+        $cacheKey = md5(sprintf('parsePhx#%s#%s#%s',$key,$value,print_r($modifiers,true)));
+        if(isset($this->tmpCache[$cacheKey])) return $this->tmpCache[$cacheKey];
         if(empty($modifiers)) return '';
         
         foreach($modifiers as $m)
         {
-            $lastKey = $m['cmd'];
+            $lastKey = strtolower($m['cmd']);
         }
         $_ = explode(',','is,eq,equals,ne,neq,notequals,isnot,isnt,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir');
         if(in_array($lastKey,$_))
@@ -139,6 +142,7 @@ class MODIFIERS {
             $value = $this->Filter($key,$value, $a['cmd'], $a['opt']);
             if ($modx->debug) $modx->addLogEntry('$modx->filter->'.__FUNCTION__."(:{$a['cmd']})",$fstart);
         }
+        $this->tmpCache[$cacheKey] = $value;
         return $value;
     }
     
@@ -841,7 +845,7 @@ class MODIFIERS {
         $key = $this->key;
         $value  = $this->value;
         $opt    = $this->opt;
-    	return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
+        return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
     }
     
     function getValueFromElement($key, $value, $cmd, $opt)
