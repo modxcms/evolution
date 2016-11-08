@@ -14,7 +14,6 @@ class MODIFIERS {
     var $key;
     var $value;
     var $opt;
-    var $wrapat;
     
     function __construct()
     {
@@ -412,9 +411,10 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $this->wrapat = intval($opt) ? intval($opt) : 70;
+                  $wrapat = intval($opt) ? intval($opt) : 70;
+                  return preg_replace_callback("~(\b\w+\b)~",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$value);
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
-                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$this->wrapat,' ',1)",$value);
+                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
                 $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
                 if($modx->config['manager_language']==='japanese-utf8') {
