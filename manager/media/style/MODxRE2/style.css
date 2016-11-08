@@ -2565,7 +2565,7 @@ li.breadcrumbs__li_current {
 
 .table,
 #documentPane [id*="table-tv"] {
-    width: 100%;
+  width: 100%;
 }
 
 .table--edit {
