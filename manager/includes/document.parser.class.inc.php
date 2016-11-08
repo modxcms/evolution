@@ -66,6 +66,7 @@ class DocumentParser {
     public $recentUpdate = 0;
     public $useConditional = false;
     protected $systemCacheKey = null;
+    var $snipLapCount;
 
     /**
      * Document constructor
@@ -87,6 +88,12 @@ class DocumentParser {
         // set track_errors ini variable
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
         $this->error_reporting = 1;
+        $this->debug        = false;
+        $this->dumpSQL      = false;
+        $this->dumpSnippets = false; // feed the parser the execution start time
+        $this->dumpPlugins  = false;
+        $this->stopOnNotice = false;
+        $this->snipLapCount = 0;
     }
 
     function __call($method_name,$arguments) {
@@ -1233,7 +1240,6 @@ class DocumentParser {
             }
         }
         unset($modx->event->params);
-        $this->currentSnippet = '';
         if (is_array($return) || is_object($return)) {
             return $return;
         } else {
@@ -1300,6 +1306,7 @@ class DocumentParser {
     
     private function _get_snip_result($piece)
     {
+        if($this->dumpSnippets) $eventtime = $this->getMicroTime();
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
         
@@ -1319,11 +1326,15 @@ class DocumentParser {
         $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
+        $this->currentSnippet = '';
         if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         
-        if($this->dumpSnippets == 1)
+        if($this->dumpSnippets)
         {
-            $this->snipCode .= sprintf('<fieldset><legend><b>%s</b></legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']));
+            $eventtime = $this->getMicroTime() - $eventtime;
+            $eventtime = sprintf('%2.2f ms', $eventtime*1000);
+            $code = $this->htmlspecialchars($value);
+            if($code) $this->snippetsCode .= sprintf('<fieldset><legend><b>%s</b>(%s)</legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], $eventtime, $code);
         }
         return $value;
     }
@@ -1797,8 +1808,9 @@ class DocumentParser {
             // get source length if this is the final pass
             if ($i == ($passes -1))
                 $st= strlen($source);
-            if ($this->dumpSnippets == 1) {
-                $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i +1) . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
+            $this->snipLapCount++;
+            if ($this->dumpSnippets) {
+                $this->snippetsCode .= '<fieldset><legend><b style="color: #821517;">PARSE PASS ' . $this->snipLapCount . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
             }
 
             // invoke OnParseDocument event
@@ -1829,7 +1841,7 @@ class DocumentParser {
             
             $source = $this->mergeSettingsContent($source);
             
-            if ($this->dumpSnippets == 1) {
+            if ($this->dumpSnippets) {
                 $this->snippetsCode .= "</fieldset><br />";
             }
             if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
@@ -4106,7 +4118,7 @@ class DocumentParser {
         $numEvents= count($el);
         if ($numEvents > 0)
             for ($i= 0; $i < $numEvents; $i++) { // start for loop
-                if ($this->dumpPlugins == 1) $eventtime = $this->getMicroTime();
+                if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
                 $pluginName= $el[$i];
                 $pluginName = stripslashes($pluginName);
                 // reset event object
@@ -4133,7 +4145,7 @@ class DocumentParser {
 
                 if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
 
-                if ($this->dumpPlugins == 1) {
+                if ($this->dumpPlugins) {
                     $eventtime = $this->getMicroTime() - $eventtime;
                     $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
                     foreach ($parameter as $k=>$v) $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
