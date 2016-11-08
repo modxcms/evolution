@@ -703,10 +703,8 @@ class DocumentParser {
                 $this->documentOutput = $evtOut['0'];
             }   
         }
-        global $sanitize_seed;
-        if(strpos($this->documentOutput, $sanitize_seed)!==false) {
-            $this->documentOutput = str_replace($sanitize_seed, '', $this->documentOutput);
-        }
+        
+        $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
 
         echo $this->documentOutput;
 
@@ -922,11 +920,8 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            $key = trim($key);
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
             else                                   $value = '';
@@ -937,11 +932,7 @@ class DocumentParser {
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
             
-            if($modifiers!==false)
-            {
-                $this->loadExtension('MODIFIERS');
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
-            }
+            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
             $content= str_replace($matches[0][$i], $value, $content);
         }
@@ -1004,17 +995,12 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
-                if($modifiers!==false) {
-                    $this->loadExtension('MODIFIERS');
-                    $value = $this->filter->phxFilter($key,$value,$modifiers);
-                }
+                if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
             else $replace[$i]= '';
@@ -1065,71 +1051,79 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content, '[+', '+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
             elseif($key==='phx') $value = '';
             else continue;
             
             if($modifiers!==false)
             {
-                $this->loadExtension('MODIFIERS');
                 $modifiers = $this->mergePlaceholderContent($modifiers);
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
+                $value = $this->applyFilter($value,$modifiers,$key);
             }
             $content= str_replace($matches[0][$i], $value, $content);
         }
         return $content;
     }
 
-    function mergeConditionalTagsContent($content)
+    function mergeConditionalTagsContent($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>')
     {
-        if ($this->debug) $fstart = $this->getMicroTime();
+        if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
+        if(strpos($content,$iftag)===false)          return $content;
+        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);       // for jp
         
-        if(strpos($content,'<!--@IF:')!==false)       $content = str_replace('<!--@IF:',    '<@IF:',$content);
-        if(strpos($content,'<@IF:')===false)         return $content;
-        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',   '<@ENDIF>',$content);
-        
-        $s = array('<@IF:',           '<@ELSE',            '<@ENDIF>');
-        $r = array('<!--@CONDTAG@IF:','<!--@CONDTAG@ELSE', '<!--@CONDTAG@ENDIF-->');
+        $delim = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
+        $s = array('<@IF:', '<@ELSEIF:', '<@ELSE>', '<@ENDIF>');
+        $r = array($delim.'<@IF:', $delim.'<@ELSEIF:', $delim.'<@ELSE>', $delim.'<@ENDIF>');
         $content = str_replace($s, $r, $content);
-        $splits = explode('<!--@CONDTAG@', $content);
+        $splits = explode($delim, $content);
         foreach($splits as $i=>$split) {
             if($i===0) {
                 $content = $split;
                 $excute = false;
                 continue;
             }
-            if(substr($split,0,2)==='IF' || substr($split,0,6)==='ELSEIF') {
+            if(substr($split,0,5)==='<@IF:' || substr($split,0,9)==='<@ELSEIF:') {
                 if($excute) continue;
                 list($cmd, $text) = explode('>', $split, 2);
-                $dlen = substr($split,0,2)==='IF' ? 2 : 6;
-                
-                $cmd = rtrim(substr($cmd,$dlen+1));
-                if(substr($cmd,-$dlen)==='--') $cmd = substr($cmd,0,-$dlen);
-                // echo ' -|||' . $cmd . '|||- ';
-                $flag = substr($cmd,0,1)!=='!' ? true : false;
-                if($flag===false) $cmd = ltrim($cmd,'!');
+                $cmd = substr($cmd,strpos($cmd,':')+1);
+                $cmd = trim($cmd);
+                $reverse = substr($cmd,0,1)==='!' ? true : false;
+                if($reverse) $cmd = ltrim($cmd,'!');
                 
                 if(strpos($cmd,'[!')!==false) $cmd = str_replace(array('[!','!]'),array('[[',']]'),$cmd);
-                
-                $cmd = $this->parseDocumentSource($cmd);
+                $safe=0;
+                $bt=md5('');
+                $_ = $this->config['enable_filter'];
+                $this->config['enable_filter'] = 1;
+                while($bt!==md5($cmd)) {
+                    $bt = md5($cmd);
+                    if(strpos($cmd,'[*')!==false) $cmd= $this->mergeDocumentContent($cmd);
+                    if(strpos($cmd,'[(')!==false) $cmd= $this->mergeSettingsContent($cmd);
+                    if(strpos($cmd,'{{')!==false) $cmd= $this->mergeChunkContent($cmd);
+                    if(strpos($cmd,'[[')!==false) $cmd= $this->evalSnippets($cmd);
+                    if(strpos($cmd,'[+')!==false
+                     &&strpos($cmd,'[[')===false) $cmd= $this->mergePlaceholderContent($cmd);
+                    $safe++;
+                    if(20<$safe) break;
+                }
+                $this->config['enable_filter'] = $_;
                 $cmd = ltrim($cmd);
+                $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
                 
-                if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!]*$@', $cmd))
+                if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
                     $cmd = (int) eval("return {$cmd};");
                 if($cmd < 0) $cmd = 0;
                 
-                if( ($flag===true && !empty($cmd)) || ($flag===false && empty($cmd)) ) {
+                if( (!$reverse && !empty($cmd)) || ($reverse && empty($cmd)) ) {
                     $content .= $text;
                     $excute = true;
                 }
                 else $excute = false;
             }
-            elseif(substr($split,0,4)==='ELSE') {
+            elseif(substr($split,0,6)==='<@ELSE') {
                 if($excute) continue;
                 list(, $text) = explode('>', $split, 2);
                 $content .= $text;
@@ -1141,7 +1135,6 @@ class DocumentParser {
                 $excute = false;
             }
         }
-        if ($this->debug) $this->addLogEntry('$modx->'.__FUNCTION__,$fstart);
         return $content;
     }
     
@@ -1287,11 +1280,8 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-            list($key,$modifiers) = explode(':', $key, 2);
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $key = str_replace(array('(',')'),array("['","']"),$key);
-        $key = trim($key);
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
@@ -1304,11 +1294,7 @@ class DocumentParser {
         elseif(0<eval("return count({$key});"))
             $value = eval("return print_r({$key},true);");
         else $value = '';
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         return $value;
     }
     
@@ -1317,13 +1303,8 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
         
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $key = trim($key);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
+        $snip_call['name'] = $key;
         
         $snippetObject = $this->_getSnippetObject($key);
         $this->currentSnippet = $snippetObject['name'];
@@ -1338,11 +1319,7 @@ class DocumentParser {
         $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         
         if($this->dumpSnippets == 1)
         {
@@ -3168,20 +3145,14 @@ class DocumentParser {
             $bt = md5($content);
             $replace= array ();
             foreach($matches[1] as $i=>$key) {
-                if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                    list($key,$modifiers) = explode(':', $key, 2);
-                else
-                    $modifiers = false;
                 
-                $key = trim($key);
+                list($key,$modifiers) = $this->splitKeyAndFilter($key);
+                
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
                 
                 if(isset($ph[$key])) {
                     $value = $ph[$key];
-                    if($modifiers!==false) {
-                        $this->loadExtension('MODIFIERS');
-                        $value = $this->filter->phxFilter($key,$value,$modifiers);
-                    }
+                    if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                     $replace[$i]= $value;
                 }
                 elseif($cleanup) $replace[$i] = '';
@@ -4492,6 +4463,14 @@ class DocumentParser {
         return $list;
     }
 
+    function removeSanitizeSeed ($string=''){
+        global $sanitize_seed;
+        
+        if(!$string || strpos($string,$sanitize_seed)===false) return $string;
+        
+        return str_replace($sanitize_seed, '', $string);
+    }
+    
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
@@ -4910,6 +4889,27 @@ class DocumentParser {
         $data = json_decode($string, true);
         return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
     }
+    
+    function splitKeyAndFilter($key) {
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+            list($key,$modifiers) = explode(':', $key, 2);
+        else
+            $modifiers = false;
+        
+        $key = trim($key);
+        if($modifiers!==false) $modifiers = trim($modifiers);
+        
+        return array($key,$modifiers);
+    }
+    
+    function applyFilter($value='', $modifiers=false, $key='') {
+        if($modifiers===false || $modifiers=='raw') return $value;
+        if($modifiers!==false) $modifiers = trim($modifiers);
+        
+        $this->loadExtension('MODIFIERS');
+        return $this->filter->phxFilter($key,$value,$modifiers);
+    }
+    
     // End of class.
 
 }

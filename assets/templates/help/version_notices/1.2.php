@@ -34,24 +34,24 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	<li><strong>New Conditional Tags / Modifiers</strong>
 		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. Example:</p>
 		<pre>[*longtitle:ifempty=[*pagetitle*]*]</pre>
-		<pre>&lt;!--@IF:[*id:is('[(site_start)]')*]>
+		<pre>&lt;@IF:[*id:is('[(site_start)]')*]>
 Top page
 <@ELSE>
 Sub page
-<@ENDIF--&gt;</pre>
+<@ENDIF&gt;</pre>
 		<p>In combination with $_GET :</p>
-		<pre>&lt;!--@IF:[!$_GET['value']:preg('/^[0-9]+$/')!]>
+		<pre>&lt;@IF:[!$_GET['value']:preg('/^[0-9]+$/')!]>
 Value is numeric.
 <@ELSE>
 Value is not numeric.
-<@ENDIF--&gt;</pre>
+<@ENDIF&gt;</pre>
 		<p>UltimateParent</p>
 		<pre>[[UltimateParent:is=`8`:then=`8`:else=`11`]]
-&lt;!--@IF:[[UltimateParent:is=8]]>
+&lt;@IF:[[UltimateParent:is=8]]>
 8
 <@ELSE>
 11
-<@ENDIF--&gt;</pre>
+<@ENDIF&gt;</pre>
 	</li>
 
 	<li><strong>New Comment Tag</strong>
