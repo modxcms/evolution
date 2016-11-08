@@ -15,13 +15,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
 ) ENGINE=MyISAM COMMENT='Contains data about active users.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}active_user_locks` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `internalKey` int(9) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
   `firsthit` int(20) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
   `element` int(1) NOT NULL default '0',
-  `id` int(10) default NULL,
-  PRIMARY KEY  (`internalKey`,`element`,`id`)
+  PRIMARY KEY(`id`),
+  UNIQUE INDEX  ix_element_id (`internalKey`,`element`,`id`)
 ) ENGINE=MyISAM COMMENT='Contains data about all elements that are locked by active users.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
