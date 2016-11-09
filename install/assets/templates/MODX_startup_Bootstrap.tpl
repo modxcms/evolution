@@ -12,7 +12,7 @@
  * @internal	@save_sql_id_as BOOTSTRAP_SQL_ID
  */
 <!DOCTYPE html>
-<html lang="en">
+<html lang="[(lang_code)]">
 <head>	
 	<base href="[(site_url)]" />
 	<meta charset="[(modx_charset)]" />
