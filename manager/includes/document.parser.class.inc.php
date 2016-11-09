@@ -59,6 +59,7 @@ class DocumentParser {
     var $pluginsTime=array();
     var $pluginCache=array();
     var $aliasListing;
+    var $lockedElements=null;
     private $version=array();
     public $extensions = array();
     public $cacheKey = null;
@@ -702,10 +703,8 @@ class DocumentParser {
                 $this->documentOutput = $evtOut['0'];
             }   
         }
-        global $sanitize_seed;
-        if(strpos($this->documentOutput, $sanitize_seed)!==false) {
-            $this->documentOutput = str_replace($sanitize_seed, '', $this->documentOutput);
-        }
+        
+        $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
 
         echo $this->documentOutput;
 
@@ -921,11 +920,8 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            $key = trim($key);
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
             else                                   $value = '';
@@ -936,11 +932,7 @@ class DocumentParser {
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
             
-            if($modifiers!==false)
-            {
-                $this->loadExtension('MODIFIERS');
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
-            }
+            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
             $content= str_replace($matches[0][$i], $value, $content);
         }
@@ -1003,17 +995,12 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
-                if($modifiers!==false) {
-                    $this->loadExtension('MODIFIERS');
-                    $value = $this->filter->phxFilter($key,$value,$modifiers);
-                }
+                if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
             else $replace[$i]= '';
@@ -1064,20 +1051,17 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content, '[+', '+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
-            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                list($key,$modifiers) = explode(':', $key, 2);
-            else $modifiers = false;
             
-            $key = trim($key);
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
             elseif($key==='phx') $value = '';
             else continue;
             
             if($modifiers!==false)
             {
-                $this->loadExtension('MODIFIERS');
                 $modifiers = $this->mergePlaceholderContent($modifiers);
-                $value = $this->filter->phxFilter($key,$value,$modifiers);
+                $value = $this->applyFilter($value,$modifiers,$key);
             }
             $content= str_replace($matches[0][$i], $value, $content);
         }
@@ -1286,11 +1270,8 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-            list($key,$modifiers) = explode(':', $key, 2);
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $key = str_replace(array('(',')'),array("['","']"),$key);
-        $key = trim($key);
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
@@ -1303,11 +1284,7 @@ class DocumentParser {
         elseif(0<eval("return count({$key});"))
             $value = eval("return print_r({$key},true);");
         else $value = '';
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         return $value;
     }
     
@@ -1316,13 +1293,8 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
         
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $key = trim($key);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
+        list($key,$modifiers) = $this->splitKeyAndFilter($key);
+        $snip_call['name'] = $key;
         
         $snippetObject = $this->_getSnippetObject($key);
         $this->currentSnippet = $snippetObject['name'];
@@ -1337,11 +1309,7 @@ class DocumentParser {
         $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false)
-        {
-            $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($key,$value,$modifiers);
-        }
+        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         
         if($this->dumpSnippets == 1)
         {
@@ -2243,6 +2211,137 @@ class DocumentParser {
             $state= ($pms[$pm] == 1);
         return $state;
     }
+        
+    /**
+     * Returns true if element is locked
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id
+     * @param bool $includeThisUser true = Return also info about actual user
+     * @return string username
+     */
+    function elementIsLocked($type, $id, $includeThisUser=false) {
+        $id = intval($id);
+        $type = intval($type);
+        if(!$type || !$id) return false;
+
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        
+        // Build lockedElements-Cache at first call
+        $this->buildLockedElementsCache();
+        
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return false;
+  
+        // Return Username if locked
+        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30);
+        if($this->lockedElements[$type][$id]['lasthit'] > $delay) {
+            return $this->lockedElements[$type][$id];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Builds the Locked Elements Cache once
+     */
+    function buildLockedElementsCache() {
+        if(is_null($this->lockedElements)) {
+            $this->lockedElements = array();
+            $this->cleanupExpiredLocks();
+
+            $rs = $this->db->select(
+                'internalKey,username,firsthit,lasthit,element,id',
+                $this->getFullTableName('active_user_locks')
+            );
+            while ($row = $this->db->getRow($rs)) {
+                $this->lockedElements[$row['element']][$row['id']] = array(
+                    'internalKey' => $row['internalKey'],
+                    'username'    => $row['username'],
+                    'firsthit'    => $row['firsthit'],
+                    'lasthit'     => $row['lasthit'],
+                    'firsthit_df'  => $this->toDateFormat($row['firsthit']),
+                    'lasthit_df'  => $this->toDateFormat($row['lasthit'])
+                );
+            }
+        }
+    }
+    
+    /**
+     * Locks an element
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id                 
+     */
+    function lockElement($type, $id, $lastHitOnly=false) {
+        $id = intval($id);
+        $type = intval($type);
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        if(!$type || !$id || !$userId) return false;
+	    
+	    $time = time();
+	    if($lastHitOnly) {
+		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
+	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $_SESSION['mgrShortname'],
+			    !empty($this->lockedElements[$type][$id]['firsthit']) ? $this->lockedElements[$type][$id]['firsthit'] : $time,
+			    $time,
+			    $type,
+			    $id
+		    );
+	    } else {
+		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
+	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $_SESSION['mgrShortname'],
+			    $time,
+			    $time,
+			    $type,
+			    $id
+		    );
+	    }
+        $this->db->query($sql);
+    }
+
+    /**
+     * Unlocks an element
+     *
+     * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param int $id Element- / Resource-id
+     * @param bool $includeAllUsers true = Deletes not only own user-locks
+     */
+    function unlockElement($type, $id, $includeAllUsers=false) {
+        $id = intval($id);
+        $type = intval($type);
+        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        if(!$type || !$id) return false;
+	    
+	    if(!$includeAllUsers) {
+		    $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND element = %d AND id = %d;',
+			    $this->getFullTableName('active_user_locks'),
+			    $userId,
+			    $type,
+			    $id
+		    );
+	    } else {
+		    $sql = sprintf('DELETE FROM %s WHERE element = %d AND id = %d;',
+			    $this->getFullTableName('active_user_locks'),
+			    $type,
+			    $id
+		    );
+	    }
+        $this->db->query($sql);
+    }
+
+    /**
+     * Cleans up the active user locks table
+     */
+    function cleanupExpiredLocks() {
+        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30) * 2; // *2 as tolerance to avoid releasing locks too soon
+        $this->db->delete($this->getFullTableName('active_user_locks'), "lasthit < '{$delay}'");
+    }
 
     /**
      * Add an a alert message to the system event log
@@ -3036,20 +3135,14 @@ class DocumentParser {
             $bt = md5($content);
             $replace= array ();
             foreach($matches[1] as $i=>$key) {
-                if($this->config['enable_filter']==1 && strpos($key,':')!==false)
-                    list($key,$modifiers) = explode(':', $key, 2);
-                else
-                    $modifiers = false;
                 
-                $key = trim($key);
+                list($key,$modifiers) = $this->splitKeyAndFilter($key);
+                
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
                 
                 if(isset($ph[$key])) {
                     $value = $ph[$key];
-                    if($modifiers!==false) {
-                        $this->loadExtension('MODIFIERS');
-                        $value = $this->filter->phxFilter($key,$value,$modifiers);
-                    }
+                    if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                     $replace[$i]= $value;
                 }
                 elseif($cleanup) $replace[$i] = '';
@@ -4360,6 +4453,14 @@ class DocumentParser {
         return $list;
     }
 
+    function removeSanitizeSeed ($string=''){
+        global $sanitize_seed;
+        
+        if(!$string || strpos($string,$sanitize_seed)===false) return $string;
+        
+        return str_replace($sanitize_seed, '', $string);
+    }
+    
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
@@ -4778,6 +4879,27 @@ class DocumentParser {
         $data = json_decode($string, true);
         return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
     }
+    
+    function splitKeyAndFilter($key) {
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+            list($key,$modifiers) = explode(':', $key, 2);
+        else
+            $modifiers = false;
+        
+        $key = trim($key);
+        if($modifiers!==false) $modifiers = trim($modifiers);
+        
+        return array($key,$modifiers);
+    }
+    
+    function applyFilter($value='', $modifiers=false, $key='') {
+        if($modifiers===false || $modifiers=='raw') return $value;
+        if($modifiers!==false) $modifiers = trim($modifiers);
+        
+        $this->loadExtension('MODIFIERS');
+        return $this->filter->phxFilter($key,$value,$modifiers);
+    }
+    
     // End of class.
 
 }

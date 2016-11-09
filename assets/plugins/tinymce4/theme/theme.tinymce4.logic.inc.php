@@ -20,6 +20,6 @@
 // http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
 
 $this->set('plugins', 'anchor save autolink autosave advlist image imagetools fullscreen paste modxlink media contextmenu table youtube code textcolor', 'string');
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough styleselect fontsizeselect code | fullscreen help', 'string');
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect styleselect fontsizeselect code | fullscreen help', 'string');
 $this->set('toolbar2', 'image media youtube link unlink anchor | bullist numlist | blockquote outdent indent | alignleft aligncenter alignright | table | hr | styleprops removeformat | pastetext', 'string');
 $this->set('toolbar3', 'charmap subscript superscript | cite ins del abbr acronym attribs', 'string');

@@ -102,20 +102,10 @@ class tinymce4bridge extends modxRTEbridge
         if (isset($this->pluginParams['styleFormats']) && !empty($this->pluginParams['styleFormats'])) {
             // Check for simple format: Title,cssClass|Title2,cssClass
             if(preg_match('/^[a-zA-Z0-9,]+/', $this->pluginParams['styleFormats'])) {
-                $sfArray[] = array('title' => 'Paragraph', 'format' => 'p');
-                $sfArray[] = array('title' => 'Header 1', 'format' => 'h1');
-                $sfArray[] = array('title' => 'Header 2', 'format' => 'h2');
-                $sfArray[] = array('title' => 'Header 3', 'format' => 'h3');
-                $sfArray[] = array('title' => 'Header 4', 'format' => 'h4');
-                $sfArray[] = array('title' => 'Header 5', 'format' => 'h5');
-                $sfArray[] = array('title' => 'Header 6', 'format' => 'h6');
-                $sfArray[] = array('title' => 'Div', 'format' => 'div');
-                $sfArray[] = array('title' => 'Pre', 'format' => 'pre');
-
                 $styles_formats = explode('|', $this->pluginParams['styleFormats']);
                 foreach ($styles_formats as $val) {
                     $style = explode(',', $val);
-                    $sfArray[] = array('title' => $style['0'], 'selector' => 'a,strong,em,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,tr,span,img', 'classes' => $style['1']);
+                    $sfArray[] = array('title' => $style['0'], 'inline' => 'span', 'classes' => $style['1']);
                 }
                 return $sfArray;    // return NULL would avoid bridging this parameter
             } else {
