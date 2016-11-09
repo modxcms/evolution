@@ -12,14 +12,14 @@
  * @internal	@save_sql_id_as BOOTSTRAP_SQL_ID
  */
 <!DOCTYPE html>
-<html lang="en">
+<html lang="[(lang_code)]">
 <head>	
 	<base href="[(site_url)]" />
 	<meta charset="[(modx_charset)]" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>[*pagetitle:strip_tags*] / [(site_name)]</title>
-	<@IF:[*description:isntEmpty*]><meta name="description" content="[*description:strip_tags*]"><@ENDIF>
+	<title>[*pagetitle*] / [(site_name)]</title>
+	<@IF:[*description:isntEmpty*]><meta name="description" content="[*description*]"><@ENDIF>
 	
 	<link href="[(site_url)]<@IF:[*id:isnt(1)*]>[~[*id*]~]<@ENDIF>" rel="canonical">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">	

@@ -1286,7 +1286,10 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
+        $_ = $this->config['enable_filter'];
+        $this->config['enable_filter'] = 1;
         list($key,$modifiers) = $this->splitKeyAndFilter($key);
+        $this->config['enable_filter'] = $_;
         $key = str_replace(array('(',')'),array("['","']"),$key);
         if(strpos($key,'$_SESSION')!==false)
         {
