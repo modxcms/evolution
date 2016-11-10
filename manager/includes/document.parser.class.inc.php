@@ -60,6 +60,7 @@ class DocumentParser {
     var $pluginCache=array();
     var $aliasListing;
     var $lockedElements=null;
+    var $tmpCache = array();
     private $version=array();
     public $extensions = array();
     public $cacheKey = null;
@@ -656,8 +657,15 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
+        $_ = array('[* *]','[( )]','{{ }}');
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($this->documentOutput,$left)!==false)
+                $this->documentOutput = $this->sweepRemainPlaceholders($this->documentOutput,$left,$right);
+        }
+        
         // remove all unused placeholders
-        if (strpos($this->documentOutput, '[+') > -1) {
+        if (strpos($this->documentOutput, '[+')!==false) {
             $matches= array ();
             preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
             if ($matches[0])
@@ -931,7 +939,7 @@ class DocumentParser {
             
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
-            else                                   $value = '';
+            else                                   $value = $matches[0][$i];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1010,7 +1018,7 @@ class DocumentParser {
                 if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
-            else $replace[$i]= '';
+            else $replace[$i]= $matches[0][$i];
         }
         $content= str_replace($matches[0], $replace, $content);
         return $content;
@@ -1035,7 +1043,7 @@ class DocumentParser {
             $ph = $this->_snipParamsToArray($snip_call['params']);
             
             $value = $this->getChunk($key);
-            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : '';
+            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
             
             $replace[$i] = $value;
         }
@@ -1704,6 +1712,10 @@ class DocumentParser {
      * @return array
      */
     function getDocumentObject($method, $identifier, $isPrepareResponse=false) {
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
 
@@ -1788,6 +1800,8 @@ class DocumentParser {
                 $documentObject = $out[0];
             }
         }
+        
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $documentObject;
 
         return $documentObject;
     }
@@ -2770,12 +2784,19 @@ class DocumentParser {
         
         if(empty($docid)) return false;
         
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $doc = $this->getDocumentObject('id', $docid);
         if(is_array($doc[$field])) {
             $tvs= $this->getTemplateVarOutput($field, $docid,1);
-            return $tvs[$field];
+            $content = $tvs[$field];
         }
-        return $doc[$field];
+        else $content = $doc[$field];
+        
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $content;
+        
+        return $content;
     }
     
     /**
@@ -4484,6 +4505,19 @@ class DocumentParser {
         if(!$string || strpos($string,$sanitize_seed)===false) return $string;
         
         return str_replace($sanitize_seed, '', $string);
+    }
+    
+    function sweepRemainPlaceholders($content='',$left='[*',$right='*]') {
+        
+        if(strpos($content,$left)===false || strpos($content,$right)===false) return false;
+        
+        $_ = $this->config['enable_filter'];
+        $this->config['enable_filter'] = 1;
+        if($left==='[*')  $content = $this->mergeDocumentContent($content);
+        $this->config['enable_filter'] = $_;
+        
+        $content= str_replace($matches[0], '', $content);
+        return $content;
     }
     
     /***************************************************************************************/
