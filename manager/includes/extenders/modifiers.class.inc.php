@@ -21,7 +21,7 @@ class MODIFIERS {
         global $modx;
         
         if (function_exists('mb_internal_encoding')) mb_internal_encoding($modx->config['modx_charset']);
-        $this->condModifiers = 'is,eq,equals,ne,neq,notequals,isnot,isnt,not,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
+        $this->condModifiers = '=,is,eq,equals,ne,neq,notequals,isnot,isnt,not,%,isempty,isnotempty,isntempty,>=,gte,eg,gte,greaterthan,>,gt,isgreaterthan,isgt,lowerthan,<,lt,<=,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
     
     function phxFilter($key,$value,$modifiers)
@@ -229,6 +229,7 @@ class MODIFIERS {
             case 'if':
                 if(!$opt) return $value;
                 return $opt;
+            case '=':
             case 'eq':
             case 'is':
             case 'equals':
@@ -238,25 +239,32 @@ class MODIFIERS {
             case 'notequals':
             case 'isnot':
             case 'isnt':
+            case 'not':
                 $this->condition[] = intval($value != $opt);break;
+            case '%':
+                $this->condition[] = intval($value%$opt==0);break;
             case 'isempty':
                 $this->condition[] = intval(empty($value)); break;
             case 'isntempty':
             case 'isnotempty':
                 $this->condition[] = intval(!empty($value)); break;
+            case '>=':
             case 'gte':
             case 'eg':
             case 'isgte':
                 $this->condition[] = intval($value >= $opt);break;
+            case '<=':
             case 'lte':
             case 'el':
             case 'islte':
                 $this->condition[] = intval($value <= $opt);break;
+            case '>':
             case 'gt':
             case 'greaterthan':
             case 'isgreaterthan':
             case 'isgt':
                 $this->condition[] = intval($value > $opt);break;
+            case '<':
             case 'lt':
             case 'lowerthan':
             case 'islowerthan':
@@ -264,6 +272,8 @@ class MODIFIERS {
                 $this->condition[] = intval($value < $opt);break;
             case 'find':
                 $this->condition[] = intval(strpos($value, $opt)!==false);break;
+            case 'inarray':
+            case 'in_array':
             case 'in':
                 $opt = explode(',', $opt);
                 $this->condition[] = intval(in_array($value, $opt)!==false);break;
