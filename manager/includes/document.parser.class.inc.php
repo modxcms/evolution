@@ -60,6 +60,7 @@ class DocumentParser {
     var $pluginCache=array();
     var $aliasListing;
     var $lockedElements=null;
+    var $tmpCache = array();
     private $version=array();
     public $extensions = array();
     public $cacheKey = null;
@@ -1704,6 +1705,10 @@ class DocumentParser {
      * @return array
      */
     function getDocumentObject($method, $identifier, $isPrepareResponse=false) {
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
 
@@ -1788,6 +1793,8 @@ class DocumentParser {
                 $documentObject = $out[0];
             }
         }
+        
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $documentObject;
 
         return $documentObject;
     }
@@ -2770,12 +2777,19 @@ class DocumentParser {
         
         if(empty($docid)) return false;
         
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $doc = $this->getDocumentObject('id', $docid);
         if(is_array($doc[$field])) {
             $tvs= $this->getTemplateVarOutput($field, $docid,1);
-            return $tvs[$field];
+            $content = $tvs[$field];
         }
-        return $doc[$field];
+        else $content = $doc[$field];
+        
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $content;
+        
+        return $content;
     }
     
     /**
