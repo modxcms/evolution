@@ -657,8 +657,15 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
+        $_ = array('[* *]','[( )]','{{ }}');
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($this->documentOutput,$left)!==false)
+                $this->documentOutput = $this->sweepRemainPlaceholders($this->documentOutput,$left,$right);
+        }
+        
         // remove all unused placeholders
-        if (strpos($this->documentOutput, '[+') > -1) {
+        if (strpos($this->documentOutput, '[+')!==false) {
             $matches= array ();
             preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
             if ($matches[0])
@@ -932,7 +939,7 @@ class DocumentParser {
             
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
-            else                                   $value = '';
+            else                                   $value = $matches[0][$i];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1011,7 +1018,7 @@ class DocumentParser {
                 if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
-            else $replace[$i]= '';
+            else $replace[$i]= $matches[0][$i];
         }
         $content= str_replace($matches[0], $replace, $content);
         return $content;
@@ -1036,7 +1043,7 @@ class DocumentParser {
             $ph = $this->_snipParamsToArray($snip_call['params']);
             
             $value = $this->getChunk($key);
-            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : '';
+            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
             
             $replace[$i] = $value;
         }
@@ -4498,6 +4505,19 @@ class DocumentParser {
         if(!$string || strpos($string,$sanitize_seed)===false) return $string;
         
         return str_replace($sanitize_seed, '', $string);
+    }
+    
+    function sweepRemainPlaceholders($content='',$left='[*',$right='*]') {
+        
+        if(strpos($content,$left)===false || strpos($content,$right)===false) return false;
+        
+        $_ = $this->config['enable_filter'];
+        $this->config['enable_filter'] = 1;
+        if($left==='[*')  $content = $this->mergeDocumentContent($content);
+        $this->config['enable_filter'] = $_;
+        
+        $content= str_replace($matches[0], '', $content);
+        return $content;
     }
     
     /***************************************************************************************/
