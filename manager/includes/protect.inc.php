@@ -38,17 +38,17 @@ if (!function_exists('modx_sanitize_gpc')) {
             }
         }
         else $values = getSanitizedValue($values);
-        
+
         return $values;
     }
 }
 
 function getSanitizedValue($value='') {
     global $sanitize_seed;
-    
+
     if(!$value) return $value;
-    
-    $brackets = explode(' ', '[[ ]] [! !] [* *] [( )] {{ }} [+ +] [~ ~] [^ ^]');
+
+    $brackets = explode(' ', '[[ ]] [! !] [* *] [( )] {{ }} [+ +] [~ ~] [^ ^] \[\[ \]\] \{\{ \}\} \[\( \)\] \[\~ \~\] \[\+ \+\] \[\* \*\] \[! !\] [\[ ]\] {\{ }\} [\( )\] [\~ ~\] [\+ +\] [\* *\] [\! !\]');
     foreach($brackets as $bracket) {
         if(strpos($value,$bracket)===false) continue;
         $sanitizedBracket = str_replace('#', $sanitize_seed, sprintf('#%s#%s#', substr($bracket,0,1), substr($bracket,1,1)));
