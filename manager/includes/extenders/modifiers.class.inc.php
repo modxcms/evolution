@@ -10,6 +10,7 @@ class MODIFIERS {
     var $bt;
     var $srcValue;
     var $condition = array();
+    var $condModifiers;
     
     var $key;
     var $value;
@@ -20,6 +21,7 @@ class MODIFIERS {
         global $modx;
         
         if (function_exists('mb_internal_encoding')) mb_internal_encoding($modx->config['modx_charset']);
+        $this->condModifiers = 'is,eq,equals,ne,neq,notequals,isnot,isnt,not,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
     
     function phxFilter($key,$value,$modifiers)
@@ -40,70 +42,93 @@ class MODIFIERS {
         return $value;
     }
     
-    function splitEachModifiers($modifiers)
-    {
+    function _getDelim($mode,$modifiers) {
+        $c = substr($modifiers,0,1);
+        if(!in_array($c, array('"', "'", '`')) ) return false;
+        
+        $modifiers = substr($modifiers,1);
+        $clodure = $mode=='(' ? "{$c})" : $c;
+        if(strpos($modifiers, $clodure)===false) return false;
+        
+        return  $c;
+    }
+    
+    function _getOpt($mode,$delim,$modifiers) {
+        if($delim) {
+            if($mode=='(')
+                return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);
+            else return substr($modifiers,1,strpos($modifiers,$delim));
+        }
+        else {
+            $chars = str_split($modifiers);
+            $opt='';
+            foreach($chars as $c) {
+                if($c==':' || $c==')') break;
+                $opt .=$c;
+            }
+            return $opt;
+        }
+    }
+    function _getRemainModifiers($mode,$delim,$modifiers) {
+        if($delim) {
+            if($mode=='(')
+                return substr($modifiers,strpos($modifiers, $delim . ')' )+2);
+            else
+                return substr($modifiers,strpos($modifiers, $delim)+1);
+        }
+        else {
+            $chars = str_split($modifiers);
+            foreach($chars as $c) {
+                if($c==':') return $modifiers;
+                else $modifiers = substr($modifiers,1);
+            }
+            return $modifiers;
+        }
+    }
+    function splitEachModifiers($modifiers) {
         global $modx;
         
         if(strpos($modifiers,':')===false && strpos($modifiers,'=')===false && strpos($modifiers,'(')===false)
             return array(array('cmd'=>$modifiers,'opt'=>''));
         
-        $result = array();
-        $cmd   = '';
-        $opt = null;
-        while($modifiers!=='')
-        {
+        $cmd = '';
+        $bt = '';
+        $eq2md5 = md5('=');
+        while($bt!==$modifiers) {
             $bt = $modifiers;
-            $char = $this->substr($modifiers,0,1);
-            $modifiers = $this->substr($modifiers,1);
-            
-            if($cmd===''&&$char==='=') exit('Modifiers parse error');
-            
-            if    ($char==='=')
-            {
-                $modifiers = trim($modifiers);
-                $nextchar = $this->substr($modifiers,0,1);
-                if(in_array($nextchar, array('"', "'", '`'))) list($opt,$modifiers) = $this->_delimSplit($modifiers,$nextchar);
-                elseif(strpos($modifiers,':')!==false)        list($opt,$modifiers) = explode(':', $modifiers, 2);
-                else                                          list($opt,$modifiers) = array($modifiers,'');
-            }
-            elseif($char==='(' && strpos($modifiers,')')!==false)
-            {
-                $delim = $this->substr($modifiers,0,1);
-                switch($delim)
-                {
-                    case '"':
-                    case "'":
-                    case '`':
-                        if(strpos($modifiers,"{$delim})")!==false)
-                        {
-                            list($opt,$modifiers) = explode("{$delim})", $modifiers, 2);
-                            $opt = substr($opt,1);
+            $c = substr($modifiers,0,1);
+            $modifiers = substr($modifiers,1);
+            if($c==='=') {
+                    if($cmd!=='') {
+                        switch(substr($cmd,-1)) {
+                            case '<': case '>': $c = $eq2md5;
                         }
-                        break;
-                    default:
-                        list($opt,$modifiers) = explode(')', $modifiers, 2);
-                }
+                    }
+                    elseif(substr($modifiers,0,1)==='(')
+                        $c = $eq2md5;
             }
-            elseif($char===':') $opt = '';
-            else                $cmd .= $char;
-            
-            $cmd=trim($cmd);
-            if(!is_null($opt))
-            {
-                $cmd=trim($cmd);
-                if($cmd!=='') $result[]=array('cmd'=>$cmd,'opt'=>$opt);
+            if($c==='(' || $c==='=') {
+                $modifiers = trim($modifiers);
                 
-                $cmd   = '';
-                $opt = null;
+                $delim     = $this->_getDelim($c,$modifiers);
+                $opt       = $this->_getOpt($c,$delim,$modifiers);
+                $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
+                
+                $result[]=array('cmd'=>trim($cmd),'opt'=>$opt);
+                $cmd = '';
             }
-            elseif($cmd!==''&&$modifiers==='')
-                $result[]=array('cmd'=>$cmd,'opt'=>'');
-            
-            if($modifiers===$bt)
-            {
-                $cmd = trim($cmd);
-                if($cmd!=='') $result[] = array('cmd'=>$cmd,'opt'=>'');
+            elseif($c==':') {
+                $result[]=array('cmd'=>trim($cmd),'opt'=>'');
+                $cmd = '';
+            }
+            elseif(trim($modifiers)=='' && trim($cmd)!=='') {
+                $cmd .= $c;
+                $result[]=array('cmd'=>trim($cmd),'opt'=>'');
                 break;
+            }
+            else {
+                if($c===$eq2md5) $c = '=';
+                $cmd .= $c;
             }
         }
         
@@ -129,7 +154,7 @@ class MODIFIERS {
         {
             $lastKey = strtolower($m['cmd']);
         }
-        $_ = explode(',','is,eq,equals,ne,neq,notequals,isnot,isnt,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir');
+        $_ = explode(',',$this->condModifiers);
         if(in_array($lastKey,$_))
         {
             $modifiers[] = array('cmd'=>'then','opt'=>'1');
@@ -182,7 +207,7 @@ class MODIFIERS {
     {
         if($value!=='') return false;
         
-        $_ = explode(',', 'is,eq,equals,ne,neq,notequals,isnot,isnt,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir,_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
+        $_ = explode(',', $this->condModifiers . ',_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
         if(in_array($cmd,$_)) return false;
         else                  return true;
     }
@@ -938,20 +963,6 @@ class MODIFIERS {
             $value = str_replace(array('[+value+]',$self),$value,$cmd);
         }
         return $value;
-    }
-    function _delimSplit($_tmp,$delim)
-    {
-        $debugbt = $_tmp;
-        $_tmp = substr($_tmp,1);
-        $pos = strpos($_tmp,$delim);
-        $value = substr($_tmp,0,$pos);
-        $_tmp  = substr($_tmp,$pos+1);
-        if(!empty($value)) {
-            if(strpos($value,'[')!==false || strpos($value,'{')!==false)
-                $value = $this->parseDocumentSource($value);
-        }
-        
-        return array($value,$_tmp);
     }
     
     function parseDocumentSource($content='')
