@@ -1,5 +1,5 @@
 <?php
-// eForm 1.4.6 - Electronic Form Snippet
+// eForm 1.4.8 - Electronic Form Snippet
 // Original created by: Raymond Irving 15-Dec-2004.
 // Extended by: Jelle Jager (TobyL) September 2006
 // -----------------------------------------------------
@@ -54,7 +54,7 @@ function eForm($modx,$params) {
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.6';
+	$fileVersion = '1.4.8';
 	$version = isset($version) ? $version : 'prior to 1.4.2';
 
 	// include default language file
@@ -166,18 +166,17 @@ function eForm($modx,$params) {
 
 		// get user post back data
 		foreach($_POST as $name => $value){
-			if(is_array($value)){
-				//remove empty values
-				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
+			if(is_array($value)){ // type="checkbox" etc. remove empty values
+				$value = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
-				if ($allowhtml && $formats[$name][2]=='html') {
-					$fields[$name] = stripslashes($value);
-				} else {
-					$fields[$name] = strip_tags(stripslashes($value));
-				}
+				if(get_magic_quotes_gpc())                    $value = stripslashes($value); // For before PHP 5.3
+				if(!$allowhtml || $formats[$name][2]!='html') $value = strip_tags($value);
 			}
+			$fields[$name] = $value;
 		}
-
+		
+		modx_sanitize_gpc($fields); // Remove the danger values that the result of stripslashes and strip_tags.
+		
 		// get uploaded files
 		foreach($_FILES as $name => $value){
 			$fields[$name] = $value;
@@ -192,24 +191,8 @@ function eForm($modx,$params) {
 				$rClass['vericode']=$invalidClass; //added in 1.4.4
 			}
 		}
-
-		// sanitize the values with slashes stripped to avoid remote execution of Snippets
-		$version = $modx->getVersionData();
-		if (version_compare($version['version'], '1.0.9', '<=')) {
-			modx_sanitize_gpc($fields, array(
-				'@<script[^>]*?>.*?</script>@si',
-				'@&#(\d+);@e',
-				'@\[\~(.*?)\~\]@si',
-				'@\[\((.*?)\)\]@si',
-				'@{{(.*?)}}@si',
-				'@\[\+(.*?)\+\]@si',
-				'@\[\*(.*?)\*\]@si',
-				'@\[\[(.*?)\]\]@si',
-				'@\[!(.*?)!\]@si'
-			));
-		}
-
-		# validate fields
+		
+		// validate fields
 		foreach($fields as $name => $value) {
 			$fld = $formats[$name];
 			if ($fld) {
