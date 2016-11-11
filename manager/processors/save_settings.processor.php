@@ -50,6 +50,14 @@ $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['fi
 $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
 
 if (isset($data) && count($data) > 0) {
+	if(isset($data['manager_language'])) {
+		$lang_path = MODX_MANAGER_PATH . 'includes/lang/' . $data['manager_language'] . '.inc.php';
+		if(is_file($lang_path)) {
+			include($lang_path);
+            global $modx_lang_attribute;
+            $data['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+		}
+	}
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
 	foreach ($data as $k => $v) {

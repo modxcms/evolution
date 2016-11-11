@@ -6,7 +6,7 @@ class MODIFIERS {
     
     var $placeholders = array();
     var $vars = array();
-    var $cache = array();
+    var $tmpCache = array();
     var $bt;
     var $srcValue;
     var $condition = array();
@@ -14,7 +14,6 @@ class MODIFIERS {
     var $key;
     var $value;
     var $opt;
-    var $wrapat;
     
     function __construct()
     {
@@ -27,6 +26,7 @@ class MODIFIERS {
     {
         global $modx;
         $this->srcValue = $value;
+        $modifiers = trim($modifiers);
         $modifiers = str_replace(array("\r\n","\r"), "\n", $modifiers);
         $modifiers = $this->splitEachModifiers($modifiers);
         $this->placeholders = array();
@@ -121,13 +121,15 @@ class MODIFIERS {
     function parsePhx($key,$value,$modifiers)
     {
         global $modx;
+        $cacheKey = md5(sprintf('parsePhx#%s#%s#%s',$key,$value,print_r($modifiers,true)));
+        if(isset($this->tmpCache[$cacheKey])) return $this->tmpCache[$cacheKey];
         if(empty($modifiers)) return '';
         
         foreach($modifiers as $m)
         {
-            $lastKey = $m['cmd'];
+            $lastKey = strtolower($m['cmd']);
         }
-        $_ = explode(',','is,eq,equals,ne,neq,notequals,isnot,isnt,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir');
+        $_ = explode(',','is,eq,equals,ne,neq,notequals,isnot,isnt,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir');
         if(in_array($lastKey,$_))
         {
             $modifiers[] = array('cmd'=>'then','opt'=>'1');
@@ -140,6 +142,7 @@ class MODIFIERS {
             $value = $this->Filter($key,$value, $a['cmd'], $a['opt']);
             if ($modx->debug) $modx->addLogEntry('$modx->filter->'.__FUNCTION__."(:{$a['cmd']})",$fstart);
         }
+        $this->tmpCache[$cacheKey] = $value;
         return $value;
     }
     
@@ -179,7 +182,7 @@ class MODIFIERS {
     {
         if($value!=='') return false;
         
-        $_ = explode(',', 'is,eq,equals,ne,neq,notequals,isnot,isnt,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir,_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
+        $_ = explode(',', 'is,eq,equals,ne,neq,notequals,isnot,isnt,isempty,isnotempty,isntempty,gte,eg,gte,greaterthan,gt,isgreaterthan,isgt,lowerthan,lt,lte,islte,islowerthan,islt,el,find,in,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir,_default,default,if,input,or,and,show,this,select,switch,then,else,id,ifempty,smart_desc,smart_description,summary');
         if(in_array($cmd,$_)) return false;
         else                  return true;
     }
@@ -211,6 +214,11 @@ class MODIFIERS {
             case 'isnot':
             case 'isnt':
                 $this->condition[] = intval($value != $opt);break;
+            case 'isempty':
+                $this->condition[] = intval(empty($value)); break;
+            case 'isntempty':
+            case 'isnotempty':
+                $this->condition[] = intval(!empty($value)); break;
             case 'gte':
             case 'eg':
             case 'isgte':
@@ -412,9 +420,10 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $this->wrapat = intval($opt) ? intval($opt) : 70;
+                  $wrapat = intval($opt) ? intval($opt) : 70;
+                  return preg_replace_callback("~(\b\w+\b)~",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$value);
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
-                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$this->wrapat,' ',1)",$value);
+                else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
                 $width = preg_match('/^[1-9][0-9]*$/',$opt) ? $opt : 70;
                 if($modx->config['manager_language']==='japanese-utf8') {
@@ -474,6 +483,14 @@ class MODIFIERS {
             case 'replace_to':
             case 'tpl':
                 if($value!=='') return str_replace(array('[+value+]','[+output+]','{value}'),$value,$opt);
+                break;
+            case 'eachtpl':
+                $value = explode('||',$value);
+                $_ = array();
+                foreach($value as $v) {
+                    $_[] = str_replace(array('[+value+]','[+output+]','{value}','%s'),$v,$opt);
+                }
+                return join("\n", $_);
                 break;
             case 'preg_replace':
             case 'regex_replace':
@@ -841,7 +858,7 @@ class MODIFIERS {
         $key = $this->key;
         $value  = $this->value;
         $opt    = $this->opt;
-    	return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
+        return include(MODX_CORE_PATH."extenders/modifiers/mdf_{$cmd}.inc.php");
     }
     
     function getValueFromElement($key, $value, $cmd, $opt)

@@ -1,7 +1,7 @@
 <?php
 if(strpos($opt,',')) list($limit,$delim) = explode(',', $opt);
 elseif(preg_match('/^[1-9][0-9]*$/',$opt)) {$limit=$opt;$delim='';}
-else {$limit=100;$delim='';}
+else {$limit=124;$delim='';}
 
 if($delim==='') $delim = $modx->config['manager_language']==='japanese-utf8' ? '。' : '.';
 $limit = intval($limit);

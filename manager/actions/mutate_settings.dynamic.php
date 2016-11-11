@@ -133,6 +133,10 @@ jQuery(function(){
     jQuery('#editorRowOff').change(function() {jQuery('.editorRow').slideUp();});
     jQuery('#rbRowOn').change(function()      {jQuery('.rbRow').fadeIn();});
     jQuery('#rbRowOff').change(function()     {jQuery('.rbRow').fadeOut();});
+    jQuery('#useSmtp').change(function()      {jQuery('.smtpRow').fadeIn();});
+    jQuery('#useMail').change(function()      {jQuery('.smtpRow').fadeOut();});
+    jQuery('#captchaOn').change(function()    {jQuery('.captchaRow').fadeIn();});
+    jQuery('#captchaOff').change(function()   {jQuery('.captchaRow').fadeOut();});
 });
 function checkIM() {
     im_on = document.settings.im_plugin[0].checked; // check if im_plugin is on
@@ -1042,10 +1046,10 @@ function confirmLangChange(el, lkey, elupd){
 ?>
           <tr>
             <td nowrap class="warning"><?php echo $_lang["captcha_title"] ?></td>
-            <td> <input type="radio" name="use_captcha" value="1" <?php echo ($use_captcha==1) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : ''; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input type="radio" name="use_captcha" value="0" <?php echo ($use_captcha==0) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : '';?> />
-              <?php echo $_lang["no"]?> </td>
+            <td> <label><input type="radio" id="captchaOn" name="use_captcha" value="1" <?php echo ($use_captcha==1) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : ''; ?> />
+              <?php echo $_lang["yes"]?></label><br />
+              <label><input type="radio" id="captchaOff" name="use_captcha" value="0" <?php echo ($use_captcha==0) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : '';?> />
+              <?php echo $_lang["no"]?></label> </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -1054,7 +1058,7 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
             <td nowrap class="warning"><?php echo $_lang["captcha_words_title"] ?>
               <br />
               <p><?php echo $_lang["update_settings_from_language"]; ?></p>
@@ -1066,11 +1070,11 @@ function confirmLangChange(el, lkey, elupd){
                 <input type="hidden" name="captcha_words_default" id="captcha_words_default_hidden" value="<?php echo addslashes($_lang["captcha_words_default"]);?>" />
             </td>
           </tr>
-          <tr>
+          <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["captcha_words_message"] ?></td>
           </tr>
-          <tr>
+          <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
@@ -1090,25 +1094,25 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td nowrap class="warning"><?php echo $_lang["email_method_title"] ?></td>
             <td>
-                <?php echo wrap_label($_lang["email_method_mail"],form_radio('email_method','mail' ));?><br />
-                <?php echo wrap_label($_lang["email_method_smtp"],form_radio('email_method','smtp' ));?>
+                <?php echo wrap_label($_lang["email_method_mail"],form_radio('email_method','mail','id="useMail"'));?><br />
+                <?php echo wrap_label($_lang["email_method_smtp"],form_radio('email_method','smtp','id="useSmtp"'));?>
             </td>
           </tr>
           <tr>
             <td colspan="2"><div class="split"></div></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_auth_title"] ?></td>
             <td>
                 <?php echo wrap_label($_lang["yes"],form_radio('smtp_auth','1' ));?><br />
                 <?php echo wrap_label($_lang["no"],form_radio('smtp_auth','0' ));?>
             </td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class="split"></div></td>
           </tr>
           
-      <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_secure_title"] ?></td>
             <td >
              <select name="smtp_secure" size="1" class="inputBox">
@@ -1119,36 +1123,36 @@ function confirmLangChange(el, lkey, elupd){
          <br />
           </td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class="split"></div></td>
           </tr>
           
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_host_title"] ?></td>
             <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_host" value="<?php echo $smtp_host; ?>" /></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class="split"></div></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_port_title"] ?></td>
             <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_port" value="<?php echo $smtp_port; ?>" /></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_username_title"] ?></td>
             <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_username" value="<?php echo $smtp_username; ?>" /></td>
           </tr>
-           <tr>
+           <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class="split"></div></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td nowrap class="warning"><?php echo $_lang["smtp_password_title"] ?></td>
             <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
           </tr>
-          <tr>
+          <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
             <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
@@ -1479,18 +1483,26 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+        <?php
+            // invoke OnRichTextEditorRegister event
+            $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+            if(!is_array($evtOut)) {
+                $evtOut = array();
+                $use_editor = 0;
+            }
+        ?>
+          <tr <?php echo showHide(0<count($evtOut));?>>
             <td nowrap class="warning"><?php echo $_lang["use_editor_title"]?></td>
             <td>
                 <?php echo wrap_label($_lang["yes"],form_radio('use_editor', 1, 'id="editorRowOn"'));?><br />
                 <?php echo wrap_label($_lang["no"], form_radio('use_editor', 0, 'id="editorRowOff"'));?>
             </td>
           </tr>
-          <tr>
+          <tr <?php echo showHide(0<count($evtOut));?>>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["use_editor_message"]?></td>
           </tr>
-          <tr>
+          <tr <?php echo showHide(0<count($evtOut));?>>
             <td colspan="2"><div class='split'></div></td>
           </tr>
           
@@ -1501,11 +1513,11 @@ function confirmLangChange(el, lkey, elupd){
                 <select name="which_editor" onchange="documentDirty=true;">
                     <?php
                         // invoke OnRichTextEditorRegister event
-                        $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
                         echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">".$_lang["none"]."</option>\n";
-                        if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
-                            $editor = $evtOut[$i];
-                            echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";
+                        if(is_array($evtOut)) {
+                            foreach($evtOut as $editor) {
+                                echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";
+                            }
                         }
                     ?>
                 </select>

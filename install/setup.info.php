@@ -8,11 +8,6 @@ if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
 
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODX";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = "setup.sql";
-$moduleSQLDataFile = "setup.data.sql";
 $chunkPath    = $base_path .'install/assets/chunks';
 $snippetPath  = $base_path .'install/assets/snippets';
 $pluginPath   = $base_path .'install/assets/plugins';

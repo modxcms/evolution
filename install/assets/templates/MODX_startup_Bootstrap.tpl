@@ -12,16 +12,16 @@
  * @internal	@save_sql_id_as BOOTSTRAP_SQL_ID
  */
 <!DOCTYPE html>
-<html lang="en">
+<html lang="[(lang_code)]">
 <head>	
+	<base href="[(site_url)]" />
 	<meta charset="[(modx_charset)]" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>[*pagetitle*] / [(site_name)]</title>
-	<meta name="description" content="">
+	<@IF:[*description:isntEmpty*]><meta name="description" content="[*description*]"><@ENDIF>
 	
-	<link rel="icon" type="image/png" href="/favicon.png">
-	<link href="[[if? &is=`[*id*]:is:1` &then=`[(site_url)]` &else=`[(site_url)][~[*id*]~]`]]" rel="canonical">
+	<link href="[(site_url)]<@IF:[*id:isnt(1)*]>[~[*id*]~]<@ENDIF>" rel="canonical">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -127,8 +127,6 @@
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-	
-	<base href="[(site_url)]" />
 </head>
 <body>
 	<section class="top">
@@ -153,7 +151,7 @@
 							</button>
 						</div>
 						<div id="navbar" class="navbar-collapse collapse">
-							[!Wayfinder? 
+							[[Wayfinder? 
 							&startId=`0` 
 							&level=`2` 
 							&removeNewLines=`1`
@@ -163,7 +161,7 @@
 							&innerRowTpl=`@CODE:<li[+wf.classes+]><a href="[+wf.link+]">[+wf.linktext+]</a></li>`
 							&parentRowTpl=`@CODE:<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" title="[+wf.title+]">[+wf.linktext+] <b class="caret"></b></a>[+wf.wrapper+]</li>`
 							&activeParentRowTpl=`@CODE:<li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#" title="[+wf.title+]">[+wf.linktext+] <b class="caret"></b></a>[+wf.wrapper+]</li>`
-							!]
+							]]
 						</div>
 
 					</nav>
@@ -255,7 +253,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-6">
-						<a href="https://modx.com" title="Learn more about MODx">MODx</a> Starter-Template &copy;[[if? &is=`:is:` &then=`@eval: echo '2006-'.date("Y");`]]
+						<a href="https://modx.com" title="Learn more about MODX">MODX</a> Starter-Template &copy;2006-[[$_SERVER['REQUEST_TIME']:dateFormat=`Y` ]]
 					</div>
 					<div class="col-sm-6 text-right">
 						Built with <a href="http://www.getbootstrap.com" target="_blank">Bootstrap</a> framework.

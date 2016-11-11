@@ -27,6 +27,7 @@ $rte->setDebug(false);  // true or 'full' for Debug-Infos in HTML-comments
 // $rte->force('height',         isset($height) ? $height : '400px', 'string' );  // Get/set height from plugin-configuration
 // $rte->force('height',         NULL );                                          // Removes "height" completely from editor-init
 
+$rte->pluginParams['customParams'] = !empty($rte->pluginParams['customParams']) ? ','. trim($rte->pluginParams['customParams'], ',') : '';
 
 // Internal Stuff - Don´t touch!
 $showSettingsInterface = true;  // Show/Hide interface in Modx- / user-configuration
