@@ -44,6 +44,9 @@
  * Initialize Document Parsing
  * -----------------------------
  */
+
+if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
@@ -55,7 +58,6 @@ if(!defined('MODX_SITE_HOSTNAMES'))
 	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
-$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
 
 // harden it
@@ -99,27 +101,7 @@ if($database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-	echo "<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='utf-8'>
-<title>MODX is not installed!</title>
-<meta name='robots' content='noindex, nofollow'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-<style type=\"text/css\">
-*{margin:0;padding:0}
-body{margin:50px;background:#eee;}
-.install{padding:10px;border:2px solid #f22;border-radius:10px;background:#ffe8b7;margin:0 auto;font:1.5em 'Open Sans',serif;font-weight:300;text-align:center;}
-p{ margin:20px 0; }
-a{font-size:2em;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
-</style>
-</head>
-<body>
-<div class=\"install\">
-<p>MODX is not currently installed or the configuration file cannot be found.</p>
-<p>Do you want to <a href=\"install/index.php\">install now?</a></p>
-</div>
-</body></html>";
+		readfile('install/not_installed.tpl');
 		exit;
 	}
 }
@@ -138,7 +120,7 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->dumpPlugins = false;
-$modx->tstart = $tstart;
+$modx->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
 $modx->mstart = $mstart;
 
 // Debugging mode:

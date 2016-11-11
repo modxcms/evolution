@@ -5,7 +5,7 @@
  * Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads
  *
  * @category   snippet
- * @version    1.4.7
+ * @version    1.4.8
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal   @properties
  * @internal   @modx_category Forms
@@ -101,7 +101,7 @@ $_params = array (
    'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
    'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span>.</span>',
    'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span>, <span>',
-   'version' => '1.4.6'
+   'version' => '1.4.8'
 );
 
 // pixelchutes PHx workaround
