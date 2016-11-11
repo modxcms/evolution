@@ -1,5 +1,5 @@
 <?php
-// eForm 1.4.6 - Electronic Form Snippet
+// eForm 1.4.8 - Electronic Form Snippet
 // Original created by: Raymond Irving 15-Dec-2004.
 // Extended by: Jelle Jager (TobyL) September 2006
 // -----------------------------------------------------
@@ -54,7 +54,7 @@ function eForm($modx,$params) {
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.6';
+	$fileVersion = '1.4.8';
 	$version = isset($version) ? $version : 'prior to 1.4.2';
 
 	// include default language file
