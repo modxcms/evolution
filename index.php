@@ -44,6 +44,9 @@
  * Initialize Document Parsing
  * -----------------------------
  */
+
+if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
@@ -55,7 +58,6 @@ if(!defined('MODX_SITE_HOSTNAMES'))
 	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
-$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
 
 // harden it
@@ -118,7 +120,7 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->dumpPlugins = false;
-$modx->tstart = $tstart;
+$modx->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
 $modx->mstart = $mstart;
 
 // Debugging mode:
