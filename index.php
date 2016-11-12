@@ -47,6 +47,8 @@
 
 if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 
+if(is_file('autoload.php')) include_once('autoload.php');
+
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
@@ -86,18 +88,8 @@ if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
 
-// initialize the variables prior to grabbing the config file
-$database_type = '';
-$database_server = '';
-$database_user = '';
-$database_password = '';
-$dbase = '';
-$table_prefix = '';
-$base_url = '';
-$base_path = '';
-
 // get the required includes
-if($database_user=="") {
+if(!isset($database_user) || $database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
