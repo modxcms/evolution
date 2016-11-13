@@ -1040,7 +1040,7 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
-            $ph = $this->_snipParamsToArray($snip_call['params']);
+            $ph = $this->getParamsFromString($snip_call['params']);
             
             $value = $this->getChunk($key);
             $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
@@ -1335,7 +1335,7 @@ class DocumentParser {
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
-        $params = $this->_snipParamsToArray($snip_call['params']);
+        $params = $this->getParamsFromString($snip_call['params']);
         
         if(!isset($snippetObject['properties'])){
             $snippetObject['properties'] = '';
@@ -1357,7 +1357,7 @@ class DocumentParser {
         return $value;
     }
     
-    function _snipParamsToArray($string='')
+    function getParamsFromString($string='')
     {
         if(empty($string)) return array();
         
