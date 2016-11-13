@@ -1450,7 +1450,7 @@ class DocumentParser {
         return $params;
     }
     
-    function _findSplitter($str) {
+    function _getSplitPosition($str) {
         $str = str_split($str);
         $pass = false;
         $i = -1;
@@ -1476,7 +1476,7 @@ class DocumentParser {
         if(strpos($call,']]>')!==false)
             $call = str_replace(']]>', "]{$spacer}]>",$call);
         
-        $pos['?']  = $this->_findSplitter($call);
+        $pos['?']  = $this->_getSplitPosition($call);
         $pos['&']  = strpos($call, '&');
         $pos['=']  = strpos($call, '=');
         $pos['lf'] = strpos($call, "\n");
