@@ -1040,7 +1040,7 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
-            $ph = $this->_snipParamsToArray($snip_call['params']);
+            $ph = $this->getParamsFromString($snip_call['params']);
             
             $value = $this->getChunk($key);
             $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
@@ -1229,6 +1229,13 @@ class DocumentParser {
      */
     function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
+        if(isset($params) && is_array($params)) {
+            foreach($params as $k=>$v) {
+                $v = strtolower($v);
+                if($v==='false')    $params[$k] = false;
+                elseif($v==='true') $params[$k] = true;
+            }
+        }
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1328,7 +1335,7 @@ class DocumentParser {
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
-        $params = $this->_snipParamsToArray($snip_call['params']);
+        $params = $this->getParamsFromString($snip_call['params']);
         
         if(!isset($snippetObject['properties'])){
             $snippetObject['properties'] = '';
@@ -1350,7 +1357,7 @@ class DocumentParser {
         return $value;
     }
     
-    function _snipParamsToArray($string='')
+    function getParamsFromString($string='')
     {
         if(empty($string)) return array();
         
@@ -1443,22 +1450,37 @@ class DocumentParser {
         return $params;
     }
     
-    function _findSplitter($str) {
-        $str = str_split($str);
-        $pass = false;
-        $i = -1;
-        $pos = false;
+    function _getSplitPosition($str) {
+        $closeOpt = false;
+        $maybePos = false;
         $inFilter = false;
-        foreach($str as $c) {
-            $i++;
-            if($inFilter)    {
-                if($c===')')     { $pass = false; continue; }
-                elseif($pass)    { continue; }
-                elseif($c==='(') { $pass=true; continue; }
-                elseif($c==='?') { $pos=$i; break; }
+        $total = strlen($str);
+        $i=0;
+        for($i=0;$i<$total;$i++) {
+            $c  = substr($str,$i,1);
+            $cc = substr($str,$i,2);
+            if(!$inFilter) {
+                if($c===':')                  $inFilter=true;
+                elseif($c==='?')              $pos = $i;
+                elseif($c===' ')              $maybePos = $i;
+                elseif($c==='&' && $maybePos) $pos = $maybePos;
+                elseif($c==="\n")             $pos = $i;
+                else                          $pos = false;
             }
-            elseif($c===':')     { $inFilter=true; }
-            elseif($c==='?')     { $pos = $i; break; }
+            else {
+                if    ($cc==$closeOpt) $closeOpt = false;
+                elseif($c==$closeOpt)  $closeOpt = false;
+                elseif($closeOpt)      continue;
+                elseif($cc==="('")     $closeOpt = "')";
+                elseif($cc==='("')     $closeOpt = '")';
+                elseif($cc==='(`')     $closeOpt = '`)';
+                elseif($c==='(')       $closeOpt = ')';
+                elseif($c==='?')       $pos=$i;
+                elseif($c===' ' && strpos($str,'?')===false)
+                                       $pos = $i;
+                else                   $pos = false;
+            }
+            if($pos) break;
         }
         return $pos;
     }
@@ -1469,26 +1491,13 @@ class DocumentParser {
         if(strpos($call,']]>')!==false)
             $call = str_replace(']]>', "]{$spacer}]>",$call);
         
-        $pos['?']  = $this->_findSplitter($call);
-        $pos['&']  = strpos($call, '&');
-        $pos['=']  = strpos($call, '=');
-        $pos['lf'] = strpos($call, "\n");
+        $splitPosition  = $this->_getSplitPosition($call);
         
-        if($pos['?'] !== false)
+        if($splitPosition !== false)
         {
-            if($pos['lf']!==false && $pos['?'] < $pos['lf'])
-                list($name,$params) = explode('?',$call,2);
-            elseif($pos['lf']!==false && $pos['lf'] < $pos['?'])
-                list($name,$params) = explode("\n",$call,2);
-            else {
-                $name   = substr($call, 0, $pos['?']);
-                $params = substr($call, $pos['?']+1);
-            }
+            $name   = substr($call, 0, $splitPosition);
+            $params = substr($call, $splitPosition+1);
         }
-        elseif($pos['&'] !== false && $pos['='] !== false && $pos['?'] === false)
-            list($name,$params) = explode('&',$call,2);
-        elseif($pos['lf'] !== false)
-            list($name,$params) = explode("\n",$call,2);
         else
         {
             $name   = $call;
@@ -1499,6 +1508,7 @@ class DocumentParser {
         if(strpos($params,$spacer)!==false)
             $params = str_replace("]{$spacer}]>",']]>',$params);
         $snip['params'] = $params = ltrim($params,"?& \t\n");
+        
         return $snip;
     }
     

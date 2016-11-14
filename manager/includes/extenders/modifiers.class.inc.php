@@ -29,8 +29,10 @@ class MODIFIERS {
         global $modx;
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
+        $modifiers = ':'.trim($modifiers,':');
         $modifiers = str_replace(array("\r\n","\r"), "\n", $modifiers);
         $modifiers = $this->splitEachModifiers($modifiers);
+        
         $this->placeholders = array();
         $this->placeholders['phx'] = '';
         $this->placeholders['dummy'] = '';
@@ -57,7 +59,7 @@ class MODIFIERS {
         if($delim) {
             if($mode=='(')
                 return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);
-            else return substr($modifiers,1,strpos($modifiers,$delim));
+            else return substr($modifiers,1,strpos($modifiers,$delim,1)-1);
         }
         else {
             $chars = str_split($modifiers);
@@ -73,8 +75,11 @@ class MODIFIERS {
         if($delim) {
             if($mode=='(')
                 return substr($modifiers,strpos($modifiers, $delim . ')' )+2);
-            else
+            else {
+                $modifiers = trim($modifiers);
+                $modifiers = substr($modifiers,1);
                 return substr($modifiers,strpos($modifiers, $delim)+1);
+            }
         }
         else {
             $chars = str_split($modifiers);
@@ -88,46 +93,51 @@ class MODIFIERS {
     function splitEachModifiers($modifiers) {
         global $modx;
         
-        if(strpos($modifiers,':')===false && strpos($modifiers,'=')===false && strpos($modifiers,'(')===false)
-            return array(array('cmd'=>$modifiers,'opt'=>''));
-        
         $cmd = '';
         $bt = '';
-        $eq2md5 = md5('=');
         while($bt!==$modifiers) {
             $bt = $modifiers;
             $c = substr($modifiers,0,1);
             $modifiers = substr($modifiers,1);
-            if($c==='=') {
-                    if($cmd!=='') {
-                        switch(substr($cmd,-1)) {
-                            case '<': case '>': $c = $eq2md5;
-                        }
-                    }
-                    elseif(substr($modifiers,0,1)==='(')
-                        $c = $eq2md5;
-            }
-            if($c==='(' || $c==='=') {
-                $modifiers = trim($modifiers);
+            
+            if(preg_match('@^:(!?[<>=]{1,2})@', $c.$modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
+                $c = substr($modifiers,strlen($match[1]),1);
+                $debuginfo = '#i=0 #c='.$c.' #m='.$modifiers;
+                if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
+                else         $modifiers = substr($modifiers,strlen($match[1]));
                 
                 $delim     = $this->_getDelim($c,$modifiers);
                 $opt       = $this->_getOpt($c,$delim,$modifiers);
                 $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
                 
-                $result[]=array('cmd'=>trim($cmd),'opt'=>$opt);
+                $result[]=array('cmd'=>trim($match[1]),'opt'=>$opt,'debuginfo'=>$debuginfo);
+                $cmd = '';
+            }
+            elseif($c==='(' || $c==='=') {
+                $modifiers = $m1 = trim($modifiers);
+                $delim     = $this->_getDelim($c,$modifiers);
+                $opt       = $this->_getOpt($c,$delim,$modifiers);
+                $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
+                $debuginfo = '#i=1 #c='.$c.' #delim='.$delim.' #m1='.$m1 . 'remainMdf=' . $modifiers;
+                
+                $result[]=array('cmd'=>trim($cmd),'opt'=>$opt,'debuginfo'=>$debuginfo);
+                
                 $cmd = '';
             }
             elseif($c==':') {
-                $result[]=array('cmd'=>trim($cmd),'opt'=>'');
+                $debuginfo = '#i=2 #c='.$c.' #m='.$modifiers;
+                if($cmd!=='') $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
+                
                 $cmd = '';
             }
             elseif(trim($modifiers)=='' && trim($cmd)!=='') {
+                $debuginfo = '#i=3 #c='.$c.' #m='.$modifiers;
                 $cmd .= $c;
-                $result[]=array('cmd'=>trim($cmd),'opt'=>'');
+                $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
+                
                 break;
             }
             else {
-                if($c===$eq2md5) $c = '=';
                 $cmd .= $c;
             }
         }
@@ -967,6 +977,8 @@ class MODIFIERS {
             $html = str_replace(array($self,'[+value+]'), $value, $html);
             $value = str_replace(array('[+options+]','[+param+]'), $opt, $html);
         }
+        else return false;
+        
         if($php===false && $html===false && $value!==''
            && (strpos($cmd,'[+value+]')!==false || strpos($cmd,$self)!==false))
         {
