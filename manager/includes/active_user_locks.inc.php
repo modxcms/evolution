@@ -12,10 +12,10 @@ if($lockElementId > 0) {
 			onComplete: function(sessionResponse) {
 				resp = Json.evaluate(sessionResponse);
 				if(resp.status != 'ok') {
-					var errorMsg = '<?php echo sprintf($_lang["lock_element_unknown_error"], $lockElementType, $lockElementId, $_lang["lock_element_type_".$lockElementType]);?>';
-					jQuery('body').prepend('<div class="alert alert-error">'+errorMsg+'</div>');
-					alert(errorMsg);
 					clearInterval(keepMeLockedInterval);
+					var errorMsg = '<?php echo $modx->parseText($_lang["lock_element_unknown_error"], array('type'=>$lockElementType, 'id'=>$lockElementId, 'element_type'=>$_lang["lock_element_type_".$lockElementType])); ?>';
+					jQuery('body').prepend('<div class="modx-alert alert-error">'+errorMsg+'</div>');
+					alert(errorMsg);
 				}
 			}
 		}).request();

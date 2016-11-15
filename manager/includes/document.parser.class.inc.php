@@ -2286,6 +2286,38 @@ class DocumentParser {
     }
 
     /**
+     * Returns Locked Elements as Array
+     * 
+     * @param int $type Types: 0=all, 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param bool $minimumDetails true = 
+     */
+    function getLockedElements($type=0, $minimumDetails=false) {
+        $this->buildLockedElementsCache();
+
+        if(!$minimumDetails) {
+            $lockedElements = $this->lockedElements;
+        } else {
+            // Minimum details for HTML / Ajax-requests
+            $lockedElements = array();
+            foreach($this->lockedElements as $elType=>$elements) {
+                foreach($elements as $elId=>$el) {
+                    $lockedElements[$elType][$elId] = array(
+                        'username'    => $el['username'],
+                        'firsthit_df' => $this->toDateFormat($el['firsthit']),
+                        'state'       => $this->determineLockState($el['internalKey'])
+                    );
+                }
+            }
+        }
+        
+        if($type == 0) return $lockedElements;
+
+        $type = intval($type);
+        if(isset($lockedElements[$type])) return $lockedElements[$type];
+        else return array();
+    }
+
+    /**
      * Builds the Locked Elements Cache once
      */
     function buildLockedElementsCache() {
@@ -2303,11 +2335,34 @@ class DocumentParser {
                     'username'    => $row['username'],
                     'firsthit'    => $row['firsthit'],
                     'lasthit'     => $row['lasthit'],
-                    'firsthit_df'  => $this->toDateFormat($row['firsthit']),
-                    'lasthit_df'  => $this->toDateFormat($row['lasthit'])
+                    'firsthit_df' => $this->toDateFormat($row['firsthit']),
+                    'lasthit_df'  => $this->toDateFormat($row['lasthit']),
+                    'state'       => $this->determineLockState($row['internalKey'])
                 );
             }
         }
+    }
+
+    /**
+     * Determines state of a locked element
+     *
+     * @param int $internalKey: ID of User who locked actual element
+     * @return int $state States: 0=No display, 1=viewing this element, 2=locked, 3=show unlock-button
+     */
+    function determineLockState($internalKey) {
+        $state = 0;
+        if($this->hasPermission('display_locks')) {
+            if($internalKey == $this->getLoginUserID()) {
+                $state = 1;
+            } else {
+                if($this->hasPermission('remove_locks')) {
+                    $state = 3;
+                } else {
+                    $state = 2;
+                }
+            }
+        }
+        return $state;
     }
     
     /**

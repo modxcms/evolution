@@ -84,6 +84,49 @@ Value is not numeric.
         return file_get_contents('assets/templates/mydesign/page.html');
 }</pre>
 	</li>
+	<li><strong>Snippet-calls improved and supporting Modifiers</strong>
+		<pre>[[snippetName]]
+[[snippet Name]]
+[[snippetName?param=`value`]]
+[[snippet Name?param=`value`]]
+[[snippetName? &amp;param=`value`]]
+[[snippetName ? &amp;param=`value`]]
+[[snippetName &amp;param=`value`]]
+[[snippetName?
+    &amp;param=`value`
+]]
+[[snippetName
+    &amp;param=`value`
+]]
+[[snippet Name?
+    &amp;param=`value`
+]]
+[[snippetName?param]]
+
+[[snippetName:modifier]]
+[[snippetName:modifier?param=`value`]]
+[[snippetName:modifier ?
+    &amp;param=`value`
+]]
+[[snippetName:modifier
+    &amp;param=`value`
+]]
+[[snippetName:modifier=`option`
+    &amp;param=`value`
+]]
+[[snippetName:modifier(option)
+    &amp;param=`value`
+]]
+[[snippetName:modifier('option')
+    &amp;param=`value`
+]]
+[[snippetName:modifier("option")
+    &amp;param=`value`
+]]
+[[snippetName:modifier(`option`)
+    &amp;param=`value`
+]]</pre>
+	</li>
 </ul>
 
 <h1>New Manager Roles</h1>

@@ -87,10 +87,10 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
         $rowLock = $modx->elementIsLocked(7, $id, true);
         if($rowLock && $modx->hasPermission('display_locks')) {
             if($rowLock['internalKey'] == $modx->getLoginUserID()) {
-                $title = sprintf($_lang["lock_element_editing"], $_lang["lock_element_type_7"], $rowLock['firsthit_df']);
+                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_7"], 'firsthit_df'=>$rowLock['firsthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
-                $title = sprintf($_lang["lock_element_locked_by"], $_lang["lock_element_type_7"], $rowLock['username'], $rowLock['firsthit_df']);
+                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_7"], 'username'=>$rowLock['username'], 'firsthit_df'=>$rowLock['firsthit_df']));
                 if($modx->hasPermission('remove_locks')) {
                     $lockedByUser = '<a href="#" onclick="unlockResource(7, '.$id.', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
                 } else {

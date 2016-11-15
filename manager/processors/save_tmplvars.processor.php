@@ -163,6 +163,7 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay']."&or=".$origin."&oid=".$originId;
 				header($header);
 			} else {
+				$modx->unlockElement(2, $id);
 				$header="Location: index.php?a=".$origin."&r=2".($originId!=NULL?'&id='.$originId:'');
 				header($header);
 			}
