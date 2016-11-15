@@ -299,6 +299,15 @@ if ($e->name == 'OnManagerTreePrerender') {
 			margin-right:2px;
 			color: #657587;
 		}
+		
+		.actionButtons--eit li {
+			margin-right: 5px;
+			padding-left: 0 !important;
+		}
+		
+		.actionButtons--eit a {
+			font-size: 14px;
+		}
 
 		#tabTemp li.eltree:before {content: "\f1ea";}
 		#tabCH   li.eltree:before {content: "\f009";}
@@ -487,6 +496,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_snippet   = '<i class="fa fa-code"></i>';
 			$tabLabel_plugin    = '<i class="fa fa-plug"></i>';
 			$tabLabel_module    = '<i class="fa fa-cogs"></i>';
+			$tabLabel_create    = '<i class="fa fa-plus"></i>';
 			$tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
 		}
 		else {
@@ -496,8 +506,11 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_snippet   = 'SN';
 			$tabLabel_plugin    = 'PL';
 			$tabLabel_module    = 'MD';
+			$tabLabel_create    = 'Create';
 			$tabLabel_refresh   = 'Refresh';
 		}
+		
+		$text_reload_title = 'Click here to reload elements list.';
 		
 		function renderLockIcon($resourceTable, $id)
 		{
@@ -705,9 +718,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
               '.$temp.'
               <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=19" target="main">'.$_lang['new_template'].'</a></li>
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=19" target="main" title="'.$_lang['new_template'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
               <div class="tab-page" id="tabTV" style="padding-left:0; padding-right:0;">
@@ -715,9 +728,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
               '.$tv.'
               <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=300" target="main">'.$_lang['new_tmplvars'].'</a></li>
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=300" target="main" title="'.$_lang['new_tmplvars'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -730,9 +743,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
               '.$chunk.'
               <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=77" target="main">'.$_lang['new_htmlsnippet'].'</a></li>
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=77" target="main" title="'.$_lang['new_htmlsnippet'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -745,9 +758,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
               '.$snippet.'
               <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=23" target="main">'.$_lang['new_snippet'].'</a></li>
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=23" target="main" title="'.$_lang['new_snippet'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -760,9 +773,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
               '.$plugin.'
               <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=101" target="main">'.$_lang['new_plugin'].'</a></li>
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=101" target="main" title="'.$_lang['new_plugin'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -773,7 +786,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$new_module_button = '';
       
 			if ($modx->hasPermission('new_module')) {
-				$new_module_button = '<li><a href="index.php?a=107" target="main">'.$_lang['new_module'].'</a></li>';
+				$new_module_button = '<li><a href="index.php?a=107" target="main" title="'.$_lang['new_module'].'">'.$tabLabel_create.'</a></li>';
 			}
 			
 			$output .= '
@@ -782,9 +795,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
               '.$module.'
               <br/>
-              <ul class="actionButtons">
+              <ul class="actionButtons actionButtons--eit">
               '.$new_module_button.'
-              <li><a href="javascript:reloadElementsInTree();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	      ';
