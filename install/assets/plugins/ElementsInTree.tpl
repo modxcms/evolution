@@ -300,12 +300,24 @@ if ($e->name == 'OnManagerTreePrerender') {
 			color: #657587;
 		}
 		
+		.filterElements-form--eit {
+			width: 200px;
+			width: calc(100% - 70px);
+		}
+		
+		.actionButtons--eit {
+			position: absolute;
+			top: 25px;
+			right: 10px;
+		}
+		
 		.actionButtons--eit li {
 			margin-right: 5px;
 			padding-left: 0 !important;
 		}
 		
 		.actionButtons--eit a {
+			padding: 5px 8px;
 			font-size: 14px;
 		}
 
@@ -552,7 +564,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			global $modx, $_lang;
 			
 			$output  = '
-				<form class="filterElements-form" style="margin-top: 0;">
+				<form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
 				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
 				</form>';
 				
@@ -627,7 +639,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			global $modx, $_lang;
 			
 			$output  = '
-				<form class="filterElements-form" style="margin-top: 0;">
+				<form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
 				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
 				</form>';
 				
