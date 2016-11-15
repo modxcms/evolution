@@ -76,12 +76,12 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $rowLock = $modx->elementIsLocked($lockElementType, $row['id'], true);
         if($rowLock && $modx->hasPermission('display_locks')) {
             if($rowLock['internalKey'] == $modx->getLoginUserID()) {
-                $title = sprintf($_lang["lock_element_editing"], $_lang["lock_element_type_".$lockElementType], $rowLock['firsthit_df']);
+                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockElementType],'firsthit_df'=>$rowLock['firsthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
-                $title = sprintf($_lang["lock_element_locked_by"], $_lang["lock_element_type_".$lockElementType], $rowLock['username'], $rowLock['firsthit_df']); 
+                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_".$lockElementType], 'username'=>$rowLock['username'], 'firsthit_df'=>$rowLock['firsthit_df']));
                 if($modx->hasPermission('remove_locks')) {
-                    $lockedByUser = '<a href="#" onclick="unlockResource('.$lockElementType.', '.$row['id'].', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
+                    $lockedByUser = '<a href="#" onclick="unlockElement('.$lockElementType.', '.$row['id'].', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
                 } else {
                     $lockedByUser = '<span title="'.$title.'" class="lockedResource" style="cursor:context-menu;"><img src="'.$_style['icons_secured'].'" /></span>';
                 }
@@ -134,7 +134,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         });
     }
 
-    function unlockResource(type, id, domEl) {
+    function unlockElement(type, id, domEl) {
     <?php
         // Prepare lang-strings
         $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
@@ -142,7 +142,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                                     'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
         ?>
         var trans = <?php echo json_encode($unlockTranslations); ?>;
-        var msg = trans.msg.replace('%d',id).replace('%s',trans['type'+type]);
+        var msg = trans.msg.replace('[+id+]',id).replace('[+element_type+]',trans['type'+type]);
         if(confirm(msg)==true) {
             jQuery.get( 'index.php?a=67&type='+type+'&id='+id, function( data ) {
                 if(data == 1) {

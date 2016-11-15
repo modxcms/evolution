@@ -663,6 +663,9 @@ switch ($actionToTake) {
 		if ($_POST['refresh_preview'] == '1')
 			$header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
 		else {
+			if ($_POST['stay'] != '2' && $id > 0) {
+				$modx->unlockElement(7, $id);
+			}
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];
 				if ($type == "reference") {

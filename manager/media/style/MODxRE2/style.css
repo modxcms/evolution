@@ -3396,5 +3396,5 @@ table.actionButtons .searchtext {
 .btn-small { padding:2px 4px !important; font-size:11px !important; }
 .relative { position:relative; }
 
-.alert { display:block; margin:60px 10px 10px 10px; padding:1em; }
-.alert.alert-error { background-color:#ffd0d0; border:1px solid #ff0000; color:#000; }
+.modx-alert { display:block; margin:60px 10px 10px 10px; padding:1em; }
+.modx-alert.alert-error { background-color:#ffd0d0; border:1px solid #ff0000; color:#000; }
