@@ -657,12 +657,7 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
-        $_ = array('[* *]','[( )]','{{ }}');
-        foreach($_ as $brackets) {
-            list($left,$right) = explode(' ', $brackets);
-            if(strpos($this->documentOutput,$left)!==false)
-                $this->documentOutput = $this->sweepRemainPlaceholders($this->documentOutput,$left,$right);
-        }
+        $this->documentOutput = $this->sweepGarbageStrings($this->documentOutput);
         
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+')!==false) {
@@ -4517,16 +4512,26 @@ class DocumentParser {
         return str_replace($sanitize_seed, '', $string);
     }
     
-    function sweepRemainPlaceholders($content='',$left='[*',$right='*]') {
+    function sweepGarbageStrings($content='') {
+        global $sanitize_seed;
         
-        if(strpos($content,$left)===false || strpos($content,$right)===false) return false;
+        if(strpos($string,$sanitize_seed)!==false) $content = str_replace($sanitize_seed, '', $content);
         
-        $_ = $this->config['enable_filter'];
+        $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
-        if($left==='[*')  $content = $this->mergeDocumentContent($content);
-        $this->config['enable_filter'] = $_;
-        
-        $content= str_replace($matches[0], '', $content);
+        $_ = array('[* *]','[( )]','{{ }}','[[ ]]');
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($content,$left)!==false) {
+                if    ($left==='[*') $content = $this->mergeDocumentContent($content);
+                elseif($left==='[(') $content = $this->mergeSettingsContent($content);
+                elseif($left==='{{') $content = $this->mergeChunkContent($content);
+                elseif($left==='[[') $content = $this->evalSnippets($content);
+                $matches = $this->getTagsFromContent($content,$left,$right);
+                $content= str_replace($matches[0], '', $content);
+            }
+        }
+        $this->config['enable_filter'] = $enable_filter;
         return $content;
     }
     
