@@ -236,7 +236,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             // check if our payload contains the login form :)
             e = $('mx_loginbox');
             if(e) {
-                // yep! the seession has timed out
+                // yep! the session has timed out
                 rpcNode.innerHTML = '';
                 top.location = 'index.php';
             }
@@ -298,15 +298,17 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
     
-    function unlockResource(type, id, domEl) {
-	    <?php 
-	        // Prepare lang-strings
-	        $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"], 
-                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
-                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
-	    ?>
-        var trans = <?php echo json_encode($unlockTranslations); ?>;
-	    var msg = trans.msg.replace('%d',id).replace('%s',trans['type'+type]);
+    <?php
+    // Prepare lang-strings
+    $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
+                                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
+                                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+    ?>
+    
+    var lockedElementsTranslation = <?php echo json_encode($unlockTranslations); ?>;
+    
+    function unlockElement(type, id, domEl) {
+        var msg = lockedElementsTranslation.msg.replace('[+id+]',id).replace('[+element_type+]',lockedElementsTranslation['type'+type]);
         if(confirm(msg)==true) {
             jQuery.get( 'index.php?a=67&type='+type+'&id='+id, function( data ) {
                 if(data == 1) {
@@ -351,9 +353,9 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
                 var href = '';
                 if(treedisp_children==0) {
-                    href = "index.php?a=3&id=" + id + getFolderState();
+                    href = "index.php?a=3&r=1&id=" + id + getFolderState();
                 } else {
-                    href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&id=" + id; // edit as default action
+                    href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
                 if (e.shiftKey) {
                     window.getSelection().removeAllRanges(); // Remove unnessecary text-selection
