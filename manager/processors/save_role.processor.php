@@ -130,4 +130,7 @@ switch ($_POST['mode']) {
     default :
 		$modx->webAlertAndQuit("No operation set in request.");
 }
+
+$modx->unlockElement(8, $id);
+
 ?>

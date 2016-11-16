@@ -113,8 +113,8 @@ class MODxMailer extends PHPMailer
     public function Send() {
 		global $modx;
 		
-		$this->Body    = $modx->removeSanitizeSeed($this->Body));
-		$this->Subject = $modx->removeSanitizeSeed($this->Subject));
+		$this->Body    = $modx->removeSanitizeSeed($this->Body);
+		$this->Subject = $modx->removeSanitizeSeed($this->Subject);
 		
         try {
             if(!$this->PreSend()) return false;

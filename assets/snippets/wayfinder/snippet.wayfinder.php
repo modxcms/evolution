@@ -25,7 +25,8 @@ $wf_base_path = $modx->config['base_path'] . 'assets/snippets/wayfinder/';
 $conf_path = "{$wf_base_path}configs/";
 
 //Include a custom config file if specified
-@include("{$conf_path}default.config.php");
+if(is_file("{$conf_path}default.config.php"))
+    include("{$conf_path}default.config.php");
 
 $config = (!isset($config)) ? 'default' : trim($config);
 $config = ltrim($config,'/');
