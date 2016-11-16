@@ -5,7 +5,7 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.3.3
+ * @version     1.4.0
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;yes;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
@@ -18,7 +18,7 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  15/11/2016
+ * @lastupdate  16/11/2016
  */
 
 global $_lang;
@@ -175,7 +175,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-page ul li {
 			list-style: none;
-			padding-left: 10px;
+			padding-left: 8px;
 		}
 
 		#treePane .tab-page ul li li {
@@ -208,6 +208,15 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-row .tab span {
 			font-size: 14px;
+		}
+		
+		/* Clearfix to avoid .tab-row height() = 0 */
+		#treePane .tab-row:after {
+			content: ".";
+			clear: both;
+			display: block;
+			visibility: hidden;
+			height: 0px;
 		}
 
 		#treePane .ext-ico {
@@ -270,19 +279,23 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .panel-title a{
 			display: block;
-			padding: 4px 0 4px 15px;
+			padding: 4px 0 4px 17px;
 			color: #657587;
 			font-weight: bold;
 		}
-
+		#treePane .panel-title a:hover {
+			text-decoration: none;
+			color:#3697CD;
+		}
+		
 		#treePane .panel-title > a::before {
 			content: "\f107"; /* fa-angle-down */
 			font-family: "FontAwesome";
-			position: absolute;
-			left: 15px;
+			margin-left:-17px;
 		}
 		#treePane .panel-title > a.collapsed::before {
 			content: "\f105"; /* fa-angle-right */
+			padding:0 2px;
 		}
 		#treePane .panel-title > a[aria-expanded="true"] {
 			color: #657587;
@@ -379,10 +392,10 @@ if ($e->name == 'OnManagerTreePrerender') {
 						elementsInTreeParams = JSON.parse( storage );
 	                } catch(err) {
 	                    console.log(err);
-	                    elementsInTreeParams = { "cat_collapsed": {} };
+	                    elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
 	                }
 	            } else {
-                    elementsInTreeParams = { "cat_collapsed": {} };
+                    elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
                 }
                 
                 // Remember collapsed categories functions
@@ -424,7 +437,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 					localStorage.setItem(storageKey, jsonString );
 				}
 				
-				// Issue #20
+				// Issue #20 - Keep HTTP_REFERER
 				function reloadElementsInTree() {
 					// http://stackoverflow.com/a/7917528/2354531 
 					var url = "index.php?a=1&f=tree";
@@ -442,7 +455,114 @@ if ($e->name == 'OnManagerTreePrerender') {
 				    }
 				}
 				
-	            jQuery(document).ready(function() {
+				/////////////////////////////////////////////////////////////
+				// Prepare "remember scroll-position" functions
+				var tabIds = ["tree_site_templates","tree_site_tmplvars","tree_site_htmlsnippets","tree_site_snippets","tree_site_plugins","tree_site_modules"];
+				
+				function getScrollXY(tab) {
+	                var t = document.getElementById(tab);
+	                return [t.scrollLeft, t.scrollTop];
+	            }
+	
+	            function setScrollXY(tab, pos) {
+	                document.getElementById(tab).scrollLeft = pos[0];
+	                document.getElementById(tab).scrollTop = pos[1];
+	            }
+	            
+	            // Window load
+	            function loadPositions() {
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    tabEl.css("box-sizing","content-box").css("overflow","auto");
+	                    var tabPage = tabEl.closest(".tab-page");
+	                    if(tabPage.is(":visible")) {
+	                        setScrollXY(tabId, elementsInTreeParams.scroll_pos[tabId]);
+	                    } else {
+	                        tabPage.show();
+	                        setScrollXY(tabId, elementsInTreeParams.scroll_pos[tabId]);
+				            tabPage.hide(); 
+	                    }
+					}
+	            }
+	            
+	            // Window unload
+	            function savePositions() {
+	                if(typeof elementsInTreeParams.scroll_pos == "undefined") { elementsInTreeParams.scroll_pos = {}; }
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    var tabPage = tabEl.closest(".tab-page");
+	                    if(tabPage.is(":visible")) {
+	                        elementsInTreeParams.scroll_pos[tabId] = getScrollXY(tabId);
+	                    } else {
+	                        tabPage.show(); 
+				            elementsInTreeParams.scroll_pos[tabId] = getScrollXY(tabId);
+				            tabPage.hide(); 
+	                    }
+						
+					}
+	                writeElementsInTreeParamsToStorage();
+	            }
+	            
+	            // Window load & resize
+	            var winHeight, tabsHeight, buttonsSize, themeMargins, tabHeight;
+	            
+	            function determineHeightValues() {
+	                winHeight = jQuery(window).height();
+	                tabsHeight = jQuery(".tab-row:first").height();
+	                buttonsSize = jQuery(".filterElements-form:first").getSize();
+	                themeMargins = 70; // All MODxRE2 top/bottom margins
+	                tabHeight = winHeight - tabsHeight - buttonsSize.height - themeMargins;
+	            }
+	            
+	            function setTabsHeight() {
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    tabEl.css("max-height",tabHeight+"px");
+	                }
+	            }
+	            
+	            jQuery(window).on("load", function() {
+	                determineHeightValues();
+		            setTabsHeight();
+		            // Workaround for Firefox, which sometimes does not set scrollTop, 1ms is hopefully enough 
+	                var initDelay = setTimeout(function(){
+		                loadPositions();
+	                }, 1);
+	            });
+	            jQuery(window).on("unload", function() {
+	                savePositions();
+	            });
+	            jQuery(window).on("resize", function() {
+	                determineHeightValues();
+                    setTabsHeight();
+                });
+                
+                // Get size of invisible elements - http://stackoverflow.com/a/8839261/2354531
+                jQuery.fn.getSize = function() {    
+				    var $wrap = jQuery("<div />").appendTo(jQuery("body"));
+				    $wrap.css({
+				        "position":   "absolute !important",
+				        "visibility": "hidden !important",
+				        "display":    "block !important"
+				    });
+				
+				    $clone = jQuery(this).clone().appendTo($wrap);
+				
+				    sizes = {
+				        "width": $clone.width(),
+				        "height": $clone.height()
+				    };
+				
+				    $wrap.remove();
+				
+				    return sizes;
+				};
+	            /////////////////////////////////////////////////////////////
+            
+            jQuery(document).ready(function() {
 
                 jQuery(".filterElements-form").keydown(function (e) {
                     if(e.keyCode == 13) e.preventDefault();
@@ -729,7 +849,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Templates">'.$tabLabel_template.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
               '.$temp.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               <li><a href="index.php?a=19" target="main" title="'.$_lang['new_template'].'">'.$tabLabel_create.'</a></li>
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
@@ -739,7 +858,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Template Variables">'.$tabLabel_tv.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
               '.$tv.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               <li><a href="index.php?a=300" target="main" title="'.$_lang['new_tmplvars'].'">'.$tabLabel_create.'</a></li>
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
@@ -754,7 +872,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Chunks">'.$tabLabel_chunk.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
               '.$chunk.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               <li><a href="index.php?a=77" target="main" title="'.$_lang['new_htmlsnippet'].'">'.$tabLabel_create.'</a></li>
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
@@ -769,7 +886,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Snippets">'.$tabLabel_snippet.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
               '.$snippet.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               <li><a href="index.php?a=23" target="main" title="'.$_lang['new_snippet'].'">'.$tabLabel_create.'</a></li>
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
@@ -784,7 +900,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Plugins">'.$tabLabel_plugin.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
               '.$plugin.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               <li><a href="index.php?a=101" target="main" title="'.$_lang['new_plugin'].'">'.$tabLabel_create.'</a></li>
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
@@ -806,7 +921,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
               '.$module.'
-              <br/>
               <ul class="actionButtons actionButtons--eit">
               '.$new_module_button.'
               <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
