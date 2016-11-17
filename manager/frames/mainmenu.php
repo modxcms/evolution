@@ -62,13 +62,14 @@ if ($modx->hasPermission('exec_module')) {
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1');
+                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
+                ORDER BY sm.name');
     } else {
-        $rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
+        $rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1', 'name');
     }
     $i = 10;
     while ($content = $modx->db->getRow($rs)) {
-        $sitemenu['module' . $content['id']] = array('module' . $content['id'], 'modules', $content['name'], 'index.php?a=112&id=' . $content['id'], $content['name'], 'this.blur();', '', 'main', 0, 0, $i + 10, '');
+        $sitemenu['module' . $content['id']] = array('module' . $content['id'], 'modules', $content['name'], 'index.php?a=112&id=' . $content['id'], $content['name'], 'this.blur();', '', 'main', 0, $i + 10, '');
         $i = $i + 10;
     }
 }
