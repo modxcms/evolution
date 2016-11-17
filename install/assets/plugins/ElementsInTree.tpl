@@ -5,7 +5,7 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.4.0
+ * @version     1.5.0
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;yes;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
@@ -80,6 +80,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 	// unify frames
 	if ($unifyFrames == 'yes') {
 		$unifyFrames_css = '
+			/* Unify Frames */
 			body,
 			div.treeframebody {
 				background-color: #f2f2f2 !important;
@@ -108,6 +109,7 @@ if ($e->name == 'OnManagerTreePrerender') {
         ';
         
         $treeButtonsInTab_css = '
+      /* Tree Buttons in Tab */
       #treeHolder {
         padding-top: 10px;
         padding-left: 10px;
@@ -150,6 +152,227 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 	// start main output
 	$output = '
+		<script>
+			/**
+			 * nuContextMenu - jQuery Plugin
+			 * https://github.com/avxto/nuContextMenu
+			 */
+			(function($, window, document, undefined) {
+			  
+			  "use strict";
+			  
+			  var plugin = "nuContextMenu";
+			  
+			  var defaults = {
+			    hideAfterClick: false,
+			    contextMenuClass: "nu-context-menu",
+			    activeClass: "active"
+			  };
+			  
+			  var nuContextMenu = function(container, options) {
+			    this.container = $(container);
+			    this.options = $.extend({}, defaults, options);
+			    this._defaults = defaults;
+			    this._name = plugin;
+			    this.init();
+			  };
+			  
+			  $.extend(nuContextMenu.prototype, {
+			    init: function() {
+			      
+			      if (this.options.items) {
+			        this.items = $(this.options.items);
+			      }
+			      
+			      if (this._buildContextMenu()) {
+			        this._bindEvents();
+			        this._menuVisible = this._menu.hasClass(this.options.activeClass);
+			      }
+			    },
+			    
+			    _getCallback: function() {
+			      return ((this.options.callback && typeof this.options.callback ===
+			      "function") ? this.options.callback : function() {});
+			    },
+			    
+			    _buildContextMenu: function() {
+			      
+			      // Create context menu
+			      this._menu = $("<div>")
+			      .addClass(this.options.contextMenuClass)
+			      .append("<ul>");
+			      
+			      var menuArray = this.options.menu,
+			      menuList = this._menu.children("ul");
+			      
+			      // Create menu items
+			      $.each(menuArray, function(index, element) {
+			        
+			        var item;
+			        
+			        if (element !== null && typeof element !==
+			          "object") {
+			          return;
+			          }
+			          
+			          if (element.name === "void") {
+			            item = $("<hr>");
+			            menuList.append(item);
+			            return;
+			          }
+			          
+			          item = $("<li>")
+			          .attr("data-key", element.name)
+			          .text(" " + element.title);
+			          
+			          if (element.icon) {
+			            var icon = $("<i>")
+			            .addClass("fa fa-" + element.icon.toString());
+			            item.prepend(icon);
+			          }
+			          
+			          menuList.append(item);
+			          
+			      });
+			      
+			      $("body")
+			      .append(this._menu);
+			      
+			      return true;
+			      
+			    },
+			    
+			    _pDefault: function(event) {
+			      event.preventDefault();
+			      event.stopPropagation();
+			      return false;
+			    },
+			    
+			    _contextMenu: function(event) {
+			      
+			      event.preventDefault();
+			      
+			      // Store the value of this
+			      // So it can be used in the listItem click event
+			      var _this = this;
+			      var element = event.target;
+			      
+			      if (this._menuVisible || this.options.disable) {
+			        return false;
+			      }
+			      
+			      var callback = this._getCallback();
+			      var listItems = this._menu.children("ul")
+			      .children("li");
+			      
+			      listItems.off()
+			      .on("click", function() {
+			        
+			        var key = $(this)
+			        .attr("data-key");
+			        callback(key, element);
+			        if (_this.options.hideAfterClick) {
+			          _this.closeMenu();
+			        }
+			      });
+			      
+			      this.openMenu();
+			      
+			      // Custom fix: Assure menu is displayed within viewport
+			      var winHeight = jQuery(window).height();
+			      var winWidth = jQuery(window).width();
+			      var menuHeight = this._menu.height();
+			      var menuWidth = this._menu.width();
+			      
+			      var posX = event.pageX;
+			      var posY = event.pageY;
+			      if(event.pageX+menuWidth > winWidth) posX = event.pageX-menuWidth;
+			      if(event.pageY+menuHeight > winHeight) posY = event.pageY-menuHeight;
+			      
+		          this._menu.css({
+			        "top": posY + "px",
+			        "left": posX + "px"
+			      });
+			      
+			      return true;
+			    },
+			    
+			    _onMouseDown: function(event) {
+			      // Remove menu if clicked outside
+			      if (!$(event.target)
+			        .parents("." + this.options.contextMenuClass)
+			        .length) {
+			        this.closeMenu();
+			        }
+			    },
+			    
+			    _bindEvents: function() {
+			      
+			      if (this.items) {
+			        // Make it possible to bind to dynamically created items
+			        this.container.on("contextmenu", this.options.items,
+			                          $.proxy(this._contextMenu,
+			                                  this));
+			      } else {
+			        this.container.on("contextmenu", $.proxy(this._contextMenu,
+			                                                 this));
+			      }
+			      
+			      // Remove menu on click
+			      $(document)
+			      .on("mousedown", $.proxy(this._onMouseDown, this));
+			      
+			    },
+			    
+			    disable: function() {
+			      this.options.disable = true;
+			      return true;
+			    },
+			    
+			    destroy: function() {
+			      if (this.items) {
+			        this.container.off("contextmenu", this.options.items);
+			      } else {
+			        this.container.off("contextmenu");
+			      }
+			      this._menu.remove();
+			      return true;
+			    },
+			    
+			    openMenu: function() {
+			      this._menu.addClass(this.options.activeClass);
+			      this._menuVisible = true;
+			      return true;
+			    },
+			    
+			    closeMenu: function() {
+			      this._menu.removeClass(this.options.activeClass);
+			      this._menuVisible = false;
+			      return true;
+			    }
+			    
+			  });
+			  
+			  $.fn[plugin] = function(options) {
+			    var args = Array.prototype.slice.call(arguments, 1);
+			    
+			    return this.each(function() {
+			      var item = $(this),
+			                     instance = item.data(plugin);
+			                     if (!instance) {
+			                       item.data(plugin, new nuContextMenu(this, options));
+			                     } else {
+			                       if (typeof options === "string" && options[0] !== "_" &&
+			                         options !== "init") {
+			                         instance[options].apply(instance, args);
+			                         }
+			                     }
+			    });
+			  };
+			  
+			})(jQuery, window, document);
+		</script>
+		
 		<style>
 		#tabDoc {
 			overflow: hidden;
@@ -342,6 +565,73 @@ if ($e->name == 'OnManagerTreePrerender') {
 		#tabMD   li.eltree:before {content: "\f085";}
 		
 		.no-events { pointer-events: none; }
+		
+		/* Context Menu */
+		.nu-context-menu {
+		    background-clip: padding-box;
+		    background-color: #fff;
+		    border: 1px solid rgba(0,0,0,0.10);
+		    border-top:3px solid #3697CD;
+		    border-radius: 2px;
+		    box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+		    box-sizing: border-box;
+		    display: block;
+		    height: 0;
+		    opacity: 0;
+		    overflow: hidden;
+		    position: absolute;
+		    width: 0;
+		    z-index: 9999;
+		}
+		
+		.nu-context-menu.active {
+		    opacity: 1;
+		    height: auto;
+		    width: auto;
+		}
+		
+		.nu-context-menu ul {
+		    font-size: 14px;
+		    list-style: none;
+		    margin: 2px 0 0;
+		    padding: 4px 0;
+		    text-align: left;
+		}
+		
+		.nu-context-menu ul li {
+		    clear: both;
+		    color: #777;
+		    cursor: pointer;
+		    font-weight: 400;
+		    line-height: 1.42857;
+		    padding: 2px 30px 2px 5px;
+			margin: 0 4px;
+		    white-space: nowrap;
+			border: 1px solid transparent;
+		}
+		
+		.nu-context-menu ul li:hover {
+		    background: #E6F2FF;
+			border-color: #BACCDB;
+		    color: #333;
+		}
+		
+		.nu-context-menu ul li .fa {
+		    margin-right: 5px;
+		}
+		
+		.nu-context-menu ul hr {
+		    background: #e8e8e8;
+		    border: 0;
+		    color: #e8e8e8;
+		    height: 1px;
+		    margin: 4px 0;
+		}
+		 
+		.nu-context-menu-title {
+		    color:#3697CD;
+		    font-weight:bold;
+		}
 		
 		'.$unifyFrames_css.'
 		'.$treeButtonsInTab_css.'
@@ -724,7 +1014,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 				}
 				if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
 				$lockIcon = renderLockIcon($resourceTable, $row['id']);
-				$output .= '<li class="eltree">'.$lockIcon.'<span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+				$output .= '<li class="eltree">'.$lockIcon.'<span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" title="'.strip_tags($row['description']).'" target="main" class="context-menu" data-type="'.$resourceTable.'" data-id="'.$row['id'].'"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
@@ -766,7 +1056,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$resourceTable.'">';
 
 			if ($_SESSION['mgrRole'] != 1) {
-				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid, mg.member
+				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
@@ -776,7 +1066,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			} 
 			
 			else {
-				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid
+				$rs = $modx->db->query('SELECT sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS cats ON sm.category = cats.id
 				WHERE sm.disabled != 1
@@ -805,7 +1095,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
                     $output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" id="toggle'.$resourceTable.$row['catid'].'" href="#collapse'.$resourceTable.$row['catid'].'" data-cattype="'.$resourceTable.'" data-catid="'.$row['catid'].'" title="Click to toggle collapse. Shift+Click to toggle all."> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$resourceTable.'"  id="collapse'.$resourceTable.$row['category'].'"><ul>';
 					$insideUl = 1;
 				}
-				$output .= '<li class="eltree"><span><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+				$output .= '<li class="eltree"><span><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" title="'.strip_tags($row['description']).'" target="main" class="context-menu" data-type="'.$resourceTable.'" data-id="'.$row['id'].'"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
 				$output .= '</li>';
@@ -930,6 +1220,82 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 		}
 
         if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('exec_module') ) {
+			
+	        $output .= '
+	        <script>
+			    jQuery(function() {
+			        var context = jQuery("#treePane").nuContextMenu({
+			          hideAfterClick: true,
+			          items: ".context-menu",
+			          callback: function(action, element) {
+			            var el = jQuery(element);
+			            var name = el.html();
+			            var cm = el.closest(".context-menu");
+			            eitAction(name, action, cm.data("type"), cm.data("id"));
+			          },
+			          menu: [
+			            { name: "create",    title: "'.addslashes($_lang["create_new"]).'", icon: "plus", },
+			            { name: "edit",      title: "'.addslashes($_lang["edit"]).'",       icon: "edit", },
+			            { name: "duplicate", title: "'.addslashes($_lang["duplicate"]).'",  icon: "clone", },
+			            { name: "void" },
+			            { name: "delete",    title: "'.addslashes($_lang["delete"]).'",     icon: "trash", },
+			          ]
+			        });
+			    });
+			    
+			    function eitAction(name, action, type, id) {
+			    	var actionIds, deleteMsg;
+			    	
+			    	switch(type) {
+				        case "site_templates" :
+				            actionsIds = { "create":19, "edit":16, "duplicate":96, "delete":21 }; 
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_template"]).'";
+				            break;
+			            case "site_tmplvars" :
+				            actionsIds = { "create":300, "edit":301, "duplicate":304, "delete":303 };
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_tmplvars"]).'";
+				            break;
+			            case "site_htmlsnippets" :
+				            actionsIds = { "create":77, "edit":78, "duplicate":97, "delete":80 };
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_htmlsnippet"]).'";
+				            break;
+			            case "site_snippets" :
+				            actionsIds = { "create":23, "edit":22, "duplicate":98, "delete":25 };
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_snippet"]).'";
+				            break;
+			            case "site_plugins" :
+				            actionsIds = { "create":101, "edit":102, "duplicate":105, "delete":104 };
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_plugin"]).'";
+				            break;
+			            case "site_modules" :
+				            actionsIds = { "create":107, "edit":108, "duplicate":111, "delete":110 };
+				            deleteMsg = "'.addslashes($_lang["confirm_delete_module"]).'";
+				            break;
+				        default :
+				            alert("Unknown type");
+				            return;
+			    	}
+			    	
+			    	// Actions that need confirmation
+			    	var confirmMsg = false;
+			    	switch(action) {
+				        case "create" : id = false; break;
+			            case "edit" : break;
+			            case "duplicate" : confirmMsg = "'.addslashes($_lang["confirm_duplicate_record"]).'"; break;
+			            case "delete" : confirmMsg = deleteMsg; break;
+		            }
+			    	
+		            if(confirmMsg) {
+		                confirmMsg += " \n \n " + name + " ("+id+")";
+				        var r = confirm(confirmMsg);
+						if (r != true) return;
+					}
+					
+					top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+			    }
+			  </script>
+	        ';
+	        
 			$output .= '</div>';
 			$e->output($output);
 		}
