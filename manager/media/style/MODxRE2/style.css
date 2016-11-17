@@ -3128,9 +3128,10 @@ form textarea,
 #tv_body input[type="number"], 
 #tv_body textarea {
   background-color: #FBFBFB;
-  box-shadow: none;
-  transition: all .3s;
+  transition: all .2s;
   border-color: #dbdbdb;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05) inset;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05) inset;
 }
 
 #tv_body select, 

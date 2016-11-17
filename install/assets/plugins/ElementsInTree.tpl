@@ -5,7 +5,7 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.3.2
+ * @version     1.4.0
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
  * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;yes;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
@@ -18,7 +18,7 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  31/10/2016
+ * @lastupdate  16/11/2016
  */
 
 global $_lang;
@@ -47,15 +47,18 @@ if( in_array($e->name, array(
 	$_SESSION['elementsInTree']['reloadTree'] = true;
 }
 
-// Trigger reloading tree for relevant actions when reloadTree = true
+// Trigger reloading tree for relevant actions
 if ( $e->name == "OnManagerMainFrameHeaderHTMLBlock" ) {
-	$relevantActions = array(16,19,23,300,301,77,78,22,101,102,108,76,106,107);
-	if(in_array($_GET['a'],$relevantActions) && $_SESSION['elementsInTree']['reloadTree'] == true) {
+	$triggerRequiredActions = array(19,23,300,77,101,108,106,107); // when reloadTree = true
+	$alwaysRefreshActions = array(16,301,78,22,102,76); // Always reload tree
+	if((in_array($_GET['a'],$triggerRequiredActions) && $_SESSION['elementsInTree']['reloadTree'] == true) 
+		|| in_array($_GET['a'], $alwaysRefreshActions)) 
+	{
 		$_SESSION['elementsInTree']['reloadTree'] = false;
 		$html  = "<!-- elementsInTree Start -->\n";
 		$html .= "<script>";
 		$html .= "jQuery(document).ready(function() {";
-		$html .= "top.tree.location.reload();";
+		$html .= "top.tree.reloadElementsInTree();";
 		$html .= "})\n";
 		$html .= "</script>\n";
 		$html .= "<!-- elementsInTree End -->\n";
@@ -139,7 +142,12 @@ if ($e->name == 'OnManagerTreePrerender') {
       }
 	  ';
 	}
-	
+
+    // Prepare lang-strings
+    $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
+                                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
+                                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+
 	// start main output
 	$output = '
 		<style>
@@ -167,7 +175,7 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-page ul li {
 			list-style: none;
-			padding-left: 10px;
+			padding-left: 8px;
 		}
 
 		#treePane .tab-page ul li li {
@@ -200,6 +208,15 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .tab-row .tab span {
 			font-size: 14px;
+		}
+		
+		/* Clearfix to avoid .tab-row height() = 0 */
+		#treePane .tab-row:after {
+			content: ".";
+			clear: both;
+			display: block;
+			visibility: hidden;
+			height: 0px;
 		}
 
 		#treePane .ext-ico {
@@ -262,19 +279,23 @@ if ($e->name == 'OnManagerTreePrerender') {
 
 		#treePane .panel-title a{
 			display: block;
-			padding: 4px 0 4px 15px;
+			padding: 4px 0 4px 17px;
 			color: #657587;
 			font-weight: bold;
 		}
-
+		#treePane .panel-title a:hover {
+			text-decoration: none;
+			color:#3697CD;
+		}
+		
 		#treePane .panel-title > a::before {
 			content: "\f107"; /* fa-angle-down */
 			font-family: "FontAwesome";
-			position: absolute;
-			left: 15px;
+			margin-left:-17px;
 		}
 		#treePane .panel-title > a.collapsed::before {
 			content: "\f105"; /* fa-angle-right */
+			padding:0 2px;
 		}
 		#treePane .panel-title > a[aria-expanded="true"] {
 			color: #657587;
@@ -290,6 +311,27 @@ if ($e->name == 'OnManagerTreePrerender') {
 			padding:0 5px 0 0;
 			margin-right:2px;
 			color: #657587;
+		}
+		
+		.filterElements-form--eit {
+			width: 200px;
+			width: calc(100% - 70px);
+		}
+		
+		.actionButtons--eit {
+			position: absolute;
+			top: 25px;
+			right: 10px;
+		}
+		
+		.actionButtons--eit li {
+			margin-right: 5px;
+			padding-left: 0 !important;
+		}
+		
+		.actionButtons--eit a {
+			padding: 5px 8px;
+			font-size: 14px;
 		}
 
 		#tabTemp li.eltree:before {content: "\f1ea";}
@@ -350,10 +392,10 @@ if ($e->name == 'OnManagerTreePrerender') {
 						elementsInTreeParams = JSON.parse( storage );
 	                } catch(err) {
 	                    console.log(err);
-	                    elementsInTreeParams = { "cat_collapsed": {} };
+	                    elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
 	                }
 	            } else {
-                    elementsInTreeParams = { "cat_collapsed": {} };
+                    elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
                 }
                 
                 // Remember collapsed categories functions
@@ -389,12 +431,138 @@ if ($e->name == 'OnManagerTreePrerender') {
 	                  if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
 	                  elementsInTreeParams.cat_collapsed[type][id] = state;
                 }
+
 				function writeElementsInTreeParamsToStorage() {
 					var jsonString = JSON.stringify(elementsInTreeParams);
 					localStorage.setItem(storageKey, jsonString );
 				}
 				
-	            jQuery(document).ready(function() {
+				// Issue #20 - Keep HTTP_REFERER
+				function reloadElementsInTree() {
+					// http://stackoverflow.com/a/7917528/2354531 
+					var url = "index.php?a=1&f=tree";
+					var a = document.createElement("a");
+				    if (a.click)
+				    {
+				        // HTML5 browsers and IE support click() on <a>, early FF does not.
+				        a.setAttribute("href", url);
+				        a.style.display = "none";
+				        document.body.appendChild(a);
+				        a.click();
+				    } else {
+				        // Early FF can, however, use this usual method where IE cannot with secure links.
+				        window.location = url;
+				    }
+				}
+				
+				/////////////////////////////////////////////////////////////
+				// Prepare "remember scroll-position" functions
+				var tabIds = ["tree_site_templates","tree_site_tmplvars","tree_site_htmlsnippets","tree_site_snippets","tree_site_plugins","tree_site_modules"];
+				
+				function getScrollXY(tab) {
+	                var t = document.getElementById(tab);
+	                return [t.scrollLeft, t.scrollTop];
+	            }
+	
+	            function setScrollXY(tab, pos) {
+	                document.getElementById(tab).scrollLeft = pos[0];
+	                document.getElementById(tab).scrollTop = pos[1];
+	            }
+	            
+	            // Window load
+	            function loadPositions() {
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    tabEl.css("box-sizing","content-box").css("overflow","auto");
+	                    var tabPage = tabEl.closest(".tab-page");
+	                    if(tabPage.is(":visible")) {
+	                        setScrollXY(tabId, elementsInTreeParams.scroll_pos[tabId]);
+	                    } else {
+	                        tabPage.show();
+	                        setScrollXY(tabId, elementsInTreeParams.scroll_pos[tabId]);
+				            tabPage.hide(); 
+	                    }
+					}
+	            }
+	            
+	            // Window unload
+	            function savePositions() {
+	                if(typeof elementsInTreeParams.scroll_pos == "undefined") { elementsInTreeParams.scroll_pos = {}; }
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    var tabPage = tabEl.closest(".tab-page");
+	                    if(tabPage.is(":visible")) {
+	                        elementsInTreeParams.scroll_pos[tabId] = getScrollXY(tabId);
+	                    } else {
+	                        tabPage.show(); 
+				            elementsInTreeParams.scroll_pos[tabId] = getScrollXY(tabId);
+				            tabPage.hide(); 
+	                    }
+						
+					}
+	                writeElementsInTreeParamsToStorage();
+	            }
+	            
+	            // Window load & resize
+	            var winHeight, tabsHeight, buttonsSize, themeMargins, tabHeight;
+	            
+	            function determineHeightValues() {
+	                winHeight = jQuery(window).height();
+	                tabsHeight = jQuery(".tab-row:first").height();
+	                buttonsSize = jQuery(".filterElements-form:first").getSize();
+	                themeMargins = 70; // All MODxRE2 top/bottom margins
+	                tabHeight = winHeight - tabsHeight - buttonsSize.height - themeMargins;
+	            }
+	            
+	            function setTabsHeight() {
+	                for (var i = 0; i < tabIds.length; i++) {
+	                    var tabId = tabIds[i];
+	                    var tabEl = jQuery("#"+tabId);
+	                    tabEl.css("max-height",tabHeight+"px");
+	                }
+	            }
+	            
+	            jQuery(window).on("load", function() {
+	                determineHeightValues();
+		            setTabsHeight();
+		            // Workaround for Firefox, which sometimes does not set scrollTop, 1ms is hopefully enough 
+	                var initDelay = setTimeout(function(){
+		                loadPositions();
+	                }, 1);
+	            });
+	            jQuery(window).on("unload", function() {
+	                savePositions();
+	            });
+	            jQuery(window).on("resize", function() {
+	                determineHeightValues();
+                    setTabsHeight();
+                });
+                
+                // Get size of invisible elements - http://stackoverflow.com/a/8839261/2354531
+                jQuery.fn.getSize = function() {    
+				    var $wrap = jQuery("<div />").appendTo(jQuery("body"));
+				    $wrap.css({
+				        "position":   "absolute !important",
+				        "visibility": "hidden !important",
+				        "display":    "block !important"
+				    });
+				
+				    $clone = jQuery(this).clone().appendTo($wrap);
+				
+				    sizes = {
+				        "width": $clone.width(),
+				        "height": $clone.height()
+				    };
+				
+				    $wrap.remove();
+				
+				    return sizes;
+				};
+	            /////////////////////////////////////////////////////////////
+            
+            jQuery(document).ready(function() {
 
                 jQuery(".filterElements-form").keydown(function (e) {
                     if(e.keyCode == 13) e.preventDefault();
@@ -460,6 +628,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_snippet   = '<i class="fa fa-code"></i>';
 			$tabLabel_plugin    = '<i class="fa fa-plug"></i>';
 			$tabLabel_module    = '<i class="fa fa-cogs"></i>';
+			$tabLabel_create    = '<i class="fa fa-plus"></i>';
 			$tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
 		}
 		else {
@@ -469,18 +638,53 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$tabLabel_snippet   = 'SN';
 			$tabLabel_plugin    = 'PL';
 			$tabLabel_module    = 'MD';
+			$tabLabel_create    = 'Create';
 			$tabLabel_refresh   = 'Refresh';
+		}
+		
+		$text_reload_title = 'Click here to reload elements list.';
+		
+		function renderLockIcon($resourceTable, $id)
+		{
+			global $modx, $_lang, $_style;
+			
+			switch($resourceTable) {
+				case 'site_templates': $lockType = 1; break;
+				case 'site_tmplvars': $lockType = 2; break;
+				case 'site_htmlsnippets': $lockType = 3; break;
+				case 'site_snippets': $lockType = 4; break;
+				case 'site_plugins': $lockType = 5; break;
+				case 'site_modules': $lockType = 6; break;
+			}
+			
+			if(!isset($lockType)) return '';
+			
+			$lockedByUser = '';
+			$rowLock = $modx->elementIsLocked($lockType, $id, true);
+			if($rowLock && $modx->hasPermission('display_locks')) {
+				if($rowLock['internalKey'] == $modx->getLoginUserID()) {
+					$title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockType],'firsthit_df'=>$rowLock['firsthit_df']));
+					$lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
+				} else {
+					$title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_".$lockType], 'username'=>$rowLock['username'], 'firsthit_df'=>$rowLock['firsthit_df']));
+					if($modx->hasPermission('remove_locks')) {
+						$lockedByUser = '<a href="#" onclick="unlockElement('.$lockType.', '.$id.', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
+					} else {
+						$lockedByUser = '<span title="'.$title.'" class="lockedResource" style="cursor:context-menu;"><img src="'.$_style['icons_secured'].'" /></span>';
+					}
+				}
+			}
+			return '<span id="lock'.$lockType.'_'.$id.'">'.$lockedByUser.'</span>';
 		}
 		
 		$tablePre = $modx->db->config['dbase'] . '.`' . $modx->db->config['table_prefix'];
 		
-		// createResourceList function
-		
+		// create elements list function
 		function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name') {
 			global $modx, $_lang;
 			
 			$output  = '
-				<form class="filterElements-form" style="margin-top: 0;">
+				<form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
 				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
 				</form>';
 				
@@ -511,7 +715,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
-				$row['category'] = stripslashes($row['category']); //pixelchutes
+				$row['category'] = stripslashes($row['category']);
 				if ($preCat !== $row['category']) {
 					$output .= $insideUl? '</div>': '';
 					$row['catid'] = intval($row['catid']);
@@ -519,7 +723,8 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 					$insideUl = 1;
 				}
 				if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
-				$output .= '<li class="eltree"><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
+				$lockIcon = renderLockIcon($resourceTable, $row['id']);
+				$output .= '<li class="eltree">'.$lockIcon.'<span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" target="main"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
                   <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
 				
 				$output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
@@ -531,7 +736,6 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$output .= '
     
         <script>
-          jQuery(\'#collapse'.$resourceTable.$row['catid'].'\').collapse();
           initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
           jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
             searchFieldCache = elementsInTreeParams.cat_collapsed;
@@ -555,7 +759,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			global $modx, $_lang;
 			
 			$output  = '
-				<form class="filterElements-form" style="margin-top: 0;">
+				<form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
 				  <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$resourceTable.'_search">
 				</form>';
 				
@@ -645,20 +849,18 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Templates">'.$tabLabel_template.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
               '.$temp.'
-              <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=19" target="main">'.$_lang['new_template'].'</a></li>
-              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=19" target="main" title="'.$_lang['new_template'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
               <div class="tab-page" id="tabTV" style="padding-left:0; padding-right:0;">
               <h2 class="tab" title="Template Variables">'.$tabLabel_tv.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
               '.$tv.'
-              <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=300" target="main">'.$_lang['new_tmplvars'].'</a></li>
-              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=300" target="main" title="'.$_lang['new_tmplvars'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -670,10 +872,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Chunks">'.$tabLabel_chunk.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
               '.$chunk.'
-              <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=77" target="main">'.$_lang['new_htmlsnippet'].'</a></li>
-              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=77" target="main" title="'.$_lang['new_htmlsnippet'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -685,10 +886,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Snippets">'.$tabLabel_snippet.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
               '.$snippet.'
-              <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=23" target="main">'.$_lang['new_snippet'].'</a></li>
-              <li><a href="javascript:location.reload();" title="Click here if element was added or deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=23" target="main" title="'.$_lang['new_snippet'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -700,10 +900,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Plugins">'.$tabLabel_plugin.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
               '.$plugin.'
-              <br/>
-              <ul class="actionButtons">
-              <li><a href="index.php?a=101" target="main">'.$_lang['new_plugin'].'</a></li>
-              <li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <ul class="actionButtons actionButtons--eit">
+              <li><a href="index.php?a=101" target="main" title="'.$_lang['new_plugin'].'">'.$tabLabel_create.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	        ';
@@ -714,7 +913,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$new_module_button = '';
       
 			if ($modx->hasPermission('new_module')) {
-				$new_module_button = '<li><a href="index.php?a=107" target="main">'.$_lang['new_module'].'</a></li>';
+				$new_module_button = '<li><a href="index.php?a=107" target="main" title="'.$_lang['new_module'].'">'.$tabLabel_create.'</a></li>';
 			}
 			
 			$output .= '
@@ -722,10 +921,9 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
               <h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
               <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
               '.$module.'
-              <br/>
-              <ul class="actionButtons">
+              <ul class="actionButtons actionButtons--eit">
               '.$new_module_button.'
-              <li><a href="javascript:location.reload();" title="Click here if element was enabled/disabled/added/deleted to refresh the list.">'.$tabLabel_refresh.'</a></li>
+              <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
               </ul>
               </div>
 	      ';
