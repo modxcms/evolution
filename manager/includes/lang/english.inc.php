@@ -184,6 +184,7 @@ $_lang["create_resource_here"] = 'Create Resource here';
 $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Create Weblink here';
 $_lang["createdon"] = 'Creation date';
+$_lang["create_new"] = 'Create new';
 $_lang["credits"] = 'Credits';
 $_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Add custom content types for Resources. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
