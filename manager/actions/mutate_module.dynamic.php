@@ -612,7 +612,7 @@ $ds = $modx->db->select(
 <?php
     }
     $chk = '';
-    $rs = $modx->db->select('name, id', $tbl_membergroup_names);
+    $rs = $modx->db->select('name, id', $tbl_membergroup_names, '', 'name');
     while ($row = $modx->db->getRow($rs)) {
         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
         $checked = in_array($row['id'], $groupsarray);
