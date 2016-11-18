@@ -2348,7 +2348,7 @@ input#dateto:focus.DatePicker {
 .dp_cal input.cal_timeTextBox {
   display: block;
   text-align: center;
-  width: 60px;
+  width: 60px !important;
   margin: 0 auto;
   margin-top: 3px;
 }
