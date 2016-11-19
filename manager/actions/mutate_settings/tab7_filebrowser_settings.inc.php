@@ -43,10 +43,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
     <td nowrap class="warning"><?php echo $_lang['rb_webuser_title']?></td>
     <td>
-      <input type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['yes']?><br />
-      <input type="radio" name="rb_webuser" value="0" <?php echo $rb_webuser=='0' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['no']?>
+      <label><input type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['yes']?></label><br />
+      <label><input type="radio" name="rb_webuser" value="0" <?php echo $rb_webuser=='0' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['no']?></label>
     </td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
@@ -86,10 +86,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
       <td nowrap class="warning"><?php echo $_lang['clean_uploaded_filename']?></td>
       <td>
-        <input type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
-        <?php echo $_lang['yes']?><br />
-        <input type="radio" name="clean_uploaded_filename" value="0" <?php echo $clean_uploaded_filename=='0' ? 'checked="checked"' : "" ; ?> />
-        <?php echo $_lang['no']?>
+        <label><input type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
+        <?php echo $_lang['yes']?></label><br />
+        <label><input type="radio" name="clean_uploaded_filename" value="0" <?php echo $clean_uploaded_filename=='0' ? 'checked="checked"' : "" ; ?> />
+        <?php echo $_lang['no']?></label>
       </td>
   </tr>
     <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
@@ -102,10 +102,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
     <td nowrap class="warning"><?php echo $_lang['settings_strip_image_paths_title']?></td>
     <td>
-      <input type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['yes']?><br />
-      <input type="radio" name="strip_image_paths" value="0" <?php echo $strip_image_paths=='0' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['no']?>
+      <label><input type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['yes']?></label><br />
+      <label><input type="radio" name="strip_image_paths" value="0" <?php echo $strip_image_paths=='0' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['no']?></label>
     </td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
@@ -196,10 +196,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
        <td nowrap class="warning"><?php echo $_lang['denyZipDownload'] ?></td>
         <td>
-          <input type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
-          <?php echo $_lang['no']?><br />
-          <input type="radio" name="denyZipDownload" value="1" <?php echo $denyZipDownload=='1' ? 'checked="checked"' : ""; ?> />
-          <?php echo $_lang['yes']?>
+          <label><input type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
+          <?php echo $_lang['no']?></label><br />
+          <label><input type="radio" name="denyZipDownload" value="1" <?php echo $denyZipDownload=='1' ? 'checked="checked"' : ""; ?> />
+          <?php echo $_lang['yes']?></label>
         </td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
@@ -208,10 +208,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
         <td nowrap class="warning"><?php echo $_lang['denyExtensionRename'] ?></td>
         <td>
-           <input type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['no']?><br />
-           <input type="radio" name="denyExtensionRename" value="1" <?php echo $denyExtensionRename=='1' ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['yes']?>
+           <label><input type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
+           <?php echo $_lang['no']?></label><br />
+           <label><input type="radio" name="denyExtensionRename" value="1" <?php echo $denyExtensionRename=='1' ? 'checked="checked"' : ""; ?> />
+           <?php echo $_lang['yes']?></label>
         </td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
@@ -220,10 +220,10 @@
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
        <td nowrap class="warning"><?php echo $_lang['showHiddenFiles'] ?></td>
        <td>
-         <input type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['no']?><br />
-         <input type="radio" name="showHiddenFiles" value="1" <?php echo $showHiddenFiles=='1' ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['yes']?>
+         <label><input type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['no']?></label><br />
+         <label><input type="radio" name="showHiddenFiles" value="1" <?php echo $showHiddenFiles=='1' ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['yes']?></label>
         </td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>

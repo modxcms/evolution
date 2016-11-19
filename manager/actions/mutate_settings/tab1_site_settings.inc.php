@@ -141,8 +141,8 @@
       </select>
           <br />
         <div id="template_reset_options_wrapper" style="display:none;">
-            <input type="radio" name="reset_template" value="1" /> <?php echo $_lang['template_reset_all']; ?><br />
-            <input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'],$oldTmpName); ?>
+            <label><input type="radio" name="reset_template" value="1" /> <?php echo $_lang['template_reset_all']; ?></label><br />
+            <label><input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'],$oldTmpName); ?></label>
         </div>
         <input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
     </td>
@@ -158,9 +158,9 @@
         <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_logic_title'];?></td>
         <td>
             <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
-            <input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?><br />
-            <input type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?><br />
-            <input type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?><br />
+            <label><input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?></label><br />
+            <label><input type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?></label><br />
+            <label><input type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?></label><br />
         </td>
     </tr>
     <tr>

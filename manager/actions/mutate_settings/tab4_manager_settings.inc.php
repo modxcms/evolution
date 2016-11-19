@@ -56,10 +56,10 @@
     </tr>
      <tr>
        <td nowrap class="warning"><?php echo $_lang['warning_visibility'] ?></td>
-       <td> <input type="radio" name="warning_visibility" value="0" <?php echo $warning_visibility=='0' ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['administrators']?><br />
-         <input type="radio" name="warning_visibility" value="1" <?php echo ($warning_visibility=='1') ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['everybody']?></td>
+       <td> <label><input type="radio" name="warning_visibility" value="0" <?php echo $warning_visibility=='0' ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['administrators']?></label><br />
+         <label><input type="radio" name="warning_visibility" value="1" <?php echo ($warning_visibility=='1') ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['everybody']?></label></td>
      </tr>
      <tr>
        <td width="200">&nbsp;</td>
@@ -71,10 +71,11 @@
     </tr>
      <tr>
          <td nowrap class="warning"><?php echo $_lang['tree_page_click'] ?></td>
-         <td> <input type="radio" name="tree_page_click" value="27" <?php echo $tree_page_click=='27' ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['edit_resource']?><br />
-           <input type="radio" name="tree_page_click" value="3" <?php echo ($tree_page_click=='3') ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['doc_data_title']?></td>
+         <td>
+           <label><input type="radio" name="tree_page_click" value="27" <?php echo $tree_page_click=='27' ? 'checked="checked"' : ""; ?> />
+           <?php echo $_lang['edit_resource']?></label><br />
+           <label><input type="radio" name="tree_page_click" value="3" <?php echo ($tree_page_click=='3') ? 'checked="checked"' : ""; ?> />
+           <?php echo $_lang['doc_data_title']?></label></td>
        </tr>
      <tr>
        <td width="200">&nbsp;</td>
@@ -86,10 +87,11 @@
     </tr>
     <tr>
         <td nowrap class="warning"><?php echo $_lang['use_breadcrumbs'] ?></td>
-        <td> <input type="radio" name="use_breadcrumbs" value="1" <?php echo $use_breadcrumbs=='1' ? 'checked="checked"' : ""; ?> />
-            <?php echo $_lang['yes']?><br />
-            <input type="radio" name="use_breadcrumbs" value="0" <?php echo ($use_breadcrumbs=='0') ? 'checked="checked"' : ""; ?> />
-            <?php echo $_lang['no']?></td>
+        <td>
+            <label><input type="radio" name="use_breadcrumbs" value="1" <?php echo $use_breadcrumbs=='1' ? 'checked="checked"' : ""; ?> />
+            <?php echo $_lang['yes']?></label><br />
+            <label><input type="radio" name="use_breadcrumbs" value="0" <?php echo ($use_breadcrumbs=='0') ? 'checked="checked"' : ""; ?> />
+            <?php echo $_lang['no']?></label></td>
     </tr>
     <tr>
         <td width="200">&nbsp;</td>
@@ -102,10 +104,10 @@
      <tr>
        <td nowrap class="warning"><?php echo $_lang['remember_last_tab'] ?></td>
        <td>
-         <input type="radio" name="remember_last_tab" value="1" <?php echo $remember_last_tab=='1' ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['yes']?><br />
-         <input type="radio" name="remember_last_tab" value="0" <?php echo ($remember_last_tab=='0') ? 'checked="checked"' : ""; ?> />
-         <?php echo $_lang['no']?></td>
+         <label><input type="radio" name="remember_last_tab" value="1" <?php echo $remember_last_tab=='1' ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['yes']?></label><br />
+         <label><input type="radio" name="remember_last_tab" value="0" <?php echo ($remember_last_tab=='0') ? 'checked="checked"' : ""; ?> />
+         <?php echo $_lang['no']?></label></td>
      </tr>
      <tr>
        <td width="200">&nbsp;</td>
@@ -166,10 +168,11 @@ echo implode("\n",$output)
     </tr>
      <tr>
          <td nowrap class="warning"><?php echo $_lang['tree_show_protected'] ?></td>
-         <td> <input type="radio" name="tree_show_protected" value="1" <?php echo ($tree_show_protected=='1') ? 'checked="checked" ' : ''; ?>/>
-           <?php echo $_lang['yes']?><br />
-           <input type="radio" name="tree_show_protected" value="0" <?php echo ($tree_show_protected=='0') ? 'checked="checked" ' : ''; ?>/>
-           <?php echo $_lang['no']?></td>
+         <td>
+           <label><input type="radio" name="tree_show_protected" value="1" <?php echo ($tree_show_protected=='1') ? 'checked="checked" ' : ''; ?>/>
+           <?php echo $_lang['yes']?></label><br />
+           <label><input type="radio" name="tree_show_protected" value="0" <?php echo ($tree_show_protected=='0') ? 'checked="checked" ' : ''; ?>/>
+           <?php echo $_lang['no']?></label></td>
        </tr>
          <tr>
            <td width="200">&nbsp;</td>
@@ -180,10 +183,11 @@ echo implode("\n",$output)
     </tr>
      <tr>
          <td nowrap class="warning"><?php echo $_lang['show_meta'] ?></td>
-         <td> <input type="radio" name="show_meta" value="1" <?php echo $show_meta=='1' ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['yes']?><br />
-           <input type="radio" name="show_meta" value="0" <?php echo ($show_meta=='0') ? 'checked="checked"' : ''; ?> />
-           <?php echo $_lang['no']?></td>
+         <td>
+           <label><input type="radio" name="show_meta" value="1" <?php echo $show_meta=='1' ? 'checked="checked"' : ""; ?> />
+           <?php echo $_lang['yes']?></label><br />
+           <label><input type="radio" name="show_meta" value="0" <?php echo ($show_meta=='0') ? 'checked="checked"' : ''; ?> />
+           <?php echo $_lang['no']?></label></td>
        </tr>
      <tr>
        <td width="200">&nbsp;</td>
