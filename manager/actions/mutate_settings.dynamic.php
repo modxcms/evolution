@@ -87,6 +87,7 @@ var lang_chg = '<?php echo $_lang['confirm_setting_language_change']; ?>';
     include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab2_furl_settings.inc.php');
     include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab3_user_settings.inc.php');
     include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab4_manager_settings.inc.php');
+    include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab5_security_settings.inc.php');
     include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab6_filemanager_settings.inc.php');
     include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/tab7_filebrowser_settings.inc.php');
 ?>

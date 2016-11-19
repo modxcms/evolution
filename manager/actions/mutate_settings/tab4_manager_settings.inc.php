@@ -3,6 +3,32 @@
 <h2 class="tab"><?php echo $_lang['settings_ui'] ?></h2>
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage5" ) );</script>
 <table border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['language_title']?></td>
+    <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true;">
+<?php echo get_lang_options(null, $manager_language);?>
+      </select> </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['language_message']?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['charset_title']?></td>
+    <td> <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
+        <?php include "charsets.php"; ?>
+      </select> </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['charset_message']?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
     <tr>
       <td nowrap class="warning"><?php echo $_lang['manager_theme']?></td>
       <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
@@ -123,6 +149,9 @@ echo implode("\n",$output)
     <tr>
         <td width="200">&nbsp;</td>
         <td class="comment"><?php echo $_lang['lock_interval_msg']?></td>
+    </tr>
+    <tr>
+        <td colspan="2"><div class="split"></div></td>
     </tr>
     <tr>
         <td nowrap class="warning"><?php echo $_lang['lock_release_delay'] ?></td>

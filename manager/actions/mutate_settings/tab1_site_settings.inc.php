@@ -6,6 +6,20 @@
 <h2 class="tab"><?php echo $_lang['settings_site'] ?></h2>
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script>
 <table border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['sitestatus_title'] ?></td>
+    <td>
+        <?php echo wrap_label($_lang['online'],  form_radio('site_status', 1));?><br />
+        <?php echo wrap_label($_lang['offline'], form_radio('site_status', 0));?>
+    </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['sitestatus_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
     <tr>
       <td nowrap class="warning"><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?></td>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" /></td>
@@ -17,46 +31,6 @@
     <tr>
       <td colspan="2"><div class="split"></div></td>
     </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['language_title']?></td>
-    <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true;">
-<?php echo get_lang_options(null, $manager_language);?>
-      </select> </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['language_message']?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['charset_title']?></td>
-    <td> <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
-        <?php include "charsets.php"; ?>
-      </select> </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['charset_message']?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['xhtml_urls_title'] ?></td>
-    <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('xhtml_urls', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('xhtml_urls', 0));?>
-    </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['xhtml_urls_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
   <tr>
     <td nowrap class="warning"><?php echo $_lang['sitestart_title'] ?></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" /></td>
@@ -91,20 +65,6 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['sitestatus_title'] ?></td>
-    <td>
-        <?php echo wrap_label($_lang['online'],  form_radio('site_status', 1));?><br />
-        <?php echo wrap_label($_lang['offline'], form_radio('site_status', 0));?>
-    </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['sitestatus_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
     <td nowrap class="warning" valign="top"><?php echo $_lang['siteunavailable_page_title'] ?></td>
     <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo $site_unavailable_page; ?>" /></td>
   </tr>
@@ -134,44 +94,6 @@
   <tr>
     <td colspan="2"><div class="split"></div></td>
   </tr>
-
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['track_visitors_title'] ?></td>
-    <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
-        <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
-    </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['track_visitors_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['top_howmany_title'] ?></td>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['top_howmany_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-    <tr>
-        <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_logic_title'];?></td>
-        <td>
-            <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
-            <input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?><br />
-            <input type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?><br />
-            <input type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?><br />
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2"><div class="split"></div></td>
-    </tr>
   <tr>
     <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_title'] ?></td>
     <td>
@@ -232,6 +154,18 @@
   <tr>
     <td colspan="2"><div class="split"></div></td>
   </tr>
+    <tr>
+        <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_logic_title'];?></td>
+        <td>
+            <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
+            <input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?><br />
+            <input type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_parent_message']; ?><br />
+            <input type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_sibling_message']; ?><br />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><div class="split"></div></td>
+    </tr>
   <tr>
     <td nowrap class="warning" valign="top"><?php echo $_lang['defaultpublish_title'] ?></td>
     <td>
@@ -338,10 +272,23 @@
 <?php echo wrap_label($_lang['cache_type_2'], form_radio('cache_type', 2));?>
 </td>
 </tr>
-
   <tr>
     <td colspan="2"><div class="split"></div></td>
-    </tr>
+  </tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['xhtml_urls_title'] ?></td>
+    <td>
+        <?php echo wrap_label($_lang['yes'],form_radio('xhtml_urls', 1));?><br />
+        <?php echo wrap_label($_lang['no'], form_radio('xhtml_urls', 0));?>
+    </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['xhtml_urls_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
     <tr>
       <td nowrap class="warning"><?php echo $_lang['serveroffset_title'] ?></td>
       <td> <select name="server_offset_time" size="1" class="inputBox">
@@ -373,31 +320,6 @@
     <tr>
       <td width="200">&nbsp;</td>
       <td class="comment"><?php echo $_lang['server_protocol_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['validate_referer_title'] ?></td>
-      <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('validate_referer', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('validate_referer', 0));?>
-      </td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['validate_referer_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['valid_hostnames_title'] ?></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="valid_hostnames" value="<?php echo $modx->htmlspecialchars($valid_hostnames); ?>" /></td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['valid_hostnames_message'] ?></td>
     </tr>
     <tr>
       <td colspan="2"><div class="split"></div></td>
@@ -435,17 +357,31 @@
     <tr>
       <td colspan="2"><div class="split"></div></td>
     </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['rss_url_security_title'] ?></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_security" value="<?php echo $rss_url_security; ?>" /></td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['rss_url_security_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
+  <tr>
+    <td nowrap class="warning" valign="top"><?php echo $_lang['track_visitors_title'] ?></td>
+    <td>
+        <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
+        <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
+    </td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['track_visitors_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td nowrap class="warning" valign="top"><?php echo $_lang['top_howmany_title'] ?></td>
+    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" /></td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['top_howmany_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
   <tr>
     <td colspan="2">
         <?php
