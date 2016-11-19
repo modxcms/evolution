@@ -1,34 +1,3 @@
-function checkIM() {
-    im_on = document.settings.im_plugin[0].checked; // check if im_plugin is on
-    if(im_on==true) showHide(/imRow/, 1);
-};
-
-function checkCustomIcons() {
-    if(document.settings.editor_toolbar.selectedIndex!=3) {
-        showHide(/custom/,0);
-    }
-};
-
-function showHide(what, onoff){
-
-    var all = document.getElementsByTagName('*');
-    var l = all.length;
-    var buttonRe = what;
-    var id, el, stylevar;
-
-    if(onoff==1) stylevar = displayStyle;
-    else         stylevar = 'none';
-
-    for ( var i = 0; i < l; i++ ) {
-        el = all[i]
-        id = el.id;
-        if ( id == "" ) continue;
-        if (buttonRe.test(id)) {
-            el.style.display = stylevar;
-        }
-    }
-};
-
 function addContentType(){
     var i,o,exists=false;
     var txt = document.settings.txt_custom_contenttype;
