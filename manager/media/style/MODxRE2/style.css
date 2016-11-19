@@ -2976,26 +2976,26 @@ div.treeframebody {
     padding: 0 5px 0 12px;
 }
 div#tabTemplates.tab-page ul li ul li:before,
-div#tabCategory.tab-page ul li ul li.el-Templates:before{
+div#tabCategory.tab-page ul li ul li.el-16:before{
     content:'\f1ea';
 }
 div#tabVariables.tab-page ul li ul li:before,
-div#tabCategory.tab-page ul li ul li.el-Template.Variables:before{
+div#tabCategory.tab-page ul li ul li.el-301:before{
     content:'\f022';
 }
 div#tabChunks.tab-page ul li ul li:before,
-div#tabCategory.tab-page ul li ul li.el-Chunks:before{
+div#tabCategory.tab-page ul li ul li.el-78:before{
     content:'\f009';
 }
 div#tabSnippets.tab-page ul li ul li:before,
-div#tabCategory.tab-page ul li ul li.el-Snippets:before{
+div#tabCategory.tab-page ul li ul li.el-22:before{
     content:'\f121';
 }
 div#tabPlugins.tab-page ul li ul li:before,
-div#tabCategory.tab-page ul li ul li.el-Plugins:before{
+div#tabCategory.tab-page ul li ul li.el-102:before{
     content:'\f1e6';
 }
-div#tabCategory.tab-page ul li ul li.el-Modules:before{
+div#tabCategory.tab-page ul li ul li.el-108:before{
     content:'\f085';
 }
 
