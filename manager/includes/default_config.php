@@ -23,7 +23,7 @@ if(!isset($c['aliaslistingfolder']))      $c['aliaslistingfolder']      = '0';
 if(!isset($c['check_files_onlogin']))     $c['check_files_onlogin']     ="index.php\n.htaccess\nmanager/index.php\nmanager/includes/config.inc.php";
 if(!isset($c['use_captcha']))             $c['use_captcha']             = 0;
 if(!isset($c['pwd_hash_algo']))           $c['pwd_hash_algo']           = 0;
-if(!isset($c['rb_base_url']))             $c['rb_base_url']             ="{$site_url}assets/";
+if(!isset($c['rb_base_url']))             $c['rb_base_url']             = 'assets/';
 if(!isset($c['resource_tree_node_name'])) $c['resource_tree_node_name'] = 'pagetitle';
 if(!isset($c['udperms_allowroot']))       $c['udperms_allowroot']       = 0;
 if(!isset($c['failed_login_attempts']))   $c['failed_login_attempts']   = 3;
@@ -78,3 +78,5 @@ if(!isset($c['denyExtensionRename']))     $c['denyExtensionRename']     = 1;
 if(!isset($c['showHiddenFiles']))         $c['showHiddenFiles']         = 1;
 if(!isset($c['lock_interval']))           $c['lock_interval']           = 15;
 if(!isset($c['lock_release_delay']))      $c['lock_release_delay']      = 30;
+if(!isset($c['site_unavailable_message']))$c['site_unavailable_message']= $_lang['siteunavailable_message_default'];
+
