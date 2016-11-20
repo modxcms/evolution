@@ -53,8 +53,8 @@ $tbl_user_settings   = $modx->getFullTableName('user_settings');
 $tbl_manager_users   = $modx->getFullTableName('manager_users');
 $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 
-$username = $modx->db->escape(htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES, $modx->config['modx_charset']));
-$givenPassword = htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
+$username      = $modx->db->escape($modx->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
+$givenPassword = $modx->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme= $_REQUEST['rememberme'];
 $failed_allowed = $modx->config['failed_login_attempts'];
