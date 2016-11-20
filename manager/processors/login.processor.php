@@ -67,7 +67,7 @@ $modx->invokeEvent('OnBeforeManagerLogin',
                             'rememberme'   => $rememberme
                         ));
 $fields = 'mu.*, ua.*';
-$from   = "{$tbl_manager_users} AS mu, {$tbl_user_attributes} AS ua";
+$from   = '[+prefix+]manager_users AS mu, [+prefix+]user_attributes AS ua';
 $where  = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
 $rs = $modx->db->select($fields, $from,$where);
 $limit = $modx->db->getRecordCount($rs);
@@ -93,7 +93,7 @@ $fullname               = $row['fullname'];
 $email                  = $row['email'];
 
 // get the user settings from the database
-$rs = $modx->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_value!=''");
+$rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
 while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
@@ -110,7 +110,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
 	$fields = array();
 	$fields['failedlogincount'] = '0';
 	$fields['blockeduntil']     = time()-1;
-    $modx->db->update($fields,$tbl_user_attributes,"internalKey='{$internalKey}'");
+    $modx->db->update($fields,'[+prefix+]user_attributes',"internalKey='{$internalKey}'");
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -273,7 +273,7 @@ if (isset($_SESSION['mgrValidated'])) {
 			. 'logincount=logincount+1, '
 			. 'lastlogin=thislogin, '
 			. 'thislogin=' . time() . ', '
-			. "sessionid='{$currentsessionid}'", $tbl_user_attributes, "internalKey='{$internalKey}'"
+			. "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'"
 	);
 }
 
@@ -320,7 +320,8 @@ $modx->invokeEvent('OnManagerLogin',
                         ));
 
 // check if we should redirect user to a web page
-$id = intval($modx->db->getValue($modx->db->select('setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_name='manager_login_startup'")));
+$rs = $modx->db->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
+$id = intval($modx->db->getValue($rs));
 if($id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;
