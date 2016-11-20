@@ -7,20 +7,21 @@ set_include_path(get_include_path() . PATH_SEPARATOR . '../includes/');
 define('IN_MANAGER_MODE', 'true');  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 // include the database configuration file
-include_once "config.inc.php";
+include_once('../includes/config.inc.php');
+$core_path = MODX_MANAGER_PATH.'includes/';
 
 // start session
 startCMSSession();
 
 
-include_once "document.parser.class.inc.php";
+include_once("{$core_path}document.parser.class.inc.php");
 $modx = new DocumentParser;
 $modx->loadExtension('ManagerAPI');
 $modx->getSettings();
 $etomite = &$modx;
 
 // get the settings from the database
-include_once "settings.inc.php";
+include_once("{$core_path}settings.inc.php");
 
 /*
  * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
@@ -34,12 +35,12 @@ $_lang = array();
 include_once "lang/english.inc.php";
 $length_eng_lang = count($_lang);
 
-if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
-    include_once "lang/".$manager_language.".inc.php";
+if($manager_language!=='english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
+    include_once("{$core_path}lang/{$manager_language}.inc.php");
 }
 
 // include the logger
-include_once "log.class.inc.php";
+include_once("{$core_path}log.class.inc.php");
 
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
