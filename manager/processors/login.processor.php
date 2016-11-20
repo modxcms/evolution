@@ -25,7 +25,7 @@ include_once("{$core_path}settings.inc.php");
 
 // include_once the language file
 $_lang = array();
-include_once("{$core_path}lang/english.inc.php");
+$length_eng_lang = count($_lang);
 
 if($manager_language!=='english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
     include_once("{$core_path}lang/{$manager_language}.inc.php");
@@ -87,8 +87,10 @@ $email                  = $row['email'];
 // get the user settings from the database
 $rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
 while ($row = $modx->db->getRow($rs)) {
-    ${$row['setting_name']} = $row['setting_value'];
+    extract($row);
+    ${$setting_name} = $setting_value;
 }
+
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
     @session_destroy();
