@@ -5,8 +5,8 @@
 * @package  AjaxSearchResults
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchResults class contains all functions and data used to manage Results
@@ -51,7 +51,7 @@ class AjaxSearchResults {
     *
     *  @access public
     */
-    function AjaxSearchResults() {
+    function __construct() {
     }
     /*
     *  Initializes the class into the proper context

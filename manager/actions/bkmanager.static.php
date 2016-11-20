@@ -175,11 +175,18 @@ else
 	<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>
 
 </script>
-<h1><?php echo $_lang['bk_manager']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-database"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['bk_manager']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
   </ul>
 </div>
 
@@ -193,7 +200,7 @@ else
 	    <script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabBackup'));</script>
 	<form name="frmdb" method="post">
 	<input type="hidden" name="mode" value="" />
-	<p><?php echo $_lang['table_hoverinfo']?></p>
+    <p class="element-edit-message"><?php echo $_lang['table_hoverinfo']?></p>
 
 	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="<?php echo $_style['ed_save'];?>" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
@@ -277,8 +284,10 @@ if ($totaloverhead > 0) {
 <div class="tab-page" id="tabRestore">
 	<h2 class="tab"><?php echo $_lang["bkmgr_restore_title"];?></h2>
 	<?php echo $ph['result_msg_import']; ?>
-	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
-	<?php echo $_lang["bkmgr_restore_msg"]; ?>
+    <script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
+    <div class="element-edit-message">
+      <?php echo $_lang["bkmgr_restore_msg"]; ?>
+    </div>
 	<form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="restore1" />
@@ -373,16 +382,18 @@ function checked($cond)
 	<h2 class="tab"><?php echo $_lang["bkmgr_snapshot_title"];?></h2>
 	<?php echo $ph['result_msg_snapshot']; ?>
 	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
-	<?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
+    <div class="element-edit-message">
+      <?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
+    </div>
 	<form method="post" name="snapshot" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="snapshot" />
 	<div class="actionButtons" style="margin-top:2em;margin-bottom:2em;">
         <?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" /> 
 	<a href="#" class="primary" style="display:inline-block;" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
-	<input type="submit" name="save" style="display:none;" />
+      <input type="submit" name="save" style="display:none;" />
+      </div>
 	</form>
-	</div>
 	<style type="text/css">
 	table {background-color:#fff;border-collapse:collapse;}
 	table td {border:1px solid #ccc;padding:4px;}
@@ -501,10 +512,13 @@ class Mysqldumper {
 			$result = $modx->db->query("SHOW CREATE TABLE `{$tblval}`");
 			$createtable[$tblval] = $this->result2Array(1, $result);
 		}
+        
+        $version = $modx->getVersionData();
+        
 		// Set header
 		$output  = "#{$lf}";
 		$output .= "# ".addslashes($modx->config['site_name'])." Database Dump{$lf}";
-		$output .= "# MODX Version:{$modx->config['settings_version']}{$lf}";
+		$output .= "# MODX Version:{$version['version']}{$lf}";
 		$output .= "# {$lf}";
 		$output .= "# Host: {$this->database_server}{$lf}";
 		$output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
@@ -559,11 +573,15 @@ class Mysqldumper {
 				$insertdump .= "INSERT INTO `{$tblval}` VALUES (";
 				$arr = $this->object2Array($row);
 				foreach($arr as $key => $value) {
-					$value = addslashes($value);
-					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
-					$insertdump .= "'$value',";
+					if(is_null($value)) $value = 'NULL';
+					else {
+    					$value = addslashes($value);
+    					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
+    					$value = "'{$value}'";
+					}
+					$insertdump .= $value .',';
 				}
-				$output .= rtrim($insertdump,',') . ");";
+				$output .= rtrim($insertdump,',') . ");\n";
 				if(1048576 < strlen($output))
 				{
 					file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
@@ -635,7 +653,7 @@ function import_sql($source,$result_code='import_ok')
 	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
 	if(0 < $modx->db->getValue($rs))
 	{
-		$modx->webAlertAndQuit("Resource is edit now by any user.");
+		$modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
 	}
 	
 	$settings = getSettings();

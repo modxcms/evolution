@@ -5,8 +5,8 @@
 * @package  AjaxSearchUtil
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchUtil class contains some util methods
@@ -29,7 +29,7 @@ class AjaxSearchUtil {
     var $_dbgFd;
     var $_current_pcre_backtrack;
 
-    function ajaxSearchUtil($level=0, $version, $tstart, &$msgErr) {
+    function __construct($level=0, $version, $tstart, &$msgErr) {
         global $modx;
         $this->level = (abs($level) > 0 && abs($level) < 4) ? $level : 0;
         $this->dbg = ($this->level > 0);

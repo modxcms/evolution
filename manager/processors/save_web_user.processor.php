@@ -53,7 +53,7 @@ if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confi
 }
 
 // verify email
-if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
@@ -166,7 +166,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -303,7 +303,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">

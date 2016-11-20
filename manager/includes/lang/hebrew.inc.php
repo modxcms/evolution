@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'View action completed screen';
 $_lang["role_bk_manager"] = 'Use the Backup Manager';
 $_lang["role_cache_refresh"] = 'Empty the site\'s cache';
 $_lang["role_change_password"] = 'שנה סיסמה';
+$_lang["role_change_resourcetype"] = 'סוג משאב שינוי';
 $_lang["role_chunk_management"] = 'ניהול מיני תבניות';
 $_lang["role_config_management"] = 'ניהול הגדרות';
 $_lang["role_content_management"] = 'ניהול תכנים';
@@ -1154,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';

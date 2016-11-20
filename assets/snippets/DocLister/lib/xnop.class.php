@@ -1,11 +1,15 @@
 <?php
+
+/**
+ * Class xNop
+ */
 class xNop
 {
     /**
      * Magic call
      *
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      * @return null
      */
     public function __call($method, $args)
@@ -16,8 +20,8 @@ class xNop
     /**
      * Magic call for static
      *
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      * @return null
      */
     public static function __callStatic($method, $args)
@@ -28,8 +32,8 @@ class xNop
     /**
      * __set
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      * @return null
      */
     public function __set($key, $value)

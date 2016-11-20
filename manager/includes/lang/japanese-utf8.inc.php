@@ -773,6 +773,7 @@ $_lang["role_actionok"] = '処理完了ページの表示';
 $_lang["role_bk_manager"] = 'バックアップ・リストア機能の使用';
 $_lang["role_cache_refresh"] = 'サイトをリフレッシュ';
 $_lang["role_change_password"] = 'パスワード変更';
+$_lang["role_change_resourcetype"] = '変更リソースタイプ';
 $_lang["role_chunk_management"] = 'チャンクの管理';
 $_lang["role_config_management"] = '設定管理';
 $_lang["role_content_management"] = 'コンテンツ管理';
@@ -911,7 +912,7 @@ $_lang["settings_strip_image_paths_title"] = '相対パスを渡す';
 $_lang["settings_templvars"] = 'カスタムフィールド(テンプレート変数)';
 $_lang["settings_title"] = 'グローバル設定';
 $_lang["settings_ui"] = '管理画面の設定';
-$_lang["settings_users"] = 'セキュリティ';
+$_lang["settings_users"] = 'ユーザー';
 $_lang["show_meta"] = 'METAタグ管理機能の有効<br />(※非推奨)';
 $_lang["show_meta_message"] = 'リソース編集画面にMETA Keywordsタブを表示します。(※この機能は将来廃止される可能性があります)';
 $_lang["show_tree"] = 'リソースツリーの表示';
@@ -1165,6 +1166,7 @@ $_lang["pwd_hash_algo_message"] = 'パスワード文字列はここで設定し
 $_lang["enable_bindings_title"] = '@Bindingsを有効にする';
 $_lang["enable_bindings_message"] = '<a href="http://www.google.com/cse?cx=007286147079563201032%3Aigbcdgg0jyo&q=Bindings" target="_blank">@Bindings機能</a>を有効にします。この機能は、投稿画面上の入力フィールド(テンプレート変数)に任意のコマンドを記述し、実行するものです。PHP文の実行などが可能なため、複数メンバーでサイトを運用する場合、当機能の運用には注意が必要です。';
 
+$_lang["enable_filter_phx_warning"] = 'PHxのプラグインが有効になっている場合、内蔵のフィルタはデフォルトで無効になっています';
 $_lang["bkmgr_alert_mkdir"] = 'ディレクトリにファイルを作成できません。[+snapshot_path+]のパーミッションを確認してください。';
 $_lang["bkmgr_restore_msg"] = '<p>「バックアップ」で取得したSQLファイルを用いて、サイトをリストアできます。<br />※SQL文を実行するだけなので、他の用途にも使えます(拡張機能のインストールなど)。</p>';
 $_lang["bkmgr_restore_title"] = 'リストア';

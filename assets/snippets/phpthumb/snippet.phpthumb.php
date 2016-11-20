@@ -1,7 +1,24 @@
 <?php
+/**
+ * phpthumb
+ *
+ * PHPThumb creates thumbnails and altered images on the fly and caches them
+ *
+ * @category 	snippet
+ * @version 	1.3
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Content
+ * @internal    @installset base, sample
+ * @documentation Usage: [[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
+ * @documentation phpThumb docs http://phpthumb.sourceforge.net/demo/docs/phpthumb.readme.txt
+ * @reportissues https://github.com/modxcms/evolution
+ * @link        noimage.png here [+site_url+]assets/snippets/phpthumb/noimage.png
+ * @author      Bumkaka
+ * @author      Many contributors since then
+ * @lastupdate  09/04/2016
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-//[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
-//Author: Bumkaka
 
 $newfolderaccessmode = $modx->config['new_folder_permissions'] ? octdec($modx->config['new_folder_permissions']) : 0777;
 
@@ -65,4 +82,5 @@ if (!file_exists($outputFilename)) {
     }
 }
 return $fname_preffix.rawurlencode($fname);
+?>
 ?>

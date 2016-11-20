@@ -765,6 +765,7 @@ $_lang["role_actionok"] = 'Accès à l\'écran de fin d\'action';
 $_lang["role_bk_manager"] = 'Utiliser le Gestionnaire de Sauvegardes';
 $_lang["role_cache_refresh"] = 'Purge du cache du site';
 $_lang["role_change_password"] = 'Changement de mot de passe';
+$_lang["role_change_resourcetype"] = 'Changer Type de ressources';
 $_lang["role_chunk_management"] = 'Gestion des Chunks';
 $_lang["role_config_management"] = 'Gestion de la configuration';
 $_lang["role_content_management"] = 'Gestion du contenu';
@@ -1124,6 +1125,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorithme "Hash" pour les mots de passe.';
 $_lang["enable_bindings_title"] = 'Activer les commandes @Bindings';
 $_lang["enable_bindings_message"] = 'Interdit l\'exécution de code PHP via les @Bindings des TVs. Utile si vous avez des utilisateurs qui doivent pourvoir créer ou éditer des des TVs mais ne doivent pas pouvoir créer de code PHP. Le résultat des TVs contenant un @Binding sera "@Bindings is disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Lorsque pHx plug-in activé, les filtres intégrés sont désactivés par défaut';
 $_lang["bkmgr_alert_mkdir"] = 'Un fichier n\'a pu être créé dans un répertoire. Veuillez vérifier les droits de [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Un site peut être restauré via un fichier SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Restaurer';

@@ -131,6 +131,7 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
 				header($header);
 			} else {
+				$modx->unlockElement(1, $id);
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}

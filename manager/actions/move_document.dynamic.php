@@ -62,14 +62,19 @@ function checkParentChildRelation(pId, pName) {
 
 </script>
 
-
-
-<h1><?php echo $_lang['move_resource_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-arrows"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['move_resource_title']; ?>
+  </span>
+</h1>
 
 <div id="actions">
 	<ul class="actionButtons">
-		<li id="Button1"><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
-		<li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+		<li id="Button1" class="transition"><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
+		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 	</ul>
 </div>
 

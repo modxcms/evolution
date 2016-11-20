@@ -89,10 +89,6 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
 			$field_html .=  ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style'.$dm->theme.'/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
 
-			$field_html .=  '<script type="text/javascript">';
-			$field_html .=  '   	new DatePicker($(\'tv'.$field_id.'\'), {\'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
-			$field_html .=  '</script>';
-
 			break;
 		case "dropdown": // handler for select boxes
 			$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" size="1" onchange="documentDirty=true;">';
@@ -164,7 +160,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			break;
 		case "image":	// handles image fields using htmlarea image manager
 			global $ResourceManagerLoaded;
-			global $content,$use_editor,$which_editor;
+			global $content,$use_editor,$which_editor,$which_browser;
 			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 				$field_html .="
 				<script type=\"text/javascript\">
@@ -186,14 +182,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=images', w, h);
 						}
 						
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){
@@ -241,14 +237,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=images', w, h);
 						}
 									
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
+							OpenServerBrowser('media/browser/{$which_browser}/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){

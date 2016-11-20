@@ -21,12 +21,14 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $tbl_active_users   = $modx->getFullTableName('active_users');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
-// check to see the template editor isn't locked
-$rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
-    }
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(1, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['template']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(1, $id);
 
 $content = array();
 if(!empty($id)) {
@@ -51,6 +53,10 @@ if ($modx->manager->hasFormValues()) {
 $content = array_merge($content, $_POST);
 $selectable = $_REQUEST['a'] == 19 ? 1 : $content['selectable'];
 
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 1;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 function duplicaterecord(){
@@ -79,11 +85,18 @@ function deletedocument() {
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a'];?>">
 
-    <h1><?php echo $_lang['template_title']; ?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-newspaper-o"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['template_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
@@ -101,7 +114,7 @@ function deletedocument() {
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -115,13 +128,16 @@ function deletedocument() {
         <h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 
-<?php echo '<div>' . $_lang['template_msg'] . '<br/><br/></div>'; ?>
+        <p class="element-edit-message">
+          <?php echo $_lang['template_msg']; ?>
+        </p>
+      
     <table>
       <tr>
         <th><?php echo $_lang['template_name']; ?>:</th>
         <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
             <?php if($id == $modx->config['default_template']) echo ' <b>'.$_lang['defaulttemplate_title'].'</b>'; ?>
-            <?php if(strpos($content['templatename'],'Duplicate of')!==false) echo '<script>document.getElementsByName("templatename")[0].focus();</script>'?></td>
+            <script>document.getElementsByName("templatename")[0].focus();</script></td>
       </tr>
     <tr>
     <th><?php echo $_lang['template_desc']; ?>:</th>
@@ -215,7 +231,7 @@ $total = count($selectedTvs);
 <?php
 if ($total > 0) echo '<p>' . $_lang['template_tv_msg'] . '</p>';
 if($modx->hasPermission('save_template') && $total > 1 && $id) {
-    echo sprintf('<p><a href="index.php?a=117&amp;id=%s">%s</a></p>',$id,$_lang['template_tv_edit']);
+    echo sprintf('<ul class="actionButtons"><li><a href="index.php?a=117&amp;id=%s">%s</a></li></ul>',$id,$_lang['template_tv_edit']);
 }
 
 // Selected TVs

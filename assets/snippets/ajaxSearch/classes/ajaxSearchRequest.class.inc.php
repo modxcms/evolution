@@ -5,8 +5,8 @@
 * @package  AjaxSearchRequest
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchRequest class contains all functions and data used to manage the search SQL Request
@@ -33,7 +33,7 @@ class AjaxSearchRequest {
     var $dbg;
     var $pgCharset;
 
-    function AjaxSearchRequest(&$asUtil, $pgCharset) {
+    function __construct(&$asUtil, $pgCharset) {
         $this->asUtil =& $asUtil;
         $this->dbg = $asUtil->dbg;
         $this->pgCharset = $pgCharset;

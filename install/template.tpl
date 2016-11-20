@@ -5,17 +5,26 @@
 <title>[+pagetitle+]</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<script src="../assets/js/jquery.min.js" type="text/javascript"></script>
+<script>
+	jQuery.noConflict();
+</script>
 </head>
 <body [+textdir+]>
+
 <div id="header">
 	<div class="container_10">
 		<span class="help"><a href="[+help_link+]" target="_blank" title="[+help_title+]">[+help+]</a></span>
 		<span class="version">[+version+] ([+release_date+])</span>
-		<div id="mainheader">
-			<h1 id="logo"><span>MODX CMS</span></h1>
-		</div>
 	</div>
 </div>
+
+<div id="mainheader">
+	<div class="container_10">
+    <img id="logo" src="img/logo.png" alt="MODX CMS">
+  </div>
+</div>
+
 <div id="contentarea">
 	<div class="container_10">
 		<div id="content">
@@ -23,6 +32,7 @@
 		</div>
 	</div>
 </div>
+
 <div id="footer">
 	<div id="footer-inner">
 		<div class="container_10">
@@ -31,5 +41,6 @@
 		</div>
 	</div>
 </div>
+
 </body>
 </html>

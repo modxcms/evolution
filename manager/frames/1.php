@@ -4,7 +4,7 @@ header("X-XSS-Protection: 0");
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
-if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '300';
+if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '320';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
 <!DOCTYPE html>
@@ -14,11 +14,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100% }
-        body { position: relative }
-        #mainMenu, #tree, #main { position: absolute }
+        body { position: relative; background-color: #F2F2F2 !important; }
+        #mainMenu, #tree, #main { position: absolute; }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
-        #mainMenu { height: 70px; width: 100%;}
-        #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; }
+        #mainMenu { height: 70px; width: 100%; box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25); z-index: 100;}
+        #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; overflow:hidden;}
         #main { top: 70px; left: <?php echo $modx->config['manager_tree_width'];?>px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 12px; cursor: col-resize; z-index: 999 }
         #resizer #hideMenu {
@@ -30,11 +30,23 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             width: 16px;
             height: 16px;
         }
+        #resizer2 { position: absolute; top: 70px; right: 20px; width: 3px; z-index: 110;}
+        #resizer2 #hideTopMenu {display:block;
+            margin-top:-4px;
+            margin-left:px;
+            cursor:pointer;
+            background:transparent url(media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_get.png)!important;
+            width:16px;
+            height:16px;
+        }
     </style>
 </head>
 <body>
     <div id="resizer">
         <a id="hideMenu" onclick="mainMenu.toggleTreeFrame();"></a>
+    </div>
+    <div id="resizer2">
+        <a id="hideTopMenu" onclick="mainMenu.toggleMenuFrame();"></a>
     </div>
     <div id="mainMenu">
         <iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize"></iframe>

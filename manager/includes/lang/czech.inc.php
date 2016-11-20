@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Prohlížení dokončené akce na obrazovce';
 $_lang["role_bk_manager"] = 'Použít správce zálohy';
 $_lang["role_cache_refresh"] = 'Vyprázdnit zásobník stránek (cache)';
 $_lang["role_change_password"] = 'Změna hesla';
+$_lang["role_change_resourcetype"] = 'Změnit typ zdroje';
 $_lang["role_chunk_management"] = 'Správa chunků';
 $_lang["role_config_management"] = 'Správa nastavení';
 $_lang["role_content_management"] = 'Správa obsahu';
@@ -1158,6 +1159,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Pokud je povoleno PHX plugin, vestavěné filtry jsou ve výchozím nastavení zakázány';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';

@@ -35,9 +35,10 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 if($name=="") $name = "Untitled snippet";
 
 if($parse_docblock) {
-    $parsed       = $modx->parseDocBlockFromString($snippet);
+    $parsed       = $modx->parseDocBlockFromString($snippet, true);
     $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
+    $moduleguid   = isset($parsed['guid']) ? $parsed['guid'] : $moduleguid;
 
     $description  = isset($parsed['description']) ? $parsed['description'] : $description;
     $version      = isset($parsed['version']) ? '<b>'.$parsed['version'].'</b> ' : '';
@@ -150,6 +151,7 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
 				header($header);
 			} else {
+				$modx->unlockElement(4, $id);
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}

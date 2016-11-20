@@ -7,14 +7,16 @@ $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
-$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
-if(!isset($modx->config['devmode_showhash'])) $modx->config['devmode_showhash'] = 0;
+if(!isset($modx->config['mgr_jquery_path']))  $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
+if(!isset($modx->config['mgr_date_picker_path'])) $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo  $mxla;?>" dir="<?php echo  $textdir;?>"><head>
     <title>MODX</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+    <link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
     <?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
@@ -22,8 +24,15 @@ if(!isset($modx->config['devmode_showhash'])) $modx->config['devmode_showhash'] 
     <?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
     <script type="text/javascript">
 		/* <![CDATA[ */
-        var show_hash = <?php echo $modx->config['devmode_showhash'];?>;
-        if(show_hash) parent.location.hash = location.search.substr(1);
+	
+        jQuery(function(){
+        jQuery(window).on('beforeunload',function(){
+        	if(documentDirty) {stopWorker();return '<?php echo addslashes($_lang['warning_not_saved']);?>';}
+                jQuery('#actions').fadeOut(100);
+            	jQuery('input,textarea,select').addClass('readonly');
+            });
+        });
+        
         window.addEvent('load', document_onload);
         window.addEvent('beforeunload', document_onunload);
         

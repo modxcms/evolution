@@ -6,7 +6,14 @@ if(!$modx->hasPermission('view_eventlog')) {
 ?>
 
 <script type="text/javascript" src="media/script/tablesort.js"></script>
-<h1><?php echo $_lang["site_schedule"]?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-calendar"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['site_schedule']; ?>
+  </span>
+</h1>
 
 <div class="section">
 <div class="sectionHeader"><?php echo $_lang["publish_events"]?></div><div class="sectionBody" id="lyr1">

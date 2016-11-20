@@ -1,7 +1,18 @@
 <?php namespace Formatter;
 
-class HtmlFormatter{
-    public static function format($string, $decode = TRUE){
+/**
+ * Class HtmlFormatter
+ * @package Formatter
+ */
+class HtmlFormatter
+{
+    /**
+     * @param string $string
+     * @param bool $decode
+     * @return string
+     */
+    public static function format($string, $decode = true)
+    {
         $tag = '#0000ff';
         $att = '#ff0000';
         $val = '#8000ff';
@@ -15,15 +26,17 @@ class HtmlFormatter{
             '~(&amp;.*?;)~',                    // Stylize HTML entities
         );
         $replace = array(
-            '<span style="color:'.$att.';">$1</span>',
-            '<span style="color:'.$com.';">$1</span>',
-            '<span style="color:'.$val.';">$1</span>',
-            '<span style="color:'.$tag.';">$1</span>',
-            '<span style="color:'.$tag.';">$1</span>',
+            '<span style="color:' . $att . ';">$1</span>',
+            '<span style="color:' . $com . ';">$1</span>',
+            '<span style="color:' . $val . ';">$1</span>',
+            '<span style="color:' . $tag . ';">$1</span>',
+            '<span style="color:' . $tag . ';">$1</span>',
             '<span style="font-style:italic;">$1</span>',
         );
-        if($decode)
+        if ($decode) {
             $string = htmlentities($string);
-        return '<pre>'.preg_replace($find, $replace, $string).'</pre>';
+        }
+
+        return '<pre>' . preg_replace($find, $replace, $string) . '</pre>';
     }
 }

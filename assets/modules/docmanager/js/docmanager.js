@@ -90,8 +90,6 @@ function postForm() {
 		
 		document.range.submit(); 
 	} else if (tabActiveID == '3') {
-	   /* handled separately using save() function */
-	} else if (tabActiveID == '4') {	
 		$('tabaction').value = 'changeOther';
 
 		$('setoption').value = document.other.misc.value; 

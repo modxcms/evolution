@@ -78,7 +78,6 @@ $header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/
 		}
 
 		ul.sortableList {
-			padding-left: 20px;
 			margin: 0px;
 			width: 300px;
 			font-family: Arial, sans-serif;
@@ -135,8 +134,8 @@ foreach ($sortables as $list) {
 
 <div id="actions"
    <ul class="actionButtons">
-       	<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
+       	<li class="transition"><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+		<li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
 	</ul>
 </div>
 

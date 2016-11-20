@@ -3,7 +3,7 @@
 /*
  * Title: Debug Class
  * Purpose:
- *  	The Debug class contains all functions relating to Ditto's 
+ *  	The Debug class contains all functions relating to Ditto's
  * 		implimentation of the MODX debug console
 */
 
@@ -22,7 +22,7 @@ class debug extends modxDebugConsole {
 	// ---------------------------------------------------
 	// Function: render_popup
 	// Render the contents of the debug console
-	// ---------------------------------------------------	
+	// ---------------------------------------------------
 	function render_popup($ditto,$ditto_base,$ditto_version, $ditto_params, $IDs, $fields, $summarize, $templates, $orderBy, $start, $stop, $total,$filter,$resource) {
 		global $ditto_lang,$modx;
 		$tabs = array();
@@ -30,7 +30,7 @@ class debug extends modxDebugConsole {
 		
 		$tabs[$ditto_lang["info"]] = $this->prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $orderBy, $start, $stop, $total);
 		$tabs[$ditto_lang["params"]] = $this->makeParamTable($ditto_params,$ditto_lang["params"]);
-		$tabs[$ditto_lang["fields"]] = "<div class='ditto_dbg_fields'>".$this->array2table($this->cleanArray($fields), true, true)."</div>";		
+		$tabs[$ditto_lang["fields"]] = "<div class='ditto_dbg_fields'>".$this->array2table($this->cleanArray($fields), true, true)."</div>";
 		$tabs[$ditto_lang["templates"]] =  $this->makeParamTable($this->prepareTemplates($templates),$ditto_lang["templates"]);
 			
 		if ($filter !== false) {
@@ -38,7 +38,7 @@ class debug extends modxDebugConsole {
 		}
 
 		if ($ditto->prefetch == true) {
-			$tabs[$ditto_lang["prefetch_data"]] = $this->preparePrefetch($ditto->prefetch);				
+			$tabs[$ditto_lang["prefetch_data"]] = $this->preparePrefetch($ditto->prefetch);
 		}
 		if (count($resource) > 0 && $resource) {
 			$tabs[$ditto_lang["retrieved_data"]] = $this->prepareDocumentInfo($resource);
@@ -88,7 +88,7 @@ class debug extends modxDebugConsole {
 	// ---------------------------------------------------
 	// Function: prepareDocumentInfo
 	// Create the output for the Document Info tab
-	// ---------------------------------------------------	
+	// ---------------------------------------------------
 	function prepareDocumentInfo($resource) {
 		global $ditto_lang;
 		$output = "";
@@ -109,9 +109,9 @@ class debug extends modxDebugConsole {
 		global $ditto_lang,$dittoID,$modx;
 			$items[$ditto_lang['version']] = $ditto_version;
 			$items[$ditto_lang['summarize']] = $summarize;
-			$items[$ditto_lang['total']] = $total;	 
-			$items[$ditto_lang['start']] = $start;	 
-			$items[$ditto_lang['stop']] = $stop;	 	 
+			$items[$ditto_lang['total']] = $total;
+			$items[$ditto_lang['start']] = $start;
+			$items[$ditto_lang['stop']] = $stop;
 			$items[$ditto_lang['ditto_IDs']] = (count($IDs) > 0) ? wordwrap(implode(", ",$IDs),100, "<br />") : $ditto_lang['none'];
 			$output = '';
 			if (is_array($orderBy['parsed']) && count($orderBy['parsed']) > 0) {
@@ -119,7 +119,7 @@ class debug extends modxDebugConsole {
 				foreach ($orderBy['parsed'] as $key=>$value) {
 					$sort[$key] = array($ditto_lang['sortBy']=>$value[0],$ditto_lang['sortDir']=>$value[1]);
 				}
-				$output = $this->array2table($this->cleanArray($sort), true, true);	
+				$output = $this->array2table($this->cleanArray($sort), true, true);
 			}
 			return $this->makeParamTable($items,$ditto_lang["basic_info"],false,false).$output;
 	}
@@ -127,7 +127,7 @@ class debug extends modxDebugConsole {
 	// ---------------------------------------------------
 	// Function: prepareTemplates
 	// Create the output for the Templates tab
-	// ---------------------------------------------------	
+	// ---------------------------------------------------
 	function prepareTemplates($templates) {
 		global $ditto_lang;
 		$displayTPLs = array();

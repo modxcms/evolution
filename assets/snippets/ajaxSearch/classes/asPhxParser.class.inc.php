@@ -16,7 +16,7 @@
 class asPHxParser {
     var $placeholders = array();
 
-    function asPHxParser($template='',$maxpass=500) {
+    function __construct($template='',$maxpass=500) {
         global $modx;
         $this->name = "PHx";
         $this->version = "2.1.3";
@@ -233,7 +233,7 @@ class asPHxParser {
                     case "reverse": $output = strrev($output); break;
                     case "wordwrap": // default: 70
                         $wrapat = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 70;
-                        $output = preg_replace("~(\b\w+\b)~e","wordwrap('\\1',\$wrapat,' ',1)",$output);
+                        $output = preg_replace_callback("@(\b\w+\b)@",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$output);
                         break;
                     case "limit": // default: 100
                         $limit = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 100;

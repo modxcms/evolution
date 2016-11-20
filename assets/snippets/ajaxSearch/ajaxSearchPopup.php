@@ -5,8 +5,8 @@
 * ajaxSearchPopup.php
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 */
 
@@ -20,7 +20,7 @@ function getUserConfigName($ucfg) {
 
 if (isset($_POST['search'])) {
 
-    define('AS_VERSION', '1.10.1');
+    define('AS_VERSION', '1.10.2');
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 

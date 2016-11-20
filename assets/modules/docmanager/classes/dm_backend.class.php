@@ -4,7 +4,7 @@ class DocManagerBackend {
 	var $dm = null;
 	var $modx = null;
 
-    function DocManagerBackend(&$dm, &$modx) {
+    function __construct(&$dm, &$modx) {
     	$this->dm = &$dm;
     	$this->modx = &$modx;
     }

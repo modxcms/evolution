@@ -165,6 +165,11 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 	include_once "lang/".$manager_language.".inc.php";
 }
 
+// allow custom language overrides not altered by future MODX-updates
+if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
+	include_once "lang/override/".$manager_language.".inc.php";
+}
+
 $s = array('[+MGR_DIR+]');
 $r = array(MGR_DIR);
 foreach($_lang as $k=>$v)
@@ -341,8 +346,8 @@ switch ($action) {
 		// get the processor for publishing content
 		include_once(includeFileProcessor("processors/unpublish_content.processor.php",$manager_theme));
 	break;
-	case 54:
-		// get the move action
+	case 56:
+		// get the sort menuindex action
 		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
 		include_once(includeFileProcessor("actions/mutate_menuindex_sort.dynamic.php",$manager_theme));
 		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));

@@ -36,10 +36,12 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
 if($name=="") $name = "Untitled module";
 
 if($parse_docblock) {
-    $parsed       = $modx->parseDocBlockFromString($modulecode);
+    $parsed       = $modx->parseDocBlockFromString($modulecode, true);
     $name         = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties   = isset($parsed['properties']) ? $parsed['properties'] : $properties;
-
+    $guid         = isset($parsed['guid']) ? $parsed['guid'] : $guid;
+    $enable_sharedparams = isset($parsed['shareparams']) ? intval($parsed['shareparams']) : $enable_sharedparams;
+        
     $description  = isset($parsed['description']) ? $parsed['description'] : $description;
     $version      = isset($parsed['version']) ? '<b>'.$parsed['version'].'</b> ' : '';
     if($version) {
@@ -167,6 +169,7 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
 				header($header);
 			} else {
+				$modx->unlockElement(6, $id);
 				$header="Location: index.php?a=106&r=2";
 				header($header);
 			}

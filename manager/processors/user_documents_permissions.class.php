@@ -23,7 +23,7 @@ class udperms{
 			return true;  // administrator - grant all document permissions
 		}
 		
-		if($document==0 && $udperms_allowroot==1) {
+		if($document==0 && ($udperms_allowroot==1 || $modx->hasPermission('edit_document'))) {
 			return true;
 		}
 		

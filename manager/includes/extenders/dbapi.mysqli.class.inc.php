@@ -382,11 +382,14 @@ class DBAPI {
 		}
 	}
 
-	function makeArray($rs=''){
+	function makeArray($rs='',$index=false){
 		if (!$rs) return false;
 		$rsArray = array();
+		$iterator = 0;
 		while ($row = $this->getRow($rs)) {
-			$rsArray[] = $row;
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator; 
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
 		}
 		return $rsArray;
 	}
@@ -423,7 +426,7 @@ class DBAPI {
 	}
 
 	function dataSeek($result, $row_number) {
-		return mysqli_data_seek($result, $row_number);
+		return $result->data_seek($row_number);
 	}
 }
 ?>

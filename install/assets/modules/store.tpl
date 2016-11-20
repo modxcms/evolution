@@ -12,6 +12,7 @@
  * @internal	@dependencies requires files located at /assets/modules/store/
  * @internal	@modx_category Manager and Admin
  * @internal    @installset base, sample
+ * @lastupdate  11/04/2016
  */
 
 //AUTHORS: Bumkaka & Dmi3yy 

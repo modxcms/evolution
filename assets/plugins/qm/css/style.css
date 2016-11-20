@@ -174,7 +174,7 @@
     position: fixed;
     width: 100%;
     line-height:1;
-    z-index: 9999;
+    z-index: 2147483647;
 	background: #657587 url(images/tinylogo.png) no-repeat -2px 3px;
 	text-align: left;
 	opacity:0.5; 

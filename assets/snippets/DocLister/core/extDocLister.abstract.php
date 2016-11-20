@@ -10,6 +10,10 @@ if (!defined('MODX_BASE_PATH')) {
     die('HACK???');
 }
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
+
+/**
+ * Class extDocLister
+ */
 abstract class extDocLister
 {
     /**
@@ -33,6 +37,9 @@ abstract class extDocLister
      */
     protected $_cfg = array();
 
+    /**
+     * @var bool
+     */
     protected $lang = false;
 
     /**
@@ -61,10 +68,10 @@ abstract class extDocLister
      * Вызов экстенедара с параметрами полученными в этой функции
      *
      * @param DocLister $DocLister объект класса DocLister
-     * @param mixed $config , ... неограниченное число параметров (используются для конфигурации экстендера)
+     * @param mixed $_ , ... неограниченное число параметров (используются для конфигурации экстендера)
      * @return mixed ответ от экстендера (как правило это string)
      */
-    public function init($DocLister)
+    public function init($DocLister, $_ = null)
     {
         $this->DocLister->debug->debug('Run extender ' . get_class($this), 'runExtender', 2);
         $flag = false;
@@ -74,6 +81,7 @@ abstract class extDocLister
             $flag = $this->checkParam(func_get_args())->run();
         }
         $this->DocLister->debug->debugEnd('runExtender');
+
         return $flag;
     }
 
@@ -88,6 +96,7 @@ abstract class extDocLister
         if (isset($args[1])) {
             $this->_cfg = $args[1];
         }
+
         return $this;
     }
 

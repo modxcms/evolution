@@ -1,62 +1,22 @@
 <?php
-if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 /**
- * if snippet
- * Date: Jan 03, 2013
+ * if
  *
- * [[if? &is=`[*id*]:is:4:or:[*parent*]:in:5,6,5,7,8,9` &then=`[[if? &is=`0||is||0` &then=`true` &else=`false` &separator=`||`]]` &else=`@TPL:else`]]
- * [[if? &is=`[*id*]:is:1:or:[*id*]:is:2:and:[*parent*]:is:5:or:[*parent*]:in:2,3,4` &then=`true` &else=`false`]]
+ * A simple conditional snippet. Allows for eq/neq/lt/gt/etc logic within templates, resources, chunks, etc.
  *
- * All expressions are logically (....:or:is:.... ) :and: (...:!empty:.....)
- * expression and divides the condition into 2 parts, which in the end compared to the true
- *
- * Sample №1
- * Output action is necessary only in the parent ID = 5
- * [[if? &is=`[*parent*]:is:5` &then=`@TPL:chunk-name`]]
- *
- * Sample №2
- * Output action is necessary only in the parent ID = 5 or template IDs in (7,8,9)
- * [[if? &is=`[*parent*]:is:5:or:[*template*]:in:7,8,9` &then=`@TPL:chunk-name`]]
- *
- * Sample №3
- * Output action is necessary only in the parent ID = 5 and only the resource with the template ID = 7
- * [[if? &is=`[*parent*]:is:5:and:[*template*]:is:7` &then=`@TPL:chunk-name`]]
- *
- * Sample №4
- * Output action is necessary only in the parent ID = 5 and (only in the template ID = 7 or in other templates but with TV `new` = 1
- * [[if? &is=`[*parent*]:is:5:and:[*template*]:is:7:or:[*new*]:is:1` &then=`@TPL:chunk-name`]]
- *
- * Sample №5
- * Output share for the goods with a price in the range of > 300 <= 700
- * [[if? &is=`[*price*]:gt:300:and:[*price*]:lte:700` &then=`@TPL:chunk-name`]]
- *
- * Sample №6
- * Output in the multiplicity of records Ditto 3
- * [[if? &is=`[+ditto_iteration+]:%:3` &then=`true` &else=`false`]]
- *
- * Sample №7
- * Output in the multiplicity of records Ditto 3 but by multiplying the
- * [[if? &is=`[+ditto_iteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
- *
- * Sample №8
- * Print the value of the mathematical expression
- * [[if? &is=`[+ditto_iteration+]*2` &math=`on`]]
- *
- * Sample №9
- * Output if pagetitle contains "string"
- * [[if? &is=`[*pagetitle*]:contains:string` &then=`@TPL:chunk-name`]]
- *
- * Operator:
- * (is,=) , (not,!=) , (gt,>) , (lt,<) , (gte,>=) , (<=,lte) , (isempty,empty) , (notempty,!empty)
- * (null, is_null) , (in_array, inarray, in) , (not_in,!in) , (contains)
- *
- * More samples
- * [[if? &is=`eval('global $iteration;$iteration++;echo $iteration;')` &math=`on`]]   // iteration in Ditto,Wayfinder and others
- * [[if? &is=`:is:` &then=`@eval: echo str_replace('<br/>','','[*pagetitle*]');`]]    // 'our<br/>works' -> 'our works'
- * [[if? &is=`:is:` &then=`@eval: echo number_format('[*price*]', 2, ',', ' ');`]]    // '1000000,89' -> '1 000 000,89'
- *
- *  RussAndRussky.org.ua
- **/
+ * @category 	snippet
+ * @version 	1.3
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Navigation
+ * @internal    @installset base
+ * @documentation Readme [+site_url+]assets/snippets/if/readme.html
+ * @reportissues https://github.com/modxcms/evolution
+ * @author  	Created By Bumkaka bumkaka@yandex.ru
+ * @lastupdate  07/02/2016
+ */
+if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+
 $s = isset($separator) ? $separator: ':';
 $math = isset($math) ? $math : 'off';
 $lp = 0;

@@ -36,22 +36,18 @@ $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemnam
 $logs = $modx->db->makeArray($rs);
 
 ?>
-<script type="text/javascript" src="media/calendar/datepicker.js"></script>
-<script type="text/javascript">
-window.addEvent('domready', function() {
-	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-	var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
-    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
-    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
-	new DatePicker($('datefrom'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames, 'startDay':dpstartDay});
-	new DatePicker($('dateto'), {'yearOffset': dpOffset,'format':dpformat,'dayNames':dpdayNames,'monthNames':dpmonthNames,'startDay':dpstartDay});
-});
-</script>
-<h1><?php echo $_lang["mgrlog_view"]?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-user-secret"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['mgrlog_view']; ?>
+  </span>
+</h1>
+
 <div class="section">
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]?></div><div class="sectionBody" id="lyr1">
-<p><?php echo $_lang["mgrlog_query_msg"]?></p>
+<p class="element-edit-message"><?php echo $_lang["mgrlog_query_msg"]?></p>
 <form action="index.php?a=13" name="logging" method="POST">
 <table border="0" cellpadding="2" cellspacing="0">
  <thead>
@@ -153,8 +149,8 @@ window.addEvent('domready', function() {
   <tr bgcolor="#FFFFFF">
     <td colspan="2">
 	<ul class="actionButtons">
-		<li><a href="#" onclick="document.logging.log_submit.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search']; ?></a></li>
-		<li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+		<li><a href="#" onclick="documentDirty=false;document.logging.log_submit.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search']; ?></a></li>
+		<li><a href="index.php?a=2" onclick="documentDirty=false;"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
 	</ul>
       <input type="submit" name="log_submit" value="<?php echo $_lang["mgrlog_searchlogs"]?>" style="display:none;" />
     </td>
@@ -288,4 +284,3 @@ if(isset($_REQUEST['log_submit'])) {
 } else {
     echo $_lang["mgrlog_noquery"];
 }
-?>

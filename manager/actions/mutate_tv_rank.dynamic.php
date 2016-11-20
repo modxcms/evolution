@@ -29,7 +29,7 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $rs = $modx->db->select(
-	"name, id, rank",
+	"name, caption, id, rank",
         $tbl_site_tmplvars,
 	"",
 	"rank ASC, id ASC"
@@ -45,7 +45,8 @@ if($limit>1) {
     $i = 0;
     foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
-        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
+		$caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
+        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$caption.' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
     }
     $evtLists .= '</ul>';
 }
@@ -64,9 +65,8 @@ $header = '
         li {list-style:none;}
 
         ul.sortableList {
-            padding-left: 20px;
             margin: 0px;
-            width: 300px;
+            width: 500px;
             font-family: Arial, sans-serif;
         }
 
@@ -77,8 +77,9 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-            background-image: url("'.$_style['fade'].'");
-            background-repeat: repeat-x;
+            background: url("'.$_style['fade'].'") center repeat-x;
+            background-size: auto 100%;
+            display:inline-block;
         }
     </style>
     <script type="text/javascript">
@@ -105,7 +106,7 @@ $header = '
                     {
                         el.setStyle(\'padding\', \'3px 5px\');
                         el.setStyle(\'font-weight\', \'bold\');
-                        el.setStyle(\'width\', \'300px\');
+                        el.setStyle(\'width\', \'500px\');
                         el.setStyle(\'background-color\', \'#ccc\');
                         el.setStyle(\'cursor\', \'move\');
                     });
@@ -154,16 +155,19 @@ $header .= '</head>
 
 <div id="actions">
     <ul class="actionButtons">
-        <li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-        <li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li class="transition"><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+        <li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
     </ul>
 </div>
 
 <div class="section">
 <div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
 <div class="sectionBody">
-<button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
-<p>'.$_lang["tmplvars_rank_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
+<br/><p>'.$_lang["tmplvars_rank_edit_message"].'</p>
+<ul class="actionButtons">
+	<li><a href="#" onclick="sort();return false;">'.$_lang['sort_alphabetically'].'</a></li>
+    <li><a href="#" onclick="resetSortOrder();return false;">'.$_lang['reset_sort_order'].'</a></li>
+</ul>';
 
 echo $header;
 

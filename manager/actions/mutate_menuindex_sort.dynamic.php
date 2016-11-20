@@ -90,10 +90,10 @@ $header = '
             min-height: 20px;
         }
         li.noChildren {
-            background-image: url(media/style/'.$manager_theme.'/images/tree/page.gif);
+            background-image: url('.$_style["tree_page"].');
         }
         li.hasChildren {
-            background-image: url(media/style/'.$manager_theme.'/images/tree/folder.gif);
+            background-image: url('.$_style["tree_folder"].');
         }
     </style>
     <script type="text/javascript">
@@ -164,12 +164,19 @@ $pagetitle = $id == 0 ? $site_name : $pagetitle;
 $header .= '</head>
 <body ondragstart="return false;">
 
-<h1>'.$_lang["sort_menuindex"].'</h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-sort-numeric-asc"></i>
+  </span>
+  <span class="pagetitle-text">
+    '.$_lang["sort_menuindex"].'
+  </span>
+</h1>
 
 <div id="actions">
     <ul class="actionButtons">
         '.(!$disabled ? '<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>' : '').'
-        <li><a href="#" onclick="document.location.href=\'index.php?a=2\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=2\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
     </ul>
 </div>
 
@@ -178,8 +185,11 @@ $header .= '</head>
 <div class="sectionBody">';
 
 if(!$disabled) {
-    $header .= '<ul class="actionButtons"><li><a href="#" onclick="resetSortOrder();"><img src="'.$_style["icons_refresh"].'" /> ' . $_lang['reset_sort_order'] . '</a></li></ul>
-    <p>' . $_lang["sort_elements_msg"] . ' (<a href="#" onclick="sort();">' . $_lang["sort_alphabetically"] . '</a>)</p>';
+    $header .= '<br/><p>' . $_lang["sort_elements_msg"] . '</p>
+    <ul class="actionButtons">
+	    <li><a href="#" onclick="resetSortOrder();return false;">' . $_lang['reset_sort_order'] . '</a></li>
+	    <li><a href="#" onclick="sort();return false;">' . $_lang['sort_alphabetically'] . '</a></li>
+	</ul>';
 };
 
 echo $header;

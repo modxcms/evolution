@@ -10,17 +10,30 @@ if (!defined('MODX_BASE_PATH')) {
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  *
- * @param $userFields fields with user id
- * @param $usertype get information about managers or web users
+ * @param string $userFields fields with user id
+ * @param string $usertype get information about managers or web users
  *
  */
-
 class user_DL_Extender extends extDocLister
 {
+    /**
+     * @var array
+     */
     private $fields = array();
+
+    /**
+     * @var array
+     */
     private $userinfo = array();
+
+    /**
+     * @var array
+     */
     private $table = array();
 
+    /**
+     * @return array
+     */
     protected function run()
     {
         if ('' != $this->_cfg['fields']) {
@@ -34,26 +47,38 @@ class user_DL_Extender extends extDocLister
             $this->userinfo = $this->getInfo($userid);
             unset($userid);
         }
+
         return $this->userinfo;
     }
 
+    /**
+     * @param $field
+     * @param $user
+     * @return array|mixed
+     */
     public function getUser($field, $user)
     {
         $out = array();
         if (isset($this->fields[$field], $this->userinfo[$user])) {
             $out = $this->userinfo[$user];
         }
+
         return $out;
     }
 
+    /**
+     * @param $arr
+     * @return array
+     */
     public function setUserData($arr)
     {
         foreach ($arr as $key => $item) {
-            $out = $this->DocLister->renameKeyArr($this->getUser($key, $item[$key]), 'user', $key);
+            $out = $this->DocLister->renameKeyArr($this->getUser($key, $item), 'user', $key);
             if (is_array($out) && count($out) > 0) {
                 $arr = array_merge($arr, $out);
             }
         }
+
         return $arr;
     }
 
@@ -61,6 +86,7 @@ class user_DL_Extender extends extDocLister
      * get table name
      *
      * @global string $usertype type users (manager or web user). Default web
+     * @return array
      */
     private function getTable()
     {
@@ -68,6 +94,7 @@ class user_DL_Extender extends extDocLister
         $table = array();
         switch ($type) {
             case 'manager':
+            case 'mgr':
                 $table['users'] = $this->modx->getFullTableName('manager_users');
                 $table['attributes'] = $this->modx->getFullTableName('user_attributes');
                 break;
@@ -77,12 +104,19 @@ class user_DL_Extender extends extDocLister
                 $table['attributes'] = $this->modx->getFullTableName('web_user_attributes');
                 break;
         }
+
         return $table;
     }
 
+    /**
+     * @param array $user
+     * @return array
+     */
     private function getInfo($user = array())
     {
-        if (!isset($this->table['users'], $this->table['attributes'])) $this->table = $this->getTable();
+        if (!isset($this->table['users'], $this->table['attributes'])) {
+            $this->table = $this->getTable();
+        }
 
         $out = array();
         if (count($user) > 0) {
@@ -108,6 +142,7 @@ class user_DL_Extender extends extDocLister
                     a.gender,
                     a.country,
                     a.state,
+                    a.city,
                     a.zip,
                     a.fax,
                     a.photo,
@@ -125,6 +160,7 @@ class user_DL_Extender extends extDocLister
                 $out[$tmp['id']] = $tmp;
             }
         }
+
         return $out;
     }
 }

@@ -19,6 +19,7 @@ global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
+$readOnly = isset( $readOnly ) && $readOnly === true ? 'true' : 'false';
 /*
  * Default Plugin configuration
  */
@@ -59,7 +60,8 @@ switch ($modx->Event->name) {
         $object_name = $content['pagetitle'];
         $rte = 'none';
         $tvMode = true;
-        $contentType = $content['contentType'];
+        $contentType = $content['contentType'] ? $content['contentType'] : $modx->event->params['contentType'];
+
         /*
         * Switch contentType for doc
         */
@@ -76,6 +78,10 @@ switch ($modx->Event->name) {
                 $mode = "application/json";
                 $lang = "javascript";
                 break;
+			case "application/x-httpd-php":
+				$mode = "application/x-httpd-php";
+				$lang = "php";
+				break;
         }
         break;
     case 'OnDocFormRender'     :
@@ -107,7 +113,7 @@ switch ($modx->Event->name) {
     case 'OnPluginFormRender' :
     case 'OnModFormRender'    :
         $tvMode = true;
-        $limitedHeight = true;
+        // $limitedHeight = true; // No limited height since MODX 1.2
         $elements = array($textarea_name,'properties');
         $mode = 'application/x-httpd-php-open';
         $rte = ($prte ? $prte : 'none');
@@ -133,7 +139,11 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
+    <script src="{$_CM_URL}cm/mode/javascript-compressed.js"></script> <!-- required by mode htmlmixed -->
+    <script src="{$_CM_URL}cm/mode/css-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/clike-compressed.js"></script> <!-- required by mode php -->
+    <script src="{$_CM_URL}cm/mode/php-compressed.js"></script>
+    <script src="{$_CM_URL}cm/mode/sql-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
     {$emmet}{$search}
     
@@ -230,6 +240,7 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
         var config = {
             mode: 'MODx-{$mode}',
             theme: '{$theme}',
+            readOnly: {$readOnly},
             indentUnit: {$indentUnit},
             tabSize: {$tabSize},
             lineNumbers: true,
@@ -286,6 +297,7 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
         
         $output .= "
     <script>
+        var readOnly = {$readOnly};
         var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
         var myTextArea = document.getElementsByName('{$el}')[0];
         config['extraKeys']['F11'] = function(cm) {
@@ -307,11 +319,11 @@ if (('none' == $rte) && $mode && $elements !== NULL) {
                 }
         });
         // get data in localStorage
-        if ('true' == localStorage['cm_fullScreen_{$object_id}']){
+        if ('true' == localStorage['cm_fullScreen_{$object_id}'] && !readOnly){
             setFullScreen(myCodeMirrors['{$el}'], !isFullScreen(myCodeMirrors['{$el}']));
             myCodeMirrors['{$el}'].hasFocus();
         }
-        if (localStorage['history_{$object_id}'] !== undefined){
+        if (localStorage['history_{$object_id}'] !== undefined && !readOnly){
             var cmHistory = JSON.parse(localStorage['history_{$object_id}']);
             myCodeMirrors['{$el}'].doc.setHistory(cmHistory);
         }

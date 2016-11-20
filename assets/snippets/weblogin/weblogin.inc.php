@@ -88,11 +88,15 @@ if(!isset($_SESSION['webValidated'])){
         $tpl = str_replace("[+checkbox+]",($_POST['rememberme'] ? "checked='checked'" : ""),$tpl);
         $tpl = str_replace("[+logintext+]",$loginText,$tpl);
         echo $tpl;
-    ?>
-    <script type="text/javascript">
-        if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
-    </script>
-    <?php
+    
+        if($focusInput) {
+            ?>
+            <script type="text/javascript">
+                if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
+            </script>
+            <?php
+        };
+    
     $output .= ob_get_contents();
     ob_end_clean();
 } else {
