@@ -1,10 +1,10 @@
 <?php
-include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
-    set_include_path(get_include_path() . PATH_SEPARATOR . "../includes/");
+set_include_path(get_include_path() . PATH_SEPARATOR . '../includes/');
 
-define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
+define('IN_MANAGER_MODE', 'true');  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 // include the database configuration file
 include_once "config.inc.php";
@@ -15,7 +15,7 @@ startCMSSession();
 
 include_once "document.parser.class.inc.php";
 $modx = new DocumentParser;
-$modx->loadExtension("ManagerAPI");
+$modx->loadExtension('ManagerAPI');
 $modx->getSettings();
 $etomite = &$modx;
 
@@ -56,14 +56,14 @@ $username = $modx->db->escape(htmlspecialchars($_REQUEST['username'], ENT_NOQUOT
 $givenPassword = htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme= $_REQUEST['rememberme'];
-$failed_allowed = $modx->config["failed_login_attempts"];
+$failed_allowed = $modx->config['failed_login_attempts'];
 
 // invoke OnBeforeManagerLogin event
-$modx->invokeEvent("OnBeforeManagerLogin",
+$modx->invokeEvent('OnBeforeManagerLogin',
                         array(
-                            "username"      => $username,
-                            "userpassword"  => $givenPassword,
-                            "rememberme"    => $rememberme
+                            'username'     => $username,
+                            'userpassword' => $givenPassword,
+                            'rememberme'   => $rememberme
                         ));
 $fields = 'mu.*, ua.*';
 $from   = "{$tbl_manager_users} AS mu, {$tbl_user_attributes} AS ua";
@@ -72,7 +72,7 @@ $rs = $modx->db->select($fields, $from,$where);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit==0 || $limit>1) {
-    jsAlert($_lang["login_processor_unknown_user"]);
+    jsAlert($_lang['login_processor_unknown_user']);
     return;
 }
 
@@ -100,7 +100,7 @@ while ($row = $modx->db->getRow($rs)) {
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
     @session_destroy();
     session_unset();
-    jsAlert($_lang["login_processor_many_failed_logins"]);
+    jsAlert($_lang['login_processor_many_failed_logins']);
     return;
 }
 
@@ -113,10 +113,10 @@ if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
-if($blocked=="1") { 
+if($blocked=='1') { 
     @session_destroy();
     session_unset();
-    jsAlert($_lang["login_processor_blocked1"]);
+    jsAlert($_lang['login_processor_blocked1']);
     return;
 }
 
@@ -124,7 +124,7 @@ if($blocked=="1") {
 if($blockeduntildate>time()) {
     @session_destroy();
     session_unset();
-    jsAlert($_lang["login_processor_blocked2"]);
+    jsAlert($_lang['login_processor_blocked2']);
     return;
 }
 
@@ -132,7 +132,7 @@ if($blockeduntildate>time()) {
 if($blockedafterdate>0 && $blockedafterdate<time()) {
     @session_destroy();
     session_unset();
-    jsAlert($_lang["login_processor_blocked3"]);
+    jsAlert($_lang['login_processor_blocked3']);
     return;
 }
 
@@ -140,12 +140,12 @@ if($blockedafterdate>0 && $blockedafterdate<time()) {
 if ($allowed_ip) {
         if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
           if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
-            jsAlert($_lang["login_processor_remotehost_ip"]);
+            jsAlert($_lang['login_processor_remotehost_ip']);
             return;
           }
         }
         if(!in_array($_SERVER['REMOTE_ADDR'], array_filter(array_map('trim', explode(',', $allowed_ip))))) {
-          jsAlert($_lang["login_processor_remote_ip"]);
+          jsAlert($_lang['login_processor_remote_ip']);
           return;
         }
 }
@@ -155,19 +155,19 @@ if ($allowed_days) {
     $date = getdate();
     $day = $date['wday']+1;
     if (strpos($allowed_days,"$day")===false) {
-        jsAlert($_lang["login_processor_date"]);
+        jsAlert($_lang['login_processor_date']);
         return;
     }
 }
 
 // invoke OnManagerAuthentication event
-$rt = $modx->invokeEvent("OnManagerAuthentication",
+$rt = $modx->invokeEvent('OnManagerAuthentication',
                         array(
-                            "userid"        => $internalKey,
-                            "username"      => $username,
-                            "userpassword"  => $givenPassword,
-                            "savedpassword" => $dbasePassword,
-                            "rememberme"    => $rememberme
+                            'userid'        => $internalKey,
+                            'username'      => $username,
+                            'userpassword'  => $givenPassword,
+                            'savedpassword' => $dbasePassword,
+                            'rememberme'    => $rememberme
                         ));
 
 // check if plugin authenticated the user
@@ -218,7 +218,7 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 
 if($use_captcha==1) {
 	if (!isset ($_SESSION['veriword'])) {
-        jsAlert($_lang["login_processor_captcha_config"]);
+        jsAlert($_lang['login_processor_captcha_config']);
 		return;
 	}
 	elseif ($_SESSION['veriword'] != $captcha_code) {
@@ -280,8 +280,8 @@ if (isset($_SESSION['mgrValidated'])) {
 $i=0;
 $rs = $modx->db->select(
 	'uga.documentgroup',
-	$modx->getFullTableName('member_groups')." ug
-		INNER JOIN ".$modx->getFullTableName('membergroup_access')." uga ON uga.membergroup=ug.user_group",
+	$modx->getFullTableName('member_groups').' ug
+		INNER JOIN ' . $modx->getFullTableName('membergroup_access').' uga ON uga.membergroup=ug.user_group',
 	"ug.member='{$internalKey}'"
 	);
 $_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
@@ -303,19 +303,19 @@ if($rememberme == '1') {
     $_SESSION['modx.mgr.session.cookie.lifetime']= 0;
 	
 	// Remove the Remember Me cookie
-	setcookie ('modx_remember_manager', "", time() - 3600, MODX_BASE_URL);
+	setcookie ('modx_remember_manager', '', time() - 3600, MODX_BASE_URL);
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODX");
+$log->initAndWriteLog('Logged in', $modx->getLoginUserID(), $_SESSION['mgrShortname'], '58', '-', 'MODX');
 
 // invoke OnManagerLogin event
-$modx->invokeEvent("OnManagerLogin",
+$modx->invokeEvent('OnManagerLogin',
                         array(
-                            "userid"        => $internalKey,
-                            "username"      => $username,
-                            "userpassword"  => $givenPassword,
-                            "rememberme"    => $rememberme
+                            'userid'       => $internalKey,
+                            'username'     => $username,
+                            'userpassword' => $givenPassword,
+                            'rememberme'   => $rememberme
                         ));
 
 // check if we should redirect user to a web page
