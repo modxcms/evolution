@@ -41,9 +41,6 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 // include the logger
 include_once "log.class.inc.php";
 
-// include the crypto thing
-include_once "crypt.class.inc.php";
-
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
