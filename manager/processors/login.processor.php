@@ -25,7 +25,7 @@ include_once("{$core_path}settings.inc.php");
 
 // include_once the language file
 $_lang = array();
-$length_eng_lang = count($_lang);
+include_once("{$core_path}lang/english.inc.php");
 
 if($manager_language!=='english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
     include_once("{$core_path}lang/{$manager_language}.inc.php");
@@ -47,8 +47,8 @@ $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 
 $username      = $modx->db->escape($modx->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
 $givenPassword = $modx->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
-$captcha_code = $_REQUEST['captcha_code'];
-$rememberme= $_REQUEST['rememberme'];
+$captcha_code  = $_REQUEST['captcha_code'];
+$rememberme    = $_REQUEST['rememberme'];
 $failed_allowed = $modx->config['failed_login_attempts'];
 
 // invoke OnBeforeManagerLogin event
@@ -149,7 +149,7 @@ if ($allowed_ip) {
 if ($allowed_days) {
     $date = getdate();
     $day = $date['wday']+1;
-    if (strpos($allowed_days,"$day")===false) {
+    if (strpos($allowed_days, $day)===false) {
         jsAlert($_lang['login_processor_date']);
         return;
     }
