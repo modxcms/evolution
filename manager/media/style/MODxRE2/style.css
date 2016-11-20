@@ -29,7 +29,9 @@ html {
 
 body {
   font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 13px;
+  font-size: 62.5%;
+  font-size: 68.75%;
+  font-size: 75%;
   height: 100%;
   color: #333333;
   background: #eeeeee url(images/body.jpg);
@@ -1353,6 +1355,7 @@ a.hometblink:hover {
 #nav li.active a {
   color: #FFF;
   position: relative;
+  text-shadow: 0 -1px 0 #333;
   z-index: 999999;
 }
 

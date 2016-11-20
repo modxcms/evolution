@@ -7,8 +7,8 @@
     background: transparent;
     text-decoration: none;
     color: #333;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
     text-shadow: none;
     float: none;
     position: static;
@@ -893,7 +893,7 @@ body .mce-abs-layout-item, .mce-abs-end {
 
 .mce-btn button {
     padding: 4px 8px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 20px;
     *line-height: 16px;
     cursor: pointer;
@@ -1659,7 +1659,7 @@ i.mce-i-checkbox {
 .mce-menu-item:hover, .mce-menu-item.mce-selected, .mce-menu-item:focus {
     text-decoration: none;
     color: white;
-    background-color: #3697cd
+    background-color: #2d8ac7
 }
 
 div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
