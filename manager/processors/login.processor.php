@@ -23,10 +23,6 @@ $etomite = &$modx;
 // get the settings from the database
 include_once("{$core_path}settings.inc.php");
 
-/*
- * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
- */
-
 // include_once the language file
 if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
     $manager_language = "english"; // if not set, get the english language file.
