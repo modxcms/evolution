@@ -2,7 +2,7 @@
 	$site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 ?>
 <style>
-table.sysSettings td {border-bottom:1px dotted #ccc;padding:10px;}
+table.sysSettings > td {border-bottom:1px dotted #ccc;padding:10px;}
 table.sysSettings tr.noborder td {border:none;}
 </style>
 <!-- Site Settings -->
@@ -175,7 +175,7 @@ table.sysSettings tr.noborder td {border:none;}
   <tr>
     <td nowrap class="warning" valign="top"><?php echo $_lang['custom_contenttype_title'] ?></td>
     <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /><input type="button" value="<?php echo $_lang['add']; ?>" onclick='addContentType()' /><br />
-    <table border="0" cellspacing="0" cellpadding="0"><tr class="noborder"><td valign="top" style="padding:0;">
+    <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
     <select name="lst_custom_contenttype" style="width:200px;height:100px;" size="5">
     <?php
         $ct = explode(",",$custom_contenttype);
@@ -185,7 +185,7 @@ table.sysSettings tr.noborder td {border:none;}
     ?>
     </select>
     <input name="custom_contenttype" type="hidden" value="<?php echo $custom_contenttype; ?>" />
-    </td><td valign="top" style="padding:0;">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang['remove']; ?>" onclick='removeContentType()' /></td></tr></table>
+    </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang['remove']; ?>" onclick='removeContentType()' /></td></tr></table>
     <div class="comment"><?php echo $_lang['custom_contenttype_message'] ?></div>
     </td>
   </tr>
