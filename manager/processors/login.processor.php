@@ -24,12 +24,8 @@ $etomite = &$modx;
 include_once("{$core_path}settings.inc.php");
 
 // include_once the language file
-if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
-    $manager_language = "english"; // if not set, get the english language file.
-}
 $_lang = array();
-include_once "lang/english.inc.php";
-$length_eng_lang = count($_lang);
+include_once("{$core_path}lang/english.inc.php");
 
 if($manager_language!=='english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
     include_once("{$core_path}lang/{$manager_language}.inc.php");
