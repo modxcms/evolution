@@ -14,7 +14,21 @@
 <td width="200">&nbsp;</td>
 <td class="comment"><?php echo $_lang['friendlyurls_message'] ?></td>
 </tr>
-<tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
+<tr>
+<td colspan="2"><div class="split"></div></td>
+</tr>
+<tr>
+    <td nowrap class="warning"><?php echo $_lang['xhtml_urls_title'] ?></td>
+    <td>
+        <?php echo wrap_label($_lang['yes'],form_radio('xhtml_urls', 1));?><br />
+        <?php echo wrap_label($_lang['no'], form_radio('xhtml_urls', 0));?>
+    </td>
+</tr>
+<tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['xhtml_urls_message'] ?></td>
+</tr>
+<tr>
 <td colspan="2"><div class="split"></div></td>
 </tr>
 <tr class="furlRow" <?php echo showHide($friendly_urls==1);?>>
