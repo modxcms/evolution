@@ -233,6 +233,9 @@ class DBAPI {
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
       global $modx;
+      
+      if(is_array($fields)) {$fields = $this->_getFieldsStringFromArray($fields);exit($fields);}
+      
       if (!$from)
          $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
       else {
@@ -668,5 +671,17 @@ class DBAPI {
   function dataSeek($result, $row_number) {
     return mysql_data_seek($result, $row_number);
   }
+  
+    function _getFieldsStringFromArray($fields=array()) {
+        
+        if(empty($fields)) return '*';
+        
+        $_ = array();
+        foreach($fields as $k=>$v) {
+            if($k!==$v) $_[] = "{$v} as {$k}";
+            else        $_[] = $v;
+        }
+        return join(',', $_);
+    }
 }
 ?>
