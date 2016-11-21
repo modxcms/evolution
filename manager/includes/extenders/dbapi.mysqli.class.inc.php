@@ -142,6 +142,7 @@ class DBAPI {
 		if (!$from) {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::select().");
 		} else {
+			$fields = $this->replaceFullTableName($fields);
 			$from = $this->replaceFullTableName($from);
 			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
 			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
