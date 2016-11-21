@@ -419,16 +419,26 @@ class DocumentParser {
     }
 
     /**
+     * Check for manager or webuser login session since v1.2
+     *
+     * @return boolean
+     */
+    function isLoggedIn($context='mgr')
+    {
+        if(substr($context,0,1)=='m') $_ = 'mgrValidated';
+        else                          $_ = 'webValidated';
+        
+        if(isset($_SESSION[$_]) && !empty($_SESSION[$_])) return true;
+        else                                              return false;
+    }
+    
+    /**
      * Check for manager login session
      *
      * @return boolean
      */
     function checkSession() {
-        if (isset ($_SESSION['mgrValidated']) && !empty($_SESSION['mgrValidated'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->isLoggedin();
     }
 
     /**
@@ -437,7 +447,7 @@ class DocumentParser {
      * @return boolean
      */
     function checkPreview() {
-        if ($this->checkSession() == true) {
+        if ($this->isLoggedIn() == true) {
             if (isset ($_REQUEST['z']) && $_REQUEST['z'] == 'manprev') {
                 return true;
             } else {
@@ -459,7 +469,7 @@ class DocumentParser {
             // site online
             return true;
         }
-        elseif ($siteStatus == 0 && $this->checkSession()) {
+        elseif ($siteStatus == 0 && $this->isLoggedIn()) {
             // site offline but launched via the manager
             return true;
         } else {
