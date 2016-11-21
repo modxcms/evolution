@@ -235,6 +235,7 @@ class DBAPI {
       global $modx;
       
       if(is_array($fields)) {$fields = $this->_getFieldsStringFromArray($fields);exit($fields);}
+      if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
       
       if (!$from)
          $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
@@ -596,10 +597,6 @@ class DBAPI {
          return $grd->render();
       }
    }
-
-   
-   
-   
    
    /**
    * @name:  makeArray
@@ -684,5 +681,13 @@ class DBAPI {
         }
         return join(',', $_);
     }
+    
+    function _getFromStringFromArray($tables=array()) {
+        $_ = array();
+        foreach($tables as $k=>$v) {
+            $_[] = $v;
+        }
+        return join(' ', $_);
+    }
 }
-?>
+
