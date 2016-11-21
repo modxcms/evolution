@@ -69,7 +69,7 @@ class ManagerAPI {
 		unset($_SESSION["mgrFormValueId"]);	
 	}
 	
-	function genHash($password, $seed='1')
+	function genV1Hash($password, $seed='1')
 	{ // $seed is user_id basically
 		global $modx;
 		
@@ -109,7 +109,7 @@ class ManagerAPI {
 		return $result;
 	}
 	
-	function getUserHashAlgorithm($uid)
+	function getV1UserHashAlgorithm($uid)
 	{
 		global $modx;
 		$tbl_manager_users = $modx->getFullTableName('manager_users');
