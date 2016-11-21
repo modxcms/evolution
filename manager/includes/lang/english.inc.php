@@ -1365,3 +1365,6 @@ $_lang["lock_element_type_7"] = "Resource";
 $_lang["lock_element_type_8"] = "Role";
 $_lang["lock_element_editing"] = "You are editing this [+element_type+] since\n[+firsthit_df+]";
 $_lang["lock_element_locked_by"] = "This [+element_type+] is locked by user\n[+username+] since [+firsthit_df+]";
+
+$_lang["minifyphp_incache_title"] = 'Minify php codes in site cache';
+$_lang["minifyphp_incache_message"] = 'Minify php codes(snippets and plugins) and store into the site cache file, ref:<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
