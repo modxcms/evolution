@@ -234,7 +234,7 @@ class DBAPI {
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
       global $modx;
       
-      if(is_array($fields)) {$fields = $this->_getFieldsStringFromArray($fields);exit($fields);}
+      if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
       if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
       
       if (!$from)
