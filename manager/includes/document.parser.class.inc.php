@@ -4734,9 +4734,9 @@ class DocumentParser {
             {
                 $str .= '<div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;margin-bottom:15px;">' . $output . '</div>';
             }
-            $table[] = array('ErrorType[num]' , $errortype [$nr] ."[".$nr."]");
-            $table[] = array("File", $file);
-            $table[] = array("Line", $line);
+            if($nr!=='') $table[] = array('ErrorType[num]' , $errortype [$nr] ."[".$nr."]");
+            if($file)    $table[] = array('File', $file);
+            if($line)    $table[] = array('Line', $line);
 
         }
 
