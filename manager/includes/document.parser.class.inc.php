@@ -3839,16 +3839,16 @@ class DocumentParser {
 
         if(!empty($context)){
             if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
-                $out = stripslashes($_SESSION[$context . 'Shortname']);
+                $out = $this->stripslashes($_SESSION[$context . 'Shortname']);
             }
         }else{
             switch(true){
                 case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
-                    $out = stripslashes($_SESSION['webShortname']);
+                    $out = $this->stripslashes($_SESSION['webShortname']);
                     break;
                 }
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
-                    $out = stripslashes($_SESSION['mgrShortname']);
+                    $out = $this->stripslashes($_SESSION['mgrShortname']);
                     break;
                 }
             }
@@ -4214,7 +4214,7 @@ class DocumentParser {
             for ($i= 0; $i < $numEvents; $i++) { // start for loop
                 if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
                 $pluginName= $el[$i];
-                $pluginName = stripslashes($pluginName);
+                $pluginName = $this->stripslashes($pluginName);
                 // reset event object
                 $e= & $this->Event;
                 $e->_resetEventObject();
@@ -4423,7 +4423,7 @@ class DocumentParser {
                 $description_found = $r['description_found'];
                 $docblock_end_found = $r['docblock_end_found'];
                 $param = $r['param'];
-                $val = stripslashes($r['val']);
+                $val = $this->stripslashes($r['val']);
                 if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
                 if(!empty($param)) {
@@ -4598,6 +4598,17 @@ class DocumentParser {
         }
         $this->config['enable_filter'] = $enable_filter;
         return $content;
+    }
+    
+    // Required in PHP 5.3 or earlier environment. However, since PHP 5.3 has already finished support on August 14, 2014, Evolution does not intend to support the stripslashes function for long time.
+    // http://php.net/manual/en/function.get-magic-quotes-gpc.php
+    function stripslashes($str='') {
+        
+        if(!get_magic_quotes_gpc()) return $str;
+        
+        $str = stripslashes($str);
+        modx_sanitize_gpc($str);
+        return $str;
     }
     
     /***************************************************************************************/
