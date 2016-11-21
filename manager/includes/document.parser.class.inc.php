@@ -4612,6 +4612,12 @@ class DocumentParser {
         return $str;
     }
     
+    function strip_tags($str='', $allowable_tags='') {
+        $str = strip_tags($str, $allowable_tags);
+        modx_sanitize_gpc($str);
+        return $str;
+    }
+    
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
