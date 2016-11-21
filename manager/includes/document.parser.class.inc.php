@@ -692,6 +692,7 @@ class DocumentParser {
                     // strip title of special characters
                     $name= $this->documentObject['pagetitle'];
                     $name= strip_tags($name);
+                    $name= $this->sweepGarbageStrings($name);
                     $name= strtolower($name);
                     $name= preg_replace('/&.+?;/', '', $name); // kill entities
                     $name= preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
