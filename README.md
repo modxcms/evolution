@@ -10,11 +10,11 @@ MODX Evolution requires **PHP version 5.3 and higher**.
 
 ### Screenshots
 
-![screenshot_1](http://image.prntscr.com/image/ec33b07b02054186a5713df3447967bf.png)
+![screenshot_1](https://cloud.githubusercontent.com/assets/523389/20504423/97db8bf8-b047-11e6-9eef-550c1c7d34f2.jpg)
 
-![screenshot_2](http://image.prntscr.com/image/ad611b2bc2e342f581682777611f9128.png)
+![screenshot_2](https://cloud.githubusercontent.com/assets/523389/20504414/926ceec8-b047-11e6-8760-3d11d6610977.jpg)
 
-![screenshot_3](http://image.prntscr.com/image/bad9c3f1221847348193d6dd30ba1253.png)
+![screenshot_3](https://cloud.githubusercontent.com/assets/523389/20504420/956ef5d0-b047-11e6-9460-7c7a471bada6.jpg)
 
 ### References
 
