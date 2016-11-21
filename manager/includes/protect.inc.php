@@ -60,7 +60,7 @@ function getSanitizedValue($value='') {
 }
 
 modx_sanitize_gpc($_GET);
-if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE == 'false'))) {
+if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE === 'false'))) {
     modx_sanitize_gpc($_POST);
 }
 modx_sanitize_gpc($_COOKIE);

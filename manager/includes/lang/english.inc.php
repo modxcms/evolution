@@ -262,7 +262,7 @@ $_lang["element_selector_title"] = 'Element Selector';
 $_lang["elements"] = 'Elements';
 $_lang["email"] = 'Email';
 $_lang["email_sent"] = 'Email sent';
-$_lang["emailsender_message"] = 'Specify the e-mail address used when sending users their usernames and passwords.';
+$_lang["emailsender_message"] = 'The email address of the site administrator. For example, this email address will be used as the destination of system notification e-mail etc.';
 $_lang["emailsender_title"] = 'E-mail address';
 $_lang["emailsubject_default"] = 'Your login details';
 $_lang["emailsubject_message"] = 'Specify the value of the subject of the signup e-mail.';
@@ -1365,3 +1365,6 @@ $_lang["lock_element_type_7"] = "Resource";
 $_lang["lock_element_type_8"] = "Role";
 $_lang["lock_element_editing"] = "You are editing this [+element_type+] since\n[+firsthit_df+]";
 $_lang["lock_element_locked_by"] = "This [+element_type+] is locked by user\n[+username+] since [+firsthit_df+]";
+
+$_lang["minifyphp_incache_title"] = 'Minify php codes in site cache';
+$_lang["minifyphp_incache_message"] = 'Minify php codes(snippets and plugins) and store into the site cache file, ref:<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
