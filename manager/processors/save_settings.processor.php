@@ -123,7 +123,9 @@ if (isset($data) && count($data) > 0) {
 			break;
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
-
+		
+		$modx->config[$k] = $v;
+		
 		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 	
