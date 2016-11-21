@@ -136,7 +136,7 @@ defined('IN_PARSER_MODE') or die();
                                     "username" => $username
                                 ));
 
-        clearWebuserSession();
+        clearWebuserSession();
 
         // invoke OnWebLogout event
         $modx->invokeEvent("OnWebLogout",
@@ -202,7 +202,7 @@ defined('IN_PARSER_MODE') or die();
     }
 
     if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate>time()) {    // blocked due to number of login errors.
-        clearWebuserSession();
+        clearWebuserSession();
         $output = webLoginAlert("Due to too many failed logins, you have been blocked!");
         return;
     }
@@ -219,22 +219,22 @@ defined('IN_PARSER_MODE') or die();
     }
 
     if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
-        clearWebuserSession();
+        clearWebuserSession();
         $output = webLoginAlert("You are blocked and cannot log in!");
         return;
     }
 
     // blockuntil
     if($blockeduntildate>time()) { // this user has a block until date
-        clearWebuserSession();
+        clearWebuserSession();
         $output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
         return;
     }
 
     // blockafter
     if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
-        clearWebuserSession();
-        $output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
+        clearWebuserSession();
+        $output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
         return;
     }
 
@@ -301,8 +301,8 @@ defined('IN_PARSER_MODE') or die();
 				"internalKey='{$internalKey}'"
 				);
         }
-        clearWebuserSession();
-        return;
+        clearWebuserSession();
+        return;
     }
 
     $currentsessionid = session_id();
@@ -409,7 +409,7 @@ defined('IN_PARSER_MODE') or die();
 
     return;
 
-    function clearWebuserSession() {
+    function clearWebuserSession() {
 	    // if we were launched from the manager
 	    // do NOT destroy session
 	    if(isset($_SESSION['mgrValidated'])) {

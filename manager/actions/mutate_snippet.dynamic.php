@@ -467,7 +467,7 @@ function contains(a, obj) {
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"."?>" ?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"; ?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->

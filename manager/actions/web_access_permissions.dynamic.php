@@ -89,7 +89,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN ".$modx->getFullTableName('web_groups')." AS groups ON groups.webgroup = groupnames.id
 			LEFT JOIN ".$modx->getFullTableName('web_users')." AS users ON users.id = groups.webuser",
 		'',
-		'groupnames.name'
+		'groupnames.name, user_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
@@ -214,7 +214,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN ".$modx->getFullTableName('webgroup_access')." AS groupacc ON groupacc.webgroup = groupnames.id
 			LEFT JOIN ".$modx->getFullTableName('documentgroup_names')." AS dgnames ON dgnames.id = groupacc.documentgroup",
 		'',
-		'name'
+		'name, dg_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
