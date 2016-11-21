@@ -18,7 +18,8 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  17/11/2016
+ * @author      yama https://github.com/yama
+ * @lastupdate  21/11/2016
  */
 
 require MODX_BASE_PATH.'assets/plugins/elementsintree/plugin.elementsintree.php';
