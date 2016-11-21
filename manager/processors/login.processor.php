@@ -41,10 +41,6 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 // initiate the content manager class
  // for backward compatibility
 
-$tbl_user_settings   = $modx->getFullTableName('user_settings');
-$tbl_manager_users   = $modx->getFullTableName('manager_users');
-$tbl_user_attributes = $modx->getFullTableName('user_attributes');
-
 $username      = $modx->db->escape($modx->htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES));
 $givenPassword = $modx->htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES);
 $captcha_code  = $_REQUEST['captcha_code'];
@@ -170,45 +166,16 @@ $rt = $modx->invokeEvent('OnManagerAuthentication',
 if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 {
 	// check user password - local authentication
-	$tbl_manager_users = $modx->getFullTableName('manager_users');
-	if(strpos($dbasePassword,'>')!==false)
-	{
-		if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) $modx->config['pwd_hash_algo'] = 'UNCRYPT';
-		$user_algo = $modx->manager->getUserHashAlgorithm($internalKey);
-		
-		if($user_algo !== $modx->config['pwd_hash_algo'])
-		{
-			$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
-			$modx->config['pwd_hash_algo'] = $user_algo;
-		}
-		
-		if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
-		{
-			jsAlert($_lang["login_processor_wrong_password"]);
-			$newloginerror = 1;
-		}
-		elseif(isset($bk_pwd_hash_algo))
-		{
-			$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
-			$field = array();
-			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
-			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
-		}
-	}
-	else
-	{
-		if($dbasePassword != md5($givenPassword))
-		{
-			jsAlert($_lang["login_processor_wrong_password"]);
-			$newloginerror = 1;
-		}
-		else
-		{
-			$field = array();
-			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
-			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
-		}
-	}
+	$hashType = $modx->manager->getHashType($dbasePassword);
+	if($hashType=='md5')     $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
+	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
+	else                     $matchPassword = false;
+}
+
+if(!$matchPassword) {
+	jsAlert($_lang['login_processor_wrong_password']);
+	incrementFailedLoginCount($internalKey,$failedlogins,$failed_allowed,$blocked_minutes);
+	return;
 }
 
 if($use_captcha==1) {
@@ -217,30 +184,10 @@ if($use_captcha==1) {
 		return;
 	}
 	elseif ($_SESSION['veriword'] != $captcha_code) {
-        jsAlert($_lang["login_processor_bad_code"]);
-        $newloginerror = 1;
+        jsAlert($_lang['login_processor_bad_code']);
+        incrementFailedLoginCount($internalKey,$failedlogins,$failed_allowed,$blocked_minutes);
+        return;
     }
-}
-
-if($newloginerror) {
-	//increment the failed login counter
-    $failedlogins += 1;
-
-    $fields = array('failedlogincount' => $failedlogins);
-    if($failedlogins>=$failed_allowed) //block user for too many fail attempts
-        $fields['blockeduntil'] = time()+($blocked_minutes*60);
-
-    $modx->db->update($fields, $tbl_user_attributes, "internalKey='{$internalKey}'");
-
-    if($failedlogins<$failed_allowed) { 
-		//sleep to help prevent brute force attacks
-        $sleep = (int)$failedlogins/2;
-        if($sleep>5) $sleep = 5;
-        sleep($sleep);
-    }
-	@session_destroy();
-	session_unset();
-    return;
 }
 
 $currentsessionid = session_id();
@@ -330,8 +277,68 @@ else {
 // show javascript alert
 function jsAlert($msg){
 	global $modx;
-    if($_POST['ajax']==1) echo $msg."\n";
-    else {
-        echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
+    if($_POST['ajax']!=1) echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
+    else                  echo $msg."\n";
+}
+
+function loginV1($internalKey,$givenPassword,$dbasePassword,$username) {
+	global $modx;
+	
+	$user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
+	
+	if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo']))
+		$modx->config['pwd_hash_algo'] = 'UNCRYPT';
+	
+	if($user_algo !== $modx->config['pwd_hash_algo']) {
+		$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+		$modx->config['pwd_hash_algo'] = $user_algo;
+	}
+	
+	if($dbasePassword != $modx->manager->genV1Hash($givenPassword, $internalKey)) {
+		return false;
+	}
+	elseif(isset($bk_pwd_hash_algo)) {
+		$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
+		updateNewHash($username,$givenPassword,$internalKey);
+	}
+	
+	return true;
+}
+
+function loginMD5($internalKey,$givenPassword,$dbasePassword,$username) {
+	global $modx;
+	
+	if($dbasePassword != md5($givenPassword)) return false;
+	updateNewHash($username,$givenPassword,$internalKey);
+	return true;
+}
+
+function updateNewHash($username,$password,$internalKey) {
+	global $modx;
+	
+	$field = array();
+	$field['password'] = $modx->manager->genV1Hash($password, $internalKey);
+	$modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
+}
+
+function incrementFailedLoginCount($internalKey,$failedlogins,$failed_allowed,$blocked_minutes) {
+	global $modx;
+	
+    $failedlogins += 1;
+
+    $fields = array('failedlogincount' => $failedlogins);
+    if($failedlogins>=$failed_allowed) //block user for too many fail attempts
+        $fields['blockeduntil'] = time()+($blocked_minutes*60);
+
+    $modx->db->update($fields, '[+prefix+]user_attributes', "internalKey='{$internalKey}'");
+
+    if($failedlogins<$failed_allowed) { 
+		//sleep to help prevent brute force attacks
+        $sleep = (int)$failedlogins/2;
+        if($sleep>5) $sleep = 5;
+        sleep($sleep);
     }
+	@session_destroy();
+	session_unset();
+    return;
 }
