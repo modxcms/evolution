@@ -24,6 +24,12 @@ table.sysSettings tr.noborder td {border:none;}
 	</td>
     </tr>
   <tr>
+    <td nowrap class="warning"><?php echo $_lang['emailsender_title'] ?></td>
+    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="emailsender" value="<?php echo $emailsender; ?>" />
+	<div class="comment"><?php echo $_lang['emailsender_message'] ?></div>
+	</td>
+  </tr>
+  <tr>
     <td nowrap class="warning"><?php echo $_lang['sitestart_title'] ?></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" />
 	<div class="comment"><?php echo $_lang['sitestart_message'] ?></div>
