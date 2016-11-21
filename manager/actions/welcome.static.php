@@ -157,9 +157,9 @@ else {
         }
         if ($modx->hasPermission('delete_document')) {
             if ($content['deleted'] == 0) {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_delete_record"].'\')" class="btn btn-xs btn-danger"  title="' . $_lang["delete_resource"] . '" href="index.php?a=6&amp;id=' . $content['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+                $html .= '<a class="btn btn-xs btn-danger"  title="' . $_lang["delete_resource"] . '" href="index.php?a=6&amp;id=' . $content['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
             } else {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_undelete"].'\')" class="btn btn-xs btn-success"  title="' . $_lang["undelete_resource"] . '" href="index.php?a=63&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+                $html .= '<a class="btn btn-xs btn-success"  title="' . $_lang["undelete_resource"] . '" href="index.php?a=63&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
             }
         }
         if ($content['deleted'] == "1" AND $content['published'] == 0) {
@@ -251,7 +251,7 @@ $html = '
       </tr>
       <tr>
         <td>' . $_lang["inbox"] . '</td>
-        <td><a href="index.php?a=10"><b>' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style=\'color:red;\'>" . $_SESSION['nrnewmessages'] . "</span>") . '</b></a></td>
+        <td><a href="index.php?a=10"><b>' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</b></a></td>
       </tr>
     </table>
 ';
