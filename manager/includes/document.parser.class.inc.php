@@ -929,11 +929,13 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeDocumentContent($content) {
+    function mergeDocumentContent($content,$ph=false) {
         if (strpos($content, '[*') === false)
             return $content;
         if(!isset($this->documentIdentifier)) return $content;
         if(!isset($this->documentObject) || empty($this->documentObject)) return $content;
+        
+        if(!$ph) $ph = $this->documentObject;
         
         $matches = $this->getTagsFromContent($content,'[*','*]');
         if(!$matches) return $content;
@@ -943,9 +945,9 @@ class DocumentParser {
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
-            elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
-            else                                   $value = $matches[0][$i];
+            if(isset($ph[$key]))             $value = $ph[$key];
+            elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
+            else                             $value = $matches[0][$i];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1008,9 +1010,12 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeSettingsContent($content) {
+    function mergeSettingsContent($content,$ph=false) {
         if (strpos($content, '[(') === false)
             return $content;
+        
+        if(!$ph) $ph = $this->config;
+        
         $matches = $this->getTagsFromContent($content,'[(',')]');
         if(!$matches) return $content;
         
@@ -1019,8 +1024,8 @@ class DocumentParser {
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            if(isset($this->config[$key])) {
-                $value = $this->config[$key];
+            if(isset($ph[$key])) {
+                $value = $ph[$key];
                 if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
                 $replace[$i]= $value;
             }
@@ -1036,8 +1041,10 @@ class DocumentParser {
      * @param string $content
      * @return string
      */
-    function mergeChunkContent($content) {
+    function mergeChunkContent($content,$ph=false) {
         if(strpos($content,'{{')===false) return $content;
+        
+        if(!$ph) $ph = $this->chunkCache;
         
         $matches = $this->getTagsFromContent($content,'{{','}}');
         if(!$matches) return $content;
@@ -1046,11 +1053,10 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
-            $ph = $this->getParamsFromString($snip_call['params']);
-            
-            $value = $this->getChunk($key);
-            $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
-            
+            $params = $this->getParamsFromString($snip_call['params']);
+            if(!isset($ph[$key])) $ph[$key] = $this->getChunk($key);
+            $value = $ph[$key];
+            $value = !is_null($value) ? $this->mergePlaceholderContent($value,$params) : $matches[0][$i];
             $replace[$i] = $value;
         }
         
@@ -1064,9 +1070,12 @@ class DocumentParser {
      * @param string $content
      * @return string
      */
-    function mergePlaceholderContent($content) {
-        if (strpos($content, '[+') === false)
-            return $content;
+    function mergePlaceholderContent($content,$ph=false) {
+        
+        if (strpos($content, '[+') === false) return $content;
+        
+        if(!$ph) $ph = $this->placeholders;
+        
         $replace = array();
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
@@ -1075,8 +1084,9 @@ class DocumentParser {
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
-            elseif($key==='phx') $value = '';
+            if (isset($ph[$key])) $value = $ph[$key];
+            elseif($modifiers)    $value = '';
+            elseif($key==='phx')  $value = '';
             else continue;
             
             if($modifiers!==false)
@@ -3208,6 +3218,7 @@ class DocumentParser {
                 $row= $this->db->getRow($result);
                 $out = $this->chunkCache[$chunkName]= $row['snippet'];
             }
+            else $out = $this->chunkCache[$chunkName] = null;
         }
         return $out;
     }
