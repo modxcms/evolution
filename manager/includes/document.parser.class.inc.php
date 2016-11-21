@@ -4818,7 +4818,8 @@ class DocumentParser {
         elseif(!empty($this->event->activePlugin)) $source = 'Plugin - ' . $this->event->activePlugin;
         elseif($source!=='') $source = 'Parser - ' . $source;
         elseif($query!=='')  $source = 'SQL Query';
-        else             $source = 'Parser';
+        else                 $source = 'Parser';
+        if($msg)             $source .= ' / ' . $msg;
         if(isset($actionName) && !empty($actionName)) $source .= $actionName;
         switch($nr)
         {
