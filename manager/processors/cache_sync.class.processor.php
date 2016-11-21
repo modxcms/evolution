@@ -314,7 +314,6 @@ if(!class_exists('synccache')) {
             if(substr($source,0,5)!=='<?php') $source = '<?php ' . $source;
             
             $tokens = token_get_all($source);
-            foreach($tokens as $i=>$token) {
             $_ = '';
             $prev_token = 0;
             $chars = explode(' ', '( ) ; , = { } ? :');
