@@ -3236,53 +3236,21 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($content='', $ph=array(), $left= '[+', $right= '+]',$cleanup=true)
+    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]')
     {
-        if(is_array($content)&&is_string($ph)) {list($ph,$content) = array($content,$ph);}
+        if(!$ph)  return $tpl;
+        if(!$tpl) return $tpl;
         
-        if(!$ph) return $content;
-        if(strpos($content,$left)===false) return $content;
-        elseif(is_string($ph) && strpos($ph,'='))
-        {
-            if(strpos($ph,',')) $pairs   = explode(',',$ph);
-            else                $pairs[] = $ph;
-            
-            unset($ph);
-            $ph = array();
-            foreach($pairs as $pair)
-            {
-                list($k,$v) = explode('=',trim($pair));
-                $ph[$k] = $v;
-            }
+        $matches = $this->getTagsFromContent($tpl,$left,$right);
+        if(!$matches) return $tpl;
+        
+        $replace= array ();
+        foreach($matches[1] as $i=>$key) {
+            if(isset($ph[$key])) $replace[$i] = $ph[$key];
+            else                 $replace[$i] = '';
         }
-        $c=0;
-        $bt='';
-        while($bt!==md5($content)) {
-            $matches = $this->getTagsFromContent($content,$left,$right);
-            if(!$matches) break;
-            $bt = md5($content);
-            $replace= array ();
-            foreach($matches[1] as $i=>$key) {
-                
-                list($key,$modifiers) = $this->splitKeyAndFilter($key);
-                
-                if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
-                
-                if(isset($ph[$key])) {
-                    $value = $ph[$key];
-                    if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-                    $replace[$i]= $value;
-                }
-                elseif($cleanup) $replace[$i] = '';
-                else             $replace[$i] = $matches[0][$i];
-            }
-            $content= str_replace($matches[0], $replace, $content);
-            if($bt===md5($content)) break;
-            $c++;
-            $cleanup = false;
-            if(1000<$c) $this->messageQuit('parseText parse over');
-        }
-        return $content;
+        
+        return str_replace($matches[0], $replace, $tpl);
     }
     
     /**
