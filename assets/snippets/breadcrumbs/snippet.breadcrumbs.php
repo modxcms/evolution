@@ -28,7 +28,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($linkTextField) ) ? $linkTextField : $linkTextField = 'menutitle,pagetitle,longtitle';
 ( isset($linkDescField) ) ? $linkDescField : $linkDescField = 'description,longtitle,pagetitle,menutitle';
 ( isset($showCrumbsAsLinks) ) ? $showCrumbsAsLinks : $showCrumbsAsLinks = 1;
-( isset($templateSet) ) ? $templateSet : $templateSet = 'defaultString';
+( isset($templateSet) ) ? $templateSet : $templateSet = 'Schema.org.markup';
 ( isset($crumbGap) ) ? $crumbGap : $crumbGap = '...';
 ( isset($stylePrefix) ) ? $stylePrefix : $stylePrefix = 'B_';
 ( isset($showHomeCrumb) ) ? $showHomeCrumb : $showHomeCrumb = 1;
@@ -70,6 +70,13 @@ $templates = array(
         'crumbContainer' => '<ul class="[+crumbBoxClass+]">[+crumbs+]</ul>',
         'lastCrumbWrapper' => '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>',
         'firstCrumbWrapper' => '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>'
+    ),
+	'Schema.org.markup' => array(
+	'crumb' => '  <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">[+crumb+]</li>',
+	'separator' => ' '.$separator.' ',
+		'crumbContainer' => '<ol itemscope itemtype="http://schema.org/BreadcrumbList" class="[+crumbBoxClass+]">[+crumbs+]</ol>',
+	 'lastCrumbWrapper' => '[+lastCrumbSpanA+]',
+	 'firstCrumbWrapper' => '[+firstCrumbSpanA+]'
     ),
 );
 // Return blank if necessary: on home page
@@ -196,7 +203,8 @@ if ( $showHomeCrumb && $homeId != $document['id'] && $homeCrumb = $modx->getPage
 // Process each crumb ----------------------------------------------------------
 $pretemplateCrumbs = array();
 
-foreach ( $crumbs as $c )
+$cc=count($crumbs);
+foreach ( $crumbs as $k=>$c )
 {
 
     // Skip if we've exceeded our crumb limit but we're waiting to get to home
@@ -264,12 +272,12 @@ foreach ( $crumbs as $c )
         }
 
 
-        $pretemplateCrumb .= '<a class="'.$crumbClass.'" href="'.($c['id'] == $modx->config['site_start'] ? $modx->config['base_url'] : $modx->makeUrl($c['id'])).'" title="'.$title.'">'.$text.'</a>';
+        $pretemplateCrumb .= '<a class="'.$crumbClass.'" href="'.($c['id'] == $modx->config['site_start'] ? $modx->config['base_url'] : $modx->makeUrl($c['id'])).'" title="'.$title.'" itemprop="item"><span itemprop="name">'.$text.'</span><meta itemprop="position" content="'.($cc-$k).'" /></a>';
     }
     else
     // Make a span instead of a link
     {
-       $pretemplateCrumb .= '<span class="'.$crumbClass.'">'.$text.'</span>';
+       $pretemplateCrumb .= '<span class="'.$crumbClass.'" itemprop="item"><span itemprop="name">'.$text.'</span><meta itemprop="position" content="'.($cc-$k).'" /></span>';
     }
 
     // Add crumb to pretemplate crumb array
