@@ -4615,6 +4615,9 @@ class DocumentParser {
         return $str;
     }
     
+    function addSnippet($name, $phpCode) {
+        $this->snippetCache[$name] = $phpCode;
+    }
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
