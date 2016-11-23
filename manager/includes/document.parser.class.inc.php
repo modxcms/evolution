@@ -947,6 +947,7 @@ class DocumentParser {
             
             if(isset($ph[$key]))             $value = $ph[$key];
             elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
+            elseif($modifiers)               $value = '';
             else                             $value = $matches[0][$i];
             
             if (is_array($value)) {
@@ -1021,16 +1022,16 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            if(isset($ph[$key])) {
-                $value = $ph[$key];
-                if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-                $replace[$i]= $value;
-            }
-            else $replace[$i]= $matches[0][$i];
+            if(isset($ph[$key])) $value = $ph[$key];
+            elseif($modifiers)   $value = '';
+            else                 $value = $matches[0][$i];
+            
+            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
+            $replace[$i]= $value;
         }
+        
         $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
@@ -1054,9 +1055,15 @@ class DocumentParser {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
             $params = $this->getParamsFromString($snip_call['params']);
+
+            list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            
             if(!isset($ph[$key])) $ph[$key] = $this->getChunk($key);
             $value = $ph[$key];
             $value = !is_null($value) ? $this->mergePlaceholderContent($value,$params) : $matches[0][$i];
+            
+            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
+            
             $replace[$i] = $value;
         }
         
