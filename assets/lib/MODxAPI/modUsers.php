@@ -34,6 +34,7 @@ class modUsers extends MODxAPI
             'country'          => null,
             'state'            => null,
             'city'             => null,
+            'street'           => null,
             'zip'              => null,
             'fax'              => null,
             'photo'            => null,
@@ -104,6 +105,7 @@ class modUsers extends MODxAPI
                 $this->field = $this->modx->db->getRow($result);
 
                 $this->id = empty($this->field['internalKey']) ? null : $this->get('internalKey');
+                $this->store($this->toArray());
                 unset($this->field['id']);
                 unset($this->field['internalKey']);
             }
@@ -124,6 +126,10 @@ class modUsers extends MODxAPI
                 case 'password':
                     $this->givenPassword = $value;
                     $value = $this->getPassword($value);
+                    break;
+                case 'sessionid':
+                    session_regenerate_id(false);
+                    $value = session_id();
                     break;
             }
             $this->field[$key] = $value;
@@ -167,7 +173,7 @@ class modUsers extends MODxAPI
 
             return false;
         }
-
+        $this->set('sessionid', '');
         $fld = $this->toArray();
         foreach ($this->default_field['user'] as $key => $value) {
             $tmp = $this->get($key);
@@ -210,9 +216,9 @@ class modUsers extends MODxAPI
             }
             $this->query($SQL);
         }
-
+        unset($fld['id']);
         foreach ($fld as $key => $value) {
-            if ($value == '') {
+            if ($value == '' || !$this->isChanged($key)) {
                 continue;
             }
             $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('web_user_settings')} WHERE `webuser` = '{$this->id}' AND `setting_name` = '{$key}'");
@@ -290,6 +296,7 @@ class modUsers extends MODxAPI
         }
         if (null !== $this->getID()) {
             $flag = true;
+            $this->save(false);
             $this->SessionHandler('start', $cookieName, $fulltime);
             $this->invokeEvent("OnWebLogin", array(
                 'userObj'      => $this,
@@ -374,12 +381,12 @@ class modUsers extends MODxAPI
     {
         $flag = false;
         if (isset($_COOKIE[$cookieName])) {
-            $cookie = explode('|', $_COOKIE[$cookieName], 2);
-            if (isset($cookie[0], $cookie[1]) && strlen($cookie[0]) == 32 && strlen($cookie[1]) == 32) {
+            $cookie = explode('|', $_COOKIE[$cookieName], 3);
+            if (isset($cookie[0], $cookie[1], $cookie[2]) && strlen($cookie[0]) == 32 && strlen($cookie[1]) == 32) {
                 $this->close();
                 $q = $this->modx->db->query("SELECT id FROM " . $this->makeTable('web_users') . " WHERE md5(username)='{$this->escape($cookie[0])}'");
                 $id = $this->modx->db->getValue($q);
-                if ($this->edit($id) && null !== $this->getID() && $this->get('password') == $cookie[1] && $this->testAuth($this->getID(),
+                if ($this->edit($id) && null !== $this->getID() && $this->get('password') == $cookie[1] && $this->get('sessionid') == $cookie[2] && $this->testAuth($this->getID(),
                         $cookie[1], true)
                 ) {
                     $flag = $this->authUser($this->getID(), $fulltime, $cookieName, $fire_events);
@@ -441,9 +448,7 @@ class modUsers extends MODxAPI
                     $_SESSION['webUserGroupNames'] = $this->getUserGroups();
                     $_SESSION['webDocgroups'] = $this->getDocumentGroups();
                     if ($remember) {
-                        $cookieValue = md5($this->get('username')) . '|' . $this->get('password');
-                        $cookieExpires = time() + (is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember);
-                        setcookie($cookieName, $cookieValue, $cookieExpires, '/');
+                        $this->setAutoLoginCookie($cookieName, $remember);
                     }
                 }
                 break;
@@ -472,6 +477,34 @@ class modUsers extends MODxAPI
                     session_destroy();
                 }
                 break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSecure()
+    {
+        $out = $this->modxConfig('server_protocol') == 'http' ? false : true;
+
+        return $out;
+    }
+
+    /**
+     * @param $cookieName
+     * @param bool $remember
+     * @return $this
+     */
+    protected function setAutoLoginCookie($cookieName, $remember = true)
+    {
+        if (!empty($cookieName)) {
+            $secure = $this->isSecure();
+            $cookieValue = array(md5($this->get('username')), $this->get('password'), $this->get('sessionid'));
+            $cookieValue = implode('|', $cookieValue);
+            $cookieExpires = time() + (is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember);
+            setcookie($cookieName, $cookieValue, $cookieExpires, '/', '', $secure, true);
         }
 
         return $this;

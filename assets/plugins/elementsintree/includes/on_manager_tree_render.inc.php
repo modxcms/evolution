@@ -27,11 +27,11 @@ $text_reload_title = 'Click here to reload elements list.';
 
 $tablePre = $modx->db->config['dbase'] . '.`' . $modx->db->config['table_prefix'];
 
-$temp    = createElementsList('site_templates',16,$tablePre,'templatename');
-$tv      = createElementsList('site_tmplvars',301,$tablePre);
-$chunk   = createElementsList('site_htmlsnippets',78,$tablePre);
-$snippet = createElementsList('site_snippets',22,$tablePre);
-$plugin  = createElementsList('site_plugins',102,$tablePre);
+$temp    = createElementsList('site_templates',16,'templatename');
+$tv      = createElementsList('site_tmplvars',301);
+$chunk   = createElementsList('site_htmlsnippets',78);
+$snippet = createElementsList('site_snippets',22);
+$plugin  = createElementsList('site_plugins',102);
 $module  = createModulesList('site_modules',112,$tablePre);
 
 if ( hasAnyPermission() ) {

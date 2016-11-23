@@ -1,3 +1,6 @@
+<?php
+    if(empty($valid_hostnames) && empty(MODX_SITE_HOSTNAMES)) $valid_hostnames = $_SERVER['HTTP_HOST'];
+?>
 <!-- Interface & editor settings -->
 <div class="tab-page" id="tabPageSecurity">
 <h2 class="tab"><?php echo $_lang['settings_security'] ?></h2>

@@ -147,7 +147,7 @@ class MODIFIERS {
         foreach($result as $i=>$a)
         {
             $a['opt'] = $this->parseDocumentSource($a['opt']);
-            $result[$i]['opt'] = $modx->parseText($a['opt'],$this->placeholders,'[+','+]',false);
+            $result[$i]['opt'] = $modx->mergePlaceholderContent($a['opt'],$this->placeholders);
         }
         
         return $result;
