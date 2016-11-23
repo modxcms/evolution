@@ -1133,7 +1133,11 @@ class DocumentParser {
             
             if($scope==='@IF' || $scope==='@ELSEIF') {
                 if($excute) continue;
+                $_ = md5('@:>@');
+                if(strpos($split,':>')!==false) $split = str_replace(':>', ':'.$_, $split);
                 list($cmd, $text) = explode('>', $split, 2);
+                if(strpos($cmd,$_)!==false)  $cmd  = str_replace($_, '>', $cmd);
+                if(strpos($text,$_)!==false) $text = str_replace($_, '>', $text);
                 $cmd = substr($cmd,strpos($cmd,':')+1);
                 $cmd = trim($cmd);
                 $reverse = substr($cmd,0,1)==='!' ? true : false;
@@ -1157,6 +1161,7 @@ class DocumentParser {
                 }
                 $this->config['enable_filter'] = $_;
                 $cmd = ltrim($cmd);
+                $cmd = rtrim($cmd,'-');
                 $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
                 
                 if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
