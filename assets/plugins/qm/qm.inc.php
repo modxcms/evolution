@@ -950,7 +950,7 @@ class Qm {
 
 		$result = $this->modx->db->select('count(internalKey)', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
 
-		if ($this->modx->db->getValue($result) === 0) {
+		if ($this->modx->db->getValue($result) === '0') {
 			$locked = FALSE;
 		}
 

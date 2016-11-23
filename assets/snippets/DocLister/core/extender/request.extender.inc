@@ -144,7 +144,7 @@ class request_DL_Extender extends extDocLister
     private function setCFG()
     {
         foreach ($this->param as $name => $item) {
-            $this->DocLister->setConfig($item);
+            $this->DocLister->config->setConfig($item);
         }
     }
 

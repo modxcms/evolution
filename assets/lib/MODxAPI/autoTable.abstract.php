@@ -53,13 +53,12 @@ abstract class autoTable extends MODxAPI
     {
         $id = is_scalar($id) ? trim($id) : '';
         if ($this->getID() != $id) {
-            $this->newDoc = false;
-            $this->id = null;
+            $this->close();
             $this->markAllEncode();
-            $this->field = array();
-            $this->set = array();
+            $this->newDoc = false;
             $result = $this->query("SELECT * from {$this->makeTable($this->table)} where `" . $this->pkName . "`='" . $this->escape($id) . "'");
             $this->fromArray($this->modx->db->getRow($result));
+            $this->store($this->toArray());
             $this->id = $this->eraseField($this->pkName);
             if (is_bool($this->id) && $this->id === false) {
                 $this->id = null;
@@ -78,7 +77,6 @@ abstract class autoTable extends MODxAPI
      */
     public function save($fire_events = null, $clearCache = false)
     {
-        $result = false;
         $fld = $this->encodeFields()->toArray();
         foreach ($this->default_field as $key => $value) {
             if ($this->newDoc && $this->get($key) === null && $this->get($key) !== $value) {
@@ -97,24 +95,17 @@ abstract class autoTable extends MODxAPI
                 $SQL = ($this->getID() === null) ? null : "UPDATE {$this->ignoreError} {$this->makeTable($this->table)} SET " . implode(', ',
                         $this->set) . " WHERE `" . $this->pkName . "` = " . $this->getID();
             }
-            $result = $this->query($SQL);
-        }
-        if ($result && $this->modx->db->getAffectedRows() >= 0) {
-            if ($this->newDoc && !empty($SQL)) {
+            $this->query($SQL);
+            if ($this->newDoc) {
                 $this->id = $this->modx->db->getInsertId();
             }
-            if ($clearCache) {
-                $this->clearCache($fire_events);
-            }
-            $result = $this->id;
-        } else {
-            if (!empty($SQL)) {
-                $this->log['SqlError'] = $SQL;
-            }
-            $result = false;
         }
+        if ($clearCache) {
+            $this->clearCache($fire_events);
+        }
+        $this->decodeFields();
 
-        return $result;
+        return $this->id;
     }
 
     /**
