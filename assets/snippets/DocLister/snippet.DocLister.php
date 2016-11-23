@@ -32,8 +32,8 @@ if ($classname != 'DocLister' && file_exists($dir . $controller . ".php") && !cl
 if (class_exists($classname, false) && $classname != 'DocLister') {
     $DocLister = new $classname($modx, $modx->Event->params, $_time);
     $data = $DocLister->getDocs();
-    $out = isset($modx->Event->params['api']) ? jsonHelper::json_format($DocLister->getJSON($data,
-        $modx->Event->params['api'])) : $DocLister->render();
+    $out = isset($modx->Event->params['api']) ? $DocLister->getJSON($data,
+        $modx->Event->params['api']) : $DocLister->render();
     if (isset($_SESSION['usertype']) && $_SESSION['usertype'] == 'manager') {
         $debug = $DocLister->debug->showLog();
     } else {

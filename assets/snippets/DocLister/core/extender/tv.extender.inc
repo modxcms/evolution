@@ -238,7 +238,7 @@ class tv_DL_Extender extends extDocLister
         $dTV = explode(',', $this->DocLister->getCFGDef('tvSortWithDefault', ''));
         $dTV[] = $name;
         $tvList = implode(",", array_unique($dTV));
-        $this->DocLister->setConfig(array('tvSortWithDefault' => $tvList));
+        $this->DocLister->config->setConfig(array('tvSortWithDefault' => $tvList));
 
         return $tvList;
     }
