@@ -98,7 +98,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN {$tbl_member_groups} AS groups ON groups.user_group = groupnames.id
 			LEFT JOIN {$tbl_manager_users} AS users ON users.id = groups.member",
 		'',
-		'groupnames.name'
+		'groupnames.name, user_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
@@ -222,7 +222,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN {$tbl_membergroup_access} AS groupacc ON groupacc.membergroup = groupnames.id
 			LEFT JOIN {$tbl_documentgroup_names} AS dgnames ON dgnames.id = groupacc.documentgroup",
 		'',
-		'name'
+		'name, dg_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';

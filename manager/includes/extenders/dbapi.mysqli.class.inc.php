@@ -136,9 +136,14 @@ class DBAPI {
 
 	function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
 		global $modx;
+		
+		if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
+		if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+		
 		if (!$from) {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::select().");
 		} else {
+			$fields = $this->replaceFullTableName($fields);
 			$from = $this->replaceFullTableName($from);
 			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
 			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
@@ -428,5 +433,24 @@ class DBAPI {
 	function dataSeek($result, $row_number) {
 		return $result->data_seek($row_number);
 	}
+	
+    function _getFieldsStringFromArray($fields=array()) {
+        
+        if(empty($fields)) return '*';
+        
+        $_ = array();
+        foreach($fields as $k=>$v) {
+            if($k!==$v) $_[] = "{$v} as {$k}";
+            else        $_[] = $v;
+        }
+        return join(',', $_);
+    }
+    
+    function _getFromStringFromArray($tables=array()) {
+        $_ = array();
+        foreach($tables as $k=>$v) {
+            $_[] = $v;
+        }
+        return join(' ', $_);
+    }
 }
-?>
