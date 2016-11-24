@@ -301,8 +301,7 @@ class MODIFIERS {
                 if(!$opt) $path = $value;
                 else      $path = $opt;
                 if(strpos($path,MODX_MANAGER_PATH)!==false) exit('Can not read core path');
-                if(!$opt) $path = $value;
-                else      $path = $opt;
+                if(strpos($path,$modx->config['base_path'])===false) $path = ltrim($path,'/');
                 $this->condition[] = intval($cmd($path)!==false);break;
             case 'is_image':
                 if(!$opt) $path = $value;
@@ -503,11 +502,12 @@ class MODIFIERS {
                     $str = '';
                 }
                 if($len==='') $len = 100;
+                if(abs($len) > $this->strlen($value)) $str ='';
                 if(preg_match('/^[1-9][0-9]*$/',$len)) {
                     return $this->substr($value,0,$len) . $str;
                 }
                 elseif(preg_match('/^\-[1-9][0-9]*$/',$len)) {
-                    return $this->substr($value,$len) . $str;
+                    return $str . $this->substr($value,$len);
                 }
                 break;
             case 'summary':

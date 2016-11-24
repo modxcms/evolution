@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	header('HTTP/1.0 404 Not Found');exit('error');
+}
 include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
@@ -17,6 +20,7 @@ startCMSSession();
 include_once("{$core_path}document.parser.class.inc.php");
 $modx = new DocumentParser;
 $modx->loadExtension('ManagerAPI');
+$modx->loadExtension('phpass');
 $modx->getSettings();
 $etomite = &$modx;
 
@@ -167,7 +171,8 @@ if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
 {
 	// check user password - local authentication
 	$hashType = $modx->manager->getHashType($dbasePassword);
-	if($hashType=='md5')     $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
+	if($hashType=='phpass')  $matchPassword = login($username,$givenPassword,$dbasePassword);
+	elseif($hashType=='md5') $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
 	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
 	else                     $matchPassword = false;
 }
@@ -281,6 +286,11 @@ function jsAlert($msg){
     else                  echo $msg."\n";
 }
 
+function login($username,$givenPassword,$dbasePassword) {
+	global $modx;
+	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
+}
+
 function loginV1($internalKey,$givenPassword,$dbasePassword,$username) {
 	global $modx;
 	
@@ -297,10 +307,8 @@ function loginV1($internalKey,$givenPassword,$dbasePassword,$username) {
 	if($dbasePassword != $modx->manager->genV1Hash($givenPassword, $internalKey)) {
 		return false;
 	}
-	elseif(isset($bk_pwd_hash_algo)) {
-		$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
-		updateNewHash($username,$givenPassword,$internalKey);
-	}
+	
+	updateNewHash($username,$givenPassword);
 	
 	return true;
 }
@@ -309,15 +317,15 @@ function loginMD5($internalKey,$givenPassword,$dbasePassword,$username) {
 	global $modx;
 	
 	if($dbasePassword != md5($givenPassword)) return false;
-	updateNewHash($username,$givenPassword,$internalKey);
+	updateNewHash($username,$givenPassword);
 	return true;
 }
 
-function updateNewHash($username,$password,$internalKey) {
+function updateNewHash($username,$password) {
 	global $modx;
 	
 	$field = array();
-	$field['password'] = $modx->manager->genV1Hash($password, $internalKey);
+	$field['password'] = $modx->phpass->HashPassword($password);
 	$modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
 }
 

@@ -137,7 +137,7 @@ class DocumentParser {
     /**
      * Loads an extension from the extenders folder.
      * You can load any extension creating a boot file:
-     * MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php"
+     * MODX_MANAGER_PATH."includes/extenders/ex_{$extname}.inc.php"
      * $extname - extension name in lowercase
      *
      * @return boolean
@@ -153,7 +153,7 @@ class DocumentParser {
         }
         if( ! $out && $flag){
             $extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
-            $filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
+            $filename = MODX_MANAGER_PATH."includes/extenders/ex_{$extname}.inc.php";
             $out = is_file($filename) ? include $filename : false;
         }
         if($out && !in_array($extname, $this->extensions)){
