@@ -239,7 +239,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
       <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
       <?php $style = $modx->config['settings_version']!=$modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; ?>
       <?php 
-        if ($modx->hasPermission('view_help')) {
+        if ($modx->hasPermission('help')) {
         echo sprintf('<span onclick="top.main.document.location.href=\'index.php?a=9#version_notices\'" style="cursor:pointer" class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);
         } else
         {
