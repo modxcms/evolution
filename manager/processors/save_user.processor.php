@@ -116,7 +116,7 @@ switch ($input['mode']) {
 		$internalKey = $modx->db->insert($field, $tbl_manager_users);
 
 		$field = array();
-		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
+		$field['password'] = $modx->manager->genV1Hash($newpassword, $internalKey);
 		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
