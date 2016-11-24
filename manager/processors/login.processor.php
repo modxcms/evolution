@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	header('HTTP/1.0 404 Not Found');exit('error');
+}
 include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
