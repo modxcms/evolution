@@ -1128,7 +1128,7 @@ class DocumentParser {
             if    (substr($split,0,5)==='<@IF:')     $scope = '@IF';
             elseif(substr($split,0,9)==='<@ELSEIF:') $scope = '@ELSEIF';
             elseif(substr($split,0,6)==='<@ELSE')    $scope = '@ELSE';
-            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '';
+            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '@ENDIF';
             else exit('Unknown error '.__LINE__);
             
             if($scope==='@IF' || $scope==='@ELSEIF') {
@@ -1180,7 +1180,7 @@ class DocumentParser {
                 $content .= $text;
                 $excute = true;
             }
-            else {
+            elseif($scope==='@ENDIF') {
                 list(, $text) = explode('>', $split, 2);
                 $content .= $text;
                 $excute = false;
