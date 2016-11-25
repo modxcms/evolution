@@ -120,7 +120,7 @@ if(isset($_REQUEST['submitok'])) {
 
  $fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
  $where  = $sqladd;
-
+ 
  $rs = $modx->db->select($fields,$tbl_site_content,$where,'id');
  $limit = $modx->db->getRecordCount($rs);
  ?>
