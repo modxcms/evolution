@@ -6,14 +6,14 @@
  * @date 2016/11/24
  * @author The MODX Project Team
  *
- * @language English
+ * @language Russian
  * @package modx
  * @subpackage manager
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
-$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+$modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX - это <a href="http://rtfm.modx.com/evolution/1.0/getting-started/what-is-modx" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -68,7 +68,7 @@ $_lang["allow_mgr_access"] = 'Доступ к интерфейсу систем�
 $_lang["allow_mgr_access_message"] = 'Выберите этот параметр для разрешения / запрета доступа к системе управления сайтом. <b>ПРИМЕЧАНИЕ:</b> если параметр отключен, пользователь будет направлен на стартовую страницу системы управления или на начальную страницу сайта.';
 $_lang["already_deleted"] = 'уже удален.';
 $_lang["attachment"] = 'Прикрепленное';
-$_lang["author_infos"] = 'Информация про автора';
+$_lang["author_infos"] = 'Информация об авторах';
 $_lang["automatic_alias_message"] = 'Выберите \'Да\' для того, чтобы система автоматически генерировала псевдонимы на основе заголовков страниц (для транслитерации русских символов настройте плагин TransAlias).';
 $_lang["automatic_alias_title"] = 'Автоматически генерировать псевдоним:';
 $_lang["backup"] = 'Бэкап';

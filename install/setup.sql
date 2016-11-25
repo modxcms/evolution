@@ -793,6 +793,8 @@ ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues` ADD FULLTEXT `value_ft_idx` (`value`);
 
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues` ADD UNIQUE INDEX `ix_tvid_contentid` (`tmplvarid`,`contentid`);
+
 ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`;
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_templateid`;
