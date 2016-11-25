@@ -137,7 +137,7 @@ class DocumentParser {
     /**
      * Loads an extension from the extenders folder.
      * You can load any extension creating a boot file:
-     * MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php"
+     * MODX_MANAGER_PATH."includes/extenders/ex_{$extname}.inc.php"
      * $extname - extension name in lowercase
      *
      * @return boolean
@@ -153,7 +153,7 @@ class DocumentParser {
         }
         if( ! $out && $flag){
             $extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
-            $filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
+            $filename = MODX_MANAGER_PATH."includes/extenders/ex_{$extname}.inc.php";
             $out = is_file($filename) ? include $filename : false;
         }
         if($out && !in_array($extname, $this->extensions)){
@@ -1108,8 +1108,14 @@ class DocumentParser {
 
     function mergeConditionalTagsContent($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>')
     {
+        $bt = md5($content);
+        
+        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ',$iftag,$content);
         if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
         if(strpos($content,$iftag)===false)          return $content;
+        if(strpos($content,'<!--@ELSEIF:')!==false)  $content = str_replace('<!--@ELSEIF:', $elseiftag,  $content);
+        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', $elsetag,   $content);
+        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->',$endiftag,$content);
         if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);
         
         $_ = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
@@ -1122,20 +1128,30 @@ class DocumentParser {
             if($i===0) {
                 $content = $split;
                 $excute  = false;
+                $depth = 0;
                 continue;
             }
             
             if    (substr($split,0,5)==='<@IF:')     $scope = '@IF';
             elseif(substr($split,0,9)==='<@ELSEIF:') $scope = '@ELSEIF';
             elseif(substr($split,0,6)==='<@ELSE')    $scope = '@ELSE';
-            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '';
+            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '@ENDIF';
             else exit('Unknown error '.__LINE__);
+            
+            if($scope==='@IF')    $depth++;
+            if(1<$depth) {
+                if($scope==='@ENDIF') $depth--;
+                if($excute) $content .= $split;
+                continue;
+            }
+            if($scope==='@ENDIF') $depth--;
             
             if($scope==='@IF' || $scope==='@ELSEIF') {
                 if($excute) continue;
                 $_ = md5('@:>@');
                 if(strpos($split,':>')!==false) $split = str_replace(':>', ':'.$_, $split);
                 list($cmd, $text) = explode('>', $split, 2);
+                $cmd = rtrim($cmd,'-');
                 if(strpos($cmd,$_)!==false)  $cmd  = str_replace($_, '>', $cmd);
                 if(strpos($text,$_)!==false) $text = str_replace($_, '>', $text);
                 $cmd = substr($cmd,strpos($cmd,':')+1);
@@ -1180,12 +1196,16 @@ class DocumentParser {
                 $content .= $text;
                 $excute = true;
             }
-            else {
+            elseif($scope==='@ENDIF') {
                 list(, $text) = explode('>', $split, 2);
                 $content .= $text;
                 $excute = false;
             }
         }
+        
+        if(strpos($content,$iftag) && $bt!==md5($content))
+            $content = $this->mergeConditionalTagsContent($content, $iftag, $elseiftag, $elsetag, $endiftag);
+        
         return $content;
     }
     
@@ -4631,7 +4651,12 @@ class DocumentParser {
     function addSnippet($name, $phpCode) {
         $this->snippetCache[$name] = $phpCode;
     }
-    /***************************************************************************************/
+    
+    function addChunk($name, $text) {
+        $this->chunkCache[$name] = $text;
+    }
+    
+/***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
 
