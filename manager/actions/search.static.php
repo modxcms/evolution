@@ -108,7 +108,7 @@ if(isset($_REQUEST['submitok'])) {
   }
 
   $tbl_site_content = $modx->getFullTableName('site_content');
- 
+  
   $sqladd .= isset($searchid)       ? " id='{$searchid}' " : '';
   $sqladd .= $templateid!==''       ? (isset($searchid) ? " AND ":"")   ." template='{$templateid}' " : '';
   $sqladd .= $searchfields!=''      ? ($templateid!=='' ? " AND ":"")  ." pagetitle LIKE '%{$searchfields}%' " : '';
