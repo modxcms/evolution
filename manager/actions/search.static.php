@@ -92,7 +92,7 @@ if(isset($_REQUEST['submitok'])) {
   $searchlongtitle = $modx->db->escape($_REQUEST['searchfields']);
 
   if(isset($_REQUEST['url']) && $_REQUEST['url']!=='') {
-    if(is_int((int)$_REQUEST['url'])) {
+    if(is_int($_REQUEST['url'])) {
 	    $searchid = $_REQUEST['url'];
     } else {
 	    $url                 = $modx->db->escape($_REQUEST['url']);
