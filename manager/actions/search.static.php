@@ -92,7 +92,7 @@ if(isset($_REQUEST['submitok'])) {
   $searchlongtitle = $modx->db->escape($_REQUEST['searchfields']);
 
   if(isset($_REQUEST['url']) && $_REQUEST['url']!=='') {
-    if(is_int($_REQUEST['url'])) {
+    if(is_int((int)$_REQUEST['url'])) {
 	    $searchid = $_REQUEST['url'];
     } else {
 	    $url                 = $modx->db->escape($_REQUEST['url']);
@@ -111,7 +111,7 @@ if(isset($_REQUEST['submitok'])) {
   
   $sqladd .= isset($searchid)       ? " id='{$searchid}' " : '';
   $sqladd .= $templateid!==''       ? (isset($searchid) ? " AND ":"")   ." template='{$templateid}' " : '';
-  $sqladd .= $searchfields!=''      ? ($templateid!=='' ? " AND ":"")  ." pagetitle LIKE '%{$searchfields}%' " : '';
+  $sqladd .= $searchfields!=''      ? ($templateid!=='' ? " AND ":($sqladd!=''?" OR " : ''))  ." pagetitle LIKE '%{$searchfields}%' " : '';
   $sqladd .= $searchlongtitle!=''   ? " OR longtitle LIKE '%{$searchlongtitle}%' " : '';
   $sqladd .= $search_alias!=''      ? " OR alias LIKE '%{$search_alias}%' " : '';
   if($sqladd!=='' && $searchcontent!=='')
