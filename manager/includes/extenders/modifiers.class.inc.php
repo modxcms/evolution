@@ -696,9 +696,9 @@ class MODIFIERS {
                 $menutitle = $this->getDocumentObject($value,'menutitle');
                 return $menutitle ? $menutitle : $pagetitle;
             case 'templatename':
-                $template = $this->getDocumentObject($value,'template');
-                $templateObject = $modx->db->getObject('site_templates',"id='{$template}'");
-                return $templateObject !== false ? $templateObject->templatename : '(blank)';
+                $rs = $modx->db->select('templatename','[+prefix+]site_templates',"id='{$value}'");
+                $templateName = $modx->db->getValue($rs);
+                return !$templateName ? '(blank)' : $templateName;
             case 'getfield':
                 if(!$opt) $opt = 'content';
                 return $modx->getField($opt,$value);
