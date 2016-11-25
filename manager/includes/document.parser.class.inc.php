@@ -1140,6 +1140,7 @@ class DocumentParser {
                 $_ = md5('@:>@');
                 if(strpos($split,':>')!==false) $split = str_replace(':>', ':'.$_, $split);
                 list($cmd, $text) = explode('>', $split, 2);
+                $cmd = rtrim($cmd,'-');
                 if(strpos($cmd,$_)!==false)  $cmd  = str_replace($_, '>', $cmd);
                 if(strpos($text,$_)!==false) $text = str_replace($_, '>', $text);
                 $cmd = substr($cmd,strpos($cmd,':')+1);
