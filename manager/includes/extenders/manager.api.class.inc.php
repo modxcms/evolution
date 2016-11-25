@@ -74,6 +74,7 @@ class ManagerAPI {
 		if($c==='$')                                      return 'phpass';
 		elseif(strlen($db_value)===32)                    return 'md5';
 		elseif($c!=='$' && strpos($db_value,'>')!==false) return 'v1';
+		else                                              return 'unknown';
 	}
 	
 	function genV1Hash($password, $seed='1')
