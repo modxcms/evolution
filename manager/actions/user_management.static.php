@@ -113,7 +113,7 @@ echo $cm->render();
 	<div>
 	<?php
 	$where = "";
-	if ($_SESSION['mgrRole'] != 1)
+	if (!$modx->hasPermission('save_role'))
 		$where .= (empty($where)?"":" AND ") . "mua.role != 1";
 	if (!empty($sqlQuery))
 		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";

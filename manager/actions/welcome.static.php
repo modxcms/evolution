@@ -30,24 +30,25 @@ JS;
 $modx->regClientScript($script);
 
 // set placeholders
-$modx->setPlaceholder('theme', $modx->config['manager_theme']);
-$modx->setPlaceholder('home', $_lang["home"]);
-$modx->setPlaceholder('logo_slogan', $_lang["logo_slogan"]);
-$modx->setPlaceholder('site_name', $site_name);
-$modx->setPlaceholder('welcome_title', $_lang['welcome_title']);
-$modx->setPlaceholder('resetgrid', $_lang['reset']);
-$modx->setPlaceholder('search', $_lang['search']);
+$ph = array();
+$ph['theme'] = $modx->config['manager_theme'];
+$ph['home'] = $_lang["home"];
+$ph['logo_slogan'] =  $_lang["logo_slogan"];
+$ph['site_name'] =  $site_name;
+$ph['welcome_title'] =  $_lang['welcome_title'];
+$ph['resetgrid'] =  $_lang['reset'];
+$ph['search'] =  $_lang['search'];
 
 // setup message info
 if ($modx->hasPermission('messages')) {
-    include_once MODX_MANAGER_PATH . 'includes/messageCount.inc.php';
+    include_once(MODX_MANAGER_PATH . 'includes/messageCount.inc.php');
     $_SESSION['nrtotalmessages'] = $nrtotalmessages;
     $_SESSION['nrnewmessages']   = $nrnewmessages;
     
     $msg = '<a href="index.php?a=10"><img src="' . $_style['icons_mail_large'] . '" /></a>
     <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10">' . $_lang["inbox"] . '</a>' . ($_SESSION['nrnewmessages'] > 0 ? " (<span style='color:red'>" . $_SESSION['nrnewmessages'] . "</span>)" : "") . '</span><br />
     <span class="comment">' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</span>';
-    $modx->setPlaceholder('MessageInfo', $msg);
+    $ph['MessageInfo'] =  $msg;
 }
 
 // setup icons
@@ -58,55 +59,55 @@ function wrapIcon($i)
 // setup icons
 if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=75"><i class="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'"> </i><br />'.$_lang['security'].'</a>';
-	$modx->setPlaceholder('SecurityIcon',wrapIcon($icon));
+	$ph['SecurityIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=99"><i class="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'"> </i><br />'.$_lang['web_users'].'</a>';
-	$modx->setPlaceholder('WebUserIcon',wrapIcon($icon));
+	$ph['WebUserIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
 	$icon = '<a class="hometblink" href="index.php?a=106"><i class="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'"> </i><br />'.$_lang['modules'].'</a>';
-	$modx->setPlaceholder('ModulesIcon',wrapIcon($icon));
+	$ph['ModulesIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
 	$icon = '<a class="hometblink" href="index.php?a=76"><i class="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'"> </i><br />'.$_lang['elements'].'</a>';
-	$modx->setPlaceholder('ResourcesIcon',wrapIcon($icon));
+	$ph['ResourcesIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('bk_manager')) {
 	$icon = '<a class="hometblink" href="index.php?a=93"><i class="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'"> </i><br />'.$_lang['backup'].'</a>';
-	$modx->setPlaceholder('BackupIcon',wrapIcon($icon));
+	$ph['BackupIcon'] = wrapIcon($icon);
 }
 if ($modx->hasPermission('help')) {
     $icon = '<a class="hometblink" href="index.php?a=9"><i class="'.$_style['icons_help_large'].'" alt="'. $_lang['help'].'" /> </i><br />' . $_lang['help'] . '</a>';
-    $modx->setPlaceholder('HelpIcon', wrapIcon($icon));
+    $ph['HelpIcon'] =  wrapIcon($icon);
 }
 // do some config checks
 if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
-    include_once "config_check.inc.php";
-    $modx->setPlaceholder('settings_config', $_lang['settings_config']);
-    $modx->setPlaceholder('configcheck_title', $_lang['configcheck_title']);
+    include_once(MODX_MANAGER_PATH.'includes/config_check.inc.php');
+    $ph['settings_config'] =  $_lang['settings_config'];
+    $ph['configcheck_title'] =  $_lang['configcheck_title'];
     if ($config_check_results != $_lang['configcheck_ok']) {
-        $modx->setPlaceholder('config_check_results', $config_check_results);
-        $modx->setPlaceholder('config_display', 'block');
+        $ph['config_check_results'] =  $config_check_results;
+        $ph['config_display'] =  'block';
     } else {
-        $modx->setPlaceholder('config_display', 'none');
+        $ph['config_display'] =  'none';
     }
 } else {
-    $modx->setPlaceholder('config_display', 'none');
+    $ph['config_display'] =  'none';
 }
 
 // include rss feeds for important forum topics
-include_once "rss.inc.php";
+include_once(MODX_MANAGER_PATH.'includes/rss.inc.php');
 
 // modx news
-$modx->setPlaceholder('modx_news', $_lang["modx_news_tab"]);
-$modx->setPlaceholder('modx_news_title', $_lang["modx_news_title"]);
-$modx->setPlaceholder('modx_news_content', $feedData['modx_news_content']);
+$ph['modx_news'] =  $_lang["modx_news_tab"];
+$ph['modx_news_title'] =  $_lang["modx_news_title"];
+$ph['modx_news_content'] =  $feedData['modx_news_content'];
 
 // security notices
-$modx->setPlaceholder('modx_security_notices', $_lang["security_notices_tab"]);
-$modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_title"]);
-$modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
+$ph['modx_security_notices'] =  $_lang["security_notices_tab"];
+$ph['modx_security_notices_title'] =  $_lang["security_notices_title"];
+$ph['modx_security_notices_content'] =  $feedData['modx_security_notices_content'];
 
 // recent document info
 $html  = '<div class="table-responsive">
@@ -224,13 +225,13 @@ else {
 }
 
 $html .= '</table></div>';
-$modx->setPlaceholder('recent_docs', $_lang['recent_docs']);
-$modx->setPlaceholder('activity_title', $_lang['activity_title']);
-$modx->setPlaceholder('RecentInfo', $html);
+$ph['recent_docs'] =  $_lang['recent_docs'];
+$ph['activity_title'] =  $_lang['activity_title'];
+$ph['RecentInfo'] =  $html;
 
 // user info
-$modx->setPlaceholder('info', $_lang['info']);
-$modx->setPlaceholder('yourinfo_title', $_lang['yourinfo_title']);
+$ph['info'] =  $_lang['info'];
+$ph['yourinfo_title'] =  $_lang['yourinfo_title'];
 $html = '
     <table class="table table-hover table-condensed">
       <tr>
@@ -255,14 +256,14 @@ $html = '
       </tr>
     </table>
 ';
-$modx->setPlaceholder('UserInfo', $html);
+$ph['UserInfo'] =  $html;
 
 // online users
-$modx->setPlaceholder('online', $_lang['online']);
-$modx->setPlaceholder('onlineusers_title', $_lang['onlineusers_title']);
+$ph['online'] =  $_lang['online'];
+$ph['onlineusers_title'] =  $_lang['onlineusers_title'];
 $timetocheck = (time() - (60 * 20)); //+$server_offset_time;
 
-include_once "actionlist.inc.php";
+include_once(MODX_MANAGER_PATH.'includes/actionlist.inc.php');
 
 $rs    = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
 $limit = $modx->db->getRecordCount($rs);
@@ -285,8 +286,9 @@ if ($limit < 1) {
         ';
     while ($activeusers = $modx->db->getRow($rs)) {
         $currentaction = getAction($activeusers['action'], $activeusers['id']);
-        $webicon       = ($activeusers['internalKey'] < 0) ? "<img src='" . $_style["tree_globe"] . "' alt='Web user' />" : "";
-      $html .= "<tr><td><strong>" . $activeusers['username'] . "</strong></td><td>$webicon&nbsp;" . abs($activeusers['internalKey']) . "</td><td>" . $activeusers['ip'] . "</td><td>" . strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time) . "</td><td>$currentaction</td></tr>";
+        $webicon       = ($activeusers['internalKey'] < 0) ? sprintf('<img src="%s" alt="Web user" />',$_style["tree_globe"]) : '';
+        $params = array($activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
+        $html .= vsprintf('<tr><td><strong>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
     }
     $html .= '
                 </tbody>
@@ -294,27 +296,27 @@ if ($limit < 1) {
                 </div>
         ';
 }
-$modx->setPlaceholder('OnlineInfo', $html);
+$ph['OnlineInfo'] =  $html;
 
 // invoke event OnManagerWelcomePrerender
 $evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomePrerender', $output);
+    $ph['OnManagerWelcomePrerender'] =  $output;
 }
 
 // invoke event OnManagerWelcomeHome
 $evtOut = $modx->invokeEvent('OnManagerWelcomeHome');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeHome', $output);
+    $ph['OnManagerWelcomeHome'] =  $output;
 }
 
 // invoke event OnManagerWelcomeRender
 $evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeRender', $output);
+    $ph['OnManagerWelcomeRender'] =  $output;
 }
 
 // load template
@@ -354,8 +356,13 @@ if (substr($target, 0, 1) === '@') {
 }
 
 // merge placeholders
-$welcome_tpl = $modx->mergePlaceholderContent($welcome_tpl);
-$welcome_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $welcome_tpl); //cleanup
+$welcome_tpl = $modx->mergeConditionalTagsContent($welcome_tpl);
+$welcome_tpl = $modx->mergeSettingsContent($welcome_tpl);
+$welcome_tpl = $modx->parseText($welcome_tpl,$ph);
+$welcome_tpl = $modx->parseText($welcome_tpl,$_lang, '[%','%]');
+$welcome_tpl = $modx->parseText($welcome_tpl,$_style,'[&','&]');
+$welcome_tpl = $modx->sweepGarbageStrings($welcome_tpl); //cleanup
+
 if ($js = $modx->getRegisteredClientScripts()) {
     $welcome_tpl .= $js;
 }
