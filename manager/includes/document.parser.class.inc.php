@@ -4615,7 +4615,7 @@ class DocumentParser {
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
-        $_ = array('[* *]','[( )]','{{ }}','[[ ]]');
+        $_ = array('[* *]','[( )]','{{ }}','[[ ]]','[+ +]');
         foreach($_ as $brackets) {
             list($left,$right) = explode(' ', $brackets);
             if(strpos($content,$left)!==false) {
