@@ -68,6 +68,7 @@ class DocumentParser {
     public $useConditional = false;
     protected $systemCacheKey = null;
     var $snipLapCount;
+    var $messageQuitCount;
 
     /**
      * Document constructor
@@ -4703,7 +4704,10 @@ class DocumentParser {
     }
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
-
+        
+        if(0<$this->messageQuitCount) return;
+        $this->messageQuitCount++;
+        
         if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');
