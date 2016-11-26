@@ -2514,7 +2514,7 @@ class DocumentParser {
      */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
-        if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
+        if (strpos($GLOBALS['database_connection_charset'],'utf8')===0 && extension_loaded('mbstring')) {
             $esc_source = mb_substr($source, 0, 50 , "UTF-8");
         } else {
             $esc_source = substr($source, 0, 50);
