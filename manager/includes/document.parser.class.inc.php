@@ -68,6 +68,7 @@ class DocumentParser {
     public $useConditional = false;
     protected $systemCacheKey = null;
     var $snipLapCount;
+    var $messageQuitCount;
 
     /**
      * Document constructor
@@ -667,7 +668,7 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
-        $this->documentOutput = $this->sweepGarbageStrings($this->documentOutput);
+        $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
         
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+')!==false) {
@@ -692,7 +693,7 @@ class DocumentParser {
                     // strip title of special characters
                     $name= $this->documentObject['pagetitle'];
                     $name= strip_tags($name);
-                    $name= $this->sweepGarbageStrings($name);
+                    $name= $this->cleanUpMODXTags($name);
                     $name= strtolower($name);
                     $name= preg_replace('/&.+?;/', '', $name); // kill entities
                     $name= preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
@@ -2514,7 +2515,7 @@ class DocumentParser {
      */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
-        if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
+        if (strpos($GLOBALS['database_connection_charset'],'utf8')===0 && extension_loaded('mbstring')) {
             $esc_source = mb_substr($source, 0, 50 , "UTF-8");
         } else {
             $esc_source = substr($source, 0, 50);
@@ -4608,14 +4609,14 @@ class DocumentParser {
         return str_replace($sanitize_seed, '', $string);
     }
     
-    function sweepGarbageStrings($content='') {
+    function cleanUpMODXTags($content='') {
         global $sanitize_seed;
         
         if(strpos($string,$sanitize_seed)!==false) $content = str_replace($sanitize_seed, '', $content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
-        $_ = array('[* *]','[( )]','{{ }}','[[ ]]');
+        $_ = array('[* *]','[( )]','{{ }}','[[ ]]','[+ +]');
         foreach($_ as $brackets) {
             list($left,$right) = explode(' ', $brackets);
             if(strpos($content,$left)!==false) {
@@ -4703,7 +4704,10 @@ class DocumentParser {
     }
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
-
+        
+        if(0<$this->messageQuitCount) return;
+        $this->messageQuitCount++;
+        
         if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
         $MakeTable = new MakeTable();
         $MakeTable->setTableClass('grid');

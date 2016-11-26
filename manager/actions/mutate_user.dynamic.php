@@ -325,7 +325,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
             <td>
               <?php
 
-              $rs = $modx->db->select('name, id', $modx->getFullTableName('user_roles'), ($_SESSION['mgrRole'] == 1) ? '' : 'id != 1');
+              $rs = $modx->db->select('name, id', '[+prefix+]user_roles', ($modx->hasPermission('save_role')) ? '' : 'id != 1');
               ?>
               <select name="role" class="inputBox" onchange='documentDirty=true;' style="width:300px">
                 <?php
