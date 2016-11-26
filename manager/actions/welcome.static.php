@@ -109,125 +109,9 @@ $ph['modx_security_notices'] =  $_lang["security_notices_tab"];
 $ph['modx_security_notices_title'] =  $_lang["security_notices_title"];
 $ph['modx_security_notices_content'] =  $feedData['modx_security_notices_content'];
 
-// recent document info
-$html  = '<div class="table-responsive">
-<table class="table table-hover table-condensed">
-<thead>
-<tr>
-<th style="width: 50px;">' . $_lang["id"] . '</th>
-<th>' . $_lang["resource_title"] . '</th>
-<th style="width: 140px;">' . $_lang['page_data_edited'] . '</th>
-<th style="width: 180px;">' . $_lang["user"] . '</th>
-<th style="width: 180px; text-align: right;">' . $_lang["mgrlog_action"] . '</th>
-</tr>
-</thead>';
-
-$rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable, template', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
-
-$limit = $modx->db->getRecordCount($rs);
-
-if ($limit < 1) {
-    $html .= '<tr><td>' . $_lang['no_activity_message'] . '</td></tr>';
-} 
-
-else {
-    while ($content = $modx->db->getRow($rs)) {
-        $editedby  = $content['editedby'];
-        $editedbyu = $modx->getUserInfo($editedby);
-        $html .= '<tr><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
-      
-        <span class="label label-info">' . $content['id'] . '</span></td><td>';
-        if ($content['deleted'] == 1) {
-            $html .= '<a class="deleted" ';
-        } else if ($content['published'] == 0) {
-            $html .= '<a class="unpublished" ';
-        } else {
-            $html .= '<a class="published" ';
-        }
-        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
-        <td style="text-align: right;">';
-        
-        if ($modx->hasPermission('edit_document')) {
-            $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
-        }
-        
-        if ($content['deleted'] == 1) {
-            $html .= '<a class="btn btn-xs btn-info disabled"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
-        } else {
-            $html .= '<a class="btn btn-xs btn-info"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
-        }
-        if ($modx->hasPermission('delete_document')) {
-            if ($content['deleted'] == 0) {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_delete_record"].'\')" class="btn btn-xs btn-danger"  title="' . $_lang["delete_resource"] . '" href="index.php?a=6&amp;id=' . $content['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
-            } else {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_undelete"].'\')" class="btn btn-xs btn-success"  title="' . $_lang["undelete_resource"] . '" href="index.php?a=63&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
-            }
-        }
-        if ($content['deleted'] == "1" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "0" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
-        } else {
-            $html .= '<a class="btn btn-xs btn-warning"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=62&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
-        }
-        $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="' . $_lang["resource_overview"] . '" data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="fa fa-info" aria-hidden="true"></i></button></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
-<li><b>' . $_lang["long_title"] . '</b>: ';
-        if ($content['longtitle'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else { 
-            $html .= '' . $content['longtitle'] . '</li> ';
-        }
-        $html .= ' <li><b>' . $_lang["description"] . '</b>: ';        
-        if ($content['description'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else {         
-            $html .= '' . $content['description'] . '</li> ';
-        }
-        $html .= '<li><b>' . $_lang["resource_summary"] . '</b>: ';
-        if ($content['introtext'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else {   
-            $html .= '' . $content['introtext'] . '</li> ';
-        }
-        $html .= '<li><b>' . $_lang['type'] . '</b>: ';
-        if ($content['type'] == 'reference') {
-            $html .= '' . $_lang['weblink'] . '</li>';
-        } else {
-            $html .= '' . $_lang['resource'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang["resource_alias"] . '</b>: ';
-        if ($content['alias'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else { 
-           $html .= '' . $content['alias'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang['page_data_cacheable'] . '</b>: '; 
-        if ($content['cacheable'] == 0) {
-            $html .= '' . $_lang['no'] . '<br/>';
-        } else {
-            $html .= '' . $_lang['yes'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang['resource_opt_show_menu'] . '</b>: ';
-        if ($content['hidemenu'] == 0) {
-            $html .= '' . $_lang['no'] . '<br/>';
-        } else {
-            $html .= '' . $_lang['yes'] . '</li>';
-        }
-        // Get Template name
-        $rst          = $modx->db->select('templatename', $modx->getFullTableName('site_templates'), 'id=' . $content['template'] .'');
-        $templatename = $modx->db->getValue($rst);
-        $html .= '<li><b>' . $_lang['page_data_template'] . '</b>: ' . $templatename . '</li>';
-        $html .= '</ul></div></div></td></tr>';
-        
-    }
-}
-
-$html .= '</table></div>';
+$ph['RecentInfo'] =  getRecentInfo();
 $ph['recent_docs'] =  $_lang['recent_docs'];
 $ph['activity_title'] =  $_lang['activity_title'];
-$ph['RecentInfo'] =  $html;
 
 // user info
 $ph['info'] =  $_lang['info'];
@@ -361,10 +245,118 @@ $welcome_tpl = $modx->mergeSettingsContent($welcome_tpl);
 $welcome_tpl = $modx->parseText($welcome_tpl,$ph);
 $welcome_tpl = $modx->parseText($welcome_tpl,$_lang, '[%','%]');
 $welcome_tpl = $modx->parseText($welcome_tpl,$_style,'[&','&]');
-$welcome_tpl = $modx->sweepGarbageStrings($welcome_tpl); //cleanup
+$welcome_tpl = $modx->cleanUpMODXTags($welcome_tpl); //cleanup
 
 if ($js = $modx->getRegisteredClientScripts()) {
     $welcome_tpl .= $js;
 }
 
 echo $welcome_tpl;
+
+
+
+function getRecentInfo() { // recent document info
+    global $modx, $_lang;
+    
+    $html  = '<div class="table-responsive">
+    <table class="table table-hover table-condensed">
+    <thead>
+    <tr>
+    <th style="width: 50px;">[%id%]</th>
+    <th>[%resource_title%]</th>
+    <th style="width: 140px;">[%page_data_edited%]</th>
+    <th style="width: 180px;">[%user%]</th>
+    <th style="width: 180px; text-align: right;">[%mgrlog_action%]</th>
+    </tr>
+    </thead>';
+    
+    $rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
+    
+    if ($modx->db->getRecordCount($rs) < 1) {
+        $html .= '<tr><td>[%no_activity_message%]</td></tr>';
+    }
+    else {
+        while ($content = $modx->db->getRow($rs)) {
+            
+            $editedbyu = $modx->getUserInfo($content['editedby']);
+            $content['username'] = $editedbyu['username'];
+            
+            $html .= '<tr><td data-toggle="collapse" data-target=".collapse[+id+]"><span class="label label-info">[+id+]</span></td><td>';
+            
+            $html .= '<a class=';
+            if ($content['deleted'] == 1)       $html .= '"deleted"';
+            elseif ($content['published'] == 0) $html .= '"unpublished"';
+            else                                $html .= '"published"';
+            
+            $html .= ' title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td><td data-toggle="collapse" data-target=".collapse[+id+]">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td><td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
+            <td style="text-align: right;">';
+            
+            if ($modx->hasPermission('edit_document')) {
+                $html .= '<a class="btn btn-xs btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+            }
+            
+            if ($content['deleted'] == 1) {
+                $html .= '<a class="btn btn-xs btn-info disabled"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+            } else {
+                $html .= '<a class="btn btn-xs btn-info"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+            }
+            
+            if ($modx->hasPermission('delete_document')) {
+                if ($content['deleted'] == 0) {
+                    $html .= '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+                } else {
+                    $html .= '<a onclick="return confirm(\'[%["confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+                }
+            }
+            
+            if ($content['deleted'] == 1 && $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            } elseif ($content['deleted'] == 1 && $content['published'] == 1) {
+                $html .= '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            } elseif ($content['deleted'] == 0 && $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+            } else {
+                $html .= '<a class="btn btn-xs btn-warning"  title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+            }
+            
+            $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info" aria-hidden="true"></i></button>';
+            
+            $html .='</td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse[+id+]"><div class="overview-body small"><ul>';
+            
+            $html .= ' <li><b>[%long_title%]</b>: ';
+            $html .= ($content['longtitle'] != '')     ? '[+longtitle+]'    : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= ' <li><b>[%description%]</b>: ';
+            $html .= ($content['description'] != '')   ? '[+description+] ' : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_summary%]</b>: ';
+            $html .= ($content['introtext'] != '')     ? '[+introtext+] '   : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%type%]</b>: ';
+            $html .= ($content['type'] != 'reference') ? '[%resource%]'     : '[%weblink%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_alias%]</b>: ';
+            $html .=  ($content['alias'] != '')        ? '[+alias+]'        : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%page_data_cacheable%]</b>: '; 
+            $html .= ($content['cacheable'] == 0)      ? '[%yes%]'          : '[%no%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_opt_show_menu%]</b>: ';
+            $html .= ($content['hidemenu'] == 0)       ? '[%yes%]'          : '[%no%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>';
+            $html .= '</ul></div></div></td></tr>';
+            $html = $modx->parseText($html,$content);
+        }
+    }
+    
+    $html .= '</table></div>';
+    return $html;
+}

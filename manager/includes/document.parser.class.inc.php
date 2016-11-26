@@ -668,7 +668,7 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
-        $this->documentOutput = $this->sweepGarbageStrings($this->documentOutput);
+        $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
         
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+')!==false) {
@@ -693,7 +693,7 @@ class DocumentParser {
                     // strip title of special characters
                     $name= $this->documentObject['pagetitle'];
                     $name= strip_tags($name);
-                    $name= $this->sweepGarbageStrings($name);
+                    $name= $this->cleanUpMODXTags($name);
                     $name= strtolower($name);
                     $name= preg_replace('/&.+?;/', '', $name); // kill entities
                     $name= preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
@@ -4609,7 +4609,7 @@ class DocumentParser {
         return str_replace($sanitize_seed, '', $string);
     }
     
-    function sweepGarbageStrings($content='') {
+    function cleanUpMODXTags($content='') {
         global $sanitize_seed;
         
         if(strpos($string,$sanitize_seed)!==false) $content = str_replace($sanitize_seed, '', $content);
