@@ -357,7 +357,7 @@ if (substr($target, 0, 1) === '@') {
 
 // merge placeholders
 $welcome_tpl = $modx->parseText($welcome_tpl,$ph);
-$welcome_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $welcome_tpl); //cleanup
+$welcome_tpl = $modx->sweepGarbageStrings($welcome_tpl); //cleanup
 if ($js = $modx->getRegisteredClientScripts()) {
     $welcome_tpl .= $js;
 }
