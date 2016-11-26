@@ -15,6 +15,8 @@ if(!$modx->config['lang_code']) {
     $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
 }
 
+if($_GET['a']==2) include_once('welcome.php');
+
 // Large Icons
 $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
 $_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
