@@ -356,8 +356,13 @@ if (substr($target, 0, 1) === '@') {
 }
 
 // merge placeholders
+$welcome_tpl = $modx->mergeConditionalTagsContent($welcome_tpl);
+$welcome_tpl = $modx->mergeSettingsContent($welcome_tpl);
 $welcome_tpl = $modx->parseText($welcome_tpl,$ph);
+$welcome_tpl = $modx->parseText($welcome_tpl,$_lang, '[%','%]');
+$welcome_tpl = $modx->parseText($welcome_tpl,$_style,'[&','&]');
 $welcome_tpl = $modx->sweepGarbageStrings($welcome_tpl); //cleanup
+
 if ($js = $modx->getRegisteredClientScripts()) {
     $welcome_tpl .= $js;
 }
