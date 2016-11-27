@@ -1582,6 +1582,10 @@ class DocumentParser {
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
         }
+        elseif(substr($snip_name,0,1)==='@' && isset($this->pluginEvent[substr($snip_name,1)]))
+        {
+            return sprintf('return $this->invokeEvent("%s",$params);', $snip_name);
+        }
         else
         {
             $where = sprintf("name='%s'",$this->db->escape($snip_name));
