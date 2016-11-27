@@ -77,6 +77,5 @@ $c['jpegQuality']              = 90;
 $c['denyZipDownload']          = 1;
 $c['denyExtensionRename']      = 1;
 $c['showHiddenFiles']          = 1;
-$c['lock_interval']            = 15;
-$c['lock_release_delay']       = 30;
+$c['session_timeout']          = 15;
 $c['site_unavailable_message'] = $_lang['siteunavailable_message_default'];
