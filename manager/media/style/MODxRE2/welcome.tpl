@@ -6,7 +6,7 @@
 <div class="container-fluid dashboard">
 
   <!-- title-->
-  [+OnManagerWelcomePrerender+]
+  [[@OnManagerWelcomePrerender]]
   <!--div class="dashboard_header">
     <div class="row">
       <div class="col-sm-12">
@@ -31,7 +31,7 @@
   <!-- GridSter widgets -->
   <div class="gridster">
     <ul>
-      [+OnManagerWelcomeHome+]
+      [[@OnManagerWelcomeHome]]
       <!---Welcome Logo and buttons---> 
       <!--- panel -->
       <li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="2" data-sizey="6">
@@ -195,7 +195,7 @@
   </div>
   <!-- / GridStack widgets -->
 
-  [+OnManagerWelcomeRender+] 
+  [[@OnManagerWelcomeRender]] 
   <div class="container-fluid">
     <p class="text-muted pull-right">
       <a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[(site_name)]-evodashboard.grid,[(site_name)]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [%reset%]</a>
