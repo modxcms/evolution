@@ -2335,14 +2335,14 @@ class DocumentParser {
     function elementIsLocked($type, $id, $includeThisUser=false) {
         $id = intval($id);
         $type = intval($type);
-        if(!$type || !$id) return false;
+        if(!$type || !$id) return NULL;
 
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
         
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
         
-        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return false;
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return NULL;
   
         if(isset($this->lockedElements[$type][$id])) {
             return $this->lockedElements[$type][$id];
