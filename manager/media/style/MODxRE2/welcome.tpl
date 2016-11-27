@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="wm_logo">
-          <img src='media/style/[(manager_theme)]/images/misc/logo-dashboard.png' alt='[%logo_slogan%]' />
+          <img src="media/style/[(manager_theme)]/images/misc/logo-dashboard.png" alt="[%logo_slogan%]" />
         </div>
         <h1>[(site_name)]</h1>
       </div>
