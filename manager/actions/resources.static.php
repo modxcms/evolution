@@ -76,10 +76,10 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $rowLock = $modx->elementIsLocked($lockElementType, $row['id'], true);
         if($rowLock && $modx->hasPermission('display_locks')) {
             if($rowLock['internalKey'] == $modx->getLoginUserID()) {
-                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockElementType],'firsthit_df'=>$rowLock['firsthit_df']));
+                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockElementType],'lasthit_df'=>$rowLock['lasthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
-                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_".$lockElementType], 'username'=>$rowLock['username'], 'firsthit_df'=>$rowLock['firsthit_df']));
+                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_".$lockElementType], 'username'=>$rowLock['username'], 'lasthit_df'=>$rowLock['lasthit_df']));
                 if($modx->hasPermission('remove_locks')) {
                     $lockedByUser = '<a href="#" onclick="unlockElement('.$lockElementType.', '.$row['id'].', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
                 } else {
