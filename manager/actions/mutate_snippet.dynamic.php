@@ -19,7 +19,6 @@ switch((int) $_REQUEST['a']) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table Names (alphabetical)
-$tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
 $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
@@ -376,7 +375,7 @@ function contains(a, obj) {
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
-                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
