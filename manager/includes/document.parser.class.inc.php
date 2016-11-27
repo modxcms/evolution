@@ -1335,22 +1335,22 @@ class DocumentParser {
         
         if(!$matches) return $content;
         $replace= array ();
-        foreach($matches[1] as $i=>$value) {
-            if(substr($value,0,2)==='$_') {
-                $replace[$i] = $this->_getSGVar($value);
+        foreach($matches[1] as $i=>$call) {
+            if(substr($call,0,2)==='$_') {
+                $replace[$i] = $this->_getSGVar($call);
                 continue;
             }
             $find = $i - 1;
             while( $find >= 0 )
             {
                 $tag = $matches[0][ $find ];
-                if(isset($replace[$find]) && strpos($value,$tag)!==false) {
-                    $value = str_replace($tag,$replace[$find],$value);
+                if(isset($replace[$find]) && strpos($call,$tag)!==false) {
+                    $call = str_replace($tag,$replace[$find],$call);
                     break;
                 }
                 $find--;
             }
-            $replace[$i] = $this->_get_snip_result($value);
+            $replace[$i] = $this->_get_snip_result($call);
         }
         $content = str_replace($matches[0], $replace, $content);
         return $content;
@@ -1581,6 +1581,10 @@ class DocumentParser {
                     $this->snippetCache["{$snip_name}Props"] = '';
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
+        }
+        elseif(substr($snip_name,0,1)==='@' && isset($this->pluginEvent[substr($snip_name,1)]))
+        {
+            return sprintf('return $this->invokeEvent("%s",$params);', $snip_name);
         }
         else
         {
@@ -4650,11 +4654,11 @@ class DocumentParser {
     }
     
     function addSnippet($name, $phpCode) {
-        $this->snippetCache[$name] = $phpCode;
+        $this->snippetCache['#'.$name] = $phpCode;
     }
     
     function addChunk($name, $text) {
-        $this->chunkCache[$name] = $text;
+        $this->chunkCache['#'.$name] = $text;
     }
     
 /***************************************************************************************/

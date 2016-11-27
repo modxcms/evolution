@@ -6,12 +6,12 @@
 <div class="container-fluid dashboard">
 
   <!-- title-->
-  [+OnManagerWelcomePrerender+]
+  [[@OnManagerWelcomePrerender]]
   <!--div class="dashboard_header">
     <div class="row">
       <div class="col-sm-12">
         <div class="wm_logo">
-          <img src='media/style/[(manager_theme)]/images/misc/logo-dashboard.png' alt='[%logo_slogan%]' />
+          <img src="media/style/[(manager_theme)]/images/misc/logo-dashboard.png" alt="[%logo_slogan%]" />
         </div>
         <h1>[(site_name)]</h1>
       </div>
@@ -31,7 +31,7 @@
   <!-- GridSter widgets -->
   <div class="gridster">
     <ul>
-      [+OnManagerWelcomeHome+]
+      [[@OnManagerWelcomeHome]]
       <!---Welcome Logo and buttons---> 
       <!--- panel -->
       <li id="modxwelcome_widget" data-row="1" data-col="1" data-sizex="2" data-sizey="6">
@@ -46,48 +46,48 @@
           </div>
           <div class="panel-body widget-stage sectionBody">
             <div class="wm_buttons">
-              <@IF:[[hasPermission?key=new_user]] OR [[hasPermission?key=edit_user]]>
+              <!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]-->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i><br />
                 [%security%]</a>
                 </span>
-              <@ENDIF>
-              <@IF:[[hasPermission?key=new_web_user]] OR [[hasPermission?key=edit_web_user]]>
+              <!--@ENDIF-->
+              <!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]-->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=99"><i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i><br />
                 [%web_users%]</a>
                 </span>
-              <@ENDIF>
-              <@IF:[[hasPermission?key=new_module]] OR [[hasPermission?key=edit_module]]>
+              <!--@ENDIF-->
+              <!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]-->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=106"><i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i><br />
                 [%modules%]</a>
                 </span>
-              <@ENDIF>
-              <@IF:[[hasAnyPermission:is(1)]] >
+              <!--@ENDIF-->
+              <!--@IF:[[#hasAnyPermission:is(1)]] -->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=76"><i class="[&icons_resources_large&]" alt="[%element_management%]"> </i><br />
                 [%elements%]</a>
                 </span>
-              <@ENDIF>
-              <@IF:[[hasPermission?key=bk_manager]]>
+              <!--@ENDIF-->
+              <!--@IF:[[#hasPermission?key=bk_manager]]-->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=93"><i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i><br />
                 [%backup%]</a>
                 </span>
-              <@ENDIF>
-              <@IF:[[hasPermission?key=help]] OR [[hasPermission?key=edit_module]]>
+              <!--@ENDIF-->
+              <!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]-->
                 <span class="wm_button" style="border:0">
                 <a class="hometblink" href="index.php?a=9"><i class="[&icons_help_large&]" alt="[%help%]"> </i><br />
                 [%help%]</a>
                 </span>
-              <@ENDIF>
+              <!--@ENDIF-->
             </div>
             <div class="userprofiletable">
                 <table class="table table-hover table-condensed">
                   <tr>
                     <td width="150">[%yourinfo_username%]</td>
-                    <td><b>[[getLoginUserName]]</b></td>
+                    <td><b>[[#getLoginUserName]]</b></td>
                   </tr>
                   <tr>
                     <td>[%yourinfo_role%]</td>
@@ -101,12 +101,12 @@
                     <td>[%yourinfo_total_logins%]</td>
                     <td><b>[[$_SESSION['mgrLogincount']:math('%s+1')]]</b></td>
                   </tr>
-                  <@IF:[[hasPermission?key=messages]]>
+                  <!--@IF:[[#hasPermission?key=messages]]-->
                   <tr>
                     <td>[%inbox%]</td>
-                    <td><a href="index.php?a=10"><b>[[getMessageCount]]</b></a></td>
+                    <td><a href="index.php?a=10"><b>[[#getMessageCount]]</b></a></td>
                   </tr>
-                  <@ENDIF>
+                  <!--@ENDIF-->
                 </table>
             </div>
           </div>
@@ -195,7 +195,7 @@
   </div>
   <!-- / GridStack widgets -->
 
-  [+OnManagerWelcomeRender+] 
+  [[@OnManagerWelcomeRender]] 
   <div class="container-fluid">
     <p class="text-muted pull-right">
       <a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[(site_name)]-evodashboard.grid,[(site_name)]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [%reset%]</a>
@@ -213,7 +213,6 @@
 
   var localdata_position = JSON.parse(localStorage.getItem('[(site_name)]-evodashboard.grid'));
   var localdata_states = JSON.parse(localStorage.getItem('[(site_name)]-evodashboard.states'));
-
 
   fnCreateGridster('[(site_name)]-evodashboard.grid', '[(site_name)]-evodashboard.states');
 </script>
