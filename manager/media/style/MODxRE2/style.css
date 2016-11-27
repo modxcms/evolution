@@ -3406,6 +3406,16 @@ table.actionButtons .searchtext {
 .modx-alert { display:block; margin:60px 10px 10px 10px; padding:1em; }
 .modx-alert.alert-error { background-color:#ffd0d0; border:1px solid #ff0000; color:#000; }
 
+tr.userIdle td { color:#aaa; }
+tr.userIdle td strong:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #aaa;
+    padding: 0 5px 0 0;
+    content:'\f017';
+}
+
 /* c-roleslist */
 
 .c-roleslist {
