@@ -4,26 +4,37 @@
 # Each sql command is separated by double lines \n\n 
 
 
-CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
+DROP TABLE IF EXISTS `{PREFIX}active_users`;
+
+CREATE TABLE `{PREFIX}active_users` (
   `internalKey` int(9) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
   `lasthit` int(20) NOT NULL default '0',
-  `id` int(10) default NULL,
   `action` varchar(10) NOT NULL default '',
-  `ip` varchar(50) NOT NULL default '',
+  `id` int(10) default NULL,
   PRIMARY KEY  (`internalKey`)
-) ENGINE=MyISAM COMMENT='Contains data about active users.';
+) ENGINE=MyISAM COMMENT='Contains data about last user action.';
 
-CREATE TABLE IF NOT EXISTS `{PREFIX}active_user_locks` (
+DROP TABLE IF EXISTS `{PREFIX}active_user_locks`;
+
+CREATE TABLE `{PREFIX}active_user_locks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `internalKey` int(9) NOT NULL default '0',
-  `username` varchar(50) NOT NULL default '',
-  `firsthit` int(20) NOT NULL default '0',
+  `elementType` int(1) NOT NULL default '0',
+  `elementId` int(10) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
-  `element` int(1) NOT NULL default '0',
   PRIMARY KEY(`id`),
-  UNIQUE INDEX  ix_element_id (`internalKey`,`element`,`id`)
-) ENGINE=MyISAM COMMENT='Contains data about all elements that are locked by active users.';
+  UNIQUE INDEX ix_element_id (`internalKey`,`elementType`,`elementId`)
+) ENGINE=MyISAM COMMENT='Contains data about locked elements.';
+
+DROP TABLE IF EXISTS `{PREFIX}active_user_sessions`;
+
+CREATE TABLE `{PREFIX}active_user_sessions` (
+  `internalKey` int(9) NOT NULL default '0',
+  `lasthit` int(20) NOT NULL default '0',
+  `ip` varchar(50) NOT NULL default '',
+  PRIMARY KEY(`internalKey`)
+) ENGINE=MyISAM COMMENT='Contains data about valid user sessions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -655,9 +666,6 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/javascr
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WHERE `type`='' AND `alias` REGEXP '\.css$';
 
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
-
-ALTER TABLE `{PREFIX}active_users`
-  MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
 
 ALTER TABLE `{PREFIX}documentgroup_names`
   MODIFY COLUMN `name` varchar(245) NOT NULL default '';
