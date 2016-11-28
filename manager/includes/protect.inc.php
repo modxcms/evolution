@@ -17,10 +17,7 @@ if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']
 
 // Unregister globals
 if (@ ini_get('register_globals')) {
-    foreach ($_REQUEST as $key => $value) {
-        $$key = null; // This is NOT paranoid because
-        unset ($$key); // unset may not work.
-    }
+    die();
 }
 
 global $sanitize_seed;

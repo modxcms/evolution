@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch((int) $_REQUEST['a']) {
+switch($modx->manager->action) {
   case 102:
     if(!$modx->hasPermission('edit_plugin')) {
       $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -18,7 +18,6 @@ switch((int) $_REQUEST['a']) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-$tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_plugins       = $modx->getFullTableName('site_plugins');
 $tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
 $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
@@ -404,7 +403,7 @@ var internal = <?php echo json_encode($internal); ?>;
 <form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
 
     <input type="hidden" name="id" value="<?php echo $content['id'];?>">
-    <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+    <input type="hidden" name="mode" value="<?php echo $modx->manager->action;?>">
 
     <h1 class="pagetitle">
       <span class="pagetitle-icon">
@@ -418,7 +417,7 @@ var internal = <?php echo json_encode($internal); ?>;
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
-                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
@@ -428,7 +427,7 @@ var internal = <?php echo json_encode($internal); ?>;
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_GET['a'] == '101') { ?>
+          <?php if ($modx->manager->action == '101') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -491,7 +490,7 @@ var internal = <?php echo json_encode($internal); ?>;
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
       </tr>
       <tr>     
-        <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
+        <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
       </tr>
 <?php endif;?>
     </table>

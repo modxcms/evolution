@@ -4,26 +4,37 @@
 # Each sql command is separated by double lines \n\n 
 
 
-CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
+DROP TABLE IF EXISTS `{PREFIX}active_users`;
+
+CREATE TABLE `{PREFIX}active_users` (
   `internalKey` int(9) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
   `lasthit` int(20) NOT NULL default '0',
-  `id` int(10) default NULL,
   `action` varchar(10) NOT NULL default '',
-  `ip` varchar(50) NOT NULL default '',
+  `id` int(10) default NULL,
   PRIMARY KEY  (`internalKey`)
-) ENGINE=MyISAM COMMENT='Contains data about active users.';
+) ENGINE=MyISAM COMMENT='Contains data about last user action.';
 
-CREATE TABLE IF NOT EXISTS `{PREFIX}active_user_locks` (
+DROP TABLE IF EXISTS `{PREFIX}active_user_locks`;
+
+CREATE TABLE `{PREFIX}active_user_locks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `internalKey` int(9) NOT NULL default '0',
-  `username` varchar(50) NOT NULL default '',
-  `firsthit` int(20) NOT NULL default '0',
+  `elementType` int(1) NOT NULL default '0',
+  `elementId` int(10) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
-  `element` int(1) NOT NULL default '0',
   PRIMARY KEY(`id`),
-  UNIQUE INDEX  ix_element_id (`internalKey`,`element`,`id`)
-) ENGINE=MyISAM COMMENT='Contains data about all elements that are locked by active users.';
+  UNIQUE INDEX ix_element_id (`internalKey`,`elementType`,`elementId`)
+) ENGINE=MyISAM COMMENT='Contains data about locked elements.';
+
+DROP TABLE IF EXISTS `{PREFIX}active_user_sessions`;
+
+CREATE TABLE `{PREFIX}active_user_sessions` (
+  `internalKey` int(9) NOT NULL default '0',
+  `lasthit` int(20) NOT NULL default '0',
+  `ip` varchar(50) NOT NULL default '',
+  PRIMARY KEY(`internalKey`)
+) ENGINE=MyISAM COMMENT='Contains data about valid user sessions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -656,9 +667,6 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WH
 
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
 
-ALTER TABLE `{PREFIX}active_users`
-  MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
-
 ALTER TABLE `{PREFIX}documentgroup_names`
   MODIFY COLUMN `name` varchar(245) NOT NULL default '';
 
@@ -853,11 +861,9 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxRE2'),
 ('settings_version',''),
-('show_meta','0'),
+('manager_theme','MODxRE2'),
 ('server_offset_time','0'),
-('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
 ('site_name','My MODX Site'),
@@ -865,91 +871,21 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('error_page','1'),
 ('unauthorized_page','1'),
 ('site_status','1'),
-('site_unavailable_message','The site is currently unavailable'),
-('track_visitors','0'),
-('top_howmany','10'),
 ('auto_template_logic','{AUTOTEMPLATELOGIC}'),
 ('default_template','3'),
 ('old_template',''),
-('publish_default','0'),
-('cache_default','1'),
-('search_default','1'),
-('friendly_urls','0'),
-('friendly_url_prefix',''),
-('friendly_url_suffix','.html'),
-('friendly_alias_urls','1'),
-('use_alias_path','1'),
+('cache_type','1'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
 ('failed_login_attempts','3'),
 ('blocked_minutes','60'),
 ('use_captcha','0'),
-('captcha_words','MODX,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
 ('emailsender','{ADMINEMAIL}'),
-('email_method','mail'),
-('smtp_auth','0'),
-('smtp_host',''),
-('smtp_port','25'),
-('smtp_username',''),
-('emailsubject','Your login details'),
-('number_of_logs','100'),
-('number_of_messages','30'),
-('number_of_results','20'),
 ('use_editor','1'),
 ('use_browser','1'),
-('which_browser','mcpuk'),
-('rb_base_dir',''),
-('rb_base_url',''),
-('which_editor','TinyMCE4'),
 ('fe_editor_lang','{MANAGERLANGUAGE}'),
-('fck_editor_toolbar','standard'),
-('fck_editor_autolang','0'),
-('editor_css_path',''),
-('editor_css_selectors',''),
-('strip_image_paths','1'),
-('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
-('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
-('upload_flash','fla,flv,swf'),
-('upload_files','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF'),
-('upload_maxsize','10485760'),
-('new_file_permissions','0644'),
-('new_folder_permissions','0755'),
-('filemanager_path',''),
-('theme_refresher',''),
-('manager_layout','4'),
-('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain,application/json'),
-('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
-('mail_check_timeperiod','60'),
-('manager_direction','ltr'),
-('tinymce4_theme','custom'),
-('tree_show_protected', '0'),
-('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
-('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
-('validate_referer', '1'),
-('datepicker_offset','-10'),
-('xhtml_urls','1'),
-('allow_duplicate_alias','0'),
-('automatic_alias','1'),
-('datetime_format','dd-mm-YYYY'),
-('warning_visibility', '1'),
-('remember_last_tab', '0'),
-('enable_bindings', '1'),
-('seostrict', '0'),
-('cache_type', '1'),
-('maxImageWidth', '1600'),
-('maxImageHeight', '1200'),
-('thumbWidth', '150'),
-('thumbHeight', '150'),
-('thumbsDir', '.thumbs'),
-('jpegQuality', '90'),
-('denyZipDownload', '0'),
-('denyExtensionRename', '0'),
-('showHiddenFiles', '0'),
-('docid_incrmnt_method', '0'),
-('make_folders', '0'),
-('tree_page_click', '27'),
-('clean_uploaded_filename', '1');
+('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
 (id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks) VALUES 

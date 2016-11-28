@@ -1,7 +1,7 @@
 /*
  * Small script to keep session alive in MODX
  */
-function keepMeAlive(imgName) {
+function keepMeAlive() {
     var sessionJSON = new Ajax('includes/session_keepalive.php?tok=' + document.getElementById('sessTokenInput').value + '&o=' + Math.random(), {
         method: 'get',
         onComplete: function(sessionResponse) {
@@ -12,4 +12,4 @@ function keepMeAlive(imgName) {
         }
     }).request();
 }
-window.setInterval("keepMeAlive()", 1000 * 600);
+window.setInterval(keepMeAlive, 1000 * 600); // Update session every 10min
