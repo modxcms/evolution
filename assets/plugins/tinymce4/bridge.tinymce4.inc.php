@@ -44,6 +44,8 @@ class tinymce4bridge extends modxRTEbridge
                 'custom_buttons1' => 'undo redo | cut copy paste | searchreplace | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | styleselect',
                 'custom_buttons2' => 'link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code',
                 // Provide empty values for parseText() #989
+                'template_docs' => '',
+                'template_chunks' => '',
                 'custom_buttons3' => '',
                 'custom_buttons4' => ''
             )
