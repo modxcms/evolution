@@ -4765,9 +4765,8 @@ class DocumentParser {
     }
     
     function safeEval($phpcode='',$evalmode='',$safe_functions='') {
-        // with_scan,with_scan_at_post,everytime_eval,dont_eval | default:with_scan;
         if($evalmode=='')       $evalmode       = $this->config['allow_eval'];
-        if($safe_functions=='') $safe_functions = $this->config['safe_functions_at_eval']; // 'time,date,strtotime';
+        if($safe_functions=='') $safe_functions = $this->config['safe_functions_at_eval'];
         
         modx_sanitize_gpc($phpcode);
         
