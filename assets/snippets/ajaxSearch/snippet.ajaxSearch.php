@@ -1,8 +1,30 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+/**
+ * AjaxSearch
+ *
+ * Ajax and non-Ajax search that supports highlighting of results
+ *
+ * @category 	snippet
+ * @version 	1.10.2
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Search
+ * @internal    @installset base, sample
+ * @documentation Cheatsheet [+site_url+]assets/snippets/ajaxSearch/documentation/AjaxSearch193_v1.pdf
+ * @documentation MODX Docs https://rtfm.modx.com/extras/evo/ajaxsearch
+ * @documentation Examples <b>assets/snippets/ajaxSearch/documentation</b>
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Coroico coroico@wangba.fr
+ * @author      Jason Coward jason@opengeek.com
+ * @author      Kyle Jaebker kjaebker@muddydogpaws.com
+ * @author      Ryan Thrash http://thrash.me
+ * @author      Many others since 2010
+ * @lastupdate  27/05/2015
+ */
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.10.1');
+define('AS_VERSION', '1.10.2');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file

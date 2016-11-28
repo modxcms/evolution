@@ -4,7 +4,6 @@
         <title>[+lang.DM_update_title+]</title>
         <link rel="stylesheet" type="text/css" href="media/style[+theme+]/style.css" />
         <script type="text/javascript" src="media/script/mootools/mootools.js"></script>
-        <script type="text/javascript" src="media/script/mootools/moodx.js"></script>
         <script type="text/javascript">
 	        function reset() {
 	           $('backform').submit();

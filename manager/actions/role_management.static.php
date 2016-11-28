@@ -7,10 +7,17 @@ if(!$modx->hasPermission('edit_user')) {
 ?>
 <!-- User Roles -->
 
-<h1><?php echo $_lang['role_management_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-legal"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['role_management_title']; ?>
+  </span>
+</h1>
 <div class="section">
 <div class="sectionBody">
-<p><?php echo $_lang['role_management_msg']; ?></p>
+<p class="element-edit-message"><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul class="actionButtons">
 	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
@@ -22,15 +29,15 @@ $limit = $modx->db->getRecordCount($rs);
 if($limit<1){
 	echo "<p>The request returned no roles!</p>";
 } else {
-	echo "<ul>";
+	echo '<ul class="c-roleslist">';
 	while ($row = $modx->db->getRow($rs)) {
 		if($row['id']==1) {
-			echo '<li><span style="width: 200px"><i>' . $row['name'] . '</i></span> - <i>' . $_lang['administrator_role_message'] . '</i></li>';
+          echo '<li class="c-roleslist-item c-roleslist-item--admin"><span class="c-roleslist-name">' . $row['name'] . '</span> <span class="c-roleslist-hyphen">-</span> <span class="c-roleslist-description">' . $_lang['administrator_role_message'] . '</span></li>';
 		} else {
-			echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=35">' . $row['name'] . '</a></span> - ' . $row['description'] . '</li>';
+          echo '<li class="c-roleslist-item"><span class="c-roleslist-name"><a href="index.php?id=' . $row['id'] . '&a=35">' . $row['name'] . '</a></span> <span class="c-roleslist-hyphen">-</span> <span class="c-roleslist-description">' . $row['description'] . '</span></li>';
 		}
 	}
-	echo "</ul>";
+	echo '</ul>';
 }
 ?>
 </div>

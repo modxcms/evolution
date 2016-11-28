@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Преглед на екрана с приключи�
 $_lang["role_bk_manager"] = 'Използване на Мениджъра за съхранение';
 $_lang["role_cache_refresh"] = 'Изчистване на кеша на сайта';
 $_lang["role_change_password"] = 'Смяна на паролата';
+$_lang["role_change_resourcetype"] = 'Промяна Вид документ';
 $_lang["role_chunk_management"] = 'Управление на чънковете';
 $_lang["role_config_management"] = 'Управление на конфигурацията';
 $_lang["role_content_management"] = 'Управление на съдържанието';
@@ -1154,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'При активиране РНх плъгин, вградени филтри са изключени по подразбиране';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';

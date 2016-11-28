@@ -165,6 +165,11 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 	include_once "lang/".$manager_language.".inc.php";
 }
 
+// allow custom language overrides not altered by future MODX-updates
+if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
+	include_once "lang/override/".$manager_language.".inc.php";
+}
+
 $s = array('[+MGR_DIR+]');
 $r = array(MGR_DIR);
 foreach($_lang as $k=>$v)
@@ -215,11 +220,11 @@ if(!isset($_POST['a']) && !isset($_GET['a']) && !isset($_POST['updateMsgCount'])
 }
 
 // OK, let's retrieve the action directive from the request
-if(isset($_GET['a']) && isset($_POST['a'])) {
-	$modx->webAlertAndQuit($_lang["error_double_action"]);
-} else {
-	$action= isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : null;
-}
+$option = array('min_range'=>1,'max_range'=>2000);
+if(isset($_GET['a']) && isset($_POST['a'])) $modx->webAlertAndQuit($_lang['error_double_action']);
+elseif(isset($_GET['a']))  $action = filter_input(INPUT_GET, 'a',FILTER_VALIDATE_INT,$option);
+elseif(isset($_POST['a'])) $action = filter_input(INPUT_POST,'a',FILTER_VALIDATE_INT,$option);
+else                       $action = null;
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 	include_once 'messageCount.inc.php';
@@ -341,6 +346,12 @@ switch ($action) {
 		// get the processor for publishing content
 		include_once(includeFileProcessor("processors/unpublish_content.processor.php",$manager_theme));
 	break;
+	case 56:
+		// get the sort menuindex action
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_menuindex_sort.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+		break;
 /********************************************************************/
 /* show the wait page - gives the tree time to refresh (hopefully)  */
 /********************************************************************/
@@ -462,7 +473,7 @@ switch ($action) {
 	break;
 	case 117:
 		// change the tv rank for selected template
-		//include_once(includeFileProcessor("includes/header.inc.php",$manager_theme)); - in action file
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
 		include_once(includeFileProcessor("actions/mutate_template_tv_rank.dynamic.php",$manager_theme));
 		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
 		break;
@@ -913,7 +924,12 @@ switch ($action) {
 		// get the duplicate processor
 		include_once(includeFileProcessor("processors/duplicate_tmplvars.processor.php",$manager_theme));
 	break;
-
+	case 305:
+		// get the tv-rank action
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_tv_rank.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+	break;
 /********************************************************************/
 /* Event viewer: show event message log                             */
 /********************************************************************/

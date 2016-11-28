@@ -115,14 +115,14 @@ $displayMode= isset($tagDisplayMode) ? $tagDisplayMode: 1;
  	How to display the tags in [+tagLinks+]
 
 	Options:
-	1 - string of links &tagDisplayDelimiter separated 
+	1 - string of links &tagDisplayDelimiter separated
 	2 - ul/li list
 
 	Note:
 	Output of individual items can be customized by <tplTagLinks>
 	
 	Default:
-	1 - string of links &tagDisplayDelimiter separated 
+	1 - string of links &tagDisplayDelimiter separated
 */
 $givenTags = !empty($tags) ? trim($tags) : false;
 /*
@@ -151,7 +151,7 @@ $tplTagLinks = !empty($tplTagLinks) ? template::fetch($tplTagLinks) : false;
 	
 	Default:
 	(code)
-	<a href="[+url+]" class="ditto_tag" rel="tag">[+tag+]</a>	
+	<a href="[+url+]" class="ditto_tag" rel="tag">[+tag+]</a>
 */
 $callback = !empty($tagCallback) ? trim($tagCallback) : false;
 /*
@@ -180,7 +180,7 @@ if(!class_exists("tagging")) {
 	class tagging {
 		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive, $displayDelimiter, $sort, $displayMode, $tpl, $callback;
 
-		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $callback, $sort, $displayMode, $tpl) {
+		function __construct($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $callback, $sort, $displayMode, $tpl) {
 			$this->delimiter = $delimiter;
 			$this->source = $this->parseTagData($source);
 			$this->mode = $mode;
@@ -209,13 +209,13 @@ if(!class_exists("tagging")) {
 			}
 		
 			if ($givenTags !== false) {
-				$tags2 = explode($this->delimiter,$givenTags);		
-			} 
+				$tags2 = explode($this->delimiter,$givenTags);
+			}
 		
 			$kTags = array();
 			$tags = array_merge($tags1,$tags2);
 			foreach ($tags as $tag) {
-				if (!empty($tag)) {				
+				if (!empty($tag)) {
 					if ($this->caseSensitive) {
 						$kTags[trim($tag)] = trim($tag);
 					} else {
@@ -278,7 +278,7 @@ if(!class_exists("tagging")) {
 				if(!empty($resource[$source])) {
 					$tags[] = $resource[$source];
 				}
-			}		
+			}
 			$kTags = array();
 			$tags = explode($this->delimiter,implode($this->delimiter,$tags));
 			foreach ($tags as $tag) {
@@ -297,7 +297,7 @@ if(!class_exists("tagging")) {
 			global $ditto_lang,$modx;
 			if(count($tags) == 0 && $format=="html") {
 				return $ditto_lang['none'];
-			} else if (count($tags) == 0 && ($format=="rss" || $format=="xml" || $format == "xml")) 
+			} else if (count($tags) == 0 && ($format=="rss" || $format=="xml" || $format == "xml"))
 			{
 				return "<category>".$ditto_lang['none']."</category>";
 			}
@@ -311,7 +311,7 @@ if(!class_exists("tagging")) {
 			$tplRss = "\r\n"."				<category>[+tag+]</category>";
 			$tpl = ($this->tpl == false) ? '<a href="[+url+]" class="ditto_tag" rel="tag">[+tag+]</a>' : $this->tpl;
 			
-			$tpl = (($format == "rss" || $format == "xml" || $format == "atom") && $templates['user'] == false) ? $tplRss : $tpl; 
+			$tpl = (($format == "rss" || $format == "xml" || $format == "atom") && $templates['user'] == false) ? $tplRss : $tpl;
 			
 			if ($this->displayMode == 1) {
 				foreach ($tags as $tag) {
@@ -319,7 +319,7 @@ if(!class_exists("tagging")) {
 					$url = ditto::buildURL("tags=$tag&start=0",$tagDocID);
 					$output .= template::replace(array('url'=>$url,'tag'=>$tag),$tpl);
 					$output .= ($format != "rss" && $format != "xml" && $format != "atom") ? $this->displayDelimiter : '';
-				}			
+				}
 			} else if ($format != "rss" && $format != "xml" && $format != "atom" && $this->displayMode == 2) {
 				$tagList = array();
 				foreach ($tags as $tag) {
@@ -368,7 +368,7 @@ if(!class_exists("tagging")) {
 $tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive,$displayDelimiter, $callback, $sort, $displayMode,$tplTagLinks);
 
 if (count($tags->givenTags) > 0) {
-	$filters["custom"]["tagging"] = array($source,array($tags,"tagFilter")); 
+	$filters["custom"]["tagging"] = array($source,array($tags,"tagFilter"));
 		// set tagging custom filter
 }
 
@@ -388,6 +388,5 @@ $modx->setPlaceholder($dittoID."tags",implode($delimiter,$tags->givenTags));
 	Content:
 	Raw tags separated by <tagDelimiter>
 */
-// set tagging placeholder			
+// set tagging placeholder
 $placeholders['tagLinks'] = array(array($source,"*"),array($tags,"makeLinks"));
-?>

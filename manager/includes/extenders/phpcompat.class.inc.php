@@ -6,16 +6,22 @@ class PHPCOMPAT
 	{
 	}
 	
-	function htmlspecialchars($str, $flags = ENT_COMPAT)
+	function htmlspecialchars($str='', $flags = ENT_COMPAT, $encode='')
 	{
 		global $modx;
 		
-		$ent_str = htmlspecialchars($str, $flags, $modx->config['modx_charset']);
+		if($str=='') return '';
+		
+		if($encode=='') $encode = $modx->config['modx_charset'];
+		
+		$ent_str = htmlspecialchars($str, $flags, $encode);
+		
 		if(!empty($str) && empty($ent_str))
 		{
 			$detect_order = implode(',', mb_detect_order());
-			$ent_str = mb_convert_encoding($str,$modx->config['modx_charset'],$detect_order); 
+			$ent_str = mb_convert_encoding($str, $encode, $detect_order); 
 		}
+		
 		return $ent_str;
 	}
 }

@@ -9,6 +9,7 @@ global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;
 global $moduleSQLDataFile;
+global $moduleSQLResetFile;
 
 global $moduleChunks;
 global $moduleTemplates;
@@ -47,6 +48,7 @@ $adminname = $_POST['cmsadmin'];
 $adminemail = $_POST['cmsadminemail'];
 $adminpass = $_POST['cmspassword'];
 $managerlanguage = $_POST['managerlanguage'];
+$custom_placeholders = array();
 //}
 
 // set session name variable
@@ -366,7 +368,7 @@ if ($configFileFailed == true) {
 // generate new site_id and set manager theme to MODxRE
 if ($installMode == 0) {
     $siteid = uniqid('');
-    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxRE')");
+    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxRE2')");
 } else {
     // update site_id if missing
     $ds = mysqli_query($sqlParser->conn, "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'");
@@ -380,6 +382,26 @@ if ($installMode == 0) {
     }
 }
 
+// Reset database for installation of demo-site 
+if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
+	echo "<p>" . $_lang['resetting_database'];
+	$sqlParser->process($moduleSQLResetFile);
+	// display database results
+	if ($sqlParser->installFailed == true) {
+		$errors += 1;
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
+		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+		}
+		echo "</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
+		return;
+	} else {
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+	}
+}
 
 // Install Templates
 if (isset ($_POST['template']) || $installData) {
@@ -393,6 +415,7 @@ if (isset ($_POST['template']) || $installData) {
             $category = mysqli_real_escape_string($conn, $moduleTemplate[4]);
             $locked = mysqli_real_escape_string($conn, $moduleTemplate[5]);
             $filecontent = $moduleTemplate[3];
+            $save_sql_id_as = $moduleTemplate[7]; // Nessecary for demo-site
             if (!file_exists($filecontent)) {
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             } else {
@@ -407,10 +430,18 @@ if (isset ($_POST['template']) || $installData) {
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'");
 
                 if (mysqli_num_rows($rs)) {
-                    if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name';")) {
+                    if (!mysqli_query($sqlParser->conn, "UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name' LIMIT 1;")) {
                         $errors += 1;
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
+                    }
+                    if(!is_null($save_sql_id_as)) {
+                        $sql_id = @mysqli_insert_id($sqlParser->conn);
+                        if(!$sql_id) {
+                            $idQuery = mysqli_fetch_assoc(mysqli_query($sqlParser->conn, "SELECT id FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name' LIMIT 1;"));
+                            $sql_id = $idQuery['id'];
+                        }
+                        $custom_placeholders[$save_sql_id_as] = $sql_id;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
@@ -419,6 +450,7 @@ if (isset ($_POST['template']) || $installData) {
                         echo "<p>" . mysqli_error($sqlParser->conn) . "</p>";
                         return;
                     }
+                    if(!is_null($save_sql_id_as)) $custom_placeholders[$save_sql_id_as] = @mysqli_insert_id($sqlParser->conn);
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
             }
@@ -503,6 +535,7 @@ if (isset ($_POST['chunk']) || $installData) {
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
+        $count_new_name = 0;
         if($installSample || in_array($k, $selChunks)) {
 
             $name = mysqli_real_escape_string($conn, $moduleChunk[0]);
@@ -573,8 +606,7 @@ if (isset ($_POST['module']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
+                // $module = removeDocblock($module, 'module'); // Modules have no fileBinding, keep docblock for info-tab
                 $module = mysqli_real_escape_string($conn, $module);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -631,8 +663,7 @@ if (isset ($_POST['plugin']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
-                // remove installer docblock
-                $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
+                $plugin = removeDocblock($plugin, 'plugin');
                 $plugin = mysqli_real_escape_string($conn, $plugin);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -703,8 +734,7 @@ if (isset ($_POST['snippet']) || $installData) {
                 $category = getCreateDbCategory($category, $sqlParser);
 
                 $snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
-                // remove installer docblock
-                $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
+                $snippet = removeDocblock($snippet, 'snippet');
                 $snippet = mysqli_real_escape_string($conn, $snippet);
                 $rs = mysqli_query($sqlParser->conn, "SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'");
                 if (mysqli_num_rows($rs)) {
@@ -727,7 +757,7 @@ if (isset ($_POST['snippet']) || $installData) {
     }
 }
 
-// install data
+// Install demo-site
 if ($installData && $moduleSQLDataFile) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($moduleSQLDataFile);
@@ -744,6 +774,13 @@ if ($installData && $moduleSQLDataFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='MODX startup - Bootstrap'", $sqlParser->prefix);
+        $rs = mysqli_query($sqlParser->conn, $sql);
+        if(mysqli_num_rows($rs)) {
+            $row = mysqli_fetch_assoc($rs);
+            $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix, $row['id']);
+            mysqli_query($sqlParser->conn, $sql);
+        }
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
 }
@@ -848,6 +885,7 @@ function propUpdate($new,$old){
     $returnArr = array();
     $newArr = explode("&",$new);
     $oldArr = explode("&",$old);
+    $return = '';
 
     foreach ($newArr as $k => $v) {
         if(!empty($v)){
@@ -892,4 +930,33 @@ function getCreateDbCategory($category, $sqlParser) {
         }
     }
     return $category_id;
+}
+
+// Remove installer Docblock only from components using plugin FileSource / fileBinding
+function removeDocblock($code, $type) {
+    
+    $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
+    
+    // Procedure taken from plugin.filesource.php
+    switch($type) {
+        case 'snippet':
+            $elm_name = 'snippets';
+            $include = 'return require';
+            $count = 47;
+            break;
+
+        case 'plugin':
+            $elm_name = 'plugins';
+            $include = 'require';
+            $count = 39;
+            break;
+
+        default:
+            return $cleaned;
+    };
+    if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
+        return $cleaned;
+    
+    // fileBinding not found - return code incl docblock
+    return $code;
 }

@@ -366,7 +366,8 @@ class OldFunctions {
      * @param string $url URL to redirect to
      */
     function webAlert($msg, $url= "") {
-        $msg= addslashes($this->db->escape($msg));
+    	global $modx;
+        $msg= addslashes($modx->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $act= "__WebAlert();";
             $fnc= "function __WebAlert(){" . substr($url, 11) . "};";
@@ -374,8 +375,8 @@ class OldFunctions {
             $act= ($url ? "window.location.href='" . addslashes($url) . "';" : "");
         }
         $html= "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
-        if ($this->isFrontend())
-            $this->regClientScript($html);
+        if ($modx->isFrontend())
+            $modx->regClientScript($html);
         else {
             echo $html;
         }

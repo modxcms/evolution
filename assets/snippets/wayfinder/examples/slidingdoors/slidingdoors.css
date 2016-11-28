@@ -8,8 +8,8 @@ http://www.alistapart.com/articles/slidingdoors2/
 #menu {
   float:left;
   width:100%;
-  background:#DAE0D2 url("images/bg.gif") repeat-x bottom;
-  font-size:93%;
+  background-color:#DAE0D2;
+/*  background:#DAE0D2 url("images/bg.gif") repeat-x bottom;*/
   line-height:normal;
   }
 #menu ul {

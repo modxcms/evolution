@@ -90,8 +90,6 @@ function postForm() {
 		
 		document.range.submit(); 
 	} else if (tabActiveID == '3') {
-	   /* handled separately using save() function */
-	} else if (tabActiveID == '4') {	
 		$('tabaction').value = 'changeOther';
 
 		$('setoption').value = document.other.misc.value; 
@@ -114,6 +112,7 @@ function hideInteraction() {
     if (tabActiveID == '1') { 
         $('tvloading').style.display = 'none';
     }
+    /*
     if (tabActiveID == '3') {
         if ($('interaction')) {
             $('interaction').style.display = 'none';
@@ -123,7 +122,7 @@ function hideInteraction() {
         $('interaction').style.display = '';
         parent.tree.ca = '';
     }
-    
+    */
     return true;
 }
 

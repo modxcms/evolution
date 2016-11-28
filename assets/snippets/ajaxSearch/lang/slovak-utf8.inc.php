@@ -1,6 +1,6 @@
 <?php
 /*
-slovak-utf8.inc.php - for AjaxSearch 1.10.1
+slovak-utf8.inc.php - for AjaxSearch 1.10.2
 Created by: KyleJ (kjaebker@muddydogpaws.com), Modified by sNop (snop3@seznam.cz)
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

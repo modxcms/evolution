@@ -1,24 +1,19 @@
 <?php
 //:: MODX Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-define('MGR_DIR', 'manager');
+if (is_file($base_path . 'assets/cache/siteManager.php')) {
+    include_once($base_path . 'assets/cache/siteManager.php');
 }
+if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
+
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODX";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = "setup.sql";
-$moduleSQLDataFile = "setup.data.sql";
-$chunkPath = $setupPath .'/assets/chunks';
-$snippetPath = $setupPath .'/assets/snippets';
-$pluginPath = $setupPath .'/assets/plugins';
-$modulePath = $setupPath .'/assets/modules';
-$templatePath = $setupPath .'/assets/templates';
-$tvPath = $setupPath .'/assets/tvs';
+$chunkPath    = $base_path .'install/assets/chunks';
+$snippetPath  = $base_path .'install/assets/snippets';
+$pluginPath   = $base_path .'install/assets/plugins';
+$modulePath   = $base_path .'install/assets/modules';
+$templatePath = $base_path .'install/assets/templates';
+$tvPath = $base_path .'install/assets/tvs';
 
 // setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
 $mt = &$moduleTemplates;
@@ -40,7 +35,8 @@ if(is_dir($templatePath) && is_readable($templatePath)) {
                 "$templatePath/{$params['filename']}",
                 $params['modx_category'],
                 $params['lock_template'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : NULL // Nessecary to fix template-ID for demo-site
             );
         }
     }

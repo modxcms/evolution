@@ -1,5 +1,9 @@
 <!-- welcome -->
 <div style="margin: 20px 12px;">
+    <div id="logout_reminder" style="padding-left:0; padding-right:0;display:[+show_logout_reminder+]">
+        [+logout_reminder_msg+]
+    </div>
+    
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="tab-pane" id="welcomePane" style="border:0">
     <script type="text/javascript">
@@ -26,11 +30,11 @@
                         <br /><br />
                     </td>
                     <td valign="top">
-                        <span class="wm_button" style="border:0">[+SecurityIcon+]</span>
-                        <span class="wm_button" style="border:0">[+WebUserIcon+]</span>
-                        <span class="wm_button" style="border:0">[+ModulesIcon+]</span>
-                        <span class="wm_button" style="border:0">[+ResourcesIcon+]</span>
-                        <span class="wm_button" style="border:0">[+BackupIcon+]</span>
+                        [+SecurityIcon+]
+                        [+WebUserIcon+]
+                        [+ModulesIcon+]
+                        [+ResourcesIcon+]
+                        [+BackupIcon+]
                         <br style="clear:both" /><br />
                         [+MessageInfo+]
                     </td>

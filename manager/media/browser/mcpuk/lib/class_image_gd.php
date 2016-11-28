@@ -130,6 +130,8 @@ class image_gd extends image {
 
     public function flipHorizontal() {
         $img = imagecreatetruecolor($this->width, $this->height);
+            imagealphablending($img, false);
+            imagesavealpha($img, true);
         if (imagecopyresampled($img, $this->image, 0, 0, ($this->width - 1), 0, $this->width, $this->height, -$this->width, $this->height))
             $this->image = $img;
         else
@@ -139,6 +141,8 @@ class image_gd extends image {
 
     public function flipVertical() {
         $img = imagecreatetruecolor($this->width, $this->height);
+            imagealphablending($img, false);
+            imagesavealpha($img, true);
         if (imagecopyresampled($img, $this->image, 0, 0, 0, ($this->height - 1), $this->width, $this->height, $this->width, -$this->height))
             $this->image = $img;
         else
@@ -194,7 +198,10 @@ class image_gd extends image {
     // ABSTRACT PROTECTED METHODS
 
     protected function getBlankImage($width, $height) {
-        return @imagecreatetruecolor($width, $height);
+        $img = @imagecreatetruecolor($width, $height);
+            imagealphablending($img, false);
+            imagesavealpha($img, true);
+        return $img;
     }
 
     protected function getImage($image, &$width, &$height) {

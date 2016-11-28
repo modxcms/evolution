@@ -84,19 +84,26 @@ echo $cm->render();
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
 
-<h1><?php echo $_lang['user_management_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa fa-user"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['user_management_title']; ?>
+  </span>
+</h1>
 <div class="section">
 <div class="sectionBody">
-	<p><?php echo $_lang['user_management_msg']; ?></p>
+    <p class="element-edit-message"><?php echo $_lang['user_management_msg']; ?></p>
 	<div class="searchbar">
-		<table border="0" style="width:100%" class="actionButtons">
+        <table border="0" style="width:100%" class="actionButtons actionButtons--tableheader">
 			<tr>
-			<td><a href="index.php?a=11"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['new_user']; ?></a></td>
+			<td><a href="index.php?a=11"><?php echo $_lang['new_user']; ?></a></td>
 			<td nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#"  title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang['go']; ?></a></td>
-				<td><a href="#"  title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style["icons_refresh"]?>" /></a></td>
-				<td><a href="#"  title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style["icons_table"]?>" /></a></td>
+				<td><a href="#"  title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a></td>
+				<td><a href="#"  title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a></td>
 				</tr>
 				</table>
 			</td>
@@ -106,7 +113,7 @@ echo $cm->render();
 	<div>
 	<?php
 	$where = "";
-	if ($_SESSION['mgrRole'] != 1)
+	if (!$modx->hasPermission('save_role'))
 		$where .= (empty($where)?"":" AND ") . "mua.role != 1";
 	if (!empty($sqlQuery))
 		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";

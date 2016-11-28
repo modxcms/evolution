@@ -10,7 +10,7 @@
 class modxDebugConsole{
 	var $templates;
 	
-	function modxDebugConsole($templates) {
+	function __construct($templates) {
 		$this->templates = $templates;
 			// set templates array
 	}

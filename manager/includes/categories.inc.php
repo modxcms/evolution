@@ -24,6 +24,12 @@ function checkCategory($newCat = '') {
 	}
     return 0;
 }
+//Check for category, create new if not exists
+function getCategory($category='') {
+    $categoryId = checkCategory($category);
+    if(!$categoryId) $categoryId = newCategory($category);
+    return $categoryId;
+}
 //Get all categories
 function getCategories() {
     global $modx;

@@ -4,6 +4,8 @@ if (!$modx->hasPermission('save_user')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+$modx->loadExtension('phpass');
+
 $tbl_manager_users   = $modx->getFullTableName('manager_users');
 $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 $tbl_member_groups   = $modx->getFullTableName('member_groups');
@@ -53,14 +55,14 @@ if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confi
 }
 
 // verify email
-if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
 // verify admin security
 if ($_SESSION['mgrRole'] != 1) {
 	// Check to see if user tried to spoof a "1" (admin) role
-	if ($role == 1) {
+	if (!$modx->hasPermission('save_role')) {
 		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!");
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
@@ -116,7 +118,7 @@ switch ($input['mode']) {
 		$internalKey = $modx->db->insert($field, $tbl_manager_users);
 
 		$field = array();
-		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
+		$field['password'] = $modx->phpass->HashPassword($newpassword);
 		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
@@ -185,7 +187,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -250,7 +252,7 @@ switch ($input['mode']) {
 		$field = array();
 		$field['username'] = $esc_newusername;
 		if($genpassword == 1) {
-		    $field['password'] = $modx->manager->genHash($newpassword, $id);
+		    $field['password'] = $modx->phpass->HashPassword($newpassword);
 		}
 		$modx->db->update($field, $tbl_manager_users, "id='{$id}'");
 		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
@@ -325,7 +327,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
+				<li class="transition"><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">

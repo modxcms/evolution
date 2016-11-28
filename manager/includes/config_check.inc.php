@@ -1,13 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
+// PROCESSOR FIRST
+if($_SESSION['mgrRole'] == 1) {
+	if($_REQUEST['b'] == 'resetSysfilesChecksum' && $modx->hasPermission('settings')) {
+		$current = $modx->manager->getSystemChecksum($modx->config['check_files_onlogin']);
+		if(!empty($current)) {
+			$modx->manager->setSystemChecksum($current);
+			$modx->clearCache('full');
+			$modx->config['sys_files_checksum'] = $current;
+		};
+	}
+}
+
+// NOW CHECK CONFIG
 $warningspresent = 0;
 
 $sysfiles_check = $modx->manager->checkSystemChecksum();
-if ($sysfiles_check==='modified'){
+if ($sysfiles_check!=='0'){
       $warningspresent = 1;
       $warnings[] = array($_lang['configcheck_sysfiles_mod']);
-    }
+}
 
 if (is_writable("includes/config.inc.php")){
     // Warn if world writable
@@ -133,8 +146,8 @@ if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
 }
 
 if (count($_lang)!=$length_eng_lang) {
-    $warningspresent = 0;
-    $warnings[] = array($_lang['configcheck_lang_difference']);
+    //$warningspresent = 0;
+    //$warnings[] = array($_lang['configcheck_lang_difference']);
 }
 
 // clear file info cache
@@ -165,13 +178,14 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_sysfiles_mod']:
             $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1],$_lang['configcheck_sysfiles_mod']);
+			$warnings[$i][2] = '<ul><li>'. join('</li><li>', $sysfiles_check) .'</li></ul>';
+			if($modx->hasPermission('settings')) {
+				$warnings[$i][2] .= '<ul class="actionButtons" style="float:right"><li><a href="index.php?a=2&b=resetSysfilesChecksum" onclick="return confirm(\'' . $_lang["reset_sysfiles_checksum_alert"] . '\')">' . $_lang["reset_sysfiles_checksum_button"] . '</a></li></ul>';
+			}
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".join(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
-            break;
-        case $_lang['configcheck_register_globals'] :
-            $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
             break;
         case $_lang['configcheck_php_gdzip'] :
             $warnings[$i][1] = $_lang['configcheck_php_gdzip_msg'];
@@ -214,6 +228,7 @@ for ($i=0;$i<count($warnings);$i++) {
             <p><strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'</p>
             <p style=\"padding-left:1em\"><em>".$_lang['configcheck_what']."</em><br />
             ".$warnings[$i][1]." ".$admin_warning."</p>
+            ".(isset($warnings[$i][2]) ? '<div style="padding-left:1em">'.$warnings[$i][2].'</div>' : '')."
             </fieldset>
 ";
         if ($i!=count($warnings)-1) {

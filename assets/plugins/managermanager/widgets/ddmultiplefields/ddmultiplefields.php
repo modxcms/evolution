@@ -20,6 +20,7 @@
  * @param $minRow {integer} - Minimum number of strings. Default: 0.
  * @param $maxRow {integer} - Maximum number of strings. Default: 0 (без лимита).
  * @param $columnsData {separated string} - List of valid values in json format (with “||”). Default: ''. Example: '[['','No selected'],['0','No'],['1','Yes',1]]'
+ * @param $options {array or JSON} - Extend options: sortable - allow sorting (default), showIndex - display line numbers (default), btnToggleRaw - show button "Raw" (not defailt)
  * 
  * @event OnDocFormPrerender
  * @event OnDocFormRender

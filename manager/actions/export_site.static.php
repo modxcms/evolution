@@ -7,11 +7,18 @@ if(!$modx->hasPermission('export_static')) {
 // figure out the base of the server, so we know where to get the documents in order to export them
 ?>
 
-<h1><?php echo $_lang['export_site_html']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-download"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['export_site_html']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
   </ul>
 </div>
 
@@ -72,8 +79,13 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
 </table>
 
 <ul class="actionButtons">
-	<li><a href="#" class="default" onclick="document.exportFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
+	<li id="exportButton"><a href="#" class="default" onclick="document.exportFrm.submit();jQuery(this).hide();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
 </ul>
+<script>
+	jQuery('#exportButton a').click(function(){
+        jQuery(this).parent().html('<?php echo $_style['ajax_loader'];?>');
+    });
+</script>
 </form>
 
 <?php

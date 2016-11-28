@@ -1,0 +1,9 @@
+<script>!window.jQuery && document.write(decodeURIComponent('%3Cscript%20src%3D%22%2Fmanager%2Fmedia%2Fscript%2Fjquery%2Fjquery.min.js%22%3E%3C%2Fscript%3E'))</script>
+<script>!window.jQuery && document.write(decodeURIComponent('%3Cscript%20src%3D%22%2Fassets%2Fjs%2Fjquery.min.js%22%3E%3C%2Fscript%3E'))</script>
+<script src="[+pp.base_url+]tinymce/tinymce.min.js"></script>
+<script>
+    var tinymce4_baseUrl = '[+pp.base_url+]';
+            
+    // For displaying modals inside external lightboxes
+    jQuery(document).on('focusin.bs.modal', function(e) { if (jQuery(e.target).closest(".mce-window").length && jQuery('#colorbox').is(":visible")) { e.stopImmediatePropagation(); }})
+</script>

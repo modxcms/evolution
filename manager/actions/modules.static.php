@@ -26,7 +26,7 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH."includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_save'],(!$modx->hasPermission('exec_module') ? 1:0));
+$cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_run'],(!$modx->hasPermission('exec_module') ? 1:0));
 $cm->addSeparator();
 $cm->addItem($_lang["edit"],"js:menuAction(2)",$_style['icons_edit_document'],(!$modx->hasPermission('edit_module') ? 1:0));
 $cm->addItem($_lang["duplicate"],"js:menuAction(3)",$_style['icons_resource_duplicate'],(!$modx->hasPermission('new_module') ? 1:0));
@@ -74,15 +74,22 @@ echo $cm->render();
 	});
 </script>
 
-<h1><?php echo $_lang['module_management']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['module_management']; ?>
+  </span>
+</h1>
 <div class="section">
 <div class="sectionBody">
 	<!-- load modules -->
-	<p><?php echo $_lang['module_management_msg']; ?></p>
+    <p class="element-edit-message"><?php echo $_lang['module_management_msg']; ?></p>
 
 	<div id="actions">
 		<ul class="actionButtons">
-			<?php if(($modx->hasPermission('new_module'))){ echo '<li id="newModule"><a href="index.php?a=107"><img src="'. $_style["icons_save"]. '" />'. $_lang["new_module"].'</a></li>'; } ?>
+			<?php if(($modx->hasPermission('new_module'))){ echo '<li id="newModule" class="transition"><a href="index.php?a=107"><img src="'. $_style["icons_save"]. '" />'. $_lang["new_module"].'</a></li>'; } ?>
 		</ul>
 	</div>
 

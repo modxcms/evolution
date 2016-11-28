@@ -118,7 +118,7 @@ $_lang["modules"] = 'Moduler';
 $_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med ensamrätt. MODX är licensierad under GNU GPL.';
 $_lang["modx_footer2"] = 'MODX är fri programvara. Vi uppmuntrar dig att vara kreativ och använda MODX på vilket sätt du vill. Vara bara noga med att bevara källkoden fri om du gör ändringar och sedan väljer att omdistribuera din modifierade version av MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
-$_lang["modx_requires_php"] = ', och MODX kräver PHP 5.3 eller senare.';
+$_lang["modx_requires_php"] = ', och MODX kräver PHP [+min_version+] eller senare.';
 $_lang["mysql_5051"] = ' MySQL-serverns version är 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Det finns kända problem med MySQL 5.0.51. Du rekommenderas att uppgradera innan du fortsätter.';
 $_lang["mysql_version_is"] = ' Din MySQL-version är: ';

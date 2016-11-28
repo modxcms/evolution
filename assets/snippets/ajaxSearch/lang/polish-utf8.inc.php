@@ -1,6 +1,6 @@
 <?php
 /*
-polish-utf8.inc.php - for AjaxSearch 1.10.1
+polish-utf8.inc.php - for AjaxSearch 1.10.2
 Created by: Radosław Włodkowski (radoslaw@artengine.pl)
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

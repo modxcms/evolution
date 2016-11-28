@@ -136,37 +136,7 @@ defined('IN_PARSER_MODE') or die();
                                     "username" => $username
                                 ));
 
-        // if we were launched from the manager
-        // do NOT destroy session
-        if(isset($_SESSION['mgrValidated'])) {
-            unset($_SESSION['webShortname']);
-            unset($_SESSION['webFullname']);
-            unset($_SESSION['webEmail']);
-            unset($_SESSION['webValidated']);
-            unset($_SESSION['webInternalKey']);
-            unset($_SESSION['webValid']);
-            unset($_SESSION['webUser']);
-            unset($_SESSION['webFailedlogins']);
-            unset($_SESSION['webLastlogin']);
-            unset($_SESSION['webnrlogins']);
-            unset($_SESSION['webUsrConfigSet']);
-            unset($_SESSION['webUserGroupNames']);
-            unset($_SESSION['webDocgroups']);
-            unset($_SESSION['webDocgrpNames']);
-        }
-        else {
-            // Unset all of the session variables.
-//            $_SESSION = array();
-            // destroy session cookie
-            if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', 0, MODX_BASE_URL);
-            }
-            session_destroy();
-//            $sessionID = md5(date('d-m-Y H:i:s'));
-//            session_id($sessionID);
-//            startCMSSession();
-//            session_destroy();
-        }
+        clearWebuserSession();
 
         // invoke OnWebLogout event
         $modx->invokeEvent("OnWebLogout",
@@ -232,8 +202,7 @@ defined('IN_PARSER_MODE') or die();
     }
 
     if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate>time()) {    // blocked due to number of login errors.
-        session_destroy();
-        session_unset();
+        clearWebuserSession();
         $output = webLoginAlert("Due to too many failed logins, you have been blocked!");
         return;
     }
@@ -250,24 +219,21 @@ defined('IN_PARSER_MODE') or die();
     }
 
     if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
-        session_destroy();
-        session_unset();
+        clearWebuserSession();
         $output = webLoginAlert("You are blocked and cannot log in!");
         return;
     }
 
     // blockuntil
     if($blockeduntildate>time()) { // this user has a block until date
-        session_destroy();
-        session_unset();
+        clearWebuserSession();
         $output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
         return;
     }
 
     // blockafter
     if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
-        session_destroy();
-        session_unset();
+        clearWebuserSession();
         $output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
         return;
     }
@@ -335,8 +301,7 @@ defined('IN_PARSER_MODE') or die();
 				"internalKey='{$internalKey}'"
 				);
         }
-        session_destroy();
-        session_unset();
+        clearWebuserSession();
         return;
     }
 
@@ -443,5 +408,34 @@ defined('IN_PARSER_MODE') or die();
     }
 
     return;
+
+    function clearWebuserSession() {
+	    // if we were launched from the manager
+	    // do NOT destroy session
+	    if(isset($_SESSION['mgrValidated'])) {
+		    unset($_SESSION['webShortname']);
+		    unset($_SESSION['webFullname']);
+		    unset($_SESSION['webEmail']);
+		    unset($_SESSION['webValidated']);
+		    unset($_SESSION['webInternalKey']);
+		    unset($_SESSION['webValid']);
+		    unset($_SESSION['webUser']);
+		    unset($_SESSION['webFailedlogins']);
+		    unset($_SESSION['webLastlogin']);
+		    unset($_SESSION['webnrlogins']);
+		    unset($_SESSION['webUsrConfigSet']);
+		    unset($_SESSION['webUserGroupNames']);
+		    unset($_SESSION['webDocgroups']);
+		    unset($_SESSION['webDocgrpNames']);
+	    }
+	    else {
+		    // Unset all of the session variables.
+		    // destroy session cookie
+		    if (isset($_COOKIE[session_name()])) {
+			    setcookie(session_name(), '', 0, MODX_BASE_URL);
+		    }
+		    session_destroy();
+	    }
+    }
 
 ?>

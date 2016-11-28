@@ -33,6 +33,7 @@ $_CONFIG = array(
     'dirPerms' => intval($modx->config['new_folder_permissions'],8),
     'filePerms' => intval($modx->config['new_file_permissions'],8),
     'maxfilesize' => $settings['upload_maxsize'],
+    'denyUpdateCheck' => true,
 
 
     'access' => array(

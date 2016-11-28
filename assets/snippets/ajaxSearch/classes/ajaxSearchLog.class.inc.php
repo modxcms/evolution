@@ -5,8 +5,8 @@
 * @package  AjaxSearchLog
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests
@@ -39,7 +39,7 @@ class AjaxSearchLog {
     *  @access public
     *  @param string $log log parameter
     */
-    function AjaxSearchLog($log='0:0') {
+    function __construct($log='0:0') {
         global $modx;
         $this->_tbName = $modx->getFullTableName(LOG_TABLE_NAME);
         $asLog_array = explode(':', $log);

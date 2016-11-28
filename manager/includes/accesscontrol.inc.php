@@ -1,6 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
+if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	header('HTTP/1.0 404 Not Found');
+	exit;
+}
+
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
 //			setcookie(session_name(), '', 0, MODX_BASE_URL);
@@ -127,6 +132,8 @@ if(!isset($_SESSION['mgrValidated'])){
 			$login_tpl = file_get_contents($target);
 		}
 	} else {
+		$theme_path = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/';
+		if(is_file($theme_path . 'style.php')) include($theme_path . 'style.php');
 		$chunk = $modx->getChunk($target);
 		if($chunk!==false && !empty($chunk)) {
 			$login_tpl = $chunk;
@@ -135,14 +142,14 @@ if(!isset($_SESSION['mgrValidated'])){
 			$login_tpl = file_get_contents($target);
 		} elseif(is_file($target)) {
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
+		} elseif(is_file($theme_path . 'login.tpl')) {
+			$target = $theme_path . 'login.tpl';
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl')) {
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/login.tpl';
+		} elseif(is_file($theme_path . 'templates/actions/login.tpl')) {
+			$target = $theme_path . 'templates/actions/login.tpl';
 			$login_tpl = file_get_contents($target);
-		} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
-			$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
+		} elseif(is_file($theme_path . 'html/login.html')) { // ClipperCMS compatible
+			$target = $theme_path . 'html/login.html';
 			$login_tpl = file_get_contents($target);
 		} else {
 			$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
@@ -160,34 +167,24 @@ if(!isset($_SESSION['mgrValidated'])){
 	exit;
 
 } else {
-	// log the user action
-	if ($cip = getenv("HTTP_CLIENT_IP"))
-		$ip = $cip;
-	elseif ($cip = getenv("HTTP_X_FORWARDED_FOR"))
-		$ip = $cip;
-	elseif ($cip = getenv("REMOTE_ADDR"))
-		$ip = $cip;
-	else	$ip = "UNKNOWN";
-
-	$_SESSION['ip'] = $ip;
-
+	// Update table active_user_sessions
+	$modx->updateValidatedUserSession();
+	
+	// Update last action in table active_users
 	$itemid = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
 	$lasthittime = time();
 	$action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
 
 	if($action !== 1) {
 		if (!intval($itemid)) $itemid= null;
-		$sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, action, id, ip)
-			VALUES (%d, \'%s\', \'%d\', \'%s\', %s, \'%s\')',
-			$modx->getFullTableName('active_users'), // Table
-			$modx->getLoginUserID(),
-			$_SESSION['mgrShortname'],
-			$lasthittime,
-			(string)$action,
-			$itemid == null ? var_export(null, true) : $itemid,
-			$ip
+		$sql = sprintf("REPLACE INTO %s (internalKey, username, lasthit, action, id) VALUES (%d, '%s', %d, '%s', %s)"
+			, $modx->getFullTableName('active_users') // Table
+			, $modx->getLoginUserID()
+			, $_SESSION['mgrShortname']
+			, $lasthittime
+			, (string)$action
+			, $itemid == null ? var_export(null, true) : $itemid
 		);
 		$modx->db->query($sql);
 	}
 }
-?>

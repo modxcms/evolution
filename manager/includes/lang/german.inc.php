@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Ausgeführte Aktionen anzeigen';
 $_lang["role_bk_manager"] = 'Backup-Manager benutzen';
 $_lang["role_cache_refresh"] = 'Seitencache leeren';
 $_lang["role_change_password"] = 'Passwort ändern';
+$_lang["role_change_resourcetype"] = 'Ändern Ressourcentyp';
 $_lang["role_chunk_management"] = 'Chunk-Management';
 $_lang["role_config_management"] = 'Konfigurations-Verwaltung';
 $_lang["role_content_management"] = 'Inhalts-Verwaltung';
@@ -1158,6 +1159,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorithmus für den Passwort-Hash.';
 $_lang["enable_bindings_title"] = '@Bindings aktivieren';
 $_lang["enable_bindings_message"] = 'Verhindert die Ausführung von PHP-Code innerhalb von @Bindings in Template-Variablen. Nützlich, wenn Sie Manager-Benutzer haben, die keinen PHP-Code einsetzen dürfen, aber Template-Variablen bearbeiten und erstellen dürfen. Die Ausgabe einer Template-Variable mit @Binding lautet in diesem Fall „@Bindings disabled“.';
 
+$_lang["enable_filter_phx_warning"] = 'Wenn das PHx Plugin aktiviert ist, sind die eingebauten Filter standardmäßig deaktiviert.';
 $_lang["bkmgr_alert_mkdir"] = 'Es konnte keine Wiederherstellungs-Datei erstellt werden. Bitte überprüfen Sie die Verzeichnis-Rechte von [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Einzelne Tabellen dieser Installation können mit SQL Befehlen wiederhergestellt werden.</p>';
 $_lang["bkmgr_restore_title"] = 'Wiederherstellen';

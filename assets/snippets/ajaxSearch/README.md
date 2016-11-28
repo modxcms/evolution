@@ -1,4 +1,4 @@
-#AjaxSearch 1.10.1
+#AjaxSearch 1.10.2
 
 Ajax and non-Ajax search that supports results highlighting
 

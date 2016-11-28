@@ -321,6 +321,7 @@ if (isset ($_POST['plugin']) || $installData) {
             $guid = $modx->db->escape($modulePlugin[5]);
             $category = $modx->db->escape($modulePlugin[6]);
             $leg_names = '';
+            $disabled = $modulePlugin[9];
             if(array_key_exists(7, $modulePlugin)) {
                 // parse comma-separated legacy names and prepare them for sql IN clause
                 $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', $modx->db->escape($modulePlugin[7]))) . "'";
@@ -369,19 +370,10 @@ if (isset ($_POST['plugin']) || $installData) {
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
 				 
-				    //add disabled
-                    if ($category == 'add'){				
-						if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','1',$category);")) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}else{	
-						if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',$category);")) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}
-					
+				    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid',$disabled,$category);")) {
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
 					
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }

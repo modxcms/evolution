@@ -19,7 +19,8 @@ if(strlen($pass1)<6){
         $pass1 = htmlspecialchars($pass1, ENT_NOQUOTES, $modx->config['modx_charset']);
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
-	$f['password'] = $modx->manager->genHash($pass1, $uid);
+	$modx->loadExtension('phpass');
+	$f['password'] = $modx->phpass->HashPassword($pass1);
 	$modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
 
 	// invoke OnManagerChangePassword event

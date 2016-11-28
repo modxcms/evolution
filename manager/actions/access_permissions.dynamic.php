@@ -39,7 +39,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
-<h1><?php echo $_lang['mgr_access_permissions']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-male"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['mgr_access_permissions']; ?>
+  </span>
+</h1>
 
 <div class="sectionBody">
 <p><?php echo $_lang['access_permissions_introtext']?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : ''?>
@@ -67,7 +74,7 @@ function deletegroup(groupid,type) {
 <?php
 // User Groups
 
-	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_users_tab'].'</p>';
 
 ?>
 	<table class="permissiongroup">
@@ -91,7 +98,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN {$tbl_member_groups} AS groups ON groups.user_group = groupnames.id
 			LEFT JOIN {$tbl_manager_users} AS users ON users.id = groups.member",
 		'',
-		'groupnames.name'
+		'groupnames.name, user_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
@@ -138,7 +145,7 @@ function deletegroup(groupid,type) {
 <?php
 // Document Groups
 
-	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_resources_tab'].'</p>';
 ?>
 	<table class="permissiongroup">
 		<thead>
@@ -207,7 +214,7 @@ function deletegroup(groupid,type) {
 <?php
 // User/Document Group Links
 
-	echo '<p>'.$_lang['access_permissions_links_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_links_tab'].'</p>';
 
 	$rs = $modx->db->select(
 		"groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name",
@@ -215,7 +222,7 @@ function deletegroup(groupid,type) {
 			LEFT JOIN {$tbl_membergroup_access} AS groupacc ON groupacc.membergroup = groupnames.id
 			LEFT JOIN {$tbl_documentgroup_names} AS dgnames ON dgnames.id = groupacc.documentgroup",
 		'',
-		'name'
+		'name, dg_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';

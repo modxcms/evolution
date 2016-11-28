@@ -4,7 +4,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 $internalKey = $modx->getLoginUserID();
 $username = $_SESSION['mgrShortname'];
 
-
 // invoke OnBeforeManagerLogout event
 $modx->invokeEvent("OnBeforeManagerLogout",
 						array(
@@ -24,6 +23,12 @@ if (isset($_COOKIE[session_name()])) {
 //session_id($sessionID);
 //startCMSSession();
 //session_destroy();
+
+// Clean up active_user_locks
+$modx->db->delete($modx->getFullTableName('active_user_locks'), "internalKey = '{$internalKey}'");
+
+// Clean up active_user_sessions
+$modx->db->delete($modx->getFullTableName('active_user_sessions'), "internalKey = '{$internalKey}'");
 
 // invoke OnManagerLogout event
 $modx->invokeEvent("OnManagerLogout",
