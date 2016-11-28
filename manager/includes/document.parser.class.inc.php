@@ -4685,7 +4685,59 @@ class DocumentParser {
         $this->chunkCache['#'.$name] = $text;
     }
     
-/***************************************************************************************/
+    function safeEval($phpcode='',$evalmode='',$safe_functions='') {
+        // with_scan,with_scan_at_post,everytime_eval,dont_eval | default:with_scan;
+        if($evalmode=='')       $evalmode       = $this->config['allow_eval'];
+        if($safe_functions=='') $safe_functions = $this->config['safe_functions_at_eval']; // 'time,date,strtotime';
+        
+        modx_sanitize_gpc($phpcode);
+        
+        switch($evalmode) {
+            case 'with_scan'         : $isSafe = $this->isSafeCode($phpcode,$safe_functions); break;
+            case 'with_scan_at_post' : $isSafe = $_POST ? $this->isSafeCode($phpcode,$safe_functions) : true; break;
+            case 'everytime_eval'    : $isSafe = true; break; // Should debug only
+            case 'dont_eval'         : 
+            default                  : return $phpcode;
+        }
+        
+        if(!$isSafe) {
+            $msg = $phpcode . "\n" . $this->currentSnippet . "\n" . print_r($_SERVER,true);
+            $title = sprintf('Unknown eval was executed (%s)', $this->htmlspecialchars(substr(trim($phpcode),0,50)));
+            $this->messageQuit($title, '', true, '', '', 'Parser', $msg);
+            return;
+        }
+        
+        ob_start();
+        $return = eval($phpcode);
+        $echo = ob_get_clean();
+        
+        if(is_array($return)) return 'array()';
+        
+        $output = $echo.$return;
+        modx_sanitize_gpc($output);
+        return $this->htmlspecialchars($output); // Maybe, all html tags are dangerous
+    }
+    
+    function isSafeCode($phpcode='',$safe_functions='') { // return true or false
+        if($safe_functions=='')  return false;
+        
+        $safe = explode(',', $safe_functions);
+        
+        $tokens = token_get_all('<?php ' . $phpcode);
+        foreach($tokens as $token) {
+            if(!is_array($token)) continue;
+            switch(token_name($token[0])) {
+                case 'T_STRING':
+                    if(!in_array($token[1],$safe)) return false;
+                    break;
+                case 'T_EVAL':
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
 
