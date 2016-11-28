@@ -173,7 +173,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	// Update last action in table active_users
 	$itemid = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
 	$lasthittime = time();
-	$action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
+	$action = isset($modx->manager->action) ? $modx->manager->action : 1;
 
 	if($action !== 1) {
 		if (!intval($itemid)) $itemid= null;

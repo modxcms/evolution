@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch ((int) $_REQUEST['a']) {
+switch ($modx->manager->action) {
     case 78:
         if (!$modx->hasPermission('edit_chunk')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -109,7 +109,7 @@ if (is_array($evtOut))
 ?>
 <input type="hidden" name="a" value="79" />
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
-<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
+<input type="hidden" name="mode" value="<?php $modx->manager->action;?>" />
 
     <h1 class="pagetitle">
       <span class="pagetitle-icon">
@@ -135,7 +135,7 @@ if (is_array($evtOut))
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_REQUEST['a'] == '77') { ?>
+          <?php if ($modx->manager->action == '77') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>

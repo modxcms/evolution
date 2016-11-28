@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-switch ((int) $_REQUEST['a']) {
+switch ($modx->manager->action) {
     case 107:
         if(!$modx->hasPermission('new_module')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -405,7 +405,7 @@ function SetUrl(url, width, height, alt) {
     $internal = array();
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
   <h1 class="pagetitle">
   <span class="pagetitle-icon">
@@ -430,7 +430,7 @@ function SetUrl(url, width, height, alt) {
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_REQUEST['a'] == '107') { ?>
+          <?php if ($modx->manager->action == '107') { ?>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
@@ -478,7 +478,7 @@ function SetUrl(url, width, height, alt) {
             <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span><br/><span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
-        <tr><td align="left" valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td></tr>
+        <tr><td align="left" valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -514,7 +514,7 @@ function SetUrl(url, width, height, alt) {
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	        <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
-                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
+                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo $modx->manager->action == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
                 <tr>
         <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
                 <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
@@ -527,7 +527,7 @@ function SetUrl(url, width, height, alt) {
             </td></tr>
         </table>
     </div>
-<?php if ($_REQUEST['a'] == '108'): ?>
+<?php if ($modx->manager->action == '108'): ?>
     <!-- Dependencies -->
     <div class="tab-page" id="tabDepend">
     <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>

@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch((int) $_REQUEST['a'])
+switch((int) $modx->manager->action)
 {
 	case 35:
 		if(!$modx->hasPermission('edit_role'))
@@ -32,7 +32,7 @@ if ($lockedEl = $modx->elementIsLocked(8, $role)) {
 // Lock snippet for other users to edit
 $modx->lockElement(8, $role);
 
-if($_REQUEST['a']=='35')
+if($modx->manager->action=='35')
 {
 	$rs = $modx->db->select('*',$tbl_user_roles, "id='{$role}'");
 	$roledata = $modx->db->getRow($rs);
@@ -69,7 +69,7 @@ function deletedocument() {
 
 </script>
 <form action="index.php?a=36" method="post" name="userform" enctype="multipart/form-data">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>">
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action ?>">
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 
 <h1><?php echo $_lang['role_title']; ?></h1>
@@ -80,7 +80,7 @@ function deletedocument() {
 		<li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete'] ?></a></li>
 		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=86';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
 	</ul>
-	<?php if($_GET['a']=='38') { ?>
+	<?php if($modx->manager->action=='38') { ?>
 	<script type="text/javascript">document.getElementById("Button3").className='disabled';</script>
 	<?php } ?>
 </div>
