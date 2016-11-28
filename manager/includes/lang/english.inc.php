@@ -1349,11 +1349,8 @@ $_lang["extras"] = "Extras";
 
 $_lang["display_locks"] = "Display Locks";
 $_lang["role_display_locks"] = "Display Locks";
-$_lang["lock_interval"] = "Lock-Interval";
-$_lang["lock_interval_msg"] = "When editing Elements and Resources, these are locked for other users to edit by periodically sending lock-requests to server. This setting controls the delay between each request (set value in seconds).";
-$_lang["lock_release_delay"] = "Lock-Release Delay";
-$_lang["lock_release_delay_msg"] = "This setting controls the delay between last request and releasing a lock (set value in seconds).";
-$_lang["lock_element_unknown_error"] = "Unknown error occured while sending lock-request (Type [+type+], ID [+id+]). This [+element_type+] is possibly not locked anymore against editing by other users! Before trying to save, be sure no other user is editing it.";
+$_lang["session_timeout"] = "Session Timeout";
+$_lang["session_timeout_msg"] = "MODX will ping the server once every minute to update the mailer. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
 $_lang["unlock_element_id_warning"] = "Are you sure you want to unlock this [+element_type+] (ID [+id+])?";
 $_lang["lock_element_type_1"] = "Template";
 $_lang["lock_element_type_2"] = "Template-Variable";
@@ -1363,8 +1360,20 @@ $_lang["lock_element_type_5"] = "Plugin";
 $_lang["lock_element_type_6"] = "Module";
 $_lang["lock_element_type_7"] = "Resource";
 $_lang["lock_element_type_8"] = "Role";
-$_lang["lock_element_editing"] = "You are editing this [+element_type+] since\n[+firsthit_df+]";
-$_lang["lock_element_locked_by"] = "This [+element_type+] is locked by user\n[+username+] since [+firsthit_df+]";
+$_lang["lock_element_editing"] = "You are editing this [+element_type+] since\n[+lasthit_df+]";
+$_lang["lock_element_locked_by"] = "This [+element_type+] is locked by user\n[+username+] since [+lasthit_df+]";
 
 $_lang["minifyphp_incache_title"] = 'Minify php codes in site cache';
 $_lang["minifyphp_incache_message"] = 'Minify php codes(snippets and plugins) and store into the site cache file, ref:<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
+
+$_lang["logout_reminder_msg"] = "Reminder: It seems on [+date+] you forgot to logout. Please pay attention in future to do so after your work is finished.";
+
+$_lang["allow_eval_title"]             = "Eval php code in snippet call";
+$_lang["allow_eval_msg"]               = "For developer : Please use \$modx-&gt;safeEval().";
+$_lang["allow_eval_with_scan"]         = "Execute only permitted functions";
+$_lang["allow_eval_with_scan_at_post"] = "Execute all. However, at POST, only permitted functions";
+$_lang["allow_eval_everytime_eval"]    = "Unlimited (Use only for debugging)";
+$_lang["allow_eval_dont_eval"]         = "Do not allow all functions";
+
+$_lang["safe_functions_at_eval_title"] = "Functions to allow eval";
+$_lang["safe_functions_at_eval_msg"]   = "Comma separated list";

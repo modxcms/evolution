@@ -187,9 +187,6 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
             break;
-        case $_lang['configcheck_register_globals'] :
-            $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
-            break;
         case $_lang['configcheck_php_gdzip'] :
             $warnings[$i][1] = $_lang['configcheck_php_gdzip_msg'];
             break;

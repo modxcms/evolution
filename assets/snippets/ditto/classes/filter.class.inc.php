@@ -22,7 +22,7 @@ class filter {
 				if(substr($currentFilter["value"],0,5) != "@EVAL") {
 					$this->filterValue = $currentFilter["value"];
 				} else {
-					$this->filterValue = eval(substr($currentFilter["value"],5));
+					$this->filterValue = $modx->safeEval(substr($currentFilter["value"],5));
 				}
 				if(strpos($this->filterValue,'[+') !== false) {
 					$this->filterValue = $modx->mergePlaceholderContent($this->filterValue);

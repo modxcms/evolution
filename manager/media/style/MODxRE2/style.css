@@ -338,6 +338,7 @@ hr {
 
 #supplementalNav .username {
   display: inline-block;
+  margin-right: 10px;
   padding-left: 20px;
   background-image: url('images/icons/user.png');
   background-repeat: no-repeat;
@@ -2624,8 +2625,8 @@ form select {
 #searchform {
   z-index: 1000;
   position: absolute;
-  right: 7px;
-  top: 41px;
+  top: 37px;
+  right: 0;
 }
 
 @media (max-width: 958px) {
@@ -2635,26 +2636,30 @@ form select {
 }
 
 #searchform input[type=text] {
-  height: 24px;
-  width: 150px;
-  padding-left: 5px;
+  height: 32px;
+  width: 160px;
+  padding-left: 10px;
   margin-right: 0;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 3px !important;
-  background: rgba(0, 0, 0, 0.15);
+  border: 0px solid rgba(255,255,255,0.1);
+  border-radius: 0 !important;
+  border-width: 1px 0 0 1px;
+  background: rgba(0,0,0, 0.1);
   color: white;
   text-align: left;
+  /*
   box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
-  transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -webkit-transition-duration: 0.3s;
+  */
+  -moz-transition-duration: 0.2s;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
 }
 
 #searchform input[type=text]:focus {
   width: 250px;
-  border-color: rgba(255,255,255,0.5);
+  /*border-color: rgba(255,255,255,0.5);*/
+  background: rgba(0,0,0, 0.2);
   text-align: left;
 }
 
@@ -3326,7 +3331,7 @@ table.grid .gridHeader {
 
 table.grid th, 
 table.grid td {
-  padding: 5px 7px;
+  padding: 7px;
 }
 
 table.actionButtons {
@@ -3400,3 +3405,50 @@ table.actionButtons .searchtext {
 
 .modx-alert { display:block; margin:60px 10px 10px 10px; padding:1em; }
 .modx-alert.alert-error { background-color:#ffd0d0; border:1px solid #ff0000; color:#000; }
+
+tr.userIdle td { color:#aaa; }
+tr.userIdle td strong:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #aaa;
+    padding: 0 5px 0 0;
+    content:'\f017';
+}
+
+/* c-roleslist */
+
+.c-roleslist {
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+.c-roleslist-name {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.c-roleslist-hyphen {
+  display: none;
+}
+
+.c-roleslist-description {
+  color: #666;
+}
+
+.c-roleslist-item {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.c-roleslist-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom-width: 0;
+}
+
+.c-roleslist-item--admin {
+  font-style: italic;
+}

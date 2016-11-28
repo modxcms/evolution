@@ -31,27 +31,36 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	<li><strong>Output value of $_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION</strong>
 		<pre>[!$_SERVER['REQUEST_TIME']:dateFormat='Y'!]</pre>
 	</li>
-	<li><strong>New Conditional Tags / Modifiers</strong>
-		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. Example:</p>
+	<li><strong>New Conditional Tags &lt;@IF&gt; &lt;@ELSEIF&gt; &lt;@ELSE&gt; &lt;@ENDIF&gt; and Modifiers</strong>
+		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. <br />
+			Performance is good because it does not parse the block which is judged false.<br />
+			Example:</p>
 		<pre>[*longtitle:ifempty=[*pagetitle*]*]</pre>
 		<pre>&lt;@IF:[*id:is('[(site_start)]')*]>
 Top page
-<@ELSE>
+&lt;@ELSE&gt;
 Sub page
-<@ENDIF&gt;</pre>
+&lt;@ENDIF&gt;</pre>
 		<p>In combination with $_GET :</p>
 		<pre>&lt;@IF:[!$_GET['value']:preg('/^[0-9]+$/')!]>
 Value is numeric.
-<@ELSE>
+&lt;@ELSE&gt;
 Value is not numeric.
-<@ENDIF&gt;</pre>
+&lt;@ENDIF&gt;</pre>
 		<p>UltimateParent</p>
 		<pre>[[UltimateParent:is=`8`:then=`8`:else=`11`]]
 &lt;@IF:[[UltimateParent:is=8]]>
 8
-<@ELSE>
+&lt;@ELSE&gt;
 11
-<@ENDIF&gt;</pre>
+&lt;@ENDIF&gt;</pre>
+
+		<p>Combination with Cross-references (<a href="https://github.com/modxcms/evolution/commit/956c9ae1028535308bdb6039483a20b2d697bee9" target="_blank">modxcms/evolution@956c9ae</a>)</p>
+		<pre>&lt;@IF:[*id@ultimateparent:is=8*]>
+8
+&lt;@ELSE&gt;
+11
+&lt;@ENDIF&gt;</pre>
 	</li>
 
 	<li><strong>New Comment Tag</strong>

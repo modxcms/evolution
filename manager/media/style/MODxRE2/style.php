@@ -15,14 +15,7 @@ if(!$modx->config['lang_code']) {
     $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
 }
 
-// Large Icons
-$_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
-$_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
-$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-2x';
-$_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
-$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-2x';
-$_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
-$_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';
+if($_GET['a']==2) include_once('welcome.php');
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file fa-lg"></i>';
@@ -168,5 +161,3 @@ $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
 $_style['ed_save']                  = $style_path.'misc/ed_save.gif';
-
-?>

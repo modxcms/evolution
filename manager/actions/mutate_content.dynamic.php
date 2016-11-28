@@ -40,7 +40,6 @@ switch ($_REQUEST['a']) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
-$tbl_active_users               = $modx->getFullTableName('active_users');
 $tbl_categories                 = $modx->getFullTableName('categories');
 $tbl_document_group_names       = $modx->getFullTableName('documentgroup_names');
 $tbl_member_groups              = $modx->getFullTableName('member_groups');
@@ -564,7 +563,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <div id="actions">
       <ul class="actionButtons">
           <li id="Button1" class="transition">
-            <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
+            <a href="#" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
               <img alt="icons_save" src="<?php echo $_style["icons_save"]; ?>" /> <?php echo $_lang['save']; ?>
             </a>
             <span class="plus"> + </span>

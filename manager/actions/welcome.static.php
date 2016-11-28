@@ -30,24 +30,25 @@ JS;
 $modx->regClientScript($script);
 
 // set placeholders
-$modx->setPlaceholder('theme', $modx->config['manager_theme']);
-$modx->setPlaceholder('home', $_lang["home"]);
-$modx->setPlaceholder('logo_slogan', $_lang["logo_slogan"]);
-$modx->setPlaceholder('site_name', $site_name);
-$modx->setPlaceholder('welcome_title', $_lang['welcome_title']);
-$modx->setPlaceholder('resetgrid', $_lang['reset']);
-$modx->setPlaceholder('search', $_lang['search']);
+$ph = array();
+$ph['theme'] = $modx->config['manager_theme'];
+$ph['home'] = $_lang["home"];
+$ph['logo_slogan'] =  $_lang["logo_slogan"];
+$ph['site_name'] =  $site_name;
+$ph['welcome_title'] =  $_lang['welcome_title'];
+$ph['resetgrid'] =  $_lang['reset'];
+$ph['search'] =  $_lang['search'];
 
 // setup message info
 if ($modx->hasPermission('messages')) {
-    include_once MODX_MANAGER_PATH . 'includes/messageCount.inc.php';
+    include_once(MODX_MANAGER_PATH . 'includes/messageCount.inc.php');
     $_SESSION['nrtotalmessages'] = $nrtotalmessages;
     $_SESSION['nrnewmessages']   = $nrnewmessages;
     
     $msg = '<a href="index.php?a=10"><img src="' . $_style['icons_mail_large'] . '" /></a>
     <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10">' . $_lang["inbox"] . '</a>' . ($_SESSION['nrnewmessages'] > 0 ? " (<span style='color:red'>" . $_SESSION['nrnewmessages'] . "</span>)" : "") . '</span><br />
     <span class="comment">' . sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>" . $_SESSION['nrnewmessages'] . "</span>") . '</span>';
-    $modx->setPlaceholder('MessageInfo', $msg);
+    $ph['MessageInfo'] =  $msg;
 }
 
 // setup icons
@@ -58,179 +59,72 @@ function wrapIcon($i)
 // setup icons
 if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=75"><i class="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'"> </i><br />'.$_lang['security'].'</a>';
-	$modx->setPlaceholder('SecurityIcon',wrapIcon($icon));
+	$ph['SecurityIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) {
 	$icon = '<a class="hometblink" href="index.php?a=99"><i class="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'"> </i><br />'.$_lang['web_users'].'</a>';
-	$modx->setPlaceholder('WebUserIcon',wrapIcon($icon));
+	$ph['WebUserIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
 	$icon = '<a class="hometblink" href="index.php?a=106"><i class="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'"> </i><br />'.$_lang['modules'].'</a>';
-	$modx->setPlaceholder('ModulesIcon',wrapIcon($icon));
+	$ph['ModulesIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
 	$icon = '<a class="hometblink" href="index.php?a=76"><i class="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'"> </i><br />'.$_lang['elements'].'</a>';
-	$modx->setPlaceholder('ResourcesIcon',wrapIcon($icon));
+	$ph['ResourcesIcon'] = wrapIcon($icon);
 }
 if($modx->hasPermission('bk_manager')) {
 	$icon = '<a class="hometblink" href="index.php?a=93"><i class="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'"> </i><br />'.$_lang['backup'].'</a>';
-	$modx->setPlaceholder('BackupIcon',wrapIcon($icon));
+	$ph['BackupIcon'] = wrapIcon($icon);
 }
 if ($modx->hasPermission('help')) {
     $icon = '<a class="hometblink" href="index.php?a=9"><i class="'.$_style['icons_help_large'].'" alt="'. $_lang['help'].'" /> </i><br />' . $_lang['help'] . '</a>';
-    $modx->setPlaceholder('HelpIcon', wrapIcon($icon));
+    $ph['HelpIcon'] =  wrapIcon($icon);
 }
 // do some config checks
 if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
-    include_once "config_check.inc.php";
-    $modx->setPlaceholder('settings_config', $_lang['settings_config']);
-    $modx->setPlaceholder('configcheck_title', $_lang['configcheck_title']);
+    include_once(MODX_MANAGER_PATH.'includes/config_check.inc.php');
+    $ph['settings_config'] =  $_lang['settings_config'];
+    $ph['configcheck_title'] =  $_lang['configcheck_title'];
     if ($config_check_results != $_lang['configcheck_ok']) {
-        $modx->setPlaceholder('config_check_results', $config_check_results);
-        $modx->setPlaceholder('config_display', 'block');
+        $ph['config_check_results'] =  $config_check_results;
+        $ph['config_display'] =  'block';
     } else {
-        $modx->setPlaceholder('config_display', 'none');
+        $ph['config_display'] =  'none';
     }
 } else {
-    $modx->setPlaceholder('config_display', 'none');
+    $ph['config_display'] =  'none';
+}
+
+// Check logout-reminder
+if(isset($_SESSION['show_logout_reminder'])) {
+	$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date'=>$modx->toDateFormat($_SESSION['show_logout_reminder'], 'dateOnly')));
+	$ph['show_logout_reminder'] = 'block';
+	unset($_SESSION['show_logout_reminder']);
+} else {
+	$ph['show_logout_reminder'] = 'none';
 }
 
 // include rss feeds for important forum topics
-include_once "rss.inc.php";
+include_once(MODX_MANAGER_PATH.'includes/rss.inc.php');
 
 // modx news
-$modx->setPlaceholder('modx_news', $_lang["modx_news_tab"]);
-$modx->setPlaceholder('modx_news_title', $_lang["modx_news_title"]);
-$modx->setPlaceholder('modx_news_content', $feedData['modx_news_content']);
+$ph['modx_news'] =  $_lang["modx_news_tab"];
+$ph['modx_news_title'] =  $_lang["modx_news_title"];
+$ph['modx_news_content'] =  $feedData['modx_news_content'];
 
 // security notices
-$modx->setPlaceholder('modx_security_notices', $_lang["security_notices_tab"]);
-$modx->setPlaceholder('modx_security_notices_title', $_lang["security_notices_title"]);
-$modx->setPlaceholder('modx_security_notices_content', $feedData['modx_security_notices_content']);
+$ph['modx_security_notices'] =  $_lang["security_notices_tab"];
+$ph['modx_security_notices_title'] =  $_lang["security_notices_title"];
+$ph['modx_security_notices_content'] =  $feedData['modx_security_notices_content'];
 
-// recent document info
-$html  = '<div class="table-responsive">
-<table class="table table-hover table-condensed">
-<thead>
-<tr>
-<th style="width: 50px;">' . $_lang["id"] . '</th>
-<th>' . $_lang["resource_title"] . '</th>
-<th style="width: 140px;">' . $_lang['page_data_edited'] . '</th>
-<th style="width: 180px;">' . $_lang["user"] . '</th>
-<th style="width: 180px; text-align: right;">' . $_lang["mgrlog_action"] . '</th>
-</tr>
-</thead>';
-
-$rs    = $modx->db->select('id, pagetitle, longtitle, introtext, alias, description, editedon, editedby, published, deleted, cacheable, template', $modx->getFullTableName('site_content'), "", 'editedon DESC', 10);
-
-$limit = $modx->db->getRecordCount($rs);
-
-if ($limit < 1) {
-    $html .= '<tr><td>' . $_lang['no_activity_message'] . '</td></tr>';
-} 
-
-else {
-    while ($content = $modx->db->getRow($rs)) {
-        $editedby  = $content['editedby'];
-        $editedbyu = $modx->getUserInfo($editedby);
-        $html .= '<tr><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">
-      
-        <span class="label label-info">' . $content['id'] . '</span></td><td>';
-        if ($content['deleted'] == 1) {
-            $html .= '<a class="deleted" ';
-        } else if ($content['published'] == 0) {
-            $html .= '<a class="unpublished" ';
-        } else {
-            $html .= '<a class="published" ';
-        }
-        $html .= 'title="' . $_lang["edit_resource"] . '" href="index.php?a=3&amp;id=' . $content['id'] . '">' . $content['pagetitle'] . '</a>' . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $modx->toDateFormat($content['editedon'] + $server_offset_time) . '</td><td data-toggle="collapse" data-target=".collapse' . $content['id'] . '">' . $editedbyu['username'] . '</td>
-        <td style="text-align: right;">';
-        
-        if ($modx->hasPermission('edit_document')) {
-            $html .= '<a class="btn btn-xs btn-success" title="' . $_lang["edit_resource"] . '" href="index.php?a=27&amp;id=' . $content['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
-        }
-        
-        if ($content['deleted'] == 1) {
-            $html .= '<a class="btn btn-xs btn-info disabled"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
-        } else {
-            $html .= '<a class="btn btn-xs btn-info"  title="' . $_lang["preview_resource"] . '" target="_blank" href="../index.php?&amp;id=' . $content['id'] . '"><i class="fa fa-eye fa-fw"></i></a> ';
-        }
-        if ($modx->hasPermission('delete_document')) {
-            if ($content['deleted'] == 0) {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_delete_record"].'\')" class="btn btn-xs btn-danger"  title="' . $_lang["delete_resource"] . '" href="index.php?a=6&amp;id=' . $content['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
-            } else {
-                $html .= '<a onclick="return confirm(\''.$_lang["confirm_undelete"].'\')" class="btn btn-xs btn-success"  title="' . $_lang["undelete_resource"] . '" href="index.php?a=63&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
-            }
-        }
-        if ($content['deleted'] == "1" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "1" AND $content['published'] == 1) {
-            $html .= '<a class="btn btn-xs btn-primary disabled"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down fa-fw"></i></a> ';
-        } else if ($content['deleted'] == "0" AND $content['published'] == 0) {
-            $html .= '<a class="btn btn-xs btn-primary"  title="' . $_lang["publish_resource"] . '" href="index.php?a=61&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
-        } else {
-            $html .= '<a class="btn btn-xs btn-warning"  title="' . $_lang["unpublish_resource"] . '" href="index.php?a=62&amp;id=' . $content['id'] . '"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
-        }
-        $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="' . $_lang["resource_overview"] . '" data-toggle="collapse" data-target=".collapse' . $content['id'] . '"><i class="fa fa-info" aria-hidden="true"></i></button></td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse' . $content['id'] . '"><div class="overview-body small"><ul>        
-<li><b>' . $_lang["long_title"] . '</b>: ';
-        if ($content['longtitle'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else { 
-            $html .= '' . $content['longtitle'] . '</li> ';
-        }
-        $html .= ' <li><b>' . $_lang["description"] . '</b>: ';        
-        if ($content['description'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else {         
-            $html .= '' . $content['description'] . '</li> ';
-        }
-        $html .= '<li><b>' . $_lang["resource_summary"] . '</b>: ';
-        if ($content['introtext'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else {   
-            $html .= '' . $content['introtext'] . '</li> ';
-        }
-        $html .= '<li><b>' . $_lang['type'] . '</b>: ';
-        if ($content['type'] == 'reference') {
-            $html .= '' . $_lang['weblink'] . '</li>';
-        } else {
-            $html .= '' . $_lang['resource'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang["resource_alias"] . '</b>: ';
-        if ($content['alias'] == "") {
-            $html .= '(<i>'.$_lang['not_set'].'</i>)';
-        } else { 
-           $html .= '' . $content['alias'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang['page_data_cacheable'] . '</b>: '; 
-        if ($content['cacheable'] == 0) {
-            $html .= '' . $_lang['no'] . '<br/>';
-        } else {
-            $html .= '' . $_lang['yes'] . '</li>';
-        }
-        $html .= '<li><b>' . $_lang['resource_opt_show_menu'] . '</b>: ';
-        if ($content['hidemenu'] == 0) {
-            $html .= '' . $_lang['no'] . '<br/>';
-        } else {
-            $html .= '' . $_lang['yes'] . '</li>';
-        }
-        // Get Template name
-        $rst          = $modx->db->select('templatename', $modx->getFullTableName('site_templates'), 'id=' . $content['template'] .'');
-        $templatename = $modx->db->getValue($rst);
-        $html .= '<li><b>' . $_lang['page_data_template'] . '</b>: ' . $templatename . '</li>';
-        $html .= '</ul></div></div></td></tr>';
-        
-    }
-}
-
-$html .= '</table></div>';
-$modx->setPlaceholder('recent_docs', $_lang['recent_docs']);
-$modx->setPlaceholder('activity_title', $_lang['activity_title']);
-$modx->setPlaceholder('RecentInfo', $html);
+$ph['RecentInfo'] =  getRecentInfo();
+$ph['recent_docs'] =  $_lang['recent_docs'];
+$ph['activity_title'] =  $_lang['activity_title'];
 
 // user info
-$modx->setPlaceholder('info', $_lang['info']);
-$modx->setPlaceholder('yourinfo_title', $_lang['yourinfo_title']);
+$ph['info'] =  $_lang['info'];
+$ph['yourinfo_title'] =  $_lang['yourinfo_title'];
 $html = '
     <table class="table table-hover table-condensed">
       <tr>
@@ -255,16 +149,16 @@ $html = '
       </tr>
     </table>
 ';
-$modx->setPlaceholder('UserInfo', $html);
+$ph['UserInfo'] =  $html;
 
 // online users
-$modx->setPlaceholder('online', $_lang['online']);
-$modx->setPlaceholder('onlineusers_title', $_lang['onlineusers_title']);
+$ph['online'] =  $_lang['online'];
+$ph['onlineusers_title'] =  $_lang['onlineusers_title'];
 $timetocheck = (time() - (60 * 20)); //+$server_offset_time;
 
-include_once "actionlist.inc.php";
+include_once(MODX_MANAGER_PATH.'includes/actionlist.inc.php');
 
-$rs    = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
+$rs    = $modx->db->select('*', $modx->getFullTableName('active_user_sessions')." us LEFT JOIN {$modx->getFullTableName('active_users')} au ON au.internalKey=us.internalKey", "", 'username ASC');
 $limit = $modx->db->getRecordCount($rs);
 if ($limit < 1) {
     $html = "<p>" . $_lang['no_active_users_found'] . "</p>";
@@ -285,8 +179,10 @@ if ($limit < 1) {
         ';
     while ($activeusers = $modx->db->getRow($rs)) {
         $currentaction = getAction($activeusers['action'], $activeusers['id']);
-        $webicon       = ($activeusers['internalKey'] < 0) ? "<img src='" . $_style["tree_globe"] . "' alt='Web user' />" : "";
-      $html .= "<tr><td><strong>" . $activeusers['username'] . "</strong></td><td>$webicon&nbsp;" . abs($activeusers['internalKey']) . "</td><td>" . $activeusers['ip'] . "</td><td>" . strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time) . "</td><td>$currentaction</td></tr>";
+        $webicon       = ($activeusers['internalKey'] < 0) ? sprintf('<img src="%s" alt="Web user" />',$_style["tree_globe"]) : '';
+	    $idle          = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+        $params = array($idle, $activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
+        $html .= vsprintf('<tr%s><td><strong>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
     }
     $html .= '
                 </tbody>
@@ -294,27 +190,27 @@ if ($limit < 1) {
                 </div>
         ';
 }
-$modx->setPlaceholder('OnlineInfo', $html);
+$ph['OnlineInfo'] =  $html;
 
 // invoke event OnManagerWelcomePrerender
 $evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomePrerender', $output);
+    $ph['OnManagerWelcomePrerender'] =  $output;
 }
 
 // invoke event OnManagerWelcomeHome
 $evtOut = $modx->invokeEvent('OnManagerWelcomeHome');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeHome', $output);
+    $ph['OnManagerWelcomeHome'] =  $output;
 }
 
 // invoke event OnManagerWelcomeRender
 $evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
 if (is_array($evtOut)) {
     $output = implode("", $evtOut);
-    $modx->setPlaceholder('OnManagerWelcomeRender', $output);
+    $ph['OnManagerWelcomeRender'] =  $output;
 }
 
 // load template
@@ -354,10 +250,123 @@ if (substr($target, 0, 1) === '@') {
 }
 
 // merge placeholders
-$welcome_tpl = $modx->mergePlaceholderContent($welcome_tpl);
-$welcome_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $welcome_tpl); //cleanup
+$welcome_tpl = $modx->mergeConditionalTagsContent($welcome_tpl);
+$welcome_tpl = $modx->mergeSettingsContent($welcome_tpl);
+$welcome_tpl = $modx->parseText($welcome_tpl,$ph);
+$welcome_tpl = $modx->parseText($welcome_tpl,$_lang, '[%','%]');
+$welcome_tpl = $modx->parseText($welcome_tpl,$_style,'[&','&]');
+$welcome_tpl = $modx->cleanUpMODXTags($welcome_tpl); //cleanup
+
 if ($js = $modx->getRegisteredClientScripts()) {
     $welcome_tpl .= $js;
 }
 
 echo $welcome_tpl;
+
+
+
+function getRecentInfo() { // recent document info
+    global $modx, $_lang;
+    
+    $html  = '<div class="table-responsive">
+    <table class="table table-hover table-condensed">
+    <thead>
+    <tr>
+    <th style="width: 50px;">[%id%]</th>
+    <th>[%resource_title%]</th>
+    <th style="width: 140px;">[%page_data_edited%]</th>
+    <th style="width: 180px;">[%user%]</th>
+    <th style="width: 180px; text-align: right;">[%mgrlog_action%]</th>
+    </tr>
+    </thead>';
+    
+    $rs = $modx->db->select('*', '[+prefix+]site_content', '', 'editedon DESC', 10);
+    
+    if ($modx->db->getRecordCount($rs) < 1) {
+        $html .= '<tr><td>[%no_activity_message%]</td></tr>';
+    }
+    else {
+        while ($content = $modx->db->getRow($rs)) {
+            
+            $editedbyu = $modx->getUserInfo($content['editedby']);
+            $content['username'] = $editedbyu['username'];
+            
+            $html .= '<tr><td data-toggle="collapse" data-target=".collapse[+id+]"><span class="label label-info">[+id+]</span></td><td>';
+            
+            $html .= '<a class=';
+            if ($content['deleted'] == 1)       $html .= '"deleted"';
+            elseif ($content['published'] == 0) $html .= '"unpublished"';
+            else                                $html .= '"published"';
+            
+            $html .= ' title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td><td data-toggle="collapse" data-target=".collapse[+id+]">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td><td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
+            <td style="text-align: right;">';
+            
+            if ($modx->hasPermission('edit_document')) {
+                $html .= '<a class="btn btn-xs btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+            }
+            
+            if ($content['deleted'] == 1) {
+                $html .= '<a class="btn btn-xs btn-info disabled"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+            } else {
+                $html .= '<a class="btn btn-xs btn-info"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+            }
+            
+            if ($modx->hasPermission('delete_document')) {
+                if ($content['deleted'] == 0) {
+                    $html .= '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+                } else {
+                    $html .= '<a onclick="return confirm(\'[%["confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+                }
+            }
+            
+            if ($content['deleted'] == 1 && $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+            } elseif ($content['deleted'] == 1 && $content['published'] == 1) {
+                $html .= '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+            } elseif ($content['deleted'] == 0 && $content['published'] == 0) {
+                $html .= '<a class="btn btn-xs btn-primary"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+            } else {
+                $html .= '<a class="btn btn-xs btn-warning"  title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+            }
+            
+            $html .= '<button class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info" aria-hidden="true"></i></button>';
+            
+            $html .='</td></tr><tr><td colspan="6" class="hiddenRow"><div class="resource-overview-accordian collapse collapse[+id+]"><div class="overview-body small"><ul>';
+            
+            $html .= ' <li><b>[%long_title%]</b>: ';
+            $html .= ($content['longtitle'] != '')     ? '[+longtitle+]'    : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= ' <li><b>[%description%]</b>: ';
+            $html .= ($content['description'] != '')   ? '[+description+] ' : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_summary%]</b>: ';
+            $html .= ($content['introtext'] != '')     ? '[+introtext+] '   : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%type%]</b>: ';
+            $html .= ($content['type'] != 'reference') ? '[%resource%]'     : '[%weblink%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_alias%]</b>: ';
+            $html .=  ($content['alias'] != '')        ? '[+alias+]'        : '(<i>[%not_set%]</i>)';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%page_data_cacheable%]</b>: '; 
+            $html .= ($content['cacheable'] == 0)      ? '[%yes%]'          : '[%no%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%resource_opt_show_menu%]</b>: ';
+            $html .= ($content['hidemenu'] == 0)       ? '[%yes%]'          : '[%no%]';
+            $html .= '</li>';
+            
+            $html .= '<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>';
+            $html .= '</ul></div></div></td></tr>';
+            $html = $modx->parseText($html,$content);
+        }
+    }
+    
+    $html .= '</table></div>';
+    return $html;
+}

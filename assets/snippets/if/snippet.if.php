@@ -42,7 +42,7 @@ for ($i=1;$i<count($opers);$i++){
 
     if (isset($subject)) {
         if (!empty($operator)) {
-            if ($math=='on' && !empty($subject)) {eval('$subject='.$subject.';');}
+            if ($math=='on' && !empty($subject)) {echo $modx->safeEval('$subject='.$subject.';');}
             $operator = strtolower($operator);
 
             switch ($operator) {
@@ -133,12 +133,12 @@ if (strpos($output,'@TPL:')!==FALSE){$output='{{'.(str_replace('@TPL:','',$outpu
 
 if (substr($output,0,6) == "@eval:") {
     ob_start();
-    eval(substr($output,6));
+    echo $modx->safeEval(substr($output,6));
     $output = ob_get_contents();
     ob_end_clean();
 }
 if (empty($then)&&empty($else)&&$math=='on') {
-    eval('$subject='.$subject.';');
+    echo $modx->safeEval('$subject='.$subject.';');
     return $subject;
 }
 
