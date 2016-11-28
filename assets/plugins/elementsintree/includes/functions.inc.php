@@ -126,79 +126,79 @@ function createElementsList($elmTable,$action,$nameField = 'name') {
 
 // createModulesList function
 
-function createModulesList($elmTable,$action,$tablePre,$nameField = 'name') {
+function createModulesList($action) {
 
     global $modx, $_lang;
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$elmTable.'_search">
+          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_site_modules_search">
         </form>';
         
-    $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$elmTable.'">';
+    $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_site_modules">';
 
     if ($_SESSION['mgrRole'] != 1) {
-        $rs = $modx->db->query('SELECT sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid, mg.member
-        FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
-        LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
-        LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
-        LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS cats ON sm.category = cats.id
-        WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
-        ORDER BY 5,1');
+        $field = 'sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category as catname, cats.id as catid, mg.member';
+        $from = array();
+        $from[] = '[+prefix+]site_modules as sm';
+        $from[] = 'LEFT JOIN [+prefix+]site_module_access as sma ON sma.module=sm.id';
+        $from[] = 'LEFT JOIN [+prefix+]member_groups as mg ON sma.usergroup = mg.user_group';
+        $from[] = 'LEFT JOIN [+prefix+]categories as cats ON sm.category = cats.id';
+        $where  = sprintf( '(mg.member IS NULL OR mg.member=%s) AND sm.disabled!=1 AND sm.locked!=1', $modx->getLoginUserID() );
+        $rs = $modx->db->select($field,$from,$where,'5,1');
     } 
     
     else {
-        $rs = $modx->db->query('SELECT sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category AS catname, cats.id AS catid
-        FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
-        LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS cats ON sm.category = cats.id
-        WHERE sm.disabled != 1
-        ORDER BY 5,1');
+        $field = 'sm.id, sm.name, sm.description, sm.category, sm.disabled, cats.category as catname, cats.id as catid';
+        $from = array();
+        $from[] = '[+prefix+]site_modules as sm';
+        $from[] = 'LEFT JOIN [+prefix+]categories as cats ON sm.category=cats.id';
+        $rs = $modx->db->select($field,$from,'sm.disabled!=1','5,1');
     }
     
-    $limit = $modx->db->getRecordCount($rs);
-    
-    if($limit<1){
+    if($modx->db->getRecordCount($rs)<1){
         return '';
     }
     
     $preCat   = '';
     $insideUl = 0;
     
-    for($i=0; $i<$limit; $i++) {
-        $row = $modx->db->getRow($rs);
-        if($row['catid'] > 0) {
-            $row['catid'] = stripslashes($row['catid']);
-        } else {
-            $row['catname'] = $_lang["no_category"];
-        }
+    while($row = $modx->db->getRow($rs)) {
+        
+        if($row['catid'] > 0) $row['catid']   = stripslashes($row['catid']);
+        else                  $row['catname'] = $_lang['no_category'];
+        $row['action'] = $action;
+        
         if ($preCat !== $row['category']) {
             $output .= $insideUl? '</div>': '';
             $row['catid'] = intval($row['catid']);
-            $output .= '<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" id="toggle'.$elmTable.$row['catid'].'" href="#collapse'.$elmTable.$row['catid'].'" data-cattype="'.$elmTable.'" data-catid="'.$row['catid'].'" title="Click to toggle collapse. Shift+Click to toggle all."> '.$row['catname'].'</a></span></div><div class="panel-collapse in '.$elmTable.'"  id="collapse'.$elmTable.$row['category'].'"><ul>';
+            $output .= $modx->parseText('<div class="panel-heading"><span class="panel-title"><a class="accordion-toggle" id="togglesite_modules[+catid+]" href="#collapsesite_modules[+catid+]" data-cattype="site_modules" data-catid="[+catid+]" title="Click to toggle collapse. Shift+Click to toggle all."> [+catname+]</a></span></div><div class="panel-collapse in site_modules"  id="collapsesite_modules[+category+]"><ul>', $row);
             $insideUl = 1;
         }
-        $output .= '<li class="eltree"><span><a href="index.php?id='.$row['id'].'&amp;a='.$action.'" title="'.strip_tags($row['description']).'" target="main" class="context-menu" data-type="'.$elmTable.'" data-id="'.$row['id'].'"><span class="elementname">'.$row['name'].'</span><small> (' . $row['id'] . ')</small></a>
-          <a class="ext-ico" href="#" title="Open in new window" onclick="window.open(\'index.php?id='.$row['id'].'&a='.$action.'\',\'gener\',\'width=800,height=600,top=\'+((screen.height-600)/2)+\',left=\'+((screen.width-800)/2)+\',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no\')"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
-        $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
-        $output .= '</li>';
+        $row['window.open'] = $modx->parseText("'index.php?id=[+id+]&a=[+action+]','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no'", $row);
+        $row['textdir'] = $modx_textdir ? '&rlm;' : '';
+        $row['description'] = strip_tags($row['description']);
+        $row['locked'] = $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : '';
+        $output .= $modx->parseText('<li class="eltree"><span><a href="index.php?id=[+id+]&amp;a=[+action+]" title="[+description+]" target="main" class="context-menu" data-type="site_modules" data-id="[+id+]"><span class="elementname">[+name+]</span><small> ([+id+])</small></a>
+          <a class="ext-ico" href="#" title="Open in new window" onclick="window.open([+window.open+])"> <small><i class="fa fa-external-link" aria-hidden="true"></i></small></a>[+textdir+]</span>[+locked+]</li>', $row);
         $preCat  = $row['category'];
     }
     $output .= $insideUl? '</ul></div></div>': '';
     $output .= '</div>';
-    $output .= '
+    $output .= "
 
 <script>
-  initQuicksearch(\'tree_'.$elmTable.'_search\', \'tree_'.$elmTable.'\');
-  jQuery(\'#tree_'.$elmTable.'_search\').on(\'focus\', function () {
+  initQuicksearch('tree_site_modules_search', 'tree_site_modules');
+  jQuery('#tree_site_modules_search').on('focus', function () {
     searchFieldCache = elementsInTreeParams.cat_collapsed;
-    jQuery(\'#tree_'.$elmTable.' .accordion-toggle\').addClass("no-events");
-    jQuery(\'#tree_'.$elmTable.' .accordion-toggle\').removeClass("collapsed");
-    jQuery(\'.'.$elmTable.'\').collapse(\'show\');
-  }).on(\'blur\', function () {
-    jQuery(\'#tree_'.$elmTable.' .accordion-toggle\').removeClass("no-events");
+    jQuery('#tree_site_modules .accordion-toggle').addClass('no-events');
+    jQuery('#tree_site_modules .accordion-toggle').removeClass('collapsed');
+    jQuery('.site_modules').collapse('show');
+  }).on('blur', function () {
+    jQuery('#tree_site_modules .accordion-toggle').removeClass('no-events');
     setRememberCollapsedCategories(searchFieldCache);
   });
-</script>';
+</script>";
     return $output;
 }
 

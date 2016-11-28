@@ -25,105 +25,96 @@ else {
 
 $text_reload_title = 'Click here to reload elements list.';
 
-$tablePre = $modx->db->config['dbase'] . '.`' . $modx->db->config['table_prefix'];
-
-$temp    = createElementsList('site_templates',16,'templatename');
-$tv      = createElementsList('site_tmplvars',301);
+$templates = createElementsList('site_templates',16,'templatename');
+$tmplvars  = createElementsList('site_tmplvars',301);
 $chunk   = createElementsList('site_htmlsnippets',78);
 $snippet = createElementsList('site_snippets',22);
 $plugin  = createElementsList('site_plugins',102);
-$module  = createModulesList('site_modules',112,$tablePre);
+$module    = createModulesList(112);
 
-if ( hasAnyPermission() ) {
-    $output = '</div>';
-}
+$ph = compact('tabLabel_template','tabLabel_tv','tabLabel_chunk','tabLabel_snippet','tabLabel_plugin','tabLabel_module','tabLabel_create','tabLabel_refresh','text_reload_title','templates','tmplvars','chunk','snippet','plugin','module');
 
-if ($modx->hasPermission('edit_template')) {
+if ( hasAnyPermission() ) $output = '</div>';
+
+$modx->addSnippet('hasPermission','return $modx->hasPermission($permission);');
+
     $output .= '
+<@IF:[!hasPermission?permission=edit_template!] >
       <div class="tab-page" id="tabTemp" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Templates">'.$tabLabel_template.'</h2>
+      <h2 class="tab" title="Templates">[+tabLabel_template+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
-      '.$temp.'
+      [+templates+]
       <ul class="actionButtons actionButtons--eit">
-      <li><a href="index.php?a=19" target="main" title="'.$_lang['new_template'].'">'.$tabLabel_create.'</a></li>
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      <li><a href="index.php?a=19" target="main" title="[%new_template%]">[+tabLabel_create+]</a></li>
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
-    ';
-}
+<@ENDIF>
 
-if ($modx->hasPermission('edit_template')) {
-    $output .= '
+<@IF:[!hasPermission?permission=edit_template!] >
       <div class="tab-page" id="tabTV" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Template Variables">'.$tabLabel_tv.'</h2>
+      <h2 class="tab" title="Template Variables">[+tabLabel_tv+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
-      '.$tv.'
+      [+tmplvars+]
       <ul class="actionButtons actionButtons--eit">
-      <li><a href="index.php?a=300" target="main" title="'.$_lang['new_tmplvars'].'">'.$tabLabel_create.'</a></li>
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      <li><a href="index.php?a=300" target="main" title="[%new_tmplvars%]">[+tabLabel_create+]</a></li>
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
-    ';
-}
+<@ENDIF>
 
-if ($modx->hasPermission('edit_chunk')) {
-    $output .= '
+<@IF:[!hasPermission?permission=edit_chunk!] >
       <div class="tab-page" id="tabCH" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Chunks">'.$tabLabel_chunk.'</h2>
+      <h2 class="tab" title="Chunks">[+tabLabel_chunk+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
-      '.$chunk.'
+      [+chunk+]
       <ul class="actionButtons actionButtons--eit">
-      <li><a href="index.php?a=77" target="main" title="'.$_lang['new_htmlsnippet'].'">'.$tabLabel_create.'</a></li>
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      <li><a href="index.php?a=77" target="main" title="[%new_htmlsnippet%]">[+tabLabel_create+]</a></li>
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
-    ';
-}
+<@ENDIF>
 
-if ($modx->hasPermission('edit_snippet')) {
-    $output .= '
+<@IF:[!hasPermission?permission=edit_snippet!] >
       <div class="tab-page" id="tabSN" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Snippets">'.$tabLabel_snippet.'</h2>
+      <h2 class="tab" title="Snippets">[+tabLabel_snippet+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
-      '.$snippet.'
+      [+snippet+]
       <ul class="actionButtons actionButtons--eit">
-      <li><a href="index.php?a=23" target="main" title="'.$_lang['new_snippet'].'">'.$tabLabel_create.'</a></li>
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      <li><a href="index.php?a=23" target="main" title="[%new_snippet%]">[+tabLabel_create+]</a></li>
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
-    ';
-}
+<@ENDIF>
 
-if ($modx->hasPermission('edit_plugin')) {
-    $output .= '
+<@IF:[!hasPermission?permission=edit_plugin!] >
       <div class="tab-page" id="tabPL" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Plugins">'.$tabLabel_plugin.'</h2>
+      <h2 class="tab" title="Plugins">[+tabLabel_plugin+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
-      '.$plugin.'
+      [+plugin+]
       <ul class="actionButtons actionButtons--eit">
-      <li><a href="index.php?a=101" target="main" title="'.$_lang['new_plugin'].'">'.$tabLabel_create.'</a></li>
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      <li><a href="index.php?a=101" target="main" title="[%new_plugin%]">[+tabLabel_create+]</a></li>
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
+<@ENDIF>
     ';
-}
 
 if ($modx->hasPermission('exec_module')) {
     
-    $new_module_button = '';
-
-    if ($modx->hasPermission('new_module')) {
-        $new_module_button = '<li><a href="index.php?a=107" target="main" title="'.$_lang['new_module'].'">'.$tabLabel_create.'</a></li>';
-    }
+    if ($modx->hasPermission('new_module'))
+        $ph['new_module_button'] = $modx->parseText('<li><a href="index.php?a=107" target="main" title="[%new_module%]">[+tabLabel_create+]</a></li>',$ph);
+    else
+        $ph['new_module_button'] = '';
     
     $output .= '
       <div class="tab-page" id="tabMD" style="padding-left:0; padding-right:0;">
-      <h2 class="tab" title="Modules">'.$tabLabel_module.'</h2>
+      <h2 class="tab" title="Modules">[+tabLabel_module+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
-      '.$module.'
+      [+module+]
       <ul class="actionButtons actionButtons--eit">
-      '.$new_module_button.'
-      <li><a href="javascript:reloadElementsInTree();" title="'.$text_reload_title.'">'.$tabLabel_refresh.'</a></li>
+      [+new_module_button+]
+      <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
       </div>
   ';
@@ -144,11 +135,11 @@ if ( hasAnyPermission() ) {
                 eitAction(name, action, cm.data("type"), cm.data("id"));
               },
               menu: [
-                { name: "create",    title: "'.addslashes($_lang["create_new"]).'", icon: "plus", },
-                { name: "edit",      title: "'.addslashes($_lang["edit"]).'",       icon: "edit", },
-                { name: "duplicate", title: "'.addslashes($_lang["duplicate"]).'",  icon: "clone", },
+                { name: "create",    title: "[%create_new:addslashes%]", icon: "plus", },
+                { name: "edit",      title: "[%edit:addslashes%]",       icon: "edit", },
+                { name: "duplicate", title: "[%duplicate:addslashes%]",  icon: "clone", },
                 { name: "void" },
-                { name: "delete",    title: "'.addslashes($_lang["delete"]).'",     icon: "trash", },
+                { name: "delete",    title: "[%delete:addslashes%]",     icon: "trash", },
               ]
             });
         });
@@ -159,27 +150,27 @@ if ( hasAnyPermission() ) {
             switch(type) {
                 case "site_templates" :
                     actionsIds = { "create":19, "edit":16, "duplicate":96, "delete":21 }; 
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_template"]).'";
+                    deleteMsg = "[%confirm_delete_template:addslashes%]";
                     break;
                 case "site_tmplvars" :
                     actionsIds = { "create":300, "edit":301, "duplicate":304, "delete":303 };
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_tmplvars"]).'";
+                    deleteMsg = "[%confirm_delete_tmplvars:addslashes%]";
                     break;
                 case "site_htmlsnippets" :
                     actionsIds = { "create":77, "edit":78, "duplicate":97, "delete":80 };
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_htmlsnippet"]).'";
+                    deleteMsg = "[%confirm_delete_htmlsnippet:addslashes%]";
                     break;
                 case "site_snippets" :
                     actionsIds = { "create":23, "edit":22, "duplicate":98, "delete":25 };
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_snippet"]).'";
+                    deleteMsg = "[%confirm_delete_snippet:addslashes%]";
                     break;
                 case "site_plugins" :
                     actionsIds = { "create":101, "edit":102, "duplicate":105, "delete":104 };
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_plugin"]).'";
+                    deleteMsg = "[%confirm_delete_plugin:addslashes%]";
                     break;
                 case "site_modules" :
                     actionsIds = { "create":107, "edit":108, "duplicate":111, "delete":110 };
-                    deleteMsg = "'.addslashes($_lang["confirm_delete_module"]).'";
+                    deleteMsg = "[%confirm_delete_module:addslashes%]";
                     break;
                 default :
                     alert("Unknown type");
@@ -191,7 +182,7 @@ if ( hasAnyPermission() ) {
             switch(action) {
                 case "create" : id = false; break;
                 case "edit" : break;
-                case "duplicate" : confirmMsg = "'.addslashes($_lang["confirm_duplicate_record"]).'"; break;
+                case "duplicate" : confirmMsg = "[%confirm_duplicate_record:addslashes%]"; break;
                 case "delete" : confirmMsg = deleteMsg; break;
             }
             
@@ -207,5 +198,11 @@ if ( hasAnyPermission() ) {
     ';
     
     $output .= '</div>';
+    $_ = $modx->config['enable_filter'];
+    $modx->config['enable_filter'] = 1;
+    $output = $modx->mergeConditionalTagsContent($output);
+    $output = $modx->parseText($output,$ph);
+    $output = $modx->parseText($output,$_lang,'[%','%]');
+    $modx->config['enable_filter'] = $_;
     $e->output($output);
 }
