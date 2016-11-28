@@ -253,6 +253,8 @@ if (substr($target, 0, 1) === '@') {
 $welcome_tpl = $modx->mergeConditionalTagsContent($welcome_tpl);
 $welcome_tpl = $modx->mergeSettingsContent($welcome_tpl);
 $welcome_tpl = $modx->parseText($welcome_tpl,$ph);
+if(strpos($welcome_tpl,'[+')!==false)
+    $welcome_tpl = $modx->mergePlaceholderContent($welcome_tpl);
 $welcome_tpl = $modx->parseText($welcome_tpl,$_lang, '[%','%]');
 $welcome_tpl = $modx->parseText($welcome_tpl,$_style,'[&','&]');
 $welcome_tpl = $modx->cleanUpMODXTags($welcome_tpl); //cleanup

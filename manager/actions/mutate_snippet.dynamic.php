@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch((int) $_REQUEST['a']) {
+switch($modx->manager->action) {
   case 22:
     if(!$modx->hasPermission('edit_snippet')) {
       $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -370,7 +370,7 @@ function contains(a, obj) {
     $docBlockList = $modx->convertDocBlockIntoList($parsed);
 ?>
     <input type="hidden" name="id" value="<?php echo $content['id']?>">
-    <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
+    <input type="hidden" name="mode" value="<?php echo $modx->manager->action;?>">
     
     <div id="actions">
           <ul class="actionButtons">
@@ -385,7 +385,7 @@ function contains(a, obj) {
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_GET['a'] == '23') { ?>
+          <?php if ($modx->manager->action == '23') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -455,7 +455,7 @@ function contains(a, obj) {
             <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
           </tr>
           <tr>
-            <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
+            <td valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td>
           </tr>
 <?php endif;?>
         </table>

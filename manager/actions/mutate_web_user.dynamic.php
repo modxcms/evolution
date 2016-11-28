@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch((int) $_REQUEST['a']) {
+switch($modx->manager->action) {
   case 88:
     if(!$modx->hasPermission('edit_web_user')) {
       $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -26,7 +26,7 @@ if ($username = $modx->db->getValue($rs)) {
 }
 // end check for lock
 
-if($_REQUEST['a']=='88') {
+if($modx->manager->action=='88') {
   // get user attributes
   $rs = $modx->db->select('*', $modx->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
   $userdata = $modx->db->getRow($rs);
@@ -184,7 +184,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
   $evtOut = $modx->invokeEvent("OnWUsrFormPrerender",array("id" => $user));
   if(is_array($evtOut)) echo implode("",$evtOut);
   ?>
-  <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>" />
+  <input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
   <input type="hidden" name="id" value="<?php echo $user ?>" />
   <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
@@ -209,7 +209,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
           <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
         </select>
       </li>
-      <?php if($_GET['a'] == '87') { ?>
+      <?php if($modx->manager->action == '87') { ?>
       <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
       <?php } else { ?>
       <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
@@ -238,7 +238,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
           </tr>
           
           <?php if(!empty($userdata['id'])) { ?>
-          <tr id="showname" style="display: <?php echo ($_GET['a']=='88' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
+          <tr id="showname" style="display: <?php echo ($modx->manager->action=='88' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
             <td colspan="3">
               <img src="<?php echo $_style["icons_user"]?>" alt="." />&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
               <input type="hidden" name="oldusername" value="<?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
@@ -247,17 +247,17 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
           </tr>
           <?php } ?>
           
-          <tr id="editname" style="display:<?php echo $_GET['a']=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
+          <tr id="editname" style="display:<?php echo $modx->manager->action=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
             <th><?php echo $_lang['username']; ?>:</th>
             <td>&nbsp;</td>
             <td><input type="text" name="newusername" class="inputBox" value="<?php echo $modx->htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
           </tr>
           
           <tr>
-            <th><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></th>
+            <th><?php echo $modx->manager->action=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></th>
             <td>&nbsp;</td>
-            <td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="87" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
-              <span style="display:<?php echo $_REQUEST['a']=="87" ? "block": "none" ; ?>" id="passwordBlock">
+            <td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $modx->manager->action=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $modx->manager->action=="87" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
+              <span style="display:<?php echo $modx->manager->action=="87" ? "block": "none" ; ?>" id="passwordBlock">
                 <fieldset style="width:300px">
                   <legend><?php echo $_lang['password_gen_method']; ?></legend>
                   <input type=radio name="passwordgenmethod" value="g" <?php echo $_POST['passwordgenmethod']=="spec" ? "" : 'checked="checked"'; ?> /><?php echo $_lang['password_gen_gen']; ?><br />
@@ -434,7 +434,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
             </td>
           </tr>
           
-          <?php if($_GET['a']=='88') { ?>
+          <?php if($modx->manager->action=='88') { ?>
 
           <tr> 
             <td colspan="3"><div class='split'></div></td> 
@@ -616,7 +616,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
       if($use_udperms==1) {
         $groupsarray = array();
 
-        if($_GET['a']=='88') { // only do this bit if the user is being edited
+        if($modx->manager->action=='88') { // only do this bit if the user is being edited
           $rs = $modx->db->select('webgroup', $modx->getFullTableName('web_groups'), "webuser='{$user}'");
           $groupsarray = $modx->db->getColumn('webgroup', $rs);
         }

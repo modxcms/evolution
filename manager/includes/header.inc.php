@@ -40,7 +40,8 @@ if(!isset($modx->config['mgr_date_picker_path'])) $modx->config['mgr_date_picker
             stopWorker();
             hideLoader();
 <?php
-	if(isset($_REQUEST['r'])) echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
+	if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@',$_REQUEST['r']))
+	    echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 ?>
         }
 

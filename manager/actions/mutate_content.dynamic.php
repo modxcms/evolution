@@ -9,7 +9,7 @@ $add_path=$sd.$sb.$pg;
 /*******************/
 
 // check permissions
-switch ($_REQUEST['a']) {
+switch ($modx->manager->action) {
     case 27:
         if (!$modx->hasPermission('edit_document')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -508,7 +508,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 ?>
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
-<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($modx->config['upload_maxsize']) ? $modx->config['upload_maxsize'] : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
@@ -575,7 +575,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
               <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
             </select>
           </li>
-      <?php if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') { ?>
+      <?php if ($modx->manager->action == '4' || $modx->manager->action == '72') { ?>
           <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } else { ?>
@@ -627,7 +627,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 <td><input name="link_attributes" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['link_attributes']))?>" class="inputBox" onchange="documentDirty=true;" />
                 <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['link_attributes_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
-<?php if ($content['type'] == 'reference' || $_REQUEST['a'] == '72') { // Web Link specific ?>
+<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 
           <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" alt="tree_folder" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer; margin-top:-4px;" /></td>
                 <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -728,12 +728,12 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 </td></tr>
         </table>
 
-<?php if ($content['type'] == 'document' || $_REQUEST['a'] == '4') { ?>
+<?php if ($content['type'] == 'document' || $modx->manager->action == '4') { ?>
         <!-- Content -->
             <div class="sectionHeader" id="content_header"><?php echo $_lang['resource_content']?></div>
             <div class="sectionBody" id="content_body">
 <?php
-            if (($content['richtext'] == 1 || $_REQUEST['a'] == '4') && $use_editor == 1) {
+            if (($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
                 $htmlContent = $content['content'];
 ?>
                 <div style="width:100%">
@@ -767,7 +767,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
             </div><!-- end .sectionBody -->
 <?php } ?>
 
-<?php if (($content['type'] == 'document' || $_REQUEST['a'] == '4') || ($content['type'] == 'reference' || $_REQUEST['a'] == 72)) { ?>
+<?php if (($content['type'] == 'document' || $modx->manager->action == '4') || ($content['type'] == 'reference' || $modx->manager->action == 72)) { ?>
         <!-- Template Variables -->
             <div class="sectionHeader" id="tv_header"><?php echo $_lang['settings_templvars']?></div>
             <div class="sectionBody tmplvars" id="tv_body">
@@ -890,13 +890,13 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 <?php
 
-if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
+if ($_SESSION['mgrRole'] == 1 || $modx->manager->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
 ?>
             <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_type']?></span></td>
                 <td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
-                    <option value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == '85' || $_REQUEST['a'] == '4') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_webpage"];?></option>
-                    <option value="reference"<?php echo (($content['type'] == "reference" || $_REQUEST['a'] == '72') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_weblink"];?></option>
+                    <option value="document"<?php echo (($content['type'] == "document" || $modx->manager->action == '85' || $modx->manager->action == '4') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_webpage"];?></option>
+                    <option value="reference"<?php echo (($content['type'] == "reference" || $modx->manager->action == '72') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_weblink"];?></option>
                     </select>
                     <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_type_message']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
@@ -925,7 +925,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             </tr>
 <?php
 } else {
-    if ($content['type'] != 'reference' && $_REQUEST['a'] != '72') {
+    if ($content['type'] != 'reference' && $modx->manager->action != '72') {
         // non-admin managers creating or editing a document resource
 ?>
             <input type="hidden" name="contentType" value="<?php echo isset($content['contentType']) ? $content['contentType'] : "text/html"?>" />
@@ -944,8 +944,8 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 
             <tr style="height: 24px;">
                 <td width="150"><span class="warning"><?php echo $_lang['resource_opt_folder']?></span></td>
-                <td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']=='85') ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
-                <input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']=='85') ? 1 : 0?>" onchange="documentDirty=true;" />
+                <td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$modx->manager->action=='85') ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
+                <input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$modx->manager->action=='85') ? 1 : 0?>" onchange="documentDirty=true;" />
                 <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_folder_help']?>" onclick="alert(this.alt);" style="cursor:help;margin-left:5px;" /></td>
             </tr>
 
@@ -957,8 +957,8 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 
             <tr style="height: 24px;">
                 <td width="150"><span class="warning"><?php echo $_lang['resource_opt_richtext']?></span></td>
-                <td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
-                <input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? 0 : 1?>" onchange="documentDirty=true;" />
+                <td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $modx->manager->action=='27' ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
+                <input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $modx->manager->action=='27' ? 0 : 1?>" onchange="documentDirty=true;" />
                 <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;margin-left:5px;" /></td>
             </tr>
             <tr style="height: 24px;">
@@ -1064,7 +1064,7 @@ if ($use_udperms == 1) {
     $groupsarray = array();
     $sql = '';
 
-    $documentId = ($_REQUEST['a'] == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
+    $documentId = ($modx->manager->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
     if ($documentId > 0) {
         // Load up, the permissions from the parent (if new document) or existing document
         $rs = $modx->db->select('id, document_group', $tbl_document_groups, "document='{$documentId}'");
@@ -1215,7 +1215,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
     storeCurTemplate();
 </script>
 <?php
-    if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
+    if (($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager->action == '72') && $use_editor == 1) {
         if (is_array($richtexteditorIds)) {
             foreach($richtexteditorIds as $editor=>$elements) {
                 // invoke OnRichTextEditorInit event

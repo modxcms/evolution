@@ -1217,9 +1217,10 @@ class DocumentParser {
                 $this->config['enable_filter'] = $_;
                 $cmd = ltrim($cmd);
                 $cmd = rtrim($cmd,'-');
+                $cmd = trim($cmd);
                 $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
                 
-                if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
+                if($cmd!=='' && !preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
                     $cmd = (int) eval("return {$cmd};");
                 if($cmd < 0) $cmd = 0;
                 
@@ -4948,16 +4949,13 @@ class DocumentParser {
         $table = array();
         $table[] = array('REQUEST_URI' , $request_uri);
 
-        if(isset($_GET['a']))      $action = $_GET['a'];
-        elseif(isset($_POST['a'])) $action = $_POST['a'];
-        if(isset($action) && !empty($action))
+        if($this->manager->action)
         {
             include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
             global $action_list;
-            if(isset($action_list[$action])) $actionName = " - {$action_list[$action]}";
-            else $actionName = '';
+            $actionName =(isset($action_list[$this->manager->action])) ? " - {$action_list[$this->manager->action]}" : '';
 
-            $table[] = array('Manager action' , $action.$actionName);
+            $table[] = array('Manager action' , $this->manager->action.$actionName);
         }
 
         if(preg_match('@^[0-9]+@',$this->documentIdentifier))

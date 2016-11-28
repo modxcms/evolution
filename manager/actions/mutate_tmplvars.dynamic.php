@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_template') && $_REQUEST['a']=='301') {
+if(!$modx->hasPermission('edit_template') && $modx->manager->action=='301') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
+if(!$modx->hasPermission('new_template') && $modx->manager->action=='300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
@@ -263,7 +263,7 @@ function decode(s){
 <input type="hidden" name="a" value="302">
 <input type="hidden" name="or" value="<?php echo $origin;?>">
 <input type="hidden" name="oid" value="<?php echo $originId;?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action;?>">
 <input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
     <h1 class="pagetitle">
@@ -288,7 +288,7 @@ function decode(s){
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>        
               </li>
-          <?php if ($_GET['a'] == '300') { ?>
+          <?php if ($modx->manager->action == '300') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -472,7 +472,7 @@ while ($row = $modx->db->getRow($rs)) {
         $insideUl = 1;
     }
 
-    if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+    if($modx->manager->action=='300' && $modx->config['default_template']==$row['id'])
     {
         $checked = true;
     }
