@@ -332,7 +332,7 @@ function eForm($modx,$params) {
 					switch ($datatype)  {
 
 						case "integer":
-							$value = number_format( (float) $value);	//EM~
+							$value = number_format((float) $value, 0, '.', '');
 							break;
 						case "float":
 							$localeInfo = localeconv();
