@@ -2264,6 +2264,10 @@ class DocumentParser {
      * @return array Contains the document Listing (tree) like the sitemap
      */
     function getChildIds($id, $depth= 10, $children= array ()) {
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         if ($this->config['aliaslistingfolder'] == 1) {
 
             $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
@@ -2284,6 +2288,7 @@ class DocumentParser {
                     $children = $this->getChildIds($idx, $depth, $children );
                 }
             }
+            $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
             return $children;
 
         }else{
@@ -2312,6 +2317,7 @@ class DocumentParser {
                     }
                 }
             }
+            $this->tmpCache[__FUNCTION__][$cacheKey] = $children;
             return $children;
 
         }
@@ -2759,6 +2765,10 @@ class DocumentParser {
      * @return array
      */
     function getAllChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
         // modify field names to use sc. table reference
@@ -2778,6 +2788,7 @@ class DocumentParser {
             "{$sort} {$dir}"
             );
         $resourceArray = $this->db->makeArray($result);
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
         return $resourceArray;
     }
 
@@ -2793,6 +2804,10 @@ class DocumentParser {
      * @return array
      */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
+    	
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
 
@@ -2813,6 +2828,9 @@ class DocumentParser {
             "{$sort} {$dir}"
             );
         $resourceArray = $this->db->makeArray($result);
+        
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
+        
         return $resourceArray;
     }
     
@@ -2834,6 +2852,10 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         $published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
         $deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
         
@@ -2867,6 +2889,8 @@ class DocumentParser {
         
         $resourceArray = $this->db->makeArray($result);
         
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
+        
         return $resourceArray;
     }
     
@@ -2888,6 +2912,10 @@ class DocumentParser {
      * @return {array; false} - Result array with documents, or false.
      */
     function getDocuments($ids = array(), $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         if(is_string($ids)){
             if(strpos($ids, ',') !== false){
                 $ids = array_filter(array_map('intval', explode(',', $ids)));
@@ -2896,6 +2924,7 @@ class DocumentParser {
             }
         }
         if (count($ids) == 0){
+            $this->tmpCache[__FUNCTION__][$cacheKey] = false;
             return false;
         }else{
             // modify field names to use sc. table reference
@@ -2928,6 +2957,8 @@ class DocumentParser {
                 );
             
             $resourceArray = $this->db->makeArray($result);
+            
+            $this->tmpCache[__FUNCTION__][$cacheKey] = $resourceArray;
             
             return $resourceArray;
         }
@@ -2997,6 +3028,10 @@ class DocumentParser {
      * @return boolean|array
      */
     function getPageInfo($pageid= -1, $active= 1, $fields= 'id, pagetitle, description, alias') {
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         if ($pageid == 0) {
             return false;
         } else {
@@ -3018,6 +3053,9 @@ class DocumentParser {
                     1
                     );
             $pageInfo= $this->db->getRow($result);
+            
+            $this->tmpCache[__FUNCTION__][$cacheKey] = $pageInfo;
+            
             return $pageInfo;
         }
     }
@@ -3674,6 +3712,10 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
+        
+        $cacheKey = md5(print_r(func_get_args(),true));
+        if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
+        
         if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
             return false;
         }else{
@@ -3686,6 +3728,7 @@ class DocumentParser {
                 $docRow = $this->getDocument($docid, '*', $published);
                 
                 if (!$docRow){
+                    $this->tmpCache[__FUNCTION__][$cacheKey] = false;
                     return false;
                 }
             }
@@ -3722,6 +3765,8 @@ class DocumentParser {
                     ));
                 }
             }
+            
+            $this->tmpCache[__FUNCTION__][$cacheKey] = $result;
             
             return $result;
         }
