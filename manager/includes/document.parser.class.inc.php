@@ -69,7 +69,8 @@ class DocumentParser {
     protected $systemCacheKey = null;
     var $snipLapCount;
     var $messageQuitCount;
-
+    var $time;
+	
     /**
      * Document constructor
      *
@@ -96,6 +97,7 @@ class DocumentParser {
         $this->dumpPlugins  = false;
         $this->stopOnNotice = false;
         $this->snipLapCount = 0;
+        $this->time = time(); // for having global timestamp
     }
 
     function __call($method_name,$arguments) {
@@ -2328,26 +2330,24 @@ class DocumentParser {
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
      * @param int $id Element- / Resource-id
      * @param bool $includeThisUser true = Return also info about actual user
-     * @return string username
+     * @return array lock-details or null
      */
     function elementIsLocked($type, $id, $includeThisUser=false) {
         $id = intval($id);
         $type = intval($type);
-        if(!$type || !$id) return false;
+        if(!$type || !$id) return NULL;
 
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
         
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
         
-        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return false;
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return NULL;
   
-        // Return Username if locked
-        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30);
-        if($this->lockedElements[$type][$id]['lasthit'] > $delay) {
+        if(isset($this->lockedElements[$type][$id])) {
             return $this->lockedElements[$type][$id];
         } else {
-            return false;
+            return NULL;
         }
     }
 
@@ -2369,7 +2369,7 @@ class DocumentParser {
                 foreach($elements as $elId=>$el) {
                     $lockedElements[$elType][$elId] = array(
                         'username'    => $el['username'],
-                        'firsthit_df' => $this->toDateFormat($el['firsthit']),
+                        'lasthit_df'  => $el['lasthit_df'],
                         'state'       => $this->determineLockState($el['internalKey'])
                     );
                 }
@@ -2392,16 +2392,17 @@ class DocumentParser {
             $this->cleanupExpiredLocks();
 
             $rs = $this->db->select(
-                'internalKey,username,firsthit,lasthit,element,id',
-                $this->getFullTableName('active_user_locks')
+                'internalKey,elementType,elementId,lasthit,username',
+                $this->getFullTableName('active_user_locks')." ul
+                LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id"
             );
             while ($row = $this->db->getRow($rs)) {
-                $this->lockedElements[$row['element']][$row['id']] = array(
+                $this->lockedElements[$row['elementType']][$row['elementId']] = array(
                     'internalKey' => $row['internalKey'],
                     'username'    => $row['username'],
-                    'firsthit'    => $row['firsthit'],
+                    'elementType' => $row['firsthit'],
+                    'elementId'   => $row['firsthit'],
                     'lasthit'     => $row['lasthit'],
-                    'firsthit_df' => $this->toDateFormat($row['firsthit']),
                     'lasthit_df'  => $this->toDateFormat($row['lasthit']),
                     'state'       => $this->determineLockState($row['internalKey'])
                 );
@@ -2410,7 +2411,28 @@ class DocumentParser {
     }
 
     /**
-     * Determines state of a locked element
+     * Cleans up the active user locks table
+     */
+    function cleanupExpiredLocks() {
+        // Clean-up active_user_sessions first
+        $timeout = intval($this->config['session_timeout']) < 2 ? 2 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $validSessionTimeLimit = $this->time - $timeout;
+        $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
+
+        // Clean-up active_user_locks
+        $rs = $this->db->select('internalKey', $this->getFullTableName('active_user_sessions'));
+        $count = $this->db->getRecordCount($rs);
+        if($count) {
+            $rs      = $this->db->makeArray($rs);
+            $userIds = array();
+            foreach ($rs as $row) $userIds[] = $row['internalKey'];
+            $userIds = implode(',', $userIds);
+            $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+        }
+    }
+
+    /**
+     * Determines state of a locked element acc. to user-permissions
      *
      * @param int $internalKey: ID of User who locked actual element
      * @return int $state States: 0=No display, 1=viewing this element, 2=locked, 3=show unlock-button
@@ -2437,36 +2459,20 @@ class DocumentParser {
      * @param int $type Types: 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
      * @param int $id Element- / Resource-id                 
      */
-    function lockElement($type, $id, $lastHitOnly=false) {
-        $id = intval($id);
-        $type = intval($type);
+    function lockElement($type, $id) {
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        $type = intval($type);
+        $id = intval($id);
         if(!$type || !$id || !$userId) return false;
-	    
-	    $time = time();
-	    if($lastHitOnly) {
-		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
-	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
-			    $this->getFullTableName('active_user_locks'),
-			    $userId,
-			    $_SESSION['mgrShortname'],
-			    !empty($this->lockedElements[$type][$id]['firsthit']) ? $this->lockedElements[$type][$id]['firsthit'] : $time,
-			    $time,
-			    $type,
-			    $id
-		    );
-	    } else {
-		    $sql = sprintf('REPLACE INTO %s (internalKey, username, firsthit, lasthit, element, id)
-	            VALUES (%d, \'%s\', %d, %d, %d, %d)',
-			    $this->getFullTableName('active_user_locks'),
-			    $userId,
-			    $_SESSION['mgrShortname'],
-			    $time,
-			    $time,
-			    $type,
-			    $id
-		    );
-	    }
+
+        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit)
+                VALUES (%d, %d, %d, %d)',
+            $this->getFullTableName('active_user_locks'),
+            $userId,
+            $type,
+            $id,
+            $this->time
+        );
         $this->db->query($sql);
     }
 
@@ -2478,34 +2484,48 @@ class DocumentParser {
      * @param bool $includeAllUsers true = Deletes not only own user-locks
      */
     function unlockElement($type, $id, $includeAllUsers=false) {
-        $id = intval($id);
-        $type = intval($type);
         $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
+        $type = intval($type);
+        $id = intval($id);
         if(!$type || !$id) return false;
-	    
-	    if(!$includeAllUsers) {
-		    $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND element = %d AND id = %d;',
-			    $this->getFullTableName('active_user_locks'),
-			    $userId,
-			    $type,
-			    $id
-		    );
-	    } else {
-		    $sql = sprintf('DELETE FROM %s WHERE element = %d AND id = %d;',
-			    $this->getFullTableName('active_user_locks'),
-			    $type,
-			    $id
-		    );
-	    }
+        
+        if(!$includeAllUsers) {
+            $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;',
+                $this->getFullTableName('active_user_locks'),
+                $userId,
+                $type,
+                $id
+            );
+        } else {
+            $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;',
+                $this->getFullTableName('active_user_locks'),
+                $type,
+                $id
+            );
+        }
         $this->db->query($sql);
     }
 
     /**
-     * Cleans up the active user locks table
+     * Updates table "active_user_sessions" with userid, lasthit, IP
      */
-    function cleanupExpiredLocks() {
-        $delay = time() - (isset($this->config['lock_release_delay']) ? intval($this->config['lock_release_delay']) : 30) * 2; // *2 as tolerance to avoid releasing locks too soon
-        $this->db->delete($this->getFullTableName('active_user_locks'), "lasthit < '{$delay}'");
+    function updateValidatedUserSession() {
+        // Get user IP
+        if ($cip = getenv("HTTP_CLIENT_IP"))           $ip = $cip;
+        elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) $ip = $cip;
+        elseif ($cip = getenv("REMOTE_ADDR"))          $ip = $cip;
+        else                                           $ip = "UNKNOWN";
+
+        $_SESSION['ip'] = $ip;
+
+        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip)
+            VALUES (%d, %d, \'%s\')',
+            $this->getFullTableName('active_user_sessions'),
+            $this->getLoginUserID(),
+            $this->time,
+            $ip
+        );
+        $this->db->query($sql);
     }
 
     /**
@@ -4196,7 +4216,7 @@ class DocumentParser {
     }
 
    /**
-     * Add an event listner to a plugin - only for use within the current execution cycle
+     * Add an event listener to a plugin - only for use within the current execution cycle
      *
      * @param string $evtName
      * @param string $pluginName
@@ -4211,7 +4231,7 @@ class DocumentParser {
     }
 
     /**
-     * Remove event listner - only for use within the current execution cycle
+     * Remove event listener - only for use within the current execution cycle
      *
      * @param string $evtName
      * @return boolean
@@ -4223,7 +4243,7 @@ class DocumentParser {
     }
 
     /**
-     * Remove all event listners - only for use within the current execution cycle
+     * Remove all event listeners - only for use within the current execution cycle
      */
     function removeAllEventListener() {
         unset ($this->pluginEvent);

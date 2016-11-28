@@ -6,21 +6,30 @@ $lockElementId = intval($lockElementId);
 if($lockElementId > 0) {
 ?>
 <script>
-	function keepMeLocked() {
-		var sessionJSON = new Ajax('includes/active_user_locks.php?tok=<?php echo md5(session_id());?>&type=<?php echo $lockElementType;?>&id=<?php echo $lockElementId;?>&o=' + Math.random(), {
-			method: 'get',
-			onComplete: function(sessionResponse) {
-				resp = Json.evaluate(sessionResponse);
-				if(resp.status != 'ok') {
-					clearInterval(keepMeLockedInterval);
-					var errorMsg = '<?php echo $modx->parseText($_lang["lock_element_unknown_error"], array('type'=>$lockElementType, 'id'=>$lockElementId, 'element_type'=>$_lang["lock_element_type_".$lockElementType])); ?>';
-					jQuery('body').prepend('<div class="modx-alert alert-error">'+errorMsg+'</div>');
-					alert(errorMsg);
-				}
+	// Trigger unlock when leaving window
+	var form_save = false;
+	jQuery(window).on('beforeunload', function(){
+		var stay = jQuery('#stay').val();
+		var lastClickedElement = localStorage.getItem('MODX_lastClickedElement');
+		var sameElement = false; 
+		if(lastClickedElement != null) {
+			try {
+				lastClickedElement = JSON.parse( lastClickedElement );
+				sameElement = lastClickedElement[0]==<?php echo $lockElementType;?> && lastClickedElement[1]==<?php echo $lockElementId;?> ? true : false;
+			} catch(err) {
+				console.log(err);
 			}
-		}).request();
-	}
-	var keepMeLockedInterval = window.setInterval("keepMeLocked()", 1000 * <?php echo isset($modx->config['lock_interval']) ? intval($modx->config['lock_interval']) : 15; ?>);
+		}
+		
+		// Trigger unlock 
+		if((stay != 2 || !form_save) && !sameElement) {
+			// console.log('unlock triggered:', 'stay='+stay, 'form_save='+form_save, 'sameElement='+sameElement, lastClickedElement);
+			var unlockRequest = new Ajax('index.php?a=67&type=<?php echo $lockElementType;?>&id=<?php echo $lockElementId;?>&o=' + Math.random(), {
+				method: 'get'
+			}).request();
+            top.mainMenu.reloadtree();
+		}
+	});
 </script>
 <?php
 }

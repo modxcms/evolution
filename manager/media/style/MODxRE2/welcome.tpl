@@ -17,6 +17,13 @@
       </div>
     </div>
   </div-->
+
+  <!-- logout reminder -->
+  <div id="logout_reminder" style="display:[+show_logout_reminder+]">
+      <div class="widget-wrapper alert alert-warning">
+        [+logout_reminder_msg+]
+      </div>
+  </div>
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">

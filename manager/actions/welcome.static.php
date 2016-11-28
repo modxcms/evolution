@@ -96,6 +96,15 @@ if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $
     $ph['config_display'] =  'none';
 }
 
+// Check logout-reminder
+if(isset($_SESSION['show_logout_reminder'])) {
+	$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date'=>$modx->toDateFormat($_SESSION['show_logout_reminder'], 'dateOnly')));
+	$ph['show_logout_reminder'] = 'block';
+	unset($_SESSION['show_logout_reminder']);
+} else {
+	$ph['show_logout_reminder'] = 'none';
+}
+
 // include rss feeds for important forum topics
 include_once(MODX_MANAGER_PATH.'includes/rss.inc.php');
 
@@ -149,7 +158,7 @@ $timetocheck = (time() - (60 * 20)); //+$server_offset_time;
 
 include_once(MODX_MANAGER_PATH.'includes/actionlist.inc.php');
 
-$rs    = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>'{$timetocheck}'", 'username ASC');
+$rs    = $modx->db->select('*', $modx->getFullTableName('active_user_sessions')." us LEFT JOIN {$modx->getFullTableName('active_users')} au ON au.internalKey=us.internalKey", "", 'username ASC');
 $limit = $modx->db->getRecordCount($rs);
 if ($limit < 1) {
     $html = "<p>" . $_lang['no_active_users_found'] . "</p>";
@@ -171,8 +180,9 @@ if ($limit < 1) {
     while ($activeusers = $modx->db->getRow($rs)) {
         $currentaction = getAction($activeusers['action'], $activeusers['id']);
         $webicon       = ($activeusers['internalKey'] < 0) ? sprintf('<img src="%s" alt="Web user" />',$_style["tree_globe"]) : '';
-        $params = array($activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
-        $html .= vsprintf('<tr><td><strong>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
+	    $idle          = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+        $params = array($idle, $activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
+        $html .= vsprintf('<tr%s><td><strong>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
     }
     $html .= '
                 </tbody>

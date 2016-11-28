@@ -145,23 +145,12 @@ echo implode("\n",$output)
 <td colspan="2"><div class="split"></div></td>
 </tr>
     <tr>
-        <td nowrap class="warning"><?php echo $_lang['lock_interval'] ?></td>
-        <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="lock_interval" value="<?php echo $lock_interval; ?>" /></td>
+        <td nowrap class="warning"><?php echo $_lang['session_timeout'] ?></td>
+        <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="session_timeout" value="<?php echo $session_timeout; ?>" /></td>
     </tr>
     <tr>
         <td width="200">&nbsp;</td>
-        <td class="comment"><?php echo $_lang['lock_interval_msg']?></td>
-    </tr>
-    <tr>
-        <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-        <td nowrap class="warning"><?php echo $_lang['lock_release_delay'] ?></td>
-        <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="lock_release_delay" value="<?php echo $lock_release_delay; ?>" /></td>
-    </tr>
-    <tr>
-        <td width="200">&nbsp;</td>
-        <td class="comment"><?php echo $_lang['lock_release_delay_msg']?></td>
+        <td class="comment"><?php echo $_lang['session_timeout_msg']?></td>
     </tr>
     <tr>
         <td colspan="2"><div class="split"></div></td>

@@ -943,14 +943,10 @@ class Qm {
 	//_____________________________________________________
 	function checkLocked() {
 
-		$activeUsersTable = $this->modx->getFullTableName('active_users');
 		$pageId = $this->modx->documentIdentifier;
 		$locked = TRUE;
-		$userId = $_SESSION['mgrInternalKey'];
 
-		$result = $this->modx->db->select('count(internalKey)', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
-
-		if ($this->modx->db->getValue($result) === '0') {
+		if ($this->modx->elementIsLocked(7, $pageId) === NULL) {
 			$locked = FALSE;
 		}
 
@@ -961,29 +957,17 @@ class Qm {
 	//_____________________________________________________
 	function setLocked($locked) {
 
-		$activeUsersTable = $this->modx->getFullTableName('active_users');
 		$pageId = $this->modx->documentIdentifier;
-		$userId = $_SESSION['mgrInternalKey'];
 		
 		// Set document locked
 		if ($locked == 1) {
-    		$fields = array (
-            'id'	=> $pageId,
-    		'action'	=> 27
-    		);	
+    		$this->modx->lockElement(7, $pageId);
         }
         
         // Set document unlocked
         else {
-            $fields = array (
-            'id'	=> 'NULL',
-    		'action'	=> 2
-    		);    
+            $this->modx->unlockElement(7, $pageId);    
         }
-		
-		$where = "internalKey = '{$userId}'";
-		
-        $result = $this->modx->db->update($fields, $activeUsersTable, $where);
 	}
 	
 	// Save TV

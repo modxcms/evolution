@@ -30,7 +30,7 @@ function getLockedByUser($lockType,$rowLock,$id) {
 	
     $ph = array();
     $ph['element_type'] = $_lang['lock_element_type_'.$lockType];
-    $ph['firsthit_df']  = $rowLock['firsthit_df'];
+    $ph['lasthit_df']  = $rowLock['lasthit_df'];
     
         if($rowLock['internalKey'] == $modx->getLoginUserID()) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);

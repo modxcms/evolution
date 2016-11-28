@@ -648,10 +648,8 @@ class Mysqldumper {
 function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
-	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
-	if(0 < $modx->db->getValue($rs))
+	if($modx->getLockedElements() !== array())
 	{
 		$modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
 	}
