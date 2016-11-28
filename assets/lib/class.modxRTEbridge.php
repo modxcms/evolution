@@ -572,11 +572,12 @@ class modxRTEbridge
             // Prepare displaying of default values
             $row['default'] = isset($this->gSettingsDefaultValues[$name]) ? '<span class="default-val" style="margin:0.5em 0;float:left;">' . $this->lang('default') . '<i>' . $this->gSettingsDefaultValues[$name] . '</i></span>' : '';
 
-            // Enable nested parsing
+            // Simple nested parsing
             $output = $modx->parseText($settingsRowTpl, $row); // Replace general translations
             $output = $modx->parseText($output, $ph);          // Replace values / settings
             $output = $modx->parseText($output, $row);         // Replace new PHs from values / settings
-
+            $output = $modx->parseText($output, $ph);          // Replace last values / settings
+        
             $ph['rows'] .= $output . "\n";
         };
 
