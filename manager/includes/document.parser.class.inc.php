@@ -1001,6 +1001,40 @@ class DocumentParser {
                 $str = trim($str,'()"\'');
                 $docid = $this->getIdFromAlias($str);
                 break;
+            case 'prev':
+                $children = $this->getActiveChildren($this->documentObject['parent'], 'menuindex', 'ASC');
+                $find = false;
+                $prev = false;
+                foreach($children as $row) {
+                    if($row['id'] == $this->documentIdentifier) {
+                        $find = true;
+                        break;
+                    }
+                    $prev = $row;
+                }
+                if($find) {
+                    if(isset($prev[$key])) return $prev[$key];
+                    else $docid = $prev['id'];
+                }
+                else $docid = '';
+                break;
+            case 'next':
+                $children = $this->getActiveChildren($this->documentObject['parent'], 'menuindex', 'ASC');
+                $find = false;
+                $next = false;
+                foreach($children as $row) {
+                    if($find) {
+                        $next = $row;
+                        break;
+                    }
+                    if($row['id'] == $this->documentIdentifier) $find = true;
+                }
+                if($find) {
+                    if(isset($next[$key])) return $next[$key];
+                    else $docid = $next['id'];
+                }
+                else $docid = '';
+                break;
             default:
                 $docid = $str;
         }
