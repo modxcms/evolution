@@ -1584,9 +1584,11 @@ class DocumentParser {
                 $snippetObject['properties'] = $this->snippetCache["{$snip_name}Props"];
             }
         }
-        elseif(substr($snip_name,0,1)==='@' && isset($this->pluginEvent[substr($snip_name,1)]))
+        elseif(substr($snip_name,0,1)==='@' && isset($this->pluginEvent[trim($snip_name,'@')]))
         {
-            return sprintf('return $this->invokeEvent("%s",$params);', $snip_name);
+            $snippetObject['name']       = trim($snip_name,'@');
+            $snippetObject['content']    = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(join("",$rs));', trim($snip_name,'@'));
+            $snippetObject['properties'] = '';
         }
         else
         {
