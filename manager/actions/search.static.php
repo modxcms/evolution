@@ -3,8 +3,8 @@ if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 // Catch $_REQUEST['searchid'] for compatibility
 if(isset($_REQUEST['searchid'])) {
-	$_REQUEST['searchfields'] = $_REQUEST['searchid'];
-	$_POST['searchfields'] = $_REQUEST['searchid'];
+    $_REQUEST['searchfields'] = $_REQUEST['searchid'];
+    $_POST['searchfields'] = $_REQUEST['searchid'];
 }
 ?>
 
@@ -47,7 +47,7 @@ if(isset($_REQUEST['searchid'])) {
          while($row=$modx->db->getRow($rs))
          {
           $templatename = htmlspecialchars($row['templatename'], ENT_QUOTES, $modx->config['modx_charset']);
-	      $selected = $row['id'] == $templateid ? ' selected="selected"' : '';
+          $selected = $row['id'] == $templateid ? ' selected="selected"' : '';
           $option[] = sprintf('<option value="%s"%s>%s(%s)</option>', $row['id'], $selected, $templatename, $row['id']);
         }
         $tpls = sprintf('<select name="templateid">%s</select>', join("\n",$option));
@@ -56,7 +56,7 @@ if(isset($_REQUEST['searchid'])) {
         <td><?php echo $_lang['search_criteria_template_id_msg']; ?></td>
       </tr>
       <tr>
-        <td>URL / ID</td>
+        <td>URL</td>
         <td>&nbsp;</td>
         <td><input name="url" type="text" size="50" value="<?php echo isset($_REQUEST['url']) ? $_REQUEST['url'] : ''; ?>" /></td>
         <td><?php echo $_lang['search_criteria_url_msg']; ?></td>
@@ -85,45 +85,74 @@ if(isset($_REQUEST['searchid'])) {
 <?php
 //TODO: сделать поиск по уму пока сделаю что б одно поле было для id,longtitle,pagetitle,alias далее нужно думаю добавить что б и в елементах искало
 if(isset($_REQUEST['submitok'])) {
-  $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid']!=='') ? intval($_REQUEST['templateid']) : '';
-  $searchfields = htmlentities($_POST['searchfields'], ENT_QUOTES, $modx_manager_charset);
-  $search_alias = $modx->db->escape($_REQUEST['searchfields']);
-  $searchcontent = $modx->db->escape($_REQUEST['content']);
-  $searchlongtitle = $modx->db->escape($_REQUEST['searchfields']);
+$tbl_site_content = $modx->getFullTableName('site_content');
 
-  if(isset($_REQUEST['url']) && $_REQUEST['url']!=='') {
-    if(is_int($_REQUEST['url'])) {
-	    $searchid = $_REQUEST['url'];
-    } else {
-	    $url                 = $modx->db->escape($_REQUEST['url']);
-	    $friendly_url_suffix = $modx->config['friendly_url_suffix'];
-	    $base_url            = $modx->config['base_url'];
-	    $site_url            = $modx->config['site_url'];
-	    $url                 = preg_replace('@' . $friendly_url_suffix . '$@', '', $url);
-	    if ($url[0] === '/') $url = preg_replace('@^' . $base_url . '@', '', $url);
-	    if (substr($url, 0, 4) === 'http') $url = preg_replace('@^' . $site_url . '@', '', $url);
-	    $idFromAlias = $modx->getIdFromAlias($url);
-	    if (!empty($idFromAlias)) $searchid = $idFromAlias;
+$searchfields    = htmlentities($_POST['searchfields'], ENT_QUOTES, $modx_manager_charset);
+$searchlongtitle = $modx->db->escape($_REQUEST['searchfields']);
+$search_alias    = $modx->db->escape($_REQUEST['searchfields']);
+$templateid      = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? intval($_REQUEST['templateid']) : '';
+$searchcontent   = $modx->db->escape($_REQUEST['content']);
+
+$sqladd = "";
+
+// Handle Input "Search by exact URL"
+$idFromAlias = false;
+if (isset($_REQUEST['url']) && $_REQUEST['url'] !== '') {
+    $url                 = $modx->db->escape($_REQUEST['url']);
+    $friendly_url_suffix = $modx->config['friendly_url_suffix'];
+    $base_url            = $modx->config['base_url'];
+    $site_url            = $modx->config['site_url'];
+    $url                 = preg_replace('@' . $friendly_url_suffix . '$@', '', $url);
+    if ($url[0] === '/') $url = preg_replace('@^' . $base_url . '@', '', $url);
+    if (substr($url, 0, 4) === 'http') $url = preg_replace('@^' . $site_url . '@', '', $url);
+    $idFromAlias = $modx->getIdFromAlias($url);
+}
+
+// Handle Input "Search in main fields"
+if($searchfields != '') {
+    if (ctype_digit($searchfields)) {
+        $sqladd .= "id='{$searchfields}'";
     }
-  }
+    if($idFromAlias) {
+        $sqladd .= $sqladd != '' ? ' OR ' : '';
+        $sqladd .= "id='{$idFromAlias}'";
+    }
+    
+    $sqladd = $sqladd ? "({$sqladd})" : $sqladd;
+    
+    if(!ctype_digit($searchfields)) {
+        $sqladd .= $sqladd != '' ? ' AND' : '';
+        $sqladd .= " pagetitle LIKE '%{$searchfields}%'";
+        $sqladd .= " OR longtitle LIKE '%{$searchlongtitle}%'";
+        $sqladd .= " OR alias LIKE '%{$search_alias}%'";
+    }
+} else if($idFromAlias) {
+    $sqladd .= " id='{$idFromAlias}'";
+}
 
-  $tbl_site_content = $modx->getFullTableName('site_content');
+// Handle Input "Search by template ID"
+if($templateid !== '') {
+    $sqladd .= $sqladd != '' ? ' AND' : '';
+    $sqladd .= " template='{$templateid}'";
+}
 
-  $sqladd .= isset($searchid)       ? " id='{$searchid}' " : '';
-  $sqladd .= $templateid!==''       ? (isset($searchid) ? " AND ":"")   ." template='{$templateid}' " : '';
-  $sqladd .= $searchfields!=''      ? ($templateid!=='' ? " AND ":"")  ." pagetitle LIKE '%{$searchfields}%' " : '';
-  $sqladd .= $searchlongtitle!=''   ? " OR longtitle LIKE '%{$searchlongtitle}%' " : '';
-  $sqladd .= $search_alias!=''      ? " OR alias LIKE '%{$search_alias}%' " : '';
-  if($sqladd!=='' && $searchcontent!=='')
-   $sqladd .= ' AND';
- $sqladd .= $searchcontent!=''   ? " content LIKE '%{$searchcontent}%' " : '';
+// Handle Input "Search by content"
+if ($searchcontent !== '') {
+    $sqladd .= $sqladd != '' ? ' AND' : '';
+    $sqladd .= $searchcontent != '' ? " content LIKE '%{$searchcontent}%'" : '';
+}
 
- $fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
- $where  = $sqladd;
+$fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
+$where  = $sqladd;
 
- $rs = $modx->db->select($fields,$tbl_site_content,$where,'id');
- $limit = $modx->db->getRecordCount($rs);
- ?>
+if($where) {
+    $rs    = $modx->db->select($fields, $tbl_site_content, $where, 'id');
+    $limit = $modx->db->getRecordCount($rs);
+} else {
+    $limit = 0;
+}
+
+?>
  <div class="section">
   <div class="sectionHeader"><?php echo $_lang['search_results']; ?></div><div class="sectionBody">
   <?php
