@@ -177,16 +177,14 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	if($action !== 1) {
 		if (!intval($itemid)) $itemid= null;
-		$sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, action, id)
-			VALUES (%d, \'%s\', %d, \'%s\', \'%s\')',
-			$modx->getFullTableName('active_users'), // Table
-			$modx->getLoginUserID(),
-			$_SESSION['mgrShortname'],
-			$lasthittime,
-			(string)$action,
-			$itemid == null ? var_export(null, true) : $itemid
+		$sql = sprintf("REPLACE INTO %s (internalKey, username, lasthit, action, id) VALUES (%d, '%s', %d, '%s', %s)"
+			, $modx->getFullTableName('active_users') // Table
+			, $modx->getLoginUserID()
+			, $_SESSION['mgrShortname']
+			, $lasthittime
+			, (string)$action
+			, $itemid == null ? var_export(null, true) : $itemid
 		);
 		$modx->db->query($sql);
 	}
 }
-?>
