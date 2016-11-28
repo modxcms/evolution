@@ -192,6 +192,8 @@ if ($limit < 1) {
 }
 $ph['OnlineInfo'] =  $html;
 
+$modx->toPlaceholders($ph);
+
 // invoke event OnManagerWelcomePrerender
 $evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
 if (is_array($evtOut)) {
