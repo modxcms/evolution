@@ -8,6 +8,7 @@ if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
 if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
 
 class DocumentParser {
+    var $apiVersion;
     var $db; // db object
     var $event, $Event; // event object
     var $pluginEvent;
@@ -77,6 +78,7 @@ class DocumentParser {
      * @return DocumentParser
      */
     function __construct() {
+        $this->apiVersion = '1.0.0'; // This is New evolution
         global $database_server;
         if(substr(PHP_OS,0,3) === 'WIN' && $database_server==='localhost') $database_server = '127.0.0.1';
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
