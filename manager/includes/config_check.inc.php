@@ -146,8 +146,8 @@ if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
 }
 
 if (count($_lang)!=$length_eng_lang) {
-    $warningspresent = 0;
-    $warnings[] = array($_lang['configcheck_lang_difference']);
+    //$warningspresent = 0;
+    //$warnings[] = array($_lang['configcheck_lang_difference']);
 }
 
 // clear file info cache
