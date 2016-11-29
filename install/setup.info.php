@@ -171,7 +171,7 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
             );
         }
 		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
-			$dependencies = explode(',', $dependencies);
+			$dependencies = explode(',', $params['dependencies']);
 			foreach ($dependencies as $dependency) {
 				$dependency = explode(':', $dependency);
 				switch (trim($dependency[0])) {

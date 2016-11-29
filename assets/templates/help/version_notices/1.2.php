@@ -136,6 +136,10 @@ Value is not numeric.
     &amp;param=`value`
 ]]</pre>
 	</li>
+    <li><strong>Wayfinder Debug-Mode</strong>
+        <p>More infos at <a href="https://github.com/modxcms/evolution/issues/719" target="_blank">#719</a></p>
+        <pre>[[Wayfinder?debug]]</pre>
+    </li>
 </ul>
 
 <h1>New Manager Roles</h1>

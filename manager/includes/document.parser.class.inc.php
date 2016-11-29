@@ -1325,13 +1325,14 @@ class DocumentParser {
      */
     function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
+        /*
         if(isset($params) && is_array($params)) {
             foreach($params as $k=>$v) {
                 $v = strtolower($v);
                 if($v==='false')    $params[$k] = false;
                 elseif($v==='true') $params[$k] = true;
             }
-        }
+        }*/
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -3357,7 +3358,7 @@ class DocumentParser {
             $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
             $rs= $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), $where);
             if ($this->db->getRecordCount($rs)==1) {
-                $row= $this->db->getRow($result);
+                $row= $this->db->getRow($rs);
                 $out = $this->chunkCache[$chunkName]= $row['snippet'];
             }
             else $out = $this->chunkCache[$chunkName] = null;
@@ -4720,7 +4721,7 @@ class DocumentParser {
     function cleanUpMODXTags($content='') {
         global $sanitize_seed;
         
-        if(strpos($string,$sanitize_seed)!==false) $content = str_replace($sanitize_seed, '', $content);
+        if(strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
