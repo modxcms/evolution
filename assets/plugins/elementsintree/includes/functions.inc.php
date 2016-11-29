@@ -30,7 +30,7 @@ function getLockedByUser($lockType,$rowLock,$id) {
 	
     $ph = array();
     $ph['element_type'] = $_lang['lock_element_type_'.$lockType];
-    $ph['lasthit_df']  = $rowLock['lasthit_df'];
+    $ph['firsthit_df']  = $rowLock['firsthit_df'];
     
         if($rowLock['internalKey'] == $modx->getLoginUserID()) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);
@@ -54,7 +54,7 @@ function getLockedByUser($lockType,$rowLock,$id) {
 
 // create elements list function
 function createElementsList($elmTable,$action,$nameField = 'name') {
-    global $modx, $_lang;
+    global $modx, $_lang, $modx_textdir;
     
     $field = array();
     if    ($elmTable == 'site_plugins')  $field['disabled'] = '[+prefix+]site_plugins.disabled';
@@ -128,7 +128,7 @@ function createElementsList($elmTable,$action,$nameField = 'name') {
 
 function createModulesList($action) {
 
-    global $modx, $_lang;
+    global $modx, $_lang, $modx_textdir;
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
