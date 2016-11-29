@@ -100,6 +100,7 @@ class DBAPI {
                 case 1054:
                 case 1060:
                 case 1061:
+                case 1062:
                 case 1091:
                     break;
                 default:

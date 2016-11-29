@@ -1325,13 +1325,14 @@ class DocumentParser {
      */
     function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
+        /*
         if(isset($params) && is_array($params)) {
             foreach($params as $k=>$v) {
                 $v = strtolower($v);
                 if($v==='false')    $params[$k] = false;
                 elseif($v==='true') $params[$k] = true;
             }
-        }
+        }*/
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);

@@ -7,7 +7,7 @@ class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
-	var $dbVersion;
+	var $dbMODx, $dbVersion;
     var $connection_charset, $connection_method;
 
 	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
@@ -42,7 +42,7 @@ class SqlParser {
 	}
 
 	function process($filename) {
-	    global $modx_version, $custom_placeholders;
+	    global $custom_placeholders;
 
 		// check to make sure file exists
 		if (!file_exists($filename)) {
@@ -74,8 +74,8 @@ class SqlParser {
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
 		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
 		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
-		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
-		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
+		$idata = str_replace('{IMAGEPATH}', $this->imgPath, $idata);
+		$idata = str_replace('{IMAGEURL}', $this->imgUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
@@ -109,7 +109,7 @@ class SqlParser {
 			if(mysqli_error($this->conn)) {
 				// Ignore duplicate and drop errors - Raymond
 				if ($this->ignoreDuplicateErrors){
-					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1091) continue;
+					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1062 ||mysqli_errno($this->conn) == 1091) continue;
 				}
 				// End Ignore duplicate
 				$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);

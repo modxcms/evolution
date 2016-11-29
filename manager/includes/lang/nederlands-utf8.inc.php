@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Webgebruikersbeheer';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Geef hier de URL voor de MODX Nieuws Feed.';
 $_lang["rss_url_news_title"] = 'RSS Nieuws Feed:';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Geef hier de URL voor de MODX Beveiligings Feed.';
 $_lang["rss_url_security_title"] = 'RSS Beveiligings Feed:';
 $_lang["run_module"] = 'Module uitvoeren';
