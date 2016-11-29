@@ -99,8 +99,8 @@ if ($create) {
         $errors += 1;
 ?>
         <pre>
-        database charset = <?php $database_charset ?>
-        database collation = <?php $database_collation ?>
+        database charset = <?php echo $database_charset ?>
+        database collation = <?php echo $database_collation ?>
         </pre>
         <p><?php echo $_lang['setup_database_creation_failed_note2']?></p>
 <?php
