@@ -47,6 +47,8 @@ class site_contentDocLister extends DocLister
             $tvlist = $this->getCFGDef('tvList', '');
         }
 
+        $this->extTV->getAllTV_Name();
+
         if ($this->extPaginate = $this->getExtender('paginate')) {
             $this->extPaginate->init($this);
         } else {
@@ -55,7 +57,6 @@ class site_contentDocLister extends DocLister
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();
         if ($tvlist != '' && count($this->_docs) > 0) {
-            $this->extTV->getAllTV_Name();
             $tv = $this->extTV->getTVList(array_keys($this->_docs), $tvlist);
             if (!is_array($tv)) {
                 $tv = array();
