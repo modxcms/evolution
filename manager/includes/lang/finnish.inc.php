@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Web-käyttäjän hallinta';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Anna MODX-uutisten osoite (RSS-syöte).';
 $_lang["rss_url_news_title"] = 'RSS / Uutiset';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Anna MODX-tietoturvatiedotteiden osoite (RSS-syöte).';
 $_lang["rss_url_security_title"] = 'RSS / Tietoturvatiedotteet';
 $_lang["run_module"] = 'Suorita moduuli';
