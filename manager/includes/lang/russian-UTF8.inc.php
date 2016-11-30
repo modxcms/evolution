@@ -1366,7 +1366,7 @@ $_lang["lock_element_type_5"] = "Плагин";
 $_lang["lock_element_type_6"] = "Модуль";
 $_lang["lock_element_type_7"] = "Ресурс";
 $_lang["lock_element_type_8"] = "Роль";
-$_lang["lock_element_editing"] = "Вы редактируете  [+element_type+] с \n[+firsthit_df+]";
+$_lang["lock_element_editing"] = "Вы редактируете  [+element_type+] с \n[+lasthit_df+]";
 $_lang["lock_element_locked_by"] = "Этот [+element_type+] заблокирован пользователем [+username+], с ";
 
 $_lang["minifyphp_incache_title"] = 'Сжать код php в файле кеша';
