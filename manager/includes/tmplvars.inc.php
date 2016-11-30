@@ -9,7 +9,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 
 	if (substr($default_text, 0, 6) === '@@EVAL' && $field_value === $default_text) {
 		$eval_str = trim(substr($default_text, 7));
-		$default_text = $modx->safeEval($eval_str);
+		$default_text = eval($eval_str);
 		$field_value = $default_text;
 	}
 
