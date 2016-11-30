@@ -430,11 +430,11 @@ function contains(a, obj) {
             <script>document.getElementsByName("name")[0].focus();</script></td>
           </tr>
           <tr>
-            <th><?php echo $_lang['snippet_desc']?></th>
+            <th><?php echo $_lang['snippet_desc']?>:</th>
             <td><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
           </tr>
           <tr>
-            <th><?php echo $_lang['existing_category']?></th>
+            <th><?php echo $_lang['existing_category']?>:</th>
             <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
