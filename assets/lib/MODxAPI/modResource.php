@@ -604,7 +604,7 @@ class modResource extends MODxAPI
             $result = $this->query("SELECT `tmplvarid` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid`={$this->id} AND `tmplvarid` IN ({$ids})");
             $existedTVs = $this->modx->db->getColumn('tmplvarid',$result);
             foreach ($existedTVs as $id) {
-                $_updateTVs[] = $_insertTVs[$id];
+                $_updateTVs[$id] = $_insertTVs[$id];
                 unset($_insertTVs[$id]);
             }
         }
