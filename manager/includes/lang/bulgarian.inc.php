@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Управление на уеб потр�
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Въвеждане на URL адрес за MODX Новините.';
 $_lang["rss_url_news_title"] = 'RSS на Новините';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Въвеждане на URL адрес за MODX Сигурността.';
 $_lang["rss_url_security_title"] = 'RSS на Сигурността';
 $_lang["run_module"] = 'Стартиране на модул';

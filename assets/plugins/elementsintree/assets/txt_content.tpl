@@ -479,6 +479,8 @@
     font-weight:bold;
 }
 
+.tab-page { margin-bottom:0; }
+
 [+unifyFrames_css+]
 [+treeButtonsInTab_css+]
 
@@ -648,7 +650,7 @@
             winHeight = jQuery(window).height();
             tabsHeight = jQuery(".tab-row:first").height();
             buttonsSize = jQuery(".filterElements-form:first").getSize();
-            themeMargins = 70; // All MODxRE2 top/bottom margins
+            themeMargins = 60; // All MODxRE2 top/bottom margins
             tabHeight = winHeight - tabsHeight - buttonsSize.height - themeMargins;
         }
         

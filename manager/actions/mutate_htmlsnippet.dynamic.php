@@ -108,8 +108,8 @@ if (is_array($evtOut))
 
 ?>
 <input type="hidden" name="a" value="79" />
-<input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
-<input type="hidden" name="mode" value="<?php $modx->manager->action;?>" />
+<input type="hidden" name="id" value="<?php echo $_REQUEST['id']; ?>" />
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 
     <h1 class="pagetitle">
       <span class="pagetitle-icon">
