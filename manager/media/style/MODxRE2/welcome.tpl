@@ -24,6 +24,14 @@
         [+logout_reminder_msg+]
       </div>
   </div>
+
+  <!-- logout reminder -->
+  <div id="multiple_sessions" style="display:[+show_multiple_sessions+]">
+      <div class="widget-wrapper alert alert-warning">
+        [+multiple_sessions_msg+]
+      </div>
+  </div>
+
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">
