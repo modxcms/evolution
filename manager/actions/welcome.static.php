@@ -98,11 +98,25 @@ if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $
 
 // Check logout-reminder
 if(isset($_SESSION['show_logout_reminder'])) {
-	$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date'=>$modx->toDateFormat($_SESSION['show_logout_reminder'], 'dateOnly')));
+	switch($_SESSION['show_logout_reminder']['type']) {
+		case 'logout_reminder':
+			$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date' => $modx->toDateFormat($_SESSION['show_logout_reminder']['lastHit'], 'dateOnly')));
+			break;
+	}
 	$ph['show_logout_reminder'] = 'block';
 	unset($_SESSION['show_logout_reminder']);
 } else {
 	$ph['show_logout_reminder'] = 'none';
+}
+
+// Check multiple sessions
+$rs = $modx->db->select('count(*) AS count', $modx->getFullTableName('active_user_sessions'), "internalKey='{$_SESSION['mgrInternalKey']}'");
+$count = $modx->db->getValue($rs);
+if($count > 1) {
+	$ph['multiple_sessions_msg'] = $modx->parseText($_lang["multiple_sessions_msg"], array('username' => $_SESSION['mgrShortname'], 'total'=>$count));
+	$ph['show_multiple_sessions'] = 'block';
+} else {
+	$ph['show_multiple_sessions'] = 'none';
 }
 
 // include rss feeds for important forum topics
