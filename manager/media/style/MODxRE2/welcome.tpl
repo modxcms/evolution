@@ -123,7 +123,7 @@
 
       <!---User Info--->
       <!--- panel --->
-      <li id="modxonline_widget" data-row="2" data-col="2" data-sizex="2" data-sizey="6">
+      <li id="modxonline_widget" data-row="2" data-col="3" data-sizex="2" data-sizey="6">
         <div class="panel panel-default widget-wrapper">
           <div class="panel-headingx widget-title sectionHeader clearfix">
             <span class="panel-handel pull-left"><i class="fa fa-user"></i> [%onlineusers_title%]</span>
@@ -182,7 +182,7 @@
 
       <!---Security News--->
       <!--- panel --->
-      <li id="modxsecurity_widget" data-row="4" data-col="2" data-sizex="2" data-sizey="5">
+      <li id="modxsecurity_widget" data-row="4" data-col="3" data-sizex="2" data-sizey="5">
         <div class="panel panel-default widget-wrapper">
           <div class="panel-headingx widget-title sectionHeader clearfix">
             <span class="panel-handel pull-left"><i class="fa fa-exclamation-triangle"></i> [%security_notices_title%]</span>
