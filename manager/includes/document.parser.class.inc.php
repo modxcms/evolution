@@ -71,7 +71,8 @@ class DocumentParser {
     var $snipLapCount;
     var $messageQuitCount;
     var $time;
-	
+    var $sid;
+
     /**
      * Document constructor
      *
@@ -2557,14 +2558,15 @@ class DocumentParser {
         $type = intval($type);
         $id = intval($id);
         if(!$type || !$id || !$userId) return false;
-
-        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit)
-                VALUES (%d, %d, %d, %d)',
+        
+        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
+                VALUES (%d, %d, %d, %d, \'%s\')',
             $this->getFullTableName('active_user_locks'),
             $userId,
             $type,
             $id,
-            $this->time
+            $this->time,
+            $this->sid
         );
         $this->db->query($sql);
     }
@@ -2611,15 +2613,15 @@ class DocumentParser {
         elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) $ip = $cip;
         elseif ($cip = getenv("REMOTE_ADDR"))          $ip = $cip;
         else                                           $ip = "UNKNOWN";
-
         $_SESSION['ip'] = $ip;
-
-        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip)
-            VALUES (%d, %d, \'%s\')',
+        
+        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
+            VALUES (%d, %d, \'%s\', \'%s\')',
             $this->getFullTableName('active_user_sessions'),
             $userId,
             $this->time,
-            $ip
+            $ip,
+            $this->sid
         );
         $this->db->query($sql);
     }
