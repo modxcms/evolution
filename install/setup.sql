@@ -675,6 +675,9 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WH
 
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
 
+ALTER TABLE `{PREFIX}active_users`
+  MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
+
 ALTER TABLE `{PREFIX}documentgroup_names`
   MODIFY COLUMN `name` varchar(245) NOT NULL default '';
 
