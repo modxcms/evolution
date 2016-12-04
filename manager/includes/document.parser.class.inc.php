@@ -799,6 +799,7 @@ class DocumentParser {
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
+        $recent_update = 0;
         @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
         $this->recentUpdate = $recent_update;
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
