@@ -26,7 +26,7 @@ $newid = $modx->db->insert(
 		'properties'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_plugins'), // Insert into
-	"CONCAT(name, ' Duplicate{$count}') AS name, description, disabled, moduleguid, plugincode, properties, category", $modx->getFullTableName('site_plugins'), "id='{$id}'"); // Copy from
+	"CONCAT(name, ' Duplicate{$count}') AS name, description, '1' AS disabled, moduleguid, plugincode, properties, category", $modx->getFullTableName('site_plugins'), "id='{$id}'"); // Copy from
 
 // duplicate Plugin Event Listeners
 $modx->db->insert(
