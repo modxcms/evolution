@@ -255,7 +255,7 @@ if (!class_exists("searchFilter")) {
 // ---------------------------------------------------
 // Search Filter Execution
 // ---------------------------------------------------
-if (isset($searchString)) {
+if (!empty($searchString)) {
     $searchFilter = new searchFilter($searchString, $searchFields, $searchOptions, $searchOptionsSeparators);
     $filters["custom"]["searchFilter"] = array($searchFields,array($searchFilter,"execute".$searchFilter->searchFunction));
 }
