@@ -1282,3 +1282,58 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Alles auswählen";
 $_lang["check_none"] = "Nichts auswählen";
 $_lang["check_toggle"] = "Auswahl umkehren";
+
+$_lang["version_notices"] = "Version Notices"; // keine Ahnung. hab nicht gesehen, wo das auftaucht.
+
+$_lang["em_button_shift"] = " (Shift+Mausklick, um mehrere Fenster zu öffnen)";
+
+$_lang["reset_sysfiles_checksum_button"] = "Prüfsummen zurücksetzen";
+$_lang["reset_sysfiles_checksum_alert"] = "Sind Sie sicher, dass Sie die Prüfsummen der Systemdateien zurücksetzen wollen?";
+
+$_lang["file_browser_disabled_msg"] = "Der Datei-Browser ist nicht aktiviert.";
+$_lang["which_browser_default_title"]= "Standard-Datei-Browser";
+$_lang["which_browser_default_msg"]= "Wählen Sie den Standard-Datei-Browser. In den Benutzereinstellungen können Sie jedem Benutzer einen eigenen Datei-Browser zuweisen.";
+$_lang["which_browser_title"]= "Datei-Browser";
+$_lang["which_browser_msg"]= "Sie können diesem Benutzer einen eigenen Datei-Browser zuweisen. Um den Standard-Datei-Browser des Systems zu verwenden, lassen Sie die Einstellung auf &quot;Standard&quot;.";
+$_lang["option_default"] = "Standard";
+
+$_lang['evo_downloads_title'] = "Evolution Downloads";
+$_lang['help_translating_title'] = "Helfen Sie bei der Übersetzung von MODX Evolution";
+$_lang['download'] = "Download";
+$_lang['downloads'] = "Downloads";
+$_lang["previous_releases"] = "Vorherige Releases";
+$_lang["extras"] = "Extras";
+
+$_lang["display_locks"] = "Sperren anzeigen";
+$_lang["role_display_locks"] = "Sperren anzeigen";
+$_lang["session_timeout"] = "Zeitüberschreitung der Sitzung";
+$_lang["session_timeout_msg"] = "Die Einstellung entspricht Minuten (>2, Standard: 15min). MODX pingt den Server jede Minute an, um die Nachrichten zu aktualisieren. Wenn der letzte Ping diese Einstellung hier überschreitet, wird die dazugehörige Sitzung als ungültig angesehen und alle zugehörigen Sperren werden automatisch entfernt.";
+$_lang["unlock_element_id_warning"] = "Sind Sie sicher, dass Sie [+element_type+] (ID [+id+]) entsperren wollen?";
+$_lang["lock_element_type_1"] = "Template";
+$_lang["lock_element_type_2"] = "Template-Variable";
+$_lang["lock_element_type_3"] = "Chunk";
+$_lang["lock_element_type_4"] = "Snippet";
+$_lang["lock_element_type_5"] = "Plugin";
+$_lang["lock_element_type_6"] = "Module";
+$_lang["lock_element_type_7"] = "Resource";
+$_lang["lock_element_type_8"] = "Rollen";
+$_lang["lock_element_editing"] = "Sie bearbeiten dieses [+element_type+] seit\n[+lasthit_df+]";
+$_lang["lock_element_locked_by"] = "Dieses [+element_type+] ist gesperrt von Benutzer\n[+username+] seit [+lasthit_df+]";
+
+$_lang["minifyphp_incache_title"] = 'Minify auf den PHP-Code<br>im Site-Cache anwenden';
+$_lang["minifyphp_incache_message"] = 'Minify auf den PHP-Code (Snippets und Plugins) anwenden und in der Site-Cache-Datei speichern. Ref: <a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
+
+$_lang["logout_reminder_msg"] = "Erinnerung: Es scheint, als hätten Sie am [+date+] vergessen sich auszuloggen. Bitte denken Sie daran sich in Zukunft nach dem Ende Ihrer Arbeiten auszuloggen.";
+
+$_lang["allow_eval_title"]             = "PHP-Code in Snippet-Aufrufen ausführen?";
+$_lang["allow_eval_msg"]               = "Für Entwickler: Bitte benutzt \$modx-&gt;safeEval().";
+$_lang["allow_eval_with_scan"]         = "Nur erlaubte Funktionen ausführen";
+$_lang["allow_eval_with_scan_at_post"] = "Alle ausführen. Allerdings bei POST nur erlaubte Funktionen";
+$_lang["allow_eval_everytime_eval"]    = "Alle ausführen. (Nur für das Debugging benutzen)";
+$_lang["allow_eval_dont_eval"]         = "Keine ausführen.";
+
+$_lang["safe_functions_at_eval_title"] = "Erlaubte PHP-Funktionen für das<br>Ausführen in Snippet-Aufrufen";
+$_lang["safe_functions_at_eval_msg"]   = "Kommaseparierte Liste";
+
+$_lang["parse_docblock"] = 'DocBlock parsen';
+$_lang["parse_docblock_msg"] = 'Achtung (!): Name, Konfiguration, Beschreibung und Kategorie werden auf die Standardwerte zur Zeit der Installation <b>zurückgesetzt</b>. Dazu wird der Quellcode ausgelesen.';
