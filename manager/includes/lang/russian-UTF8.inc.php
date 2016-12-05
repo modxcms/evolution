@@ -1207,7 +1207,8 @@ $_lang["bkmgr_snapshot_title"] = 'Резервное копирование';
 $_lang["bkmgr_snapshot_msg"] = '<p>Резервные копии сохраняются и восстанавливаются на сервер.<br />Путь для резервных копий: /assets/backup/</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Создать резервную копию';
 $_lang["bkmgr_snapshot_list_title"] = 'Список резервных копий';
-$_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
+$_lang["bkmgr_restore_submit"] = 'Восстановить резервную копию';
+$_lang["bkmgr_restore_confirm"] = 'Вы уверены, что хотите восстановить резервную копию\n[+filename+].  ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет резервных копий';
 
 $_lang["files.dynamic.php1"] = 'Создать PHP-файл';

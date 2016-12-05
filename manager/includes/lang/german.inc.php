@@ -1174,6 +1174,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>Der Inhalt der Datenbank wird in einer Datei 
 $_lang["bkmgr_snapshot_submit"] = 'Wiederherstellungspunkt hinzufügen';
 $_lang["bkmgr_snapshot_list_title"] = 'Liste der Wiederherstellungspunkte';
 $_lang["bkmgr_restore_submit"] = 'Diesen Wiederherstellungspunkt zurückspielen';
+$_lang["bkmgr_restore_confirm"] = 'Sind Sie sicher, dass Sie die Sicherung wiederherstellen möchten\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Keine Wiederherstellungspunkte vorhanden';
 
 $_lang["files.dynamic.php1"] = 'Textdatei erstellen';
