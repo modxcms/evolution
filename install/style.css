@@ -566,27 +566,30 @@ tbody td {
   padding: .25em .5em;
 }
 
-p.actions {
+.actions {
   line-height: 1;
   margin-top: 3px;
   overflow: hidden;
   zoom: 1;
 }
 
-p.actions a {
-  margin: 0 8px 0 0;
-  padding: 10px 12px;
+.actions a {
+  margin: 0;
+  padding: 0.8em 1em;
   border: 1px solid #CBCBCC;
-  display: block;
-  float: left;
+  display: inline-block;
   color: #3697CD;
   text-decoration: none;
   border-radius: 3px;
   background-color: #fff;
 }
+h3 .actions {
+  font-size: 0.8em;
+  margin-left: 1em;
+}
 
-#rtl p.actions a {
-  float: right;
+#rtl .actions  {
+  text-align: right;
 }
 
 p.actions a:hover {
