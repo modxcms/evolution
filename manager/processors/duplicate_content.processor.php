@@ -58,7 +58,13 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 
 	// Once we've grabbed the document object, start doing some modifications
 	if ($_toplevel == 0) {
-		$content['pagetitle'] = 'Duplicate of '.$content['pagetitle'];
+		// count duplicates
+		$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$docid}'"));
+		$count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "pagetitle LIKE '{$pagetitle} Duplicate%'"));
+		if($count>=1) $count = ' '.($count+1);
+		else $count = '';
+		
+		$content['pagetitle'] = $content['pagetitle'].' Duplicate'.$count;
 		$content['alias'] = null;
 	} elseif($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
 		$content['alias'] = null;

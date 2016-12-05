@@ -9,6 +9,12 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
+// count duplicates
+$name = $modx->db->getValue($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "id='{$id}'"));
+$count = $modx->db->getRecordCount($modx->db->select('templatename', $modx->getFullTableName('site_templates'), "templatename LIKE '{$name} Duplicate%'"));
+if($count>=1) $count = ' '.($count+1);
+else $count = '';
+
 // duplicate template
 $newid = $modx->db->insert(
 	array(
@@ -17,7 +23,7 @@ $newid = $modx->db->insert(
 		'content'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_templates'), // Insert into
-	"CONCAT('Duplicate of ',templatename) AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
+	"CONCAT(templatename, ' Duplicate{$count}') AS templatename, description, content, category", $modx->getFullTableName('site_templates'), "id='{$id}'"); // Copy from
 
 // duplicate TV values
 $modx->db->insert(
