@@ -2566,8 +2566,8 @@ li.breadcrumbs__li_current {
 /* table styles*/
 
 .table,
-.tab-page table,
-#documentPane [id*="table-tv"] {
+#documentPane #tv_body table,
+#documentPane [id*="table-"] {
   width: 100%;
 }
 
