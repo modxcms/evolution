@@ -1169,6 +1169,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>De inhoud van de database is opgeslagen en he
 $_lang["bkmgr_snapshot_submit"] = 'Snapshot toevoegen';
 $_lang["bkmgr_snapshot_list_title"] = 'Lijst van Snapshots';
 $_lang["bkmgr_restore_submit"] = 'Deze gegevens (data) terugzetten';
+$_lang["bkmgr_restore_confirm"] = 'Weet u zeker dat u wilt back-up terugzetten\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Geen Snapshot';
 
 $_lang["files.dynamic.php1"] = 'Maak tekstbestand aan';
