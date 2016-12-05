@@ -166,15 +166,17 @@ $rt = $modx->invokeEvent('OnManagerAuthentication',
                         ));
 
 // check if plugin authenticated the user
-
-if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+$matchPassword = false;
+if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true,$rt)))
 {
 	// check user password - local authentication
 	$hashType = $modx->manager->getHashType($dbasePassword);
 	if($hashType=='phpass')  $matchPassword = login($username,$givenPassword,$dbasePassword);
-	elseif($hashType=='md5') $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
+	elseif($hashType=='md5') $matchPassword = loginMD5($internalKey,$givenPassword,$dbasePassword,$username);
 	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
 	else                     $matchPassword = false;
+} else if($rt === true || (is_array($rt) && in_array(true,$rt))) {
+	$matchPassword = true;
 }
 
 if(!$matchPassword) {
