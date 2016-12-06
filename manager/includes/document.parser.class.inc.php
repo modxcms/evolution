@@ -419,6 +419,11 @@ class DocumentParser {
                     $docIdentifier= intval($_GET['id']);
                 }
                 break;
+            default:
+                if(strpos($_SERVER['REQUEST_URI'],'index.php')!==false) {
+                    list(,$_) = explode('index.php', $_SERVER['REQUEST_URI'], 2);
+                    if(substr($_,0,1)==='/') $this->sendErrorPage();
+                }
         }
         return $docIdentifier;
     }
