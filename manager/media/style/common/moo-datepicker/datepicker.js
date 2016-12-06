@@ -128,7 +128,8 @@ var DatePicker = new Class({
         document.addEvents({
             'keydown': function(e) {
                 e = new Event(e);
-                if ((e.code== 9 && !e.shift) || e.code == 27) {
+                if ((e.code== 9 && !e.shift) || e.code == 27 || e.code == 13) {
+                    if(e.code == 13 && dp.container) e.stop();
                     this.remove(this.dp);
                 }
             }.bind(this)
