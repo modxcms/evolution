@@ -465,7 +465,6 @@ class MODIFIERS {
             case 'wordwrap':
                 // default: 70
                   $wrapat = intval($opt) ? intval($opt) : 70;
-                  return preg_replace_callback("~(\b\w+\b)~",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$value);
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
                 else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
