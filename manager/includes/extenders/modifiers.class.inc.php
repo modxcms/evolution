@@ -105,7 +105,7 @@ class MODIFIERS {
             
             if(preg_match('@^:(!?[<>=]{1,2})@', $c.$modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
                 $c = substr($modifiers,strlen($match[1]),1);
-                $debuginfo = '#i=0 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=0 #c=[{$c}] #m=[{$modifiers}]";
                 if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
                 else         $modifiers = substr($modifiers,strlen($match[1]));
                 
@@ -121,20 +121,20 @@ class MODIFIERS {
                 $delim     = $this->_getDelim($c,$modifiers);
                 $opt       = $this->_getOpt($c,$delim,$modifiers);
                 $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
-                $debuginfo = '#i=1 #c='.$c.' #delim='.$delim.' #m1='.$m1 . 'remainMdf=' . $modifiers;
+                $debuginfo = "#i=1 #c=[{$c}] #delim=[{$delim}] #m1=[{$m1}] remainMdf=[{$modifiers}]";
                 
                 $result[]=array('cmd'=>trim($cmd),'opt'=>$opt,'debuginfo'=>$debuginfo);
                 
                 $cmd = '';
             }
             elseif($c==':') {
-                $debuginfo = '#i=2 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=2 #c=[{$c}] #m=[{$modifiers}]";
                 if($cmd!=='') $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
                 
                 $cmd = '';
             }
             elseif(trim($modifiers)=='' && trim($cmd)!=='') {
-                $debuginfo = '#i=3 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=3 #c=[{$c}] #m=[{$modifiers}]";
                 $cmd .= $c;
                 $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
                 
@@ -995,7 +995,7 @@ class MODIFIERS {
         
         if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
         
-        if(!$modx->maxParserPasses) $modx->maxParserPasses = 20;
+        if(!$modx->maxParserPasses) $modx->maxParserPasses = 10;
         $bt='';
         $i=0;
         while($bt!==$content)
