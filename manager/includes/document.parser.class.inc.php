@@ -799,6 +799,7 @@ class DocumentParser {
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
+        $recent_update = 0;
         @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
         $this->recentUpdate = $recent_update;
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
@@ -4721,7 +4722,7 @@ class DocumentParser {
     function cleanUpMODXTags($content='') {
         global $sanitize_seed;
         
-        if(strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
+        if($content !== '' && strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;

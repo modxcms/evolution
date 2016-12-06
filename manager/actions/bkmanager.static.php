@@ -172,6 +172,15 @@ else
 		f.submit();
 		return false;
 	}
+    function confirmRevert(filename) {
+	    var m = '<?php echo $_lang["bkmgr_restore_confirm"] ?>';
+            m = m.replace('[+filename+]', filename);
+        var c = confirm(m);
+        if(c) {
+            document.restore2.filename.value = filename;
+            document.restore2.save.click();
+        }
+    }
 	<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>
 
 </script>
@@ -415,7 +424,7 @@ if(is_array($files) && 0 < $total)
 	echo '<table>';
         echo "<tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr>\n";
 	arsort($files);
-	$tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="#" onclick="document.restore2.filename.value=\'[+filename+]\';document.restore2.save.click()" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
+	$tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="#" onclick="confirmRevert(\'[+filename+]\');" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
 	while ($file = array_shift($files))
 	{
 		$filename = substr($file,strrpos($file,'/')+1);

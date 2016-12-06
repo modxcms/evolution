@@ -9,6 +9,12 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
+// count duplicates
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"));
+$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "name LIKE '{$name} Duplicate%'"));
+if($count>=1) $count = ' '.($count+1);
+else $count = '';
+
 // duplicate htmlsnippet
 $newid = $modx->db->insert(
 	array(
@@ -17,7 +23,7 @@ $newid = $modx->db->insert(
 		'snippet'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_htmlsnippets'), // Insert into
-	"CONCAT('Duplicate of ',name) AS name, description, snippet, category", $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"); // Copy from
+	"CONCAT(name, ' Duplicate{$count}') AS name, description, snippet, category", $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'"); // Copy from
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_htmlsnippets'), "id='{$newid}'"));

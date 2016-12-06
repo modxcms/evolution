@@ -227,7 +227,7 @@ function setColor(){
 	Slider1.hide();
 	$('setCollation').style.backgroundColor = '#ffff00';
 	$('setCollation').style.display = 'block';
-	if(installMode==0 && document.getElementById('AUH')) {
+	if((installMode==0 || installMode==2) && document.getElementById('AUH')) {
 		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
 		Slider2.hide();
 		$('AUH').style.display = 'block';
