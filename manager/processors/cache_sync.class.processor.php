@@ -184,9 +184,9 @@ if(!class_exists('synccache')) {
 	$tmpPHP .= '$d=&$this->documentListing;';
 	$tmpPHP .= '$m=&$this->documentMap;';
         if ($config['aliaslistingfolder'] == 1) {
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
         }else{
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
         }
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
@@ -196,7 +196,7 @@ if(!class_exists('synccache')) {
             } else {
                 $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($tmp1['alias']) . '\']' . " = " . $tmp1['id'] . ";";
             }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");";
+            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'alias_visible' => " . $tmp1['alias_visible'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");";
             $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');";
         }
 
