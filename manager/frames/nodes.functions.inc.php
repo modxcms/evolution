@@ -259,7 +259,7 @@ function getNodeTitle($nodeNameSource,$row) {
     switch($nodeNameSource)
     {
         case 'menutitle':
-            $nodetitle = $menutitle ? $menutitle : $pagetitle;
+            $nodetitle = $menutitle;
             break;
         case 'alias':
             $nodetitle = $alias ? $alias : $id;
