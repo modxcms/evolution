@@ -4748,9 +4748,7 @@ class DocumentParser {
     }
     
     function cleanUpMODXTags($content='') {
-        global $sanitize_seed;
-        
-        if($content !== '' && strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
+        $content = $this->removeSanitizeSeed($content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
