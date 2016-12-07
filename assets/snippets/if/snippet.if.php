@@ -42,7 +42,7 @@ for ($i=1;$i<count($opers);$i++){
 
     if (isset($subject)) {
         if (!empty($operator)) {
-            if ($math=='on' && !empty($subject)) {echo $modx->safeEval('$subject='.$subject.';');}
+            if ($math=='on' && !empty($subject)) {echo $modx->safeEval('$subject='.$subject.';', 'math');}
             $operator = strtolower($operator);
 
             switch ($operator) {
