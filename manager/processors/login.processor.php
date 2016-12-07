@@ -171,7 +171,7 @@ if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true,$rt)))
 {
 	// check user password - local authentication
 	$hashType = $modx->manager->getHashType($dbasePassword);
-	if($hashType=='phpass')  $matchPassword = login($username,$givenPassword,$dbasePassword);
+	if($hashType=='phpass')  $matchPassword = login($username,$_REQUEST['password'],$dbasePassword);
 	elseif($hashType=='md5') $matchPassword = loginMD5($internalKey,$givenPassword,$dbasePassword,$username);
 	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
 	else                     $matchPassword = false;
