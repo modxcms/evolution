@@ -43,6 +43,7 @@ for ($i=1;$i<count($opers);$i++){
     if (isset($subject)) {
         if (!empty($operator)) {
             if ($math=='on' && !empty($subject)) {
+                $subject = preg_replace('@([a-zA-Z\n\r\t\s])@','',$subject);
                 $subject = $modx->safeEval('return ' . $subject.';');
             }
             $operator = strtolower($operator);
