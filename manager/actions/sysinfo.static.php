@@ -63,41 +63,6 @@ $serverArr = array(
    </div>
 </div>
 
-<!-- recent documents -->
-<div class="section">
-<div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
-		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
-			<thead>
-			<tr>
-				<td><b><?php echo $_lang["id"]; ?></b></td>
-				<td><b><?php echo $_lang["resource_title"]; ?></b></td>
-				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
-				<td><b><?php echo $_lang["datechanged"]; ?></b></td>
-			</tr>
-			</thead>
-			<tbody>
-		<?php
-		$rs = $modx->db->select('id, pagetitle, editedby, editedon', $modx->getFullTableName('site_content'), 'deleted=0', 'editedon DESC', 20);
-		$limit = $modx->db->getRecordCount($rs);
-		if($limit<1) {
-			echo "<p>".$_lang["no_edits_creates"]."</p>";
-		} else {
-			$i = 0;
-			while ($content = $modx->db->getRow($rs)) {
-				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'");
-				$content['user'] = $modx->db->getValue($rs2);
-				if(!$content['user']) $content['user'] = '-';
-				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$content['user']."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
-			}
-		}
-		?>
-		</tbody>
-         </table>
-   </div>
-</div>
-
 <!-- database -->
 <div class="section">
 <div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
@@ -170,45 +135,4 @@ $serverArr = array(
 	if($totaloverhead>0) { ?>
 		<p><?php echo $_lang['database_overhead']; ?></p>
 		<?php } ?>
-</div></div>
-
-<!-- online users -->
-<div class="section">
-<div class="sectionHeader"><?php echo $_lang['onlineusers_title']; ?></div><div class="sectionBody" id="lyr5">
-
-		<?php
-		$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
-                  <thead>
-                    <tr>
-                      <td><b>'.$_lang["onlineusers_user"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_userid"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_ipaddress"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_lasthit"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_action"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_actionid"].'</b></td>		
-                    </tr>
-                  </thead>
-                  <tbody>
-        ';
-		
-		$timetocheck = (time()-(60*20));
-
-		include_once "actionlist.inc.php";
-
-		$rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>{$timetocheck}", 'username ASC');
-		$limit = $modx->db->getRecordCount($rs);
-		if($limit<1) {
-			$html = "<p>".$_lang['no_active_users_found']."</p>";
-		} else {
-			while ($activeusers = $modx->db->getRow($rs)) {
-				$currentaction = getAction($activeusers['action'], $activeusers['id']);
-				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='".$_style["tree_globe"]."' alt='Web user'>":"";
-				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
-			}
-		}
-		echo $html;
-		?>
-		</tbody>
-		</table>
 </div></div>
