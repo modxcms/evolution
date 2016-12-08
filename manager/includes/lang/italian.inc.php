@@ -1145,6 +1145,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>I contenuti del database vengono salvati e ri
 $_lang["bkmgr_snapshot_submit"] = 'Aggiungi uno snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista degli snapshots';
 $_lang["bkmgr_restore_submit"] = 'Ripristina questi dati';
+$_lang["bkmgr_restore_confirm"] = 'Sei sicuro che si desidera ripristinare il backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Nessuno snapshot disponibile';
 
 $_lang["files.dynamic.php1"] = 'Nuovo file di testo';

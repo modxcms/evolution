@@ -58,8 +58,8 @@ if($lockElementId > 0) {
         }
 
         // Trigger unlock
+        // console.log('unlock triggered:', 'stay='+stay, 'form_save='+form_save, 'sameElement='+sameElement, lastClickedElement);
         if((stay != 2 || !form_save) && !sameElement) {
-            // console.log('unlock triggered:', 'stay='+stay, 'form_save='+form_save, 'sameElement='+sameElement, lastClickedElement);
             navigator.sendBeacon('index.php?a=67&type=<?php echo $lockElementType;?>&id=<?php echo $lockElementId;?>&o=' + Math.random());
             top.mainMenu.reloadtree();
         }

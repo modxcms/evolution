@@ -134,11 +134,15 @@ table.sysSettings tr.noborder td {border:none;}
       <td >
         <?php
             // Check if PHX is enabled
-            $modx->invokeEvent('OnParseDocument');
-            if(class_exists('PHxParser')) {
+            $count = $modx->db->getRecordCount(
+              $modx->db->select('id', '[+prefix+]site_plugins', 
+              "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
+            );
+            if($count) {
                 $disabledFilters = 1;
                 echo '<b>'.$_lang['enable_filter_phx_warning'].'</b><br/>';
             }
+            else $disabledFilters = false;
         ?>
         <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>

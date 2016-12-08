@@ -274,7 +274,7 @@ function getNodeTitle($nodeNameSource,$row) {
             $nodetitle = $pagetitle;
             break;
         case 'longtitle':
-            $nodetitle = $longtitle;
+            $nodetitle = $longtitle ? $longtitle : $pagetitle;
             break;
         case 'createdon':
         case 'editedon':

@@ -419,6 +419,11 @@ class DocumentParser {
                     $docIdentifier= intval($_GET['id']);
                 }
                 break;
+            default:
+                if(strpos($_SERVER['REQUEST_URI'],'index.php')!==false) {
+                    list(,$_) = explode('index.php', $_SERVER['REQUEST_URI'], 2);
+                    if(substr($_,0,1)==='/') $this->sendErrorPage();
+                }
         }
         return $docIdentifier;
     }
@@ -799,6 +804,7 @@ class DocumentParser {
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
+        $recent_update = 0;
         @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
         $this->recentUpdate = $recent_update;
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
@@ -1411,7 +1417,7 @@ class DocumentParser {
             if(isset($_['token'])) unset($_['token']);
         }
         if(strpos($key,'[')!==false)
-            $value = eval("return {$key};");
+            $value = $key ? eval("return {$key};") : '';
         elseif(0<eval("return count({$key});"))
             $value = eval("return print_r({$key},true);");
         else $value = '';
@@ -1498,7 +1504,7 @@ class DocumentParser {
             }
             elseif($key!==''||trim($char)!=='') $key .= $char;
             
-            if(!is_null($value))
+            if(isset($value) && !is_null($value))
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
@@ -1723,7 +1729,7 @@ class DocumentParser {
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
-                    $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
+                    $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
                             $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
@@ -2009,25 +2015,8 @@ class DocumentParser {
 
         //$_REQUEST['q'] = $_GET['q'] = $this->setRequestQ($_SERVER['REQUEST_URI']);
         
-        // IIS friendly url fix
-        if ($this->config['friendly_urls'] == 1 && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false) {
-            $url= $_SERVER['QUERY_STRING'];
-            $err= substr($url, 0, 3);
-            if ($err == '404' || $err == '405') {
-                $k= array_keys($_GET);
-                unset ($_GET[$k[0]]);
-                unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-                $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
-                $_SERVER['QUERY_STRING']= $qp['query'];
-                if (!empty ($qp['query'])) {
-                    parse_str($qp['query'], $qv);
-                    foreach ($qv as $n => $v)
-                        $_REQUEST[$n]= $_GET[$n]= $v;
-                }
-                $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
-                $_REQUEST['q']= $_GET['q']= $qp['path'];
-            }
-        }
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
+            $this->_IIS_furl_fix(); // IIS friendly url fix
 
         // check site settings
         if (!$this->checkSiteStatus()) {
@@ -2087,7 +2076,22 @@ class DocumentParser {
                         {
                             $this->documentIdentifier = $docId;
                         }else{
+                            /*
+                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
+                            if($this->db->getRecordCount($rs)==0)
+                            {
+                                $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
+                            }
+                            $docId = $this->db->getValue($rs);
+
+                            if ($docId > 0)
+                            {
+                                $this->documentIdentifier = $docId;
+                            
+                            }else{
+                            */    
                             $this->sendErrorPage();
+                            //}
                         }
                     }else{
                         $this->sendErrorPage();
@@ -2116,6 +2120,31 @@ class DocumentParser {
         }
         if($this->config['seostrict']==='1') $this->sendStrictURI();
         $this->prepareResponse();
+    }
+
+    function _IIS_furl_fix()
+    {
+        if($this->config['friendly_urls'] != 1) return;
+        
+        $url= $_SERVER['QUERY_STRING'];
+        $err= substr($url, 0, 3);
+        if ($err !== '404' && $err !== '405') return;
+        
+        $k= array_keys($_GET);
+        unset ($_GET[$k[0]]);
+        unset ($_REQUEST[$k[0]]); // remove 404,405 entry
+        $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+        $_SERVER['QUERY_STRING']= $qp['query'];
+        if (!empty ($qp['query'])) {
+            parse_str($qp['query'], $qv);
+            foreach ($qv as $n => $v)
+            {
+                $_REQUEST[$n]= $_GET[$n]= $v;
+            }
+        }
+        $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
+        $_REQUEST['q']= $_GET['q']= $qp['path'];
+        return $qp['path'];
     }
 
     function setRequestQ($request_uri) {
@@ -4719,9 +4748,7 @@ class DocumentParser {
     }
     
     function cleanUpMODXTags($content='') {
-        global $sanitize_seed;
-        
-        if(strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
+        $content = $this->removeSanitizeSeed($content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;

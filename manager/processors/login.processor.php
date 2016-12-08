@@ -95,6 +95,15 @@ while ($row = $modx->db->getRow($rs)) {
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
     @session_destroy();
     session_unset();
+    if ($cip = getenv("HTTP_CLIENT_IP"))
+        $ip = $cip;
+    elseif ($cip = getenv("HTTP_X_FORWARDED_FOR"))
+        $ip = $cip;
+    elseif ($cip = getenv("REMOTE_ADDR"))
+        $ip = $cip;
+    else $ip = "UNKNOWN";
+    $log = new logHandler;
+    $log->initAndWriteLog("Login Fail (Temporary Block)", $internalKey, $username, "119", $internalKey, "IP: ".$ip);
     jsAlert($_lang['login_processor_many_failed_logins']);
     return;
 }
@@ -166,15 +175,17 @@ $rt = $modx->invokeEvent('OnManagerAuthentication',
                         ));
 
 // check if plugin authenticated the user
-
-if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+$matchPassword = false;
+if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true,$rt)))
 {
 	// check user password - local authentication
 	$hashType = $modx->manager->getHashType($dbasePassword);
-	if($hashType=='phpass')  $matchPassword = login($username,$givenPassword,$dbasePassword);
-	elseif($hashType=='md5') $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
+	if($hashType=='phpass')  $matchPassword = login($username,$_REQUEST['password'],$dbasePassword);
+	elseif($hashType=='md5') $matchPassword = loginMD5($internalKey,$givenPassword,$dbasePassword,$username);
 	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
 	else                     $matchPassword = false;
+} else if($rt === true || (is_array($rt) && in_array(true,$rt))) {
+	$matchPassword = true;
 }
 
 if(!$matchPassword) {

@@ -1175,6 +1175,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>Zawartość bazy danych zostanie zapisana na 
 $_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
 $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
+$_lang["bkmgr_restore_confirm"] = 'Czy na pewno chcesz przywrócić kopię zapasową\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
 
 $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
