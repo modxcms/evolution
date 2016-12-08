@@ -4789,7 +4789,6 @@ class DocumentParser {
         switch($evalmode) {
             case 'with_scan'         : $isSafe = $this->isSafeCode($phpcode,$safe_functions); break;
             case 'with_scan_at_post' : $isSafe = $_POST ? $this->isSafeCode($phpcode,$safe_functions) : true; break;
-            case 'math'              : $isSafe = true; break;
             case 'everytime_eval'    : $isSafe = true; break; // Should debug only
             case 'dont_eval'         : 
             default                  : return $phpcode;
@@ -4803,7 +4802,6 @@ class DocumentParser {
         }
         
         ob_start();
-        if($evalmode==='math') $phpcode = preg_replace('@([a-zA-Z\n\r\t\s])@','',$phpcode);
         $return = eval($phpcode);
         $echo = ob_get_clean();
         
