@@ -24,6 +24,7 @@ $_lang["ef_failed_upload"] = "Falscher Dateityp.";
 $_lang["ef_failed_vericode"] = "Ungültiger Bestätigungs-Code.";
 $_lang["ef_invalid_date"] = " ist kein gültiges Datum";
 $_lang["ef_invalid_email"] = " ist keine gültige E-Mail Adresse";
+$_lang["ef_invalid_phone"] = "Telefonnummer enthält ungültige Eingaben";
 $_lang["ef_invalid_number"] = " ist keine gültige Nummer";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Das Formulartemplate wurde auf ID des Dokuments, welches den Snippet-Aufruf enthält, gesetzt. Sie können das Formular nicht im selben Dokument wie den Snippet-Aufruf haben.</span> id=";
 $_lang["ef_mail_abuse_error"] = "<strong>Ungültige oder unsichere Einträge wurden in Ihrem Formular entdeckt.</strong>";
