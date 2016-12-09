@@ -122,11 +122,14 @@ class Store{
 	}
 	
 	static function parse($tpl,$field){
+        global $modx;
 		foreach($field as $key=>$value)  $tpl = str_replace('[+'.$key.'+]',$value,$tpl);
-		return $tpl;
+       $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+       $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
+       $tpl = str_replace('[+onManagerMainFrameHeaderHTMLBlock+]',$onManagerMainFrameHeaderHTMLBlock,$tpl);
+       return $tpl;
 	}
-
-	function tpl($file){
+    function tpl($file){
 		$lang = $this->lang;
 		ob_start();
 		include($file);
