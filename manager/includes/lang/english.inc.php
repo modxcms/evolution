@@ -245,6 +245,7 @@ $_lang["duplicate_alias_message"] = 'Select \'yes\' to allow duplicate URL alias
 $_lang["duplicate_alias_title"] = 'Allow duplicate URL aliases';
 $_lang["duplicate_name_found_general"] = 'There is already a %s named \'%s\'. Please enter a unique name.';
 $_lang["duplicate_name_found_module"] = 'There is already a Module named \'%s\'. Please enter a unique name.';
+$_lang["duplicated_el_suffix"] = 'Duplicate';
 $_lang["edit"] = 'Edit';
 $_lang["edit_resource"] = 'Edit Resource';
 $_lang["edit_resource_title"] = 'Edit Resource';

@@ -17,7 +17,7 @@ if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']
 
 // Unregister globals
 if (@ ini_get('register_globals')) {
-    die();
+    die('Please disable register_globals!');
 }
 
 global $sanitize_seed;

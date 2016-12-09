@@ -42,7 +42,10 @@ for ($i=1;$i<count($opers);$i++){
 
     if (isset($subject)) {
         if (!empty($operator)) {
-            if ($math=='on' && !empty($subject)) {echo $modx->safeEval('$subject='.$subject.';');}
+            if ($math=='on' && !empty($subject)) {
+                $subject = preg_replace('@([a-zA-Z\n\r\t\s])@','',$subject);
+                $subject = $modx->safeEval('return ' . $subject.';');
+            }
             $operator = strtolower($operator);
 
             switch ($operator) {
@@ -132,15 +135,10 @@ if ($lp==1){
 if (strpos($output,'@TPL:')!==FALSE){$output='{{'.(str_replace('@TPL:','',$output)).'}}';}
 
 if (substr($output,0,6) == "@eval:") {
-    ob_start();
-    echo $modx->safeEval(substr($output,6));
-    $output = ob_get_contents();
-    ob_end_clean();
+    $output = $modx->safeEval(substr($output,6));
 }
 if (empty($then)&&empty($else)&&$math=='on') {
-    echo $modx->safeEval('$subject='.$subject.';');
-    return $subject;
+    return $modx->safeEval('return '.$subject.';');
 }
 
 return $output;
-?>
