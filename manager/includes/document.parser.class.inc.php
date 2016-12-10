@@ -1508,6 +1508,7 @@ class DocumentParser {
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
+                if(strpos($value,'[!')!==false) $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
                 if(substr($value,0,6)!=='@CODE:')
                 {
                     if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
