@@ -30,6 +30,8 @@ var DatePicker = new Class({
         this.yearRange = 10;
         this.yearStart = (new Date().getFullYear());
         this.yearOffset = -10;
+        this.error = '';
+        this.lastValidDate = '';
 
         // Pull the rest of the options
         if(options) {
@@ -52,7 +54,8 @@ var DatePicker = new Class({
 
         // Finds the entered date, or uses the current date
         dp = this.getValue(dp);
-
+        dp.lastValidDate = dp.value;
+        
         // Set beginning time and today, remember the original
         dp.oldYear = dp.year = dp.then.getFullYear();
         dp.oldMonth = dp.month = dp.then.getMonth();
@@ -93,8 +96,19 @@ var DatePicker = new Class({
         el = $(document.body).getElement('td.dp_selected');
         if(el) {
             ds = el.axis.split('|');
-            dp.value = this.formatValue(dp, ds[0], ds[1], ds[2]);
+            var formatted = this.formatValue(dp, ds[0], ds[1], ds[2]);
+            if(formatted != '') {
+                dp.value  = formatted;
+                dp.lastValidDate = formatted;
+            }
             this.dp.dirty = true;
+        }
+    },
+
+    alertError: function(dp) {
+        if(dp.error != '' && typeof dp.error != 'undefined') {
+            alert(dp.error);
+            dp.error = '';
         }
     },
     
@@ -104,7 +118,10 @@ var DatePicker = new Class({
 
         var clickOutside = ($chk(e) && e.target != this.dp && e.target != this.dp.container && !$(this.dp.id + 'dp_container').hasChild(e.target));
         if (clickOutside) {
-            if(this.dp.dirty) this.updateValue(this.dp);
+            if(this.dp.dirty) {
+                this.updateValue(this.dp);
+                this.alertError(this.dp);
+            }
             this.remove(this.dp);
         }
     },
@@ -129,8 +146,14 @@ var DatePicker = new Class({
             'keydown': function(e) {
                 e = new Event(e);
                 if ((e.code== 9 && !e.shift) || e.code == 27 || e.code == 13) {
-                    if(e.code == 13 && dp.container) e.stop();
-                    this.remove(this.dp);
+                    if(e.code == 13 && dp.container) {
+                        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+                        if(this.dp.dirty) this.updateValue(dp);
+                        this.remove(this.dp);
+                        this.alertError(this.dp);
+                    } else {
+                        this.remove(this.dp);
+                    }
                 }
             }.bind(this)
         });
@@ -306,14 +329,10 @@ var DatePicker = new Class({
         timeTextBox.onfocus = function(){ dp.active = true; };
         timeTextBox.onblur = function() {
             this.updateValue(this.dp);
+            this.alertError(this.dp);
         }.bind(this);
         timeTextBox.onkeypress = function(e) {
           this.dp.dirty = true;
-          e = new Event(e);
-          if (e.code == 13) {
-              this.updateValue(this.dp);
-	          return false;
-            }
         }.bind(this);
     },
     
@@ -325,12 +344,12 @@ var DatePicker = new Class({
         /* get time */
         var time = $(dp.id + '_timeTextBox').value.split(':');
 
-        if (time[0] < 0 || time[0] > 23) {
-            alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
+        if (time[0] == '' || time[0] < 0 || time[0] > 23) {
+            dp.error = 'Invalid hours value: ' + time[0] + '\nAllowed range is 00-23';
             return '';
         }
-        if (time[1] < 0 || time[1] > 59 || time[1].length !== 2) {
-            alert('Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59');
+        if (time[1] == '' || time[1] < 0 || time[1] > 59 || time[1].length !== 2) {
+            dp.error = 'Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59';
             return '';
         }
         
