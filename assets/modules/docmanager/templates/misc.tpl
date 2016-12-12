@@ -1,33 +1,33 @@
-<br /><h3>[+lang.DM_adjust_dates_header+]</h3><br />
+<br /><h3><i class="fa fa-calendar" aria-hidden="true"></i> [+lang.DM_adjust_dates_header+]</h3><br />
 <p>[+lang.DM_adjust_dates_desc+]</p><br />
 <form id="dates" name="dates" method="post" action="">
-    <table style="margin-left: 50px">
+    <table>
 	    <tr>
 	        <td><label for="date_pubdate" id="date_pubdate_label">[+lang.DM_date_pubdate+]</label></td>
 	        <td>
 	            <input type="text" id="date_pubdate" class="DatePicker" name="date_pubdate" />
-	            <a href="#" onclick="document.forms['dates'].elements['date_pubdate'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	            <a href="#" title=" [+lang.DM_clear_date+]" onclick="document.forms['dates'].elements['date_pubdate'].value=''; return true;"><i class="fa fa-calendar-o" aria-hidden="true"></i></a>
 	        </td>
 	    </tr>
 	    <tr>
 	        <td><label for="date_unpubdate" id="date_unpubdate_label">[+lang.DM_date_unpubdate+]</label></td>
 	        <td>
 	            <input type="text" id="date_unpubdate" class="DatePicker" name="date_unpubdate" />
-	            <a href="#" onclick="document.forms['dates'].elements['date_unpubdate'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	            <a href="#" title=" [+lang.DM_clear_date+]" onclick="document.forms['dates'].elements['date_unpubdate'].value=''; return true;"><i class="fa fa-calendar-o" aria-hidden="true"></i></a>
 	        </td>
 	    </tr>
 	    <tr>
 	        <td><label for="date_createdon" id="date_createdon_label">[+lang.DM_date_createdon+]</label></td>
 	        <td>
 	            <input type="text" id="date_createdon" class="DatePicker" name="date_createdon" />
-	            <a href="#" onclick="document.forms['dates'].elements['date_createdon'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	            <a href="#" title=" [+lang.DM_clear_date+]" onclick="document.forms['dates'].elements['date_createdon'].value=''; return true;"><i class="fa fa-calendar-o" aria-hidden="true"></i></a>
 	        </td>
 	    </tr>
 	    <tr>
 	        <td><label for="date_editedon" id="date_editedon_label">[+lang.DM_date_editedon+]</label></td>
 	        <td>
 	            <input type="text" id="date_editedon" class="DatePicker" name="date_editedon" />
-	            <a href="#" onclick="document.forms['dates'].elements['date_editedon'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	            <a href="#" title=" [+lang.DM_clear_date+]" onclick="document.forms['dates'].elements['date_editedon'].value=''; return true;"><i class="fa fa-calendar-o" aria-hidden="true"></i></a>
 	        </td>
 	    </tr>
     </table>
@@ -35,10 +35,10 @@
 
 
 <br />
-<h3>[+lang.DM_other_header+]</h3>
+<h3><i class="fa fa-sliders" aria-hidden="true"></i> [+lang.DM_other_header+]</h3>
 <br />
 <p>[+lang.DM_misc_desc+]</p><br />
-<form style="margin-left:50px;" name="other" method="post" action="">
+<form name="other" method="post" action="">
     <input type="hidden" id="option1" name="option1" value="[+lang.DM_other_publish_radio1+]" />
     <input type="hidden" id="option2" name="option2" value="[+lang.DM_other_publish_radio2+]" />
     <input type="hidden" id="option3" name="option3" value="[+lang.DM_other_show_radio1+]" />
