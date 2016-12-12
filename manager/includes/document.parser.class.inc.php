@@ -2586,6 +2586,9 @@ class DocumentParser {
      * Updates table "active_user_sessions" with userid, lasthit, IP
      */
     function updateValidatedUserSession() {
+        // web users are stored with negative keys
+        $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
+            
         // Get user IP
         if ($cip = getenv("HTTP_CLIENT_IP"))           $ip = $cip;
         elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) $ip = $cip;
@@ -2597,7 +2600,7 @@ class DocumentParser {
         $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip)
             VALUES (%d, %d, \'%s\')',
             $this->getFullTableName('active_user_sessions'),
-            $this->getLoginUserID(),
+            $userId,
             $this->time,
             $ip
         );
