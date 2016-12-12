@@ -4828,6 +4828,7 @@ class DocumentParser {
         
         $safe = explode(',', $safe_functions);
         
+        $phpcode = rtrim($phpcode,';') . ';';
         $tokens = token_get_all('<?php ' . $phpcode);
         foreach($tokens as $i=>$token) {
             if(!is_array($token)) continue;
