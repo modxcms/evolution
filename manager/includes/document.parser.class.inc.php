@@ -1383,6 +1383,11 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
         if(!$matches) return $content;
+        
+        $this->snipLapCount++;
+        if ($this->dumpSnippets)
+            $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
+        
         $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
@@ -1401,6 +1406,9 @@ class DocumentParser {
             }
             $replace[$i] = $this->_get_snip_result($call);
         }
+        
+        if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
+        
         $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
@@ -1948,10 +1956,6 @@ class DocumentParser {
             // get source length if this is the final pass
             if ($i == ($passes -1))
                 $st= strlen($source);
-            $this->snipLapCount++;
-            if ($this->dumpSnippets) {
-                $this->snippetsCode .= '<fieldset><legend><b style="color: #821517;">PARSE PASS ' . $this->snipLapCount . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
-            }
 
             // invoke OnParseDocument event
             $this->documentOutput= $source; // store source code so plugins can
@@ -1981,9 +1985,6 @@ class DocumentParser {
             
             $source = $this->mergeSettingsContent($source);
             
-            if ($this->dumpSnippets) {
-                $this->snippetsCode .= "</fieldset><br />";
-            }
             if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
                 // check if source length was changed
                 $et= strlen($source);
