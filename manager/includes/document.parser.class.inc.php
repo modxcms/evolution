@@ -4753,6 +4753,11 @@ class DocumentParser {
                 elseif($left==='[(') $content = $this->mergeSettingsContent($content);
                 elseif($left==='{{') $content = $this->mergeChunkContent($content);
                 elseif($left==='[[') $content = $this->evalSnippets($content);
+            }
+        }
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($content,$left)!==false) {
                 $matches = $this->getTagsFromContent($content,$left,$right);
                 $content= str_replace($matches[0], '', $content);
             }
