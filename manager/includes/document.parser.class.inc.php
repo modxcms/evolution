@@ -4850,6 +4850,38 @@ class DocumentParser {
         return true;
     }
     
+    function atBindFileContent($str='') {
+        if(strpos($str,'@FILE')!==0) return $str;
+        if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
+        
+        if($this->getExtFromFilename($str)==='.php') return 'Could not retrieve PHP file.';
+        
+        $str = substr($str,6);
+        $str = trim($str);
+        if(strpos($str,'\\')!==false) $str = str_replace('\\','/',$str);
+        $str = ltrim($str,'/');
+        
+        $tvs_path      = MODX_BASE_PATH . 'assets/tvs/';
+        $chunks_path   = MODX_BASE_PATH . 'assets/chunks/';
+        $template_path = MODX_BASE_PATH . 'assets/templates/';
+        $rb_files_path = $this->config['rb_base_dir'].'files/';
+        
+        if(strpos($str,MODX_MANAGER_PATH)===0) $file_path = false;
+        elseif(is_file($tvs_path      . $str)) $file_path = $tvs_path      . $str;
+        elseif(is_file($rb_files_path . $str)) $file_path = $rb_files_path . $str;
+        elseif(is_file($chunks_path   . $str)) $file_path = $chunks_path   . $str;
+        elseif(is_file($template_path . $str)) $file_path = $template_path . $str;
+        elseif(is_file(MODX_BASE_PATH . $str)) $file_path = MODX_BASE_PATH . $str;
+        else                                   $file_path = false;
+        
+        if($file_path===false) return sprintf("Could not retrieve string '%s'.", $file);
+        
+        $content = (string) file_get_contents($file_path);
+        if(!$content) return '';
+        
+        return $content;
+    }
+    
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
