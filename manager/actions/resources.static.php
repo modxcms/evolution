@@ -390,9 +390,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
                 $pluginsql = $v['table'] == 'site_plugins' ? $v['table'].'.disabled, ' : '';
                 $rs = $modx->db->select(
-                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, categories.category, categories.id as catid",
+                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, IF(isnull(categories.category), '{$_lang['no_category']}',categories.category) as category, categories.id as catid",
                     $modx->getFullTableName($v['table'])." AS {$v['table']}
-                        RIGHT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
+                        LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
                     "",
                     "5,1"
                     );
