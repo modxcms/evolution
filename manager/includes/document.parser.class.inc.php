@@ -1941,49 +1941,36 @@ class DocumentParser {
      * @return string
      */
     function parseDocumentSource($source) {
+        
+        if(!$source) return $source;
+        
         // set the number of times we are to parse the document source
-        $this->minParserPasses= empty ($this->minParserPasses) ? 2 : $this->minParserPasses;
-        $this->maxParserPasses= empty ($this->maxParserPasses) ? 10 : $this->maxParserPasses;
-        $passes= $this->minParserPasses;
-        for ($i= 0; $i < $passes; $i++) {
-            // get source length if this is the final pass
-            if ($i == ($passes -1))
-                $st= strlen($source);
+        if(empty ($this->maxParserPasses))     $this->maxParserPasses     = 10;
+        if(!isset($this->config['show_meta'])) $this->config['show_meta'] = 0; // deprecated
+        
+        $bt = '';
+        $i = 0;
+        while($i < $this->maxParserPasses) {
+            $bt= md5($source);
 
             // invoke OnParseDocument event
-            $this->documentOutput= $source; // store source code so plugins can
-            $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
-            $source= $this->documentOutput;
+            $this->documentOutput = $source; // store source code so plugins can
+            $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
+            $source = $this->documentOutput;
 
-            $source= $this->ignoreCommentedTagsContent($source);
-
-            $source= $this->mergeConditionalTagsContent($source);
-            
+            $source = $this->ignoreCommentedTagsContent($source);
+            $source = $this->mergeConditionalTagsContent($source);
             $source = $this->mergeSettingsContent($source);
             
-            // combine template and document variables
-            $source= $this->mergeDocumentContent($source);
-            // replace settings referenced in document
-            $source= $this->mergeSettingsContent($source);
-            // replace HTMLSnippets in document
-            $source= $this->mergeChunkContent($source);
-        // insert META tags & keywords
-            if(isset($this->config['show_meta']) && $this->config['show_meta']==1) {
-                $source= $this->mergeDocumentMETATags($source);
-            }
-            // find and merge snippets
-            $source= $this->evalSnippets($source);
-            // find and replace Placeholders (must be parsed last) - Added by Raymond
-            $source= $this->mergePlaceholderContent($source);
-            
+            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeChunkContent($source);
+            if($this->config['show_meta']) $source= $this->mergeDocumentMETATags($source);
+            $source = $this->evalSnippets($source);
+            $source = $this->mergePlaceholderContent($source);
             
-            if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
-                // check if source length was changed
-                $et= strlen($source);
-                if ($st != $et)
-                    $passes++; // if content change then increase passes because
-            } // we have not yet reached maxParserPasses
+            if($bt === md5($source)) break;
+            $i++;
         }
         return $source;
     }
