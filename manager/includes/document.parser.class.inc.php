@@ -5243,27 +5243,19 @@ class DocumentParser {
     function atBindInclude($str='')
     {
         if(strpos($str,'@INCLUDE')!==0) return $str;
-        if(strpos($str,"\n")!==false)
-            $str = substr($str,0,strpos("\n",$str));
+        if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
         $str = substr($str,9);
         $str = trim($str);
         $str = str_replace('\\','/',$str);
+        $str = ltrim($str,'/');
         
         $tpl_dir = 'assets/templates/';
         
-        if(substr($str,0,1)==='/')
-        {
-            $vpath = MODX_BASE_PATH . ltrim($str,'/');
-            if(is_file($str) && strpos($str,MODX_MANAGER_PATH)===0)         $file_path = false;
-            elseif(is_file($vpath) && strpos($vpath,MODX_MANAGER_PATH)===0) $file_path = false;
-            elseif(is_file($str) && strpos($str,MODX_BASE_PATH)===0)        $file_path = $str;
-            elseif(is_file($vpath))                                         $file_path = $vpath;
-            else                                                            $file_path = false;
-        }
-        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH.$str;
-        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH.$tpl_dir.$str;
-        else                                                                $file_path = false;
+        if(strpos($str,MODX_MANAGER_PATH)===0)               return false;
+        elseif(is_file(MODX_BASE_PATH . $str))               $file_path = MODX_BASE_PATH.$str;
+        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}")) $file_path = MODX_BASE_PATH.$tpl_dir.$str;
+        else                                                 return false;
         
         if(!$file_path || !is_file($file_path)) return false;
         
