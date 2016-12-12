@@ -4829,11 +4829,18 @@ class DocumentParser {
         $safe = explode(',', $safe_functions);
         
         $tokens = token_get_all('<?php ' . $phpcode);
+        foreach($tokens as $i=>$token) {
+            if(!is_array($token)) continue;
+            $tokens[$i]['token_name'] = token_name($token[0]);
+        }
         foreach($tokens as $token) {
             if(!is_array($token)) continue;
-            switch(token_name($token[0])) {
+            switch($token['token_name']) {
                 case 'T_STRING':
                     if(!in_array($token[1],$safe)) return false;
+                    break;
+                case 'T_VARIABLE':
+                    if($token[1]=='$GLOBALS') return false;
                     break;
                 case 'T_EVAL':
                     return false;
