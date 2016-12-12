@@ -4882,6 +4882,12 @@ class DocumentParser {
         return $content;
     }
     
+    function getExtFromFilename($str) {
+        $str = strtolower(trim($str));
+        $pos = strrpos($str,'.');
+        if($pos===false) return false;
+        else             return substr($str,$pos);
+    }
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
