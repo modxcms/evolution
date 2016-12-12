@@ -303,6 +303,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                                 'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                                 'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+    
+    foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
     ?>
     
     var lockedElementsTranslation = <?php echo json_encode($unlockTranslations); ?>;
