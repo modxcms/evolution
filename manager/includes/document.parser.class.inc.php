@@ -1391,20 +1391,13 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
-                if(strpos($content,'_PHX_INTERNAL_')===false) $replace[$i] = $this->_getSGVar($call);
+                if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
+                else                                          $value = $matches[0][$i];
+                $content = str_replace($matches[0][$i], $value, $content);
                 continue;
             }
-            $find = $i - 1;
-            while( $find >= 0 )
-            {
-                $tag = $matches[0][ $find ];
-                if(isset($replace[$find]) && strpos($call,$tag)!==false) {
-                    $call = str_replace($tag,$replace[$find],$call);
-                    break;
-                }
-                $find--;
-            }
-            $replace[$i] = $this->_get_snip_result($call);
+            $value = $this->_get_snip_result($call);
+            $content = str_replace($matches[0][$i], $value, $content);
         }
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
@@ -1479,6 +1472,7 @@ class DocumentParser {
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
         $key = '';
+        $value = null;
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
@@ -1519,15 +1513,14 @@ class DocumentParser {
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
-                if(strpos($value,'[!')!==false) $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
+                $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
+                $value = $this->mergeDocumentContent($value);
+                $value = $this->mergeSettingsContent($value);
+                $value = $this->mergeChunkContent($value);
+                $value = $this->evalSnippets($value);
                 if(substr($value,0,6)!=='@CODE:')
-                {
-                    if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
-                    if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
-                    if(strpos($value,'{{')!==false) $value = $this->mergeChunkContent($value);
-                    if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
-                    if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
-                }
+                    $value = $this->mergePlaceholderContent($value);
+                
                 $temp_params[][$key]=$value;
                 
                 $key   = '';
