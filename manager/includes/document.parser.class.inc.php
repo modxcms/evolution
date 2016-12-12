@@ -1383,7 +1383,7 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
-                $replace[$i] = $this->_getSGVar($call);
+                if(strpos($content,'_PHX_INTERNAL_')===false) $replace[$i] = $this->_getSGVar($call);
                 continue;
             }
             $find = $i - 1;
