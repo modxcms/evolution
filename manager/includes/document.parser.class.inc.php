@@ -379,6 +379,9 @@ class DocumentParser {
             $this->config= array_merge($this->config, $usrSettings);
             $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
             $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+            $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+            if($count) $this->config['enable_filter'] = '0';
         }
     }
 
