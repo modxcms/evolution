@@ -99,19 +99,23 @@ if(!function_exists('startCMSSession')) {
         removeInvalidCmsSessionIds($site_sessionname);
         session_start();
         $cookieExpiration= 0;
-        if (isset ($_SESSION['mgrValidated']) || isset ($_SESSION['webValidated'])) {
-            $contextKey= isset ($_SESSION['mgrValidated']) ? 'mgr' : 'web';
-            if (isset ($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime']) && is_numeric($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime'])) {
-                $cookieLifetime= intval($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime']);
-            }
-            if ($cookieLifetime) {
-                $cookieExpiration= time() + $cookieLifetime;
-            }
-            if (!isset($_SESSION['modx.session.created.time'])) {
-              $_SESSION['modx.session.created.time'] = time();
-            }
-        }
         $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
-        setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
+        
+        if    (isset($_SESSION['mgrValidated'])) $context = 'mgr';
+        elseif(isset($_SESSION['webValidated'])) $context = 'web';
+        else {
+            setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
+            return;
+        }
+        
+        $key = "modx.{$context}.session.cookie.lifetime";
+        if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
+            $cookieLifetime= intval($_SESSION[$key]);
+            if($cookieLifetime) $cookieExpiration = $_SERVER['REQUEST_TIME']+$cookieLifetime;
+        }
+        if (!isset($_SESSION['modx.session.created.time'])) {
+            $_SESSION['modx.session.created.time'] = $_SERVER['REQUEST_TIME'];
+        }
+        setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
     }
 }
