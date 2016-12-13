@@ -13,7 +13,6 @@ $table_prefix      = '[+table_prefix+]';
 
 $lastInstallTime = [+lastInstallTime+];
 
-$site_sessionname = '[+site_sessionname+]';
 $https_port = '443';
 
 if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
@@ -80,6 +79,13 @@ if (!defined('MODX_MANAGER_URL')) define('MODX_MANAGER_URL', $site_url.MGR_DIR.'
 
 // start cms session
 if(!function_exists('startCMSSession')) {
+    
+    global $site_sessionname;
+    $_ = crc32(__FILE__);
+    $_ = sprintf('%u', $_);
+    $_ = base_convert($_,10,36);
+    $site_sessionname = 'evo' . $_;
+    
     function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
       if (isset($storage[$session_name]) && $storage[$session_name] === '')
       {
@@ -94,7 +100,9 @@ if(!function_exists('startCMSSession')) {
         removeInvalidCmsSessionFromStorage($_POST, $session_name);
     }
     function startCMSSession(){
+        
         global $site_sessionname, $https_port;
+        
         session_name($site_sessionname);
         removeInvalidCmsSessionIds($site_sessionname);
         session_start();
