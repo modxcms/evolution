@@ -4831,6 +4831,9 @@ class DocumentParser {
     }
     
     function atBindFileContent($str='') {
+        
+        $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'].'files/', '');
+        
         if(strpos($str,'@FILE')!==0) return $str;
         if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
@@ -4841,23 +4844,19 @@ class DocumentParser {
         if(strpos($str,'\\')!==false) $str = str_replace('\\','/',$str);
         $str = ltrim($str,'/');
         
-        $tvs_path      = MODX_BASE_PATH . 'assets/tvs/';
-        $chunks_path   = MODX_BASE_PATH . 'assets/chunks/';
-        $template_path = MODX_BASE_PATH . 'assets/templates/';
-        $rb_files_path = $this->config['rb_base_dir'].'files/';
+        $errorMsg = sprintf("Could not retrieve string '%s'.", $str);
         
-        if(strpos($str,MODX_MANAGER_PATH)===0) $file_path = false;
-        elseif(is_file($tvs_path      . $str)) $file_path = $tvs_path      . $str;
-        elseif(is_file($rb_files_path . $str)) $file_path = $rb_files_path . $str;
-        elseif(is_file($chunks_path   . $str)) $file_path = $chunks_path   . $str;
-        elseif(is_file($template_path . $str)) $file_path = $template_path . $str;
-        elseif(is_file(MODX_BASE_PATH . $str)) $file_path = MODX_BASE_PATH . $str;
-        else                                   $file_path = false;
+        foreach($search_path as $path) {
+            $file_path = MODX_BASE_PATH.$path.$str;
+            if(strpos($file_path,MODX_MANAGER_PATH)===0) return $errorMsg;
+            elseif(is_file($file_path))                  break;
+            else                                         $file_path = false;
+        }
         
-        if($file_path===false) return sprintf("Could not retrieve string '%s'.", $file);
+        if(!$file_path) return $errorMsg;
         
         $content = (string) file_get_contents($file_path);
-        if(!$content) return '';
+        if($content===false) return $errorMsg;
         
         return $content;
     }
