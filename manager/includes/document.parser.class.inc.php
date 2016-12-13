@@ -2061,7 +2061,22 @@ class DocumentParser {
                         {
                             $this->documentIdentifier = $docId;
                         }else{
+                            /*
+                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
+                            if($this->db->getRecordCount($rs)==0)
+                            {
+                                $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
+                            }
+                            $docId = $this->db->getValue($rs);
+
+                            if ($docId > 0)
+                            {
+                                $this->documentIdentifier = $docId;
+                            
+                            }else{
+                            */    
                             $this->sendErrorPage();
+                            //}
                         }
                     }else{
                         $this->sendErrorPage();
