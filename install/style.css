@@ -583,21 +583,25 @@ tbody td {
   border-radius: 3px;
   background-color: #fff;
 }
+
 h3 .actions {
+  display: block;
+  margin-top: 0.5em;
   font-size: 0.8em;
-  margin-left: 1em;
 }
 
 #rtl .actions  {
   text-align: right;
 }
 
+h3 .actions a:hover,
 p.actions a:hover {
   background-color: #3697cd;
   border-color: #3697cd;
   color: #fff;
 }
 
+h3 .actions a:active,
 p.actions a:active {
   background-color: #3189ba;
   border-color: #3189ba;
