@@ -140,6 +140,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                                     'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                                     'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+        foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
         ?>
         var trans = <?php echo json_encode($unlockTranslations); ?>;
         var msg = trans.msg.replace('[+id+]',id).replace('[+element_type+]',trans['type'+type]);
@@ -389,9 +390,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
                 $pluginsql = $v['table'] == 'site_plugins' ? $v['table'].'.disabled, ' : '';
                 $rs = $modx->db->select(
-                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, categories.category, categories.id as catid",
+                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, IF(isnull(categories.category), '{$_lang['no_category']}',categories.category) as category, categories.id as catid",
                     $modx->getFullTableName($v['table'])." AS {$v['table']}
-                        RIGHT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
+                        LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
                     "",
                     "5,1"
                     );

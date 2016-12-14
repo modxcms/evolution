@@ -379,6 +379,9 @@ class DocumentParser {
             $this->config= array_merge($this->config, $usrSettings);
             $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
             $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+            $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+            if($count) $this->config['enable_filter'] = '0';
         }
     }
 
@@ -1380,24 +1383,25 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
         if(!$matches) return $content;
+        
+        $this->snipLapCount++;
+        if ($this->dumpSnippets)
+            $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
+        
         $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
-                $replace[$i] = $this->_getSGVar($call);
+                if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
+                else                                          $value = $matches[0][$i];
+                $content = str_replace($matches[0][$i], $value, $content);
                 continue;
             }
-            $find = $i - 1;
-            while( $find >= 0 )
-            {
-                $tag = $matches[0][ $find ];
-                if(isset($replace[$find]) && strpos($call,$tag)!==false) {
-                    $call = str_replace($tag,$replace[$find],$call);
-                    break;
-                }
-                $find--;
-            }
-            $replace[$i] = $this->_get_snip_result($call);
+            $value = $this->_get_snip_result($call);
+            $content = str_replace($matches[0][$i], $value, $content);
         }
+        
+        if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
+        
         $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
@@ -1468,6 +1472,7 @@ class DocumentParser {
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
         $key = '';
+        $value = null;
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
@@ -1508,14 +1513,14 @@ class DocumentParser {
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
+                $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
+                $value = $this->mergeDocumentContent($value);
+                $value = $this->mergeSettingsContent($value);
+                $value = $this->mergeChunkContent($value);
+                $value = $this->evalSnippets($value);
                 if(substr($value,0,6)!=='@CODE:')
-                {
-                    if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
-                    if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
-                    if(strpos($value,'{{')!==false) $value = $this->mergeChunkContent($value);
-                    if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
-                    if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
-                }
+                    $value = $this->mergePlaceholderContent($value);
+                
                 $temp_params[][$key]=$value;
                 
                 $key   = '';
@@ -1936,56 +1941,36 @@ class DocumentParser {
      * @return string
      */
     function parseDocumentSource($source) {
+        
+        if(!$source) return $source;
+        
         // set the number of times we are to parse the document source
-        $this->minParserPasses= empty ($this->minParserPasses) ? 2 : $this->minParserPasses;
-        $this->maxParserPasses= empty ($this->maxParserPasses) ? 10 : $this->maxParserPasses;
-        $passes= $this->minParserPasses;
-        for ($i= 0; $i < $passes; $i++) {
-            // get source length if this is the final pass
-            if ($i == ($passes -1))
-                $st= strlen($source);
-            $this->snipLapCount++;
-            if ($this->dumpSnippets) {
-                $this->snippetsCode .= '<fieldset><legend><b style="color: #821517;">PARSE PASS ' . $this->snipLapCount . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
-            }
+        if(empty ($this->maxParserPasses))     $this->maxParserPasses     = 10;
+        if(!isset($this->config['show_meta'])) $this->config['show_meta'] = 0; // deprecated
+        
+        $bt = '';
+        $i = 0;
+        while($i < $this->maxParserPasses) {
+            $bt= md5($source);
 
             // invoke OnParseDocument event
-            $this->documentOutput= $source; // store source code so plugins can
-            $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
-            $source= $this->documentOutput;
+            $this->documentOutput = $source; // store source code so plugins can
+            $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
+            $source = $this->documentOutput;
 
-            $source= $this->ignoreCommentedTagsContent($source);
-
-            $source= $this->mergeConditionalTagsContent($source);
-            
+            $source = $this->ignoreCommentedTagsContent($source);
+            $source = $this->mergeConditionalTagsContent($source);
             $source = $this->mergeSettingsContent($source);
             
-            // combine template and document variables
-            $source= $this->mergeDocumentContent($source);
-            // replace settings referenced in document
-            $source= $this->mergeSettingsContent($source);
-            // replace HTMLSnippets in document
-            $source= $this->mergeChunkContent($source);
-        // insert META tags & keywords
-            if(isset($this->config['show_meta']) && $this->config['show_meta']==1) {
-                $source= $this->mergeDocumentMETATags($source);
-            }
-            // find and merge snippets
-            $source= $this->evalSnippets($source);
-            // find and replace Placeholders (must be parsed last) - Added by Raymond
-            $source= $this->mergePlaceholderContent($source);
-            
+            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeChunkContent($source);
+            if($this->config['show_meta']) $source= $this->mergeDocumentMETATags($source);
+            $source = $this->evalSnippets($source);
+            $source = $this->mergePlaceholderContent($source);
             
-            if ($this->dumpSnippets) {
-                $this->snippetsCode .= "</fieldset><br />";
-            }
-            if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
-                // check if source length was changed
-                $et= strlen($source);
-                if ($st != $et)
-                    $passes++; // if content change then increase passes because
-            } // we have not yet reached maxParserPasses
+            if($bt === md5($source)) break;
+            $i++;
         }
         return $source;
     }
@@ -2076,22 +2061,7 @@ class DocumentParser {
                         {
                             $this->documentIdentifier = $docId;
                         }else{
-                            /*
-                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$docAlias}'");
-                            if($this->db->getRecordCount($rs)==0)
-                            {
-                                $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and id='{$docAlias}'");
-                            }
-                            $docId = $this->db->getValue($rs);
-
-                            if ($docId > 0)
-                            {
-                                $this->documentIdentifier = $docId;
-                            
-                            }else{
-                            */    
                             $this->sendErrorPage();
-                            //}
                         }
                     }else{
                         $this->sendErrorPage();
@@ -2585,6 +2555,9 @@ class DocumentParser {
      * Updates table "active_user_sessions" with userid, lasthit, IP
      */
     function updateValidatedUserSession() {
+        // web users are stored with negative keys
+        $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
+            
         // Get user IP
         if ($cip = getenv("HTTP_CLIENT_IP"))           $ip = $cip;
         elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) $ip = $cip;
@@ -2596,7 +2569,7 @@ class DocumentParser {
         $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip)
             VALUES (%d, %d, \'%s\')',
             $this->getFullTableName('active_user_sessions'),
-            $this->getLoginUserID(),
+            $userId,
             $this->time,
             $ip
         );
@@ -4760,6 +4733,11 @@ class DocumentParser {
                 elseif($left==='[(') $content = $this->mergeSettingsContent($content);
                 elseif($left==='{{') $content = $this->mergeChunkContent($content);
                 elseif($left==='[[') $content = $this->evalSnippets($content);
+            }
+        }
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($content,$left)!==false) {
                 $matches = $this->getTagsFromContent($content,$left,$right);
                 $content= str_replace($matches[0], '', $content);
             }
@@ -4830,12 +4808,20 @@ class DocumentParser {
         
         $safe = explode(',', $safe_functions);
         
+        $phpcode = rtrim($phpcode,';') . ';';
         $tokens = token_get_all('<?php ' . $phpcode);
+        foreach($tokens as $i=>$token) {
+            if(!is_array($token)) continue;
+            $tokens[$i]['token_name'] = token_name($token[0]);
+        }
         foreach($tokens as $token) {
             if(!is_array($token)) continue;
-            switch(token_name($token[0])) {
+            switch($token['token_name']) {
                 case 'T_STRING':
                     if(!in_array($token[1],$safe)) return false;
+                    break;
+                case 'T_VARIABLE':
+                    if($token[1]=='$GLOBALS') return false;
                     break;
                 case 'T_EVAL':
                     return false;
@@ -4844,6 +4830,44 @@ class DocumentParser {
         return true;
     }
     
+    function atBindFileContent($str='') {
+        if(strpos($str,'@FILE')!==0) return $str;
+        if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
+        
+        if($this->getExtFromFilename($str)==='.php') return 'Could not retrieve PHP file.';
+        
+        $str = substr($str,6);
+        $str = trim($str);
+        if(strpos($str,'\\')!==false) $str = str_replace('\\','/',$str);
+        $str = ltrim($str,'/');
+        
+        $tvs_path      = MODX_BASE_PATH . 'assets/tvs/';
+        $chunks_path   = MODX_BASE_PATH . 'assets/chunks/';
+        $template_path = MODX_BASE_PATH . 'assets/templates/';
+        $rb_files_path = $this->config['rb_base_dir'].'files/';
+        
+        if(strpos($str,MODX_MANAGER_PATH)===0) $file_path = false;
+        elseif(is_file($tvs_path      . $str)) $file_path = $tvs_path      . $str;
+        elseif(is_file($rb_files_path . $str)) $file_path = $rb_files_path . $str;
+        elseif(is_file($chunks_path   . $str)) $file_path = $chunks_path   . $str;
+        elseif(is_file($template_path . $str)) $file_path = $template_path . $str;
+        elseif(is_file(MODX_BASE_PATH . $str)) $file_path = MODX_BASE_PATH . $str;
+        else                                   $file_path = false;
+        
+        if($file_path===false) return sprintf("Could not retrieve string '%s'.", $file);
+        
+        $content = (string) file_get_contents($file_path);
+        if(!$content) return '';
+        
+        return $content;
+    }
+    
+    function getExtFromFilename($str) {
+        $str = strtolower(trim($str));
+        $pos = strrpos($str,'.');
+        if($pos===false) return false;
+        else             return substr($str,$pos);
+    }
     /***************************************************************************************/
     /* End of API functions                                       */
     /***************************************************************************************/
@@ -5219,27 +5243,19 @@ class DocumentParser {
     function atBindInclude($str='')
     {
         if(strpos($str,'@INCLUDE')!==0) return $str;
-        if(strpos($str,"\n")!==false)
-            $str = substr($str,0,strpos("\n",$str));
+        if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
         $str = substr($str,9);
         $str = trim($str);
         $str = str_replace('\\','/',$str);
+        $str = ltrim($str,'/');
         
         $tpl_dir = 'assets/templates/';
         
-        if(substr($str,0,1)==='/')
-        {
-            $vpath = MODX_BASE_PATH . ltrim($str,'/');
-            if(is_file($str) && strpos($str,MODX_MANAGER_PATH)===0)         $file_path = false;
-            elseif(is_file($vpath) && strpos($vpath,MODX_MANAGER_PATH)===0) $file_path = false;
-            elseif(is_file($str) && strpos($str,MODX_BASE_PATH)===0)        $file_path = $str;
-            elseif(is_file($vpath))                                         $file_path = $vpath;
-            else                                                            $file_path = false;
-        }
-        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH.$str;
-        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH.$tpl_dir.$str;
-        else                                                                $file_path = false;
+        if(strpos($str,MODX_MANAGER_PATH)===0)               return false;
+        elseif(is_file(MODX_BASE_PATH . $str))               $file_path = MODX_BASE_PATH.$str;
+        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}")) $file_path = MODX_BASE_PATH.$tpl_dir.$str;
+        else                                                 return false;
         
         if(!$file_path || !is_file($file_path)) return false;
         
