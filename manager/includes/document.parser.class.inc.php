@@ -1485,6 +1485,13 @@ class DocumentParser {
                 if(in_array($delim, array('"', "'", '`')))
                 {
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
+                    $i=0;
+                    while(substr(trim($_tmp),0,1)!=='&' && trim($_tmp)!=='' && 1<substr_count($_tmp,$delim)) {
+                        list($inner, $outer, $_tmp) = explode($delim, $_tmp, 3);
+                        $value .= "{$delim}{$inner}{$delim}{$outer}";
+                        $i++;
+                        if(10<$i) exit('Nesting level too deep');
+                    }
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
