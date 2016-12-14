@@ -592,6 +592,7 @@ class ditto {
 				$documentIDs = $this->getChildIDs($IDs, $depth);
 			break;
 			case "documents":
+				if(!preg_match('@^[0-9, ]*$@',$IDs)) exit(sprintf('Illegal value of &amp;documents: %s', $IDs));
 				$documentIDs = explode(",",$IDs);
 			break;
 		}

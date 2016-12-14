@@ -20,8 +20,8 @@
 // http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
 
 // @todo: Is this list complete for a "full"-theme?
-$this->set('plugins', 'anchor autolink lists spellchecker pagebreak layer table save hr modxlink image imagetools emoticons insertdatetime preview media searchreplace print code contextmenu paste directionality fullscreen noneditable visualchars textcolor nonbreaking template youtube autosave advlist visualblocks charmap', 'string');
-$this->set('toolbar1', 'save newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect', 'string');
-$this->set('toolbar2', 'cut copy paste pastetext | search replace | bullist numlist | outdent indent blockquote | undo redo | link unlink anchor image help code | insertdate inserttime preview | forecolor backcolor', 'string');
-$this->set('toolbar3', 'table | hr removeformat visualblocks | subscript superscript | charmap emoticons youtube media hr | print | ltr rtl | fullscreen', 'string');
-$this->set('toolbar4', 'insertlayer moveforward movebackward absolute | styleprops spellchecker | cite abbr acronym del ins attribs | visualchars nonbreaking template blockquote pagebreak | insertfile insertimage', 'string');
+$this->set('plugins', 'anchor autolink lists spellchecker pagebreak layer table save hr modxlink image imagetools emoticons insertdatetime preview media searchreplace print code contextmenu paste directionality fullscreen noneditable visualchars textcolor nonbreaking template youtube autosave advlist visualblocks charmap wordcount codesample', 'string');
+$this->set('toolbar1', 'save print newdocument | undo redo | searchreplace | cut copy paste pastetext | visualchars spellchecker | visualblocks code | preview fullscreen', 'string');
+$this->set('toolbar2', 'styleselect formatselect fontselect fontsizeselect | forecolor backcolor', 'string');
+$this->set('toolbar3', 'bold italic underline strikethrough subscript superscript removeformat | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | ltr rtl', 'string');
+$this->set('toolbar4', 'image youtube media | link unlink anchor | table | pagebreak hr | template codesample nonbreaking insertdatetime | charmap emoticons', 'string');

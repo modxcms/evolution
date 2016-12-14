@@ -64,6 +64,9 @@ $this->set('image_advtab',          'small',                        'string' ); 
 $this->set('image_advtab',          true,                           'bool' );       // https://www.tinymce.com/docs/plugins/image/#image_advtab // replacement for 3.x-plugin advimage
 $this->set('image_class_list', '[{title: "None", value: ""},{title: "Float left", value: "justifyleft"},{title: "Float right", value: "justifyright"},{title: "Image Responsive",value: "img-responsive"}]', 'json' );
 
+// https://www.tinymce.com/docs/plugins/spellchecker/
+// https://github.com/extras-evolution/tinymce4-for-modx-evo/issues/26
+$this->set('browser_spellcheck',    ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
 
 // https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
 $this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');

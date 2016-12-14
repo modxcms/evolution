@@ -2,7 +2,7 @@
 	$site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 ?>
 <style>
-table.sysSettings > td {border-bottom:1px dotted #ccc;padding:10px;}
+table.sysSettings > tbody td, table.sysSettings > tbody th {border-bottom:1px dotted #ccc;padding:10px;}
 table.sysSettings tr.noborder td {border:none;}
 </style>
 <!-- Site Settings -->
@@ -11,63 +11,63 @@ table.sysSettings tr.noborder td {border:none;}
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script>
 <table class="sysSettings" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['sitestatus_title'] ?></td>
+    <th><?php echo $_lang['sitestatus_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['online'],  form_radio('site_status', 1));?><br />
         <?php echo wrap_label($_lang['offline'], form_radio('site_status', 0));?>
     </td>
   </tr>
   <tr>
-      <td nowrap class="warning"><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?></td>
+      <th><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?></th>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" />
 	<div class="comment"><?php echo $_lang['sitename_message'] ?></div>
 	</td>
     </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['emailsender_title'] ?></td>
+    <th><?php echo $_lang['emailsender_title'] ?></th>
     <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="emailsender" value="<?php echo $emailsender; ?>" />
 	<div class="comment"><?php echo $_lang['emailsender_message'] ?></div>
 	</td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['sitestart_title'] ?></td>
+    <th><?php echo $_lang['sitestart_title'] ?></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" />
 	<div class="comment"><?php echo $_lang['sitestart_message'] ?></div>
 	</td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['errorpage_title'] ?></td>
+    <th><?php echo $_lang['errorpage_title'] ?></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="error_page" value="<?php echo $error_page; ?>" />
 	<div class="comment"><?php echo $_lang['errorpage_message'] ?></div>
 	</td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['unauthorizedpage_title'] ?></td>
+    <th><?php echo $_lang['unauthorizedpage_title'] ?></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="unauthorized_page" value="<?php echo $unauthorized_page; ?>" />
 	<div class="comment"><?php echo $_lang['unauthorizedpage_message'] ?></div>
 	</td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['siteunavailable_page_title'] ?></td>
+    <th><?php echo $_lang['siteunavailable_page_title'] ?></th>
     <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo $site_unavailable_page; ?>" />
 	<div class="comment"><?php echo $_lang['siteunavailable_page_message'] ?></div>
 	</td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['siteunavailable_title'] ?>
+    <th><?php echo $_lang['siteunavailable_title'] ?>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_site_unavailable" id="reload_site_unavailable_select" onchange="confirmLangChange(this, 'siteunavailable_message_default', 'site_unavailable_message_textarea');">
 <?php echo get_lang_options('siteunavailable_message_default');?>
       </select>
-    </td>
+    </th>
     <td> <textarea name="site_unavailable_message" id="site_unavailable_message_textarea" style="width:100%; height: 120px;"><?php echo $site_unavailable_message_view; ?></textarea>
         <input type="hidden" name="siteunavailable_message_default" id="siteunavailable_message_default_hidden" value="<?php echo addslashes($_lang['siteunavailable_message_default']);?>" />
 	<div class="comment"><?php echo $_lang['siteunavailable_message'];?></div>
     </td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_title'] ?></td>
+    <th><?php echo $_lang['defaulttemplate_title'] ?></th>
     <td>
     <?php
         $rs = $modx->db->select(
@@ -121,7 +121,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-        <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_logic_title'];?></td>
+        <th><?php echo $_lang['defaulttemplate_logic_title'];?></th>
         <td>
             <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
             <label><input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?></label><br />
@@ -130,7 +130,7 @@ table.sysSettings tr.noborder td {border:none;}
         </td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['enable_filter_title'] ?></td>
+      <th><?php echo $_lang['enable_filter_title'] ?></th>
       <td >
         <?php
             // Check if PHX is enabled
@@ -150,7 +150,7 @@ table.sysSettings tr.noborder td {border:none;}
       </td>
     </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultpublish_title'] ?></td>
+    <th><?php echo $_lang['defaultpublish_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('publish_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('publish_default', 0));?>
@@ -159,7 +159,7 @@ table.sysSettings tr.noborder td {border:none;}
   </tr>
 
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultcache_title'] ?></td>
+    <th><?php echo $_lang['defaultcache_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('cache_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('cache_default', 0));?>
@@ -167,7 +167,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultsearch_title'] ?></td>
+    <th><?php echo $_lang['defaultsearch_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('search_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('search_default', 0));?>
@@ -175,7 +175,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultmenuindex_title'] ?></td>
+    <th><?php echo $_lang['defaultmenuindex_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('auto_menuindex', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('auto_menuindex', 0));?>
@@ -183,7 +183,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['custom_contenttype_title'] ?></td>
+    <th><?php echo $_lang['custom_contenttype_title'] ?></th>
     <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /><input type="button" value="<?php echo $_lang['add']; ?>" onclick='addContentType()' /><br />
     <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
     <select name="lst_custom_contenttype" style="width:200px;height:100px;" size="5">
@@ -200,7 +200,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr>
-<td nowrap class="warning" valign="top"><?php echo $_lang['docid_incrmnt_method_title'] ?></td>
+<th><?php echo $_lang['docid_incrmnt_method_title'] ?></th>
 <td>
 <label><input type="radio" name="docid_incrmnt_method" value="0"
     <?php echo ($docid_incrmnt_method=='0') ? 'checked="checked"' : "" ; ?> />
@@ -216,14 +216,14 @@ table.sysSettings tr.noborder td {border:none;}
 </tr>
 
 <tr>
-<td nowrap class="warning"><?php echo $_lang['cache_type_title'] ?></td>
+<th><?php echo $_lang['cache_type_title'] ?></th>
 <td>
 <?php echo wrap_label($_lang['cache_type_1'],form_radio('cache_type', 1));?><br />
 <?php echo wrap_label($_lang['cache_type_2'], form_radio('cache_type', 2));?>
 </td>
 </tr>
   <tr>
-<td nowrap class="warning" valign="top"><?php echo $_lang['minifyphp_incache_title'] ?></td>
+<th><?php echo $_lang['minifyphp_incache_title'] ?></th>
     <td>
 <?php echo wrap_label($_lang['enabled'],form_radio('minifyphp_incache', 1));?><br />
 <?php echo wrap_label($_lang['disabled'], form_radio('minifyphp_incache', 0));?>
@@ -232,7 +232,7 @@ table.sysSettings tr.noborder td {border:none;}
   </tr>
 
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['serveroffset_title'] ?></td>
+      <th><?php echo $_lang['serveroffset_title'] ?></th>
       <td> <select name="server_offset_time" size="1" class="inputBox">
           <?php
       for($i=-24; $i<25; $i++) {
@@ -248,7 +248,7 @@ table.sysSettings tr.noborder td {border:none;}
       	</td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['server_protocol_title'] ?></td>
+      <th><?php echo $_lang['server_protocol_title'] ?></th>
       <td>
         <?php echo wrap_label($_lang['server_protocol_http'],form_radio('server_protocol', 'http'));?><br />
         <?php echo wrap_label($_lang['server_protocol_https'], form_radio('server_protocol', 'https'));?>
@@ -256,13 +256,13 @@ table.sysSettings tr.noborder td {border:none;}
       </td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['rss_url_news_title'] ?></td>
+      <th><?php echo $_lang['rss_url_news_title'] ?></th>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_news" value="<?php echo $rss_url_news; ?>" />
       	<div class="comment"><?php echo $_lang['rss_url_news_message'] ?></div>
       </td>
     </tr>
     <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['track_visitors_title'] ?></td>
+    <th><?php echo $_lang['track_visitors_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
@@ -270,7 +270,7 @@ table.sysSettings tr.noborder td {border:none;}
     </td>
   </tr>
   <tr class="noborder">
-    <td nowrap class="warning" valign="top"><?php echo $_lang['top_howmany_title'] ?></td>
+    <th><?php echo $_lang['top_howmany_title'] ?></th>
     <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" />
       	<div class="comment"><?php echo $_lang['top_howmany_message'] ?></div>
       	</td>

@@ -8,7 +8,7 @@ if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template')
 else $hasAnyPermission = 0;
 $modx->addSnippet('hasAnyPermission','global $hasAnyPermission; return $hasAnyPermission;');
 $modx->addSnippet('getLoginUserName','return $modx->getLoginUserName();');
-$code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : "No messages";';
+$code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"];';
 $modx->addSnippet('getMessageCount',$code);
 
 // Large Icons
