@@ -256,6 +256,7 @@ $_lang["editor_css_path_message"] = 'Enter the path to your CSS file that you wi
 $_lang["editor_css_path_title"] = 'Path to CSS file';
 $_lang["element"] = 'Element';
 $_lang["element_categories"] = 'Combined View';
+$_lang["element_filter_msg"] = 'Type here to filter list';
 $_lang["element_management"] = 'Manage Elements';
 $_lang["element_name"] = 'Element name';
 $_lang["element_selector_msg"] = 'Select the Elements(s) from the list below and click the \'Insert\' button.';
