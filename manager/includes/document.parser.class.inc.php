@@ -633,6 +633,7 @@ class DocumentParser {
         }
         $this->documentGenerated= 0;
         // invoke OnLoadWebPageCache  event
+        $this->documentContent = $result;
         $this->invokeEvent('OnLoadWebPageCache');
         return $result;
     }
@@ -2184,12 +2185,14 @@ class DocumentParser {
 
             if(substr($templateCode,0,8)==='@INCLUDE') $templateCode = $this->atBindInclude($templateCode);
             
-            // invoke OnLoadWebDocument event
+          
             $this->documentContent = &$templateCode;
-            $this->invokeEvent('OnLoadWebDocument');
-
+            
             // Parse document source
             $this->documentContent = $this->parseDocumentSource($templateCode);
+            
+            // invoke OnLoadWebDocument event
+            $this->invokeEvent('OnLoadWebDocument');
             $this->documentGenerated = 1;
         }
         else $this->documentGenerated = 0;
