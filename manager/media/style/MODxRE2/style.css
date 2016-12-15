@@ -2816,7 +2816,7 @@ div.treeframebody {
 #nav li.active ul.subnav a:hover {
   color: #fff;
   background: none;
-  background-color: rgba(255,255,255,0.075);
+  background-color: rgba(0,0,0,0.1);
 }
 
 #nav li.active ul.subnav a:active {
