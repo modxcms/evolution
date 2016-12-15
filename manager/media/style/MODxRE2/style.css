@@ -44,51 +44,56 @@ html[lang="azb"] body,
 html[lang="fa-IR"] body,
 html[lang="haz"] body,
 html[lang="ps"] body,
-html[lang="ur"] {
+html[lang="ur"] body {
     font-family: Tahoma, Arial, sans-serif;
 }
 
 /* For Chinese Font */
-html[lang^="zh-"] body{
-    font-family: "PingFang TC", "Helvetica Neue", Helvetica, STHeitiTC-Light, Arial, sans-serif;
+html[lang="zh"] body{
+  font-family: "PingFang SC", "Microsoft JhengHei", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", Helvetica, sans-serif;
 }
 
 /* For Devanagari Font */
 html[lang="bn-BD"] body,
 html[lang="hi-IN"] body,
-html[lang="mr-IN"] body{
+html[lang="mr-IN"] body {
     font-family: Arial, sans-serif;
 }
 
 /* For Greek Font */
-html[lang="el"] body{
+html[lang="el"] body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-/* For Gujarati Font */
 
-html[lang="gu-IN"] body{
+/* For Gujarati Font */
+html[lang="gu-IN"] body {
     font-family: Arial, sans-serif;
 }
 
 /* For Hebrew Font */
-html[lang="he-IL"] body{
-    font-family: "Arial Hebrew", Arial, sans-serif;
+html[lang="he"] body {
+  font-family: "Arial Hebrew", Arial, sans-serif;
 }
 
 /* For Japanese Font */
-html[lang="ja"] body{
-    font-family: Meiryo, "Hiragino Kaku Gothic Pro", sans-serif;
+html[lang="ja"] body {
+  font-family: Meiryo, "Hiragino Kaku Gothic Pro", sans-serif;
 }
 
 /* For Korean font */
-html[lang="ko-KR"] body{
+html[lang="ko-KR"] body {
     font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Nanum Gothic", Dotum, sans-serif;
 }
+
 /* For Thai Font */
-html[lang="th"] body{
+html[lang="th"] body {
     font-family: "Sukhumvit Set", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+/* For Arabic Font */
+html[lang="fa"] body {
+  font-family: Tahoma, Arial, sans-serif;
+}
 
 img,
 a img {
