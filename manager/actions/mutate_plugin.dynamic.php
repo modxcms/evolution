@@ -457,16 +457,16 @@ var internal = <?php echo json_encode($internal); ?>;
    
     <table>
       <tr>
-        <th><?php echo $_lang['plugin_name']; ?>:</th>
+        <th><?php echo $_lang['plugin_name']; ?></th>
         <td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span>
             <script>document.getElementsByName("name")[0].focus();</script></td>
       </tr>
       <tr>
-        <th><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</th>
+        <th><?php echo $_lang['plugin_desc']; ?></th>
         <td><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
       <tr>
-        <th><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</th>
+        <th><?php echo $_lang['existing_category']; ?></th>
         <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
             <option>&nbsp;</option>
             <?php
@@ -479,7 +479,7 @@ var internal = <?php echo json_encode($internal); ?>;
         </td>
       </tr>
       <tr>
-        <th><?php echo $_lang['new_category']; ?>:</th>
+        <th><?php echo $_lang['new_category']; ?></th>
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
        <tr>
@@ -531,7 +531,7 @@ var internal = <?php echo json_encode($internal); ?>;
     <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table border="0" cellspacing="0" cellpadding="6">
           <tr>
-            <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
+            <th><?php echo $_lang['import_params']; ?></th>
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
