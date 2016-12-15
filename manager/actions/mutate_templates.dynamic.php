@@ -161,10 +161,10 @@ function deletedocument() {
     </tr>
 <?php if($modx->hasPermission('save_role')):?>
     <tr>
-    <td colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?></label> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
+    <th colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?></label> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></th>
     </tr>
     <tr>
-    <td colspan="2"><label style="display:block;"><input name="selectable" type="checkbox" <?php echo $selectable==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['template_selectable']; ?></label></td>
+    <th colspan="2"><label style="display:block;"><input name="selectable" type="checkbox" <?php echo $selectable==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['template_selectable']; ?></label></th>
     </tr>
 <?php endif;?>
     </table>
