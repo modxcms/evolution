@@ -497,7 +497,7 @@ function contains(a, obj) {
         <table>
           <tr>
             <th><?php echo $_lang['import_params']?></th>
-            <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
+            <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
                     $ds = $modx->db->select(
