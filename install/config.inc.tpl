@@ -13,7 +13,6 @@ $table_prefix      = '[+table_prefix+]';
 
 $lastInstallTime = [+lastInstallTime+];
 
-$site_sessionname = '[+site_sessionname+]';
 $https_port = '443';
 
 if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
@@ -80,6 +79,13 @@ if (!defined('MODX_MANAGER_URL')) define('MODX_MANAGER_URL', $site_url.MGR_DIR.'
 
 // start cms session
 if(!function_exists('startCMSSession')) {
+    
+    global $site_sessionname;
+    $_ = crc32(__FILE__);
+    $_ = sprintf('%u', $_);
+    $_ = base_convert($_,10,36);
+    $site_sessionname = 'evo' . $_;
+    
     function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
       if (isset($storage[$session_name]) && $storage[$session_name] === '')
       {
@@ -94,24 +100,30 @@ if(!function_exists('startCMSSession')) {
         removeInvalidCmsSessionFromStorage($_POST, $session_name);
     }
     function startCMSSession(){
+        
         global $site_sessionname, $https_port;
+        
         session_name($site_sessionname);
         removeInvalidCmsSessionIds($site_sessionname);
         session_start();
         $cookieExpiration= 0;
-        if (isset ($_SESSION['mgrValidated']) || isset ($_SESSION['webValidated'])) {
-            $contextKey= isset ($_SESSION['mgrValidated']) ? 'mgr' : 'web';
-            if (isset ($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime']) && is_numeric($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime'])) {
-                $cookieLifetime= intval($_SESSION['modx.' . $contextKey . '.session.cookie.lifetime']);
-            }
-            if ($cookieLifetime) {
-                $cookieExpiration= time() + $cookieLifetime;
-            }
-            if (!isset($_SESSION['modx.session.created.time'])) {
-              $_SESSION['modx.session.created.time'] = time();
-            }
-        }
         $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
-        setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
+        
+        if    (isset($_SESSION['mgrValidated'])) $context = 'mgr';
+        elseif(isset($_SESSION['webValidated'])) $context = 'web';
+        else {
+            setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
+            return;
+        }
+        
+        $key = "modx.{$context}.session.cookie.lifetime";
+        if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
+            $cookieLifetime= intval($_SESSION[$key]);
+            if($cookieLifetime) $cookieExpiration = $_SERVER['REQUEST_TIME']+$cookieLifetime;
+        }
+        if (!isset($_SESSION['modx.session.created.time'])) {
+            $_SESSION['modx.session.created.time'] = $_SERVER['REQUEST_TIME'];
+        }
+        setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
     }
 }
