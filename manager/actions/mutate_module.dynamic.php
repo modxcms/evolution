@@ -455,11 +455,11 @@ function SetUrl(url, width, height, alt) {
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabModule" ) );</script>
 
     <table border="0" cellspacing="0" cellpadding="1">
-        <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
+        <tr><td align="left"><?php echo $_lang['module_name']?></td>
             <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
-        <tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
+        <tr><td align="left"><?php echo $_lang['module_desc']?>&nbsp;&nbsp;</td>
             <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
+        <tr><td align="left"><?php echo $_lang['existing_category']?></td>
             <td align="left">
             <select name="categoryid" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
@@ -470,11 +470,11 @@ function SetUrl(url, width, height, alt) {
                 }
 ?>
             </select></td></tr>
-        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
+        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?></td>
             <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span>:&nbsp;&nbsp;</td>
+        <tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span></td>
             <td align="left"><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
-        <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
+        <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span></td>
             <td align="left"><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
  <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
@@ -515,7 +515,7 @@ function SetUrl(url, width, height, alt) {
         <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	        <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
+	        <tr><td align="left" valign="top"><?php echo $_lang['guid']?></td>
                 <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo $modx->manager->action == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
                 <tr>
         <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
