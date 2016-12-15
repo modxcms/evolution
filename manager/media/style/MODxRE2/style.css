@@ -24,21 +24,75 @@ img {
 html {
   font-size: 100.01%;
   line-height: 1.5;
-  color: #111;
+  color: #333;
 }
 
 body {
-  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 62.5%;
-  font-size: 68.75%;
-  font-size: 75%;
+  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+
+
   height: 100%;
-  color: #333333;
-  background: #eeeeee url(images/body.jpg);
+  color: #333;
+  background: #eeeeee;
 }
 
-html:lang(ja) body {
-  font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
+/* For Arabic Font */
+html[lang="ar"] body,
+html[lang="ary"] body,
+html[lang="azb"] body,
+html[lang="fa-IR"] body,
+html[lang="haz"] body,
+html[lang="ps"] body,
+html[lang="ur"] body {
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+/* For Chinese Font */
+html[lang="zh"] body{
+  font-family: "PingFang SC", "Microsoft JhengHei", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", Helvetica, sans-serif;
+}
+
+/* For Devanagari Font */
+html[lang="bn-BD"] body,
+html[lang="hi-IN"] body,
+html[lang="mr-IN"] body {
+    font-family: Arial, sans-serif;
+}
+
+/* For Greek Font */
+html[lang="el"] body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* For Gujarati Font */
+html[lang="gu-IN"] body {
+    font-family: Arial, sans-serif;
+}
+
+/* For Hebrew Font */
+html[lang="he"] body {
+  font-family: "Arial Hebrew", Arial, sans-serif;
+}
+
+/* For Japanese Font */
+html[lang="ja"] body {
+  font-family: Meiryo, "Hiragino Kaku Gothic Pro", sans-serif;
+}
+
+/* For Korean font */
+html[lang="ko-KR"] body {
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Nanum Gothic", Dotum, sans-serif;
+}
+
+/* For Thai Font */
+html[lang="th"] body {
+    font-family: "Sukhumvit Set", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* For Arabic Font */
+html[lang="fa"] body {
+  font-family: Tahoma, Arial, sans-serif;
 }
 
 img,
@@ -87,6 +141,7 @@ blockquote {
   padding-bottom: 20px;
 }
 
+td{vertical-align:top;}
 
 /* -------------------------[ Miscellaneous conveniences ]--- */
 
@@ -105,17 +160,17 @@ blockquote {
 
 .fail {
   color: #900;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .warning {
-  color: #222;
-  font-weight: bold;
+  color: #111;
+  font-weight: 500;
 }
 
 .success {
   color: #090;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .contentPad {
@@ -143,7 +198,7 @@ h4,
 h5,
 h6,
 .subTitle {
-  font-weight: normal;
+  font-weight: 500;
 }
 
 h1 {
@@ -170,12 +225,12 @@ h4 {
 
 h5 {
   font-size: 100%;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 h6 {
   font-size: 86%;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 p.caption,
@@ -187,7 +242,7 @@ p.comment {
 button {
   color: #821517;
   font: inherit;
-  font-weight: bold;
+  font-weight: 500;
   width: 112px;
   margin: 0 5px 0 0;
   cursor: pointer;
@@ -236,11 +291,11 @@ hr {
 
 .messageUnread {
   color: #3CB371;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .right {
-  font-weight: bold;
+  font-weight: 500;
   color: #333;
   float: left;
   padding: 0 20px 20px;
@@ -266,7 +321,7 @@ hr {
 #topbar a,
 #topbar a:link,
 #topbar a:visited {
-  font-weight: bold;
+  font-weight: 500;
   color: #AAB1B9;
   text-decoration: none;
 }
@@ -294,7 +349,7 @@ hr {
 #tocText,
 #buildText,
 #workText {
-  font-weight: bold;
+  font-weight: 500;
   line-height: 16px;
   margin: 0 15px;
   color: #FFF;
@@ -411,7 +466,7 @@ td {
 
 optgroup {
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   background-color: #ddd;
 }
 
@@ -585,7 +640,7 @@ form textarea {
 
 .form legend {
   color: #04C;
-  font-weight: bold;
+  font-weight: 500;
   padding: 5px;
 }
 
@@ -659,7 +714,7 @@ input.submit {
 }
 
 .sectionBody legend {
-  font-weight: bold;
+  font-weight: 500;
   padding: 5px 15px;
   background: #fff;
   border: 1px solid #ccc;
@@ -674,19 +729,19 @@ input.submit {
 .sectionBody fieldset h3 {
   font-size: 14px;
   color: #789;
-  font-weight: bold;
+  font-weight: 500;
   padding-bottom: 0;
   margin-bottom: 0;
 }
 
 .sectionHeader,
 .showHideVisible {
-  color: #777;
+  color: #666;
   margin: 0 15px;
   padding: 5px 3px 5px;
   zoom: 1;
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: 500;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-bottom: none;
   text-shadow: 0px 1px 0px #FFF;
@@ -754,8 +809,9 @@ input.submit {
 }
 
 .comment {
-  font-size: .9em;
+  font-size: 11px;
   color: #999;
+  padding:4px 0;
 }
 
 thead,
@@ -882,7 +938,7 @@ div.treeframebody {
 
 #treeRoot {
   margin-top: 2px;
-  margin-left: -10px;
+  margin-left: -20px;
 }
 
 #treeRoot div img {
@@ -976,7 +1032,7 @@ div.treeNode {
 }
 
 .notInMenuNode {
-  color: #777;
+  color: #39515d;
   text-decoration: none;
 }
 
@@ -1023,7 +1079,7 @@ label.disabled {
 .gridHeader,
 .grid th {
   color: #333;
-  font-weight: bold;
+  font-weight: 500;
   white-space: nowrap;
   background-color: #d2d2d2;
   text-align: left;
@@ -1122,7 +1178,7 @@ a.hometblink:link,
 .hometblink {
   text-decoration: underline;
   color: #333;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 a.hometblink:hover {
@@ -1337,10 +1393,12 @@ a.hometblink:hover {
 
 #nav a:hover {
   color: #fff;
+  background-color: rgba(255,255,255,0.05);
 }
 
 #nav a:active {
   color: #fff;
+  background-color: rgba(255,255,255,0.02);
 }
 
 #nav li.active {
@@ -1356,8 +1414,12 @@ a.hometblink:hover {
 #nav li.active a {
   color: #FFF;
   position: relative;
-  text-shadow: 0 -1px 0 #333;
+
   z-index: 999999;
+}
+
+#nav li.active a:hover {
+  background-color: transparent;
 }
 
 #nav li.active a:hover {
@@ -1380,7 +1442,7 @@ a.hometblink:hover {
 
 #nav li.active ul.subnav a {
   color: #fff;
-  font-weight: normal;
+  font-weight: 500;
   background: #657587;
   cursor: pointer;
   border-left: none;
@@ -1432,13 +1494,14 @@ a.hometblink:hover {
   height: auto;
   visibility: hidden;
   z-index: 10000;
-  width: 170px;
+  width: 190px;
   background: #fff;
   margin: 0;
   padding: 4px;
   border: 1px solid #C9C9C9;
   overflow: hidden;
   line-height: 11px;
+  font-size:12px;
   /* font-size: 11px; */
   -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
@@ -1494,7 +1557,7 @@ a.hometblink:hover {
   color: #86939E;
   text-align: left;
   cursor: default;
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 2px;
   font-size: 12px;
   padding: 6px 6px 6px 4px;
@@ -1806,7 +1869,7 @@ a.hometblink img {
 
 .sortabletable thead tr {
   color: #333;
-  font-weight: bold;
+  font-weight: 500;
   white-space: nowrap;
   background-color: #d2d2d2;
   text-align: left;
@@ -1972,7 +2035,7 @@ ul.actionButtons {
   border: 1px solid #BBB;
   border-radius: 3px 3px 3px 3px;
   color: #333;
-  font-weight: bold;
+  font-weight: 500;
   outline: medium none;
   padding: 7px 8px 7px 4px;
   text-decoration: none;
@@ -2042,7 +2105,7 @@ ul.actionButtons {
 .actionButtons .plus {
   margin: 0 2px 0 5px;
   color: #3b454f;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 
@@ -2062,7 +2125,7 @@ form#mutate dt h3.label {
   float: left;
   width: 200px;
   color: #821517!important;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 form#mutate dd {
@@ -2257,7 +2320,7 @@ form#mutate select.tv_url_select {
 }
 
 .custom-title {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1em;
   margin: 0;
   color: #fff;
@@ -2378,7 +2441,7 @@ input#dateto:focus.DatePicker {
   border-width: 1px 0;
   color: #797774;
   background: #daf2e6;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .dp_cal td {
@@ -2433,7 +2496,7 @@ input#dateto:focus.DatePicker {
   color: #000;
   background: #bee860 url(images/misc/fade.gif) repeat-x top;
   padding: 5px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .cbBox p {
@@ -2558,7 +2621,7 @@ a.breadcrumbs__a {
 
 li.breadcrumbs__li_current {
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 /* end breadcrumbs */
@@ -2567,7 +2630,7 @@ li.breadcrumbs__li_current {
 
 .table,
 #documentPane #tv_body table,
-#documentPane [id*="table-"] {
+#documentPane [id*="table-tv"] {
   width: 100%;
 }
 
@@ -2579,6 +2642,10 @@ li.breadcrumbs__li_current {
 .table td {
   text-align: left;
   vertical-align: middle;
+}
+  
+table th {
+  font-weight: 500;
 }
   
 .table--edit th {
@@ -2617,7 +2684,7 @@ form select {
 }
 
 /* STYLES FOR HELP */
-#helpPane h1 { font-size:20px; display:block; border-bottom:1px solid #888; margin-bottom:1em; font-weight:bold; }
+#helpPane h1 { font-size:20px; display:block; border-bottom:1px solid #888; margin-bottom:1em; font-weight:500; }
 #helpPane li:not(:first-child) > strong { margin-top:1.4em; }
 #helpPane li > strong { display:block; font-size:14px; }
 #helpPane pre { font-size:12px; border:1px solid #888; border-radius:5px; background-color:#fff;padding:1em; margin:10px 0;}
@@ -2626,7 +2693,7 @@ form select {
 #searchform {
   z-index: 1000;
   position: absolute;
-  top: 37px;
+  top: 38px;
   right: 0;
 }
 
@@ -2637,16 +2704,17 @@ form select {
 }
 
 #searchform input[type=text] {
-  height: 32px;
+  height: 27px;
   width: 160px;
   padding-left: 10px;
-  margin-right: 0;
+  margin-right: 8px;
   border: 0px solid rgba(255,255,255,0.1);
   border-radius: 0 !important;
-  border-width: 1px 0 0 1px;
-  background: rgba(0,0,0, 0.1);
+  border-width: 1px;
+  background: rgba(0,0,0,0.1);
   color: white;
   text-align: left;
+  margin-top: 2px;
   /*
   box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
@@ -2725,8 +2793,8 @@ div.treeframebody {
 #nav > li > a {
   height: 37px;
   line-height: 38px;
-  color: rgba(255, 255, 255, 0.75);
-  font-weight: bold;
+  color: #fff;
+  font-weight: 500;
 }
 
 #nav ul {
@@ -2734,7 +2802,7 @@ div.treeframebody {
 }
 
 #nav li.active {
-  background: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.15);
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -2743,8 +2811,8 @@ div.treeframebody {
 
 #nav li.active ul.subnav, 
 #nav li.active ul.subnav a {
-  color: #C9D4E1;
-  color: rgba(255,255,255,0.95);
+  color: #fff;
+
   filter: none;
   background: none;
   background-color: transparent;
@@ -2753,16 +2821,16 @@ div.treeframebody {
 #nav li.active ul.subnav a:hover {
   color: #fff;
   background: none;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(0,0,0,0.1);
 }
 
 #nav li.active ul.subnav a:active {
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(0,0,0,0.15);
 }
 
 #nav li.active ul.subnav {
   top: 37px;
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(0,0,0,0.15);
   /*border-top-color: rgba(255,255,255,0.15);*/
   border-top-color: transparent;
   border-top-width: 0;
@@ -2809,6 +2877,9 @@ div.treeframebody {
     display: none;
   }
 }
+
+.alert-warning{color:#3697cd;}
+
 
 #statusbar {
   top: 45px;
@@ -3011,7 +3082,7 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
 .actionButtons a {
   padding: 8px 10px;
   font-size: 13px;
-  font-weight: normal;
+  font-weight: 500;
 }
 .actionButtons a, 
 .actionButtons li.primary a, 
@@ -3045,13 +3116,16 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
 .actionButtons li.primary a, 
 .actionButtons a.primary {
   color: #fff;
-  background: #32AB9A;
+
   border-color: #32AB9A;
+  background-color: #32AB9A;
+  background-image: linear-gradient(#32AB9A, #00948E);
 }
 .actionButtons li.primary a:hover, 
 .actionButtons a.primary:hover {
-  background: #35baa8;
-  border-color: #35baa8;
+  background-color: #2b9385;
+  background-image: linear-gradient(#2b9385, #007571);
+  border-color: #2b9385;
 }
 .actionButtons li.primary a:active, 
 .actionButtons a.primary:active {
@@ -3086,7 +3160,7 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
 
 .treeButton, 
 .treeButtonDisabled {
-  color: #576B75 !important;
+  color: #39515d !important;
   border-radius: 2px !important;
   min-width: 15px;
   text-align: center;
@@ -3099,7 +3173,7 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
 input[type="button"],
 input[type="submit"] {
   background: #ededed;
-  border: 1px solid #3697cd;
+  border: 1px solid #ededed;
   border-radius: 3px !important;
 }
 
@@ -3427,7 +3501,7 @@ tr.userIdle td strong:before {
 .c-roleslist-name {
   display: block;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .c-roleslist-hyphen {
@@ -3452,4 +3526,10 @@ tr.userIdle td strong:before {
 
 .c-roleslist-item--admin {
   font-style: italic;
+}
+
+/* codemirror */
+
+.CodeMirror pre {
+  font-size: 12px !important;
 }
