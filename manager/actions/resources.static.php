@@ -183,7 +183,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_templates_search">
               </form>
             </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
@@ -217,7 +217,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_tmplvars_search">
               </form>
             </li>
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
@@ -248,7 +248,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_htmlsnippets_search">
               </form>
             </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
@@ -278,7 +278,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_snippets_search">
               </form>
             </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
@@ -308,7 +308,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_plugins_search">
               </form>
             </li>
             <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
@@ -337,14 +337,17 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabCategory">
         <h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
-
+        
+        <div id="category-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
+        </div>
         <ul class="actionButtons">
           <li>
             <form class="filterElements-form">
-              <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
+              <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="categories_list_search">
             </form>
           </li>
+            <li><a href="#" id="category-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
     
         <div id="categories_list">
@@ -446,6 +449,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             if (e.keyCode == 13) {
             e.preventDefault();
             }
+          });
+            jQuery( "#category-help" ).click(function() {
+            jQuery( '#category-info').toggle();
             });
         </script>
     </div>
