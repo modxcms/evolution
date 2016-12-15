@@ -185,8 +185,8 @@ foreach (getCategories() as $n => $v) {
         <th><?php echo $_lang['new_category']?></th>
         <td><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : ''?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
 <?php if($modx->hasPermission('save_role')):?>
-    <tr><td colspan="2"><label style="display:block;"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?></label>
-        <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></td>
+    <tr><th colspan="2"><label style="display:block;"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?></label>
+        <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></th>
     </tr>
 <?php endif;?>
     </table>
