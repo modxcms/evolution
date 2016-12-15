@@ -338,7 +338,7 @@ function getTplOpenFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_minusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
@@ -370,7 +370,7 @@ function getTplClosedFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_plusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
