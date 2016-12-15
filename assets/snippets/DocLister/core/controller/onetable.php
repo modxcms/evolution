@@ -39,7 +39,7 @@ class onetableDocLister extends DocLister
         if ($this->checkExtender('paginate')) {
             $this->extender['paginate']->init($this);
         } else {
-            $this->setConfig(array('start' => 0));
+            $this->config->setConfig(array('start' => 0));
         }
         $type = $this->getCFGDef('idType', 'parents');
         $this->_docs = ($type == 'parents') ? $this->getChildrenList() : $this->getDocList();

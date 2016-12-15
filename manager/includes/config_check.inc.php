@@ -146,8 +146,8 @@ if (!is_writable(MODX_BASE_PATH . "assets/images/")) {
 }
 
 if (count($_lang)!=$length_eng_lang) {
-    $warningspresent = 0;
-    $warnings[] = array($_lang['configcheck_lang_difference']);
+    //$warningspresent = 0;
+    //$warnings[] = array($_lang['configcheck_lang_difference']);
 }
 
 // clear file info cache
@@ -186,9 +186,6 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
-            break;
-        case $_lang['configcheck_register_globals'] :
-            $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
             break;
         case $_lang['configcheck_php_gdzip'] :
             $warnings[$i][1] = $_lang['configcheck_php_gdzip_msg'];

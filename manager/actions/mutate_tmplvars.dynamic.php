@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_template') && $_REQUEST['a']=='301') {
+if(!$modx->hasPermission('edit_template') && $modx->manager->action=='301') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
+if(!$modx->hasPermission('new_template') && $modx->manager->action=='300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
@@ -263,7 +263,7 @@ function decode(s){
 <input type="hidden" name="a" value="302">
 <input type="hidden" name="or" value="<?php echo $origin;?>">
 <input type="hidden" name="oid" value="<?php echo $originId;?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action;?>">
 <input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
     <h1 class="pagetitle">
@@ -278,7 +278,7 @@ function decode(s){
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
-                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
@@ -288,7 +288,7 @@ function decode(s){
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>        
               </li>
-          <?php if ($_GET['a'] == '300') { ?>
+          <?php if ($modx->manager->action == '300') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -315,21 +315,21 @@ function decode(s){
       
 <table>
   <tr>
-    <th><?php echo $_lang['tmplvars_name']; ?>:</th>
+    <th><?php echo $_lang['tmplvars_name']; ?></th>
     <td>[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
+    <th><?php echo $_lang['tmplvars_caption']; ?></th>
     <td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
     <script>document.getElementsByName("caption")[0].focus();</script></td>
   </tr>
 
   <tr>
-    <th><?php echo $_lang['tmplvars_description']; ?>:</th>
+    <th><?php echo $_lang['tmplvars_description']; ?></th>
     <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
   </tr>
   <tr>
-    <th><?php echo $_lang['existing_category']; ?>:</th>
+    <th><?php echo $_lang['existing_category']; ?></th>
     <td><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
         	<option>&nbsp;</option>
         <?php
@@ -342,19 +342,19 @@ function decode(s){
     </td>
   </tr>
   <tr>
-    <th><?php echo $_lang['new_category']; ?>:</th>
+    <th><?php echo $_lang['new_category']; ?></th>
     <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
 <?php if($modx->hasPermission('save_role')):?>
   <tr>
-    <td colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
+    <th colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></th>
   </tr>
 <?php endif;?>
   <tr>
     <td colspan="2">&nbsp;</td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_type']; ?></th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
 	            <optgroup label="Standard Type">
                     <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
@@ -391,15 +391,15 @@ function decode(s){
     </td>
   </tr>
   <tr>
-	<th><?php echo $_lang['tmplvars_elements']; ?>:  </th>
+	<th><?php echo $_lang['tmplvars_elements']; ?></th>
 	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_default']; ?></th>
     <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_widget']; ?></th>
     <td>
         <select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
 	            <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
@@ -427,7 +427,7 @@ function decode(s){
     <td id="displayparams">&nbsp;</td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</th>
+    <th><?php echo $_lang['tmplvars_rank']; ?></th>
     <td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
   <tr>
@@ -472,7 +472,7 @@ while ($row = $modx->db->getRow($rs)) {
         $insideUl = 1;
     }
 
-    if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+    if($modx->manager->action=='300' && $modx->config['default_template']==$row['id'])
     {
         $checked = true;
     }

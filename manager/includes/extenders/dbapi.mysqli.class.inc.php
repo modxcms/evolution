@@ -88,14 +88,24 @@ class DBAPI {
 		return $s;
 	}
 
-	function query($sql) {
+	function query($sql,$watchError=true) {
 		global $modx;
 		if (empty ($this->conn) || !is_object($this->conn)) {
 			$this->connect();
 		}
 		$tstart = $modx->getMicroTime();
 		if (!($result = $this->conn->query($sql))) {
-			$modx->messageQuit("Execution of a query to the database failed - " . $this->getLastError(), $sql);
+			if(!$watchError) return;
+            switch(mysqli_errno($this->conn)) {
+                case 1054:
+                case 1060:
+                case 1061:
+                case 1062:
+                case 1091:
+                    break;
+                default:
+                    $modx->messageQuit('Execution of a query to the database failed - ' . $this->getLastError(), $sql);
+            }
 		} else {
 			$tend = $modx->getMicroTime();
 			$totaltime = $tend - $tstart;
@@ -136,9 +146,14 @@ class DBAPI {
 
 	function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
 		global $modx;
+		
+		if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
+		if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+		
 		if (!$from) {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::select().");
 		} else {
+			$fields = $this->replaceFullTableName($fields);
 			$from = $this->replaceFullTableName($from);
 			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
 			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
@@ -428,5 +443,24 @@ class DBAPI {
 	function dataSeek($result, $row_number) {
 		return $result->data_seek($row_number);
 	}
+	
+    function _getFieldsStringFromArray($fields=array()) {
+        
+        if(empty($fields)) return '*';
+        
+        $_ = array();
+        foreach($fields as $k=>$v) {
+            if($k!==$v) $_[] = "{$v} as {$k}";
+            else        $_[] = $v;
+        }
+        return join(',', $_);
+    }
+    
+    function _getFromStringFromArray($tables=array()) {
+        $_ = array();
+        foreach($tables as $k=>$v) {
+            $_[] = $v;
+        }
+        return join(' ', $_);
+    }
 }
-?>

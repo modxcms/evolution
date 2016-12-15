@@ -17,10 +17,7 @@ if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']
 
 // Unregister globals
 if (@ ini_get('register_globals')) {
-    foreach ($_REQUEST as $key => $value) {
-        $$key = null; // This is NOT paranoid because
-        unset ($$key); // unset may not work.
-    }
+    die('Please disable register_globals!');
 }
 
 global $sanitize_seed;
@@ -60,7 +57,7 @@ function getSanitizedValue($value='') {
 }
 
 modx_sanitize_gpc($_GET);
-if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE == 'false'))) {
+if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE === 'false'))) {
     modx_sanitize_gpc($_POST);
 }
 modx_sanitize_gpc($_COOKIE);

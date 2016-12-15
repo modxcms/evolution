@@ -1,8 +1,41 @@
+<?php
+    $MODX_SITE_HOSTNAMES = MODX_SITE_HOSTNAMES; // Fix for PHP 5.4
+    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) $valid_hostnames = $_SERVER['HTTP_HOST'];
+?>
 <!-- Interface & editor settings -->
 <div class="tab-page" id="tabPageSecurity">
 <h2 class="tab"><?php echo $_lang['settings_security'] ?></h2>
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById("tabPageSecurity") );</script>
 <table border="0" cellspacing="0" cellpadding="3">
+
+<tr>
+<th><?php echo $_lang['allow_eval_title']; ?></th>
+<td>
+<?php echo wrap_label($_lang['allow_eval_with_scan']         , form_radio('allow_eval','with_scan'));?><br />
+<?php echo wrap_label($_lang['allow_eval_with_scan_at_post'] , form_radio('allow_eval','with_scan_at_post'));?><br />
+<?php echo wrap_label($_lang['allow_eval_everytime_eval']    , form_radio('allow_eval','everytime_eval'));?><br />
+<?php echo wrap_label($_lang['allow_eval_dont_eval']         , form_radio('allow_eval','dont_eval'));?>
+    <div class="comment">
+        <?php echo $_lang['allow_eval_msg'] ?>
+    </div>
+</td>
+</tr>
+<tr>
+  <td colspan="2"><div class="split"></div></td>
+</tr>
+<tr>
+  <td nowrap class="warning"><?php echo $_lang['safe_functions_at_eval_title'] ?></td>
+  <td >
+    <input onchange="documentDirty=true;" type="text" style="width: 350px;" name="safe_functions_at_eval" value="<?php echo $safe_functions_at_eval; ?>" />
+    <div class="comment">
+        <?php echo $_lang['safe_functions_at_eval_msg'] ?>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td colspan="2"><div class="split"></div></td>
+</tr>
+
 <tr>
     <th><?php echo $_lang['check_files_onlogin_title'] ?></th>
     <td>

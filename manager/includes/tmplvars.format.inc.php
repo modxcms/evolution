@@ -270,7 +270,10 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                 $widget_output = '';
             }
             if(is_string($widget_output)) {
-                $widget_output = str_replace('[+value+]', $value, $widget_output);
+                $_ = $modx->config['enable_filter'];
+                $modx->config['enable_filter'] = 1;
+                $widget_output = $modx->parseText($widget_output, array('value'=>$value));
+                $modx->config['enable_filter'] = $_;
                 $o = $modx->parseDocumentSource($widget_output);
             } else {
                 $o = $widget_output;

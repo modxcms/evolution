@@ -87,10 +87,10 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
         $rowLock = $modx->elementIsLocked(7, $id, true);
         if($rowLock && $modx->hasPermission('display_locks')) {
             if($rowLock['internalKey'] == $modx->getLoginUserID()) {
-                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_7"], 'firsthit_df'=>$rowLock['firsthit_df']));
+                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_7"], 'lasthit_df'=>$rowLock['lasthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
-                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_7"], 'username'=>$rowLock['username'], 'firsthit_df'=>$rowLock['firsthit_df']));
+                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_7"], 'username'=>$rowLock['username'], 'lasthit_df'=>$rowLock['lasthit_df']));
                 if($modx->hasPermission('remove_locks')) {
                     $lockedByUser = '<a href="#" onclick="unlockElement(7, '.$id.', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
                 } else {
@@ -274,7 +274,7 @@ function getNodeTitle($nodeNameSource,$row) {
             $nodetitle = $pagetitle;
             break;
         case 'longtitle':
-            $nodetitle = $longtitle;
+            $nodetitle = $longtitle ? $longtitle : $pagetitle;
             break;
         case 'createdon':
         case 'editedon':
@@ -338,7 +338,7 @@ function getTplOpenFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_minusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
@@ -370,7 +370,7 @@ function getTplClosedFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_plusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"

@@ -19,6 +19,19 @@ class DLTemplate
      */
     protected static $instance;
 
+    protected $templatePath = 'assets/templates/';
+
+    protected $templateExtension = 'html';
+
+    /**
+     * @var null twig object
+     */
+    protected $twig = null;
+
+    protected $twigEnabled = false;
+
+    protected $twigTemplateVars = array();
+
     public $phx = null;
 
     /**
@@ -66,6 +79,54 @@ class DLTemplate
     }
 
     /**
+     * Задает относительный путь к папке с шаблонами
+     *
+     * @param $path
+     * @return $this
+     */
+    public function setTemplatePath($path)
+    {
+        $path = trim($path);
+        $path = preg_replace(array(
+            '/\.*[\/|\\\]/i',
+            '/[\/|\\\]+/i'
+        ), array('/', '/'), $path);
+
+        if (!empty($path)) {
+            $this->templatePath = $path;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Задает расширение файла с шаблоном
+     *
+     * @param $ext
+     * @return $this
+     */
+    public function setTemplateExtension($ext)
+    {
+        $ext = trim($ext, ". \t\n\r\0\x0B");
+        if (!empty($ext)) {
+            $this->templateExtension = $ext;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Additional data for twig templates
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setTwigTemplateVars($data = array()) {
+        if (is_array($data)) $this->twigTemplateVars = $data;
+        return $this;
+    }
+
+    /**
      * Сохранение данных в массив плейсхолдеров
      *
      * @param mixed $data данные
@@ -95,20 +156,24 @@ class DLTemplate
     public function getChunk($name)
     {
         $tpl = '';
+        $this->twigEnabled = substr($name,0,3) == '@T_';
         if ($name != '' && !isset($this->modx->chunkCache[$name])) {
-            $mode = (preg_match('/^((@[A-Z]+)[:]{0,1})(.*)/Asu', trim($name),
+            $mode = (preg_match('/^((@[A-Z_]+)[:]{0,1})(.*)/Asu', trim($name),
                     $tmp) && isset($tmp[2], $tmp[3])) ? $tmp[2] : false;
             $subTmp = (isset($tmp[3])) ? trim($tmp[3]) : null;
+            if ($this->twigEnabled) $mode = '@'.substr($mode,3);
             switch ($mode) {
                 case '@FILE':
                     if ($subTmp != '') {
-                        $real = realpath(MODX_BASE_PATH . 'assets/templates');
-                        $path = realpath(MODX_BASE_PATH . 'assets/templates/' . preg_replace(array(
+                        $real = realpath(MODX_BASE_PATH . $this->templatePath);
+                        $path = realpath(MODX_BASE_PATH . $this->templatePath . preg_replace(array(
                                 '/\.*[\/|\\\]/i',
                                 '/[\/|\\\]+/i'
-                            ), array('/', '/'), $subTmp) . '.html');
+                            ), array('/', '/'), $subTmp) . '.' . $this->templateExtension);
                         $fname = explode(".", $path);
-                        if ($real == substr($path, 0, strlen($real)) && end($fname) == 'html' && file_exists($path)) {
+                        if ($real == substr($path, 0,
+                                strlen($real)) && end($fname) == $this->templateExtension && file_exists($path)
+                        ) {
                             $tpl = file_get_contents($path);
                         }
                     }
@@ -252,20 +317,27 @@ class DLTemplate
      */
     public function parseChunk($name, $data, $parseDocumentSource = false)
     {
-        $out = null;
-        if (is_array($data) && ($out = $this->getChunk($name)) != '') {
-            if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
-                $item = $this->renameKeyArr($data, '[', ']', '+');
-                $out = str_replace(array_keys($item), array_values($item), $out);
-            }
-            if (preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
-                if (is_null($this->phx) || !($this->phx instanceof DLphx)) {
-                    $this->phx = $this->createPHx(0, 1000);
+        $out = $this->getChunk($name);
+        if ($this->twigEnabled && ($out != '') && ($twig = $this->getTwig($name, $out))) {
+            $plh = $this->twigTemplateVars;
+            $plh['data'] = $data;
+            $plh['modx'] = $this->modx;
+            $out = $twig->render(md5($name),$plh);
+        } else {
+            if (is_array($data) && ($out != '')) {
+                if (preg_match("/\[\+[A-Z0-9\.\_\-]+\+\]/is", $out)) {
+                    $item = $this->renameKeyArr($data, '[', ']', '+');
+                    $out = str_replace(array_keys($item), array_values($item), $out);
                 }
-                $this->phx->placeholders = array();
-                $this->setPHxPlaceholders($data);
-                $out = $this->phx->Parse($out);
-                $out = $this->cleanPHx($out);
+                if (preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
+                    if (is_null($this->phx) || !($this->phx instanceof DLphx)) {
+                        $this->phx = $this->createPHx(0, 1000);
+                    }
+                    $this->phx->placeholders = array();
+                    $this->setPHxPlaceholders($data);
+                    $out = $this->phx->Parse($out);
+                    $out = $this->cleanPHx($out);
+                }
             }
         }
         if ($parseDocumentSource) {
@@ -295,6 +367,22 @@ class DLTemplate
     }
 
     /**
+     * Return clone of twig
+     *
+     * @return null
+     */
+    protected function getTwig($name, $tpl) {
+        if (is_null($this->twig) && isset($this->modx->twig)) {
+            $twig = clone $this->modx->twig;
+            $this->twig = $twig;
+        } else {
+            $twig = $this->twig;
+        }
+        if ($twig) $twig->getLoader()->addLoader(new Twig_Loader_Array(array(md5($name)=>$tpl)));
+        return $twig;
+    }
+
+    /**
      *
      * @param string $string
      * @return string
@@ -317,7 +405,7 @@ class DLTemplate
     public function createPHx($debug = 0, $maxpass = 50)
     {
         if (!class_exists('DLphx', false)) {
-            include_once(dirname(__FILE__) . '/DLphx.class.php');
+            include_once(__DIR__ . '/DLphx.class.php');
         }
 
         return new DLphx($debug, $maxpass);

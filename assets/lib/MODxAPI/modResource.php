@@ -484,6 +484,7 @@ class modResource extends MODxAPI
                 $this->id = $this->field['id'];
                 $this->set('editedby', null)->touch();
             }
+            $this->store($this->toArray(null, null, null, false));
             unset($this->field['id']);
         }
 
@@ -507,7 +508,8 @@ class modResource extends MODxAPI
         $uid = $this->modx->getLoginUserID('mgr');
 
         if (
-            ($this->field['parent'] == 0 && !$this->modxConfig('udperms_allowroot')) ||
+            $this->field['parent'] == 0 &&
+            !$this->modxConfig('udperms_allowroot') &&
             !($uid && isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1)
         ) {
             $this->log['rootForbidden'] = 'Only Administrators can create documents in the root folder because udperms_allowroot setting is off';
@@ -554,7 +556,7 @@ class modResource extends MODxAPI
                     $parent = (int)$this->get($key);
                     $q = $this->query("SELECT count(`id`) FROM {$this->makeTable('site_content')} WHERE `id`='{$parent}'");
                     if ($this->modx->db->getValue($q) != 1) {
-                        $parent = $value;
+                        $parent = 0;
                     }
                     $this->field[$key] = $parent;
                     $this->Uset($key);
@@ -586,22 +588,47 @@ class modResource extends MODxAPI
             }
         }
 
+        $_deleteTVs = $_updateTVs = $_insertTVs = array();
         foreach ($fld as $key => $value) {
-            if (empty($this->tv[$key])) {
+            if (empty($this->tv[$key]) || !$this->isChanged($key)) {
                 continue;
-            }
-            if ($value === '') {
-                $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}'");
+            } elseif ($value === '') {
+                $_deleteTVs[] = $this->tv[$key];
             } else {
-                $value = $this->escape($value);
-                $result = $this->query("SELECT `value` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}'");
-                if ($this->modx->db->getRecordCount($result) > 0) {
-                    $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
-                } else {
-                    $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
-                }
+                $_insertTVs[$this->tv[$key]] = $this->escape($value);
             }
         }
+
+        if (!$this->newDoc && !empty($_insertTVs)) {
+            $ids = implode(',',array_keys($_insertTVs));
+            $result = $this->query("SELECT `tmplvarid` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid`={$this->id} AND `tmplvarid` IN ({$ids})");
+            $existedTVs = $this->modx->db->getColumn('tmplvarid',$result);
+            foreach ($existedTVs as $id) {
+                $_updateTVs[$id] = $_insertTVs[$id];
+                unset($_insertTVs[$id]);
+            }
+        }
+
+        if (!empty($_updateTVs)) {
+            foreach($_updateTVs as $id => $value) {
+                $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = {$this->id} AND `tmplvarid` = {$id}");
+            }
+        }
+
+        if (!empty($_insertTVs)) {
+            $values = array();
+            foreach ($_insertTVs as $id => $value) {
+                $values[] = "({$this->id}, {$id}, '{$value}')";
+            }
+            $values = implode(',',$values);
+            $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} (`contentid`,`tmplvarid`,`value`) VALUES {$values}");
+        }
+
+        if (!empty($_deleteTVs)) {
+            $ids = implode(',',$_deleteTVs);
+            $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` IN ({$ids})");
+        }
+
         if (!isset($this->mode)) {
             $this->mode = $this->newDoc ? "new" : "upd";
             $this->newDoc = false;
@@ -632,7 +659,7 @@ class modResource extends MODxAPI
         if (is_array($_ids) && $_ids != array()) {
             $id = $this->sanitarIn($_ids);
             $uid = (int)$this->modx->getLoginUserId();
-            $deletedon = time();
+            $deletedon = time() + $this->modxConfig('server_offset_time');
             $this->query("UPDATE {$this->makeTable('site_content')} SET `deleted`=1, `deletedby`={$uid}, `deletedon`={$deletedon} WHERE `id` IN ({$id})");
         } else {
             throw new Exception('Invalid IDs list for mark trash: <pre>' . print_r($ids,
@@ -885,6 +912,52 @@ class modResource extends MODxAPI
             $this->query("SET @index := 0");
             $this->query("UPDATE {$this->makeTable('site_content')} SET `menuindex` = (@index := @index + 1) WHERE `parent`={$parent} ORDER BY {$criteria} {$dir}");
         }
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает значение шаблона согласно системной настройке
+     *
+     * @return $this
+     */
+    public function setDefaultTemplate()
+    {
+        $parent = $this->get('parent');
+        $template = $this->modxConfig('default_template');
+        switch ($this->modxConfig('auto_template_logic')) {
+            case 'sibling':
+                if (!$parent) {
+                    $site_start = $this->modxConfig('site_start');
+                    $where = "sc.isfolder=0 AND sc.id!={$site_start}";
+                    $sibl = $this->modx->getDocumentChildren($parent, 1, 0, 'template', $where, 'menuindex', 'ASC', 1);
+                    if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
+                        $template = $sibl[0]['template'];
+                    }
+                } else {
+                    $sibl = $this->modx->getDocumentChildren($parent, 1, 0, 'template', 'isfolder=0', 'menuindex',
+                        'ASC', 1);
+                    if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
+                        $template = $sibl[0]['template'];
+                    } else {
+                        $sibl = $this->modx->getDocumentChildren($parent, 0, 0, 'template', 'isfolder=0', 'menuindex',
+                            'ASC', 1);
+                        if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
+                            $template = $sibl[0]['template'];
+                        }
+                    }
+                }
+                break;
+            case 'parent':
+                if ($parent) {
+                    $_parent = $this->modx->getPageInfo($parent, 0, 'template');
+                    if (isset($_parent['template'])) {
+                        $template = $_parent['template'];
+                    }
+                }
+                break;
+        }
+        $this->set('template', $template);
 
         return $this;
     }

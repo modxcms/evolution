@@ -128,6 +128,11 @@ abstract class MODxAPI extends MODxAPIhelpers
     protected $jsonFields = array();
 
     /**
+     * @var array
+     */
+    protected $store = array();
+
+    /**
      * @var DLCollection
      */
     private $_decodedFields;
@@ -447,6 +452,8 @@ abstract class MODxAPI extends MODxAPIhelpers
     }
 
     /**
+     * Формирует массив значений для подстановки в SQL запрос на обновление
+     *
      * @param $key
      * @param string $id
      * @return $this
@@ -464,7 +471,7 @@ abstract class MODxAPI extends MODxAPIhelpers
                 throw new Exception("{$key} is invalid <pre>" . print_r($this->field[$key], true) . "</pre>");
             }
         }
-        if (!empty($tmp)) {
+        if (!empty($tmp) && $this->isChanged($key)) {
             if ($id == '') {
                 $this->set[] = $tmp;
             } else {
@@ -473,6 +480,46 @@ abstract class MODxAPI extends MODxAPIhelpers
         }
 
         return $this;
+    }
+
+    /**
+     * Сохраняет начальные значения полей
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function store($data = array()) {
+        if (is_array($data)) $this->store = $data;
+
+        return $this;
+    }
+
+    /**
+     * Откатывает изменения отдельного поля или всех полей сразу
+     *
+     * @param string $key
+     * @return MODxAPI
+     */
+    public function rollback($key = '') {
+        if (!empty($key) && isset($this->store[$key])) {
+            $this->set($key,$this->store[$key]);
+        } else {
+            $this->fromArray($this->store);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Проверяет изменилось ли поле
+     *
+     * @param $key
+     * @return bool
+     */
+    public function isChanged($key) {
+        $flag = !isset($this->store[$key]) || (isset($this->store[$key]) && $this->store[$key] != $this->field[$key]);
+
+        return $flag;
     }
 
     /**
@@ -721,6 +768,7 @@ abstract class MODxAPI extends MODxAPIhelpers
         $this->id = null;
         $this->field = array();
         $this->set = array();
+        $this->store = array();
         $this->markAllDecode();
     }
 

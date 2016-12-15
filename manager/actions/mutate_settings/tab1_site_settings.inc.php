@@ -1,101 +1,73 @@
 <?php
 	$site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 ?>
+<style>
+table.sysSettings > tbody td, table.sysSettings > tbody th {border-bottom:1px dotted #ccc;padding:10px;}
+table.sysSettings tr.noborder td {border:none;}
+</style>
 <!-- Site Settings -->
 <div class="tab-page" id="tabPage2">
 <h2 class="tab"><?php echo $_lang['settings_site'] ?></h2>
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script>
-<table border="0" cellspacing="0" cellpadding="3">
+<table class="sysSettings" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['sitestatus_title'] ?></td>
+    <th><?php echo $_lang['sitestatus_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['online'],  form_radio('site_status', 1));?><br />
         <?php echo wrap_label($_lang['offline'], form_radio('site_status', 0));?>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['sitestatus_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" /></td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['sitename_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
+      <th><?php echo $modx->htmlspecialchars($_lang['sitename_title']) ?></th>
+      <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="site_name" value="<?php echo $modx->htmlspecialchars($site_name); ?>" />
+	<div class="comment"><?php echo $_lang['sitename_message'] ?></div>
+	</td>
     </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['sitestart_title'] ?></td>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" /></td>
+    <th><?php echo $_lang['emailsender_title'] ?></th>
+    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="emailsender" value="<?php echo $emailsender; ?>" />
+	<div class="comment"><?php echo $_lang['emailsender_message'] ?></div>
+	</td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['sitestart_message'] ?></td>
+    <th><?php echo $_lang['sitestart_title'] ?></th>
+    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="site_start" value="<?php echo $site_start; ?>" />
+	<div class="comment"><?php echo $_lang['sitestart_message'] ?></div>
+	</td>
   </tr>
   <tr>
-    <td colspan="2"><div class="split"></div></td>
+    <th><?php echo $_lang['errorpage_title'] ?></th>
+    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="error_page" value="<?php echo $error_page; ?>" />
+	<div class="comment"><?php echo $_lang['errorpage_message'] ?></div>
+	</td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['errorpage_title'] ?></td>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="error_page" value="<?php echo $error_page; ?>" /></td>
+    <th><?php echo $_lang['unauthorizedpage_title'] ?></th>
+    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="unauthorized_page" value="<?php echo $unauthorized_page; ?>" />
+	<div class="comment"><?php echo $_lang['unauthorizedpage_message'] ?></div>
+	</td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['errorpage_message'] ?></td>
+    <th><?php echo $_lang['siteunavailable_page_title'] ?></th>
+    <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo $site_unavailable_page; ?>" />
+	<div class="comment"><?php echo $_lang['siteunavailable_page_message'] ?></div>
+	</td>
   </tr>
   <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['unauthorizedpage_title'] ?></td>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="10" size="5" name="unauthorized_page" value="<?php echo $unauthorized_page; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['unauthorizedpage_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['siteunavailable_page_title'] ?></td>
-    <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo $site_unavailable_page; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['siteunavailable_page_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['siteunavailable_title'] ?>
+    <th><?php echo $_lang['siteunavailable_title'] ?>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_site_unavailable" id="reload_site_unavailable_select" onchange="confirmLangChange(this, 'siteunavailable_message_default', 'site_unavailable_message_textarea');">
 <?php echo get_lang_options('siteunavailable_message_default');?>
       </select>
-    </td>
+    </th>
     <td> <textarea name="site_unavailable_message" id="site_unavailable_message_textarea" style="width:100%; height: 120px;"><?php echo $site_unavailable_message_view; ?></textarea>
         <input type="hidden" name="siteunavailable_message_default" id="siteunavailable_message_default_hidden" value="<?php echo addslashes($_lang['siteunavailable_message_default']);?>" />
+	<div class="comment"><?php echo $_lang['siteunavailable_message'];?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['siteunavailable_message'];?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_title'] ?></td>
+    <th><?php echo $_lang['defaulttemplate_title'] ?></th>
     <td>
     <?php
         $rs = $modx->db->select(
@@ -145,17 +117,11 @@
             <label><input type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang['template_reset_specific'],$oldTmpName); ?></label>
         </div>
         <input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
+	<div class="comment"><?php echo $_lang['defaulttemplate_message'] ?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['defaulttemplate_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-    <tr>
-        <td nowrap class="warning" valign="top"><?php echo $_lang['defaulttemplate_logic_title'];?></td>
+        <th><?php echo $_lang['defaulttemplate_logic_title'];?></th>
         <td>
             <p><?php echo $_lang['defaulttemplate_logic_general_message'];?></p>
             <label><input type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang['defaulttemplate_logic_system_message']; ?></label><br />
@@ -164,70 +130,63 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"><div class="split"></div></td>
+      <th><?php echo $_lang['enable_filter_title'] ?></th>
+      <td >
+        <?php
+            // Check if PHX is enabled
+            $count = $modx->db->getRecordCount(
+              $modx->db->select('id', '[+prefix+]site_plugins', 
+              "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1")
+            );
+            if($count) {
+                $disabledFilters = 1;
+                echo '<b>'.$_lang['enable_filter_phx_warning'].'</b><br/>';
+            }
+            else $disabledFilters = false;
+        ?>
+        <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
+        <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>
+        <div class="comment"><?php echo $_lang['enable_filter_message']; ?></div>
+      </td>
     </tr>
   <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultpublish_title'] ?></td>
+    <th><?php echo $_lang['defaultpublish_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('publish_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('publish_default', 0));?>
+        <div class="comment"><?php echo $_lang['defaultpublish_message'] ?></div>
     </td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['defaultpublish_message'] ?></td>
   </tr>
 
   <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultcache_title'] ?></td>
+    <th><?php echo $_lang['defaultcache_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('cache_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('cache_default', 0));?>
+        <div class="comment"><?php echo $_lang['defaultcache_message'] ?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['defaultcache_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultsearch_title'] ?></td>
+    <th><?php echo $_lang['defaultsearch_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('search_default', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('search_default', 0));?>
+        <div class="comment"><?php echo $_lang['defaultsearch_message'] ?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['defaultsearch_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['defaultmenuindex_title'] ?></td>
+    <th><?php echo $_lang['defaultmenuindex_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('auto_menuindex', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('auto_menuindex', 0));?>
+        <div class="comment"><?php echo $_lang['defaultmenuindex_message'] ?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['defaultmenuindex_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['custom_contenttype_title'] ?></td>
-    <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;height:100px" value="" /> <input type="button" value="<?php echo $_lang['add']; ?>" onclick='addContentType()' /><br />
+    <th><?php echo $_lang['custom_contenttype_title'] ?></th>
+    <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /><input type="button" value="<?php echo $_lang['add']; ?>" onclick='addContentType()' /><br />
     <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
-    <select name="lst_custom_contenttype" style="width:200px;" size="5">
+    <select name="lst_custom_contenttype" style="width:200px;height:100px;" size="5">
     <?php
         $ct = explode(",",$custom_contenttype);
         for($i=0;$i<count($ct);$i++) {
@@ -237,17 +196,11 @@
     </select>
     <input name="custom_contenttype" type="hidden" value="<?php echo $custom_contenttype; ?>" />
     </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang['remove']; ?>" onclick='removeContentType()' /></td></tr></table>
+    <div class="comment"><?php echo $_lang['custom_contenttype_message'] ?></div>
     </td>
   </tr>
   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['custom_contenttype_message'] ?></td>
-  </tr>
-<tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-<tr>
-<td nowrap class="warning" valign="top"><?php echo $_lang['docid_incrmnt_method_title'] ?></td>
+<th><?php echo $_lang['docid_incrmnt_method_title'] ?></th>
 <td>
 <label><input type="radio" name="docid_incrmnt_method" value="0"
     <?php echo ($docid_incrmnt_method=='0') ? 'checked="checked"' : "" ; ?> />
@@ -261,36 +214,25 @@
     <?php echo $_lang['docid_incrmnt_method_2']?></label><br />
 </td>
 </tr>
-<tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
 
 <tr>
-<td nowrap class="warning"><?php echo $_lang['cache_type_title'] ?></td>
+<th><?php echo $_lang['cache_type_title'] ?></th>
 <td>
 <?php echo wrap_label($_lang['cache_type_1'],form_radio('cache_type', 1));?><br />
 <?php echo wrap_label($_lang['cache_type_2'], form_radio('cache_type', 2));?>
 </td>
 </tr>
   <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['xhtml_urls_title'] ?></td>
+<th><?php echo $_lang['minifyphp_incache_title'] ?></th>
     <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('xhtml_urls', 1));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('xhtml_urls', 0));?>
+<?php echo wrap_label($_lang['enabled'],form_radio('minifyphp_incache', 1));?><br />
+<?php echo wrap_label($_lang['disabled'], form_radio('minifyphp_incache', 0));?>
+<div class="comment"><?php echo $_lang['minifyphp_incache_message'] ?></div>
     </td>
   </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['xhtml_urls_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
+
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['serveroffset_title'] ?></td>
+      <th><?php echo $_lang['serveroffset_title'] ?></th>
       <td> <select name="server_offset_time" size="1" class="inputBox">
           <?php
       for($i=-24; $i<25; $i++) {
@@ -301,89 +243,40 @@
           <?php
       }
       ?>
-        </select> </td>
+        </select>
+      	<div class="comment"><?php printf($_lang['serveroffset_message'], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></div>
+      	</td>
     </tr>
     <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php printf($_lang['serveroffset_message'], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class='split'>&nbsp;</div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['server_protocol_title'] ?></td>
+      <th><?php echo $_lang['server_protocol_title'] ?></th>
       <td>
         <?php echo wrap_label($_lang['server_protocol_http'],form_radio('server_protocol', 'http'));?><br />
         <?php echo wrap_label($_lang['server_protocol_https'], form_radio('server_protocol', 'https'));?>
+        <div class="comment"><?php echo $_lang['server_protocol_message'] ?></div>
       </td>
     </tr>
     <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['server_protocol_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['enable_filter_title'] ?></td>
-      <td >
-        <?php
-            // Check if PHX is enabled
-            $modx->invokeEvent('OnParseDocument');
-            if(class_exists('PHxParser')) {
-                $disabledFilters = 1;
-                echo '<b>'.$_lang['enable_filter_phx_warning'].'</b><br/>';
-            }
-        ?>
-        <?php echo wrap_label($_lang['yes'],form_radio('enable_filter', 1, '', $disabledFilters));?><br />
-        <?php echo wrap_label($_lang['no'], form_radio('enable_filter', 0, '', $disabledFilters));?>
+      <th><?php echo $_lang['rss_url_news_title'] ?></th>
+      <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_news" value="<?php echo $rss_url_news; ?>" />
+      	<div class="comment"><?php echo $_lang['rss_url_news_message'] ?></div>
       </td>
     </tr>
     <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['enable_filter_message']; ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
-    <tr>
-      <td nowrap class="warning"><?php echo $_lang['rss_url_news_title'] ?></td>
-      <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_news" value="<?php echo $rss_url_news; ?>" /></td>
-    </tr>
-    <tr>
-      <td width="200">&nbsp;</td>
-      <td class="comment"><?php echo $_lang['rss_url_news_message'] ?></td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['track_visitors_title'] ?></td>
+    <th><?php echo $_lang['track_visitors_title'] ?></th>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('track_visitors', 1));?><br />
         <?php echo wrap_label($_lang['no'],form_radio('track_visitors', 0));?>
+      	<div class="comment"><?php echo $_lang['track_visitors_message'] ?></div>
     </td>
   </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['track_visitors_message'] ?></td>
+  <tr class="noborder">
+    <th><?php echo $_lang['top_howmany_title'] ?></th>
+    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" />
+      	<div class="comment"><?php echo $_lang['top_howmany_message'] ?></div>
+      	</td>
   </tr>
   <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning" valign="top"><?php echo $_lang['top_howmany_title'] ?></td>
-    <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="top_howmany" value="<?php echo $top_howmany; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['top_howmany_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td colspan="2">
+    <td colspan="2" style="border:none;">
         <?php
             // invoke OnSiteSettingsRender event
             $evtOut = $modx->invokeEvent('OnSiteSettingsRender');

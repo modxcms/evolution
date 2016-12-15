@@ -847,7 +847,7 @@ $_lang["role_web_user_management"] = 'Zarządzanie użytkownikami web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Wprowadź URL źródła wiadomości MODX';
 $_lang["rss_url_news_title"] = 'Żródło RSS wiadomości';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Wprowadź URL źródła biuletynu bezpieczeństwa MODX';
 $_lang["rss_url_security_title"] = 'Źródło RSS biuletynu bezpieczeństwa';
 $_lang["run_module"] = 'Uruchom moduł';
@@ -1175,6 +1175,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>Zawartość bazy danych zostanie zapisana na 
 $_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
 $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
+$_lang["bkmgr_restore_confirm"] = 'Czy na pewno chcesz przywrócić kopię zapasową\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
 
 $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';

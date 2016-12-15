@@ -39,30 +39,28 @@ EOD;
             $hash = $modx->db->escape($hash);
             $tbl_manager_users   = $modx->getFullTableName('manager_users');
             $tbl_user_attributes = $modx->getFullTableName('user_attributes');
-            $tbl_active_users    = $modx->getFullTableName('active_users');
 
-            $site_id = $modx->config['site_id'];
+            // $site_id = $modx->config['site_id'];
             $today = date('Yz'); // Year and day of the year
             $wheres = array();
-            $where = '';
             $user = null;
 
             if($user_id !== false) { $wheres[] = "usr.id='{$user_id}'"; }
             if(!empty($username))  { $wheres[] = "usr.username='{$username}'"; }
             if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
-            if(!empty($hash))      { $wheres[] = "MD5(CONCAT(auser.lasthit,usr.password))='{$hash}'"; }
-
+            if(!empty($hash))      { $wheres[] = "MD5(CONCAT('{$today}',attr.lastlogin,usr.password))='{$hash}'"; }
+            $wheres[] = "attr.lastlogin > 0";
+            
             if($wheres) {
                 $result = $modx->db->select(
-                    "usr.id, usr.username, attr.email, MD5(CONCAT(auser.lasthit,usr.password)) AS hash",
+                    "usr.id, usr.username, attr.email, MD5(CONCAT('{$today}',attr.lastlogin,usr.password)) AS hash",
                     "{$tbl_manager_users} usr
-                        INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
-                        INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username",
+                        INNER JOIN {$tbl_user_attributes} attr ON usr.id=attr.internalKey",
                     implode(' AND ',$wheres),
                     "",
                     1
-                    );
-                        $user = $modx->db->getRow($result);
+                );
+                $user = $modx->db->getRow($result);
             }
 
             if($user == null) { $this->errors[] = $_lang['could_not_find_user']; }
@@ -159,7 +157,7 @@ if($event_name == 'OnManagerLoginFormRender') {
             $output = $forgot->getForm();
             break;
         case 'send_email':
-            if($forgot->sendEmail($to)) { $output = $_lang['email_sent']; }
+            if($forgot->sendEmail($to)) { $output = '<p><b>'.$_lang['email_sent'].'</b></p>'; }
             break;
         default:
             $output = $forgot->getLink();
@@ -182,6 +180,7 @@ if($event_name == 'OnManagerAuthentication' && $hash && $username) {
 		if(isset($_REQUEST['captcha_code']) && !empty($_REQUEST['captcha_code']))
 			$_SESSION['veriword'] = $_REQUEST['captcha_code'];
 		$output = true;
+		$_SESSION['onLoginForwardToAction'] = 28; // action "change password"
 	}
 	else $output = false;
 }

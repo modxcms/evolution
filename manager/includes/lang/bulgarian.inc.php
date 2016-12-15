@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Управление на уеб потр�
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Въвеждане на URL адрес за MODX Новините.';
 $_lang["rss_url_news_title"] = 'RSS на Новините';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Въвеждане на URL адрес за MODX Сигурността.';
 $_lang["rss_url_security_title"] = 'RSS на Сигурността';
 $_lang["run_module"] = 'Стартиране на модул';
@@ -1169,7 +1169,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Връщане на тези данни';
+$_lang["bkmgr_restore_confirm"] = 'Сигурни ли сте, че искате да се върнете архивиране\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';

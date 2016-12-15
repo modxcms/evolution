@@ -11,6 +11,9 @@ if(!class_exists('synccache')) {
 		var $aliasVisible = array();
 
 
+		function __construct() {
+		}
+		
 		function setCachepath($path)
 		{
 			$this->cachePath = $path;
@@ -181,9 +184,9 @@ if(!class_exists('synccache')) {
 	$tmpPHP .= '$d=&$this->documentListing;';
 	$tmpPHP .= '$m=&$this->documentMap;';
         if ($config['aliaslistingfolder'] == 1) {
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
         }else{
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
         }
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
@@ -193,7 +196,7 @@ if(!class_exists('synccache')) {
             } else {
                 $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($tmp1['alias']) . '\']' . " = " . $tmp1['id'] . ";";
             }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");";
+            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'alias_visible' => " . $tmp1['alias_visible'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");";
             $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');";
         }
 
@@ -220,7 +223,10 @@ if(!class_exists('synccache')) {
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($row = $modx->db->getRow($rs)) {
 				$name = $this->escapeSingleQuotes($row['name']);
-				$code = $this->escapeSingleQuotes(trim($row['snippet']));
+				$code = trim($row['snippet']);
+				if($modx->config['minifyphp_incache'])
+					$code = $this->php_strip_whitespace($code);
+				$code = $this->escapeSingleQuotes($code);
 				$properties       = $modx->parseProperties($row['properties']);
 				$sharedproperties = $modx->parseProperties($row['sharedproperties']);
 				$properties = array_merge($sharedproperties,$properties);
@@ -228,34 +234,38 @@ if(!class_exists('synccache')) {
 				if (0<count($properties)) {
     				$properties = json_encode($properties);
     				$properties = $this->escapeSingleQuotes($properties);
-					$tmpPHP .= sprintf("\$s['%sProps']='%s';", $this->escapeSingleQuotes($row['name']), $properties);
+					$tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, $properties);
 				}
 			}
 
 			// WRITE plugins to cache file
 			$rs = $modx->db->select(
 				'sp.*, sm.properties as sharedproperties',
-				$modx->getFullTableName('site_plugins') . ' sp
-				LEFT JOIN ' . $modx->getFullTableName('site_modules') . ' sm on sm.guid=sp.moduleguid',
+				'[+prefix+]site_plugins sp LEFT JOIN [+prefix+]site_modules sm on sm.guid=sp.moduleguid',
 				'sp.disabled=0');
 			$tmpPHP .= '$p=&$this->pluginCache;';
-			while ($tmp1 = $modx->db->getRow($rs)) {
-				$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['plugincode'])) . "';";
-				if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-					$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . ' ' . $tmp1['sharedproperties']) . "';";
+			while ($row = $modx->db->getRow($rs)) {
+				$name = $this->escapeSingleQuotes($row['name']);
+				$code = trim($row['plugincode']);
+				if($modx->config['minifyphp_incache'])
+					$code = $this->php_strip_whitespace($code);
+				$tmpPHP .= sprintf("\$p['%s']='%s';", $name, $this->escapeSingleQuotes($code));
+				if ($row['properties'] != '' || $row['sharedproperties'] != '') {
+					$k = $name;
+					$v = $this->escapeSingleQuotes($row['properties'] . ' ' . $row['sharedproperties']);
+					$tmpPHP .= sprintf("\$p['%sProps']='%s';", $k, $v);
 				}
 			}
-
 
 			// WRITE system event triggers
 			$events = array();
 			$rs = $modx->db->select(
-				'sysevt.name as evtname, pe.pluginid, plugs.name',
-				$modx->getFullTableName('system_eventnames') . ' sysevt
-				INNER JOIN ' . $modx->getFullTableName('site_plugin_events') . ' pe ON pe.evtid = sysevt.id
-				INNER JOIN ' . $modx->getFullTableName('site_plugins') . ' plugs ON plugs.id = pe.pluginid',
-				'plugs.disabled=0',
-				'sysevt.name,pe.priority'
+				'sysevt.name as evtname, event.pluginid, plugin.name',
+				'[+prefix+]system_eventnames sysevt
+				INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id
+				INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid',
+				'plugin.disabled=0',
+				'sysevt.name, event.priority'
 			);
 			$tmpPHP .= '$e = &$this->pluginEvent;';
 			while ($evt = $modx->db->getRow($rs)) {
@@ -296,5 +306,59 @@ if(!class_exists('synccache')) {
 
 			return true;
 		}
+		
+        // ref : http://php.net/manual/en/tokenizer.examples.php
+        function php_strip_whitespace($source) {
+            
+            $source = trim($source);
+            if(substr($source,0,5)!=='<?php') $source = '<?php ' . $source;
+            
+            $tokens = token_get_all($source);
+            $_ = '';
+            $prev_token = 0;
+            $chars = explode(' ', '( ) ; , = { } ? :');
+            foreach ($tokens as $i=>$token) {
+                if (is_string($token)) {
+                    if(in_array($token,array('=',':')))
+                        $_ = trim($_);
+                    elseif(in_array($token,array('(','{')) && in_array($prev_token,array(T_IF,T_ELSE,T_ELSEIF)))
+                        $_ = trim($_);
+                    $_ .= $token;
+                    continue;
+                }
+                
+                list($type, $text) = $token;
+                
+                switch ($type) {
+                    case T_COMMENT    :
+                    case T_DOC_COMMENT:
+                        break;
+                    case T_WHITESPACE :
+                        $_ = trim($_);
+                        $lastChar = substr($_,-1);
+                        if( !in_array($lastChar,$chars ) ) {// ,320,327,288,284,289
+                            if(!in_array($prev_token,array(T_FOREACH,T_WHILE,T_FOR,T_BOOLEAN_AND,T_BOOLEAN_OR,T_DOUBLE_ARROW)))
+                                $_ .= ' ';
+                        }
+                        break;
+                    case T_IS_EQUAL :
+                    case T_IS_IDENTICAL :
+                    case T_IS_NOT_EQUAL :
+                    case T_DOUBLE_ARROW :
+                    case T_BOOLEAN_AND :
+                    case T_BOOLEAN_OR :
+                        $prev_token=$type;
+                        $_ = trim($_);
+                        $_ .= $text;
+                        break;
+                    default:
+                        $prev_token=$type;
+                        $_ .= $text;
+                }
+            }
+            $source = preg_replace('@^<\?php@', '', $_);
+            $source = trim($source);
+            return $source;
+        }
 	}
 }

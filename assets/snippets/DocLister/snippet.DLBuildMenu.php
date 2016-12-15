@@ -17,12 +17,12 @@ $p['currentDepth'] = $currentDepth = \APIhelpers::getkey($p, 'currentDepth', 1);
 
 /** Основной шаблон обертка */
 $p['TplMainOwner'] = \APIhelpers::getkey($p, 'TplMainOwner',
-    '@CODE: <ul id="nav" class="menu level-1">[+dl.wrap+]</ul>'
+    '@CODE:<ul id="nav" class="menu level-1">[+dl.wrap+]</ul>'
 );
 
 /** Шаблон обертка для вложенных уровней */
 $p['TplSubOwner'] = \APIhelpers::getkey($p, 'TplSubOwner',
-    '@CODE: <ul class="sub-menu level-[+dl.currentDepth+]">[+dl.wrap+]</ul>'
+    '@CODE:<ul class="sub-menu level-[+dl.currentDepth+]">[+dl.wrap+]</ul>'
 );
 
 /**
@@ -38,7 +38,7 @@ if (empty($currentOwnerTpl)) {
 
 /** Основной шаблон для каждого пункта меню всех уровней */
 $p['TplOneItem'] = $currentTpl = \APIhelpers::getkey($p, 'TplOneItem',
-    '@CODE: <li id="menu-item-[+id+]" class="menu-item [+dl.class+]">
+    '@CODE:<li id="menu-item-[+id+]" class="menu-item [+dl.class+]">
         <a href="[+url+]" title="[+e.title+]">[+title+]</a>
         [+dl.submenu+]
     </li>'
@@ -65,6 +65,9 @@ $p['orderBy'] = $currentOrderBy = \APIhelpers::getkey($p, 'orderBy', 'menuindex 
 /** orderByN   Условия сортировки документов N уровня */
 $currentOrderBy = \APIhelpers::getkey($p, 'orderBy' . $currentDepth, $currentOrderBy);
 
+
+$p['tvList'] = $currentTvList = \APIhelpers::getkey($p, 'tvList');
+$currentTvList  = \APIhelpers::getkey($p, 'tvList' . $currentDepth, $currentTvList);
 /**
  * Получение prepare сниппетов из параметров BeforePrepare и AfterPrepare
  * для совмещения с обязательным вызовом DLFixedPrepare::buildMenu метода

@@ -20,26 +20,15 @@
   <tr class="udPerms" <?php echo showHide($use_udperms==1);?>>
     <td nowrap class="warning"><?php echo $_lang['udperms_allowroot_title'] ?></td>
     <td>
-      <input type="radio" name="udperms_allowroot" value="1" <?php echo $udperms_allowroot=='1' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['yes']?><br />
-      <input type="radio" name="udperms_allowroot" value="0" <?php echo $udperms_allowroot=='0' ? 'checked="checked"' : "" ; ?> />
-      <?php echo $_lang['no']?>
+      <label><input type="radio" name="udperms_allowroot" value="1" <?php echo $udperms_allowroot=='1' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['yes']?></label><br />
+      <label><input type="radio" name="udperms_allowroot" value="0" <?php echo $udperms_allowroot=='0' ? 'checked="checked"' : "" ; ?> />
+      <?php echo $_lang['no']?></label>
     </td>
   </tr>
   <tr class="udPerms" <?php echo showHide($use_udperms==1);?>>
     <td width="200">&nbsp;</td>
     <td class="comment"><?php echo $_lang['udperms_allowroot_message'] ?></td>
-  </tr>
-  <tr class="udPerms" <?php echo showHide($use_udperms==1);?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['emailsender_title'] ?></td>
-    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="emailsender" value="<?php echo $emailsender; ?>" /></td>
-  </tr>
-   <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['emailsender_message'] ?></td>
   </tr>
 
   <!--for smtp-->
@@ -52,63 +41,12 @@
     <td>
         <?php echo wrap_label($_lang['email_method_mail'],form_radio('email_method','mail','id="useMail"'));?><br />
         <?php echo wrap_label($_lang['email_method_smtp'],form_radio('email_method','smtp','id="useSmtp"'));?>
+        <div class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
+            <?php include_once(MODX_MANAGER_PATH . 'actions/mutate_settings/snippet_smtp.inc.php'); ?>
+        </div>
     </td>
   </tr>
   <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_auth_title'] ?></td>
-    <td>
-        <?php echo wrap_label($_lang['yes'],form_radio('smtp_auth','1' ));?><br />
-        <?php echo wrap_label($_lang['no'],form_radio('smtp_auth','0' ));?>
-    </td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_secure_title'] ?></td>
-    <td >
-     <select name="smtp_secure" size="1" class="inputBox">
-  <option value="none" ><?php echo $_lang['no'] ?></option>
-   <option value="ssl" <?php if($smtp_secure == 'ssl') echo "selected='selected'"; ?> >SSL</option>
-  <option value="tls" <?php if($smtp_secure == 'tls') echo "selected='selected'"; ?> >TLS</option>
- </select>
- <br />
-  </td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_host_title'] ?></td>
-    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_host" value="<?php echo $smtp_host; ?>" /></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_port_title'] ?></td>
-    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_port" value="<?php echo $smtp_port; ?>" /></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_username_title'] ?></td>
-    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_username" value="<?php echo $smtp_username; ?>" /></td>
-  </tr>
-   <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
-    <td nowrap class="warning"><?php echo $_lang['smtp_password_title'] ?></td>
-    <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
-  </tr>
-  <tr class="smtpRow" <?php echo showHide($email_method=='smtp');?>>
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>

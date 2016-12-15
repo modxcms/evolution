@@ -120,6 +120,7 @@ $GLOBALS['action_list'] = array(
 	'116'	=> 'Delete event log',
 	'117'   => 'Editing tv rank',
 	'118'   => 'Call settings ajax include',
+	'119'   => 'Login Fail (Temporary Block)',	
 
 	'300'	=> 'Create Template Variable',
 	'301'	=> 'Edit Template Variable',

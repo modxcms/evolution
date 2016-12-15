@@ -303,6 +303,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                                 'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                                 'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+    
+    foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
     ?>
     
     var lockedElementsTranslation = <?php echo json_encode($unlockTranslations); ?>;
@@ -313,7 +315,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             jQuery.get( 'index.php?a=67&type='+type+'&id='+id, function( data ) {
                 if(data == 1) {
                     jQuery(domEl).fadeOut();
-                    // top.main.document.location.href="index.php?a=27&id="+id; // Redirect to "Edit Resource" immediately
                 }
                 else alert( data );
             });
@@ -355,12 +356,14 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 if(treedisp_children==0) {
                     href = "index.php?a=3&r=1&id=" + id + getFolderState();
                 } else {
+                    setLastClickedElement(7, id);
                     href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
                 if (e.shiftKey) {
                     window.getSelection().removeAllRanges(); // Remove unnessecary text-selection
                     randomNum = Math.floor((Math.random()*999999)+1);
                     window.open(href, 'res'+randomNum, 'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
+                    top.mainMenu.reloadtree(); // Show updated locks as &r=1 will not work in popup
                 } else {
                     parent.main.location.href=href;
                 }
@@ -425,7 +428,10 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         a.onclick = '';
     }
     }
-
+    
+    function setLastClickedElement(type, id) {
+        localStorage.setItem('MODX_lastClickedElement', '['+type+','+id+']' );    
+    }
 </script>
 
 </head>
@@ -585,7 +591,7 @@ foreach($sortParams as $param) {
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
-    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php $site_name = htmlspecialchars($site_name,ENT_QUOTES,$modx->config['modx_charset']); echo $site_name; ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name,ENT_QUOTES,$modx->config['modx_charset']); echo $site_name; ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 <?php
     // invoke OnTreeRender event
     $evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->db->escape($_REQUEST));
@@ -614,6 +620,7 @@ function menuHandler(action) {
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
             break;
         case 2 : // edit
+            setLastClickedElement(7, itemToChange);
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
             break;

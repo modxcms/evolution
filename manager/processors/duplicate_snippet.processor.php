@@ -8,6 +8,13 @@ $id = isset($_GET['id'])? intval($_GET['id']) : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
+
+// count duplicates
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$id}'"));
+$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_snippets'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+if($count>=1) $count = ' '.($count+1);
+else $count = '';
+
 // duplicate Snippet
 $newid = $modx->db->insert(
 	array(
@@ -17,7 +24,7 @@ $newid = $modx->db->insert(
 		'properties'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_snippets'), // Insert into
-	"CONCAT('Duplicate of ',name) AS name, description, snippet, properties, category", $modx->getFullTableName('site_snippets'), "id='{$id}'"); // Copy from
+	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, snippet, properties, category", $modx->getFullTableName('site_snippets'), "id='{$id}'"); // Copy from
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_snippets'), "id='{$newid}'"));

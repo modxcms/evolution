@@ -5,7 +5,7 @@ if (!$modx->hasPermission('save_snippet')) {
 }
 
 $id = intval($_POST['id']);
-$snippet = trim($modx->db->escape($_POST['post']));
+$snippet = trim($_POST['post']);
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
@@ -13,8 +13,10 @@ $locked = $_POST['locked']=='on' ? 1 : 0 ;
 if ( strncmp($snippet, "<?", 2) == 0 ) {
     $snippet = substr($snippet, 2);
     if ( strncmp( $snippet, "php", 3 ) == 0 ) $snippet = substr($snippet, 3);
-    if ( substr($snippet, -2, 2) == '?>' ) $snippet = substr($snippet, 0, -2);
 }
+if ( substr($snippet, -2) == '?>' ) $snippet = substr($snippet, 0, -2);
+$snippet = $modx->db->escape($snippet);
+
 $properties = $modx->db->escape($_POST['properties']);
 $moduleguid = $modx->db->escape($_POST['moduleguid']);
 $parse_docblock = $_POST['parse_docblock']=="1" ? '1' : '0';
@@ -159,4 +161,3 @@ switch ($_POST['mode']) {
     default:
 		$modx->webAlertAndQuit("No operation set in request.");
 }
-?>

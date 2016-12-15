@@ -843,7 +843,7 @@ $_lang["role_web_user_management"] = 'Gestão de usuários web (externos)';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Digite o URL para o Feed de notícias MODX.';
 $_lang["rss_url_news_title"] = 'Feed de Notícias RSS';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Digite o URL para o Feed de segurança MODX.';
 $_lang["rss_url_security_title"] = 'Feed de Segurança RSS';
 $_lang["run_module"] = 'Executar Módulo';
@@ -1137,7 +1137,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Reverter estes dados';
+$_lang["bkmgr_restore_confirm"] = 'Tem certeza de que deseja reverter o backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';
