@@ -455,12 +455,12 @@ function SetUrl(url, width, height, alt) {
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabModule" ) );</script>
 
     <table border="0" cellspacing="0" cellpadding="1">
-        <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
-            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
-        <tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
-            <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
-            <td align="left">
+        <tr><th><?php echo $_lang['module_name']?></th>
+            <td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+        <tr><th><?php echo $_lang['module_desc']?></th>
+            <td><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" onchange="documentDirty=true;"></td></tr>
+        <tr><th><?php echo $_lang['existing_category']?></th>
+            <td>
             <select name="categoryid" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
 <?php
@@ -470,17 +470,17 @@ function SetUrl(url, width, height, alt) {
                 }
 ?>
             </select></td></tr>
-        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
-            <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
-        <tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span>:&nbsp;&nbsp;</td>
-            <td align="left"><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
-        <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
-            <td align="left"><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
- <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
-        <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
-            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span><br/><span class="comment"><?php echo $_lang['lock_module_msg']?></span></td></tr>
-        <tr><td align="left" valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></td></tr>
+        <tr><th><?php echo $_lang['new_category']?></th>
+            <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
+        <tr><th><?php echo $_lang['icon']?> <span class="comment">(32x32)</span></th>
+            <td><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" /></td></tr>
+        <tr><th><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span></th>
+            <td><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
+ <tr><th colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
+            <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></th></tr>
+        <tr><th colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />
+            <span style="cursor:pointer" onclick="document.mutate.locked.click();"><?php echo $_lang['lock_module']?></span><br/><span class="comment"><?php echo $_lang['lock_module_msg']?></span></th></tr>
+        <tr><th colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 107 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></th></tr>
     </table>
 
     <!-- PHP text editor start -->
@@ -515,13 +515,13 @@ function SetUrl(url, width, height, alt) {
         <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabParams" ) );</script>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	        <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
-                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo $modx->manager->action == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
+	        <tr><th><?php echo $_lang['guid']?></th>
+                <td align="left" valign="top"><input name="guid" type="text" maxlength="32" value="<?php echo $modx->manager->action == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
                 <tr>
-        <tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
-                <td align="left" valign="bottom"><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
+        <tr><th><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?></span></th>
+                <td><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></td></tr>
             <tr>
-                <td align="left" valign="top" colspan="2"><textarea name="properties" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea>
+                <td colspan="2"><textarea name="properties" class="phptextarea" style="width:280px;" onchange="showParameters(this);documentDirty=true;"><?php echo $content['properties']?></textarea>
                 </td>
             </tr>
             <tr><td>
