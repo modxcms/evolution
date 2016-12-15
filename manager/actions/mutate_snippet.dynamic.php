@@ -425,7 +425,7 @@ function contains(a, obj) {
        
         <table>
           <tr>
-            <th><?php echo $_lang['snippet_name']?>:</th>
+            <th><?php echo $_lang['snippet_name']?></th>
             <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span>
             <script>document.getElementsByName("name")[0].focus();</script></td>
           </tr>
@@ -447,7 +447,7 @@ function contains(a, obj) {
             </td>
           </tr>
           <tr>
-            <th><?php echo $_lang['new_category']?>:</th>
+            <th><?php echo $_lang['new_category']?></th>
             <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
           </tr>
 <?php if($modx->hasPermission('save_role')):?>
@@ -496,7 +496,7 @@ function contains(a, obj) {
         <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
           <tr>
-            <th><?php echo $_lang['import_params']?>:&nbsp;&nbsp;</th>
+            <th><?php echo $_lang['import_params']?></th>
             <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
