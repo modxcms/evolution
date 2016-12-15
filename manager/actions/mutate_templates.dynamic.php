@@ -133,17 +133,17 @@ function deletedocument() {
       
     <table>
       <tr>
-        <th><?php echo $_lang['template_name']; ?>:</th>
+        <th><?php echo $_lang['template_name']; ?></th>
         <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
             <?php if($id == $modx->config['default_template']) echo ' <b>'.$_lang['defaulttemplate_title'].'</b>'; ?>
             <script>document.getElementsByName("templatename")[0].focus();</script></td>
       </tr>
     <tr>
-    <th><?php echo $_lang['template_desc']; ?>:</th>
+    <th><?php echo $_lang['template_desc']; ?></th>
     <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
     </tr>
     <tr>
-    <th><?php echo $_lang['existing_category']; ?>:</th>
+    <th><?php echo $_lang['existing_category']; ?></th>
     <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
             <option>&nbsp;</option>
             <?php
@@ -156,7 +156,7 @@ function deletedocument() {
     </td>
     </tr>
     <tr>
-    <th><?php echo $_lang['new_category']; ?>:</th>
+    <th><?php echo $_lang['new_category']; ?></th>
     <td><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
     </tr>
 <?php if($modx->hasPermission('save_role')):?>
