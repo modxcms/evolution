@@ -240,7 +240,7 @@ class PHxParser {
 					case "lcase": $output = strtolower($output); break;
 					case "ucase": $output = strtoupper($output); break;
 					case "ucfirst": $output = ucfirst($output); break;
-					case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['etomite_charset']); break;
+					case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['modx_charset']); break;
 					case "esc":
 						$output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", htmlspecialchars($output));
   						$output = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$output);
