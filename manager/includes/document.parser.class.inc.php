@@ -1389,7 +1389,6 @@ class DocumentParser {
         if ($this->dumpSnippets)
             $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
         
-        $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
                 if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
@@ -1403,7 +1402,6 @@ class DocumentParser {
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
         
-        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
