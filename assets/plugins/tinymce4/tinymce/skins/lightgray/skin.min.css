@@ -6,9 +6,9 @@
     vertical-align: top;
     background: transparent;
     text-decoration: none;
-    color: #333;
+    color: #111;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     text-shadow: none;
     float: none;
     position: static;
@@ -24,7 +24,8 @@
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     direction: ltr;
-    max-width: none
+    max-width: none;
+    -moz-osx-font-smoothing:grayscale;
 }
 
 .mce-widget button {
@@ -893,7 +894,7 @@ body .mce-abs-layout-item, .mce-abs-end {
 
 .mce-btn button {
     padding: 4px 8px;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 20px;
     *line-height: 16px;
     cursor: pointer;
@@ -917,11 +918,11 @@ body .mce-abs-layout-item, .mce-abs-end {
     color: #fff;
     border: 1px solid transparent;
     border-color: transparent;
-    background-color: #2d8ac7
+    background-color: #3697cd
 }
 
 .mce-primary:hover, .mce-primary:focus {
-    background-color: #257cb6;
+    background-color: #32ab9a;
     border-color: transparent
 }
 
@@ -933,7 +934,7 @@ body .mce-abs-layout-item, .mce-abs-end {
 }
 
 .mce-primary.mce-active, .mce-primary.mce-active:hover, .mce-primary:not(.mce-disabled):active {
-    background-color: #206ea1
+    background-color: #32ab9a
 }
 
 .mce-primary button, .mce-primary button i {
@@ -1659,7 +1660,7 @@ i.mce-i-checkbox {
 .mce-menu-item:hover, .mce-menu-item.mce-selected, .mce-menu-item:focus {
     text-decoration: none;
     color: white;
-    background-color: #2d8ac7
+    background-color: #3697cd
 }
 
 div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
@@ -1984,6 +1985,8 @@ i.mce-i-resize {
     font-style: normal
 }
 
+.mce-widget .mce-ico{font-family: 'tinymce-small', Arial;}
+
 .mce-ico {
     font-family: 'tinymce', Arial;
     font-style: normal;
@@ -2005,6 +2008,10 @@ i.mce-i-resize {
 
 .mce-btn-small .mce-ico {
     font-family: 'tinymce-small', Arial
+}
+
+.mce-tinymce-inline .mce-ico{
+    font-family: 'tinymce', Arial
 }
 
 .mce-i-save:before {
