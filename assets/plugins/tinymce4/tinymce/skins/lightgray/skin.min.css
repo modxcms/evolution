@@ -2010,7 +2010,9 @@ i.mce-i-resize {
     font-family: 'tinymce-small', Arial
 }
 
-.mce-tinymce-inline .mce-ico{
+.mce-tinymce-inline .mce-ico,
+.mce-imagetool .mce-ico,
+.mce-abs-layout-item .mce-ico{
     font-family: 'tinymce', Arial
 }
 
