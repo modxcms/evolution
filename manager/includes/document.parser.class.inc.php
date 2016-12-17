@@ -633,6 +633,7 @@ class DocumentParser {
         }
         $this->documentGenerated= 0;
         // invoke OnLoadWebPageCache  event
+        $this->documentContent = $result;
         $this->invokeEvent('OnLoadWebPageCache');
         return $result;
     }
@@ -1388,7 +1389,6 @@ class DocumentParser {
         if ($this->dumpSnippets)
             $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
         
-        $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
                 if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
@@ -1402,7 +1402,6 @@ class DocumentParser {
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
         
-        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -1431,6 +1430,8 @@ class DocumentParser {
     
     private function _get_snip_result($piece)
     {
+        if(ltrim($piece)!==$piece) return '';
+        
         if($this->dumpSnippets) $eventtime = $this->getMicroTime();
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
@@ -2184,12 +2185,14 @@ class DocumentParser {
 
             if(substr($templateCode,0,8)==='@INCLUDE') $templateCode = $this->atBindInclude($templateCode);
             
-            // invoke OnLoadWebDocument event
+          
             $this->documentContent = &$templateCode;
-            $this->invokeEvent('OnLoadWebDocument');
-
+            
             // Parse document source
             $this->documentContent = $this->parseDocumentSource($templateCode);
+            
+            // invoke OnLoadWebDocument event
+            $this->invokeEvent('OnLoadWebDocument');
             $this->documentGenerated = 1;
         }
         else $this->documentGenerated = 0;
