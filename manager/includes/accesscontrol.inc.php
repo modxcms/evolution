@@ -179,7 +179,7 @@ if(!isset($_SESSION['mgrValidated'])){
 		if (!intval($itemid)) $itemid= null;
 		$sql = sprintf("REPLACE INTO %s (sid, internalKey, username, lasthit, action, id) VALUES ('%s', %d, '%s', %d, '%s', %s)"
 			, $modx->getFullTableName('active_users') // Table
-			, md5(session_id())
+			, session_id()
 			, $modx->getLoginUserID()
 			, $_SESSION['mgrShortname']
 			, $lasthittime

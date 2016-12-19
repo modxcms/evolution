@@ -146,7 +146,7 @@ $modx->db->connect();
 
 // start session
 startCMSSession();
-$modx->sid = md5(session_id());
+$modx->sid = session_id();
 
 // get the settings from the database
 include_once "settings.inc.php";
