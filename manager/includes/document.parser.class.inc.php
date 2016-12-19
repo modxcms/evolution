@@ -3409,7 +3409,7 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]')
+    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]', $execModifier=true)
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
@@ -3420,7 +3420,8 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
-            if(strpos($key,':')!==false) list($key,$modifiers)=$this->splitKeyAndFilter($key);
+            if(strpos($key,':')!==false && $execModifier)
+                list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
             if(isset($ph[$key])) $value = $ph[$key];
