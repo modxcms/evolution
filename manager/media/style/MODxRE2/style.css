@@ -2414,9 +2414,11 @@ input#dateto:focus.DatePicker {
   display: block;
   text-align: center;
   width: 60px !important;
-  margin: 0 auto;
-  margin-top: 3px;
+  margin: 10px 0 0 35px;
+  float:left;
 }
+
+.dp_cal button.cal_submit { width:40px; float:left; margin: 12px 0 10px 20px; border:none; background-color:#DAF2E6; color:#328DCF; font-weight:bold; border:1px solid #328DCF; }
 
 .dp_cal select {
   margin: 2px 3px;
