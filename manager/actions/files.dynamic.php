@@ -176,14 +176,14 @@ function unzipFile(file) {
 
 function getFolderName(a){
 	var f;
-	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'');
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
 
 function getFileName(a){
 	var f;
-	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'')
+	f=window.prompt("<?php echo $_lang['files_dynamic_new_file_name'] ?>",'');
 	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
@@ -201,6 +201,27 @@ function deleteFile(file) {
     {
         window.location.href="index.php?a=31&mode=delete&path="+current_path+'/'+file+"&token=<?php echo $newToken;?>";
         return false;
+    }
+}
+
+function duplicateFile(file) {
+    newFilename = prompt("<?php echo $_lang["files_dynamic_new_file_name"]; ?>", file);
+    if (newFilename != null && newFilename != file) {
+        window.location.href="index.php?a=31&mode=duplicate&path="+current_path+'/'+file+"&newFilename="+newFilename+"&token=<?php echo $newToken;?>";
+    }
+}
+
+function renameFolder(dir) {
+    newDirname = prompt("<?php echo $_lang["files_dynamic_new_folder_name"]; ?>", dir);
+    if (newDirname != null && newDirname != dir) {
+        window.location.href="index.php?a=31&mode=renameFolder&path="+current_path+'&dirname='+dir+"&newDirname="+newDirname+"&token=<?php echo $newToken;?>";
+    }
+}
+
+function renameFile(file) {
+    newFilename = prompt("<?php echo $_lang["files_dynamic_new_file_name"]; ?>", file);
+    if (newFilename != null && newFilename != file) {
+        window.location.href="index.php?a=31&mode=renameFile&path="+current_path+'/'+file+"&newFilename="+newFilename+"&token=<?php echo $newToken;?>";
     }
 }
 </script>
@@ -340,6 +361,72 @@ if (is_writable($startpath))
 			else
 			{
 				echo $_lang['files.dynamic.php4'];
+			}
+			umask($old_umask);
+		}
+	}
+	// Duplicate file here
+	if($_REQUEST['mode']=='duplicate')
+	{
+		$old_umask = umask(0);
+		$filename = $_REQUEST['path'];
+		$filename = $modx->db->escape($filename);
+		$newFilename = str_replace('..\\','',str_replace('../','',$_REQUEST['newFilename']));
+		$newFilename = $modx->db->escape($newFilename);
+
+		if(!checkExtension($newFilename))
+		{
+			echo '<span class="warning"><b>'.$_lang['files_filetype_notok'].'</b></span><br /><br />';
+		}
+		elseif(preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@',$newFilename)!==0)
+		{
+			echo $_lang['files.dynamic.php3'];
+		}
+		else
+		{
+			if (!copy($filename, MODX_BASE_PATH.$newFilename)) {
+				echo $_lang['files.dynamic.php5'];
+			}
+			umask($old_umask);
+		}
+	}
+	// Rename folder here
+	if($_REQUEST['mode']=='renameFolder') {
+		$old_umask  = umask(0);
+		$dirname = $_REQUEST['path'] .'/'. $_REQUEST['dirname'];
+		$dirname = $modx->db->escape($dirname);
+		$newDirname = str_replace(array('..\\', '../', '\\', '/'),'',$_REQUEST['newDirname']);
+		$newDirname = $modx->db->escape($newDirname);
+
+		if(preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@',$newDirname)!==0)
+		{
+			echo $_lang['files.dynamic.php3'];
+		} else if (!rename($dirname, MODX_BASE_PATH.$newDirname)) {
+			echo '<span class="warning"><b>', $_lang['file_folder_not_created'], '</b></span><br /><br />';
+		}
+		umask($old_umask);
+	}
+	// Rename file here
+	if($_REQUEST['mode']=='renameFile')
+	{
+		$old_umask = umask(0);
+		$filename = $_REQUEST['path'];
+		$filename = $modx->db->escape($filename);
+		$newFilename = str_replace(array('..\\', '../', '\\', '/'),'',$_REQUEST['newFilename']);
+		$newFilename = $modx->db->escape($newFilename);
+
+		if(!checkExtension($newFilename))
+		{
+			echo '<span class="warning"><b>'.$_lang['files_filetype_notok'].'</b></span><br /><br />';
+		}
+		elseif(preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@',$newFilename)!==0)
+		{
+			echo $_lang['files.dynamic.php3'];
+		}
+		else
+		{
+			if (!rename($filename, MODX_BASE_PATH.$newFilename)) {
+				echo $_lang['files.dynamic.php5'];
 			}
 			umask($old_umask);
 		}
@@ -515,7 +602,11 @@ function ls($curpath)
 				$dirs_array[$dircounter]['text'] = '<img src="'.$_style['icons_deleted_folder'].'" align="absmiddle" alt="" /> <span style="color:#bbb;">'.$file . '</span>';
 				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px" class="disabledImage"><img src="'.$_style['icons_delete_document'].'" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></span>' : '';
 			}
-
+			
+			$dirs_array[$dircounter]['rename'] = is_writable($curpath)
+                ? '<span style="width:20px"><a href="javascript:renameFolder(\''.urlencode($file).'\');"><img src="'.$_style['icons_message_reply'].'" alt="'.$_lang['rename'].'" title="'.$_lang['rename'].'" /></a></span>' 
+                : '';
+            
 			// increment the counter
 			$dircounter++;
 		}
@@ -525,11 +616,16 @@ function ls($curpath)
 			$files_array[$filecounter]['file'] = $newpath;
 			$files_array[$filecounter]['stats'] = lstat($newpath);
 			$files_array[$filecounter]['text'] = '<img src="'.$_style['tree_page_html'].'" align="absmiddle" alt="" />'.$file;
-			$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ?
-			'<span style="cursor:pointer; width:20px;" onclick="viewfile(\''.$webstart_path.substr($newpath, $len, strlen($newpath)).'\');"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> ' : (($enablefiledownload && in_array($type, $uploadablefiles))? '<a href="'.$webstart_path.implode('/', array_map('rawurlencode', explode('/', substr($newpath, $len, strlen($newpath))))).'" style="cursor:pointer; width:20px;"><img src="'.$_style['icons_edit_document'].'" align="absmiddle" alt="'.$_lang['file_download_file'].'" title="'.$_lang['file_download_file'].'" /></a> ':'<span class="disabledImage"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> ');
-			$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=view&path='.urlencode($newpath).'"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></a></span> ' : $files_array[$filecounter]['view'] ;
+			$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles))
+			    ? '<span style="cursor:pointer; width:20px;" onclick="viewfile(\''.$webstart_path.substr($newpath, $len, strlen($newpath)).'\');"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> '
+                : (($enablefiledownload && in_array($type, $uploadablefiles))? '<a href="'.$webstart_path.implode('/', array_map('rawurlencode', explode('/', substr($newpath, $len, strlen($newpath))))).'" style="cursor:pointer; width:20px;"><img src="'.$_style['icons_edit_document'].'" align="absmiddle" alt="'.$_lang['file_download_file'].'" title="'.$_lang['file_download_file'].'" /></a> ':'<span class="disabledImage"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> ');
+			$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles))
+                ? '<span style="width:20px;"><a href="index.php?a=31&mode=view&path='.urlencode($newpath).'"><img src="'.$_style['icons_preview_resource'].'" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></a></span> '
+                : $files_array[$filecounter]['view'];
 			$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? '<span style="width:20px;"><a href="javascript:unzipFile(\''.urlencode($file).'\');"><img src="'.$_style['icons_unzip'].'" align="absmiddle" alt="'.$_lang['file_download_unzip'].'" title="'.$_lang['file_download_unzip'].'" /></a></span> ' : '' ;
 			$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=edit&path='.urlencode($newpath).'#file_editfile"><img src="'.$_style['icons_edit_document'] . '" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$_style['icons_edit_document'] . '" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></span> ';
+			$files_array[$filecounter]['duplicate'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="javascript:duplicateFile(\''.urlencode($file).'\');"><img src="'.$_style['icons_resource_duplicate'] . '" align="absmiddle" alt="'.$_lang['duplicate'].'" title="'.$_lang['duplicate'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$_style['icons_resource_duplicate'] . '" align="absmiddle" alt="'.$_lang['duplicate'].'" title="'.$_lang['duplicate'].'" /></span> ';
+			$files_array[$filecounter]['rename'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="javascript:renameFile(\''.urlencode($file).'\');"><img src="'.$_style['icons_message_reply'] . '" align="absmiddle" alt="'.$_lang['rename'].'" title="'.$_lang['rename'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$_style['icons_message_reply'] . '" align="absmiddle" alt="'.$_lang['rename'].'" title="'.$_lang['rename'].'" /></span> ';
             $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<span style="width:20px;"><a href="javascript:deleteFile(\''.urlencode($file).'\');"><img src="'.$_style['icons_delete_document'].'" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$_style['icons_delete_document'].'" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></span> ';
 
 			// increment the counter
@@ -548,6 +644,7 @@ function ls($curpath)
 		echo '<td>',$modx->toDateFormat($dirs_array[$i]['stats']['9']),'</td>';
 		echo '<td dir="ltr">',$modx->nicesize($dirs_array[$i]['stats']['7']),'</td>';
 		echo '<td>';
+		echo $dirs_array[$i]['rename'];
 		echo $dirs_array[$i]['delete'];
 		echo '</td>';
 		echo '</tr>';
@@ -567,6 +664,8 @@ function ls($curpath)
 		echo $files_array[$i]['unzip'];
 		echo $files_array[$i]['view'];
 		echo $files_array[$i]['edit'];
+		echo $files_array[$i]['duplicate'];
+		echo $files_array[$i]['rename'];
 		echo $files_array[$i]['delete'];
 		echo '</td>';
 		echo '</tr>';

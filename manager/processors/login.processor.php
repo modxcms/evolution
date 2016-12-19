@@ -206,6 +206,8 @@ if($use_captcha==1) {
     }
 }
 
+$modx->cleanupExpiredLocks();
+
 $currentsessionid = session_id();
 
 $_SESSION['usertype'] = 'manager'; // user is a backend user
@@ -224,15 +226,13 @@ $rs = $modx->db->select('*', $modx->getFullTableName('user_roles'), "id='{$role}
 $_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
-if (isset($_SESSION['mgrValidated'])) {
-	$modx->db->update(
-			'failedlogincount=0, '
-			. 'logincount=logincount+1, '
-			. 'lastlogin=thislogin, '
-			. 'thislogin=' . time() . ', '
-			. "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'"
-	);
-}
+$modx->db->update(
+		'failedlogincount=0, '
+		. 'logincount=logincount+1, '
+		. 'lastlogin=thislogin, '
+		. 'thislogin=' . time() . ', '
+		. "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'"
+);
 
 // get user's document groups
 $i=0;

@@ -2488,7 +2488,7 @@ class DocumentParser {
      */
     function cleanupExpiredLocks() {
         // Clean-up active_user_sessions first
-        $timeout = intval($this->config['session_timeout']) < 2 ? 2 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = intval($this->config['session_timeout']) < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
@@ -2501,6 +2501,8 @@ class DocumentParser {
             foreach ($rs as $row) $userIds[] = $row['internalKey'];
             $userIds = implode(',', $userIds);
             $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+        } else {
+            $this->db->delete($this->getFullTableName('active_user_locks'));
         }
     }
 
