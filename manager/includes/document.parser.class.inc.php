@@ -2500,6 +2500,8 @@ class DocumentParser {
             foreach ($rs as $row) $userIds[] = $row['internalKey'];
             $userIds = implode(',', $userIds);
             $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+        } else {
+            $this->db->delete($this->getFullTableName('active_user_locks'));
         }
     }
 
