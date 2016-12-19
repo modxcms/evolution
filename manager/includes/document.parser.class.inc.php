@@ -959,11 +959,14 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            list($key,$context)   = explode('@',$key,2);
             
-            if(isset($ph[$key]))             $value = $ph[$key];
-            elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
-            elseif($modifiers)               $value = '';
-            else                             $value = $matches[0][$i];
+            if(!isset($ph[$key]) && !$context) {
+                $content= str_replace($matches[0][$i], '', $content);
+                continue;
+            }
+            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
+            else             $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
