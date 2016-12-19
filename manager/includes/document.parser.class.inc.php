@@ -959,11 +959,14 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            list($key,$context)   = explode('@',$key,2);
             
-            if(isset($ph[$key]))             $value = $ph[$key];
-            elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
-            elseif($modifiers)               $value = '';
-            else                             $value = $matches[0][$i];
+            if(!isset($ph[$key]) && !$context) {
+                $content= str_replace($matches[0][$i], '', $content);
+                continue;
+            }
+            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
+            else             $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -3406,7 +3409,7 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]')
+    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]', $execModifier=true)
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
@@ -3417,7 +3420,8 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
-            if(strpos($key,':')!==false) list($key,$modifiers)=$this->splitKeyAndFilter($key);
+            if(strpos($key,':')!==false && $execModifier)
+                list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
             if(isset($ph[$key])) $value = $ph[$key];
