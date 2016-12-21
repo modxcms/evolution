@@ -1506,7 +1506,7 @@ class DocumentParser {
                         list($inner, $outer, $_tmp) = explode($delim, $_tmp, 3);
                         $value .= "{$delim}{$inner}{$delim}{$outer}";
                         $i++;
-                        if(10<$i) exit('Nesting level too deep');
+                        if(200<$i) exit('Nesting level too deep');
                     }
                 }
                 elseif(strpos($_tmp,'&')!==false)
