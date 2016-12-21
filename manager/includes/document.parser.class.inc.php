@@ -1310,10 +1310,22 @@ class DocumentParser {
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
         }
+        
+        $lock_file_path = MODX_BASE_PATH . 'assets/cache/lock_' . str_replace(' ','-',strtolower($this->event->activePlugin)) . '.pageCache.php';
+        if($this->isBackend()) {
+            if(is_file($lock_file_path)) {
+                $msg = sprintf("Plugin parse error, Temporarily disabled '%s'.", $this->event->activePlugin);
+                $this->logEvent(0, 3, $msg, $msg);
+                return;
+            }
+            elseif(stripos($this->event->activePlugin,'ElementsInTree')===false) touch($lock_file_path);
+        }
         ob_start();
         eval($pluginCode);
         $msg = ob_get_contents();
         ob_end_clean();
+        if(is_file($lock_file_path)) unlink($lock_file_path);
+        
         if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
