@@ -1796,6 +1796,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
+	$q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -1806,7 +1807,7 @@ class DocumentParser {
         if(strpos($_SERVER['REQUEST_URI'],'?'))
             list($url_path,$url_query_string) = explode('?', $_SERVER['REQUEST_URI'],2);
         else $url_path = $_SERVER['REQUEST_URI'];
-        $url_path = $_GET['q'];//LANG
+        $url_path = $q;//LANG
             
         
         if(substr($url_path,0,$len_base_url)===$this->config['base_url'])
@@ -1817,7 +1818,7 @@ class DocumentParser {
         if(substr($strictURL,0,$len_base_url)===$this->config['base_url'])
             $strictURL = substr($strictURL,$len_base_url);
         $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . '/'.$_GET['q']; //LANG
+        $requestedURL = "{$scheme}://{$http_host}" . '/'.$q; //LANG
         
         $site_url = $this->config['site_url'];
         
