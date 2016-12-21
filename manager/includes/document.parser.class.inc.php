@@ -3199,7 +3199,7 @@ class DocumentParser {
      */
     function makeUrl($id, $alias = '', $args = '', $scheme = ''){
         $url = '';
-        $virtualDir = $this->config['virtual_dir'];
+        $virtualDir = isset($this->config['virtual_dir']) ? $this->config['virtual_dir'] : '';
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         
