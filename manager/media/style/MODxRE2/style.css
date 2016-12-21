@@ -2164,6 +2164,10 @@ form#mutate input[name="menuindex"].inputBox {
   padding-right: 0;
 }
 
+form#mutate input[name="ta"].inputBox {
+  width: 70%;
+}
+
 #tv_body input[type="text"],
 #tv_body input[type="password"],
 #tv_body input[type="number"],
