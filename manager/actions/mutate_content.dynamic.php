@@ -486,7 +486,7 @@ function decode(s) {
     return s;
 }
 
-//weblink insert
+<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 var lastImageCtrl;
 var lastFileCtrl;
 
@@ -502,7 +502,14 @@ function OpenServerBrowser(url, width, height ) {
 
     var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
 }			
-
+			
+function BrowseServer(ctrl) {
+    lastImageCtrl = ctrl;
+    var w = screen.width * 0.5;
+    var h = screen.height * 0.5;
+    OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=images', w, h);
+}
+	
 function BrowseFileServer(ctrl) {
     lastFileCtrl = ctrl;
     var w = screen.width * 0.5;
@@ -539,6 +546,7 @@ function SetUrl(url, width, height, alt) {
         return;
     }
 }
+<?php $ResourceManagerLoaded=true; } ?>
 /* ]]> */
 </script>
 
