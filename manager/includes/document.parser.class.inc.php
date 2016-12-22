@@ -633,6 +633,7 @@ class DocumentParser {
         }
         $this->documentGenerated= 0;
         // invoke OnLoadWebPageCache  event
+        $this->documentContent = $result;
         $this->invokeEvent('OnLoadWebPageCache');
         return $result;
     }
@@ -958,11 +959,14 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            list($key,$context)   = explode('@',$key,2);
             
-            if(isset($ph[$key]))             $value = $ph[$key];
-            elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
-            elseif($modifiers)               $value = '';
-            else                             $value = $matches[0][$i];
+            if(!isset($ph[$key]) && !$context) {
+                $content= str_replace($matches[0][$i], '', $content);
+                continue;
+            }
+            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
+            else             $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1306,10 +1310,22 @@ class DocumentParser {
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
         }
+        
+        $lock_file_path = MODX_BASE_PATH . 'assets/cache/lock_' . str_replace(' ','-',strtolower($this->event->activePlugin)) . '.pageCache.php';
+        if($this->isBackend()) {
+            if(is_file($lock_file_path)) {
+                $msg = sprintf("Plugin parse error, Temporarily disabled '%s'.", $this->event->activePlugin);
+                $this->logEvent(0, 3, $msg, $msg);
+                return;
+            }
+            elseif(stripos($this->event->activePlugin,'ElementsInTree')===false) touch($lock_file_path);
+        }
         ob_start();
         eval($pluginCode);
         $msg = ob_get_contents();
         ob_end_clean();
+        if(is_file($lock_file_path)) unlink($lock_file_path);
+        
         if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
@@ -1388,7 +1404,6 @@ class DocumentParser {
         if ($this->dumpSnippets)
             $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
         
-        $replace= array ();
         foreach($matches[1] as $i=>$call) {
             if(substr($call,0,2)==='$_') {
                 if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
@@ -1402,7 +1417,6 @@ class DocumentParser {
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
         
-        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -1431,6 +1445,8 @@ class DocumentParser {
     
     private function _get_snip_result($piece)
     {
+        if(ltrim($piece)!==$piece) return '';
+        
         if($this->dumpSnippets) $eventtime = $this->getMicroTime();
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
@@ -1490,7 +1506,7 @@ class DocumentParser {
                         list($inner, $outer, $_tmp) = explode($delim, $_tmp, 3);
                         $value .= "{$delim}{$inner}{$delim}{$outer}";
                         $i++;
-                        if(10<$i) exit('Nesting level too deep');
+                        if(200<$i) exit('Nesting level too deep');
                     }
                 }
                 elseif(strpos($_tmp,'&')!==false)
@@ -1780,6 +1796,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
+	$q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -1790,7 +1807,7 @@ class DocumentParser {
         if(strpos($_SERVER['REQUEST_URI'],'?'))
             list($url_path,$url_query_string) = explode('?', $_SERVER['REQUEST_URI'],2);
         else $url_path = $_SERVER['REQUEST_URI'];
-        $url_path = $_GET['q'];//LANG
+        $url_path = $q;//LANG
             
         
         if(substr($url_path,0,$len_base_url)===$this->config['base_url'])
@@ -1801,7 +1818,7 @@ class DocumentParser {
         if(substr($strictURL,0,$len_base_url)===$this->config['base_url'])
             $strictURL = substr($strictURL,$len_base_url);
         $http_host = $_SERVER['HTTP_HOST'];
-        $requestedURL = "{$scheme}://{$http_host}" . '/'.$_GET['q']; //LANG
+        $requestedURL = "{$scheme}://{$http_host}" . '/'.$q; //LANG
         
         $site_url = $this->config['site_url'];
         
@@ -2184,12 +2201,14 @@ class DocumentParser {
 
             if(substr($templateCode,0,8)==='@INCLUDE') $templateCode = $this->atBindInclude($templateCode);
             
-            // invoke OnLoadWebDocument event
+          
             $this->documentContent = &$templateCode;
-            $this->invokeEvent('OnLoadWebDocument');
-
+            
             // Parse document source
             $this->documentContent = $this->parseDocumentSource($templateCode);
+            
+            // invoke OnLoadWebDocument event
+            $this->invokeEvent('OnLoadWebDocument');
             $this->documentGenerated = 1;
         }
         else $this->documentGenerated = 0;
@@ -2482,7 +2501,7 @@ class DocumentParser {
      */
     function cleanupExpiredLocks() {
         // Clean-up active_user_sessions first
-        $timeout = intval($this->config['session_timeout']) < 2 ? 2 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = intval($this->config['session_timeout']) < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
@@ -2495,6 +2514,8 @@ class DocumentParser {
             foreach ($rs as $row) $userIds[] = $row['internalKey'];
             $userIds = implode(',', $userIds);
             $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+        } else {
+            $this->db->delete($this->getFullTableName('active_user_locks'));
         }
     }
 
@@ -3178,7 +3199,7 @@ class DocumentParser {
      */
     function makeUrl($id, $alias = '', $args = '', $scheme = ''){
         $url = '';
-        $virtualDir = $this->config['virtual_dir'];
+        $virtualDir = isset($this->config['virtual_dir']) ? $this->config['virtual_dir'] : '';
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         
@@ -3403,7 +3424,7 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]')
+    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]', $execModifier=true)
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
@@ -3414,7 +3435,8 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
-            if(strpos($key,':')!==false) list($key,$modifiers)=$this->splitKeyAndFilter($key);
+            if(strpos($key,':')!==false && $execModifier)
+                list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
             if(isset($ph[$key])) $value = $ph[$key];

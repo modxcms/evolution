@@ -6,7 +6,8 @@ $lockElementId = intval($lockElementId);
 if($lockElementId > 0) {
 ?>
 <script>
-    // Polyfill for Navigator.sendBeacon
+// Polyfill for Navigator.sendBeacon
+if (!('sendBeacon' in navigator)) {
     (function(root) {
         'use strict';
 
@@ -39,7 +40,8 @@ if($lockElementId > 0) {
             root.navigator.sendBeacon = sendBeacon;
         }
     })(this);
-    
+}
+
     // Trigger unlock when leaving window
     var form_save = false;
     window.addEventListener('unload', unlockThisElement, false);
@@ -60,10 +62,11 @@ if($lockElementId > 0) {
         // Trigger unlock
         // console.log('unlock triggered:', 'stay='+stay, 'form_save='+form_save, 'sameElement='+sameElement, lastClickedElement);
         if((stay != 2 || !form_save) && !sameElement) {
-            navigator.sendBeacon('index.php?a=67&type=<?php echo $lockElementType;?>&id=<?php echo $lockElementId;?>&o=' + Math.random());
-            top.mainMenu.reloadtree();
+            navigator.sendBeacon('<?php echo MODX_MANAGER_URL; ?>index.php?a=67&type=<?php echo $lockElementType;?>&id=<?php echo $lockElementId;?>&o=' + Math.random());
+            if(top.mainMenu) top.mainMenu.reloadtree();
         }
     }
+
 </script>
 <?php
 }

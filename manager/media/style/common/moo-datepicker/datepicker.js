@@ -214,6 +214,7 @@ var DatePicker = new Class({
             var time = dp.time;
         }
         timeTextBox = new Element('input', {'id':dp.id + '_timeTextBox', 'class':'cal_timeTextBox', 'type':'text', 'value':time});
+        submitButton = new Element('button', {'id':dp.id + '_submit', 'class':'cal_submit'}).appendText('OK');
         
         /* start creating calendar */
         calTable = new Element('table');
@@ -266,6 +267,7 @@ var DatePicker = new Class({
         calTimePara = new Element('p', {'class':dp.id + '_calTime'});
         timeTextBox.injectInside(calTimePara);
         //calTimeCell.injectInside(calTimeRow);
+        submitButton.injectInside(calTimePara);
         
         calTable.injectInside(dp.calendar);
         calTimePara.injectInside(dp.calendar);
@@ -333,6 +335,14 @@ var DatePicker = new Class({
         }.bind(this);
         timeTextBox.onkeypress = function(e) {
           this.dp.dirty = true;
+        }.bind(this);
+        submitButton.onclick = function(e) {
+            e.stopPropagation();
+            if(this.dp.dirty) {
+                this.updateValue(this.dp);
+                this.alertError(this.dp);
+            }
+            this.remove(this.dp);
         }.bind(this);
     },
     
