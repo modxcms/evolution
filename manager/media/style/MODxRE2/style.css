@@ -2414,11 +2414,9 @@ input#dateto:focus.DatePicker {
   display: block;
   text-align: center;
   width: 60px !important;
-  margin: 10px 0 0 35px;
-  float:left;
+  margin: 0 auto;
+  margin-top: 3px;
 }
-
-.dp_cal button.cal_submit { width:40px; float:left; margin: 12px 0 10px 20px; border:none; background-color:#DAF2E6; color:#328DCF; font-weight:bold; border:1px solid #328DCF; }
 
 .dp_cal select {
   margin: 2px 3px;
@@ -3162,7 +3160,7 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
 
 .treeButton, 
 .treeButtonDisabled {
-  color: #39515d !important;
+  color: #3d5764 !important;
   border-radius: 2px !important;
   min-width: 15px;
   text-align: center;
@@ -3326,7 +3324,7 @@ form textarea:focus,
 
 .wm_buttons a {
   font-weight: normal !important;
-  color: #576B75 !important;
+  color: #3d5764 !important;
 }
 
 .wm_buttons .fa {
@@ -3353,7 +3351,7 @@ form textarea:focus,
 }
 .widget-stage .btn {
   background-color: transparent !important;
-  color: #555 !important;
+  color: #3d5764 !important;
   border-color: #ccc !important;
 }
 .widget-stage .btn:hover {
@@ -3534,4 +3532,161 @@ tr.userIdle td strong:before {
 
 .CodeMirror pre {
   font-size: 12px !important;
+}
+
+/*Manage Files*/
+#ManageFiles i.fa, #ManageFiles span.fa {color: #39515d;}
+#ManageFiles i.fa.FilesTopFolder {color: #80969c;font-size: 19px!important;}
+#ManageFiles i.fa.FilesFolder {font-size: 19px!important; color: #80969c; margin-right: 4px;}
+#ManageFiles i.fa.FilesDeletedFolder {font-size: 19px!important; color: #e2e2e2; margin-right: 4px;}
+#ManageFiles i.fa.FilesPage  {color: #80969c; margin-right: 4px;}
+#FilesTable {border-collapse:collapse;}
+#FilesTable tr, #FilesTable td {padding:2px !important;}
+#FilesTable td {border-bottom: 1px dotted #e2e2e2 !important;}
+#FilesTable th {background: #fff;border: none;}
+
+/*BS button*/
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: normal;
+ /* line-height: 1.42857143;*/
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #333;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=45);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  opacity: .45;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  font-size: 14px;
+  color: #3d5764 !important;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default:focus,
+.btn-default.focus {
+  color: #333;
+  background-color: #fff;
+  border-color: #3697CD;
+}
+.btn-default:hover {
+  color: #333;
+  background-color: #fff;
+  border-color: #3697CD;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-default:active:hover,
+.btn-default.active:hover,
+.open > .dropdown-toggle.btn-default:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default:active.focus,
+.btn-default.active.focus,
+.open > .dropdown-toggle.btn-default.focus {
+  color: #333;
+  background-color: #d4d4d4;
+  border-color: #8c8c8c;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  background-image: none;
+}
+.btn-default.disabled:hover,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default:hover,
+.btn-default.disabled:focus,
+.btn-default[disabled]:focus,
+fieldset[disabled] .btn-default:focus,
+.btn-default.disabled.focus,
+.btn-default[disabled].focus,
+fieldset[disabled] .btn-default.focus {
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default .badge {
+  color: #fff;
+  background-color: #333;
+}
+
+.btn-lg,
+.btn-group-lg > .btn {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-sm,
+.btn-group-sm > .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.btn-xs,
+.btn-group-xs > .btn {
+  padding: 3px 5px;
+  font-size: 10px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}
+.btn-block + .btn-block {
+  margin-top: 5px;
 }
