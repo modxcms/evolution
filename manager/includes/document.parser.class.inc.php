@@ -1126,7 +1126,6 @@ class DocumentParser {
         
         if(!$ph) $ph = $this->placeholders;
         
-        $replace = array();
         $content= $this->mergeConditionalTagsContent($content);
         $content= $this->mergeDocumentContent($content);
         $content= $this->mergeSettingsContent($content);
@@ -3438,25 +3437,24 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
             if(strpos($key,':')!==false && $execModifier)
                 list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
-            if(isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)   $value = '';
-            else                 $value = $matches[0][$i];
+            if(!isset($ph[$key])) continue;
+            
+            $value = $ph[$key];
             
             if($modifiers!==false) {
                 if(strpos($modifiers,$left)!==false) $modifiers=$this->parseText($modifiers,$ph,$left,$right);
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
-            $replace[$i] = $value;
+            $tpl = str_replace($matches[0][$i], $value, $tpl);
         }
         
-        return str_replace($matches[0], $replace, $tpl);
+        return $tpl;
     }
     
     /**
