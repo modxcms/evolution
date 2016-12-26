@@ -207,6 +207,7 @@ if($use_captcha==1) {
 }
 
 $modx->cleanupExpiredLocks();
+$modx->cleanupMultipleActiveUsers();
 
 $currentsessionid = session_id();
 
@@ -264,9 +265,13 @@ if($rememberme == '1') {
 	setcookie ('modx_remember_manager', '', time() - 3600, MODX_BASE_URL);
 }
 
-// Check if user pressed logout end of last session
-$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
-if($lastHit = $modx->db->getValue($rs)) $_SESSION['show_logout_reminder'] = $lastHit;
+// Check if user already has an active session, if not check if user pressed logout end of last session
+$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
+$activeSession = $modx->db->getValue($rs);
+if(!$activeSession) {
+    $rs = $modx->db->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
+    if ($lastHit = $modx->db->getValue($rs)) $_SESSION['show_logout_reminder'] = array('type'=>'logout_reminder', 'lastHit'=>$lastHit);
+}
 
 $log = new logHandler;
 $log->initAndWriteLog('Logged in', $modx->getLoginUserID(), $_SESSION['mgrShortname'], '58', '-', 'MODX');
