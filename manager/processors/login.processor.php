@@ -207,6 +207,7 @@ if($use_captcha==1) {
 }
 
 $modx->cleanupExpiredLocks();
+$modx->cleanupMultipleActiveUsers();
 
 $currentsessionid = session_id();
 
