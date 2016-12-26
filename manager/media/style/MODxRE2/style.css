@@ -3495,8 +3495,16 @@ tr.userIdle td strong:before {
     content:'\f017';
 }
 
-/* c-roleslist */
+strong.userMultipleSessions:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #aaa;
+    padding: 0 5px 0 0;
+    content:'\f0c0';
+}
 
+/* c-roleslist */
 .c-roleslist {
   margin-bottom: 10px;
   margin-left: 12px;
