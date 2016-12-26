@@ -2164,6 +2164,10 @@ form#mutate input[name="menuindex"].inputBox {
   padding-right: 0;
 }
 
+form#mutate input[name="ta"].inputBox {
+  width: 70%;
+}
+
 #tv_body input[type="text"],
 #tv_body input[type="password"],
 #tv_body input[type="number"],
@@ -3534,6 +3538,7 @@ tr.userIdle td strong:before {
   font-size: 12px !important;
 }
 
+
 /*Manage Files*/
 #ManageFiles i.fa, #ManageFiles span.fa {color: #39515d;}
 #ManageFiles i.fa.FilesTopFolder {color: #80969c;font-size: 19px!important;}
@@ -3690,3 +3695,4 @@ fieldset[disabled] .btn-default.focus {
 .btn-block + .btn-block {
   margin-top: 5px;
 }
+
