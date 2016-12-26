@@ -75,7 +75,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $lockedByUser = '';
         $rowLock = $modx->elementIsLocked($lockElementType, $row['id'], true);
         if($rowLock && $modx->hasPermission('display_locks')) {
-            if($rowLock['internalKey'] == $modx->getLoginUserID()) {
+            if($rowLock['sid'] == $modx->sid) {
                 $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockElementType],'lasthit_df'=>$rowLock['lasthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
