@@ -2492,8 +2492,8 @@ class DocumentParser {
                     'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
                     'username'    => $row['username'],
-                    'elementType' => $row['firsthit'],
-                    'elementId'   => $row['firsthit'],
+                    'elementType' => $row['elementType'],
+                    'elementId'   => $row['elementId'],
                     'lasthit'     => $row['lasthit'],
                     'lasthit_df'  => $this->toDateFormat($row['lasthit']),
                     'state'       => $this->determineLockState($row['sid'])
