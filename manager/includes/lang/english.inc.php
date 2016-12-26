@@ -332,6 +332,7 @@ $_lang["files_access_denied"] = 'Access denied!';
 $_lang["files_data"] = 'Data';
 $_lang["files_dir_listing"] = 'Directory listing for:';
 $_lang["files_directories"] = 'Directories';
+$_lang["files_directory_is_empty"] = 'This directory is empty.';
 $_lang["files_dirwritable"] = 'Directory writable?';
 $_lang["files_editfile"] = 'Edit file';
 $_lang["files_file_type"] = 'File type: ';

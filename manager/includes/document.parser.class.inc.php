@@ -929,12 +929,6 @@ class DocumentParser {
         }
         if(!$tags) return array();
         
-        foreach($tags as $tag) {
-            if(strpos($tag,$left)!==false) {
-                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
-                $tags = array_merge($innerTags,$tags);
-            }
-        }
         return $tags;
     }
     
@@ -961,10 +955,7 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) {
-                $content= str_replace($matches[0][$i], '', $content);
-                continue;
-            }
+            if(!isset($ph[$key]) && !$context) continue;
             elseif($context) $value = $this->_contextValue("{$key}@{$context}");
             else             $value = $ph[$key];
             
@@ -1072,19 +1063,15 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'[(',')]');
         if(!$matches) return $content;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
             if(isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)   $value = '';
-            else                 $value = $matches[0][$i];
+            else continue;
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            $replace[$i]= $value;
+            $content= str_replace($matches[0][$i], $value, $content);
         }
-        
-        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
@@ -1102,7 +1089,6 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'{{','}}');
         if(!$matches) return $content;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
@@ -1112,14 +1098,19 @@ class DocumentParser {
             
             if(!isset($ph[$key])) $ph[$key] = $this->getChunk($key);
             $value = $ph[$key];
-            $value = !is_null($value) ? $this->mergePlaceholderContent($value,$params) : $matches[0][$i];
+            
+            if(is_null($value)) continue;
+            
+            $value = $this->mergePlaceholderContent($value,$params);
+            $value = $this->mergeConditionalTagsContent($value);
+            $value = $this->mergeDocumentContent($value);
+            $value = $this->mergeSettingsContent($value);
+            $value = $this->mergeChunkContent($value);
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
-            $replace[$i] = $value;
+            $content= str_replace($matches[0][$i], $value, $content);
         }
-        
-        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
@@ -1135,16 +1126,16 @@ class DocumentParser {
         
         if(!$ph) $ph = $this->placeholders;
         
-        $replace = array();
-        $content = $this->mergeSettingsContent($content);
-        $matches = $this->getTagsFromContent($content, '[+', '+]');
+        $content= $this->mergeConditionalTagsContent($content);
+        $content= $this->mergeDocumentContent($content);
+        $content= $this->mergeSettingsContent($content);
+        $matches = $this->getTagsFromContent($content,'[+','+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
             if (isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)    $value = '';
             elseif($key==='phx')  $value = '';
             else continue;
             
@@ -1412,6 +1403,8 @@ class DocumentParser {
                 continue;
             }
             $value = $this->_get_snip_result($call);
+            if(is_null($value)) continue;
+            
             $content = str_replace($matches[0][$i], $value, $content);
         }
         
@@ -1453,8 +1446,9 @@ class DocumentParser {
         
         list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $snip_call['name'] = $key;
-        
         $snippetObject = $this->_getSnippetObject($key);
+        if(is_null($snippetObject['content'])) return null;
+        
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1476,6 +1470,7 @@ class DocumentParser {
             $eventtime = sprintf('%2.2f ms', $eventtime*1000);
             $code = $this->htmlspecialchars($value);
             if($code) $this->snippetsCode .= sprintf('<fieldset><legend><b>%s</b>(%s)</legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], $eventtime, $code);
+            $this->snippetsTime[] = $eventtime;
         }
         return $value;
     }
@@ -1484,12 +1479,21 @@ class DocumentParser {
     {
         if(empty($string)) return array();
         
+        if(strpos($string,'&_PHX_INTERNAL_')!==false)
+            $string = str_replace(array('&_PHX_INTERNAL_091_&','&_PHX_INTERNAL_093_&'), array('[',']'), $string);
+        
+        $_ = $this->documentOutput;
+        $this->documentOutput = $string;
+        $this->invokeEvent('OnParseDocument');
+        $string = $this->documentOutput;
+        $this->documentOutput = $_;
+        
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
         $key = '';
         $value = null;
-        while($_tmp!==''):
+        while($_tmp!=='') {
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
             $_tmp = substr($_tmp,1);
@@ -1501,13 +1505,15 @@ class DocumentParser {
                 if(in_array($delim, array('"', "'", '`')))
                 {
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
+                    if(substr(trim($_tmp), 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
                     $i=0;
-                    while(substr(trim($_tmp),0,1)!=='&' && trim($_tmp)!=='' && 1<substr_count($_tmp,$delim)) {
-                        list($inner, $outer, $_tmp) = explode($delim, $_tmp, 3);
-                        $value .= "{$delim}{$inner}{$delim}{$outer}";
+                    while($delim==='`' && substr(trim($_tmp),0,1)!=='&' && 1<substr_count($_tmp,'`')) {
+                        list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
+                        $value .= "`{$inner}`{$outer}";
                         $i++;
-                        if(200<$i) exit('Nesting level too deep');
+                        if(20<$i) exit('The nest of values are hard to read. Please use three different quotes.');
                     }
+                    if($i&&$delim==='`') $value = rtrim($value, '`');
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
@@ -1536,7 +1542,7 @@ class DocumentParser {
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
-                $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
+                if(strpos($value,'[!')!==false) $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
                 $value = $this->mergeDocumentContent($value);
                 $value = $this->mergeSettingsContent($value);
                 $value = $this->mergeChunkContent($value);
@@ -1559,7 +1565,7 @@ class DocumentParser {
                 if($key!=='') $temp_params[][$key] = '';
                 break;
             }
-        endwhile;
+        }
         
         foreach($temp_params as $p)
         {
@@ -1676,7 +1682,7 @@ class DocumentParser {
             }
             else
             {
-                $snip_content = 'return false;';
+                $snip_content = null;
                 $snip_prop    = '';
             }
             $snippetObject['name']       = $snip_name;
@@ -1982,16 +1988,15 @@ class DocumentParser {
             $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            $source = $this->ignoreCommentedTagsContent($source);
-            $source = $this->mergeConditionalTagsContent($source);
-            $source = $this->mergeSettingsContent($source);
+            if(strpos($source,'<!--@-')!==false) $source = $this->ignoreCommentedTagsContent($source);
+            if(strpos($source,'<@IF')!==false)   $source = $this->mergeConditionalTagsContent($source);
             
-            $source = $this->mergeDocumentContent($source);
-            $source = $this->mergeSettingsContent($source);
-            $source = $this->mergeChunkContent($source);
-            if($this->config['show_meta']) $source= $this->mergeDocumentMETATags($source);
-            $source = $this->evalSnippets($source);
-            $source = $this->mergePlaceholderContent($source);
+            if(strpos($source,'[*')!==false)     $source = $this->mergeDocumentContent($source);
+            if(strpos($source,'[(')!==false)     $source = $this->mergeSettingsContent($source);
+            if(strpos($source,'{{')!==false)     $source = $this->mergeChunkContent($source);
+            if($this->config['show_meta'])       $source = $this->mergeDocumentMETATags($source);
+            if(strpos($source,'[[')!==false)     $source = $this->evalSnippets($source);
+            if(strpos($source,'[+')!==false)     $source = $this->mergePlaceholderContent($source);
             
             if($bt === md5($source)) break;
             $i++;
@@ -3401,7 +3406,7 @@ class DocumentParser {
             $out = $this->chunkCache[$chunkName];
         } else {
             $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
-            $rs= $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), $where);
+            $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
             if ($this->db->getRecordCount($rs)==1) {
                 $row= $this->db->getRow($rs);
                 $out = $this->chunkCache[$chunkName]= $row['snippet'];
@@ -3432,25 +3437,24 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
             if(strpos($key,':')!==false && $execModifier)
                 list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
-            if(isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)   $value = '';
-            else                 $value = $matches[0][$i];
+            if(!isset($ph[$key])) continue;
+            
+            $value = $ph[$key];
             
             if($modifiers!==false) {
                 if(strpos($modifiers,$left)!==false) $modifiers=$this->parseText($modifiers,$ph,$left,$right);
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
-            $replace[$i] = $value;
+            $tpl = str_replace($matches[0][$i], $value, $tpl);
         }
         
-        return str_replace($matches[0], $replace, $tpl);
+        return $tpl;
     }
     
     /**
