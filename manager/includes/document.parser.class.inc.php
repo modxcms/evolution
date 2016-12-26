@@ -22,6 +22,7 @@ class DocumentParser {
     var $documentMethod;
     var $documentGenerated;
     var $documentContent;
+    var $documentOutput;
     var $tstart;
     var $mstart;
     var $minParserPasses;
@@ -2429,12 +2430,10 @@ class DocumentParser {
         $type = intval($type);
         if(!$type || !$id) return NULL;
 
-        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
         
-        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return NULL;
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['sid'] == $this->sid) return NULL;
   
         if(isset($this->lockedElements[$type][$id])) {
             return $this->lockedElements[$type][$id];
@@ -2484,19 +2483,20 @@ class DocumentParser {
             $this->cleanupExpiredLocks();
 
             $rs = $this->db->select(
-                'internalKey,elementType,elementId,lasthit,username',
+                'sid,internalKey,elementType,elementId,lasthit,username',
                 $this->getFullTableName('active_user_locks')." ul
                 LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id"
             );
             while ($row = $this->db->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
+                    'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
                     'username'    => $row['username'],
                     'elementType' => $row['firsthit'],
                     'elementId'   => $row['firsthit'],
                     'lasthit'     => $row['lasthit'],
                     'lasthit_df'  => $this->toDateFormat($row['lasthit']),
-                    'state'       => $this->determineLockState($row['internalKey'])
+                    'state'       => $this->determineLockState($row['sid'])
                 );
             }
         }
@@ -2512,17 +2512,63 @@ class DocumentParser {
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
         // Clean-up active_user_locks
-        $rs = $this->db->select('internalKey', $this->getFullTableName('active_user_sessions'));
+        $rs = $this->db->select('sid,internalKey', $this->getFullTableName('active_user_sessions'));
         $count = $this->db->getRecordCount($rs);
         if($count) {
             $rs      = $this->db->makeArray($rs);
-            $userIds = array();
-            foreach ($rs as $row) $userIds[] = $row['internalKey'];
-            $userIds = implode(',', $userIds);
-            $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+            $userSids = array();
+            foreach ($rs as $row) $userSids[] = $row['sid'];
+            $userSids = "'". implode("','", $userSids) ."'";
+            $this->db->delete($this->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
         } else {
             $this->db->delete($this->getFullTableName('active_user_locks'));
         }
+        
+    }
+
+    /**
+     * Cleans up the active users table
+     */
+    function cleanupMultipleActiveUsers() {
+        $timeout = 20 * 60; // Delete multiple user-sessions after 20min
+        $validSessionTimeLimit = $this->time - $timeout;
+
+        $activeUserSids = array();
+        $rs = $this->db->select('sid', $this->getFullTableName('active_user_sessions'));
+        $count = $this->db->getRecordCount($rs);
+        if($count) {
+            $rs       = $this->db->makeArray($rs);
+            foreach ($rs as $row) $activeUserSids[] = $row['sid'];
+        }
+        
+        $rs = $this->db->select(
+            "sid,internalKey,lasthit",
+            "{$this->getFullTableName('active_users')}",
+            "",
+            "lasthit DESC"
+        );
+        if($this->db->getRecordCount($rs)) {
+            $rs      = $this->db->makeArray($rs);
+            $internalKeyCount = array();
+            $deleteSids = '';
+            foreach ($rs as $row) {
+                if(!isset($internalKeyCount[$row['internalKey']])) $internalKeyCount[$row['internalKey']] = 0;
+                $internalKeyCount[$row['internalKey']]++;
+                
+                if($internalKeyCount[$row['internalKey']] > 1 
+                    && !in_array($row['sid'], $activeUserSids)
+                    && $row['lasthit'] < $validSessionTimeLimit
+                    ) {
+                    $deleteSids .= $deleteSids == '' ? '' : ' OR ';
+                    $deleteSids .= "sid='{$row['sid']}'";
+                };
+                
+            }
+            if($deleteSids) {
+                 $this->db->delete($this->getFullTableName('active_users'), $deleteSids);
+            }
+        }
+
     }
 
     /**
@@ -2531,10 +2577,10 @@ class DocumentParser {
      * @param int $internalKey: ID of User who locked actual element
      * @return int $state States: 0=No display, 1=viewing this element, 2=locked, 3=show unlock-button
      */
-    function determineLockState($internalKey) {
+    function determineLockState($sid) {
         $state = 0;
         if($this->hasPermission('display_locks')) {
-            if($internalKey == $this->getLoginUserID()) {
+            if($sid == $this->sid) {
                 $state = 1;
             } else {
                 if($this->hasPermission('remove_locks')) {
@@ -2605,6 +2651,8 @@ class DocumentParser {
      * Updates table "active_user_sessions" with userid, lasthit, IP
      */
     function updateValidatedUserSession() {
+        if(!$this->sid) return;
+        
         // web users are stored with negative keys
         $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
             
