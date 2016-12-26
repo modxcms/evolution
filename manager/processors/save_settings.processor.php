@@ -60,6 +60,7 @@ if (isset($data) && count($data) > 0) {
 	}
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
+	$data['mail_check_timeperiod'] = intval($data['mail_check_timeperiod']) < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {
             case 'settings_version':{
@@ -114,7 +115,8 @@ if (isset($data) && count($data) > 0) {
 				$k = '';
 				break;
 			case 'session_timeout':
-				$v  = intval($v) < 2 ? 2 : $v; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+				$mail_check_timeperiod = $data['mail_check_timeperiod'];
+				$v = intval($v) < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
 				break;
 			default:
 			break;
