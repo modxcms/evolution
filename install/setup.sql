@@ -19,14 +19,13 @@ CREATE TABLE `{PREFIX}active_users` (
 DROP TABLE IF EXISTS `{PREFIX}active_user_locks`;
 
 CREATE TABLE `{PREFIX}active_user_locks` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `sid` varchar(32) NOT NULL default '',
   `internalKey` int(9) NOT NULL default '0',
   `elementType` int(1) NOT NULL default '0',
   `elementId` int(10) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
-  `sid` varchar(32) NOT NULL default '',
-  PRIMARY KEY(`id`),
-  UNIQUE INDEX ix_element_id (`internalKey`,`elementType`,`elementId`,`sid`)
+  PRIMARY KEY(`sid`),
+  UNIQUE INDEX ix_element_id (`elementType`,`elementId`,`sid`)
 ) ENGINE=MyISAM COMMENT='Contains data about locked elements.';
 
 DROP TABLE IF EXISTS `{PREFIX}active_user_sessions`;
