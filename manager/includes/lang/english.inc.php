@@ -772,7 +772,7 @@ $_lang["resource_type"] = 'Resource Type';
 $_lang["resource_type_message"] = 'Weblinks reference Resources on the Internet including another MODX Resource, an external page, or an image or other file on the Internet. Weblinks should have a text/html Internet Media Type and Inline Content-Disposition.';
 $_lang["resource_type_weblink"] = 'Weblink';
 $_lang["resource_type_webpage"] = 'Web page';
-$_lang["resource_weblink_help"] = 'Type the address of the object you wish to reference with this Weblink here.';
+$_lang["resource_weblink_help"] = 'Type the address of the object you wish to reference with this Weblink here. Alternatively insert from the File Browser or use the link selection icon and select a resource from the Site Tree.';
 $_lang["resources_in_container"] = 'Resources in this Container';
 $_lang["resources_in_container_no"] = 'This Container does not have child-Resources.';
 $_lang["role"] = 'Role';
@@ -1356,7 +1356,7 @@ $_lang["extras"] = "Extras";
 $_lang["display_locks"] = "Display Locks";
 $_lang["role_display_locks"] = "Display Locks";
 $_lang["session_timeout"] = "Session Timeout";
-$_lang["session_timeout_msg"] = "MODX will ping the server once every minute to update the mailer. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
+$_lang["session_timeout_msg"] = "MODX will ping the server as per setting &quot;Mail Check Time Period&quot;. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
 $_lang["unlock_element_id_warning"] = "Are you sure you want to unlock this [+element_type+] (ID [+id+])?";
 $_lang["lock_element_type_1"] = "Template";
 $_lang["lock_element_type_2"] = "Template-Variable";
@@ -1383,3 +1383,6 @@ $_lang["allow_eval_dont_eval"]         = "Do not allow all functions";
 
 $_lang["safe_functions_at_eval_title"] = "Functions to allow eval";
 $_lang["safe_functions_at_eval_msg"]   = "Comma separated list";
+
+
+$_lang["multiple_sessions_msg"]   = "Information: Multiple active user sessions (total [+total+]) found for user <b>[+username+]</b>.";

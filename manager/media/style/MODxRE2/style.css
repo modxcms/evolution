@@ -2164,6 +2164,10 @@ form#mutate input[name="menuindex"].inputBox {
   padding-right: 0;
 }
 
+form#mutate input[name="ta"].inputBox {
+  width: 70%;
+}
+
 #tv_body input[type="text"],
 #tv_body input[type="password"],
 #tv_body input[type="number"],
@@ -3491,8 +3495,16 @@ tr.userIdle td strong:before {
     content:'\f017';
 }
 
-/* c-roleslist */
+strong.userMultipleSessions:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #aaa;
+    padding: 0 5px 0 0;
+    content:'\f0c0';
+}
 
+/* c-roleslist */
 .c-roleslist {
   margin-bottom: 10px;
   margin-left: 12px;
@@ -3533,6 +3545,7 @@ tr.userIdle td strong:before {
 .CodeMirror pre {
   font-size: 12px !important;
 }
+
 
 /*Manage Files*/
 #ManageFiles i.fa, #ManageFiles span.fa {color: #39515d;}
@@ -3690,3 +3703,4 @@ fieldset[disabled] .btn-default.focus {
 .btn-block + .btn-block {
   margin-top: 5px;
 }
+

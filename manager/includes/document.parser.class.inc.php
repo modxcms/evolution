@@ -22,6 +22,7 @@ class DocumentParser {
     var $documentMethod;
     var $documentGenerated;
     var $documentContent;
+    var $documentOutput;
     var $tstart;
     var $mstart;
     var $minParserPasses;
@@ -71,7 +72,8 @@ class DocumentParser {
     var $snipLapCount;
     var $messageQuitCount;
     var $time;
-	
+    var $sid;
+
     /**
      * Document constructor
      *
@@ -929,12 +931,6 @@ class DocumentParser {
         }
         if(!$tags) return array();
         
-        foreach($tags as $tag) {
-            if(strpos($tag,$left)!==false) {
-                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
-                $tags = array_merge($innerTags,$tags);
-            }
-        }
         return $tags;
     }
     
@@ -961,10 +957,7 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) {
-                $content= str_replace($matches[0][$i], '', $content);
-                continue;
-            }
+            if(!isset($ph[$key]) && !$context) continue;
             elseif($context) $value = $this->_contextValue("{$key}@{$context}");
             else             $value = $ph[$key];
             
@@ -1072,19 +1065,15 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'[(',')]');
         if(!$matches) return $content;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
             if(isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)   $value = '';
-            else                 $value = $matches[0][$i];
+            else continue;
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            $replace[$i]= $value;
+            $content= str_replace($matches[0][$i], $value, $content);
         }
-        
-        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
@@ -1102,7 +1091,6 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'{{','}}');
         if(!$matches) return $content;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
@@ -1112,14 +1100,19 @@ class DocumentParser {
             
             if(!isset($ph[$key])) $ph[$key] = $this->getChunk($key);
             $value = $ph[$key];
-            $value = !is_null($value) ? $this->mergePlaceholderContent($value,$params) : $matches[0][$i];
+            
+            if(is_null($value)) continue;
+            
+            $value = $this->mergePlaceholderContent($value,$params);
+            $value = $this->mergeConditionalTagsContent($value);
+            $value = $this->mergeDocumentContent($value);
+            $value = $this->mergeSettingsContent($value);
+            $value = $this->mergeChunkContent($value);
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
-            $replace[$i] = $value;
+            $content= str_replace($matches[0][$i], $value, $content);
         }
-        
-        $content= str_replace($matches[0], $replace, $content);
         return $content;
     }
 
@@ -1135,16 +1128,16 @@ class DocumentParser {
         
         if(!$ph) $ph = $this->placeholders;
         
-        $replace = array();
-        $content = $this->mergeSettingsContent($content);
-        $matches = $this->getTagsFromContent($content, '[+', '+]');
+        $content= $this->mergeConditionalTagsContent($content);
+        $content= $this->mergeDocumentContent($content);
+        $content= $this->mergeSettingsContent($content);
+        $matches = $this->getTagsFromContent($content,'[+','+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
             if (isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)    $value = '';
             elseif($key==='phx')  $value = '';
             else continue;
             
@@ -1412,6 +1405,8 @@ class DocumentParser {
                 continue;
             }
             $value = $this->_get_snip_result($call);
+            if(is_null($value)) continue;
+            
             $content = str_replace($matches[0][$i], $value, $content);
         }
         
@@ -1453,8 +1448,9 @@ class DocumentParser {
         
         list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $snip_call['name'] = $key;
-        
         $snippetObject = $this->_getSnippetObject($key);
+        if(is_null($snippetObject['content'])) return null;
+        
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1476,6 +1472,7 @@ class DocumentParser {
             $eventtime = sprintf('%2.2f ms', $eventtime*1000);
             $code = $this->htmlspecialchars($value);
             if($code) $this->snippetsCode .= sprintf('<fieldset><legend><b>%s</b>(%s)</legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], $eventtime, $code);
+            $this->snippetsTime[] = $eventtime;
         }
         return $value;
     }
@@ -1484,12 +1481,21 @@ class DocumentParser {
     {
         if(empty($string)) return array();
         
+        if(strpos($string,'&_PHX_INTERNAL_')!==false)
+            $string = str_replace(array('&_PHX_INTERNAL_091_&','&_PHX_INTERNAL_093_&'), array('[',']'), $string);
+        
+        $_ = $this->documentOutput;
+        $this->documentOutput = $string;
+        $this->invokeEvent('OnParseDocument');
+        $string = $this->documentOutput;
+        $this->documentOutput = $_;
+        
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
         $key = '';
         $value = null;
-        while($_tmp!==''):
+        while($_tmp!=='') {
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
             $_tmp = substr($_tmp,1);
@@ -1501,13 +1507,15 @@ class DocumentParser {
                 if(in_array($delim, array('"', "'", '`')))
                 {
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
+                    if(substr(trim($_tmp), 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
                     $i=0;
-                    while(substr(trim($_tmp),0,1)!=='&' && trim($_tmp)!=='' && 1<substr_count($_tmp,$delim)) {
-                        list($inner, $outer, $_tmp) = explode($delim, $_tmp, 3);
-                        $value .= "{$delim}{$inner}{$delim}{$outer}";
+                    while($delim==='`' && substr(trim($_tmp),0,1)!=='&' && 1<substr_count($_tmp,'`')) {
+                        list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
+                        $value .= "`{$inner}`{$outer}";
                         $i++;
-                        if(200<$i) exit('Nesting level too deep');
+                        if(20<$i) exit('The nest of values are hard to read. Please use three different quotes.');
                     }
+                    if($i&&$delim==='`') $value = rtrim($value, '`');
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
@@ -1536,7 +1544,7 @@ class DocumentParser {
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
-                $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
+                if(strpos($value,'[!')!==false) $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
                 $value = $this->mergeDocumentContent($value);
                 $value = $this->mergeSettingsContent($value);
                 $value = $this->mergeChunkContent($value);
@@ -1559,7 +1567,7 @@ class DocumentParser {
                 if($key!=='') $temp_params[][$key] = '';
                 break;
             }
-        endwhile;
+        }
         
         foreach($temp_params as $p)
         {
@@ -1676,7 +1684,7 @@ class DocumentParser {
             }
             else
             {
-                $snip_content = 'return false;';
+                $snip_content = null;
                 $snip_prop    = '';
             }
             $snippetObject['name']       = $snip_name;
@@ -1982,16 +1990,15 @@ class DocumentParser {
             $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            $source = $this->ignoreCommentedTagsContent($source);
-            $source = $this->mergeConditionalTagsContent($source);
-            $source = $this->mergeSettingsContent($source);
+            if(strpos($source,'<!--@-')!==false) $source = $this->ignoreCommentedTagsContent($source);
+            if(strpos($source,'<@IF')!==false)   $source = $this->mergeConditionalTagsContent($source);
             
-            $source = $this->mergeDocumentContent($source);
-            $source = $this->mergeSettingsContent($source);
-            $source = $this->mergeChunkContent($source);
-            if($this->config['show_meta']) $source= $this->mergeDocumentMETATags($source);
-            $source = $this->evalSnippets($source);
-            $source = $this->mergePlaceholderContent($source);
+            if(strpos($source,'[*')!==false)     $source = $this->mergeDocumentContent($source);
+            if(strpos($source,'[(')!==false)     $source = $this->mergeSettingsContent($source);
+            if(strpos($source,'{{')!==false)     $source = $this->mergeChunkContent($source);
+            if($this->config['show_meta'])       $source = $this->mergeDocumentMETATags($source);
+            if(strpos($source,'[[')!==false)     $source = $this->evalSnippets($source);
+            if(strpos($source,'[+')!==false)     $source = $this->mergePlaceholderContent($source);
             
             if($bt === md5($source)) break;
             $i++;
@@ -2423,12 +2430,10 @@ class DocumentParser {
         $type = intval($type);
         if(!$type || !$id) return NULL;
 
-        $userId =  $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        
         // Build lockedElements-Cache at first call
         $this->buildLockedElementsCache();
         
-        if(!$includeThisUser && $this->lockedElements[$type][$id]['internalKey'] == $userId) return NULL;
+        if(!$includeThisUser && $this->lockedElements[$type][$id]['sid'] == $this->sid) return NULL;
   
         if(isset($this->lockedElements[$type][$id])) {
             return $this->lockedElements[$type][$id];
@@ -2478,19 +2483,20 @@ class DocumentParser {
             $this->cleanupExpiredLocks();
 
             $rs = $this->db->select(
-                'internalKey,elementType,elementId,lasthit,username',
+                'sid,internalKey,elementType,elementId,lasthit,username',
                 $this->getFullTableName('active_user_locks')." ul
                 LEFT JOIN {$this->getFullTableName('manager_users')} mu on ul.internalKey = mu.id"
             );
             while ($row = $this->db->getRow($rs)) {
                 $this->lockedElements[$row['elementType']][$row['elementId']] = array(
+                    'sid'         => $row['sid'],
                     'internalKey' => $row['internalKey'],
                     'username'    => $row['username'],
-                    'elementType' => $row['firsthit'],
-                    'elementId'   => $row['firsthit'],
+                    'elementType' => $row['elementType'],
+                    'elementId'   => $row['elementId'],
                     'lasthit'     => $row['lasthit'],
                     'lasthit_df'  => $this->toDateFormat($row['lasthit']),
-                    'state'       => $this->determineLockState($row['internalKey'])
+                    'state'       => $this->determineLockState($row['sid'])
                 );
             }
         }
@@ -2506,17 +2512,63 @@ class DocumentParser {
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
         // Clean-up active_user_locks
-        $rs = $this->db->select('internalKey', $this->getFullTableName('active_user_sessions'));
+        $rs = $this->db->select('sid,internalKey', $this->getFullTableName('active_user_sessions'));
         $count = $this->db->getRecordCount($rs);
         if($count) {
             $rs      = $this->db->makeArray($rs);
-            $userIds = array();
-            foreach ($rs as $row) $userIds[] = $row['internalKey'];
-            $userIds = implode(',', $userIds);
-            $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+            $userSids = array();
+            foreach ($rs as $row) $userSids[] = $row['sid'];
+            $userSids = "'". implode("','", $userSids) ."'";
+            $this->db->delete($this->getFullTableName('active_user_locks'), "sid NOT IN({$userSids})");
         } else {
             $this->db->delete($this->getFullTableName('active_user_locks'));
         }
+        
+    }
+
+    /**
+     * Cleans up the active users table
+     */
+    function cleanupMultipleActiveUsers() {
+        $timeout = 20 * 60; // Delete multiple user-sessions after 20min
+        $validSessionTimeLimit = $this->time - $timeout;
+
+        $activeUserSids = array();
+        $rs = $this->db->select('sid', $this->getFullTableName('active_user_sessions'));
+        $count = $this->db->getRecordCount($rs);
+        if($count) {
+            $rs       = $this->db->makeArray($rs);
+            foreach ($rs as $row) $activeUserSids[] = $row['sid'];
+        }
+        
+        $rs = $this->db->select(
+            "sid,internalKey,lasthit",
+            "{$this->getFullTableName('active_users')}",
+            "",
+            "lasthit DESC"
+        );
+        if($this->db->getRecordCount($rs)) {
+            $rs      = $this->db->makeArray($rs);
+            $internalKeyCount = array();
+            $deleteSids = '';
+            foreach ($rs as $row) {
+                if(!isset($internalKeyCount[$row['internalKey']])) $internalKeyCount[$row['internalKey']] = 0;
+                $internalKeyCount[$row['internalKey']]++;
+                
+                if($internalKeyCount[$row['internalKey']] > 1 
+                    && !in_array($row['sid'], $activeUserSids)
+                    && $row['lasthit'] < $validSessionTimeLimit
+                    ) {
+                    $deleteSids .= $deleteSids == '' ? '' : ' OR ';
+                    $deleteSids .= "sid='{$row['sid']}'";
+                };
+                
+            }
+            if($deleteSids) {
+                 $this->db->delete($this->getFullTableName('active_users'), $deleteSids);
+            }
+        }
+
     }
 
     /**
@@ -2525,10 +2577,10 @@ class DocumentParser {
      * @param int $internalKey: ID of User who locked actual element
      * @return int $state States: 0=No display, 1=viewing this element, 2=locked, 3=show unlock-button
      */
-    function determineLockState($internalKey) {
+    function determineLockState($sid) {
         $state = 0;
         if($this->hasPermission('display_locks')) {
-            if($internalKey == $this->getLoginUserID()) {
+            if($sid == $this->sid) {
                 $state = 1;
             } else {
                 if($this->hasPermission('remove_locks')) {
@@ -2552,14 +2604,15 @@ class DocumentParser {
         $type = intval($type);
         $id = intval($id);
         if(!$type || !$id || !$userId) return false;
-
-        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit)
-                VALUES (%d, %d, %d, %d)',
+        
+        $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit, sid)
+                VALUES (%d, %d, %d, %d, \'%s\')',
             $this->getFullTableName('active_user_locks'),
             $userId,
             $type,
             $id,
-            $this->time
+            $this->time,
+            $this->sid
         );
         $this->db->query($sql);
     }
@@ -2598,6 +2651,8 @@ class DocumentParser {
      * Updates table "active_user_sessions" with userid, lasthit, IP
      */
     function updateValidatedUserSession() {
+        if(!$this->sid) return;
+        
         // web users are stored with negative keys
         $userId = $this->getLoginUserType() == 'manager' ? $this->getLoginUserID() : -$this->getLoginUserID();
             
@@ -2606,15 +2661,15 @@ class DocumentParser {
         elseif ($cip = getenv("HTTP_X_FORWARDED_FOR")) $ip = $cip;
         elseif ($cip = getenv("REMOTE_ADDR"))          $ip = $cip;
         else                                           $ip = "UNKNOWN";
-
         $_SESSION['ip'] = $ip;
-
-        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip)
-            VALUES (%d, %d, \'%s\')',
+        
+        $sql = sprintf('REPLACE INTO %s (internalKey, lasthit, ip, sid)
+            VALUES (%d, %d, \'%s\', \'%s\')',
             $this->getFullTableName('active_user_sessions'),
             $userId,
             $this->time,
-            $ip
+            $ip,
+            $this->sid
         );
         $this->db->query($sql);
     }
@@ -3401,7 +3456,7 @@ class DocumentParser {
             $out = $this->chunkCache[$chunkName];
         } else {
             $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
-            $rs= $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), $where);
+            $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
             if ($this->db->getRecordCount($rs)==1) {
                 $row= $this->db->getRow($rs);
                 $out = $this->chunkCache[$chunkName]= $row['snippet'];
@@ -3432,25 +3487,24 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
         
-        $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
             if(strpos($key,':')!==false && $execModifier)
                 list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
-            if(isset($ph[$key])) $value = $ph[$key];
-            elseif($modifiers)   $value = '';
-            else                 $value = $matches[0][$i];
+            if(!isset($ph[$key])) continue;
+            
+            $value = $ph[$key];
             
             if($modifiers!==false) {
                 if(strpos($modifiers,$left)!==false) $modifiers=$this->parseText($modifiers,$ph,$left,$right);
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
-            $replace[$i] = $value;
+            $tpl = str_replace($matches[0][$i], $value, $tpl);
         }
         
-        return str_replace($matches[0], $replace, $tpl);
+        return $tpl;
     }
     
     /**
