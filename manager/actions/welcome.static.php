@@ -98,11 +98,25 @@ if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $
 
 // Check logout-reminder
 if(isset($_SESSION['show_logout_reminder'])) {
-	$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date'=>$modx->toDateFormat($_SESSION['show_logout_reminder'], 'dateOnly')));
+	switch($_SESSION['show_logout_reminder']['type']) {
+		case 'logout_reminder':
+			$ph['logout_reminder_msg'] = $modx->parseText($_lang["logout_reminder_msg"], array('date' => $modx->toDateFormat($_SESSION['show_logout_reminder']['lastHit'], 'dateOnly')));
+			break;
+	}
 	$ph['show_logout_reminder'] = 'block';
 	unset($_SESSION['show_logout_reminder']);
 } else {
 	$ph['show_logout_reminder'] = 'none';
+}
+
+// Check multiple sessions
+$rs = $modx->db->select('count(*) AS count', $modx->getFullTableName('active_user_sessions'), "internalKey='{$_SESSION['mgrInternalKey']}'");
+$count = $modx->db->getValue($rs);
+if($count > 1) {
+	$ph['multiple_sessions_msg'] = $modx->parseText($_lang["multiple_sessions_msg"], array('username' => $_SESSION['mgrShortname'], 'total'=>$count));
+	$ph['show_multiple_sessions'] = 'block';
+} else {
+	$ph['show_multiple_sessions'] = 'none';
 }
 
 // include rss feeds for important forum topics
@@ -158,7 +172,7 @@ $timetocheck = (time() - (60 * 20)); //+$server_offset_time;
 
 include_once(MODX_MANAGER_PATH.'includes/actionlist.inc.php');
 
-$rs    = $modx->db->select('*', $modx->getFullTableName('active_user_sessions')." us LEFT JOIN {$modx->getFullTableName('active_users')} au ON au.internalKey=us.internalKey", "", 'username ASC');
+$rs    = $modx->db->select('*, count(au.sid) AS count', $modx->getFullTableName('active_user_sessions')." us LEFT JOIN {$modx->getFullTableName('active_users')} au ON au.internalKey=us.internalKey GROUP BY au.sid HAVING au.action <> '8'", "", 'username ASC, au.sid ASC');
 $limit = $modx->db->getRecordCount($rs);
 if ($limit < 1) {
     $html = "<p>" . $_lang['no_active_users_found'] . "</p>";
@@ -178,11 +192,12 @@ if ($limit < 1) {
                   <tbody>
         ';
     while ($activeusers = $modx->db->getRow($rs)) {
-        $currentaction = getAction($activeusers['action'], $activeusers['id']);
+        $idle          = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+        $multipleSessions = $activeusers['count'] > 1 ? ' class="userMultipleSessions"' : '';
         $webicon       = ($activeusers['internalKey'] < 0) ? sprintf('<img src="%s" alt="Web user" />',$_style["tree_globe"]) : '';
-	    $idle          = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
-        $params = array($idle, $activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
-        $html .= vsprintf('<tr%s><td><strong>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
+        $currentaction = getAction($activeusers['action'], $activeusers['id']);
+        $params = array($idle, $multipleSessions, $activeusers['username'], $webicon, abs($activeusers['internalKey']), $activeusers['ip'], strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
+        $html .= vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
     }
     $html .= '
                 </tbody>

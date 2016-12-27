@@ -1356,7 +1356,7 @@ $_lang["extras"] = "Extras";
 $_lang["display_locks"] = "Display Locks";
 $_lang["role_display_locks"] = "Display Locks";
 $_lang["session_timeout"] = "Session Timeout";
-$_lang["session_timeout_msg"] = "MODX will ping the server once every minute to update the mailer. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
+$_lang["session_timeout_msg"] = "MODX will ping the server as per setting &quot;Mail Check Time Period&quot;. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
 $_lang["unlock_element_id_warning"] = "Are you sure you want to unlock this [+element_type+] (ID [+id+])?";
 $_lang["lock_element_type_1"] = "Template";
 $_lang["lock_element_type_2"] = "Template-Variable";
@@ -1383,3 +1383,6 @@ $_lang["allow_eval_dont_eval"]         = "Do not allow all functions";
 
 $_lang["safe_functions_at_eval_title"] = "Functions to allow eval";
 $_lang["safe_functions_at_eval_msg"]   = "Comma separated list";
+
+
+$_lang["multiple_sessions_msg"]   = "Information: Multiple active user sessions (total [+total+]) found for user <b>[+username+]</b>.";
