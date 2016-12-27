@@ -78,7 +78,7 @@ function createElementsList($elmTable,$action,$nameField = 'name') {
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$elmTable.'_search">
+          <input class="form-control" type="text" placeholder="'.$_lang['element_filter_msg'].'" id="tree_'.$elmTable.'_search">
         </form>';
     
     $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$elmTable.'">';
@@ -132,7 +132,7 @@ function createModulesList($action) {
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_site_modules_search">
+          <input class="form-control" type="text" placeholder="'.$_lang['element_filter_msg'].'" id="tree_site_modules_search">
         </form>';
         
     $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_site_modules">';
