@@ -12,7 +12,7 @@
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @documentation Requirements: This plugin requires MODX Evolution 1.2 or later
- * @reportissues https://github.com/pmfx/ElementsInTree
+ * @reportissues https://github.com/modxcms/evolution/issues
  * @link        Original Github thread https://github.com/modxcms/evolution/issues/783
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
