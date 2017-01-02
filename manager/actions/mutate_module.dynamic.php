@@ -443,6 +443,7 @@ function SetUrl(url, width, height, alt) {
           <?php } ?>
               <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
         <?php if ($modx->hasPermission('exec_module')) { ?>
+              <li id="Button4"><a href="#" onclick="runmodule();"><img src="<?php echo $_style["icons_run"] ?>" /> <?php echo $_lang["run_module"]; ?></a></li>
           <?php } ?>
           </ul>
     </div>
