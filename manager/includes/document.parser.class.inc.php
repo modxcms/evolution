@@ -931,6 +931,13 @@ class DocumentParser {
         }
         if(!$tags) return array();
         
+        foreach($tags as $tag) {
+            if(strpos($tag,$left)!==false) {
+                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
+                $tags = array_merge($innerTags,$tags);
+            }
+        }
+        
         return $tags;
     }
     
