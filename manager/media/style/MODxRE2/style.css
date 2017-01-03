@@ -3495,16 +3495,23 @@ tr.userIdle td strong:before {
     padding: 0 5px 0 0;
     content:'\f017';
 }
-
-strong.userMultipleSessions:before {
+#modxonline_widget td strong:before {
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
-    color: #aaa;
+    color: #3d5764;
     padding: 0 5px 0 0;
-    content:'\f0c0';
+    content:'\f2be';
 }
 
+#modxonline_widget td strong.userMultipleSessions:before {
+    color: #bf4949;
+    content:'\f2bd';
+}
+#modxonline_widget tr.userIdle td strong.userMultipleSessions:before {
+    color: #bf4949;
+    content:'\f017';
+}
 /* c-roleslist */
 .c-roleslist {
   margin-bottom: 10px;
@@ -3540,7 +3547,6 @@ strong.userMultipleSessions:before {
 .c-roleslist-item--admin {
   font-style: italic;
 }
-
 /* codemirror */
 
 .CodeMirror pre {
