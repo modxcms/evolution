@@ -84,11 +84,15 @@ function duplicaterecord() {
         document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=111";
     }
 }
+    
 function deletedocument() {
     if(confirm("<?php echo $_lang['confirm_delete_module']?>")==true) {
         documentDirty=false;
         document.location.href="index.php?id=" + document.mutate.id.value + "&a=110";
     }
+}
+function runmodule() {
+    document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=112";
 }
 function setTextWrap(ctrl,b) {
     if(!ctrl) return;
@@ -434,10 +438,13 @@ function SetUrl(url, width, height, alt) {
               <li id="Button6" class="disabled"><a href="#"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
-              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>          
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
               <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+        <?php if ($modx->hasPermission('exec_module')) { ?>
+              <li id="Button4"><a href="#" onclick="runmodule();"><img src="<?php echo $_style["icons_run"] ?>" /> <?php echo $_lang["run_module"]; ?></a></li>
+          <?php } ?>
           </ul>
     </div>
     <!-- end #actions -->
