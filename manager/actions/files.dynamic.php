@@ -401,7 +401,7 @@ if (is_writable($startpath))
 		if(preg_match('@(\\\\|\/|\:|\;|\,|\*|\?|\"|\<|\>|\||\?)@',$newDirname)!==0)
 		{
 			echo $_lang['files.dynamic.php3'];
-		} else if (!rename($dirname, MODX_BASE_PATH.$newDirname)) {
+		} else if (!rename($dirname, $_REQUEST['path'].'/'.$newDirname)) {
 			echo '<span class="warning"><b>', $_lang['file_folder_not_created'], '</b></span><br /><br />';
 		}
 		umask($old_umask);
@@ -410,6 +410,7 @@ if (is_writable($startpath))
 	if($_REQUEST['mode']=='renameFile')
 	{
 		$old_umask = umask(0);
+		$path = dirname($_REQUEST['path']);
 		$filename = $_REQUEST['path'];
 		$filename = $modx->db->escape($filename);
 		$newFilename = str_replace(array('..\\', '../', '\\', '/'),'',$_REQUEST['newFilename']);
@@ -425,7 +426,7 @@ if (is_writable($startpath))
 		}
 		else
 		{
-			if (!rename($filename, MODX_BASE_PATH.$newFilename)) {
+			if (!rename($filename, $path.'/'.$newFilename)) {
 				echo $_lang['files.dynamic.php5'];
 			}
 			umask($old_umask);
