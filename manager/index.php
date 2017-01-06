@@ -91,11 +91,21 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
 
+// provide english $_lang for error-messages
+$_lang = array();
+include_once "includes/lang/english.inc.php";
+
 // check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
 $php_ver_comp =  version_compare(phpversion(), "5.0.0");
 		// -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
 	echo sprintf($_lang['php_version_check'], phpversion());
+	exit;
+}
+
+// check if iconv is installed
+if(!function_exists('iconv')) {
+	echo $_lang['iconv_not_available'];
 	exit;
 }
 
@@ -154,12 +164,10 @@ include_once "settings.inc.php";
 // get the user settings from the database
 include_once "user_settings.inc.php";
 
-// include_once the language file
+// now include_once different language file as english
 if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
 	$manager_language = "english"; // if not set, get the english language file.
 }
-$_lang = array();
-include_once "lang/english.inc.php";
 $length_eng_lang = count($_lang);
 
 if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
