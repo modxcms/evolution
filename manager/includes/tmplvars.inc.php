@@ -101,8 +101,13 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 				$i = 0;
 				$_ = array();
 				foreach ($index_list as $c=>$item) {
-					$item = trim($item);
-					list($name, $value) = (strpos($item,'==')!==false) ? explode('==', $item, 2) : array($item, $item);
+					if(is_array($item)) {
+						$name = trim($item[0]);
+						$value = $item[1];
+					} else {
+						$item = trim($item);
+						list($name, $value) = (strpos($item,'==')!==false) ? explode('==', $item, 2) : array($item, $item);
+					}
 					$checked = in_array($value, $values) ? ' checked="checked"' : '';
 					$param = array($modx->htmlspecialchars($value), $i, $field_id, $checked, $modx->htmlspecialchars($name));
 					$_[] = vsprintf($tpl, $param);

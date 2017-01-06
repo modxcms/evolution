@@ -485,6 +485,68 @@ function decode(s) {
     s = s.replace(/\%26/g,'&'); // &
     return s;
 }
+
+<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+var lastImageCtrl;
+var lastFileCtrl;
+
+function OpenServerBrowser(url, width, height ) {
+    var iLeft = (screen.width  - width) / 2 ;
+    var iTop  = (screen.height - height) / 2 ;
+
+    var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+    sOptions += ',width=' + width ;
+    sOptions += ',height=' + height ;
+    sOptions += ',left=' + iLeft ;
+    sOptions += ',top=' + iTop ;
+
+    var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
+}			
+			
+function BrowseServer(ctrl) {
+    lastImageCtrl = ctrl;
+    var w = screen.width * 0.5;
+    var h = screen.height * 0.5;
+    OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=images', w, h);
+}
+	
+function BrowseFileServer(ctrl) {
+    lastFileCtrl = ctrl;
+    var w = screen.width * 0.5;
+    var h = screen.height * 0.5;
+    OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=files', w, h);
+}
+
+function SetUrlChange(el) {
+    if ('createEvent' in document) {
+        var evt = document.createEvent('HTMLEvents');
+        evt.initEvent('change', false, true);
+        el.dispatchEvent(evt);
+    } else {
+        el.fireEvent('onchange');
+    }
+}
+
+function SetUrl(url, width, height, alt) {
+	if(lastFileCtrl) {
+        var c = document.getElementById(lastFileCtrl);
+        if(c && c.value != url) {
+            c.value = url;
+            SetUrlChange(c);
+        }
+        lastFileCtrl = '';
+    } else if(lastImageCtrl) {
+        var c = document.getElementById(lastImageCtrl);
+        if(c && c.value != url) {
+            c.value = url;
+            SetUrlChange(c);
+        }
+        lastImageCtrl = '';
+    } else {
+        return;
+    }
+}
+<?php $ResourceManagerLoaded=true; } ?>
 /* ]]> */
 </script>
 
@@ -630,7 +692,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 
           <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" alt="tree_folder" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer; margin-top:-4px;" /></td>
-                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />
+                <td><input name="ta" id="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />&nbsp;<input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseFileServer('ta')" />
                 <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
 <?php } ?>
