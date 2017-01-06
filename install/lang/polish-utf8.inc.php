@@ -2,11 +2,9 @@
 /**
  * MODX Installer language file
  *
- * @author Radosław Włodkowski, radoslaw@wlodkowski.net
- * @author Natalia Łubniewska
- * @author Witek Galecki
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.2.1
+ * @date 2017/01/06
+ * @author The MODX Project Team
  *
  * @language Polish
  * @package modx
@@ -52,7 +50,7 @@ $_lang["checking_registerglobals"] = 'Sprawdzanie, czy zmienne globalne (Registe
 $_lang["checking_registerglobals_note"] = 'Taka konfiguracja powoduje, że Twoja strona jest znacznie bardziej podatna na ataki typu Cross Site Scripting (XSS). Powinieneś wyłączyć tę opcję na serwerze. Są trzy podstawowe sposoby, aby to zrobić: można zmodyfikować główny plik php.ini, dodać regułę w pliku .htaccess znajdującym się w głównym folderze, w którym zainstalowany został MODX lub dodać własny plik php.ini w każdym z folderów MODXa (a jest ich sporo) z ustawieniami nadpisującymi ustawienia globalne. Jeśli nie zmienisz tych ustawień, będziesz mógł w dalszym ciągu zainstalować MODXa - pamiętaj jednak, że zostałeś ostrzeżony!';
 $_lang["checking_sessions"] = 'Sprawdzanie, czy obsługa sesji jest skonfigurowana poprawnie: ';
 $_lang["checking_table_prefix"] = 'Sprawdzanie prefiksu tabeli `';
-$_lang["choose_language"] = 'Wybierz Język';
+$_lang["choose_language"] = 'Wybierz język';
 $_lang["chunks"] = 'Chunki';
 $_lang["config_permissions_note"] = 'Dla nowych instalacji na systemach Linux/Unix utwórz pusty plik o nazwie <span class="mono">config.inc.php</span> w folderze <span class="mono">/[+MGR_DIR+]/includes/</span> i ustaw dla niego prawa dostępu na 0666.';
 $_lang["connection_screen_collation"] = 'System porównań (collation): ';
@@ -116,7 +114,7 @@ $_lang["installing_demo_site"] = 'Instalowanie strony demo: ';
 $_lang["language_code"] = 'pl';
 $_lang["loading"] = 'Ładowanie...';
 $_lang["modules"] = 'Moduły';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX jest objęty licencją GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Wszystkie prawa zastrzeżone. MODX działa pod licencją GNU GPL.';
 $_lang["modx_footer2"] = 'MODX jest wolnym oprogramowaniem. Zachęcamy Cię, abyś kreatywnie wykorzystywał MODXa w jakikolwiek sposób, który uznasz za przydatny. Prosimy jedynie, abyś pozostawił kod źródłowy otwartym i darmowym w przypadku gdy zdecydujesz się na redystrybucję MODXa w zmodyfikowanej przez siebie wersji!';
 $_lang["modx_install"] = 'MODX &raquo; Instalacja';
 $_lang["modx_requires_php"] = ', MODx wymaga PHP w wersji [+min_version+] lub nowszej';
@@ -134,11 +132,14 @@ $_lang["please_correct_error"] = '. Proszę popraw błąd';
 $_lang["please_correct_errors"] = '. Proszę popraw błędy';
 $_lang["plugins"] = 'Pluginy';
 $_lang["preinstall_validation"] = 'Weryfikacja pre-instalacyjna';
+$_lang["recommend_collation"] = 'utf8_general_ci';
+$_lang["recommend_collations_order"] = 'utf8mb4_unicode_ci,utf8mb4_general_ci,utf8_unicode_ci,utf8_general_ci,utf8mb4_bin,utf8_bin,utf8mb4_unicode_520_ci,utf8_unicode_520_ci,utf8_general_mysql500_ci';
 $_lang["recommend_setting_change_title"] = 'Rekomendowana zmiana ustawień';
 $_lang["recommend_setting_change_validate_referer_confirmation"] = 'Zmiana ustawienia: <em>Weryfikuj nagłówki HTTP_REFERER?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Strona nie została skonfigurowana aby weryfikować nagłówki HTTP_REFERER. Zalecamy włączenie tej opcji aby zmniejszyć ryzyko ataków CSRF (Cross Site Request Forgery).';
 $_lang["remove_install_folder_auto"] = 'Usuń folder instalatora z zasobów mojej strony <br />&nbsp;(Ta operacja wymaga uprawnień do usuwania plików dla folderu instalatora).';
 $_lang["remove_install_folder_manual"] = 'Pamiętaj aby usunąć folder &quot;<b>install</b>&quot; przed zalogowaniem się do Menedżera MODXa.';
+$_lang["resetting_database"] = 'Resetuj bazę danych do wersji demo:';
 $_lang["retry"] = 'Spróbuj ponownie';
 $_lang["running_database_updates"] = 'Wykonywanie aktualizacji bazy danych: ';
 $_lang["sample_web_site"] = 'Przykładowa strona internetowa';
