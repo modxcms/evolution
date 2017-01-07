@@ -2,14 +2,9 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.15
- * @date 2014/02/24
- * @author Łukasz Kowalczyk, lukasz@pixeligence.com
- * @author Piotr Łukańko, piotr.lukanko@gmail.com
- * @author Piotr Grzeszykowski, piotrek@gawinet.pl
- * @author Radosław Włodkowski, radoslaw@wlodkowski.net
- * @author Piotr Matysiak, web@pm-fx.com
- * @author Witek Galecki
+ * @version 1.2.1
+ * @date 2017/01/06
+ * @author The MODX Project Team
  *
  * @language Polish
  * @package modx
@@ -17,7 +12,7 @@
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'pl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
@@ -73,6 +68,7 @@ $_lang["allow_mgr_access"] = 'Pozwól na dostęp do interfejsu administracyjnego
 $_lang["allow_mgr_access_message"] = 'Użyj tej opcji aby włączyć lub wyłączyć dostęp do interfejsu administracyjnego. <b>Uwaga: Jeśli ta opcja zostanie ustawiona na \'nie\' użytkownik zostanie przekierowany do dokumentu startowego dla Menedżera lub do strony startowej witryny.</b>';
 $_lang["already_deleted"] = 'został już skasowany.';
 $_lang["attachment"] = 'Załącznik';
+$_lang["author_infos"] = 'Informacje o autorze';
 $_lang["automatic_alias_message"] = 'Wybierz \'tak\' aby system automatycznie generował alias przy zapisie, bazując na tytule dokumentu.';
 $_lang["automatic_alias_title"] = 'Automatycznie generuj alias:';
 $_lang["backup"] = 'Backup';
@@ -156,6 +152,7 @@ $_lang["configcheck_what"] = 'Co to oznacza?';
 $_lang["confirm_block"] = 'Czy na pewno chcesz zablokować tego użytkownika?';
 $_lang["confirm_delete_eventlog"] = 'Czy na pewno chcesz usunąć log zdarzeń?';
 $_lang["confirm_delete_file"] = 'Czy na pewno chcesz usunąć ten plik?\n\nMoże to spowodować nieprawidłowe działanie Twojej strony! Usuwaj tylko te pliki, co do których jesteś pewien, że można je bezpiecznie usunąć.';
+$_lang["confirm_delete_group"] = 'Czy jesteś pewien że chcesz usunąć tę grupę?';
 $_lang["confirm_delete_htmlsnippet"] = 'Czy na pewno chcesz usunąć tego chunka?';
 $_lang["confirm_delete_keywords"] = 'Czy na pewno chcesz usunąć te słowa kluczowe?';
 $_lang["confirm_delete_module"] = 'Czy na pewno chcesz usunąć ten moduł?';
@@ -174,6 +171,7 @@ $_lang["confirm_load_depends"] = 'Czy na pewno chcesz załadować ekran Menedże
 $_lang["confirm_name_change"] = 'Zmiana nazwy użytkownika może wpłynąć na inne aplikacje podlinkowane do panelu administracji. nn Czy na pewno chcesz zmienić nazwę użytkownika?';
 $_lang["confirm_publish"] = '\n\nOpublikowanie tego dokumentu spowoduje usunięcie wcześniejszych dat publikacji/zamknięcia publikacji, które mogły być ustawione. Jeśli chcesz zachować te daty wybierz \'edycję\' dokumentu.nnKontynuować?';
 $_lang["confirm_remove_locks"] = 'Użytkownicy czasami zamykają przeglądarkę podczas edycji dokumentu, szablonu, snippeta lub parsera. W ten sposób pozostawiają edytowane pozycje zablokowane. Naciskając OK możesz zdjąć wszystkie aktualne blokady.nnKontynuować?';
+$_lang["confirm_reset_sort_order"] = 'Czy jesteś pewien że chcesz zresetować \"sort order/index\" wszystkich wyświetlonych elementów do 0?';
 $_lang["confirm_resource_duplicate"] = 'Czy na pewno chcesz zduplikować ten dokument/folder?n Podkatalogi i dokumenty również zostaną zduplikowane.';
 $_lang["confirm_setting_language_change"] = 'Zmodyfikowałeś wartość domyślną i utracisz wprowadzone zmiany. Czy chcesz kontynuować?';
 $_lang["confirm_unblock"] = 'Czy na pewno chcesz odblokować tego użytkownika?';
@@ -186,6 +184,7 @@ $_lang["create_resource_here"] = 'Utwórz dokument';
 $_lang["create_resource_title"] = 'Utwórz dokument w tym miejscu';
 $_lang["create_weblink_here"] = 'Utwórz odsyłacz w tym miejscu';
 $_lang["createdon"] = 'Data utworzenia';
+$_lang["create_new"] = 'Stwórz nowy';
 $_lang["credits"] = 'Autorzy';
 $_lang["credits_shouts_msg"] = '<p>MODX jest zarządzany i utrzymywany przez <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Tutaj możesz dodać własne typy treści, które zostaną użyte w dokumentach. Aby dodać nową pozycję wprowadź typ treści w polu tekstowym i naciśnij przycisk \'Dodaj\'.';
@@ -239,12 +238,14 @@ $_lang["deselect_keywords"] = 'Wyczyść słowa kluczowe';
 $_lang["deselect_metatags"] = 'Wyczyść META tagi';
 $_lang["disabled"] = 'Wyłączony';
 $_lang["doc_data_title"] = 'Pokaż dane dokumentu';
+$_lang["documentation"] = 'Dokumentacja';
 $_lang["duplicate"] = 'Kopiowanie';
 $_lang["duplicate_alias_found"] = 'Dokument \'%s\' już używa aliasu \'%s\'. Proszę wprowadzić unikalny alias.';
 $_lang["duplicate_alias_message"] = 'Wybierz \'tak\' aby pozwolić na zapisywanie takich samych aliasów. <b>Uwaga: Ta opcja powinna być używana z opcją \'Przyjazne ścieżki aliasów\' ustawioną na \'tak\' aby uniknąć problemów przy odwołaniach do dokumentów.</b>';
 $_lang["duplicate_alias_title"] = 'Dozwolone identyczne aliasy:';
 $_lang["duplicate_name_found_general"] = 'Istnieje już %s o nazwie \'%s\'. Wybierz inną nazwę.';
 $_lang["duplicate_name_found_module"] = 'Istnieje już moduł o nazwie \'%s\'. Wybierz inną nazwę.';
+$_lang["duplicated_el_suffix"] = 'Kopia';
 $_lang["edit"] = 'Edytuj';
 $_lang["edit_resource"] = 'Edytuj dokument';
 $_lang["edit_resource_title"] = 'Utwórz/ edytuj dokument';
@@ -255,6 +256,7 @@ $_lang["editor_css_path_message"] = 'Podaj ścieżkę do pliku CSS, który chces
 $_lang["editor_css_path_title"] = 'Ścieżka do pliku CSS:';
 $_lang["element"] = 'Zasób';
 $_lang["element_categories"] = 'Widok mieszany';
+$_lang["element_filter_msg"] = 'Wyszukaj elementy na liście';
 $_lang["element_management"] = 'Zarządzanie zasobami';
 $_lang["element_name"] = 'Nazwa zasobu';
 $_lang["element_selector_msg"] = 'Wybierz zasób lub zasoby z listy poniżej i kliknij przycisk \'Wstaw\'.';
@@ -262,7 +264,7 @@ $_lang["element_selector_title"] = 'Selektor zasobów';
 $_lang["elements"] = 'Zasoby';
 $_lang["email"] = 'Email';
 $_lang["email_sent"] = 'E-mail wysłany';
-$_lang["emailsender_message"] = 'Tutaj możesz określić adres e-mail, który zostanie użyty do wysłania uzytkownikom ich nazw kont i haseł.';
+$_lang["emailsender_message"] = 'Adres e-mail administratora. Ten adres będzie używany na przykład do powiadomień systemowych itp.';
 $_lang["emailsender_title"] = 'Adres e-mail:';
 $_lang["emailsubject_default"] = 'Informacje o założonym koncie użytkownika';
 $_lang["emailsubject_message"] = 'Tutaj możesz określić temat e-maila rejestrującego.';
@@ -330,6 +332,7 @@ $_lang["files_access_denied"] = 'Brak dostępu!';
 $_lang["files_data"] = 'Dane';
 $_lang["files_dir_listing"] = 'Lista katalogu dla:';
 $_lang["files_directories"] = 'Katalogi';
+$_lang["files_directory_is_empty"] = 'Ten folder jest pusty.';
 $_lang["files_dirwritable"] = 'Katalog zapisywalny?';
 $_lang["files_editfile"] = 'Edycja pliku';
 $_lang["files_file_type"] = 'Typ pliku: ';
@@ -338,6 +341,8 @@ $_lang["files_fileoptions"] = 'Opcje';
 $_lang["files_files"] = 'Pliki';
 $_lang["files_filesize"] = 'Rozmiar pliku';
 $_lang["files_filetype_notok"] = 'Wgrywanie plików tego typu nie jest dozwolone!';
+$_lang["files_management"] = 'Zarządzaj plikami';
+$_lang["files_management_no_permission"] = 'Nie masz wystarczających uprawnień do otwarcia lub edycji tych plików. Zapytaj administratora o dostęp do <b>%s</b>.';
 $_lang["files_modified"] = 'Zmodyfikowany';
 $_lang["files_top_level"] = 'Najwyższy poziom';
 $_lang["files_up_level"] = 'Jeden poziom wyżej.';
@@ -373,6 +378,7 @@ $_lang["friendlyurlsuffix_message"] = 'Opcja ta umożliwia określenie sufiksu d
 $_lang["friendlyurlsuffix_title"] = 'Sufiks dla przyjaznych URLi:';
 $_lang["functionnotimpl"] = 'Przepraszam!';
 $_lang["functionnotimpl_message"] = 'Ta funkcja nie została jeszcze zaimplementowana.';
+$_lang["further_info"] = 'Pozostałe informacje';
 $_lang["go"] = 'Dalej';
 $_lang["group_access_permissions"] = 'Dostęp grup użytkowników';
 $_lang["guid"] = 'GUID';
@@ -390,6 +396,7 @@ $_lang["icon"] = 'Ikona';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Przypisanie nadrzędne:\n\nDokument jest dzieckiem wybranego dokumentu.';
 $_lang["illegal_parent_self"] = 'Przypisanie nadrzędne:\n\nWybrany dokument nie może być przypisany do samego siebie.';
+$_lang["images_management"] = 'Zarządzaj obrazami';
 $_lang["import_files_found"] = '<b>Znaleziono %s dokumentów do importu...</b><p />';
 $_lang["import_params"] = 'Importuj parametry udostępniane przez moduł';
 $_lang["import_params_msg"] = 'Możesz zaimportować parametry i ustawienia modułu wybierając nazwę modułu z menu rozwijalnego.<br /><b>Uwaga:</b> Aby moduł pojawił się na liści ta wtyczka/snippet musi być częścią listy zależności modułu oraz moduł musi mieć włączone udostępnianie parametrów. ';
@@ -432,8 +439,10 @@ $_lang["keyword"] = 'Słowo kluczowe';
 $_lang["keywords"] = 'Słowa kluczowe';
 $_lang["keywords_intro"] = 'Aby edytować słowo kluczowe wpisz nowe słowo w polu tekstowym obok słowa, które chcesz zmienić. Aby usunąć słowo kluczowe, zaznacz pole \'usuń\' dla danego słowa. Jeśli zaznaczysz pole usunięcia i zmienisz nazwę pola zostanie ono usunięte!';
 $_lang["language_message"] = 'Wybierz język dla MODX Content Manager.';
-$_lang["language_title"] = 'Język:';
+$_lang["language_title"] = 'Język Managera';
+$_lang["last_update"] = 'Ostatnia aktualizacja';
 $_lang["launch_site"] = 'Uruchom stronę';
+$_lang["license"] = 'Licencja';
 $_lang["link_attributes"] = 'Atrybuty łącza';
 $_lang["link_attributes_help"] = 'Tu możesz wprowadzić atrybuty łącza, takie jak rel= lub href=.';
 $_lang["list_mode"] = 'Włącz/wyłącz tryb listy - używany to wyświetlenia listy wszystkich rekordów w tabeli.';
@@ -610,10 +619,10 @@ $_lang["onlineusers_actionid"] = 'ID akcji';
 $_lang["onlineusers_ipaddress"] = 'Adres IP użytkownika';
 $_lang["onlineusers_lasthit"] = 'Ostatnio odwiedzone';
 $_lang["onlineusers_message"] = 'Ta lista pokazuje wszystkich użytkowników aktywnych przez ostatnie 20 minut (aktualny czas ';
-$_lang["onlineusers_title"] = 'Użytkowników online';
+$_lang["onlineusers_title"] = 'Zalogowani użytkownicy';
 $_lang["onlineusers_user"] = 'Użytkownik';
 $_lang["onlineusers_userid"] = 'ID Użytkownika';
-$_lang["optimize_table"] = 'Kliknij tu, aby zoptymalizować tabelę';
+$_lang["optimize_table"] = 'Kliknij tutaj, aby zoptymalizować tabelę';
 $_lang["page_data_cacheable"] = 'Cache\'owany';
 $_lang["page_data_cacheable_help"] = 'Zaznaczenie tego pola pozwoli na zapisywanie tego dokumentu w cache\'u. Jeśli dokument zawiera snippety, upewnij się że pole jest odznaczone.';
 $_lang["page_data_cached"] = '<b>Źródło pobrane z cache\'u:</b>';
@@ -654,6 +663,8 @@ $_lang["paging_showing"] = 'Pokazuję';
 $_lang["paging_to"] = 'do';
 $_lang["paging_total"] = 'wszystkich';
 $_lang["parameter"] = 'Parametr';
+$_lang["parse_docblock"] = 'Przetwórz DocBlock';
+$_lang["parse_docblock_msg"] = 'Uwaga (!): To <b>zresetuje</b> nazwę, konfigurację, opis oraz kategorię do wartości domyślnych poprzez ponowne skanowanie kodu źródłowego.';
 $_lang["password"] = 'Hasło';
 $_lang["password_change_request"] = 'Żądanie zmiany hasła';
 $_lang["password_gen_gen"] = 'Pozwól MODX wygenerować hasło.';
@@ -677,6 +688,7 @@ $_lang["plugin_name"] = 'Nazwa wtyczki';
 $_lang["plugin_priority"] = 'Edytuj kolejność wykonywania pluginów po wydarzeniach.';
 $_lang["plugin_priority_instructions"] = 'Przeciągnij aby zmienić kojejność pluginów w każdej z kategorii wydarzeń. Plugin który ma być uruchomiony jako pierwszy powinien być na szczycie listy.';
 $_lang["plugin_priority_title"] = 'Kolejność wykonywania pluginów';
+$_lang["purge_plugin"] = 'Usuń przestarzałe wtyczki';
 $_lang["plugin_title"] = 'Stwórz/edytuj wtyczkę';
 $_lang["preview"] = 'Podgląd';
 $_lang["preview_msg"] = 'To jest podgląd ostatnio dokonanych zmian. Kliknij tutaj aby <a href="#" onclick="saveRefreshPreview();">zapisać i odświeżyć</a> bieżące zmiany';
@@ -697,6 +709,7 @@ $_lang["rb_webuser_title"] = 'Użytkownicy web?';
 $_lang["recent_docs"] = 'Ostatnio używane';
 $_lang["recommend_setting_change_title"] = 'Rekomendowana zmiana ustawień';
 $_lang["recommend_setting_change_description"] = 'Strona nie została skonfigurowana aby walidować nagłówki HTTP_REFERER. Zalecamy włączenie tej opcji aby zmniejszyć ryzyko ataków CSRF (Cross Site Request Forgery).';
+$_lang["references"] = 'Odniesienia';
 $_lang["refresh_cache"] = 'Cache: Znaleziono <b>%s</b> plików w katalogu cache i usunięto z niego <b>%d</b> plików.<p>Nowe pliki cache\'u zostaną utworzone podczas wysyłania zapytań o strony.';
 $_lang["refresh_published"] = '<b>%s</b> dokument/y/ów zostało opublikowanych.';
 $_lang["refresh_site"] = 'Odśwież stronę';
@@ -712,11 +725,13 @@ $_lang["remove_date"] = 'Data usunięcia';
 $_lang["remove_locks"] = 'Zdejmij blokady';
 $_lang["rename"] = 'Zmień nazwę';
 $_lang["reports"] = 'Raporty';
+$_lang["report_issues"] = 'Zgłaszanie problemów';
 $_lang["require_tagname"] = 'Nazwa tagu jest wymagana';
 $_lang["require_tagvalue"] = 'Wartość tagu jest wymagana';
 $_lang["reserved_name_warning"] = 'Użyłeś zarezerwowanej nazwy.';
 $_lang["reset"] = 'Reset';
 $_lang["reset_failedlogins"] = 'reset';
+$_lang["reset_sort_order"] = 'Resetuj kolejność sortowania';
 $_lang["resource"] = 'Dokument';
 $_lang["resource_alias"] = 'Alias dokumentu';
 $_lang["resource_alias_help"] = 'Tutaj możesz wybrać alias tego dokumentu. To spowoduje dostępność dokumentu poprzez: http://yourserver/alias Funkcja ta działa tylko, przy użyciu przyjaznych URL.';
@@ -757,17 +772,19 @@ $_lang["resource_type"] = 'Typ zasobu';
 $_lang["resource_type_message"] = 'Linki odsyłają do zasobów w Internecie włączając w to również inne zasoby tej strony. Przykładowo: zewnętrzne strony internetowe, obrazy lub inne pliki znajdujące się w Internecie. Linki powinny być typu "text/html" oraz posiadać ustawiony sposób przetwarzania treści na "Inline".';
 $_lang["resource_type_weblink"] = 'Link';
 $_lang["resource_type_webpage"] = 'Dokument';
-$_lang["resource_weblink_help"] = 'Wprowadź adres obiektu, do którego chcesz się odwołać za pomocą tego odsyłacza.';
+$_lang["resource_weblink_help"] = 'Podaj adres obiektu który chcesz połączyć z Weblinkiem. Możesz też wybrać plik z serwera lub zasób z drzewa.';
 $_lang["resources_in_container"] = 'dokument(-y/-ów) w tym folderze';
 $_lang["resources_in_container_no"] = 'Ten folder nie ma dokumentów podrzędnych.';
 $_lang["role"] = 'Rola';
 $_lang["role_about"] = 'Pokazuj stronę \'O MODX\'';
 $_lang["role_access_persmissions"] = 'Uprawnienia dostępu';
 $_lang["role_actionok"] = 'Pokazuj ekran zakończenia zadania';
+$_lang["role_assets_images"] = 'Zarządzanie assets/images';
+$_lang["role_assets_files"] = 'Zarządzanie assets/files';
 $_lang["role_bk_manager"] = 'Użyj menedżera backup-u';
 $_lang["role_cache_refresh"] = 'Czyszczenie cache\'u witryny';
 $_lang["role_change_password"] = 'Zmienianie hasła';
-$_lang["role_change_resourcetype"] = 'Zmien Typ zasobu';
+$_lang["role_change_resourcetype"] = 'Zmiana Typu Zasobu';
 $_lang["role_chunk_management"] = 'Zarządzanie chunkami';
 $_lang["role_config_management"] = 'Zarządzanie konfiguracją';
 $_lang["role_content_management"] = 'Zarządzanie zawartością';
@@ -802,7 +819,8 @@ $_lang["role_empty_trash"] = 'Trwałe kasowanie usuniętych dokumentów';
 $_lang["role_errors"] = 'Pokazuj okno dialogowe błędów';
 $_lang["role_eventlog_management"] = 'Logowanie zdarzeń';
 $_lang["role_export_static"] = 'Eksportowanie statycznego HTML';
-$_lang["role_file_manager"] = 'Używanie menedżera plików';
+$_lang["role_file_management"] = 'Zarządzanie plikami';
+$_lang["role_file_manager"] = 'Dostęp zarządzania wszystkimi plikami (root)';
 $_lang["role_frames"] = 'Pokaż ramki menedżera';
 $_lang["role_help"] = 'Przeglądanie stron pomocy';
 $_lang["role_home"] = 'Pokaż stronę wprowadzającą menedżera';
@@ -862,8 +880,11 @@ $_lang["search_criteria_content"] = 'Szukaj po zawartości';
 $_lang["search_criteria_content_msg"] = 'Znajdź wszystkie dokumenty zawierające w zawartości wpisany tekst.';
 $_lang["search_criteria_id"] = 'Szukaj po ID';
 $_lang["search_criteria_id_msg"] = 'Wpisz ID dokumentu, aby go szybko zlokalizować.';
+$_lang["search_criteria_top"] = 'Szukaj w głównych polach';
+$_lang["search_criteria_top_msg"] = 'Tytuł, Długi tytuł, Alias, ID';
 $_lang["search_criteria_template_id"] = 'Szukaj po ID szablonu';
 $_lang["search_criteria_template_id_msg"] = 'Znajdź wszystkie dokumenty używające określonego szablonu.';
+$_lang["search_criteria_url_msg"] = 'Znajdź zasób za pomocą dokładnego URL.';
 $_lang["search_criteria_longtitle"] = 'Szukaj w długich tytułach';
 $_lang["search_criteria_longtitle_msg"] = 'Znajdź wszystkie dokumenty posiadające wyszukiwane słowo w długim tytul.';
 $_lang["search_criteria_title"] = 'Szukaj po tytule';
@@ -889,6 +910,9 @@ $_lang["serveroffset"] = 'Przesunięcie czasu serwera';
 $_lang["serveroffset_message"] = 'Wybierz różnicę czasu pomiędzy lokalizacją Twoją, a serwera. Aktualny czas na serwerze wynosi <b>[%s]</b>, aktualny czas na serwerze z uwzględnieniem różnicy czasu wynosi <b>[%s]</b>.';
 $_lang["serveroffset_title"] = 'Przesunięcie czasu serwera:';
 $_lang["servertime"] = 'Czas serwera';
+$_lang["set_automatic"] = 'Ustaw automatycznie';
+$_lang["set_default"] = 'Ustaw domyślne';
+$_lang["set_default_all"] = 'Ustaw domyślne';
 $_lang["settings_after_install"] = 'Ponieważ jest to nowa instalacja, wymagane jest abyś sprawdził ustawienia i zmienił te, które ci nie odpowiadają. Po sprawdzeniu ustawień, naciśnij \'Zapisz\' aby zaktualizowac ustawienia w bazie.<br /><br />';
 $_lang["settings_config"] = 'Konfiguracja';
 $_lang["settings_dependencies"] = 'Zależności';
@@ -896,6 +920,7 @@ $_lang["settings_events"] = 'Zdarzenia systemowe';
 $_lang["settings_furls"] = 'Ustawienia przyjaznego URL';
 $_lang["settings_general"] = 'Ogólne';
 $_lang["settings_misc"] = 'Inne ustawienia';
+$_lang["settings_security"] = 'Bezpieczeństwo';
 $_lang["settings_KC"] = 'Przeglądarka plików';
 $_lang["settings_page_settings"] = 'Ustawienia strony';
 $_lang["settings_photo"] = 'Zdjęcie';
@@ -935,9 +960,15 @@ $_lang["snippet_msg"] = 'Tutaj możesz dodawać/ edytować snippety. Pamiętaj, 
 $_lang["snippet_name"] = 'Nazwa snippeta';
 $_lang["snippet_properties"] = 'Domyślne właściwości';
 $_lang["snippet_title"] = 'Utwórz/ edytuj snippet';
+$_lang["sort_alphabetically"] = 'Sortuj alfabetycznie';
 $_lang["sort_asc"] = 'Rosnąco';
 $_lang["sort_desc"] = 'Malejąco';
+$_lang["sort_menuindex"] = 'Sortuj indeks menu';
 $_lang["sort_tree"] = 'Sortuj drzewo';
+$_lang['sort_updating'] = 'Aktualizowanie...';
+$_lang['sort_updated'] = 'Zaktualizowano!';
+$_lang['sort_nochildren'] = 'Dokument nie ma żadnych pod-dokumentów';
+$_lang["sort_elements_msg"] = 'Przeciągnij aby zmienić kolejność elementów.';
 $_lang["source"] = 'Źródło';
 $_lang["stay"] = 'Kontynuuj edycję';
 $_lang["stay_new"] = 'Dodaj kolejny';
@@ -994,8 +1025,10 @@ $_lang["template_management_msg"] = 'Tutaj możesz wybrać, które szablony chce
 $_lang["template_msg"] = 'Tutaj możesz tworzyć/ edytować szablony. Zmienione/ nowe szablony nie będą widoczne na zcacheowanych stronach Twojej witryny dopóki cache nie zostanie wyczyszczony, jednakże, możesz użyć funkcji podglądu na stronie, aby zobaczyć szablon w działaniu.';
 $_lang["template_name"] = 'Nazwa szablonu';
 $_lang["template_no_tv"] = 'Do tego szablonu nie zostały jeszcze przypisane żadne zmienne szablonu.';
+$_lang["template_notassigned_tv"] = 'Można przydzielić te Zmienne Szablonu.';
 $_lang["template_reset_all"] = 'Zresetuj wszystkie strony i przypisz je do szablonu domyślnego';
 $_lang["template_reset_specific"] = 'Zresetuj tylko \'%s\' stron';
+$_lang["template_selectable"] = 'Szablon dostępny podczas tworzenia lub edycji zasobu.';
 $_lang["template_title"] = 'Utwórz/ edytuj szablon';
 $_lang["template_tv_edit"] = 'Edytuj kolejność sortowania zmiennych szablonu';
 $_lang["template_tv_edit_message"] = 'Przeciągnij aby zmienić kolejność Zmiennych Szablonu dla tego szablonu.';
@@ -1007,6 +1040,7 @@ $_lang["tmplvar_change_template_msg"] = 'Zmiana tego szablonu spowoduje przeład
 $_lang["tmplvar_inuse"] = 'Poniższy dokument lub dokumenty używają tej Zmiennej Szablonu. Aby kontynuować usuwane kliknij przycisk Usuń, w przeciwnym razie kliknij Anuluj.';
 $_lang["tmplvar_tmpl_access"] = 'Dostęp Szablonów';
 $_lang["tmplvar_tmpl_access_msg"] = 'Wybierz Szablony, które mogą odczytywać lub modyfikować tą zmienną';
+$_lang["tmplvar"] = 'Zmienna szablonu';
 $_lang["tmplvars"] = 'Zmienne Szablonu';
 $_lang["tmplvars_binding_msg"] = 'To pole obsługuje przypisanie danych źródłowych przy użyciu poleceń @';
 $_lang["tmplvars_caption"] = 'Tytuł';
@@ -1019,6 +1053,7 @@ $_lang["tmplvars_msg"] = 'Tutaj możesz dodawać/edytować Zmienne Szablonów. Z
 $_lang["tmplvars_name"] = 'Nazwa zmiennej';
 $_lang["tmplvars_novars"] = 'Nie znaleziono Zmiennych Szablonu';
 $_lang["tmplvars_rank"] = 'Kolejność sortowania';
+$_lang["tmplvars_rank_edit_message"] = 'Przeciągnij aby zmienić kolejność zmiennych szablonu.';
 $_lang["tmplvars_reset_params"] = 'Zresetuj parametry';
 $_lang["tmplvars_title"] = 'Utwórz/Edytuj Zmienną Szablonu';
 $_lang["tmplvars_type"] = 'Typ pola';
@@ -1033,6 +1068,8 @@ $_lang["track_visitors_message"] = 'Logowanie wizyt pozwoli na stworzenie statys
 $_lang["track_visitors_title"] = 'Loguj wizyty';
 $_lang["tree_page_click"] = 'Akcja po kliknięciu na dokument';
 $_lang["tree_page_click_message"] = 'Domyślna akcja wykonywana po kliknięciu na dokument w drzewie dokumentów.';
+$_lang["use_breadcrumbs"] = 'Pokaż nawigację';
+$_lang["use_breadcrumbs_message"] = 'Pokaż nawigację podczas tworzenia lub edycji zasobu';
 $_lang["tree_show_protected"] = 'Pokazuj chronione dokumenty';
 $_lang["tree_show_protected_message"] = 'Kiedy ta opcja jest ustawiona na "Nie", chronione dokumenty (i wszystkie ich poddokumenty) nie będą wyświetlane na drzewie dokumentów. "Nie" jest ustawieniem zgodnym z wcześniejszymi wersjami MODX.';
 $_lang["truncate_table"] = 'Kliknij tu, aby skrócić tabelę';
@@ -1108,6 +1145,7 @@ $_lang["valid_hostnames_title"] = 'Prawidłowe nazwy hosta';
 $_lang["validate_referer_message"] = 'Możesz weryfikować nagłówki HTTP_REFERER aby zmniejszyć ryzyko ataków typu CSRF (Cross Site Request Forgery). Niektóre konfiguracje mogą nie mieć możliwości korzystania z tej opcji, jeżeli serwer nie wysyła nagłówków HTTP_REFERER.';
 $_lang["validate_referer_title"] = 'Weryfikuj nagłówki HTTP_REFERER';
 $_lang["value"] = 'Wartość';
+$_lang["version"] = 'Wersja';
 $_lang["view"] = 'Pokaż';
 $_lang["view_child_resources_in_container"] = 'Pokaż poddokumenty';
 $_lang["view_log"] = 'Wyświetl log';
@@ -1159,8 +1197,12 @@ $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
 
 $_lang["enable_bindings_title"] = 'Włącz komendy @Bindings';
 $_lang["enable_bindings_message"] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
+$_lang["enable_filter_title"] = 'Włącz filtry';
+$_lang["enable_filter_message"] = 'Filtry pozwalają na manipulowanie pokazywaniem lub przetwarzaniem tagów. Pozwalają zmodyfikować wartości na poziomie szablonu analogicznie jak PHx. <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">Więcej informacji</a>.'; // todo: change link to documentation 
+$_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbudowane filtry będą domyślnie wyłączone';
 
-$_lang["enable_filter_phx_warning"] = 'Po włączeniu wtyczki PHx, filtry wbudowane są domyślnie wyłączone';
+$_lang["enable_filter_phx_warning"] = 'Jeśli wtyczka PHx zostanie wykryta, wbudowane filtry będą domyślnie wyłączone';
+
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
 $_lang["bkmgr_restore_title"] = 'Przywróć';
@@ -1175,13 +1217,15 @@ $_lang["bkmgr_snapshot_msg"] = '<p>Zawartość bazy danych zostanie zapisana na 
 $_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
 $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
-$_lang["bkmgr_restore_confirm"] = 'Czy na pewno chcesz przywrócić kopię zapasową\n[+filename+] ?';
+$_lang["bkmgr_restore_confirm"] = 'Czy jesteś pewien, że chcesz przywrócić kopię zapasową\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
 
 $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
 $_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
 $_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
 $_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
+$_lang["files.dynamic.php5"] = 'Nie udało się duplikować pliku.';
+$_lang["files.dynamic.php6"] = 'Nie udało się zmienić nazwy pliku lub katalogu.';
 $_lang["files_dynamic_new_folder_name"] = 'Podaj nazwę nowego katalogu:';
 $_lang["files_dynamic_new_file_name"] = 'Podaj nową nazwę pliku:';
 $_lang["not_readable_dir"] = 'Nie można odczytać katalogu.';
@@ -1195,7 +1239,7 @@ $_lang["check_files_onlogin_title"] = 'Sprawdzaj ważne pliki przy logowaniu';
 $_lang["check_files_onlogin_message"] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Ważne pliki systemowe zostały zmienione.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'System został skonfigurowany tak aby sprawdzać ważne pliki systemowe pod kątem ataków. To ostrzeżenie niekoniecznie oznacza że strona została zaatakowana, jednakże powinno się sprawdzić analizowane pliki wylistowane w Konfiguracja systemu -> Bezpieczeństwo -> Sprawdzaj ważne pliki przy logowaniu. Jeśli pliki są niezmienione lub utworzone przez administratora, przejdź do Konfiguracji systemu i zapisz ponownie ustawienia. Zmiany wykryto w następujących plikach:';
 
 $_lang['email_method_title'] = 'Metoda wysyłania poczty';
 $_lang['email_method_mail'] = 'Funkcja PHP mail()';
@@ -1209,6 +1253,7 @@ $_lang['smtp_port_title'] = 'Port SMTP';
 
 $_lang["setting_resource_tree_node_name"] = 'Nazwa węzła drzewa zasobów';
 $_lang["setting_resource_tree_node_name_desc"] = 'Określ pole zasobu, które zostanie użyte w czasie renderowania węzłów w drzewie zasobów. Domyślnie to pagetitle, jednakże każde pole zasobu może zostać wykorzystane np. menutitle, alias.';
+$_lang["setting_resource_tree_node_name_desc_add"] = 'Informacja: Od MODX 1.1 możesz zmienić wyświetlaną nazwę w opcjach sortowania drzewa zasobów. To ustawienie jest używane gdy wyświetlana nazwa w drzewie jest ustawiona na &quot;Domyślnie&quot;.';
 
 $_lang["resource_opt_alvisibled"] = 'in URL';
 $_lang["resource_opt_alvisibled_help"] = 'alias in url';
@@ -1223,6 +1268,8 @@ $_lang["cache_type_1"] = 'Cache bazuje tylko na id dokumentu (domyślne)';
 $_lang["cache_type_2"] = 'Cache bazuje na id dokumentu oraz parametrach $_GET';
 $_lang["seostrict_title"] = 'Używaj SEO Strict URLs';
 $_lang["seostrict_message"] = 'Jeśli potrzeba, wymuś używanie strict URLs aby zapobiec duplikowaniu treści';
+$_lang["aliaslistingfolder_title"] = 'Używaj AliasListing tylko dla folderów';
+$_lang["aliaslistingfolder_message"] = 'Redukuje zużycie pamięci w przypadku bardzo dużej liczby zasobów';
 
 $_lang["settings_friendlyurls_alert"] = 'Wymagana jest zmiana nazwy pliku ht.access na .htaccess aby używać przyjaznych adresów.';
 $_lang["settings_friendlyurls_alert2"] = 'Ponieważ serwis zainstalowany został w podkatalogu, wymagana jest zmiana zawartości pliku .htaccess.';
@@ -1284,3 +1331,58 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Wybierz wszystko";
 $_lang["check_none"] = "Żaden";
 $_lang["check_toggle"] = "Odwróć zaznaczenie";
+
+$_lang["version_notices"] = "Uwagi do wydania";
+
+$_lang["em_button_shift"] = "(Shift + kliknięcie otwiera w wielu oknach)";
+
+$_lang["reset_sysfiles_checksum_button"] = "Odbuduj sumy kontrolne";
+$_lang["reset_sysfiles_checksum_alert"] = "Czy jesteś pewien że chcesz odbudować sumy kontrolne?";
+
+$_lang["file_browser_disabled_msg"] = "Przeglądarka plików nie została włączona.";
+$_lang["which_browser_default_title"]= "Domyślna przeglądarka plików";
+$_lang["which_browser_default_msg"]= "Wybierz przeglądarkę plików, która ma być domyślna. W ustawieniach użytkownikach możesz ominąć domyślne ustawienie dla danego użytkownika.";
+$_lang["which_browser_title"]= "Przeglądarka plików";
+$_lang["which_browser_msg"]= "Możesz wybrać inną przeglądarkę plików dla tego użytkownika. Aby użyć ustawień systemowych zostaw wartość &quot;Domyślne&quot;.";
+$_lang["option_default"] = "Domyślne";
+
+$_lang['evo_downloads_title'] = "Pobierania Evolution";
+$_lang['help_translating_title'] = "Pomóż w tłumaczeniu MODX Evolution";
+$_lang['download'] = "Pobierz";
+$_lang['downloads'] = "Pobierania";
+$_lang["previous_releases"] = "Poprzednie wydania";
+$_lang["extras"] = "Extras";
+
+$_lang["display_locks"] = "Wyświetlaj blokady";
+$_lang["role_display_locks"] = "Wyświetlaj blokady";
+$_lang["session_timeout"] = "Wygaśnięcie sesji";
+$_lang["session_timeout_msg"] = "MODX będzie pingować serwer podobnie jak ustawienie &quot;Okres sprawdzania wiadomości&quot;. Jeśli ostatni ping przewyższy ustawienie, powiązana sesja będzie uznana za nieważną i wszystkie powiązane blokady zostaną automatycznie zdjęte. Ustaw wartość w minutach (>2 minuty, domyślnie 15 minut).";
+$_lang["unlock_element_id_warning"] = "Czy jesteś pewien że chcesz odblokować ten [+element_type+] (ID [+id+])?";
+$_lang["lock_element_type_1"] = "Szablon";
+$_lang["lock_element_type_2"] = "Zmienna szablonu";
+$_lang["lock_element_type_3"] = "Chunk";
+$_lang["lock_element_type_4"] = "Snippet";
+$_lang["lock_element_type_5"] = "Wtyczka";
+$_lang["lock_element_type_6"] = "Moduł";
+$_lang["lock_element_type_7"] = "Zasób";
+$_lang["lock_element_type_8"] = "Rola";
+$_lang["lock_element_editing"] = "Edytujesz ten [+element_type+] od\n[+lasthit_df+]";
+$_lang["lock_element_locked_by"] = "Ten [+element_type+] jest zablokowany przez użytkownika\n[+username+] od [+lasthit_df+]";
+
+$_lang["minifyphp_incache_title"] = 'Zmniejsz kod PHP w cache serwisu';
+$_lang["minifyphp_incache_message"] = 'Zmniejsz kod PHP (snippetów i wtyczek) i przechowuj go w pliku cache serwisu. Więcej informacji: <a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
+
+$_lang["logout_reminder_msg"] = "Przypomnienie: Wygląda na to że [+date+] zapomniałeś się wylogować. Proszę zwrócić w przyszłości uwagę na to aby poprawnie się wylogować po zakończeniu pracy.";
+
+$_lang["allow_eval_title"]             = "Kod PHP eval w wywo‭‭‭łaniach snippetów";
+$_lang["allow_eval_msg"]               = "Dla developerów: Proszę używać \$modx-&gt;safeEval().";
+$_lang["allow_eval_with_scan"]         = "Wykonuj tylko dozwolone funkcje";
+$_lang["allow_eval_with_scan_at_post"] = "Wykonuj wszystko. Jednakże tylko dozwolone funkcje przy POST";
+$_lang["allow_eval_everytime_eval"]    = "Bez ograniczeń (używaj tylko do debugowania)";
+$_lang["allow_eval_dont_eval"]         = "Nie zezwalaj na wszystkie funkcje";
+
+$_lang["safe_functions_at_eval_title"] = "Funkcje zezwalające na eval";
+$_lang["safe_functions_at_eval_msg"]   = "Lista oddzielona przecinkami";
+
+
+$_lang["multiple_sessions_msg"]   = "Informacja: Wykryto wiele aktywnych sesji (w sumie [+total+]) dla użytkownika <b>[+username+]</b>.";
