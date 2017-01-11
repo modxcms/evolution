@@ -404,20 +404,19 @@ class Wayfinder {
                 }
                 $sort = implode(',', $_);
             }
-
-            // get document groups for current user
-            if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(',',$docgrp);
+            
             // build query
             if($modx->isFrontend()) {
-                if(!$this->_config['showPrivate']) {
-                    $access = "sc.privateweb=0";
-                }
+                if(!$this->_config['showPrivate']) $access = "sc.privateweb=0";
+                else                               $access = '';
             }
-            else {
-                $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
-                if($docgrp) $access .= sprintf(' OR dg.document_group IN (%s)', $docgrp);
+            else $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
+            
+            if($access!=='') {
+                $docgrp = $modx->getUserDocGroups();
+                if($docgrp) $access .= sprintf(' OR dg.document_group IN (%s)', implode(',',$docgrp));
+                $access = "AND({$access})";
             }
-            if($access) $access = "AND({$access})";
             
             //Add the ignore hidden option to the where clause
             if ($this->_config['ignoreHidden'])  $menuWhere = '';

@@ -573,10 +573,10 @@ class modxRTEbridge
             $row['default'] = isset($this->gSettingsDefaultValues[$name]) ? '<span class="default-val" style="margin:0.5em 0;float:left;">' . $this->lang('default') . '<i>' . $this->gSettingsDefaultValues[$name] . '</i></span>' : '';
 
             // Simple nested parsing
-            $output = $modx->parseText($settingsRowTpl, $row); // Replace general translations
-            $output = $modx->parseText($output, $ph);          // Replace values / settings
-            $output = $modx->parseText($output, $row);         // Replace new PHs from values / settings
-            $output = $modx->parseText($output, $ph);          // Replace last values / settings
+            $output = $this->parsePlaceholders($settingsRowTpl, $row); // Replace general translations
+            $output = $this->parsePlaceholders($output, $ph);          // Replace values / settings
+            $output = $this->parsePlaceholders($output, $row);         // Replace new PHs from values / settings
+            $output = $this->parsePlaceholders($output, $ph);          // Replace last values / settings
         
             $ph['rows'] .= $output . "\n";
         };
@@ -585,10 +585,15 @@ class modxRTEbridge
 
         $ph['editorLogo'] = !empty($this->pluginParams['editorLogo']) ? '<img src="' . $this->pluginParams['base_url'] . $this->pluginParams['editorLogo'] . '" style="max-height:50px;width:auto;margin-right:50px;" />' : '';
 
-        $settingsBody = $modx->parseText($settingsBody, $ph);
+        $settingsBody = $this->parsePlaceholders($settingsBody, $ph);
         $settingsBody = $this->replaceTranslations($settingsBody);
 
         return $settingsBody;
+    }
+    
+    public function parsePlaceholders($content, $ph) {
+        foreach($ph as $key=>$value) $content = str_replace('[+'.$key.'+]', $value, $content);
+        return $content;
     }
     
     // Replace all translation-placeholders

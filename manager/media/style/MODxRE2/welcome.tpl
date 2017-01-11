@@ -24,6 +24,14 @@
         [+logout_reminder_msg+]
       </div>
   </div>
+
+  <!-- logout reminder -->
+  <div id="multiple_sessions" style="display:[+show_multiple_sessions+]">
+      <div class="widget-wrapper alert alert-warning">
+        [+multiple_sessions_msg+]
+      </div>
+  </div>
+
   <!-- alert -->
   <div style="display:[+config_display+]">
     <div class="widget-wrapper alert alert-warning">
@@ -205,7 +213,7 @@
   [[@OnManagerWelcomeRender]] 
   <div class="container-fluid">
     <p class="text-muted pull-right">
-      <a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[(site_name)]-evodashboard.grid,[(site_name)]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [%reset%]</a>
+      <a class="btn btn-sm btn-default" onclick="cleanLocalStorage('[(site_name:encode_js)]-evodashboard.grid,[(site_name:encode_js)]-evodashboard.states')"><i class="fa fa-refresh" aria-hidden="true"></i> [%reset%]</a>
     </p>
   </div>
 
@@ -218,10 +226,10 @@
 <script type="text/javascript">
   //localStorage.clear();
 
-  var localdata_position = JSON.parse(localStorage.getItem('[(site_name)]-evodashboard.grid'));
-  var localdata_states = JSON.parse(localStorage.getItem('[(site_name)]-evodashboard.states'));
+  var localdata_position = JSON.parse(localStorage.getItem('[(site_name:encode_js)]-evodashboard.grid'));
+  var localdata_states = JSON.parse(localStorage.getItem('[(site_name:encode_js)]-evodashboard.states'));
 
-  fnCreateGridster('[(site_name)]-evodashboard.grid', '[(site_name)]-evodashboard.states');
+  fnCreateGridster('[(site_name:encode_js)]-evodashboard.grid', '[(site_name:encode_js)]-evodashboard.states');
 </script>
 
 <script type="text/javascript">        

@@ -24,6 +24,7 @@ $_lang["ef_failed_upload"] = "Onjuist bestandstype.";
 $_lang["ef_failed_vericode"] = "Ongeldige verificatie code.";
 $_lang["ef_invalid_date"] = " is geen geldige datum";
 $_lang["ef_invalid_email"] = " is geen geldig e-mail adres";
+$_lang["ef_invalid_phone"] = "Ongeldige waarden in het telefoonnummer";
 $_lang["ef_invalid_number"] = " is geen geldig nummer";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Formulier template verwijst naar een ID van een pagina met een snippet aanroep! U kunt het formulier niet in hetzelfde document hebben als de snippet aanroep.</span> id=";
 $_lang["ef_mail_abuse_error"] = "<strong>Ongeldige of onveilige waarden gedetecteerd in uw formulier</strong>.";

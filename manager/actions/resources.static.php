@@ -75,7 +75,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $lockedByUser = '';
         $rowLock = $modx->elementIsLocked($lockElementType, $row['id'], true);
         if($rowLock && $modx->hasPermission('display_locks')) {
-            if($rowLock['internalKey'] == $modx->getLoginUserID()) {
+            if($rowLock['sid'] == $modx->sid) {
                 $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_".$lockElementType],'lasthit_df'=>$rowLock['lasthit_df']));
                 $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
             } else {
@@ -140,6 +140,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                                     'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                                     'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+        foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
         ?>
         var trans = <?php echo json_encode($unlockTranslations); ?>;
         var msg = trans.msg.replace('[+id+]',id).replace('[+element_type+]',trans['type'+type]);
@@ -182,7 +183,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_templates_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_templates_search">
               </form>
             </li>
             <li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
@@ -216,7 +217,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_tmplvars_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_tmplvars_search">
               </form>
             </li>
             <li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
@@ -247,7 +248,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_htmlsnippets_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_htmlsnippets_search">
               </form>
             </li>
             <li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
@@ -277,7 +278,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_snippets_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_snippets_search">
               </form>
             </li>
             <li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
@@ -307,7 +308,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         <ul class="actionButtons">
             <li>
               <form class="filterElements-form">
-                <input class="form-control" type="text" placeholder="Type here to filter list" id="site_plugins_search">
+                <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_plugins_search">
               </form>
             </li>
             <?php if($modx->hasPermission('new_plugin'))  { ?><li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li><?php } ?>
@@ -336,14 +337,17 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     <div class="tab-page" id="tabCategory">
         <h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
         <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
-        <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
-
+        
+        <div id="category-info" style="display:none">
+            <p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
+        </div>
         <ul class="actionButtons">
           <li>
             <form class="filterElements-form">
-              <input class="form-control" type="text" placeholder="Type here to filter list" id="categories_list_search">
+              <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="categories_list_search">
             </form>
           </li>
+            <li><a href="#" id="category-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
     
         <div id="categories_list">
@@ -389,9 +393,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
                 $pluginsql = $v['table'] == 'site_plugins' ? $v['table'].'.disabled, ' : '';
                 $rs = $modx->db->select(
-                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, categories.category, categories.id as catid",
+                    "{$pluginsql} {$nameField} as name, {$v['table']}.id, description, locked, IF(isnull(categories.category), '{$_lang['no_category']}',categories.category) as category, categories.id as catid",
                     $modx->getFullTableName($v['table'])." AS {$v['table']}
-                        RIGHT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
+                        LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$v['table']}.category = categories.id",
                     "",
                     "5,1"
                     );
@@ -445,6 +449,9 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             if (e.keyCode == 13) {
             e.preventDefault();
             }
+          });
+            jQuery( "#category-help" ).click(function() {
+            jQuery( '#category-info').toggle();
             });
         </script>
     </div>

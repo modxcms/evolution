@@ -30,8 +30,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
         $param = parseTvValues($param, $tvsArray);
         switch ($cmd) {
             case "FILE" :
-                $output = ProcessFile(trim($param));
-                $output = str_replace('@FILE ' . $param, $output, $nvalue);
+                $output = $modx->atBindFileContent($nvalue);
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content

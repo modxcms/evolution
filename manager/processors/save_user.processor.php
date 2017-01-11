@@ -11,24 +11,16 @@ $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 $tbl_member_groups   = $modx->getFullTableName('member_groups');
 
 $input = $_POST;
-foreach($input as $k=>$v) {
-    if($k!=='comment') {
-        $v = sanitize($v);
-    }
-    $input[$k] = $v;
-}
 
 $id                   = intval($input['id']);
 $oldusername          = $input['oldusername'];
 $newusername          = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
-$esc_newusername      = $modx->db->escape($newusername);
 $fullname             = $input['fullname'];
 $genpassword          = $input['newpassword'];
 $passwordgenmethod    = $input['passwordgenmethod'];
 $passwordnotifymethod = $input['passwordnotifymethod'];
 $specifiedpassword    = $input['specifiedpassword'];
 $email                = $input['email'];
-$esc_email            = $modx->db->escape($email);
 $oldemail             = $input['oldemail'];
 $phone                = $input['phone'];
 $mobilephone          = $input['mobilephone'];
@@ -77,14 +69,14 @@ if ($_SESSION['mgrRole'] != 1) {
 switch ($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}'");
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, sprintf("username='%s'", $modx->db->escape($newusername)));
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 			webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND id!='%s'", $modx->db->escape($email), $id));
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 				webAlertAndQuit("Email is already in use!");
@@ -113,9 +105,7 @@ switch ($input['mode']) {
 		));
 
 		// create the user account
-		$field = array();
-		$field['username'] = $esc_newusername;
-		$internalKey = $modx->db->insert($field, $tbl_manager_users);
+		$internalKey = $modx->db->insert(array('username'=>$modx->db->escape($newusername)), $tbl_manager_users);
 
 		$field = array();
 		$field['password'] = $modx->phpass->HashPassword($newpassword);
@@ -195,7 +185,7 @@ switch ($input['mode']) {
 			<div class="sectionBody">
 			<div id="disp">
 			<p>
-			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?>
+			<?php echo sprintf($_lang["password_msg"], $modx->htmlspecialchars($newusername), $modx->htmlspecialchars($newpassword)); ?>
 			</p>
 			</div>
 			</div>
@@ -229,14 +219,14 @@ switch ($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}' AND id!='{$id}'");
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, sprintf("username='%s' AND id!='%s'", $modx->db->escape($newusername), $id));
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 				webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, sprintf("email='%s' AND internalKey!='%s'", $modx->db->escape($email), $id));
 		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
 				webAlertAndQuit("Email is already in use!");
@@ -250,7 +240,7 @@ switch ($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $esc_newusername;
+		$field['username'] = $modx->db->escape($newusername);
 		if($genpassword == 1) {
 		    $field['password'] = $modx->phpass->HashPassword($newpassword);
 		}
@@ -334,7 +324,7 @@ switch ($input['mode']) {
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
-				<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword).(($id == $modx->getLoginUserID()) ? ' '.$_lang['user_changeddata'] : ''); ?></p>
+				<p><?php echo sprintf($_lang["password_msg"], $modx->htmlspecialchars($newusername), $modx->htmlspecialchars($newpassword)).(($id == $modx->getLoginUserID()) ? ' '.$_lang['user_changeddata'] : ''); ?></p>
 			</div>
 			</div>
             </div>
@@ -354,17 +344,6 @@ switch ($input['mode']) {
 		break;
 	default:
 		webAlertAndQuit("No operation set in request.");
-}
-
-// in case any plugins include a quoted_printable function
-function save_user_quoted_printable($string) {
-	$crlf = "\n" ;
-	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf ;
-	$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e' ;
-	$r[] = "'=' . sprintf('%02X', ord('\\1'))" ; $f[] = '/([\011\040])' . $crlf . '/e' ;
-	$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'" ;
-	$string = preg_replace($f, $r, $string) ;
-	return trim(wordwrap($string, 70, ' =' . $crlf)) ;
 }
 
 // Send an email to the user
@@ -496,22 +475,4 @@ function generate_password($length = 10) {
 		$pass .= $allowable_characters[mt_rand(0, $ps_len -1)];
 	}
 	return $pass;
-}
-
-function sanitize($str='',$safecount=0) {
-	global $modx;
-	$safecount++;
-	if (1000 < $safecount) {
-		exit("error too many loops '{$safecount}'");
-	}
-	if(is_array($str)) {
-		foreach($str as $i=>$v) {
-			$str[$i] = sanitize($v,$safecount);
-		}
-	}
-	else {
-		// $str = strip_tags($str); // LEAVE < and > intact
-		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
-	}
-	return $str;
 }

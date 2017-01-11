@@ -52,7 +52,7 @@ abstract class AbstractController
         $this->FS = \Helpers\FS::getInstance();
         $this->modx = $modx;
         $this->params = $modx->event->params;
-        $this->rid = isset($_POST[$this->rfName]) ? (int)$_POST[$this->rfName] : 0;
+        $this->rid = isset($_REQUEST[$this->rfName]) ? (int)$_REQUEST[$this->rfName] : 0;
     }
 
     public function callExit()

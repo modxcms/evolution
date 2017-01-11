@@ -1139,7 +1139,8 @@ $_lang["bkmgr_snapshot_title"] = 'Sauvegarde et restauration des "Snapshots"';
 $_lang["bkmgr_snapshot_msg"] = '<p>Le contenu de la base est sauvegardé et restauré sur un serveur.<br />Emplacement : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Ajouter un "snapshot"';
 $_lang["bkmgr_snapshot_list_title"] = 'Liste des "snapshots"';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Inverser cette donnée';
+$_lang["bkmgr_restore_confirm"] = 'Voulez-vous vraiment annuler la sauvegarde\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Aucun "snapshot"';
 
 $_lang["files.dynamic.php1"] = 'Créer un fichier texte';

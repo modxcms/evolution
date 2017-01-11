@@ -9,6 +9,12 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
+// count duplicates
+$name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_plugins'), "id='{$id}'"));
+$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_plugins'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
+if($count>=1) $count = ' '.($count+1);
+else $count = '';
+
 // duplicate Plugin
 $newid = $modx->db->insert(
 	array(
@@ -20,7 +26,7 @@ $newid = $modx->db->insert(
 		'properties'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_plugins'), // Insert into
-	"CONCAT('Duplicate of ',name) AS name, description, disabled, moduleguid, plugincode, properties, category", $modx->getFullTableName('site_plugins'), "id='{$id}'"); // Copy from
+	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, '1' AS disabled, moduleguid, plugincode, properties, category", $modx->getFullTableName('site_plugins'), "id='{$id}'"); // Copy from
 
 // duplicate Plugin Event Listeners
 $modx->db->insert(

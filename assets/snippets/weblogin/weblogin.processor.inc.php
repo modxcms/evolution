@@ -366,13 +366,15 @@ defined('IN_PARSER_MODE') or die();
 
     // update active users list if redirectinq to another page
     if($id!=$modx->documentIdentifier) {
-        if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
-        $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
-        if($a!=1) {
-            // web users are stored with negative id
-            $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id, ip) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
-            $modx->db->query($sql);
-        }
+        $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;
+        $lasthittime = $modx->time;
+        $a = 998;
+        
+        // web users are stored with negative id
+        $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid})";
+        $modx->db->query($sql);
+        
+        $modx->updateValidatedUserSession();
     }
 
     // invoke OnWebLogin event
