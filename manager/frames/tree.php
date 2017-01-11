@@ -353,10 +353,10 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
                 var href = '';
+                setLastClickedElement(7, id);
                 if(treedisp_children==0) {
                     href = "index.php?a=3&r=1&id=" + id + getFolderState();
-                } else {
-                    setLastClickedElement(7, id);
+                } else {  
                     href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
                 if (e.shiftKey) {

@@ -1,6 +1,6 @@
 <?php
 
-if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_BASE_PATH.'manager/includes/');
+if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_MANAGER_PATH.'includes/');
 
 class MODIFIERS {
     
