@@ -11,6 +11,8 @@ $phpMinVersion = "5.3.0";
 if (version_compare(phpversion(), $phpMinVersion) < 0) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
     $errors += 1;
+} else {
+    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 // check php register globals off
 echo "<p>" . $_lang['checking_registerglobals'];
@@ -18,6 +20,15 @@ $register_globals = (int) ini_get('register_globals');
 if ($register_globals == '1'){
     echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p><p><strong>".$_lang['checking_registerglobals_note']."</strong></p>";
     // $errors += 1; // comment out for now so we still allow installs if folks are simply stubborn
+} else {
+    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+}
+// check if iconv is available
+echo "<p>" . $_lang['checking_iconv'];
+$iconv = (int) function_exists('iconv');
+if ($iconv == '0'){
+    echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p><p><strong>".$_lang['checking_iconv_note']."</strong></p>";
+    $errors += 1;
 } else {
     echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }

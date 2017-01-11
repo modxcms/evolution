@@ -108,11 +108,17 @@ class tinymce4bridge extends modxRTEbridge
             // Check for simple format: Title,cssClass|Title2,cssClass
             if(preg_match('/^[a-zA-Z0-9,]+/', $this->pluginParams['styleFormats'])) {
                 $styles_formats = explode('|', $this->pluginParams['styleFormats']);
+                $inline = array(); $block = array();
                 foreach ($styles_formats as $val) {
                     $style = explode(',', $val);
-                    $sfArray[] = array('title' => $style['0'], 'inline' => 'span', 'classes' => $style['1']);
+                    // create inline / block 
+                    $inline[] = array('title' => $style['0'], 'inline'   => 'span', 'classes' => $style['1']);
+                    $block[]  = array('title' => $style['0'], 'selector' => '*',    'classes' => $style['1']);
                 }
-                return $sfArray;    // return NULL would avoid bridging this parameter
+                return array(
+                    0=>array('title'=>'Inline','items'=>$inline),
+                    1=>array('title'=>'Block','items'=>$block)
+                );
             } else {
                 // Allow full-format as seen in https://www.tinymce.com/docs/demo/format-custom/
                 $this->set('style_formats', $this->pluginParams['styleFormats'], 'object');
