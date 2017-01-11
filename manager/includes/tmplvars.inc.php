@@ -98,7 +98,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 				$values = !is_array($field_value) ? explode('||', $field_value) : $field_value;
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
 				$tpl = '<label class="checkbox"><input type="checkbox" value="%s" id="tv_%s" name="tv%s[]" %s onchange="documentDirty=true;" />%s</label><br />';
-				$i = 0;
+				static $i = 0;
 				$_ = array();
 				foreach ($index_list as $c=>$item) {
 					if(is_array($item)) {
