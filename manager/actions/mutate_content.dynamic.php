@@ -788,6 +788,30 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
     &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
                 <input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?>" onchange="documentDirty=true;" />
                 </td></tr>
+<?php
+    if ($content['type'] == 'reference' || $modx->manager->action == '72') {
+?>
+        <tr><td colspan="2"><div class="split"></div></td></tr>
+        <tr style="height: 24px;">
+            <td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['which_editor_title']?></span></td>
+            <td>
+                <select id="which_editor" name="which_editor" onchange="changeRTE();">
+<?php
+                    // invoke OnRichTextEditorRegister event
+                    $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+                    if (is_array($evtOut)) {
+                        for ($i = 0; $i < count($evtOut); $i++) {
+                            $editor = $evtOut[$i];
+                            echo "\t\t\t",'<option value="',$editor,'"',($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
+                        }
+                    }
+?>
+                </select>
+            </td>
+        </tr>
+<?php
+    }
+?>            
         </table>
 
 <?php if ($content['type'] == 'document' || $modx->manager->action == '4') { ?>

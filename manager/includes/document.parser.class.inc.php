@@ -41,7 +41,6 @@ class DocumentParser {
     var $documentListing;
     var $dumpSnippets;
     var $snippetsCode;
-    var $snippetsCount=array();
     var $snippetsTime=array();
     var $chunkCache;
     var $snippetCache;
@@ -749,11 +748,13 @@ class DocumentParser {
         if ($this->dumpSnippets) {
             $sc = "";
             $tt = 0;
-            foreach ($this->snippetsTime as $s=>$t) {
-                $sc .= "$s: ".$this->snippetsCount[$s]." (".sprintf("%2.2f ms", $t*1000).")<br>";
+            foreach ($this->snippetsTime as $s=>$v) {
+                $t=$v['time'];
+                $sname=$v['sname'];
+                $sc .= sprintf("%s. %s (%s)<br>", $s, $sname, sprintf("%2.2f ms", $t)); // currentSnippet
                 $tt += $t;
             }
-            echo "<fieldset><legend><b>Snippets</b> (".count($this->snippetsTime)." / ".sprintf("%2.2f ms", $tt*1000).")</legend>{$sc}</fieldset><br />";
+            echo "<fieldset><legend><b>Snippets</b> (".count($this->snippetsTime)." / ".sprintf("%2.2f ms", $tt).")</legend>{$sc}</fieldset><br />";
             echo $this->snippetsCode;
         }
         if ($this->dumpPlugins) {
@@ -1470,9 +1471,11 @@ class DocumentParser {
         {
             $eventtime = $this->getMicroTime() - $eventtime;
             $eventtime = sprintf('%2.2f ms', $eventtime*1000);
-            $code = $this->htmlspecialchars($value);
-            if($code) $this->snippetsCode .= sprintf('<fieldset><legend><b>%s</b>(%s)</legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], $eventtime, $code);
-            $this->snippetsTime[] = $eventtime;
+            $code = str_replace("\t",'  ',$this->htmlspecialchars($value));
+            $piece = str_replace("\t",'  ',$this->htmlspecialchars($piece));
+            $print_r_params = str_replace("\t",'  ',$this->htmlspecialchars('$modx->event->params = '.print_r($params,true)));
+            $this->snippetsCode .= sprintf('<fieldset style="margin:1em;"><legend><b>%s</b>(%s)</legend><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">[[%s]]</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre><pre style="white-space: pre-wrap;background-color:#fff;width:90%%;">%s</pre></fieldset>', $snippetObject['name'], $eventtime, $piece, $print_r_params, $code);
+            $this->snippetsTime[] = array('sname'=>$key, 'time'=>$eventtime);
         }
         return $value;
     }
@@ -1486,7 +1489,7 @@ class DocumentParser {
         
         $_ = $this->documentOutput;
         $this->documentOutput = $string;
-        $this->invokeEvent('OnParseDocument');
+        $this->invokeEvent('OnBeforeParseParams');
         $string = $this->documentOutput;
         $this->documentOutput = $_;
         

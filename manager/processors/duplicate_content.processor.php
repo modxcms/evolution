@@ -64,7 +64,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 		if($count>=1) $count = ' '.($count+1);
 		else $count = '';
 		
-		$content['pagetitle'] = $content['pagetitle'].' '.$_lang['duplicated_el_suffix'].$count;
+		$content['pagetitle'] = $_lang['duplicated_el_suffix'].$count.' '.$content['pagetitle'];
 		$content['alias'] = null;
 	} elseif($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
 		$content['alias'] = null;

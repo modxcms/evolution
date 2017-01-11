@@ -18,7 +18,7 @@ if($inlineMode == 'enabled' && $e->name == 'OnWebPagePrerender') {
         'theme'=>isset($inlineTheme) ? $inlineTheme : 'inline'
     ));
 } else {
-    $options = array();
+    $options = is_array($options) ? $options : array();
 }
 
 $rte = new tinymce4bridge($options);
