@@ -2599,10 +2599,11 @@ code {
 /* breadcrumbs */
 
 ul.breadcrumbs {
-  margin: 0 0 10px 15px;
-  padding: 0;
+  margin: 0px 15px 12px 15px;
+  padding: 0 0 9px 0;
   line-height: normal;
   font-size: 0;
+  border-bottom: 1px dotted #CECACA;
 }
 
 li.breadcrumbs__li {
