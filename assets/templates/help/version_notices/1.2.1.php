@@ -14,3 +14,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         <p>Will get invoked before parsing a snippet-params string like <code>&amp;param1=`value`</code> to allow replacing custom-placeholders like EvoBabel´s <code>[%ph%]</code> before parsing a params-string. Example:<br/><br/><code>[[Wayfinder? &amp;startId=`[%lang%]` ..]]</code></p>
     </li>
 </ul>
+<h1>Debug-Infos</h1>
+<ul>
+    <li><strong>Improved Debug-Infos for <code>$modx->dumpSnippets</code> and <code>$modx->dumpPlugins</code></strong>
+        <p>To display infos for plugins/snippets create a plugin with the following code and activate event "OnWebPageInit":</p>
+        <pre>$e = & $modx->Event;
+if ( $e->name == "OnWebPageInit" ) {
+	$modx->dumpSnippets=true;
+	$modx->dumpPlugins=true;
+}</pre>
+    </li>
+</ul>
