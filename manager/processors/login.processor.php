@@ -95,6 +95,15 @@ while ($row = $modx->db->getRow($rs)) {
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
     @session_destroy();
     session_unset();
+    if ($cip = getenv("HTTP_CLIENT_IP"))
+        $ip = $cip;
+    elseif ($cip = getenv("HTTP_X_FORWARDED_FOR"))
+        $ip = $cip;
+    elseif ($cip = getenv("REMOTE_ADDR"))
+        $ip = $cip;
+    else $ip = "UNKNOWN";
+    $log = new logHandler;
+    $log->initAndWriteLog("Login Fail (Temporary Block)", $internalKey, $username, "119", $internalKey, "IP: ".$ip);
     jsAlert($_lang['login_processor_many_failed_logins']);
     return;
 }
@@ -166,15 +175,17 @@ $rt = $modx->invokeEvent('OnManagerAuthentication',
                         ));
 
 // check if plugin authenticated the user
-
-if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+$matchPassword = false;
+if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true,$rt)))
 {
 	// check user password - local authentication
 	$hashType = $modx->manager->getHashType($dbasePassword);
-	if($hashType=='phpass')  $matchPassword = login($username,$givenPassword,$dbasePassword);
-	elseif($hashType=='md5') $matchPassword = loginMD5(  $internalKey,$givenPassword,$dbasePassword,$username);
+	if($hashType=='phpass')  $matchPassword = login($username,$_REQUEST['password'],$dbasePassword);
+	elseif($hashType=='md5') $matchPassword = loginMD5($internalKey,$givenPassword,$dbasePassword,$username);
 	elseif($hashType=='v1')  $matchPassword = loginV1($internalKey,$givenPassword,$dbasePassword,$username);
 	else                     $matchPassword = false;
+} else if($rt === true || (is_array($rt) && in_array(true,$rt))) {
+	$matchPassword = true;
 }
 
 if(!$matchPassword) {
@@ -195,6 +206,9 @@ if($use_captcha==1) {
     }
 }
 
+$modx->cleanupExpiredLocks();
+$modx->cleanupMultipleActiveUsers();
+
 $currentsessionid = session_id();
 
 $_SESSION['usertype'] = 'manager'; // user is a backend user
@@ -213,15 +227,13 @@ $rs = $modx->db->select('*', $modx->getFullTableName('user_roles'), "id='{$role}
 $_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
-if (isset($_SESSION['mgrValidated'])) {
-	$modx->db->update(
-			'failedlogincount=0, '
-			. 'logincount=logincount+1, '
-			. 'lastlogin=thislogin, '
-			. 'thislogin=' . time() . ', '
-			. "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'"
-	);
-}
+$modx->db->update(
+		'failedlogincount=0, '
+		. 'logincount=logincount+1, '
+		. 'lastlogin=thislogin, '
+		. 'thislogin=' . time() . ', '
+		. "sessionid='{$currentsessionid}'", '[+prefix+]user_attributes', "internalKey='{$internalKey}'"
+);
 
 // get user's document groups
 $i=0;
@@ -253,9 +265,13 @@ if($rememberme == '1') {
 	setcookie ('modx_remember_manager', '', time() - 3600, MODX_BASE_URL);
 }
 
-// Check if user pressed logout end of last session
-$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
-if($lastHit = $modx->db->getValue($rs)) $_SESSION['show_logout_reminder'] = $lastHit;
+// Check if user already has an active session, if not check if user pressed logout end of last session
+$rs = $modx->db->select('lasthit', $modx->getFullTableName('active_user_sessions'), "internalKey='{$internalKey}'");
+$activeSession = $modx->db->getValue($rs);
+if(!$activeSession) {
+    $rs = $modx->db->select('lasthit', $modx->getFullTableName('active_users'), "internalKey='{$internalKey}' AND action != 8");
+    if ($lastHit = $modx->db->getValue($rs)) $_SESSION['show_logout_reminder'] = array('type'=>'logout_reminder', 'lastHit'=>$lastHit);
+}
 
 $log = new logHandler;
 $log->initAndWriteLog('Logged in', $modx->getLoginUserID(), $_SESSION['mgrShortname'], '58', '-', 'MODX');

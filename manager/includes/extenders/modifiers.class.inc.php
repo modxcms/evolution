@@ -1,6 +1,6 @@
 <?php
 
-if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_BASE_PATH.'manager/includes/');
+if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_MANAGER_PATH.'includes/');
 
 class MODIFIERS {
     
@@ -27,6 +27,7 @@ class MODIFIERS {
     function phxFilter($key,$value,$modifiers)
     {
         global $modx;
+        $value = $this->parseDocumentSource($value);
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
         $modifiers = ':'.trim($modifiers,':');
@@ -57,11 +58,13 @@ class MODIFIERS {
     
     function _getOpt($mode,$delim,$modifiers) {
         if($delim) {
-            if($mode=='(')
-                return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);
-            else return substr($modifiers,1,strpos($modifiers,$delim,1)-1);
+            if($mode=='(') return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);
+            
+            return substr($modifiers,1,strpos($modifiers,$delim,1)-1);
         }
         else {
+            if($mode=='(') return substr($modifiers,0,strpos($modifiers, ')') );
+            
             $chars = str_split($modifiers);
             $opt='';
             foreach($chars as $c) {
@@ -82,6 +85,7 @@ class MODIFIERS {
             }
         }
         else {
+            if($mode=='(') return substr($modifiers,strpos($modifiers, ')' )+1);
             $chars = str_split($modifiers);
             foreach($chars as $c) {
                 if($c==':') return $modifiers;
@@ -102,7 +106,7 @@ class MODIFIERS {
             
             if(preg_match('@^:(!?[<>=]{1,2})@', $c.$modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
                 $c = substr($modifiers,strlen($match[1]),1);
-                $debuginfo = '#i=0 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=0 #c=[{$c}] #m=[{$modifiers}]";
                 if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
                 else         $modifiers = substr($modifiers,strlen($match[1]));
                 
@@ -118,20 +122,20 @@ class MODIFIERS {
                 $delim     = $this->_getDelim($c,$modifiers);
                 $opt       = $this->_getOpt($c,$delim,$modifiers);
                 $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
-                $debuginfo = '#i=1 #c='.$c.' #delim='.$delim.' #m1='.$m1 . 'remainMdf=' . $modifiers;
+                $debuginfo = "#i=1 #c=[{$c}] #delim=[{$delim}] #m1=[{$m1}] remainMdf=[{$modifiers}]";
                 
                 $result[]=array('cmd'=>trim($cmd),'opt'=>$opt,'debuginfo'=>$debuginfo);
                 
                 $cmd = '';
             }
             elseif($c==':') {
-                $debuginfo = '#i=2 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=2 #c=[{$c}] #m=[{$modifiers}]";
                 if($cmd!=='') $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
                 
                 $cmd = '';
             }
             elseif(trim($modifiers)=='' && trim($cmd)!=='') {
-                $debuginfo = '#i=3 #c='.$c.' #m='.$modifiers;
+                $debuginfo = "#i=3 #c=[{$c}] #m=[{$modifiers}]";
                 $cmd .= $c;
                 $result[]=array('cmd'=>trim($cmd),'opt'=>'','debuginfo'=>$debuginfo);
                 
@@ -465,7 +469,6 @@ class MODIFIERS {
             case 'wordwrap':
                 // default: 70
                   $wrapat = intval($opt) ? intval($opt) : 70;
-                  return preg_replace_callback("~(\b\w+\b)~",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$value);
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
                 else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
@@ -993,7 +996,7 @@ class MODIFIERS {
         
         if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
         
-        if(!$modx->maxParserPasses) $modx->maxParserPasses = 20;
+        if(!$modx->maxParserPasses) $modx->maxParserPasses = 10;
         $bt='';
         $i=0;
         while($bt!==$content)
@@ -1003,6 +1006,7 @@ class MODIFIERS {
                                               $content = $modx->mergeDocumentContent($content);
             if(strpos($content,'[(')!==false) $content = $modx->mergeSettingsContent($content);
             if(strpos($content,'{{')!==false) $content = $modx->mergeChunkContent($content);
+            if(strpos($content,'[!')!==false) $content = str_replace(array('[!','!]'),array('[[',']]'),$content);
             if(strpos($content,'[[')!==false) $content = $modx->evalSnippets($content);
             
             if($content===$bt)              break;

@@ -490,6 +490,7 @@ class Qm {
                         }
             
                         // Insert jQuery and ColorBox in head if needed
+                        $head = '';
                         if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
                         if ($this->loadtb == 'true') {
                             $head .= '
@@ -613,6 +614,23 @@ class Qm {
     
                         </script>
                         ';
+
+                        $head .= "
+                        <script>
+                        // Assure keeping session and related locks alive
+                        $(document).ready(function($) {
+                            function updateMODXsession() {
+                              $.ajax({ url: '".MODX_MANAGER_URL."index.php', method:'post', data:{'updateMsgCount':true},
+                                success: function(data) {},
+                                complete: function() {
+                                  setTimeout(updateMODXsession, ". ($this->modx->config['mail_check_timeperiod'] * 1000) .");
+                                }
+                              });
+                            }
+                            setTimeout(updateMODXsession, ". ($this->modx->config['mail_check_timeperiod'] * 1000) .");
+                        });
+                        </script>
+                        ";
                         
                         // Insert QM+ css in head
                         $head .= $css;

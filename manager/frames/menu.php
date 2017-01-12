@@ -213,6 +213,10 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		// remove focus from top nav
 		if(element) element.blur();
 	}
+
+	function setLastClickedElement(type, id) {
+		localStorage.setItem('MODX_lastClickedElement', '['+type+','+id+']' );
+	}
 	</script>
 </head>
 

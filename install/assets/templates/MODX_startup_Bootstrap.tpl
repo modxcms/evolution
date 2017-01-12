@@ -185,14 +185,12 @@
 
 				<div class="row">
 
-					<div class="col-sm-8">		
-						<h1 class="editable" id="modx_longtitle">[*longtitle*]</h1>
-						<div class="editable" id="modx_content">[*content*]</div>
+					<div class="col-sm-8">
+						<h1>[*#longtitle*]</h1>
+						[*#content*]
 					</div>
 
-
 					<aside class="col-sm-4">
-
 						<div class="search">
 							<h2>Search</h2>
 							[!AjaxSearch? 

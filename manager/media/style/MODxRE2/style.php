@@ -95,11 +95,32 @@ $_style['icons_resource_overview']  = $style_path.'icons/info-sign.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
 $_style['icons_preview_resource']   = $style_path.'icons/eye.png';
 
-//Manage Files
+//file manager icons
+$_style['files_save']               = 'fa fa-floppy-o fa-fw fa-lg';
+$_style['files_folder']             = 'fa fa-folder-o fa-lg';
+$_style['files_deleted_folder']     = 'fa fa-folder-o fa-lg';
+$_style['files_folder-open']        = 'fa fa-folder-open-o fa-lg';
+$_style['files_page_php']           = 'fa fa-file-o fa-lg';
+$_style['files_page_html']          = 'fa fa-file-o fa-lg';
+$_style['files_cancel']             = 'fa fa-times-circle fa-fw fa-lg';
+$_style['files_top']                = 'fa fa-folder-open-o fa-lg';
+$_style['files_add']                = 'fa fa-plus-circle fa-fw fa-lg';
+$_style['files_upload']             = 'fa fa-upload fa-fw fa-lg';
+$_style['files_delete']             = 'fa fa-trash fa-fw fa-lg';
+$_style['files_duplicate']          = 'fa fa-clone fa-fw fa-lg';
+$_style['files_rename']             = 'fa fa-i-cursor fa-fw fa-lg';
+$_style['files_view']               = 'fa fa-eye fa-fw fa-lg';
+$_style['files_download']           = 'fa fa-download fa-fw fa-lg';
+$_style['files_unzip']              = 'fa fa-file-archive-o fa-fw fa-lg';
+$_style['files_edit']               = 'fa fa-pencil-square-o fa-fw fa-lg';
+
+//for back compatibility 
+
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_delete']             = $style_path.'icons/trash.png';
 $_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
 $_style['icons_unzip']              = $style_path.'icons/download-alt.png';
+
 
 // Indicators
 $_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png';

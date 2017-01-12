@@ -552,11 +552,11 @@ class modResource extends MODxAPI
                 $this->field[$key] = $value;
             }
             switch (true) {
-                case $key == 'parent' || (!$this->newDoc && $this->isChanged($key)):
+                case $key == 'parent':
                     $parent = (int)$this->get($key);
                     $q = $this->query("SELECT count(`id`) FROM {$this->makeTable('site_content')} WHERE `id`='{$parent}'");
                     if ($this->modx->db->getValue($q) != 1) {
-                        $parent = $value;
+                        $parent = 0;
                     }
                     $this->field[$key] = $parent;
                     $this->Uset($key);

@@ -6,8 +6,9 @@ if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCL
 
 $version = "0.1.2";
 $Store = new Store;
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-switch($_REQUEST['action']){
+switch($action){
 case 'saveuser':
 	$_SESSION['STORE_USER'] = $modx->db->escape($_POST['res']);
 	break;
@@ -86,7 +87,7 @@ default:
 	}
 	
 	$Store->lang['user_email'] = $_SESSION['mgrEmail'];
-	$Store->lang['hash'] = stripslashes( $_SESSION['STORE_USER'] );
+	$Store->lang['hash'] = isset($_SESSION['STORE_USER']) ? stripslashes( $_SESSION['STORE_USER'] ) : '';
 	$Store->lang['lang'] = $Store->language;	
 	$Store->lang['_type'] = json_encode($PACK);	
 	$Store->lang['v'] = $version;
@@ -118,14 +119,17 @@ class Store{
 	}
 	function get_version($text){
 		preg_match('/<strong>(.*)<\/strong>/s',$text, $match);
-		return $match[1];
+		return isset($match[1]) ? $match[1] : '';
 	}
 	
 	static function parse($tpl,$field){
+        global $modx;
 		foreach($field as $key=>$value)  $tpl = str_replace('[+'.$key.'+]',$value,$tpl);
+       $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+       $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
+       $tpl = str_replace('[+onManagerMainFrameHeaderHTMLBlock+]',$onManagerMainFrameHeaderHTMLBlock,$tpl);
 		return $tpl;
 	}
-
 	function tpl($file){
 		$lang = $this->lang;
 		ob_start();
@@ -223,4 +227,3 @@ class Store{
 		}
 	}
 }
-?>

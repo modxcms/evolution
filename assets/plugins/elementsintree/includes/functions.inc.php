@@ -4,7 +4,7 @@ if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 function renderLockIcon($elmTable, $id)
 {
-    global $modx, $_lang, $_style;
+    global $modx;
     
     switch($elmTable) {
         case 'site_templates': $lockType = 1; break;
@@ -26,18 +26,18 @@ function renderLockIcon($elmTable, $id)
 }
 
 function getLockedByUser($lockType,$rowLock,$id) {
-	global $modx,$_lang,$_style;
-	
+    global $modx,$_lang,$_style;
+    
     $ph = array();
     $ph['element_type'] = $_lang['lock_element_type_'.$lockType];
-    $ph['firsthit_df']  = $rowLock['firsthit_df'];
+    $ph['lasthit_df']  = $rowLock['lasthit_df'];
     
-        if($rowLock['internalKey'] == $modx->getLoginUserID()) {
+    if($rowLock['sid'] == $modx->sid) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);
         $tpl = '<span title="%s" class="editResource" style="cursor:context-menu;"><img src="%s" /></span>&nbsp;';
         $params = array($title, $_style['icons_preview_resource']);
         return vsprintf($tpl, $params);
-        } else {
+    } else {
         $ph['username'] = $rowLock['username'];
         $title = $modx->parseText($_lang['lock_element_locked_by'], $ph);
             if($modx->hasPermission('remove_locks')) {
@@ -78,7 +78,7 @@ function createElementsList($elmTable,$action,$nameField = 'name') {
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_'.$elmTable.'_search">
+          <input class="form-control" type="text" placeholder="'.$_lang['element_filter_msg'].'" id="tree_'.$elmTable.'_search">
         </form>';
     
     $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_'.$elmTable.'">';
@@ -132,7 +132,7 @@ function createModulesList($action) {
     
     $output  = '
         <form class="filterElements-form filterElements-form--eit" style="margin-top: 0;">
-          <input class="form-control" type="text" placeholder="Type here to filter list" id="tree_site_modules_search">
+          <input class="form-control" type="text" placeholder="'.$_lang['element_filter_msg'].'" id="tree_site_modules_search">
         </form>';
         
     $output .= '<div class="panel-group"><div class="panel panel-default" id="tree_site_modules">';

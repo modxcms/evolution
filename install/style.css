@@ -566,35 +566,42 @@ tbody td {
   padding: .25em .5em;
 }
 
-p.actions {
+.actions {
   line-height: 1;
   margin-top: 3px;
   overflow: hidden;
   zoom: 1;
 }
 
-p.actions a {
-  margin: 0 8px 0 0;
-  padding: 10px 12px;
+.actions a {
+  margin: 0;
+  padding: 0.8em 1em;
   border: 1px solid #CBCBCC;
-  display: block;
-  float: left;
+  display: inline-block;
   color: #3697CD;
   text-decoration: none;
   border-radius: 3px;
   background-color: #fff;
 }
 
-#rtl p.actions a {
-  float: right;
+h3 .actions {
+  display: block;
+  margin-top: 0.5em;
+  font-size: 0.8em;
 }
 
+#rtl .actions  {
+  text-align: right;
+}
+
+h3 .actions a:hover,
 p.actions a:hover {
   background-color: #3697cd;
   border-color: #3697cd;
   color: #fff;
 }
 
+h3 .actions a:active,
 p.actions a:active {
   background-color: #3189ba;
   border-color: #3189ba;

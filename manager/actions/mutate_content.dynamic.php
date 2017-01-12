@@ -485,6 +485,72 @@ function decode(s) {
     s = s.replace(/\%26/g,'&'); // &
     return s;
 }
+
+function setLastClickedElement(type, id) {
+    localStorage.setItem('MODX_lastClickedElement', '['+type+','+id+']' );
+}
+
+<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
+var lastImageCtrl;
+var lastFileCtrl;
+
+function OpenServerBrowser(url, width, height ) {
+    var iLeft = (screen.width  - width) / 2 ;
+    var iTop  = (screen.height - height) / 2 ;
+
+    var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+    sOptions += ',width=' + width ;
+    sOptions += ',height=' + height ;
+    sOptions += ',left=' + iLeft ;
+    sOptions += ',top=' + iTop ;
+
+    var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
+}			
+			
+function BrowseServer(ctrl) {
+    lastImageCtrl = ctrl;
+    var w = screen.width * 0.5;
+    var h = screen.height * 0.5;
+    OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=images', w, h);
+}
+	
+function BrowseFileServer(ctrl) {
+    lastFileCtrl = ctrl;
+    var w = screen.width * 0.5;
+    var h = screen.height * 0.5;
+    OpenServerBrowser('<?php echo MODX_MANAGER_URL?>media/browser/<?php echo $which_browser?>/browser.php?Type=files', w, h);
+}
+
+function SetUrlChange(el) {
+    if ('createEvent' in document) {
+        var evt = document.createEvent('HTMLEvents');
+        evt.initEvent('change', false, true);
+        el.dispatchEvent(evt);
+    } else {
+        el.fireEvent('onchange');
+    }
+}
+
+function SetUrl(url, width, height, alt) {
+	if(lastFileCtrl) {
+        var c = document.getElementById(lastFileCtrl);
+        if(c && c.value != url) {
+            c.value = url;
+            SetUrlChange(c);
+        }
+        lastFileCtrl = '';
+    } else if(lastImageCtrl) {
+        var c = document.getElementById(lastImageCtrl);
+        if(c && c.value != url) {
+            c.value = url;
+            SetUrlChange(c);
+        }
+        lastImageCtrl = '';
+    } else {
+        return;
+    }
+}
+<?php $ResourceManagerLoaded=true; } ?>
 /* ]]> */
 </script>
 
@@ -579,10 +645,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
           <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } else { ?>
-          <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
-          <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
+          <li id="Button6"><a href="#" onclick="setLastClickedElement(0,0);duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
+          <li id="Button3"><a href="#" onclick="setLastClickedElement(0,0);deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
       <?php } ?>
-          <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <li id="Button5" class="transition"><a href="#" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button4"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
 </div>
@@ -630,7 +696,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 
           <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" alt="tree_folder" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer; margin-top:-4px;" /></td>
-                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />
+                <td><input name="ta" id="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : 'http://'; ?>" class="inputBox" onchange="documentDirty=true;" />&nbsp;<input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseFileServer('ta')" />
                 <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
 <?php } ?>
@@ -726,6 +792,30 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
     &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
                 <input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?>" onchange="documentDirty=true;" />
                 </td></tr>
+<?php
+    if ($content['type'] == 'reference' || $modx->manager->action == '72') {
+?>
+        <tr><td colspan="2"><div class="split"></div></td></tr>
+        <tr style="height: 24px;">
+            <td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['which_editor_title']?></span></td>
+            <td>
+                <select id="which_editor" name="which_editor" onchange="changeRTE();">
+<?php
+                    // invoke OnRichTextEditorRegister event
+                    $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+                    if (is_array($evtOut)) {
+                        for ($i = 0; $i < count($evtOut); $i++) {
+                            $editor = $evtOut[$i];
+                            echo "\t\t\t",'<option value="',$editor,'"',($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''),'>',$editor,"</option>\n";
+                        }
+                    }
+?>
+                </select>
+            </td>
+        </tr>
+<?php
+    }
+?>            
         </table>
 
 <?php if ($content['type'] == 'document' || $modx->manager->action == '4') { ?>
