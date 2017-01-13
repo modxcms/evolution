@@ -3047,15 +3047,11 @@ div.treeframebody {
 }
 
 /* elements icons in manage elements */ 
-.tab-pane ul li ul {
-    width:100%;
-}
+
 .tab-pane ul li ul li {
     list-style-type: none;
     list-style: none;
-    padding-left: 20px;
 }
-.elements_description:before,
 .tab-pane ul li ul li:before{
     font-family: FontAwesome;
     font-style: normal;
@@ -3063,52 +3059,29 @@ div.treeframebody {
     color: #5b6f7a;
     padding: 0 5px 0 12px;
 }
-div#tabTemplates .elements_description:before,
+div#tabTemplates.tab-page ul li ul li:before,
 div#tabCategory.tab-page ul li ul li.el-16:before{
     content:'\f1ea';
 }
-div#tabVariables .elements_description:before,
+div#tabVariables.tab-page ul li ul li:before,
 div#tabCategory.tab-page ul li ul li.el-301:before{
     content:'\f022';
 }
-div#tabChunks .elements_description:before,
+div#tabChunks.tab-page ul li ul li:before,
 div#tabCategory.tab-page ul li ul li.el-78:before{
     content:'\f009';
 }
-div#tabSnippets .elements_description:before,
+div#tabSnippets.tab-page ul li ul li:before,
 div#tabCategory.tab-page ul li ul li.el-22:before{
     content:'\f121';
 }
-div#tabPlugins .elements_description:before,
+div#tabPlugins.tab-page ul li ul li:before,
 div#tabCategory.tab-page ul li ul li.el-102:before{
     content:'\f1e6';
 }
 div#tabCategory.tab-page ul li ul li.el-108:before{
     content:'\f085';
 }
-
-/* Manager Elements Buttons bar*/
-/*Fake tables*/
-.rTable { display: table; width:100%;}
-.rTableRow { display: table-row;}
-.rTableHeading { display: table-header-group; }
-.rTableBody { display: table-row-group; }
-.rTableFoot { display: table-footer-group; }
-.rTableCell, .rTableHead { display: table-cell; }
-
-.elements_buttonbar {min-width:90px; text-align:right; font-size: 100%!important;}
-
-.tab-pane ul li ul li {
-    padding: 6px 6px 8px 0px;
-    margin-left: -50px;
-    border-bottom: 1px dotted #dedede;
-    border-left: 3px solid #FFF;
-    transition: all 0.1s ease;
-}
-.tab-pane ul li ul li:hover{
-background: #f9f9f9;
-border-left: 3px solid #3697CD;}
-
 
 /* action buttons */
 
