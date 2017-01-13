@@ -4,6 +4,10 @@
         [+logout_reminder_msg+]
     </div>
     
+    <div id="multiple_sessions" style="padding-left:0; padding-right:0;display:[+show_multiple_sessions+]">
+        [+multiple_sessions_msg+]
+    </div>
+    
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="tab-pane" id="welcomePane" style="border:0">
     <script type="text/javascript">

@@ -592,6 +592,7 @@ class ditto {
 				$documentIDs = $this->getChildIDs($IDs, $depth);
 			break;
 			case "documents":
+				if(!preg_match('@^[0-9, ]*$@',$IDs)) exit(sprintf('Illegal value of &amp;documents: %s', $IDs));
 				$documentIDs = explode(",",$IDs);
 			break;
 		}
@@ -1123,9 +1124,13 @@ class ditto {
 			}
 		}
 		if ($totalpages>1){
-		$modx->setPlaceholder($dittoID."next", $nextplaceholder);
-		$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
-		$modx->setPlaceholder($dittoID."pages", $pages);
+			$modx->setPlaceholder($dittoID."next", $nextplaceholder);
+			$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
+			$modx->setPlaceholder($dittoID."pages", $pages);
+		}elseif($paginateAlwaysShowLinks == 1){
+			$modx->setPlaceholder($dittoID."next", $nextplaceholder);
+			$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
+			$modx->setPlaceholder($dittoID."pages", $pages);
 		}	
 		$modx->setPlaceholder($dittoID."splitter", $split);
 		$modx->setPlaceholder($dittoID."start", $start +1);

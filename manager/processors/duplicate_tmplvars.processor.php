@@ -11,7 +11,7 @@ if($id==0) {
 
 // count duplicates
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_tmplvars'), "id='{$id}'"));
-$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_tmplvars'), "name LIKE '{$name} Duplicate%'"));
+$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_tmplvars'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
@@ -29,7 +29,7 @@ $newid = $modx->db->insert(
 		'display_params'=>'',
 		'category'=>'',
 		), $modx->getFullTableName('site_tmplvars'), // Insert into
-	"type, CONCAT(name, ' Duplicate{$count}') AS name, CONCAT(caption, ' Duplicate{$count}') AS caption, description, default_text, elements, rank, display, display_params, category", $modx->getFullTableName('site_tmplvars'), "id='{$id}'"); // Copy from
+	"type, CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, CONCAT(caption, ' Duplicate{$count}') AS caption, description, default_text, elements, rank, display, display_params, category", $modx->getFullTableName('site_tmplvars'), "id='{$id}'"); // Copy from
 
 
 // duplicate TV Template Access Permissions

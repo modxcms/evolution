@@ -20,7 +20,7 @@ function createGUID(){
 
 // count duplicates
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('site_modules'), "id='{$id}'"));
-$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_modules'), "name LIKE '{$name} Duplicate%'"));
+$count = $modx->db->getRecordCount($modx->db->select('name', $modx->getFullTableName('site_modules'), "name LIKE '{$name} {$_lang['duplicated_el_suffix']}%'"));
 if($count>=1) $count = ' '.($count+1);
 else $count = '';
 
@@ -42,7 +42,7 @@ $newid = $modx->db->insert(
 		'properties'=>'',
 		'modulecode'=>'',
 		), $modx->getFullTableName('site_modules'), // Insert into
-	"CONCAT(name, ' Duplicate{$count}') AS name, description, '1' AS disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' AS guid, enable_sharedparams, properties, modulecode", $modx->getFullTableName('site_modules'), "id='{$id}'"); // Copy from
+	"CONCAT(name, ' {$_lang['duplicated_el_suffix']}{$count}') AS name, description, '1' AS disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' AS guid, enable_sharedparams, properties, modulecode", $modx->getFullTableName('site_modules'), "id='{$id}'"); // Copy from
 
 // duplicate module dependencies
 $modx->db->insert(

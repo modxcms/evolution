@@ -51,6 +51,7 @@
 			    return true;
 			}
         </script>
+        [+onManagerMainFrameHeaderHTMLBlock+]
     </head>
     <body>
     <h1 class="pagetitle">

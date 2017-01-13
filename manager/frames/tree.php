@@ -303,6 +303,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                                 'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                                 'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+    
+    foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
     ?>
     
     var lockedElementsTranslation = <?php echo json_encode($unlockTranslations); ?>;
@@ -351,10 +353,10 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
                 var href = '';
+                setLastClickedElement(7, id);
                 if(treedisp_children==0) {
                     href = "index.php?a=3&r=1&id=" + id + getFolderState();
-                } else {
-                    setLastClickedElement(7, id);
+                } else {  
                     href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
                 if (e.shiftKey) {

@@ -94,16 +94,26 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 				$field_html .= '</select></td><td>';
 				$field_html .= '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.$modx->htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;" /></td></tr></table>';
 				break;
-			case "checkbox": // handles check boxes
-				$field_value = !is_array($field_value) ? explode("||", $field_value) : $field_value;
+			case 'checkbox': // handles check boxes
+				$values = !is_array($field_value) ? explode('||', $field_value) : $field_value;
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
+				$tpl = '<label class="checkbox"><input type="checkbox" value="%s" id="tv_%s" name="tv%s[]" %s onchange="documentDirty=true;" />%s</label><br />';
 				static $i = 0;
-				while (list($item, $itemvalue) = each($index_list)) {
-					list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
-					if (strlen($itemvalue) == 0) $itemvalue = $item;
-					$field_html .= '<input type="checkbox" value="'.$modx->htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '.(in_array($itemvalue, $field_value) ? " checked='checked'" : "").' onchange="documentDirty=true;" /><label for="tv_'.$i.'" class="checkbox">'.$item.'</label><br />';
+				$_ = array();
+				foreach ($index_list as $c=>$item) {
+					if(is_array($item)) {
+						$name = trim($item[0]);
+						$value = $item[1];
+					} else {
+						$item = trim($item);
+						list($name, $value) = (strpos($item,'==')!==false) ? explode('==', $item, 2) : array($item, $item);
+					}
+					$checked = in_array($value, $values) ? ' checked="checked"' : '';
+					$param = array($modx->htmlspecialchars($value), $i, $field_id, $checked, $modx->htmlspecialchars($name));
+					$_[] = vsprintf($tpl, $param);
 					$i++;
 				}
+				$field_html = join("\n", $_);
 				break;
 			case "option": // handles radio buttons
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
