@@ -94,6 +94,7 @@
         margin-bottom:10px;
         background-color: #32AB9A;
         border-radius: 3px;
+        -webkit-appearance: none;
       }
       #submitButton:hover,
       #FMP-email_button:hover {
