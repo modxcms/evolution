@@ -100,7 +100,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         if($row['locked']) $tplInfo[] = $_lang['locked'];
         if($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') $tplInfo[] = $_lang['defaulttemplate_title'];
         $output .= !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
-        /* buttons*/
+/* buttons*/
         $output .= '</div><div class="rTableCell elements_buttonbar">';
 /*templates buttons*/
         if ($resourceTable == 'site_templates') {
@@ -166,6 +166,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
        $output .= '</div></div>'; 
 /* #buttons*/
         $output .= '</li>';
+
         $preCat = $row['category'];
     }
     $output .= $insideUl? '</ul>': '';
@@ -488,7 +489,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                     if ($v['category'] == $_lang['no_category'] || !$delPerm) {
                         echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .'</strong><ul>';
                     } else {
-                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a class="btn btn-xs btn-default" onclick="return confirm(\''.$_lang["confirm_delete_category"].'\')" href="index.php?a=501&amp;catId='.$v['catid'].'"><i class="fa fa-trash fa-fw"></i> '.$_lang['delete'].'</a></strong><ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a></strong><ul>';
                     }
                     $insideUl = 1;
                 }
