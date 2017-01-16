@@ -85,15 +85,23 @@ $_style['tree_page_pdf_secure']     = $style_path.'tree/file-pdf-secure.png';
 $_style['tree_page_word_secure']    = $style_path.'tree/file-word-secure.png';
 $_style['tree_page_excel_secure']   = $style_path.'tree/file-excel-secure.png';
 
-// resource overview and managment
-$_style['icons_move_document']      = $style_path.'icons/move.png';
-$_style['icons_publish_document']   = $style_path.'icons/arrow-up.png';
-$_style['icons_unpublish_resource'] = $style_path.'icons/arrow-down.png';
-$_style['icons_delete_document']    = $style_path.'icons/trash.png';
+//View Resource data 
+$_style['icons_new_document']       = 'fa fa-file-o fa-lg';
+$_style['icons_new_weblink']        = 'fa fa-link fa-lg';
+$_style['icons_move_document']      = 'fa fa-arrows fa-fw fa-lg';
+$_style['icons_publish_document']   = 'fa fa-arrow-up fa-fw fa-lg';
+$_style['icons_unpublish_resource'] = 'fa fa-arrow-down fa-fw fa-lg';
+$_style['icons_delete_resource']    = 'fa fa-trash fa-fw fa-lg';
+$_style['icons_undelete_resource']  = 'fa fa-arrow-circle-o-up fa-fw fa-lg';
+$_style['icons_resource_overview']  = 'fa fa-info fa-fw fa-lg';
+$_style['icons_edit_resource']      = 'fa fa-pencil-square-o fa-fw fa-lg';
+//context menu
 $_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
-$_style['icons_resource_overview']  = $style_path.'icons/info-sign.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
+$_style['icons_delete_document']    = $style_path.'icons/trash.png';
+//locks
 $_style['icons_preview_resource']   = $style_path.'icons/eye.png';
+$_style['icons_secured']            = $style_path.'icons/lock.png';
 
 //file manager icons
 $_style['files_save']               = 'fa fa-floppy-o fa-fw fa-lg';
@@ -132,13 +140,6 @@ $_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
 //modules
 $_style['icons_modules']            = $style_path.'icons/modules.png';
 $_style['icons_run']                = $style_path.'icons/play.png';
-
-//View Resource data 
-$_style['icons_new_document']       = $style_path.'icons/save.png'; 
-$_style['icons_new_weblink']        = $style_path.'icons/link.png';
-$_style['icons_undelete_resource']  = $style_path.'icons/undelete.png';
-$_style['icons_secured']            = $style_path.'icons/lock.png';
-
 
 //users and webusers
 $_style['icons_user']               = $style_path.'icons/user.png';
