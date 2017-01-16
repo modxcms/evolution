@@ -145,18 +145,17 @@ $add_path=$sd.$sb.$pg;
 			
 			// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь 
 			// для сохранения сортировки
-			$icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>' : '<a 
-				href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>';
-			$icon_del_undel = (!$children['deleted']) ? '<a href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>' : '<a href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><img src="' . $_style["icons_undelete_resource"] .'" /></a>';
+			$icon_pub_unpub = (!$children['published']) ? '<a class="btn btn-xs btn-default" href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><i class="' . $_style["icons_publish_document"] .'"></i></a>' : '<a class="btn btn-xs btn-default" href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><i class="' . $_style["icons_unpublish_resource"] .'" ></i></a>';
+			$icon_del_undel = (!$children['deleted']) ? '<a onclick="return confirm(\''.$_lang["confirm_delete_resource"].'\')" class="btn btn-xs btn-default" href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><i class="' . $_style["icons_delete_resource"] .'"></i></a>' : '<a onclick="return confirm(\''.$_lang["confirm_undelete"].'\')" class="btn btn-xs btn-default" href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><i class="' . $_style["icons_undelete_resource"] .'"></i></a>';
 			$listDocs[] = array(
 				'docid' =>  $children['id'],
 				'title' =>  (($children['deleted'] ? ('<span class="deleted">'.$children['pagetitle'].'</span>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
 				'createdon' =>  ($modx->toDateFormat($children['createdon']+$server_offset_time,'dateOnly')),
 				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'" title="'.$_lang['edit'].'"><img src="' . $_style["icons_save"] .'" /></a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].$add_path.'" title="'.$_lang['move'].'"><img 
-				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;'.$icon_pub_unpub .'&nbsp;': '') .
-				(($modx->hasPermission('delete_document')) ? '&nbsp;' . $icon_del_undel : ''),
+				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a class="btn btn-xs btn-default" href="index.php?a=27&amp;id='.$children['id'].$add_path.'" title="'.$_lang['edit'].'"><i class="' . $_style["icons_edit_resource"] .'"></i></a>&nbsp;<a class="btn btn-xs btn-default" href="index.php?a=51&amp;id='.$children['id'].$add_path.'" title="'.$_lang['move'].'"><i 
+				class="' . $_style["icons_move_document"] .'"></i></a>&nbsp;'.$icon_pub_unpub .'&nbsp;': '') .
+				(($modx->hasPermission('delete_document')) ? $icon_del_undel : ''),
 			);
 			
 			/****************/
@@ -202,19 +201,19 @@ function movedocument() {
 	<div id="actions">	
 	  <ul class="actionButtons">
 		  <li id="Button1" class="transition">
-			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" /> <?php echo $_lang['edit']?></a>
+			<a href="#" onclick="editdocument();"><?php echo $_lang['edit']?></a>
 		  </li>
 		  <li id="Button2" class="transition">
-			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" /> <?php echo $_lang['move']?></a>
+			<a href="#" onclick="movedocument();"><?php echo $_lang['move']?></a>
 		  </li>
 		  <li id="Button6">
-		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang['duplicate']?></a>
+		    <a href="#" onclick="duplicatedocument();"><?php echo $_lang['duplicate']?></a>
 		  </li>
 		  <li id="Button3">
-		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
+		    <a href="#" onclick="deletedocument();"><?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button4">
-			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>
@@ -334,8 +333,8 @@ function movedocument() {
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
 			<ul class="actionButtons">
-				<li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle" /> <?php echo $_lang['create_resource_here']?></a></li>
-				<li><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_weblink"]; ?>" align="absmiddle" /> <?php echo $_lang['create_weblink_here']?></a></li>
+                <li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><i class="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle"></i> <?php echo $_lang['create_resource_here']?></a></li>
+				<li><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><i class="<?php echo $_style["icons_new_weblink"]; ?>" align="absmiddle"></i> <?php echo $_lang['create_weblink_here']?></a></li>
 			</ul>
 <?php }
 	if ($numRecords > 0)
