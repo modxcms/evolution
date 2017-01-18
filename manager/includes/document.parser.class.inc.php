@@ -2087,6 +2087,7 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
+                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
