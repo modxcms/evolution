@@ -1955,7 +1955,7 @@ class DocumentParser {
                 $documentObject= array_merge($documentObject, $tmplvars);
             }
             $out = $this->invokeEvent('OnAfterLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out) && is_array($out[0])){
+            if(is_array($out) && array_key_exists(0,$out) !== FALSE && is_array($out[0])){
                 $documentObject = $out[0];
             }
         }
