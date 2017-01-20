@@ -180,7 +180,7 @@
 	opacity:0.5; 
     ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
 	filter: alpha(opacity=50);
-	top: -28px;
+	top: -34px;
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
@@ -212,13 +212,13 @@
 	line-height: 25px;
 	color: black;
 }
-
+/**
 #qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
 {
     background: transparent url(images/save.png) no-repeat left center;
     padding-left: 20px;
 }
-
+**/
 #qmEditor .qmButton span
 {
 
@@ -289,37 +289,53 @@
 
 #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel  
 {
-	color: #3b454f;
-	font-weight: bold;
-	font-size: 12px;
-	background: #c7ced2 url(images/button-gradient.png) repeat-x 0px -6px; 
-    padding: 4px 6px;
-	white-space: nowrap;
-	text-decoration: none;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-text-shadow: 1px 1px 0 #fff;
-	-moz-text-shadow: 0 1px 1px #fff;
-	text-shadow: 0 1px 1px #fff;
-	border: 1px solid #8ea4be;
-	outline: none;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: none;
+  background: #fff;
+  filter: none;
+  color: #555;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E4E4E4;
+  border-radius: 3px !important;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
+  transition: none;
 }
 
-#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover  
+#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover 
 {
-	background-position: bottom left;
-	-webkit-box-shadow: 0 0 10px #b8c7d6;
-	-moz-box-shadow: 0 0 10px #b8c7d6;
-	box-shadow:  0 0 10px #b8c7d6;
-	-webkit-transition: -webkit-box-shadow 0.2s linear;
+  background: none;
+  filter: none;
+  background-color: #3697cd;
+  box-shadow: none;
+  border-color: #3697cd;
+  color: #FFF !important;
+  transition: none;
+  text-decoration: none;
 }
-
+a.colorbox.cboxElement:hover  
+{
+  color: #FFF !important;
+}
 #qmEditor .qmButton:active 
 {
-	background-color: #92aac4;
-	background-position: bottom left;
-	-webkit-box-shadow: 0 0 10px #b8c7d6;
-	-moz-box-shadow: 0 0 10px #b8c7d6;
-	box-shadow:  0 0 10px #b8c7d6;
+  background-color: #3189ba;
+  border-color: #3189ba;
+}
+
+#qmEditor .qmButton.primary 
+{
+  color: #fff;
+  border-color: #32AB9A;
+  background-color: #32AB9A;
+  background-image: linear-gradient(#32AB9A, #00948E);
+}
+#qmEditor .qmButton.primary:hover 
+{
+  background-color: #2b9385;
+  background-image: linear-gradient(#2b9385, #007571);
+  border-color: #2b9385;
 }
