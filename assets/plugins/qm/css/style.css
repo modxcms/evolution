@@ -79,11 +79,7 @@
     padding: 6px 6px;
 }
 
-.qm-cancel span
-{
-    background: transparent url(images/stop.png) no-repeat left center;
-    padding-left: 20px;
-}
+
 
 .qm-save
 {
@@ -180,7 +176,7 @@
 	opacity:0.5; 
     ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
 	filter: alpha(opacity=50);
-	top: -34px;
+	top: -30px;
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
@@ -212,13 +208,6 @@
 	line-height: 25px;
 	color: black;
 }
-/**
-#qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
-{
-    background: transparent url(images/save.png) no-repeat left center;
-    padding-left: 20px;
-}
-**/
 #qmEditor .qmButton span
 {
 
@@ -287,9 +276,8 @@
     list-style-image:none;
 }
 
-#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel  
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
 {
-  padding: 8px 10px;
   font-size: 13px;
   font-weight: 500;
   text-shadow: none;
@@ -304,8 +292,15 @@
   box-shadow: none;
   transition: none;
 }
-
-#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover 
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+{
+  padding: 6px 10px;
+}
+.qm-tv a, .qm-save a, .qm-cancel a
+{
+  padding: 9px 10px;
+}
+#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover
 {
   background: none;
   filter: none;
@@ -316,7 +311,7 @@
   transition: none;
   text-decoration: none;
 }
-a.colorbox.cboxElement:hover  
+a.colorbox.cboxElement:hover, .qm-cancel a:hover, .qm-save a:hover    
 {
   color: #FFF !important;
 }
@@ -326,14 +321,14 @@ a.colorbox.cboxElement:hover
   border-color: #3189ba;
 }
 
-#qmEditor .qmButton.primary 
+#qmEditor .qmButton.primary, .qm-save a
 {
   color: #fff;
   border-color: #32AB9A;
   background-color: #32AB9A;
   background-image: linear-gradient(#32AB9A, #00948E);
 }
-#qmEditor .qmButton.primary:hover 
+#qmEditor .qmButton.primary:hover, .qm-save a:hover 
 {
   background-color: #2b9385;
   background-image: linear-gradient(#2b9385, #007571);
