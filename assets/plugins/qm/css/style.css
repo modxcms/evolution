@@ -80,7 +80,6 @@
 }
 
 
-
 .qm-save
 {
     margin-right: 5px;
@@ -164,7 +163,7 @@
 #qmEditor, #qmEditorClosed
 {
 	font-family: Arial, Helvetica, sans-serif !important;
-    top:0; 
+ /*   top:0; */
     left:0;
     padding: 3px;
     position: fixed;
@@ -176,7 +175,7 @@
 	opacity:0.5; 
     ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
 	filter: alpha(opacity=50);
-	top: -29px;
+/*	top: -29px;*/
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
@@ -245,7 +244,7 @@
     opacity:1; 
     -ms-filter:"" !important;
     filter:none !important;
-	top: 0px;
+/*	top: 0px;*/
 	-webkit-transition-duration: 0.2s;
 	-moz-transition-duration: 0.2s;
 	transition-duration: 0.2s;

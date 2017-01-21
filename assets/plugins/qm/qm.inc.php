@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.6 updated 08/08/2013
+ * @version     1.5.7 updated 21/01/2017
  */
 
 if(!class_exists('Qm')) {
@@ -13,7 +13,7 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $bottomtoolbar='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
         $this->modx = $modx;
         
         // Get plugin parameters
@@ -35,6 +35,7 @@ class Qm {
         $this->managerbutton = $managerbutton;
         $this->logout = $logout;
         $this->autohide = $autohide;
+        $this->bottomtoolbar = $bottomtoolbar;
         $this->editbuttons = $editbuttons;
         $this->editbclass = $editbclass;
         $this->newbuttons = $newbuttons;
@@ -481,10 +482,41 @@ class Qm {
                         ';
             
                         // Autohide toolbar? Default: true
-                        if ($this->autohide == 'false') {
+                        if (($this->autohide == 'false') && ($this->bottomtoolbar == 'false')) {
                             $css .= '
                             <style type="text/css">
                             #qmEditor, #qmEditorClosed { top: 0px; }
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            </style>
+                            ';
+                        }
+                        else 
+                        // Autohide toolbar? Default: true
+                        if (($this->autohide == 'true') && ($this->bottomtoolbar == 'false')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { top: -29px; }
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            </style>
+                            ';
+                        }
+                        else 
+                        // Autohide toolbar? Default: true
+                        if (($this->autohide == 'true') && ($this->bottomtoolbar == 'true')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { bottom: -28px; }
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            </style>
+                            ';
+                        }
+                        else
+                        // Bottom toolbar? Default: faslse
+                        if (($this->autohide == 'false') && ($this->bottomtoolbar == 'true')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { bottom: 0px; }
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
                             </style>
                             ';
                         }
