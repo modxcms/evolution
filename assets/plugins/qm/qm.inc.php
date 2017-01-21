@@ -2,7 +2,7 @@
 /**
  * QuickManager+
  *  
- * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy 
+ * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy and Nicola1971 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @version     1.5.7 updated 21/01/2017
  */
@@ -540,7 +540,7 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'left')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed { left:-50px; top: 0px; width: 53px; height:100%}
+                            #qmEditor, #qmEditorClosed { left:-47px; top: 0px; width: 53px; height:100%}
                             #qmEditor:hover, #qmEditorClosed:hover {left: 0px;}
                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; }
                             #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
@@ -568,7 +568,7 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'right')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:6px; right:-50px; top: 0px; width: 53px; height:100%}
+                            #qmEditor, #qmEditorClosed {padding-left:6px; right:-47px; top: 0px; width: 53px; height:100%}
                             #qmEditor:hover, #qmEditorClosed:hover {right: 0px;}
                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; }
                             #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
