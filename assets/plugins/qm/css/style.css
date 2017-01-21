@@ -176,7 +176,7 @@
 	opacity:0.5; 
     ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
 	filter: alpha(opacity=50);
-	top: -30px;
+	top: -29px;
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
@@ -215,7 +215,7 @@
 
 #qmEditorClosed
 {
-    height: 26px;
+    height: 34px;
     display: none;
     width: 40px !important;
     cursor: pointer !important;
