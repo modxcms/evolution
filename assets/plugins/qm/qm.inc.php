@@ -391,7 +391,7 @@ class Qm {
                                 $buttonAction = $buttonParams[1]; // Contains URL if this is not add button
                                 $buttonParentId = $buttonParams[2]; // Is empty is this is not add button
                                 $buttonTplId = $buttonParams[3];
-                                
+                                                        
                                 // Button visible for all
                                 if ($buttonParams[4] == '') {
                                     $showButton = TRUE;
@@ -410,7 +410,7 @@ class Qm {
                                         }
                                     }
                                 }
-                                
+                                $buttonIcon = $buttonParams[5];
                                 // Show custom button
                                 if ($showButton) {
                                     switch ($buttonAction)
@@ -418,7 +418,7 @@ class Qm {
                                         case 'new':
                                             $customButton = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';
                                         break;
@@ -426,7 +426,7 @@ class Qm {
                                         case 'link':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom" href="'.$buttonParentId.'" ><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';    
                                         break;
@@ -434,7 +434,7 @@ class Qm {
                                         case 'modal':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';   
                                         break;
