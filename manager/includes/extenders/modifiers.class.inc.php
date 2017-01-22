@@ -415,6 +415,7 @@ class MODIFIERS {
             case 'base64_encode':
             case 'md5':
             case 'sha1':
+            case 'json_encode':
                 return $cmd($value);
             
             #####  String Modifiers
