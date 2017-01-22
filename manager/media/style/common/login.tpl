@@ -325,7 +325,7 @@
     </script>
 </head>
 <body id="login">
-<div class="sectionHeader">[+site_name+]<b>MODX Evolution</b></div>
+<div class="sectionHeader">[(site_name)]<b>MODX Evolution</b></div>
 <div id="mx_loginbox">
     <form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
     <!-- anything to output before the login box via a plugin? -->
