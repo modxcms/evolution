@@ -166,7 +166,6 @@
    /* */
     padding: 3px;
     position: fixed;
-
     line-height:1;
     z-index: 2147483647;
 	background: #657587 url(images/tinylogo.png) no-repeat -2px 3px;
@@ -330,4 +329,19 @@ a.colorbox.cboxElement:hover, .qm-cancel a:hover, .qm-save a:hover
   background-color: #2b9385;
   background-image: linear-gradient(#2b9385, #007571);
   border-color: #2b9385;
+}
+
+@media only screen and (max-width: 728px) {
+.butttext {display:none}
+.butticon {display:inline!important}
+#qmEditor, #qmEditorClosed {height: 48px!important;}
+}
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+.butttext {display:none}
+.butticon {display:inline!important}
+
 }

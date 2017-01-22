@@ -498,7 +498,7 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'top')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed { left:0; top: -29px; width: 100%;}
+                            #qmEditor, #qmEditorClosed { left:0; top: -30px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
                             .butticon {display:none}
                             </style>
