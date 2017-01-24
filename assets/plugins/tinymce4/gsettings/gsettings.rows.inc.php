@@ -48,7 +48,8 @@ $settingsRows = array(
         'title'=>'editor_custom_plugins_title',
         'configTpl'=>'
                   <textarea class="inputBox mce" name="[+name+]">[+[+editorKey+]_custom_plugins+]</textarea>',
-        'message'=>'editor_custom_plugins_message'
+        'message'=>'editor_custom_plugins_message',
+        'defaultCheckbox'=>true    
     ),
     'custom_buttons'=>array(
         'title'=>'editor_custom_buttons_title',
@@ -59,13 +60,15 @@ $settingsRows = array(
                   <div>[+editor_custom_buttons2_msg+]</div>
                   Row 3: <textarea class="inputBox mce" name="[+name+]3">[+[+editorKey+]_custom_buttons3+]</textarea>
                   Row 4: <textarea class="inputBox mce" name="[+name+]4">[+[+editorKey+]_custom_buttons4+]</textarea>',
-        'message'=>'editor_custom_buttons_message'
+        'message'=>'editor_custom_buttons_message',
+        'defaultCheckbox'=>true
     ),
     'css_selectors'=>array(
         'title'=>'editor_css_selectors_title',
         'configTpl'=>'
                     <textarea class="inputBox mce" name="[+name+]">[+[+editorKey+]_css_selectors+]</textarea>',
-        'message'=>'editor_css_selectors_message'
+        'message'=>'editor_css_selectors_message',
+        'defaultCheckbox'=>true
     )
 );
 

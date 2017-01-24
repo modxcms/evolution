@@ -11,3 +11,10 @@ textarea.mce {width:95%;height:53px;display:block;}
   </tr>
   [+rows+]
 </table>
+<script>
+    jQuery("input.defaultCheckbox").on('change', function() {
+        hiddenId = jQuery(this).attr("id") + '_hidden';
+        val = jQuery(this).is(":checked") ? '1' : '0';
+        jQuery("#"+hiddenId).attr("value", val);
+    });
+</script>
