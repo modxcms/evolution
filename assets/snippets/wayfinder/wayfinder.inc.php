@@ -375,8 +375,9 @@ class Wayfinder {
                 //remove parents lower than level of startId + level depth
                 $parents = array_slice(array_reverse($parents), 0, $depth-1);
 
-                foreach($parents as $p)
-                    $ids = $modx->getChildIds($p, 1, $ids);
+                foreach($parents as $p) {
+                    $ids += $modx->getChildIds($p, 1, $ids);
+                }
             }
         }
         //Get all of the ids for processing

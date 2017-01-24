@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="[(lang_code)]" xml:lang="[(lang_code)]">
   <head>
-    <title>[+site_name+] (MODX CMF Manager Login)</title>
+    <title>[(site_name)] (MODX CMF Manager Login)</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width">
@@ -94,6 +94,7 @@
         margin-bottom:10px;
         background-color: #32AB9A;
         border-radius: 3px;
+        -webkit-appearance: none;
       }
       #submitButton:hover,
       #FMP-email_button:hover {
@@ -207,8 +208,8 @@
         <!-- anything to output before the login box via a plugin? -->
         [+OnManagerLoginFormPrerender+]
         <div class="sectionHeader">
-          <a class="logo" href="../" title="[+site_name+]">
-            <img src="media/style/[+theme+]/images/misc/login-logo.png" alt="[+site_name+]" id="logo" />
+          <a class="logo" href="../" title="[(site_name)]">
+            <img src="media/style/[(manager_theme)]/images/misc/login-logo.png" alt="[(site_name)]" id="logo" />
           </a>
         </div>
         <div class="sectionBody">

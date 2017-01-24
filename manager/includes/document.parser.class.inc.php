@@ -1383,7 +1383,8 @@ class DocumentParser {
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        $return = eval($phpcode);
+        if(strpos($phpcode,';')!==false) $return = eval($phpcode);
+        else                             $return = call_user_func_array($phpcode,array($params));
         $echo = ob_get_contents();
         ob_end_clean();
         if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
@@ -1981,7 +1982,7 @@ class DocumentParser {
                 $documentObject= array_merge($documentObject, $tmplvars);
             }
             $out = $this->invokeEvent('OnAfterLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out) && is_array($out[0])){
+            if(is_array($out) && array_key_exists(0,$out) !== FALSE && is_array($out[0])){
                 $documentObject = $out[0];
             }
         }
@@ -2113,6 +2114,7 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
+                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
@@ -4149,17 +4151,21 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-        $rs = $this->db->select(
-            'mu.username, mu.password, mua.*',
-            $this->getFullTableName("manager_users") . " mu
-                INNER JOIN " . $this->getFullTableName("user_attributes") . " mua ON mua.internalkey=mu.id",
-            "mu.id = '{$uid}'"
-            );
-        if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype']) or !$row["usertype"])
-                $row["usertype"]= "manager";
-            return $row;
-        }
+    	
+        if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
+        
+        $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
+        $where = sprintf("mu.id='%s'", $this->db->escape($uid));
+        $rs = $this->db->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        
+        if(!$this->db->getRecordCount($rs)) return $this->tmpCache[__FUNCTION__][$uid] = false;
+        
+        $row = $this->db->getRow($rs);
+        if (!isset($row['usertype']) || !$row['usertype']) $row['usertype']= 'manager';
+        
+        $this->tmpCache[__FUNCTION__][$uid] = $row;
+        
+        return $row;
     }
 
     /**
