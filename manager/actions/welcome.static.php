@@ -239,6 +239,7 @@ if(strpos($content,'[+')!==false) {
     $modx->toPlaceholders($ph);
     $content = $modx->mergePlaceholderContent($content);
 }
+$content = $modx->parseDocumentSource($content);
 $content = $modx->parseText($content,$_lang, '[%','%]');
 $content = $modx->parseText($content,$_style,'[&','&]');
 $content = $modx->cleanUpMODXTags($content); //cleanup
