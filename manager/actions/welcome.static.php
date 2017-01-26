@@ -113,8 +113,8 @@ $ph['UserInfo'] =  $modx->parseText($tpl, array(
 
 $from = array();
 $from[] = '[+prefix+]active_user_sessions';
-$from[] = " us LEFT JOIN [+prefix+]active_users au ON au.internalKey=us.internalKey GROUP BY au.sid HAVING au.action <> '8'";
-$rs = $modx->db->select('*, count(au.sid) AS count', $from, '', 'username ASC, au.sid ASC');
+$from[] = " us LEFT JOIN [+prefix+]active_users au ON au.sid=us.sid WHERE au.action <> '8'";
+$rs = $modx->db->select('*', $from, '', 'username ASC, au.sid ASC');
 if ($modx->db->getRecordCount($rs) < 1) {
     $html = '<p>[%no_active_users_found%]</p>';
 } else {
@@ -134,17 +134,25 @@ if ($modx->db->getRecordCount($rs) < 1) {
                       <th>[%onlineusers_action%]</th>
                     </tr>
                   </thead>
-                  <tbody>
-        ';
-    while ($row = $modx->db->getRow($rs)) {
-        $idle          = $row['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
-        $multipleSessions = $row['count'] > 1 ? ' class="userMultipleSessions"' : '';
-        $webicon       = ($row['internalKey'] < 0) ? '<img src="[&tree_globe&]" alt="Web user" />' : '';
-        $currentaction = getAction($row['action'], $row['id']);
-        if($row['ip']==='::1') $row['ip'] = '127.0.0.1';
-        $params = array($idle, $multipleSessions, $row['username'], $webicon, abs($row['internalKey']), $row['ip'], strftime('%H:%M:%S', $row['lasthit'] + $server_offset_time),$currentaction);
-        $html .= vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s&nbsp;%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
+                  <tbody>';
+    
+    $userList = array();
+    $userCount = array();
+    // Create userlist with session-count first before output
+    while ($activeusers = $modx->db->getRow($rs)) {
+        $userCount[$activeusers['internalKey']] = isset($userCount[$activeusers['internalKey']]) ? $userCount[$activeusers['internalKey']] + 1 : 1;
+
+        $idle             = $activeusers['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+        $webicon          = $activeusers['internalKey'] < 0 ? '<img src="[&tree_globe&]" alt="Web user" />&nbsp;' : '';
+        $ip               = $activeusers['ip']==='::1' ? '127.0.0.1' : $activeusers['ip'];
+        $currentaction    = getAction($activeusers['action'], $activeusers['id']);
+        $userList[]       = array($idle, '', $activeusers['username'], $webicon, abs($activeusers['internalKey']), $ip, strftime('%H:%M:%S', $activeusers['lasthit'] + $server_offset_time),$currentaction);
     }
+    foreach ($userList as $params) {
+        $params[1] = $userCount[$params[4]] > 1 ? ' class="userMultipleSessions"' : '';
+        $html .= "\n". vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
+    }
+    
     $html .= '
                 </tbody>
                 </table>

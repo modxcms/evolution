@@ -30,7 +30,8 @@ class tinymce4bridge extends modxRTEbridge
                 'blockFormats' => array(
                     'title' => 'blockFormats_title',
                     'configTpl' => '<textarea class="inputBox mce" name="[+name+]">[+[+editorKey+]_blockFormats+]</textarea>',
-                    'message' => 'blockFormats_message'
+                    'message' => 'blockFormats_message',
+                    'defaultCheckbox'=>true
                 )
             ),
     

@@ -24,9 +24,6 @@ $modx->loadExtension('phpass');
 $modx->getSettings();
 $etomite = &$modx;
 
-// get the settings from the database
-include_once("{$core_path}settings.inc.php");
-
 // include_once the language file
 $_lang = array();
 include_once("{$core_path}lang/english.inc.php");
