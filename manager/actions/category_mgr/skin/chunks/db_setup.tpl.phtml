@@ -1,0 +1,14 @@
+<div class="tab-page" style="background-color: #fff;">
+  <p>
+    <strong>Database not ready.</strong>
+  </p>
+
+  <p>
+    The column "rank" don't exist. Please click the "Add rank column" button to add a new column to categories table.<br>
+    After that go to module configuration and set "Check DB-table" to "false" (optional).
+  </p>
+
+  <form action="<?php echo $view->get('url'); ?>" method="post">
+    <input type="submit" name="<?php echo $view->get('request_key'); ?>[db][submit]" value="Add rank column" />
+  </form>
+</div>
