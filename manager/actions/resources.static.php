@@ -88,7 +88,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
             }
         }
         
-        $output .= '<li><span'.$class.'>'.$lockedByUser.'<a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+        $output .= '<li><div class="rTable"><div class="rTableRow"><div class="rTableCell elements_description"><span'.$class.'>'.$lockedByUser.'<a class="man_el_name" href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
              $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>('.$row['description'].')</small>' : ' - '.$row['caption'];
@@ -100,7 +100,71 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         if($row['locked']) $tplInfo[] = $_lang['locked'];
         if($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') $tplInfo[] = $_lang['defaulttemplate_title'];
         $output .= !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
-
+/* buttons*/
+        $output .= '</div><div class="rTableCell elements_buttonbar">';
+/*templates buttons*/
+        if ($resourceTable == 'site_templates') {
+        if ($modx->hasPermission('edit_template')) {
+        $output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=16&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+        } 
+        if ($modx->hasPermission('new_template')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_duplicate_record"].'\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=96&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
+       }     
+        if ($modx->hasPermission('delete_template')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_delete_template"].'\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=21&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+        }  
+        }
+        /* end templates buttons*/
+        /*tvs buttons*/
+        if ($resourceTable == 'site_tmplvars') {
+        if ($modx->hasPermission('edit_template')) {
+        $output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=301&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_duplicate_record"].'\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=304&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_delete_tmplvars"].'\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=303&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+        }  
+        }
+        /* end tvs buttons*/
+        /*chunks buttons*/
+        if ($resourceTable == 'site_htmlsnippets') {
+        if ($modx->hasPermission('edit_chunk')) {
+        $output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=78&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+        } 
+        if ($modx->hasPermission('new_chunk')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_duplicate_record"].'\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=97&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
+       }     
+        if ($modx->hasPermission('delete_chunk')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_delete_htmlsnippet"].'\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=80&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+        }  
+        }
+        /* end chunks buttons*/
+        /*snippets buttons*/
+        if ($resourceTable == 'site_snippets') {
+        if ($modx->hasPermission('edit_snippet')) {
+        $output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=78&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+        } 
+        if ($modx->hasPermission('new_snippet')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_duplicate_record"].'\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=96&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
+       }     
+        if ($modx->hasPermission('delete_snippet')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_delete_snippet"].'\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=25&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+        }  
+        }
+        /* end snippets buttons*/
+        /*plugins buttons*/
+        if ($resourceTable == 'site_plugins') {
+        if ($modx->hasPermission('edit_plugin')) {
+        $output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=102&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
+        } 
+        if ($modx->hasPermission('new_plugin')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_duplicate_record"].'\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=105&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
+        }     
+        if ($modx->hasPermission('delete_plugin')) {
+        $output .= '<a onclick="return confirm(\''.$_lang["confirm_delete_plugin"].'\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=104&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
+        }  
+        }
+        /* end plugins buttons*/
+       $output .= '</div></div>'; 
+/* #buttons*/
         $output .= '</li>';
 
         $preCat = $row['category'];
@@ -118,7 +182,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
 <script>
     function initQuicksearch(inputId, listId) {
         jQuery('#'+inputId).quicksearch('#'+listId+' ul li', {
-            selector: 'a',
+            selector: '.man_el_name',
             'show': function () { jQuery(this).removeClass('hide'); },
             'hide': function () { jQuery(this).addClass('hide'); },
             'bind':'keyup',
@@ -425,7 +489,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
                     if ($v['category'] == $_lang['no_category'] || !$delPerm) {
                         echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .'</strong><ul>';
                     } else {
-                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a></strong><ul>';
+                        echo '<li><strong>'.$v['category']. ($v['catid']!='' ? ' <small>('.$v['catid'].')</small>' : '') .' - <a class="btn btn-xs btn-default" onclick="return confirm(\''.$_lang["confirm_delete_category"].'\')" href="index.php?a=501&amp;catId='.$v['catid'].'"><i class="fa fa-trash"></i> '.$_lang['delete'].'</a></strong><ul>';
                     }
                     $insideUl = 1;
                 }
