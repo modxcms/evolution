@@ -62,10 +62,11 @@ foreach ($tmpImagesFolder as $folder) {
         }
     }
 }
-  
-$fname_preffix=$cacheFolder."/".$params['w']."x".$params['h'].'-';
-$fname = $path_parts['filename'].".".substr(md5(serialize($params).filemtime(MODX_BASE_PATH . $input)),0,3).".".$params['f'];
-$outputFilename =MODX_BASE_PATH.$fname_preffix.$fname;
+
+$fname_preffix = "$cacheFolder/";
+$fname = $path_parts['filename'];
+$fname_suffix = "-{$params['w']}x{$params['h']}-".substr(md5(serialize($params).filemtime(MODX_BASE_PATH . $input)),0,3).".{$params['f']}";
+$outputFilename = MODX_BASE_PATH.$fname_preffix.$fname.$fname_suffix;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
     $phpThumb = new phpthumb();
@@ -81,5 +82,5 @@ if (!file_exists($outputFilename)) {
         $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
     }
 }
-return $fname_preffix.rawurlencode($fname);
+return $fname_preffix.rawurlencode($fname).$fname_suffix;
 ?>
