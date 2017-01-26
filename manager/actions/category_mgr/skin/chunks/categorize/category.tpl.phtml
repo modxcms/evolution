@@ -1,0 +1,10 @@
+<div id="categorize-category-<?php echo $data['id']; ?>" class="categorize_category drop">
+  <div class="inner">
+    <h2><i class="fa fa-folder-open"></i> <?php echo $data['category']; ?></h2>
+    <?php if( !empty( $data['elements'] ) ) : ?>
+    <?php foreach( $data['elements'] as $element ) : ?>
+    <?php echo $view->renderView('chunks/categorize/drag_element',$element); ?>
+    <?php endforeach; ?>
+    <?php endif; ?>
+  </div>
+</div>

@@ -10,7 +10,7 @@ class modxRTEbridge
     public $editorKey = '';                     // Key for config/tpl/settings-files (ckeditor4, tinymce4, ...)
     public $theme = '';                         // Theme-key (default, simple, mini ... )
     public $pluginParams = array();             // Params from Modx plugin-configuration
-    public $modxParams = array();               // Holds actual settings coming from Modx- or user-configuration
+    public $modxParams = array();               // Holds actual settings merged from Modx- and user-configuration
     public $bridgeParams = array();             // Holds translation of Modx Configuration-Keys to Editor Configuration-Keys
     public $themeConfig = array();              // Valid params and defaults for Editor
     public $tvOptions = array();                // Options set via TV-Option like {"theme":"mini"}
@@ -21,7 +21,7 @@ class modxRTEbridge
     public $langArr = array();                  // Holds lang strings
     public $debug = false;                      // Enable/disable debug messages via HTML-comment
     public $debugMessages = array();            // Holds all messages - added by    $this->debugMessages[] = 'Message';
-	public $ajaxSecHash = array();              // Holds security-hashes
+    public $ajaxSecHash = array();              // Holds security-hashes
 
     public function __construct($editorKey = NULL, $bridgeConfig=array(), $tvOptions=array(), $basePath='')
     {
@@ -62,9 +62,6 @@ class modxRTEbridge
             case 12:    // Edit user
             case 119:   // Purge plugin processor
                 $editorConfig = $usersettings;
-                if (!empty($usersettings[$this->editorKey . '_theme'])) {
-                    $usersettings[$this->editorKey . '_theme'] = $settings[$this->editorKey . '_theme'];
-                }
                 break;
             // Get Modx-config
             case 17:    // Modx-configuration
@@ -79,19 +76,40 @@ class modxRTEbridge
             'custom_plugins', 'custom_buttons1', 'custom_buttons2', 'custom_buttons3', 'custom_buttons4',
             'template_docs', 'template_chunks'
         );
-
+        
+        // Add defaultCheckbox-Values for user-settings
+        $settingsRows = array();
+        include($basePath . 'gsettings/gsettings.rows.inc.php');
+        $this->gSettingsRows = $settingsRows;
+        foreach($this->gSettingsRows as $param=>$row) {
+            if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
+                $useGlobalName = $editorKey . '_' . $param . '_useglobal';
+                $this->modxParams[$param . '_useglobal'] = is_null($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) ? '1' : '0';
+            }
+        }
+        
         // Add custom settings from bridge
-        foreach ($this->gSettingsCustom as $name => $x) {
-            if (!in_array($name, $modxParamsArr)) $modxParamsArr[] = $name;
+        foreach ($this->gSettingsCustom as $param => $row) {
+            if (!in_array($param, $modxParamsArr)) $modxParamsArr[] = $param;
+            // Handle defaultCheckbox
+            if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
+                $useGlobalName = $editorKey . '_' . $param . '_useglobal';
+                $this->modxParams[$param . '_useglobal'] = is_null($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) ? '1' : '0';
+            }
         };
 
         // Take over editor-configuration from Modx
         foreach ($modxParamsArr as $p) {
-            $value = isset($editorConfig[$editorKey . '_' . $p]) ? $editorConfig[$editorKey . '_' . $p] : NULL;
-            $value = $value === NULL && isset($this->gSettingsDefaultValues[$p]) ? $this->gSettingsDefaultValues[$p] : $value;
-
+            $useGlobalName = $p . '_useglobal';
+            if (!in_array($mgrAction,array(11,12)) && isset($this->modxParams[$useGlobalName]) && $this->modxParams[$useGlobalName] == '1' && isset($modx->configGlobal[$editorKey . '_' . $p])) {
+                $value = $modx->configGlobal[$editorKey . '_' . $p];
+            }
+            else {
+                $value = isset($editorConfig[$editorKey . '_' . $p]) ? $editorConfig[$editorKey . '_' . $p] : null;
+                $value = $value === null && isset($this->gSettingsDefaultValues[$p]) ? $this->gSettingsDefaultValues[$p] : $value;
+            }
             $this->modxParams[$p] = $value;
-        };
+        }
 
         // Set TV-options
         $this->tvOptions = $tvOptions;
@@ -195,7 +213,7 @@ class modxRTEbridge
     // Get translation
     public function lang($key = '', $returnNull = false)
     {
-        if (!$key) return;
+        if (!$key) return $returnNull ? NULL : '';
         if (isset($this->langArr[$key])) return $this->langArr[$key];
         return $returnNull ? NULL : 'lang_' . $key;    // Show missing key as fallback
     }
@@ -473,7 +491,7 @@ class modxRTEbridge
     // Outputs Modx- / user-configuration settings
     public function getModxSettings()
     {
-        global $modx, $usersettings, $settings;
+        global $modx;
         $params = &$this->pluginParams;
 
         if (defined('INTERFACE_RENDERED_' . $this->editorKey)) {
@@ -492,16 +510,6 @@ class modxRTEbridge
         // Prepare [+display+]
         $ph['display'] = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
         $ph['display'] = $modx->config['use_editor'] == 1 ? $ph['display'] : 'none';
-
-        // Prepare setting "editor_theme"
-        $theme_options = '';
-        switch ($modx->manager->action) {
-            case '11';
-            case '12';
-            case '119';
-                $selected = empty($ph[$this->editorKey . '_theme']) ? '"selected"' : '';
-                $theme_options .= '<option value="" ' . $selected . '>' . $this->lang('theme_global_settings') . "</option>\n";
-        }
 
         // Prepare setting "theme"
         $ph['theme_options'] = $this->getThemeNames();
@@ -570,13 +578,26 @@ class modxRTEbridge
             $row['messageVal'] = !empty($row['messageVal']) ? $row['messageVal'] : '';
 
             // Prepare displaying of default values
-            $row['default'] = isset($this->gSettingsDefaultValues[$name]) ? '<span class="default-val" style="margin:0.5em 0;float:left;">' . $this->lang('default') . '<i>' . $this->gSettingsDefaultValues[$name] . '</i></span>' : '';
-
-            // Simple nested parsing
-            $output = $this->parsePlaceholders($settingsRowTpl, $row); // Replace general translations
-            $output = $this->parsePlaceholders($output, $ph);          // Replace values / settings
-            $output = $this->parsePlaceholders($output, $row);         // Replace new PHs from values / settings
-            $output = $this->parsePlaceholders($output, $ph);          // Replace last values / settings
+            $row['default'] = isset($this->gSettingsDefaultValues[$name]) ? '<span class="default-val" style="margin:0.5em 0;display:block">' . $this->lang('default') . '<i>' . $this->gSettingsDefaultValues[$name] . '</i></span>' : '';
+        
+            // Prepare Default-Checkboxes for user-settings
+            if(in_array($modx->manager->action, array(11,12)) && isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
+                $useGlobalName          = $name . '_useglobal';
+                $useGlobal              = is_null($this->modxParams[$useGlobalName]) || !empty($this->modxParams[$useGlobalName]) ? '1' : '0';
+                $useGlobalBool          = $useGlobal ? true : false;
+                $row['defaultCheckbox'] = '<label><input class="defaultCheckbox" type="checkbox" id="' . $useGlobalName . '" ' . $this->checked($useGlobalBool) . '>' . $this->lang('theme_global_settings') . '</label><input id="' . $useGlobalName . '_hidden" name="' . $this->editorKey .'_'. $useGlobalName . '" value="' . $useGlobal . '" type="hidden" />';
+            } else {
+                $row['defaultCheckbox'] = '';
+            }
+            
+            // Nested parsing
+            $output = $settingsRowTpl;
+            $bt=md5('');
+            while($bt !== md5($output)) {
+                $bt = md5($output);
+                $output = $this->parsePlaceholders($output, $row); // Replace general translations
+                $output = $this->parsePlaceholders($output, $ph);  // Replace values / settings
+            }
         
             $ph['rows'] .= $output . "\n";
         };
@@ -650,7 +671,7 @@ class modxRTEbridge
 
     public function getSkinNames()
     {
-        global $modx, $usersettings, $settings;
+        global $modx;
         $params = $this->pluginParams;
 
         if (empty($params['skinsDirectory'])) {
@@ -798,11 +819,11 @@ class modxRTEbridge
     public function parseEditableIds($source, $attrContentEditable=false)
     {
         if(!isset($_SESSION['mgrValidated'])) return $source;
-		$attrContentEditable = $attrContentEditable == true ? ' contenteditable="true"' : '';
-			
+        $attrContentEditable = $attrContentEditable == true ? ' contenteditable="true"' : '';
+        
         $matchPhs = '~\[\*#(.*?)\*\]~'; // match [*#content*] / content
         preg_match_all($matchPhs, $source, $editableIds);
-		
+        
         $this->setEditableIds($editableIds);
         
         $source = preg_replace($matchPhs, '<div class="editable" id="modx_$1"'.$attrContentEditable.'>[*$1*]</div>', $source);
@@ -852,11 +873,11 @@ class modxRTEbridge
 
     public function prepareAjaxSecHash($docId)
     {
-    	if(isset($this->ajaxSecHash[$docId])) return $this->ajaxSecHash[$docId];
+        if(isset($this->ajaxSecHash[$docId])) return $this->ajaxSecHash[$docId];
 
-		$secHash = md5(rand(0, 999999999) + rand(0, 999999999));
-		$_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
-		$this->ajaxSecHash[$docId] = $secHash;
+        $secHash = md5(rand(0, 999999999) + rand(0, 999999999));
+        $_SESSION['modxRTEbridge']['secHash'][$docId] = $secHash;
+        $this->ajaxSecHash[$docId] = $secHash;
 
         return $secHash;
     }

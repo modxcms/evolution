@@ -21,7 +21,7 @@ $helpBasePath = MODX_BASE_PATH . "assets/templates/help/";
 <?php
 if ($handle = opendir(MODX_BASE_PATH . 'assets/templates/help')) {
     while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != ".." && $file != ".svn" && !is_dir($helpBasePath.$file)) {
+        if ($file != "." && $file != ".." && $file != ".svn" && $file != 'index.html' && !is_dir($helpBasePath.$file)) {
             $help[] = $file;
         }
     }

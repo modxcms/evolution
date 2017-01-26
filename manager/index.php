@@ -158,17 +158,18 @@ $modx->db->connect();
 startCMSSession();
 $modx->sid = session_id();
 
-// get the settings from the database
-include_once "settings.inc.php";
+// Now that session is given get user settings and merge into $modx->config
+$usersettings = $modx->getUserSettings();
 
-// get the user settings from the database
-include_once "user_settings.inc.php";
+$settings =& $modx->config;
+extract($modx->config, EXTR_OVERWRITE);
 
 // now include_once different language file as english
 if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
 	$manager_language = "english"; // if not set, get the english language file.
 }
-$length_eng_lang = count($_lang);
+
+// $length_eng_lang = count($_lang); // Not used for now, required for difference-check with other languages than english (i.e. inside installer) 
 
 if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
 	include_once "lang/".$manager_language.".inc.php";
@@ -452,6 +453,19 @@ switch ($action) {
 	case 37:
 		// get the delete role page
 		include_once(includeFileProcessor("processors/delete_role.processor.php",$manager_theme));
+	break;
+/********************************************************************/
+/* category management                                               */
+/********************************************************************/
+	case 120:
+		// get the edit category page
+		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
+		include_once(includeFileProcessor("actions/mutate_categories.dynamic.php",$manager_theme));
+		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
+	break;
+	case 121:
+		// for ajax-requests
+		include_once(includeFileProcessor("actions/mutate_categories.dynamic.php",$manager_theme));
 	break;
 /********************************************************************/
 /* template management                                              */
