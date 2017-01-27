@@ -934,6 +934,7 @@ class DocumentParser {
         $lc=0;
         $rc=0;
         $fetch = '';
+        $tags = array();
         foreach($piece as $v) {
             if($v===$left) {
                 if(0<$lc) $fetch .= $left;
@@ -943,7 +944,16 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+                    // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
+                    if(strpos($fetch,$left)!==false) {
+                        $nested = $this->_getTagsFromContent($fetch,$left,$right);
+                        foreach($nested as $tag) {
+                            if(!in_array($tag, $tags))
+                                $tags[] = $tag;
+                        }
+                    }
+
+                    if(!in_array($fetch, $tags)) {  // Avoid double Matches
                         $tags[] = $fetch; // Fetch
                     };
                     $fetch = ''; // and reset
@@ -956,8 +966,6 @@ class DocumentParser {
                 else continue;
             }
         }
-        if(!$tags) return array();
-        
         return $tags;
     }
     
@@ -1834,7 +1842,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
-	$q = isset($_GET['q']) ? $_GET['q'] : '';
+        $q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -2937,7 +2945,6 @@ class DocumentParser {
      * @return array
      */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
-    	
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -3845,7 +3852,6 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
-        
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -4151,7 +4157,6 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-    	
         if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
         
         $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
