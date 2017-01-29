@@ -411,6 +411,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
               <input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="categories_list_search">
             </form>
           </li>
+            <li><a href="index.php?a=120"><?php echo $_lang['manage_categories']; ?></a></li>
             <li><a href="#" id="category-help"><?php echo $_lang['help']; ?></a></li>
         </ul>
     
