@@ -734,7 +734,7 @@ class modxRTEbridge
 
         // Init langArray once
         if (empty($this->langArr)) {
-            $lang_name = $modx->config['manager_language'];
+            $lang_name = !empty($_SESSION['mgrUsrConfigSet']['manager_language']) ? $_SESSION['mgrUsrConfigSet']['manager_language'] : $modx->config['manager_language'];
             $gsettings_path = $basePath . "lang/gsettings/";     // Holds general translations
             $custom_path = $basePath . "lang/custom/";        // Holds custom translations
             $lang_file = $lang_name . '.inc.php';
