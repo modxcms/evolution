@@ -3097,6 +3097,52 @@ div#tabCategory.tab-page ul li ul li{
     padding-top:7px;
     padding-bottom:7px;
 }
+/* Checkbox "Icons" */
+.noicons.tab-page ul li ul li:before,
+.noicons .elements_description:before {
+    display:none !important;
+}
+
+ul.resourceTable a { display:inline-block; }
+ul.resourceTable .category_name {
+    float:none;
+    display:block;
+    clear:both;
+    margin-top:20px;
+}
+
+/* Manage elements views / options */
+/* List */
+.resourceTable.list li { }
+
+/* Inline */
+.resourceTable.inline ul li {
+    float:left;
+    margin-right:20px;
+}
+
+/* Flex */
+.resourceTable.flex li ul {
+    -webkit-column-count: 3; -webkit-column-gap:20px;
+    -moz-column-count:3; -moz-column-gap:20px;
+    -o-column-count:3; -o-column-gap:20px;
+    column-count:3; column-gap:20px;
+}
+.resourceTable.flex .elements_descr {
+    display:block;
+    padding-left:17px;
+}
+
+/* Option "small fonts" */
+.resourceTable.small {
+    font-size:10px;
+}
+.resourceTable.small .elements_buttonbar .btn,
+.resourceTable.small .elements_buttonbar .fa { 
+    font-size:10px !important;
+    padding:0 5px;
+}
+
 /* Manager Elements Buttons bar*/
 /*Fake tables*/
 .rTable { display: table; width:100%;}
@@ -3105,11 +3151,11 @@ div#tabCategory.tab-page ul li ul li{
 .rTableBody { display: table-row-group; }
 .rTableFoot { display: table-footer-group; }
 .rTableCell, .rTableHead { display: table-cell; }
-.elements_buttonbar {min-width:100px; text-align:right;}
-.elements_buttonbar .fa{font-size: 13px!important; padding-top:2px}
+.elements_buttonbar {min-width:120px; text-align:right;}
+.elements_buttonbar .fa{font-size: 13px!important; padding:1px 1px 0px}
 
 .tab-pane ul li ul li {
-    padding: 3px 6px 4px 0px;
+    padding: 1px 6px 1px 0px;
     margin-left: -50px;
     border-bottom: 1px dotted #dedede;
     border-left: 3px solid #FFF;
