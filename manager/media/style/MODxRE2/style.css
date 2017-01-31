@@ -3112,6 +3112,11 @@ ul.resourceTable .category_name {
 }
 
 /* Manage elements views / options */
+.switchForm { float:left; padding:5px; background-color:#f5f5f5; border-radius:3px; }
+.switchForm input.columns { width:3em; }
+.switchForm .cb_all { float:left; }
+.switchForm .btn_reset { float:right; }
+
 /* List */
 .resourceTable.list li { }
 
@@ -3131,16 +3136,6 @@ ul.resourceTable .category_name {
 .resourceTable.flex .elements_descr {
     display:block;
     padding-left:17px;
-}
-
-/* Option "small fonts" */
-.resourceTable.small {
-    font-size:10px;
-}
-.resourceTable.small .elements_buttonbar .btn,
-.resourceTable.small .elements_buttonbar .fa { 
-    font-size:10px !important;
-    padding:0 5px;
 }
 
 /* Manager Elements Buttons bar*/

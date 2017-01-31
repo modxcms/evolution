@@ -1161,6 +1161,7 @@ $_lang["view_child_resources_in_container"] = 'View children';
 $_lang["view_log"] = 'View log';
 $_lang["view_logging"] = 'Manager Actions';
 $_lang["view_sysinfo"] = 'System Info';
+$_lang["view_options"] = 'View Options';
 $_lang["warning"] = 'Warning!';
 $_lang["warning_not_saved"] = 'The changes you have made have not been saved yet. You can choose to stay on the current page in order to save the changes (\'Cancel\'), or you can leave this page, losing any changes you have made (\'OK\').';
 $_lang["warning_visibility"] = 'Configuration Warnings visible to';
