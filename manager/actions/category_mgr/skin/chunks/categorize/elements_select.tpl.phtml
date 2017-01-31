@@ -1,0 +1,6 @@
+<select id="elements-select" name="<?php echo $view->get('request_key'); ?>[categorize][elementsgroup]">
+  <option disabled="disabled" selected="selected"><?php echo $view->txt('cm_select_element_group'); ?></option>
+  <?php foreach( $view->elements as $element ) : ?>
+  <option value="<?php echo $element; ?>"><?php echo $view->txt($element); ?></option>
+  <?php endforeach; ?>
+</select>

@@ -200,8 +200,6 @@ class MODIFIERS {
             $cmd = 'id';
         }
         
-        if(!$modx->chunkCache) $modx->setChunkCache();
-        
         if(isset($modx->snippetCache["phx:{$cmd}"]))   $this->elmName = "phx:{$cmd}";
         elseif(isset($modx->chunkCache["phx:{$cmd}"])) $this->elmName = "phx:{$cmd}";
         else                                           $this->elmName = '';
@@ -417,6 +415,8 @@ class MODIFIERS {
             case 'base64_encode':
             case 'md5':
             case 'sha1':
+            case 'json_encode':
+            case 'json_decode':
                 return $cmd($value);
             
             #####  String Modifiers

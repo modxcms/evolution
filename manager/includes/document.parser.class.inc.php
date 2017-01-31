@@ -13,6 +13,7 @@ class DocumentParser {
     var $event, $Event; // event object
     var $pluginEvent;
     var $config= null;
+    var $configGlobal= null; // contains backup of settings overwritten by user-settings 
     var $rs;
     var $result;
     var $sql;
@@ -293,8 +294,6 @@ class DocumentParser {
      */
     function getSettings() {
         $tbl_system_settings   = $this->getFullTableName('system_settings');
-        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
-        $tbl_user_settings     = $this->getFullTableName('user_settings');
         if (!is_array($this->config) || empty ($this->config)) {
             if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
@@ -320,72 +319,99 @@ class DocumentParser {
             // added for backwards compatibility - garry FS#104
             $this->config['etomite_charset'] = & $this->config['modx_charset'];
 
+            // setup default site id - new installation should generate a unique id for the site.
+            if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
+
             // store base_url and base_path inside config array
-            $this->config['base_url']= MODX_BASE_URL;
-            $this->config['base_path']= MODX_BASE_PATH;
-            $this->config['site_url']= MODX_SITE_URL;
-            $this->config['valid_hostnames']= MODX_SITE_HOSTNAMES;
-            $this->config['site_manager_url']=MODX_MANAGER_URL;
-            $this->config['site_manager_path']=MODX_MANAGER_PATH;
-
-            // load user setting if user is logged in
-            $usrSettings= array ();
-            if ($id= $this->getLoginUserID()) {
-                $usrType= $this->getLoginUserType();
-                if (isset ($usrType) && $usrType == 'manager')
-                    $usrType= 'mgr';
-
-                if ($usrType == 'mgr' && $this->isBackend()) {
-                    // invoke the OnBeforeManagerPageInit event, only if in backend
-                    $this->invokeEvent("OnBeforeManagerPageInit");
-                }
-
-                if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
-                    $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
-                } else {
-                    if ($usrType == 'web')
-                    {
-                        $from = $tbl_web_user_settings;
-                        $where = "webuser='{$id}'";
-                    }
-                    else
-                    {
-                        $from = $tbl_user_settings;
-                        $where = "user='{$id}'";
-                    }
-                    $result= $this->db->select('setting_name, setting_value', $from, $where);
-                    while ($row= $this->db->getRow($result))
-                        $usrSettings[$row['setting_name']]= $row['setting_value'];
-                    if (isset ($usrType))
-                        $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
-                }
-            }
-            if ($this->isFrontend() && $mgrid= $this->getLoginUserID('mgr')) {
-                $musrSettings= array ();
-                if (isset ($_SESSION['mgrUsrConfigSet'])) {
-                    $musrSettings= & $_SESSION['mgrUsrConfigSet'];
-                } else {
-                    if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
-                        while ($row= $this->db->getRow($result)) {
-                            $musrSettings[$row['setting_name']]= $row['setting_value'];
-                        }
-                        $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
-                    }
-                }
-                if (!empty ($musrSettings)) {
-                    $usrSettings= array_merge($musrSettings, $usrSettings);
-                }
-            }
-            $this->error_reporting = $this->config['error_reporting'];
-            $this->config= array_merge($this->config, $usrSettings);
-            $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            $this->config['base_url']           = MODX_BASE_URL;
+            $this->config['base_path']          = MODX_BASE_PATH;
+            $this->config['site_url']           = MODX_SITE_URL;
+            $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
+            $this->config['site_manager_url']   = MODX_MANAGER_URL;
+            $this->config['site_manager_path']  = MODX_MANAGER_PATH;
+            $this->error_reporting              = $this->config['error_reporting'];
+            $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+            $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            
             $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
             $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
             if($count) $this->config['enable_filter'] = '0';
         }
+        // now merge user settings into MODX-configuration
+        $this->getUserSettings();
     }
 
+    /**
+     * Get user settings and merge into MODX configuration
+     */
+    function getUserSettings() {
+        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
+        $tbl_user_settings     = $this->getFullTableName('user_settings');
+        
+        // load user setting if user is logged in
+        $usrSettings= array ();
+        if ($id= $this->getLoginUserID()) {
+            $usrType= $this->getLoginUserType();
+            if (isset ($usrType) && $usrType == 'manager')
+                $usrType= 'mgr';
+
+            if ($usrType == 'mgr' && $this->isBackend()) {
+                // invoke the OnBeforeManagerPageInit event, only if in backend
+                $this->invokeEvent("OnBeforeManagerPageInit");
+            }
+
+            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
+                $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
+            } else {
+                if ($usrType == 'web')
+                {
+                    $from = $tbl_web_user_settings;
+                    $where = "webuser='{$id}'";
+                }
+                else
+                {
+                    $from = $tbl_user_settings;
+                    $where = "user='{$id}'";
+                }
+                
+                $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
+                
+                $result= $this->db->select('setting_name, setting_value', $from, $where);
+                while ($row= $this->db->getRow($result)) {
+                    if($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') $row['setting_value'] = $which_browser_default;
+                    $usrSettings[$row['setting_name']] = $row['setting_value'];
+                }
+                if (isset ($usrType))
+                    $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
+            }
+        }
+        if ($this->isFrontend() && $mgrid= $this->getLoginUserID('mgr')) {
+            $musrSettings= array ();
+            if (isset ($_SESSION['mgrUsrConfigSet'])) {
+                $musrSettings= & $_SESSION['mgrUsrConfigSet'];
+            } else {
+                if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
+                    while ($row= $this->db->getRow($result)) {
+                        $musrSettings[$row['setting_name']]= $row['setting_value'];
+                    }
+                    $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
+                }
+            }
+            if (!empty ($musrSettings)) {
+                $usrSettings= array_merge($musrSettings, $usrSettings);
+            }
+        }
+        // save global values before overwriting/merging array
+        foreach($usrSettings as $param=>$value) 
+            if(isset($this->config[$param])) $this->configGlobal[$param] = $this->config[$param];
+        
+        $this->config                     = array_merge($this->config, $usrSettings);
+        $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+        $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+        
+        return $usrSettings;
+    }
+    
     /**
      * Get the method by which the current document/resource was requested
      *
@@ -1357,7 +1383,8 @@ class DocumentParser {
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        $return = eval($phpcode);
+        if(strpos($phpcode,';')!==false) $return = eval($phpcode);
+        else                             $return = call_user_func_array($phpcode,array($params));
         $echo = ob_get_contents();
         ob_end_clean();
         if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
@@ -1955,7 +1982,7 @@ class DocumentParser {
                 $documentObject= array_merge($documentObject, $tmplvars);
             }
             $out = $this->invokeEvent('OnAfterLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out) && is_array($out[0])){
+            if(is_array($out) && array_key_exists(0,$out) !== FALSE && is_array($out[0])){
                 $documentObject = $out[0];
             }
         }
@@ -2087,6 +2114,7 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
+                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
@@ -4123,17 +4151,21 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-        $rs = $this->db->select(
-            'mu.username, mu.password, mua.*',
-            $this->getFullTableName("manager_users") . " mu
-                INNER JOIN " . $this->getFullTableName("user_attributes") . " mua ON mua.internalkey=mu.id",
-            "mu.id = '{$uid}'"
-            );
-        if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype']) or !$row["usertype"])
-                $row["usertype"]= "manager";
-            return $row;
-        }
+    	
+        if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
+        
+        $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
+        $where = sprintf("mu.id='%s'", $this->db->escape($uid));
+        $rs = $this->db->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        
+        if(!$this->db->getRecordCount($rs)) return $this->tmpCache[__FUNCTION__][$uid] = false;
+        
+        $row = $this->db->getRow($rs);
+        if (!isset($row['usertype']) || !$row['usertype']) $row['usertype']= 'manager';
+        
+        $this->tmpCache[__FUNCTION__][$uid] = $row;
+        
+        return $row;
     }
 
     /**

@@ -153,6 +153,12 @@ table td {vertical-align:top;}
 	echo render_form('assets_images',   $_lang['role_assets_images']);
 ?>
 </fieldset>
+<fieldset>
+<h3><?php echo $_lang['category_management']; ?></h3>
+<?php
+	echo render_form('category_manager',$_lang['role_category_manager']);
+?>
+</fieldset>
 </td>
 </tr>
 </table>

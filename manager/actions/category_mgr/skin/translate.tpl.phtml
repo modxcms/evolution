@@ -1,0 +1,32 @@
+<form id="category-translation-form" action="<?php echo $view->get('url'); ?>" method="post">
+  <fieldset>
+    <legend><?php echo $view->txt('cm_translate_module_phrases'); ?></legend>
+    <table id="category-translation" class="grid" cellpadding="1" cellspacing="1">
+      <thead>
+        <tr>
+          <td class="gridHeader"><?php echo $view->txt('cm_native_phrase'); ?></td>
+          <td class="gridHeader"><?php echo $view->txt('cm_translation'); ?></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php $i = 0; foreach( $data as $native => $translation ) : ?>
+        <tr>
+          <td class="native <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
+            <?php echo $native; ?>
+          </td>
+          <td class="translation <?php echo ($i%2===0)?'gridItem':'gridAltItem'; ?>">
+            <textarea  rows="2" cols="80" name="<?php echo $view->get('request_key'); ?>[translate][data][<?php echo urlencode($native) ?>]"><?php echo $translation; ?></textarea>
+          </td>           
+        </tr>
+        <?php $i++; endforeach; ?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" class="submit">
+            <input type="submit" name="<?php echo $view->get('request_key'); ?>[translate][submit]" value="<?php echo $view->txt('cm_translate_phrases'); ?>" />    
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </fieldset>
+</form>
