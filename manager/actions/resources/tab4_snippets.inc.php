@@ -21,7 +21,7 @@ if(isset($resources->items['site_snippets'])) { ?>
 			<?php echo renderViewSwitchButtons('site_snippets'); ?>
 		</ul>
 
-		<?php echo $resources->createResourceList('site_snippets'); ?>
+		<?php echo createResourceList('site_snippets', $resources); ?>
 
 		<script>
             initQuicksearch('site_snippets_search', 'site_snippets');

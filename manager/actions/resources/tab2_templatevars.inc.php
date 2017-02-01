@@ -26,7 +26,7 @@ if(isset($resources->items['site_tmplvars'])) { ?>
 			<?php echo renderViewSwitchButtons('site_tmplvars'); ?>
 		</ul>
 
-		<?php echo $resources->createResourceList('site_tmplvars'); ?>
+		<?php echo createResourceList('site_tmplvars', $resources); ?>
 
 		<script>
             initQuicksearch('site_tmplvars_search', 'site_tmplvars');

@@ -6,8 +6,6 @@ include_once(MODX_MANAGER_PATH . 'actions/resources/mgrResources.class.php');
 
 $resources = new mgrResources();
 
-
-
 // Prepare lang-strings / $unlockTranslations
 $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                             'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
@@ -18,6 +16,8 @@ foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv(
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+<script type="text/javascript" src="media/script/jquery.nucontextmenu.js"></script>
+<script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="actions/resources/functions.js"></script>
 
 <h1 class="pagetitle">

@@ -28,7 +28,7 @@ if(isset($resources->items['site_plugins'])) { ?>
 			<?php echo renderViewSwitchButtons('site_plugins'); ?>
 		</ul>
 
-		<?php echo $resources->createResourceList('site_plugins'); ?>
+		<?php echo createResourceList('site_plugins', $resources); ?>
 
 		<script>
             initQuicksearch('site_plugins_search', 'site_plugins');

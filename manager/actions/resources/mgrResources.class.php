@@ -58,12 +58,6 @@ class mgrResources {
 		return false;
 	}
 
-	function createResourceList($resourceTable) {
-		global $_lang;
-		
-		return !$this->items[$resourceTable] ? $_lang['no_results'] : self::render($resourceTable);
-	}
-		
 	function queryResources($resourceTable, $nameField = 'name') {
 		global $modx, $_lang;
 
@@ -114,95 +108,5 @@ class mgrResources {
 		return $result;
 	}
 
-	function render($resourceTable) {
-		global $modx,$_lang,$_style,$modx_textdir;
-		
-		$output   = '<ul id="' . $resourceTable . '" class="resourceTable">';
-		$preCat   = '';
-		$insideUl = 0;
-		foreach($this->items[$resourceTable] as $row) {
-			$row['category'] = stripslashes($row['category']);
-			if ($preCat !== $row['category']) {
-				$output .= $insideUl ? '</ul>' : '';
-				$output .= '<li><span class="category_name"><strong>' . $row['category'] . ($row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '') . '</strong><span><ul>';
-				$insideUl = 1;
-			}
-
-			if ($resourceTable == 'site_templates') {
-				$class           = $row['selectable'] ? '' : ' class="disabledPlugin"';
-				$lockElementType = 1;
-			}
-			if ($resourceTable == 'site_tmplvars') {
-				$class           = $row['reltpl'] ? '' : ' class="disabledPlugin"';
-				$lockElementType = 2;
-			}
-			if ($resourceTable == 'site_htmlsnippets') {
-				$lockElementType = 3;
-			}
-			if ($resourceTable == 'site_snippets') {
-				$lockElementType = 4;
-			}
-			if ($resourceTable == 'site_plugins') {
-				$class           = $row['disabled'] ? ' class="disabledPlugin"' : '';
-				$lockElementType = 5;
-			}
-
-			// Prepare displaying user-locks
-			$lockedByUser = '';
-			$rowLock      = $modx->elementIsLocked($lockElementType, $row['id'], true);
-			if ($rowLock && $modx->hasPermission('display_locks')) {
-				if ($rowLock['sid'] == $modx->sid) {
-					$title        = $modx->parseText($_lang["lock_element_editing"], array('element_type' => $_lang["lock_element_type_" . $lockElementType], 'lasthit_df' => $rowLock['lasthit_df']));
-					$lockedByUser = '<span title="' . $title . '" class="editResource" style="cursor:context-menu;"><img src="' . $_style['icons_preview_resource'] . '" /></span>&nbsp;';
-				}
-				else {
-					$title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type' => $_lang["lock_element_type_" . $lockElementType], 'username' => $rowLock['username'], 'lasthit_df' => $rowLock['lasthit_df']));
-					if ($modx->hasPermission('remove_locks')) {
-						$lockedByUser = '<a href="#" onclick="unlockElement(' . $lockElementType . ', ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource"><img src="' . $_style['icons_secured'] . '" /></a>';
-					}
-					else {
-						$lockedByUser = '<span title="' . $title . '" class="lockedResource" style="cursor:context-menu;"><img src="' . $_style['icons_secured'] . '" /></span>';
-					}
-				}
-			}
-
-			$output .= '<li><div class="rTable"><div class="rTableRow"><div class="rTableCell elements_description"><span' . $class . '>' . $lockedByUser . '<a class="man_el_name" href="index.php?a='. $this->types[$resourceTable]['actions']['edit'][0] .'&amp;id=' . $row['id'] . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a>' . ($modx_textdir ? '&rlm;' : '') . '</span> <span class="elements_descr">';
-
-			if ($resourceTable == 'site_tmplvars') {
-				$output .= !empty($row['description']) ? ' ' . $row['caption'] . ' &nbsp; <small>(' . $row['description'] . ')</small>' : ' - ' . $row['caption'];
-			}
-			else {
-				$output .= !empty($row['description']) ? ' ' . $row['description'] : '</span>';
-			}
-
-			$tplInfo = array();
-			if ($row['locked']) $tplInfo[] = $_lang['locked'];
-			if ($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') $tplInfo[] = $_lang['defaulttemplate_title'];
-			$output .= !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
-			
-			/* row buttons */
-			$output .= '</div><div class="rTableCell elements_buttonbar">';
-
-			if ($modx->hasPermission($this->types[$resourceTable]['actions']['edit'][1])) {
-				$output .= '<a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a='.$this->types[$resourceTable]['actions']['edit'][0].'&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a> ';
-			}
-			if ($modx->hasPermission($this->types[$resourceTable]['actions']['duplicate'][1])) {
-				$output .= '<a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a='.$this->types[$resourceTable]['actions']['duplicate'][0].'&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a> ';
-			}
-			if ($modx->hasPermission($this->types[$resourceTable]['actions']['remove'][1])) {
-				$output .= '<a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a='.$this->types[$resourceTable]['actions']['remove'][0].'&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a> ';
-			}
-			
-			$output .= '</div></div>';
-			/* end row buttons */
-			
-			$output .= '</li>';
-
-			$preCat = $row['category'];
-		}
-		$output .= $insideUl ? '</ul>' : '';
-		$output .= '</ul>';
-		
-		return $output;
-	}
+	
 }

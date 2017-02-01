@@ -1,26 +1,3 @@
-function initQuicksearch(inputId, listId) {
-    jQuery('#'+inputId).quicksearch('#'+listId+' ul li', {
-        selector: '.man_el_name',
-        'show': function () { jQuery(this).removeClass('hide'); },
-        'hide': function () { jQuery(this).addClass('hide'); },
-        'bind':'keyup',
-        'onAfter': function() {
-            jQuery('#'+listId).find('> li ul').each( function() {
-                var parentLI = jQuery(this).closest('li');
-                var totalLI  = jQuery(this).children('li').length;
-                var hiddenLI = jQuery(this).children('li.hide').length;
-                if (hiddenLI == totalLI) { parentLI.addClass('hide'); }
-                else { parentLI.removeClass('hide'); }
-            });
-        }
-    });
-    jQuery('.filterElements-form').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-        }
-    });
-}
-
 function unlockElement(type, id, domEl) {
     var msg = trans.msg.replace('[+id+]',id).replace('[+element_type+]',trans['type'+type]);
     if(confirm(msg)==true) {
@@ -43,7 +20,7 @@ function initViews(pre, helppre, target) {
 }
 
 function setColumnCount(targetEl, count) {
-    targetEl.find('li ul').css({
+    targetEl.find('.panel-collapse > ul').css({
         '-moz-column-count': count,
         '-webkit-column-count': count,
         'column-count': count,
@@ -69,9 +46,9 @@ function getViewOpts(form) {
 function setView(viewOpts, targetEl, target) {
     // Options
     if(viewOpts.cb_buttons) {
-        targetEl.find('.elements_buttonbar').show();
+        targetEl.find('.btnCell').show();
     } else {
-        targetEl.find('.elements_buttonbar').hide();
+        targetEl.find('.btnCell').hide();
     }
     if(viewOpts.cb_description) {
         targetEl.find('span.elements_descr').show();
@@ -198,4 +175,246 @@ jQuery( document ).ready(function() {
             jQuery('#'+target).toggle();
         });
     });
+
+    jQuery(function() {
+        var context = jQuery("#resourcesPane").nuContextMenu({
+            hideAfterClick: true,
+            items: ".man_el_name",
+            callback: function(action, element) {
+                var el = jQuery(element);
+                var name = el.html();
+                var cm = el.closest(".man_el_name");
+                eitAction(name, action, cm.data("type"), cm.data("id"));
+            },
+            menu: [
+                { name: "create",    title: "Create new", icon: "plus", },
+                { name: "edit",      title: "Edit",       icon: "edit", },
+                { name: "duplicate", title: "Duplicate",  icon: "clone", },
+                { name: "void" },
+                { name: "delete",    title: "Delete",     icon: "trash", },
+            ]
+        });
+    });
+
+    function eitAction(name, action, type, id) {
+        var actionIds, deleteMsg;
+
+        switch(type) {
+            case "site_templates" :
+                actionsIds = { "create":19, "edit":16, "duplicate":96, "delete":21 };
+                deleteMsg = "Are you sure you want to delete this Template?";
+                break;
+            case "site_tmplvars" :
+                actionsIds = { "create":300, "edit":301, "duplicate":304, "delete":303 };
+                deleteMsg = "Are you sure you want to remove this Template Variable and all stored values?";
+                break;
+            case "site_htmlsnippets" :
+                actionsIds = { "create":77, "edit":78, "duplicate":97, "delete":80 };
+                deleteMsg = "Are you sure you want to delete this Chunk?";
+                break;
+            case "site_snippets" :
+                actionsIds = { "create":23, "edit":22, "duplicate":98, "delete":25 };
+                deleteMsg = "Are you sure you want to delete this Snippet?";
+                break;
+            case "site_plugins" :
+                actionsIds = { "create":101, "edit":102, "duplicate":105, "delete":104 };
+                deleteMsg = "Are you sure you want to delete this Plugin?";
+                break;
+            case "site_modules" :
+                actionsIds = { "create":107, "edit":108, "duplicate":111, "delete":110 };
+                deleteMsg = "Are you sure you want to delete this Module?";
+                break;
+            default :
+                alert("Unknown type");
+                return;
+        }
+
+        // Actions that need confirmation
+        var confirmMsg = false;
+        switch(action) {
+            case "create" : id = false; break;
+            case "edit" : break;
+            case "duplicate" : confirmMsg = "Are you sure you want to duplicate this record?"; break;
+            case "delete" : confirmMsg = deleteMsg; break;
+        }
+
+        if(confirmMsg) {
+            confirmMsg += " \n \n " + name + " ("+id+")";
+            var r = confirm(confirmMsg);
+            if (r != true) return;
+        }
+
+        top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+    }
 });
+
+/*
+function initQuicksearch(inputId, listId) {
+    jQuery('#'+inputId).quicksearch('#'+listId+' ul li', {
+        selector: '.man_el_name',
+        'show': function () { jQuery(this).removeClass('hide'); },
+        'hide': function () { jQuery(this).addClass('hide'); },
+        'bind':'keyup',
+        'onAfter': function() {
+            jQuery('#'+listId).find('> li ul').each( function() {
+                var parentLI = jQuery(this).closest('li');
+                var totalLI  = jQuery(this).children('li').length;
+                var hiddenLI = jQuery(this).children('li.hide').length;
+                if (hiddenLI == totalLI) { parentLI.addClass('hide'); }
+                else { parentLI.removeClass('hide'); }
+            });
+        }
+    });
+    jQuery('.filterElements-form').keydown(function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+        }
+    });
+}
+*/
+
+function initQuicksearch(inputId, listId) {
+    jQuery("#"+inputId).quicksearch("#"+listId+" ul li", {
+        selector: ".man_el_name",
+        "show": function () { jQuery(this).removeClass("hide"); },
+        "hide": function () { jQuery(this).addClass("hide"); },
+        "bind":"keyup",
+        "onAfter": function() {
+            jQuery("#"+listId).find(".panel-collapse").each( function() {
+                var parentLI = jQuery(this);
+                var totalLI  = jQuery(this).find("li").length;
+                var hiddenLI = jQuery(this).find("li.hide").length;
+                if (hiddenLI == totalLI) { parentLI.prev(".panel-heading").addClass("hide"); }
+                else { parentLI.prev(".panel-heading").removeClass("hide"); }
+            });
+        }
+    });
+    jQuery(".filterElements-form").keydown(function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+        }
+    });
+}
+
+var storageKey = "MODX_mgrResources";
+
+// localStorage reset :
+// localStorage.removeItem(storageKey);
+
+// Prepare remember collapsed categories function
+var storage = localStorage.getItem(storageKey);
+var elementsInTreeParams = {};
+var searchFieldCache = {};
+
+try {
+    if(storage != null) {
+        try {
+            elementsInTreeParams = JSON.parse( storage );
+        } catch(err) {
+            console.log(err);
+            elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
+        }
+    } else {
+        elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
+    }
+
+    // Remember collapsed categories functions
+    function setRememberCollapsedCategories(obj=null) {
+        obj = obj == null ? elementsInTreeParams.cat_collapsed : obj;
+        for (var type in obj) {
+            if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
+            for (var category in elementsInTreeParams.cat_collapsed[type]) {
+                if (!elementsInTreeParams.cat_collapsed[type].hasOwnProperty(category)) continue;
+                state = elementsInTreeParams.cat_collapsed[type][category];
+                if(state == null) continue;
+                var collapseItem = jQuery("#collapse" + type + category);
+                var toggleItem = jQuery("#toggle" + type + category);
+                if(state == 0) {
+                    // Collapsed
+                    collapseItem.collapse("hide");
+                    toggleItem.addClass("collapsed");
+                } else {
+                    // Open
+                    collapseItem.collapse("show");
+                    toggleItem.removeClass("collapsed");
+                }
+            }
+        }
+        // Avoid first category collapse-flicker on reload
+        setTimeout(function() {
+            jQuery(".panel-group").removeClass("no-transition");
+        }, 50);
+    }
+
+    function setLastCollapsedCategory(type, id, state) {
+        console.log(type, id, state);
+        state = state != 1 ? 1 : 0;
+        if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
+        elementsInTreeParams.cat_collapsed[type][id] = state;
+    }
+    function writeElementsInTreeParamsToStorage() {
+        var jsonString = JSON.stringify(elementsInTreeParams);
+        localStorage.setItem(storageKey, jsonString );
+    }
+
+    // Issue #20 - Keep HTTP_REFERER
+    function reloadElementsInTree() {
+        // http://stackoverflow.com/a/7917528/2354531 
+        var url = "index.php?a=1&f=tree";
+        var a = document.createElement("a");
+        if (a.click)
+        {
+            // HTML5 browsers and IE support click() on <a>, early FF does not.
+            a.setAttribute("href", url);
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+        } else {
+            // Early FF can, however, use this usual method where IE cannot with secure links.
+            window.location = url;
+        }
+    }
+
+    jQuery(document).ready(function() {
+
+        jQuery(".filterElements-form").keydown(function (e) {
+            if(e.keyCode == 13) e.preventDefault();
+        });
+
+        // Shift-Mouseclick opens/collapsed all categories
+        jQuery(".accordion-toggle").click(function(e) {
+            e.preventDefault();
+            var thisItemCollapsed = jQuery(this).hasClass("collapsed");
+            if (e.shiftKey) {
+                // Shift-key pressed
+                var toggleItems = jQuery(this).closest(".panel-group").find("> .panel .accordion-toggle");
+                var collapseItems = jQuery(this).closest(".panel-group").find("> .panel > .panel-collapse");
+                if(thisItemCollapsed) {
+                    toggleItems.removeClass("collapsed");
+                    collapseItems.collapse("show");
+                } else {
+                    toggleItems.addClass("collapsed");
+                    collapseItems.collapse("hide");
+                }
+                // Save states to localStorage
+                toggleItems.each(function() {
+                    state = jQuery(this).hasClass("collapsed") ? 1 : 0;
+                    setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
+                });
+                writeElementsInTreeParamsToStorage();
+            } else {
+                jQuery(this).toggleClass("collapsed");
+                jQuery(jQuery(this).attr("href")).collapse("toggle");
+                // Save state to localStorage
+                state = thisItemCollapsed ? 0 : 1;
+                setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
+                writeElementsInTreeParamsToStorage();
+            }
+        });
+
+        setRememberCollapsedCategories();
+
+    });
+} catch(err) {
+    alert("document.ready error: " + err);
+}

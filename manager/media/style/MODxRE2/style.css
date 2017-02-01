@@ -3004,6 +3004,75 @@ div.treeframebody {
   background: #F9F9F9 !important;
 }
 
+.no-events { pointer-events: none; }
+
+/* Context Menu */
+.nu-context-menu {
+    background-clip: padding-box;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.10);
+    border-top:3px solid #3697CD;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    display: block;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+    z-index: 9999;
+}
+
+.nu-context-menu.active {
+    opacity: 1;
+    height: auto;
+    width: auto;
+}
+
+.nu-context-menu ul {
+    font-size: 14px;
+    list-style: none;
+    margin: 2px 0 0;
+    padding: 4px 0;
+    text-align: left;
+}
+
+.nu-context-menu ul li {
+    clear: both;
+    color: #777;
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 1.42857;
+    padding: 2px 30px 2px 5px;
+    margin: 0 4px;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.nu-context-menu ul li:hover {
+    background: #E6F2FF;
+    border-color: #BACCDB;
+    color: #333;
+}
+
+.nu-context-menu ul li .fa {
+    margin-right: 5px;
+}
+
+.nu-context-menu ul hr {
+    background: #e8e8e8;
+    border: 0;
+    color: #e8e8e8;
+    height: 1px;
+    margin: 4px 0;
+}
+
+.nu-context-menu-title {
+    color:#3697CD;
+    font-weight:bold;
+}
+
 /* category icons in manage elements */ 
 
 #site_templates,
@@ -3062,44 +3131,108 @@ padding-left: 0;
     list-style: none;
     padding-left: 20px;
 }
-.elements_description:before,
-.tab-pane ul li ul li:before{
+.elements_description a:before,
+.tab-pane ul li ul li a:before{
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
     color: #5b6f7a;
-    padding: 0 5px 0 12px;
 }
-div#tabTemplates .elements_description:before,
-div#tabCategory.tab-page ul li ul li.el-16:before{
+div#tabTemplates .elements_description a:before,
+div#tabCategory.tab-page ul li ul li.el-16 a:before{
     content:'\f1ea';
 }
-div#tabVariables .elements_description:before,
-div#tabCategory.tab-page ul li ul li.el-301:before{
+div#tabVariables .elements_description a:before,
+div#tabCategory.tab-page ul li ul li.el-301 a:before{
     content:'\f022';
 }
-div#tabChunks .elements_description:before,
-div#tabCategory.tab-page ul li ul li.el-78:before{
+div#tabChunks .elements_description a:before,
+div#tabCategory.tab-page ul li ul li.el-78 a:before{
     content:'\f009';
 }
-div#tabSnippets .elements_description:before,
-div#tabCategory.tab-page ul li ul li.el-22:before{
+div#tabSnippets .elements_description a:before,
+div#tabCategory.tab-page ul li ul li.el-22 a:before{
     content:'\f121';
 }
-div#tabPlugins .elements_description:before,
-div#tabCategory.tab-page ul li ul li.el-102:before{
+div#tabPlugins .elements_description a:before,
+div#tabCategory.tab-page ul li ul li.el-102 a:before{
     content:'\f1e6';
 }
-div#tabCategory.tab-page ul li ul li.el-108:before{
+div#tabCategory.tab-page ul li ul li.el-108 a:before{
     content:'\f085';
 }
 div#tabCategory.tab-page ul li ul li{
     padding-top:7px;
     padding-bottom:7px;
 }
+
+/* Required for Bootstrap3 Collapse */
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+.fade.in {
+    opacity: 1;
+}
+.collapse {
+    display: none;
+}
+.collapse.in {
+    display: block;
+}
+.collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: .35s;
+    -o-transition-duration: .35s;
+    transition-duration: .35s;
+    -webkit-transition-property: height, visibility;
+    -o-transition-property: height, visibility;
+    transition-property: height, visibility;
+}
+.no-transition .collapsing {
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+.panel-title > a::before {
+    content: "\f107"; /* fa-angle-down */
+    font-family: "FontAwesome";
+}
+.panel-title > a.collapsed::before {
+    content: "\f105"; /* fa-angle-right */
+    padding:0 1px 0 3px;
+}
+.panel-title > a {
+    font-size:1.1em;
+    color: #657587;
+    display:block;
+    padding:3px 0;
+}
+.panel-title > a:hover {
+    text-decoration: none;
+    color:#3697CD;
+    background: #f9f9f9;
+}
+
+a.man_el_name { display:block; }
+a.man_el_name:hover { text-decoration:none; }
+.elements_descr { color:#222; margin-left:1em; font-size:0.88em; }
+
+#resourcesPane .panel-group ul {
+    margin:0 0 0 16px;
+}
+
+/* Manage elements views / options */
 /* Checkbox "Icons" */
-.noicons.tab-page ul li ul li:before,
-.noicons .elements_description:before {
+.noicons.tab-page ul li ul li a:before,
+.noicons .elements_description a:before {
     display:none !important;
 }
 
@@ -3111,7 +3244,39 @@ ul.resourceTable .category_name {
     margin-top:20px;
 }
 
-/* Manage elements views / options */
+/* Manager Elements Buttons bar*/
+/*Fake tables*/
+.rTable { display: table; width:100%;}
+.rTableRow { display: table-row;}
+.rTableHeading { display: table-header-group; }
+.rTableBody { display: table-row-group; }
+.rTableFoot { display: table-footer-group; }
+.lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; }
+.lockCell { width:20px; }
+.mainCell { width:auto; }
+.btnCell { width:6em; }
+
+ul.elements_buttonbar { list-style:none; padding:0; margin:0; display: table; table-layout: fixed; }
+ul.elements_buttonbar li { display: table-cell; padding:0 3px 0 0 !important; margin:0; width:2em; }
+ul.elements_buttonbar li a { display: block; width:2em; }
+ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
+
+.resourceTable .panel-heading {
+    margin:0 -12px !important;
+    border-bottom: 1px dotted #dedede;
+}
+.resourceTable ul.elements > li {
+    padding: 1px 10px 1px 14px;
+    border-bottom: 1px dotted #dedede;
+    border-left: 3px solid #FFF;
+    transition: all 0.1s ease;
+    margin:0 -25px 0 -36px !important;
+}
+.resourceTable ul.elements > li:hover{
+    background: #f9f9f9;
+    border-left: 3px solid #3697CD;
+}
+
 .switchForm { float:left; padding:5px; background-color:#f5f5f5; border-radius:3px; }
 .switchForm input.columns { width:3em; }
 .switchForm .cb_all { float:left; }
@@ -3121,46 +3286,45 @@ ul.resourceTable .category_name {
 .resourceTable.list li { }
 
 /* Inline */
-.resourceTable.inline ul li {
+.resourceTable.inline .panel-heading {
+    margin-top:10px !important;
+}
+.resourceTable.inline ul.elements {
+    margin:0 !important;
+    padding:0 !important;
+}
+.resourceTable.inline ul.elements > li {
     float:left;
-    margin-right:20px;
+    margin:10px 10px 0 0 !important;
+    padding:0 !important;
+    border: 1px dotted #dedede;
+}
+.resourceTable.inline ul.elements_buttonbar { margin:0 20px 0 0 !important; } 
+.resourceTable.inline a.man_el_name {
+    padding:5px 10px;
 }
 
 /* Flex */
-.resourceTable.flex li ul {
-    -webkit-column-count: 3; -webkit-column-gap:20px;
-    -moz-column-count:3; -moz-column-gap:20px;
-    -o-column-count:3; -o-column-gap:20px;
-    column-count:3; column-gap:20px;
+.resourceTable.flex ul.elements {
+    -webkit-column-gap:10px;
+    -moz-column-gap:10px;
+    -o-column-gap:10px;
+    column-gap:10px;
 }
-.resourceTable.flex .elements_descr {
-    display:block;
-    padding-left:17px;
+.resourceTable.flex .panel-heading {
+    margin-top:10px !important;
+}
+.resourceTable.flex ul.elements {
+    margin-right:0 !important;
+}
+.resourceTable.flex ul.elements > li {
+    margin:0 36px 0 -36px !important;
+}
+.resourceTable.flex ul.elements_buttonbar { margin:0 20px 0 0 !important; }
+.resourceTable.flex a.man_el_name {
 }
 
-/* Manager Elements Buttons bar*/
-/*Fake tables*/
-.rTable { display: table; width:100%;}
-.rTableRow { display: table-row;}
-.rTableHeading { display: table-header-group; }
-.rTableBody { display: table-row-group; }
-.rTableFoot { display: table-footer-group; }
-.rTableCell, .rTableHead { display: table-cell; }
-.elements_buttonbar {min-width:120px; text-align:right;}
-.elements_buttonbar .fa{font-size: 13px!important; padding:1px 1px 0px}
-
-.tab-pane ul li ul li {
-    padding: 1px 6px 1px 0px;
-    margin-left: -50px;
-    border-bottom: 1px dotted #dedede;
-    border-left: 3px solid #FFF;
-    transition: all 0.1s ease;
-}
-.tab-pane ul li ul li:hover{
-background: #f9f9f9;
-border-left: 3px solid #3697CD;}
 /* action buttons */
-
 .actionButtons a {
   padding: 8px 10px;
   font-size: 13px;
