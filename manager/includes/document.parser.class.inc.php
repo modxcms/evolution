@@ -1798,7 +1798,15 @@ class DocumentParser {
                     $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
-                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                            $parent = $row['parent'];
+                            $path   = $aliases[$parent];
+
+                            while ( isset( $this->aliasListing[$parent] ) && $this->aliasListing[$parent]['alias_visible'] == 0 ) {
+                                $path   = $this->aliasListing[$parent]['path'];
+                                $parent = $this->aliasListing[$parent]['parent'];
+                            }
+
+                            $aliases[$row['id']] = $path . '/' . $row['alias'];
                         } else {
                             $aliases[$row['id']] = $row['alias'];
                         }
@@ -3390,11 +3398,11 @@ class DocumentParser {
                     'isfolder' => (int)$q['isfolder'],
                 );
                 if($this->aliasListing[$id]['parent']>0){
-                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
                     //fix alias_path_usage
                     if ($this->config['use_alias_path'] == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                        $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($this->aliasListing[$id]['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
                     } else {
                         $this->aliasListing[$id]['path'] = '';
                     }
