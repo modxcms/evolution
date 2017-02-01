@@ -3402,7 +3402,7 @@ class DocumentParser {
                     if ($this->config['use_alias_path'] == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
                         $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($this->aliasListing[$id]['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
                     } else {
                         $this->aliasListing[$id]['path'] = '';
                     }
