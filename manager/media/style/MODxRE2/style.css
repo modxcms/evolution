@@ -3275,7 +3275,7 @@ ul.elements_buttonbar li a { display: block; width:2em; padding:1px 2px; margin:
 ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
 
 /* Manage elements views-form */
-.switchForm { float:left; padding:5px; background-color:#f5f5f5; border-radius:3px; }
+.switchForm { float:left; margin:15px 0; padding:15px; background-color:#f5f5f5; border-radius:3px; box-shadow:1px 1px 2px #ddd; border:1px solid #ddd; }
 .switchForm input.columns { width:3em; }
 .switchForm .cb_all { float:left; }
 .switchForm .btn_reset { float:right; }
