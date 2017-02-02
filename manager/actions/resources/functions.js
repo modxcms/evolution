@@ -274,7 +274,7 @@ function initQuicksearch(inputId, listId) {
 */
 
 function initQuicksearch(inputId, listId) {
-    jQuery("#"+inputId).quicksearch("#"+listId+" ul li", {
+    jQuery("#"+inputId).quicksearch("#"+listId+" ul.elements > li", {
         selector: ".man_el_name",
         "show": function () { jQuery(this).removeClass("hide"); },
         "hide": function () { jQuery(this).addClass("hide"); },
@@ -282,8 +282,8 @@ function initQuicksearch(inputId, listId) {
         "onAfter": function() {
             jQuery("#"+listId).find(".panel-collapse").each( function() {
                 var parentLI = jQuery(this);
-                var totalLI  = jQuery(this).find("li").length;
-                var hiddenLI = jQuery(this).find("li.hide").length;
+                var totalLI  = jQuery(this).find("ul.elements > li").length;
+                var hiddenLI = jQuery(this).find("ul.elements > li.hide").length;
                 if (hiddenLI == totalLI) { parentLI.prev(".panel-heading").addClass("hide"); }
                 else { parentLI.prev(".panel-heading").removeClass("hide"); }
             });
@@ -312,10 +312,10 @@ try {
             elementsInTreeParams = JSON.parse( storage );
         } catch(err) {
             console.log(err);
-            elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
+            elementsInTreeParams = { "cat_collapsed": {} };
         }
     } else {
-        elementsInTreeParams = { "cat_collapsed": {}, "scroll_pos": {} };
+        elementsInTreeParams = { "cat_collapsed": {} };
     }
 
     // Remember collapsed categories functions
@@ -347,7 +347,6 @@ try {
     }
 
     function setLastCollapsedCategory(type, id, state) {
-        console.log(type, id, state);
         state = state != 1 ? 1 : 0;
         if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
         elementsInTreeParams.cat_collapsed[type][id] = state;
@@ -355,24 +354,6 @@ try {
     function writeElementsInTreeParamsToStorage() {
         var jsonString = JSON.stringify(elementsInTreeParams);
         localStorage.setItem(storageKey, jsonString );
-    }
-
-    // Issue #20 - Keep HTTP_REFERER
-    function reloadElementsInTree() {
-        // http://stackoverflow.com/a/7917528/2354531 
-        var url = "index.php?a=1&f=tree";
-        var a = document.createElement("a");
-        if (a.click)
-        {
-            // HTML5 browsers and IE support click() on <a>, early FF does not.
-            a.setAttribute("href", url);
-            a.style.display = "none";
-            document.body.appendChild(a);
-            a.click();
-        } else {
-            // Early FF can, however, use this usual method where IE cannot with secure links.
-            window.location = url;
-        }
     }
 
     jQuery(document).ready(function() {

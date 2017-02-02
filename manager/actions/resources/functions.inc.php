@@ -2,24 +2,13 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 function renderViewSwitchButtons($cssId) {
-	global $_lang;
-	return '
-			<li><a href="#" class="switchform-btn" data-target="switchForm_'.$cssId.'">'.$_lang['view_options'].'</a></li>
-			<form id="switchForm_'.$cssId.'" class="switchForm" data-target="'.$cssId.'" style="display:none">
-				<label><input type="checkbox" name="cb_buttons" value="buttons"> Buttons</label>
-				<label><input type="checkbox" name="cb_description" value="description"> Description</label>
-				<label><input type="checkbox" name="cb_icons" value="icons"> Icons</label>
-				<br/>
-				<label><input type="radio" name="view" value="list"> List</label>
-				<label><input type="radio" name="view" value="inline"> Inline</label>
-				<label><input type="radio" name="view" value="flex"> Flex</label>
-				<label><input type="number" placeholder="Columns" name="columns" class="columns" value="3"></label>
-				<br/>
-				<label>Font-Size <input type="number" placeholder="" name="fontsize" class="fontsize" value="10"></label>
-				<hr/>
-				<label><input type="checkbox" class="cb_all" name="cb_all" value="all"> All Tabs</label>
-				<a href="#" class="btn_reset"> Reset</a>
-			</form>';
+	global $modx,$_lang;
+	
+	$output = file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_viewForm.tpl');
+	$output = $modx->parseText($output, $_lang, '[%', '%]');
+	return $modx->parseText($output, array(
+		'cssId'=>$cssId
+	));
 }
 
 function createResourceList($resourceTable, $resources) {
@@ -31,32 +20,18 @@ function createResourceList($resourceTable, $resources) {
 	if(!$items) return $_lang['no_results'];
 	if(!$types) return 'Error: Types missing';
 	
-	$output   = '<div class="clearfix"></div>';
-	$output  .= '<div class="panel-group no-transition">';
-	$output  .= '<div id="' . $resourceTable . '" class="resourceTable panel panel-default">';
-	$preCat   = '';
-
+	$tpl = array(
+		'panelGroup'    =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelGroup.tpl'),
+		'panelHeading'  =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelHeading.tpl'),
+		'panelCollapse' =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelCollapse.tpl'),
+		'elementsRow'   =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_elementsRow.tpl'),
+	);
+	
+	// Prepare elements- and categories-list
+	$elements = array();
+	$categories = array();
 	foreach($items as $row) {
-		$row['category'] = stripslashes($row['category']);
-		if ($preCat !== $row['category']) {
-			$output .= $preCat != '' ? '</ul></div>' : '';
-			$row['tab'] = $resourceTable;
-			$row['categoryid'] = $row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '';
-			$row['catid'] = $row['catid'] ? $row['catid'] : 0;
-			$output .= $modx->parseText('
-					<div class="panel-heading">
-						<span class="panel-title">
-							<a class="accordion-toggle" id="toggle[+tab+][+catid+]" href="#collapse[+tab+][+catid+]" data-cattype="[+tab+]" data-catid="[+catid+]" title="Click to toggle collapse. Shift+Click to toggle all.">
-								<span class="category_name">
-									<strong>[+category+][+categoryid+]</strong>
-								</span>
-							</a>
-						</span>
-					</div>
-					<div id="collapse[+tab+][+catid+]" class="panel-collapse collapse in" aria-expanded="true">
-						<ul class="elements">', $row);
-		}
-
+		
 		$class = '';
 		if ($resourceTable == 'site_templates') {
 			$class           = $row['selectable'] ? '' : 'disabledPlugin';
@@ -123,8 +98,10 @@ function createResourceList($resourceTable, $resources) {
 			$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a='.$types['actions']['remove'][0].'&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
 		}
 		$buttons = $buttons ? '<div class="btnCell"><ul class="elements_buttonbar">'.$buttons.'</ul></div>' : '';
+
+		$catid = $row['catid'] ? $row['catid'] : 0;
 		
-		// Placeholders
+		// Placeholders for elements-row
 		$ph = array(
 			'class'=>$class ? ' class="'.$class.'"' : '',
 			'lockedByUser'=>$lockedByUser,
@@ -135,34 +112,41 @@ function createResourceList($resourceTable, $resources) {
 			'id'=>$row['id'],
 			'resourceTable'=>$resourceTable,
 			'actionEdit'=>$types['actions']['edit'][0],
+			'catid'=>$catid,
 			'textdir'=>$modx_textdir ? '&rlm;' : '',
 		);
 
-		$template = '
-					<li>
-						<div class="rTable">
-							<div class="rTableRow">
-								[+lockedByUser+]
-								<div class="mainCell elements_description">
-									<span[+class+]>
-										<a class="man_el_name" data-type="[+resourceTable+]" data-id="[+id+]" href="index.php?a=[+actionEdit+]&amp;id=[+id+]">
-											[+name+] <small>([+id+])</small> <span class="elements_descr">[+caption+]</span>
-										</a>[+textdir+]
-									</span>
-								</div>
-								[+buttons+]
-							</div>
-						</div>
-					</li>';
+		if(!isset($categories[$catid])) $categories[$catid] = array('name'=>stripslashes($row['category']));
+		$elements[$catid][] = $ph;
+	}
+	
+	// Now render categories / panel-collapse
+	$panelGroup = '';
+	foreach($elements as $catid=>$elList) {
+		// Add panel-heading / category-collapse to output
+		$panelGroup .= $modx->parseText($tpl['panelHeading'], array(
+			'tab'        => $resourceTable,
+			'category'   => $categories[$catid]['name'],
+			'categoryid' => $catid != '' ? ' <small>(' . $catid . ')</small>' : '',
+			'catid'      => $catid,
+		));
 
-		$output .= $modx->parseText($template, $ph);
-
-		$preCat = $row['category'];
+		// Prepare content for panel-collapse
+		$panelCollapse = '';
+		foreach($elList as $el) {
+			$panelCollapse .= $modx->parseText($tpl['elementsRow'], $el);
+		}
+		
+		// Add panel-collapse with elements to output
+		$panelGroup .= $modx->parseText($tpl['panelCollapse'], array(
+			'tab'        => $resourceTable,
+			'catid'      => $catid,
+			'wrapper'    => $panelCollapse,
+		));
 	}
 
-	$output .= '</ul></div>';
-	$output .= '</div></div>';
-	$output .= '<div class="clearfix"></div>';
-
-	return $output;
+	return $modx->parseText($tpl['panelGroup'], array(
+		'resourceTable'=>$resourceTable,
+		'wrapper'=>$panelGroup
+	));
 }
