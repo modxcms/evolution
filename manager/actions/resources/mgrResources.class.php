@@ -4,10 +4,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 class mgrResources {
 	var $types = array();
 	var $items = array();
+	var $categories = array();
+	var $itemsPerCategory = array();
 	
 	function __construct() {
 		$this->setTypes();
 		$this->queryItemsFromDB();
+		$this->prepareCategoryArrays();
 	}
 
 	function setTypes() {
@@ -37,6 +40,11 @@ class mgrResources {
 			'title'=>$_lang["manage_plugins"],
 			'actions'=>array('edit'=>array(102,'edit_plugin'), 'duplicate'=>array(105,'new_plugin'), 'remove'=>array(104,'delete_plugin')),
 			'permissions'=>array('new_plugin','edit_plugin'),
+		);
+		$this->types['site_modules']      = array(
+			'title'=>$_lang["manage_modules"],
+			'actions'=>array('edit'=>array(108,'edit_module'), 'duplicate'=>array(111,'new_module'), 'remove'=>array(110,'delete_module')),
+			'permissions'=>array('new_module','edit_module'),
 		);
 	}
 	
@@ -108,5 +116,22 @@ class mgrResources {
 		return $result;
 	}
 
-	
+	function prepareCategoryArrays() {
+		foreach($this->items as $type=>$items) {
+			foreach($items as $item) {
+				$catid = $item['catid'] ? $item['catid'] : 0;
+				$this->categories[$catid] = $item['category'];
+				
+				$item['type'] = $type;
+				$this->itemsPerCategory[$catid][] = $item;
+			}
+		}
+		
+		// Now sort by name
+		foreach($this->itemsPerCategory as $catid=>$items) {
+			usort($this->itemsPerCategory[$catid], function ($a, $b) {
+				return strcmp($a['name'], $b['name']);
+			});
+		}
+	}
 }

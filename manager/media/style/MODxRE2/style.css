@@ -3137,25 +3137,19 @@ div.treeframebody {
 width:99.5%;
 padding-left: 0;
 }
-#categories_list ul {
-width:100%;
-padding-left: 0;
-}
+
 #site_templates li,
 #site_tmplvars li, 
 #site_htmlsnippets li, 
 #site_snippets li, 
 #site_snippets li, 
-#site_plugins li{
+#site_plugins li,
+#categories_list li {
   list-style-type: none;
   list-style: none;
   margin-left: -21px;
 }
-#categories_list li  {
-  list-style-type: none;
-  list-style: none;
-  margin-left: -18px;
-}
+
 #site_templates li strong:before,
 #site_tmplvars li strong:before, 
 #site_htmlsnippets li strong:before, 
@@ -3177,41 +3171,35 @@ padding-left: 0;
 
 /* elements icons in manage elements */ 
 .tab-pane ul li ul {
-    width:100%;
+    /* width:100%; */
 }
 .tab-pane ul li ul li {
     list-style-type: none;
     list-style: none;
     padding-left: 20px;
 }
-.elements_description a:before,
-.tab-pane ul li ul li a:before{
+a.man_el_name:before{
     font-family: "FontAwesome";
     font-style: normal;
     font-weight: normal;
     color: #5b6f7a;
 }
-div#tabTemplates .elements_description a:before,
-div#tabCategory.tab-page ul li ul li.el-16 a:before{
+a.man_el_name.site_templates:before {
     content:'\f1ea';
 }
-div#tabVariables .elements_description a:before,
-div#tabCategory.tab-page ul li ul li.el-301 a:before{
+a.man_el_name.site_tmplvars:before {
     content:'\f022';
 }
-div#tabChunks .elements_description a:before,
-div#tabCategory.tab-page ul li ul li.el-78 a:before{
+a.man_el_name.site_htmlsnippets:before {
     content:'\f009';
 }
-div#tabSnippets .elements_description a:before,
-div#tabCategory.tab-page ul li ul li.el-22 a:before{
+a.man_el_name.site_snippets:before {
     content:'\f121';
 }
-div#tabPlugins .elements_description a:before,
-div#tabCategory.tab-page ul li ul li.el-102 a:before{
+a.man_el_name.site_plugins:before {
     content:'\f1e6';
 }
-div#tabCategory.tab-page ul li ul li.el-108 a:before{
+a.man_el_name.site_modules:before{
     content:'\f085';
 }
 div#tabCategory.tab-page ul li ul li{

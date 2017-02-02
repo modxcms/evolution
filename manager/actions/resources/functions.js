@@ -244,34 +244,12 @@ jQuery( document ).ready(function() {
             if (r != true) return;
         }
 
-        top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+        var target = "index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+        
+        if(top.main) top.main.document.location.href=target
+        else document.location.href=target;
     }
 });
-
-/*
-function initQuicksearch(inputId, listId) {
-    jQuery('#'+inputId).quicksearch('#'+listId+' ul li', {
-        selector: '.man_el_name',
-        'show': function () { jQuery(this).removeClass('hide'); },
-        'hide': function () { jQuery(this).addClass('hide'); },
-        'bind':'keyup',
-        'onAfter': function() {
-            jQuery('#'+listId).find('> li ul').each( function() {
-                var parentLI = jQuery(this).closest('li');
-                var totalLI  = jQuery(this).children('li').length;
-                var hiddenLI = jQuery(this).children('li.hide').length;
-                if (hiddenLI == totalLI) { parentLI.addClass('hide'); }
-                else { parentLI.removeClass('hide'); }
-            });
-        }
-    });
-    jQuery('.filterElements-form').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-        }
-    });
-}
-*/
 
 function initQuicksearch(inputId, listId) {
     jQuery("#"+inputId).quicksearch("#"+listId+" ul.elements > li", {
