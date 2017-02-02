@@ -74,7 +74,7 @@ function createResourceList($resourceTable, $resources) {
 
 		// Caption
 		if ($resourceTable == 'site_tmplvars') {
-			$caption = !empty($row['description']) ? ' ' . $row['caption'] . ' &nbsp; <small>(' . $row['description'] . ')</small>' : ' - ' . $row['caption'];
+			$caption = !empty($row['description']) ? ' ' . $row['caption'] . ' &nbsp; <small>(' . $row['description'] . ')</small>' : ' ' . $row['caption'];
 		}
 		else {
 			$caption = !empty($row['description']) ? ' ' . $row['description'] : '';
