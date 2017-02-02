@@ -3163,7 +3163,7 @@ padding-left: 0;
 #site_snippets li strong:before, 
 #site_plugins li strong:before,
 #categories_list li strong:before {
-  font-family: FontAwesome;
+  font-family: "FontAwesome";
   font-style: normal;
   font-weight: normal;
   color: #5b6f7a;
@@ -3186,7 +3186,7 @@ padding-left: 0;
 }
 .elements_description a:before,
 .tab-pane ul li ul li a:before{
-    font-family: FontAwesome;
+    font-family: "FontAwesome";
     font-style: normal;
     font-weight: normal;
     color: #5b6f7a;
@@ -3226,13 +3226,16 @@ div#tabCategory.tab-page ul li ul li{
 .rTableBody { display: table-row-group; }
 .rTableFoot { display: table-footer-group; }
 .lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; padding:0; }
-.lockCell { width:20px; }
+.lockCell { width:20px; padding-left:10px; }
 .mainCell { width:auto; }
 .btnCell { width:6em; }
 
 /* Manage elements general styles */
-a.man_el_name { display:block; padding:.1em 0 .1em 14px; }
+a.man_el_name { display:block; padding:.1em 0 .1em 12px; }
 a.man_el_name:hover { text-decoration:none; }
+.lockCell + .mainCell a.man_el_name { padding-left:0 !important; }
+.lockCell + .mainCell a.man_el_name:before { display:none; }
+
 .elements_descr { color:#222; margin-left:1em; font-size:0.88em; }
 
 .resourceTable .panel-heading {
@@ -3731,7 +3734,7 @@ table.actionButtons .searchtext {
 
 tr.userIdle td { color:#aaa; }
 tr.userIdle td strong:before {
-    font-family: FontAwesome;
+    font-family: "FontAwesome";
     font-style: normal;
     font-weight: normal;
     color: #aaa;
@@ -3739,7 +3742,7 @@ tr.userIdle td strong:before {
     content:'\f017';
 }
 #modxonline_widget td strong:before {
-    font-family: FontAwesome;
+    font-family: "FontAwesome";
     font-style: normal;
     font-weight: normal;
     color: #3d5764;
