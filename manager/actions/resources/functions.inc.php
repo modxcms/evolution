@@ -84,9 +84,9 @@ function createCombinedView($resources) {
 
 	// Easily loop through $itemsPerCategory-Array
 	$panelGroup = ''; 
-	foreach($itemsPerCategory as $catid=>$elements) {
+	foreach($categories as $catid=>$category) {
 		$panelCollapse = '';
-		foreach($elements as $el) {
+		foreach($itemsPerCategory[$catid] as $el) {
 			$resourceTable = $el['type'];
 			$ph = prepareElementRowPh($el, $resourceTable, $resources);
 			$panelCollapse .= $modx->parseText($tpl['elementsRow'], $ph);

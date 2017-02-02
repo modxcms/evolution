@@ -127,10 +127,13 @@ class mgrResources {
 			}
 		}
 		
+		// Sort categories by name
+		natcasesort($this->categories);
+		
 		// Now sort by name
 		foreach($this->itemsPerCategory as $catid=>$items) {
 			usort($this->itemsPerCategory[$catid], function ($a, $b) {
-				return strcmp($a['name'], $b['name']);
+				return strcasecmp($a['name'], $b['name']);
 			});
 		}
 	}
