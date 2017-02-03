@@ -2127,6 +2127,17 @@ class DocumentParser {
                         }
                         $docId = $this->db->getValue($rs);
 
+                        if ( !$docId ) {
+                            if ( !empty( $this->config['friendly_url_suffix'] ) ) {
+                                $pos = strrpos( $alias, $this->config['friendly_url_suffix'] );
+
+                                if ( $pos !== false ) {
+                                    $alias = substr( $alias, 0, $pos );
+                                }
+                            }
+                            $docId = $this->getIdFromAlias( $alias );
+                        }
+
                         if ($docId > 0)
                         {
                             $this->documentIdentifier = $docId;
@@ -5349,6 +5360,31 @@ class DocumentParser {
         return '0 b';
     }
 
+    function getHiddenIdFromAlias( $parentid, $alias ) { 
+        $table = $this->getFullTableName( 'site_content' );
+        $query = $this->db->query( "SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count 
+            FROM {$table} sc 
+            JOIN {$table} children ON children.parent = sc.id 
+            LEFT JOIN {$table} children2 ON children2.parent = children.id 
+            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;"
+        );
+
+        while ( $child = $this->db->getRow( $query ) ) { 
+            if ( $child['alias'] == $alias || $child['child_id'] == $alias ) {
+                return $child['child_id'];
+            }
+
+            if ( $child['children_count'] > 0 ) {
+                $id = $this->getHiddenIdFromAlias( $child['id'], $alias );
+                if ( $id ) {
+                    return $id;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function getIdFromAlias($alias)
     {
         $children = array();
@@ -5357,6 +5393,10 @@ class DocumentParser {
         $tbl_site_content = $this->getFullTableName('site_content');
         if($this->config['use_alias_path']==1)
         {
+            if ( $alias == '.' ) {
+                return 0;
+            }
+
             if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
             else                           $_a[] = $alias;
             $id= 0;
@@ -5367,8 +5407,8 @@ class DocumentParser {
                 $alias = $this->db->escape($alias);
                 $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
                 if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-                $id = $this->db->getValue($rs);
-                if (!$id) $id = false;
+                $next = $this->db->getValue($rs);
+                $id = !$next ? $this->getHiddenIdFromAlias( $id, $alias ) : $next;
             }
         }
         else
