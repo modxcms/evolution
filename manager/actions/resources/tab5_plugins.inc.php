@@ -6,8 +6,9 @@ if(isset($resources->items['site_plugins'])) { ?>
 	<div class="tab-page" id="tabPlugins">
 		<h2 class="tab"><i class="fa fa-plug"></i> <?php echo $_lang["manage_plugins"] ?></h2>
 		<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
-		<div id="plugins-info" style="display:none">
+		<div id="plugins-info" class="msg-container" style="display:none">
 			<p class="element-edit-message"><?php echo $_lang['plugin_management_msg']; ?></p>
+            <p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
 		</div>
 
 		<ul class="actionButtons">

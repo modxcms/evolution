@@ -10,8 +10,9 @@ if(isset($resources->items['site_tmplvars'])) { ?>
 			Modified By Raymond for Template Variables
 			Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
 		-->
-		<div id="tv-info" style="display:none">
+		<div id="tv-info" class="msg-container" style="display:none">
 			<p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
+            <p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
 		</div>
 
 		<ul class="actionButtons">

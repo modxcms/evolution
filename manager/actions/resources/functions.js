@@ -182,47 +182,47 @@ jQuery( document ).ready(function() {
             items: ".man_el_name",
             callback: function(action, element) {
                 var el = jQuery(element);
-                var name = el.html();
+                var name = el.text().trim();
                 var cm = el.closest(".man_el_name");
-                eitAction(name, action, cm.data("type"), cm.data("id"));
+                mgrResAction(name, action, cm.data("type"), cm.data("id"));
             },
             menu: [
-                { name: "create",    title: "Create new", icon: "plus", },
-                { name: "edit",      title: "Edit",       icon: "edit", },
-                { name: "duplicate", title: "Duplicate",  icon: "clone", },
+                { name: "create",    title: mraTrans.create_new, icon: "plus", },
+                { name: "edit",      title: mraTrans.edit,       icon: "edit", },
+                { name: "duplicate", title: mraTrans.duplicate,  icon: "clone", },
                 { name: "void" },
-                { name: "delete",    title: "Delete",     icon: "trash", },
+                { name: "remove",    title: mraTrans.remove,     icon: "trash", },
             ]
         });
     });
 
-    function eitAction(name, action, type, id) {
+    function mgrResAction(name, action, type, id) {
         var actionIds, deleteMsg;
 
         switch(type) {
             case "site_templates" :
-                actionsIds = { "create":19, "edit":16, "duplicate":96, "delete":21 };
-                deleteMsg = "Are you sure you want to delete this Template?";
+                actionsIds = { "create":19, "edit":16, "duplicate":96, "remove":21 };
+                deleteMsg = mraTrans.confirm_delete_template;
                 break;
             case "site_tmplvars" :
-                actionsIds = { "create":300, "edit":301, "duplicate":304, "delete":303 };
-                deleteMsg = "Are you sure you want to remove this Template Variable and all stored values?";
+                actionsIds = { "create":300, "edit":301, "duplicate":304, "remove":303 };
+                deleteMsg = mraTrans.confirm_delete_tempvars;
                 break;
             case "site_htmlsnippets" :
-                actionsIds = { "create":77, "edit":78, "duplicate":97, "delete":80 };
-                deleteMsg = "Are you sure you want to delete this Chunk?";
+                actionsIds = { "create":77, "edit":78, "duplicate":97, "remove":80 };
+                deleteMsg = mraTrans.confirm_delete_htmlsnippet;
                 break;
             case "site_snippets" :
-                actionsIds = { "create":23, "edit":22, "duplicate":98, "delete":25 };
-                deleteMsg = "Are you sure you want to delete this Snippet?";
+                actionsIds = { "create":23, "edit":22, "duplicate":98, "remove":25 };
+                deleteMsg = mraTrans.confirm_delete_snippet;
                 break;
             case "site_plugins" :
-                actionsIds = { "create":101, "edit":102, "duplicate":105, "delete":104 };
-                deleteMsg = "Are you sure you want to delete this Plugin?";
+                actionsIds = { "create":101, "edit":102, "duplicate":105, "remove":104 };
+                deleteMsg = mraTrans.confirm_delete_plugin;
                 break;
             case "site_modules" :
-                actionsIds = { "create":107, "edit":108, "duplicate":111, "delete":110 };
-                deleteMsg = "Are you sure you want to delete this Module?";
+                actionsIds = { "create":107, "edit":108, "duplicate":111, "remove":110 };
+                deleteMsg = mraTrans.confirm_delete_module;
                 break;
             default :
                 alert("Unknown type");
@@ -234,19 +234,19 @@ jQuery( document ).ready(function() {
         switch(action) {
             case "create" : id = false; break;
             case "edit" : break;
-            case "duplicate" : confirmMsg = "Are you sure you want to duplicate this record?"; break;
-            case "delete" : confirmMsg = deleteMsg; break;
+            case "duplicate" : confirmMsg = mraTrans.confirm_duplicate_record; break;
+            case "remove" : confirmMsg = deleteMsg; break;
         }
 
         if(confirmMsg) {
-            confirmMsg += " \n \n " + name + " ("+id+")";
+            confirmMsg += " \n \n " + name; // + " ("+id+")"
             var r = confirm(confirmMsg);
             if (r != true) return;
         }
 
         var target = "index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
         
-        if(top.main) top.main.document.location.href=target
+        if(top.main) top.main.document.location.href=target;
         else document.location.href=target;
     }
 });

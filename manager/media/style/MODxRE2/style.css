@@ -3705,7 +3705,7 @@ table.actionButtons .searchtext {
 
 /* element-edit-message */
 
-.element-edit-message {
+.msg-container {
   padding-bottom: 10px;
   border-bottom: 1px solid #ededed;
   margin-bottom: 15px;

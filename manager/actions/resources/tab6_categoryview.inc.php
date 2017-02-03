@@ -5,8 +5,9 @@
 	<h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
 	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
 
-	<div id="category-info" style="display:none">
+	<div id="category-info" class="msg-container" style="display:none">
 		<p class="element-edit-message"><?php echo $_lang['category_msg']; ?></p>
+        <p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
 	</div>
 	<ul class="actionButtons">
 		<li>

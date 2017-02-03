@@ -6,8 +6,9 @@ if(isset($resources->items['site_templates'])) { ?>
 	<div class="tab-page" id="tabTemplates">
 		<h2 class="tab"><i class="fa fa-newspaper-o"></i> <?php echo $_lang["manage_templates"] ?></h2>
 		<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
-		<div id="template-info" style="display:none">
+		<div id="template-info" class="msg-container" style="display:none">
 			<p class="element-edit-message"><?php echo $_lang['template_management_msg']; ?></p>
+            <p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
 		</div>
 
 		<ul class="actionButtons">

@@ -1,30 +1,35 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-function renderViewSwitchButtons($cssId) {
+$tpl = array(
+	'viewForm'      =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_viewForm.tpl'),
+	'panelGroup'    =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelGroup.tpl'),
+	'panelHeading'  =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelHeading.tpl'),
+	'panelCollapse' =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelCollapse.tpl'),
+	'elementsRow'   =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_elementsRow.tpl')
+);
+
+function parsePh($tpl, $ph) {
 	global $modx,$_lang;
+	$tpl = $modx->parseText($tpl, $_lang, '[%', '%]');
+	return $modx->parseText($tpl, $ph);
+}
+
+function renderViewSwitchButtons($cssId) {
+	global $modx,$_lang,$tpl;
 	
-	$output = file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_viewForm.tpl');
-	$output = $modx->parseText($output, $_lang, '[%', '%]');
-	return $modx->parseText($output, array(
+	return parsePh($tpl['viewForm'], array(
 		'cssId'=>$cssId
 	));
 }
 
 function createResourceList($resourceTable, $resources) {
-	global $modx,$_lang,$_style,$modx_textdir;
+	global $modx,$_lang,$_style,$modx_textdir,$tpl;
 
 	$items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
 	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
 	if(!$items) return $_lang['no_results'];
-	
-	$tpl = array(
-		'panelGroup'    =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelGroup.tpl'),
-		'panelHeading'  =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelHeading.tpl'),
-		'panelCollapse' =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_panelCollapse.tpl'),
-		'elementsRow'   =>file_get_contents(MODX_MANAGER_PATH.'actions/resources/tpl_elementsRow.tpl'),
-	);
 	
 	// Prepare elements- and categories-list
 	$elements = array();
@@ -39,7 +44,7 @@ function createResourceList($resourceTable, $resources) {
 	$panelGroup = '';
 	foreach($elements as $catid=>$elList) {
 		// Add panel-heading / category-collapse to output
-		$panelGroup .= $modx->parseText($tpl['panelHeading'], array(
+		$panelGroup .= parsePh($tpl['panelHeading'], array(
 			'tab'        => $resourceTable,
 			'category'   => $categories[$catid]['name'],
 			'categoryid' => $catid != '' ? ' <small>(' . $catid . ')</small>' : '',
@@ -49,18 +54,18 @@ function createResourceList($resourceTable, $resources) {
 		// Prepare content for panel-collapse
 		$panelCollapse = '';
 		foreach($elList as $el) {
-			$panelCollapse .= $modx->parseText($tpl['elementsRow'], $el);
+			$panelCollapse .= parsePh($tpl['elementsRow'], $el);
 		}
 		
 		// Add panel-collapse with elements to output
-		$panelGroup .= $modx->parseText($tpl['panelCollapse'], array(
+		$panelGroup .= parsePh($tpl['panelCollapse'], array(
 			'tab'        => $resourceTable,
 			'catid'      => $catid,
 			'wrapper'    => $panelCollapse,
 		));
 	}
 
-	return $modx->parseText($tpl['panelGroup'], array(
+	return parsePh($tpl['panelGroup'], array(
 		'resourceTable'=>$resourceTable,
 		'wrapper'=>$panelGroup
 	));
@@ -85,28 +90,31 @@ function createCombinedView($resources) {
 	// Easily loop through $itemsPerCategory-Array
 	$panelGroup = ''; 
 	foreach($categories as $catid=>$category) {
+		// Prepare collapse content / elements-list
 		$panelCollapse = '';
 		foreach($itemsPerCategory[$catid] as $el) {
 			$resourceTable = $el['type'];
 			$ph = prepareElementRowPh($el, $resourceTable, $resources);
-			$panelCollapse .= $modx->parseText($tpl['elementsRow'], $ph);
+			$panelCollapse .= parsePh($tpl['elementsRow'], $ph);
 		}
 		
-		$panelGroup .= $modx->parseText($tpl['panelHeading'], array(
+		// Add panel-heading / button
+		$panelGroup .= parsePh($tpl['panelHeading'], array(
 			'tab'        => 'categories_list',
 			'category'   => $categories[$catid],
 			'categoryid' => $catid != '' ? ' <small>(' . $catid . ')</small>' : '',
 			'catid'      => $catid,
 		));
 
-		$panelGroup .= $modx->parseText($tpl['panelCollapse'], array(
+		// Add panel
+		$panelGroup .= parsePh($tpl['panelCollapse'], array(
 			'tab'        => 'categories_list',
 			'catid'      => $catid,
 			'wrapper'    => $panelCollapse,
 		));
 	}
 
-	return $modx->parseText($tpl['panelGroup'], array(
+	return parsePh($tpl['panelGroup'], array(
 		'resourceTable'=>'categories_list',
 		'wrapper'=>$panelGroup
 	));

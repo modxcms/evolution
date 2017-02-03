@@ -6,13 +6,30 @@ include_once(MODX_MANAGER_PATH . 'actions/resources/mgrResources.class.php');
 
 $resources = new mgrResources();
 
-// Prepare lang-strings / $unlockTranslations
+// Prepare lang-strings for "Lock Elements"
 $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
                             'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
                             'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
 foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
+
+// Prepare lang-strings for mgrResAction()
+$mraTranslations = array(
+        'create_new'=>$_lang["create_new"],
+        'edit'=>$_lang["edit"],
+        'duplicate'=>$_lang["duplicate"],
+        'remove'=>$_lang["remove"],
+        'confirm_duplicate_record'=>$_lang["confirm_duplicate_record"],
+        'confirm_delete_template'=>$_lang["confirm_delete_template"],
+        'confirm_delete_tmplvars'=>$_lang["confirm_delete_tmplvars"],
+        'confirm_delete_htmlsnippet'=>$_lang["confirm_delete_htmlsnippet"],
+        'confirm_delete_snippet'=>$_lang["confirm_delete_htmlsnippet"],
+        'confirm_delete_plugin'=>$_lang["confirm_delete_plugin"],
+        'confirm_delete_module'=>$_lang["confirm_delete_module"],
+);
+foreach ($mraTranslations as $key=>$value) $mraTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
 ?>
 <script>var trans = <?php echo json_encode($unlockTranslations); ?>;</script>
+<script>var mraTrans = <?php echo json_encode($mraTranslations); ?>;</script>
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>

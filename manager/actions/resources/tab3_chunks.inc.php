@@ -6,8 +6,9 @@ if(isset($resources->items['site_htmlsnippets'])) { ?>
 	<div class="tab-page" id="tabChunks">
 		<h2 class="tab"><i class="fa fa-th-large"></i> <?php echo $_lang["manage_htmlsnippets"] ?></h2>
 		<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
-		<div id="chunks-info" style="display:none">
+		<div id="chunks-info" class="msg-container" style="display:none">
 			<p class="element-edit-message"><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
+            <p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
 		</div>
 
 		<ul class="actionButtons">
