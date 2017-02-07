@@ -3232,7 +3232,7 @@ a.man_el_name:hover { text-decoration:none; }
 }
 .resourceTable .panel-title > a { padding:5px 0 5px 15px; }
 .resourceTable ul.elements {
-    margin:0 -15px; padding:0;
+    margin:0 -15px; padding:0 0 10px 0;
 }
 .resourceTable ul.elements > li {
     padding: 0 !important;
@@ -3280,7 +3280,6 @@ ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0; }
 /* Inline-view */
 .resourceTable.inline ul.elements {
     margin:0 !important;
-    padding:0 0 10px 0 !important;
 }
 .resourceTable.inline ul.elements > li {
     float:left;
