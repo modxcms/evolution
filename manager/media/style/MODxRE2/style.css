@@ -3306,7 +3306,14 @@ ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0; }
 
 }
 .resourceTable.flex ul.elements > li {
-
+    overflow: hidden; /* fix for Firefox */
+    break-inside: avoid-column;
+    -webkit-column-break-inside:avoid;
+    -moz-column-break-inside:avoid;
+    -o-column-break-inside:avoid;
+    -ms-column-break-inside:avoid;
+    column-break-inside:avoid;
+    page-break-inside:avoid
 }
 .resourceTable.flex .elements_descr {
     display:block;
