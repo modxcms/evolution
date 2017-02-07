@@ -3134,7 +3134,6 @@ div.treeframebody {
 #site_htmlsnippets,
 #site_snippets,
 #site_plugins {
-width:99.5%;
 padding-left: 0;
 }
 
@@ -3145,7 +3144,6 @@ padding-left: 0;
 #site_snippets li, 
 #site_plugins li,
 #categories_list li {
-  list-style-type: none;
   list-style: none;
   margin-left: -21px;
 }
@@ -3216,7 +3214,7 @@ div#tabCategory.tab-page ul li ul li{
 .lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; padding:0; }
 .lockCell { width:20px; padding-left:10px; }
 .mainCell { width:auto; }
-.btnCell { width:6em; }
+.btnCell { width:6em; text-align:right; }
 
 /* Manage elements general styles */
 a.man_el_name { display:block; padding:.1em 0 .1em 12px; }
@@ -3233,21 +3231,22 @@ a.man_el_name:hover { text-decoration:none; }
     border-bottom: 1px dotted #dedede;
 }
 .resourceTable .panel-title > a { padding:5px 0 5px 15px; }
+.resourceTable ul.elements {
+    margin:0 -15px; padding:0;
+}
 .resourceTable ul.elements > li {
     padding: 0 !important;
     border-bottom: 1px dotted #dedede;
     border-left: 3px solid #FFF;
     transition: all 0.1s ease;
-    margin:0 -15px 0 -36px !important;
+    margin:0 !important;
 }
 .resourceTable ul.elements > li:hover{
     background: #f9f9f9;
     border-left: 3px solid #3697CD;
 }
 
-#resourcesPane .panel-group ul {
-    margin:0 0 0 16px;
-}
+#resourcesPane .panel-group ul { }
 
 ul.resourceTable .category_name {
     float:none;
@@ -3257,10 +3256,10 @@ ul.resourceTable .category_name {
 }
 
 /* Manager Elements Buttons bar*/
-ul.elements_buttonbar { list-style:none; padding:0; display: table; table-layout: fixed; }
+ul.elements_buttonbar { list-style:none; margin:0; padding:0; display: table; table-layout: fixed; }
 ul.elements_buttonbar li { display: table-cell; padding:0 !important; width:2em; }
-ul.elements_buttonbar li a { display: block; width:2em; padding:1px 2px; margin:1px 0; }
-ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
+ul.elements_buttonbar li a { display: block; width:2em; padding:1px 2px; margin:1px; }
+ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0; }
 
 /* Manage elements views-form */
 .switchForm { float:left; margin:15px 0; padding:15px; background-color:#f5f5f5; border-radius:3px; box-shadow:1px 1px 2px #ddd; border:1px solid #ddd; }
@@ -3289,13 +3288,12 @@ ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
     padding:0 !important;
     border: 1px dotted #dedede;
 }
-.resourceTable.inline ul.elements_buttonbar { margin:0 20px 0 0 !important; } 
+.resourceTable.inline ul.elements_buttonbar { margin:0 5px 0 0 !important; } 
 .resourceTable.inline a.man_el_name {
     padding:5px 10px;
-    background-color:#fafafa;
 }
-.resourceTable.inline a:hover.man_el_name {
-    background-color:#fff;
+.resourceTable.inline ul.elements > li:hover { 
+    border:1px solid #aaa
 }
 
 /* Flex-view */
@@ -3306,13 +3304,15 @@ ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
     column-gap:10px;
 }
 .resourceTable.flex ul.elements {
-    margin-right:0px !important;
+
 }
 .resourceTable.flex ul.elements > li {
-    margin:0 36px 0 -36px !important;
+
 }
-.resourceTable.flex ul.elements_buttonbar { margin:0 20px 0 0 !important; }
-.resourceTable.flex .elements_descr { display:block; }
+.resourceTable.flex .elements_descr {
+    display:block;
+    margin-left:1.5em;
+}
 
 /* action buttons */
 .actionButtons a {
