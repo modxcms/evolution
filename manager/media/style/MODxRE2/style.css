@@ -3279,12 +3279,9 @@ ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0px}
 .resourceTable.list li { }
 
 /* Inline-view */
-.resourceTable.inline .panel-heading {
-    margin-top:10px !important;
-}
 .resourceTable.inline ul.elements {
     margin:0 !important;
-    padding:0 !important;
+    padding:0 0 10px 0 !important;
 }
 .resourceTable.inline ul.elements > li {
     float:left;
