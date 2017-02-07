@@ -206,7 +206,7 @@ jQuery( document ).ready(function() {
                 break;
             case "site_tmplvars" :
                 actionsIds = { "create":300, "edit":301, "duplicate":304, "remove":303 };
-                deleteMsg = mraTrans.confirm_delete_tempvars;
+                deleteMsg = mraTrans.confirm_delete_tmplvars;
                 break;
             case "site_htmlsnippets" :
                 actionsIds = { "create":77, "edit":78, "duplicate":97, "remove":80 };
