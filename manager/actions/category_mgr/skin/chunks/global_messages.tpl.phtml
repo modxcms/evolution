@@ -1,0 +1,12 @@
+<?php if( $data ) :?>
+<div id="section-header-categories-message" class="sectionHeader"><?php echo $view->txt('cm_global_messages'); ?></div>
+<div id="section-body-categories-messages" class="sectionBody">
+  <div class="messages">
+    <ul>
+      <?php foreach( $data as $message ) : ?>
+      <li><?php echo $message; ?></li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+</div>
+<?php endif; ?>

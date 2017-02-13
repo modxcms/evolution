@@ -2,9 +2,9 @@
 /**
  * QuickManager+
  *  
- * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy 
+ * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy and Nicola1971 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.6 updated 08/08/2013
+ * @version     1.5.7 updated 21/01/2017
  */
 
 if(!class_exists('Qm')) {
@@ -13,7 +13,7 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $position='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='', $buttonStyle='', $removeBg='') {
         $this->modx = $modx;
         
         // Get plugin parameters
@@ -35,12 +35,15 @@ class Qm {
         $this->managerbutton = $managerbutton;
         $this->logout = $logout;
         $this->autohide = $autohide;
+        $this->position = $position;
         $this->editbuttons = $editbuttons;
         $this->editbclass = $editbclass;
         $this->newbuttons = $newbuttons;
         $this->newbclass = $newbclass;
         $this->tvbuttons = $tvbuttons;
         $this->tvbclass = $tvbclass;
+        $this->buttonStyle = $buttonStyle;
+        $this->removeBg = $removeBg;
         
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
@@ -337,13 +340,13 @@ class Qm {
                         $userID = $_SESSION['mgrInternalKey'];
                         
                         // Add ID
-                        $controls .= '<li class="qmId">ID: '.$docID.'</li>';
+                        $controls .= '<li class="qmId"><span class="textid">ID: </span>'.$docID.'</li>';
 
                         // Edit button
                         
                         $editButton = '
                         <li class="qmEdit">
-                        <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><span> '.$_lang['edit_resource'].'</span></a>
+                        <a class="qmButton qmEdit colorbox primary" href="'.$this->modx->config['site_manager_url'].'index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-pencil-square-o butticon"></i><span class="butttext"> '.$_lang['edit_resource'].'</span></a>
                         </li>
                         ';
                         
@@ -357,7 +360,7 @@ class Qm {
                             // Add button
                             $addButton = '
                             <li class="qmAdd">
-                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><span>'.$_lang['create_resource_here'].'</span></a>
+                            <a class="qmButton qmAdd colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1"><i class="fa fa-2x fa-fw fa-plus-circle butticon"></i><span class="butttext">'.$_lang['create_resource_here'].'</span></a>
                             </li>
                             ';
                             
@@ -390,7 +393,7 @@ class Qm {
                                 $buttonAction = $buttonParams[1]; // Contains URL if this is not add button
                                 $buttonParentId = $buttonParams[2]; // Is empty is this is not add button
                                 $buttonTplId = $buttonParams[3];
-                                
+                                                        
                                 // Button visible for all
                                 if ($buttonParams[4] == '') {
                                     $showButton = TRUE;
@@ -409,7 +412,7 @@ class Qm {
                                         }
                                     }
                                 }
-                                
+                                $buttonIcon = $buttonParams[5];
                                 // Show custom button
                                 if ($showButton) {
                                     switch ($buttonAction)
@@ -417,7 +420,7 @@ class Qm {
                                         case 'new':
                                             $customButton = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom colorbox" href="'.$this->modx->config['site_manager_url'].'index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'"><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';
                                         break;
@@ -425,7 +428,7 @@ class Qm {
                                         case 'link':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom" href="'.$buttonParentId.'" ><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';    
                                         break;
@@ -433,7 +436,7 @@ class Qm {
                                         case 'modal':
                                             $customButton  = '
                                             <li class="qm-custom-'.$i.' qmCustom">
-                                            <a class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><span>'.$buttonTitle.'</span></a>
+                                            <a class="qmButton qmCustom colorbox" href="'.$buttonParentId.'" ><i class="fa fa-2x fa-fw fa-'.$buttonIcon.' butticon"></i><span class="butttext">'.$buttonTitle.'</span></a>
                                             </li>
                                             ';   
                                         break;
@@ -447,7 +450,7 @@ class Qm {
                         if ($this->managerbutton == 'true') {
                             $managerButton  = '
                             <li class="qmManager">
-                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'" ><span>'.$_lang['manager'].'</span></a>
+                            <a class="qmButton qmManager" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_manager_url'].'" ><i class="fa fa-2x fa-fw fa-sign-in butticon"></i><span class="butttext">'.$_lang['manager'].'</span></a>
                             </li>
                             ';
                             $controls .= $managerButton;
@@ -457,7 +460,7 @@ class Qm {
                         $logout = $this->modx->config['site_manager_url'].'index.php?a=8&amp;quickmanager=logout&amp;logoutid='.$docID;
                         $logoutButton  = '
                         <li class="qmLogout">
-                        <a id="qmLogout" class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><span>'.$_lang['logout'].'</span></a>
+                        <a id="qmLogout" class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><i class="fa fa-2x fa-fw fa-sign-out butticon"></i><span class="butttext">'.$_lang['logout'].'</span></a>
                         </li>
                         ';
                         $controls .= $logoutButton;
@@ -469,26 +472,171 @@ class Qm {
     					<div id="qmEditor">
     					
                         <ul>
-                        <li id="qmClose"><a class="qmButton qmClose" href="#" onclick="javascript: return false;">X</a></li>
+                        <li id="qmClose"><a class="qmButton qmClose" href="#" onclick="javascript: return false;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></li>
                         <li><a id="qmLogoClose" class="qmClose" href="#" onclick="javascript: return false;"></a></li>
                         '.$controls.'
                         </ul>
     					</div>';
     					
+                        $MGR_DIR = $this->modx->getManagerPath( );
                         $css = '
-                        <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
+                        <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />';
+                        
+                        $css .= '
+                        <link rel="stylesheet" type="text/css" href="'.$MGR_DIR.'media/style/common/font-awesome/css/font-awesome.min.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
                         ';
-            
-                        // Autohide toolbar? Default: true
-                        if ($this->autohide == 'false') {
+                        // Buttons Styles
+                        if ($this->buttonStyle == 'actionButtons') {
+                            $css .= '
+                            <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/actionButtons.css" />
+                            ';
+                        }
+                        else
+                        if ($this->buttonStyle == 'navButtons') {
+                            $css .= '
+                            <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/navButtons.css" />
+                            ';
+                        }
+                        // Top toolbar Autohide false
+                        if (($this->autohide == 'false') && ($this->position == 'top')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed { top: 0px; }
+                            #qmEditor, #qmEditorClosed { left:0; top: 0px; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            .butticon {display:none}
                             </style>
                             ';
                         }
-            
+                        else 
+                        // Top toolbar Autohide true
+                        if (($this->autohide == 'true') && ($this->position == 'top')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { left:0; top: -30px; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            .butticon {display:none}
+                            </style>
+                            ';
+                        }
+                        else 
+                        // Top toolbar Relative
+                        if ($this->position == 'before') {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0px; width: 100%; height:39px; opacity:1; -ms-filter:"" !important; filter:none !important;}
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            .butticon {display:none}
+                            </style>
+                            ';
+                        }
+                        else 
+                        // Bottom toolbar Autohide true
+                        if (($this->autohide == 'true') && ($this->position == 'bottom')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { left:0; bottom: -28px; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            .butticon {display:none}
+                            </style>
+                            ';
+                        }
+                        else
+                        // Bottom toolbar Autohide false
+                        if (($this->autohide == 'false') && ($this->position == 'bottom')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed { left:0; bottom: 0px; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            .butticon {display:none}</style>
+                            ';
+                        }
+                        // Left toolbar Autohide true
+                        if (($this->autohide == 'true') && ($this->position == 'left')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed {padding-left:5px; left:-47px; top: 0px; width: 53px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {left: 0px;}
+                            #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
+                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
+                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            .butttext, span.textid {display:none}
+                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 2px;}
+                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            </style>
+                            ';
+                        }
+                        else
+                        // Left toolbar Autohide false
+                        if (($this->autohide == 'false') && ($this->position == 'left')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed {padding-left:5px; left:0px; top: 0px; width: 53px; height:100%}
+                            #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
+                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
+                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            .butttext, span.textid {display:none}
+                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 3px;}
+                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            </style>
+                            ';
+                        }
+                        // Right toolbar Autohide true
+                        if (($this->autohide == 'true') && ($this->position == 'right')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed {padding-left:6px; right:-47px; top: 0px; width: 53px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {right: 0px;}
+                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
+                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
+                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            .butttext, span.textid {display:none}
+                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 3px;}
+                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            </style>
+                            ';
+                        }
+                        else
+                        // Right toolbar Autohide false
+                        if (($this->autohide == 'false') && ($this->position == 'right')) {
+                            $css .= '
+                            <style type="text/css">
+                            #qmEditor, #qmEditorClosed {padding-left:6px; right:0px; top: 0px; width: 55px; height:100%}
+                             #qmEditor, #qmEditorClosed {background: none; background-color: #657587; opacity:0.5; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
+                            background-image: -webkit-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: -o-linear-gradient(top, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important; background-image: linear-gradient(to bottom, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
+                            #qmEditor .qmClose, #qmClose {padding: 8px 16px; float: left !important; margin-bottom: 10px;}
+                            .butttext, span.textid {display:none}
+                            #qmEditor .qmId {width:100%; background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center; margin:-5px 0 5px 2px;} 
+                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            </style>
+                            ';
+                        }
+                        // Remove background
+                        if (($this->removeBg == 'yes') && ($this->buttonStyle == 'actionButtons')) {
+                            $css .= '
+                            <style type="text/css">
+                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important; opacity:1; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; 
+                            background-image: none !important; background-image: none !important; background-image: none !important;}
+                            #qmEditor .qmId {background: rgba(255, 255, 255, 0.3); font-size:13px; text-align:center;  color: #666; padding:2px;} 
+                            </style>
+                            ';
+                        }
+                        else
+                        if (($this->removeBg == 'yes') && ($this->buttonStyle == 'navButtons')) {
+                            $css .= '
+                            <style type="text/css">
+                             #qmEditor, #qmEditorClosed {background: none; background-color: transparent!important; opacity:1!important; ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=1)"; 
+                            background-image: none !important; background-image: none !important; background-image: none !important;}
+                            #qmEditor .qmId {font-size:13px; text-align:center;  color: #666; padding:1px; margin-right:2px!important;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel {transition: all; background-color:rgba(57, 81, 93, 0.8);border-color: rgba(255, 255, 255, 0.8)}
+                            #qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover { color:#FFF!important; background-color:rgba(57, 81, 93,.4); border-color: rgba(255, 255, 255, 1)}
+                            </style>
+                            ';
+                        }
                         // Insert jQuery and ColorBox in head if needed
                         $head = '';
                         if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
@@ -754,7 +902,7 @@ class Qm {
 					
 					// Add action buttons
                     $url = $this->modx->makeUrl($doc_id,'','','full');
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"'.$_style["icons_save"].'\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"'.$_style["icons_cancel"].'\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a class=\"primary\" href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"'.$_style["icons_save"].'\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"'.$_style["icons_cancel"].'\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';

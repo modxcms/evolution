@@ -3010,23 +3010,30 @@ div.treeframebody {
 #site_tmplvars,
 #site_htmlsnippets,
 #site_snippets,
-#site_plugins,
-#categories_list ul {
-  padding-left: 0;
+#site_plugins {
+width:99.5%;
+padding-left: 0;
 }
+#categories_list ul {
+width:100%;
+padding-left: 0;
 
+}
 #site_templates li,
 #site_tmplvars li, 
 #site_htmlsnippets li, 
 #site_snippets li, 
 #site_snippets li, 
-#site_plugins li,
+#site_plugins li{
+  list-style-type: none;
+  list-style: none;
+  margin-left: -21px;
+}
 #categories_list li  {
   list-style-type: none;
   list-style: none;
-  margin-left: -15px;
+  margin-left: -18px;
 }
-
 #site_templates li strong:before,
 #site_tmplvars li strong:before, 
 #site_htmlsnippets li strong:before, 
@@ -3047,11 +3054,15 @@ div.treeframebody {
 }
 
 /* elements icons in manage elements */ 
-
+.tab-pane ul li ul {
+    width:100%;
+}
 .tab-pane ul li ul li {
     list-style-type: none;
     list-style: none;
+    padding-left: 20px;
 }
+.elements_description:before,
 .tab-pane ul li ul li:before{
     font-family: FontAwesome;
     font-style: normal;
@@ -3059,30 +3070,54 @@ div.treeframebody {
     color: #5b6f7a;
     padding: 0 5px 0 12px;
 }
-div#tabTemplates.tab-page ul li ul li:before,
+div#tabTemplates .elements_description:before,
 div#tabCategory.tab-page ul li ul li.el-16:before{
     content:'\f1ea';
 }
-div#tabVariables.tab-page ul li ul li:before,
+div#tabVariables .elements_description:before,
 div#tabCategory.tab-page ul li ul li.el-301:before{
     content:'\f022';
 }
-div#tabChunks.tab-page ul li ul li:before,
+div#tabChunks .elements_description:before,
 div#tabCategory.tab-page ul li ul li.el-78:before{
     content:'\f009';
 }
-div#tabSnippets.tab-page ul li ul li:before,
+div#tabSnippets .elements_description:before,
 div#tabCategory.tab-page ul li ul li.el-22:before{
     content:'\f121';
 }
-div#tabPlugins.tab-page ul li ul li:before,
+div#tabPlugins .elements_description:before,
 div#tabCategory.tab-page ul li ul li.el-102:before{
     content:'\f1e6';
 }
 div#tabCategory.tab-page ul li ul li.el-108:before{
     content:'\f085';
 }
+div#tabCategory.tab-page ul li ul li{
+    padding-top:7px;
+    padding-bottom:7px;
+}
+/* Manager Elements Buttons bar*/
+/*Fake tables*/
+.rTable { display: table; width:100%;}
+.rTableRow { display: table-row;}
+.rTableHeading { display: table-header-group; }
+.rTableBody { display: table-row-group; }
+.rTableFoot { display: table-footer-group; }
+.rTableCell, .rTableHead { display: table-cell; }
+.elements_buttonbar {min-width:100px; text-align:right;}
+.elements_buttonbar .fa{font-size: 13px!important; padding-top:2px}
 
+.tab-pane ul li ul li {
+    padding: 3px 6px 4px 0px;
+    margin-left: -50px;
+    border-bottom: 1px dotted #dedede;
+    border-left: 3px solid #FFF;
+    transition: all 0.1s ease;
+}
+.tab-pane ul li ul li:hover{
+background: #f9f9f9;
+border-left: 3px solid #3697CD;}
 /* action buttons */
 
 .actionButtons a {
@@ -3712,3 +3747,4 @@ fieldset[disabled] .btn-default.focus {
   margin-top: 5px;
 }
 
+.border-bottom { border-bottom:2px solid #3697CD !important; }

@@ -1,0 +1,7 @@
+<div id="categorize-category-0" class="uncategorized_elements">
+  <h2><?php echo $view->txt('no_category'); ?></h2>
+  <?php foreach( $data as $element ) : ?>
+  <?php echo $view->renderView('chunks/categorize/drag_element', $element); ?>  
+  <?php endforeach; ?>
+</div>
+<hr style="margin-bottom:15px; clear:both; visibility:hidden;" />
