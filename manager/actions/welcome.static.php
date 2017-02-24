@@ -401,5 +401,5 @@ function getStartUpScript() {
 
         </script>
 JS;
-    return JS;
+    return $script;
 }

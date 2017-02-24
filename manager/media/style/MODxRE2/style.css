@@ -3094,8 +3094,8 @@ div#tabCategory.tab-page ul li ul li.el-108:before{
     content:'\f085';
 }
 div#tabCategory.tab-page ul li ul li{
-    padding-top:7px;
-    padding-bottom:7px;
+    padding-top:4px;
+    padding-bottom:4px;
 }
 /* Manager Elements Buttons bar*/
 /*Fake tables*/
@@ -3106,10 +3106,10 @@ div#tabCategory.tab-page ul li ul li{
 .rTableFoot { display: table-footer-group; }
 .rTableCell, .rTableHead { display: table-cell; }
 .elements_buttonbar {min-width:100px; text-align:right;}
-.elements_buttonbar .fa{font-size: 13px!important; padding-top:2px}
+.elements_buttonbar .fa{font-size: 13px!important; padding:1px 1px 0px}
 
 .tab-pane ul li ul li {
-    padding: 3px 6px 4px 0px;
+    padding: 1px 6px 1px 0px;
     margin-left: -50px;
     border-bottom: 1px dotted #dedede;
     border-left: 3px solid #FFF;
