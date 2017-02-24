@@ -15,7 +15,7 @@ var version = 1;
 
 function initViews(pre, helppre, target) {
     jQuery( "#"+helppre+"-help" ).click(function() {
-        jQuery( '#'+helppre+'-info').toggle();
+        jQuery( '#'+helppre+'-info').toggle(400);
     });
 }
 
@@ -172,7 +172,7 @@ jQuery( document ).ready(function() {
     jQuery('.switchform-btn').each(function() {
         jQuery(this).click(function() {
             var target = jQuery(this).data('target');
-            jQuery('#'+target).toggle();
+            jQuery('#'+target).toggle(400);
         });
     });
 
