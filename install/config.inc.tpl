@@ -87,7 +87,7 @@ if(!function_exists('startCMSSession')) {
     $site_sessionname = 'evo' . $_;
     
     function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
-      if (isset($storage[$session_name]) && $storage[$session_name] === '')
+      if (isset($storage[$session_name]) && ($storage[$session_name] === '' || $storage[$session_name] === 'deleted'))
       {
         unset($storage[$session_name]);
       }

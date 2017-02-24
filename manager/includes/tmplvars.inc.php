@@ -103,7 +103,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 				foreach ($index_list as $c=>$item) {
 					if(is_array($item)) {
 						$name = trim($item[0]);
-						$value = $item[1];
+						$value = isset($item[1]) ? $item[1] : $name;
 					} else {
 						$item = trim($item);
 						list($name, $value) = (strpos($item,'==')!==false) ? explode('==', $item, 2) : array($item, $item);

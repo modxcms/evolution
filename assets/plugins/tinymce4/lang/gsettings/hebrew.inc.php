@@ -8,7 +8,7 @@
  * MODX version:   0.9.5-1.1
  */
 
-$_lang['lang_code'] = 'he';
+$_lang['lang_code'] = 'he_IL';
 $_lang['editor_theme_title'] = 'Theme';
 $_lang['editor_theme_message'] = 'Here you can select which theme or skin to use with the editor.';
 $_lang['editor_custom_plugins_title'] = 'Custom Plugins';

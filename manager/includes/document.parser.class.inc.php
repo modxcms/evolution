@@ -934,6 +934,7 @@ class DocumentParser {
         $lc=0;
         $rc=0;
         $fetch = '';
+        $tags = array();
         foreach($piece as $v) {
             if($v===$left) {
                 if(0<$lc) $fetch .= $left;
@@ -943,7 +944,16 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+                    // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
+                    if(strpos($fetch,$left)!==false) {
+                        $nested = $this->_getTagsFromContent($fetch,$left,$right);
+                        foreach($nested as $tag) {
+                            if(!in_array($tag, $tags))
+                                $tags[] = $tag;
+                        }
+                    }
+
+                    if(!in_array($fetch, $tags)) {  // Avoid double Matches
                         $tags[] = $fetch; // Fetch
                     };
                     $fetch = ''; // and reset
@@ -956,8 +966,6 @@ class DocumentParser {
                 else continue;
             }
         }
-        if(!$tags) return array();
-        
         return $tags;
     }
     
@@ -984,9 +992,9 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) continue;
-            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
-            else             $value = $ph[$key];
+            // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
+            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            else         $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1798,7 +1806,15 @@ class DocumentParser {
                     $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
-                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                            $parent = $row['parent'];
+                            $path   = $aliases[$parent];
+
+                            while ( isset( $this->aliasListing[$parent] ) && $this->aliasListing[$parent]['alias_visible'] == 0 ) {
+                                $path   = $this->aliasListing[$parent]['path'];
+                                $parent = $this->aliasListing[$parent]['parent'];
+                            }
+
+                            $aliases[$row['id']] = $path . '/' . $row['alias'];
                         } else {
                             $aliases[$row['id']] = $row['alias'];
                         }
@@ -1834,7 +1850,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
-	$q = isset($_GET['q']) ? $_GET['q'] : '';
+        $q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -2118,6 +2134,17 @@ class DocumentParser {
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
+
+                        if ( !$docId ) {
+                            if ( !empty( $this->config['friendly_url_suffix'] ) ) {
+                                $pos = strrpos( $alias, $this->config['friendly_url_suffix'] );
+
+                                if ( $pos !== false ) {
+                                    $alias = substr( $alias, 0, $pos );
+                                }
+                            }
+                            $docId = $this->getIdFromAlias( $alias );
+                        }
 
                         if ($docId > 0)
                         {
@@ -2937,7 +2964,6 @@ class DocumentParser {
      * @return array
      */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
-    	
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -3390,11 +3416,11 @@ class DocumentParser {
                     'isfolder' => (int)$q['isfolder'],
                 );
                 if($this->aliasListing[$id]['parent']>0){
-                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
                     //fix alias_path_usage
                     if ($this->config['use_alias_path'] == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                        $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
                     } else {
                         $this->aliasListing[$id]['path'] = '';
                     }
@@ -3845,7 +3871,6 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
-        
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -4151,7 +4176,6 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-    	
         if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
         
         $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
@@ -5341,6 +5365,31 @@ class DocumentParser {
         return '0 b';
     }
 
+    function getHiddenIdFromAlias( $parentid, $alias ) { 
+        $table = $this->getFullTableName( 'site_content' );
+        $query = $this->db->query( "SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count 
+            FROM {$table} sc 
+            JOIN {$table} children ON children.parent = sc.id 
+            LEFT JOIN {$table} children2 ON children2.parent = children.id 
+            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;"
+        );
+
+        while ( $child = $this->db->getRow( $query ) ) { 
+            if ( $child['alias'] == $alias || $child['child_id'] == $alias ) {
+                return $child['child_id'];
+            }
+
+            if ( $child['children_count'] > 0 ) {
+                $id = $this->getHiddenIdFromAlias( $child['id'], $alias );
+                if ( $id ) {
+                    return $id;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function getIdFromAlias($alias)
     {
         $children = array();
@@ -5349,6 +5398,10 @@ class DocumentParser {
         $tbl_site_content = $this->getFullTableName('site_content');
         if($this->config['use_alias_path']==1)
         {
+            if ( $alias == '.' ) {
+                return 0;
+            }
+
             if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
             else                           $_a[] = $alias;
             $id= 0;
@@ -5359,8 +5412,8 @@ class DocumentParser {
                 $alias = $this->db->escape($alias);
                 $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
                 if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-                $id = $this->db->getValue($rs);
-                if (!$id) $id = false;
+                $next = $this->db->getValue($rs);
+                $id = !$next ? $this->getHiddenIdFromAlias( $id, $alias ) : $next;
             }
         }
         else
