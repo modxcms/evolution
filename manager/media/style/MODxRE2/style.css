@@ -3258,14 +3258,25 @@ ul.resourceTable .category_name {
 /* Manager Elements Buttons bar*/
 ul.elements_buttonbar { list-style:none; margin:0; padding:0; display: table; table-layout: fixed; }
 ul.elements_buttonbar li { display: table-cell; padding:0 !important; width:2em; }
-ul.elements_buttonbar li a { display: block; width:2em; padding:1px 2px; margin:1px; }
+ul.elements_buttonbar li a { display: block; width:2em; padding:3px 4px; margin:1px; }
 ul.elements_buttonbar .fa {font-size: 13px!important; padding:1px 1px 0; }
 
 /* Manage elements views-form */
-.switchForm { float:left; margin:15px 0; padding:15px; background-color:#f5f5f5; border-radius:3px; box-shadow:1px 1px 2px #ddd; border:1px solid #ddd; }
-.switchForm input.columns { width:3em; }
+.switchForm { display: block; width: 100%; float:left; clear: left; margin: 7px 0 7px -4px; padding:5px; background-color:#fff; border: 1px solid #E4E4E4;border-radius:3px;}
+.switchForm h3.optionsTitle {color: #3697CD; padding-left:7px; font-size: 16px;}
+.switchForm label {color: #3697CD;font-weight: 700;}
+.switchForm input.columns { width:3em; color:#444; font-weight: normal;}
+.switchForm input.fontsize {width:4em; color:#444; font-weight: normal;}
 .switchForm .cb_all { float:left; }
 .switchForm .btn_reset { float:right; }
+.switchForm .optionsLeft { float:left;padding:4px 8px 4px 4px;}
+.switchForm .optionsFull { display:block;clear: both; padding:4px 8px 4px 4px;}
+.switchForm .optionsRadios {padding-top:6px;}
+.switchForm .optionsChecks {padding-top:10px; }
+.switchForm .optionsFontsSize {margin-left:9px;padding-left:8px;border-left:1px solid #ededed;}
+.switchForm .optionsReset {margin-left:8px;border-left:1px solid #ededed;padding-left:8px;}
+.switchForm .optionsAllTabs {clear:left;padding-top:10px;}
+.switchForm .optionsClear {display:block;clear: both; padding-top:8px;margin-bottom:4px;border-bottom: 1px solid #ededed;}}
 
 /* Checkbox "Icons" */
 .noicons.tab-page ul li ul li a:before,
