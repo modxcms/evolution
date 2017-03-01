@@ -294,19 +294,19 @@ class DocumentParser {
      */
     function getSettings() {
         $tbl_system_settings   = $this->getFullTableName('system_settings');
-        if (!is_array($this->config) || empty ($this->config)) {
-            if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+        if (!isset($this->config['site_name'])) {
+            if ($included= is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
             }
-            if (!$included || !is_array($this->config) || empty ($this->config)) {
+            if (!$included || !isset($this->config['site_name'])) {
                 include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
                 $cache->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
                 $cache->setReport(false);
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
-                if($rebuilt && $included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
-                    $included= include MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
+                if($rebuilt && is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                    $included= include(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -315,28 +315,29 @@ class DocumentParser {
                     }
                 }
             }
-
-            // added for backwards compatibility - garry FS#104
-            $this->config['etomite_charset'] = & $this->config['modx_charset'];
-
-            // setup default site id - new installation should generate a unique id for the site.
-            if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
-
-            // store base_url and base_path inside config array
-            $this->config['base_url']           = MODX_BASE_URL;
-            $this->config['base_path']          = MODX_BASE_PATH;
-            $this->config['site_url']           = MODX_SITE_URL;
-            $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
-            $this->config['site_manager_url']   = MODX_MANAGER_URL;
-            $this->config['site_manager_path']  = MODX_MANAGER_PATH;
-            $this->error_reporting              = $this->config['error_reporting'];
-            $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
-            
-            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-            $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
-            if($count) $this->config['enable_filter'] = '0';
         }
+
+        // added for backwards compatibility - garry FS#104
+        $this->config['etomite_charset'] = & $this->config['modx_charset'];
+
+        // setup default site id - new installation should generate a unique id for the site.
+        if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
+
+        // store base_url and base_path inside config array
+        $this->config['base_url']           = MODX_BASE_URL;
+        $this->config['base_path']          = MODX_BASE_PATH;
+        $this->config['site_url']           = MODX_SITE_URL;
+        $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
+        $this->config['site_manager_url']   = MODX_MANAGER_URL;
+        $this->config['site_manager_path']  = MODX_MANAGER_PATH;
+        $this->error_reporting              = $this->config['error_reporting'];
+        $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+        $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+        
+        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+        if($count) $this->config['enable_filter'] = '0';
+        
         // now merge user settings into MODX-configuration
         $this->getUserSettings();
     }
