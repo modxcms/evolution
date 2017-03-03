@@ -629,9 +629,27 @@ class ditto {
 		$customReset = $this->customReset;
 		if ($keywords) {$this->addField("haskeywords","*","db");$this->addField("hasmetatags","*","db");}
 		if ($this->debug) {$this->addField("pagetitle","backend","db");}
-		if (count($customReset) > 0) {$this->addField("createdon","backend","db");}
-		$resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limit,$keywords,$randomize,$dateSource);
-		if ($resource !== false) {
+// intersel edit
+// Bug when we use a date field ("pub_date","unpub_date","editedon","deletedon","publishedon")
+// used to order the results' array in descending order:
+// the result of getDocuments is not correct because the result is limited to $limit
+// but the array of results was not sorted (see SQL Query in getDocuments)
+// (see checkAdvSort function)
+// my choice to fix this bug was to set limit to 0 in the getDocuments call when we order with a date field (see customReset),
+// then to limit the size of the array after all sorting functions were done (see hereafter)
+// I did not get side effects on my modx installs...
+
+/*
+                if (count($customReset) > 0) {$this->addField("createdon","backend","db");}
+                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limit,$keywords,$randomize,$dateSource);
+*/
+                $limitSearch=$limit;
+                if (count($customReset) > 0) {$this->addField("createdon","backend","db"); $limitSearch=0;}
+                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limitSearch,$keywords,$randomize,$dateSource);
+
+// EPO - End of change (then see line 692 - if ($limit) array_slice($resource, 0, $limit);    )
+
+ 		if ($resource !== false) {
 			$resource = array_values($resource);
 				// remove #'s from keys
 			$recordCount = count($resource);
@@ -671,6 +689,9 @@ class ditto {
 				$resource = $this->userSort($resource,$orderBy);
 			}
 			
+			//intersel - see above in order to limit the array to $limit.
+	                if ($limit) $resource=array_slice($resource, 0, $limit);      
+      
 			$fields = (array_intersect($this->fields["backend"],$this->fields["display"]));
 			$readyFields = array();
 			foreach ($fields as $field) {
