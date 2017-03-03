@@ -184,7 +184,7 @@ jQuery( document ).ready(function() {
                 var el = jQuery(element);
                 var name = el.text().trim();
                 var cm = el.closest(".man_el_name");
-                mgrResAction(name, action, cm.data("type"), cm.data("id"));
+                mgrResAction(name, action, cm.data("type"), cm.data("id"), cm.data("catid"));
             },
             menu: [
                 { name: "create",    title: mraTrans.create_new, icon: "plus", },
@@ -196,7 +196,7 @@ jQuery( document ).ready(function() {
         });
     });
 
-    function mgrResAction(name, action, type, id) {
+    function mgrResAction(name, action, type, id, catid) {
         var actionIds, deleteMsg;
 
         switch(type) {
@@ -244,7 +244,7 @@ jQuery( document ).ready(function() {
             if (r != true) return;
         }
 
-        var target = "index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+        var target = "index.php?a="+actionsIds[action]+ (id ? "&id="+id : "")+ (catid ? "&catid="+catid : "");
         
         if(top.main) top.main.document.location.href=target;
         else document.location.href=target;

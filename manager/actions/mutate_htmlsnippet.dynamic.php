@@ -43,6 +43,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
     }
 } else {
     $_SESSION['itemname'] = $_lang["new_htmlsnippet"];
+    $content['category'] = intval($_REQUEST['catid']);
 }
 
 if ($modx->manager->hasFormValues()) {
