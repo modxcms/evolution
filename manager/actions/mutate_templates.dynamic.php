@@ -43,6 +43,7 @@ if(!empty($id)) {
     }
 } else {
     $_SESSION['itemname']=$_lang["new_template"];
+    $content['category'] = intval($_REQUEST['catid']);
 }
 
 if ($modx->manager->hasFormValues()) {

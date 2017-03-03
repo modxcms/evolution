@@ -48,6 +48,7 @@ if(isset($_GET['id']))
 else
 {
     $_SESSION['itemname']=$_lang["new_plugin"];
+    $content['category'] = intval($_REQUEST['catid']);
 }
 
 if ($modx->manager->hasFormValues()) {
