@@ -4506,7 +4506,6 @@ class DocumentParser {
         if (!$evtName)                             return false;
         if (!isset ($this->pluginEvent[$evtName])) return false;
         
-        
         $results= array ();
         foreach($this->pluginEvent[$evtName] as $pluginName) { // start for loop
             if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
@@ -4518,9 +4517,9 @@ class DocumentParser {
             $e->activePlugin = $pluginName;
 
             // get plugin code
-            $plugin = $this->getPluginCode($pluginName);
-            $pluginCode= $plugin['code'];
-            $pluginProperties= $plugin['props'];
+            $_ = $this->getPluginCode($pluginName);
+            $pluginCode       = $_['code'];
+            $pluginProperties = $_['props'];
 
             // load default params/properties
             $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
@@ -4534,10 +4533,10 @@ class DocumentParser {
 
             if ($this->dumpPlugins) {
                 $eventtime = $this->getMicroTime() - $eventtime;
-                $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
-                foreach ($parameter as $k=>$v) $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
+                $this->pluginsCode .= sprintf('<fieldset><legend><b>%s / %s</b> (%2.2f ms)</legend>', $evtName, $pluginName, $eventtime*1000);
+                foreach ($parameter as $k=>$v) $this->pluginsCode .= "{$k} => " . print_r($v, true) . '<br>';
                 $this->pluginsCode .= '</fieldset><br />';
-                $this->pluginsTime["$evtName / $pluginName"] += $eventtime;
+                $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
             if ($e->_output != '') $results[]= $e->_output;
             if ($e->_propagate != true) break;
