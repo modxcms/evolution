@@ -135,7 +135,12 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         else          jQuery('#item11').hide();
         
         var bodyHeight = parseInt(document.body.offsetHeight);
+        var bodyWidth = parseInt(document.body.offsetWidth);
         x = e.clientX>0 ? e.clientX:e.pageX;
+        if (x+mnu.offsetWidth > bodyWidth) {
+            // make sure context menu is within frame
+            x = Math.max(x - ((x+mnu.offsetWidth)-bodyWidth+5),0);
+        }
         y = e.clientY>0 ? e.clientY:e.pageY;
         y = getScrollY()+(y/2);
         if (y+mnu.offsetHeight > bodyHeight) {
