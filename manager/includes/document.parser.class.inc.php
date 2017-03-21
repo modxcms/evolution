@@ -1974,8 +1974,8 @@ class DocumentParser {
 
             if($isPrepareResponse==='prepareResponse') $this->documentObject = & $documentObject;
             $out = $this->invokeEvent('OnLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out)){
-                $documentObject = $out;
+            if(is_array($out) && is_array($out[0])){
+                $documentObject = $out[0];
             }
             if ($documentObject['template']) {
                 // load TVs and merge with document - Orig by Apodigm - Docvars
