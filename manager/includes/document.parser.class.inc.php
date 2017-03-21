@@ -4503,56 +4503,46 @@ class DocumentParser {
      * @return boolean|array
      */
     function invokeEvent($evtName, $extParams= array ()) {
-        if (!$evtName)
-            return false;
-        if (!isset ($this->pluginEvent[$evtName]))
-            return false;
+        if (!$evtName)                             return false;
+        if (!isset ($this->pluginEvent[$evtName])) return false;
         
-        $el= $this->pluginEvent[$evtName];
         $results= array ();
-        $numEvents= count($el);
-        if ($numEvents > 0)
-            for ($i= 0; $i < $numEvents; $i++) { // start for loop
-                if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
-                $pluginName= $el[$i];
-                $pluginName = $this->stripslashes($pluginName);
-                // reset event object
-                $e= & $this->Event;
-                $e->_resetEventObject();
-                $e->name= $evtName;
-                $e->activePlugin= $pluginName;
+        foreach($this->pluginEvent[$evtName] as $pluginName) { // start for loop
+            if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
+            $pluginName = $this->stripslashes($pluginName);
+            // reset event object
+            $e= & $this->event;
+            $e->_resetEventObject();
+            $e->name         = $evtName;
+            $e->activePlugin = $pluginName;
 
-                // get plugin code
-                $plugin = $this->getPluginCode($pluginName);
-                $pluginCode= $plugin['code'];
-                $pluginProperties= $plugin['props'];
+            // get plugin code
+            $_ = $this->getPluginCode($pluginName);
+            $pluginCode       = $_['code'];
+            $pluginProperties = $_['props'];
 
-                // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
-                if(!is_array($parameter)){
-                    $parameter = array();
-                }
-                if (!empty ($extParams))
-                    $parameter= array_merge($parameter, $extParams);
+            // load default params/properties
+            $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
+            if(!is_array($parameter)) $parameter = array();
+            if(!empty($extParams))    $parameter = array_merge($parameter, $extParams);
 
-                // eval plugin
-                $this->evalPlugin($pluginCode, $parameter);
+            // eval plugin
+            $this->evalPlugin($pluginCode, $parameter);
 
-                if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
+            if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
 
-                if ($this->dumpPlugins) {
-                    $eventtime = $this->getMicroTime() - $eventtime;
-                    $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
-                    foreach ($parameter as $k=>$v) $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
-                    $this->pluginsCode .= '</fieldset><br />';
-                    $this->pluginsTime["$evtName / $pluginName"] += $eventtime;
-                }
-                if ($e->_output != "")
-                    $results[]= $e->_output;
-                if ($e->_propagate != true)
-                    break;
+            if ($this->dumpPlugins) {
+                $eventtime = $this->getMicroTime() - $eventtime;
+                $this->pluginsCode .= sprintf('<fieldset><legend><b>%s / %s</b> (%2.2f ms)</legend>', $evtName, $pluginName, $eventtime*1000);
+                foreach ($parameter as $k=>$v) $this->pluginsCode .= "{$k} => " . print_r($v, true) . '<br>';
+                $this->pluginsCode .= '</fieldset><br />';
+                $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
-        $e->activePlugin= "";
+            if ($e->_output != '') $results[]= $e->_output;
+            if ($e->_propagate != true) break;
+        }
+        
+        $e->activePlugin= '';
         return $results;
     }
 

@@ -23,19 +23,13 @@ class udperms{
 			return true;  // administrator - grant all document permissions
 		}
 		
-		if($document==0 && ($udperms_allowroot==1 || $modx->hasPermission('edit_document'))) {
-			return true;
-		}
-		
-		$permissionsok = false;  // set permissions to false
-		
 		if($modx->config['use_udperms']==0 || $modx->config['use_udperms']=="" || !isset($modx->config['use_udperms'])) {
 			return true; // permissions aren't in use
 		}
 		
 		$parent = $modx->db->getValue($modx->db->select('parent', $tblsc, "id='{$this->document}'"));
-		if ($this->duplicateDoc==true && $parent==0 && $udperms_allowroot==0) {
-			return false; // deny duplicate document at root if Allow Root is No
+		if (($this->duplicateDoc==true || $document==0) && $parent==0 && $udperms_allowroot==0) {
+			return false; // deny duplicate || create new document at root if Allow Root is No
 		}
 		
 		// get document groups for current user
@@ -51,6 +45,8 @@ class udperms{
 			are private to the manager users will not be private to web users if the 
 			document group is not assigned to a web user group and visa versa.
 		 */
+		$permissionsok = false;  // set permissions to false
+		
 		$rs = $modx->db->select(
 			'count(DISTINCT sc.id)',
 			"{$tblsc} AS sc 
