@@ -25,7 +25,7 @@
 
     // show javascript alert    
     function webLoginAlert($msg){
-    	global $modx;
+        global $modx;
         return "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);</script>";
     }
 
@@ -50,7 +50,11 @@
         $emailsender = $modx->config['emailsender']; 
         $site_name = $modx->config['site_name'];
         $site_start = $modx->config['site_start'];
-        $message = sprintf($websignupemail_message, $uid, $pwd); // use old method
+        
+        //Escape quotes
+        $message = str_replace('"', '', $websignupemail_message);
+        
+        
         // replace placeholders
         $message = str_replace("[+uid+]",$uid,$message);
         $message = str_replace("[+pwd+]",$pwd,$message);
@@ -58,37 +62,59 @@
         $message = str_replace("[+sname+]",$site_name,$message);
         $message = str_replace("[+semail+]",$emailsender,$message);
         $message = str_replace("[+surl+]",$site_url,$message);
-        if (!ini_get('safe_mode')) $sent = mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion(), "-f {$emailsender}");
-        else $sent = mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+        
+        
+        //Set HTML Headers
+        $headers =  "From: ".$emailsender."\r\n";
+        $headers .= "X-Mailer: PHP/".phpversion();
+        $headers .=  "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+                        
+        
+        if (!ini_get('safe_mode')) 
+            $sent = mail($email, 
+                         $emailsubject, 
+                         $message, 
+                        $headers,  
+                    
+                         "-f {$emailsender}");
+        
+        else $sent = mail(
+            $email, 
+            $emailsubject, 
+            $message, 
+            "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+        
         if (!$sent) webLoginAlert("Error while sending mail to $mailto",1);
+        
         return true;
     }
     
     function preserveUrl($docid = '', $alias = '', $array_values = array(), $suffix = false) {
-		global $modx;
-		$array_get = $_GET;
-		$urlstring = array();
-	
-		unset($array_get["id"]);
-		unset($array_get["q"]);
-		unset($array_get["webloginmode"]);
-	
-		$array_url = array_merge($array_get, $array_values);
-		foreach ($array_url as $name => $value) {
-			if (!is_null($value)) {
-				$urlstring[] = urlencode($name) . '=' . urlencode($value);
-			}
-		}
-	
-		$url = implode('&',$urlstring);
-		if ($suffix) {
-			if (empty($url)) {
-				$url = "?";
-			} else {
-				$url .= "&";
-			}
-		}
-		return $modx->makeUrl($docid, $alias, $url);
-	}
+        global $modx;
+        $array_get = $_GET;
+        $urlstring = array();
+    
+        unset($array_get["id"]);
+        unset($array_get["q"]);
+        unset($array_get["webloginmode"]);
+    
+        $array_url = array_merge($array_get, $array_values);
+        foreach ($array_url as $name => $value) {
+            if (!is_null($value)) {
+                $urlstring[] = urlencode($name) . '=' . urlencode($value);
+            }
+        }
+    
+        $url = implode('&',$urlstring);
+        if ($suffix) {
+            if (empty($url)) {
+                $url = "?";
+            } else {
+                $url .= "&";
+            }
+        }
+        return $modx->makeUrl($docid, $alias, $url);
+    }
 
 ?>
