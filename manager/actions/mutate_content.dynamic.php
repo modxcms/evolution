@@ -1344,7 +1344,7 @@ function getDefaultTemplate()
 					if(isset($sibl[0]['template']) && $sibl[0]['template']!=='') $default_template = $sibl[0]['template'];
 				}
 			}
-			break;
+			if(isset($default_template)) break; // If $default_template could not be determined, fall back / through to "parent"-mode
 		case 'parent':
 			if (isset($_REQUEST['pid']) && !empty($_REQUEST['pid']))
 			{
