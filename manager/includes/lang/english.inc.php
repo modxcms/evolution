@@ -986,7 +986,9 @@ $_lang["sunday"] = 'Sunday';
 $_lang["sys_alert"] = 'System Alert';
 $_lang["sysinfo_activity_message"] = 'This list show which Resources have been recently edited by your users.';
 $_lang["sysinfo_userid"] = 'User';
-$_lang["system_email_signup"] = 'Hello [+uid+] 
+$_lang["system_email_signup"] = '<!doctype html>
+<html>
+Hello [+uid+] 
 
 Here are your login details for [+sname+] Content Manager:
 
@@ -996,7 +998,8 @@ Password: [+pwd+]
 Once you log into the Content Manager ([+surl+]), you can change your password.
 
 Regards,
-Site Administrator';
+Site Administrator
+</html>';
 $_lang["system_email_webreminder"] = 'Hello [+uid+]
 
 To activate your new password click the following link:
