@@ -89,7 +89,50 @@
 {
     margin-right: 20px;
 }
-
+.qm-save, .qm-cancel
+{
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: none;
+  background: #fff;
+  filter: none;
+  color: #555;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E4E4E4;
+  border-radius: 3px !important;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
+  transition: none;
+}
+.qm-save:hover, .qm-cancel:hover
+{
+  background: none;
+  filter: none;
+  background-color: #3697cd;
+  box-shadow: none;
+  border-color: #3697cd;
+  color: #FFF !important;
+  transition: none;
+  text-decoration: none;
+}
+.qm-cancel a:hover, .qm-save a:hover    
+{
+  color: #FFF !important;
+}
+.qm-save a
+{
+  color: #fff;
+  border-color: #32AB9A;
+  background-color: #32AB9A;
+  background-image: linear-gradient(#32AB9A, #00948E);
+}
+.qm-save a:hover 
+{
+  background-color: #2b9385;
+  background-image: linear-gradient(#2b9385, #007571);
+  border-color: #2b9385;
+}
 #qm-tv-actions
 {
 	position: fixed;
@@ -291,17 +334,3 @@ a:hover#qmLogoClose:after
 
 
 
-@media only screen and (max-width: 728px) {
-.butttext {display:none}
-.butticon {display:inline!important}
-#qmEditor, #qmEditorClosed {height: 48px!important;}
-}
-@media only screen 
-  and (min-device-width: 768px) 
-  and (max-device-width: 1024px) 
-  and (orientation: portrait) 
-  and (-webkit-min-device-pixel-ratio: 1) {
-.butttext {display:none}
-.butticon {display:inline!important}
-
-}

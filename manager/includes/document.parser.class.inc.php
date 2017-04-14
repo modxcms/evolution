@@ -294,19 +294,19 @@ class DocumentParser {
      */
     function getSettings() {
         $tbl_system_settings   = $this->getFullTableName('system_settings');
-        if (!is_array($this->config) || empty ($this->config)) {
-            if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+        if (!isset($this->config['site_name'])) {
+            if ($included= is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
             }
-            if (!$included || !is_array($this->config) || empty ($this->config)) {
+            if (!$included || !isset($this->config['site_name'])) {
                 include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
                 $cache->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
                 $cache->setReport(false);
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
-                if($rebuilt && $included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
-                    $included= include MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
+                if($rebuilt && is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                    $included= include(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -315,28 +315,29 @@ class DocumentParser {
                     }
                 }
             }
-
-            // added for backwards compatibility - garry FS#104
-            $this->config['etomite_charset'] = & $this->config['modx_charset'];
-
-            // setup default site id - new installation should generate a unique id for the site.
-            if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
-
-            // store base_url and base_path inside config array
-            $this->config['base_url']           = MODX_BASE_URL;
-            $this->config['base_path']          = MODX_BASE_PATH;
-            $this->config['site_url']           = MODX_SITE_URL;
-            $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
-            $this->config['site_manager_url']   = MODX_MANAGER_URL;
-            $this->config['site_manager_path']  = MODX_MANAGER_PATH;
-            $this->error_reporting              = $this->config['error_reporting'];
-            $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
-            
-            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-            $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
-            if($count) $this->config['enable_filter'] = '0';
         }
+
+        // added for backwards compatibility - garry FS#104
+        $this->config['etomite_charset'] = & $this->config['modx_charset'];
+
+        // setup default site id - new installation should generate a unique id for the site.
+        if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
+
+        // store base_url and base_path inside config array
+        $this->config['base_url']           = MODX_BASE_URL;
+        $this->config['base_path']          = MODX_BASE_PATH;
+        $this->config['site_url']           = MODX_SITE_URL;
+        $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
+        $this->config['site_manager_url']   = MODX_MANAGER_URL;
+        $this->config['site_manager_path']  = MODX_MANAGER_PATH;
+        $this->error_reporting              = $this->config['error_reporting'];
+        $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+        $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+        
+        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+        if($count) $this->config['enable_filter'] = '0';
+        
         // now merge user settings into MODX-configuration
         $this->getUserSettings();
     }
@@ -934,6 +935,7 @@ class DocumentParser {
         $lc=0;
         $rc=0;
         $fetch = '';
+        $tags = array();
         foreach($piece as $v) {
             if($v===$left) {
                 if(0<$lc) $fetch .= $left;
@@ -943,7 +945,16 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+                    // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
+                    if(strpos($fetch,$left)!==false) {
+                        $nested = $this->_getTagsFromContent($fetch,$left,$right);
+                        foreach($nested as $tag) {
+                            if(!in_array($tag, $tags))
+                                $tags[] = $tag;
+                        }
+                    }
+
+                    if(!in_array($fetch, $tags)) {  // Avoid double Matches
                         $tags[] = $fetch; // Fetch
                     };
                     $fetch = ''; // and reset
@@ -956,8 +967,6 @@ class DocumentParser {
                 else continue;
             }
         }
-        if(!$tags) return array();
-        
         return $tags;
     }
     
@@ -1798,7 +1807,15 @@ class DocumentParser {
                     $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
-                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                            $parent = $row['parent'];
+                            $path   = $aliases[$parent];
+
+                            while ( isset( $this->aliasListing[$parent] ) && $this->aliasListing[$parent]['alias_visible'] == 0 ) {
+                                $path   = $this->aliasListing[$parent]['path'];
+                                $parent = $this->aliasListing[$parent]['parent'];
+                            }
+
+                            $aliases[$row['id']] = $path . '/' . $row['alias'];
                         } else {
                             $aliases[$row['id']] = $row['alias'];
                         }
@@ -1834,7 +1851,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
-	$q = isset($_GET['q']) ? $_GET['q'] : '';
+        $q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -1957,8 +1974,8 @@ class DocumentParser {
 
             if($isPrepareResponse==='prepareResponse') $this->documentObject = & $documentObject;
             $out = $this->invokeEvent('OnLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out)){
-                $documentObject = $out;
+            if(is_array($out) && is_array($out[0])){
+                $documentObject = $out[0];
             }
             if ($documentObject['template']) {
                 // load TVs and merge with document - Orig by Apodigm - Docvars
@@ -2118,6 +2135,17 @@ class DocumentParser {
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
+
+                        if ( !$docId ) {
+                            if ( !empty( $this->config['friendly_url_suffix'] ) ) {
+                                $pos = strrpos( $alias, $this->config['friendly_url_suffix'] );
+
+                                if ( $pos !== false ) {
+                                    $alias = substr( $alias, 0, $pos );
+                                }
+                            }
+                            $docId = $this->getIdFromAlias( $alias );
+                        }
 
                         if ($docId > 0)
                         {
@@ -2937,7 +2965,6 @@ class DocumentParser {
      * @return array
      */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
-    	
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -3390,11 +3417,11 @@ class DocumentParser {
                     'isfolder' => (int)$q['isfolder'],
                 );
                 if($this->aliasListing[$id]['parent']>0){
-                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
                     //fix alias_path_usage
                     if ($this->config['use_alias_path'] == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                        $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
                     } else {
                         $this->aliasListing[$id]['path'] = '';
                     }
@@ -3845,7 +3872,6 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
-        
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -4151,7 +4177,6 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-    	
         if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
         
         $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
@@ -4478,56 +4503,46 @@ class DocumentParser {
      * @return boolean|array
      */
     function invokeEvent($evtName, $extParams= array ()) {
-        if (!$evtName)
-            return false;
-        if (!isset ($this->pluginEvent[$evtName]))
-            return false;
+        if (!$evtName)                             return false;
+        if (!isset ($this->pluginEvent[$evtName])) return false;
         
-        $el= $this->pluginEvent[$evtName];
         $results= array ();
-        $numEvents= count($el);
-        if ($numEvents > 0)
-            for ($i= 0; $i < $numEvents; $i++) { // start for loop
-                if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
-                $pluginName= $el[$i];
-                $pluginName = $this->stripslashes($pluginName);
-                // reset event object
-                $e= & $this->Event;
-                $e->_resetEventObject();
-                $e->name= $evtName;
-                $e->activePlugin= $pluginName;
+        foreach($this->pluginEvent[$evtName] as $pluginName) { // start for loop
+            if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
+            $pluginName = $this->stripslashes($pluginName);
+            // reset event object
+            $e= & $this->event;
+            $e->_resetEventObject();
+            $e->name         = $evtName;
+            $e->activePlugin = $pluginName;
 
-                // get plugin code
-                $plugin = $this->getPluginCode($pluginName);
-                $pluginCode= $plugin['code'];
-                $pluginProperties= $plugin['props'];
+            // get plugin code
+            $_ = $this->getPluginCode($pluginName);
+            $pluginCode       = $_['code'];
+            $pluginProperties = $_['props'];
 
-                // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
-                if(!is_array($parameter)){
-                    $parameter = array();
-                }
-                if (!empty ($extParams))
-                    $parameter= array_merge($parameter, $extParams);
+            // load default params/properties
+            $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
+            if(!is_array($parameter)) $parameter = array();
+            if(!empty($extParams))    $parameter = array_merge($parameter, $extParams);
 
-                // eval plugin
-                $this->evalPlugin($pluginCode, $parameter);
+            // eval plugin
+            $this->evalPlugin($pluginCode, $parameter);
 
-                if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
+            if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
 
-                if ($this->dumpPlugins) {
-                    $eventtime = $this->getMicroTime() - $eventtime;
-                    $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
-                    foreach ($parameter as $k=>$v) $this->pluginsCode .= $k . ' => ' . print_r($v, true) . '<br>';
-                    $this->pluginsCode .= '</fieldset><br />';
-                    $this->pluginsTime["$evtName / $pluginName"] += $eventtime;
-                }
-                if ($e->_output != "")
-                    $results[]= $e->_output;
-                if ($e->_propagate != true)
-                    break;
+            if ($this->dumpPlugins) {
+                $eventtime = $this->getMicroTime() - $eventtime;
+                $this->pluginsCode .= sprintf('<fieldset><legend><b>%s / %s</b> (%2.2f ms)</legend>', $evtName, $pluginName, $eventtime*1000);
+                foreach ($parameter as $k=>$v) $this->pluginsCode .= "{$k} => " . print_r($v, true) . '<br>';
+                $this->pluginsCode .= '</fieldset><br />';
+                $this->pluginsTime["{$evtName} / {$pluginName}"] += $eventtime;
             }
-        $e->activePlugin= "";
+            if ($e->_output != '') $results[]= $e->_output;
+            if ($e->_propagate != true) break;
+        }
+        
+        $e->activePlugin= '';
         return $results;
     }
 
@@ -5341,6 +5356,31 @@ class DocumentParser {
         return '0 b';
     }
 
+    function getHiddenIdFromAlias( $parentid, $alias ) { 
+        $table = $this->getFullTableName( 'site_content' );
+        $query = $this->db->query( "SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count 
+            FROM {$table} sc 
+            JOIN {$table} children ON children.parent = sc.id 
+            LEFT JOIN {$table} children2 ON children2.parent = children.id 
+            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;"
+        );
+
+        while ( $child = $this->db->getRow( $query ) ) { 
+            if ( $child['alias'] == $alias || $child['child_id'] == $alias ) {
+                return $child['child_id'];
+            }
+
+            if ( $child['children_count'] > 0 ) {
+                $id = $this->getHiddenIdFromAlias( $child['id'], $alias );
+                if ( $id ) {
+                    return $id;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function getIdFromAlias($alias)
     {
         $children = array();
@@ -5349,6 +5389,10 @@ class DocumentParser {
         $tbl_site_content = $this->getFullTableName('site_content');
         if($this->config['use_alias_path']==1)
         {
+            if ( $alias == '.' ) {
+                return 0;
+            }
+
             if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
             else                           $_a[] = $alias;
             $id= 0;
@@ -5359,8 +5403,8 @@ class DocumentParser {
                 $alias = $this->db->escape($alias);
                 $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
                 if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-                $id = $this->db->getValue($rs);
-                if (!$id) $id = false;
+                $next = $this->db->getValue($rs);
+                $id = !$next ? $this->getHiddenIdFromAlias( $id, $alias ) : $next;
             }
         }
         else

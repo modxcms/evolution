@@ -46,7 +46,7 @@ class site_contentDocLister extends DocLister
         if ($tvlist == '') {
             $tvlist = $this->getCFGDef('tvList', '');
         }
-
+        
         $this->extTV->getAllTV_Name();
 
         if ($this->extPaginate = $this->getExtender('paginate')) {

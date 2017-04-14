@@ -46,6 +46,7 @@ if(isset($_GET['id'])) {
     $content['properties'] = str_replace("&", "&amp;", $content['properties']);
 } else {
     $_SESSION['itemname']=$_lang["new_snippet"];
+    $content['category'] = intval($_REQUEST['catid']);
 }
 
 if ($modx->manager->hasFormValues()) {
