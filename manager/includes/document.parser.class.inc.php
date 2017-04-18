@@ -4584,6 +4584,7 @@ class DocumentParser {
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $propertyString = trim($propertyString);
+        $propertyString = str_replace('{}', '', $propertyString );
         $propertyString = str_replace('} {', ',', $propertyString );
         if(empty($propertyString)) return array();
         if($propertyString=='{}')  return array();
