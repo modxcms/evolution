@@ -20,7 +20,7 @@ if(!$modx->hasPermission('edit_user')) {
 <p class="element-edit-message"><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul class="actionButtons">
-	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
+	<li><a href="index.php?a=38"><i class="<?php echo $_style["actions_new"] ?> hide4desktop" aria-hidden="true"></i> <span><?php echo $_lang['new_role']; ?></span></a></li>
 </ul>
 <?php
 
