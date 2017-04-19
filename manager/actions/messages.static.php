@@ -41,7 +41,7 @@ if(!$message) {
     <ul class="actionButtons">
         <li id="Button1"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
         <li id="Button2"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
-        <li id="Button3"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+        <li id="Button3"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <?php echo $_lang['delete']; ?></a></li>
 	<?php if($message['sender']==0) { ?>
 	<script type="text/javascript">document.getElementById("Button1").className='disabled';</script>
 	<?php } ?>
@@ -306,8 +306,8 @@ function hideSpans(showSpan) {
 </table>
 
 <ul class="actionButtons">
-        <li id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
-        <li id="Button5"><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+        <li id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <?php echo $_lang['messages_send']; ?></a></li>
+        <li id="Button5"><a href="index.php?a=10&t=c"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <?php echo $_lang['cancel']; ?></a></li>
 </ul>
 
 </fieldset>

@@ -1,4 +1,4 @@
-<li><a href="#" class="switchform-btn" data-target="switchForm_[+cssId+]">[%btn_view_options%]</a></li>
+<li><a href="#" class="switchform-btn" data-target="switchForm_[+cssId+]"><i class="fa fa-bars" aria-hidden="true"></i> <span>[%btn_view_options%]</span></a></li>
 <form id="switchForm_[+cssId+]" class="switchForm" data-target="[+cssId+]" style="display:none">
     <h3 class="optionsTitle"><i class="fa fa-check-square" aria-hidden="true"></i> [%viewopts_title%]</h3>
     <div class="optionsFull optionsRadios">
