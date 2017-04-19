@@ -108,7 +108,7 @@ else $webstart_path = '../'.$webstart_path;
 <div id="actions">
   <ul class="actionButtons">
 <?php if($_POST['mode']=='save'||$_GET['mode']=='edit') :?>
-      <li><a href="#" onclick="documentDirty=false;document.editFile.submit();"><i class="<?php echo $_style["files_save"] ?>"></i> <?php echo $_lang['save']?></a></li>
+      <li><a href="#" onclick="documentDirty=false;document.editFile.submit();"><i class="<?php echo $_style["files_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span></a></li>
 <?php endif; ?>
 <?php
 if(isset($_GET['mode'])&&$_GET['mode']!=='drill') $href= 'a=31&path=' . urlencode($_REQUEST['path']);
@@ -131,7 +131,7 @@ if (is_writable($startpath))
 	echo $_;
 }
 ?>
-      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?<?php echo $href;?>';"><?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?<?php echo $href;?>';"><span><?php echo $_lang['cancel']?></span></a></li>
   </ul>
 </div>
 

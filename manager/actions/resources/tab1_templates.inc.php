@@ -17,8 +17,8 @@ if(isset($resources->items['site_templates'])) { ?>
 					<input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_templates_search">
 				</form>
 			</li>
-			<li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
-			<li><a href="#" id="template-help"><?php echo $_lang['help']; ?></a></li>
+			<li><a href="index.php?a=19"><i class="<?php echo $_style["actions_new"] ?>" aria-hidden="true"></i><span><?php echo $_lang['new_template']; ?></span></a></li>
+			<li><a href="#" id="template-help"><i class="<?php echo $_style["actions_help"] ?>" aria-hidden="true"></i><span><?php echo $_lang['help']; ?></span></a></li>
 			<?php echo renderViewSwitchButtons('site_templates'); ?>
 		</ul>
 

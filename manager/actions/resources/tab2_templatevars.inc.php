@@ -21,9 +21,9 @@ if(isset($resources->items['site_tmplvars'])) { ?>
 					<input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_tmplvars_search">
 				</form>
 			</li>
-			<li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
-			<li><a href="index.php?a=305"><?php echo $_lang['template_tv_edit']; ?></a></li>
-			<li><a href="#" id="tv-help"><?php echo $_lang['help']; ?></a></li>
+            <li><a href="index.php?a=300"><i class="<?php echo $_style["actions_new"] ?>" aria-hidden="true"></i><span><?php echo $_lang['new_tmplvars']; ?></span></a></li>
+            <li><a href="index.php?a=305"><i class="<?php echo $_style["actions_sort"] ?>" aria-hidden="true"></i><span><?php echo $_lang['template_tv_edit']; ?></span></a></li>
+            <li><a href="#" id="tv-help"><i class="<?php echo $_style["actions_help"] ?>" aria-hidden="true"></i><span><?php echo $_lang['help']; ?></span></a></li>
 			<?php echo renderViewSwitchButtons('site_tmplvars'); ?>
 		</ul>
 
