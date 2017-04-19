@@ -495,6 +495,7 @@ $_lang["manage_modules"] = 'Manage Modules';
 $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
+$_lang["manage_documents"] = 'Documents';
 $_lang["manager"] = 'Manager';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'Manager Permissions';

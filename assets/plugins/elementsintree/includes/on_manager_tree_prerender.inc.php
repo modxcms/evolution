@@ -11,7 +11,7 @@ $ph['unifyFrames_css'] = ($unifyFrames == 'yes') ? file_get_contents($eit_base_p
 // tree buttons in tab
 $ph['treeButtonsInTab_js']  = ($treeButtonsInTab == 'yes') ? file_get_contents($eit_base_path.'assets/js_treeButtonsInTab.tpl') : '';
 $ph['treeButtonsInTab_css'] = ($treeButtonsInTab == 'yes') ? file_get_contents($eit_base_path.'assets/css_treeButtonsInTab.tpl') : '';
-$ph['tabTreeTitle'] = $tabTreeTitle;
+$ph['tabTreeTitle'] = '<i class="fa fa-sitemap"></i>';
 
 // Prepare lang-strings
 $unlockTranslations = array();

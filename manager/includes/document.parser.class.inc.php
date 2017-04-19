@@ -993,9 +993,9 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) continue;
-            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
-            else             $value = $ph[$key];
+            // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
+            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            else         $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1737,7 +1737,7 @@ class DocumentParser {
     
     function toAlias($text) {
         $suff= $this->config['friendly_url_suffix'];
-        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff),array('.xml','.rss','.js','.css','.txt'),$text);
+        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff,'.json'.$suff),array('.xml','.rss','.js','.css','.txt','.json'),$text);
     }
     
     /**
@@ -2131,8 +2131,7 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
-                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
-                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
+                            $this->sendErrorPage();
                         }
                         $docId = $this->db->getValue($rs);
 
@@ -4585,6 +4584,7 @@ class DocumentParser {
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $propertyString = trim($propertyString);
+        $propertyString = str_replace('{}', '', $propertyString );
         $propertyString = str_replace('} {', ',', $propertyString );
         if(empty($propertyString)) return array();
         if($propertyString=='{}')  return array();
