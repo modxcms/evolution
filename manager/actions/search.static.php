@@ -225,7 +225,7 @@ if(isset($_REQUEST['submitok'])) {
               ?>
               <tr>
                 <td align="center">
-                  <a href="index.php?a=3&id=<?php echo $row['id']; ?>" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="<?php echo $_style['icons_resource_overview']; ?>" /></a>
+                  <a href="index.php?a=3&id=<?php echo $row['id']; ?>" title="<?php echo $_lang['search_view_docdata']; ?>"><i class="<?php echo $_style['icons_resource_overview']; ?>" /></i></a>
                 </td>
                 <td><?php echo $row['id']; ?></td>
                 <?php
