@@ -141,7 +141,7 @@ blockquote {
   padding-bottom: 20px;
 }
 
-td,td[valign=top]{vertical-align:top;}
+td{vertical-align:top;}
 
 /* -------------------------[ Miscellaneous conveniences ]--- */
 
@@ -3964,6 +3964,7 @@ fieldset[disabled] .btn-default.focus {
 /*responsive buttons*/
 
 .actionButtons .fa {display:none;}
+.searchbar .actionButtons .fa {display:inline-block;}
 .optionsTitle .fa {display: inline-block;}
 @media (max-width: 900px) {
 	.actionButtons a {display: inline-block; padding: 6px 10px;margin-top:-7px}

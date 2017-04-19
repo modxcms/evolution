@@ -134,6 +134,7 @@ $_style['actions_help']               = 'fa fa-question-circle fa-lg';
 $_style['actions_sort']               = 'fa fa-sort fa-fw fa-lg';
 $_style['actions_options']            = 'fa fa-check-square fa-fw fa-lg';
 $_style['actions_categories']         = 'fa fa-folder-open fa-fw fa-lg';
+$_style['actions_search']             = 'fa fa-search fa-fw fa-lg';
 
 //for back compatibility 
 $_style['icons_save']               = $style_path.'icons/save.png';
