@@ -69,11 +69,11 @@ if(!$MODX_positionSideBar) {
 	<script type="text/javascript">
 
 		var reloadmenu = function() {
-			mainMenu.reloadmenu()
+			top.mainMenu.reloadmenu()
 		};
 
 		mainMenu.reloadtree = function() {
-			mainMenu.reloadtree()
+			top.mainMenu.reloadtree()
 		};
 
 		//save scrollPosition
