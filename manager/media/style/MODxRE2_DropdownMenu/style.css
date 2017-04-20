@@ -781,3 +781,15 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .btn-block { display: block; width: 100%; }
 .btn-block + .btn-block { margin-top: 5px; }
 .border-bottom { border-bottom: 2px solid #3697CD !important; }
+
+/*responsive buttons*/
+
+.actionButtons .fa {display:none;}
+.searchbar .actionButtons .fa {display:inline-block;}
+.optionsTitle .fa {display: inline-block;}
+@media (max-width: 900px) {
+	.actionButtons a {display: inline-block; padding: 6px 10px;margin-top:-7px}
+    .tab-page .actionButtons a {margin-top:0!important}
+	.actionButtons a span { display: none;}
+	.actionButtons a .fa {display:inline-block;}
+}
