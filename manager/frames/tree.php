@@ -226,7 +226,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             rpcNode.innerHTML = typeof response=='object' ? response.responseText : response ;
             rpcNode.style.display = 'block';
             rpcNode.loaded = true;
-            var elm = top.mainMenu.$("buildText");
+            var elm = parent.mainMenu.document.getElementById("buildText");
             if (elm) {
                 elm.innerHTML = "";
                 elm.style.display = 'none';
