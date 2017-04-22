@@ -349,7 +349,7 @@ if(isset($_REQUEST['submitok'])) {
         if($modulescounts > 0) {
           $output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
           while($row = $modx->db->getRow($rs)) {
-            $output .= '<li><a href="index.php?a=112&id=' . $row['id'] . '" id="modules_' . $row['id'] . '">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '</a></li>';
+            $output .= '<li><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . '</a></li>';
           }
         }
 
@@ -366,5 +366,3 @@ function highlightingCoincidence($text, $search) {
   $regexp = '!(' . str_replace(array('(', ')'), array('\(', '\)'), $search) . ')!isu';
   return preg_replace($regexp, '<span class="text-danger">$1</span>' , $text);
 }
-
-?>
