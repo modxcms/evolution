@@ -21,7 +21,7 @@ if($_GET['a']==2) include_once('welcome.php');
 $_style['add_doc_tree']             = '<i class="fa fa-file fa-lg"></i>';
 $_style['add_weblink_tree']         = '<i class="fa fa-link fa-lg"></i>';
 $_style['collapse_tree']            = '<i class="fa fa-arrow-circle-up fa-lg"></i>';
-$_style['empty_recycle_bin']        = '<i class="fa fa-trash-o fa-lg"></i>';
+$_style['empty_recycle_bin']        = '<i class="fa fa-trash fa-lg"></i>';
 $_style['empty_recycle_bin_empty']  = '<i class="fa fa-trash-o fa-lg"></i>';
 $_style['expand_tree']              = '<i class="fa fa-arrow-circle-down fa-lg"></i>';
 $_style['hide_tree']                = '<i class="fa fa-caret-square-o-left fa-lg"></i>';
@@ -32,7 +32,6 @@ $_style['sort_menuindex']           = '<i class="fa fa-sort-numeric-asc fa-lg"><
 $_style['element_management']       = '<i class="fa fa-th fa-lg"></i>';
 $_style['images_management']        = '<i class="fa fa-camera fa-lg"></i>';
 $_style['files_management']         = '<i class="fa fa-files-o fa-lg"></i>';
-$_style['icons_external_link']      = '<i class="fa fa-external-link"></i>';
 
 //Tree Contextual Menu Popup
 $_style['ctx_new_document']         = 'fa fa-file-o fa-fw fa-lg';
@@ -49,42 +48,50 @@ $_style['ctx_resource_overview']    = 'fa fa-info fa-fw fa-lg';
 $_style['ctx_preview_resource']     = 'fa fa-eye fa-fw fa-lg';
 
 // Tree Icons
-$_style['tree_deletedpage']         = $style_path.'tree/file-alt-deleted.png';
+$_style['tree_deletedpage']         = "<i class='fa fa-ban'></i>";
 $_style['tree_folder']              = $style_path.'tree/folder-close-alt.png'; /* folder.png */
 $_style['tree_folderopen']          = $style_path.'tree/folder-open-alt.png'; /* folder-open.png */
-$_style['tree_folder_secure']       = $style_path.'tree/folder-close-alt-secure.png';
-$_style['tree_folderopen_secure']   = $style_path.'tree/folder-open-alt-secure.png';
 $_style['tree_globe']               = $style_path.'tree/globe.png';
-$_style['tree_linkgo']              = $style_path.'tree/link.png';
-$_style['tree_minusnode']           = $style_path.'tree/angle-down.png';
-$_style['tree_page']                = $style_path.'tree/file-alt.png';
-$_style['tree_page_home']           = $style_path.'tree/home.png';
-$_style['tree_page_404']            = $style_path.'tree/warning-sign.png';
-$_style['tree_page_hourglass']      = $style_path.'tree/time.png';
-$_style['tree_page_info']           = $style_path.'tree/info.png';
-$_style['tree_page_blank']          = $style_path.'tree/file-alt.png';
-$_style['tree_page_css']            = $style_path.'tree/file-text.png';
-$_style['tree_page_html']           = $style_path.'tree/file-alt.png';
-$_style['tree_page_xml']            = $style_path.'tree/file-code.png';
-$_style['tree_page_js']             = $style_path.'tree/file-code.png';
-$_style['tree_page_rss']            = $style_path.'tree/file-rss.png';
-$_style['tree_page_pdf']            = $style_path.'tree/file-pdf.png';
-$_style['tree_page_word']           = $style_path.'tree/file-word.png';
-$_style['tree_page_excel']          = $style_path.'tree/file-excel.png';
-$_style['tree_plusnode']            = $style_path.'tree/angle-right.png';
-$_style['tree_showtree']            = '<img src="'.$style_path.'tree/sitemap.png" width="16" height="16" align="absmiddle" />';
-$_style['tree_weblink']             = $style_path.'tree/link.png';
+$_style['tree_folder_new']          = "<i class='fa fa-folder'></i>"; /* folder.png */
+$_style['tree_folderopen_new']      = "<i class='fa fa-folder-open'></i>"; /* folder-open.png */
+$_style['tree_folder_secure']       = "<i class='fa fa-folder'><i class='fa fa-lock'></i></i>";
+$_style['tree_folderopen_secure']   = "<i class='fa fa-folder-open'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_linkgo']              = "<i class='fa fa-link'></i>";
+$_style['tree_page']                = "<i class='fa fa-file-o'></i>";
+$_style['tree_page_home']           = "<i class='fa fa-home'></i>";
+$_style['tree_page_404']            = "<i class='fa fa-exclamation-triangle'></i>";
+$_style['tree_page_hourglass']      = "<i class='fa fa-clock-o'></i>";
+$_style['tree_page_info']           = "<i class='fa fa-info'></i>";
+$_style['tree_page_blank']          = "<i class='fa fa-file-o'></i>";
+$_style['tree_page_css']            = "<i class='fa fa-file-code-o'></i>";
+$_style['tree_page_html']           = "<i class='fa fa-file-o'></i>";
+$_style['tree_page_xml']            = "<i class='fa fa-file-code-o'></i>";
+$_style['tree_page_js']             = "<i class='fa fa-file-code-o'></i>";
+$_style['tree_page_rss']            = "<i class='fa fa-file-code-o'></i>";
+$_style['tree_page_pdf']            = "<i class='fa fa-file-fdf-o'></i>"; 
+$_style['tree_page_word']           = "<i class='fa fa-file-word-o'></i>"; 
+$_style['tree_page_excel']          = "<i class='fa fa-file-excel-o'></i>";
 
-$_style['tree_page_secure']         = $style_path.'tree/file-alt-secure.png';
-$_style['tree_page_blank_secure']   = $style_path.'tree/file-alt-secure.png';
-$_style['tree_page_css_secure']     = $style_path.'tree/file-code-secure.png';
-$_style['tree_page_html_secure']    = $style_path.'tree/file-alt-secure.png';
-$_style['tree_page_xml_secure']     = $style_path.'tree/file-code-secure.png';
-$_style['tree_page_js_secure']      = $style_path.'tree/file-code-secure.png';
-$_style['tree_page_rss_secure']     = $style_path.'tree/file-rss-secure.png';
-$_style['tree_page_pdf_secure']     = $style_path.'tree/file-pdf-secure.png';
-$_style['tree_page_word_secure']    = $style_path.'tree/file-word-secure.png';
-$_style['tree_page_excel_secure']   = $style_path.'tree/file-excel-secure.png';
+$_style['tree_minusnode']           = "<i class='fa fa-angle-down'></i>";//$style_path.'tree/angle-down.png';
+$_style['tree_plusnode']            = "<i class='fa fa-angle-right'></i>";//$style_path.'tree/angle-right.png';
+$_style['tree_weblink']             = $style_path.'tree/link.png';
+$_style['tree_preview_resource']    = "<i class='fa fa-eye'></i>";//$style_path.'icons/eye.png';
+
+$_style['tree_showtree']            = '<i class="fa fa-sitemap"></i>';
+
+$_style['tree_page_secure']         = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_blank_secure']   = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_css_secure']     = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_html_secure']    = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_xml_secure']     = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_js_secure']      = "<i class='fa fa-file-code-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_rss_secure']     = "<i class='fa fa-file-code-o'></i>";
+$_style['tree_page_pdf_secure']     = "<i class='fa fa-file-pdf-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_word_secure']    = "<i class='fa fa-file-word-o'><i class='fa fa-lock'></i></i>"; 
+$_style['tree_page_excel_secure']   = "<i class='fa fa-file-excel-o'><i class='fa fa-lock'></i></i>";
+
+//search
+$_style['icons_external_link']      = '<i class="fa fa-external-link"></i>';
 
 //View Resource data 
 $_style['icons_new_document']       = 'fa fa-file-o fa-lg';
@@ -101,8 +108,8 @@ $_style['icons_resource_duplicate'] = $style_path.'icons/clone.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
 $_style['icons_delete_document']    = $style_path.'icons/trash.png';
 //locks
-$_style['icons_preview_resource']   = $style_path.'icons/eye.png';
-$_style['icons_secured']            = $style_path.'icons/lock.png';
+$_style['icons_preview_resource']   = $style_path.'icons/eye.png';//$style_path.'icons/eye.png';
+$_style['icons_secured']            = "<i class='fa fa-lock'></i>";//$style_path.'icons/lock.png';
 
 //file manager icons
 $_style['files_save']               = 'fa fa-floppy-o fa-fw fa-lg';
@@ -124,18 +131,18 @@ $_style['files_unzip']              = 'fa fa-file-archive-o fa-fw fa-lg';
 $_style['files_edit']               = 'fa fa-pencil-square-o fa-fw fa-lg';
 
 //Action buttons 
-$_style['actions_save']               = 'fa fa-floppy-o fa-lg';
-$_style['actions_duplicate']          = 'fa fa-clone fa-fw fa-lg';
-$_style['actions_delete']             = 'fa fa-trash fa-fw fa-lg';
-$_style['actions_cancel']             = 'fa fa-times-circle fa-fw fa-lg';
-$_style['actions_preview']            = 'fa fa-eye fa-fw fa-lg';
-$_style['actions_run']                = 'fa fa-play fa-fw fa-lg';
-$_style['actions_new']                = 'fa fa-plus-circle fa-lg';
-$_style['actions_help']               = 'fa fa-question-circle fa-lg';
-$_style['actions_sort']               = 'fa fa-sort fa-fw fa-lg';
-$_style['actions_options']            = 'fa fa-check-square fa-fw fa-lg';
-$_style['actions_categories']         = 'fa fa-folder-open fa-fw fa-lg';
-$_style['actions_search']             = 'fa fa-search fa-fw fa-lg';
+$_style['actions_save']             = 'fa fa-floppy-o fa-lg';
+$_style['actions_duplicate']        = 'fa fa-clone fa-fw fa-lg';
+$_style['actions_delete']           = 'fa fa-trash fa-fw fa-lg';
+$_style['actions_cancel']           = 'fa fa-times-circle fa-fw fa-lg';
+$_style['actions_preview']          = 'fa fa-eye fa-fw fa-lg';
+$_style['actions_run']              = 'fa fa-play fa-fw fa-lg';
+$_style['actions_new']              = 'fa fa-plus-circle fa-lg';
+$_style['actions_help']             = 'fa fa-question-circle fa-lg';
+$_style['actions_sort']             = 'fa fa-sort fa-fw fa-lg';
+$_style['actions_options']          = 'fa fa-check-square fa-fw fa-lg';
+$_style['actions_categories']       = 'fa fa-folder-open fa-fw fa-lg';
+$_style['actions_search']           = 'fa fa-search fa-fw fa-lg';
 
 //for back compatibility 
 
@@ -193,7 +200,7 @@ $_style['icons_information']        = $style_path.'icons/info-sign.png';
 
 
 // Miscellaneous
-$_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';
+$_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><i class="fa fa-spinner fa-spin fa-lg"></i></p>';
 $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
