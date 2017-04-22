@@ -18,7 +18,7 @@ if(!$modx->hasPermission('export_static')) {
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
   </ul>
 </div>
 
@@ -79,7 +79,7 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
 </table>
 
 <ul class="actionButtons">
-	<li id="exportButton"><a href="#" class="default" onclick="document.exportFrm.submit();jQuery(this).hide();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
+	<li id="exportButton"><a href="#" class="default" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <?php echo $_lang["export_site_start"]; ?></a></li>
 </ul>
 <script>
 	jQuery('#exportButton a').click(function(){

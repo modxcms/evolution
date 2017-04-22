@@ -122,8 +122,21 @@ $_style['files_download']           = 'fa fa-download fa-fw fa-lg';
 $_style['files_unzip']              = 'fa fa-file-archive-o fa-fw fa-lg';
 $_style['files_edit']               = 'fa fa-pencil-square-o fa-fw fa-lg';
 
-//for back compatibility 
+//Action buttons 
+$_style['actions_save']               = 'fa fa-floppy-o fa-lg';
+$_style['actions_duplicate']          = 'fa fa-clone fa-fw fa-lg';
+$_style['actions_delete']             = 'fa fa-trash fa-fw fa-lg';
+$_style['actions_cancel']             = 'fa fa-times-circle fa-fw fa-lg';
+$_style['actions_preview']            = 'fa fa-eye fa-fw fa-lg';
+$_style['actions_run']                = 'fa fa-play fa-fw fa-lg';
+$_style['actions_new']                = 'fa fa-plus-circle fa-lg';
+$_style['actions_help']               = 'fa fa-question-circle fa-lg';
+$_style['actions_sort']               = 'fa fa-sort fa-fw fa-lg';
+$_style['actions_options']            = 'fa fa-check-square fa-fw fa-lg';
+$_style['actions_categories']         = 'fa fa-folder-open fa-fw fa-lg';
+$_style['actions_search']             = 'fa fa-search fa-fw fa-lg';
 
+//for back compatibility 
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_delete']             = $style_path.'icons/trash.png';
 $_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';

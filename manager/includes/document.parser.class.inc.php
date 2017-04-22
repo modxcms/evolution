@@ -73,6 +73,7 @@ class DocumentParser {
     var $messageQuitCount;
     var $time;
     var $sid;
+    private $q;
 
     /**
      * Document constructor
@@ -102,6 +103,8 @@ class DocumentParser {
         $this->stopOnNotice = false;
         $this->snipLapCount = 0;
         $this->time = time(); // for having global timestamp
+
+        $this->q = self::_getCleanQueryString();
     }
 
     function __call($method_name,$arguments) {
@@ -993,9 +996,9 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) continue;
-            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
-            else             $value = $ph[$key];
+            // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
+            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            else         $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1737,7 +1740,7 @@ class DocumentParser {
     
     function toAlias($text) {
         $suff= $this->config['friendly_url_suffix'];
-        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff),array('.xml','.rss','.js','.css','.txt'),$text);
+        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff,'.json'.$suff),array('.xml','.rss','.js','.css','.txt','.json'),$text);
     }
     
     /**
@@ -1851,7 +1854,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
-        $q = isset($_GET['q']) ? $_GET['q'] : '';
+        $q = $this->q;
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -2076,8 +2079,8 @@ class DocumentParser {
             $this->getSettings();
         }
 
-        //$_REQUEST['q'] = $_GET['q'] = $this->setRequestQ($_SERVER['REQUEST_URI']);
-        
+        //$this->q = $this->setRequestQ($_SERVER['REQUEST_URI']);
+
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
             $this->_IIS_furl_fix(); // IIS friendly url fix
 
@@ -2120,7 +2123,7 @@ class DocumentParser {
                     //@TODO: check new $alias;
                     if ($this->config['aliaslistingfolder'] == 1) {
                         $tbl_site_content = $this->getFullTableName('site_content');
-                        $alias = $this->db->escape($_GET['q']);
+                        $alias = $this->db->escape($this->q);
 
                         $parentAlias = dirname($alias);
                         $parentId = $this->getIdFromAlias($parentAlias);
@@ -2131,8 +2134,7 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
-                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
-                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
+                            $this->sendErrorPage();
                         }
                         $docId = $this->db->getValue($rs);
 
@@ -2177,7 +2179,7 @@ class DocumentParser {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
                 } else {
-                    $alias = $this->db->escape($_GET['q']);
+                    $alias = $this->db->escape($this->q);
                     $docAlias = basename($alias, $this->config['friendly_url_suffix']);
                     $rs  = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
                     $this->documentIdentifier = (int) $this->db->getValue($rs);
@@ -2218,7 +2220,7 @@ class DocumentParser {
             }
         }
         $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
-        $_REQUEST['q']= $_GET['q']= $qp['path'];
+        $this->q = $qp['path'];
         return $qp['path'];
     }
 
@@ -2229,8 +2231,8 @@ class DocumentParser {
             if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
             if($q=='index.php')        $q = '';
         }
-        
-        $_REQUEST['q'] = $_GET['q'] = $q;
+
+        $this->q = $q;
         return $q;
     }
     
@@ -4585,6 +4587,7 @@ class DocumentParser {
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $propertyString = trim($propertyString);
+        $propertyString = str_replace('{}', '', $propertyString );
         $propertyString = str_replace('} {', ',', $propertyString );
         if(empty($propertyString)) return array();
         if($propertyString=='{}')  return array();
@@ -5478,6 +5481,31 @@ class DocumentParser {
     
     // End of class.
 
+
+    /**
+     * Get Clean Query String
+     *
+     * Fixes the issue where passing an array into the q get variable causes errors
+     *
+     */
+    private static function _getCleanQueryString() {
+        $q = $_GET['q'];
+
+        //Return null if the query doesn't exist
+        if(empty($q)) {
+            return null;
+        }
+
+        //If we have a string, return it
+        if(is_string($q)) {
+            return $q;
+        }
+
+        //If we have an array, return the first element
+        if(is_array($q)) {
+            return $q[0];
+        }
+    }
 }
 
 /**

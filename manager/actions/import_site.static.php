@@ -31,7 +31,7 @@ $allowedfiles = array('html','htm','shtml','xml');
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
   </ul>
 </div>
 
@@ -81,7 +81,7 @@ if(!isset($_POST['import'])) {
   </tr>
 </table>
 <ul class="actionButtons">
-    <li><a href="#" class="default" onclick="document.importFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["import_site_start"]; ?></a></li>
+    <li><a href="#" class="default" onclick="document.importFrm.submit();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <?php echo $_lang["import_site_start"]; ?></a></li>
 </ul>
 </form>
 </fieldset>

@@ -630,7 +630,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
       <ul class="actionButtons">
           <li id="Button1" class="transition">
             <a href="#" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-              <img alt="icons_save" src="<?php echo $_style["icons_save"]; ?>" /> <?php echo $_lang['save']; ?>
+              <i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span>
             </a>
             <span class="plus"> + </span>
             <select id="stay" name="stay">
@@ -642,14 +642,14 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
             </select>
           </li>
       <?php if ($modx->manager->action == '4' || $modx->manager->action == '72') { ?>
-          <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
-          <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
+          <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><i class="<?php echo $_style["actions_duplicate"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['duplicate']?></span></a></li>
+          <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><span><?php echo $_lang['delete']?></span></span></a></li>
       <?php } else { ?>
-          <li id="Button6"><a href="#" onclick="setLastClickedElement(0,0);duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
-          <li id="Button3"><a href="#" onclick="setLastClickedElement(0,0);deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
+          <li id="Button6"><a href="#" onclick="setLastClickedElement(0,0);duplicatedocument();"><i class="<?php echo $_style["actions_duplicate"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['duplicate']?></span></a></li>
+          <li id="Button3"><a href="#" onclick="setLastClickedElement(0,0);deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><span><?php echo $_lang['delete']?></span></a></li>
       <?php } ?>
-          <li id="Button5" class="transition"><a href="#" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-          <li id="Button4"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
+          <li id="Button5" class="transition"><a href="#" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id".htmlspecialchars($add_path)."';"?>"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><span><?php echo $_lang['cancel']?></span></span></a></li>
+          <li id="Button4"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><i class="<?php echo $_style["actions_preview"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['preview']?></span></a></li>
       </ul>
 </div>
 

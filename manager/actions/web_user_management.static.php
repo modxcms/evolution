@@ -98,7 +98,7 @@ echo $cm->render();
 	<div class="searchbar">
         <table border="0" style="width:100%" class="actionButtons actionButtons--tableheader">
 			<tr>
-			<td><a href="index.php?a=87"><?php echo $_lang['new_web_user']; ?></a></td>
+                <td><a href="index.php?a=87"><i class="<?php echo $_style["actions_new"] ?> hide4desktop" aria-hidden="true"></i> <span><?php echo $_lang['new_web_user']; ?></span></a></td>
 			<td nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>

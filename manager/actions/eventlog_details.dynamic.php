@@ -23,9 +23,9 @@ $ds = $modx->db->select(
 <div id="actions">
 	<ul class="actionButtons">
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
-		<li id="Button3"><a href="#" onclick="deletelog();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+		<li id="Button3"><a href="#" onclick="deletelog();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <?php echo $_lang['delete']; ?></a></li>
 <?php } ?>
-		<li id="Button4"><a href="index.php?a=114"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+		<li id="Button4"><a href="index.php?a=114"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <?php echo $_lang['cancel']; ?></a></li>
 	</ul>
 </div>
 

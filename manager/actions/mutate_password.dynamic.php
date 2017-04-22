@@ -8,8 +8,8 @@ if(!$modx->hasPermission('change_password')) {
 <h1><?php echo $_lang['change_password']?></h1>
 <div id="actions">
 	<ul class="actionButtons">
-		<li class="transition"><a href="javascript:void(0)" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?></a></li>
-	  <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+		<li class="transition"><a href="javascript:void(0)" onclick="documentDirty=false; document.userform.save.click();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span></a></li>
+	  <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
 	</ul>
 </div>
 <div class="section">

@@ -158,7 +158,7 @@ class APIhelpers
      * @param $data
      * @return bool|false|string
      */
-    private function _getEnv($data)
+    private static function _getEnv($data)
     {
         switch (true) {
             case (isset($_SERVER[$data])):
