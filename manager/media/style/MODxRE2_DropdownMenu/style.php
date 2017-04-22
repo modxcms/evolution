@@ -78,6 +78,8 @@ $_style['tree_weblink']             = $style_path.'tree/link.png';
 $_style['tree_preview_resource']    = "<i class='fa fa-eye'></i>";//$style_path.'icons/eye.png';
 
 $_style['tree_showtree']            = '<i class="fa fa-sitemap"></i>';
+$_style['tree_working']             = '<i class="fa fa-warning"></i>';
+$_style['tree_info']                = '<i class="fa fa-info-circle"></i>';
 
 $_style['tree_page_secure']         = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>"; 
 $_style['tree_page_blank_secure']   = "<i class='fa fa-file-o'><i class='fa fa-lock'></i></i>"; 

@@ -112,8 +112,7 @@ var setLastClickedElement = function(type, id) {
 										data = $(data).find('.' + modx.mainMenu.search.classResult);
 										$('a', data).each(function(i, el) {
 											$(el).attr('target', 'main').append('<i onclick="modx.openWindow({title:\'' + el.innerText + '\',id:\'' + el.id + '\',url:\'' + el.href + '\'});return false;">' + modx.style.icons_external_link + '</i>'
-											)
-											;
+											);
 										});
 										return data.length ? data.html() : '';
 									},
@@ -182,7 +181,7 @@ var setLastClickedElement = function(type, id) {
 			},
 			work: function() {
 				var elm = d.getElementById('workText');
-				if(elm) elm.innerHTML = '<img src="' + modx.style.icons_working + '" width="16" height="16" />' + modx.lang.working;
+				if(elm) elm.innerHTML = modx.style.icons_working + modx.lang.working;
 				else setTimeout('modx.main.work()', 50);
 			},
 			stopWork: function() {
@@ -343,6 +342,7 @@ var setLastClickedElement = function(type, id) {
 						var i, spacer = '';
 						//for(i = 0; i <= indent + 1; i++) spacer += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 						var folderState = modx.tree.getFolderState();
+						$("#buildText").html(modx.style.tree_info + loadText).show();
 						modx.tree.rpcNode.innerHTML = "<span class='emptyNode' style='white-space:nowrap;'>" + spacer + loadText + "...<\/span>";
 						$.get('index.php?a=1&f=nodes&indent=' + indent + '&parent=' + parent + '&expandAll=' + expandAll + folderState, function(data) {
 							modx.tree.rpcLoadData(data)
@@ -366,7 +366,7 @@ var setLastClickedElement = function(type, id) {
 					modx.tree.rpcNode.innerHTML = typeof response == 'object' ? response.responseText : response;
 					modx.tree.rpcNode.style.display = 'block';
 					modx.tree.rpcNode.loaded = true;
-					$("#buildText").html('').hide();
+					$("#buildText").html('').fadeOut();
 					if(localStorage.getItem('MODX_lastClickedElement')) {
 						modx.tree.setActiveFromContextMenu(JSON.parse(localStorage.getItem('MODX_lastClickedElement'))[1]);
 					}
@@ -592,6 +592,7 @@ var setLastClickedElement = function(type, id) {
 				$('#node' + doc_id + '>.treeNode').addClass('treeNodeSelected')
 			},
 			restoreTree: function() {
+				$("#buildText").html(modx.style.tree_info + modx.lang.loading_doc_tree).show();
 				modx.tree.rpcNode = d.getElementById('treeRoot');
 				$.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2', function(data) {
 					modx.tree.rpcLoadData(data)

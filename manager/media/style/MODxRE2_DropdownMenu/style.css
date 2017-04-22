@@ -106,6 +106,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .nav > li > ul a .fa { margin-right: 0.833rem; color: #39545e; width: 1.25rem; text-align: center; }
 #mainMenu .nav > li > ul span { text-align: center; font-size: 11px; color: #999; }
 #statusbar { position: absolute; overflow: hidden; padding: 0 10px; height: 48px; line-height: 48px; font-size: 11px; white-space: nowrap; color: #93a59e; }
+#statusbar .fa { margin-right: 5px }
 #statusbar .fa-warning { color: #F44336 }
 #tocText { display: none }
 @media (max-width: 959px) {
@@ -217,7 +218,7 @@ div.treeframebody { background: #f5f5f5 url(images/subnav.jpg) !important; -webk
 #treeMenu { margin-left: 2px; background-color: rgba(0, 0, 0, 0.1); border-bottom: 1px solid #fff; }
 #treeMenu table td { padding: 3px 0px; }
 #treeMenu * { vertical-align: middle; }
-#treeHolder { cursor: default; overflow: auto; height: 100%; height: calc(100% - 34px); padding: 5px; line-height: 1.5em; }
+#treeHolder { cursor: default; overflow: auto; height: 100%; height: calc(100% - 34px); padding: 5px 10px; line-height: 1.5em; }
 #treeRoot { cursor: default; }
 #treeRoot div { position: relative; margin-left: 20px; white-space: nowrap }
 #treeRoot div div { margin-left: 10px }
