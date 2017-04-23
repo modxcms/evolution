@@ -22,7 +22,7 @@ if ($rt = @ include_once('config.inc.php')) {
 }
 header('Content-type: application/json');
 if($ok) {
-    echo '{status:"ok"}';
+    echo '{"status":"ok"}';
 } else {
-  echo '{status:"null"}';
+  echo '{"status":"null"}';
 }
