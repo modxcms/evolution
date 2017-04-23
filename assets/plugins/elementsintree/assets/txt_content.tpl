@@ -168,7 +168,7 @@
 
 .actionButtons--eit {
     position: absolute;
-    top: 20px;
+    top: 25px;
     right: 10px;
 }
 
@@ -178,7 +178,7 @@
 }
 
 .actionButtons--eit a {
-    padding: 4px 8px;
+    padding: 5px 8px;
     font-size: 14px;
 }
 
