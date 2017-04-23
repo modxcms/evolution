@@ -41,6 +41,10 @@ if(!$MODX_positionSideBar) {
 	$body_class .= 'sidebar-closed';
 }
 
+if(isset($modx->pluginCache['ElementsInTree'])) {
+	$body_class .= ' ElementsInTree';
+}
+
 $unlockTranslations = array(
 	'msg' => $_lang["unlock_element_id_warning"],
 	'type1' => $_lang["lock_element_type_1"],
@@ -63,8 +67,8 @@ if($user['which_browser'] == 'default') {
 }
 ?>
 <!DOCTYPE html>
-<html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?> style="height:100%">
-<head style="height:100%">
+<html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
+<head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
@@ -138,6 +142,10 @@ if($user['which_browser'] == 'default') {
 				new_document: "<?php echo $modx->hasPermission('new_document') ? 1 : 0; ?>",
 				publish_document: "<?php echo $modx->hasPermission('publish_document') ? 1 : 0; ?>"
 			},
+			plugins: {
+				ElementsInTree: "<?php echo isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>",
+				EVOmodal: "<?php echo isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>"
+			},
 			openedArray: [],
 			lockedElementsTranslation: <?php echo json_encode($unlockTranslations) . "\n" ?>
 		};
@@ -168,52 +176,52 @@ if($user['which_browser'] == 'default') {
 						<i class="fa fa-desktop"></i>
 					</a>
 				</li>
-				<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help') ) { ?>
-				<li class="dropdown">
-					<a class="dropdown-toggle" onclick="modx.mainMenu.navToggle(this); return false;"><i class="fa fa-sliders fa-2x"></i></a>
-					<ul class="dropdown-menu">
-						<?php if($modx->hasPermission('settings')) { ?>
-							<li>
-								<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
-								</a>
-							</li>
-						<?php } ?>
-						<?php if($modx->hasPermission('view_eventlog')) { ?>
-							<li>
-								<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
-								</a>
-							</li>
-						<?php } ?>
-						<?php if($modx->hasPermission('view_eventlog')) { ?>
-							<li>
-								<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
-								</a>
-							</li>
-						<?php } ?>
-						<?php if($modx->hasPermission('logs')) { ?>
-							<li>
-								<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
-								</a>
-							</li>
-							<li>
-								<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
-								</a>
-							</li>
-						<?php } ?>
-						<?php if($modx->hasPermission('help')) { ?>
-							<li>
-								<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);this.blur();">
-									<i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
-								</a>
-							</li>
-						<?php } ?>
-					</ul>
-				</li>
+				<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
+					<li class="dropdown">
+						<a class="dropdown-toggle" onclick="modx.mainMenu.navToggle(this); return false;"><i class="fa fa-sliders fa-2x"></i></a>
+						<ul class="dropdown-menu">
+							<?php if($modx->hasPermission('settings')) { ?>
+								<li>
+									<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if($modx->hasPermission('view_eventlog')) { ?>
+								<li>
+									<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if($modx->hasPermission('view_eventlog')) { ?>
+								<li>
+									<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if($modx->hasPermission('logs')) { ?>
+								<li>
+									<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
+									</a>
+								</li>
+								<li>
+									<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if($modx->hasPermission('help')) { ?>
+								<li>
+									<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+										<i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
+									</a>
+								</li>
+							<?php } ?>
+						</ul>
+					</li>
 				<?php } ?>
 				<li class="dropdown account">
 					<a class="dropdown-toggle" onclick="modx.mainMenu.navToggle(this); return false;">
@@ -275,9 +283,51 @@ if($user['which_browser'] == 'default') {
 		</a>
 	</div>
 	<div id="searchresult"></div>
+
+	<!-- Contextual Menu Popup Code -->
+	<div id="mx_contextmenu" onselectstart="return false;">
+		<div id="nameHolder">&nbsp;</div>
+		<?php
+		constructLink(3, $_style["ctx_new_document"], $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
+		constructLink(2, $_style["ctx_edit_document"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
+		constructLink(5, $_style["ctx_move_document"], $_lang["move_resource"], $modx->hasPermission('save_document')); // move
+		constructLink(7, $_style["ctx_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
+		constructLink(11, $_style["ctx_sort_menuindex"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
+		?>
+		<div class="seperator"></div>
+		<?php
+		constructLink(9, $_style["ctx_publish_document"], $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
+		constructLink(10, $_style["ctx_unpublish_resource"], $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
+		constructLink(4, $_style["ctx_delete"], $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
+		constructLink(8, $_style["ctx_undelete_resource"], $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
+		?>
+		<div class="seperator"></div>
+		<?php
+		constructLink(6, $_style["ctx_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
+		?>
+		<div class="seperator"></div>
+		<?php
+		constructLink(1, $_style["ctx_resource_overview"], $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
+		constructLink(12, $_style["ctx_preview_resource"], $_lang["preview_resource"], 1); // preview
+		?>
+	</div>
+
 	<?php
+	function constructLink($action, $img, $text, $allowed) {
+		if($allowed == 1) {
+			echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s); modx.tree.hideMenu();">', $action, $action);
+			echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+		}
+	}
+
 	$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
 	?>
+	<script>
+		reloadElementsInTree = function() {
+			console.log('tree.reloadElementsInTree() off end');
+			modx.tree.reloadElementsInTree()
+		};
+	</script>
 </div>
 </body>
 </html>
