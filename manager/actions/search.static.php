@@ -135,6 +135,9 @@ if(isset($_REQUEST['submitok'])) {
       $sqladd .= $sqladd != '' ? ' AND' : '';
       $sqladd .= " pagetitle LIKE '%{$searchfields}%'";
       $sqladd .= " OR longtitle LIKE '%{$searchlongtitle}%'";
+      $sqladd .= " OR description LIKE '%{$searchlongtitle}%'";
+      $sqladd .= " OR introtext LIKE '%{$searchlongtitle}%'";
+      $sqladd .= " OR menutitle LIKE '%{$searchlongtitle}%'";
       $sqladd .= " OR alias LIKE '%{$search_alias}%'";
     }
   } else if($idFromAlias) {
@@ -153,7 +156,7 @@ if(isset($_REQUEST['submitok'])) {
     $sqladd .= $searchcontent != '' ? " content LIKE '%{$searchcontent}%'" : '';
   }
 
-  $fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
+  $fields = 'id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';
   $where = $sqladd;
 
   if($where) {
@@ -212,7 +215,7 @@ if(isset($_REQUEST['submitok'])) {
               } elseif($row['isfolder'] == 0) {
                 $icon .= isset($icons[$row['contenttype']]) ? $icons[$row['contenttype']] : $_style["tree_page_html"];
               } else {
-                $icon .= $_style['tree_folder'];
+                $icon .= $_style['tree_folder_new'];
               }
 
               $tdClass = "";
@@ -243,7 +246,7 @@ if(isset($_REQUEST['submitok'])) {
                   <?php
                 }
                 ?>
-                <td align="center"><img src="<?php echo $icon; ?>" /></td>
+                <td align="center"><?php echo $icon; ?></td>
               </tr>
               <?php
             }
