@@ -1014,20 +1014,23 @@ class DocumentParser {
         return $content;
     }
 
-    function _contextValue($key) {
+    function _contextValue($key,$parent=false) {
+        if(preg_match('/@\d+\/u/',$key))
+        $key = str_replace(array('@','/u'),array('@u(',')'),$key);
         list($key,$str) = explode('@',$key,2);
-        $context = strtolower($str);
-        if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
-            $context = 'alias';
-        elseif(substr($str,0,1)==='u' && strpos($str,'(')!==false)
-            $context = 'uparent';
-        switch($context) {
+        
+        if(strpos($str,'(')) list($context,$option) = explode('(', $str, 2);
+        else                 list($context,$option) = array($str, false);
+        
+        if($option) $option = trim($option, ')(\'"`');
+        
+        switch(strtolower($context)) {
             case 'site_start':
                 $docid = $this->config['site_start'];
                 break;
             case 'parent':
             case 'p':
-                $docid = $this->documentObject['parent'];
+                $docid = $parent;
                 if($docid==0) $docid = $this->config['site_start'];
                 break;
             case 'ultimateparent':
@@ -1047,7 +1050,10 @@ class DocumentParser {
                 $docid = $this->getIdFromAlias($str);
                 break;
             case 'prev':
-                $children = $this->getActiveChildren($this->documentObject['parent'], 'menuindex', 'ASC');
+                if(!$option) $option = 'menuindex,ASC';
+                elseif(strpos($option, ',')===false) $option .= ',ASC';
+                list($by,$dir) = explode(',', $option, 2);
+                $children = $this->getActiveChildren($parent, $by, $dir);
                 $find = false;
                 $prev = false;
                 foreach($children as $row) {
@@ -1064,7 +1070,10 @@ class DocumentParser {
                 else $docid = '';
                 break;
             case 'next':
-                $children = $this->getActiveChildren($this->documentObject['parent'], 'menuindex', 'ASC');
+                if(!$option) $option = 'menuindex,ASC';
+                elseif(strpos($option, ',')===false) $option .= ',ASC';
+                list($by,$dir) = explode(',', $option, 2);
+                $children = $this->getActiveChildren($parent, $by, $dir);
                 $find = false;
                 $next = false;
                 foreach($children as $row) {
