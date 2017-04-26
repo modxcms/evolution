@@ -118,7 +118,7 @@ class mgrResources {
 
 	function prepareCategoryArrays() {
 		foreach($this->items as $type=>$items) {
-			foreach($items as $item) {
+			foreach((array)$items as $item) {
 				$catid = $item['catid'] ? $item['catid'] : 0;
 				$this->categories[$catid] = $item['category'];
 				

@@ -337,7 +337,7 @@ class ditto {
 				// set QE Placeholders
 		}
 		
-		if ($phx == 1) {
+		if ($phx == 1 && !$modx->config['enable_filter']) {
 			$PHs = $placeholders;
 			foreach($PHs as $key=>$output) {
 				$placeholders[$key] = str_replace( array_keys( $contentVars ), array_values( $contentVars ), $output );
@@ -346,6 +346,16 @@ class ditto {
 			$phx = new prePHx($template);
 			$phx->setPlaceholders($placeholders);
 			$output = $phx->output();
+		}
+		elseif ($phx == 1 && $modx->config['enable_filter']) {
+			$output = $template;
+			$i = 0;
+			while($i<10) {
+				$_ = $output;
+				$output = $modx->parseText($output,$placeholders);
+				if($_===$output) break;
+				$i++;
+			}
 		} else {
 		 	$output = $this->template->replace($placeholders,$template);
 			$output = $this->template->replace($contentVars,$output);
@@ -374,6 +384,7 @@ class ditto {
 		}
 		$this->addField("id","display","db");
 		$this->addField("pagetitle","display","db");
+		$this->addField("parent","display","db");
 		$checkOptions = array("pub_date","unpub_date","editedon","deletedon","publishedon");
 		if (in_array($dateSource,$checkOptions)) {
 			$this->addField("createdon","display");
