@@ -368,7 +368,7 @@ function getRecentInfoRowTpl() {
                 <li><b>[%resource_alias%]</b>: [+alias+]</li>
                 <li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
                 <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-                <li><b>[%page_data_template%]</b>: [+[+template:templatename+]+]</li>
+                <li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
             </ul>
         </div>
     </div>
