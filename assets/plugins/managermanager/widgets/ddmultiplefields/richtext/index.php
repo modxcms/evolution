@@ -37,7 +37,7 @@ if ($_SESSION['mgrValidated']){
 	require_once($modx->config['base_path'].$mmDir.'modx.ddtools.class.php');
 	
 	$temp = $modx->invokeEvent('OnRichTextEditorInit', array(
-		'editor' => 'TinyMCE',
+		'editor' => 'TinyMCE4',
 		'elements' => array('ddMultipleFields_richtext')
 	));
 	
