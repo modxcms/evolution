@@ -139,7 +139,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 									var iLeft = (screen.width  - width) / 2 ;
 									var iTop  = (screen.height - height) / 2 ;
 
-									var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+									var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes,scrollbars=yes';
 									sOptions += ',width=' + width ;
 									sOptions += ',height=' + height ;
 									sOptions += ',left=' + iLeft ;
@@ -151,13 +151,13 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 									lastImageCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=images&field_id='+ctrl+'&popup=1&relative_url=1', w, h);
 								}
 								function BrowseFileServer(ctrl) {
 									lastFileCtrl = ctrl;
 									var w = screen.width * 0.5;
 									var h = screen.height * 0.5;
-									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files', w, h);
+									OpenServerBrowser('".MODX_MANAGER_URL."media/browser/{$which_browser}/browser.php?Type=files&field_id='+ctrl+'&popup=1&relative_url=1', w, h);
 								}
 								function SetUrlChange(el) {
 									if ('createEvent' in document) {
@@ -209,7 +209,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 									var iLeft = (screen.width  - width) / 2 ;
 									var iTop  = (screen.height - height) / 2 ;
 
-									var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+									var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes,scrollbars=yes';
 									sOptions += ',width=' + width ;
 									sOptions += ',height=' + height ;
 									sOptions += ',left=' + iLeft ;
