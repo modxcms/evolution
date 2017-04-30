@@ -623,6 +623,7 @@ ul.elements_buttonbar { list-style: none; margin: 0; padding: 0; display: table;
 ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2em; }
 ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width:22px;}
 ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
+ul.elements_buttonbar a.btn { width: 3em; }
 /* Manage elements views-form */
 .switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
 .switchForm h3.optionsTitle { color: #3697CD; padding-left: 7px; font-size: 16px; }
