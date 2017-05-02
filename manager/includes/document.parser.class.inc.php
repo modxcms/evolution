@@ -4545,7 +4545,7 @@ class DocumentParser {
             $pluginProperties = $_['props'];
 
             // load default params/properties
-            $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
+            $parameter= $this->parseProperties($pluginProperties);
             if(!is_array($parameter)) $parameter = array();
             if(!empty($extParams))    $parameter = array_merge($parameter, $extParams);
 
