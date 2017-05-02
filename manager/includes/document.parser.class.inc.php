@@ -1201,8 +1201,6 @@ class DocumentParser {
 
     function mergeConditionalTagsContent($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>')
     {
-        $bt = md5($content);
-        
         if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ',$iftag,$content);
         if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
         if(strpos($content,$iftag)===false)          return $content;
@@ -1210,6 +1208,8 @@ class DocumentParser {
         if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', $elsetag,   $content);
         if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->',$endiftag,$content);
         if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);
+
+        $bt = md5($content);
         
         $_ = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
         $s = array('<@IF:'    ,     '<@ELSEIF:',     '<@ELSE>',     '<@ENDIF>');
@@ -2032,39 +2032,45 @@ class DocumentParser {
      * @return string
      */
     function parseDocumentSource($source) {
-        
-        if(!$source) return $source;
-        
         // set the number of times we are to parse the document source
-        if(empty ($this->maxParserPasses))     $this->maxParserPasses     = 10;
-        if(!isset($this->config['show_meta'])) $this->config['show_meta'] = 0; // deprecated
-        
-        $bt = '';
-        $i = 0;
-        while($i < $this->maxParserPasses) {
-            $bt= md5($source);
+        $this->minParserPasses= empty ($this->minParserPasses) ? 2 : $this->minParserPasses;
+        $this->maxParserPasses= empty ($this->maxParserPasses) ? 10 : $this->maxParserPasses;
+        $passes= $this->minParserPasses;
+        for ($i= 0; $i < $passes; $i++) {
+            // get source length if this is the final pass
+            if ($i == ($passes -1))
+                $st= strlen($source);
+            if ($this->dumpSnippets == 1) {
+                $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i +1) . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
+            }
 
             // invoke OnParseDocument event
-            $this->documentOutput = $source; // store source code so plugins can
-            $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
-            $source = $this->documentOutput;
-
-            if(strpos($source,'<!--@-')!==false) $source = $this->ignoreCommentedTagsContent($source);
-            if(strpos($source,'<@IF')!==false)   $source = $this->mergeConditionalTagsContent($source);
+            $this->documentOutput= $source; // store source code so plugins can
+            $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
+            $source= $this->documentOutput;
             
-            if(strpos($source,'[*')!==false)     $source = $this->mergeDocumentContent($source);
-            if(strpos($source,'[(')!==false)     $source = $this->mergeSettingsContent($source);
-            if(strpos($source,'{{')!==false)     $source = $this->mergeChunkContent($source);
-            if($this->config['show_meta'])       $source = $this->mergeDocumentMETATags($source);
-            if(strpos($source,'[[')!==false)     $source = $this->evalSnippets($source);
-            if(strpos($source,'[+')!==false)     $source = $this->mergePlaceholderContent($source);
+            $source = $this->ignoreCommentedTagsContent($source);
+            $source = $this->mergeConditionalTagsContent($source);
             
-            if($bt === md5($source)) break;
-            $i++;
+            $source = $this->mergeDocumentContent($source);
+            $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeChunkContent($source);
+            $source = $this->mergeDocumentMETATags($source);
+            $source = $this->evalSnippets($source);
+            $source = $this->mergePlaceholderContent($source);
+            
+            if ($this->dumpSnippets == 1) {
+                $this->snippetsCode .= "</fieldset><br />";
+            }
+            if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
+                // check if source length was changed
+                $et= strlen($source);
+                if ($st != $et)
+                    $passes++; // if content change then increase passes because
+            } // we have not yet reached maxParserPasses
         }
         return $source;
     }
-
     /**
      * Starts the parsing operations.
      * 
@@ -2280,12 +2286,13 @@ class DocumentParser {
             
           
             $this->documentContent = &$templateCode;
+
+            // invoke OnLoadWebDocument event
+            $this->invokeEvent('OnLoadWebDocument');
             
             // Parse document source
             $this->documentContent = $this->parseDocumentSource($templateCode);
             
-            // invoke OnLoadWebDocument event
-            $this->invokeEvent('OnLoadWebDocument');
             $this->documentGenerated = 1;
         }
         else $this->documentGenerated = 0;
@@ -4881,6 +4888,8 @@ class DocumentParser {
     }
     
     function cleanUpMODXTags($content='') {
+        if ($this->minParserPasses < 1) return $content;
+        
         $content = $this->removeSanitizeSeed($content);
         
         $enable_filter = $this->config['enable_filter'];
