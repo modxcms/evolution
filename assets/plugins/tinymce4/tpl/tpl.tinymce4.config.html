@@ -1,12 +1,6 @@
 <script>
     var config_[+editorKey+]_[+themeKey+] = {
-        [+pp.customParams+]
-        [+configString+],
-        /* config for responsive filemanager*/
-        external_filemanager_path:"/manager/media/browser/filemanager/",
-        filemanager_title:"Responsive Filemanager" ,
-        external_plugins: { "filemanager" : "/manager/media/browser/filemanager/plugin.min.js"},
-        /* end config for responsive filemanager*/
+[+configString+],
         file_browser_callback: function (field, url, type, win) {
             if (type == 'image') {
                 type = 'images';
@@ -27,5 +21,6 @@
             });
             return false;
         }
+        [+pp.customParams+]
     }
 </script>
