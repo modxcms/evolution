@@ -6,7 +6,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden; }
+body { font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden; }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
