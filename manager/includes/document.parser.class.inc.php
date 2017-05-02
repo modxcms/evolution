@@ -1845,9 +1845,14 @@ class DocumentParser {
                     global $modx;
                     $thealias = $aliases[$m[1]];
                     $thefolder = $isfolder[$m[1]];
-                    $found_friendlyurl = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
-                    $not_found_friendlyurl = $modx->makeFriendlyURL($pref, $suff, $m[1]);
-                    $out = ($isfriendly && isset($thealias) ? $found_friendlyurl : $not_found_friendlyurl);
+                    if( $isfriendly && isset($thealias) ){
+                        //found friendly url
+                        $out = ($modx->config['seostrict'] == '1' ? $modx->toAlias($modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1])) : $modx->makeFriendlyURL($pref, $suff, $thealias, $thefolder, $m[1]));
+                    }
+                    else{
+                        //not found friendly url
+                        $out = $modx->makeFriendlyURL($pref, $suff, $m[1]);
+                    }
                     return $out;
                 },
                 $documentSource
