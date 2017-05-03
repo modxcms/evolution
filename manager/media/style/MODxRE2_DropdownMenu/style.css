@@ -6,7 +6,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden; }
+body { font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden; }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -85,7 +85,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .nav { margin: 0; padding: 0; list-style: none }
 #mainMenu .nav > li { position: relative; float: left; list-style: none }
 #mainMenu .nav > li > a .fa { margin-right: 0.85rem; vertical-align: top; line-height: inherit; font-size: 17px; width: 15px }
-#mainMenu .float-right .nav > li > a .fa { margin: 0; font-size: 28px; width: 28px }
+#mainMenu .float-right .nav > li > a .fa { margin: 0; font-size: 28px; width: 28px; text-align: center }
 #mainMenu .nav > li > a, #searchform .fa-search { float: left; overflow: hidden; padding: 0 18px; height: 48px; line-height: 48px; text-decoration: none; font-weight: 700; white-space: nowrap; color: #e0e0e0; cursor: pointer; }
 #mainMenu .nav > li:hover > a, #searchform .fa-search:hover { color: #fff; background-color: rgba(255, 255, 255, 0.05) }
 #mainMenu .nav > li.active > a, #mainMenu .nav > li.active > a:hover { background: rgba(0, 0, 0, 0.15) }
@@ -95,35 +95,35 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .account .icon { display: inline-block; border-radius: 50%; overflow: hidden; width: 30px; height: 30px; line-height: 30px; text-align: center; vertical-align: middle; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .account .icon.photo { width: 36px; height: 36px }
 #mainMenu .account .icon .fa { width: 30px; height: 30px; }
-#mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 14px; top: 3px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
+#mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 15px; top: 5px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
 #mainMenu .account #msgCounter::before { position: absolute; z-index: -1; left: 2px; top: 2px; right: 2px; bottom: 2px; background-color: #e91e4f; border-radius: 6px; content: "" }
 #mainMenu .account #newMail { display: none }
 #mainMenu .nav > li > ul { display: block; position: absolute; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 48px); max-height: calc(100vh - 48px); margin: 0; padding: 0; opacity: 0; visibility: hidden; overflow: auto; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); -webkit-transition: 0.2s; transition: 0.2s; transform: translateZ(0) }
 #mainMenu .nav > li:hover > ul { opacity: 1; visibility: visible; -webkit-transition-delay: 0.15s; transition-delay: 0.15s }
 #mainMenu .nav > li.close > ul { opacity: 0 !important; visibility: hidden !important; -webkit-transition-delay: 0s !important; transition-delay: 0s !important }
 #mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 10px; margin-top: -1px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0.05); color: #39545e }
-#mainMenu .nav > li > ul a:hover { color: #fff; background-color: #0b9991; }
+#mainMenu .nav > li > ul a:hover, #mainMenu .nav > li > ul a:hover .fa { color: #fff; background-color: #0b9991; }
 #mainMenu .nav > li > ul a .fa { margin-right: 0.833rem; color: #39545e; width: 1.25rem; text-align: center; }
 #mainMenu .nav > li > ul span { text-align: center; font-size: 11px; color: #999; }
 #statusbar { position: absolute; overflow: hidden; padding: 0 10px; height: 48px; line-height: 48px; font-size: 11px; white-space: nowrap; color: #93a59e; }
 #statusbar .fa { margin-right: 5px }
 #statusbar .fa-warning { color: #F44336 }
 #tocText { display: none }
-@media (max-width: 959px) {
+@media (max-width: 998px) {
 #mainMenu #nav.nav > li > a > .fa { margin-right: 0; font-size: 17px; }
 #mainMenu #nav.nav > li > a { font-size: 0px; }
 #mainMenu .account .username { display: none; }
 }
 /* search */
 #searchform { position: relative }
-#searchform input[type=text] { position: absolute; z-index: 0; top: 0; right: -100%; height: 27px; width: 0; padding: 0 10px; margin: 11px 64px 0 0; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; background: rgba(0, 0, 0, 0.1); color: #fff; text-align: left; opacity: 0; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
-#searchform input[type=text]:focus { z-index: 9; width: 15rem; background: rgba(0, 0, 0, 0.2); text-align: left; border-color: rgba(255, 255, 255, 0.3); opacity: 1 }
+#searchform input[type=text] { position: absolute; z-index: 0; top: 0; right: 0; height: 28px; width: 0; padding: 0 10px; margin: 10px 10px 0 0; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; background: rgba(0, 0, 0, 0.1); color: #fff; text-align: left; opacity: 0; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
+#searchform input[type=text]:focus { z-index: 9; width: 15rem; background: rgba(0, 0, 0, 0.2); text-align: left; border-color: rgba(255, 255, 255, 0.75); opacity: 1 }
 #searchform .mask { content: ""; position: absolute; z-index: 1; top: 0; right: -999rem; left: -999rem; height: 48px; opacity: 0; visibility: hidden; background-color: rgba(0, 0, 0, 0.65); -webkit-transition: all 0.3s; transition: all 0.3s; transform: translateZ(0) }
 #searchform input[type=text]:focus + .mask { opacity: 0.7; visibility: visible; }
 #searchform .fa-search { position: relative; z-index: 1; color: #e0e0e0; height: 48px; line-height: 48px; font-size: 20px; font-weight: 400; cursor: pointer }
 #searchform .fa-refresh { position: absolute; z-index: 9; top: 14px; right: 18px; font-size: 18px; color: #e0e0e0; }
-#frameset #searchresult { position: absolute; z-index: 98; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; background-color: #fcfcfc; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: margin-right 0.3s, box-shadow 0.3s; transition-delay: 0.3s; }
-#frameset #searchresult.open { margin-right: 0 !important; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); -webkit-transition-delay: 0s; transition-delay: 0s }
+#frameset #searchresult { position: absolute; z-index: 99; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; background-color: #fcfcfc; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: margin-right 0.3s, box-shadow 0.3s; transition-delay: 0.3s; }
+#frameset #searchresult.open, #frameset #searchresult:hover { margin-right: 0 !important; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); -webkit-transition-delay: 0s; transition-delay: 0s }
 #frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #ddd; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #frameset #searchresult .ajaxSearchResults a { position: relative; color: #3697CD; padding: 4px 25px 4px 10px; background-color: #fcfcfc; text-decoration: none; }
@@ -131,6 +131,15 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #frameset #searchresult .ajaxSearchResults a > i { position: absolute; right: 0; top: 50%; width: 27px; height: 27px; margin-top: -14px; line-height: 27px; text-align: center; color: #3d5764; }
 #frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
 #frameset #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
+@media (max-width: 640px) {
+#mainMenu .nav > li > a, #searchform .fa-search { padding: 0 15px }
+}
+@media (max-width: 500px) {
+#searchform { display: none }
+}
+@media (max-width: 420px) {
+#searchform { display: none }
+}
 /*resizer*/
 #resizer { position: absolute; z-index: 99; top: 48px; bottom: 0; left: 320px; width: 8px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
 #resizer:hover { background-color: #e0e0e0; }
@@ -178,6 +187,7 @@ input.submit { display: block !important; float: none !important; margin: 20px 0
 .rtl .form fieldset.list label, .rtl .form fieldset.list input { float: right; }
 .form fieldset.list label { padding-left: 5px; text-align: left; width: auto; }
 /* -------------------------[ Misc stuff ]--- */
+.sectionBody li:before { font-family: FontAwesome; content: '\f105'; display: block; font-weight: bold; font-size: 15px; color: #bdbdbd; position: absolute; margin-left: -13px; }
 .sectionBody fieldset { background: none repeat scroll 0 0 #FDFDFD; border: 1px solid #CCCCCC; padding: 15px !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 15px; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 .sectionBody fieldset h3 { font-size: 14px; color: #789; font-weight: 500; padding-bottom: 0; margin-bottom: 0; }
@@ -196,7 +206,7 @@ zoom: 1; -moz-box-shadow: 0px 1px 0px #fff inset; -webkit-box-shadow: 0px 1px 0p
 thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4E4; }
 thead td { color: #333; border-top: 1px solid #fff; }
 .fancyrow2 { height: 18px !important; background-color: #F0A62F; background-position: top; background-repeat: repeat-x; border-bottom: 1px solid #fff; color: #fff; }
-li { padding: 0; margin: 0; list-style: disc outside url(images/misc/li.png); }
+li { padding: 0; margin: 0; list-style: none; }
 ul { margin: 0 20px 0 10px; }
 .rtl ul { margin: 0 10px 0 20px; }
 .screen { border: 1px solid #ddd; text-align: center; }
@@ -213,11 +223,10 @@ a img { border: 0; }
 .row1, .row2, .row3 { background-color: #fff; color: #333; }
 .row2 { background-color: #fff; }
 .row3 { background-color: #f5f5f5; }
-div.treeframebody { -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); }
+div.treeframebody { background-color: #ebebeb; -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); }
 .treeframebody { height: 100% }
-#treeMenu { margin-left: 2px; background-color: rgba(0, 0, 0, 0.1); border-bottom: 1px solid #fff; }
-#treeMenu table td { padding: 3px 0px; }
-#treeMenu * { vertical-align: middle; }
+#treeMenu { overflow: hidden; padding: 2px; height: 32px; border-bottom: 1px solid #dbdbdb; background-color: rgba(0, 0, 0, 0.05); }
+#treeMenu a { display: inline-block }
 #treeHolder { cursor: default; overflow: auto; height: 100%; height: calc(100% - 34px); padding: 5px 10px; line-height: 1.5em; white-space: nowrap }
 #treeRoot { cursor: default; }
 #treeRoot div { position: relative; margin-left: 20px; }
@@ -231,6 +240,7 @@ div.treeframebody { -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1
 #treeRoot .fa.fa-angle-down, #treeRoot .fa.fa-angle-right { position: absolute; left: -20px; top: 0; margin: 0; line-height: 1.2rem; font-size: 1rem; text-align: center; cursor: pointer }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
+#treeRoot .fa-link { font-size: 12px }
 #treeRoot .lockedResource { cursor: pointer; }
 #floater { display: none; position: absolute; width: 100%; padding: 15px; padding-bottom: 10px; top: 31px; left: 0px; background: #fff; border: 1px solid #b0b0b0; box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .1); box-sizing: border-box; z-index: 500; }
 #floater td { padding: 0 !important; }
@@ -386,6 +396,7 @@ select#stay { margin-top: -7px; padding: 6px 5px 6px 2px; width: auto !important
 .rtl #actions { left: 10px; text-align: left; }
 ul.actionButtons { margin: 0; padding: 0; /* accommodate border on buttons - */ background: none; min-height: 40px; width: auto; white-space: nowrap; padding-top: 5px; }
 .actionButtons li { list-style: none; margin-right: 3px; padding: 0; float: left; }
+.actionButtons li:before { display: none; content: ''; }
 .actionButtons img { vertical-align: top; margin-top: 1px; filter: alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3; }
 .actionButtons:hover img { filter: alpha(opacity=100); -moz-opacity: 1; opacity: 1; }
 .actionButtons a { border: 1px solid #BBB; border-radius: 3px 3px 3px 3px; color: #333; font-weight: 500; outline: medium none; padding: 7px 8px 7px 4px; text-decoration: none; vertical-align: top; white-space: nowrap; text-shadow: 0px 1px 0px #FFF; -moz-box-shadow: 1px 1px 2px #ccc; -webkit-box-shadow: 1px 1px 2px #ccc; box-shadow: 1px 1px 2px #ccc; background: -moz-linear-gradient(#FFFFFF, #E0E0E0); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0)); background: -o-linear-gradient(#FFFFFF, #E0E0E0); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#E0E0E0);
@@ -537,11 +548,8 @@ form input[type="text"], form input[type="password"], form input[type="number"],
  * css above is original MODxRE
  * css below is basicaly MODxRE overrides to get MODxRE2 look
  */
-div.treeframebody { background-color: #ebebeb !important; }
 /* nav */
 .alert-warning { color: #3697cd; }
-/* tree */
-#treeMenu { background-color: rgba(0, 0, 0, 0.05); border-bottom: 1px solid #dbdbdb; }
 /* tab panes */
 .dynamic-tab-pane-control.tab-pane { margin-top: 10px; }
 .sectionBody > .dynamic-tab-pane-control.tab-pane, #treePane.dynamic-tab-pane-control.tab-pane { margin-top: 0; }
@@ -616,6 +624,7 @@ a.man_el_name:hover { text-decoration: none; }
 .resourceTable ul.elements { margin: 0 -15px; padding: 0 0 10px 0; }
 .resourceTable ul.elements > li { padding: 0 !important; border-bottom: 1px dotted #dedede; border-left: 3px solid #FFF; transition: all 0.1s ease; margin: 0 !important; }
 .resourceTable ul.elements > li:hover { background: #f9f9f9; border-left: 3px solid #3697CD; }
+.resourceTable ul.elements > li::before { display: none }
 #resourcesPane .panel-group ul { }
 ul.resourceTable .category_name { float: none; display: block; clear: both; margin-top: 20px; }
 /* Manager Elements Buttons bar*/
@@ -623,6 +632,7 @@ ul.elements_buttonbar { list-style: none; margin: 0; padding: 0; display: table;
 ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2em; }
 ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width:22px;}
 ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
+ul.elements_buttonbar a.btn { width: 3em; }
 /* Manage elements views-form */
 .switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
 .switchForm h3.optionsTitle { color: #3697CD; padding-left: 7px; font-size: 16px; }
@@ -644,6 +654,7 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 /* View-dependent styles */
 /* List-view */
 .resourceTable.list li { }
+.sortableList > li::before { display: none }
 /* Inline-view */
 .resourceTable.inline ul.elements { margin: 0 !important; }
 .resourceTable.inline ul.elements > li { float: left; margin: 10px 10px 0 0 !important; padding: 0 !important; border: 1px dotted #dedede; }
@@ -791,3 +802,5 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .ElementsInTree #treeHolder #treePane .tab-page { padding: 15px !important; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group .panel, .ElementsInTree #treeHolder #treePane #tabDoc.tab-page > div { max-height: calc(100vh - 180px); overflow: auto; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
+/* gridster */
+.gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 0; bottom: 0 }

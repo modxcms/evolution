@@ -7,6 +7,7 @@ header("X-XSS-Protection: 0");
 
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 1') !== false) ? 'legacy_IE' : 'modern';
 
+// invoke OnManagerPreFrameLoader
 $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
@@ -81,7 +82,7 @@ if($user['which_browser'] == 'default') {
 	<script type="text/javascript">
 
 		// GLOBAL variable modx
-		var modx = {
+		const modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",
 			config: {
 				mail_check_timeperiod: "<?php echo $modx->config['mail_check_timeperiod'] ?>",
@@ -119,6 +120,7 @@ if($user['which_browser'] == 'default') {
 			},
 			style: {
 				collapse_tree: "<?php echo addslashes($_style['collapse_tree']) ?>",
+				email: "<?php echo addslashes($_style['email']) ?>",
 				empty_recycle_bin: "<?php echo addslashes($_style['empty_recycle_bin']) ?>",
 				empty_recycle_bin_empty: "<?php echo addslashes($_style['empty_recycle_bin_empty']) ?>",
 				expand_tree: "<?php echo addslashes($_style['expand_tree']) ?>",
@@ -171,8 +173,18 @@ if($user['which_browser'] == 'default') {
 		</div>
 		<div class="col float-right">
 			<ul class="nav">
+				<li id="searchform">
+					<form action="index.php?a=71#results" method="post" target="main">
+						<input type="hidden" value="Search" name="submitok" />
+						<label for="searchid">
+							<i class="fa fa-search fa-2x"></i>
+						</label>
+						<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
+						<div class="mask"></div>
+					</form>
+				</li>
 				<li>
-					<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="setLastClickedElement(0,0);this.blur();">
+					<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="setLastClickedElement(0,0);">
 						<i class="fa fa-desktop"></i>
 					</a>
 				</li>
@@ -182,40 +194,40 @@ if($user['which_browser'] == 'default') {
 						<ul class="dropdown-menu">
 							<?php if($modx->hasPermission('settings')) { ?>
 								<li>
-									<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
 									</a>
 								</li>
 							<?php } ?>
 							<?php if($modx->hasPermission('view_eventlog')) { ?>
 								<li>
-									<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
 									</a>
 								</li>
 							<?php } ?>
 							<?php if($modx->hasPermission('view_eventlog')) { ?>
 								<li>
-									<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
 									</a>
 								</li>
 							<?php } ?>
 							<?php if($modx->hasPermission('logs')) { ?>
 								<li>
-									<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
 									</a>
 								</li>
 								<li>
-									<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
 									</a>
 								</li>
 							<?php } ?>
 							<?php if($modx->hasPermission('help')) { ?>
 								<li>
-									<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);this.blur();">
+									<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);">
 										<i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
 									</a>
 								</li>
@@ -237,7 +249,7 @@ if($user['which_browser'] == 'default') {
 						<li id="newMail"></li>
 						<?php if($modx->hasPermission('change_password')) { ?>
 							<li>
-								<a onclick="this.blur();" href="index.php?a=28" target="main">
+								<a onclick="" href="index.php?a=28" target="main">
 									<i class="fa fa-lock"></i><?php echo $_lang['change_password'] ?>
 								</a>
 							</li>
@@ -257,18 +269,6 @@ if($user['which_browser'] == 'default') {
 					</ul>
 				</li>
 			</ul>
-		</div>
-		<div class="col float-right">
-			<div id="searchform">
-				<form action="index.php?a=71#results" method="post" target="main">
-					<input type="hidden" value="Search" name="submitok" />
-					<label for="searchid">
-						<i class="fa fa-search fa-2x"></i>
-					</label>
-					<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
-					<div class="mask"></div>
-				</form>
-			</div>
 		</div>
 	</div>
 	<div id="tree">
@@ -320,6 +320,58 @@ if($user['which_browser'] == 'default') {
 		}
 	}
 
+	?>
+
+	<?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+		<script>
+			$('#treeMenu_openelements').click(function(e) {
+				e.preventDefault();
+				var randomNum = '<?php echo $_lang["elements"] ?>';
+				if(e.shiftKey) {
+					randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+				}
+				modx.openWindow({
+					url: 'index.php?a=76',
+					title: randomNum
+				})
+			});
+		</script>
+	<?php } ?>
+
+	<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+		<script>
+			$('#treeMenu_openimages').click(function(e) {
+				e.preventDefault();
+				var randomNum = '<?php echo $_lang["files_files"] ?>';
+				if(e.shiftKey) {
+					randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+				}
+				modx.openWindow({
+					url: 'media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',
+					title: randomNum
+				})
+			});
+		</script>
+	<?php } ?>
+
+	<?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+		<script>
+			$('#treeMenu_openfiles').click(function(e) {
+				e.preventDefault();
+				var randomNum = '<?php echo $_lang["files_files"] ?>';
+				if(e.shiftKey) {
+					randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+				}
+				modx.openWindow({
+					url: 'media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',
+					title: randomNum
+				})
+			});
+		</script>
+	<?php } ?>
+
+	<?php
+	// invoke OnManagerFrameLoader
 	$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
 	?>
 	<script>

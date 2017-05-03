@@ -32,6 +32,7 @@ $_style['sort_menuindex']           = '<i class="fa fa-sort-numeric-asc fa-lg"><
 $_style['element_management']       = '<i class="fa fa-th fa-lg"></i>';
 $_style['images_management']        = '<i class="fa fa-camera fa-lg"></i>';
 $_style['files_management']         = '<i class="fa fa-files-o fa-lg"></i>';
+$_style['email']                    = '<i class="fa fa-envelope"></i>';
 
 //Tree Contextual Menu Popup
 $_style['ctx_new_document']         = 'fa fa-file-o fa-fw fa-lg';
