@@ -248,7 +248,6 @@ class DocumentParser {
             $this->forwards= $this->forwards - 1;
             $this->documentIdentifier= $id;
             $this->documentMethod= 'id';
-            $this->documentObject= $this->getDocumentObject('id', $id);
             if ($responseCode) {
                 header($responseCode);
             }
