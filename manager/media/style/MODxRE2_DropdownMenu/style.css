@@ -86,7 +86,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .nav > li { position: relative; float: left; list-style: none }
 #mainMenu .nav > li > a .fa { margin-right: 0.85rem; vertical-align: top; line-height: inherit; font-size: 17px; width: 15px }
 #mainMenu .float-right .nav > li > a .fa { margin: 0; font-size: 28px; width: 28px; text-align: center }
-#mainMenu .nav > li > a, #searchform .fa-search { float: left; overflow: hidden; padding: 0 18px; height: 48px; line-height: 48px; text-decoration: none; font-weight: 700; white-space: nowrap; color: #e0e0e0; cursor: pointer; }
+#mainMenu .nav > li > a, #searchform .fa-search { float: left; overflow: hidden; padding: 0 18px; height: 48px; line-height: 48px; text-decoration: none; font-weight: 400; white-space: nowrap; color: #e0e0e0; cursor: pointer; }
 #mainMenu .nav > li:hover > a, #searchform .fa-search:hover { color: #fff; background-color: rgba(255, 255, 255, 0.05) }
 #mainMenu .nav > li.active > a, #mainMenu .nav > li.active > a:hover { background: rgba(0, 0, 0, 0.15) }
 #mainMenu .nav > li li a { white-space: nowrap; color: #39545e }
@@ -103,7 +103,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .nav > li.close > ul { opacity: 0 !important; visibility: hidden !important; -webkit-transition-delay: 0s !important; transition-delay: 0s !important }
 #mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 10px; margin-top: -1px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0.05); color: #39545e }
 #mainMenu .nav > li > ul a:hover, #mainMenu .nav > li > ul a:hover .fa { color: #fff; background-color: #0b9991; }
-#mainMenu .nav > li > ul a .fa { margin-right: 0.833rem; color: #39545e; width: 1.25rem; text-align: center; }
+#mainMenu .nav > li > ul a .fa { margin-right: 0.833rem; color: #39545e; width: 1.25rem; text-align: center; font-size: 14px; }
 #mainMenu .nav > li > ul span { text-align: center; font-size: 11px; color: #999; }
 #statusbar { position: absolute; overflow: hidden; padding: 0 10px; height: 48px; line-height: 48px; font-size: 11px; white-space: nowrap; color: #93a59e; }
 #statusbar .fa { margin-right: 5px }
