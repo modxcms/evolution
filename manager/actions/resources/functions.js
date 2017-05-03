@@ -297,7 +297,7 @@ try {
     }
 
     // Remember collapsed categories functions
-    function setRememberCollapsedCategories(obj=null) {
+    function setRememberCollapsedCategories(obj) {
         obj = obj == null ? elementsInTreeParams.cat_collapsed : obj;
         for (var type in obj) {
             if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
