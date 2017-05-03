@@ -1558,7 +1558,7 @@ class DocumentParser {
                 if(in_array($delim, array('"', "'", '`')))
                 {
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
-                    if(substr(trim($_tmp), 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
+                    if(substr(trim($_tmp), 0, 2)==='//') $_tmp = strstr(trim($_tmp), "\n");
                     $i=0;
                     while($delim==='`' && substr(trim($_tmp),0,1)!=='&' && 1<substr_count($_tmp,'`')) {
                         list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
