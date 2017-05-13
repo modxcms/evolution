@@ -6,7 +6,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden; }
+body { font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important;  }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -396,7 +396,7 @@ select#stay { margin-top: -7px; padding: 6px 5px 6px 2px; width: auto !important
 .rtl #actions { left: 10px; text-align: left; }
 ul.actionButtons { margin: 0; padding: 0; /* accommodate border on buttons - */ background: none; min-height: 40px; width: auto; white-space: nowrap; padding-top: 5px; }
 .actionButtons li { list-style: none; margin-right: 3px; padding: 0; float: left; }
-.actionButtons li:before { display: none; content: ''; }
+.actionButtons li:before, .mmTagList li:before, .rTable li:before, .tab-pane ul li ul li:before, .dashboard li:before, div#idShowHideSocialBox.sectionBody > div.btn-group.ope > ul.dropdown-menu > li:before, .sectionBody .multitv .list li:before { display: none; content: ''; }
 .actionButtons img { vertical-align: top; margin-top: 1px; filter: alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3; }
 .actionButtons:hover img { filter: alpha(opacity=100); -moz-opacity: 1; opacity: 1; }
 .actionButtons a { border: 1px solid #BBB; border-radius: 3px 3px 3px 3px; color: #333; font-weight: 500; outline: medium none; padding: 7px 8px 7px 4px; text-decoration: none; vertical-align: top; white-space: nowrap; text-shadow: 0px 1px 0px #FFF; -moz-box-shadow: 1px 1px 2px #ccc; -webkit-box-shadow: 1px 1px 2px #ccc; box-shadow: 1px 1px 2px #ccc; background: -moz-linear-gradient(#FFFFFF, #E0E0E0); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0)); background: -o-linear-gradient(#FFFFFF, #E0E0E0); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#E0E0E0);
