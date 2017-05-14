@@ -210,7 +210,7 @@ function movedocument() {
 		    <a href="#" onclick="duplicatedocument();"><?php echo $_lang['duplicate']?></a>
 		  </li>
 		  <li id="Button3">
-		    <a href="#" onclick="deletedocument();"><?php echo $_lang['delete']?></a>
+		    <a href="#" onclick="deletedocument();"><span><?php echo $_lang['delete']?></span></a>
 		  </li>
 		  <li id="Button4">
 			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><?php echo $_lang['preview']?></a>

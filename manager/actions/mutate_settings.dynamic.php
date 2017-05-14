@@ -59,12 +59,12 @@ var lang_chg = '<?php echo $_lang['confirm_setting_language_change']; ?>';
           <ul class="actionButtons">
               <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.settings.submit();">
-                    <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']; ?>
+                    <i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span>
                 </a>
               </li>
               <li id="Button5" class="transition">
                 <a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';">
-                    <img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']; ?>
+                    <i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']; ?></span>
                 </a>
               </li>
         </ul>

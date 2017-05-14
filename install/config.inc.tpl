@@ -64,7 +64,8 @@ if (!empty($site_hostnames[0]) && !in_array($site_hostname, $site_hostnames)) {
 }
 
 // assign site_url
-$site_url= ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port) ? 'https://' : 'http://';
+$secured = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
+$site_url= ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port || $secured ) ? 'https://' : 'http://';
 $site_url .= $site_hostname;
 if ($_SERVER['SERVER_PORT'] != 80)
     $site_url= str_replace(':' . $_SERVER['SERVER_PORT'], '', $site_url); // remove port from HTTP_HOST  
@@ -87,7 +88,7 @@ if(!function_exists('startCMSSession')) {
     $site_sessionname = 'evo' . $_;
     
     function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
-      if (isset($storage[$session_name]) && $storage[$session_name] === '')
+      if (isset($storage[$session_name]) && ($storage[$session_name] === '' || $storage[$session_name] === 'deleted'))
       {
         unset($storage[$session_name]);
       }

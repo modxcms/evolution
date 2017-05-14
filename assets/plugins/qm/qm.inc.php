@@ -505,6 +505,19 @@ class Qm {
                             #qmEditor, #qmEditorClosed { left:0; top: 0px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
                             .butticon {display:none}
+                            @media only screen and (max-width: 728px) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            #qmEditor, #qmEditorClosed {height: 48px!important;}
+                            }
+                            @media only screen 
+                            and (min-device-width: 768px) 
+                            and (max-device-width: 1024px) 
+                            and (orientation: portrait) 
+                            and (-webkit-min-device-pixel-ratio: 1) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            }
                             </style>
                             ';
                         }
@@ -516,6 +529,19 @@ class Qm {
                             #qmEditor, #qmEditorClosed { left:0; top: -30px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
                             .butticon {display:none}
+                            @media only screen and (max-width: 728px) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            #qmEditor, #qmEditorClosed {height: 48px!important;}
+                            }
+                            @media only screen 
+                            and (min-device-width: 768px) 
+                            and (max-device-width: 1024px) 
+                            and (orientation: portrait) 
+                            and (-webkit-min-device-pixel-ratio: 1) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            }
                             </style>
                             ';
                         }
@@ -527,6 +553,19 @@ class Qm {
                             #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0px; width: 100%; height:39px; opacity:1; -ms-filter:"" !important; filter:none !important;}
                             #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
                             .butticon {display:none}
+                            @media only screen and (max-width: 728px) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            #qmEditor, #qmEditorClosed {height: 48px!important;}
+                            }
+                            @media only screen 
+                            and (min-device-width: 768px) 
+                            and (max-device-width: 1024px) 
+                            and (orientation: portrait) 
+                            and (-webkit-min-device-pixel-ratio: 1) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            }
                             </style>
                             ';
                         }
@@ -538,6 +577,19 @@ class Qm {
                             #qmEditor, #qmEditorClosed { left:0; bottom: -28px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
                             .butticon {display:none}
+                            @media only screen and (max-width: 728px) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            #qmEditor, #qmEditorClosed {height: 48px!important;}
+                            }
+                            @media only screen 
+                            and (min-device-width: 768px) 
+                            and (max-device-width: 1024px) 
+                            and (orientation: portrait) 
+                            and (-webkit-min-device-pixel-ratio: 1) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            }
                             </style>
                             ';
                         }
@@ -548,7 +600,21 @@ class Qm {
                             <style type="text/css">
                             #qmEditor, #qmEditorClosed { left:0; bottom: 0px; width: 100%;}
                             #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
-                            .butticon {display:none}</style>
+                            .butticon {display:none}                            
+                            @media only screen and (max-width: 728px) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            #qmEditor, #qmEditorClosed {height: 48px!important;}
+                            }
+                            @media only screen 
+                            and (min-device-width: 768px) 
+                            and (max-device-width: 1024px) 
+                            and (orientation: portrait) 
+                            and (-webkit-min-device-pixel-ratio: 1) {
+                            .butttext {display:none}
+                            .butticon {display:inline!important}
+                            }
+                            </style>
                             ';
                         }
                         // Left toolbar Autohide true

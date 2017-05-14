@@ -98,6 +98,11 @@ for ($i=1;$i<count($opers);$i++){
                     $output = (strpos($subject,$operand) !== false) ? true : false;
                     $i++;
                     break;
+                case '!contains':
+                case 'not_contains':
+                    $output = (strpos($subject,$operand) !== false) ? false : true;
+                    $i++;
+                    break;
                 case '==':
                 case '=':
                 case 'eq':

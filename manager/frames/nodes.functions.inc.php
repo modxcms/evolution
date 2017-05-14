@@ -103,7 +103,8 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
 
         $alt = '';
         if(isDateNode($nodeNameSource)) $alt = $_lang['pagetitle']  .': '.$pagetitle.'[+lf+]';
-        $alt.= $_lang['resource_opt_menu_title']          .': '.$menutitle;
+        $alt.= $_lang['id']                               .': '.$id;
+        $alt.= '[+lf+]'.$_lang['resource_opt_menu_title'] .': '.$menutitle;
         $alt.= '[+lf+]'.$_lang['resource_opt_menu_index'] .': '.$menuindex;
         $alt.= '[+lf+]'.$_lang['alias']                   .': '.(!empty($alias) ? $alias : '-');
         $alt.= '[+lf+]'.$_lang['template']                .': '.$templatename;

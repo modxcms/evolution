@@ -495,6 +495,7 @@ $_lang["manage_modules"] = 'Manage Modules';
 $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
+$_lang["manage_documents"] = 'Documents';
 $_lang["manager"] = 'Manager';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'Manager Permissions';
@@ -986,7 +987,9 @@ $_lang["sunday"] = 'Sunday';
 $_lang["sys_alert"] = 'System Alert';
 $_lang["sysinfo_activity_message"] = 'This list show which Resources have been recently edited by your users.';
 $_lang["sysinfo_userid"] = 'User';
-$_lang["system_email_signup"] = 'Hello [+uid+] 
+$_lang["system_email_signup"] = '<!doctype html>
+<html>
+Hello [+uid+] 
 
 Here are your login details for [+sname+] Content Manager:
 
@@ -996,7 +999,8 @@ Password: [+pwd+]
 Once you log into the Content Manager ([+surl+]), you can change your password.
 
 Regards,
-Site Administrator';
+Site Administrator
+</html>';
 $_lang["system_email_webreminder"] = 'Hello [+uid+]
 
 To activate your new password click the following link:
@@ -1381,8 +1385,8 @@ $_lang["lock_element_type_8"] = "Role";
 $_lang["lock_element_editing"] = "You are editing this [+element_type+] since\n[+lasthit_df+]";
 $_lang["lock_element_locked_by"] = "This [+element_type+] is locked by user\n[+username+] since [+lasthit_df+]";
 
-$_lang["minifyphp_incache_title"] = 'Minify php codes in site cache';
-$_lang["minifyphp_incache_message"] = 'Minify php codes(snippets and plugins) and store into the site cache file, ref:<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
+$_lang["minifyphp_incache_title"] = 'Minify php code in site cache';
+$_lang["minifyphp_incache_message"] = 'Minify php code (snippets and plugins) and store in the site cache file, ref:<a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
 
 $_lang["logout_reminder_msg"] = "Reminder: It seems on [+date+] you forgot to logout. Please pay attention in future to do so after your work is finished.";
 
@@ -1436,3 +1440,15 @@ $_lang["cm_save_new_sorting"] = "Save new sorting";
 $_lang["cm_translate_phrases"] = "Translate phrases";
 $_lang["cm_translate_module_phrases"] = "Translate module-phrases";
 $_lang["cm_native_phrase"] = "Native phrase";
+
+$_lang["btn_view_options"] = 'View Options';
+$_lang["view_options_msg"] = 'The display & listing of elements can be customized via &quot;View Options&quot;-button. Settings are saved and restored per Browser using HTML5´s localStorage.';
+$_lang["viewopts_title"] = 'View Options';
+$_lang["viewopts_cb_buttons"] = 'Buttons';
+$_lang["viewopts_cb_descriptions"] = 'Descriptions';
+$_lang["viewopts_cb_icons"] = 'Icons';
+$_lang["viewopts_radio_list"] = 'List';
+$_lang["viewopts_radio_inline"] = 'Inline';
+$_lang["viewopts_radio_flex"] = 'Flex';
+$_lang["viewopts_fontsize"] = 'Font-Size';
+$_lang["viewopts_cb_alltabs"] = 'All Tabs';

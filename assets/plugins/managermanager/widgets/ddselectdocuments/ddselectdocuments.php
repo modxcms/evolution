@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddSelectDocuments
- * @version 1.2.2 (2014-02-14)
+ * @version 1.3 (2016-06-06)
  * 
  * @desc A widget for ManagerManager that makes selection of documents ids easier.
  * 
@@ -11,23 +11,23 @@
  * @param $tvs {comma separated string} - TVs names that the widget is applied to. @required
  * @param $roles {comma separated string} - Roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * @param $templates {comma separated string} - Templates IDs for which the widget is applying (empty value means the widget is applying to all templates). Default: ''.
- * @param $parentIds {comma separated string} - Parent documents IDs. @required
+ * @param $parentIds {comma separated string} - Parent documents IDs. Default: '0'.
  * @param $depth {integer} - Depth of search. Default: 1.
  * @param $filter {separated string} - Filter clauses, separated by '&' between pairs and by '=' between keys and values. For example, 'template=15&published=1' means to choose the published documents with template id=15. Default: ''.
  * @param $max {integer} - The largest number of elements that can be selected by user (“0” means selection without a limit). Default: 0.
  * @param $labelMask {string} - Template to be used while rendering elements of the document selection list. It is set as a string containing placeholders for document fields and TVs. Also, there is the additional placeholder “[+title+]” that is substituted with either “menutitle” (if defined) or “pagetitle”. Default: '[+title+] ([+id+])'.
+ * @param $allowDoubling {boolean} - Allows to select duplicates values. Default: false.
  * 
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.2.2
+ * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.3
  * 
- * @copyright 2014, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2013–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
-function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentIds, $depth = 1, $filter = '', $max = 0, $labelMask = '[+title+] ([+id+])',$allowDoubling = false){
-	if (empty($parentIds) || !useThisRule($roles, $templates)){return;}
+function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentIds = '0', $depth = 1, $filter = '', $max = 0, $labelMask = '[+title+] ([+id+])', $allowDoubling = false){
+	if (!useThisRule($roles, $templates)){return;}
 	
 	global $modx;
 	$e = &$modx->Event;
@@ -39,7 +39,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 		$widgetDir = $pluginDir.'widgets/ddselectdocuments/';
 		
 		$output .= includeJsCss($widgetDir.'ddselectdocuments.css', 'html');
-		$output .= includeJsCss($pluginDir.'js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
+		$output .= includeJsCss($pluginDir.'js/jquery-ui.min.js', 'html', 'jquery-ui', '1.12.1');
 		$output .= includeJsCss($widgetDir.'jquery.ddMultipleInput-1.2.1.min.js', 'html', 'jquery.ddMultipleInput', '1.2.1');
 		
 		$e->output($output);
@@ -130,16 +130,16 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 			);
 		}
 		
-		$output .= "//---------- mm_ddSelectDocuments :: Begin -----\n";
+		$output .= '//---------- mm_ddSelectDocuments :: Begin -----'.PHP_EOL;
 		
 		foreach ($tvs as $tv){
 			$output .=
 '
-$j("#tv'.$tv['id'].'").ddMultipleInput({source: '.$jsonDocs.', max: '.$max.', allowDoubling: '.$allowDoubling.'});
+$j("#tv'.$tv['id'].'").ddMultipleInput({source: '.$jsonDocs.', max: '.(int) $max.', allowDoubling: '.(int) $allowDoubling.'});
 ';
 		}
 		
-		$output .= "//---------- mm_ddSelectDocuments :: End -----\n";
+		$output .= '//---------- mm_ddSelectDocuments :: End -----'.PHP_EOL;
 		
 		$e->output($output);
 	}

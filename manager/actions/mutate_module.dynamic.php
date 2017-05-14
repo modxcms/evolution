@@ -423,7 +423,7 @@ function SetUrl(url, width, height, alt) {
           <ul class="actionButtons">
               <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-                  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+                  <i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span>
                 </a>
                 <span class="plus"> + </span>
                 <select id="stay" name="stay">
@@ -435,15 +435,15 @@ function SetUrl(url, width, height, alt) {
                 </select>
               </li>
           <?php if ($modx->manager->action == '107') { ?>
-              <li id="Button6" class="disabled"><a href="#"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
-              <li id="Button3" class="disabled"><a href="#"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+              <li id="Button6" class="disabled"><a href="#"><i class="<?php echo $_style["actions_duplicate"] ?>" aria-hidden="true"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
+              <li id="Button3" class="disabled"><a href="#"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['delete']?></span></a></li>
           <?php } else { ?>
-              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>          
-              <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+              <li id="Button6"><a href="#" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>" aria-hidden="true"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>          
+              <li id="Button3"><a href="#" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['delete']?></span></a></li>
           <?php } ?>
-              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
         <?php if ($modx->hasPermission('exec_module')) { ?>
-              <li id="Button4"><a href="#" onclick="runmodule();"><img src="<?php echo $_style["icons_run"] ?>" /> <?php echo $_lang["run_module"]; ?></a></li>
+              <li id="Button4"><a href="#" onclick="runmodule();"><i class="<?php echo $_style["actions_run"] ?>" aria-hidden="true"></i> <span><?php echo $_lang["run_module"]; ?></span></a></li>
           <?php } ?>
           </ul>
     </div>
