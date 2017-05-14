@@ -141,7 +141,7 @@ blockquote {
   padding-bottom: 20px;
 }
 
-td,td[valign=top]{vertical-align:top;} 
+td,table tr td[valign=top]{vertical-align:top;}
 
 /* -------------------------[ Miscellaneous conveniences ]--- */
 
