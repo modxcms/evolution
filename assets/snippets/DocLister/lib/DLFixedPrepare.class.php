@@ -21,7 +21,7 @@ if (!class_exists("DLFixedPrepare", false)) {
                 $params['parents'] = $data['id'];
                 $params['idType'] = 'parents';
                 $params['documents'] = '';
-                $data['dl.submenu'] = $modx->runSnippet('DLBuildMenu', $params);
+                $data['dl.submenu'] = ($data['isfolder']) ? $modx->runSnippet('DLBuildMenu', $params) : '';
             } else {
                 $data['dl.submenu'] = '';
             }

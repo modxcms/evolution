@@ -107,11 +107,16 @@ class FS
 
     /**
      * @param $file
+     * @param bool $lower 
      * @return string
      */
-    public function takeFileExt($file)
+    public function takeFileExt($file, $lower = true)
     {
-        return strtolower($this->_pathinfo($file, 'extension'));
+        $str = $this->_pathinfo($file, 'extension');
+        if($lower){
+            $str = strtolower($str);
+        }
+        return $str;
     }
 
     /**

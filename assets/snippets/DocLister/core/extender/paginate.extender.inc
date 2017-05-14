@@ -184,13 +184,26 @@ class paginate_DL_Extender extends extDocLister
             switch ($this->DocLister->getCFGDef('paginate', '')) {
                 case 'offset':
                     $requestName = 'start';
+					$url = $this->buildUrl($url, $requestName, $params);
                     break;
                 case 'pages':
                 default:
                     $requestName = 'page';
+					$call = $this->DocLister->getCFGDef('makePaginateUrl', '');
+                    if((is_object($call) && ($call instanceof Closure)) || is_callable($call)){
+                        $url = call_user_func($call, compact('url', 'params'), $this->modx, $this->DocLister, $this);
+                    }else{
+                        $url = $this->buildUrl($url, $requestName, $params);
+                    }
                     break;
             }
         }
+        
+
+        return $url;
+    }
+
+	public function buildUrl($url, $requestName, $params){
         if ($requestName != '' && is_array($params)) {
             $q = http_build_query(array_merge($params, array($this->getRequestName($requestName) => null)));
             $url = explode("?", $url, 2);
@@ -199,10 +212,9 @@ class paginate_DL_Extender extends extDocLister
                 $url .= "?" . $q;
             }
         }
-
         return $url;
     }
-
+	
     /**
      * Имя REQUEST переменной в пагинаторе
      *

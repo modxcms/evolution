@@ -57,8 +57,8 @@ if ($id !== NULL) {
             $classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode' ;
             $classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ' ;
             $classes = ($item['deleted']) ? ' deletedNode ' : $classes ;
-            $classes .= (count($modx->getChildIds($item['id'], 1)) > 0) ? ' hasChildren ' : ' noChildren ';
-            $ressourcelist .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'" title="">'. $item['pagetitle'] . ' <small>('.$item['id'].')</small></li>';
+            $hasChildren = (count($modx->getChildIds($item['id'], 1)) > 0) ? '<i class="' . $_style['files_folder'] . '"></i> ' : ' <i class="' . $_style['files_page_html'] . '"></i> ';
+            $ressourcelist .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'" title="">' . $hasChildren . $item['pagetitle'] . ' <small>('.$item['id'].')</small></li>';
         }
     }
 }
@@ -86,14 +86,8 @@ $header = '
             background: #eee no-repeat 2px center;
             margin: 2px 0;
             list-style: none;
-            padding: 1px 4px 1px 24px;
+            padding: 1px 4px;
             min-height: 20px;
-        }
-        li.noChildren {
-            background-image: url('.$_style["tree_page"].');
-        }
-        li.hasChildren {
-            background-image: url('.$_style["tree_folder"].');
         }
     </style>
     <script type="text/javascript">

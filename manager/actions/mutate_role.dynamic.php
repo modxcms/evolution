@@ -76,9 +76,9 @@ function deletedocument() {
 
 <div id="actions">
 	<ul class="actionButtons">
-		<li id="Button1" class="transition"><a href="#" onclick="documentDirty=false; form_save=true; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
-		<li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete'] ?></a></li>
-		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=86';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+		<li id="Button1" class="transition"><a href="#" onclick="documentDirty=false; form_save=true; document.userform.save.click();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span></a></li>
+		<li id="Button3"><a href="#" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['delete']?></span></a></li>
+		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=86';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
 	</ul>
 	<?php if($modx->manager->action=='38') { ?>
 	<script type="text/javascript">document.getElementById("Button3").className='disabled';</script>

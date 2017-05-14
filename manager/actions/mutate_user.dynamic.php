@@ -213,7 +213,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
     <ul class="actionButtons">
       <li id="Button1" class="transition">
         <a href="#" onclick="documentDirty=false; document.userform.save.click();">
-          <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+          <i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span>
         </a>
         <span class="plus"> + </span>
         <select id="stay" name="stay">
@@ -223,11 +223,11 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
         </select>
       </li>
       <?php if ($modx->manager->action == '11') { ?>
-      <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+      <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['delete']?></span></a></li>
       <?php } else { ?>
-      <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+      <li id="Button3"><a href="#" onclick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['delete']?></span></a></li>
       <?php } ?>
-      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
     </ul>
   </div>
   <!-- Tab Start -->

@@ -200,7 +200,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
     <ul class="actionButtons">
       <li id="Button1" class="transition">
         <a href="#" onclick="documentDirty=false; document.userform.save.click();">
-          <img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
+          <i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
         <select id="stay" name="stay">
           <?php if ($modx->hasPermission('new_web_user')) { ?>
           <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
@@ -214,7 +214,7 @@ $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
       <?php } else { ?>
       <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
       <?php } ?>
-      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=99';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=99';"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <?php echo $_lang['cancel']; ?></a></li>
     </ul>
   </div>
 

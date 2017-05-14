@@ -43,7 +43,7 @@ class tinymce4bridge extends modxRTEbridge
                 'blockFormats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3',
                 'custom_plugins' => 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste modxlink youtube',
                 'custom_buttons1' => 'undo redo | cut copy paste | searchreplace | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | styleselect',
-                'custom_buttons2' => 'link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code',
+                'custom_buttons2' => 'link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code formatselect',
                 // Provide empty values for parseText() #989
                 'template_docs' => '',
                 'template_chunks' => '',
@@ -102,14 +102,14 @@ class tinymce4bridge extends modxRTEbridge
         $this->set('convert_urls', $pathSetup[2], 'bool');
     }
 
+    // Set in plugin-configuration
     // https://www.tinymce.com/docs/configure/content-formatting/#style_formats
     public function bridge_style_formats($selector) {
-        // Set in plugin-configuration
+        $inline = array();
+        $block = array();
         if (isset($this->pluginParams['styleFormats']) && !empty($this->pluginParams['styleFormats'])) {
-            // Check for simple format: Title,cssClass|Title2,cssClass
-            if(preg_match('/^[a-zA-Z0-9,]+/', $this->pluginParams['styleFormats'])) {
+            if($this->isSimpleFormat($this->pluginParams['styleFormats'])) {
                 $styles_formats = explode('|', $this->pluginParams['styleFormats']);
-                $inline = array(); $block = array();
                 foreach ($styles_formats as $val) {
                     $style = explode(',', $val);
                     // create inline / block 
@@ -124,8 +124,38 @@ class tinymce4bridge extends modxRTEbridge
                 // Allow full-format as seen in https://www.tinymce.com/docs/demo/format-custom/
                 $this->set('style_formats', $this->pluginParams['styleFormats'], 'object');
             }
+        } else {
+            if (isset($this->pluginParams['styleFormats_inline']) && !empty($this->pluginParams['styleFormats_inline'])) {
+                if($this->isSimpleFormat($this->pluginParams['styleFormats_inline'])) {
+                    $styles_formats = explode('|', $this->pluginParams['styleFormats_inline']);
+                    foreach ($styles_formats as $val) {
+                        $style = explode(',', $val);
+                        $inline[] = array('title' => $style['0'], 'inline'   => 'span', 'classes' => $style['1']);
+                    }
+                }
+            }
+            if (isset($this->pluginParams['styleFormats_block']) && !empty($this->pluginParams['styleFormats_block'])) {
+                if($this->isSimpleFormat($this->pluginParams['styleFormats_block'])) {
+                    $styles_formats = explode('|', $this->pluginParams['styleFormats_block']);
+                    foreach ($styles_formats as $val) {
+                        $style = explode(',', $val);
+                        $block[]  = array('title' => $style['0'], 'selector' => '*',    'classes' => $style['1']);
+                    }
+                }
+            }
+            
+            $styleSetup = array();
+            if(!empty($inline)) $styleSetup[] = array('title'=>'Inline','items'=>$inline);
+            if(!empty($block))  $styleSetup[] = array('title'=>'Block', 'items'=>$block);
+            
+            if(!empty($styleSetup)) return $styleSetup;
         }
         return NULL;
+    }
+    
+    // Check for simple format: Title,cssClass|Title2,cssClass
+    public function isSimpleFormat($string) {
+        return preg_match('/^[a-zA-Z0-9,]+/', $string);
     }
 
     // https://www.tinymce.com/docs/configure/editor-appearance/#resize
