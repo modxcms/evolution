@@ -6,7 +6,6 @@ class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
-	var $dbVersion;
     var $connection_charset, $connection_method;
 
 	function SqlParser( ) {
@@ -73,7 +72,7 @@ class SqlParser {
 			if (preg_match('/^\#/', $sql_do)) continue;
 
 			// strip out comments and \n for mysql 3.x
-			if ($this->dbVersion <4.0) {
+			if ( floatval( $modx->db->getVersion() ) < 4.0 ) {
 				$sql_do = preg_replace("~COMMENT.*[^']?'.*[^']?'~","",$sql_do);
 				$sql_do = str_replace('\r', "", $sql_do);
 				$sql_do = str_replace('\n', "", $sql_do);
