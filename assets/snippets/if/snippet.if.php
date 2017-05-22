@@ -34,7 +34,7 @@ if(!empty($custom)) {
         $ccFile = $snippetPath.'/custom/if.'.$cCond.'.php';
         if(!function_exists($cCond) && file_exists($ccFile)) {
             include($ccFile);
-            $customConditions[$cCond] = $custom;
+            $customConditions[$cCond] = true;
         }
     }
 }
@@ -58,7 +58,7 @@ for ($i=1;$i<count($opers);$i++){
     if (isset($subject)) {
         if (!empty($operator)) {
             
-            if(in_array($operator, $customConditions)) {
+            if(isset($customConditions[$operator])) {
                 $output = call_user_func($operator, $subject, $operand);
                 if(is_array($output)) {
                     if(isset($output[1]) && $output[1]) $i++; // $operand was used
