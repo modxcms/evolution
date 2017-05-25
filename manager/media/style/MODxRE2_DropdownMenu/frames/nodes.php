@@ -23,6 +23,11 @@ $parent = intval($_GET['parent']);
 $expandAll = intval($_GET['expandAll']);
 $output = '';
 $theme = $manager_theme . "/";
+$hereid = isset($_GET['id']) ? $_GET['id'] : '';
+
+if(isset($_GET['showonlyfolders'])) {
+	$_SESSION['tree_show_only_folders'] = $_GET['showonlyfolders'];
+}
 
 // setup sorting
 $sortParams = array(
@@ -50,8 +55,19 @@ if(isset($_SESSION['openedArray'])) {
 $opened2 = array();
 $closed2 = array();
 
-makeHTML($indent, $parent, $expandAll, $theme);
+makeHTML($indent, $parent, $expandAll, $theme, $hereid);
 echo $output;
+
+// store vars in Javascript
+//$scr = '';
+//if($expandAll == 1) {
+//	$scr .= '<script type="text/javascript">';
+//	foreach($opened2 as $item) {
+//		$scr .= "\n" . sprintf('modx.openedArray[%d] = 1; ', $item);
+//	}
+//	$scr .= '</script> ';
+//}
+//echo $scr;
 
 // check for deleted documents on reload
 if($expandAll == 2) {

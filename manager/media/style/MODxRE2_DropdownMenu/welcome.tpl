@@ -1,7 +1,6 @@
 <link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="media/script/gridster/jquery.gridster.css" />
 <link rel="stylesheet" href="media/style/[(manager_theme)]/dashboard/css/dashboard.css" />
-<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 
 <div class="container-fluid dashboard">
 

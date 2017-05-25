@@ -4,16 +4,16 @@
  *
  * A simple conditional snippet. Allows for eq/neq/lt/gt/etc logic within templates, resources, chunks, etc.
  *
- * @category 	snippet
- * @version 	1.3
- * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal	@properties
- * @internal	@modx_category Navigation
+ * @category    snippet
+ * @version     1.4
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @properties
+ * @internal    @modx_category Navigation
  * @internal    @installset base
  * @documentation Readme [+site_url+]assets/snippets/if/readme.html
  * @reportissues https://github.com/modxcms/evolution
- * @author  	Created By Bumkaka bumkaka@yandex.ru
- * @lastupdate  07/02/2016
+ * @author      Created By Bumkaka bumkaka@yandex.ru
+ * @lastupdate  21/05/2017
  */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
@@ -24,6 +24,21 @@ $opers=explode($s,$is);
 $subject=$opers[0];
 $eq=true;
 $and=false;
+
+// Prepare custom conditions
+$customConditions = array();
+if(!empty($custom)) {
+    $snippetPath = realpath(dirname(__FILE__));
+    $cc = explode(',', $custom);
+    foreach($cc as $cCond) {
+        $ccFile = $snippetPath.'/custom/if.'.$cCond.'.php';
+        if(!function_exists($cCond) && file_exists($ccFile)) {
+            include($ccFile);
+            $customConditions[$cCond] = true;
+        }
+    }
+}
+
 for ($i=1;$i<count($opers);$i++){
     if ($opers[$i]=='or') {$or=true;$part_eq=$eq;$eq=true;continue;}
     if ($or) {$subject=$opers[$i];$or=false;continue;}
@@ -42,6 +57,17 @@ for ($i=1;$i<count($opers);$i++){
 
     if (isset($subject)) {
         if (!empty($operator)) {
+            
+            if(isset($customConditions[$operator])) {
+                $output = call_user_func($operator, $subject, $operand);
+                if(is_array($output)) {
+                    if(isset($output[1]) && $output[1]) $i++; // $operand was used
+                    $output = $output[0];
+                }
+                $output = (bool)$output;
+                $operator = 'custom';
+            }
+            
             if ($math=='on' && !empty($subject)) {
                 $subject = preg_replace('@([a-zA-Z\n\r\t\s])@','',$subject);
                 $subject = $modx->safeEval('return ' . $subject.';');
@@ -49,11 +75,9 @@ for ($i=1;$i<count($opers);$i++){
             $operator = strtolower($operator);
 
             switch ($operator) {
-
                 case '%':
                     $output = ($subject %$operand==0) ? true: false;$i++;
                     break;
-
                 case '!=':
                 case 'not':$output = ($subject != $operand) ? true: false;$i++;
                     break;
@@ -102,6 +126,8 @@ for ($i=1;$i<count($opers);$i++){
                 case 'not_contains':
                     $output = (strpos($subject,$operand) !== false) ? false : true;
                     $i++;
+                    break;
+                case 'custom':
                     break;
                 case '==':
                 case '=':

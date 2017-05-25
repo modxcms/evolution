@@ -368,6 +368,11 @@ function movedocument() {
 
 </div><!-- end documentPane -->
 </div><!-- end sectionBody -->
+<?php
+if (is_numeric($_GET['tab'])) {
+        echo '<script type="text/javascript"> docSettings.setSelectedIndex( '.$_GET['tab'].' );</script>';
+    }	
+?>
 
 <?php if ($show_preview==1) { ?>
 <div class="sectionHeader"><?php echo $_lang['preview']?></div>
