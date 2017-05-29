@@ -323,7 +323,7 @@
                 var tabId = tabIds[i];
                 var tabEl = jQuery("#"+tabId);
                 tabEl.css("box-sizing","content-box").css("overflow","auto");
-                if(typeof elementsInTreeParams.scroll_pos[tabId] == "undefined") continue;
+                if(typeof elementsInTreeParams.scroll_pos[tabId] == "undefined" || tabEl.length < 1) continue;
                 var tabPage = tabEl.closest(".tab-page");
                 if(tabPage.is(":visible")) {
                     setScrollXY(tabId, elementsInTreeParams.scroll_pos[tabId]);
@@ -341,6 +341,7 @@
             for (var i = 0; i < tabIds.length; i++) {
                 var tabId = tabIds[i];
                 var tabEl = jQuery("#"+tabId);
+                if(tabEl.length < 1) continue;
                 var tabPage = tabEl.closest(".tab-page");
                 if(tabPage.is(":visible")) {
                     elementsInTreeParams.scroll_pos[tabId] = getScrollXY(tabId);
