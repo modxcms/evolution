@@ -950,6 +950,9 @@
 	for(let o in _) modx[o] = _[o];
 	_ = '';
 	w.mainMenu = {};
+	w.mainMenu.stopWork = function() {
+		modx.main.stopWork()
+	};
 	w.mainMenu.work = function() {
 		modx.main.work()
 	};

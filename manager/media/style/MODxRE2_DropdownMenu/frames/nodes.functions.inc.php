@@ -162,7 +162,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'tree_page_click' => $modx->config['tree_page_click'],
 			'showChildren' => 1,
 			'openFolder' => 1,
-			'contextmenu' => ''
+			'contextmenu' => '',
+			'tree_minusnode' => $_style['tree_minusnode'],
+			'tree_plusnode' => $_style['tree_plusnode']
 		);
 
 		$ph = $data;
@@ -214,13 +216,11 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			if(!$_SESSION['tree_show_only_folders']) {
 				if($row['parent'] == 0) {
 					$node = $modx->parseText($tpl, $ph);
-					$node = $modx->parseText($node, $_lang, '[%', '%]');
 				} else {
 					$node = '';
 				}
 			} else {
 				$node = $modx->parseText($tpl, $ph);
-				$node = $modx->parseText($node, $_lang, '[%', '%]');
 			}
 
 		} else {
@@ -240,11 +240,12 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$opened2[] = $row['id'];
 					}
 					$ph['icon'] = $ph['icon_folder_open'];
-					$_style['icon_node_toggle'] = $_style['tree_minusnode'];
+					$ph['icon_node_toggle'] = $ph['tree_minusnode'];
+					$ph['node_toggle'] = 1;
 
 					if(($checkDocs && !$checkFolders) || (!$checkDocs && !$checkFolders)) {
 						$ph['showChildren'] = 1;
-						$_style['icon_node_toggle'] = '';
+						$ph['icon_node_toggle'] = '';
 						$ph['icon'] = $ph['icon_folder_close'];
 					} elseif(!$checkDocs && $checkFolders) {
 						$ph['showChildren'] = 0;
@@ -268,8 +269,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					}
 
 					$node = $modx->parseText($tpl, $ph);
-					$node = $modx->parseText($node, $_lang, '[%', '%]');
-					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$output .= $node;
 					if($checkFolders) {
 						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
@@ -278,11 +277,12 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 				} else {
 					$closed2[] = $row['id'];
 					$ph['icon'] = $ph['icon_folder_close'];
-					$_style['icon_node_toggle'] = $_style['tree_plusnode'];
+					$ph['icon_node_toggle'] = $ph['tree_plusnode'];
+					$ph['node_toggle'] = 0;
 
 					if(($checkDocs && !$checkFolders) || (!$checkDocs && !$checkFolders)) {
 						$ph['showChildren'] = 1;
-						$_style['icon_node_toggle'] = '';
+						$ph['icon_node_toggle'] = '';
 					} elseif(!$checkDocs && $checkFolders) {
 						$ph['showChildren'] = 0;
 						$ph['openFolder'] = 2;
@@ -305,8 +305,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					}
 
 					$node = $modx->parseText($tpl, $ph);
-					$node = $modx->parseText($node, $_lang, '[%', '%]');
-					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$node .= '</div></div>';
 				}
 			} else {
@@ -316,11 +314,13 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$opened2[] = $row['id'];
 					}
 					$ph['icon'] = $ph['icon_folder_open'];
-					$_style['icon_node_toggle'] = $_style['tree_minusnode'];
+					$ph['icon_node_toggle'] = $ph['tree_minusnode'];
+					$ph['node_toggle'] = 1;
 
-					if($row['donthit']) {
+					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
-						$_style['icon_node_toggle'] = '';
+						$ph['icon_node_toggle'] = '';
+						$ph['icon'] = $ph['icon_folder_close'];
 					}
 
 					// invoke OnManagerNodePrerender event
@@ -333,26 +333,32 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
+					if($ph['showChildren'] == 0) {
+						$ph['icon_node_toggle'] = '';
+						$ph['donthit'] = 1;
+						$ph['icon'] = $ph['icon_folder_close'];
+					}
+
 					if($ph['contextmenu']) {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
 					$node = $modx->parseText($tpl, $ph);
-					$node = $modx->parseText($node, $_lang, '[%', '%]');
-					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$output .= $node;
-					if(!$row['donthit']) {
+					if($ph['donthit'] == 0) {
 						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
 					}
 					$node = '</div></div>';
 				} else {
 					$closed2[] = $row['id'];
 					$ph['icon'] = $ph['icon_folder_close'];
-					$_style['icon_node_toggle'] = $_style['tree_plusnode'];
+					$ph['icon_node_toggle'] = $ph['tree_plusnode'];
+					$ph['node_toggle'] = 0;
 
-					if($row['donthit']) {
+					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
-						$_style['icon_node_toggle'] = '';
+						$ph['icon_node_toggle'] = '';
+						$ph['icon'] = $ph['icon_folder_close'];
 					}
 
 					// invoke OnManagerNodePrerender event
@@ -365,13 +371,17 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
+					if($ph['showChildren'] == 0) {
+						$ph['icon_node_toggle'] = '';
+						$ph['donthit'] = 1;
+						$ph['icon'] = $ph['icon_folder_close'];
+					}
+
 					if($ph['contextmenu']) {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
 					$node = $modx->parseText($tpl, $ph);
-					$node = $modx->parseText($node, $_lang, '[%', '%]');
-					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$node .= '</div></div>';
 				}
 			}
@@ -536,11 +546,12 @@ function getTplSingleNode() {
 function getTplFolderNode() {
 	return '<div id="node[+id+]"[+contextmenu+]><span
         id="s[+id+]"
-        data-icon-expanded="[&tree_plusnode&]"
-        data-icon-collapsed="[&tree_minusnode&]"
+        class="treeNodeToggle"
+        data-icon-expanded="[+tree_plusnode+]"
+        data-icon-collapsed="[+tree_minusnode+]"
         onclick="modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
-        >[&icon_node_toggle&]</span><span
+        >[+icon_node_toggle+]</span><span
         id="f[+id+]"
         data-icon-folder-open="[+icon_folder_open+]"
         data-icon-folder-close="[+icon_folder_close+]"
