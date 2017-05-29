@@ -148,10 +148,14 @@ class site_contentDocLister extends DocLister
                         }
                     }
 
-                    $item['date'] = (isset($item[$date]) && $date != 'createdon' && $item[$date] != 0 && $item[$date] == (int)$item[$date]) ? $item[$date] : $item['createdon'];
-                    $item['date'] = $item['date'] + $this->modx->config['server_offset_time'];
-                    if ($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
-                        $item['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $item['date']);
+                    if (isset($item[$date])) {
+                        $_date = is_numeric($item[$date]) && $item[$date] == (int)$item[$date] ? $item[$date] : strtotime($item[$date]);
+                        if ($_date !== false) {
+                            $_date = $_date + $this->modx->config['server_offset_time'];
+                            if ($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
+                                $item['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $_date);
+                            }
+                        }
                     }
 
                     $findTpl = $this->renderTPL;
@@ -225,9 +229,15 @@ class site_contentDocLister extends DocLister
                 $row['summary'] = $this->getSummary($this->_docs[$num], $extSummary, 'introtext', 'content');
             }
             if (array('1') == $fields || in_array('date', $fields)) {
-                $tmp = (isset($this->_docs[$num][$date]) && $date != 'createdon' && $this->_docs[$num][$date] != 0 && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date]) ? $this->_docs[$num][$date] : $this->_docs[$num]['createdon'];
-                $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'),
-                    $tmp + $this->modx->config['server_offset_time']);
+                if (isset($this->_docs[$num][$date])) {
+                    $_date = is_numeric($this->_docs[$num][$date]) && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date] ? $this->_docs[$num][$date] : strtotime($this->_docs[$num][$date]);
+                    if ($_date !== false) {
+                        $_date = $_date + $this->modx->config['server_offset_time'];
+                        if ($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
+                            $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $_date);
+                        }
+                    }
+                }
             }
             if (array('1') == $fields || in_array(array('menutitle', 'pagetitle'), $fields)) {
                 $row['title'] = ($row['menutitle'] == '' ? $row['pagetitle'] : $row['menutitle']);
@@ -268,6 +278,8 @@ class site_contentDocLister extends DocLister
         $out = 0;
         $sanitarInIDs = $this->sanitarIn($this->IDs);
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
+            $q_true = $this->getCFGDef('ignoreEmpty', '0');
+            $q_true = $q_true ? $q_true : $this->getCFGDef('idType', 'parents') == 'parents';
             $where = $this->getCFGDef('addWhereList', '');
             $where = sqlHelper::trimLogicalOp($where);
             $where = ($where ? $where . ' AND ' : '') . $this->_filters['where'];
@@ -280,6 +292,9 @@ class site_contentDocLister extends DocLister
             $whereArr = array();
             if (!$this->getCFGDef('showNoPublish', 0)) {
                 $whereArr[] = "c.deleted=0 AND c.published=1";
+            }
+            else{
+                $q_true = 1;
             }
 
             $tbl_site_content = $this->getTable('site_content', 'c');
@@ -315,6 +330,8 @@ class site_contentDocLister extends DocLister
             $from = $tbl_site_content . " " . $this->_filters['join'];
             $where = sqlHelper::trimLogicalOp($where);
 
+            $q_true = $q_true ? $q_true : trim($where) != 'WHERE';
+
             if (trim($where) != 'WHERE') {
                 $where .= " AND ";
             }
@@ -329,8 +346,15 @@ class site_contentDocLister extends DocLister
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($from) = $this->injectSortByTV($from, $sort);
 
-            $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group}) as `tmp`");
-            $out = $this->modx->db->getValue($rs);
+            $q_true = $q_true ? $q_true : $group != 'GROUP BY c.id';
+
+            if ( $q_true ){
+                $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group}) as `tmp`");
+                $out = $this->modx->db->getValue($rs);
+            }
+            else {
+                $out = count($this->IDs);
+            }
         }
 
         return $out;

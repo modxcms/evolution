@@ -22,7 +22,9 @@ switch($e->name) {
     case 'OnManagerTreePrerender': // Main elementsInTree-part
         include_once($eit_base_path.'includes/on_manager_tree_prerender.inc.php'); break;
     case 'OnManagerTreeRender':
-        if(hasAnyPermission()) include_once($eit_base_path.'includes/on_manager_tree_render.inc.php'); break;
+        if(hasAnyPermission()) include_once($eit_base_path.'includes/on_manager_tree_render.inc.php');
+        else $e->output('</div></div>'); // Issue 1340
+        break;
     case 'OnTempFormSave':
     case 'OnTVFormSave':
     case 'OnChunkFormSave':

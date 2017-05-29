@@ -37,12 +37,12 @@ div.wm_logo { float: left; }
 .panel-heading { background-color: transparent; }
 .sectionHeader { cursor: move; margin: 0; min-height: 34px; }
 .widget-wrapper { background: #fff; border: 1px solid #e2e2e2; border-radius: 4px; box-shadow: 1px 1px 2px #ddd; moz-box-shadow: 1px 1px 2px #ddd; webkit-box-shadow: 1px 1px 2px #ddd; }
-.widget-wrapper .widget-title { border-bottom: 1px solid #d7d7d7; font-size: 14px; font-weight: 300; padding: 7px 5px 4px 10px; }
+.widget-wrapper .widget-title { border-bottom: 1px solid #d7d7d7; padding: 7px 5px 4px 10px; }
 .widget-wrapper .widget-stage { overflow: hidden; padding: 15px; position: relative; }
 .widget-wrapper .widget-notes { background: #fbfbfb; border-top: 1px solid #e2e2e2; color: #808080; font-size: 12px; padding: 8px 10px 5px; }
 i.icon-color-verylight { color: #dedede; float: left; margin-right: 5px; }
 .btn-group a:link { text-decoration: none; text-weight: normal; }
-.btn-group .panel-hide { margin-top: -7px; padding-top: 3px; }
+.btn-group .panel-hide { margin-top: -3px; padding-top: 3px; }
 .btn-action { padding: 1px 1px !important; width: 28px; }
 .btn-expand i { color: #afafaf; }
 .btn-expand:hover { color: #4d4d4d; background: #fbfbfb; }
@@ -51,6 +51,6 @@ table > tbody > tr > td a.btn { color: #fff; }
 .gridster { display: none; }
 .gridster .panel-headingx { min-height: 32px; overflow: hidden; }
 .gridster .panel-body.widget-stage.sectionBody { height: inherit; overflow-x: hidden; overflow-y: auto; }
-.gridster .panel { height: 100%; padding-bottom: 60px; }
+.gridster .panel { height: 100%; padding-bottom: 60px; overflow: hidden }
 .gridster .panel-headingx { cursor: move; }
 .gridster .preview-holder { background: rgba(33, 255, 181, 0.08); border: 1px dashed #000; border-color: #000; opacity: 0.3; position: absolute; }

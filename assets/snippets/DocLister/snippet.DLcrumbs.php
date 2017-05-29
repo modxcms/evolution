@@ -10,6 +10,17 @@ if (!defined('MODX_BASE_PATH')) {
 }
 $_out = '';
 
+if ( isset( $modx->event->params['config'] ) ) {
+    require_once MODX_BASE_PATH . 'assets/lib/Helpers/Config.php';
+
+    $helper = new \Helpers\Config( $modx->event->params );
+    $helper->setPath( '/assets/snippets/DocLister/' );
+    $helper->loadConfig( $modx->event->params['config'] );
+    
+    $modx->event->params = $helper->getConfig();
+    extract( $modx->event->params );
+}
+
 $_parents = array();
 $hideMain = (!isset($hideMain) || (int)$hideMain == 0);
 if ($hideMain) {
