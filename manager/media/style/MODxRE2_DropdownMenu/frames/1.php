@@ -388,7 +388,7 @@ if($user['which_browser'] == 'default') {
 	?>
 
 	<script type="text/javascript">
-		$("#treeMenu_openelements").click(function(e) {
+		document.getElementById('treeMenu_openelements').onclick = function(e) {
 			e.preventDefault();
 			let randomNum = '<?php echo $_lang["elements"] ?>';
 			if(e.shiftKey) {
@@ -398,8 +398,8 @@ if($user['which_browser'] == 'default') {
 				url: 'index.php?a=76',
 				title: randomNum
 			})
-		});
-		$("#treeMenu_openimages").click(function(e) {
+		};
+		document.getElementById('treeMenu_openimages').onclick = function(e) {
 			e.preventDefault();
 			let randomNum = '<?php echo $_lang["files_files"] ?>';
 			if(e.shiftKey) {
@@ -409,8 +409,8 @@ if($user['which_browser'] == 'default') {
 				url: 'media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',
 				title: randomNum
 			})
-		});
-		$("#treeMenu_openfiles").click(function(e) {
+		};
+		document.getElementById('treeMenu_openfiles').onclick = function(e) {
 			e.preventDefault();
 			let randomNum = '<?php echo $_lang["files_files"] ?>';
 			if(e.shiftKey) {
@@ -420,7 +420,7 @@ if($user['which_browser'] == 'default') {
 				url: 'media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',
 				title: randomNum
 			})
-		});
+		};
 	</script>
 
 	<?php
