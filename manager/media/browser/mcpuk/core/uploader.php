@@ -633,11 +633,21 @@ class uploader {
             $img->watermark($this->config['watermark']['file'], $left, $top);
 		}
 
-        // WRITE TO FILE
-        return $img->output("jpeg", array(
-            'file' => $file,
-            'quality' => $this->config['jpegQuality']
-        ));
+        $options = array( 'file' => $file );
+
+        $type = exif_imagetype( $file );
+
+        switch ( $type ) {
+            case IMAGETYPE_GIF: 
+                return $img->output( 'gif', $options );
+
+            case IMAGETYPE_PNG: 
+                return $img->output( 'png', $options );
+            
+            default:
+                return $img->output( 'jpeg', array_merge( $options, array( 'quality' => $this->config['jpegQuality'] ) ) );
+        }
+
     }
 
     protected function makeThumb($file, $overwrite=true) {
@@ -670,6 +680,19 @@ class uploader {
         } else */
         if (!$img->resizeFit($this->config['thumbWidth'], $this->config['thumbHeight']))
             return false;
+
+        if ( $this->imageDriver == 'gd' ) {
+            $width  = imagesx( $img->image );
+            $height = imagesy( $img->image );
+            $back   = image::factory( $this->imageDriver, array( $width, $height ) );
+            $tile   = image::factory( $this->imageDriver, __DIR__ . '/../themes/' . $this->config['theme'] . '/img/bg_transparent.png' );
+            
+            imagesettile( $back->image, $tile->image );
+            imagefill( $back->image, 0, 0, IMG_COLOR_TILED );
+            imagecopy( $back->image, $img->image, 0, 0, 0, 0, $width, $height );
+
+            $img = $back;
+        }
 
         // Save thumbnail
         return $img->output("jpeg", array(
