@@ -832,9 +832,9 @@ class Qm {
                         $head .= "
                         <script>
                         // Assure keeping session and related locks alive
-                        $(document).ready(function($) {
+                        $".$jvar."(document).ready(function($".$jvar.") {
                             function updateMODXsession() {
-                              $.ajax({ url: '".MODX_MANAGER_URL."index.php', method:'post', data:{'updateMsgCount':true},
+                              $".$jvar.".ajax({ url: '".MODX_MANAGER_URL."index.php', method:'post', data:{'updateMsgCount':true},
                                 success: function(data) {},
                                 complete: function() {
                                   setTimeout(updateMODXsession, ". ($this->modx->config['mail_check_timeperiod'] * 1000) .");

@@ -364,11 +364,16 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 } else {  
                     href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
+                // Open pop-up
                 if (e.shiftKey) {
                     window.getSelection().removeAllRanges(); // Remove unnessecary text-selection
                     randomNum = Math.floor((Math.random()*999999)+1);
                     window.open(href, 'res'+randomNum, 'width=960,height=720,top='+((screen.height-720)/2)+',left='+((screen.width-960)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
                     top.mainMenu.reloadtree(); // Show updated locks as &r=1 will not work in popup
+                // Open in new tab
+                } else if(e.ctrlKey) {
+                    window.open(href, '_blank');
+                    top.mainMenu.reloadtree();
                 } else {
                     parent.main.location.href=href;
                 }
