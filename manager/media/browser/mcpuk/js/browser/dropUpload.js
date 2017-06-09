@@ -94,15 +94,34 @@ browser.initDropUpload = function() {
         return false;
     };
 
-    files.get(0).removeEventListener('dragover', filesDragOver, false);
-    files.get(0).removeEventListener('dragenter', filesDragEnter, false);
-    files.get(0).removeEventListener('dragleave', filesDragLeave, false);
-    files.get(0).removeEventListener('drop', filesDrop, false);
+    var handlers = files.data( 'handlers' );
+
+    if ( handlers ) {
+        if ( handlers.dragover ) {
+            files.get(0).removeEventListener('dragover', handlers.dragover, false);
+        }
+        if ( handlers.dragenter ) {
+            files.get(0).removeEventListener('dragenter', handlers.dragenter, false);
+        }
+        if ( handlers.dragleave ) {
+            files.get(0).removeEventListener('dragleave', handlers.dragleave, false);
+        }
+        if ( handlers.drop ) {
+            files.get(0).removeEventListener('drop', handlers.drop, false);
+        }
+    }
 
     files.get(0).addEventListener('dragover', filesDragOver, false);
     files.get(0).addEventListener('dragenter', filesDragEnter, false);
     files.get(0).addEventListener('dragleave', filesDragLeave, false);
     files.get(0).addEventListener('drop', filesDrop, false);
+
+    files.data( 'handlers', {
+        dragover:  filesDragOver,
+        dragenter: filesDragEnter,
+        dragleave: filesDragLeave,
+        drop:      filesDrop
+    } );
 
     folders.each(function() {
         var folder = this,
