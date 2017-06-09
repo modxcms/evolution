@@ -692,7 +692,7 @@ $_lang["plugin_priority_title"] = 'Порядок вызова плагинов'
 $_lang["purge_plugin"] = 'Удаление старых плагинов';
 $_lang["plugin_title"] = 'Создать / редактировать плагин';
 $_lang["preview"] = 'Просмотр';
-$_lang["preview_msg"] = 'Предпросмотр последних изменений. <a href="#" onclick="saveRefreshPreview();">Сохранить и обновить</a> последние изменения';
+$_lang["preview_msg"] = 'Предпросмотр последних изменений. <a href="javascript:;" onclick="saveRefreshPreview();">Сохранить и обновить</a> последние изменения';
 $_lang["preview_resource"] = 'Просмотр';
 $_lang["private"] = 'Личный';
 $_lang["public"] = 'Доступен для всех';

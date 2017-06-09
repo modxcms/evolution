@@ -1,13 +1,15 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE != "true") {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('save_document')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if(isset($_REQUEST['id'])) {
-    $id = intval($_REQUEST['id']);
+	$id = intval($_REQUEST['id']);
 } else {
-    $modx->webAlertAndQuit($_lang["error_no_id"]);
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 // check permissions on the document
@@ -18,7 +20,7 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // Set the item name for logger
@@ -28,67 +30,63 @@ $_SESSION['itemname'] = $pagetitle;
 ?>
 
 <script language="javascript">
-parent.tree.ca = "move";
+	parent.tree.ca = "move";
 
-function setMoveValue(pId, pName) {
-    if (pId==0 || checkParentChildRelation(pId, pName)) {
-        document.newdocumentparent.new_parent.value=pId;
-        document.getElementById('parentName').innerHTML = "<?php echo $_lang['new_parent']; ?>: <b>" + pId + "</b> (" + pName + ")";
-    }
-}
+	function setMoveValue(pId, pName) {
+		if(pId == 0 || checkParentChildRelation(pId, pName)) {
+			document.newdocumentparent.new_parent.value = pId;
+			document.getElementById('parentName').innerHTML = "<?php echo $_lang['new_parent']; ?>: <b>" + pId + "</b> (" + pName + ")";
+		}
+	}
 
-// check if the selected parent is a child of this document
-function checkParentChildRelation(pId, pName) {
-    var sp;
-    var id = document.newdocumentparent.id.value;
-    var tdoc = parent.tree.document;
-    var pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pId) : tdoc.all["node"+pId];
-    if (!pn) return;
-    if (pn.id.substr(4)==id) {
-        alert("<?php echo $_lang['illegal_parent_self']; ?>");
-        return;
-    }
-    else {
-        while (pn.p>0) {
-            pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pn.p) : tdoc.all["node"+pn.p];
-            if (pn.id.substr(4)==id) {
-                alert("<?php echo $_lang['illegal_parent_child']; ?>");
-                return;
-            }
-        }
-    }
-    return true;
-}
+	// check if the selected parent is a child of this document
+	function checkParentChildRelation(pId, pName) {
+		var sp;
+		var id = document.newdocumentparent.id.value;
+		var tdoc = parent.tree.document;
+		var pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pId) : tdoc.all["node" + pId];
+		if(!pn) return;
+		if(pn.id.substr(4) == id) {
+			alert("<?php echo $_lang['illegal_parent_self']; ?>");
+			return;
+		}
+		else {
+			while(pn.p > 0) {
+				pn = (tdoc.getElementById) ? tdoc.getElementById("node" + pn.p) : tdoc.all["node" + pn.p];
+				if(pn.id.substr(4) == id) {
+					alert("<?php echo $_lang['illegal_parent_child']; ?>");
+					return;
+				}
+			}
+		}
+		return true;
+	}
 
 </script>
 
-<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-arrows"></i>
-  </span>
-  <span class="pagetitle-text">
-    <?php echo $_lang['move_resource_title']; ?>
-  </span>
+<h1>
+	<i class="fa fa-arrows"></i><?php echo $_lang['move_resource_title']; ?>
 </h1>
 
 <div id="actions">
 	<ul class="actionButtons">
-		<li id="Button1" class="transition"><a href="#" onclick="document.newdocumentparent.submit();"><i class="<?php echo $_style["actions_save"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['save']; ?></span></a></li>
-		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span></a></li>
+		<li id="Button1" class="transition"><a href="javascript:;" onclick="document.newdocumentparent.submit();"><i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span></a></li>
+		<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;<?php echo $id == 0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';" ?>"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
 	</ul>
 </div>
 
 <div class="section">
-<div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['move_resource_message']; ?><p />
-<form method="post" action="index.php" name='newdocumentparent'>
-<input type="hidden" name="a" value="52">
-<input type="hidden" name="id" value="<?php echo $id; ?>">
-<input type="hidden" name="idshow" value="<?php echo $id; ?>"><?php echo $_lang['resource_to_be_moved']; ?>: <b><?php echo $id; ?></b><br />
-<span id="parentName" class="warning"><?php echo $_lang['move_resource_new_parent']; ?></span><br />
-<input type="hidden" name="new_parent" value="" class="inputBox">
-<br />
-<input type='save' value="Move" style="display:none">
-</form>
-</div>
+	<div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div>
+	<div class="sectionBody">
+		<?php echo $_lang['move_resource_message']; ?><p />
+		<form method="post" action="index.php" name='newdocumentparent'>
+			<input type="hidden" name="a" value="52">
+			<input type="hidden" name="id" value="<?php echo $id; ?>">
+			<input type="hidden" name="idshow" value="<?php echo $id; ?>"><?php echo $_lang['resource_to_be_moved']; ?>: <b><?php echo $id; ?></b><br />
+			<span id="parentName" class="warning"><?php echo $_lang['move_resource_new_parent']; ?></span><br />
+			<input type="hidden" name="new_parent" value="" class="inputBox">
+			<br />
+			<input type='save' value="Move" style="display:none">
+		</form>
+	</div>
 </div>

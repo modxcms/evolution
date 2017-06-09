@@ -699,7 +699,7 @@ $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["purge_plugin"] = 'Purge obsolete plugins';
 $_lang["plugin_title"] = 'Create/edit Plugin';
 $_lang["preview"] = 'Preview';
-$_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="#" onclick="saveRefreshPreview();">Save and Refresh</a> your current changes';
+$_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="javascript:;" onclick="saveRefreshPreview();">Save and Refresh</a> your current changes';
 $_lang["preview_resource"] = 'Preview Resource';
 $_lang["private"] = 'Private';
 $_lang["public"] = 'Public';

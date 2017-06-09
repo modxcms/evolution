@@ -677,7 +677,7 @@ $_lang["plugin_priority_instructions"] = 'Glissez et déposez les Plugins sous c
 $_lang["plugin_priority_title"] = 'Ordre d\'exécution des Plugins';
 $_lang["plugin_title"] = 'Créer/modifier le Plugin';
 $_lang["preview"] = 'Prévisualiser';
-$_lang["preview_msg"] = 'Voici la prévisualisation de vos derniers changements enregistrés. Cliquer ici pour <a href="#" onclick="saveRefreshPreview();">Enregistrer et Afficher</a> vos modifications actuelles';
+$_lang["preview_msg"] = 'Voici la prévisualisation de vos derniers changements enregistrés. Cliquer ici pour <a href="javascript:;" onclick="saveRefreshPreview();">Enregistrer et Afficher</a> vos modifications actuelles';
 $_lang["preview_resource"] = 'Prévisualiser';
 $_lang["private"] = 'Privé';
 $_lang["public"] = 'Public';

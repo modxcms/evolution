@@ -13,7 +13,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 if(!isset($modx->config['manager_menu_height'])) {
-	$modx->config['manager_menu_height'] = 48;
+	$modx->config['manager_menu_height'] = 35;
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
@@ -77,6 +77,7 @@ if($user['which_browser'] == 'default') {
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<style>
 		#tree { width: <?php echo $MODX_positionSideBar ?>px }
@@ -86,8 +87,9 @@ if($user['which_browser'] == 'default') {
 	<script type="text/javascript">
 
 		// GLOBAL variable modx
-		const modx = {
+		var modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",
+			MODX_SITE_URL: "<?php echo MODX_SITE_URL ?>",
 			user: {
 				username: "<?php echo $user['username'] ?>"
 			},
@@ -126,6 +128,10 @@ if($user['which_browser'] == 'default') {
 				working: "<?php echo $_lang['working'] ?>"
 			},
 			style: {
+				actions_file: "<?php echo addslashes($_style['actions_file']) ?>",
+				actions_pencil: "<?php echo addslashes($_style['actions_pencil']) ?>",
+				actions_plus: "<?php echo addslashes($_style['actions_plus']) ?>",
+				actions_reply: "<?php echo addslashes($_style['actions_reply']) ?>",
 				collapse_tree: "<?php echo addslashes($_style['collapse_tree']) ?>",
 				email: "<?php echo addslashes($_style['email']) ?>",
 				empty_recycle_bin: "<?php echo addslashes($_style['empty_recycle_bin']) ?>",
@@ -164,11 +170,10 @@ if($user['which_browser'] == 'default') {
 		echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
 		?>
 	</script>
-	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/modx.js"></script>
 </head>
 <body class="<?php echo $body_class ?>">
 <div id="frameset">
-	<div id="mainMenu">
+	<div id="mainMenu" class="dropdown">
 		<div class="col float-left">
 			<input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
 			<?php include('mainmenu.php'); ?>
@@ -184,8 +189,8 @@ if($user['which_browser'] == 'default') {
 				<li id="searchform">
 					<form action="index.php?a=71#results" method="post" target="main">
 						<input type="hidden" value="Search" name="submitok" />
-						<label for="searchid">
-							<i class="fa fa-search fa-2x"></i>
+						<label for="searchid" class="label_searchid">
+							<i class="fa fa-search"></i>
 						</label>
 						<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
 						<div class="mask"></div>
@@ -198,7 +203,7 @@ if($user['which_browser'] == 'default') {
 				</li>
 				<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
 					<li class="dropdown">
-						<a class="dropdown-toggle"><i class="fa fa-sliders fa-2x"></i></a>
+						<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
 						<ul class="dropdown-menu">
 							<?php if($modx->hasPermission('settings')) { ?>
 								<li>
@@ -244,12 +249,12 @@ if($user['which_browser'] == 'default') {
 					</li>
 				<?php } ?>
 				<li class="dropdown account">
-					<a class="dropdown-toggle">
+					<a href="javascript:;" class="dropdown-toggle" onclick="return false;">
 						<div class="username"><?php echo $user['username'] ?></div>
 						<?php if($user['photo']) { ?>
 							<div class="icon photo" style="background-image: url(<?php echo MODX_SITE_URL . $user['photo'] ?>);"></div>
 						<?php } else { ?>
-							<div class="icon"><i class="fa fa-user-circle fa-2x"></i></div>
+							<div class="icon"><i class="fa fa-user-circle"></i></div>
 						<?php } ?>
 						<div id="msgCounter"></div>
 					</a>
@@ -272,7 +277,7 @@ if($user['which_browser'] == 'default') {
 						$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
 						?>
 						<?php
-						echo sprintf('<li><span title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+						echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
 						?>
 					</ul>
 				</li>
@@ -292,7 +297,7 @@ if($user['which_browser'] == 'default') {
 	</div>
 	<div id="searchresult"></div>
 
-	<div id="floater" class="dropdown-menu">
+	<div id="floater" class="dropdown">
 		<?php
 		$sortParams = array(
 			'tree_sortby',
@@ -342,7 +347,7 @@ if($user['which_browser'] == 'default') {
 			<div>
 				<ul class="actionButtons">
 					<li>
-						<a href="javascript://" onclick="modx.tree.updateTree();modx.tree.showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
+						<a href="javascript:;" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 					</li>
 				</ul>
 			</div>
@@ -350,7 +355,7 @@ if($user['which_browser'] == 'default') {
 	</div>
 
 	<!-- Contextual Menu Popup Code -->
-	<div id="mx_contextmenu" class="dropdown-menu" onselectstart="return false;">
+	<div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
 		<div id="nameHolder">&nbsp;</div>
 		<?php
 		constructLink(3, $_style["ctx_new_document"], $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
@@ -390,7 +395,7 @@ if($user['which_browser'] == 'default') {
 	<script type="text/javascript">
 		document.getElementById('treeMenu_openelements').onclick = function(e) {
 			e.preventDefault();
-			let randomNum = '<?php echo $_lang["elements"] ?>';
+			var randomNum = '<?php echo $_lang["elements"] ?>';
 			if(e.shiftKey) {
 				randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
 			}
@@ -401,7 +406,7 @@ if($user['which_browser'] == 'default') {
 		};
 		document.getElementById('treeMenu_openimages').onclick = function(e) {
 			e.preventDefault();
-			let randomNum = '<?php echo $_lang["files_files"] ?>';
+			var randomNum = '<?php echo $_lang["files_files"] ?>';
 			if(e.shiftKey) {
 				randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
 			}
@@ -412,7 +417,7 @@ if($user['which_browser'] == 'default') {
 		};
 		document.getElementById('treeMenu_openfiles').onclick = function(e) {
 			e.preventDefault();
-			let randomNum = '<?php echo $_lang["files_files"] ?>';
+			var randomNum = '<?php echo $_lang["files_files"] ?>';
 			if(e.shiftKey) {
 				randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
 			}
@@ -427,12 +432,10 @@ if($user['which_browser'] == 'default') {
 	// invoke OnManagerFrameLoader
 	$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
 	?>
-	<script>
-		reloadElementsInTree = function() {
-			console.log('tree.reloadElementsInTree() off end');
-			modx.tree.reloadElementsInTree()
-		};
-	</script>
+
 </div>
+
+<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/modx.js"></script>
+
 </body>
 </html>

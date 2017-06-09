@@ -1,30 +1,30 @@
 <form id="categorize-form" action="<?php echo $view->get('url'); ?>" method="post">
 	<input name="<?php echo $view->get('request_key'); ?>[categorize][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a id="categorize-submit" class="primary" href="#" onclick="document.getElementById('categorize-form').submit();return false;"><?php echo $view->txt('cm_save_categorization'); ?></a></li>
-		<li><a href="#" id="categorize-help"><?php echo $_lang['help']; ?></a></li>
+		<li><a id="categorize-submit" class="primary" href="javascript:;" onclick="document.getElementById('categorize-form').submit();return false;"><?php echo $view->txt('cm_save_categorization'); ?></a></li>
+		<li><a href="javascript:;" id="categorize-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="categorize-info" style="display:none">
-        <p class="element-edit-message">Categorize elements easily by dragging them into categories.</p>
+		<p class="element-edit-message">Categorize elements easily by dragging them into categories.</p>
 	</div>
 	<script>
-		jQuery( "#categorize-help" ).click(function() {
-			jQuery( '#categorize-info').toggle();
+		jQuery("#categorize-help").click(function() {
+			jQuery('#categorize-info').toggle();
 		});
 	</script>
-  <div style="margin-bottom: 10px;">
-    <?php $view->renderView('chunks/categorize/elements_select'); ?>
-  </div>
+	<div style="margin-bottom: 10px;">
+		<?php $view->renderView('chunks/categorize/elements_select'); ?>
+	</div>
 
-  <div id="categorize-elements" class="grid hidden">
-    <div class="gridItem">
-      <div id="categorize-workbench" style="position:relative"></div>
-      <div id="log"></div>
-    </div>
-    
-    <div style="clear: both;"></div>
-  </div>
+	<div id="categorize-elements" class="grid hidden">
+		<div class="gridItem">
+			<div id="categorize-workbench" style="position:relative"></div>
+			<div id="log"></div>
+		</div>
 
-  <fieldset id="categorize-formfields" class="hidden"></fieldset>
+		<div style="clear: both;"></div>
+	</div>
+
+	<fieldset id="categorize-formfields" class="hidden"></fieldset>
 
 </form>

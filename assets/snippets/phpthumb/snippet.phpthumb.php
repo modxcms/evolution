@@ -51,7 +51,7 @@ $tmpImagesFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['di
 $tmpImagesFolder=str_replace("assets/images","",$tmpImagesFolder);
 $tmpImagesFolder=explode("/",$tmpImagesFolder);
 $ext=strtolower($path_parts['extension']);
-$options = 'f='.(in_array($ext,explode(",","png,gif,jpeg"))?$ext:"jpg&q=96").'&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
+$options = 'f='.(in_array($ext,explode(",","png,gif,jpeg"))?$ext:"jpg&q=85").'&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
 parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {

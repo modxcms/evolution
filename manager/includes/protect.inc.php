@@ -26,7 +26,7 @@ $sanitize_seed = 'sanitize_seed_' . base_convert(md5(__FILE__),16,36);
 // sanitize array
 if (!function_exists('modx_sanitize_gpc')) {
     function modx_sanitize_gpc(& $values, $depth=0) {
-        if(10 < $depth) exit('GPC Array nested too deep!');
+        if(200 < $depth) exit('GPC Array nested too deep!');
         if(is_array($values)) {
             $depth++;
             foreach ($values as $key => $value) {

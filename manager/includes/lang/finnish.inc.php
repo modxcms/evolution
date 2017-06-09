@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Muuta liitännäisten järjestystä ve
 $_lang["plugin_priority_title"] = 'Liitännäisten suorittamisjärjestys';
 $_lang["plugin_title"] = 'Liitännäinen';
 $_lang["preview"] = 'Esikatselu';
-$_lang["preview_msg"] = 'Esikatselunäkymä viimeksi tallennetuista muutoksista. Napsauta <a href="#" onclick="saveRefreshPreview();">tästä tallentaaksesi ja päivittääksesi</a> tämän hetkiset muutokset';
+$_lang["preview_msg"] = 'Esikatselunäkymä viimeksi tallennetuista muutoksista. Napsauta <a href="javascript:;" onclick="saveRefreshPreview();">tästä tallentaaksesi ja päivittääksesi</a> tämän hetkiset muutokset';
 $_lang["preview_resource"] = 'Esikatsele';
 $_lang["private"] = 'Yksityinen';
 $_lang["public"] = 'Julkinen';

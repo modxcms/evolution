@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = 'Opprette/ redigere plugin.';
 $_lang["preview"] = 'Forhåndsvis';
-$_lang["preview_msg"] = 'Dette er en forhåndsvisning av dine siste endringer. Klikk her for å <a href="#" onclick="saveRefreshPreview();">lagre og laste om</a> dine nåværende endringer';
+$_lang["preview_msg"] = 'Dette er en forhåndsvisning av dine siste endringer. Klikk her for å <a href="javascript:;" onclick="saveRefreshPreview();">lagre og laste om</a> dine nåværende endringer';
 $_lang["preview_resource"] = 'Preview Resource';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';

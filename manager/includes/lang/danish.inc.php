@@ -675,7 +675,7 @@ $_lang["plugin_priority_instructions"] = 'Klik-træk for at ændre rækkefølgen
 $_lang["plugin_priority_title"] = 'Eksekveringsrækkefølge for plugins';
 $_lang["plugin_title"] = 'Opret eller rediger plugin';
 $_lang["preview"] = 'Preview';
-$_lang["preview_msg"] = 'Dette er et preview af de sidste gemte ændringer. Klik her for at <a href="#" onclick="saveRefreshPreview();">gemme og opdatere</a> ændringerne';
+$_lang["preview_msg"] = 'Dette er et preview af de sidste gemte ændringer. Klik her for at <a href="javascript:;" onclick="saveRefreshPreview();">gemme og opdatere</a> ændringerne';
 $_lang["preview_resource"] = 'Preview ressourcen';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentligt';

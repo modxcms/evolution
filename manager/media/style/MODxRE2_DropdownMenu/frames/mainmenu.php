@@ -3,11 +3,25 @@
 menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex', 'class')
 */
 
+$sitemenu['bars'] = array(
+	'bars',
+	'main',
+	'<i class="fa fa-bars"></i>',
+	'javascript:;',
+	$_lang['home'],
+	'modx.resizer.toggle(); return false;',
+	' return false;',
+	'',
+	0,
+	10,
+	''
+);
+
 //mainMenu
 $sitemenu['site'] = array(
 	'site',
 	'main',
-	'<i class="fa fa-modx fa-lg"></i>' . $_lang['home'],
+	'<i class="fa fa-modx"></i>' . $_lang['home'],
 	'index.php?a=2',
 	$_lang['home'],
 	'',
@@ -22,8 +36,8 @@ if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet')
 	$sitemenu['elements'] = array(
 		'elements',
 		'main',
-		'<i class="fa fa-th fa-lg"></i>' . $_lang['elements'],
-		'',
+		'<i class="fa fa-th"></i>' . $_lang['elements'],
+		'javascript:;',
 		$_lang['elements'],
 		' return false;',
 		'',
@@ -38,8 +52,8 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="fa fa-cogs fa-lg"></i>' . $_lang['modules'],
-		'',
+		'<i class="fa fa-cogs"></i>' . $_lang['modules'],
+		'javascript:;',
 		$_lang['modules'],
 		' return false;',
 		'',
@@ -54,8 +68,8 @@ if($modx->hasPermission('edit_user') || $modx->hasPermission('edit_web_user') ||
 	$sitemenu['users'] = array(
 		'users',
 		'main',
-		'<i class="fa fa-users fa-lg"></i>' . $_lang['users'],
-		'',
+		'<i class="fa fa-users"></i>' . $_lang['users'],
+		'javascript:;',
 		$_lang['users'],
 		' return false;',
 		'edit_user',
@@ -70,8 +84,8 @@ if($modx->hasPermission('bk_manager') || $modx->hasPermission('remove_locks') ||
 	$sitemenu['tools'] = array(
 		'tools',
 		'main',
-		'<i class="fa fa-wrench fa-lg"></i>' . $_lang['tools'],
-		'',
+		'<i class="fa fa-wrench"></i>' . $_lang['tools'],
+		'javascript:;',
 		$_lang['tools'],
 		' return false;',
 		'',
@@ -89,7 +103,7 @@ if($modx->hasPermission('edit_template')) {
 		'<i class="fa fa-newspaper-o"></i>' . $_lang['manage_templates'],
 		'index.php?a=76&tab=0',
 		$_lang['manage_templates'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'new_template,edit_template',
 		'main',
 		0,
@@ -104,7 +118,7 @@ if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet')
 		'<i class="fa fa-list-alt"></i>' . $_lang['tmplvars'],
 		'index.php?a=76&tab=1',
 		$_lang['tmplvars'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'new_template,edit_template',
 		'main',
 		0,
@@ -119,7 +133,7 @@ if($modx->hasPermission('edit_chunk')) {
 		'<i class="fa fa-th-large"></i>' . $_lang['manage_htmlsnippets'],
 		'index.php?a=76&tab=2',
 		$_lang['manage_htmlsnippets'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'new_chunk,edit_chunk',
 		'main',
 		0,
@@ -134,7 +148,7 @@ if($modx->hasPermission('edit_snippet')) {
 		'<i class="fa fa-code"></i>' . $_lang['manage_snippets'],
 		'index.php?a=76&tab=3',
 		$_lang['manage_snippets'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'new_snippet,edit_snippet',
 		'main',
 		0,
@@ -149,7 +163,7 @@ if($modx->hasPermission('edit_plugin')) {
 		'<i class="fa fa-plug"></i>' . $_lang['manage_plugins'],
 		'index.php?a=76&tab=4',
 		$_lang['manage_plugins'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'new_plugin,edit_plugin',
 		'main',
 		0,
@@ -189,6 +203,7 @@ if($modx->hasPermission('category_manager')) {
 		''
 	);
 }
+
 // Modules Menu Items
 if($modx->hasPermission('new_module')) {
 	$sitemenu['new_module'] = array(
@@ -245,7 +260,7 @@ if($modx->hasPermission('edit_user')) {
 		'<i class="fa fa fa-user"></i>' . $_lang['user_management_title'],
 		'index.php?a=75',
 		$_lang['user_management_title'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'edit_user',
 		'main',
 		0,
@@ -261,7 +276,7 @@ if($modx->hasPermission('edit_web_user')) {
 		'<i class="fa fa-users"></i>' . $_lang['web_user_management_title'],
 		'index.php?a=99',
 		$_lang['web_user_management_title'],
-		'',
+		'" onmouseover="modx.mainMenu.openSubMenu(event)',
 		'edit_web_user',
 		'main',
 		0,

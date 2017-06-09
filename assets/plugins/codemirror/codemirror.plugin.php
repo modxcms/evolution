@@ -85,6 +85,7 @@ switch ($modx->Event->name) {
         }
         break;
     case 'OnDocFormRender'     :
+        if($content['type'] == 'reference') return;
         $textarea_name = 'ta';
         $object_name = $content['pagetitle'];
         $xrte = (('htmlmixed' == $mode) ? $xrte : 0);

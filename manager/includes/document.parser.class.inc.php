@@ -1350,7 +1350,7 @@ class DocumentParser {
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
         }
-        
+        /* if uncomment incorrect work plugin, cant understend where use this code and for what?
         $lock_file_path = MODX_BASE_PATH . 'assets/cache/lock_' . str_replace(' ','-',strtolower($this->event->activePlugin)) . '.pageCache.php';
         if($this->isBackend()) {
             if(is_file($lock_file_path)) {
@@ -1359,7 +1359,7 @@ class DocumentParser {
                 return;
             }
             elseif(stripos($this->event->activePlugin,'ElementsInTree')===false) touch($lock_file_path);
-        }
+        }*/
         ob_start();
         eval($pluginCode);
         $msg = ob_get_contents();

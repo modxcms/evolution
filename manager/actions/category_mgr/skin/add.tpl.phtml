@@ -1,29 +1,29 @@
 <form action="<?php $view->get('url'); ?>" method="post" id="add_form">
 	<input name="<?php echo $view->get('request_key'); ?>[add][submit]" type="hidden" value="1" />
 	<ul class="actionButtons">
-		<li><a class="primary" href="#" onclick="document.getElementById('add_form').submit();return false;"><?php echo $view->txt('cm_create_new_category'); ?></a></li>
-		<li><a href="#" id="add-help"><?php echo $_lang['help']; ?></a></li>
+		<li><a class="primary" href="javascript:;" onclick="document.getElementById('add_form').submit();return false;"><?php echo $view->txt('cm_create_new_category'); ?></a></li>
+		<li><a href="javascript:;" id="add-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
 	<div id="add-info" style="display:none">
 		<p class="element-edit-message">Add a new category to the Manager.</p>
 	</div>
 	<script>
-		jQuery( "#add-help" ).click(function() {
-			jQuery( '#add-info').toggle();
+		jQuery("#add-help").click(function() {
+			jQuery('#add-info').toggle();
 		});
 	</script>
-  <table id="category-add" class="grid" cellpadding="1" cellspacing="1">
-    <thead>
-      <tr>
-        <td class="gridHeader"><?php echo $view->txt('cm_category_name'); ?></td>
-        <td class="gridHeader"><?php echo $view->txt('cm_category_position'); ?></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="gridAltItem"><input type="text" class="inputBox" name="<?php echo $view->get('request_key'); ?>[add][data][name]" /></td>
-        <td class="gridAltItem"><input type="text" name="<?php echo $view->get('request_key'); ?>[add][data][rank]" /></td>
-      </tr> 
-    </tbody>
-  </table>
+	<table id="category-add" class="grid" cellpadding="1" cellspacing="1">
+		<thead>
+		<tr>
+			<td class="gridHeader"><?php echo $view->txt('cm_category_name'); ?></td>
+			<td class="gridHeader"><?php echo $view->txt('cm_category_position'); ?></td>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="gridAltItem"><input type="text" class="inputBox" name="<?php echo $view->get('request_key'); ?>[add][data][name]" /></td>
+			<td class="gridAltItem"><input type="text" name="<?php echo $view->get('request_key'); ?>[add][data][rank]" /></td>
+		</tr>
+		</tbody>
+	</table>
 </form>

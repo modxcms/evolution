@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE != "true") {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('edit_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -18,51 +20,50 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 if(isset($_POST['listSubmitted'])) {
-    $updateMsg .= '<span class="warning" id="updated">Updated!</span>';
-    if (strlen($items) > 0) {
-        $items = explode(';', $items);
-        foreach ($items as $key => $value) {
-            $docid = ltrim($value, 'item_');
-            $key = $reset ? 0 : $key;
-            if (is_numeric($docid)) {
-                $modx->db->update(array('menuindex'=>$key), $modx->getFullTableName('site_content'), "id='{$docid}'");
-            }
-        }
-    }
+	$updateMsg .= '<span class="warning" id="updated">Updated!</span>';
+	if(strlen($items) > 0) {
+		$items = explode(';', $items);
+		foreach($items as $key => $value) {
+			$docid = ltrim($value, 'item_');
+			$key = $reset ? 0 : $key;
+			if(is_numeric($docid)) {
+				$modx->db->update(array('menuindex' => $key), $modx->getFullTableName('site_content'), "id='{$docid}'");
+			}
+		}
+	}
 }
 
 $limit = 0;
 $disabled = 'true';
 $pagetitle = '';
-if ($id !== NULL) {
-    $rs = $modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'");
-    $pagetitle = $modx->db->getValue($rs);
-    
-    $rs = $modx->db->select('id, pagetitle, parent, menuindex, published, hidemenu, deleted', $modx->getFullTableName('site_content'), "parent='{$id}'", 'menuindex ASC');
-    $resource = $modx->db->makeArray($rs);
-    $limit = count($resource);
-    if ($limit < 1) {
-        $updateMsg = $_lang['sort_nochildren'];
-    } else {
-        $disabled = 0;
-        foreach ($resource as $item) {
-            // Add classes to determine whether it's published, deleted, not in the menu
-            // or has children.
-            // Use class names which match the classes in the document tree
-            $classes = '';
-            $classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode' ;
-            $classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ' ;
-            $classes = ($item['deleted']) ? ' deletedNode ' : $classes ;
-            $hasChildren = (count($modx->getChildIds($item['id'], 1)) > 0) ? '<i class="' . $_style['files_folder'] . '"></i> ' : ' <i class="' . $_style['files_page_html'] . '"></i> ';
-            $ressourcelist .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'" title="">' . $hasChildren . $item['pagetitle'] . ' <small>('.$item['id'].')</small></li>';
-        }
-    }
-}
+if($id !== NULL) {
+	$rs = $modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'");
+	$pagetitle = $modx->db->getValue($rs);
 
+	$rs = $modx->db->select('id, pagetitle, parent, menuindex, published, hidemenu, deleted', $modx->getFullTableName('site_content'), "parent='{$id}'", 'menuindex ASC');
+	$resource = $modx->db->makeArray($rs);
+	$limit = count($resource);
+	if($limit < 1) {
+		$updateMsg = $_lang['sort_nochildren'];
+	} else {
+		$disabled = 0;
+		foreach($resource as $item) {
+			// Add classes to determine whether it's published, deleted, not in the menu
+			// or has children.
+			// Use class names which match the classes in the document tree
+			$classes = '';
+			$classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode';
+			$classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ';
+			$classes = ($item['deleted']) ? ' deletedNode ' : $classes;
+			$hasChildren = (count($modx->getChildIds($item['id'], 1)) > 0) ? '<i class="' . $_style['files_folder'] . '"></i> ' : ' <i class="' . $_style['files_page_html'] . '"></i> ';
+			$ressourcelist .= '<li id="item_' . $item['id'] . '" class="sort ' . $classes . '" title="">' . $hasChildren . $item['pagetitle'] . ' <small>(' . $item['id'] . ')</small></li>';
+		}
+	}
+}
 
 $header = '
     <script>window.$j = jQuery.noConflict();</script>
@@ -116,7 +117,7 @@ $header = '
 	           }
 	       });
 	       
-	       if ('.$disabled.' == true) {
+	       if (' . $disabled . ' == true) {
 	           parent.tree.ca = \'\';
 	       }
 	    });
@@ -140,7 +141,7 @@ $header = '
         }
         
         function resetSortOrder() {
-            if (confirm("'.$_lang["confirm_reset_sort_order"].'")==true) {
+            if (confirm("' . $_lang["confirm_reset_sort_order"] . '")==true) {
                 documentDirty=false;
                 var input = document.createElement("input");
                 input.type = "hidden";
@@ -152,37 +153,31 @@ $header = '
         }
     </script>';
 
-
 $pagetitle = $id == 0 ? $site_name : $pagetitle;
-    
+
 $header .= '</head>
 <body ondragstart="return false;">
 
-<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-sort-numeric-asc"></i>
-  </span>
-  <span class="pagetitle-text">
-    '.$_lang["sort_menuindex"].'
-  </span>
+<h1>
+	<i class="fa fa-sort-numeric-asc"></i>' . $_lang["sort_menuindex"] . '
 </h1>
 
 <div id="actions">
     <ul class="actionButtons">
-        '.(!$disabled ? '<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>' : '').'
-        <li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=2\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        ' . (!$disabled ? '<li><a href="javascript:;" onclick="save();"><i class="' . $_style["actions_save"] . '"></i> ' . $_lang['save'] . '</a></li>' : '') . '
+        <li class="transition"><a href="javascript:;" onclick="document.location.href=\'index.php?a=2\';"><i class="' . $_style["actions_cancel"] . '"></i> ' . $_lang['cancel'] . '</a></li>
     </ul>
 </div>
 
 <div class="section">
-<div class="sectionHeader">'.$pagetitle.' ('.$id.')</div>
+<div class="sectionHeader">' . $pagetitle . ' (' . $id . ')</div>
 <div class="sectionBody">';
 
 if(!$disabled) {
-    $header .= '<br/><p>' . $_lang["sort_elements_msg"] . '</p>
+	$header .= '<br/><p>' . $_lang["sort_elements_msg"] . '</p>
     <ul class="actionButtons">
-	    <li><a href="#" onclick="resetSortOrder();return false;">' . $_lang['reset_sort_order'] . '</a></li>
-	    <li><a href="#" onclick="sort();return false;">' . $_lang['sort_alphabetically'] . '</a></li>
+	    <li><a href="javascript:;" onclick="resetSortOrder();return false;">' . $_lang['reset_sort_order'] . '</a></li>
+	    <li><a href="javascript:;" onclick="sort();return false;">' . $_lang['sort_alphabetically'] . '</a></li>
 	</ul>';
 };
 
@@ -191,17 +186,15 @@ echo $header;
 echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...</span>";
 
 if(!$disabled) {
-    echo '
+	echo '
         <ul id="sortlist" class="sortableList">
-            '.$ressourcelist.'
+            ' . $ressourcelist . '
         </ul>
 	<form action="" method="post" name="sortableListForm" style="display: none;">
             <input type="hidden" name="listSubmitted" value="true" />
             <input type="text" id="list" name="list" value="" />
         </form>';
 }
-
 echo '
 </div>
 </div>';
-?>
