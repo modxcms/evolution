@@ -28,7 +28,7 @@ case 'install':
 	if ($file!='%url%' && $file!='' && $file!=' '){
 		$url = $file;
 	} else {
-		$url = "http://modx-store.com/get.php?get=file&cid=".$id;
+		$url = "http://extras.evolution-cms.com/get.php?get=file&cid=".$id;
 	}
 
 	if (!$Store->downloadFile($url ,MODX_BASE_PATH."assets/cache/store/temp.zip")){
