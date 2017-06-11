@@ -28,6 +28,7 @@ class udperms{
 		}
 		
 		$parent = $modx->db->getValue($modx->db->select('parent', $tblsc, "id='{$this->document}'"));
+		if($document == 0 && $parent == NULL && $udperms_allowroot == 1) return true; // User is allowed to create new document in root
 		if (($this->duplicateDoc==true || $document==0) && $parent==0 && $udperms_allowroot==0) {
 			return false; // deny duplicate || create new document at root if Allow Root is No
 		}
