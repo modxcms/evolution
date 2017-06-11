@@ -44,7 +44,7 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 			}
 			?>
-			<? if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
+			<?php if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
 
 			var actionButtons = document.getElementById('actions'),
 				actionSelect = document.getElementById('stay');
