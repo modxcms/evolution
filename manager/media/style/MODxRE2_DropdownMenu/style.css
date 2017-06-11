@@ -798,6 +798,8 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #ManageFiles #imageviewer { display: none; margin-top: 10px }
 #ManageFiles #imageviewer img { display: inline-block; max-width: 100%; height: auto; border: 1px dashed #ccc !important }
 #ManageFiles #uploader { margin-top: 20px }
+#ManageFiles tr.editRow td { background-color:#F2DEDE !important; }
+#ManageFiles tr.viewRow td { background-color:#DFF0D8 !important; }
 #content.phptextarea { width: 100%; height: 400px }
 #FilesTable { border-collapse: collapse; }
 #FilesTable tr, #FilesTable td { padding: 2px !important; }

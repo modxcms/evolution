@@ -546,6 +546,30 @@ if($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
 
 }
 
+function determineIcon($file, $selFile, $mode) {
+	$icons = array(
+		'default'=>'fa fa-file-o',
+		'edit'=>'fa fa-pencil-square-o',
+		'view'=>'fa fa-eye'
+	);
+	$icon = $icons['default'];
+	if($file == $selFile) $icon = isset($icons[$mode]) ? $icons[$mode] : $icons['default'];
+	return '<i class="'.$icon.' FilesPage"></i>';
+}
+
+function markRow($file, $selFile, $mode) {
+	$classNames = array(
+		'default'=>'',
+		'edit'=>'editRow',
+		'view'=>'viewRow'
+	);
+	if($file == $selFile) {
+		$class = isset($classNames[$mode]) ? $classNames[$mode] : $classNames['default'];
+		return ' class="' . $class . '"';
+	}
+	return '';
+}
+
 function ls($curpath) {
 	global $_lang, $theme_image_path, $_style;
 	global $excludes, $protected_path, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $modx;
@@ -598,7 +622,7 @@ function ls($curpath) {
 			$type = getExtension($newpath);
 			$files_array[$filecounter]['file'] = $newpath;
 			$files_array[$filecounter]['stats'] = lstat($newpath);
-			$files_array[$filecounter]['text'] = '<i class="' . $_style['files_page_html'] . ' FilesPage"></i> ' . $file;
+			$files_array[$filecounter]['text'] = determineIcon($newpath, $_REQUEST['path'], $_REQUEST['mode']) . $file;
 			$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ? '<span class="btn btn-xs btn-default" style="cursor:pointer;" onclick="viewfile(\'' . $webstart_path . substr($newpath, $len, strlen($newpath)) . '\');"><i class="' . $_style['files_view'] . '" alt="' . $_lang['files_viewfile'] . '" title="' . $_lang['files_viewfile'] . '"></i></span> ' : (($enablefiledownload && in_array($type, $uploadablefiles)) ? '<a class="btn btn-xs btn-default" href="' . $webstart_path . implode('/', array_map('rawurlencode', explode('/', substr($newpath, $len, strlen($newpath))))) . '" style="cursor:pointer;"><i class="' . $_style['files_download'] . '" alt="' . $_lang['file_download_file'] . '" title="' . $_lang['file_download_file'] . '"></i></a> ' : '<span class="btn btn-xs btn-default disabled"><i class="' . $_style['files_view'] . '" alt="' . $_lang['files_viewfile'] . '" title="' . $_lang['files_viewfile'] . '"></i></span> ');
 			$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? '<a class="btn btn-xs btn-default" href="index.php?a=31&mode=view&path=' . urlencode($newpath) . '"><i class="' . $_style['files_view'] . '" alt="' . $_lang['files_viewfile'] . '" title="' . $_lang['files_viewfile'] . '"></i></a> ' : $files_array[$filecounter]['view'];
 			$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type == '.zip') ? '<a class="btn btn-xs btn-default" href="javascript:unzipFile(\'' . urlencode($file) . '\');"><i class="' . $_style['files_unzip'] . '" alt="' . $_lang['file_download_unzip'] . '" title="' . $_lang['file_download_unzip'] . '"></i></a> ' : '';
@@ -633,7 +657,7 @@ function ls($curpath) {
 	sort($files_array); // sorting the array alphabetically (Thanks pxl8r!)
 	for($i = 0; $i < $files; $i++) {
 		$filesizes += $files_array[$i]['stats']['7'];
-		echo '<tr onmouseout="setColor(this,0)" onmouseover="setColor(this,1)">';
+		echo '<tr onmouseout="setColor(this,0)" onmouseover="setColor(this,1)" '. markRow($files_array[$i]['file'], $_REQUEST['path'], $_REQUEST['mode']) .'>';
 		echo '<td>' . $files_array[$i]['text'] . '</td>';
 		echo '<td>' . $modx->toDateFormat($files_array[$i]['stats']['9']) . '</td>';
 		echo '<td dir="ltr">' . $modx->nicesize($files_array[$i]['stats']['7']) . '</td>';
