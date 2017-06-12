@@ -100,7 +100,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				</fieldset>
 
 				<style type="text/css">
-					label { display: block; }
+					form label { display: block; }
 					table td { vertical-align: top; }
 					.sectionBody fieldset { border: none; }
 				</style>
