@@ -10,8 +10,6 @@ if(empty ($modx->config)) {
 	$modx->getSettings();
 }
 
-$modx->invokeEvent("OnWebPageInit");
-
 if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
 	$modx->sendRedirect($modx->config['site_url']);
 }
@@ -122,6 +120,121 @@ if(isset($action)) {
 			}
 
 			break;
+		}
+
+		case 'modxTagHelper': {
+			$name = isset($_REQUEST['name']) ? $_REQUEST['name'] : false;
+			$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : false;
+
+			if($name && $type) {
+				switch($type) {
+					case 'Snippet':
+					case 'SnippetNoCache': {
+
+						$sql = $modx->db->query('SELECT *
+						FROM ' . $modx->getFullTableName('site_snippets') . '
+						WHERE name="' . $name . '"
+						LIMIT 1');
+
+						if($modx->db->getRecordCount($sql)) {
+							$row = $modx->db->getRow($sql);
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $row['name']
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+									'id' => 'item1',
+									'onclick' => "window.main.location.href='index.php?a=22&id=" . $row['id'] . "'"
+								),
+								'seperator1' => '',
+								'item2' => array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
+									'id' => 'item1',
+								),
+//								'item3' => array(
+//									'innerHTML' => '<i class="fa fa-book"></i> ' . $_lang["documentation"],
+//									'id' => 'item2',
+//									'onclick' => "alert(2)"
+//								)
+							);
+						} else {
+							$contextmenu = array(
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['add'],
+									'id' => 'item1',
+									'onclick' => "window.main.location.href='index.php?a=23'"
+								)
+							);
+						}
+
+						break;
+					}
+					case 'Attribute' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => $name
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Параметр сниппета',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'AttributeValue':
+					case 'Chunk' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'Чанк'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'Placeholder' :
+					case 'Tv' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'ТВ'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'Config' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'Системый параметр'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+				}
+				echo json_encode($contextmenu, JSON_UNESCAPED_UNICODE);
+				break;
+			}
 		}
 	}
 }

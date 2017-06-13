@@ -336,7 +336,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .rtl .cntxMnuSeparator { margin: 3px 28px 3px 1px; }
 #frameset { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
-#mx_contextmenu, #contextmenu, .dp_cal { position: absolute; top: 0; min-width: 200px; height: auto; visibility: hidden; z-index: 10000; background: #fff; border-top: 3px solid #068ada; margin: 0; padding: 4px; line-height: 11px; font-size: 12px; white-space: nowrap; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); }
+#mx_contextmenu, #contextmenu, .dp_cal { position: absolute; top: 0; min-width: 200px; max-width: 350px; height: auto; visibility: hidden; z-index: 10000; background: #fff; border-top: 3px solid #068ada; margin: 0; padding: 4px; line-height: 11px; font-size: 12px; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); }
 #mx_contextmenu.show, #contextmenu.show, .dp_cal { visibility: visible }
 #mx_contextmenu .menuLink, #contextmenu .menuLink, #mx_contextmenu div, #contextmenu div { color: #222; padding: 4px 2px 4px 4px; line-height: 16px; border: 1px solid #fff; }
 #mx_contextmenu .menuLink:hover, #contextmenu .menuLink:hover { background: #E5F0D6; border-color: #98BF6C; color: #333; cursor: pointer; }

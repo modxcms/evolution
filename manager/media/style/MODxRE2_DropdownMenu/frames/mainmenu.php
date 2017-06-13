@@ -103,12 +103,12 @@ if($modx->hasPermission('edit_template')) {
 		'<i class="fa fa-newspaper-o"></i>' . $_lang['manage_templates'],
 		'index.php?a=76&tab=0',
 		$_lang['manage_templates'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'new_template,edit_template',
 		'main',
 		0,
 		10,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
@@ -118,12 +118,12 @@ if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet')
 		'<i class="fa fa-list-alt"></i>' . $_lang['tmplvars'],
 		'index.php?a=76&tab=1',
 		$_lang['tmplvars'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'new_template,edit_template',
 		'main',
 		0,
 		20,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 if($modx->hasPermission('edit_chunk')) {
@@ -133,12 +133,12 @@ if($modx->hasPermission('edit_chunk')) {
 		'<i class="fa fa-th-large"></i>' . $_lang['manage_htmlsnippets'],
 		'index.php?a=76&tab=2',
 		$_lang['manage_htmlsnippets'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'new_chunk,edit_chunk',
 		'main',
 		0,
 		30,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 if($modx->hasPermission('edit_snippet')) {
@@ -148,12 +148,12 @@ if($modx->hasPermission('edit_snippet')) {
 		'<i class="fa fa-code"></i>' . $_lang['manage_snippets'],
 		'index.php?a=76&tab=3',
 		$_lang['manage_snippets'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'new_snippet,edit_snippet',
 		'main',
 		0,
 		40,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 if($modx->hasPermission('edit_plugin')) {
@@ -163,12 +163,12 @@ if($modx->hasPermission('edit_plugin')) {
 		'<i class="fa fa-plug"></i>' . $_lang['manage_plugins'],
 		'index.php?a=76&tab=4',
 		$_lang['manage_plugins'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'new_plugin,edit_plugin',
 		'main',
 		0,
 		50,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 //$sitemenu['element_categories']     = array('element_categories','elements',$_lang['element_categories'],'index.php?a=76&tab=5',$_lang['element_categories'],'','new_template,edit_template,new_snippet,edit_snippet,new_chunk,edit_chunk,new_plugin,edit_plugin','main',1,60,'');
@@ -260,12 +260,12 @@ if($modx->hasPermission('edit_user')) {
 		'<i class="fa fa fa-user"></i>' . $_lang['user_management_title'],
 		'index.php?a=75',
 		$_lang['user_management_title'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'edit_user',
 		'main',
 		0,
 		10,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 
@@ -276,12 +276,12 @@ if($modx->hasPermission('edit_web_user')) {
 		'<i class="fa fa-users"></i>' . $_lang['web_user_management_title'],
 		'index.php?a=99',
 		$_lang['web_user_management_title'],
-		'" onmouseover="modx.mainMenu.openSubMenu(event)',
+		'',
 		'edit_web_user',
 		'main',
 		0,
 		20,
-		''
+		'class="toggle-dropdown"'
 	);
 }
 
