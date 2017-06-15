@@ -78,10 +78,10 @@ switch ($modx->Event->name) {
                 $mode = "application/json";
                 $lang = "javascript";
                 break;
-			case "application/x-httpd-php":
-				$mode = "application/x-httpd-php";
-				$lang = "php";
-				break;
+            case "application/x-httpd-php":
+                $mode = "application/x-httpd-php";
+                $lang = "php";
+                break;
         }
         break;
     case 'OnDocFormRender'     :
@@ -154,57 +154,58 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
             var mustacheOverlay = {
                 token: function(stream, state) {
                     var ch;
-                    if (stream.match("[[")) {
+                    if (stream.match("[[") || stream.match("`[[")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "?" || (ch == "]"&& stream.next() == "]")) break;
                         return "modxSnippet";
                     }
-                    if (stream.match("{{")) {
+                    if (stream.match("{{") || stream.match("`{{")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "}" && stream.next() == "}") break;
                         stream.eat("}");
                         return "modxChunk";
                     }
-                    if (stream.match("[*")) {
+                    if (stream.match("[*") || stream.match("`[*")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "*" && stream.next() == "]") break;
                         stream.eat("]");
                         return "modxTv";
                     }
-                    if (stream.match("[+")) {
+                    if (stream.match("[+") || stream.match("`[+")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "+" && stream.next() == "]") break;
                         stream.eat("]");
                         return "modxPlaceholder";
                     }
-                    if (stream.match("[!")) {
+                    if (stream.match("[!") || stream.match("`[!")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "?" || (ch == "!"&& stream.next() == "]")) break;
                         return "modxSnippetNoCache";
                     }
-                    if (stream.match("[(")) {
+                    if (stream.match("[(") || stream.match("`[(")) {
                         while ((ch = stream.next()) != null)
                             if (ch == ")" && stream.next() == "]") break;
                         stream.eat("]");
                         return "modxVariable";
                     }
-                    if (stream.match("[~")) {
+                    if (stream.match("[~") || stream.match("`[~")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "~" && stream.next() == "]") break;
                         stream.eat("]");
                         return "modxUrl";
                     }
-                    if (stream.match("[^")) {
+                    if (stream.match("[^") || stream.match("`[^")) {
                         while ((ch = stream.next()) != null)
                             if (ch == "^" && stream.next() == "]") break;
                         stream.eat("]");
                         return "modxConfig";
                     }
-                    if (ch = stream.match(/&([^\s=]+=+`)?/)) {
+                    if (ch = stream.match(/&([^\s=]+=)?/)) {
                         if(ch[1] != undefined)
                             return "modxAttribute";
                     }
-                    if (stream.match("`")) {
+                    if (stream.match(/`([^\s=]+`)?/)) {
+                        if (stream.match("`[")) return;
                         return "modxAttributeValue";
                     }
                     if (stream.match("@inherit", true, true) ||

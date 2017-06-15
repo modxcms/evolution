@@ -2148,7 +2148,7 @@ class DocumentParser {
                         $parentId = $this->getIdFromAlias($parentAlias);
                         $parentId = ($parentId > 0) ? $parentId : '0';
 
-                        $docAlias = basename($alias, $this->config['friendly_url_suffix']);
+                        $docAlias = $this->mb_basename($alias, $this->config['friendly_url_suffix']);
 
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
@@ -2216,6 +2216,10 @@ class DocumentParser {
         }
         if($this->config['seostrict']==='1') $this->sendStrictURI();
         $this->prepareResponse();
+    }
+    
+    function mb_basename($path, $suffix = null) {
+        return str_replace($suffix, '', end(explode('/', $path)));
     }
 
     function _IIS_furl_fix()

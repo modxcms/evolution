@@ -162,6 +162,12 @@ if($user['which_browser'] == 'default') {
 				ElementsInTree: <?php echo isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
 				EVOmodal: <?php echo isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
 			},
+			extend: function(a, b) {
+				for(var c in a) a[c] = a[c];
+			},
+			extended: function(a) {
+				for(var b in a) this[b] = a[b]; delete a[b]
+			},
 			openedArray: [],
 			lockedElementsTranslation: <?php echo json_encode($unlockTranslations) . "\n" ?>
 		};
@@ -170,6 +176,7 @@ if($user['which_browser'] == 'default') {
 		echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
 		?>
 	</script>
+	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/modx.js"></script>
 </head>
 <body class="<?php echo $body_class ?>">
 <div id="frameset">
@@ -434,8 +441,6 @@ if($user['which_browser'] == 'default') {
 	?>
 
 </div>
-
-<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/modx.js"></script>
 
 </body>
 </html>

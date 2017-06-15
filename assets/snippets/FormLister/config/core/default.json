@@ -1,0 +1,7 @@
+{
+  "errorClass":" has-error",
+  "requiredClass":" has-warning",
+  "subject":"Новое сообщение",
+  "messagesOuterTpl":"@CODE:<div class=\"alert alert-danger\" role=\"alert\">[+messages+]</div>",
+  "errorTpl":"@CODE:<span class=\"help-block\">[+message+]</span>"
+}

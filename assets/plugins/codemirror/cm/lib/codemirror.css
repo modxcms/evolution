@@ -433,12 +433,13 @@ span.CodeMirror-selectedtext { background: none; }
     background-color: rgba(0, 0, 0, 0.05);
     font-weight:bold;
 }
-.cm-modxAttribute, .cm-modxAttributeValue {
+.cm-modxAttribute {
     color: #00c;
     background-color: rgba(0, 0, 0, 0.05);
 }
 .cm-modxAttributeValue {
-    font-weight:bold;
+    /*font-weight:bold;*/
+    color: #000;
 }
 .cm-modxBinding {
     color: #bc00cc;
