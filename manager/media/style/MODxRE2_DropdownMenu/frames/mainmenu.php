@@ -108,7 +108,7 @@ if($modx->hasPermission('edit_template')) {
 		'main',
 		0,
 		10,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
@@ -123,7 +123,7 @@ if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet')
 		'main',
 		0,
 		20,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 if($modx->hasPermission('edit_chunk')) {
@@ -138,7 +138,7 @@ if($modx->hasPermission('edit_chunk')) {
 		'main',
 		0,
 		30,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 if($modx->hasPermission('edit_snippet')) {
@@ -153,7 +153,7 @@ if($modx->hasPermission('edit_snippet')) {
 		'main',
 		0,
 		40,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 if($modx->hasPermission('edit_plugin')) {
@@ -168,7 +168,7 @@ if($modx->hasPermission('edit_plugin')) {
 		'main',
 		0,
 		50,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 //$sitemenu['element_categories']     = array('element_categories','elements',$_lang['element_categories'],'index.php?a=76&tab=5',$_lang['element_categories'],'','new_template,edit_template,new_snippet,edit_snippet,new_chunk,edit_chunk,new_plugin,edit_plugin','main',1,60,'');
@@ -265,7 +265,7 @@ if($modx->hasPermission('edit_user')) {
 		'main',
 		0,
 		10,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 
@@ -281,7 +281,7 @@ if($modx->hasPermission('edit_web_user')) {
 		'main',
 		0,
 		20,
-		'class="toggle-dropdown"'
+		'toggle-dropdown'
 	);
 }
 
@@ -433,8 +433,11 @@ $menu = unserialize($menu[0]);
 if(is_array($menu)) {
 	$sitemenu = $menu;
 }
-
-include_once(MODX_MANAGER_PATH . 'includes/menu.class.inc.php');
+if(file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/includes/menu.class.inc.php')) {
+	include_once(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/includes/menu.class.inc.php');
+} else {
+	include_once(MODX_MANAGER_PATH . 'includes/menu.class.inc.php');
+}
 $menu = new EVOmenu();
 $menu->Build($sitemenu, array(
 	'outerClass' => 'nav',
