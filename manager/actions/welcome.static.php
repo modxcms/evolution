@@ -132,7 +132,7 @@ if($modx->db->getRecordCount($rs) < 1) {
                   <thead>
                     <tr>
                       <th>[%onlineusers_user%]</th>
-                      <th>[%onlineusers_userid%]</th>
+                      <th>ID</th>
                       <th>[%onlineusers_ipaddress%]</th>
                       <th>[%onlineusers_lasthit%]</th>
                       <th>[%onlineusers_action%]</th>
@@ -369,7 +369,7 @@ function getRecentInfoList() {
 		}
 		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-		$ph['info_btn'] = str_replace('[+id+]', $docid, '<button class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info"></i></button>');
+		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info"></i></a>');
 
 		if($ph['longtitle'] == '') {
 			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
