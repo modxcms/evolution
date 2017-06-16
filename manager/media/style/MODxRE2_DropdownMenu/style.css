@@ -109,11 +109,11 @@ input.submit { display: block !important; float: none !important; margin: 20px 0
 .sectionBody fieldset { background: none repeat scroll 0 0 #FDFDFD; border: 1px solid #CCCCCC; padding: 15px !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 15px; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 .sectionBody fieldset h3 { font-size: 14px; color: #789; font-weight: 500; padding-bottom: 0; margin-bottom: 0; }
-.sectionHeader, .showHideVisible { color: #666; margin: 0 15px; padding: 5px 3px 5px; zoom: 1; font-weight: 500; border: 1px solid #ccc; text-shadow: 0 1px 0 #FFF; }
+.sectionHeader, .showHideVisible { color: #333; margin: 0 15px; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #FFF; }
 .sectionHeader + .sectionBody, .showHideVisible + .sectionBody { margin-top: -1px !important }
-.tab-page .sectionHeader { margin: 2px 3px 0; }
-.sectionBody, .layerVisible { position: relative; display: none; margin: 5px 15px 15px; display: block; }
-.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { background: none repeat scroll 0 0 #F7F7F7 !important; border: 1px solid #CCCCCC; margin: 0 3px 15px; padding: 7px; }
+.tab-page .sectionHeader { margin: 15px 3px 0; }
+.sectionBody, .layerVisible { position: relative; display: none; margin: 5px 0px 0px; display: block; }
+.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { border-top: 1px solid #CCCCCC; margin: 0 3px 15px; padding: 7px; }
 .section .sectionBody { margin: 0 15px 15px; padding: 15px; background-color: #fff; border: 1px solid #CCCCCC; }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
@@ -191,7 +191,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 /*.tab-pane { position: relative; width: 100%; margin-top: 0 }*/
 .tab-row .tab.selected { color: #333; border-radius: 0 }
 .tab-row .tab.selected span { background-color: #fff; text-shadow: none }
-.tab-row { position: relative; z-index: 1; white-space: nowrap }
+.tab-row { position: relative; z-index: 1; white-space: nowrap; padding-left:15px; }
 .tab-row .tab, .tab-row .tab span { color: #1377c5; font-size: 13px }
 .tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: 0 0; cursor: pointer }
 .tab-row .tab.hover { background: 0 0; filter: none }
@@ -203,10 +203,10 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-row .tab.hover, .tab-row .tab.hover span { color: #2b749d }
 .tab-row .tab .fa { margin-right: 3px; font-size: 14px }
 .tab-page { clear: both; background-color: #fff; position: relative; top: -2px; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
-.sectionHeader { padding: 7px 12px; background-color: #F2F2F2 }
+.sectionHeader { padding: 7px 0px;}
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
-.tab-page .sectionBody { padding: 12px; }
+.tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Welcome Page ]--- */
 a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !important; }
@@ -392,7 +392,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .phptextarea { font-family: Consolas, 'Courier New', 'Courier', monospace; }
 /* Custom */
 /* normalize some td paddings */
-#tabTemplate tbody td, .sectionBody td, .sectionBody th { padding: 1px 5px; text-align: left; vertical-align: middle; }
+#tabTemplate tbody td, .sectionBody td, .sectionBody th { padding: 1px 5px; text-align: left; vertical-align: top; }
 .sectionBody .displayparams, .sectionBody .permissiongroup { margin-bottom: 3px; background-color: #eee; border-collapse: separate; border-spacing: 1px; }
 .sectionBody .displayparams th, .sectionBody .displayparams td { padding: 4px 4px; }
 .sectionBody .displayparams thead td, .sectionBody .permissiongroup thead td { border-top: none; }
@@ -482,7 +482,7 @@ div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
 .lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; padding: 0; }
 .lockCell { width: 30px; padding-left: 10px; }
 .mainCell { width: auto; }
-.btnCell { width: 6em; text-align: right; }
+.btnCell { width: 6em; text-align: right; padding-right:10px;}
 .mainCell > span { display: block }
 /* Manage elements general styles */
 a.man_el_name { display: block; padding: .1em 0 .1em 12px; }
@@ -554,7 +554,6 @@ input[type="button"], input[type="submit"] { background: #ededed; border: 1px so
 input[type="button"]:hover, input[type="submit"]:hover { background: #1377c5; border: 1px solid #1377c5; color: #fff; }
 input[type="button"]:active, input[type="submit"]:active { background: #3189ba; border: 1px solid #3189ba; }
 form select, input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="number"], textarea, form input[type="text"], form input[type="password"], form input[type="number"], form textarea, #tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #FBFBFB; transition: all .2s; border-color: #dbdbdb; -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; }
-#tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #fff; border-color: #cfcfcf; }
 #tmplvars-pane select, #tmplvars-pane input[type="text"], #tmplvars-pane input[type="email"], #tmplvars-pane input[type="password"], #tmplvars-pane input[type="url"], #tmplvars-pane input[type="number"], #tmplvars-pane textarea { background-color: #FBFBFB; border-color: #dbdbdb; }
 input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, textarea:focus, select:focus, form input[type="text"]:focus, form input[type="password"]:focus, form input[type="email"]:focus, form input[type="url"]:focus, form input[type="number"]:focus, form textarea:focus, #tv_body input[type="text"]:focus, #tv_body input[type="password"]:focus, #tv_body input[type="email"]:focus, #tv_body input[type="url"]:focus, #tv_body input[type="number"]:focus, #tv_body textarea:focus { border-color: #1377c5; }
 #range input#pids { width: calc(100% - 95px) !important; margin: 0; float: left; }
@@ -676,3 +675,76 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .show > .dropdown-menu { display: block }
 /* SimpleGallery */
 #SimpleGallery .pagination { display: block }
+
+
+/*multiTV*/
+.multitv .list li.element a.copy, .multitv .list li.element a.remove{
+width: 25px!important;
+text-align: center;
+background: #fff!important;
+top: -10px!important;
+}
+.multitv .list li.element{
+	border-radius: .25rem;
+	border: 1px solid rgba(0, 0, 0, .125)
+	background: #fefefe!important;
+	margin-bottom:10px!important;
+}
+
+
+/*dark*/
+
+.dark .tab-page, .dark .tab-row .tab.selected, .dark .tab-row .tab.selected.hover, .dark .tab-row .tab.selected:before,.dark .tab-row .tab.selected span {
+	background: #F9F9F9;
+}
+.dark, .dark .resourceTable .panel-heading {background: #ecf0f1!important;}
+ .dark .resourceTable .panel-heading:hover {background: #ecf0f1!important;}
+.dark form select, 
+.dark input[type="text"], 
+.dark input[type="email"], 
+.dark input[type="password"], 
+.dark input[type="url"], 
+.dark input[type="number"], 
+.dark textarea, 
+.dark form input[type="text"], 
+.dark form input[type="password"], 
+.dark form input[type="number"], 
+.dark form textarea, 
+.dark #tv_body select, 
+.dark #tv_body input[type="text"], 
+.dark #tv_body input[type="email"], 
+.dark #tv_body input[type="password"], 
+.dark #tv_body input[type="url"], 
+.dark #tv_body input[type="number"], 
+.dark #tv_body textarea {
+	background-color: #FFF;
+}
+
+.dark .multitv .list li.element a.copy, .multitv .list li.element a.remove{
+  background: #F9F9F9!important;
+
+}
+.dark .multitv .list li.element{
+	background: #FEFEFE!important;
+}
+
+.dark .split{background: #e3e3e3;}
+.dark hr{background: transparent;}
+
+.dark .content-blocks .block{
+	background: #FEFEFE;
+	border: 1px solid #e3e3e3;
+}
+.dark .content-blocks .block .fields-group{
+	border: 1px dashed #e2e2e2;
+}
+.dark .content-blocks input[type="text"], 
+.dark .content-blocks input[type="password"], 
+.dark .content-blocks input[type="number"], 
+.dark .content-blocks textarea{
+	background-color: #FBFBFB !important;
+	border-color: #dbdbdb !important;
+}
+.dark .content-blocks .controls{
+	background: transparent!important;
+}
