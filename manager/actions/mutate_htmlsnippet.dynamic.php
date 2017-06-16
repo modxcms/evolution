@@ -43,6 +43,8 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'] != '' && is_numeric($_REQUEST['id']
 	if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 	}
+} else if(isset($_REQUEST['itemname'])) {
+	$content['name'] = $_REQUEST['itemname'];
 } else {
 	$_SESSION['itemname'] = $_lang["new_htmlsnippet"];
 	$content['category'] = intval($_REQUEST['catid']);
