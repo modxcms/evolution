@@ -7,13 +7,13 @@
 #frameset { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
 #mainMenu, #tree, #main { position: absolute; }
 #mainMenu { top: 0; left: 0; width: 100%; height: 2.2rem; overflow: hidden; z-index: 100; }
-#tree { left: 0; top: 2.2rem; bottom: 0; width: 25rem; overflow: hidden; z-index: 1; }
+#tree { left: 0; top: 2.2rem; bottom: 0; width: 25rem; max-width: 100%; overflow: hidden; z-index: 1; }
 #main { left: 25rem; top: 2.2rem; right: 0; bottom: 0; overflow: hidden; z-index: 2; }
 #main iframe { width: 100%; height: 100%; }
 /* floater */
 #floater { position: fixed; z-index: 1000; opacity: 0; visibility: hidden; max-width: 25rem; padding: 1.5rem; top: 4rem; left: 2rem; border-radius: 0.25rem; background-color: #fff; -webkit-box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); transition-duration: 0.15s }
 #floater.show { opacity: 1; visibility: visible; }
 /*resizer*/
-#resizer { position: absolute; z-index: 99; top: 35px; bottom: 0; left: 320px; width: 5px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
+#resizer { position: absolute; z-index: 99; top: 2.2rem; bottom: 0; left: 25rem; width: 5px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
 #resizer:hover { background-color: rgba(0, 0, 0, 0.1); }
 #mask_resizer { position: absolute; width: 100%; height: 100%; }

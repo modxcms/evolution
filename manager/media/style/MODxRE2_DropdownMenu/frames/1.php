@@ -5,10 +5,6 @@ if(IN_MANAGER_MODE != "true") {
 }
 header("X-XSS-Protection: 0");
 
-//function json_encode($value, $options) {
-//
-//}
-
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 1') !== false) ? 'legacy_IE' : 'modern';
 
 // invoke OnManagerPreFrameLoader
@@ -17,11 +13,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 if(!isset($modx->config['manager_menu_height'])) {
-	$modx->config['manager_menu_height'] = 35;
+	$modx->config['manager_menu_height'] = 2.2; // rem
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
-	$modx->config['manager_tree_width'] = 320;
+	$modx->config['manager_tree_width'] = 25; // rem
 }
 
 if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwardToAction'])) {
@@ -91,16 +87,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
-	<!--			<script>
-			if(window.innerWidth < 600) {
-				document.getElementsByName('viewport')[0]['content'] = 'initial-scale=0.64, maximum-scale=0.64, user-scalable=no';
-			}
-		</script>-->
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css" />
 	<style>
-		#tree { width: <?php echo $MODX_positionSideBar ?>px }
-		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>px }
+		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
+		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
 	</style>
 	<?php echo $jQuery ?>
 	<script type="text/javascript">
