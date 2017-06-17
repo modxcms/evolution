@@ -46,6 +46,8 @@ if(isset($_GET['id'])) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 	}
 	$content['properties'] = str_replace("&", "&amp;", $content['properties']);
+} else if(isset($_REQUEST['itemname'])) {
+	$content['name'] = $_REQUEST['itemname'];
 } else {
 	$_SESSION['itemname'] = $_lang["new_snippet"];
 	$content['category'] = intval($_REQUEST['catid']);

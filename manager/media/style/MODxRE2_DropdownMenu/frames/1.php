@@ -13,11 +13,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 if(!isset($modx->config['manager_menu_height'])) {
-	$modx->config['manager_menu_height'] = 35;
+	$modx->config['manager_menu_height'] = 2.2; // rem
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
-	$modx->config['manager_tree_width'] = 320;
+	$modx->config['manager_tree_width'] = 25; // rem
 }
 
 if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwardToAction'])) {
@@ -48,6 +48,10 @@ if(!$MODX_positionSideBar) {
 
 if(isset($modx->pluginCache['ElementsInTree'])) {
 	$body_class .= ' ElementsInTree';
+} else {
+	if(!empty($_COOKIE['MODX_themeColor'])) {
+		$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+	}
 }
 
 $unlockTranslations = array(
@@ -70,22 +74,27 @@ $user = $modx->getUserInfo($modx->getLoginUserID());
 if($user['which_browser'] == 'default') {
 	$user['which_browser'] = $modx->config['which_browser'];
 }
+
+$jQuery = '';
+
+if(isset($modx->pluginCache['ElementsInTree'])) {
+	$jQuery = '<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>';
+}
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
+	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css" />
 	<style>
-		#tree { width: <?php echo $MODX_positionSideBar ?>px }
-		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>px }
+		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
+		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
 	</style>
-	<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
+	<?php echo $jQuery ?>
 	<script type="text/javascript">
-
 		// GLOBAL variable modx
 		var modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",
@@ -104,7 +113,7 @@ if($user['which_browser'] == 'default') {
 				theme: "<?php echo $modx->config['manager_theme'] ?>",
 				which_browser: "<?php echo $user['which_browser'] ?>",
 				layout: <?php echo (int) $manager_layout ?>,
-				textdir: "<?php echo $modx_textdir ?>",
+				textdir: "<?php echo $modx_textdir ?>"
 			},
 			lang: {
 				already_deleted: "<?php echo $_lang['already_deleted'] ?>",
@@ -157,151 +166,152 @@ if($user['which_browser'] == 'default') {
 				edit_template: <?php echo $modx->hasPermission('edit_template') ? 1 : 0 ?>,
 				new_document: <?php echo $modx->hasPermission('new_document') ? 1 : 0 ?>,
 				publish_document: <?php echo $modx->hasPermission('publish_document') ? 1 : 0 ?>
+
 			},
 			plugins: {
 				ElementsInTree: <?php echo isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
 				EVOmodal: <?php echo isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
+
 			},
 			extend: function(a, b) {
 				for(var c in a) a[c] = a[c];
 			},
 			extended: function(a) {
-				for(var b in a) this[b] = a[b]; delete a[b]
+				for(var b in a) this[b] = a[b];
+				delete a[b]
 			},
 			openedArray: [],
-			lockedElementsTranslation: <?php echo json_encode($unlockTranslations) . "\n" ?>
+			lockedElementsTranslation: <?php echo json_encode($unlockTranslations, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE) . "\n" ?>
 		};
 		<?php
 		$opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
 		echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
 		?>
 	</script>
-	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/modx.js"></script>
+	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/js/modx.js"></script>
 </head>
 <body class="<?php echo $body_class ?>">
+<input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
 <div id="frameset">
 	<div id="mainMenu" class="dropdown">
-		<div class="col float-left">
-			<input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
-			<?php include('mainmenu.php'); ?>
-		</div>
-		<div class="col float-left">
-			<div id="statusbar">
-				<div id="buildText"></div>
-				<div id="workText"></div>
-			</div>
-		</div>
-		<div class="col float-right">
-			<ul class="nav">
-				<li id="searchform">
-					<form action="index.php?a=71#results" method="post" target="main">
-						<input type="hidden" value="Search" name="submitok" />
-						<label for="searchid" class="label_searchid">
-							<i class="fa fa-search"></i>
-						</label>
-						<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
-						<div class="mask"></div>
-					</form>
-				</li>
-				<li>
-					<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="setLastClickedElement(0,0);">
-						<i class="fa fa-desktop"></i>
-					</a>
-				</li>
-				<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
-						<ul class="dropdown-menu">
-							<?php if($modx->hasPermission('settings')) { ?>
-								<li>
-									<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
-									</a>
-								</li>
-							<?php } ?>
-							<?php if($modx->hasPermission('view_eventlog')) { ?>
-								<li>
-									<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
-									</a>
-								</li>
-							<?php } ?>
-							<?php if($modx->hasPermission('view_eventlog')) { ?>
-								<li>
-									<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
-									</a>
-								</li>
-							<?php } ?>
-							<?php if($modx->hasPermission('logs')) { ?>
-								<li>
-									<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
-									</a>
-								</li>
-								<li>
-									<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
-									</a>
-								</li>
-							<?php } ?>
-							<?php if($modx->hasPermission('help')) { ?>
-								<li>
-									<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
-									</a>
-								</li>
-							<?php } ?>
-						</ul>
-					</li>
-				<?php } ?>
-				<li class="dropdown account">
-					<a href="javascript:;" class="dropdown-toggle" onclick="return false;">
-						<div class="username"><?php echo $user['username'] ?></div>
-						<?php if($user['photo']) { ?>
-							<div class="icon photo" style="background-image: url(<?php echo MODX_SITE_URL . $user['photo'] ?>);"></div>
-						<?php } else { ?>
-							<div class="icon"><i class="fa fa-user-circle"></i></div>
-						<?php } ?>
-						<div id="msgCounter"></div>
-					</a>
-					<ul class="dropdown-menu">
-						<li id="newMail"></li>
-						<?php if($modx->hasPermission('change_password')) { ?>
-							<li>
-								<a onclick="" href="index.php?a=28" target="main">
-									<i class="fa fa-lock"></i><?php echo $_lang['change_password'] ?>
-								</a>
-							</li>
-						<?php } ?>
+		<div class="container">
+			<div class="row">
+				<div class="cell">
+					<?php include('mainmenu.php'); ?>
+					<div id="statusbar">
+						<div id="buildText"></div>
+						<div id="workText"></div>
+					</div>
+				</div>
+				<div class="cell">
+					<ul id="settings" class="nav">
+						<li id="searchform">
+							<form action="index.php?a=71#results" method="post" target="main">
+								<input type="hidden" value="Search" name="submitok" />
+								<label for="searchid" class="label_searchid">
+									<i class="fa fa-search"></i>
+								</label>
+								<input type="text" id="searchid" name="searchid" size="25" />
+								<div class="mask"></div>
+							</form>
+						</li>
 						<li>
-							<a href="index.php?a=8">
-								<i class="fa fa-sign-out"></i><?php echo $_lang['logout'] ?>
+							<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="setLastClickedElement(0,0);">
+								<i class="fa fa-desktop"></i>
 							</a>
 						</li>
-						<?php
-						$style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
-						$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
-						?>
-						<?php
-						echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
-						?>
+						<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
+							<li class="dropdown">
+								<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
+								<ul class="dropdown-menu">
+									<?php if($modx->hasPermission('settings')) { ?>
+										<li>
+											<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if($modx->hasPermission('view_eventlog')) { ?>
+										<li>
+											<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if($modx->hasPermission('view_eventlog')) { ?>
+										<li>
+											<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if($modx->hasPermission('logs')) { ?>
+										<li>
+											<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
+											</a>
+										</li>
+										<li>
+											<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if($modx->hasPermission('help')) { ?>
+										<li>
+											<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
+											</a>
+										</li>
+									<?php } ?>
+								</ul>
+							</li>
+						<?php } ?>
+						<li class="dropdown account">
+							<a href="javascript:;" class="dropdown-toggle" onclick="return false;">
+								<span class="username"><?php echo $user['username'] ?></span>
+								<?php if($user['photo']) { ?>
+									<span class="icon photo" style="background-image: url(<?php echo MODX_SITE_URL . $user['photo'] ?>);"></span>
+								<?php } else { ?>
+									<span class="icon"><i class="fa fa-user-circle"></i></span>
+								<?php } ?>
+								<i id="msgCounter"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li id="newMail"></li>
+								<?php if($modx->hasPermission('change_password')) { ?>
+									<li>
+										<a onclick="" href="index.php?a=28" target="main">
+											<i class="fa fa-lock"></i><?php echo $_lang['change_password'] ?>
+										</a>
+									</li>
+								<?php } ?>
+								<li>
+									<a href="index.php?a=8">
+										<i class="fa fa-sign-out"></i><?php echo $_lang['logout'] ?>
+									</a>
+								</li>
+								<?php
+								$style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+								$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
+								?>
+								<?php
+								echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+								?>
+							</ul>
+						</li>
 					</ul>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div id="tree">
 		<?php include('tree.php'); ?>
 	</div>
 	<div id="main">
-		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.init()"></iframe>
+		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
 	</div>
-	<div id="resizer">
-		<a id="hideMenu">
-			<i class="fa fa-angle-left"></i>
-		</a>
-	</div>
+	<div id="resizer"></div>
 	<div id="searchresult"></div>
 
 	<div id="floater" class="dropdown">
@@ -321,42 +331,45 @@ if($user['which_browser'] == 'default') {
 		}
 		?>
 		<form name="sortFrm" id="sortFrm">
-			<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
-			<p><?php echo $_lang["sort_tree"] ?></p>
-			<select name="sortby">
-				<option value="isfolder" <?php echo $_SESSION['tree_sortby'] == 'isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
-				<option value="pagetitle" <?php echo $_SESSION['tree_sortby'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
-				<option value="longtitle" <?php echo $_SESSION['tree_sortby'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
-				<option value="id" <?php echo $_SESSION['tree_sortby'] == 'id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
-				<option value="menuindex" <?php echo $_SESSION['tree_sortby'] == 'menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
-				<option value="createdon" <?php echo $_SESSION['tree_sortby'] == 'createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
-				<option value="editedon" <?php echo $_SESSION['tree_sortby'] == 'editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
-				<option value="publishedon" <?php echo $_SESSION['tree_sortby'] == 'publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
-			</select>
-			<select name="sortdir">
-				<option value="DESC" <?php echo $_SESSION['tree_sortdir'] == 'DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
-				<option value="ASC" <?php echo $_SESSION['tree_sortdir'] == 'ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
-			</select>
-			<p><?php echo $_lang["setting_resource_tree_node_name"] ?></p>
-			<select name="nodename">
-				<option value="default" <?php echo $_SESSION['tree_nodename'] == 'default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
-				<option value="pagetitle" <?php echo $_SESSION['tree_nodename'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
-				<option value="longtitle" <?php echo $_SESSION['tree_nodename'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
-				<option value="menutitle" <?php echo $_SESSION['tree_nodename'] == 'menutitle' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_title']; ?></option>
-				<option value="alias" <?php echo $_SESSION['tree_nodename'] == 'alias' ? "selected='selected'" : "" ?>><?php echo $_lang['alias']; ?></option>
-				<option value="createdon" <?php echo $_SESSION['tree_nodename'] == 'createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
-				<option value="editedon" <?php echo $_SESSION['tree_nodename'] == 'editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
-				<option value="publishedon" <?php echo $_SESSION['tree_nodename'] == 'publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
-			</select>
-			<p>
-				<label><input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?>
-				</label></p>
-			<div>
-				<ul class="actionButtons">
-					<li>
-						<a href="javascript:;" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
-					</li>
-				</ul>
+			<div class="form-group">
+				<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
+				<label><?php echo $_lang["sort_tree"] ?></label>
+				<select name="sortby" class="form-control form-control-sm">
+					<option value="isfolder" <?php echo $_SESSION['tree_sortby'] == 'isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
+					<option value="pagetitle" <?php echo $_SESSION['tree_sortby'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+					<option value="longtitle" <?php echo $_SESSION['tree_sortby'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
+					<option value="id" <?php echo $_SESSION['tree_sortby'] == 'id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
+					<option value="menuindex" <?php echo $_SESSION['tree_sortby'] == 'menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
+					<option value="createdon" <?php echo $_SESSION['tree_sortby'] == 'createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
+					<option value="editedon" <?php echo $_SESSION['tree_sortby'] == 'editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+					<option value="publishedon" <?php echo $_SESSION['tree_sortby'] == 'publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="sortdir" class="form-control form-control-sm">
+					<option value="DESC" <?php echo $_SESSION['tree_sortdir'] == 'DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
+					<option value="ASC" <?php echo $_SESSION['tree_sortdir'] == 'ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label><?php echo $_lang["setting_resource_tree_node_name"] ?></label>
+				<select name="nodename" class="form-control form-control-sm">
+					<option value="default" <?php echo $_SESSION['tree_nodename'] == 'default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
+					<option value="pagetitle" <?php echo $_SESSION['tree_nodename'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+					<option value="longtitle" <?php echo $_SESSION['tree_nodename'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
+					<option value="menutitle" <?php echo $_SESSION['tree_nodename'] == 'menutitle' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_title']; ?></option>
+					<option value="alias" <?php echo $_SESSION['tree_nodename'] == 'alias' ? "selected='selected'" : "" ?>><?php echo $_lang['alias']; ?></option>
+					<option value="createdon" <?php echo $_SESSION['tree_nodename'] == 'createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
+					<option value="editedon" <?php echo $_SESSION['tree_nodename'] == 'editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+					<option value="publishedon" <?php echo $_SESSION['tree_nodename'] == 'publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>
+					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
+			</div>
+			<div class="text-center">
+				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 			</div>
 		</form>
 	</div>

@@ -1364,7 +1364,7 @@ class DocumentParser {
         eval($pluginCode);
         $msg = ob_get_contents();
         ob_end_clean();
-        if(is_file($lock_file_path)) unlink($lock_file_path);
+        /*if(is_file($lock_file_path)) unlink($lock_file_path);*/
         
         if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
             $error_info = error_get_last();
@@ -2056,8 +2056,8 @@ class DocumentParser {
             $source = $this->ignoreCommentedTagsContent($source);
             $source = $this->mergeConditionalTagsContent($source);
             
-            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeChunkContent($source);
             $source = $this->mergeDocumentMETATags($source);
             $source = $this->evalSnippets($source);

@@ -211,12 +211,127 @@ if(is_array($evtOut)) {
 	$ph['OnManagerWelcomePrerender'] = $output;
 }
 
-// invoke event OnManagerWelcomeHome
-$evtOut = $modx->invokeEvent('OnManagerWelcomeHome');
-if(is_array($evtOut)) {
-	$output = implode('', $evtOut);
-	$ph['OnManagerWelcomeHome'] = $output;
+$widgets['welcome'] = array(
+	'menuindex' => '10',
+	'id' => 'welcome',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-home',
+	'title' => '[%welcome_title%]',
+	'body' => '<div class="wm_buttons">
+							<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]-->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i><br />
+								[%security%]</a>
+							</span>
+							<!--@ENDIF-->
+							<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]-->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=99"><i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i><br />
+								[%web_users%]</a>
+							</span>
+							<!--@ENDIF-->
+							<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]-->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=106"><i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i><br />
+								[%modules%]</a>
+							</span>
+							<!--@ENDIF-->
+							<!--@IF:[[#hasAnyPermission:is(1)]] -->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=76"><i class="[&icons_resources_large&]" alt="[%element_management%]"> </i><br />
+								[%elements%]</a>
+							</span>
+							<!--@ENDIF-->
+							<!--@IF:[[#hasPermission?key=bk_manager]]-->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=93"><i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i><br />
+								[%backup%]</a>
+							</span>
+							<!--@ENDIF-->
+							<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]-->
+							<span class="wm_button" style="border:0">
+								<a class="hometblink" href="index.php?a=9"><i class="[&icons_help_large&]" alt="[%help%]"> </i><br />
+								[%help%]</a>
+							</span>
+							<!--@ENDIF-->
+						</div>
+						<div class="userprofiletable">
+							<table class="table table-hover table-condensed">
+								<tr>
+									<td width="150">[%yourinfo_username%]</td>
+									<td><b>[[#getLoginUserName]]</b></td>
+								</tr>
+								<tr>
+									<td>[%yourinfo_role%]</td>
+									<td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
+								</tr>
+								<tr>
+									<td>[%yourinfo_previous_login%]</td>
+									<td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
+								</tr>
+								<tr>
+									<td>[%yourinfo_total_logins%]</td>
+									<td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
+								</tr>
+								<!--@IF:[[#hasPermission?key=messages]]-->
+								<tr>
+									<td>[%inbox%]</td>
+									<td><a href="index.php?a=10"><b>[[#getMessageCount]]</b></a></td>
+								</tr>
+								<!--@ENDIF-->
+							</table>
+						</div>'
+);
+$widgets['onlineinfo'] = array(
+	'menuindex' => '20',
+	'id' => 'onlineinfo',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-user',
+	'title' => '[%onlineusers_title%]',
+	'body' => '<div class="userstable">[+OnlineInfo+]</div>'
+);
+$widgets['recentinfo'] = array(
+	'menuindex' => '30',
+	'id' => 'modxrecent_widget',
+	'cols' => 'col-sm-12',
+	'icon' => 'fa-pencil-square-o',
+	'title' => '[%activity_title%]',
+	'body' => '<div class="widget-stage">[+RecentInfo+]</div>'
+);
+$widgets['news'] = array(
+	'menuindex' => '40',
+	'id' => 'news',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-rss',
+	'title' => '[%modx_news_title%]',
+	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_news_content+]</div>'
+);
+$widgets['security'] = array(
+	'menuindex' => '50',
+	'id' => 'security',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-exclamation-triangle',
+	'title' => '[%security_notices_title%]',
+	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_security_notices_content+]</div>'
+);
+
+// invoke OnManagerWelcomeHome event
+$sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
+$sitewidgets = unserialize($sitewidgets[0]);
+if(is_array($sitewidgets)) {
+	$widgets = $sitewidgets;
 }
+
+usort($widgets, function ($a, $b) {
+	return $a['menuindex'] - $b['menuindex'];
+});
+
+$tpl = getTplWidget();
+$output = '';
+foreach($widgets as $widget) {
+	$output .= $modx->parseText($tpl, $widget);
+}
+$ph['widgets'] = $output;
 
 // invoke event OnManagerWelcomeRender
 $evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
@@ -277,6 +392,22 @@ if($js = $modx->getRegisteredClientScripts()) {
 
 echo $content;
 
+//<span class="conf">
+//	<a href="javascript:;" class="setting"><i class="fa fa-cog"></i></a>
+//  <a href="javascript:;" class="closed"><i class="fa fa-close"></i></a>
+//</span>
+function getTplWidget() { // recent document info
+	return '<div class="[+cols+] pr-0" id="[+id+]">	
+			<div class="card mb-1">
+				<div class="card-header">
+				    <i class="fa [+icon+]"></i> [+title+]
+				</div>
+				<div class="card-block">
+					[+body+]
+				</div>
+			</div>
+		</div>';
+}
 
 function getRecentInfo() { // recent document info
 	global $modx;
@@ -351,7 +482,7 @@ function getRecentInfoList() {
 			if($ph['deleted'] == 0) {
 				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%["confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -439,6 +570,14 @@ function getStartUpScript() {
             });
             myAjax.request();
         }
+        
+		(function($) {
+			$('[data-toggle="collapse"]').click(function() {
+				if($(this).data('target')) {
+					$($(this).data('target')).slideToggle(150)
+				}
+			});
+		})(jQuery);
 
         </script>
 JS;

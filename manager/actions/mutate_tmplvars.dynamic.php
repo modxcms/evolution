@@ -40,6 +40,8 @@ if(isset($_GET['id'])) {
 	if($content['locked'] == 1 && $modx->hasPermission('save_role') != 1) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 	}
+} else if(isset($_REQUEST['itemname'])) {
+	$content['name'] = $_REQUEST['itemname'];
 } else {
 	$_SESSION['itemname'] = $_lang["new_tmplvars"];
 	$content['category'] = intval($_REQUEST['catid']);

@@ -1,0 +1,16 @@
+/* -------------------------[ Tabs ]--- */
+.tab-row .tab span, .tab-row .tab.hover { text-decoration: none }
+.tab-row .tab.selected { color: #333; border-radius: 0 }
+.tab-row .tab.selected span { background-color: #fff; text-shadow: none }
+.tab-row { position: relative; z-index: 1; white-space: nowrap }
+.tab-row .tab, .tab-row .tab span { color: #1377c5; font-size: 13px }
+.tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: 0 0; cursor: pointer }
+.tab-row .tab.hover { background: 0 0; filter: none }
+.tab-row .tab.selected span, .tab-row .tab.selected.hover span { color: #1377c5 }
+.tab-row .tab.selected, .tab-row .tab.selected.hover { background: #fff; filter: none; box-shadow: 0 -3px 0 #1377c5, -1px 0 0 transparent }
+.tab-row .tab:after, .tab-row .tab:before { position: absolute; content: ''; left: 0; display: block; right: 0 }
+.tab-row .tab.selected.hover:after, .tab-row .tab.selected:after { border-radius: 3px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); top: -3px; bottom: 1px; z-index: -1 }
+.tab-row .tab.selected:before { background: #FFF; top: 90%; bottom: -4px }
+.tab-row .tab.hover, .tab-row .tab.hover span { color: #2b749d }
+.tab-row .tab .fa { margin-right: 3px; font-size: 14px }
+.tab-page { clear: both; background-color: #fff; position: relative; top: -2px; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }

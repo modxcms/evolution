@@ -17,10 +17,13 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $modx_textdir;
 
 	// setup spacer
-	$spacer = '';
+	$level = 0;
+	$spacer = '<span class="indent">';
 	for($i = 2; $i <= $indent; $i++) {
-		$spacer .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		$spacer .= '<i></i>';
+		$level++;
 	}
+	$spacer .= '</span>';
 
 	// manage order-by
 	if(!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
@@ -70,7 +73,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	$where = "(parent={$parent}) {$access} GROUP BY sc.id";
 	$result = $modx->db->select($field, $from, $where, $orderby);
 	if($modx->db->getRecordCount($result) == 0) {
-		$output .= sprintf('<div><a>%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer, $_style['tree_deletedpage'], $_lang['empty_folder']);
+		$output .= sprintf('<div><a class="empty">%s%s&nbsp;<span class="empty">%s</span></a></div>', $spacer, $_style['tree_deletedpage'], $_lang['empty_folder']);
 	}
 
 	$nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
@@ -113,7 +116,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					'element_type' => $_lang["lock_element_type_7"],
 					'lasthit_df' => $rowLock['lasthit_df']
 				));
-				$lockedByUser = ' <span title="' . $title . '" class="editResource">' . $_style['tree_preview_resource'] . '</span>';
+				$lockedByUser = '<span title="' . $title . '" class="editResource">' . $_style['tree_preview_resource'] . '</span>';
 			} else {
 				$title = $modx->parseText($_lang["lock_element_locked_by"], array(
 					'element_type' => $_lang["lock_element_type_7"],
@@ -121,9 +124,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					'lasthit_df' => $rowLock['lasthit_df']
 				));
 				if($modx->hasPermission('remove_locks')) {
-					$lockedByUser = ' <span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+					$lockedByUser = '<span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				} else {
-					$lockedByUser = ' <span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+					$lockedByUser = '<span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				}
 			}
 		}
@@ -184,7 +187,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'tree_minusnode' => $_style['tree_minusnode'],
 			'tree_plusnode' => $_style['tree_plusnode'],
 			'spacer' => $spacer,
-			'subMenuState' => ''
+			'subMenuState' => '',
+			'level' => $level,
+			'isPrivate' => 0
 		);
 
 		$ph = $data;
@@ -214,6 +219,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						} else {
 							$icon = $_style['tree_page_secure'];
 						}
+						$ph['isPrivate'] = 1;
 					} elseif(isset($icons[$row['contentType']])) {
 						$icon = $icons[$row['contentType']];
 					} else {
@@ -245,7 +251,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 		} else {
 			$tpl = getTplFolderNode();
-			$ph['isPrivate'] = ($row['privateweb'] == 1 || $row['privatemgr'] == 1) ? '1' : '0';
+			$ph['isPrivate'] = ($row['privateweb'] || $row['privatemgr']) ? '1' : '0';
 			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
 			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
 
@@ -554,12 +560,16 @@ function _htmlentities($array) {
 function getTplSingleNode() {
 	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);">[+spacer+]<span
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
+        oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);"
+        data-deleted="[+deleted+]"
+        data-href="[+url+]"
+        data-private="[+isPrivate+]"
+        data-level="[+level+]">[+spacer+]<span
         id="p[+id+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\'"
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a></div>';
@@ -568,8 +578,12 @@ function getTplSingleNode() {
 function getTplFolderNode() {
 	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);">[+spacer+]<span
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
+        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);"
+        data-deleted="[+deleted+]"
+        data-href="[+url+]"
+        data-private="[+isPrivate+]"
+        data-level="[+level+]">[+spacer+]<span
         id="s[+id+]"
         class="toggle"
         data-icon-expanded="[+tree_plusnode+]"
@@ -582,7 +596,7 @@ function getTplFolderNode() {
         data-icon-folder-close="[+icon_folder_close+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';

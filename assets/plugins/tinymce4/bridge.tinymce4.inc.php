@@ -1,6 +1,6 @@
 <?php
 /* TinyMCE4 for Modx Evolution
-   Base: v4.3.7
+   Base: v4.6.3
 */
 
 // @todo: check all needed themes
@@ -16,7 +16,7 @@ class tinymce4bridge extends modxRTEbridge
             // Editor-Settings
             'editorLabel'   => 'TinyMCE4',           // Name displayed in Modx-Dropdowns - No HTML!
             'skinsDirectory'=> 'tinymce/skins',      // Relative to plugin-dir
-            'editorVersion' => '4.3.7',              // Version of TinyMCE4-Library
+            'editorVersion' => '4.6.3',              // Version of TinyMCE4-Library
             'editorLogo'    => 'tinymce/logo.png',   // Optional Image displayed in Modx-settings
             
             'bridgeParams'=>array('url_setup','style_formats','advanced_resizing','forced_root_block','contentsLangDirection','disabledButtons','selectorPrefix','selector','block_formats'),
