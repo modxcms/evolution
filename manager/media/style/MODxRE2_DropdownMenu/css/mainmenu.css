@@ -13,16 +13,16 @@
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid { display: block; padding: 0 1rem; height: 2.2rem; line-height: 2.4rem; text-decoration: none; color: #bbb; transition-duration: 0.15s }
 #mainMenu .nav > li > a:hover, #mainMenu .nav .label_searchid:hover { color: #f3f3f3; }
 #mainMenu.show .nav > li.dropdown:hover > a, #mainMenu.show .nav > li.dropdown.hover > a { background-color: #fff; color: #444; }
-#mainMenu .nav > li > a .icon { float: right; overflow: hidden; width: 2rem; height: 2rem; line-height: 2rem; font-size: 1.5em; text-align: center; margin: 0.05rem 0 0 0.5rem; vertical-align: middle; border-radius: 50%; background: no-repeat 50% 50%; background-size: cover; }
+#mainMenu .nav > li > a .icon { display: inline-block; overflow: hidden; width: 2rem; height: 2rem; line-height: 2rem; font-size: 1.5em; text-align: center; margin: 0.05rem 0 0 0.5rem; vertical-align: top; border-radius: 50%; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .nav > li > a .icon .fa { font-size: 1.2rem; line-height: 2.1rem }
 #mainMenu .nav > li .fa { line-height: 2.2rem; font-size: 1rem; vertical-align: top }
 #mainMenu #nav > li > a > .fa { margin-right: 0.25rem; }
-#mainMenu #nav #bars .fa { display: inline-block; width: 1.5rem; margin: 0; text-align: center; overflow: hidden; transition-duration: 0.15s }
+#mainMenu #nav #bars .fa { display: inline-block; width: 1.5rem; margin: 0; text-align: center; overflow: hidden; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 .sidebar-closed #mainMenu #nav #bars .fa { width: 0.25rem; margin: 0 0.625rem; }
 #mainMenu .nav .caret, #mainMenu .nav .divider { display: none }
-#mainMenu .nav > li > ul { display: block; position: absolute; overflow: auto; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; transition-duration: 0.15s; }
+#mainMenu .nav > li > ul { display: block; position: absolute; overflow: auto; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
 #mainMenu.show .nav > li:hover > a + ul, #mainMenu.show .nav > li.hover > a + ul, #mainMenu.show .nav > li.hover > ul.sub-menu.show { opacity: 1; visibility: visible }
-#mainMenu.show .nav > li > ul.sub-menu { left: 15rem; margin-left: -0.1rem; opacity: 0; visibility: hidden; }
+#mainMenu.show .nav > li > ul.sub-menu { left: 15rem; opacity: 0; visibility: hidden; }
 #mainMenu.show .nav > li:hover > ul.sub-menu { }
 #mainMenu.show .nav > li:hover > ul.sub-menu.show { }
 #mainMenu #settings.nav > li > ul { left: auto; right: 0 }
@@ -50,12 +50,12 @@
 #mainMenu #searchform input { position: absolute; z-index: 0; top: 0; right: 0; height: 1.5rem; width: 0; padding: 0 0.5rem; margin: 0.345rem; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; background: rgba(0, 0, 0, 0.1); color: #fff; text-align: left; opacity: 0; outline: none; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
 #mainMenu #searchform input:focus { z-index: 9; width: 15rem; background: #000; text-align: left; border-color: rgba(255, 255, 255, 0.75); opacity: 1 }
 #mainMenu #searchform input:focus + .mask { opacity: 0.7; visibility: visible; }
-#mainMenu #searchform .mask { content: ""; position: absolute; z-index: 5; top: 0; right: -999rem; right: -100vw; left: -999rem; left: -100vw; height: 2.2rem; opacity: 0; visibility: hidden; background-color: rgba(0, 0, 0, 0.65); -webkit-transition: all 0.3s; transition: all 0.3s; transform: translateZ(0) }
+#mainMenu #searchform .mask { content: ""; position: absolute; z-index: 5; top: 0; right: -999rem; right: -100vw; left: -999rem; left: -100vw; height: 2.2rem; opacity: 0; visibility: hidden; background-color: rgba(0, 0, 0, 0.65); -webkit-transition-duration: 0.3s; transition-duration: 0.3s; transform: translateZ(0) }
 #mainMenu #searchform .fa-search { position: relative; z-index: 1 }
 #mainMenu #searchform .fa-refresh { position: absolute; z-index: 9; display: none; top: 0.6rem; right: 0.8rem; line-height: 1em }
 /* #searchresult */
-#searchresult { position: absolute; z-index: 99; overflow: auto; top: 2.2rem; right: -30rem; bottom: 0; width: 30rem; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; transition: 0.25s ease 0.5s; transition-delay: 0.3s; }
-#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#searchresult { position: absolute; z-index: 99; overflow: auto; top: 2.2rem; right: -30rem; bottom: 0; width: 30rem; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; -webkit-transition: 0.25s ease 0.5s; transition: 0.25s ease 0.5s; -webkit-transition-delay: 0.3s; transition-delay: 0.3s; }
+#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; -webkit-transition: 0.5s ease 0.5s; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
 #searchresult .ajaxSearchResults ul, #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #searchresult .ajaxSearchResults b, #searchresult .ajaxSearchResults strong, #searchresult .ajaxSearchResults a { position: relative; z-index: 0; display: block; color: #333; padding: 0.25rem 1rem; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #searchresult .ajaxSearchResults b { z-index: 1; background-color: #ddd }
@@ -81,3 +81,4 @@
 #mainMenu .nav > li > a .username, #searchresult .ajaxSearchResults a > i { display: none }
 #mainMenu .nav > li > a .icon { margin-left: 0; width: auto }
 }
+/* dark */
