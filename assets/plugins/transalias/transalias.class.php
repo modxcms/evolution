@@ -62,13 +62,38 @@ class TransAlias {
     /**
      * Swap named HTML entities with numeric entities.
      *
-     * @see *deadlink*http://www.lazycat.org/software/html_entity_decode_full.phps
+     * @param $matches
+     * @param bool $destroy
+     * @return string
+     *
+     * @see *deadlink* http://www.lazycat.org/software/html_entity_decode_full.phps
      */
-    function convert_entity($matches, $destroy= true) {
-         if (isset($this->$_tables['named'][$matches[1]]))
-            return $this->$_tables['named'][$matches[1]];
+    function convert_entity($matches, $destroy = true) {
+        if (isset($this->_tables['named'][$matches[1]]))
+            return $this->_tables['named'][$matches[1]];
         else
             return $destroy ? '' : $matches[0];
+    }
+
+    /**
+     * Convert hexadecimal entities to their actual character.
+     *
+     * @param array $matches matches array from preg_replace_callback
+     * @return string converted entity
+     */
+    function convert_hex_entity($matches)
+    {
+        return chr(hexdec($matches[1]));
+    }
+
+    /**
+     * Convert numeric entities to their actual character.
+     *
+     * @param array $matches matches array from preg_replace_callback
+     * @return string converted entity
+     */
+    function convert_numeric_entity($matches) {
+        return chr($matches[1]);
     }
 
     /**
@@ -76,7 +101,7 @@ class TransAlias {
      * TV may be used to override the default or hard-configured transliteration table
      *
      * @param string $tv name of Template Variable
-     * @return value of TV in current POST operation or false if TV not found in POST
+     * @return mixed value of TV in current POST operation or false if TV not found in POST
      */
     function getTVValue($tv) {
         global $modx;
@@ -103,6 +128,7 @@ class TransAlias {
      * load a transliteration table from a file and use it
      *
      * @param string $name
+     * @param string $remove_periods
      * @return bool success
      */
     function loadTable($name, $remove_periods = 'No') {
@@ -130,13 +156,14 @@ class TransAlias {
                 return false;
             }
         }
-        return false;
     }
 
     /**
      * perform transliteration and clean up alias
      *
      * @param string $alias
+     * @param $char_restrict
+     * @param $word_separator
      * @return string alias
      */
     function stripAlias($alias,$char_restrict,$word_separator) {
@@ -144,9 +171,9 @@ class TransAlias {
         $alias = preg_replace_callback('/&([a-zA-Z][a-zA-Z0-9]{1,7});/', array($this,'convert_entity'), $alias);
         
         // Convert all numeric entities to their actual character
-        $alias = preg_replace('/&#x([0-9a-f]{1,7});/ei', 'chr(hexdec("\\1"))', $alias);
-        $alias = preg_replace('/&#([0-9]{1,7});/e', 'chr("\\1")', $alias);
-        
+        $alias = preg_replace_callback('/&#x([0-9a-f]{1,7});/i', array($this, 'convert_hex_entity'), $alias);
+        $alias = preg_replace_callback('/&#([0-9]{1,7});/', array($this, 'convert_numeric_entity'), $alias);
+
         if (class_exists('Normalizer')) {
             $alias = Normalizer::normalize($alias);
         }
@@ -162,7 +189,7 @@ class TransAlias {
         } elseif($char_restrict=='alphanumeric') {
             $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
         } else { // restrict only to legal characters
-            $alias = preg_replace('/[&=+%#<>"~`@\?\[\]\{\}\|\^\'\\\\]/', '', $alias); // remove chars that are illegal/unsafe in a url
+            $alias = preg_replace('/[&=+%#<>"~`@\?\[\]\{\}\|\^\'\\\\\:]/', '', $alias); // remove chars that are illegal/unsafe in a url
         }
         switch($word_separator) {
             case 'dash': $word_separator='-'; break;
@@ -178,6 +205,4 @@ class TransAlias {
             $alias = trim($alias, '/. '); // trim bad chars
         return $alias;
     }
-
 }
-?>

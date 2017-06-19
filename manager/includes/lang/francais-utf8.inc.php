@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Nicolas Martignoni (Nissai)
  * @author David Mollière (davidm)
@@ -765,6 +765,7 @@ $_lang["role_actionok"] = 'Accès à l\'écran de fin d\'action';
 $_lang["role_bk_manager"] = 'Utiliser le Gestionnaire de Sauvegardes';
 $_lang["role_cache_refresh"] = 'Purge du cache du site';
 $_lang["role_change_password"] = 'Changement de mot de passe';
+$_lang["role_change_resourcetype"] = 'Changer Type de ressources';
 $_lang["role_chunk_management"] = 'Gestion des Chunks';
 $_lang["role_config_management"] = 'Gestion de la configuration';
 $_lang["role_content_management"] = 'Gestion du contenu';
@@ -844,7 +845,7 @@ $_lang["role_web_user_management"] = 'Gestion des Utilisateurs Web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Entrez l\'URL du flux pour les actualités MODX.';
 $_lang["rss_url_news_title"] = 'Flux RSS des actualités';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Entrez l\'URL du flux pour les bulletins de sécurité MODX.';
 $_lang["rss_url_security_title"] = 'Flux RSS des bulletins de sécurité';
 $_lang["run_module"] = 'Lancer le Module';
@@ -859,6 +860,8 @@ $_lang["search_criteria_content"] = 'Recherche par contenu';
 $_lang["search_criteria_content_msg"] = 'Rechercher les Ressources dont le contenu contient ce texte';
 $_lang["search_criteria_id"] = 'Recherche par ID';
 $_lang["search_criteria_id_msg"] = 'Entrez l\'ID d\'une Ressource pour la localiser rapidement';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Recherche par titre long';
 $_lang["search_criteria_longtitle_msg"] = 'Rechercher les Ressources dont le titre long contient ce texte';
 $_lang["search_criteria_title"] = 'Recherche par titre';
@@ -1122,6 +1125,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorithme "Hash" pour les mots de passe.';
 $_lang["enable_bindings_title"] = 'Activer les commandes @Bindings';
 $_lang["enable_bindings_message"] = 'Interdit l\'exécution de code PHP via les @Bindings des TVs. Utile si vous avez des utilisateurs qui doivent pourvoir créer ou éditer des des TVs mais ne doivent pas pouvoir créer de code PHP. Le résultat des TVs contenant un @Binding sera "@Bindings is disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Lorsque pHx plug-in activé, les filtres intégrés sont désactivés par défaut';
 $_lang["bkmgr_alert_mkdir"] = 'Un fichier n\'a pu être créé dans un répertoire. Veuillez vérifier les droits de [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Un site peut être restauré via un fichier SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Restaurer';
@@ -1135,7 +1139,8 @@ $_lang["bkmgr_snapshot_title"] = 'Sauvegarde et restauration des "Snapshots"';
 $_lang["bkmgr_snapshot_msg"] = '<p>Le contenu de la base est sauvegardé et restauré sur un serveur.<br />Emplacement : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Ajouter un "snapshot"';
 $_lang["bkmgr_snapshot_list_title"] = 'Liste des "snapshots"';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Inverser cette donnée';
+$_lang["bkmgr_restore_confirm"] = 'Voulez-vous vraiment annuler la sauvegarde\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'Aucun "snapshot"';
 
 $_lang["files.dynamic.php1"] = 'Créer un fichier texte';
@@ -1162,6 +1167,7 @@ $_lang['email_method_mail'] = 'via la fonction mail() de PHP';
 $_lang['email_method_smtp'] = 'via un serveur SMTP';
 $_lang['smtp_auth_title'] = 'Authentification SMTP';
 $_lang['smtp_host_title'] = 'Serveur SMTP';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'Utilisateur SMTP';
 $_lang['smtp_password_title'] = 'Mot de passe SMTP';
 $_lang['smtp_port_title'] = 'Port SMTP';

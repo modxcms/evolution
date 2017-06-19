@@ -1,7 +1,7 @@
 <?php
 
 /** Bulgarian localization file for KCFinder
-  * author: Pavel Tzonkov <pavelc@users.sourceforge.net>
+  * author: Pavel Tzonkov <sunhater@sunhater.com>
   */
 
 $lang = array(
@@ -236,6 +236,10 @@ $lang = array(
 
     // SINCE 2.4
 
+    "Checking for new version..." => "Проверка за нова версия...",
+    "Unable to connect!" => "Не може да се свърже!",
+    "Download version {version} now!" => "Свалете версия {version} сега!",
+    "KCFinder is up to date!" => "KCFinder е актуален!",
     "Licenses:" => "Лицензи:",
     "Attention" => "Внимание",
     "Question" => "Въпрос",

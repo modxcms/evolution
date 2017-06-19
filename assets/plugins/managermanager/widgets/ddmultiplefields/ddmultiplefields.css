@@ -17,7 +17,7 @@
 	font: 12px/1.2em Verdana,Helvetica,sans-serif !important;
 }
 
-.ddMultipleField input {height: 1.2em;}
+.ddMultipleField input {height: 2em;}
 
 .ddMultipleField input:focus {border-color: #E1A020 !important;}
 
@@ -39,11 +39,15 @@
 	vertical-align: top;
 }
 
-.ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol:last-child {
+.ddMultipleField tr td.ddFieldCol:last-child {
 	white-space: nowrap;
 }
 
-.ddMultipleField tr th {text-align: left;}
+.ddMultipleField tr th {
+	line-height: 1;
+	text-align: left;
+	vertical-align: bottom;
+}
 
 .ddMultipleField tr td.ddFieldCol, .ddMultipleField tr td.ddSortHandle {
 	border: 2px solid #FFFFFF;
@@ -70,8 +74,8 @@
 .ddMultipleField tr td.ddSortHandle div {
 /* 	border-radius: 0 12px 12px 0; */
 	background: #007CC3;
-	width: 10px;
-	height: 23px;
+	min-width: 1em;
+	min-height: 2em;
 	-webkit-transition: opacity 0.3s ease-out;
 	-moz-transition: opacity 0.3s ease-out;
 	-ms-transition: opacity 0.3s ease-out;
@@ -79,6 +83,13 @@
 	transition: opacity 0.3s ease-out;
 	opacity: .3;
 	cursor: n-resize;
+	color: white;
+	display: inline-block;
+	padding: 0.2em 0.3em 0.2em 0.25em;
+	box-sizing: border-box;
+}
+.ddMultipleField.nosort tr td.ddSortHandle div {
+	cursor: default;
 }
 
 .ddMultipleField tr.ddFieldBlock:hover td.ddFieldCol, .ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle {background: #B2E3FF;}
@@ -98,4 +109,16 @@
 	background: #f0f0f0;
 	width: 100%;
 	height: 100%;
+}
+.tip {
+	cursor: default;
+}
+.tip:after {
+	color: #999;
+	content: "?";
+	display: inline-block;
+	font-size: 80%;
+	padding: 0.05em 0.15em;
+	text-align: center;
+	vertical-align: super;
 }

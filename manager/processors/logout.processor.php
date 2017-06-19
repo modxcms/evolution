@@ -3,7 +3,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $internalKey = $modx->getLoginUserID();
 $username = $_SESSION['mgrShortname'];
-
+$sid = $modx->sid;
 
 // invoke OnBeforeManagerLogout event
 $modx->invokeEvent("OnBeforeManagerLogout",
@@ -24,6 +24,12 @@ if (isset($_COOKIE[session_name()])) {
 //session_id($sessionID);
 //startCMSSession();
 //session_destroy();
+
+// Clean up active_user_locks
+$modx->db->delete($modx->getFullTableName('active_user_locks'), "sid = '{$sid}'");
+
+// Clean up active_user_sessions
+$modx->db->delete($modx->getFullTableName('active_user_sessions'), "sid = '{$sid}'");
 
 // invoke OnManagerLogout event
 $modx->invokeEvent("OnManagerLogout",

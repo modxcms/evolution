@@ -1,4 +1,24 @@
 <?php
+/**
+ * Breadcrumbs
+ *
+ * Configurable breadcrumb page-trail navigation
+ *
+ * @category	snippet
+ * @version 	1.0.5
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties
+ * @internal	@modx_category Navigation
+ * @internal    @installset base, sample
+ * @documentation README.md [+site_url+]assets/snippets/breadcrumbs/README.md
+ * @documentation MODX Wiki http://wiki.modxcms.com/index.php/Breadcrumbs_1.0.1
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Ryan Thrash http://thrash.me
+ * @author      Jason Coward jason@opengeek.com
+ * @author      Mike Schell
+ * @author      Dmi3yy
+ * @lastupdate  06/07/2015
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($maxCrumbs) ) ? $maxCrumbs : $maxCrumbs = 100;
 ( isset($pathThruUnPub) ) ? $pathThruUnPub : $pathThruUnPub = 1;
@@ -20,6 +40,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($hideUnder) ) ? $hideUnder : $hideUnder = '';
 ( isset($stopIds) ) ? $stopIds : $stopIds = '';
 ( isset($ignoreIds) ) ? $ignoreIds : $ignoreIds = '';
+( isset($ignoreAliasVisible) ) ? $ignoreAliasVisible : $ignoreAliasVisible = '1';
 ( isset($ignoreTemplates) ) ? $ignoreTemplates : $ignoreTemplates = '0';
 ( isset($crumbSeparator) ) ? $separator = $crumbSeparator : $separator = ' &raquo; ';
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
@@ -120,10 +141,12 @@ $loopSafety = 0;
 while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 {
     // Get next crumb
-    $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu,template");
+     $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu,template,alias_visible");
     // Check for include conditions & add to crumbs
     if (
-        $tempCrumb['published'] && !in_array($tempCrumb['template'],$ignoreTemplates) &&
+        $tempCrumb['published'] && 
+        ($tempCrumb['alias_visible'] || $ignoreAliasVisible) && 
+        !in_array($tempCrumb['template'],$ignoreTemplates) &&
         ( !$tempCrumb['hidemenu'] || !$respectHidemenu) &&
         !in_array($tempCrumb['id'],$ignoreIds)
     )

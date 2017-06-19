@@ -5,8 +5,8 @@
 * @package  AjaxSearchResults
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchResults class contains all functions and data used to manage Results
@@ -51,7 +51,7 @@ class AjaxSearchResults {
     *
     *  @access public
     */
-    function AjaxSearchResults() {
+    function __construct() {
     }
     /*
     *  Initializes the class into the proper context
@@ -529,7 +529,7 @@ class AjaxSearchResults {
                 $wordLength = $mbStrlen($searchTerm);
                 $wordLength2 = $wordLength / 2;
                 // $pattern = '/' . preg_quote($searchTerm, '/') . $lookAhead . '/' . $pcreModifier;
-                if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                 else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                 $matches = array();
                 $nbr = preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
@@ -592,7 +592,7 @@ class AjaxSearchResults {
                 if ($this->asCfg->cfg['highlightResult']) {
                     $rank = $extracts[$i]['rank'];
                     $searchTerm = $searchList[$rank - 1];
-                    if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                    if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                     else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                     $subject = '<span class="' . $highlightClass . ' ' . $highlightClass . $rank . '">\0</span>';
                     $extract = preg_replace($pattern, $subject, $extract);
@@ -881,7 +881,7 @@ class AjaxSearchResults {
                     $searchList = $this->asCtrl->getSearchWords($searchString, $advSearch);
                     $pcreModifier = $this->asCfg->pcreModifier;
                     foreach ($searchList as $searchTerm) {
-                        if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                        if ($advSearch == EXACTPHRASE) $pattern = '/(\b|\W)' . preg_quote($searchTerm, '/') . '(\b|\W)/' . $pcreModifier;
                         else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                         $matches = array();
                         $found = preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE);

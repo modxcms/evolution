@@ -2,9 +2,9 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
- * @author Yossi Bengigi, www.modx.co.il
+ * @author Yossi Bengigi, www.modx.co.il; Shlomo Tommer
  *
  * @language Hebrew
  * @package modx
@@ -576,7 +576,7 @@ $_lang["new_template"] = 'תבנית עיצוב חדשה';
 $_lang["new_tmplvars"] = 'משתנה תבנית חדש';
 $_lang["new_user"] = 'משתמש חדש';
 $_lang["new_web_user"] = 'חבר חדש';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'מסמך חדש';
 $_lang["no"] = 'לא';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'עדיין לא יצרת או ערכת מסמכים.';
@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'View action completed screen';
 $_lang["role_bk_manager"] = 'Use the Backup Manager';
 $_lang["role_cache_refresh"] = 'Empty the site\'s cache';
 $_lang["role_change_password"] = 'שנה סיסמה';
+$_lang["role_change_resourcetype"] = 'סוג משאב שינוי';
 $_lang["role_chunk_management"] = 'ניהול מיני תבניות';
 $_lang["role_config_management"] = 'ניהול הגדרות';
 $_lang["role_content_management"] = 'ניהול תכנים';
@@ -841,7 +842,7 @@ $_lang["role_web_user_management"] = 'ניהול חברים';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = 'הרץ מודול';
@@ -856,6 +857,8 @@ $_lang["search_criteria_content"] = 'חפש לפי תוכן';
 $_lang["search_criteria_content_msg"] = 'Find all documents with the entered text in their content.';
 $_lang["search_criteria_id"] = 'חפש לפי זיהוי';
 $_lang["search_criteria_id_msg"] = 'Enter a document\'s ID to quickly locate that document.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'מצא את כל המסמכים המשתמשים בתבנית מסויימת';
 $_lang["search_criteria_longtitle"] = 'Search by long title';
 $_lang["search_criteria_longtitle_msg"] = 'Find all documents with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'חפש לפי כותרת';
@@ -1152,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1165,7 +1169,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'לחזור נתונים זה';
+$_lang["bkmgr_restore_confirm"] = '?[+filename+]\nהאם אתה בטוח שאתה רוצה לחזור גיבוי';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';
@@ -1192,6 +1197,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';
@@ -1202,7 +1208,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Published';
-$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
+$_lang["docid_incrmnt_method_title"] = 'שיטת קידום ערך הקוד של מסמך חדש';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
@@ -1220,16 +1226,16 @@ $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
 
-$_lang["import_site.static.php1"] = 'Reset resource tree';
-$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
+$_lang["import_site.static.php1"] = 'אתחל את עץ המסמכים';
+$_lang["import_site.static.php2"] = 'אתחל את עץ המסמכים, כולל איפוס כל קודי המסמך';
 $_lang["import_site.static.php3"] = 'Target';
 $_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
 $_lang["import_site.static.php5"] = 'Whole file content';
 
 $_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
 $_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
+$_lang["export_site.static.php2"] = 'רק מסמכים שעודכנו';
+$_lang["export_site.static.php3"] = 'כל המסמכים';
 $_lang["export_site.static.php4"] = 'Search for';
 $_lang["export_site.static.php5"] = 'Replace with';
 $_lang["export_site.static.php6"] = 'Target';

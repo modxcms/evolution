@@ -3,8 +3,42 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 if(!$modx->hasPermission('logs')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
+
+$res = $modx->db->query("show variables like 'character_set_database'");
+$charset = $modx->db->getRow($res, 'num');
+$res = $modx->db->query("show variables like 'collation_database'");
+$collation = $modx->db->getRow($res, 'num');
+
+$serverArr = array(
+	$_lang['modx_version']       => $modx->getVersionData('version'). ' '.$newversiontext,
+	$_lang['release_date']       => $modx->getVersionData('release_date'),
+	'PHP Version'                => phpversion(),
+	'phpInfo()'            		 => '<a href="#" onclick="viewPHPInfo();return false;">'.$_lang['view'].'</a>',
+	$_lang['access_permissions'] =>  ($use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']),
+	$_lang['servertime']		 => strftime('%H:%M:%S', time()),
+	$_lang['localtime']          => strftime('%H:%M:%S', time()+$server_offset_time),
+	$_lang['serveroffset']	     => $server_offset_time/(60*60) . ' h',
+	$_lang['database_name']      => trim($dbase,'`'),
+	$_lang['database_server']    => $database_server,
+	$_lang['database_version']   => $modx->db->getVersion(),
+	$_lang['database_charset']   => $charset[1],
+	$_lang['database_collation'] => $collation[1],
+	$_lang['table_prefix']       => $modx->db->config['table_prefix'],
+	$_lang['cfg_base_path']      => MODX_BASE_PATH,
+	$_lang['cfg_base_url']       => MODX_BASE_URL,
+	$_lang['cfg_manager_url']    => MODX_MANAGER_URL,
+	$_lang['cfg_manager_path']   => MODX_MANAGER_PATH,
+	$_lang['cfg_site_url']       => MODX_SITE_URL
+);
 ?>
-<h1><?php echo $_lang["view_sysinfo"]; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-info-circle"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['view_sysinfo']; ?>
+  </span>
+</h1>
 
 <script type="text/javascript">
 	function viewPHPInfo() {
@@ -16,145 +50,16 @@ if(!$modx->hasPermission('logs')) {
 <!-- server -->
 <div class="section">
 <div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
-
 		<table border="0" cellspacing="2" cellpadding="2">
-		  <tr>
-			<td width="150"><?php echo $_lang['modx_version']?></td>
-			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx->getVersionData('version') ?></b><?php echo $newversiontext ?></td>
-		  </tr>
-		  <tr>
-			<td width="150"><?php echo $_lang['release_date']?></td>
-			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx->getVersionData('release_date') ?></b></td>
-		  </tr>
-		  <tr>
-			<td>phpInfo()</td>
-			<td>&nbsp;</td>
-			<td><b><a href="#" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['access_permissions']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']; ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['servertime']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo strftime('%H:%M:%S', time()); ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['localtime']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['serveroffset']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $server_offset_time/(60*60) ?></b> h</td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_name']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo trim($dbase,'`') ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_server']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $database_server ?></b></td>
-		  </tr>
-		  <tr>
-		    <td><?php echo $_lang['database_version']?></td>
-		    <td>&nbsp;</td>
-		    <td><strong><?php echo $modx->db->getVersion(); ?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_charset']?></td>
-			<td>&nbsp;</td>
-			<td><strong><?php
-	$sql1 = "show variables like 'character_set_database'";
-    $res = $modx->db->query($sql1);
-    $charset = $modx->db->getRow($res, 'num');
-    echo $charset[1];
-			?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['database_collation']?></td>
-			<td>&nbsp;</td>
-			<td><strong><?php
-    $sql2 = "show variables like 'collation_database'";
-    $res = $modx->db->query($sql2);
-    $collation = $modx->db->getRow($res, 'num');
-    echo $collation[1];
-            ?></strong></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['table_prefix']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo $modx->db->config['table_prefix'] ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_base_path']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_BASE_PATH ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_base_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_BASE_URL ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_manager_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_MANAGER_URL ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_manager_path']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_MANAGER_PATH ?></b></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['cfg_site_url']?></td>
-			<td>&nbsp;</td>
-			<td><b><?php echo MODX_SITE_URL ?></b></td>
-		  </tr>
+		<?php foreach ($serverArr as $key => $value){
+			echo '<tr>
+					<td>'.$key.'</td>
+					<td>&nbsp;</td>
+					<td><b>'.$value.'</b></td>
+				  </tr>';
+		}	
+		?>	 
 		</table>
-
-   </div>
-</div>
-
-<!-- recent documents -->
-<div class="section">
-<div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
-		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
-			<thead>
-			<tr>
-				<td><b><?php echo $_lang["id"]; ?></b></td>
-				<td><b><?php echo $_lang["resource_title"]; ?></b></td>
-				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
-				<td><b><?php echo $_lang["datechanged"]; ?></b></td>
-			</tr>
-			</thead>
-			<tbody>
-		<?php
-		$rs = $modx->db->select('id, pagetitle, editedby, editedon', $modx->getFullTableName('site_content'), 'deleted=0', 'editedon DESC', 20);
-		$limit = $modx->db->getRecordCount($rs);
-		if($limit<1) {
-			echo "<p>".$_lang["no_edits_creates"]."</p>";
-		} else {
-			$i = 0;
-			while ($content = $modx->db->getRow($rs)) {
-				$rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$content['editedby']}'");
-				$content['user'] = $modx->db->getValue($rs2);
-				if(!$content['user']) $content['user'] = '-';
-				$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$content['user']."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
-			}
-		}
-		?>
-		</tbody>
-         </table>
    </div>
 </div>
 
@@ -230,45 +135,4 @@ if(!$modx->hasPermission('logs')) {
 	if($totaloverhead>0) { ?>
 		<p><?php echo $_lang['database_overhead']; ?></p>
 		<?php } ?>
-</div></div>
-
-<!-- online users -->
-<div class="section">
-<div class="sectionHeader"><?php echo $_lang['onlineusers_title']; ?></div><div class="sectionBody" id="lyr5">
-
-		<?php
-		$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
-                  <thead>
-                    <tr>
-                      <td><b>'.$_lang["onlineusers_user"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_userid"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_ipaddress"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_lasthit"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_action"].'</b></td>
-                      <td><b>'.$_lang["onlineusers_actionid"].'</b></td>		
-                    </tr>
-                  </thead>
-                  <tbody>
-        ';
-		
-		$timetocheck = (time()-(60*20));
-
-		include_once "actionlist.inc.php";
-
-		$rs = $modx->db->select('*', $modx->getFullTableName('active_users'), "lasthit>{$timetocheck}", 'username ASC');
-		$limit = $modx->db->getRecordCount($rs);
-		if($limit<1) {
-			$html = "<p>".$_lang['no_active_users_found']."</p>";
-		} else {
-			while ($activeusers = $modx->db->getRow($rs)) {
-				$currentaction = getAction($activeusers['action'], $activeusers['id']);
-				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='".$_style["tree_globe"]."' alt='Web user'>":"";
-				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
-			}
-		}
-		echo $html;
-		?>
-		</tbody>
-		</table>
 </div></div>

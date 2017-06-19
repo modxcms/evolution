@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Japanese
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Register_Globalsの設定: ';
 $_lang["checking_registerglobals_note"] = 'Register_Globalsがオンになっていると、サイトはXSS攻撃の対象としてさらされるため非常に危険です。特に必要がなければオフにしてください。.htaccessに「php_flag register_globals off」と記述を加えることでオフに設定できます。';
 $_lang["checking_sessions"] = 'セッション情報が正常に構成されるかどうか: ';
 $_lang["checking_table_prefix"] = 'Tableプリフィックスの設定 `';
+$_lang["choose_language"] = '言語を選択してください';
 $_lang["chunks"] = 'チャンク';
 $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = '照合順序(エンコード指定含む):<br />※utf8_general_ciを<br />おすすめします';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'サンプルサイトのインストール: ';
 $_lang["language_code"] = 'ja';
 $_lang["loading"] = '処理中...';
 $_lang["modules"] = 'モジュール';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
 $_lang["modx_install"] = 'MODX &raquo; インストール';
 $_lang["modx_requires_php"] = 'MODXの動作にはPHP [+min_version+]以上が必要です。';
@@ -131,6 +132,8 @@ $_lang["please_correct_error"] = 'があります。';
 $_lang["please_correct_errors"] = 'があります。';
 $_lang["plugins"] = 'プラグイン';
 $_lang["preinstall_validation"] = 'インストール前の状態確認';
+$_lang['recommend_collation'] = 'utf8mb4_general_ci';
+$_lang['recommend_collations_order'] = 'utf8mb4_general_ci,utf8_general_ci,utf8mb4_bin,utf8_bin';
 $_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
 $_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the Manager. We strongly recommend enabling this setting to reduce the risk of a CSRF (Cross Site Request Forgery) attack.';

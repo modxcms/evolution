@@ -5,8 +5,8 @@
 * @package  AjaxSearchInput
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearchInput class contains all functions and data used to manage Input form
@@ -33,7 +33,7 @@ class AjaxSearchInput {
     *
     * @access public
     */
-    function AjaxSearchInput() {
+    function __construct() {
     }
     /*
     * Initializes the class into the proper context

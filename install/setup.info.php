@@ -1,24 +1,19 @@
 <?php
 //:: MODX Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
-}else{
-define('MGR_DIR', 'manager');
+if (is_file($base_path . 'assets/cache/siteManager.php')) {
+    include_once($base_path . 'assets/cache/siteManager.php');
 }
+if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
+
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODX";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
-$moduleSQLBaseFile = "setup.sql";
-$moduleSQLDataFile = "setup.data.sql";
-$chunkPath = $setupPath .'/assets/chunks';
-$snippetPath = $setupPath .'/assets/snippets';
-$pluginPath = $setupPath .'/assets/plugins';
-$modulePath = $setupPath .'/assets/modules';
-$templatePath = $setupPath .'/assets/templates';
-$tvPath = $setupPath .'/assets/tvs';
+$chunkPath    = $base_path .'install/assets/chunks';
+$snippetPath  = $base_path .'install/assets/snippets';
+$pluginPath   = $base_path .'install/assets/plugins';
+$modulePath   = $base_path .'install/assets/modules';
+$templatePath = $base_path .'install/assets/templates';
+$tvPath = $base_path .'install/assets/tvs';
 
 // setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
 $mt = &$moduleTemplates;
@@ -40,7 +35,8 @@ if(is_dir($templatePath) && is_readable($templatePath)) {
                 "$templatePath/{$params['filename']}",
                 $params['modx_category'],
                 $params['lock_template'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                isset($params['save_sql_id_as']) ? $params['save_sql_id_as'] : NULL // Nessecary to fix template-ID for demo-site
             );
         }
     }
@@ -66,7 +62,7 @@ if(is_dir($tvPath) && is_readable($tvPath)) {
                 $params['output_widget'],
                 $params['output_widget_params'],
                 "$templatePath/{$params['filename']}", /* not currently used */
-                $params['template_assignments'], /* comma-separated list of template names */
+                $params['template_assignments']!="*"?$params['template_assignments']:implode(",",array_map(create_function('$v','return $v[0];'),$mt)), /* comma-separated list of template names */
                 $params['modx_category'],
                 $params['lock_tv'],  /* value should be 1 or 0 */
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
@@ -175,7 +171,7 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
             );
         }
 		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
-			$dependencies = explode(',', $dependencies);
+			$dependencies = explode(',', $params['dependencies']);
 			foreach ($dependencies as $dependency) {
 				$dependency = explode(':', $dependency);
 				switch (trim($dependency[0])) {
@@ -249,44 +245,44 @@ function clean_up($sqlParser) {
     $ids = array();
     $mysqlVerOk = -1;
 
-    if(function_exists("mysql_get_server_info")) {
-        $mysqlVerOk = (version_compare(mysql_get_server_info(),"4.0.2")>=0);
+    if(function_exists("mysqli_get_server_info")) {
+        $mysqlVerOk = (version_compare(mysqli_get_server_info($sqlParser->conn),"4.0.2")>=0);
     }
 
     // secure web documents - privateweb
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."webgroup_access` wga ON wga.documentgroup = dg.document_group
              WHERE wga.id>0";
-    $ds = mysql_query($sql,$sqlParser->conn);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }
 
     // secure manager documents privatemgr
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."membergroup_access` mga ON mga.documentgroup = dg.document_group
              WHERE mga.id>0";
-    $ds = mysql_query($sql);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }

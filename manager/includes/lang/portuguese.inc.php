@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'Ver ecran de acção finalizada';
 $_lang["role_bk_manager"] = 'Usar o gestor de Cópias de Segurança (Backups)';
 $_lang["role_cache_refresh"] = 'Limpar a cache do site';
 $_lang["role_change_password"] = 'Alterar a senha de acesso';
+$_lang["role_change_resourcetype"] = 'Mudança de tipo de recurso';
 $_lang["role_chunk_management"] = 'Chunk management';
 $_lang["role_config_management"] = 'Gestão de configurações do sistema';
 $_lang["role_content_management"] = 'Gestão de conteúdos';
@@ -841,7 +842,7 @@ $_lang["role_web_user_management"] = 'Gestão de utilizadores web (externos)';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = 'Executar Módulo';
@@ -856,6 +857,8 @@ $_lang["search_criteria_content"] = 'Procurar por conteúdo';
 $_lang["search_criteria_content_msg"] = 'Encontrar todos os documentos que contenham o texto indicado no seu <b>conteúdo</b>.';
 $_lang["search_criteria_id"] = 'Procurar por ID';
 $_lang["search_criteria_id_msg"] = 'Indique a ID de um documento para o localizar rapidamente.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Procurar por título longo';
 $_lang["search_criteria_longtitle_msg"] = 'Encontrar todos os documentos que contenham o texto indicado no seu <b>título longo</b>.';
 $_lang["search_criteria_title"] = 'Procurar por título';
@@ -1152,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1165,7 +1169,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Reverter estes dados';
+$_lang["bkmgr_restore_confirm"] = 'Tem certeza de que deseja reverter o backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';
@@ -1192,6 +1197,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

@@ -15,7 +15,7 @@ class DBAPI {
     * @name:  DBAPI
     *
     */
-   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='',$connection_method='SET CHARACTER SET') {
+   function __construct($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='',$connection_method='SET CHARACTER SET') {
       $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
       $this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
       $this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
@@ -177,14 +177,24 @@ class DBAPI {
     * @desc:  Mainly for internal use.
     * Developers should use select, update, insert, delete where possible
     */
-   function query($sql) {
+   function query($sql,$watchError=true) {
       global $modx;
       if (empty ($this->conn) || !is_resource($this->conn)) {
          $this->connect();
       }
       $tstart = $modx->getMicroTime();
       if (!$result = @ mysql_query($sql, $this->conn)) {
-         $modx->messageQuit("Execution of a query to the database failed - " . $this->getLastError(), $sql);
+         if(!$watchError) return;
+            switch(mysql_errno()) {
+                case 1054:
+                case 1060:
+                case 1061:
+                case 1062:
+                case 1091:
+                    break;
+                default:
+                    $modx->messageQuit('Execution of a query to the database failed - ' . $this->getLastError(), $sql);
+            }
       } else {
          $tend = $modx->getMicroTime();
          $totaltime = $tend - $tstart;
@@ -233,9 +243,14 @@ class DBAPI {
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
       global $modx;
+      
+      if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
+      if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+      
       if (!$from)
          $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
       else {
+         $fields = $this->replaceFullTableName($fields);
          $from = $this->replaceFullTableName($from);
          $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
          $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
@@ -255,8 +270,14 @@ class DBAPI {
       else {
          $table = $this->replaceFullTableName($table);
          if (is_array($fields)) {
-            foreach ($fields as $key => $value)
-               $fields[$key] = "`{$key}` = '{$value}'";
+			 foreach ($fields as $key => $value) {
+				 if(is_null($value) || strtolower($value) === 'null'){
+					 $flds = 'NULL';
+				 }else{
+					 $flds = "'" . $value . "'";
+				 }
+				 $fields[$key] = "`{$key}` = ".$flds;
+			 }
             $fields = implode(",", $fields);
          }
          $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
@@ -300,6 +321,14 @@ class DBAPI {
          return $lid;
       }
    }
+   /**
+    * @name:  isResult
+    *
+    */
+   function isResult($rs) {
+      return is_resource($rs);
+   }
+
    /**
     * @name:  freeResult
     *
@@ -578,10 +607,6 @@ class DBAPI {
          return $grd->render();
       }
    }
-
-   
-   
-   
    
    /**
    * @name:  makeArray
@@ -591,14 +616,17 @@ class DBAPI {
    *          was passed
    * @param: $rs Recordset to be packaged into an array
    */
-   function makeArray($rs=''){
-      if(!$rs) return false;
-      $rsArray = array();
-      while ($row = $this->getRow($rs)) {
-            $rsArray[] = $row;
-      }
-      return $rsArray;
-   }
+	function makeArray($rs='',$index=false){
+		if (!$rs) return false;
+		$rsArray = array();
+		$iterator = 0;
+		while ($row = $this->getRow($rs)) {
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator;
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
+		}
+		return $rsArray;
+	}
    
    /**
     * @name	getVersion
@@ -647,5 +675,29 @@ class DBAPI {
        $rs = $this->query("TRUNCATE {$table_name}");
        return $rs;
    }
+
+  function dataSeek($result, $row_number) {
+    return mysql_data_seek($result, $row_number);
+  }
+  
+    function _getFieldsStringFromArray($fields=array()) {
+        
+        if(empty($fields)) return '*';
+        
+        $_ = array();
+        foreach($fields as $k=>$v) {
+            if($k!==$v) $_[] = "{$v} as {$k}";
+            else        $_[] = $v;
+        }
+        return join(',', $_);
+    }
+    
+    function _getFromStringFromArray($tables=array()) {
+        $_ = array();
+        foreach($tables as $k=>$v) {
+            $_[] = $v;
+        }
+        return join(' ', $_);
+    }
 }
-?>
+

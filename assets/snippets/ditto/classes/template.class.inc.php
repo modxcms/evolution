@@ -14,7 +14,7 @@ class template{
 	// Function: template
 	// Set the class language and fields variables
 	// ---------------------------------------------------
-	function template() {
+	function __construct() {
 		$this->language = $GLOBALS["ditto_lang"];
 		$this->fields = array (
 			"db" => array (),
@@ -210,7 +210,8 @@ class template{
 		} else {
 			$template = $this->language['missing_placeholders_tpl'];
 		}
-			return $template;
+		if(strpos($template,'[!')!==false) $template = str_replace(array('[!','!]'),array('[[',']]'),$template);
+		return $template;
 	}
 
 	// ---------------------------------------------------

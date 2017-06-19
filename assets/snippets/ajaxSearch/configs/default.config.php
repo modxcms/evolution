@@ -1,9 +1,9 @@
 <?php
 
-// Default configuration file - AjaxSearch 1.10.1
+// Default configuration file - AjaxSearch 1.10.2
 // Keep care all these values are required
 
-$dcfg['version'] = '1.10.1';
+$dcfg['version'] = '1.10.2';
 $dcfg['config'] = '';
 $dcfg['debug'] = 0;
 $dcfg['timeLimit'] = 60;
@@ -32,7 +32,7 @@ $dcfg['extract'] = '1:content,description,introtext,tv_value';
 $dcfg['extractLength'] = 200;
 $dcfg['extractEllips'] = '...';
 $dcfg['extractSeparator'] = '<br />';
-$dcfg['formatDate'] = 'd/m/y : H:i:s';
+$dcfg['formatDate'] = str_replace('%','',$modx->toDateFormat(null,'formatOnly')) . ' : H:i:s';
 $dcfg['highlightResult'] = 1;
 $dcfg['pagingType'] = 1;
 $dcfg['showPagingAlways'] = 0;

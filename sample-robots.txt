@@ -1,5 +1,6 @@
 # Default modx exclusions
 User-agent: *
+Disallow: /assets/backup/
 Disallow: /assets/cache/
 Disallow: /assets/docs/
 Disallow: /assets/export/
@@ -10,7 +11,16 @@ Disallow: /assets/snippets/
 Disallow: /assets/packages/ 
 Disallow: /assets/tvs/
 Disallow: /install/
-Disallow: /manager/	
 
-# For sitemaps.xml autodiscovery. Uncomment if you have one.
+Allow: /assets/cache/images/
+Allow: /assets/modules/*.css
+Allow: /assets/modules/*.js
+Allow: /assets/plugins/*.css
+Allow: /assets/plugins/*.js
+Allow: /assets/snippets/*.css
+Allow: /assets/snippets/*.js
+
+# Host: example.com
+
+# For sitemaps.xml autodiscovery. Uncomment if you have one:
 # Sitemap: http://example.com/sitemap.xml

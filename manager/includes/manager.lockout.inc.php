@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
+if($modx->manager->action!='8' && isset($_SESSION['mgrValidated'])){
     
     $homeurl = $modx->makeUrl($manager_login_startup>0 ? $manager_login_startup:$site_start);
     $logouturl = MODX_MANAGER_URL.'index.php?a=8';
@@ -51,6 +51,10 @@ if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/manager.lockout.tpl';
     		$lockout_tpl = file_get_contents($target);
     	}
+	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/manager.lockout.tpl')) {
+		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/templates/actions/manager.lockout.tpl';
+		$login_tpl = file_get_contents($target);
+	}
     	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/manager.lockout.html')) { // ClipperCMS compatible
     		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/manager.lockout.html';
     		$lockout_tpl = file_get_contents($target);

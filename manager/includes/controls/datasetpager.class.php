@@ -27,7 +27,7 @@ class DataSetPager {
 	var $selPageStyle;	
 	var $selPageClass;
 
-	function DataSetPager($id,$ds,$pageSize=10,$pageNumber=-1) {		
+	function __construct($id,$ds,$pageSize=10,$pageNumber=-1) {
 		global $_PAGE; // use view state object
 		
 		global $__DataSetPagerCnt;
@@ -85,7 +85,7 @@ class DataSetPager {
 	function render(){
 		global $modx,$_PAGE;
 			
-		$isDataset = is_resource($this->ds);
+		$isDataset = $modx->db->isResult($this->ds);
 		
 		if (!$this->selPageStyle) $this->selPageStyle = "font-weight:bold";
 		

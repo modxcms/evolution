@@ -57,31 +57,56 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		}
 	});
 
+
+	function setTreeFrameWidth(pos) {
+		parent.document.getElementById('tree').style.width    = pos + 'px';
+		parent.document.getElementById('resizer').style.left = pos + 'px';
+		parent.document.getElementById('main').style.left    = pos + 'px';
+
+	}
+
+	function toggleTreeFrame() {
+		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:320;
+		setTreeFrameWidth(pos);
+	}
+
+
 	function hideTreeFrame() {
-		userDefinedFrameWidth = parent.document.getElementsByTagName("FRAMESET").item(1).cols;
-		currentFrameState = 'closed';
-		try {
-			var elm = $('tocText');
-			if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']?>' alt='<?php echo $_lang['show_tree']?>' width='16' height='16' /></a>";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo (!$modx_textdir ? '0,*' : '*,0')?>';
-			top.__hideTree = true;
-		} catch(oException) {
-			x=window.setTimeout('hideTreeFrame()', 1000);
-		}
+		var pos = 0;
+		setTreeFrameWidth(pos);
 	}
 
 	function defaultTreeFrame() {
-		userDefinedFrameWidth = defaultFrameWidth;
-		currentFrameState = 'open';
-		try {
-			var elm = $('tocText');
-			if(elm) elm.innerHTML = "";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = defaultFrameWidth;
-			top.__hideTree = false;
-		} catch(oException) {
-			z=window.setTimeout('defaultTreeFrame()', 1000);
-		}
+		var pos = 300;
+		setTreeFrameWidth(pos);
 	}
+
+
+	//toggle TopMenu Frame
+		function setMenuFrameHeight(pos) {
+		parent.document.getElementById('tree').style.top    = pos + 'px';
+		parent.document.getElementById('resizer').style.top = pos + 'px';
+		parent.document.getElementById('resizer2').style.top = pos + 'px';
+		parent.document.getElementById('main').style.top    = pos + 'px';
+		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
+	}
+
+	function toggleMenuFrame() {
+		var pos = parseInt(parent.document.getElementById('mainMenu').style.height) != 5?5:70;
+		setMenuFrameHeight(pos);
+	}
+
+	function hideMenuFrame() {
+		var pos = 5;
+		setMenuFrameHeight(pos);
+	}
+
+	function defaultMenuFrame() {
+		var pos = 65;
+		setMenuFrameHeight(pos);
+	}
+
+
 
 	// TREE FUNCTIONS - Expand/ Collapse
 	// These functions affect the expanded/collapsed state of the tree and any items that may be pointing to it
@@ -188,203 +213,58 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		// remove focus from top nav
 		if(element) element.blur();
 	}
+
+	function setLastClickedElement(type, id) {
+		localStorage.setItem('MODX_lastClickedElement', '['+type+','+id+']' );
+	}
 	</script>
-	<!--[if lt IE 7]>
-	<style type="text/css">
-	body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
-	img { behavior: url(media/script/forIE/htcmime.php?file=pngbehavior.htc); }
-	</style>
-	<![endif]-->
 </head>
 
 <body id="topMenu" class="<?php echo $modx_textdir ? 'rtl':'ltr'?>">
-
-<div id="tocText"<?php echo $modx_textdir ? ' class="tocTextRTL"' : '' ?>></div>
+<?php
+    // invoke OnManagerTopPrerender event
+    $evtOut = $modx->invokeEvent('OnManagerTopPrerender',$_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
+<div id="tocText" <?php echo $modx_textdir ? ' class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">
-<div id="topbar-container">
-	<div id="statusbar">
-		<span id="buildText"></span>
-		<span id="workText"></span>
-	</div>
+  <div id="topbar-container">
+   
+    <div id="statusbar">
+      <span id="buildText"></span>
+      <span id="workText"></span>
+    </div>
 
-	<div id="supplementalNav">
-	<?php echo $modx->getLoginUserName(). ($modx->hasPermission('change_password') ? ': <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") ?>
-<?php if($modx->hasPermission('messages')) { ?>
-	| <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang['you_got_mail']?>" target="main"> <img src="<?php echo $_style['icons_mail']?>" width="16" height="16" /></a></span>
-	<a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang['messages']?> <span id="msgCounter">( ? / ? )</span></a>
-<?php }
-if($modx->hasPermission('help')) { ?>
-	| <a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
-<?php } ?>
-	| <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx->getVersionData('full_appname') ?>"><?php echo $modx->getVersionData('version') ?></span>&nbsp;
-	<!-- close #supplementalNav --></div>
-</div>
-</div>
+    <div id="supplementalNav">
+      <?php 
+      echo '<span class="username">' . $modx->getLoginUserName() . '</span>' . ($modx->hasPermission('change_password') ? ' <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") 
+      ?>
+      <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
+      <?php $style = $modx->config['settings_version']!=$modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; ?>
+      <?php 
+        if ($modx->hasPermission('help')) {
+        echo sprintf('<span onclick="top.main.document.location.href=\'index.php?a=9#version_notices\'" style="cursor:pointer" class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);
+        } else
+        {
+        echo sprintf('<span class="systemversion" title="%s &ndash; %s" %s>%s</span>&nbsp;',$site_name,$modx->getVersionData('full_appname'),$style,$modx->config['settings_version']);            
+        }
+            ?>
+    </div>
 
+  </div>
+</div>
+<div id="searchform">
+			<form  action="index.php?a=71#results" method="post" target="main">
+				<input type="hidden" value="Search" name="submitok" />
+				<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search']?>">
+			</form>
+		</div>
 <form name="menuForm" action="l4mnu.php" class="clear">
     <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
 <div id="Navcontainer">
 <div id="divNav">
-	<ul id="nav">
-<?php
-// Concatenate menu items based on permissions
-
-// Site Menu
-$sitemenu = array();
-// home
-$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=2" target="main">'.$_lang['home'].'</a></li>';
-// preview
-$sitemenu[] = '<li><a onclick="this.blur();" href="../" target="_blank">'.$_lang['preview'].'</a></li>';
-// clear-cache
-$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=26" target="main">'.$_lang['refresh_site'].'</a></li>';
-// search
-$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=71" target="main">'.$_lang['search'].'</a></li>';
-if ($modx->hasPermission('new_document')) {
-	// new-document
-	$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=4" target="main">'.$_lang['add_resource'].'</a></li>';
-	// new-weblink
-	$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=72" target="main">'.$_lang['add_weblink'].'</a></li>';
-}
-
-// Elements Menu
-$resourcemenu = array();
-if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) {
-	// Elements
-	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=76" target="main">'.$_lang['element_management'].'</a></li>';
-}
-if($modx->hasPermission('file_manager')) {
-	// Manage-Files
-	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=31" target="main">'.$_lang['manage_files'].'</a></li>';
-}
-if($modx->hasPermission('manage_metatags') && $modx->config['show_meta'] == 1) {
-	// Manage-Metatags
-	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=81" target="main">'.$_lang['manage_metatags'].'</a></li>';
-}
-
-// Modules Menu Items
-$modulemenu = array();
-if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-	// manage-modules
-	$modulemenu[] = '<li><a onclick="this.blur();" href="index.php?a=106" target="main">'.$_lang['module_management'].'</a></li>';
-}
-if($modx->hasPermission('exec_module')) {
-	// Each module
-	if ($_SESSION['mgrRole'] != 1) {
-		// Display only those modules the user can execute
-		$rs = $modx->db->select(
-			'DISTINCT sm.id, sm.name, mg.member',
-			$modx->getFullTableName('site_modules')." AS sm
-				LEFT JOIN ".$modx->getFullTableName('site_module_access')." AS sma ON sma.module = sm.id
-				LEFT JOIN ".$modx->getFullTableName('member_groups')." AS mg ON sma.usergroup = mg.user_group",
-			"(mg.member IS NULL OR mg.member = ".$modx->getLoginUserID().") AND sm.disabled != 1"
-			);
-	} else {
-		// Admins get the entire list
-		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
-	}
-	while ($content = $modx->db->getRow($rs)) {
-		$modulemenu[] = '<li><a onclick="this.blur();" href="index.php?a=112&amp;id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
-	}
-}
-
-// Security menu items (users)
-$securitymenu = array();
-if($modx->hasPermission('edit_user')) {
-	// manager-users
-	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=75" target="main">'.$_lang['user_management_title'].'</a></li>';
-}
-if($modx->hasPermission('edit_web_user')) {
-	// web-users
-	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=99" target="main">'.$_lang['web_user_management_title'].'</a></li>';
-}
-if($modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('delete_role')) {
-	// roles
-	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=86" target="main">'.$_lang['role_management_title'].'</a></li>';
-}
-if($modx->hasPermission('access_permissions')) {
-	// manager-perms
-	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=40" target="main">'.$_lang['manager_permissions'].'</a></li>';
-}
-if($modx->hasPermission('web_access_permissions')) {
-	// web-user-perms
-	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=91" target="main">'.$_lang['web_permissions'].'</a></li>';
-}
-
-// Tools Menu
-$toolsmenu = array();
-if($modx->hasPermission('bk_manager')) {
-	// backup-mgr
-	$toolsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=93" target="main">'.$_lang['bk_manager'].'</a></li>';
-}
-if($modx->hasPermission('remove_locks')) {
-	// unlock-pages
-	$toolsmenu[] = '<li><a onclick="this.blur();" href="javascript:removeLocks();">'.$_lang['remove_locks'].'</a></li>';
-}
-if($modx->hasPermission('import_static')) {
-	// import-html
-	$toolsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=95" target="main">'.$_lang['import_site'].'</a></li>';
-}
-if($modx->hasPermission('export_static')) {
-	// export-static-site
-	$toolsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=83" target="main">'.$_lang['export_site'].'</a></li>';
-}
-if($modx->hasPermission('settings')) {
-	// configuration
-	$toolsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=17" target="main">'.$_lang['edit_settings'].'</a></li>';
-}
-
-// Reports Menu
-$reportsmenu = array();
-// site-sched
-if($modx->hasPermission('view_eventlog')) {
-	// eventlog
-	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
-}	
-if($modx->hasPermission('view_eventlog')) {
-	// eventlog
-	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=114" target="main">'.$_lang['eventlog_viewer'].'</a></li>';
-}
-if($modx->hasPermission('logs')) {
-	// manager-audit-trail
-	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=13" target="main">'.$_lang['view_logging'].'</a></li>';
-	// system-info
-	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=53" target="main">'.$_lang['view_sysinfo'].'</a></li>';
-}
-
-// Output Menus where there are items to show
-if (!empty($sitemenu)) {
-	echo "\t",'<li id="limenu3" class="active"><a href="#menu3" onclick="new NavToggle(this); return false;">',$_lang['site'],'</a><ul class="subnav" id="menu3">',"\n\t\t",
-	     implode("\n\t\t", $sitemenu),
-	     "\n\t</ul></li>\n";
-}
-if (!empty($resourcemenu)) {
-	echo "\t",'<li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;">',$_lang['elements'],'</a><ul class="subnav" id="menu5">',"\n\t\t",
-	     implode("\n\t\t", $resourcemenu),
-	     "\n\t</ul></li>\n";
-}
-if (!empty($modulemenu)) {
-	echo "\t",'<li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;">',$_lang['modules'],'</a><ul class="subnav" id="menu9">',"\n\t\t",
-	     implode("\n\t\t", $modulemenu),
-	     "\n\t</ul></li>\n";
-}
-if (!empty($securitymenu)) {
-	echo "\t",'<li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;">',$_lang['users'],'</a><ul class="subnav" id="menu2">',"\n\t\t",
-	     implode("\n\t\t", $securitymenu),
-	     "\n\t</ul></li>\n";
-}
-if (!empty($toolsmenu)) {
-	echo "\t",'<li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;">',$_lang['tools'],'</a><ul class="subnav" id="menu1-1">',"\n\t\t",
-	     implode("\n\t\t", $toolsmenu),
-	     "\n\t</ul></li>\n";
-}
-if (!empty($reportsmenu)) {
-	echo "\t",'<li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;">',$_lang['reports'],'</a><ul class="subnav" id="menu1-2">',"\n\t\t",
-	     implode("\n\t\t", $reportsmenu),
-	     "\n\t</ul></li>\n";
-}
-?>
-	</ul>
+    <?php include('mainmenu.php'); ?>
 </div>
 </div>
 </form>

@@ -16,9 +16,11 @@ if(strlen($pass1)<6){
 	$modx->webAlertAndQuit("Password is too short. Please specify a password of at least 6 characters.");
 }
 
+        $pass1 = htmlspecialchars($pass1, ENT_NOQUOTES, $modx->config['modx_charset']);
 	$tbl_manager_users = $modx->getFullTableName('manager_users');
 	$uid = $modx->getLoginUserID();
-	$f['password'] = $modx->manager->genHash($pass1, $uid);
+	$modx->loadExtension('phpass');
+	$f['password'] = $modx->phpass->HashPassword($pass1);
 	$modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
 
 	// invoke OnManagerChangePassword event

@@ -1,43 +1,43 @@
 <?php
-# eForm 1.4.6 - Electronic Form Snippet
-# Original created by: Raymond Irving 15-Dec-2004.
-# Extended by: Jelle Jager (TobyL) September 2006
-# -----------------------------------------------------
-#
-#
-# Captcha image support - thanks to Djamoer
-# Multi checkbox, radio, select support - thanks to Djamoer
-# Form Parser and extended validation - by Jelle Jager
-#
-# see docs/eform.htm for installation and usage information
-#
-# VERSION HISTORY
-# Work around for setting required class on check & radio labels
-# fixed bug: If eform attibute is set on multiple check boxes only the last
-#            value is set in values list
-# For a full version history see the eform_history.htm file in the docs directory
-#
-# Some more fixes and problems:
-# FIXED: reg expression failed for select and textarea boxes which have regex special
-# characters in their name attribute. eg name="multipleSelection[]"
-# FIXED: validation of multiple values with #LIST & #SELECT stopped after 1st value
-# Caused by repeating $v variable naming (overwriting $v array)
-# e.g.
-# <select name="multipleSelection[]" multiple="multiple" eform="::1::"/>
-#   <option value="1">1</option>
-#   <option value="2">2</option>
-#   <option value="3">3</option>
-# </select>
-# would only have the first selected value validated!
-#
-# bugfix: &jScript parameter doesn't accept chunks, only a link to a JS file if more than one chunk is declared (eg &jScript=`chunk1,chunk2)
-# bugfix: &protectSubmit creates hash for all fields instead of fields declared in &protectSubmit
-# bugfix: Auto respond email didn't honour the &sendAsText parameter
-# bugfix: The #FUNCTION validation rule for select boxes never calls the function
-# bugfix: Validation css class isn't being added to labels.
-#
-# SECURITY FIX: add additional sanitization to fields after stripping slashes to avoid remote tag execution
-##
+// eForm 1.4.8 - Electronic Form Snippet
+// Original created by: Raymond Irving 15-Dec-2004.
+// Extended by: Jelle Jager (TobyL) September 2006
+// -----------------------------------------------------
+//
+//
+// Captcha image support - thanks to Djamoer
+// Multi checkbox, radio, select support - thanks to Djamoer
+// Form Parser and extended validation - by Jelle Jager
+//
+// see docs/eform.htm for installation and usage information
+//
+// VERSION HISTORY
+// Work around for setting required class on check & radio labels
+// fixed bug: If eform attibute is set on multiple check boxes only the last
+//            value is set in values list
+// For a full version history see the eform_history.htm file in the docs directory
+//
+// Some more fixes and problems:
+// FIXED: reg expression failed for select and textarea boxes which have regex special
+// characters in their name attribute. eg name="multipleSelection[]"
+// FIXED: validation of multiple values with #LIST & #SELECT stopped after 1st value
+// Caused by repeating $v variable naming (overwriting $v array)
+// e.g.
+// <select name="multipleSelection[]" multiple="multiple" eform="::1::"/>
+//   <option value="1">1</option>
+//   <option value="2">2</option>
+//   <option value="3">3</option>
+// </select>
+// would only have the first selected value validated!
+//
+// bugfix: &jScript parameter doesn't accept chunks, only a link to a JS file if more than one chunk is declared (eg &jScript=`chunk1,chunk2)
+// bugfix: &protectSubmit creates hash for all fields instead of fields declared in &protectSubmit
+// bugfix: Auto respond email didn't honour the &sendAsText parameter
+// bugfix: The #FUNCTION validation rule for select boxes never calls the function
+// bugfix: Validation css class isn't being added to labels.
+//
+// SECURITY FIX: add additional sanitization to fields after stripping slashes to avoid remote tag execution
+//
 
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
 $GLOBALS['efPostBack'] = false;
@@ -49,47 +49,47 @@ function eForm($modx,$params) {
 
 	$fields = array(); //reset fields array - needed in case of multiple forms
 
-// define some variables used as array index
-$_dfnMaxlength = 6;
+    // define some variables used as array index
+    $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.6';
-	$version = isset($version)?$version:'prior to 1.4.2';
+	$fileVersion = '1.4.8';
+	$version = isset($version) ? $version : 'prior to 1.4.2';
 
-	#include default language file
+	// include default language file
 	include_once($snipPath."lang/english.inc.php");
 
-	#include other language file if set.
-	$form_language = isset($language)?$language:$modx->config['manager_language'];
-	if($form_language!="english" && $form_language!='') {
-		if(file_exists($snipPath ."lang/".$form_language.".inc.php"))
+	// include other language file if set.
+	$form_language = isset($language) ? $language : $modx->config['manager_language'];
+	if($form_language!='english' && $form_language!='') {
+		if(is_file($snipPath ."lang/".$form_language.".inc.php"))
 			include_once $snipPath ."lang/".$form_language.".inc.php";
 		else
-			if( $isDebug ) $debugText .= "<strong>Language file '$form_language.inc.php' not found!</strong><br />"; //always in english!
+			if( $isDebug ) $debugText .= sprintf("<strong>Language file '%s.inc.php' not found!</strong><br />", $form_language); //always in english!
 	}
 
-	# add debug warning - moved again...
+	// add debug warning - moved again...
 	if( $isDebug ) $debugText .= $_lang['ef_debug_warning'];
 
 	//check version differences
 	if( $version != $fileVersion )
 		return formMerge($_lang['ef_version_error'], array('version' => $version, 'fileVersion' => $fileVersion));
 
-	# check for valid form key - moved to below fetching form template to allow id coming from form template
+	// check for valid form key - moved to below fetching form template to allow id coming from form template
 
 	$nomail = $noemail; //adjust variable name confusion
-	# activate nomail if missing $to
+	// activate nomail if missing $to
 	if (!$to) $nomail = 1;
 
 
-	# load templates
-	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
+	// load templates
+	if($tpl==$modx->documentIdentifier && $modx->documentIdentifier > 0) return $_lang['ef_is_own_id']."'$tpl'";
 
 	//required
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
 
-	# check for valid form key
+	// check for valid form key
 	if ($formid=="") return $_lang['ef_error_formid'];
 
 
@@ -104,7 +104,7 @@ $_dfnMaxlength = 6;
 
 	$validFormId = ($formid==$_POST['formid'])?1:0;
 
-	# check if postback mode
+	// check if postback mode
 	$efPostBack = ($validFormId && count($_POST)>0)? true:false; //retain old variable?
 
 
@@ -125,14 +125,14 @@ $_dfnMaxlength = 6;
 		$startupSource[]= array($tmp,'javascript');
 	}
 
-	#New in 1.4.4 - run snippet to include 'event' functions
+	// New in 1.4.4 - run snippet to include 'event' functions
 	if( strlen($runSnippet)>0 ){
 		$modx->runSnippet($runSnippet, array('formid'=>$formid));
 		//Sadly we cannot know if the snippet fails or if it exists as modx->runsnippet's return value
 		//is ambiguous
 	}
 
-	# invoke onBeforeFormParse event set by another script
+	// invoke onBeforeFormParse event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormParse) {
 		$eFormOnBeforeFormParse = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormParse)));
@@ -150,39 +150,39 @@ $_dfnMaxlength = 6;
 		}
 	}
 
-	# parse form for formats and generate placeholders
+	// parse form for formats and generate placeholders
 	$tpl = eFormParseTemplate($tpl,$isDebug);
 
 	if ($efPostBack) {
 
-		foreach($formats as $k => $discard)
-			if(!isset($fields[$k])) $fields[$k] = ""; // store dummy value inside $fields
+		foreach($formats as $k => $discard) {
+			if(!isset($fields[$k])) $fields[$k] = ''; // store dummy value inside $fields
+		}
 
 		 $disclaimer = (($tmp=efLoadTemplate($disclaimer))!==false )? $tmp:'';
 
 		//error message containers
 		$vMsg = $rMsg = $rClass = array();
 
-		# get user post back data
+		// get user post back data
 		foreach($_POST as $name => $value){
-			if(is_array($value)){
-				//remove empty values
-				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
+			if(is_array($value)){ // type="checkbox" etc. remove empty values
+				$value = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
-				if ($allowhtml && $formats[$name][2]=='html') {
-					$fields[$name] = stripslashes($value);
-				} else {
-					$fields[$name] = strip_tags(stripslashes($value));
-				}
+				if(get_magic_quotes_gpc())                    $value = stripslashes($value); // For before PHP 5.3
+				if(!$allowhtml || $formats[$name][2]!='html') $value = strip_tags($value);
 			}
+			$fields[$name] = $value;
 		}
-
-		# get uploaded files
+		
+		modx_sanitize_gpc($fields); // Remove the danger values that the result of stripslashes and strip_tags.
+		
+		// get uploaded files
 		foreach($_FILES as $name => $value){
 			$fields[$name] = $value;
 		}
 
-		# check vericode
+		// check vericode
 		if($vericode) {
 			//add support for captcha code - thanks to Djamoer
 			$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
@@ -191,24 +191,8 @@ $_dfnMaxlength = 6;
 				$rClass['vericode']=$invalidClass; //added in 1.4.4
 			}
 		}
-
-		# sanitize the values with slashes stripped to avoid remote execution of Snippets
-		$version = $modx->getVersionData();
-		if (version_compare($version['version'], '1.0.9', '<=')) {
-			modx_sanitize_gpc($fields, array(
-				'@<script[^>]*?>.*?</script>@si',
-				'@&#(\d+);@e',
-				'@\[\~(.*?)\~\]@si',
-				'@\[\((.*?)\)\]@si',
-				'@{{(.*?)}}@si',
-				'@\[\+(.*?)\+\]@si',
-				'@\[\*(.*?)\*\]@si',
-				'@\[\[(.*?)\]\]@si',
-				'@\[!(.*?)!\]@si'
-			));
-		}
-
-		# validate fields
+		
+		// validate fields
 		foreach($fields as $name => $value) {
 			$fld = $formats[$name];
 			if ($fld) {
@@ -248,8 +232,15 @@ $_dfnMaxlength = 6;
 						case "email":
 							//stricter email validation - udated to allow + in local name part
 							if (strlen($value)>0 &&  !preg_match(
-							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
+							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,24}$/i', $value) ){
 								$vMsg[count($vMsg)] = isset($formats[$name][4]) ? $formats[$name][4] : $desc . $_lang["ef_invalid_email"];
+								$rClass[$name]=$invalidClass;
+							}
+							break;
+							case "phone":
+							if (strlen($value)>0 && !preg_match(
+								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
@@ -333,7 +324,7 @@ $_dfnMaxlength = 6;
 			}
 		} else {
 
-			# format report fields
+			// format report fields
 			foreach($fields as $name => $value) {
 				$fld = $formats[$name];
 				if ($fld) {
@@ -341,7 +332,7 @@ $_dfnMaxlength = 6;
 					switch ($datatype)  {
 
 						case "integer":
-							$value = number_format( (float) $value);	//EM~
+							$value = number_format((float) $value, 0, '.', '');
 							break;
 						case "float":
 							$localeInfo = localeconv();
@@ -361,7 +352,7 @@ $_dfnMaxlength = 6;
 							break;
 						case "file":
 							// set file name
-							if($value['type']!="" && $value['type']!=""){
+							if($value['type']!="" && $value['error']==0){
 								$value = $value["name"];
 								$patharray = explode(((strpos($value,"/")===false)? "\\":"/"), $value);
 								$value = $patharray[count($patharray)-1];
@@ -374,13 +365,13 @@ $_dfnMaxlength = 6;
 					$fields[$name] = $value;
 				}
 			}
-			# set postdate
+			// set postdate
 			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());
 
 			//check against email injection and replace suspect content
 			if( hasMailHeaders($fields) ){
 
-				//send email to webmaster??
+				// send email to webmaster??
 				if ($reportAbuse){ //set in snippet configuration tab
 					$body = $_lang['ef_mail_abuse_message'];
 					$body .="<table>";
@@ -388,7 +379,7 @@ $_dfnMaxlength = 6;
 						$body .= "<tr><td>$key</td><td><pre>$value</pre></td></tr>";
 					$body .="</table>";
 					$modx->loadExtension('MODxMailer');
-				# send abuse alert
+				// send abuse alert
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= $modx->config['emailsender'];
 					$modx->mail->FromName	= $modx->config['site_name'];
@@ -404,7 +395,7 @@ $_dfnMaxlength = 6;
 				return formMerge($tpl,array('validationmessage'=> $_lang['ef_mail_abuse_error']));
 			}
 
-			# added in 1.4.2 - Limit the time between form submissions
+			// added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0){
 				if( time()<$submitLimit+$_SESSION[$formid.'_limit'] ){
 					return formMerge($_lang['ef_submit_time_limit'], array('submitLimitMinutes' => $submitLimit / 60));
@@ -412,7 +403,7 @@ $_dfnMaxlength = 6;
 				else unset($_SESSION[$formid.'_limit'], $_SESSION[$formid.'_hash']); //time expired
 			}
 
-			# invoke OnBeforeMailSent event set by another script
+			// invoke OnBeforeMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnBeforeMailSent) {
 				$eFormOnBeforeMailSent = array_filter(array_map('trim', explode(',', $eFormOnBeforeMailSent)));
@@ -435,7 +426,7 @@ $_dfnMaxlength = 6;
 
 			if( $protectSubmit ){
 				$hash = '';
-				# create a hash of key data
+				// create a hash of key data
 				if(!is_numeric($protectSubmit)){ //supplied field names
 					$protectSubmit = (strpos($protectSubmit,','))? explode(',',$protectSubmit):array($protectSubmit);
 					foreach($protectSubmit as $fld) $hash .= isset($fields[$fld]) ? $fields[$fld] : '';
@@ -445,7 +436,7 @@ $_dfnMaxlength = 6;
 
 				if( $isDebug ) $debugText .= "<strong>SESSION HASH</strong>:".$_SESSION[$formid.'_hash']."<br />"."<b>FORM HASH</b>:".$hash."<br />";
 
-				# check if already succesfully submitted with same data
+				// check if already succesfully submitted with same data
 				if( isset($_SESSION[$formid.'_hash']) && $_SESSION[$formid.'_hash'] == $hash && $hash!='' )
 						return formMerge($_lang['ef_multiple_submit'],$fields);
 			}
@@ -458,12 +449,12 @@ $_dfnMaxlength = 6;
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
 
-			# added in 1.4.5 - Use a field for attachments
+			// added in 1.4.5 - Use a field for attachments
 			if ($attachmentField != '' && isset($fields[$attachmentField]) && !empty($fields[$attachmentField])) {
 				$attachmentPath = realpath(MODX_BASE_PATH . $attachmentPath) . '/';
 				$filenames = explode(',', $fields[$attachmentField]);
 				foreach ($filenames as $filename) {
-					if (file_exists($attachmentPath . $filename)) {
+					if (is_file($attachmentPath . $filename)) {
 						$attachments[count($attachments)] = $attachmentPath . $filename;
 					}
 				}
@@ -473,8 +464,7 @@ $_dfnMaxlength = 6;
 			if(empty($to) || !strpos($to,'@')) $nomail=1;
 
 			if(!$nomail){
-
-				# check for mail selector field - select an email from to list
+				// check for mail selector field - select an email from to list
 				if ($mselector && $fields[$mselector]) {
 					$i = (int)$fields[$mselector];
 					$ar = explode(",",$to);
@@ -488,16 +478,17 @@ $_dfnMaxlength = 6;
 				if(!strstr($replyto,'@'))
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
 
-				# include PHP Mailer
+				// include PHP Mailer
 				$modx->loadExtension('MODxMailer');
 
-				# send form
+				// send form
 				//defaults to html so only test sendasText
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'report'))?false:true;
 
-				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
+				// added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
 				if ($fields['email']) {
-					$firstEmail = array_shift(explode(',', $fields['email']));
+					$firstEmail = explode(',', $fields['email']);
+					$firstEmail = array_shift($firstEmail);
 				} else {
 					$firstEmail = '';
 				}
@@ -519,7 +510,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->ClearAttachments();
 				}
 
-				# send user a copy of the report
+				// send user a copy of the report
 				if($ccsender && $firstEmail != '') {
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= $from;
@@ -533,7 +524,7 @@ $_dfnMaxlength = 6;
 					$modx->mail->ClearAttachments();
 				}
 
-				# send auto-respond email
+				// send auto-respond email
 				//defaults to html so only test sendasText
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
 				if ($autotext && $firstEmail != '') {
@@ -550,7 +541,7 @@ $_dfnMaxlength = 6;
 
 				//defaults to text - test for sendAsHtml
 				$isHTML = ($sendAsHTML==1 || strstr($sendAsHtml,'mobile'))?true:false;
-				# send mobile email
+				// send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
 					$modx->mail->IsHTML($isHtml);
@@ -564,13 +555,13 @@ $_dfnMaxlength = 6;
 				}
 
 			}//end test nomail
-			# added in 1.4.2 - Protection against multiple submit with same form data
+			// added in 1.4.2 - Protection against multiple submit with same form data
 			if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
 
-			# added in 1.4.2 - Limit the time between form submissions
+			// added in 1.4.2 - Limit the time between form submissions
 			if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
 
-			# invoke OnMailSent event set by another script
+			// invoke OnMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnMailSent) {
 				$eFormOnMailSent = array_filter(array_map('trim', explode(',', $eFormOnMailSent)));
@@ -595,7 +586,7 @@ $_dfnMaxlength = 6;
 				$fields['debug'] = $debugText;
 			}
 
-			# show or redirect to thank you page
+			// show or redirect to thank you page
 			if ($gid==$modx->documentIdentifier){
 
 				if(!empty($thankyou) ){
@@ -636,7 +627,7 @@ $_dfnMaxlength = 6;
 		$fields['verimageurl'] = MODX_MANAGER_URL.'includes/veriword.php?rand='.rand();
 	}
 
-	# get SESSION data - thanks to sottwell
+	// get SESSION data - thanks to sottwell
 	if($sessionVars){
 		$sessionVars = (strpos($sessionVars,',',0))?array_filter(array_map('trim', explode(',', $sessionVars))):array($sessionVars);
 		foreach( $sessionVars as $varName ){
@@ -645,7 +636,7 @@ $_dfnMaxlength = 6;
 		}
 	}
 
-	# invoke OnBeforeFormMerge event set by another script
+	// invoke OnBeforeFormMerge event set by another script
 	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormMerge) {
 		$eFormOnBeforeFormMerge = array_filter(array_map('trim', explode(',', $eFormOnBeforeFormMerge)));
@@ -660,7 +651,7 @@ $_dfnMaxlength = 6;
 		}
 	}
 
-	# build form
+	// build form
 	if($isDebug && !$fields['debug']) $fields['debug'] = $debugText;
 	if($isDebug && !strstr($tpl,'[+debug+]')) $tpl .= '[+debug+]';
 	//register css and/or javascript
@@ -668,7 +659,7 @@ $_dfnMaxlength = 6;
 	return formMerge($tpl,$fields);
 }
 
-# Form Merge
+// Form Merge
 function formMerge($docText, $docFields) {
 	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
@@ -719,23 +710,23 @@ function formMerge($docText, $docFields) {
 	return $docText;
 }
 
-# Adds Addresses to Mailer
+// Adds Addresses to Mailer
 function AddAddressToMailer(&$mail,$type,$addr){
 	if(empty($addr)) return;
 	$a = array_filter(array_map('trim', explode(',', $addr)));
-	for($i=0;$i<count($a);$i++){
-			if ($type=="to") $mail->AddAddress($a[$i]);
-			elseif ($type=="cc") $mail->AddCC($a[$i]);
-			elseif ($type=="bcc") $mail->AddBCC($a[$i]);
-			elseif ($type=="replyto") $mail->AddReplyTo($a[$i]);
+	foreach($a as $v){
+		if     ($type=='to')      $mail->AddAddress($v);
+		elseif ($type=='cc')      $mail->AddCC($v);
+		elseif ($type=='bcc')     $mail->AddBCC($v);
+		elseif ($type=='replyto') $mail->AddReplyTo($v);
 	}
 }
 
-# Attach Files to Mailer
+// Attach Files to Mailer
 function AttachFilesToMailer(&$mail,&$attachFiles) {
 	if(count($attachFiles)>0){
 		foreach($attachFiles as $attachFile){
-			if(!file_exists($attachFile)) continue;
+			if(!is_file($attachFile)) continue;
 			$FileName = $attachFile;
 			$contentType = "application/octetstream";
 			if (is_uploaded_file($attachFile)){
@@ -795,8 +786,8 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 
         //skip all fields without name attribute (these could even not be worked by eform)
         if ($name) {
-            #skip vericode field - updated in 1.4.4
-            #special case. We need to set the class placeholder but forget about the rest
+            // skip vericode field - updated in 1.4.4
+            // special case. We need to set the class placeholder but forget about the rest
             if ($name == "vericode") {
                 if (isset($tagAttributes['class'])) {
                     $tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
@@ -955,12 +946,27 @@ function buildTagPlaceholder($tag,$attributes,$name){
 			return "<$tag$t value=".$quotedValue." [+$name:$val+]>";
 		case "input":
 			switch($type){
+				case 'file':
+				case 'image':
+    				return "<input$t/>";
 				case 'radio':
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
+				case 'range':
+				case 'date':
+				case 'month':
+				case 'week':
+				case 'time':
+				case 'datetime':
+				case 'datetime-local':
+				case 'color':
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder
@@ -1167,7 +1173,7 @@ function efLoadTemplate($key){
 }
 
 
-# registers css and/or javascript to modx class
+// registers css and/or javascript to modx class
 function efRegisterStartupBlock($src_array,$noScript=false){
 	global $modx;
 
@@ -1215,5 +1221,3 @@ function hasMailHeaders( &$fields ){
 	}
 	return ($injectionAttempt)?true:false;
 }
-
-?>

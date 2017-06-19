@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author MODX Team
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Hebrew
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
 $_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.';
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
+$_lang["choose_language"] = 'בחר שפה';
 $_lang["chunks"] = 'מיני תבניות';
 $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = 'אוסף נתונים:';
@@ -113,10 +114,10 @@ $_lang["installing_demo_site"] = 'התקנת אתר דוגמא: ';
 $_lang["language_code"] = 'he';
 $_lang["loading"] = 'טוען...';
 $_lang["modules"] = 'מודולים';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
 $_lang["modx_install"] = 'MODX &raquo; Install';
-$_lang["modx_requires_php"] = ', and MODX requires PHP 5.0.0 or later';
+$_lang["modx_requires_php"] = ', and MODX requires PHP [+min_version+] or later';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';

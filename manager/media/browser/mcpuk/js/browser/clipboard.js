@@ -1,16 +1,14 @@
-<?php
-
 /** This file is part of KCFinder project
   *
   *      @desc Clipboard functionality
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
-  */?>
+  */
 
 browser.initClipboard = function() {
     if (!this.clipboard || !this.clipboard.length) return;

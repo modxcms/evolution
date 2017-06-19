@@ -44,6 +44,11 @@
  * Initialize Document Parsing
  * -----------------------------
  */
+
+if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+
+if(is_file('autoload.php')) include_once('autoload.php');
+
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
@@ -55,7 +60,6 @@ if(!defined('MODX_SITE_HOSTNAMES'))
 	define('MODX_SITE_HOSTNAMES','');
 
 // get start time
-$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
 
 // harden it
@@ -77,39 +81,19 @@ ob_start();
 
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
-define("IN_MANAGER_MODE", "false");
-
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "false");
+}
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
 
-// initialize the variables prior to grabbing the config file
-$database_type = '';
-$database_server = '';
-$database_user = '';
-$database_password = '';
-$dbase = '';
-$table_prefix = '';
-$base_url = '';
-$base_path = '';
-
 // get the required includes
-if($database_user=="") {
+if(!isset($database_user) || $database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-	echo "
-<style type=\"text/css\">
-*{margin:0;padding:0}
-body{margin:50px;background:#eee;}
-.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
-p{ margin:20px 0; }
-a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
-</style>
-<div class=\"install\">
-<p>MODX is not currently installed or the configuration file cannot be found.</p>
-<p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
-</div>";
+		readfile('install/not_installed.tpl');
 		exit;
 	}
 }
@@ -128,7 +112,7 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->dumpPlugins = false;
-$modx->tstart = $tstart;
+$modx->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
 $modx->mstart = $mstart;
 
 // Debugging mode:

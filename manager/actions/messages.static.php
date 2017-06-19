@@ -4,7 +4,14 @@ if(!$modx->hasPermission('messages')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 ?>
-<h1><?php echo $_lang['messages_title']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-envelope"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['messages_title']; ?>
+  </span>
+</h1>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
 <div class="section">
@@ -32,12 +39,12 @@ if(!$message) {
   <tr>
     <td colspan="2">
     <ul class="actionButtons">
-        <li id="btn_reply"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
-        <li><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
-        <li><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
-		<?php if($message['sender']==0) { ?>
-			<script type="text/javascript">document.getElementById("btn_reply").className='disabled';</script>
-		<?php } ?>
+        <li id="Button1"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
+        <li id="Button2"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
+        <li id="Button3"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+	<?php if($message['sender']==0) { ?>
+	<script type="text/javascript">document.getElementById("Button1").className='disabled';</script>
+	<?php } ?>
     </ul>
     </td>
   </tr>
@@ -167,7 +174,7 @@ $dotablestuff = 1;
             $messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
 ?>
     <tr>
-      <td ><?php echo $message['messageread']==0 ? "<img src='".$_style["icons_new19"]."'>" : ""; ?></td>
+      <td ><?php echo $message['messageread']==0 ? "<img src='".$_style["icons_message_unread"]."'>" : ""; ?></td>
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
       <td ><?php echo $message['private']==0 ? $_lang['no'] : $_lang['yes'] ; ?></td>
@@ -299,8 +306,8 @@ function hideSpans(showSpan) {
 </table>
 
 <ul class="actionButtons">
-        <li><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
-        <li><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+        <li id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
+        <li id="Button5"><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
 </ul>
 
 </fieldset>

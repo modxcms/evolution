@@ -26,7 +26,7 @@ if(!isset($_SESSION['webValidated'])){
 //        $thestring = $rc4->endecrypt($thepasswd,$sitename,'de');
 //        $uid = $thestring;
 //    }else{
-        $uid = isset($_POST['username'])? $modx->db->escape(htmlspecialchars(trim($_POST['username']), ENT_QUOTES)):'';
+        $uid = isset($_POST['username'])? htmlspecialchars(trim($_POST['username']), ENT_NOQUOTES):'';
 //    }
     ?>
     <script type="text/JavaScript">
@@ -83,32 +83,32 @@ if(!isset($_SESSION['webValidated'])){
         $tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
         $tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
         $tpl = str_replace("[+action+]",preserveUrl($modx->documentIdentifier,"",$ref),$tpl);
-        $tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);
+        $tpl = str_replace("[+rememberme+]",($_POST['rememberme'] ? 1 : 0),$tpl);
         $tpl = str_replace("[+username+]",$uid,$tpl);
-        $tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
+        $tpl = str_replace("[+checkbox+]",($_POST['rememberme'] ? "checked='checked'" : ""),$tpl);
         $tpl = str_replace("[+logintext+]",$loginText,$tpl);
         echo $tpl;
-    ?>
-    <script type="text/javascript">
-        if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
-    </script>
-    <?php
+    
+        if($focusInput) {
+            ?>
+            <script type="text/javascript">
+                if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
+            </script>
+            <?php
+        };
+    
     $output .= ob_get_contents();
     ob_end_clean();
 } else {
     $output= '';
+    $itemid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;
+    $lasthittime = $modx->time;
+    $a = 998;
 
-    if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
-    else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
-    else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");
-    else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
-
-    $itemid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
-
-    if($a!=1) {
-        $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id, ip) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
-        $modx->db->query($sql);
-    }
+    $sql = "REPLACE INTO ".$modx->getFullTableName('active_users')." (internalKey, username, lasthit, action, id) values(-{$_SESSION['webInternalKey']}, '{$_SESSION['webShortname']}', '{$lasthittime}', '{$a}', {$itemid})";
+    $modx->db->query($sql);
+    
+    $modx->updateValidatedUserSession();
 
     // display logout
     $tpl = $tpls[1];

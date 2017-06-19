@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author Daniel Miguel de Melo
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Português do Brasil
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Checando se Register_Globals está desliga
 $_lang["checking_registerglobals_note"] = 'Este script faz com que seu site seja muito mais propenso à ataques de Cross Site Scripting (XSS). Você deveria entrar em contato com seu Host para mudar esta configuração, geralmente há três modos de desabilitar: modificando o arquivo global php.ini, adicionando regras para um arquivo .htaccess na raiz da pasta da instalação do MODX, ou adicionando um php.ini sobre cada arquivo em cada pasta de sua instação (e tem um muitos deles). Ou você poderá instalar o MODX, mas considere-se avisado.';
 $_lang["checking_sessions"] = 'Checando se as seções estão configuradas apropiadamente: ';
 $_lang["checking_table_prefix"] = 'Verificando Prefixo de Tabela `';
+$_lang["choose_language"] = 'Escolha o idioma';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Para novas instalações de Linux/Unix, crie um arquivo vazio chamado <span class=\"mono\">config.inc.php</span> no diretório <span class=\"mono\">manager/includes/</span> com as permissões de 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'Instalando site de exemplo: ';
 $_lang["language_code"] = 'pt';
 $_lang["loading"] = 'Carregando...';
 $_lang["modules"] = 'Modulos';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODX é licensiado pela GNU GPL.';
 $_lang["modx_footer2"] = 'MODX é um software livre.  Nós indicamos o uso do MODX do modo que for mais conveniente para você. Apenas, sempre que redistribuir versões modificadas do MODX incluir uma cópia original do código-fonte gratuitamente!';
 $_lang["modx_install"] = 'MODX &raquo; Instalação';
 $_lang["modx_requires_php"] = ', e o MODX requer PHP [+min_version+] ou mais recente';

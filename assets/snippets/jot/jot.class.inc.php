@@ -2,12 +2,11 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.1.4
+#	Version: 1.1.5
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
 #	Date: Aug 04, 2008
 #
 # Latest Version: http://modx.com/extras/package/jot
-# Jot Demo Site: http://projects.zerobarrier.nl/modx/
 # Documentation: http://wiki.modxcms.com/index.php/Jot (wiki)
 #
 ####*/
@@ -23,14 +22,14 @@ class CJot {
 	var $templates = array();
 	var $_link = array();
 	
-	function CJot() {
+	function __construct() {
 		global $modx;
 		$path = strtr(realpath(dirname(__FILE__)), '\\', '/');
 		include_once($path . '/includes/jot.db.class.inc.php');
 		if (!class_exists('CChunkie'))
 			include_once($path . '/includes/chunkie.class.inc.php');
 		$this->name = $this->config["snippet"]["name"] = "Jot";
-		$this->version = $this->config["snippet"]["version"] = "1.1.4"; //
+		$this->version = $this->config["snippet"]["version"] = "1.1.5"; //
 		$this->config["snippet"]["versioncheck"] = "Unknown";
 		$this->_ctime = time();
 		$this->_check = 0;
@@ -380,7 +379,7 @@ class CJot {
 				if ($pagination > 0) {
 					$pageLength = $pagination;
 					$pageTotal = ceil($commentTotal / $pageLength);
-					$pageCurrent = isset($_GET[$this->config["querykey"]["navigation"]]) ? $_GET[$this->config["querykey"]["navigation"]]: 1;
+					$pageCurrent = isset($_GET[$this->config["querykey"]["navigation"]]) ? intval($_GET[$this->config["querykey"]["navigation"]]): 1;
 					if ( ($pageCurrent < 1) || ($pageCurrent > $pageTotal) ) { $pageCurrent = 1; };
 					$pageOffset = (($pageCurrent*$pageLength)-$pageLength);
 					$navStart = ($pageOffset+1);
@@ -490,7 +489,10 @@ class CJot {
 			
 						// Stripslashes if needed
 						if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
-						
+
+						// Avoid XSS
+						$v = $modx->htmlspecialchars($v, ENT_QUOTES);
+
 						// Validate fields and store error level + msg in array
 						$valFields[] = $this->validateFormField($n,$v);
 						
@@ -890,7 +892,7 @@ class CJot {
 		$array_url = array_merge($array_get, $array_values);
 		foreach ($array_url as $name => $value) {
 			if (!is_null($value)) {
-			  $urlstring[] = $name . '=' . urlencode($value);
+			  $urlstring[] = $name . '=' . urlencode($modx->htmlspecialchars($value, ENT_QUOTES));
 			}
 		}
 		

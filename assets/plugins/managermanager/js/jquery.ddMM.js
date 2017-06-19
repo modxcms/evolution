@@ -16,6 +16,7 @@ $.ddMM = {
 		datepicker_offset: 0
 	},
 	urls: {
+		manager: 'manager/',
 		mm: 'assets/plugins/managermanager/'
 	},
 	/**
@@ -30,7 +31,7 @@ $.ddMM = {
 	fields: {},
 	lang: {},
 	$mutate: $(),
-	
+
 	/**
 	 * makeArray
 	 * @version 1.1 (2013-10-24)
@@ -47,20 +48,20 @@ $.ddMM = {
 		if ($.isArray(csv)){
 			return csv;
 		}
-		
+
 		// Else if we have an empty string
 		if ($.trim(csv) == ''){
 			return new Array();
 		}
-		
+
 		if ($.type(splitter) != 'string' || splitter.length == 0){
 			splitter = ',';
 		}
-		
+
 		// Otherwise, turn it into an array
 		return csv.split(new RegExp('\\s*' + splitter + '\\s*'));
 	},
-	
+
 	/**
 	 * moveFields
 	 * @version 1.1 (2014-05-28)
@@ -73,26 +74,26 @@ $.ddMM = {
 	moveFields: function(fields, targetId){
 		var _this = this,
 			$target = $('#' + targetId);
-		
+
 		fields = _this.makeArray(fields);
-		
+
 		if ($target.length > 0 && fields.length > 0){
 			var ruleHtml = '<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>';
-			
+
 			$('select[id$=_prefix]').each(function(){
 				$(this).parents('tr:first').addClass('urltv');
 			});
-			
+
 			$.each(fields, function(){
 				if (this == 'content'){
 					//Если перемещаем в секцию
 					if ($target.hasClass('sectionBody')){
 						var $row = $('<tr><td valign="top"></td><td></td></tr>');
-						
+
 						$('#content_header').removeClass('sectionHeader').wrapInner('<span class="warning"></span>').appendTo($row.find('td:first'));
-						
+
 						$('#content_body').removeClass('sectionBody').appendTo($row.find('td:last'));
-						
+
 						$row.appendTo($target.find('> table:first')).after(ruleHtml);
 					}else{
 						$('#content_body').appendTo($target);
@@ -102,33 +103,34 @@ $.ddMM = {
 				}else if (
 					this == 'keywords' ||
 					this == 'metatags' ||
-					this == 'which_editor' ||
-					this == 'hidemenu' ||
-					this == 'show_in_menu' ||
-					this == 'menuindex'
+					this == 'which_editor' 
+					//||
+					//this == 'hidemenu' ||
+					//this == 'show_in_menu' ||
+					//this == 'menuindex'
 				){
 					//Do nothing
 					return;
 				}else if (this == 'pub_date' || this == 'unpub_date'){
 					var $helpline = $('input[name="' + this + '"]').parents('tr').next('tr').appendTo($target.find('> table:first'));
-					
+
 					$helpline.before($('input[name="' + this + '"]').parents('tr'));
 					$helpline.after(ruleHtml);
 				}else{
 					if ($.isPlainObject(_this.fields[this])){
 						// Identify the table row to move
 						var $toMove = _this.fields[this].$elem.parents('tr:not(.urltv)');
-						
+
 						$toMove.find('script').remove();
 						// Get rid of line after, if there is one
 						$toMove.next('tr').find('td[colspan="2"]').parents('tr').remove();
-						
+
 						// Move the table row
 						var $movedTV = $toMove.appendTo($target.find('> table:first'));
-						
+
 						// Insert a rule after
 						$movedTV.after(ruleHtml);
-						
+
 						// Remove widths from label column
 						//movedTV.find("td[width]").attr("width","");
 						// This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
@@ -143,10 +145,10 @@ $.ddMM = {
 //On document.ready
 $(function(){
 	$.ddMM.$mutate = $('#mutate');
-	
+
 	//Initialization of the corresponding jQuery element for each document field
 	for (var field in $.ddMM.fields){
-		$.ddMM.fields[field].$elem = $($.ddMM.fields[field].fieldtype + '[name="' + $.ddMM.fields[field].fieldname + '"]');
+		$.ddMM.fields[field].$elem = $('[name="' + $.ddMM.fields[field].fieldname + '"]');
 	}
 });
 })(jQuery);

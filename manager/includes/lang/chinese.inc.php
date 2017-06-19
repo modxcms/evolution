@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author changkong.org rerbin@gmail.com
  * @author modx.cn leepoooo@163.com
@@ -763,6 +763,7 @@ $_lang["role_actionok"] = '查看完成行为';
 $_lang["role_bk_manager"] = '使用备份管理';
 $_lang["role_cache_refresh"] = '清空站点cache';
 $_lang["role_change_password"] = '改变密码';
+$_lang["role_change_resourcetype"] = '更改資源類型';
 $_lang["role_chunk_management"] = 'Chunk management';
 $_lang["role_config_management"] = '管理配置';
 $_lang["role_content_management"] = '管理内容';
@@ -842,7 +843,7 @@ $_lang["role_web_user_management"] = '网站用户管理';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = '运行模块';
@@ -857,6 +858,8 @@ $_lang["search_criteria_content"] = '按内容搜索';
 $_lang["search_criteria_content_msg"] = '寻找文件内容中有输入文字的文件';
 $_lang["search_criteria_id"] = '按ID号搜索';
 $_lang["search_criteria_id_msg"] = '输入文件ID号快速定位。';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = '按长标题搜索';
 $_lang["search_criteria_longtitle_msg"] = '查询长标题里有所有输入查询字符的文档';
 $_lang["search_criteria_title"] = '按标题搜索';
@@ -1153,6 +1156,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Database tables could be restored by SQL:</p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1167,6 +1171,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved in and
 $_lang["bkmgr_snapshot_submit"] = 'Add Snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshots';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_confirm"] = 'Are you sure you want to revert backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshots available';
 
 $_lang["files.dynamic.php1"] = 'New Text File';
@@ -1193,6 +1198,7 @@ $_lang['email_method_mail'] = 'PHP mail() function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

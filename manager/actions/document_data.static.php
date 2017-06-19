@@ -15,9 +15,6 @@ $tbl_manager_users         = $modx->getFullTableName('manager_users');
 $tbl_site_content          = $modx->getFullTableName('site_content');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
-
-
-
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
@@ -59,8 +56,7 @@ $_SESSION['itemname'] = $content['pagetitle'];
 $maxpageSize = $modx->config['number_of_results'];
 define('MAX_DISPLAY_RECORDS_NUM',$maxpageSize);
 
-if (!class_exists('makeTable')) include_once $modx->config['site_manager_path'].'includes/extenders/maketable.class.php';
-$childsTable = new makeTable();
+$modx->loadExtension('makeTable');
 
 // Get child document count
 $rs = $modx->db->select(
@@ -81,7 +77,7 @@ $rs = $modx->db->select(
 		LEFT JOIN {$tbl_document_groups} AS dg ON dg.document = sc.id",
 	"sc.parent='{$content['id']}' AND ({$access})",
 	"{$sort} {$dir}",
-	$childsTable->handlePaging() // add limit clause
+	$modx->table->handlePaging() // add limit clause
 	);
 $filter_sort='';
 $filter_dir='';
@@ -107,10 +103,10 @@ if ($numRecords > 0) {
 		$rowRegularClass = 'gridItem';
 		$rowAlternateClass = 'gridAltItem';
 
-		$childsTable->setTableClass($tableClass);
-		$childsTable->setRowHeaderClass($rowHeaderClass);
-		$childsTable->setRowRegularClass($rowRegularClass);
-		$childsTable->setRowAlternateClass($rowAlternateClass);
+		$modx->table->setTableClass($tableClass);
+		$modx->table->setRowHeaderClass($rowHeaderClass);
+		$modx->table->setRowRegularClass($rowRegularClass);
+		$modx->table->setRowAlternateClass($rowAlternateClass);
 
 		// Table header
 		$listTableHeader = array(
@@ -122,7 +118,7 @@ if ($numRecords > 0) {
 			'edit' =>   $_lang['mgrlog_action'],
 		);
 		$tbWidth = array('2%', '', '10%', '10%', '90', '150');
-		$childsTable->setColumnWidths($tbWidth);
+		$modx->table->setColumnWidths($tbWidth);
 
 $sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
 $sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';
@@ -166,8 +162,8 @@ $add_path=$sd.$sb.$pg;
 			/****************/
 		}
 
-		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
-		$children_output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
+		$modx->table->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
+		$children_output = $modx->table->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
 } else {
 	// No Child documents
 	$children_output = "<p>".$_lang['resources_in_container_no']."</p>";
@@ -195,23 +191,29 @@ function movedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
-	<h1><?php echo $_lang['doc_data_title'] . ' <small>('. $_REQUEST['id'].')</small>';  ?></h1>
-	
+	<h1 class="pagetitle">
+        <span class="pagetitle-icon">
+        <i class="fa fa-info"></i>
+        </span>
+        <span class="pagetitle-text">
+        <?php echo $_lang['doc_data_title'] . ' <small>('. $_REQUEST['id'].')</small>';  ?>
+  </span>
+    </h1>
 	<div id="actions">	
 	  <ul class="actionButtons">
-		  <li id="Button1">
+		  <li id="Button1" class="transition">
 			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" /> <?php echo $_lang['edit']?></a>
 		  </li>
-		  <li id="Button2">
+		  <li id="Button2" class="transition">
 			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" /> <?php echo $_lang['move']?></a>
 		  </li>
-		  <li id="Button4">
+		  <li id="Button6">
 		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang['duplicate']?></a>
 		  </li>
 		  <li id="Button3">
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
-		  <li id="Button6">
+		  <li id="Button4">
 			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('".$modx->config['site_url']."index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
@@ -358,7 +360,7 @@ function movedocument() {
 				$buffer .= fgets($handle, 4096);
 			}
 			fclose($handle);
-			$buffer = $_lang['page_data_cached'].'<p><textarea style="width: 100%; height: 400px;">'.htmlspecialchars($buffer)."</textarea>\n";
+			$buffer = $_lang['page_data_cached'].'<p><textarea style="width: 100%; height: 400px;">'.$modx->htmlspecialchars($buffer)."</textarea>\n";
 		}
 		echo $buffer;
 ?>

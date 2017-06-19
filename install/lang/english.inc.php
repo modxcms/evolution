@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author davaeron
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language English
@@ -35,6 +35,8 @@ $_lang["cant_write_config_file"] = 'MODX couldn\'t write the config file. Please
 $_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'Checkbox select options:';
 $_lang["checking_if_cache_exist"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories exist: ';
+$_lang["checking_iconv"] = 'Checking if extension <span class="mono">iconv</span> is available: ';
+$_lang["checking_iconv_note"] = 'It is important to install/enable extension iconv. Please speak to your host if you don´t know how to enable it.';
 $_lang["checking_if_cache_file_writable"] = 'Checking if <span class="mono">/assets/cache/siteCache.idx.php</span> file is writable: ';
 $_lang["checking_if_cache_file2_writable"] = 'Checking if <span class="mono">/assets/cache/sitePublishing.idx.php</span> file is writable: ';
 $_lang["checking_if_cache_writable"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories are writable: ';
@@ -50,6 +52,7 @@ $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
 $_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.';
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
+$_lang["choose_language"] = 'Choose language';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
@@ -113,7 +116,7 @@ $_lang["installing_demo_site"] = 'Installing demo site: ';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
 $_lang["modx_install"] = 'MODX &raquo; Install';
 $_lang["modx_requires_php"] = ', and MODX requires PHP [+min_version+] or later';
@@ -131,11 +134,14 @@ $_lang["please_correct_error"] = '. Please correct the error';
 $_lang["please_correct_errors"] = '. Please correct the errors';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Pre-install validation';
+$_lang["recommend_collation"] = 'utf8_general_ci';
+$_lang["recommend_collations_order"] = 'utf8mb4_unicode_ci,utf8mb4_general_ci,utf8_unicode_ci,utf8_general_ci,utf8mb4_bin,utf8_bin,utf8mb4_unicode_520_ci,utf8_unicode_520_ci,utf8_general_mysql500_ci';
 $_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
 $_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the Manager. We strongly recommend enabling this setting to reduce the risk of a CSRF (Cross Site Request Forgery) attack.';
 $_lang["remove_install_folder_auto"] = 'Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder).';
 $_lang["remove_install_folder_manual"] = 'Please remember to remove the &quot;<b>install</b>&quot; folder before you log into the Content Manager.';
+$_lang["resetting_database"] = 'Resetting database for demo-site: ';
 $_lang["retry"] = 'Retry';
 $_lang["running_database_updates"] = 'Running database updates: ';
 $_lang["sample_web_site"] = 'Sample Web Site';

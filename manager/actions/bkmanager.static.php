@@ -172,14 +172,30 @@ else
 		f.submit();
 		return false;
 	}
+    function confirmRevert(filename) {
+	    var m = '<?php echo $_lang["bkmgr_restore_confirm"] ?>';
+            m = m.replace('[+filename+]', filename);
+        var c = confirm(m);
+        if(c) {
+            document.restore2.filename.value = filename;
+            document.restore2.save.click();
+        }
+    }
 	<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>
 
 </script>
-<h1><?php echo $_lang['bk_manager']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-database"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['bk_manager']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
   </ul>
 </div>
 
@@ -193,7 +209,7 @@ else
 	    <script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabBackup'));</script>
 	<form name="frmdb" method="post">
 	<input type="hidden" name="mode" value="" />
-	<p><?php echo $_lang['table_hoverinfo']?></p>
+    <p class="element-edit-message"><?php echo $_lang['table_hoverinfo']?></p>
 
 	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="<?php echo $_style['ed_save'];?>" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
@@ -277,8 +293,10 @@ if ($totaloverhead > 0) {
 <div class="tab-page" id="tabRestore">
 	<h2 class="tab"><?php echo $_lang["bkmgr_restore_title"];?></h2>
 	<?php echo $ph['result_msg_import']; ?>
-	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
-	<?php echo $_lang["bkmgr_restore_msg"]; ?>
+    <script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
+    <div class="element-edit-message">
+      <?php echo $_lang["bkmgr_restore_msg"]; ?>
+    </div>
 	<form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="restore1" />
@@ -373,15 +391,18 @@ function checked($cond)
 	<h2 class="tab"><?php echo $_lang["bkmgr_snapshot_title"];?></h2>
 	<?php echo $ph['result_msg_snapshot']; ?>
 	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
-	<?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
+    <div class="element-edit-message">
+      <?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
+    </div>
 	<form method="post" name="snapshot" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="snapshot" />
-	<div class="actionButtons" style="margin-top:10px;margin-bottom:10px;">
-	<a href="#" class="primary" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
-	<input type="submit" name="save" style="display:none;" />
+	<div class="actionButtons" style="margin-top:2em;margin-bottom:2em;">
+        <?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" /> 
+	<a href="#" class="primary" style="display:inline-block;" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
+      <input type="submit" name="save" style="display:none;" />
+      </div>
 	</form>
-	</div>
 	<style type="text/css">
 	table {background-color:#fff;border-collapse:collapse;}
 	table td {border:1px solid #ccc;padding:4px;}
@@ -397,18 +418,41 @@ function checked($cond)
 $pattern = "{$modx->config['snapshot_path']}*.sql";
 $files = glob($pattern,GLOB_NOCHECK);
 $total = ($files[0] !== $pattern) ? count($files) : 0;
+$detailFields = array('MODX Version', 'Host', 'Generation Time', 'Server version', 'PHP Version', 'Database', 'Description');
 if(is_array($files) && 0 < $total)
 {
-	echo '<ul>';
+	echo '<table>';
+        echo "<tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr>\n";
 	arsort($files);
-	$tpl = '<li>[+filename+] ([+filesize+]) (<a href="#" onclick="document.restore2.filename.value=\'[+filename+]\';document.restore2.save.click()">' . $_lang["bkmgr_restore_submit"] . '</a>)</li>' . "\n";
+	$tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="#" onclick="confirmRevert(\'[+filename+]\');" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
 	while ($file = array_shift($files))
 	{
 		$filename = substr($file,strrpos($file,'/')+1);
 		$filesize = $modx->nicesize(filesize($file));
-		echo str_replace(array('[+filename+]','[+filesize+]'),array($filename,$filesize),$tpl);
+
+                $file = fopen($file,"r");
+                $count = 0;
+                $details = array();
+                while($count < 11) {
+                    $line = fgets($file);
+                    foreach($detailFields as $label) {
+                        $fileLabel = '# '.$label;
+                        if (strpos($line, $fileLabel) !== false) {
+                            $details[$label] = htmlentities(trim(str_replace(array($fileLabel,':','`'), '', $line)), ENT_QUOTES, $modx_manager_charset);
+                        }
+                    }
+                    $count++;
+                };
+                fclose($file);
+            
+                $tooltip  = "Generation Time: ".$details["Generation Time"]."\n";
+                $tooltip .= "Server version: ".$details["Server version"]."\n";
+                $tooltip .= "PHP Version: ".$details["PHP Version"]."\n";
+                $tooltip .= "Host: ".$details["Host"]."\n";
+            
+		echo str_replace(array('[+filename+]','[+filesize+]','[+filedesc+]','[+modx_version+]','[+database_name+]','[+tooltip+]'),array($filename,$filesize,$details['Description'],$details['MODX Version'],$details['Database'],$tooltip),$tpl);
 	}
-	echo '</ul>';
+	echo '</table>';
 }
 else
 {
@@ -452,7 +496,7 @@ class Mysqldumper {
 	var $database_server;
 	var $dbname;
 
-	function Mysqldumper($database_server, $database_user, $database_password, $dbname) {
+	function __construct($database_server, $database_user, $database_password, $dbname) {
 		// Don't drop tables by default.
 		$this->dbname = $dbname;
 		$this->setDroptables(false);
@@ -477,16 +521,20 @@ class Mysqldumper {
 			$result = $modx->db->query("SHOW CREATE TABLE `{$tblval}`");
 			$createtable[$tblval] = $this->result2Array(1, $result);
 		}
+        
+        $version = $modx->getVersionData();
+        
 		// Set header
 		$output  = "#{$lf}";
 		$output .= "# ".addslashes($modx->config['site_name'])." Database Dump{$lf}";
-		$output .= "# MODX Version:{$modx->config['settings_version']}{$lf}";
+		$output .= "# MODX Version:{$version['version']}{$lf}";
 		$output .= "# {$lf}";
 		$output .= "# Host: {$this->database_server}{$lf}";
 		$output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
 		$output .= "# Server version: ". $modx->db->getVersion() . $lf;
 		$output .= "# PHP Version: " . phpversion() . $lf;
-		$output .= "# Database : `{$this->dbname}`{$lf}";
+		$output .= "# Database: `{$this->dbname}`{$lf}";
+                $output .= "# Description: ".trim($_REQUEST['backup_title'])."{$lf}";
 		$output .= "#";
 		file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
 		$output = '';
@@ -520,7 +568,9 @@ class Mysqldumper {
 			$output .= "#{$lf}{$lf}";
 			// Generate DROP TABLE statement when client wants it to.
 			if($this->isDroptables()) {
+				$output .= "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;{$lf}";
 				$output .= "DROP TABLE IF EXISTS `{$tblval}`;{$lf}";
+				$output .= "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;{$lf}{$lf}";
 			}
 			$output .= "{$createtable[$tblval][0]};{$lf}";
 			$output .= $lf;
@@ -532,11 +582,15 @@ class Mysqldumper {
 				$insertdump .= "INSERT INTO `{$tblval}` VALUES (";
 				$arr = $this->object2Array($row);
 				foreach($arr as $key => $value) {
-					$value = addslashes($value);
-					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
-					$insertdump .= "'$value',";
+					if(is_null($value)) $value = 'NULL';
+					else {
+    					$value = addslashes($value);
+    					$value = str_replace(array("\r\n","\r","\n"), '\\n', $value);
+    					$value = "'{$value}'";
+					}
+					$insertdump .= $value .',';
 				}
-				$output .= rtrim($insertdump,',') . ");";
+				$output .= rtrim($insertdump,',') . ");\n";
 				if(1048576 < strlen($output))
 				{
 					file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
@@ -603,12 +657,10 @@ class Mysqldumper {
 function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
-	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
-	if(0 < $modx->db->getValue($rs))
+	if($modx->getLockedElements() !== array())
 	{
-		$modx->webAlertAndQuit("Resource is edit now by any user.");
+		$modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
 	}
 	
 	$settings = getSettings();

@@ -46,12 +46,12 @@ if ($mm_changeFieldHelp_title_comment.length == 0){
 	$mm_changeFieldHelp_title_comment = $j("<span class=\'comment\'></span>").appendTo($mm_changeFieldHelp_title);
 }
 
-$mm_changeFieldHelp_title_comment.html("'.jsSafe($helptext).'");
+$mm_changeFieldHelp_title_comment.html("'.addslashes($helptext).'");
 ';
-			//Or document field
+				//Or document field
 			}else{
 				// Give the help button an ID, and modify the alt/title text
-				$output .= '$j("'.$fieldtype.'[name=\''.$fieldname.'\']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'");'."\n";
+				$output .= '$j("'.$fieldtype.'[name=\''.$fieldname.'\']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.addslashes($helptext).'").attr("title", "'.addslashes($helptext).'");'."\n";
 			}
 		}
 		

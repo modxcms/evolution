@@ -314,11 +314,7 @@ cur:"cursor:${pointer};","cur:a":"cursor:auto;","cur:d":"cursor:default;","cur:c
 "!multiTV":"[!multiTV? &tvName=`` &docid=`[*id*]` &tplConfig=`` &outerTpl=`@CODE:<ul>[+wrapper+]</ul>` &rowTpl=`@CODE:<li>[+event+], [+location+], [+price+]</li>` &display=`all` &offset=`0` &orderBy=``!]",
 "@multiTV":"@INCLUDE/assets/tvs/multitv/multitv.customtv.php",
 "@choiceTV":"@INCLUDE /assets/tvs/choicetv/choicetv.php",
-"header":"{{header}}",
-"head":"{{head}}",
-"content":"[+content+]",
-"foo":"{{footer}}",
-"footer":"{{footer}}",
+
 
 "!!!":"<!doctype html>","!!!4t":'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',"!!!4s":'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',"!!!xt":'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
 "!!!xs":'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',"!!!xxs":'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',c:"\x3c!-- |${child} --\x3e","cc:ie6":"\x3c!--[if lte IE 6]>\n\t${child}|\n<![endif]--\x3e","cc:ie":"\x3c!--[if IE]>\n\t${child}|\n<![endif]--\x3e","cc:noie":"\x3c!--[if !IE]>\x3c!--\x3e\n\t${child}|\n\x3c!--<![endif]--\x3e"},abbreviations:{"!":"html:5",a:'<a href="">',"a:link":'<a href="http://|">',

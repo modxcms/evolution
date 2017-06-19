@@ -56,6 +56,7 @@ function ph()
 	$ph['release_date']  = ($modx_textdir ? '&rlm;':'') . $modx_release_date;
 	$ph['footer1']       = $_lang['modx_footer1'];
 	$ph['footer2']       = $_lang['modx_footer2'];
+	$ph['current_year']  = date('Y');
 	return $ph;
 }
 
@@ -73,7 +74,7 @@ function get_installmode()
 		if(!isset($dbase) || empty($dbase)) $installmode = 0;
 		else
 		{
-			$conn = @ mysql_connect($database_server, $database_user, $database_password);
+			$conn = mysqli_connect($database_server, $database_user, $database_password);
 			if($conn)
 			{
 				$_SESSION['database_server']   = $database_server;
@@ -81,7 +82,7 @@ function get_installmode()
 				$_SESSION['database_password'] = $database_password;
 				
 				$dbase = trim($dbase, '`');
-				$rs = @ mysql_select_db($dbase, $conn);
+				$rs = mysqli_select_db($conn, $dbase);
 			}
 			else $rs = false;
 			
@@ -93,10 +94,10 @@ function get_installmode()
 				$_SESSION['database_connection_method'] = 'SET CHARACTER SET';
 				
 				$tbl_system_settings = "`{$dbase}`.`{$table_prefix}system_settings`";
-				$rs = mysql_query("SELECT setting_value FROM {$tbl_system_settings} WHERE setting_name='settings_version'");
+				$rs = mysqli_query($conn, "SELECT setting_value FROM {$tbl_system_settings} WHERE setting_name='settings_version'");
 				if($rs)
 				{
-					$row = mysql_fetch_assoc($rs);
+					$row = mysqli_fetch_assoc($rs);
 					$settings_version = $row['setting_value'];
 				}
 				else $settings_version = '';

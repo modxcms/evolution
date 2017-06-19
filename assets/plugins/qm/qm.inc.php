@@ -13,34 +13,34 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function Qm(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function __construct(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
         $this->modx = $modx;
         
         // Get plugin parameters
         $this->jqpath = $jqpath;
         $this->loadmanagerjq = $loadmanagerjq;
         $this->loadfrontendjq = $loadfrontendjq;
-        $this->noconflictjq = $noconflictjq;  
+        $this->noconflictjq = $noconflictjq;
         $this->loadtb = $loadtb;
         $this->tbwidth = $tbwidth;
         $this->tbheight = $tbheight;
         $this->usemm = null;
-        $this->hidefields = $hidefields;  
+        $this->hidefields = $hidefields;
         $this->hidetabs = $hidetabs;  
         $this->hidesections = $hidesections;     
-        $this->addbutton = $addbutton;       
-        $this->tpltype = $tpltype;       
+        $this->addbutton = $addbutton;
+        $this->tpltype = $tpltype;
         $this->tplid = $tplid;
         $this->custombutton = $custombutton;
         $this->managerbutton = $managerbutton;
         $this->logout = $logout;
-        $this->autohide = $autohide; 
+        $this->autohide = $autohide;
         $this->editbuttons = $editbuttons;
         $this->editbclass = $editbclass;
         $this->newbuttons = $newbuttons;
         $this->newbclass = $newbclass;
         $this->tvbuttons = $tvbuttons;
-        $this->tvbclass = $tvbclass;      
+        $this->tvbclass = $tvbclass;
         
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
@@ -104,7 +104,7 @@ class Qm {
                     // Different doc to be refreshed than the one we are editing?
                     if (isset($_POST['qmrefresh'])) {
                         $id = intval($_POST['qmrefresh']);
-                    }   
+                    }
                     
                     // Redirect to clearer page which refreshes parent window and closes modal box frame
                     if ($this->modx->config['friendly_urls'] == 1){
@@ -133,17 +133,16 @@ class Qm {
                     $url = $this->modx->makeUrl($docID, '', '', 'full');
                     
                     $output = '
-                    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                    <html xmlns="http://www.w3.org/1999/xhtml">
-                    <head>
-                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title></title>
-                    </head>
-                    <body onload="javascript: parent.location.href = \''.$url.'\';">
-                    </body>
-                    </html>
-                    ';
-                    
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body onload="javascript: parent.location.href = \''.$url.'\';">
+</body>
+</html>
+';
                     break;
                 }
                 
@@ -231,7 +230,6 @@ class Qm {
                         <title></title>
                         <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
-                        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie7.css" /><![endif]-->
                         <script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>
                         </head>
                         ';
@@ -480,7 +478,6 @@ class Qm {
                         $css = '
                         <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
-                        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie7.css" /><![endif]-->
                         ';
             
                         // Autohide toolbar? Default: true
@@ -493,6 +490,7 @@ class Qm {
                         }
             
                         // Insert jQuery and ColorBox in head if needed
+                        $head = '';
                         if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
                         if ($this->loadtb == 'true') {
                             $head .= '
@@ -545,7 +543,33 @@ class Qm {
                                     $'.$jvar.'("body").css({"overflow":"hidden"});
                                     $'.$jvar.'("html").css({"overflow":"hidden"});
                                     $'.$jvar.'("#qmEditor").css({"display":"none"});
-                                });  
+                                });
+				
+                                $'.$jvar.'(document).bind("cbox_cleanup", function(){ 
+                                    //window is closing and cannot be stopped so clear dirty settings for all fields and tinyMCE
+				    var foundit;
+				    
+                                    //loop through the iframes, checking their scr
+                                    iframearray = document.getElementsByTagName(\'iframe\');
+				    
+                                    for(var i=0; i < iframearray.length; i++) {
+                                        //if the matching colorbox src, we have found the correct iframe
+                                        haystack=iframearray[i].src;
+                                        needle="'.$this->modx->config["site_url"]."manager/index.php?a=27".'";
+                                        if(haystack.substr(0, needle.length) == needle){ 
+                                            foundit=iframearray[i]; //assign it to the foundit variable created earlier
+                                            break; //no need to keep looking
+                                        }
+                                    }
+                                    if (foundit) {
+                                        foundit.contentWindow.window.documentDirty=false; //clear document dirty for fields
+                                        //loop through tinyMCE editors and clear any dirty flags
+                                        if (typeof(foundit.contentWindow.window.tinyMCE)!==\'undefined\') {   
+                                            var i, t = foundit.contentWindow.window.tinyMCE.editors;for (i in t){    
+                                            if (t.hasOwnProperty(i)){    t[i].isNotDirty=true }}  
+                                        }
+                                    }
+                                });
                                 
                             	$'.$jvar.'(document).bind("cbox_closed", function(){      
                                     $'.$jvar.'("body").css({"overflow":"auto"});
@@ -590,6 +614,23 @@ class Qm {
     
                         </script>
                         ';
+
+                        $head .= "
+                        <script>
+                        // Assure keeping session and related locks alive
+                        $(document).ready(function($) {
+                            function updateMODXsession() {
+                              $.ajax({ url: '".MODX_MANAGER_URL."index.php', method:'post', data:{'updateMsgCount':true},
+                                success: function(data) {},
+                                complete: function() {
+                                  setTimeout(updateMODXsession, ". ($this->modx->config['mail_check_timeperiod'] * 1000) .");
+                                }
+                              });
+                            }
+                            setTimeout(updateMODXsession, ". ($this->modx->config['mail_check_timeperiod'] * 1000) .");
+                        });
+                        </script>
+                        ";
                         
                         // Insert QM+ css in head
                         $head .= $css;
@@ -920,14 +961,10 @@ class Qm {
 	//_____________________________________________________
 	function checkLocked() {
 
-		$activeUsersTable = $this->modx->getFullTableName('active_users');
 		$pageId = $this->modx->documentIdentifier;
 		$locked = TRUE;
-		$userId = $_SESSION['mgrInternalKey'];
 
-		$result = $this->modx->db->select('count(internalKey)', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
-
-		if ($this->modx->db->getValue($result) === 0) {
+		if ($this->modx->elementIsLocked(7, $pageId) === NULL) {
 			$locked = FALSE;
 		}
 
@@ -938,29 +975,17 @@ class Qm {
 	//_____________________________________________________
 	function setLocked($locked) {
 
-		$activeUsersTable = $this->modx->getFullTableName('active_users');
 		$pageId = $this->modx->documentIdentifier;
-		$userId = $_SESSION['mgrInternalKey'];
 		
 		// Set document locked
 		if ($locked == 1) {
-    		$fields = array (
-            'id'	=> $pageId,
-    		'action'	=> 27
-    		);	
+    		$this->modx->lockElement(7, $pageId);
         }
         
         // Set document unlocked
         else {
-            $fields = array (
-            'id'	=> 'NULL',
-    		'action'	=> 2
-    		);    
+            $this->modx->unlockElement(7, $pageId);    
         }
-		
-		$where = "internalKey = '{$userId}'";
-		
-        $result = $this->modx->db->update($fields, $activeUsersTable, $where);
 	}
 	
 	// Save TV
@@ -1034,4 +1059,3 @@ class Qm {
 	
 }
 }
-?>

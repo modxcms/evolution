@@ -2,11 +2,11 @@
 /**
  * MODX Installer language file
  *
- * @author luigif
- * @version 1.0.14
+ * @author davaeron
+ * @version 1.0.15
  * @date 2014/02/24
  *
- * @language Italian
+ * @language English
  * @package modx
  * @subpackage installer
  *
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Controllo se Register_Globals è disattiva
 $_lang["checking_registerglobals_note"] = 'Con questa configurazione il vostro sito potrebbe essere vittima di attacchi Cross Site Scripting (XSS). Per disabilitare Register_Globals ci sono diverse alternative: modificare il file php.ini globale, modificare il file .htaccess nella root della vostra installazione MODX, oppure aggiungere dei files php.ini in ogni directory della vostra installazione MODX (ma ci sono molte directories). Potete continuare con l\'installazione, ma non dite che non vi abbiamo avvertito.';
 $_lang["checking_sessions"] = 'Controllo se le sessioni sono configurate correttamente: ';
 $_lang["checking_table_prefix"] = 'Controllo il prefisso per le tabelle `';
+$_lang["choose_language"] = 'Scegli la lingua';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Per nuove installazioni su Linux/Unix, vi preghiamo di creare un file vuoto <span class="mono">config.inc.php</span> nella directory <span class="mono">/[+MGR_DIR+]/includes/</span> con i permessi di scrittura a 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'Installazione del sito demo: ';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Sto caricando...';
 $_lang["modules"] = 'Moduli';
-$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Tutti i diritti riservati. MODX è distribuito sotto licenza GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project.  Tutti i diritti riservati. MODX è sotto la licenza GNU GPL.';
 $_lang["modx_footer2"] = 'MODX è un software libero. Vi incoraggiamo ad essere creativi e usare MODX come vi pare. Se fate delle modifiche al codice e decidete di ridistribuire il vostro MODX modificato, dovrete distribuire gratuitamente il codice sorgente!';
 $_lang["modx_install"] = 'MODX &raquo; Installazione';
 $_lang["modx_requires_php"] = ', e MODx richiede PHP [+min_version+] o successivo';
@@ -131,11 +132,14 @@ $_lang["please_correct_error"] = '. Vi preghiamo di correggere l\'errore';
 $_lang["please_correct_errors"] = '. Vi preghiamo di correggere gli errori';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Verifica Pre-Installazione';
+$_lang["recommend_collation"] = 'utf8_general_ci';
+$_lang["recommend_collations_order"] = 'utf8mb4_unicode_ci,utf8mb4_general_ci,utf8_unicode_ci,utf8_general_ci,utf8mb4_bin,utf8_bin,utf8mb4_unicode_520_ci,utf8_unicode_520_ci,utf8_general_mysql500_ci';
 $_lang["recommend_setting_change_title"] = 'Modifiche consigliate alla Configurazione';
 $_lang["recommend_setting_change_validate_referer_confirmation"] = 'Modifica: <em>Validazione degli headers HTTP_REFERER?</em>';
 $_lang["recommend_setting_change_validate_referer_description"] = 'Il vostro sito non è stato configurato per validare gli headers HTTP_REFERER degli accessi al Manager. Vi raccomandiamo di abilitare questa impostazione per ridurre il rischio di attacchi CSRF (Cross Site Request Forgery).';
 $_lang["remove_install_folder_auto"] = 'Rimuovere la cartella install e i files in essa contenuti<br />&nbsp;(Questa operazione richiede i permessi di scrittura nella cartella di installazione).';
 $_lang["remove_install_folder_manual"] = 'Ricordatevi di cancellare la cartella &quot;<b>install</b>&quot; prima di accedere a MODX.';
+$_lang["resetting_database"] = 'Reset del database per il sito-demo:';
 $_lang["retry"] = 'Riprova';
 $_lang["running_database_updates"] = 'Esecuzione degli aggiornamenti del database: ';
 $_lang["sample_web_site"] = 'Sito Web di Esempio';

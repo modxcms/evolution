@@ -1,6 +1,6 @@
 <?php
 /*
-finnish.inc.php - for AjaxSearch 1.10.1
+finnish.inc.php - for AjaxSearch 1.10.2
 Created by: doze, Modified by: Mikko Lammi, www.maagit.fi
 Last Modified on 2014-03-31
 Description: Language strings for AjaxSearch

@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author Anssi Rajakallio, Kari Söderholm
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Finnish
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Tarkistetaan onko PHP:n Register_Globals a
 $_lang["checking_registerglobals_note"] = 'Tämä asetus tekee sivustostasi alttiimman XSS hyökkäyksille (Cross Site Scripting). Sinun tulisi kehottaa palveluntarjoajaasi kytkemään tämä asetus pois käytöstä. Useimmiten tämän asetuksen voi kytkeä pois muokkaamalla palvelimen php.ini tiedostoa. Jos se ei ole mahdollista, voit koittaa kytkeä sen pois .htaccess tiedostossa, joka sijaitsee MODX asennuksen juuri kansiossa. Jos tämäkään ei ole mahdollista, voit viimeisenä vaihtoehtona koittaa asettaa jokaiseen MODX asennuksen sisällä olevaan kansioon muokatun php.ini tiedoston, joka yliajaa asetukset palvelimen jaetusta php.ini tiedostosta, mutta kansioita MODX asennuksessa on tosin huomattava määrä. Voit kuitenkin asentaa MODX järjestelmän tästä asetuksesta huolimatta, mutta sinua on varoitettu.';
 $_lang["checking_sessions"] = 'Tarkistetaan onko palvelinistunnot asetettu toimimaan oikein: ';
 $_lang["checking_table_prefix"] = 'Tarkistetaan tietokannan taulujen etuliite `';
+$_lang["choose_language"] = 'Valitse kieli';
 $_lang["chunks"] = 'HTML-palaset';
 $_lang["config_permissions_note"] = 'Jos olet asentamassa järjestelmää Linux / Unix palvelimeen, luo kansioon <span class=\"mono\">[+MGR_DIR+]/includes/</span> tyhjä tiedosto nimeltä <span class=\"mono\">config.inc.php</span> ja aseta tiedostoon 0666 oikeudet.';
 $_lang["connection_screen_collation"] = 'Merkistö:';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'Asennetaan demo sivustoa: ';
 $_lang["language_code"] = 'fi';
 $_lang["loading"] = 'Ladataan...';
 $_lang["modules"] = 'Moduulit';
-$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODX on lisensoitu GNU GPL lisenssillä.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODX on lisensoitu GNU GPL lisenssillä.';
 $_lang["modx_footer2"] = 'MODX on ilmainen ohjelmisto. Kehoitamme sinua olemaan luova ja käyttämään MODX järjestelmää siten, miten sinä sen parhaaksi näet. Jos teet muutoksia järjestelmään ja päätät jakaa muokattua MODX järjestelmää eteenpäin, muista pitää muokattu lähdekoodi vapaasti saatavilla!';
 $_lang["modx_install"] = 'MODX &raquo; Asennus';
 $_lang["modx_requires_php"] = ', ja MODX vaatii PHP:stä version [+min_version+] tai uudemman';

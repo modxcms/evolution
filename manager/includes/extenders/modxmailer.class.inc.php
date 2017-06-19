@@ -22,7 +22,7 @@ class MODxMailer extends PHPMailer
 	var $mb_language          = null;
 	var $encode_header_method = null;
 	
-	function MODxMailer()
+	function __construct()
 	{
 		global $modx;
 		
@@ -35,10 +35,11 @@ class MODxMailer extends PHPMailer
 		{
 		    case 'smtp':
                 $this->IsSMTP();
-                $this->Host      = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
-                $this->SMTPAuth  = $modx->config['smtp_auth']==='1' ? true : false;
-                $this->Username  = $modx->config['smtp_username'];
-                $this->Password  = $modx->config['smtppw'];
+                $this->SMTPSecure = $modx->config['smtp_secure']==='none' ? '' : $modx->config['smtp_secure'];
+                $this->Host       = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
+                $this->SMTPAuth   = $modx->config['smtp_auth']==='1' ? true : false;
+                $this->Username   = $modx->config['smtp_username'];
+                $this->Password   = $modx->config['smtppw'];
                 if(10<strlen($this->Password))
                 {
                 	$this->Password = substr($this->Password,0,-7);
@@ -80,6 +81,9 @@ class MODxMailer extends PHPMailer
 				$this->encode_header_method = 'mb_encode_mimeheader';
 				$this->IsHTML(false);
 				break;
+			case 'windows-1251':
+				$this->CharSet     = 'cp1251';
+				break;
 			case 'utf8':
 			case 'utf-8':
 			default:
@@ -93,23 +97,24 @@ class MODxMailer extends PHPMailer
 			mb_internal_encoding($modx->config['modx_charset']);
 		}
 		$exconf = MODX_MANAGER_PATH . 'includes/controls/phpmailer/config.inc.php';
-		if(is_file($exconf)) include_once($exconf);
+		if(is_file($exconf)) include($exconf);
 	}
 	
 	function EncodeHeader($str, $position = 'text')
 	{
-		global $modx, $sanitize_seed;
-		if(strpos($str, $sanitize_seed)!==false) $str = str_replace($sanitize_seed, '', $str);
+		global $modx;
+		$str = $modx->removeSanitizeSeed($str);
+		
 		if($this->encode_header_method=='mb_encode_mimeheader')
 			return mb_encode_mimeheader($str, $this->CharSet, 'B', "\n");
 		else return parent::EncodeHeader($str, $position);
 	}
 	
     public function Send() {
-		global $sanitize_seed;
+		global $modx;
 		
-		if(strpos($this->Body, $sanitize_seed)!==false)    $this->Body = str_replace($sanitize_seed, '', $this->Body);
-		if(strpos($this->Subject, $sanitize_seed)!==false) $this->Subject = str_replace($sanitize_seed, '', $this->Subject);
+		$this->Body    = $modx->removeSanitizeSeed($this->Body);
+		$this->Subject = $modx->removeSanitizeSeed($this->Subject);
 		
         try {
             if(!$this->PreSend()) return false;

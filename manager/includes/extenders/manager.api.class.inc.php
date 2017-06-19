@@ -12,7 +12,7 @@ class ManagerAPI {
 	
 	var $action; // action directive
 
-	function ManagerAPI(){
+	function __construct(){
 		global $action;
 		$this->action = $action; // set action directive
 	}
@@ -29,6 +29,7 @@ class ManagerAPI {
 
 	// save page view state - not really necessary,
 	function savePageViewState($id=0){
+		global $_PAGE;
 		$_SESSION["mgrPageViewSDATA"] = $_PAGE['vs'];
 		$_SESSION["mgrPageViewSID"] = $id>0 ? $id:$this->action;
 	}
@@ -43,6 +44,7 @@ class ManagerAPI {
 				$this->clearSavedFormValues();
 			}
 		}
+		return false;
 	}	
 	// saved form post from $_POST
 	function saveFormValues($id=0){
@@ -51,11 +53,15 @@ class ManagerAPI {
 	}		
 	// load saved form values into $_POST
 	function loadFormValues(){
-		if($this->hasFormValues()) {
-			$p = $_SESSION["mgrFormValues"];
-			foreach($p as $k=>$v) $_POST[$k]=$v;
-			$this->clearSavedFormValues();
+		
+		if(!$this->hasFormValues()) return false;
+		
+		$p = $_SESSION["mgrFormValues"];
+		$this->clearSavedFormValues();
+		foreach($p as $k=>$v) {
+			$_POST[$k]=$v;
 		}
+		return true;
 	}
 	// clear form post
 	function clearSavedFormValues(){
@@ -63,7 +69,15 @@ class ManagerAPI {
 		unset($_SESSION["mgrFormValueId"]);	
 	}
 	
-	function genHash($password, $seed='1')
+	function getHashType($db_value='') { // md5 | v1 | phpass
+		$c = substr($db_value,0,1);
+		if($c==='$')                                      return 'phpass';
+		elseif(strlen($db_value)===32)                    return 'md5';
+		elseif($c!=='$' && strpos($db_value,'>')!==false) return 'v1';
+		else                                              return 'unknown';
+	}
+	
+	function genV1Hash($password, $seed='1')
 	{ // $seed is user_id basically
 		global $modx;
 		
@@ -103,7 +117,7 @@ class ManagerAPI {
 		return $result;
 	}
 	
-	function getUserHashAlgorithm($uid)
+	function getV1UserHashAlgorithm($uid)
 	{
 		global $modx;
 		$tbl_manager_users = $modx->getFullTableName('manager_users');
@@ -120,42 +134,39 @@ class ManagerAPI {
 	
 	function checkHashAlgorithm($algorithm='')
 	{
-		if(empty($algorithm)) return;
-		
-		switch($algorithm)
+		$result = false;
+		if (!empty($algorithm))
 		{
-			case 'BLOWFISH_Y':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
-				{
-					if(version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
-				}
-				break;
-			case 'BLOWFISH_A':
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
-				break;
-			case 'SHA512':
-				if(defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
-				break;
-			case 'SHA256':
-				if(defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
-				break;
-			case 'MD5':
-				if(defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7')
+			switch ($algorithm)
+			{
+				case 'BLOWFISH_Y':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1)
+					{
+						if (version_compare('5.3.7', PHP_VERSION) <= 0) $result = true;
+					}
+					break;
+				case 'BLOWFISH_A':
+					if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) $result = true;
+					break;
+				case 'SHA512':
+					if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) $result = true;
+					break;
+				case 'SHA256':
+					if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) $result = true;
+					break;
+				case 'MD5':
+					if (defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7') $result = true;
+					break;
+				case 'UNCRYPT':
 					$result = true;
-				break;
-			case 'UNCRYPT':
-				$result = true;
-				break;
+					break;
+			}
 		}
-		
-		if(!isset($result)) $result = false;
-		
 		return $result;
 	}
 
 	function getSystemChecksum($check_files) {
-		global $modx;
-		
+		$_ = array();
 		$check_files = trim($check_files);
 		$check_files = explode("\n", $check_files);
 		foreach($check_files as $file) {
@@ -166,7 +177,21 @@ class ManagerAPI {
 		}
 		return serialize($_);
 	}
-	
+
+	function getModifiedSystemFilesList($check_files, $checksum) {
+		$_ = array();
+		$check_files = trim($check_files);
+		$check_files = explode("\n", $check_files);
+		$checksum = unserialize($checksum);
+		foreach($check_files as $file) {
+			$file = trim($file);
+			$filePath = MODX_BASE_PATH . $file;
+			if(!is_file($filePath)) continue;
+			if(md5_file($filePath) != $checksum[$filePath]) $_[] = $file;
+		}
+		return $_;
+	}
+
 	function setSystemChecksum($checksum) {
 		global $modx;
 		$tbl_system_settings = $modx->getFullTableName('system_settings');
@@ -180,16 +205,61 @@ class ManagerAPI {
 		if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return '0';
 		
 		$current = $this->getSystemChecksum($modx->config['check_files_onlogin']);
-		if(empty($current)) return;
+		if(empty($current)) return '0';
 		
 		if(!isset($modx->config['sys_files_checksum']) || empty($modx->config['sys_files_checksum']))
 		{
 			$this->setSystemChecksum($current);
-			return;
+			return '0';
 		}
 		if($current===$modx->config['sys_files_checksum']) $result = '0';
-		else                                               $result = 'modified';
+		else {
+			$result = $this->getModifiedSystemFilesList($modx->config['check_files_onlogin'], $modx->config['sys_files_checksum']);
+		} 
 
 		return $result;
 	}
+
+    function getLastUserSetting($key=false) {
+        global $modx;
+        
+        $rs = $modx->db->select('*', $modx->getFullTableName('user_settings'), "user = '{$_SESSION['mgrInternalKey']}'");
+        
+        $usersettings = array ();
+        while ($row = $modx->db->getRow($rs)) {
+            if(substr($row['setting_name'], 0, 6) == '_LAST_') {
+                $name = substr($row['setting_name'], 6);
+                $usersettings[$name] = $row['setting_value'];
+            }
+        }
+        
+        if(!$key) return $usersettings;
+        else return isset($usersettings[$key]) ? $usersettings[$key] : NULL;
+    }
+    
+    function saveLastUserSetting($settings, $val='') {
+        global $modx;
+        
+        if(!empty($settings)) {
+            if(!is_array($settings)) $settings = array($settings=>$val);
+            
+            foreach ($settings as $key => $val) {
+                $f = array();
+                $f['user']          = $_SESSION['mgrInternalKey'];
+                $f['setting_name']  = '_LAST_'.$key;
+                $f['setting_value'] = $val;
+                $f = $modx->db->escape($f);
+                $f = "(`".implode("`, `", array_keys($f))."`) VALUES('".implode("', '", array_values($f))."')";
+                $f .= " ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
+                $modx->db->insert($f, $modx->getFullTableName('user_settings'));
+            }
+        }
+    }
+    
+    function loadDatePicker($path) {
+        global $modx;
+        include_once($path);
+        $dp = new DATEPICKER();
+        return $modx->mergeSettingsContent($dp->getDP());
+    }
 }

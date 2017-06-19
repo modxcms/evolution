@@ -16,7 +16,7 @@
 class asPHxParser {
     var $placeholders = array();
 
-    function asPHxParser($template='',$maxpass=500) {
+    function __construct($template='',$maxpass=500) {
         global $modx;
         $this->name = "PHx";
         $this->version = "2.1.3";
@@ -222,7 +222,7 @@ class asPHxParser {
                     case "lcase": $output = strtolower($output); break;
                     case "ucase": $output = strtoupper($output); break;
                     case "ucfirst": $output = ucfirst($output); break;
-                    case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['etomite_charset']); break;
+                    case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['modx_charset']); break;
                     case "esc":
                         $output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", htmlspecialchars($output));
                         $output = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$output);
@@ -233,7 +233,7 @@ class asPHxParser {
                     case "reverse": $output = strrev($output); break;
                     case "wordwrap": // default: 70
                         $wrapat = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 70;
-                        $output = preg_replace("~(\b\w+\b)~e","wordwrap('\\1',\$wrapat,' ',1)",$output);
+                        $output = preg_replace_callback("@(\b\w+\b)@",function($m) use($wrapat) {return wordwrap($m[1],$wrapat,' ',1);},$output);
                         break;
                     case "limit": // default: 100
                         $limit = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 100;

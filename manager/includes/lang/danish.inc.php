@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Henrik Nielsen
  * @author Mads Vestmar
@@ -763,6 +763,7 @@ $_lang["role_actionok"] = 'Vis oversigt over handlinger';
 $_lang["role_bk_manager"] = 'Brug backup værktøjet';
 $_lang["role_cache_refresh"] = 'Nulstil websitets cache';
 $_lang["role_change_password"] = 'Skift kodeord';
+$_lang["role_change_resourcetype"] = 'Skift ressourcetype';
 $_lang["role_chunk_management"] = 'Chunk administration';
 $_lang["role_config_management"] = 'Konfigurationsindstillinger';
 $_lang["role_content_management"] = 'Indholdsadministration';
@@ -842,7 +843,7 @@ $_lang["role_web_user_management"] = 'Webbruger administration';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Indtast URL\'en til MODX nyheds feed.';
 $_lang["rss_url_news_title"] = 'RSS nyheds Feed';
-$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Indtast URL\'en til MODX feed om sikkerhed.';
 $_lang["rss_url_security_title"] = 'RSS feed om sikkerhed';
 $_lang["run_module"] = 'Kør modulet';
@@ -857,6 +858,8 @@ $_lang["search_criteria_content"] = 'Søg i indhold';
 $_lang["search_criteria_content_msg"] = 'Find alle ressourcer med denne tekst i indholdet.';
 $_lang["search_criteria_id"] = 'Søg efter ID';
 $_lang["search_criteria_id_msg"] = 'Indtast en ressources ID for at kunne finde den hurtigt.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Søg i ressourcens lange titel';
 $_lang["search_criteria_longtitle_msg"] = 'Find alle ressourcer med denne tekst i den lange titel.';
 $_lang["search_criteria_title"] = 'Søg i titlen';
@@ -1155,6 +1158,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Når PHX plugin aktiveret, indbyggede filtre er som standard deaktiveret';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1168,7 +1172,8 @@ $_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
 $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
 $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_submit"] = 'Vend tilbage disse data';
+$_lang["bkmgr_restore_confirm"] = 'Er du sikker på du vil vende tilbage backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
 
 $_lang["files.dynamic.php1"] = 'create text file';
@@ -1195,6 +1200,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

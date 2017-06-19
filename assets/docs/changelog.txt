@@ -1,0 +1,2817 @@
+This file shows the changes in recent releases of MODX. The most current release is usually the
+development release, and is only shown to give an idea of what's currently in the pipeline.
+
+
+MODX Evolution 1.2.1(Jan 11, 2017)
+* [GitHub:#6f404c6] - [I] Debug information (yamamoto)
+* [GitHub:#fa584d9] - [F]  setLastClickedElement in tree.php (dmi3yy)
+* [GitHub:#a0f2a52] - [R] Resource breadcrumbs bottom-border (Piotr Matysiak)
+* [GitHub:#422bbcb] - [F] Wrong link (Thomas Jakobi)
+* [GitHub:#41f23f5] - [R] Update duplicate_content.processor.php (M-xm)
+* [GitHub:#f8dc135] - [I] #854 Allow uploads for multiple files (Deesen)
+* [GitHub:#8e6cc22] - [F] Show Richtext-editors of TVs also when resource is of type weblink (Deesen)
+* [GitHub:#c0b3897] - [F] Fix custom RTE-params per TV (like {"theme":"inline","editor":"CKEditor4"}) (Deesen)
+* [GitHub:#ecb9745] - [I] #1134 style_formats: Transform simple-format "Title1,class1|Title2,class2" into separate inline/block-subcategories (Deesen)
+* [GitHub:#3233000] - [F] #1174 Keep correct path when renaming paths/files (Deesen)
+* [GitHub:#37100dd] - [F] small change (Piotr Matysiak)
+* [GitHub:#126a06c] - [F] lang attribute (Piotr Matysiak)
+* [GitHub:#7759cc9] - [R] Updated Polish language to 1.2.1 (Piotr Matysiak)
+* [GitHub:#452fcec] - [R] Update Dutch Manager language (Marc)
+* [GitHub:#3d491be] - [F] #1166 Check if iconv() is available, provide $_lang for pre-check error-messages (Deesen)
+* [GitHub:#8e75ecf] - [F] #1166 Check if iconv() is available as required, added missing "OK!" after PHP-version (Deesen)
+* [GitHub:#40f496a] - [F] #1169 Fix MODX_CORE_PATH for renamed manager-path (Deesen)
+* [GitHub:#371dd5d] - [F] #1164 Do not trigger "save" when Alt-Key is pressed (Deesen)
+* [GitHub:#72d911d] - [R] Italian language for manager (Nicola Lambathakis)
+* [GitHub:#d90cd2d] - [R] Italian language for installer (Nicola Lambathakis)
+* [GitHub:#3ba4a1a] - [I] #1154 Added new plugin-event "OnBeforeParseParams" to allow replacing custom-placeholders like evobabel´s [%lang%] before parsing snippet-params string to PHP-array. Example: [[Wayfinder? &startId=`[%lang%]` ]] (Deesen)
+* [GitHub:#5d89d30] - [R] toAlias  add .txt. (good use for robots.txt )) (dmi3yy)
+* [GitHub:#cad2e21] - [F] https://github.com/modxcms/evolution/issues/1160 (Nicola Lambathakis)
+* [GitHub:#c585dd6] - [E] #1160 Run Module from Module Config (Nicola Lambathakis)
+* [GitHub:#6813e05] - [I] #1024 icons and styles for Online Users widget (dashboard) (Nicola Lambathakis)
+* [GitHub:#e2f6188] - [F] Only delete no good, and not work on upgrade mode (dmi3yy)
+* [GitHub:#219be2b] - [S] #1143 update phpMailer to 5.2.21 (dmi3yy)
+* [GitHub:#de18340] - [F] #1144  Nested tags issue (yamamoto)
+* [GitHub:#46ae45f] - [F] #1144 Replaced $modx->parseText() by modxRTEbridge->parsePlaceholders() (Deesen)
+* [GitHub:#b08a2cd] - [F] #1149 @SELECT for checkboxes (Deesen)
+* [GitHub:#a0be46a] - [F] 100% width for all inputs Example YAMS: https://github.com/Deesen/YAMS/issues/17 (Deesen)
+* [GitHub:#71c1f25] - [R] Report issues link updated (Piotr Matysiak)
+* [GitHub:#8463e10] - [S] #1143  Update PHPMailer (dmi3yy)
+* [GitHub:#eb7ea0d] - [F] replaced text placeholder with language string (Piotr Matysiak)
+* [GitHub:#885b522] - [R] ElementsInTree - replaced hardcoded text placeholder with language strings (Nicola Lambathakis)
+* [GitHub:#9e54164] - [R] ElementsInTree update (Piotr Matysiak)
+* [GitHub:#db9633c] - [F] fix for SimpleTab on 1.2.1 (dmi3yy)
+* [GitHub:#fe188a2] - [F] #1024 Added auto-increment ID again for active_user_locks to fix multiple locks per user (Deesen)
+* [GitHub:#650cb07] - [F] Lock Elements: Fixed keys (Deesen)
+* [GitHub:#96b0486] - [F] Corrected "session_timeout_msg", added "multiple_sessions_msg" (Deesen)
+* [GitHub:#3a07b4b] - [F] #1119 Assure "session_timeout" is always "mail_check_timeperiod" +1min https://github.com/modxcms/evolution/issues/1119#issuecomment-267921912 (Deesen)
+* [GitHub:#c268b0c] - [F]  replace query 3.1.1 from https://code.jquery.com/jquery-3.1.1.min.js (dmi3yy)
+* [GitHub:#8cbb924] - [I] #1024 Added unique icon for users logged-in with multiple browsers using same manager-login (Deesen)
+* [GitHub:#30a2d4e] - [F] #1024 Replaced check against "internalKey" by "sid", added function cleanupMultipleActiveUsers() (Deesen)
+* [GitHub:#ba0b893] - [F] #1024 Replaced check against "internalKey" by "sid" (Deesen)
+* [GitHub:#0ffee7c] - [F] #1024 Added `sid` to table active_user_locks (Deesen)
+* [GitHub:#5682b87] - [F] #1024 Added $modx->cleanupMultipleActiveUsers() (Deesen)
+* [GitHub:#15a28df] - [F] #1024 Removed unnecessary md5() for $modx->sid (Deesen)
+* [GitHub:#b9489ed] - [F] #1024 Added "sid" to DB-table (using $modx->sid = md5(session_id()); as unique session-id) (Deesen)
+* [GitHub:#4a126d0] - [F] #1024 Display "Multiple Sessions found for this user" / avoid "Forgot Logout"-msg for multiple browser-sessions (Deesen)
+* [GitHub:#a77f6f9] - [F]update Russian Lang (dmi3yy)
+* [GitHub:#2a825d8] - [R] #1115 fix ditto paginate show(Dmi3yy)
+* [GitHub:#9c73a69] - [F] Modifire parse issue (yamamoto)
+* [GitHub:#b691cfb] - [F] Empty placeholder parse issue (yamamoto)
+* [GitHub:#660163d] - [F] Issue of nesting tags (yamamoto)
+* [GitHub:#b264cb5] - [R] #1124 Refactor/Restyle Files Manager (Nicola Lambathakis)
+* [GitHub:#8368ea1] - [I] #1124 Files Manager icons with Font Awesome (Nicola Lambathakis)
+* [GitHub:#fb722d8] - [I] #1124 added styles for restyled Files Manager (Nicola Lambathakis)
+* [GitHub:#b835fea] - [I] #1124 added missing string files_directory_is_empty (Files Manager) (Nicola Lambathakis)
+* [GitHub:#ecbe34e] - [R] Update weblink help (Mr B)
+* [GitHub:#c378b24] - [R] only load js once if weblink (Mr B)
+* [GitHub:#ecb4d1b] - [R] Update style.css (Mr B)
+* [GitHub:#345c5b3] - [I] #1131 Add file insert button for weblink field (Mr B)
+* [GitHub:#4924745] - [F] Nesting level from 10 to 200 (Dmi3yy)
+* [GitHub:#23ba9a2] - [F] fix virtualDir warning (Dmi3yy)
+* [GitHub:#86a50ae] - [F] fix $_GET[‘q’] in sendStrictURI (Dmi3yy)
+* [GitHub:#1ed16a8] - [F] error if empty $options in tinymce (Dmi3yy)
+* [GitHub:#c08383c] - [F] #1130 Tabs FileManager and FileBrowser missing (yamamoto)
+* [GitHub:#280a653] - [I] #1027 Added "OK"-button to datePicker for mobile devices (Deesen)
+* [GitHub:#caa8c74] - [I] $modx->parseText() (yamamoto)
+* [GitHub:#173b403] - [F] [*var@docid*] (yamamoto)
+* [GitHub:#030e64e] - [O] Small improvements - added if (!('sendBeacon' in navigator)) before polyFill - added MODX_MANAGER_URL - added if(top.mainMenu) (Deesen)
+* [GitHub:#ee27843] - [F] Clean-up expired locks at login https://github.com/modxcms/evolution/issues/1119#issuecomment-267627760 (Deesen)
+* [GitHub:#484c969] - [F] Remove all locks when no valid user sessions exist to avoid confusion https://github.com/modxcms/evolution/issues/1119#issuecomment-267627760 (Deesen)
+* [GitHub:#e226e5f] - [F] #1120 QM: Added periodical server-ping to assure keeping session and related locks alive (Deesen)
+* [GitHub:#e6f3145] - [I] #1124 Filemanager: Added duplicateFile, renameFolder, renameFile (Deesen)
+* [GitHub:#d5a7f19] - [F] Images not visible Apache 2.0 (Marc)
+* [GitHub:#5671bc6] - [F] TinyMCE4 icon font style fix (Marc)
+* [GitHub:#4ac8c1b] - [C] $modx->evalSnippets() (yamamoto)
+* [GitHub:#cec120b] - [F] Set lock-expire minimum fallback to 120 seconds / 2min (Deesen)
+* [GitHub:#7a2d630] - [F] #1089 Issue of snippet call (yamamoto)
+* [GitHub:#7dbcc9c] - [F] fix #1107 error with plugin ajaxSubmit (Dmi3yy)
+* [GitHub:#e48100e] - [R] TinyMCE4 restyle (Marc)
+* [GitHub:#a0fd6ec] - [F] typo in wayfinder/examples/cssplay/dropline.css (Nicola Lambathakis)
+* [GitHub:#6028fb8] - [F] ditto & ajaxsearch etomite_charset > modx_charset (Nicola Lambathakis)
+* [GitHub:#0579d1d] - [I] new language string element_filter_msg (Nicola Lambathakis)
+* [GitHub:#633dd49] - [F] various fixes to manager elements (Nicola Lambathakis)
+* [GitHub:#2e7bfac] - [R] Update plugin.filesource.php (Mr B)
+* [GitHub:#ee25dde] - [R] Update mutate_plugin.dynamic.php (Mr B)
+* [GitHub:#3355344] - [R] Update mutate_snippet.dynamic.php (Mr B)
+* [GitHub:#582cbb2] - [R] Update mutate_snippet.dynamic.php (Mr B)
+* [GitHub:#a9fc31a] - [R] Update mutate_htmlsnippet.dynamic.php (Mr B)
+* [GitHub:#78b201a] - [R] Update mutate_tmplvars.dynamic.php (Mr B)
+* [GitHub:#53f7651] - [R] Update mutate_templates.dynamic.php (Mr B)
+* [GitHub:#0076143] - [R] Update mutate_module.dynamic.php (Mr B)
+* [GitHub:#f1bb21b] - [R] Update mutate_plugin.dynamic.php (Mr B)
+* [GitHub:#e334269] - [R] Update mutate_tmplvars.dynamic.php (Mr B)
+* [GitHub:#6f4486f] - [R] Update mutate_templates.dynamic.php (Mr B)
+* [GitHub:#6bc3a77] - [R] Update mutate_module.dynamic.php (Mr B)
+* [GitHub:#0bd2f33] - [F] #1026 Standard input label format, remove colon (Mr B)
+* [GitHub:#da91183] - [I] Other languages fonts update (Piotr Matysiak)
+* [GitHub:#3a4087d] - [F] #1110 English-british.inc.php not detected (yamamoto)
+* [GitHub:#fbb2ac7] - [I] MODxRE2 Top nav lvl 2 darker hover (Piotr Matysiak)
+* [GitHub:#f9143a7] - [I] MODxRE2 theme improvements (Piotr Matysiak)
+* [GitHub:#b6afe95] - [I] Installer styles (Piotr Matysiak)
+* [GitHub:#9feea66] - [D] logo.png not used (Dmi3yy)
+* [GitHub:#3b0fe5f] - [F] #1089 Not work nested values in snippet call (yamamoto)
+* [GitHub:#73f98a8] - [I] need more tests, for fix aliasListing + alias_visible (Dmi3yy)
+* [GitHub:#6c313d8] - [R] $modx->atBindFileContent() (yamamoto)
+* [GitHub:#1c0e026] - [F] #1097 The login state is synchronized at multiple sites (yamamoto)
+* [GitHub:#d8bdd8b] - [R] config.inc.php (yamamoto)
+* [GitHub:#9f18969] - [F] #109 Document Manager Layout (Nicola Lambathakis)
+* [GitHub:#2de6a5c] - [R] $modx->atBindInclude() (yamamoto)
+* [GitHub:#926c1a0] - [R] $modx->parseDocumentSource() (yamamoto)
+* [GitHub:#2eaea99] - [F] Nested snippet call issue (yamamoto)
+* [GitHub:#596902f] - [I] $modx->getExtFromFilename() (yamamoto)
+* [GitHub:#8c07d55] - [R] tab1_site_settings.inc.php (yamamoto)
+* [GitHub:#37fe7bb] - [F] #1092 TV @FILE binding not working (yamamoto)
+* [GitHub:#80003c8] - [R] Replace ProcessFile() to $modx->atBindFileContent() (yamamoto)
+* [GitHub:#f23f24a] - [I] new - $modx->atBindFileContent() (yamamoto)
+* [GitHub:#ab3b1d2] - [S] Security: Set false $GLOBALS at $modx->safeEval() (yamamoto)
+* [GitHub:#0fe2f02] - [F] Fix - $modx->cleanUpMODXTags() (yamamoto)
+* [GitHub:#bc44f6d] - [D] Remove comment out (yamamoto)
+* [GitHub:#4420c57] - [I] Showing $modx->dumpSnippets (yamamoto)
+* [GitHub:#7f1c22a] - [F] - Malfunction when PHx plugin is installed (yamamoto)
+* [GitHub:#39b10fc] - [F] Does not work if PHx plugin is installed (yamamoto)
+* [GitHub:#bbc580d] - [F] #1091 F: Show also uncategorized elements in category-view (Deesen)
+* [GitHub:#252d2f7] - [F] #1086 F: Convert tree-translations to UTF-8 before json_encode() (Deesen)
+* [GitHub:#1b200fa] - [F] #1054 F: Enter-key updates datefield now, but only when entered time is valid, instead of empty it. Prepared "dp.lastValidDate" to add validation-check of dates directly entered into datefield. (Deesen)
+* [GitHub:#b2d922e] - [F]#1086 F: Convert tree-translations to UTF-8 before json_encode() (Deesen)
+* [GitHub:#9830311] - [F] #1081 F: Added missing buttons and organized toolbars more clean (Deesen)
+* [GitHub:#21fabe6] - [F] Ditto - sql error of &documents parameter (yamamoto)
+* [GitHub:#e39b9d6] - [F] #1089 Ditto - Be sure to expand [!uncached!] in tpl-chunk (yamamoto)
+* [GitHub:#7eaea30] - [F] #1089 F: Cached and nested snippets not working (yamamoto)
+* [GitHub:#3d1f883] - [F] https://github.com/modxcms/evolution/issues/1049 Translation missing on dashboard (Nicola Lambathakis)
+* [GitHub:#09fca84] - [R] OnManagerMainFrameHeaderHTMLBlock for Extras module (Nicola Lambathakis)
+* [GitHub:#f005214] - [R] OnManagerMainFrameHeaderHTMLBlock for DocManager module (Nicola Lambathakis)
+* [GitHub:#e6891de] - [F] Adapted "active_users" to new mechanismn, related to #945 (Deesen)
+* [GitHub:#e29249c] - [F] Fixed input height (Sasha Beep)
+* [GitHub:#bbf78bb] - [I] #1081 I: Added "browser-spellcheck" to plugin-config - https://github.com/extras-evolution/tinymce4-for-modx-evo/issues/26 (Deesen)
+* [GitHub:#ae04d3f] - [F] #1083 F: Wayfinder not display correct restricted documents (yamamoto)
+* [GitHub:#10b0549] - [D] Remove 'recently edited' and 'online users' from System Info Report (Mr B)
+* [GitHub:#532e4c0] - [R] Refactor: Installer (yamamoto)
+* [GitHub:#2e319be] - [F] tinymce block to - class (Dmi3yy)
+* [GitHub:#153a43b] - [F] Demo content ur alias spelling mistake (Mr B)
+* [GitHub:#e018213] - [R] Update - language fles (yamamoto)
+* [GitHub:#50798ed] - [R] Update actionlist.inc.php (Mr B)
+* [GitHub:#bb5905b] - [R] Update login.processor.php (Mr B)
+* [GitHub:#32e27ad] - [F] Added message "Please disable register_globals!" (Deesen)
+* [GitHub:#80ced52] - [F] fix #1067 (Dmi3yy)
+* [GitHub:#ab44760] - [F] Strange behaviour in Chrome with content sometimes being empty on init (Deesen)
+* [GitHub:#18ba4f0] - [O] #1035 #1051 O: Use removeSanitizeSeed() instead of manual procedure https://github.com/Deesen/evolution/commit/842a844f014b2e5049f886631c240b1ca3977f3f#commitcomment-20100812 (Deesen)
+* [GitHub:#9887de9] - [F] #1067 F: Prepare placeholders [*#longtitle*] and [*#content*] for TinyMCE4 inline-edit (Deesen)
+* [GitHub:#2ff1ef7] - [F] #1067 F: TinyMCE4 inline-edit not working, clean "data-mce"-attr (Deesen)
+* [GitHub:#cdfbb6b] - [R] start fix error with AliasListingFolder and Alias_visible (Dmi3yy)
+* [GitHub:#851ace5] - [R] Code cleanup: Unnecessary function (yamamoto)
+* [GitHub:#1af30f6] - [F] #1066 Fix: password string as is (yamamoto)
+* [GitHub:#2608765] - [I] #1066 I: Adjust incorrect sanitize processing (yamamoto)
+* [GitHub:#9206d5c] - [F] Fix: Don't work "math" option in If snippet (yamamoto)
+* [GitHub:#c6e8e20] - [F] Fix: Error Undefined variable (yamamoto)
+* [GitHub:#3c17ce3] - [O] #200 O: Make "Duplicate of" translatable when duplicating elements/resources (Deesen)
+* [GitHub:#f54e9ca] - [F] #1054 F: Reinstate enter-key to close datepicker without submitting form (Deesen)
+* [GitHub:#d3c0b9a] - [R] Refactor: Modifier class debug info (yamamoto)
+* [GitHub:#5a8f654] - [F] Fix: Parse modifier (yamamoto)
+* [GitHub:#57d5ab5] - [F] Fix: php parse error (yamamoto)
+* [GitHub:#9909b64] - [F] #979 404 judgment of URL with path_info information (yamamoto)
+* [GitHub:#2712ba4] - [F] Fix: Modifier at custom_widget (yamamoto)
+* [GitHub:#cc3585d] - [F] #1017 Fix: related to incorrect value of $rb_base_dir (yamamoto)
+* [GitHub:#ae2d2e4] - [F] Code cleanup: prepare fix url issue (yamamoto)
+* [GitHub:#78d9255] - [R] Renamed $onLoginForwardToAction to $initMainframeAction (Deesen)
+* [GitHub:#696a0c3] - [F] Site name with apostrophy breaks manager home (yamamoto)
+* [GitHub:#cbb0a6b] - [F] #1052 F: Show menutitle also if empty, instead of pagetitle (Deesen)
+* [GitHub:#0464915] - [F] #1057 F+O: Fixed "forgotManagerLogin" use "user_attributes.lastlogin" instead of "active_users" to check if user logged in once  - added automatic forwarding to "change password"-action after successful login with hash  - hash only valid on actual day (Deesen)
+* [GitHub:#58647d2] - [R] some translates (MrSwed)
+* [GitHub:#e724c85] - [I] #1034 O: Set duplicated plugins and modules disabled by default (Deesen)
+* [GitHub:#c8d9f90] - [F] Added missing duplicate-button (Deesen)
+* [GitHub:#4863f7a] - [I] Pre-define $recent_update before try to include "sitePublishing.idx.php" (Deesen)
+* [GitHub:#842a844] - [F] #1035 #1051 F: Avoid error "strpos(): Empty needle" for empty content/templates (Deesen)
+* [GitHub:#54a3859] - [I] Adding missing translations from englisch.inc.php (kulmjens)
+* [GitHub:#feb6168] - [I] #1034 F+I: Fix "double duplicates" by changing new name "Duplicate of XXX" to "XXX Duplicate {$count}", this also improves sorting of elements/duplicates in overviews (Deesen)
+* [GitHub:#b79b949] - [F] #1040 F: Unlock resource on action-buttons duplicate, delete and cancel (Deesen)
+* [GitHub:#8c8dd8a] - [I] Moved // console.log() in front of if() (Deesen)
+* [GitHub:#231c2f6] - [F]: resource data-page should not unlock resource (Deesen)
+* [GitHub:#683d887] - [I]: Added confirmation "Are you sure you want to revert?" (Deesen)
+* [GitHub:#555a090] - [F] #1045 Fix: Clicking on tree-root does not open "edit resource" (Deesen)
+* [GitHub:#986e0ab] - [F] #1046 Fix show manager-form for "advanced upgrade" (Deesen)
+* [GitHub:#e0f2e04] - [I] More switches in install - for each type of elements (MrSwed)
+* [GitHub:#9474948] - [F] ditto search extender empty string (MrSwed)
+* [GitHub:#62f78bd] - [F] TV tables width fix (Piotr Matysiak)
+
+
+
+MODX Evolution 1.2 (Dec 01, 2016)
+===================================
+* [GitHub:#6e8455e] - fix eform version (MrSwed)
+* [GitHub:#ea68293] - Full width TV tables in tabs (Piotr Matysiak)
+* [GitHub:#6793843] - fix data-col for User Info and Security news panel (Nicola Lambathakis)
+* [GitHub:#6d7c1cd] - Rely on Navigator.sendBeacon instead of async AJAX for sending unlock-requests on window.unload - https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon - http://stackoverflow.com/a/33553050/2354531 (Deesen)
+* [GitHub:#05420d3] - Update english.inc.php (Mr B)
+* [GitHub:#34b0a68] - fix modResource not save tv if editing (Dmi3yy)
+* [GitHub:#6023234] - 1.2RC2 (Dmi3yy)
+* [GitHub:#86bfab2] - fix #973 (Dmi3yy)
+* [GitHub:#26f32bf] - fix  http://take.ms/8T1mW (Dmi3yy)
+* [GitHub:#eaaba9e] - fix #1008 (Dmi3yy)
+* [GitHub:#5f4efca] - Fix "Failed to retrieve http://forums.modx..." https://github.com/modxcms/evolution/issues/1002#issue-192127690 (Deesen)
+* [GitHub:#69c6bc9] - Added Wayfinder-Debug #719 (Deesen)
+* [GitHub:#91dc7a6] - Small fixes (Deesen)
+* [GitHub:#ee565cb] - ElementsInTree (Piotr Matysiak)
+* [GitHub:#152af3e] - Small fixes (Deesen)
+* [GitHub:#47dc93e] - Avoid TinyMCE4 being disabled after upgrade on existing MODX-installation (Deesen)
+* [GitHub:#95b7ae4] - Small fix $params['dependencies'] (Deesen)
+* [GitHub:#77d6a59] - fix version (Dmi3yy)
+* [GitHub:#ca6d723] - 1.2-RC1 (Dmi3yy)
+* [GitHub:#d836cf6] - fix #995 (Dmi3yy)
+* [GitHub:#14565ed] - Added missing echo() (Deesen)
+* [GitHub:#07737e8] - Revert "#995 Fix show warnings" (Dmi3yy)
+* [GitHub:#c62b62a] - #995 Fix show warnings (Deesen)
+* [GitHub:#5f0d6ee] - #989 Provide empty default-value for template_docs + template_chunks (Deesen)
+* [GitHub:#96e5396] - #989 Provide empty default-value for custom_buttons3 + 4 (Deesen)
+* [GitHub:#cb6ca35] - Fix (yamamoto)
+* [GitHub:#b2ab86b] - #989 Fix replace [+phs+] by values (Deesen)
+* [GitHub:#775cf52] - Fix (yamamoto)
+* [GitHub:#eb2aa53] - Fix - default_config issue when new install (yamamoto)
+* [GitHub:#ba7580d] - #991 Fix action, revert #981 (Deesen)
+* [GitHub:#c3c1004] - update lang  #992 (Dmi3yy)
+* [GitHub:#03743e4] - Fix for dashboard plugin (yamamoto)
+* [GitHub:#457a584] - #981 Fix (yamamoto)
+* [GitHub:#25bdff9] - #981 Fix (yamamoto)
+* [GitHub:#cd5a9b3] - Use filter_input() (yamamoto)
+* [GitHub:#dc6000c] - add sag to images format (Dmi3yy)
+* [GitHub:#8a9a954] - #985 fix (yamamoto)
+* [GitHub:#78e79b7] - #972 Refactored building SQL-Query (Deesen)
+* [GitHub:#dfa6c62] - Fixing a suddenly occuring thousands separator (Thomas Jakobi)
+* [GitHub:#13d5531] - Remove register_globals from support (yamamoto)
+* [GitHub:#dee70ea] - Remove comment (yamamoto)
+* [GitHub:#6b06349] - Minor improved (speed up) (yamamoto)
+* [GitHub:#324a7ba] - New - [*var@prev*] [*var:next*] (yamamoto)
+* [GitHub:#505d48e] - #939 New - $modx->safeEval() (yamamoto)
+* [GitHub:#d58b8aa] - Update - version_notice.1.2 (yamamoto)
+* [GitHub:#bd8fead] - New info - $modx->apiVersion (yamamoto)
+* [GitHub:#56bc1e2] - Fix [[@OnEventName]] (yamamoto)
+* [GitHub:#165fb9b] - elementIsLocked(): Changed return false to NULL (Deesen)
+* [GitHub:#20dce44] - Adapted checkLocked() / setLocked() to new "lock elements"-mechanismn (Deesen)
+* [GitHub:#fdc4ed4] - Adapted check for active locks (Deesen)
+* [GitHub:#324a2a9] - Several changes for "lock elements": - adapted existing lock-functions - added new function $modx->updateValidatedUserSession(); - added $this->time = time() for having global timestamp (Deesen)
+* [GitHub:#79db21e] - Added "userIdle"-styles for Dashboard (Deesen)
+* [GitHub:#d3951b2] - Added "logout_reminder_msg" (Deesen)
+* [GitHub:#a3468c1] - Several changes: - adapted "Online User" SQL-query to new "active_user_sessions"-table - added "user idle" (= no activity last 20min) to dashboard "online users" - added check for $_SESSION['show_logout_reminder'] (Deesen)
+* [GitHub:#25aac7c] - Set $_SESSION['show_logout_reminder'] when last action != 8 (logout) (Deesen)
+* [GitHub:#3b8f63e] - Clean up tables "active_user_locks" & "active_user_sessions" at logout (Deesen)
+* [GitHub:#3c70ecd] - Adapted for "lock elements" mechanismn to allow unlocking elements via on window.beforeunload (Deesen)
+* [GitHub:#e3b36fb] - Added setLastClickedElement(type, id), trigger reloadtree() when opening pop-up (Deesen)
+* [GitHub:#49b85ed] - Replaced "firsthit_df" with "lasthit_df" (Deesen)
+* [GitHub:#87522b0] - Added onclick="top.tree.setLastClickedElement(0,0);" (Deesen)
+* [GitHub:#543dac1] - Minor changes (Deesen)
+* [GitHub:#e98f06e] - Replaced "lock_interval" with "session_timeout" (Deesen)
+* [GitHub:#6437263] - Several changes reg. "lock elements" : - removed: "lock_interval", "lock_interval_msg", "lock_release_delay", "lock_release_delay_msg", "lock_element_unknown_error" - added: "session_timeout", "session_timeout_msg", "logout_reminder_msg" - modified: "lock_element_editing", "lock_element_locked_by" (Deesen)
+* [GitHub:#a813536] - Several changes for "lock elements" - added table "active_user_sessions" - cleaned-up table "active_user_locks" - moved field "ip" from "active_users" to "active_user_sessions" - added DROP TABLE before "active_users" and "active_user_locks" (Deesen)
+* [GitHub:#b87eefb] - Added $modx->updateValidatedUserSession(); (Deesen)
+* [GitHub:#5d37ca0] - Added "Lock Elements" on window.beforeunload-script (Deesen)
+* [GitHub:#95b4e71] - Added "form_save=true;" (Deesen)
+* [GitHub:#605764c] - Added "form_save=true;", removed unnecessary "$tbl_active_users" (Deesen)
+* [GitHub:#6925998] - ElementsInTree 1.5.6 (Piotr Matysiak)
+* [GitHub:#f8b7c75] - Improved - [[@OnEventName]] (yamamoto)
+* [GitHub:#93425c1] - Add symbol - $modx->addSnippet() (yamamoto)
+* [GitHub:#5ec4262] - Adjust for HTML editor (yamamoto)
+* [GitHub:#baa6c08] - Roles mgm new look (Piotr Matysiak)
+* [GitHub:#5a5db5f] - Grid table padding (Piotr Matysiak)
+* [GitHub:#6246319] - Restyled top search input (Piotr Matysiak)
+* [GitHub:#18713bb] - Username margin (Piotr Matysiak)
+* [GitHub:#5610996] - Fixed user_management (yamamoto)
+* [GitHub:#b637b4e] - Refactor (yamamoto)
+* [GitHub:#59d075d] - Refactor - MODxRE2/welcome.tpl (yamamoto)
+* [GitHub:#494fca7] - Improved - Using MODX tags in welcome.tpl (yamamoto)
+* [GitHub:#322d1b2] - Fix - $modx->messageQuit() loop error (yamamoto)
+* [GitHub:#7a0cb3a] - Fix - $modx->sweepGarbageStrings() (yamamoto)
+* [GitHub:#9372434] - Fix - error $modx->logEvent() (yamamoto)
+* [GitHub:#1ac32e5] - Update content - version_notices/1.2.php (yamamoto)
+* [GitHub:#1e6f21a] - Refactor - welcome.static.php (yamamoto)
+* [GitHub:#be9a881] - Limit deleting localStorage to grid-items only (Deesen)
+* [GitHub:#e1dd07a] - $modx->db-Юйгукн refactor  add  $watchError (Dmi3yy)
+* [GitHub:#4a6c843] - update extras to 0.1.3 (now can update from any version) (Dmi3yy)
+* [GitHub:#fd1a8c6] - fix russian lang (Dmi3yy)
+* [GitHub:#fb66c35] - IF / ELSE / ENDIF can be nested (yamamoto)
+* [GitHub:#426f2d4] - Improved - IF syntax (yamamoto)
+* [GitHub:#c5ab4db] - Fix - templatename modifier (yamamoto)
+* [GitHub:#6872ed3] - Refactor (yamamoto)
+* [GitHub:#71bd595] - minor improvements (McParana)
+* [GitHub:#da2085e] - #957 (McParana)
+* [GitHub:#a7ff5d6] - fix for pull https://github.com/modxcms/evolution/pull/966 (Nicola Lambathakis)
+* [GitHub:#3b77148] - update russian lang (Dmi3yy)
+* [GitHub:#52a8526] - New API - $modx->addChunk() (yamamoto)
+* [GitHub:#dd34f24] - Use phpass (yamamoto)
+* [GitHub:#5993eef] - Use phpass for password management at login (yamamoto)
+* [GitHub:#e870465] - New - Add phpass library (yamamoto)
+* [GitHub:#b8881e1] - Fix - modifiers.class.inc.php (yamamoto)
+* [GitHub:#b7cdd69] - Rename - extender class file name (yamamoto)
+* [GitHub:#ca5b304] - Login - Protect from bot attack (yamamoto)
+* [GitHub:#65d4984] - Minor fix (yamamoto)
+* [GitHub:#7fd8036] - update russian-utf8 (Dmi3yy)
+* [GitHub:#6f7a80f] - Fix syntax-error on PHP5.4: unexpected ')', expecting :: (T_PAAMAYIM_NEKUDOTAYIM) (Deesen)
+* [GitHub:#ddffe02] - Fix "undefined method"-error when creating new manager user (Deesen)
+* [GitHub:#7ad8b21] - Fix for special modifier (yamamoto)
+* [GitHub:#60a34a5] - Refactor (yamamoto)
+* [GitHub:#015889a] - fix permission for topbar link to help (Nicola Lambathakis)
+* [GitHub:#f962d6f] - ElementsInTree 1.5.5 (Piotr Matysiak)
+* [GitHub:#9fb9e36] - New API - $modx->addSnippet() (yamamoto)
+* [GitHub:#8d13990] - Update qm.inc.php (Mr B)
+* [GitHub:#cef985b] - $modx->parseText() Perform modifier processing (yamamoto)
+* [GitHub:#3165b87] - update DocLister to 2.3.0 (Dmi3yy)
+* [GitHub:#14195f0] - update libs (Dmi3yy)
+* [GitHub:#a170754] - Fix issue - MODX_SITE_HOSTNAMES (yamamoto)
+* [GitHub:#b42a089] - New readme screenshots (Piotr Matysiak)
+* [GitHub:#001561c] - ElementsInTree 1.5.4 (Piotr Matysiak)
+* [GitHub:#4b44228] - Readme Screenshots (Piotr Matysiak)
+* [GitHub:#9ccd62d] - Remove exit() left from dev (Deesen)
+* [GitHub:#ddaea4c] - New - $modx->db->_getFromStringFromArray() (yamamoto)
+* [GitHub:#ac8f6a9] - $db->select() - Replace [+prefix+] in the field clause (yamamoto)
+* [GitHub:#0b42552] - New - $modx->db->_getFieldsStringFromArray() (yamamoto)
+* [GitHub:#dec44c1] - Fix parseText (yamamoto)
+* [GitHub:#111e8bc] - Revert - $modx->parseText() (yamamoto)
+* [GitHub:#4a61be5] - Make the title of event log list easier to understand (yamamoto)
+* [GitHub:#bae9b18] - Minor fix - $modx->messageQuit() (yamamoto)
+* [GitHub:#2dca337] - Allow the $modx->mergeXXX function to set arbitrary values (yamamoto)
+* [GitHub:#64eed01] - confirm dialog for delete/undelete resources (Nicola Lambathakis)
+* [GitHub:#0b4db90] - Revert "confirm dialog for delete/undelete resources" (Nicola Lambathakis)
+* [GitHub:#9474e10] - confirm dialog for delete/undelete resources (Nicola Lambathakis)
+* [GitHub:#de14258] - ElementsInTree 1.5.3 (Piotr Matysiak)
+* [GitHub:#5fccc68] - Update setup.data.sql (Mr B)
+* [GitHub:#d090b8a] - ElementsInTree 1.5.2 (Piotr Matysiak)
+* [GitHub:#3422a7f] - Update web_access_permissions.dynamic.php (Mr B)
+* [GitHub:#b76d7cc] - Update access_permissions.dynamic.php (Mr B)
+* [GitHub:#8d7580a] - https://github.com/Dmi3yy/modx.evo.custom/pull/391 (Dmi3yy)
+* [GitHub:#da248cb] - Refactor - weblogin snippet (yamamoto)
+* [GitHub:#964c839] - Remove php closing tag (yamamoto)
+* [GitHub:#d6e29c8] - Refactor - reflect snippet (yamamoto)
+* [GitHub:#4cd15ee] - Do not add php closing tag (yamamoto)
+* [GitHub:#3136798] - Do not add php closing tag (yamamoto)
+* [GitHub:#21d13f9] - Fix - weblogin PHP parsing error (yamamoto)
+* [GitHub:#7e0232c] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#ea8995e] - Fix - Missing merge (yamamoto)
+* [GitHub:#1e4423b] - Add - language entry (minifyphp_incache) (yamamoto)
+* [GitHub:#634712f] - New API - $modx->strip_tags() (yamamoto)
+* [GitHub:#99d250d] - File name of attached type resource (yamamoto)
+* [GitHub:#2ec1df8] - New API - $modx->stripslashes() (yamamoto)
+* [GitHub:#8a6bc36] - New API - $modx->isLoggedIn() (yamamoto)
+* [GitHub:#fe890b6] - Refactor - defaut_config.pp (yamamoto)
+* [GitHub:#0b3e992] - Refactor - qm.tpl (yamamoto)
+* [GitHub:#07601a3] - Refactor - ElementsInTree plugin (yamamoto)
+* [GitHub:#d426fae] - Remove whitespace in PHP codes in the site cache (yamamoto)
+* [GitHub:#a9bf8b9] - Fix - Problem when saving config value into cache (yamamoto)
+* [GitHub:#3f7d1b1] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#8500d57] - Change function name (Related to password hash) (yamamoto)
+* [GitHub:#fe2d9f9] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#630a7f4] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#0a0ad75] - Refactor- login.processor.php (yamamoto)
+* [GitHub:#bf850e5] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#d8126c0] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#baab631] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#288affb] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#15ac71b] - Refactor - login.processor.php (yamamoto)
+* [GitHub:#b4472c1] - Minor fix (yamamoto)
+* [GitHub:#a117b7a] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#e6b857c] - Remove unnecessary rc4crypt class (yamamoto)
+* [GitHub:#7b0fac2] - Fixed height for text-input "Custom content types" (Deesen)
+* [GitHub:#2057440] - Revert "Equal fonts sizes" (Marc)
+* [GitHub:#98bc1d5] - Equal fonts sizes (Marc)
+* [GitHub:#256eb53] - Wrap radio buttons with <label></label> element (yamamoto)
+* [GitHub:#5681b47] - New - Add security tab in System configuration (yamamoto)
+* [GitHub:#fb19791] - Fix - default value [(rb_base_url)] (yamamoto)
+* [GitHub:#c54b340] - tab-pane margin-bottom (yamamoto)
+* [GitHub:#afac500] - Remove unnecessary functions (yamamoto)
+* [GitHub:#942e351] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#fb55f07] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#0c76cdd] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#39ee5ff] - fix elements icons in category view (Nicola Lambathakis)
+* [GitHub:#23853a7] - #934 Fix width of time-fields (Deesen)
+* [GitHub:#f71c556] - ElementsInTree bugfix 1.5.1 (Piotr Matysiak)
+* [GitHub:#8aa3a65] - Update mainmenu.php (Mr B)
+* [GitHub:#896344d] - Update mutate_module.dynamic.php (Mr B)
+* [GitHub:#c12f858] - Update login.tpl (Mr B)
+* [GitHub:#7f9b308] - ElementsInTree 1.5.0 (Piotr Matysiak)
+* [GitHub:#be34d78] - Added key "create_new" (Deesen)
+* [GitHub:#fe48daf] - ElementsInTree 1.4.0 (Piotr Matysiak)
+* [GitHub:#4a66f38] - ElementsInTree buttons update (Piotr Matysiak)
+* [GitHub:#6a3b171] - Shadow (small) inside form inputs (Piotr Matysiak)
+* [GitHub:#7014876] - ElementsInTree "new" button and styles (Piotr Matysiak)
+* [GitHub:#4a9b4de] - Renamed unlockResource() to unlockElement() (Deesen)
+* [GitHub:#f2bf173] - Update dashboard.css (Mr B)
+* [GitHub:#06b63fc] - Update weblogin.processor.inc.php (Mr B)
+* [GitHub:#6196eba] - ElementsInTree 1.3.3 (Piotr Matysiak)
+* [GitHub:#fa3d734] - Changed sprintf() to $modx->parseText() for better JS-compatibility of language-strings (enables use of string.replace("[+ph+]", phs) ) (Deesen)
+* [GitHub:#1ce79f0] - Update Tree-Frame (lock-display) on cancel (Deesen)
+* [GitHub:#3334957] - Added getLockedElements() for building Array/JSON-string (Deesen)
+* [GitHub:#1d42af7] - Added improved Snippet-calls - https://github.com/modxcms/evolution/commit/f1035753a40148d981efa66a3682c055ee3dc666 (Deesen)
+* [GitHub:#a2ae0c8] - Changed sprintf() to $modx->parseText() for better JS-compatibility (Deesen)
+* [GitHub:#fbded96] - Remove lock on save+leaving element/resource (Deesen)
+* [GitHub:#35f6cc1] - Changed CSS-class to avoid conflict with Boostrap (Deesen)
+* [GitHub:#3bfe7f0] - Remove interval first to avoid server-requests when user does not confirm immediately, changed CSS-class to avoid conflict with Boostrap (Deesen)
+* [GitHub:#589dd65] - Block bots from accessing login screen (yamamoto)
+* [GitHub:#75d8d65] - New - $odx->sweepGarbageStrings() (yamamoto)
+* [GitHub:#fb70898] - Fix - modxMailer (yamamoto)
+* [GitHub:#f103575] - Refactor - $modx->_split_snip_call() (yamamoto)
+* [GitHub:#e93d2af] - Refactor - Rename function (yamamoto)
+* [GitHub:#68bbd29] - Wayfinder - Include default-config only when file exists (yamamoto)
+* [GitHub:#114c032] - Change - function name (yamamoto)
+* [GitHub:#f50cf8b] - Improved - "false" value in snipet call (yamamoto)
+* [GitHub:#03fcb45] - Refactor - modifiers.class.inc.php (yamamoto)
+* [GitHub:#42b7029] - New - autoload.php (yamamoto)
+* [GitHub:#c2b7e5b] - eForm - Update version number  v1.4.8 (yamamoto)
+* [GitHub:#bffb840] - Security fix for eForm (yamamoto)
+* [GitHub:#a1ee8b9] - security fix for ajaxSearch (Dmi3yy)
+* [GitHub:#ef8184a] - Refactor $tstart to $_SERVER['REQUEST_TIME_FLOAT'] (yamamoto)
+* [GitHub:#33417f9] - Refactor "install now?" (yamamoto)
+* [GitHub:#a9e05df] - New - $modx->sweepRemainPlaceholders() (yamamoto)
+* [GitHub:#dc9ca0d] - Refactor (Make speedup a little) (yamamoto)
+* [GitHub:#bc93feb] - Add new modifiers (yamamoto)
+* [GitHub:#b0253c5] - Refactor - modifiers.class.inc.php (yamamoto)
+* [GitHub:#2291b1f] - Improved - system settings (yamamoto)
+* [GitHub:#3f8afed] - #915 Add [(lang_code)] (yamamoto)
+* [GitHub:#a6035e6] - Fix - modifier (yamamoto)
+* [GitHub:#f23667e] - #915 Fix (yamamoto)
+* [GitHub:#e9f2127] - indent (Piotr Matysiak)
+* [GitHub:#0fda407] - Fix MM tv tab table width (Piotr Matysiak)
+* [GitHub:#2c1a695] - Fix MM tv tab table width (Piotr Matysiak)
+* [GitHub:#b122d42] - Fix bug tracking flags (yamamoto)
+* [GitHub:#79f0f68] - Revert tabs rounded borders style (Piotr Matysiak)
+* [GitHub:#3a41264] - Add modifier - :eachTpl (yamamoto)
+* [GitHub:#341333d] - Add modifiers - :isEmpty, :isNotEmpty (yamamoto)
+* [GitHub:#fdcbee0] - Refactor - modifiers.class.inc.php (yamamoto)
+* [GitHub:#0594d65] - Refactor - MODX_startup_Bootstrap.tpl (yamamoto)
+* [GitHub:#040f5eb] - Support utf8mb4 for AjaxSearch (yamamoto)
+* [GitHub:#fa07230] - Minor fix MODxRE2/style.css (yamamoto)
+* [GitHub:#06bf25d] - Refactor $modx->htmlspecialchars() (yamamoto)
+* [GitHub:#e9a9fb4] - Fix wordwrap modifier for php7 (yamamoto)
+* [GitHub:#a485f56] - Add automatic primary key (yamamoto)
+* [GitHub:#4133f15] - Refactor (yamamoto)
+* [GitHub:#31c6c97] - Refactor - $modx->mergeConditionalTagsContent() (yamamoto)
+* [GitHub:#2d41ebc] - #912 Move "customParams" to end of object to allow overwriting previous params (Deesen)
+* [GitHub:#bba0bd1] - #910 Fix missing translations in settings (Deesen)
+* [GitHub:#13273d1] - #908 Remove "keepMeLockedInterval" when creating new resource/element .. (Deesen)
+* [GitHub:#d307b0b] - #906 Fix search when MODX is installed in sub-directory (Deesen)
+* [GitHub:#e76e536] - Workaround for deprecated preg_replace() with /e modifier (yamamoto)
+* [GitHub:#0733c97] - Refactor - protect.inc.php (yamamoto)
+* [GitHub:#159a961] - New - $modx->splitKeyAndFilter() (yamamoto)
+* [GitHub:#a1eb88c] - New - $modx->applyFilter() (yamamoto)
+* [GitHub:#3efc104] - New - $modx->applyFilter() (yamamoto)
+* [GitHub:#3d45b3b] - Refactor - modifiers.class.inc.php (yamamoto)
+* [GitHub:#140feb0] - New - $modx->removeSanitizeSeed() (yamamoto)
+* [GitHub:#cfc4dea] - New - $modx->removeSanitizeSeed() (yamamoto)
+* [GitHub:#408fc4c] - Minor fix (yamamoto)
+* [GitHub:#11b9617] - Minor fix - Comments and white spaces (yamamoto)
+* [GitHub:#374cbf5] - Removed unnessecary styleFormats #886 (Deesen)
+* [GitHub:#75c3d82] - Added translations for "lock_elements" #862 (Deesen)
+* [GitHub:#9ff00f0] - Added displaying user-locks, added event-object to treeAction() #862 (Deesen)
+* [GitHub:#953327b] - Added displaying user-locks, added unlockResource() for unlock-button #862 (Deesen)
+* [GitHub:#23ac6be] - Added unlockResource() for unlock-button, enable Shift-Mouseclick to open resource in pop-up #862 (Deesen)
+* [GitHub:#1226220] - Added "firsthit" for exact display of editing times #862 (Deesen)
+* [GitHub:#e6bb4b7] - Added "lost lock"-alert and additional warning-div #862 (Deesen)
+* [GitHub:#870677b] - Prepared styles for new "lost lock"-alert #862 (Deesen)
+* [GitHub:#34fbe95] - Added field "firsthit" to table "active_user_locks" #862 (Deesen)
+* [GitHub:#51de60e] - Removed spaces (Deesen)
+* [GitHub:#9a2721d] - Enable unlocking single elements/resources #862 (Deesen)
+* [GitHub:#534f395] - Only refresh lock-state when already locked, otherwise return false to trigger "not locked"-alert in edit-window #862 (Deesen)
+* [GitHub:#ae4f628] - Prepared lockElements-functions to work with resources.static & single unlock-feature #862 (Deesen)
+* [GitHub:#272d752] - Replaced old lock-mechanism with "active_user_locks" #862 (Deesen)
+* [GitHub:#23e0498] - Immediately unlock resource after hitting "save+leave"- or "cancel"-button #862 (Deesen)
+* [GitHub:#cf2f727] - Added functions for new locked elements/resources feature #862 (Deesen)
+* [GitHub:#468ac7d] - New handler for receiving periodically lock-requests #862 (Deesen)
+* [GitHub:#b2139c0] - Javascript to include into actions for sending periodically lock-requests #862 (Deesen)
+* [GitHub:#dd28e38] - Added new setting "lock_interval", "lock_release_delay" #862 (Deesen)
+* [GitHub:#2e2da80] - Added new role "display_locks" #862 (Deesen)
+* [GitHub:#42e3bfe] - Added table "active_user_locks", added role "display_locks" #862 (Deesen)
+* [GitHub:#7dbe207] - Link the Collations list and choosen language (yamamoto)
+* [GitHub:#9cac209] - #897 Fix (yamamoto)
+* [GitHub:#5733cca] - Parameter styleFormat: Simple-format now uses inline:'span' instead of selectors #886 (Deesen)
+* [GitHub:#3f1804d] - Fix JS-Error "tp is not defined" (Deesen)
+* [GitHub:#7c187d5] - Added button "formatselect" as per Tiny3-themes #886 (Deesen)
+* [GitHub:#cf2dd92] - Default theme for inline-editing / [*#tv*] (Deesen)
+* [GitHub:#a65edaf] - #897 FIx - choose collations issue at new install (yamamoto)
+* [GitHub:#f977cdc] - Always autofocus first input-field (Deesen)
+* [GitHub:#2f5b7e0] - Revert "actions in Manager Elements" (Nicola Lambathakis)
+* [GitHub:#36c35e8] - ElementsInTree defaults (Piotr Matysiak)
+* [GitHub:#106b23f] - Some minor CSS change (Piotr Matysiak)
+* [GitHub:#31fb525] - Fix #890 (Deesen)
+* [GitHub:#1c786b8] - actions in Manager Elements (Nicola Lambathakis)
+* [GitHub:#3b34010] - updated styles for modules and plugins config table (Nicola Lambathakis)
+* [GitHub:#43965f9] - restyled plugins config table and setdefault buttons (Nicola Lambathakis)
+* [GitHub:#d0b5f0c] - restyled modules config table and setdefault buttons (Nicola Lambathakis)
+* [GitHub:#f175bd1] - Allow setting TinyMCE4 "Custom Style Formats" fully manually #886 (Deesen)
+* [GitHub:#c3f8f96] - Fix input/textarea-width so "Set default" will not overlap #867 (Deesen)
+* [GitHub:#1bcb503] - Update qm.inc.php (Mr B)
+* [GitHub:#14856f8] - Removed unnessecary row #867 (Deesen)
+* [GitHub:#b51fb62] - ElementsInTree plugin update (Piotr Matysiak)
+* [GitHub:#becc662] - Cleaned-up & adapted tabs / forms to each other (module, plugin, snippet) #867 (Deesen)
+* [GitHub:#b5f60f2] - ElementsinTree Plugin - Prevent Users from submitting filter elements form (Nicola Lambathakis)
+* [GitHub:#7d0103e] - https://github.com/modxcms/evolution/issues/880 (Nicola Lambathakis)
+* [GitHub:#3dcf4aa] - Elements icons in Combined View (Nicola Lambathakis)
+* [GitHub:#eade463] - Cleaned-up & adapted tabs / forms to each other (module, plugin, snippet) #867 (Deesen)
+* [GitHub:#7f8ed3b] - Styles for properties #867 (Deesen)
+* [GitHub:#83376db] - Remove limited height for properties-inputs #867 (Deesen)
+* [GitHub:#036834a] - "About MODX" now completely translatable #870 (Deesen)
+* [GitHub:#1d9a75b] - removed ">" typo (Nicola Lambathakis)
+* [GitHub:#a092b95] - moved user access to access permission tab (Nicola Lambathakis)
+* [GitHub:#2bfcf79] - set default button (Nicola Lambathakis)
+* [GitHub:#1e8c435] - rearranged modules tabs (Nicola Lambathakis)
+* [GitHub:#b24ad6d] - rearranged plugins tabs (Nicola Lambathakis)
+* [GitHub:#89953ee] - ElementsInTree 1.3.0 (Piotr Matysiak)
+* [GitHub:#c26d051] - Added infos for 1.2 (Deesen)
+* [GitHub:#7cc3eb0] - Strings for "About MODX" (Deesen)
+* [GitHub:#70bcea1] - Added createList($sectionHeader, $linkArr), added "Help translating" (Deesen)
+* [GitHub:#da5fe7d] - Font Awesome 4.7 (Nicola Lambathakis)
+* [GitHub:#3e09003] - Font Awesome 4.7 (Nicola Lambathakis)
+* [GitHub:#378d852] - Font Awesome 4.7 (Nicola Lambathakis)
+* [GitHub:#0e600aa] - Fixed missing login checkbox (Piotr Matysiak)
+* [GitHub:#a293fba] - Update htaccess directive for apache 2.2 & 2.4 (esszett)
+* [GitHub:#76ee29b] - revert #698 fix this but broken else (Dmi3yy)
+* [GitHub:#38559bb] - Added download-links and modified credits (Deesen)
+* [GitHub:#220c972] - Corrected link (Deesen)
+* [GitHub:#2089153] - Added reference-links #866 (Deesen)
+* [GitHub:#a0a9199] - return back icons for backward compatibility (EvoBabel, SimpleGallery and etc  use icons from themes) (Dmi3yy)
+* [GitHub:#4bbc556] - fix shared properties for module and plugins (Dmi3yy)
+* [GitHub:#20bacd6] - fix button in iOS (Dmi3yy)
+* [GitHub:#ca81002] - generate thumbs all time (Dmi3yy)
+* [GitHub:#774723f] - update date version (Dmi3yy)
+* [GitHub:#dd47958] - fix html (Dmi3yy)
+* [GitHub:#3c1e4c9] - Completely remove empty params from properties-list for backward-compatibility #865 https://github.com/modxcms/evolution/issues/867#issuecomment-256707512 (Deesen)
+* [GitHub:#569ff06] - ElementsInTree small fix (Piotr Matysiak)
+* [GitHub:#63eb74f] - (webkit) login form bug (Piotr Matysiak)
+* [GitHub:#934c9e9] - Prepared optional "http to https"-redirect (Deesen)
+* [GitHub:#879f6f9] - ElementsInTree - smooth cutting (Piotr Matysiak)
+* [GitHub:#7d52a55] - and lost icon (Dmi3yy)
+* [GitHub:#7c669d9] - ElementsInTree update (Piotr Matysiak)
+* [GitHub:#106b487] - Elements lists css bugfix (Piotr Matysiak)
+* [GitHub:#f0e4514] - Small margin change (Piotr Matysiak)
+* [GitHub:#d9cfbff] - Updated version-notices (Deesen)
+* [GitHub:#bf805d3] - ElementsInTree 1.2.0 (Piotr Matysiak)
+* [GitHub:#03df609] - Restyled modules context menu (Piotr Matysiak)
+* [GitHub:#f444005] - Removed gap from top nav (Piotr Matysiak)
+* [GitHub:#24d967b] - Improved responsiveness of top frame (Piotr Matysiak)
+* [GitHub:#6432a59] - Bigger popup window (Piotr Matysiak)
+* [GitHub:#4f175b0] - Better tinymce font (Piotr Matysiak)
+* [GitHub:#25c9f66] - fix action buttons id (Nicola Lambathakis)
+* [GitHub:#9cd3d05] - fix action buttons id (Nicola Lambathakis)
+* [GitHub:#95c4bf8] - fix action buttons id (Nicola Lambathakis)
+* [GitHub:#f1cbb60] - Extras - pagetitle icon + minor restyle for MODxRE2 (Nicola Lambathakis)
+* [GitHub:#8b5289c] - Revert "Extras - minor restyle for MODxRE2" (Nicola Lambathakis)
+* [GitHub:#a50919f] - Extras - minor restyle for MODxRE2 (Nicola Lambathakis)
+* [GitHub:#50b730b] - docmanager pagetitle icon and icons in tabs (Nicola Lambathakis)
+* [GitHub:#061d49d] - dashboard: fix collapse button padding (Nicola Lambathakis)
+* [GitHub:#edf68a8] - fix font for code mirror better for eyes (Dmi3yy)
+* [GitHub:#042041f] - ElementsInTree 1.1.5 (Piotr Matysiak)
+* [GitHub:#054864e] - Restyled install (Piotr Matysiak)
+* [GitHub:#bc0dea1] - Fix wrong margin after resize (Deesen)
+* [GitHub:#259b2bd] - better html format (Nicola Lambathakis)
+* [GitHub:#878dd58] - font awesome list icons in manage elements list (Nicola Lambathakis)
+* [GitHub:#df1e6e0] - new list image (Nicola Lambathakis)
+* [GitHub:#3f32f3b] - Improved quicksearch: hide/display categories (Deesen)
+* [GitHub:#a23200a] - Small change 2 (Piotr Matysiak)
+* [GitHub:#680b4d0] - Small change (Piotr Matysiak)
+* [GitHub:#e68cb69] - ElementsInTree 1.1.4 (Piotr Matysiak)
+* [GitHub:#42bfafa] - fix https://github.com/modxcms/evolution/issues/781#issuecomment-254590373 (Nicola Lambathakis)
+* [GitHub:#81a2daa] - Re-compiled without Glyphicons https://github.com/modxcms/evolution/issues/781#issuecomment-254590373 (Deesen)
+* [GitHub:#b3c8c2a] - Added documentIdentifier for parseDocumentSource() #840 (Deesen)
+* [GitHub:#d5cd5d1] - Fix issue with spaces #841 (Deesen)
+* [GitHub:#a6ce450] - fix resource overview alias and introtext (Nicola Lambathakis)
+* [GitHub:#0ced6a5] - hide help info for plugins (Dmi3yy)
+* [GitHub:#142889c] - hide help info for snippets (Dmi3yy)
+* [GitHub:#75828f0] - hide help info for chunks (Dmi3yy)
+* [GitHub:#3bee5c5] - hide tv help info (Dmi3yy)
+* [GitHub:#24f4f4b] - hide  template help (Dmi3yy)
+* [GitHub:#11d2aa3] - ElementsInTree 1.1.3 (Piotr Matysiak)
+* [GitHub:#5de0060] - Cleaned-up "Sort the site tree"-floater, button to bottom (Deesen)
+* [GitHub:#7bebd10] - ElementsInTree bugfix (Piotr Matysiak)
+* [GitHub:#ce3c389] - Removed scrollbar in recent widget in webkit (Piotr Matysiak)
+* [GitHub:#7f72639] - ElementsInTree plugin updated to 1.1.2 (Piotr Matysiak)
+* [GitHub:#c5bae7d] - jot comments admin bootstrap icons (Nicola)
+* [GitHub:#056f2fb] - Revert "bootstrap jot admin icons" (Nicola)
+* [GitHub:#d0ec817] - bootstrap jot admin icons (Nicola)
+* [GitHub:#12e1c7a] - ElementsInTree plugin small fix (Piotr Matysiak)
+* [GitHub:#fc89c0b] - ElementsInTree plugin v1.1.1 (Piotr Matysiak)
+* [GitHub:#24f1a8c] - Remove - ListIndexer in preset (yamamoto)
+* [GitHub:#56c4459] - Optimized images (yamamoto)
+* [GitHub:#b1720c8] - Optimized images (yamamoto)
+* [GitHub:#f57be46] - Optimize images (yamamoto)
+* [GitHub:#0a33f6b] - Fix - Japanese font (yamamoto)
+* [GitHub:#6f803bb] - Refactor (yamamoto)
+* [GitHub:#3161341] - Remove IE6 style (yamamoto)
+* [GitHub:#1214f0a] - Improved - Font style (yamamoto)
+* [GitHub:#818b622] - Minor fix - tree pane (yamamoto)
+* [GitHub:#7ad6e4b] - Add minimum HTML mark-up - https://github.com/modxcms/evolution/issues/780#issuecomment-254034389 (Deesen)
+* [GitHub:#f1e3707] - Fix 'Table jot_content doesn't exist' for new installations - https://github.com/modxcms/evolution/issues/780#issuecomment-254034389 (Deesen)
+* [GitHub:#2a4bece] - Improved - Manager tree context menu (yamamoto)
+* [GitHub:#f1bc97f] - Refactor - manager tree node (yamamoto)
+* [GitHub:#6de9d16] - Remove undefined function (yamamoto)
+* [GitHub:#d569f0b] - Minor fix (yamamoto)
+* [GitHub:#c329be7] - Refactor - manager tree node (yamamoto)
+* [GitHub:#f6686a2] - Deleted not needed Bootstrap JS files (Piotr Matysiak)
+* [GitHub:#c1202ef] - Deleted themes (Piotr Matysiak)
+* [GitHub:#e0f1da6] - Deleted uncompressed FA (Piotr Matysiak)
+* [GitHub:#0c54b01] - Deleted Bootstrap icons (Piotr Matysiak)
+* [GitHub:#e35758e] - More condensed accordion (Piotr Matysiak)
+* [GitHub:#4ddb768] - Removed scrollbar of recent resources widget (Piotr Matysiak)
+* [GitHub:#4c100b1] - Up version to 1.2-RC1 (Piotr Matysiak)
+* [GitHub:#843ea80] - fix now extras work  on https (Dmi3yy)
+* [GitHub:#e53411a] - up version (Dmi3yy)
+* [GitHub:#43b6125] - Fix - Shared paramater issue (yamamoto)
+* [GitHub:#6a30e0c] - Refactor - $cache_sync->escapeSingleQuotes() (yamamoto)
+* [GitHub:#01562bb] - Refactor - $cache_sync->escapeSingleQuotes() (yamamoto)
+* [GitHub:#61884d5] - Refactor - $modx->parseProperties() (yamamoto)
+* [GitHub:#f22e28c] - Minor fix - $modx->parseProperties() (yamamoto)
+* [GitHub:#9a9c32b] - Refactor - $modx->parseProperties() (yamamoto)
+* [GitHub:#1613d1f] - Revert "fast fix shared params. but think need  fix normal." (yamamoto)
+* [GitHub:#a18dd34] - Added "reset database" before inserting demo-content #824 (Deesen)
+* [GitHub:#6a06bec] - Remove version info in description #824 (Deesen)
+* [GitHub:#34ab007] - Always add english-language as fallback for missing keys #824 (Deesen)
+* [GitHub:#735d6ce] - Fixed @template_assignments #824 (Deesen)
+* [GitHub:#c0f0eff] - Fixed installation of none-existing chunks #824 (Deesen)
+* [GitHub:#9c3f072] - Added installset sample #824 (Deesen)
+* [GitHub:#54aed99] - Fix - Replace new template when update (yamamoto)
+* [GitHub:#affc08d] - Sort tree form fix (Piotr Matysiak)
+* [GitHub:#6ee7b7a] - Removed big icons from rss feeds (Piotr Matysiak)
+* [GitHub:#d0be9df] - Fixed width in recent documents widget table date (Piotr Matysiak)
+* [GitHub:#970f7c8] - Search width (Piotr Matysiak)
+* [GitHub:#496b929] - Top nav search form style improvements (Piotr Matysiak)
+* [GitHub:#2721953] - Module Dependency icon fix (Nicola Lambathakis)
+* [GitHub:#1c553d9] - Module Dependency layout and style fix (Nicola Lambathakis)
+* [GitHub:#09d95a2] - updated style for new icon (Nicola Lambathakis)
+* [GitHub:#de10b25] - new MODXRE2 icon style (Nicola Lambathakis)
+* [GitHub:#de25145] - new MODXRE2 icon style (Nicola Lambathakis)
+* [GitHub:#931bee6] - new MODXRE2 icons (Nicola Lambathakis)
+* [GitHub:#c784013] - new MODXRE2 icon style (Nicola Lambathakis)
+* [GitHub:#8db1ed4] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#5d9a64e] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#900c682] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#40867d1] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#ef9c45e] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#2e5688b] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#581a448] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#9f27092] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#4ed71b6] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#c2141eb] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#a5d2e20] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#22b15ad] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#e88af6a] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#d18b8b7] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#3aae04b] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#0d9ca44] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#609049a] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#92e55b9] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#954ae002e] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#8d57406] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#ba8918f] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#268e4d7] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#d8f17e3] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#2762529] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#5f18c1c] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#77d8e6c] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#e355fdf] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#d6214e8] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#fae3df1] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#07a3492] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#47a1c59] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#eb4bcf0] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#06d3bdf] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#533f412] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#c0c1702] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#bb4b675] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#bea290c] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#88343eb] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#b01e41b] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#f3302e9] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#262d021] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#a13701d] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#bd5ff9c] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#931ac36] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#d9d929f] - removed old icons MODxRE2 (Nicola Lambathakis)
+* [GitHub:#0ee7744] - Fixed merging sharedParams in JSON-format #823 (Deesen)
+* [GitHub:#e2f2e69] - Removed tab (Deesen)
+* [GitHub:#c57359e] - Added param @save_sql_id_as for fixing demo-template´s IDs #824 (Deesen)
+* [GitHub:#6461651] - Changed is_readable() to file_exists() .. (Deesen)
+* [GitHub:#1bbb5f7] - fix for mobile   login.tpl in MODxRE2 (Dmi3yy)
+* [GitHub:#fce980e] - fast fix shared params. but think need  fix normal. (Dmi3yy)
+* [GitHub:#2284ef8] - Update README.md (Aleksander Maksymiuk)
+* [GitHub:#80fa279] - ElementsInTree plugin (Piotr Matysiak)
+* [GitHub:#578cb7d] - mainMenu frame shadow (Piotr Matysiak)
+* [GitHub:#37ba5e5] - Improved - Change template setting when upgrade (yamamoto)
+* [GitHub:#ac53129] - Fix - Upgrade script (yamamoto)
+* [GitHub:#7fd555a] - fix style (Dmi3yy)
+* [GitHub:#0d8194f] - fix lang (Dmi3yy)
+* [GitHub:#e28803d] - Refactor  dashboard (Dmi3yy)
+* [GitHub:#e46c64a] - move search form to top menu  MODxRE2 (Dmi3yy)
+* [GitHub:#e547b51] - Allow custom language-overrides not altered after Evo-Updates https://github.com/modxcms/evolution/issues/818#issuecomment-253743223 (Deesen)
+* [GitHub:#06552c0] - on mobile not see shadow and better when different bg color   MODxRE2 (Dmi3yy)
+* [GitHub:#4bc049f] - fix MODxRE2 for  mobile normal  manager width) (Dmi3yy)
+* [GitHub:#9fd9de0] - fix MODxRE2 for view on mobile (Dmi3yy)
+* [GitHub:#e357839] - fix http https (Dmi3yy)
+* [GitHub:#b1137ff] - fix loginpage on mobile (Dmi3yy)
+* [GitHub:#bc123af] - fix  hideMenuFrame ico position (Dmi3yy)
+* [GitHub:#eb32818] - fix main menu  item colors (Dmi3yy)
+* [GitHub:#c237eb5] - add some shadow to top menu, like shadow for DocTree ) (Dmi3yy)
+* [GitHub:#05cfee4] - fix now first widget without  scrolling on 1280px width ) (Dmi3yy)
+* [GitHub:#0d74715] - fix top resize  move to right (Dmi3yy)
+* [GitHub:#83fc13b] - fix button margin in MODxRE2 (Dmi3yy)
+* [GitHub:#cfac06f] - fix margin in home button in MODxRE2 (Dmi3yy)
+* [GitHub:#3e35947] - home buttons on MODxRE2  2x   better when in one row ) (Dmi3yy)
+* [GitHub:#c4b4b6a] - fix  css.map 404 error (Dmi3yy)
+* [GitHub:#5439592] - by default MODxRE2 (Dmi3yy)
+* [GitHub:#2f54362] - Refactor - moo-datepicker (yamamoto)
+* [GitHub:#dc24d76] - restored link to message system (Nicola Lambathakis)
+* [GitHub:#a1ebd44] - web users access pagetitle icon (Nicola Lambathakis)
+* [GitHub:#beda74f] - search pagetitle icon (Nicola Lambathakis)
+* [GitHub:#2f9bd43] - roles pagetitle icon (Nicola Lambathakis)
+* [GitHub:#d8c00dc] - create/edit webuser pagetitle icon (Nicola Lambathakis)
+* [GitHub:#a9354a6] - create/edit user pagetitle icon (Nicola Lambathakis)
+* [GitHub:#d29fe95] - settings pagetitle icon (Nicola Lambathakis)
+* [GitHub:#6793d7b] - edit/create module pagetitle icon (Nicola Lambathakis)
+* [GitHub:#c778f5e] - sort documents pagetitle icon (Nicola Lambathakis)
+* [GitHub:#8d0289a] - edit/create document pagetitle icon (Nicola Lambathakis)
+* [GitHub:#7d7c48e] - move document pagetitle icon (Nicola Lambathakis)
+* [GitHub:#712d23f] - removed duplicated fa class in pagetitle icon (Nicola Lambathakis)
+* [GitHub:#26c021d] - message pagetitle icon (Nicola Lambathakis)
+* [GitHub:#11d3274] - help pagetitle icon (Nicola Lambathakis)
+* [GitHub:#6b698a3] - document overview pagetitle icon (Nicola Lambathakis)
+* [GitHub:#614af77] - manager access pagetitle icon (Nicola Lambathakis)
+* [GitHub:#30de164] - Unified action headers (Piotr Matysiak)
+* [GitHub:#234e30d] - User management action buttons (Piotr Matysiak)
+* [GitHub:#c81058b] - Elements search with action buttons style update (Piotr Matysiak)
+* [GitHub:#4026d89] - little fix to pagetitle icon (Nicola Lambathakis)
+* [GitHub:#352c968] - wev users  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#24c6b76] - users  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#9954efa] - sys info pagetitle icon (Nicola Lambathakis)
+* [GitHub:#3a162c2] - schedule pagetitle icon (Nicola Lambathakis)
+* [GitHub:#50b042d] - modules  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#84af850] - events log pagetitle icon (Nicola Lambathakis)
+* [GitHub:#337cebf] - import html pagetitle icon (Nicola Lambathakis)
+* [GitHub:#8dddaed] - files  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#843a6fc] - export html  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#f51b52b] - manager log  pagetitle icon (Nicola Lambathakis)
+* [GitHub:#60d67ff] - backup pagetitle icon (Nicola Lambathakis)
+* [GitHub:#9e57cc7] - Moved search input to actionButtons (Piotr Matysiak)
+* [GitHub:#845408a] - Manage Elements styles (Piotr Matysiak)
+* [GitHub:#dae1e35] - Icons and elements description (Piotr Matysiak)
+* [GitHub:#f6e319b] - fixed color icons in D3X (Dmi3yy)
+* [GitHub:#64b4d24] - fixed missed icons in D3X (Dmi3yy)
+* [GitHub:#6ce10bb] - add summary Based on Doclister (Dmi3yy)
+* [GitHub:#919c85d] - add DLUsers (Dmi3yy)
+* [GitHub:#a71113f] - update DocLister (Dmi3yy)
+* [GitHub:#66e36be] - update class summary (Dmi3yy)
+* [GitHub:#7d1d77e] - update ApiHelpers.class (Dmi3yy)
+* [GitHub:#7bd8a74] - update lis/simpleTab (Dmi3yy)
+* [GitHub:#e29fd2d] - update MODxAPI (Dmi3yy)
+* [GitHub:#93d378c] - update lib/modules (Dmi3yy)
+* [GitHub:#c54324d] - update helpers (Dmi3yy)
+* [GitHub:#9dbe2cc] - Update /lib/formater (Dmi3yy)
+* [GitHub:#c7bcc9b] - fix width in D3X (Dmi3yy)
+* [GitHub:#a798073] - Icons is Manage Elements Tabs (Piotr Matysiak)
+* [GitHub:#d68d9d1] - Live search in Elements lists (Piotr Matysiak)
+* [GitHub:#2f38e91] - Add - maketable.extenders.inc.php (yamamoto)
+* [GitHub:#c14e378] - Update jQuery v3.1.1 (yamamoto)
+* [GitHub:#5aeaa9d] - Installer - Refactor (yamamoto)
+* [GitHub:#e349aa8] - Installer - Refactor (yamamoto)
+* [GitHub:#4583ee9] - Installer - Refactor (yamamoto)
+* [GitHub:#3bd5595] - Update jQuery v1.8.3 to v3.1.1 (yamamoto)
+* [GitHub:#74fc53e] - Installer - Refactor (yamamoto)
+* [GitHub:#47c0cd3] - Installer - Refactor (yamamoto)
+* [GitHub:#beb5f9f] - Installer - Refactor (yamamoto)
+* [GitHub:#331a8d9] - Minor fix - $modx->db->dataSeek() (yamamoto)
+* [GitHub:#7051810] - Installer - Refactor (yamamoto)
+* [GitHub:#ccb1c54] - Installer - Refactor style (yamamoto)
+* [GitHub:#1064b23] - Installer - Rfactor style for Japanese font (yamamoto)
+* [GitHub:#906cf5b] - notInMenuNode normal font weight (Piotr Matysiak)
+* [GitHub:#cb3197e] - Remove bold from tree published node (Piotr Matysiak)
+* [GitHub:#46e0090] - Improved sort_tree-button appearance (Deesen)
+* [GitHub:#c5a12fd] - sub-actionButtons: Removed float:right (Deesen)
+* [GitHub:#86be2dc] - actionButton instead of text-link (Deesen)
+* [GitHub:#b717016] - Tree colors and disabled elements styles (Piotr Matysiak)
+* [GitHub:#11da047] - removed ul.sortableList padding-left (Deesen)
+* [GitHub:#d6381a6] - actionButton instead of text-link, removed ul.sortableList padding-left (Deesen)
+* [GitHub:#fcaf6d2] - Installer - Refactor (yamamoto)
+* [GitHub:#30ba7dd] - Installer - Refactor (yamamoto)
+* [GitHub:#1856fb1] - actionButton instead of text-link (Deesen)
+* [GitHub:#9efb1f2] - actionButton instead of text-link for resetSysfilesChecksum (Deesen)
+* [GitHub:#b11acf7] - Installer - Refactor (yamamoto)
+* [GitHub:#d9bd4b0] - Installer - Remove connection.js (yamamoto)
+* [GitHub:#c330274] - Installer - refactor (yamamoto)
+* [GitHub:#a6c3937] - jQuery into installer (yamamoto)
+* [GitHub:#5e60048] - Tree published node new color (Piotr Matysiak)
+* [GitHub:#18772ca] - Missing resource secure icon (Piotr Matysiak)
+* [GitHub:#4da63a5] - Small fix cancel-button (Deesen)
+* [GitHub:#e71e87c] - Datepicker Fix (Piotr Matysiak)
+* [GitHub:#e2496ea] - Set MODxRE2 as default theme (Piotr Matysiak)
+* [GitHub:#993afba] - file deleted icon (Nicola Lambathakis)
+* [GitHub:#62c488c] - file deleted icons (Nicola Lambathakis)
+* [GitHub:#ad9c113] - solid folders (Nicola Lambathakis)
+* [GitHub:#b6a329d] - Tooltips icons margin (Piotr Matysiak)
+* [GitHub:#9ce84bf] - Removed all hardcoded icons (Nicola Lambathakis)
+* [GitHub:#f09b5ab] - New icons for Manage Files (Nicola Lambathakis)
+* [GitHub:#4acc8dd] - New icons for Manage Files (Nicola Lambathakis)
+* [GitHub:#ac431f1] - New icons for Manage Files (Nicola Lambathakis)
+* [GitHub:#56a79f0] - New icons for Manage Files (Nicola Lambathakis)
+* [GitHub:#93caca6] - updated tree secured icons lock (Nicola Lambathakis)
+* [GitHub:#ed89b8a] - updated tree secured icons lock (Nicola Lambathakis)
+* [GitHub:#a4ede3c] - updated tree secured icons lock (Nicola Lambathakis)
+* [GitHub:#7b4d7a9] - updated tree secured icons lock (Nicola Lambathakis)
+* [GitHub:#da51692] - added run module icon (Nicola Lambathakis)
+* [GitHub:#28abee7] - deleted old publish and info icon (Nicola Lambathakis)
+* [GitHub:#991c677] - updated styles for move, info, publish, calendar icons (Nicola Lambathakis)
+* [GitHub:#933fbe5] - new info icon (Nicola Lambathakis)
+* [GitHub:#44bbe37] - new move icon (Nicola Lambathakis)
+* [GitHub:#bce2443] - deleted old calendars icon (Nicola Lambathakis)
+* [GitHub:#bcda1fb] - new calendars icon (Nicola Lambathakis)
+* [GitHub:#f98711b] - New publish icon (Nicola Lambathakis)
+* [GitHub:#8e38413] - Updated to 4.3.7.2 (Deesen)
+* [GitHub:#7048a78] - modules static context menu icons (Nicola Lambathakis)
+* [GitHub:#22e8fbf] - replaced $_style['icons_save'] with new $_style['icons_run'] (Nicola Lambathakis)
+* [GitHub:#72fd10a] - Fixed file-browser on none-root installations #787 - added "which_browser" - fixed JS-error with MultiTV - inline-editing like QM with [*#tv*] (Deesen)
+* [GitHub:#429fea7] - updated question sign icon (Nicola Lambathakis)
+* [GitHub:#782163a] - updated module icon (Nicola Lambathakis)
+* [GitHub:#11108f6] - updated manage files icons (Nicola Lambathakis)
+* [GitHub:#441a540] - new collapse icons (Nicola Lambathakis)
+* [GitHub:#7cc206f] - Improved search-form #789 - activated "search by template-id" - remembers form-values after sending - merged URL/ID into single field (Deesen)
+* [GitHub:#74a7361] - https://github.com/modxcms/evolution/issues/793 (Nicola Lambathakis)
+* [GitHub:#661617c] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#5fc1428] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#2cd3253] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#42801a8] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#d3c8771] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#2e6b81c] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#3d30f67] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#5142e9d] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#7812f18] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#d57778f] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#cb5cd38] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#1665405] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#3efd467] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#eb60d0b] - new MODxFlat icons (Nicola Lambathakis)
+* [GitHub:#442756e] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#5b24b42] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#c19cdff] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#6b22937] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#9b78ad7] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#2331b57] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#dc11094] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#192d3ef] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#aeb3c64] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#0540381] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#a437b31] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#5a55638] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#07850e7] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#bd00ecd] - deleted old icons (Nicola Lambathakis)
+* [GitHub:#4d0871a] - Tree icons from MODxFlat Theme (Nicola Lambathakis)
+* [GitHub:#6e98752] - Tree icons from MODxFlat Theme (Nicola Lambathakis)
+* [GitHub:#7802e6e] - deleted old tree icons (Nicola Lambathakis)
+* [GitHub:#c3c7ce9] - select width (Piotr Matysiak)
+* [GitHub:#8e25c6a] - if we haven't  q and id in get  need go to onPageNotFound. (Dmi3yy)
+* [GitHub:#4aad3c6] - Table .grid styles mostly (Piotr Matysiak)
+* [GitHub:#6f474d4] - Resource children list style (Piotr Matysiak)
+* [GitHub:#143839a] - Add some space between content and "Editor to use" (Piotr Matysiak)
+* [GitHub:#e0aa7c9] - Image TV input width (Piotr Matysiak)
+* [GitHub:#dc8757f] - Fix for fields width (Piotr Matysiak)
+* [GitHub:#9d1428d] - Inputs width (Piotr Matysiak)
+* [GitHub:#93f4fab] - Tree Button small improvements (Piotr Matysiak)
+* [GitHub:#fb95556] - MODxRE2 small fix (Piotr Matysiak)
+* [GitHub:#fa49a33] - MODxRE2 (Piotr Matysiak)
+* [GitHub:#472b5ac] - Fix Tree Button icon size (Piotr Matysiak)
+* [GitHub:#e57c6ce] - fix ht.access (Dmi3yy)
+* [GitHub:#13ccfe2] - fix RichEditor (Dmi3yy)
+* [GitHub:#be4c3e0] - add tinyMCE theme "custom" by Default (Dmi3yy)
+* [GitHub:#760224c] - delete tinyMCE 3 settings (Dmi3yy)
+* [GitHub:#d3b0258] - add tinyMCE4 (Dmi3yy)
+* [GitHub:#ee5d720] - delete tinyMCE3 (Dmi3yy)
+* [GitHub:#b348c21] - OnManagerTopPrerender (Nicola Lambathakis)
+* [GitHub:#8e773e6] - Styling using language attributes (yamamoto)
+* [GitHub:#47e780e] - Refactor - Upgrade script (yamamoto)
+* [GitHub:#f3ffe6e] - Corresponding to UTF8MB4 (yamamoto)
+* [GitHub:#4029e0e] - Fix documentDirty (yamamoto)
+* [GitHub:#75f2827] - fix  scroll on 1440 width (Dmi3yy)
+* [GitHub:#b28d6d2] - fix icons (Dmi3yy)
+* [GitHub:#bf6724a] - fix path moo-datapicker in D3X (Dmi3yy)
+* [GitHub:#1fede26] - fix path moo-datapicker in MODxRE (Dmi3yy)
+* [GitHub:#be932f2] - fix path moo-datapicker in MODxCarbon (Dmi3yy)
+* [GitHub:#2416a7b] - fix  moo-datapicker.tpl (Dmi3yy)
+* [GitHub:#c9d9c09] - move moo-datapicker to common folder (Dmi3yy)
+* [GitHub:#2deed1a] - fix (Dmi3yy)
+* [GitHub:#f02b9c8] - fix D3X (Dmi3yy)
+* [GitHub:#da3104c] - no message (Dmi3yy)
+* [GitHub:#a3b1802] - no message (Dmi3yy)
+* [GitHub:#0f0892e] - fix d#x (Dmi3yy)
+* [GitHub:#9337663] - fix D3X (Dmi3yy)
+* [GitHub:#7955f41] - fix lang (Dmi3yy)
+* [GitHub:#b58d0cd] - fix lang (Dmi3yy)
+* [GitHub:#0449967] - fix langs (Dmi3yy)
+* [GitHub:#5a5f226] - update lang (Dmi3yy)
+* [GitHub:#f483f6f] - fix style D3X (Dmi3yy)
+* [GitHub:#6343037] - fix style in D3X (Dmi3yy)
+* [GitHub:#f864bde] - fix style in D3x (Dmi3yy)
+* [GitHub:#bce2e56] - fix icons in D3X (Dmi3yy)
+* [GitHub:#50c7cbf] - update D3X (Dmi3yy)
+* [GitHub:#d8c0300] - add dashboard files in D3X (Dmi3yy)
+* [GitHub:#8c24c6a] - add moo-datapiker files (Dmi3yy)
+* [GitHub:#4c1ce71] - fix tree width in D3X (Dmi3yy)
+* [GitHub:#7ad7645] - fix lots omg in tree for D3X (Dmi3yy)
+* [GitHub:#e4c65dd] - add file manager Zico in tree for D3X (Dmi3yy)
+* [GitHub:#7212ddb] - fix events icon (Dmi3yy)
+* [GitHub:#969a2ff] - fix logo in D3X theme (Dmi3yy)
+* [GitHub:#d1f6a1b] - add D3X theme (Dmi3yy)
+* [GitHub:#a201088] - Dashboard search for MODxCarbon (Piotr Matysiak)
+* [GitHub:#04e0278] - Update for normal work with angular, ets  plugin like this : (Dmi3yy)
+* [GitHub:#54a573f] - New MODX startup - Bootstrap Template (Nicola Lambathakis)
+* [GitHub:#266a269] - removed modxhost files (Nicola Lambathakis)
+* [GitHub:#65f32db] - Dashboard search styles (Piotr Matysiak)
+* [GitHub:#97bbd0b] - Unique class for user info table (Piotr Matysiak)
+* [GitHub:#f3c8e97] - Missing div in welcome.tpl (Piotr Matysiak)
+* [GitHub:#82ed0c3] - various css fix (Nicola Lambathakis)
+* [GitHub:#b477d63] - added search to dashboard + varuios fix (Nicola Lambathakis)
+* [GitHub:#6364e7c] - replaced tree icon icon in style php (Nicola Lambathakis)
+* [GitHub:#42abf9a] - updated modxre styles for fontawesome (Nicola Lambathakis)
+* [GitHub:#5aad9c9] - updated modxcarbon dashboard (Nicola Lambathakis)
+* [GitHub:#2cdddf0] - moved grister to manager scripts folder (Nicola Lambathakis)
+* [GitHub:#992b558] - removed jquery from dashboard (Nicola Lambathakis)
+* [GitHub:#51beeff] - moved grister js to manager scripts folder (Nicola Lambathakis)
+* [GitHub:#e39a454] - moved grister css to manager scripts folder (Nicola Lambathakis)
+* [GitHub:#0b7312c] - wrong dashboard location (Nicola Lambathakis)
+* [GitHub:#2dfae2f] - wrong dashboard location (Nicola Lambathakis)
+* [GitHub:#6f56c16] - wrong dashboard location (Nicola Lambathakis)
+* [GitHub:#f1ee469] - wrong dashboard location (Nicola Lambathakis)
+* [GitHub:#1563dab] - wrong dashboard location (Nicola Lambathakis)
+* [GitHub:#55a4902] - replaced icons with font awesome (Nicola Lambathakis)
+* [GitHub:#fb19f07] - updated welcome static (Nicola Lambathakis)
+* [GitHub:#4fb0119] - Tree Node margins (Piotr Matysiak)
+* [GitHub:#0bcb68b] - Revert "Fix td vertical align" (MrSwed)
+* [GitHub:#2ee7828] - Replaced escapeshellarg() by customEscapeshellarg() #754 (Deesen)
+* [GitHub:#0d9885d] - Update to v0.5.6 - Fix for "ontouchstart" (Firefox) #729 (Deesen)
+* [GitHub:#eed7ebe] - Update save_web_user.processor.php (Mr B)
+* [GitHub:#fb82a6b] - Update save_user.processor.php (Mr B)
+* [GitHub:#c1c6d2e] - Update eform.inc.php (Mr B)
+* [GitHub:#12be4c6] - RSS Feeds lists (Piotr Matysiak)
+* [GitHub:#d7a3556] - Remove duplicated icons (Piotr Matysiak)
+* [GitHub:#22c7704] - Input transition (Piotr Matysiak)
+* [GitHub:#071dded] - Icon placement (Piotr Matysiak)
+* [GitHub:#db52c1e] - Dashboard styles (Piotr Matysiak)
+* [GitHub:#6158cfa] - Update plus/minus tree icons (Piotr Matysiak)
+* [GitHub:#8ba9453] - delete empty rows (Dmi3yy)
+* [GitHub:#f2bb174] - store.js some fix (Dmi3yy)
+* [GitHub:#e9a1d8e] - some fix in store.js (Dmi3yy)
+* [GitHub:#b5bad67] - update rus lang (Dmi3yy)
+* [GitHub:#ca086d0] - upd russian lang (Dmi3yy)
+* [GitHub:#1958794] - * Increased the maximum length of the template name, TV name and chunk name up to 100. (Andrey Demchenko)
+* [GitHub:#a605fc8] - fixed wrong language string in user column title (th) (Nicola Lambathakis)
+* [GitHub:#5bfcf67] - added missin topmenu collapse icon (Nicola Lambathakis)
+* [GitHub:#ea8c136] - Added new Dashboard to MODxCarbon (Nicola Lambathakis)
+* [GitHub:#82d09af] - logo dashboard (Nicola Lambathakis)
+* [GitHub:#e37f1f4] - New Resource Panel with overview (Nicola Lambathakis)
+* [GitHub:#431b36f] - moved fontawesome styles (Nicola Lambathakis)
+* [GitHub:#446ebd9] - moved fontawesome fonts (Nicola Lambathakis)
+* [GitHub:#21e1782] - removed bootstrap (Nicola Lambathakis)
+* [GitHub:#e7e781b] - Updated fro resource panel (Nicola Lambathakis)
+* [GitHub:#97e1087] - updated dashboard for new resource panel (Nicola Lambathakis)
+* [GitHub:#b201cf0] - added font awesome 4.6 (Nicola Lambathakis)
+* [GitHub:#447c68e] - added bootstrap styles and font (Nicola Lambathakis)
+* [GitHub:#3c27722] - added bootstrap scripts v3.3.7 to the system (Nicola Lambathakis)
+* [GitHub:#5278ee3] - better 0 by default  many erros when update site with PHx (Dmi3yy)
+* [GitHub:#c61ee9d] - russian lang fix (Fr3ddy)
+* [GitHub:#40359ca] - removed description from info and recent resource panels (Nicola Lambathakis)
+* [GitHub:#04c0a4b] - removed typo dashes from info panel (Nicola Lambathakis)
+* [GitHub:#c4b306a] - Added info "jQuery 3.1" (Deesen)
+* [GitHub:#e5164b5] - Linked "systemversion" to version-notices (Deesen)
+* [GitHub:#27436dc] - resetgrid (Fr3ddy)
+* [GitHub:#af5d1cb] - Revert "Revert "#729"" (Fr3ddy)
+* [GitHub:#ef65167] - Revert "#729" (Fr3ddy)
+* [GitHub:#388a88a] - #729 (Fr3ddy)
+* [GitHub:#57576af] - fix path (Fr3ddy)
+* [GitHub:#6f5abab] - #738 (Fr3ddy)
+* [GitHub:#9638887] - new size 16x16 (Fr3ddy)
+* [GitHub:#8ce502b] - #741 Remove .gitignore (yamamoto)
+* [GitHub:#93fe1fe] - logo-dashboard.png (Nicola Lambathakis)
+* [GitHub:#5a08d20] - German https://github.com/modxcms/evolution/pull/739#issuecomment-245488425 (MrSwed)
+* [GitHub:#cc4d3ab] - Nederlands https://github.com/modxcms/evolution/pull/739#issuecomment-245412600 (MrSwed)
+* [GitHub:#0d03990] - fix line-height (Fr3ddy)
+* [GitHub:#8dcb3a7] - More correct tip, some google translate. (MrSwed)
+* [GitHub:#5e8e31e] - added "reset grid" text placeholder (Nicola Lambathakis)
+* [GitHub:#eb3074b] - fix tree icons - plus\minus (Fr3ddy)
+* [GitHub:#55b5ea0] - removed inbox panel (Nicola Lambathakis)
+* [GitHub:#21a85aa] - update css (Nicola Lambathakis)
+* [GitHub:#1588aab] - extended user infos with inbox (Nicola Lambathakis)
+* [GitHub:#52159ac] - Revert "extended userinfo placeholder with inbox infos" (Nicola Lambathakis)
+* [GitHub:#2d7d3d9] - extended userinfo placeholder with inbox infos (Nicola)
+* [GitHub:#2b2363a] - fix jquery path (Nicola)
+* [GitHub:#2931be2] - modxre with dashboard (Nicola)
+* [GitHub:#9fea41b] - Fix for mm_requireFields (ManagerManager) (yamamoto)
+* [GitHub:#0f81255] - DocManager - Remove loading moodx.js (yamamoto)
+* [GitHub:#a5f1359] - Help icon in welcome page (Nicola)
+* [GitHub:#cb21ea9] - Remove "leaving without saving"-alert when pressing save-button (Deesen)
+* [GitHub:#354d82e] - Added templates via @INCLUDE #627 (Deesen)
+* [GitHub:#7d4df78] - Filemanager: Switch Codemirror-mode by file-extension #730 (Deesen)
+* [GitHub:#8171ae4] - tab online (Fr3ddy)
+* [GitHub:#7dbff68] - Remove support old IE (yamamoto)
+* [GitHub:#1cc624c] - Fix - Elements list in manager (yamamoto)
+* [GitHub:#f17de04] - Fix for MySQL5.7 (yamamoto)
+* [GitHub:#3bb7fe5] - Refactor nodes.php (yamamoto)
+* [GitHub:#7f4e0ff] - revert (Fix for MySQL5.7 this is incompatible with sql_mode=only_full_group_by) (Dmi3yy)
+* [GitHub:#0318c84] - Fix - Backup Manager sql error (yamamoto)
+* [GitHub:#7bf767b] - fix url (Dmi3yy)
+* [GitHub:#2c0f03b] - open store.js (Dmi3yy)
+* [GitHub:#8e756a6] - up version to 1.1.1-beta3 (Dmi3yy)
+* [GitHub:#8d1bb2e] - fix Doclister     json format (Dmi3yy)
+* [GitHub:#27dbbb4] - fix in Doclister Abstract - sotring (Dmi3yy)
+* [GitHub:#170f074] - fix in lib Helpers (Dmi3yy)
+* [GitHub:#cd41799] - add Sortable.min.js (Dmi3yy)
+* [GitHub:#1e1b778] - add Jquery 1.9.1  need for DocLister, simpleGallery e.t.c (Dmi3yy)
+* [GitHub:#05846e7] - add jEditable  need for DocLister, simpleGallery e.t.c (Dmi3yy)
+* [GitHub:#5684745] - add handlebars  need for DocLister, simpleGallery e.t.c (Dmi3yy)
+* [GitHub:#8d3f8be] - add FileAPI  need for DocLister, simpleGallery e.t.c (Dmi3yy)
+* [GitHub:#323c36c] - add jeasyui  need for DocLister, simpleGallery e.t.c (Dmi3yy)
+* [GitHub:#3fd0533] - Refactor -nodes.php (yamamoto)
+* [GitHub:#7f6d126] - Wayfinder - Fix for debug info (yamamoto)
+* [GitHub:#148f0a8] - Fix Wayfinder - &startId=parent (yamamoto)
+* [GitHub:#3a84bdf] - Fix for MySQL5.7 (yamamoto)
+* [GitHub:#7bf955c] - Fix for MySQL5.7 (yamamoto)
+* [GitHub:#bc6b1ed] - Fix for PHP7 (yamamoto)
+* [GitHub:#58f73c7] - add noimage (Dmi3yy)
+* [GitHub:#b0c23b9] - #722 Minor fix (file path issue) (yamamoto)
+* [GitHub:#597c629] - fix wrong link (Fr3ddy)
+* [GitHub:#ffebc6b] - Tree icons fix and new (Piotr Matysiak)
+* [GitHub:#4bf5df5] - Fix PHP Deprecated - Class constructor name with PHP7 (yamamoto)
+* [GitHub:#e67b5b0] - DatePicker - Minor fix (yamamoto)
+* [GitHub:#875e76e] - DatePicker - Remove unnecessary files (yamamoto)
+* [GitHub:#432731f] - Remove unnecessary spaces (yamamoto)
+* [GitHub:#a81eb25] - size icons (Fr3ddy)
+* [GitHub:#128b13c] - Wayfinder - [+url+] New placeholder (yamamoto)
+* [GitHub:#1aa47ac] - change icons in tree #694 + add datapicker from MODxCarbon theme (Fr3ddy)
+* [GitHub:#697c876] - Revert "change icons in tree + add datapicker from MODxCarbon theme #722" (Fr3ddy)
+* [GitHub:#5b27bd7] - change icons in tree + add datapicker from MODxCarbon theme #722 (Fr3ddy)
+* [GitHub:#abd43f8] - #722 To bind the DatePicker in manager theme (yamamoto)
+* [GitHub:#d5ea09f] - #720 Fix for multitv (mootools datepicker) (yamamoto)
+* [GitHub:#79dbbd5] - Minor fix - $modx->checkSession() (yamamoto)
+* [GitHub:#fc8f27e] - Fixed ajaxSecHash for multiple fields, added optional contenteditable to parseEditableIds() (Deesen)
+* [GitHub:#e4a8ccf] - Added z-index #720 (Deesen)
+* [GitHub:#44e7c19] - #719 [Wayfinder] Refactor debug information (yamamoto)
+* [GitHub:#e604b55] - [New] Wayfinder - &showPrivate (yamamoto)
+* [GitHub:#152b18c] - Wayfinder - Version update 2.1 (yamamoto)
+* [GitHub:#60a2cbf] - Wayfinder - @FILE:any-config (yamamoto)
+* [GitHub:#c629e43] - [New] Wayfinder - config by chunk (yamamoto)
+* [GitHub:#4cf8cb9] - Wayfinder - Refactor (yamamoto)
+* [GitHub:#d525264] - Wayfinder - Add bootstrap-navbar.config.php (yamamoto)
+* [GitHub:#e21014d] - Wayfinder - Refactor sample files (yamamoto)
+* [GitHub:#edd46b7] - Wayfinder - Remove IE6 samples (yamamoto)
+* [GitHub:#fe90c27] - Wayfinder - Remove old samples (yamamoto)
+* [GitHub:#bec27f4] - Wayfinder - Refactor mollio.config.php (yamamoto)
+* [GitHub:#3bbb988] - Wayfinder - Refactor chunks.txt (yamamoto)
+* [GitHub:#8ede0da] - Wayfinder - Minor fix (yamamoto)
+* [GitHub:#aea7abe] - Wayfinder - Refactor breadcrumb.config.php (yamamoto)
+* [GitHub:#8177569] - Wayfinder - Refactor debug info (yamamoto)
+* [GitHub:#862b8fa] - Wayfinder - Remove code for IE6 in sample.config (yamamoto)
+* [GitHub:#0eea85d] - Wayfinder - Refactor breadcrumb.config.php (yamamoto)
+* [GitHub:#4a0a56a] - Wayfinder - Refactor (yamamoto)
+* [GitHub:#9bb7774] - Wayfinder - Improved debug info (yamamoto)
+* [GitHub:#0757e04] - Refactor - Wayfinder (yamamoto)
+* [GitHub:#e8b8e6d] - Fix - wordwrap modifire (yamamoto)
+* [GitHub:#4e50715] - Detect PHx even when plugin has been renamed #623 (Deesen)
+* [GitHub:#d5c907c] - Fix SQL-Error (pubdate = '' / empty) when Filters are disabled as then ":strtolower" fails for [(datetime_format:strtolower)] (Deesen)
+* [GitHub:#3e9d2ba] - Revert last changes (Deesen)
+* [GitHub:#3a4bb29] - Filters-warning when PHx is enabled #623 (Deesen)
+* [GitHub:#16f7d36] - Avoid SQL-Error when saving resource (Error: pub_date='' / empty) (Deesen)
+* [GitHub:#ced5d28] - Wayfinder - To get the TV using the API (yamamoto)
+* [GitHub:#dc298ce] - [New] Wayfinder - &startId=parent (yamamoto)
+* [GitHub:#b4c9c6c] - Wayfinder - Be able to use the modifier in tpl (yamamoto)
+* [GitHub:#bfa68fe] - Wayfinder - Refactor (yamamoto)
+* [GitHub:#d1a74bc] - Wayfinder - Replace tabs to spaces (yamamoto)
+* [GitHub:#fe6aa9f] - Minor fix (yamamoto)
+* [GitHub:#8f8b015] - Fix - DatePicker for mm_ddMultipleFields http://forum.modx.jp/viewtopic.php?p=9067#p9067 (yamamoto)
+* [GitHub:#0f39241] - #710 Minor fix (yamamoto)
+* [GitHub:#f6a19e3] - Refactor - wayfider.inc.php (yamamoto)
+* [GitHub:#09e1d49] - Update deprecated.functions.inc.php (Lukacs Vertes)
+* [GitHub:#b50e149] - update ditto distinct extender. a long time ago lost updates (MrSwed)
+* [GitHub:#928439e] - an update mm_hideEmpty https://github.com/MrSwed/MODXEvo.plugin.ManagerManager.mm_hideEmpty (MrSwed)
+* [GitHub:#a374a3f] - MySQL 5.7.x small fix (Andriy)
+* [GitHub:#0243e8d] - Enable modxRTEbridge creating config-obj for external tools like MultiTV (Deesen)
+* [GitHub:#d57901e] - Allow using different File Browsers like KCFinder, elFinder #629, #705 (Deesen)
+* [GitHub:#1fdcaf3] - Show File-Browser buttons only when "Enable File Browser" in MODX-config is set to "Yes" #681 (Deesen)
+* [GitHub:#b099cb8] - Grant full permissions for administrators on upgrade (assets_images, assets_files, change_resourcetype) (Deesen)
+* [GitHub:#884cc1e] - Parse Resource-Fields & TVs, changed [+tv+] to [*tv*] #699 (Deesen)
+* [GitHub:#ffdec5a] - Improved layout of "Version Notices" (Deesen)
+* [GitHub:#1430a42] - Improved layout of "Version Notices" (Deesen)
+* [GitHub:#69493da] - Updated version-notices 1.1.1 #625 (Deesen)
+* [GitHub:#80c1af2] - Updated version-notices 1.1.1 #699 (Deesen)
+* [GitHub:#49cc77f] - Added fallback to default-value #699 (Deesen)
+* [GitHub:#ab30bc5] - Allow using TV-values in @bindings (@SELECT name,value FROM xxx WHERE yyy = [+tv_name+]) #699 (Deesen)
+* [GitHub:#ac802af] - Added optional index to makeArray() #699 (Deesen)
+* [GitHub:#2892fb4] - Fix #701 (Deesen)
+* [GitHub:#131c383] - #698 Fix (yamamoto)
+* [GitHub:#efa787b] - Improved parser - IF / ELSEIF / ELSE / ENDIF (yamamoto)
+* [GitHub:#7564d01] - #698 Refactor (yamamoto)
+* [GitHub:#6772768] - #698 Fix $_REQUEST['q'] issue (yamamoto)
+* [GitHub:#b6c2be2] - Updated version-notices 1.1.1 (Deesen)
+* [GitHub:#853b2d8] - Refatctor - Personalize snippet (yamamoto)
+* [GitHub:#e3d8a73] - Update - Personalize v 2.2 (yamamoto)
+* [GitHub:#03e3701] - Refactor - Personalize snippets (yamamoto)
+* [GitHub:#7a92974] - Refactor - Personalize snippet (yamamoto)
+* [GitHub:#acbbd3a] - Allow display/hide of "Manage Image/Files"-button with role "assets_images/files" only (Deesen)
+* [GitHub:#f76204c] - New Tree Buttons Permissions fix (Piotr Matysiak)
+* [GitHub:#ab87fcc] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#fa36608] - Refactor - Set default values in mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#0f1eaec] - Minor fix - $modx->config['use_breadcrumbs'] (yamamoto)
+* [GitHub:#1259010] - Refactor - mutate_content.dynamic.php (yamamoto)
+* [GitHub:#03f5228] - Set the $modx->documentObject in resource edit (yamamoto)
+* [GitHub:#4195feb] - Refactor - $modx->manager->loadFormValues() (yamamoto)
+* [GitHub:#7ed2344] - Does not clear the value of the settings_version at the time of update (yamamoto)
+* [GitHub:#ed6c63c] - there are no $modx->mb_strftime function yet. (MrSwed)
+* [GitHub:#cedde34] - some sintax fix (MrSwed)
+* [GitHub:#072143e] - #623 fix disable filters if phx enabled (MrSwed)
+* [GitHub:#dd50a40] - Added permissions "assets_images, assets_files" to roles "editor, publisher" for new installations #681 (Deesen)
+* [GitHub:#55d7f5b] - Version notices: New manager roles (Deesen)
+* [GitHub:#c7a84bf] - Corrected displaying icons in a row when having limited permissions (Deesen)
+* [GitHub:#d48a2ee] - fix Deprecated after jQuery update 7afa3a2effe327e26bb00fa7d412b7dc7b8765b8 (MrSwed)
+* [GitHub:#8c247bc] - Added hasPermission("assets_images") to show/hide KCFinder-button #681 (Deesen)
+* [GitHub:#723addd] - Added hasPermission("assets_images, assets_files") #681 (Deesen)
+* [GitHub:#96bcfe5] - Applied roles assets_images/assets_files to Manage Images/Files buttons  #681 (Deesen)
+* [GitHub:#0d578c6] - Added new roles "assets_images, assets_files" #681 (Deesen)
+* [GitHub:#6ce8001] - Assure QM-toolbar lies above all elements (Deesen)
+* [GitHub:#d81b6c7] - Update - v1.1.1-beta2 (yamamoto)
+* [GitHub:#35a03bc] - Updates before and after the version display in manager (yamamoto)
+* [GitHub:#a09e7a2] - Remove - Code for IE6 (yamamoto)
+* [GitHub:#3ae737b] - Refactor - DatePicker implementation (yamamoto)
+* [GitHub:#0fb6a4a] - New DatePicker for DocManager and MM (yamamoto)
+* [GitHub:#6772b8e] - Remove - Tigra Calendar (yamamoto)
+* [GitHub:#8b5d0ba] - Fix - DatePicker not work at TV (yamamoto)
+* [GitHub:#23eee22] - Fix DatePicker (yamamoto)
+* [GitHub:#03335fb] - restore accidentally deleted ht.access in c2d4b4a83 (MrSwed)
+* [GitHub:#1f26994] - #623 "Enable filters" link and russian translate (draft) (MrSwed)
+* [GitHub:#2fc7c0a] - Improved - "Do you want to install now?" (yamamoto)
+* [GitHub:#828cf4b] - New - DatePicker (yamamoto)
+* [GitHub:#fdf3230] - New - Replace DatePicker (yamamoto)
+* [GitHub:#d0f3ab5] - Items moved from top nav (Piotr Matysiak)
+* [GitHub:#db7a18b] - Refactor - DatePiker loading script (yamamoto)
+* [GitHub:#2611e1d] - ajax_loader for exportButton (yamamoto)
+* [GitHub:#7afa3a2] - Update - jQuery v3.1.0 (yamamoto)
+* [GitHub:#a948e7e] - To hide the action button before the transition by clicking (yamamoto)
+* [GitHub:#9a7c367] - To hide the action button before the transition by clicking (yamamoto)
+* [GitHub:#3352c39] - Revert - $modx->config['devmode_showhash'] @f25d102 (yamamoto)
+* [GitHub:#3dc19b8] - Refactor (yamamoto)
+* [GitHub:#fddc40a] - Minorfix (yamamoto)
+* [GitHub:#5ddcb31] - #680 Added comment-tag <!--@- This is a comment -@--> (Deesen)
+* [GitHub:#1a59f0a] - Version notices updated, still incomplete (Deesen)
+* [GitHub:#b023925] - Improved layout (Deesen)
+* [GitHub:#2855f51] - #623 Fix - Custom modifier name issue (yamamoto)
+* [GitHub:#5888547] - Improved - [[snipName?p1&p2&p3]] (yamamoto)
+* [GitHub:#18d426f] - #623 Refactor (yamamoto)
+* [GitHub:#192538f] - #677 renamed "remove notice"-button to "rebuild checksums" (Deesen)
+* [GitHub:#a06bc19] - #677 Improved system files checksum mechanismn: - show&log list of modified files - added "remove notice"-button to rebuild checksum quickly - requires permission "settings" (Deesen)
+* [GitHub:#6445991] - Break lines nicely for captions/names longer than 500px & show name if caption is empty (Deesen)
+* [GitHub:#deebbde] - Remove text-underline from .actionButtons a:hover (Deesen)
+* [GitHub:#087a3e9] - Show also TV-caption, not only TV-name (Deesen)
+* [GitHub:#dd05a62] - Show TV-name below TV-caption when having permission "edit_template" (Deesen)
+* [GitHub:#eb21f38] - Minor fix (yamamoto)
+* [GitHub:#90cacd2] - Fix - $modx->_snipParamsToArray() (yamamoto)
+* [GitHub:#ae07452] - Minor fix (yamamoto)
+* [GitHub:#3f9dee3] - Fix for PHP 7 - wordwrap modifier (yamamoto)
+* [GitHub:#9e529d1] - #623 fix - MODIFIERS class into core (PHx) (yamamoto)
+* [GitHub:#a0d033c] - #623 Fix -  MODIFIERS class into core (PHx) (yamamoto)
+* [GitHub:#5129cca] - Refactor top bar supplementalNav (Piotr Matysiak)
+* [GitHub:#e29cefb] - Elements ul list spacing (Piotr Matysiak)
+* [GitHub:#f4efdff] - Fix select width (Piotr Matysiak)
+* [GitHub:#2b5e8dd] - Fix vertical align in role edit page 2 (Piotr Matysiak)
+* [GitHub:#1a43386] - Fix vertical align in role edit page (Piotr Matysiak)
+* [GitHub:#183a39f] - Fix td vertical align (Piotr Matysiak)
+* [GitHub:#80d5bac] - Elements links underline on hover 2 (Piotr Matysiak)
+* [GitHub:#89c4ed5] - Elements links underline on hover (Piotr Matysiak)
+* [GitHub:#13605bf] - check class (MrSwed)
+* [GitHub:#712e84b] - Properties value as is. Fix 0 value. (MrSwed)
+* [GitHub:#6667f28] - Web access permissions style (Piotr Matysiak)
+* [GitHub:#f23e1f4] - Reorder Tree Buttons (Piotr Matysiak)
+* [GitHub:#ddff05c] - Improved Tree floater styles (Piotr Matysiak)
+* [GitHub:#2ac195b] - Style update for Tree Buttons (Piotr Matysiak)
+* [GitHub:#bd69c62] - Refactor Web user table/html (Piotr Matysiak)
+* [GitHub:#55e8d84] - General styles update (Piotr Matysiak)
+* [GitHub:#2e75e27] - Wider Tree iframe (Piotr Matysiak)
+* [GitHub:#fc2a306] - Additional Tree Buttons (Piotr Matysiak)
+* [GitHub:#6cec8a2] - User icon (Piotr Matysiak)
+* [GitHub:#6febae8] - "Manage Elements" Tree Button style (Piotr Matysiak)
+* [GitHub:#8683663] - #669 Added "Manage Elements"-Button (Deesen)
+* [GitHub:#2683e96] - #623 New modifiers (yamamoto)
+* [GitHub:#5e1c9ef] - #623 New modifiers (yamamoto)
+* [GitHub:#1bd1f58] - Refactor (yamamoto)
+* [GitHub:#c57c136] - #668 Minor fix (yamamoto)
+* [GitHub:#4d20991] - modifiers.class - multi-line call (yamamoto)
+* [GitHub:#91afbc1] - Added is_readable() (Deesen)
+* [GitHub:#0c6ae53] - #645 Improved Help-Button - added tab "Documentation" - added tab "Version Notices" (content taken from assets/templates/help/version_notices) - added tab "Changelog" (moved changelog.txt from /install/ to assets/docs/) (Deesen)
+* [GitHub:#7693c30] - #618, #636: Remember last user-settings for tree-sorting via DB-table "user_settings" (Deesen)
+* [GitHub:#9c40e2b] - #659 Remember content after Duplicate Element-Error (Deesen)
+* [GitHub:#ce99e39] - #658 Fix params for Webuser (Deesen)
+* [GitHub:#f3f7957] - #662 Fix: Enable admins to preview unpublished pages (Deesen)
+* [GitHub:#2e25bee] - Minor fix (installer css) (yamamoto)
+* [GitHub:#3eab6da] - Add $modx->config['enable_filter'] (yamamoto)
+* [GitHub:#4a5b6ac] - fix breadcrumbs on the page of manager. [-] TV var inheritance for new sub resource (MrSwed)
+* [GitHub:#74902b0] - update some in doc parcer (Dmi3yy)
+* [GitHub:#225bb2a] - update modxRTEbridge (Dmi3yy)
+* [GitHub:#1e3898c] - fix codemirror (Dmi3yy)
+* [GitHub:#47d035b] - eform parameters array_merge fix (Ricardo Lewis)
+* [GitHub:#784e32f] - Changed "tmplvar_contentvalues" text to mediumtext #648 (yamamoto)
+* [GitHub:#8fb3729] - Corrected readOnly-param for edit-mode (Deesen)
+* [GitHub:#edf77b7] - readOnly-param (Deesen)
+* [GitHub:#cb8865e] - Init Codemirror via OnRichTextEditorInit (readOnly)  - https://github.com/modxcms/evolution/issues/652#issuecomment-222820593 (Deesen)
+* [GitHub:#f0dbdcc] - Added readOnly-option (for file-manager) (Deesen)
+* [GitHub:#235d26c] - Fixed CSS-highlighting  - https://github.com/modxcms/evolution/issues/652#issuecomment-222936562 (Deesen)
+* [GitHub:#5a799a9] - Fixed JS-error notice #646 (Deesen)
+* [GitHub:#a3775c3] - Changed "tmplvar_contentvalues" text to mediumtext #648 (Deesen)
+* [GitHub:#e17ec61] - Fix backup version-no, clearer "remove locks"-message (Deesen)
+* [GitHub:#74723d4] - mm_ddMultipleFields: fix using tables in richtext https://github.com/MrSwed/MODXEvo.plugin.ManagerManager.mm_ddMultipleFields/commit/1156b3f812511d0518fe3c3e8af755fffa5dab5b (MrSwed)
+* [GitHub:#c2d4b4a] - wayfinder, useReferenced: fix determine fields fix version. (MrSwed)
+* [GitHub:#213f83a] - Fix: Display nothing instead of "Array" for none-existing chunks (Deesen)
+* [GitHub:#fcc2d77] - Update mutate_menuindex_sort.dynamic.php (Mr B)
+* [GitHub:#4956aee] - Fix #639 (Deesen)
+* [GitHub:#581a58e] - Revert "Small fix" This is  partial reverts commit 8637a79f62791e9232dec1332c2a864950b7dbfb. (MrSwed)
+* [GitHub:#0a01e23] - Fix: Show all none-assigned TVs (Deesen)
+* [GitHub:#df0a78b] - translates for 'Change Resource-Type' role (MrSwed)
+* [GitHub:#f820b2e] - Set version (1.1.1-beta) update database while modx upgrade #531 (MrSwed)
+* [GitHub:#0a49695] - Conditional tags (yamamoto)
+* [GitHub:#9c2ed2b] - Fix - $modx->getField() (yamamoto)
+* [GitHub:#fe8c8f4] - New - $modx->atBindInclude() (yamamoto)
+* [GitHub:#ab82bc2] - New - $modx->atBindInclude() (yamamoto)
+* [GitHub:#b12f60e] - Refactor - $modx->checkCache() (yamamoto)
+* [GitHub:#14c3601] - Refactor - $modx->prepareResponse() (yamamoto)
+* [GitHub:#43e8da2] - Refactor - $modx->getChunk() (yamamoto)
+* [GitHub:#a01fad9] - MODIFIERS class into core (yamamoto)
+* [GitHub:#f5092a3] - New - Set parameters to Chunk (yamamoto)
+* [GitHub:#3b91c8b] - Small fix - [[Snip1?param=[[Snip2]]]] (yamamoto)
+* [GitHub:#af39d78] - Improved - $modx->parseText() (yamamoto)
+* [GitHub:#e5f1fbf] - Refactor - Fetch snippet call (yamamoto)
+* [GitHub:#6703a07] - Improved - $modx->_split_snip_call() (yamamoto)
+* [GitHub:#ca86fac] - Rename $modx->_get_snip_properties() (yamamoto)
+* [GitHub:#529209f] - Convert tabs to spaces (yamamoto)
+* [GitHub:#0a4dccb] - Refactor - $modx->mergePlaceholderContent() (yamamoto)
+* [GitHub:#8131602] - Output PHP Super Global Values (yamamoto)
+* [GitHub:#94b7a31] - Avoid php-error when pasting <?php by mistake (Deesen)
+* [GitHub:#28ac0a1] - Inline-edit like QM via [*#tv*], added secHash (Deesen)
+* [GitHub:#75c2987] - Added @events OnRichTextEditorInit (Deesen)
+* [GitHub:#a56caca] - Removed none-existing event (Deesen)
+* [GitHub:#222bc97] - Fix: Remove scrollbar above search-input #619 (Deesen)
+* [GitHub:#6978d7d] - Fix: Change values when Codemirror is disabled #619 (Deesen)
+* [GitHub:#4f16103] - Fix: Show plugin-config when Codemirror is disabled #619 (Deesen)
+* [GitHub:#c13d4ab] - Added note "resource name in tree" #618 (Deesen)
+* [GitHub:#1a6be15] - Fix install-check for PHP5.3+ #617 (Deesen)
+* [GitHub:#16dee09] - Fix makeUrl() args when SEF is disabled #616 (Deesen)
+* [GitHub:#e812663] - Fix "Set automatic"-button (Deesen)
+* [GitHub:#7db48eb] - Small fix node-tooltips yes/no (Deesen)
+* [GitHub:#95e2020] - add menuindex in wayfinder (Dmi3yy)
+* [GitHub:#6070ec6] - update russian lang (Dmi3yy)
+* [GitHub:#d22cf82] - add htccess in lib (Dmi3yy)
+* [GitHub:#1cc0176] - #612 (Deesen)
+* [GitHub:#b9561f9] - Added @guid to parseDocBlock() (Deesen)
+* [GitHub:#6e42f7e] - Small fix #532 (Deesen)
+* [GitHub:#223e917] - Added option "escapeValues" to parseDocBlock #494 (Deesen)
+* [GitHub:#054e137] - Added @lastupdate to docBlock (Deesen)
+* [GitHub:#d04703a] - WebLogin 1.1.3: Added &focusInput (Deesen)
+* [GitHub:#c34cf09] - Added removeDocblock($code, $type)  - remove installer docblock of snippets/plugins using fileBinding/plugin FileSource, keep for others  - keep docblock of modules  - removed PHP-notice (Deesen)
+* [GitHub:#745ae55] - Added @lastupdate (Deesen)
+* [GitHub:#7fb6877] - TransAlias 1.0.5: Added docBlock (Deesen)
+* [GitHub:#716f1ad] - TinyMCE 3.5.12: Added docBlock (Deesen)
+* [GitHub:#555214b] - Quick Manager+ 1.5.6: Added docBlock (Deesen)
+* [GitHub:#80f81a6] - ManagerManager 0.6.2: Added docBlock, readme.html (Deesen)
+* [GitHub:#65b8330] - FileSource 0.1: Added docBlock (Deesen)
+* [GitHub:#f0d59ff] - WebLogin 1.1.2: Added docBlock, readme.html (Deesen)
+* [GitHub:#7388066] - UltimateParent 2.1: Added docBlock, readme.html (Deesen)
+* [GitHub:#2ecef9c] - Reflect 2.1.1: Added docBlock (Deesen)
+* [GitHub:#aa79223] - phpthumb 1.3: Added docBlock (Deesen)
+* [GitHub:#2de1a72] - Personalize 2.1: Added docBlock, readme.html (Deesen)
+* [GitHub:#e59f32c] - MemberCheck  1.1: Added docBlock, readme.html (Deesen)
+* [GitHub:#233bd70] - ListIndexer 1.1.0: Added docBlock (Deesen)
+* [GitHub:#36b698f] - Jot 1.1.5: Added docBlock (Deesen)
+* [GitHub:#b676a2e] - parseDocBlockFromString(): Unescape values (allow quotes) (Deesen)
+* [GitHub:#2fdf9eb] - if 1.3: Added docBlock, readme.html (Deesen)
+* [GitHub:#5f038ad] - FirstChildRedirect 2.0: Added docBlock, readme.html (Deesen)
+* [GitHub:#a133077] - eForm 1.4.7: Added docBlock (Deesen)
+* [GitHub:#6d2bb84] - DocLister 2.1.30: Added docBlock (Deesen)
+* [GitHub:#599fe3f] - Ditto 2.1.2: Added docBlock, removed notes.txt (Deesen)
+* [GitHub:#ab58363] - Breadcrumbs 1.0.5: Added docBlock (Deesen)
+* [GitHub:#5fb6aa0] - Update Wayfinder to 2.0.5 (Deesen)
+* [GitHub:#9e91550] - Fixed duplicate action '54' #605 (Deesen)
+* [GitHub:#796580e] - Fix creating the documents at root (Yura)
+* [GitHub:#12732c9] - Remove class (fourroses666)
+* [GitHub:#7ce7c22] - Version 1.10.2 - updated version-number - added docBlock to snippet (Deesen)
+* [GitHub:#d864f29] - Added icon "icons_sort_menuindex" (Deesen)
+* [GitHub:#91bf085] - Added icon "icons_sort_menuindex" (Deesen)
+* [GitHub:#1a65065] - Add icons_sort_menuindex (fourroses666)
+* [GitHub:#af15edc] - Updated refresh icon (fourroses666)
+* [GitHub:#404f7ae] - Sort Site tree + Menu Index GIF (fourroses666)
+* [GitHub:#579c33e] - Update setup.sql (Marc)
+* [GitHub:#b91bae8] - Added nodeTitle-option "longtitle" #598 (Deesen)
+* [GitHub:#f4a9bb0] - Sort site tree fix (fourroses666)
+* [GitHub:#dab991a] - Removed PHP-notice "undefined variable" #596 (Deesen)
+* [GitHub:#52dc51e] - Improved convertDocBlockIntoList() - added placeholder [+site_url+] to enable internal links for @documentation etc - improved regexUrl: Match also "http://localhost" (Deesen)
+* [GitHub:#2109d72] - Added longtitle #598 (Deesen)
+* [GitHub:#39701e4] - Moved parseDocBlock() after OnFormPrerender so plugin "FileSource" can replace code first before parsing the docBlock (Deesen)
+* [GitHub:#4087376] - parseDocBlockFromString: str_replace rn to n, then explode (Deesen)
+* [GitHub:#646059b] - fix install disabled plugins in extras module (Dmi3yy)
+* [GitHub:#175cf41] - small fix in eForm (Dmi3yy)
+* [GitHub:#0fc1ef0] - update DocLister (Dmi3yy)
+* [GitHub:#f4e8ad9] - Added docBlock: documentation, reportissues, author #582 (Deesen)
+* [GitHub:#04a98c3] - v1.4 - fixed $object_id: Create unique id per element - added missing var "indenWithTabs" - added params "undoDepth" and "historyEventDelay" - added try/catch-block for setting history (avoid localStorage overflow error) - updated docBlock: version, documentation, reportissues, authors (Deesen)
+* [GitHub:#ff5552b] - Update mutate_menuindex_sort.dynamic.php (Mr B)
+* [GitHub:#c0e17dc] - Revert "Allow .svg upload files" (Marc)
+* [GitHub:#f05129c] - Added docblock-translations (Deesen)
+* [GitHub:#c211f3a] - Added docBlock info-tab (Deesen)
+* [GitHub:#2cf329b] - parseDocBlock() - added convertDocBlockIntoList() - added arrayParams: @author, @documentation, @reportissues, @link - added @logo - added phpDoc (Deesen)
+* [GitHub:#ca5c3a1] - Improved module-config conversion old to new scheme - properties regex-matched by &paramName=, not split by & - paramName regex-matched by =, not by == - optional options-format in old scheme possible: label==value||label==value - optional default-value and description possible:    &param=label;type;(options);value;defaultValue;description - added css-classes to params-table - set defaults-button - cleaned JS-code - added parseDocblock-option - added information-tab (Deesen)
+* [GitHub:#1ee53df] - Moved "sort menu-index" to tree context-menu #532 (Deesen)
+* [GitHub:#0e7cfc7] - Sort menu-index: Moved from docManager to tree context-menu #532 (Deesen)
+* [GitHub:#72f6b4f] - Md5 filemtime #575 (Deesen)
+* [GitHub:#48eb3a0] - Allow .svg upload files (fourroses666)
+* [GitHub:#6a87e82] - Update xconfig.js (Mr B)
+* [GitHub:#8ddb9af] - Added "Reset sort order"-button (Deesen)
+* [GitHub:#c51921e] - Added "Reset sort order"-button (sort order = 0), fixed use of span id="updating" (Deesen)
+* [GitHub:#9a2d2b2] - parseDocBlock "name/desc found" fixed (Deesen)
+* [GitHub:#18cfed9] - Added missing function for marking lines (Deesen)
+* [GitHub:#61a02d6] - Improved snippet/plugin-config conversion old to new scheme - properties regex-matched by &paramName=, not split by & - paramName regex-matched by =, not by == - optional options-format in old scheme possible: label==value||label==value - optional default-value and description possible:    &param=label;type;(options);value;defaultValue;description - added css-classes to params-table (Deesen)
+* [GitHub:#56e0918] - Mark none-assigned TVs - fixed sorting (Deesen)
+* [GitHub:#678610d] - Mark none-assigned TVs (Deesen)
+* [GitHub:#07fafd0] - Improved plugin/snippet-edit - added "Parse DocBlock"-option for easy install / reset plugin to install-defaults - separated internal-params (plugin-events, filebinding) from properties (cleaner JSON-string) - added "Set defaults"-button (set all fields) - cleaned up JS-code - small fixes (Deesen)
+* [GitHub:#f6176af] - - added parseDocBlock()-functions from modules/stores - removed unnessecary JSON-stuff (Deesen)
+* [GitHub:#744e81b] - Added shortcut getCategory() (Deesen)
+* [GitHub:#9df9cf3] - New feature: Sort/rank TVs alphabetically (Deesen)
+* [GitHub:#b4ced1f] - Template selectable when creating new (Deesen)
+* [GitHub:#9a182f4] - Compatibility PHP5.4- #584 (Deesen)
+* [GitHub:#8919fc5] - Fix maximize-button for TinyMCE4 - extras-evolution/tinymce4-for-modx-evo#12 (Deesen)
+* [GitHub:#cf0d88d] - Compare filemtime to create new thumbs when nessecary #575 (Deesen)
+* [GitHub:#a44b232] - Fix: Render submenu when parent is weblink #571 (Deesen)
+* [GitHub:#503cff2] - Provide JS-object (Deesen)
+* [GitHub:#c7a9d75] - Allow RTEs to hook on introtext (Deesen)
+* [GitHub:#4e608a8] - fix block manager without unblock (Dmi3yy)
+* [GitHub:#0bbb480] - Input autofocus "Duplicate of" (Deesen)
+* [GitHub:#e94c243] - Improved backupMgr - added optional backup-description - show more details in backups-listing (Deesen)
+* [GitHub:#c9c80ed] - Improved highlighting - nested snippets - html-entities / modx-attributes - highlight bindings (Deesen)
+* [GitHub:#e19923f] - Show default when snippet-properties are not set/empty (Deesen)
+* [GitHub:#027c001] - Don´t overwrite tpl by Modx-Upgrade (Deesen)
+* [GitHub:#8273bf2] - Fix the manager authorization and blocking (Yura)
+* [GitHub:#e137ec4] - Add check of permission (Yura)
+* [GitHub:#ec19105] - [*] no "start=0" in links of ditto pagination depending on modx setting seostrict Considering dittoID (MrSwed)
+* [GitHub:#1c294fb] - New PH wf.refid for original-id when docid is pointing to weblink #572 (Deesen)
+* [GitHub:#510ddc6] - Fix a message only on the tab of templates (Yura)
+* [GitHub:#d736919] - Wrapped into labels (Piotr Matysiak)
+* [GitHub:#7ca7080] - Margin on install image (Piotr Matysiak)
+* [GitHub:#4e9a59d] - Corrected tooltip line-feed (Deesen)
+* [GitHub:#dec4af4] - Manager Breadcrumbs style (Piotr Matysiak)
+* [GitHub:#476bce8] - Added highlighting modxAttributeValue (Deesen)
+* [GitHub:#0426f56] - Remove overlay for TinyMCE4 Fullscreen (Deesen)
+* [GitHub:#46b202b] - Added permission "change_ressourcetype" #531 (Deesen)
+* [GitHub:#e3abc95] - Added strtolower($conf['type']) (Deesen)
+* [GitHub:#baad3a2] - Added explicit document root to $phpThumb (Matthew Simpson)
+* [GitHub:#80cd682] - Add breadcrumbs on the page of manager (Yura)
+* [GitHub:#a000801] - Added "initBridge" and getPlaceholder() (Deesen)
+* [GitHub:#4361faa] - tpl/tvEdit: save&stay + save&exit + cancel return now to template where edit-button was pressed (Deesen)
+* [GitHub:#01f2086] - Improved tpl->tplVars back-button (Deesen)
+* [GitHub:#ccc2c92] - TinyMCE4-support (Deesen)
+* [GitHub:#cf88f04] - Add pagetitle to tooltips when nodes show date-format (Deesen)
+* [GitHub:#84a5d07] - Added checkbox&radio type to old scheme (Deesen)
+* [GitHub:#3605a4a] - Bugfix "purge obsolete plugins"-button - keep latest version of disabled plugins (Deesen)
+* [GitHub:#bd14dbc] - update DocLister (Dmi3yy)
+* [GitHub:#3150df9] - update MODxAPI (Dmi3yy)
+* [GitHub:#8ffabae] - Fix documentDirty for config-fields (Deesen)
+* [GitHub:#f121f76] - same width as param-fields (Deesen)
+* [GitHub:#e8a8482] - Small fix - don´t limit height for main code-input (Deesen)
+* [GitHub:#5be6a8e] - Small improvements - use codemirror for editing JSON-capable configuration-fields - added JSON-format to module- & snippet-configuration (Deesen)
+* [GitHub:#1e801ea] - KCfinder denyUpdateCheck => true (Dmi3yy)
+* [GitHub:#8d1cf0e] - fix  KCfinder  png black background (Dmi3yy)
+* [GitHub:#a0085cc] - Improved placeholder-/attribute-highlighting - update to CM v5.12.0 - small fixes (Deesen)
+* [GitHub:#033c3fb] - Codemirror v5.12.0 (Deesen)
+* [GitHub:#3408142] - Add modxRTEbridge to assets/lib (Deesen)
+* [GitHub:#26c714c] - Avoid PHP-notice (Deesen)
+* [GitHub:#3ca670a] - Support multiple richtext-TVs with {"editor":"Codemirror"}, reformat code (Deesen)
+* [GitHub:#3e5285e] - OnRichTextEditorInit options-handling, call invokeEvent once per editor (Deesen)
+* [GitHub:#1c55609] - Separated code into function getPluginCode() - extended JSON-pluginConfig (Deesen)
+* [GitHub:#fca82a1] - Refactor - Replace tabs to spaces (yamamoto)
+* [GitHub:#f76f054] - Refactor - $modx->mergeDocumentContent() (yamamoto)
+* [GitHub:#c959d35] - Prepared parseProperties() to fetch params from Input-Options (Deesen)
+* [GitHub:#b953eb8] - Added $modx->isJson() (Deesen)
+* [GitHub:#1787d2d] - changed switch-labels (Deesen)
+* [GitHub:#96631a5] - optional switch of nodename-source (Deesen)
+* [GitHub:#e71d5d3] - Improved manager-tree - sort by "published on" - empty dates come first/last - tooltips with line-breaks - tooltips reveal more details now (Deesen)
+* [GitHub:#9967c3a] - Pass TV input-options to RTE-plugins #388 (Deesen)
+* [GitHub:#396edf9] - JSON-string now human-readable (Deesen)
+* [GitHub:#f3755a2] - Improved plugin-configuration - converting old scheme to new scheme adds default-value - new types checkbox, radio - options support "label==value||label==value" - new "Set Default"-button - "Set Automatic"-button removes all events first (Deesen)
+* [GitHub:#52f00e1] - Category (id) in all lists (Deesen)
+* [GitHub:#e49eeeb] - add (id) for category in elements list (Dmi3yy)
+* [GitHub:#0e26be2] - Plugin-configuration in JSON-Format (Deesen)
+* [GitHub:#4ce8da3] - Revert "Update .gitattributes - Disable LF normalization" (yamamoto)
+* [GitHub:#9ec4347] - Update .gitattributes - Disable LF normalization (yamamoto)
+* [GitHub:#7d4d7de] - Added default-template info (Deesen)
+* [GitHub:#e25070b] - Small fix CodeMirror (Yura)
+* [GitHub:#f6c02cc] - fix for customTv type select (Dmi3yy)
+* [GitHub:#8645e0e] - we can move hidemenu (Dmi3yy)
+* [GitHub:#cfbe8cb] - Update editor_plugin.js (Mr B)
+* [GitHub:#40ccf61] - Update editor_plugin_src.js (Mr B)
+* [GitHub:#6a73b47] - Added documentDirty to tpl/tv-checkboxes (Deesen)
+* [GitHub:#ca0cca6] - Avoid empty TV-names (Deesen)
+* [GitHub:#753b749] - Consider $newid (Deesen)
+* [GitHub:#48f98ab] - Sort templates by category, name (Deesen)
+* [GitHub:#d26e745] - List templates like in native Tpl-list & catch $_POST (Deesen)
+* [GitHub:#9aa3a59] - Display unassigned TVs like in native TV-management & catch $_POST (Deesen)
+* [GitHub:#e0ffb3e] - Refactor $modx->parseProperties() (yamamoto)
+* [GitHub:#c4dc6ef] - Force default template´s selectable = 1 (Deesen)
+* [GitHub:#a14a5e7] - Refactor - $modx->parseProperties() (yamamoto)
+* [GitHub:#85929f9] - Avoid trim spaces from Chunks (allows clean indented HTML) (Deesen)
+* [GitHub:#d8bd7e8] - Allow styling of labels (Deesen)
+* [GitHub:#5989528] - Set chmod after mkdir() (Deesen)
+* [GitHub:#f25d102] - New - $modx->config['devmode_showhash'] (yamamoto)
+* [GitHub:#8c142bb] - Minor fix (code indent) (yamamoto)
+* [GitHub:#91aa032] - Refactor - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#6dbce8c] - Refactor - mutate.settings.dynamic.php (yamamoto)
+* [GitHub:#1a48769] - jQuery into core (yamamoto)
+* [GitHub:#24f4c3d] - Move event output below mootools.js (yamamoto)
+* [GitHub:#6477345] - Fix sort by category (Deesen)
+* [GitHub:#48ecaa2] - Exact same order as in assignedTvs-Tab (Deesen)
+* [GitHub:#71d1a5f] - Preserve rankings of already assigned TVs (Deesen)
+* [GitHub:#407877c] - Add space (Deesen)
+* [GitHub:#edb1d05] - Bigger click-area.. (Deesen)
+* [GitHub:#df7239d] - Added Yama´s sort-mechanismn to TemplateVars-Edit (Deesen)
+* [GitHub:#fbef3fe] - Added edit-button for better UI (Deesen)
+* [GitHub:#cc58041] - Refactor (yamamoto)
+* [GitHub:#23af420] - Added ORDER BY tv.name for none-ranked TVs (Deesen)
+* [GitHub:#d5d6fd4] - Remove unnessecary $_lang (Deesen)
+* [GitHub:#a5225ab] - Minor fix (yamamoto)
+* [GitHub:#bd0db33] - Show and hide furl settings using by jQuery (yamamoto)
+* [GitHub:#f7b8cda] - Add showhide() - mutate_settings.dynamic.php (yamamoto)
+* [GitHub:#75055d0] - jQuery into core (yamamoto)
+* [GitHub:#de27178] - Improved (yamamoto)
+* [GitHub:#5403dcd] - Add - jQuery into core (yamamoto)
+* [GitHub:#69e27f2] - Remove - Deprecated TV widgets (yamamoto)
+* [GitHub:#24bd8ed] - tabpane.js - Remove IE5.5 support (yamamoto)
+* [GitHub:#2e7a04a] - #328 Add tab "not assigned TVs" to template-edit (Deesen)
+* [GitHub:#15fe4f6] - Fix double $value['type']!="" (Yura)
+* [GitHub:#c089635] - Fix install demo content (Yura)
+* [GitHub:#cb7e15e] - Fix tabs (Piotr Matysiak)
+* [GitHub:#8b6dc88] - #345 fix activeParentRowTpl for empty childs (MrSwed)
+* [GitHub:#1697e50] - uniform formatting style (MrSwed)
+
+
+
+MODX Evolution 1.1 (Feb 29, 2016)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#41a5bcd] Fixing #356 Loosing content in chunk after saving and already exists
+* [GitHub:#6d799af] [#364] Fixed issue for renderFormElements to provide default text (Fixed to only set value if field_value is empty) 
+* [GitHub:#90b1a91] Weblogin: - Retain remember me option …	
+* [GitHub:#dcd9656] Fix script error in View manager logs	
+* [GitHub:#3e6895d] Increase FileSource filebinding input field maxlength to prevent data loss
+* [GitHub:#da4cf8a] Prevent PHP warning 'Key cannot be empty' …	
+* [GitHub:#32f0d65] Fix #396 getUserDocGroups(true) always returns only one group name	
+* [GitHub:#3cea34d] Weblogin: doesn't always clear $_SESSION['webDocgrpNames'] on logout	
+* [GitHub:#1b0148e] Fix #394 error in description of CodeMirror …	
+* [GitHub:#6cc4467] Fix/update confirmed working MODX version in CodeMirror plugin comment.	
+* [GitHub:#1c2e755] Value of properties in GUID on module creation. This bug is active since 1.0.13. Seems to be that creating modules is not an everyday task
+* [GitHub:#8530858] Maybe missing permission check in refresh_site.dynamic.php 	
+* [GitHub:#21e1aad] ManagerManager: non-breaking space. It interferes with the use of the ddmultifield
+* [GitHub:#aca2a22] Minor fix - MODxHost template	
+* [GitHub:#30fd127] small calendar styles fix	
+* [GitHub:#7dec05a] Choose language translate	
+* [GitHub:#0dc2c0f] AjaxSarch Date format	
+* [GitHub:#395898a] fix DBAPI update( for NULL)
+* [GitHub:#5a554f7] fix session_keepalive	
+* [GitHub:#dd25766] Ditto: Fix - Deprecated PHP Code "makeList"
+* [GitHub:#75c9c0f] Fix - Slimming Paint rendering issue at Chrome …	
+* [GitHub:#14a94c6] Fix error render the default setting in the TV type date	
+* [GitHub:#cbce5e7] fix sendmail	
+* [GitHub:#175a18e] checkCache fix	
+* [GitHub:#9e09c4e] wayfinder config need include for multi use with other configs	
+* [GitHub:#a5d63f5] DB dumps do not disable foreign key checks 
+* [GitHub:#ef206b2] fix install with empty categoryes name	
+* [GitHub:#f65f4ed] Avoid double matches …	
+* [GitHub:#797bd91] fix emmet header footer for HTML5	
+* [GitHub:#b631d61] fix bad SEO when using phpthumb #434 …	
+* [GitHub:#ac0cec4] Fixing, TransAlias removes a dot in file's format …		
+* [GitHub:#4bc76c5] #391 user/pw htmlspecialchars	
+* [GitHub:#2dd47e0] #391 username/data htmlspecialchars	
+* [GitHub:#93959ac] Avoid PHP-Error "File not found"	
+* [GitHub:#640309d] fix render settings	
+* [GitHub:#c7abc69] avoid php notice: undefined index…	
+* [GitHub:#e7ea0f7] Avoid PHP-Error/Data-Loss if path not exists	
+* [GitHub:#2bb4391] Issue #385	htmlspecialchars + windows-1251 	
+* [GitHub:#62a22ba] icon message unread	
+* [GitHub:#2772903] Problem with a plus-sign in email address with forgot manager password #428
+* [GitHub:#ef7a06d] if: fix for check [*content*] Issue #480	
+* [GitHub:#8845642] export.class.inc.php #417
+* [GitHub:#9e0a1b9] makeUrl fails with site start and query string
+* [GitHub:#92f6cda] Error counting published and unpublished comments in JOT #389
+* [GitHub:#f8ea894] Template Variable Type 'date' doesn't allow manual time
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#aa2baae] Refactor manager api class: added missing return values, updated checkHashAlgorithm, removed superfluos variables, added missing variables
+* [GitHub:#dfb0ac4] Display TV name during install
+* [GitHub:#6f26656] Refactor - $modx->evalSnippets()	
+* [GitHub:#1cebc29] Refactor - $modx->getTagsFromContent()
+* [GitHub:#6c098f5] Refactor - $modx->evalSnippets()	
+* [GitHub:#4e8b8da] Refactor - $modx->mergeDocumentContent()	
+* [GitHub:#2b56d5d] Update setup.sql Increase default max upload file size to 10MB	
+* [GitHub:#fb2f868] Wayfinder: for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr)
+* [GitHub:#e77c169] Wayfinder: &useWeblinkUrl=`0` now work, no longer need to write &useWeblinkUrl=`FALSE`
+* [GitHub:#27ebbe6] Ditto: no "start=0" in links of ditto pagination depending on modx setting seostrict
+* [GitHub:#fa0348f] now we can use custom frame files from theme see (https://github.com/Dmi3yy/modx.evo.custom/tree/master/manager/media/style/D3X)
+* [GitHub:#ca8bnow] you can change all action in theme without change in core		
+* [GitHub:#a842303] refactor search.static	
+* [GitHub:#c09c083] frameset to iframe	
+* [GitHub:#ed5396e] use Mysqli by default	
+* [GitHub:#1968b47] refactor MainMenu (https://github.com/modxcms/evolution/blob/develop/manager/frames/mainmenu.php)	
+* [GitHub:#6211a79] refactor cache_sync class, add some code for AliasListingFolder	
+* [GitHub:#7c6adaa] fix in postProcess	
+* [GitHub:#295ad92] Workaround for deprecated preg_replace() with /e modifier …	
+* [GitHub:#bdb542d]	refactor BackTrace	
+* [GitHub:#e612f72]	refactor getLoginUserName	
+* [GitHub:#03c5e28]	refactor getLoginUserID	
+* [GitHub:#816af9c]	refactor getChunk	
+* [GitHub:#93fa0fc]	refactor runSnippet	
+* [GitHub:#26f86d0]	refactor makeUrl for AliasListingFolder	
+* [GitHub:#7d3e99e]	refactor logEvent	
+* [GitHub:#a7fd270]	refactor getChildIds for AliasListingFolder	
+* [GitHub:#6f19c69]	refactor getParentIds for AliasListngFolder	
+* [GitHub:#fa86662]	refactor executeParser for AliasListingFolder	
+* [GitHub:#3c94596]	refactor checkPublishStatus()	
+* [GitHub:#758817d] "Show in menu" moved to new row …	
+* [GitHub:#b229ca1] #444 (Installer & PHP 5.5+ )	
+* [GitHub:#113ac4c] add php version in sysinfo	
+* [GitHub:#de360bd] autoload_register to spl_autoload_register	
+* [GitHub:#7fadc10] Create cache folder before creating .htaccess in it	
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#a76c830] Add Ukrainian lang
+* [GitHub:#0ca31ad] phpthumb: determination of the original image file extension	
+* [GitHub:#46e8457] phpthumb: encode decode cyr filenames	
+* [GitHub:#70d0c84] phpthumb: &q=96 makes no sense with png and gif
+* [GitHub:#9b0a873] phpthumb: encode only returned filenames
+* [GitHub:#bc501e0] phpthumb: larger nophoto image	
+* [GitHub:#563934c] Update eform.inc.php fix adding slash by vericode for HTML5 inputs	
+* [GitHub:#d2adb9d] eForm: Adding HTML5 input types	
+* [GitHub:#7be7aca] Wayfinder. Set id of reference to original document ID if it is innerdoc
+* [GitHub:#63e6414] Starting the installation with the language of the user's browser	
+* [GitHub:#bc5a9eb] BreadCrumbs 1.0.5: add ignoreAliasVisible to BreadCrumbs
+* [GitHub:#2e56507] Eform: add phone validate in Eform
+* [GitHub:#89dc1ea] New - $modx->getField($field,$docid)	
+* [GitHub:#0c3fd0b] New - $modx->getUltimateParentId($docid,$top)
+* [GitHub:#956c9ae] Cross-references from ClipperCMS: [*pagetitle@17*], [*pagetitle@parent*], [*pagetitle@ultimateparent*] ([*pagetitle@uparent*]), [*pagetitle@ultimateparent(17)*], [*pagetitle@alias(alias/path)*],[*pagetitle@site_start*]
+* [GitHub:#5ddb8df] allow using asterisk for assign TVs to all templates
+* [GitHub:#2ed509b] Update file browser KCfinder to 2.5.4	
+* [GitHub:#eae7e74]	Update CodeMirror to 1.2b	
+* [GitHub:#b7dc20f] the ability to pass arbitrary parameters in the snippet(so you can use them in the processing of events)
+* [GitHub:#fcb6343] Wayfinder: add [+wf.iterator+]	
+* [GitHub:#907a1f2] view customTV in Select when choice tv type	
+* [GitHub:#1072d79] Add some events: OnMakePageCacheKey, OnDocFormUnDelete, onBeforeMoveDocument, onAfterMoveDocument, OnBeforeLoadDocumentObject, OnAfterLoadDocumentObject, OnBeforeLoadExtension, OnManagerMenuPrerender, OnDocFormTemplateRender, OnFileBrowserUpload, OnDocFormTemplateRender
+* [GitHub:#2770263] ManagerManger(add mm_movecategorytotab)
+* [GitHub:#] add AliasLiastingFolder in Setting -> Friendly URLs (tested with 1000000 documents, no more limits for documents)
+* [GitHub:#07bac53] add function getCacheFolder	
+* [GitHub:#9372391] add function setConditional	
+* [GitHub:#09e0ba7] add function getTpl	
+* [GitHub:#769617e] ctrl + S, cmd + S now save in Manager	
+* [GitHub:#fe5a3e7] Add MODxAPI extend MODX Api		
+* [GitHub:#bcbe26e] add DocLister (https://rtfm.modx.com/extras/evo/doclister/)	
+* [GitHub:#1bb1710] add in DBAPI $modx->db->dataSeek	
+* [GitHub:#3a1c634] update _get_snip_result	
+* [GitHub:#97326f2] Added missing CSS-ID to "actionButtons"
+* [GitHub:#95a9283] Add Extras module to core
+* [GitHub:#0d95ec6] if: Added Expression "contains"	
+* [GitHub:#3b2547b] #328 Checkbox "selectable templates" #513
+* [GitHub:#3001fc6] #323 Chunks remember last selected+saved RTE
+
+
+
+MODX Evolution 1.0.15 (Oct 31, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#8721e56] Typo
+* [GitHub:#6dc47ed] Wrong indents
+* [GitHub:#c9267a8] Bugfix for "Context menu don't show if node has quotes."
+* [GitHub:#7b8ad03] Wrong indents
+* [GitHub:#6805efa] Not only "listbox-multiple" send array to POST
+* [GitHub:#21bf185] Fix MYSQLI->fieldName()
+* [GitHub:#8926b25] Fixing Bug: Only variables should be passed by reference
+* [GitHub:#ee6e7a0] Don't show set_time_limit warning on host that have changing the time limit disabled
+* [GitHub:#c02f75c] Richtext widget "undefined" output #341
+* [GitHub:#3151a01] changeWebUserPassword doesn't use md5 for a new password #304
+* [GitHub:#b7e665f] Update web_user_management.static.php
+* [GitHub:#5c4bda6] Patch https://github.com/modxcms/evolution/commit/98e68cbab53dd6523bb65243a9a654263cd8423d
+* [GitHub:#56357ce] fix makeURL
+* [GitHub:#1d2bfdb] Fix - Can't work manager except utf8
+* [GitHub:#2da96f6] Wayfinder, move levelClass from li to ul http://c2n.me/iA951g
+* [GitHub:#31f6759] $modx  to   $this
+* [GitHub:#c2775fd] Fixed CodeMirror syntax HTML entity highlighting
+* [GitHub:#13d0d6d] fix makeFriendlyURL for site_start
+* [GitHub:#0f4aba1] eForm - Fix Invalid address error
+* [GitHub:#71492ad] Delete unnecessary evaluate PHP code
+* [GitHub:#d8872e7] Update media.js
+* [GitHub:#022b755] Fix PHP Notices from document.parser
+* [GitHub:#04cdccc] Bugfix - $id could be an integer and not a string.
+* [GitHub:#0448cf7] fix uploader
+* [GitHub:#b49e81e] show only allowed images in their folder
+* [GitHub:#f5629f3] Skip all fields without name attribute in eFormParseTemplate
+* [GitHub:#27d7adf] Bugfix - wrong quotes
+* [GitHub:#7781b65] Small fix - smtp password field in system settings
+* [GitHub:#d2b7cb0] fix http://joxi.ru/Y_SlUxjKTJBBH38Lv8U
+* [GitHub:#9a121bc] Fixing $modx->makeUrl($modx->config['site_start']) should return '/' or $modx->config['site_url'] #2
+* [GitHub:#5266730] Fixes for phpthumb snippet - added temp folder creation – for open_basedir issues - updated phpthumb
+* [GitHub:#dfbd44e] Bugfix for hideMenu parameter
+* [GitHub:#6a23f91] New Security Feed! -> english.inc.php
+* [GitHub:#cb5b0e0] Removed unused variables
+* [GitHub:#be143a1] Removed wrong array keys
+* [GitHub:#987f8b8] Output Content-Type header at messageCount
+* [GitHub:#f7aecc4] Tools/Backup/Restore #275
+* [GitHub:#dfe0020] Webusers Not Showing Private Resources #273
+* [GitHub:#766e662] Fix for CJK multi byte environment
+* [GitHub:#39ee732] Fixing issue with accounts not getting unblocked automatically (#267) and added some language string
+* [GitHub:#a245648] Rename function name
+* [GitHub:#102fe60] Fixing Wayfinder problems after upgrading MODX from 1.0.10 to 1.0.13 #226
+* [GitHub:#744fdcc] Hide META tags content in Resource Overview when META Keywords tab is set to no #283
+* [GitHub:#ea9ccdf] Quickfix for Refused to set unsafe header "Connection" #227 - removed setHeader("Connection", "close
+* [GitHub:#43bcf75] Fixed some style issues
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#0b82d66] Use of $modx->htmlspecialchars instead of htmlspecialchars
+* [GitHub:#ace7999] htmlspecialchars be called with ENT_QUOTES
+* [GitHub:#9c4d6f5] Avoid tampering cache file by escaping all keys and values - changing all $modx->db->escape to $this
+* [GitHub:#3cdcffd] add ,  to errorRequiredSeparator in eForm
+* [GitHub:#d8ec4ce] Typo - When you need to get one field, need use the db->getValue()
+* [GitHub:#b20c22b] Update style.css
+* [GitHub:#db56a5f] insideManager is deprecated
+* [GitHub:#8deface] Uniform style code for int of $_REQUEST['id']
+* [GitHub:#3eceb21] Uniform style code for int of $_REQUEST['id'] in mutate_* Remove unnecessary checks
+* [GitHub:#92b0d75] Updated AjaxSearch - Documentation in markdown format - Changed module/snippet/plugin code from txt 
+* [GitHub:#1ea15af] Set default: Send mail on MODX errors = not notify #289
+* [GitHub:#645503e] Update modxmailer.class.inc.php
+* [GitHub:#c7f6d34] Wayfinder, revert levelClass, add outerLevelClass
+* [GitHub:#5c97732] Update uploader.php
+* [GitHub:#51c473f] Update config.php
+* [GitHub:#d9c3cda] Update mutate_user.dynamic.php
+* [GitHub:#acbaf8b] Refactor - Calling method of deprecated-function
+* [GitHub:#aef110e] Refactor - $modx->makeUrl()
+* [GitHub:#3715940] typo fix
+* [GitHub:#39a62fb] Replace insideManager() to isBackend()
+* [GitHub:#855fc76] Refactor - $modx->isFrontend()
+* [GitHub:#2d86096] Refactor - $modx->isBackend()
+* [GitHub:#1849346] Refactor - File browser settings
+* [GitHub:#6a87f51] Set $modx->config['server_offset_time']
+* [GitHub:#be2f392] + The “OnDocFormPrerender” and “OnDocFormRender” events now have the document template ID parameter.
+* [GitHub:#caf0f98] Add placeholder for PHP version in language files
+* [GitHub:#8752559] Add "level" to the "wrapperLevel" placeholders
+* [GitHub:#1f76491] Refactoring #265 - new parameters: errorTpl, errorRequiredTpl, errorRequiredSeparator
+* [GitHub:#eb3a458] Remove changes added during #90 - Hexadecimal entities not needed anymore for MODX tags
+* [GitHub:#66255dc] Change DOCTYPE declaration(HTML5)
+* [GitHub:#696a8d6] Remove semicoron
+* [GitHub:#9ab2678] Added support for lastRowTpl that will apply to last row of a list
+* [GitHub:#a98fe41] Update KCFinder Dutch language file
+* [GitHub:#576e210] Remove "?>" from end of php file
+* [GitHub:#0fc2ccb] Update tagging.extender.inc.php
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#b74b11b] update mm to 0.6.2
+* [GitHub:#1e22788] Update Wayfinder to 2.0.4
+* [GitHub:#e0c80f3] Update eForm to 1.4.6
+* [GitHub:#55b4471] Updated Languages from Transifex
+* [GitHub:#2aad3e3] Updated languages from Transifex
+* [GitHub:#f1f53d3] Updated languages from Transifex
+* [GitHub:#6166167] Updated Dutch language
+* [GitHub:#3dd0c82] Added Ukrainian Language to Transfix
+* [GitHub:#6a97faa] Updated Languages from Transifex
+* [GitHub:#9a0eb01] add ukranian lang for eFrom and AjaxSearch
+* [GitHub:#d19102d] Update english-british.inc.php
+* [GitHub:#ac38129] MYSQLI Extender
+* [GitHub:#f53d739] New feature: Allow searching of resources by template ID used. Include language strings for English 
+* [GitHub:#0c98bec] update logo
+* [GitHub:#ceee98f] add ssl to smtp mail setting add alias_listing in breadcrumbs plugin add one more type in Ditto filt
+* [GitHub:#c264569] Support for encoding windows-1251 in the emails
+* [GitHub:#98e68cb] Change publishedon, set value from current time to pub_date
+* [GitHub:#a2a3a57] Fix save mutate_content form on press Enter in input field
+* [GitHub:#41048c3] add .tpl, .less, .sass  for View/Edit  in  FileManager
+* [GitHub:#7f05792] Allow load any extension without changing the core code
+* [GitHub:#45f08ec] datepicker localization
+* [GitHub:#0c29ed0] select/deselect all templates for tv
+* [GitHub:#6b468fb] French translation for 1.0.14
+* [GitHub:#f4a559b] Updated polish and brazilian portuguese languages from Transifex Thanks to Raphael Mendonça & Piotr 
+* [GitHub:#ad335ad] Re-Added Breadcrumbs snippet commented documentation #236
+* [GitHub:#6e0fd11] Updated swedish language
+* [GitHub:#03a1e04] Première version complète de la traduction pour la 1.0.14
+* [GitHub:#45cb1ff] Début de traduction pour la 1.0.14
+* [GitHub:#a761a63] mise à jour des messages de gestionnaire de fichiers
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [GitHub:#a293ec6] Set secure flag to prevent cookies to be leaked via non encrypted requests.
+* [GitHub:#d798a2a] config.inc.php to have setcookie specify httponly
+* [GitHub:#38cbdaa] Sameorigin header
+* [GitHub:#e62d961] Prevent XSS
+* [GitHub:#3e7f9bd] Avoid XSS - $modx->htmlspecialchars or explicit integer casting on $_GET/$_POST values
+* [GitHub:#3373321] Close SQL Injection
+
+MODX Evolution 1.0.14 (Jun 05, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#f233bf0] Error in resource lib
+* [GitHub:#8958b7c] Empty template error
+* [GitHub:#99d6824] Web user view  ico
+* [GitHub:#c5cfa3e] weblogin.processor.inc.php missing fields
+* [GitHub:#9f404dd] If (not_empty)
+* [GitHub:#40a7d49] Export not cacheable resources
+* [GitHub:#6fcde64] Cool explode() bug
+* [GitHub:#a02dcce] WebLogin
+* [GitHub:#8d7f933] weblogin.processor.inc.php
+* [GitHub:#5738f4c] htmlspecialchars_decode should be executed for the reports if sent as html
+* [GitHub:#fa0b0ad] weblogin.processor.inc.php
+* [GitHub:#8829799] Warning issue: (superfluous) default object created from value
+* [GitHub:#9adc29a] Unset parameters in $modx->messageQuit call
+* [GitHub:#40229ea] phpthumb, bkmanager
+* [GitHub:#f755592] logEvent
+* [GitHub:#b7b9ed1] Typo in PHx class for ditto
+* [GitHub:#8f5f0bc] Typo in document.class.inc.php
+* [GitHub:#448ddb7] Typo in delete_role.processor.php
+* [GitHub:#fd4ce0e] Path for example in document.class.inc.php
+* [GitHub:#e88c78d] Typo in document.parser.class.inc.php
+* [GitHub:#852093b] Possible fix for valid cache file file_exist check but not found file
+* [GitHub:#e6ca725] Missing error message in evalSnippet/evalPlugin error
+* [GitHub:#488c893] Wrong language string used when renaming existing snippet with duplicate name
+* [GitHub:#9a7b2bb] Plugin save logic is updated so that it allows duplicate names for disabled plugins. Duplicate names among activated plugins are still prevented.
+* [GitHub:#7ca2938] Access Permissions error
+* [GitHub:#fc29642] Send mail at $modx->logEvent()
+* [GitHub:#751d22e] Lost installer image file
+* [GitHub:#5b87dd6] Wayfinder - Small fix
+* [GitHub:#cc65308] Wayfinder - Small fixes
+* [GitHub:#41ad3c4] Wayfinder - Fix
+* [GitHub:#e3da37d] Wayfinder - Fix undefined variable
+* [GitHub:#80486bb] Wayfinder - Fix htmlentities
+* [GitHub:#52bae77] Wayfinder - Fix fetch template
+* [GitHub:#3cb3d0b] Wayfinder - Fix Read config
+* [GitHub:#b239aa8] Wayfinder - Fix
+* [GitHub:#f9d09ff] Fix
+* [GitHub:#7e668ac] Fix - $modx_textdir
+* [GitHub:#0bb19bf] Wayfinder - Fix empty value of alias
+* [GitHub:#243ec89] Charset and Collation Charset not showing
+* [GitHub:#c4f18f6] 'Array is currently editing these settings'
+* [GitHub:#3608861] tinyMCE style for use in custom manager theme
+* [GitHub:#78bc5f3] $modx->getSettings
+* [GitHub:#dd5d8f3] Fix - Don't parse EVAL binding at the TV form
+* [GitHub:#b3ab833] Update value+1 in login.processor
+* [GitHub:#c15a609] fix resourse.php
+* [GitHub:#3d9186f] Ditto - &noResults parameter doesn't work
+* [GitHub:#eea2a6b] Wayfinder sets "last" class to all items
+* [GitHub:#39a2e5c] $modx->sendmail() cc and bcc
+* [GitHub:#1bcc38e] $modx->sendmail() $param['from']
+* [GitHub:#cb69e7d] TinyMCE - toolbar style
+* [GitHub:#8d55236] Requirements not checked php version
+* [GitHub:#b30c2e2] Tools>Export - language entry
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#006b40c] Refactor resource lib
+* [GitHub:#0448020] eForm: Remove not needed function parameter
+* [GitHub:#93ba7f9] Removing superfluous variables
+* [GitHub:#c9fd858] Removing unused keys
+* [GitHub:#9d8f797] Code issues: Removed unused code, fixed missing semicolons, corrected DocBlock declaration
+* [GitHub:#7c79471] Code issues: Removed semicolon
+* [GitHub:#49c0ed6] Delete unused code
+* [GitHub:#c6d5136] Change escape logic in logEvent - substr non-escaped source - send mail with non-escaped source
+* [GitHub:#5ce9296] Use db->escape() instead addslashes()
+* [GitHub:#781a578] <ul> only if count roles > 0
+* [GitHub:#428b523] Disable direct call of filesource/plugin.filesource.php
+* [GitHub:#7fdf3c2] Fixes in QM+ - get "Individual user language setting" from session (mgrUsrConfigSet) - use MODX_MANAGER_PATH instead MGR_DIR for include() - delete unused modx->getDocument() call
+* [GitHub:#2ff654f] Use MODX_MANAGER_PATH for include
+* [GitHub:#6c4f6b4] Add more debug info about query
+* [GitHub:#3fac66b] Use clearCache('full')
+* [GitHub:#4aca668] Show snippet params in debug info only if it's present
+* [GitHub:#e74aee6] Stop the unnecessary call recursive functions
+* [GitHub:#e5fb3aa] Use new 'all' param
+* [GitHub:#98acdd6] MariaDB. POSIX collating elements are not supported
+* [GitHub:#7300f38] Update TinyMCE default width to 100%
+* [GitHub:#21f3463] Sort cached parameters
+* [GitHub:#3bfdfd7] Send user processor mails as text.
+* [GitHub:#ccbe3b9] Use modx_charset for non japanese languages als mail charset
+* [GitHub:#651e846] Send system mails as text More detailed error mail
+* [GitHub:#65b9087] New design of installer like Revo
+* [GitHub:#89e5c14] Wayfinder - Use __construct()
+* [GitHub:#74fea39] Keep original publish state, publishedon, publishedby on save
+* [GitHub:#0da61aa] Updated Japanese Language - thanks to Mika Kobayashi
+* [GitHub:#3e7cd8c] $virtualDir= $this->config['virtual_dir'];
+* [GitHub:#07960d2] Use published='all' for one query
+* [GitHub:#9b0c95d] Info about character_set_database and collation_database
+* [GitHub:#a23ec37] Now we can specify document ID if needed
+* [GitHub:#7dafcf8] DB request only made if $hereId != $modx->documentObject['id']
+* [GitHub:#64d730f] sample-robots.txt added Disallow: /assets/packages/
+* [GitHub:#ed0d697] Delete unnecessary bold tags
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#cd61342] Updated polish language
+* [GitHub:#cb6e8be] Updated Finnish Language - thanks to Kari Söderholm
+* [GitHub:#c938674] New feature - @@EVAL at the TV form
+* [GitHub:#79e1f0f] Added polish eForm language - thanks to Piotr Matysiak
+* [GitHub:#f9eeb72] Updated Finnish language
+* [GitHub:#9c14e64] Update - TinyMCE 3.5.11
+* [GitHub:#3a920f1] MODX DBAPI->disconnect() is incomplete
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [GitHub:#b875144] SQL injection vulnerability in manager
+* [GitHub:#f466faf] Fix possible SQL injection vulnerability in manager
+* [GitHub:#45f47c6] Fix possible XSS vulnerability in manager
+* [GitHub:#0919124] Harden index-ajax.php
+* [GitHub:#13eac12] Update AjaxSearch to 1.10.1 - Security/Bug fixes
+
+MODX Evolution 1.0.13 (Feb 23, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#10073] Define in php < 5.3
+* [#10076] Undefined variable in manager panel
+* [#10173] mm_rules hide tv needs to hide split too
+* [#10177] Add - Ditto language entry
+* [#10192] 500 error with save setting if install in subfolder
+* [#10195] Lost tinyMCE theme full
+* [#10196] [+prefix+] -> $modx->getFullTableName($tableName);
+* [#10198] Codemirror template
+* [#10200] Translation on transifex not possible
+* [#10203] @Binding does not work the same
+* [#10212] Version 1.0.12 doesn't seem to work with Reflect
+* [#10225] Increment method Resource ID - Incomplete?
+* [#10235] Webuser can't change Email
+* [#10236] [phpthumb] source filename bug
+* [#10239] mm_rules.inc.php in russian
+* [#10240] Improve onchange trigger for file/image input
+* [#10266] Error if start_page have get
+* [#10273] TinyMCE compatibility with IE11
+* [#10283] modx_sanitize_gpc problem
+* [#10284] modx_sanitize_gpc breaks eForm
+* [#10293] eForm: when using ccsender, 'to' address is visible
+* [#10308] easy2gallery menu not visible
+* [#10309] Don't save SMTP password if field was emptied manually
+* [#10336] eForm sendAsText and htmlspecialchars
+* [#10339] eForm: retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [#10348] Ditto Debug issues
+* [#10356] Closing chunk tag confuses the parser
+* [#10357] Ditto does not work in @EVAL
+* [#10358] FCKEditor && $_SERVER['HTTP_HOST'] with port
+* [gitHub] AjaxSearch: Adding charset header in Ajax Mode
+* [gitHub] $key could be empty if the placeholder tag is not closed or if it is directly closed
+* [gitHub] Fix for not set $_SESSION key
+* [gitHub] Ditto: Fix outerTpl
+* [gitHub] Fix - Save button in file manager
+* [gitHub] Fix missing calendar icon
+* [gitHub] Bugfix for closing opt group tag
+* [gitHub] Restored textareamini
+* [gitHub] Don't save SMTP password if field was emptied manually
+* [gitHub] Codemirror: matchBrekers fix and turn on by default
+* [gitHub] Full request url in messageQuit
+* [gitHub] Fix SQL error when calling optimize method
+* [gitHub] Fix backup format file Y-m-d_H-i-s - now new always top
+* [gitHub] Clean filenames with KCFinder - use of TransAlias class and plugin settings
+* [gitHub] CodeMirror fails to refresh in QuickManager+
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [#10278] Update ManagerManager built-in fields for 1.0.12
+* [#10178] Set permission to config.inc.php when install
+* [#10208] Improvement several text strings
+* [#10271] Modify save button position in file manager
+* [#10300] Allow array parameter in phpthumb snippet
+* [#10349] FirstChildRedirect options
+* [#3137] save_content.processor.php site_start save condition tune. (not old-date set)
+* [#3159] $_lang['install'] button is changed to $_lang['btnnext_value'] button.
+* [#3154] Datebase name default value should be empty.
+* [gitHub] The item of "Update" is concealed at a new installation.
+* [gitHub] Manager Users - List item tuning. Many user env useful.
+* [gitHub] View manager logs - grid view tune
+* [gitHub] Reformatted indents and changed double quotes to single quotes in merge functions
+* [gitHub] Reworked eval snippets/plugin functions and MODX error level detection
+* [gitHub] eForm: Retain classes for checkboxes (and other form fields that have a name attribute with an array)
+* [gitHub] eForm: validation messages with span (for better styling with css)
+* [gitHub] Trigger change event for file/image inputs
+* [gitHub] Add css class to displayparams table, removed inline style
+* [gitHub] Use same tags and styles as other fields in manager.
+* [gitHub] Netbeans doesn't like 'and' as classname
+* [gitHub] Updated language files
+* [gitHub] Change nicesize
+* [gitHub] Change snippetsCode out
+* [gitHub] Change input size in access permissions
+* [gitHub] Correct preview link
+* [gitHub] Restore view_eventlog permission on site_shedule
+* [gitHub] Make one point to clearCache and add params
+* [gitHub] Rename MODx to MODX
+* [gitHub] Language files for core and core snippets are now handled by Transifex
+* [gitHub] Changed ConvertDate to direct call $modx->toTimeStamp
+* [gitHub] Change "event->alert"+"include mutate_*" to "manager->saveFormValues"+ webAlertAndMsg
+* [gitHub] Change webAlert() to webAlertAndQuit() and mode webAlert() to deprecated.functions.inc.php
+* [gitHub] Use while in db->makeArray()
+* [gitHub] Use db->makeArray(), db->getColumn() instead of loops
+* [gitHub] Change db loops style from for to while
+* [gitHub] Change nicesize() to $modx->nicesize()
+* [gitHub] update $modx->getDocuments 
+* [gitHub] update $modx->getTemplateVars 
+* [gitHub] update $modx->getTemplateVarOutput 
+* [gitHub] update $modx->getDocumentChildren
+* [gitHub] update $modx->getDocumentChildrenTVarOutput
+* [gitHub] update $modx->getDocumentChildren
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [gitHub] Wayfinder: ability to use all document fields like [+longtitle+] or [+pagetitle+]
+* [gitHub] Wayfinder: ability to @INHERIT custom TVs
+* [gitHub] WebLogin: @FILE ability for &tpl
+* [gitHub] Manager with role = 1 can see all documents in frontend and backend
+* [gitHub] Setup module depedencies
+* [gitHub] in manager now can go to selected tab from url with &tab=#
+* [gitHub] CodeMirror: new shorts for emmet
+* [gitHub] the method “$modx->parseText” which parses a text has been added.
+* [gitHub] Improve file/image set url for inputs that are not direct children of the form (i.e. in a colorbox)
+* [gitHub] Add backtrace info to dumpSql
+* [gitHub] Add dumpPlugins & pluginsCode out
+* [gitHub] Add hide plugin in sort
+* [gitHub] Patch findTemplateVars for compatibility with HPx
+* [gitHub] Add ID in QM+ toolbar.
+* [gitHub] add ID in title for edit document
+* [gitHub] update ManagerManager to 0.6.1.
+* [gitHub] update ajaxSearch to 1.10.0.
+* [gitHub] update Wayfinder to 2.0.2.
+* [gitHub] update Eform to 1.4.5.
+* [gitHub] Breadcrumbs 1.0.4 (option to hide pages with certain templates from crumbs list)
+* [gitHub] phpthumb 1.2 (not include phpthumb class if have resized images)
+* [gitHub] KCFinder - Remove superfluous update check from kcfinder
+* [gitHub] Automatic create .htaccess in cache folder if it is a subfolder of assets/cache
+* [gitHub] FirstChildRedirect 2.0
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [gitHub] Prevent XSS exploits misusing the site_url system setting
+
+
+
+MODX Evolution 1.0.12 (Sep 12, 2013)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#10190] fix lang (spanish, russian, nederlands)
+
+
+MODX Evolution 1.0.11 (Sep 11, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9933] insideManager - security fix
+* [#10180] ForgotManagerPassword - Improvement reset url
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#9823] IE 10 -> FCK editor is blank
+* [#9848] System Configuration screen layout issues with IE10
+* [#9865] Fix ManagerManager field rules
+* [#9870] critical--> Login won't let mgr, web users login with special characters in password
+* [#9875] Wayfinder: parametrize entity encoding title, linktext, introtext, description
+* [#9899] font-family Arial for manager
+* [#9910] superfluous " before 'new module'
+* [#9920] Quickmanager+ 1.5.5 Frontend-editing
+* [#9921] Quickmanager+ 1.5.5 inline template variable buttons not saving (furl on)
+* [#9932] load TVs only if template not _blank
+* [#9936] /assets/js/ being used?
+* [#9938] eForm: email field and ccsender/automessage
+* [#9959] SEO Strict URLs 301 redirect
+* [#9977] datapicker not work in IE9
+* [#9989] Cannot change email address for an exisiting web user
+* [#10008] eForm: allow tag attributes with '-' inside
+* [#10010] Fix - Define MGR_DIR
+* [#10028] Fix - RewriteRule
+* [#10059] error when install sampleData
+* [#10060] Template Variable Date Picker CSS Z-Index problem
+* [#10065] TinyMCE theme full not working
+* [#10066] check in install backup and .thumbs writable?
+* [#10068] tinyMCE no add images from KCfinder
+* [#10090] TinyMCE: Parameters aren't being passed through properly
+* [#10091] ManagerManager Javascript failing as jQuery is not installed
+* [#10105] Need encode plugin parameters
+* [#10109] Fix Tab pane ID
+* [#10115] Fix table structure at the new install
+* [#10117] Set "0" default template ID
+* [#10119] Fix - Table structure upgrade sql
+* [#10123] update managermanager to 0.3.11
+* [#10142] database name with "-"
+* [#10153] Can not update block user status when login
+* [#10162] Multi line @EVAL statement
+* [#10171] Ditto - TV name issue
+* [#10176] Ditto rss format - Missing link element
+* [#10181] FMP - Can not login when CAPTCHA mode
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#3870] Consistent email API needed
+* [#4305] Webuser/Manageruser records don't have "City"
+* [#9714] return object or array after RunSnippet
+* [#9763] Auto rotation logs
+* [#9886] add phpthumb snippet
+* [#9887] add * @internal @disabled 1 to install plugins
+* [#9888] add CodeMirror plugin
+* [#10011] New function - $modx->getIdFromAlias()
+* [#10024] new event in core (onTreePrerender, onTreeRender , and more)
+* [#10027] Auto generate .htaccess
+* [#10036] Add new events into manager menu
+* [#10045] eForm - Replace mail function to new mail API
+* [#10047] Add SMTP for send mail
+* [#10049] add new theme (MODxRE)
+* [#10051] add CodeMirror for file-manager
+* [#10054] New DBAPI function - $modx->db->optimize()
+* [#10124] Intsrement method Resource ID
+* [#10125] Add new function - $modx->sendmail()
+* [#10137] Add new event OnLoadDocumentObject
+* [#10138] Generate cache for each $_GET parameters
+* [#10160] email notifies of system error
+* [#10186] alias_visible - ignore parent in url(optional)
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [#3432] Use menutitle instead of Pagetitle in doc_tree
+* [#3757] Update phpmailer
+* [#3833] Default template in root when Sibling is checked
+* [#4440] change MODxCarbon/style.css to make manager look better in chrome
+* [#4449] Improve search functionality
+* [#5972] Installer should check whether $_SESSION data is being correctly saved
+* [#9706] Convert language files encoding
+* [#9707] Translate error messages
+* [#9720] Deprecated core functions
+* [#9727] invokeEvent in save_password.processor.php
+* [#9795] Remove hard coded style
+* [#9797] Fetch tags without using the regular expression
+* [#9816] Add gender option
+* [#9845] [SOLVED] Snippet Parameters cannot use Chunks?
+* [#9849] Replace to DBAPI functions
+* [#9858] Extend 'Important System Files have been modified' message
+* [#9860] Delete Etomite database functions
+* [#9861] Should be core files line feed code is "lf"
+* [#9863] Convert to utf8 all core files
+* [#9873] Abstract parser statistics to own method
+* [#9884] /manager/ to MODX_MANAGER_PATH
+* [#9891] Delete phpSniff
+* [#9911] Update AjaxSearch to 1.9.3b
+* [#9922] german.inc.php (and other lang files)
+* [#9931] getPlaceholder return null if not exist
+* [#9934] Display caption for TV on TVs tabs
+* [#9939] eForm: multiple event functions separated by comma
+* [#9940] refactor exec mergeSettingsContent
+* [#9969] appeal to the module only through GET
+* [#10025] Cache documents with $_GET (optional)
+* [#10026] SEO Strict URLs (optional)
+* [#10037] Fix - Default value ($modx->config['use_alias_path'])
+* [#10038] added sorting when viewing children documents
+* [#10039] permit duplicate aliases in different folders
+* [#10044] IE layout issue in manager tree
+* [#10046] eForm - Delete set charset
+* [#10048] Description of phpthumb snippet english translation
+* [#10050] Replace MCPUK to KCFinder
+* [#10055] Use placeholder in language files
+* [#10058] Update core language files
+* [#10062] Change MODx -> MODX
+* [#10071] fix snippets and plugins for smaller cache file
+* [#10097] htmlspecialchars in >PHP 5.4 no longer defaults to ISO-8859-1
+* [#10100] Add PHP compatible functions
+* [#10103] Add label tag on checkbox fields
+* [#10104] Add bold style on selected checkbox fields
+* [#10106] Add tab pane to template var edit
+* [#10107] Set default template at new template var
+* [#10108] TinyMCE - Separation toolbar settings from functions.php
+* [#10110] Add actionButtons class to elements list
+* [#10111] Add primary button class
+* [#10112] Add properties tab into elements edit
+* [#10113] Set custom widget default value
+* [#10114] Ajust role settings screen
+* [#10116] Add primary key to tables
+* [#10118] Add index key to site_content table
+* [#10120] 01-01-1970 01:00:00 when "0"
+* [#10126] Rewrite Export Static HTML function
+* [#10127] Rewrite Import HTML site function
+* [#10131] Update jQuery version
+* [#10132] QM - Update jQuery ColorBox plugin
+* [#10139] Show templateWarning message when only documentDirty
+* [#10144] add OnManagerNodeRender, OnManagerNodePrerender
+* [#10148] Message check time interval in manager is very short
+* [#10149] Use placeholder filemanager_path and rb_base_dir in settings value
+* [#10156] Improvement $modx->getDocuments() parameter value
+* [#10161] Remember last tab in access permissions pane
+
+
+
+MODX Evolution 1.0.10 (Apr 18, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9704] LFI in mutate_settings.ajax.php
+* [#9802] Security feature - Check falsification of system files
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#3449] Datepicker bug in Opera
+* [#3493] unnecessary slash in MAGPIE_CACHE_DIR
+* [#3533] AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
+* [#3698] AJAXSEARCH-85 : Wrong URL construction when using an array of values (checkboxes)
+* [#3783] Superfluous code in getTemplateVars
+* [#3847] Wayfinder does not apply lastClass if there is only one item
+* [#4088] web user photo from other site not correct
+* [#7033] incorrect unzip in file manager
+* [#7541] Upgrade of Existing Site - Error due to single quote in plugin properties
+* [#8909] Publication schedule don't use server_offset_time setting
+* [#9670] Can't log into upgrade install
+* [#9671] TinyMCE - Rewrite Japanese string
+* [#9678] eForm documentation
+* [#9679] Warning during Installation
+* [#9687] Dashboard logo background is not transparent
+* [#9688] Can not make new manager user
+* [#9694] Undefined property: DocumentParser::$mstart
+* [#9695] bug with add images from FCKeditor
+* [#9696] ImageEditor fix for php5.4
+* [#9697] seturl_js_tinymce incorrect path
+* [#9702] no string in language pack
+* [#9703] fake settings_version
+* [#9705] Snoopy.class.inc - File encode issue
+* [#9708] Improvement event log message
+* [#9709] Undefined variable error
+* [#9711] TinyMCE - two editor's plugins missing
+* [#9729] new tinylogo for qm plugin
+* [#9730] PHP error causes Tiny MCE Link List v1.0.3 to fail [Fix included]
+* [#9732] Template Var label CSS display:block [Includes FIX]
+* [#9733] mutate_web_user.dynamic.php fails to sanitize user entry
+* [#9745] cant create and edit web_users
+* [#9755] @INHERIT being output in page code
+* [#9760] Style issue
+* [#9762] MODX Installer foiled by single quotes in TinyMCE Custom Parameters?
+* [#9779] Trouble with site after upgrade JSON no longer working
+* [#9791] File browser - Undefined index error
+* [#9803] Error call datepicker in IE9 on Date Publication
+* [#9812] Issue of manager theme setting in user
+* [#9813] Error during Advanced Upgrade
+* [#9817] File browser file name issue
+* [#9822] Constant MGR_DIR already defined in config.inc.php
+* [#9823] IE 10 -> FCK editor is blank
+* [#9829] hardcoded style
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#3151] @Bindings commands enable/disable
+* [#3730] Entity encode Wayfinder placeholders
+* [#3746] don't show New Module button when user's role lacks that permission
+* [#9582] Add new config "Detection level of the PHP error"
+* [#9613] MODX Carbon Login page
+* [#9665] add more content type (json)
+* [#9673] Improvement some translations
+* [#9682] modx::getVersionData()
+* [#9683] trusted folder/file in index-ajax.php
+* [#9684] Remove entity encoded MODX tags in stripTags
+* [#9692] Escape strings in array data
+* [#9693] When use mysql_real_escape_string, execute mysql_set_charset beforehand
+* [#9764] german translation (german.inc.php) string: udperms_message
+* [#9766] Icon size hardcoded in welcome.static.php
+* [#9767] Files in assets/templates/manager should get moved into the theme folder
+* [#9776] Adding seo strict urls functionality to parser
+* [#9778] Added ability to use custom templates to login and manager lockout pages
+* [#9785] Add new placeholder to manager theme
+* [#9786] Change MODx -> MODX
+* [#9787] Add new config for manager layout
+* [#9790] Rename - title of mcpuk file browser
+* [#9810] Change new logo
+* [#9818] TransAlias plugin - Add property values
+* [#9819] TransAlias plugin - Add translation table
+* [#9831] Change MODx -> MODX in installer and sample contents
+* [#9832] Change forum url
+* [#9837] Indicate inheritanced template variable
+
+
+MODX Evolution 1.0.9 (Mar 19, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#3796] MODX security issues
+* [#8338] LFI in browser.php
+* [#8339] LFI in install
+* [#9621] SQL-injection in logEvent
+* [#471] Show custom error page if mysql is down
+* [#9624] Add .htaccess into assets/cache/
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#2893] document parser crop value of param when contain ?&=
+* [#3495] Mistake in phpSniff.core.php
+* [#3582] [ManagerManager] showimagetvs widget TV dirty check issue
+* [#3676] Ditto: german language file is corrupt
+* [#3689] Ditto relative to absolute url bug (with possible fix)
+* [#3724] Magic GPC Quotes issue in PHP 5.3.*
+* [#3835] Multiple call wayfinder with config, not load config in second call
+* [#4484] bug in wait.static.php
+* [#5403] Maximum upload size not honoured
+* [#5807] manager.lockout not styled properly
+* [#6119] sendMailMessage in save_web_user.processor.php
+* [#7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
+* [#7459] Deprecated function 'split' used in includes/datefunctions.inc.php
+* [#9398] eForm & php 5.3
+* [#9547] ManagerManager Tv-transfer options with multiple choice in a new tab
+* [#9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
+* [#9549] page not index in yandex if use FirstChildRedirect
+* [#9550] Breadcrumbs not have crumbSeparator
+* [#9563] onManagerMainFrameHeaderHTMLBlock event issue
+* [#9580] Bug in processors/delete_content.processor.php on line 40
+* [#9586] Quick Manager and system setting Automatic Template Assignment
+* [#9620] Set Manager language in Create/Edit User
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#9570] Detailed log message
+* [#9554] add Snippet IF
+* [#9566] Improvement to full table name call
+* [#9567] Add "limit" option to $modx->db->delete()
+* [#9568] @Bindings enable/disable option in System configuration
+* [#9569] Password hash algorithm
+* [#9582] Add new config "Detection level of the PHP error"
+* [#9615] Add new function for documentParser "$modx->nicesize()"
+* [#4051] german transliteration for transalias plugin
+* [#5971] Check whether manager template exists during manager login
+* [#9545] PHP 5.4 compatibility
+* [#9556] add memomy view to statistics for the modx parser [^m^]
+* [#9557] DocumentParser - remove all unused multiline placeholders
+* [#9564] OnWUsrFormRender event adjustment
+* [#9583] Refactoring System configuration in manager screen
+* [#9616] Update TinyMCE (3.3.9.2 -> 3.5.8)
+* [#9617] Refactoring backup manage
+* [#9622] Refactor "Manage Files"
+* [#9623] Refactor MODxCarbon theme
+
+
+
+MODX Evolution 1.0.8 (Jan 08, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9391] Prevent hash array exploit in Forgot Manager Login plugin
+
+MODX Evolution 1.0.7 (Nov 26, 2012)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* Prevent users from unblocking themselves in Forgot Manager Login plugin
+* [#9175] Escape $hash in Forgot Manager Login plugin
+
+
+MODX Evolution 1.0.6 (Mar 08, 2012)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#7175] Fix sanitization to strip tags recursively in parser and in eForm
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#3799] Fix table creation on MySQL databases that no longer support TYPE keyword
+* [#3699] Fix fatal error using default value on a Template Variable with @INHERIT binding
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#3796] Fix manager_language not being sanitized
+* [JA879] improvement to pageCache read logic
+* Update minimum PHP version for manager to 4.3.3
+
+
+MODX Evolution 1.0.5 (Jan 19, 2011)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1035] fix XSS vulnerability in installer
+* [#2787] fix XSS vuln. in image editor
+* [#3352] work around critical PHP bug 53632
+* [#3437] fix vulnerability in AjaxSearch allowing attacker to view arbitrary files (JVN#95385972)
+* [#3429] fix SQL injection vulnerability in AjaxSearch allowing attacker to execute arbitrary PHP code (JVN#54092716)
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-2245] 3 events not firing: OnWebChangePassword, OnManagerSaveUser, OnManagerChangePassword
+* [#MODX-1331] Resources in tree unclickable if pagetitle contains line break
+* [#100] fix TV with Input Type 'Date' and Widget 'Unixtime' returns wrong value
+* [#435] improve installer handling of Sample Site option
+* [#359] published date always set due to ManagerManager demo rules
+* [#488] Fix bad check for mysql strict mode
+* [#595] Fix bad path on Resource Editor rich text fields when TMCE in "root relative" mode
+* [#1252] Fix @SELECT multi-select listbox TV losing its value when switching Content field "Editor to use"
+* [#321] stop parser from running case-mismatched snippet calls
+* [#343] Fix Hiding "Validate Referer" warning messes up the setting itself
+* [#432] Fix TV date-layer display problem with multiple datefields in FF 3.6.3
+* [#445] Fix error displaying filenames with non-Latin charsets
+* [#577] Fix Spanish UTF8 language file
+* [#760] Fix Document tree not loading in children
+* [#609] Fix web_groups and member_groups tables can have duplicate entries
+* [#364] Fix W3C validation problem with TV image output widget
+* [#2957] Allow multibyte strings in QuickManager+ TV buttons
+* [#2711] Re-fix path bug in Image Editor
+* [#3060] Fix message count on Manager welcome page
+* [#1070] Fixed bug in DocManager where it would not create new TV values, only update existing ones
+* [#3163] Fix RSS feed encode issue
+* [#1871] Fix for file manager when aggressive caching/pre-fetching is used at the ISP level (e.g. satellite internet)
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1734] Add context parameter to the getLoginUserName() API function
+* [#4] getDocumentObject allows full alias path to be specified
+* [#443] TinyMCE updated to 3.3.9.2
+* [#23] Quick Manager+ updated to 1.5.4
+* [#421] ManagerManager updated to 0.3.9
+* [#421] AjaxSearch updated to 1.9.2
+* [#359][#421] Default Chunk for ManagerManager rules now "mm_rules"; Since demo rules are "mm_demo_rules", MM is now disabled on install
+* [#308] Return to active tab for Elements, regardless of "Remember tabs" system setting
+* [#331] Updated Czech language file
+* [#881] Improvements to Template inheritance (moved from plugin into core, added system setting to control behavior)
+* [#592] Adjustment of manager fonts
+* [#476] Improvement to New user's default role
+* [#378] Check for and disallow reserved words in Template Variable names
+* [#1360] Better handling of Template Switcher plugin
+* [#833] Manager and Web User comments field no longer limited to 255 characters
+* [#1132] New system setting to strip characters from files uploaded in Manage Files (using same logic configured for aliases)
+* [#190] Resolve hostnames config option deprecated
+* [#1065] Let manager themes have their own welcome.html page
+* [#216] Optimization of core methods (getParentIds & getChildIds)
+* [#819] Improvement in config.inc.php file (new installs only) so proper MODX_SITE_URL constant is set in API Mode
+* [#2867] Improvements to installer with respect to handling of Demo Site option and related elements
+* [#2867] Laid foundation for "installsets" or preset groups of installer elements
+* [#2963] New icons in manager resource tree (to reflect site start, error page, site unavailable and unauthorized system settings)
+* [#594] Tweaked Quick Manager window open style
+* [#487] Links updated in demo site content
+* [#3075] Apply monospace font to manager textarea fields
+* [#999] Enhance ordering logic when displaying lists of TVs
+* [#2953] Fix QuickManager+ Google Chrome font problem (text-shadow)
+* [#3063][#3064][#3065] Replace calls to deprecated db-related parser methods with calls to db class methods
+* [#2961] Wayfinder improvement - allow use of [+wf.alias+]
+* [#3061] Allow @ and . characters in remembered login name
+* [#3062] Corrections to ActionList item names (given that Documents are now Resources and Resources are now Elements)
+* [#3115] Automatically regenerate siteCache if it not found
+* [#835] @INHERIT improved to work with @FILE, and to allow additional data after the @INHERIT
+* [#3092] Remove db user and pw from hidden form fields in installer
+* [#194] Improve and fix bugs in markup on Edit Resource screen
+* [*3168] remove debugging output from DocManager when updating TVs
+* [#546] Improve DocManager usability by adding checkboxes to TVs and removing "ignore list", which was hard to use
+* [#3361] Allow custom TemplateVariables and output widgets
+* [#3362] Updated distributed jQuery library to 1.4.4 and updated AjaxSearch, QuickManager+ and ManagerManager to use it
+* [#2627] New event allows plugin to inject custom markup into manager's header (header.inc.php)
+* [#3385] Wayfinder optimization when hideSubMenus is enabled
+* [#3386] Breadcrumbs optimizations
+* [#3543] Personalize updated to 2.1
+
+
+MODX Evolution 1.0.4 (Jun 8, 2010)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1964] WebLogin does not prevent brute force attack
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-1957] Danish language file update
+* [#MODX-2018] Fix Multiple TinyMCE plugins activated after upgrade
+* [#MODX-1865] 1.02 to 1.03 Upgrade Error with mySQL STRICT mode, "Templates: Incorrect integer value"
+* [#MODX-1883] WebLoginSideBar chunk "forget" typo
+* [#MODX-1880] Superfluous single quote in tree.php
+* [#MODX-1878] Wrong path for _tx_.gif image in multiple files
+* [#MODX-1896] Can't properly execute logEvent function when user is not logged in (strict sql mode on)
+* [#MODX-1900] Fixes and tweaks for search.static.php
+* [#MODX-1905] Broken paths to images, non valid xhtml tags, unmatched tags
+* [#MODX-1884] Bug in breadcrumbs 1.0.1
+* [#MODX-1833] Incorrect rendering of module parameters for 'list-multi' type
+* [#MODX-1920] Problem with Ditto and server time offset
+* [#MODX-1925] WebLogin loses GET request elements if you have to login before getting to the page
+* [#MODX-1926] Revert Cache Sync tokenization updates due to inconsistencies across PHP environments
+* [#MODX-1893] Code registered with "regClientHTMLBlock" not inserted in cached documents
+* [#MODX-1906] Put duplicate button on resource edit page
+* [#MODX-1814] Irregular character string in QuickManager class
+* [#MODX-1003] Removed font: Icon; from sortabletable class to let normal font-size view. [#MODX-1818]
+* [#MODX-1874] Minor error in dbapi and debug
+* [#MODX-1487] Error when configuring database on initial install process
+* [#MODX-1882] webUserGroupNames $_SESSION value not set until second page land in WebLogin
+* [#MODX-1510] Add a 'Remove Locks' permission to roles
+* [#MODX-1881] ManagerManager errors when PHP version less than 5.2.3
+* [#MODX-1938] DB backup in Manager fails on IE under https
+* [#MODX-1954] Add system setting to allow configuration warnings to only be shown to Admins
+* [#MODX-1958] tmplvars.format.inc.php missing image property align
+* [#MODX-1959] E_DEPRECATED error in ImageEditor
+* [#MODX-1960] ImageEditor has incorrect location for the image src
+* [#MODX-1962] E_DEPRECATED error in ManagerManager
+* [#MODX-1963] DocManager, after tree sorting, can show document tree JS alert
+* [#MODX-1947] and [#MODX-1956] Allow $modx->getDocumentObject() to get other documents than the currently requested
+* [#MODX-1927] Manager Log fails to display when there are too many log entries
+* [#MODX-1990] Update common transliteration table for TransAlias plugin [#ADDON-152], update InheritTemplate plugin to include Sibling option
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1458] Make default click behavior for the Tree menu a system option
+* [#MODX-1879] Mistake in the Netherlands language file
+* [#MODX-1955] Make installer path setting changes required for Web PI installer
+* [#MODX-1957] Update language files
+* [#MODX-1929] Add styling to phpinfo() screen
+* [#MODX-1931] Style update to Mutate Module screen
+* [#MODX-1932] Style update to Template Variable and Plugin Priority Sort screens
+* [#MODX-1935] Style tweaks to table bgcolor in various places
+* [#MODX-1888] Add setting for allowing control over remembering the last tab viewed or not
+* [#MODX-1977] When previewing, use friendly URLs (if enabled)
+* [#MODX-2009] Clean up handling of 'a' variable in Manager (and related type casting changes)
+
+MODX Evolution 1.0.3 (Apr 1, 2010)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1758] Fix issue described in JVN#46669729, XSS possibility with searchHighlight plugin
+* [#MODX-1793] TinyMCE link lists are not secured if manager session does not exist
+* [#ADDON-136] Prevent SQL injection on Weblogin
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-1472] Bad path to MODxCarbon transparent GIF
+* [#MODX-1396] Add language string on module configuration screen
+* [#MODX-1424] Fix SQL errors when adding user/resource groups with apostrophes in them
+* [#MODX-1589] Remove duplicated pagetitle sort option for tree
+* [#MODX-1608] Fix background image on TV sort list for templates
+* [#MODX-1298] Links exchanged in demo site for Developers and Administration guides
+* [#MODX-1079] "Edit resource" title changes on changing the template
+* [#MODX-1630] Correct modx version reference in System Information screen
+* [#MODX-1537] Weblink internal doc ID selection icon doesn't change
+* [#MODX-1408] getVersionData out of sync with version.inc.php
+* [#MODX-1431] Correct typo in install footer
+* [#MODX-1449] Typo in demo site text
+* [#MODX-1580] PHP typo in mutate_content.dynamic.php
+* [#MODX-1506] QuickManager+ javascript errors when editing a resource
+* [#MODX-1106] Change help icons on TV create/edit screen
+* [#MODX-1103] Element Selector, part of the letters hides in search box
+* [#MODX-1566] Fix problem with Forgot Password confirmation link in WebLogin
+* [#MODX-1659] Stay option for adding another manager web user not working correctly
+* [#MODX-1164] Unable to set cssStyle when using getHTMLGrid
+* [#MODX-1176] Correct the permissions check when duplicating chunks and plugins
+* [#MODX-1753] Fix help page layout in manager
+* [#MODX-1279] OnUserFormPrerender & OnUserFormRender events weren't receiving the ID of the user
+* [#MODX-1492] Default .htaccess file will prevent some pages being found when using friendly alias
+* [#MODX-1587] For Web or Manager Users, date of birth cannot be set before year 2000 on dropdown list
+* [#MODX-1747] Date TV input: Date Picker Container gets hidden behind other input fields
+* [#MODX-1110] After deleting a template, the assignments "template to tmplvar" are still existing
+* [#MODX-1314] Spanish utf-8 translation problem - install language file had been put in place of manager language file
+* [#MODX-1505] Get 'Missing image' boxes in manager tree
+* [#MODX-1694] Extra backslashes in ForgotManagerPassword.tpl::sendEmail
+* [#MODX-1096] Additional fix, only show MODX tables on backup screen
+* [#MODX-1271] Remove unused chunk from sample site
+* [#MODX-1410] Update MooTools to 1.1.2
+* [#MODX-1429] sysAlert js function not working
+* [#MODX-1168] Double tooltips in IE7
+* [#MODX-1175] User with no create new permissions can duplicate a document
+* [#MODX-1206] Identifying the site root in the manager control panel
+* [#MODX-1141] Mootools Error if logged in with SSL encryption (https)
+* [#MODX-1114] Duplicate name on update template
+* [#MODX-1225] PHP error after install
+* [#MODX-1609] User upload file types unable to be unticked
+* [#MODX-1427] Unexpected character in input error after upgrading
+* [#MODX-863] Throws an error while running under PHP 5.3.0
+* [#MODX-1775] Remove blank line stripping from cache processor, can cause unwanted changes to chunks
+* [#MODX-1460] ManagerManager mm_renameSection for 'tvs' renames the 'content' section instead
+* [#MODX-1462] Date Picker is not displaying the current date 'green box' or correct month when re-editing a date
+* [#MODX-1799] $modx->addEventListener() doesn't operate because of the syntax error
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1107] Make font-size bigger on tree sort option dropdowns
+* [#MODX-1432] Updated Danish language file
+* [#MODX-1102] Minor layout fixes to import site, export site, and settings screen
+* [#MODX-1078] Stop scrollbar showing on welcome screen
+* [#MODX-1101] Minor styling fix for access permissions screens
+* [#MODX-1333] Add missing credit images to MODxCarbon theme
+* [#MODX-1159] Updated Norsk language file
+* [#MODX-1629] DataGrid control does not have a THEAD
+* [#MODX-1366] Hide "Manage META tags and Keywords" button if show_meta system setting is set to No
+* [#MODX-1464] Make welcome.static.php use style.php for large icons
+* [#MODX-1610] Installer doesn't install templates
+* [#MODX-1098] Add interim solution to the IE8 compatibility issues
+* [#MODX-1365] Non-admin managers to edit contentType and content_dispo for resources they create
+* [#MODX-1622] Remove support.inc.php as same can be achieved by customizing the manager HTML templates provided
+* [#MODX-1452] Show File path defaults in Site Config
+* [#MODX-1127] When creating roles, "View help pages" cannot be deselected
+* [#MODX-1757] File browser CSS tuning
+* [#MODX-1100] Delete unused template files
+* [#MODX-1320] Clean up baseline style.php file
+* [#MODX-1407] Prevent MODX 404-handling for missing images
+* [#MODX-1600] Add unique CSS ids to ease DOM manipulation of content editing Manager pages
+* [#MODX-1105] Minor Manager cleanups to remove deprecated elements
+* [#MODX-1761] Remove Templates from SQL install files
+* [#MODX-1767] Improve Evo installer to remove leading/trailing elements surrounding opening docblock
+* [#MODX-1760] ManagerManager updated to version 0.3.8
+* Allow TV definitions to be installed via the MODX installer
+* [#MODX-1756] mcpuk internal file browser hard coding strings pattern
+* [#MODX-1795] Tuning context menu order
+* [#MODX-1800] Finnish language file for Evolution 1.0.3
+* [#MODX-1803] Swedish language files
+* [#MODX-1808] Spanish language files
+* [#MODX-1804] and [#MODX-1805] Danish language file
+* [#MODX-1760] TinyMCE updated to version 3.3.2
+* [#MODX-1760] QM+ updated to version 1.3.4.1
+* [#MODX-1816] Russian language files
+* [#MODX-1817] German language files
+* [#MODX-1820] Japanese language files
+* [#MODX-1195] Paths reset button for filemanager and assets
+* [#MODX-1821] Use manager language for default language setting in Ditto
+
+
+
+MODX Evolution 1.0.2 (Nov 4, 2009)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1391] Fix possible security exploits in WebChangePwd snippet
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-1406] Error: Cannot redeclare getsvnrev()
+* [#MODX-991]  Admin password form not appearing during install
+* [#ADDON-61]  Doc Manager, Template Variables not updated
+* [#MODX-1157] Updating TV order on templates creates error
+* [#MODX-1039] "No active users found" in Welcome and System Info screens hardcoded
+* [#MODX-1321] [#MODX-1329] and [#MODX-1343] When non-admin users modify resource it loses 'type' and 'doc type'
+* [#MODX-1339] Wrong date format for datepicker inserted into DB as part of new install
+* [#MODX-994]  Setting time in datepicker to a single digit gives incorrect formatted date
+* from-forums  Fix problem where resources couldn't be deleted from the Resource Edit screen
+* [#ADDON-49]  Forgot Manager Login bug in sql query which prevents user from completing the password reset
+* [#ADDON-52]  Hardcoded charset in ForgotManagerPassword plugin
+* [#MODX-1092] DocManager - Adding Document Permissions does not properly set privateweb flag in modx_site_content
+* [#MODX-1386] After install, MODX didn't show configuration page
+* [#MODX-1338] Alias field accepts percent character
+* [#MODX-1215] Unixtime widget uses wrong pattern for MySQL date string
+* [#MODX-1364] Add check for tokenizer extension in cache_sync processor
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1322] New french language file for eForm
+* [#MODX-1071] Auto select manager language during install
+* [#MODX-1097] Tweak htaccess rule template and improve wiki documentation of such
+* [#MODX-1104] Remove width and height attributes on weblink icon on Edit Resource screen
+* [#MODX-1152] Portuguese-br language file update
+* [#MODX-1323] French language file update
+* [#MODX-1336] Italian language file updates
+* [#MODX-1277] Move jquery.colorbox.min.js to QM plugin directory as it's solely intended for use with QM
+* [#MODX-948]  Parser: Snippet calls no longer break with blank characters or when broken across multiple lines
+
+
+MODX Evolution 1.0.1 (rev 5946 - October 22, 2009)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager.
+* [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
+* [#MODX-1227] Add referrer check configuration warning to Manager
+* [#MODX-1218] Enable CSRF check by default for sites that set headers properly
+* [#MODX-1262] Security enhancement to ForgotManagerPassword plugin
+* [#AJAXSEARCH-46] Prevent content injection with JS disabled (AjaxSearch 1.8.4)
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-353]  Duplicate container cause problems
+* [#MODX-586]  Cancel button on the move document page does not redirect you to the selected page
+* [#MODX-842]  Missing Template Variable title in language files
+* [#MODX-1000] On editing a template variable the right "Cancel" button is positioned weird
+* [#MODX-1001] Navigation issues when pressing the cancel button
+* [#MODX-1017] Removed unused code in welcome.static.php
+* [#MODX-1024] Additional check for language files in Manager with graceful fallback to English
+* [#MODX-1025] No alerts on deleting the keywords
+* [#MODX-1065] Quoted_printable function in save_user.processor.php not available in some server configurations
+* [#MODX-1075] String not properly translated in French installer translation
+* [#MODX-1077] Login panel updates
+* [#MODX-1084] Download path issue in File Manager
+* [#MODX-1087] JS error when manager don't have rights for trashcan
+* [#MODX-1096] System info page shows all tables in DB
+* [#MODX-1099] Typo in the name of language variables in File manager
+* [#MODX-1129] Editing form layout broken in IE6
+* [#MODX-1131] Remove "Show Preview Window" from Site Configuration page
+* [#MODX-1145] Begin deprecation of META Tags management in the Manager
+* [#MODX-1160] Missing label on search form for manager logs (Dupes: [#MODX-1041] [#MODX-1083])
+* [#MODX-1184] After creating a manager user the head title show wrong text
+* [#MODX-1188] fix TransAlias installer template, plus other improvements to TransAlias by rfoster
+* [#MODX-1190] Installer fixes and enhancements
+* [#MODX-1095] Fixed Spanish Translation typos and missing labels and convert it to UTF-8
+* [#MODX-1286] Ensure version is saved to DB when saving configuration settings
+* [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODX stripAlias() function)
+* [#MODX-1301] Ensure correct Resource Type option is selected when adding Resources and Weblinks
+* [#MODX-1309] Stop upgrades overwriting the element category
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-180]  Convert weblink to document (and vice versa) (merge from 1.0 dev branch)
+* [#MODX-828]  Need to be able to tell user access permissions by the Site Tree icon/text
+* [#MODX-929]  Swap default click behavior for the Tree menu (edit vs view data)
+* [#MODX-988]  Automate storage of version number in settings table during install/upgrade
+* [#MODX-1011] Make config language string punctuation consistent for field labels
+* [#MODX-1034] Missed update to version number
+* [#MODX-1038] Remove space after closing ?> tags
+* [#MODX-1069] Improve layout/simplify Module Manager page
+* [#MODX-1137] Change Manager term "alias" to "URL alias"
+* [#MODX-1138] New more flexible and manageable Installer that enables making custom installer packages for Evo much simpler
+* [#MODX-1149] Update language string Resource_X and Document_X keys to match actual changes
+* [#MODX-1211] Add configuration option to QM+ - allows user to choose top or bottom placement of toolbar overlay in browser window
+* [#MODX-1244] Add ManagerManager 0.3.5
+* [#MODX-1245] Update QM+ to version 1.3.3
+* [#MODX-1246] Update AjaxSearch to 1.8.4
+* [#MODX-1276] Reduce site cache size by removing PHP comments
+* [#MODX-1282] Swedish language files for Evolution 1.0.1
+* [#MODX-1284] Czech language file for Evo 1.0.1
+* [#MODX-1287] New Danish language file for Evo 1.01
+* [#MODX-1288] New Danish language file for Evo 1.01 install
+* [#MODX-1295] Demo Content categories need to be set
+* [#MDOX-1302] Create demo content defaults for ManagerManager
+* [#MDOX-1306] Clean up styling on Manager login page
+* [#MDOX-1307] Update styling on QM+ to improve usability
+
+
+MODX Evolution 1.0.0 (rev 5601 - July 30, 2009)
+===================================
+--------------------------------------------
+Bugfixes & Feature Requests:
+--------------------------------------------
+* [#MODX-583]  Alter email-related Manager settings by reloading from specific translations
+* [#MODX-1061] Link list fixed in TinyMCE
+* [#MODX-1060] Escape language string for the recycle bin to fix a problem with disappearing trees
+* [#MODX-1027] Fix broken images with Image TV Preview plugin when no image selected
+* [#MODX-1033] Implement consistent dates throughout the Manager and add a date format setting
+* [#MODX-1045] Replace JS Alert tooltips with Mootools hover tooltips
+* [#MODX-1049] Cancel action when editing a module goes to wrong location
+* [#MODX-1026] Canceling a template change in Manager lost the original template setting
+* [#MODX-1028] Manager did not properly handle failed login attempt counts or block users
+* [#MODX-999]  Fixed width buttons break with some languages (setting pages)
+* [#MODX-1023] Date and Image TV changing doesn't work correctly in DocManager.
+* [#MODX-1013] Make DocManager use the new DatePicker
+* [MODX-1009] Fix grammar/spelling error in english language file.
+* [MODX-1008] Fix broken icons in Resource Overview->View Children
+* [#MODX-989] Fix issue with DatePicker time field styling
+* [#MODX-993] Fix broken URL rewriting when friendly alias paths are enabled
+* [#MODX-981] Replaced missing event icons.
+* [#MODX-968] Replaced folder icon in tree. (nodes.php)
+* [#MODX-974] Fixed missing save icon in files.dynamic.php
+* [#MODX-898] Allow passing script names and versions to regClient*, setting stage for more intelligent handling of script inclusion
+* [#MODX-863] Isolate deprecated magic_quotes-related code inside PHP version checks for less than 5.3 to avoid deprecated warnings in 5.3/errors in 6.0
+* [#MODX-941] Add % character to transliteration plugin tables
+* [#MODX-971] Fix to TransAlias plugin to allow it to work with the Import HTML action.
+* [#MODX-591] Escape the database user and password in config.inc.php during install
+* [#MODX-952] Modified the warning message with MySQL 4.x
+* [#MODX-944] Installer with IE8 does not show final 'Install' button on last page
+* [#MODX-904] Add better email format checking when adding/updating users.
+* [#MODX-950] Scroll the File Manager to the editing textarea when clicking the edit button.
+* [#MODX-905] Fix SQL error in cache_sync processor
+* [#MODX-866] Allow manual editing of the datepicker fields
+* [#MODX-720] The website name on the Manager login page links back to the front end site
+* [#MODX-916] Better handling of text direction and encoding for Manager languages
+* [#MODX-882] Specify the default Manager language during installation
+* [#MODX-815] Users without edit or create module permissions can get to Modules editing screen
+* [#MODX-390] Infinite loop possible during install
+* [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
+* [#MODX-851] Manager User and Webuser email messages were always in English despite the language setting
+* [#MODX-830] Friendly URLs can now contain UTF8 characters
+* [#MODX-897] Dynamic title for create/edit Resource action page depending on state
+* [#MODX-891] Manager language files contains hard-coded CSS spans
+* [#MODX-867] Add system events to Manager log Welcome page to make custom dashboard plugins possible
+* [#MODX-602] Remove the calltime-pass-by-ref errors on the Export Site HTML screen.
+* [#MODX-725] Retain checkbox TV values when changing template, also fix postback rendering of TV values (broken in a recent commit)
+* [#MODX-810] Ensure that the web user ID is passed correctly to the OnWUsrFormPrerender and OnWUsrFormRender events.
+* [#MODX-733] Apply fix for multi-byte characters being garbled in 'Site' > 'Search'.
+* [#MODX-719] Small fix to DocManager to prevent parse error when no doc groups are present and an update to doc groups is attempted.
+* [#MODX-741] Fix MCPUK browser navigation to work with folders that have spaces in them.
+* [#MODX-813] Fix the image editor's src link for the image tag.
+* [#MODX-822], [#MODX-465] Add basic file encoding for the file manager, not a complete solution but consensus that it's better than previous.
+* [#MODX-847] Replace QuickEdit with QuickManager+ (includes /assets/js/jQuery 1.3.2.min.js)
+* [#MODX-838] Ensure Datepicker correctly closes when select and textboxes lose focus without being changed.
+* [#MODX-806] fix duplicated option groups in template picker
+* [#MODX-581] Installer doesn't check /assets/media, /assets/flash and /assets/files directories
+* [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
+* [#MODX-832] Implement new DatePicker in the MODX Manager.
+* [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
+* [#MODX-806] Add option groups to template chooser in Manager
+* [#MODX-571] Fix TV date picker when special characters in TV name
+* [#MODX-588] Missing else in document parser that orphaned a small piece of code
+* [#MODX-608] Missing "$this->" in SystemEvent::stopPropagation()
+* [#MODX-592] Site Cache improvement for only storing doctypes that are different from text/html in cache files
+* [#MODX-681] Manager include path fix for occasional errors and working better with third-party libraries
+* [#MODX-449] Incorrect language setting for RTE used in front end instances at install
+* [#MODX-812] Added Hebrew Manager translation
+* [#MODX-209] Amended original patch: remove urlencode() call for viewable files (i.e. images) when generating the preview buttons in the file manager.
+* [#MODX-85]  Removed transliteration code from core and turn into a plugin
+    - Supports multiple languages
+    - Template Variable can override transliteration table (file) per-document/section (supports @INHERIT)
+ 	- Move stripAlias function into parser
+    - Add OnStripAlias parser/system event
+* [#MODX-445] Fix case where deleted docs with the same alias as another document caused a 404 response. Remove deleted docs from site cache.
+* [#MODX-593] Add missing summary/introtext to Weblink manager page
+* [#MODX-220] Manager language updates for sorting and formatting consistency across languages
+* [#MODX-393] Show Protected Pages issue solved by Thomas Leiritz
+* [#MODX-516] and [#MODX-397]
+    - fix to display of Access Permissions depending on Role permissions
+    - fix to preserve parent after new document save permissions error
+* [#MODX-397] Fix logic: creating documents inside restricted containers
+    - disallow users from creating restricted docs they can't access
+    - disallow  "Create Document Here" and "Create Weblink Here" under restricted parents
+* [#MODX-572] new Elements must be given unique names
+    - applies only to elements created with "New..." buttons
+    - templates, tvs, plugins, snippets, chunks, modules
+	- Removed isNumber function, not needed since PHP < 4
+* [#MODX-620] Add boolean support to Datagrid class
+* [#MODX-446] Committing Soushi's cache sync patch (re: optimizations to cache syncing when the site has a large number of documents)
+* [#MODX-686] Major updates to Dutch language file
+* [#MODX-582] Update and alphabetize default upload-able file types for new installs. (Also removes php files from list)
+* [#MODX-457] Updates to Swedish language file
+* [#MODX-363] Missing URL types for cleaning in save content processor
+* [#MODX-701] Polish updates
+* [#MODX-713] Brazillian Portuguese updates
+* [#MODX-580] Update Italian language files
+* [#MODX-515] Fix non-clickable view unpublished role label
+* [#MODX-724] Reference wiki page for fix for multi-server/cloud deployments and unexpected logoffs
+* [#MODX-734] Typo in language file it's->its
+* [#MODX-410] access permissions will be inherited from parent when user creates new child but and does not have role permission for access permissions
+* [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
+* [#MODX-394] Update Russian installation file per http://forums.modx.com/thread/1294/fixes-what-can-i-do-to-be-heard
+* [#MODX-715] Fix .jp lang file for incorrect hard-coded link
+* [#MODX-541] Fix the include statement in getUserData() method
+* [#MODX-650] bad reference to csshover.htc (now csshover2.htc)
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* Fix get_func_args() error (evident on PHP 5.3) in Ditto/Reflect
+* Many updates to Manager and Installer language translations
+	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
+	- Simplify language and remove overly-wordy phrases
+	- New language strings where appropriate and needed
+	- Replaced hard coded language strings in Import and Export action pages with new language strings
+	- Better handling of Manager language encoding and text direction
+    - Now handles RSS, Word, Excel, XML, HTML, CSS, JS, PDF and plain documents with custom icons in the Site Tree
+    - Able to reload and choose language for key site settings like Signup emails, password reset emails, etc.
+* Remove legacy code no longer needed
+    - Removed QuickEdit module (instructions only)
+	- Removed News Publisher snippet (did not support TVs)
+	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used
+	- Update demo content to remove Prototype/Scriptaculous dependencies
+* Convert manager to use Mootools exclusively
+	- Manager Login page
+	- Convert the 'Sort TV by template' and 'Plugin Execution Ordering', also fix the button CSS styling on those pages
+ 	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODX versions
+* Upgrade Add-on: eForm 1.4.4.6
+* Upgrade Add-on: AjaxSearch 1.8.3
+* Updated Add-on: TinyMCE 3.2.4.1
+* Fix the Template Variable "Lock variable for editing" checkbox
+* Removed erroneous parameter in isFrontend() method call
+* Exclude /assets and /manager by default from MODX rewrite and to comment out example.com -> www.example.com rule by default
+* Fix bug when login page language file was missing translation strings. Now falls back to main English file.
+* Added additional database diagnostic info to system info page (auto-generated paths)
+* Updated the MODX installer
+    - New skin
+    - Streamline process by removing two steps
+    - Make Connection/Collation/Default Admin User only show when prior steps are completed first
+    - Now set the default Manager language during new installs instead of relying on installation language
+* New MODX Carbon default theme for MODX Evolution 1.0 release
+	- Removed deprecated themes for Evo 1.0 release
+	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
+	- Remove Bottom Button Bar plugin due to new static button bar similar to Revo
+* Make upgrades between versions simpler
+ 	- Moving Manager login/welcome/blocked templates into /assets/templates/manager
+	- Moving Manager Help pages into /assets/templates/help
+* Manager RSS feed improvements
+	- Updated RSS feeds to more manageable number of entries for welcome page.
+ 	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
+
+For earlier changelog entries, please see the /install/changelog.txt file included with the MODX 0.9.6.3 distribution

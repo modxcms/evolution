@@ -5,7 +5,7 @@ class CJotDataDb {
 	var $isNew;
 	var $tbl = array();
 	
-	function CJotDataDb() {
+	function __construct() {
 		global $modx;
 		$this->tbl["check"] = $modx->getFullTableName('jot_fields');
 		$this->tbl["content"] = $modx->getFullTableName('jot_content');
@@ -194,10 +194,9 @@ class CJotDataDb {
 				break;
 			case 1:
 			default:
-                        	$viewtype = 1;
 				$where = "published = 1 "; // Published
 		}
-		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}'", $where);
+		$rs = $modx->db->select('count(id)', $this->tbl["content"], "uparent = '{$docid}' AND tagid = '{$tagid}' AND ".$where);
 		return intval($modx->db->getValue($rs));
 	}
 			

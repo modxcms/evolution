@@ -20,11 +20,18 @@ $allowedfiles = array('html','htm','shtml','xml');
     }
 </script>
 
-<h1><?php echo $_lang['import_site_html']; ?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-upload"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['import_site_html']; ?>
+  </span>
+</h1>
 
 <div id="actions">
   <ul class="actionButtons">
-      <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+      <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
   </ul>
 </div>
 
@@ -33,7 +40,7 @@ $allowedfiles = array('html','htm','shtml','xml');
 <?php
 
 if(!isset($_POST['import'])) {
-    echo "<p>".$_lang['import_site_message']."</p>";
+    echo "<div class=\"element-edit-message\">".$_lang['import_site_message']."</div>";
 ?>
 
 <fieldset style="padding:10px;border:1px solid #ccc;background-color:#fff;"><legend><?php echo $_lang['import_site']; ?></legend>

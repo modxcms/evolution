@@ -63,7 +63,7 @@ input[type="button"]:focus, input[type="submit"]:focus, input[type="reset"]:focu
 }
 
 fieldset {
-    margin: 0 5px 5px 0;
+    margin: 0 5px 5px 0px;
     padding: 5px;
     border: 1px solid #afadaa;
     border-radius: 4px;
@@ -564,4 +564,15 @@ span.close:hover {
 
 span.clicked:hover {
     background: url(img/icons/close-clicked.png);
+}
+.selectThis {
+        padding: 6px 0;
+        border-radius: 2px;
+        background: #EEE;
+        color: #4EA94E;
+        cursor: pointer;
+        text-transform: uppercase;
+}
+.selectThis:hover {
+        background-color: #fff;
 }

@@ -53,7 +53,7 @@ if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confi
 }
 
 // verify email
-if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
+if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}$/i", $email)) {
 	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
@@ -166,7 +166,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -303,7 +303,7 @@ switch ($input['mode']) {
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li class="transition"><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['edit']; ?></a></li>
 			</ul>
 			</div>
             <div class="section">
@@ -347,8 +347,7 @@ function save_user_quoted_printable($string) {
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$websignupemail_message;
 	global $emailsubject, $emailsender;
-	global $site_name;
-	$manager_url = MODX_MANAGER_URL;
+	global $site_name, $site_url;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
@@ -357,7 +356,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+sname+]", $site_name, $message);
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
-	$message = str_replace("[+surl+]", $manager_url, $message);
+	$message = str_replace("[+surl+]", $site_url, $message);
 
 	$param = array();
 	$param['from']    = "{$site_name}<{$emailsender}>";
@@ -433,7 +432,7 @@ function sanitize($str='',$safecount=0) {
 		}
 	}
 	else {
-		$str = strip_tags($str);
+		// $str = strip_tags($str); // LEAVE < and > intact
 		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
 	}
 	return $str;

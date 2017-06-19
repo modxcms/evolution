@@ -15,20 +15,20 @@ if(!defined('MGR_DIR') && is_dir("{$base_path}manager")) {
 require_once("lang.php");
 
 $output = $_lang["status_connecting"];
-if (!$conn = @ mysql_connect($host, $uid, $pwd)) {
+if (!$conn = @mysqli_connect($host, $uid, $pwd)) {
     $output .= '<span id="server_fail" style="color:#FF0000;"> '.$_lang['status_failed'].'</span>';
 }
 else {
     $output .= '<span id="server_pass" style="color:#80c000;"> '.$_lang['status_passed_server'].'</span>';
 
     // Mysql version check
-    if ( version_compare(mysql_get_server_info(), '5.0.51', '=') ) {
+    if ( version_compare(mysqli_get_server_info($conn), '5.0.51', '=') ) {
         $output .= '<br /><span style="color:#FF0000;"> '.$_lang['mysql_5051'].'</span>';
     }
     // Mode check
-    $mysqlmode = @ mysql_query("SELECT @@session.sql_mode");
-    if (@mysql_num_rows($mysqlmode) > 0){
-        $modes = mysql_fetch_array($mysqlmode, MYSQL_NUM);
+    $mysqlmode = mysqli_query($conn, "SELECT @@session.sql_mode");
+    if (@mysqli_num_rows($mysqlmode) > 0){
+        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
         $strictMode = false;
         foreach ($modes as $mode) {
     		    if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) $strictMode = true;

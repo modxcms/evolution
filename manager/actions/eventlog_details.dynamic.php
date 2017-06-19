@@ -5,18 +5,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 }
 
 // get id
-if(isset($_REQUEST['id'])) {
-	$id = intval($_REQUEST['id']);
-}
-else {
-	$id=0;
-}
-
-// make sure the id's a number
-if(!is_numeric($id)) {
-	$modx->webAlertAndQuit("Passed ID is NaN!");
-}
-
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $ds = $modx->db->select(
 	'el.*, IFNULL(wu.username,mu.username) as username',
@@ -50,7 +39,7 @@ $ds = $modx->db->select(
 
 <form name="resource" method="get">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
-<input type="hidden" name="a" value="<?php echo (int) $_REQUEST['a']; ?>" />
+<input type="hidden" name="a" value="<?php echo $modx->manager->action; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
 <div class="section">

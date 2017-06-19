@@ -5,8 +5,8 @@
 * @package  AjaxSearch
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.1
-* @date         05/06/2014
+* @version      1.10.2
+* @date         12/04/2016
 *
 * Purpose:
 *    The AjaxSearch class contains all functions and data used to manage AjaxSearch
@@ -50,7 +50,7 @@ class AjaxSearch {
     *
     *  @access public
     */
-    function AjaxSearch() {
+    function __construct() {
     }
     /*
     *  Run ajaxSearch
@@ -73,7 +73,7 @@ class AjaxSearch {
         if ($msgErr) return $msgErr;
 
         $dbg = $asUtil->dbg; // first level of debug log
-        set_time_limit($asCfg->cfg['timeLimit']);
+        @set_time_limit($asCfg->cfg['timeLimit']);
 
         include_once AS_PATH . "classes/ajaxSearchCtrl.class.inc.php";
         include_once AS_PATH . "classes/ajaxSearchInput.class.inc.php";

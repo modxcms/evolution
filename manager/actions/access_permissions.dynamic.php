@@ -39,13 +39,33 @@ if ($modx->db->getRecordCount($rs) < 1) {
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
-<h1><?php echo $_lang['mgr_access_permissions']?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-male"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['mgr_access_permissions']; ?>
+  </span>
+</h1>
 
 <div class="sectionBody">
 <p><?php echo $_lang['access_permissions_introtext']?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : ''?>
 
 <div class="tab-pane" id="uapPane">
-<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById( "uapPane" ), true );</script>
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "uapPane" ), true );
+
+function deletegroup(groupid,type) {
+    if(confirm("<?php echo $_lang['confirm_delete_group']?>")==true) {
+		if (type=='usergroup') {
+			document.location.href="index.php?a=41&usergroup=" + groupid + "&operation=delete_user_group";
+		}
+		else if (type=='documentgroup') {
+			document.location.href="index.php?a=41&documentgroup=" + groupid + "&operation=delete_document_group";
+		}
+    }
+}
+</script>
 
 
 <div class="tab-page" id="tabPage1">
@@ -54,7 +74,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 <?php
 // User Groups
 
-	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_users_tab'].'</p>';
 
 ?>
 	<table class="permissiongroup">
@@ -78,7 +98,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 			LEFT JOIN {$tbl_member_groups} AS groups ON groups.user_group = groupnames.id
 			LEFT JOIN {$tbl_manager_users} AS users ON users.id = groups.member",
 		'',
-		'groupnames.name'
+		'groupnames.name, user_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
@@ -94,9 +114,9 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				     "\t".'<input type="hidden" name="a" value="41" />'."\n".
 				     "\t".'<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				     "\t".'<input type="hidden" name="operation" value="rename_user_group" />'."\n".
-				     "\t".'<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				     "\t".'<input type="text" name="newgroupname" value="'.$modx->htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				     "\t".'<input type="submit" value="'.$_lang['rename'].'" />&nbsp;'."\n".
-				     "\t".'<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=41&usergroup='.$row['id'].'&operation=delete_user_group\';" />'."\n".
+				     "\t".'<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'usergroup\');" />'."\n".
 				     '</form>';
 
 				echo "<ul>\n";
@@ -125,7 +145,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 <?php
 // Document Groups
 
-	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_resources_tab'].'</p>';
 ?>
 	<table class="permissiongroup">
 		<thead>
@@ -166,9 +186,9 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				     "\t".'<input type="hidden" name="a" value="41" />'."\n".
 				     "\t".'<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				     "\t".'<input type="hidden" name="operation" value="rename_document_group" />'."\n".
-				     "\t".'<input type="text" name="newgroupname" value="'.htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
+				     "\t".'<input type="text" name="newgroupname" value="'.$modx->htmlspecialchars($row['name']).'" size="200" />&nbsp;'."\n".
 				     "\t".'<input type="submit" value="'.$_lang['rename'].'" />'."\n".
-				     "\t".'<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=41&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
+				     "\t".'<input type="button" value="'.$_lang['delete'].'" onclick="deletegroup('.$row['id'].',\'documentgroup\');" />'."\n".
 				     '</form>';
 
 				echo '</td></tr><tr><td class="row2">'.$_lang['access_permissions_resources_in_group'].' ';
@@ -180,7 +200,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 				continue;
 			}
 			if ($pid == $row['id']) echo ", \n";
-			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.htmlspecialchars($row['doc_title']).'">'.$row['doc_id'].'</a>';
+			echo '<a href="index.php?a=3&amp;id='.$row['doc_id'].'" title="'.$modx->htmlspecialchars($row['doc_title']).'">'.$row['doc_id'].'</a>';
 			$pid = $row['id'];
 		}
 		echo '</table>';
@@ -194,7 +214,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 <?php
 // User/Document Group Links
 
-	echo '<p>'.$_lang['access_permissions_links_tab'].'</p>';
+    echo '<p class="element-edit-message">'.$_lang['access_permissions_links_tab'].'</p>';
 
 	$rs = $modx->db->select(
 		"groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name",
@@ -202,7 +222,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 			LEFT JOIN {$tbl_membergroup_access} AS groupacc ON groupacc.membergroup = groupnames.id
 			LEFT JOIN {$tbl_documentgroup_names} AS dgnames ON dgnames.id = groupacc.documentgroup",
 		'',
-		'name'
+		'name, dg_name'
 		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';

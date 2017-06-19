@@ -122,7 +122,7 @@ if (!class_exists("searchFilter")) {
         var $searchFunction;
         private $sourceFields, $searchOptions, $searchString, $snippet, $options, $function_code, $source, $separators;
 
-        function searchFilter($searchString = "", $sourceFields = "content", $searchOptions = "", $separators = null) {
+        function __construct($searchString = "", $sourceFields = "content", $searchOptions = "", $separators = null) {
             global $modx;
 
             $functions = array('snippet', 'regex', 'case_sensitive');
@@ -255,7 +255,7 @@ if (!class_exists("searchFilter")) {
 // ---------------------------------------------------
 // Search Filter Execution
 // ---------------------------------------------------
-if (isset($searchString)) {
+if (!empty($searchString)) {
     $searchFilter = new searchFilter($searchString, $searchFields, $searchOptions, $searchOptionsSeparators);
     $filters["custom"]["searchFilter"] = array($searchFields,array($searchFilter,"execute".$searchFilter->searchFunction));
 }

@@ -9,6 +9,8 @@ $template = $modx->db->escape($_POST['post']);
 $templatename = $modx->db->escape(trim($_POST['templatename']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
+$selectable = $id == $modx->config['default_template'] ? 1 :    // Force selectable
+              $_POST['selectable']=='on' ? 1 : 0;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -50,6 +52,7 @@ switch ($_POST['mode']) {
 				'description' => $description,
 				'content' => $template,
 				'locked' => $locked,
+                                'selectable' => $selectable,
 				'category' => $categoryid,
 			), $modx->getFullTableName('site_templates'));
 
@@ -59,6 +62,8 @@ switch ($_POST['mode']) {
 										"mode"	=> "new",
 										"id"	=> $newid
 								));				
+            // Set new assigned Tvs
+            saveTemplateAccess($newid);
 
 		// Set the item name for logger
 		$_SESSION['itemname'] = $templatename;
@@ -75,6 +80,7 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
+
         break;
     case '16':
 
@@ -100,8 +106,11 @@ switch ($_POST['mode']) {
 				'description'  => $description,
 				'content'      => $template,
 				'locked'       => $locked,
+                                'selectable'   => $selectable,
 				'category'     => $categoryid,
 			), $modx->getFullTableName('site_templates'), "id='{$id}'");
+                // Set new assigned Tvs
+                saveTemplateAccess($id);
 
 			// invoke OnTempFormSave event
 			$modx->invokeEvent("OnTempFormSave",
@@ -122,14 +131,42 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
 				header($header);
 			} else {
+				$modx->unlockElement(1, $id);
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
 
 		
-		
         break;
     default:
 		$modx->webAlertAndQuit("No operation set in request.");
 }
-?>
+
+function saveTemplateAccess($id) {
+
+    global $modx;
+
+    $newAssignedTvs = $_POST['assignedTv'];
+
+    // Preserve rankings of already assigned TVs
+    $rs = $modx->db->select( "tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "" );
+
+    $ranksArr = array();
+    $highest = 0;
+    while($row = $modx->db->getRow($rs)) {
+        $ranksArr[$row['tmplvarid']] = $row['rank'];
+        $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
+    };
+
+    $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'),"templateid='{$id}'");
+    if(empty($newAssignedTvs)) return;
+    foreach($newAssignedTvs as $tvid){
+        if(!$id || !$tvid) continue;    // Dont link zeros
+        $modx->db->insert(
+            array(
+                'templateid' => $id,
+                'tmplvarid'  => $tvid,
+                'rank'  => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+            ), $modx->getFullTableName('site_tmplvar_templates'));
+    }
+}

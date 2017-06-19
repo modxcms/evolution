@@ -4,9 +4,9 @@
   *
   *      @desc This file is included first, before each other
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -30,30 +30,19 @@ if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
 define('IN_MANAGER_MODE', "true");
-// Get system settings and override them with managers'
-include_once('../../../includes/settings.inc.php');
-include_once('../../../includes/user_settings.inc.php');
+$modx->getSettings();
 
+$manager_language = $modx->config['manager_language'];
 // Pass language code from MODX to KCFinder
-if(!isset($manager_language) || !file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
+if(!file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
     $manager_language = "english"; // if not set, get the english language file.
 }
-$_lang = array();
-include_once "../../../includes/lang/english.inc.php";
-$length_eng_lang = count($_lang);
-
-if($manager_language!="english" && file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
-    include_once "../../../includes/lang/".$manager_language.".inc.php";
-}
+include_once "../../../includes/lang/".$manager_language.".inc.php";
 $_GET['langCode'] = $modx_lang_attribute;
 
 // PHP VERSION CHECK
 if (substr(PHP_VERSION, 0, strpos(PHP_VERSION, '.')) < 5)
     die("You are using PHP " . PHP_VERSION . " when KCFinder require at least version 5! Some systems has an option to change the active PHP version. Please refer to your hosting provider or upgrade your PHP distribution.");
-
-// GD EXTENSION CHECK
-if (!function_exists("imagecopyresampled"))
-    die("The GD PHP extension is not available! It's required to run KCFinder.");
 
 
 // SAFE MODE CHECK
@@ -62,18 +51,34 @@ if (ini_get("safe_mode"))
 
 
 // MAGIC AUTOLOAD CLASSES FUNCTION
-function __autoload($class) {
-    if ($class == "uploader")
-        require "core/uploader.php";
-    elseif ($class == "browser")
-        require "core/browser.php";
-    elseif (file_exists("core/types/$class.php"))
-        require "core/types/$class.php";
-    elseif (file_exists("lib/class_$class.php"))
-        require "lib/class_$class.php";
-    elseif (file_exists("lib/helper_$class.php"))
-        require "lib/helper_$class.php";
+function autoloadda9d06472ccb71b84928677ce2a6ca89($class) {
+    static $classes = null;
+    if ($classes === null) {
+        $classes = array(
+            'browser' => '/browser.php',
+            'dir' => '/../lib/helper_dir.php',
+            'file' => '/../lib/helper_file.php',
+            'gd' => '/../lib/class_gd.php',
+            'httpCache' => '/../lib/helper_httpCache.php',
+            'input' => '/../lib/class_input.php',
+            'path' => '/../lib/helper_path.php',
+            'text' => '/../lib/helper_text.php',
+            'type_img' => '/types/type_img.php',
+            'type_mime' => '/types/type_mime.php',
+            'uploader' => '/uploader.php',
+            'zipFolder' => '/../lib/class_zipFolder.php',
+            'image' => '/../lib/class_image.php',
+            'image_imagick' => '/../lib/class_image_imagick.php',
+            'image_gmagick' => '/../lib/class_image_gmagick.php',
+            'image_gd' => '/../lib/class_image_gd.php',
+            'fastImage' => '/../lib/class_fastImage.php'  
+        );
+    }
+    if (isset($classes[$class])) {
+        require dirname(__FILE__) . $classes[$class];
+    }
 }
+spl_autoload_register('autoloadda9d06472ccb71b84928677ce2a6ca89', true);
 
 
 // json_encode() IMPLEMENTATION IF JSON EXTENSION IS MISSING

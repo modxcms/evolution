@@ -14,7 +14,7 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
-function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
+function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
     $etomite = & $modx;
     $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
@@ -27,10 +27,10 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
     else {
         list ($cmd, $param) = ParseCommand($nvalue);
         $cmd = trim($cmd);
+        $param = parseTvValues($param, $tvsArray);
         switch ($cmd) {
             case "FILE" :
-                $output = ProcessFile(trim($param));
-                $output = str_replace('@FILE ' . $param, $output, $nvalue);
+                $output = $modx->atBindFileContent($nvalue);
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
@@ -114,7 +114,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
         }
         // support for nested bindings
-        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src) : $output;
+        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src, $tvsArray) : $output;
     }
 }
 
@@ -140,4 +140,26 @@ function ParseCommand($binding_string)
         }
     }
     return $binding_array;
+}
+
+// Parse MODX Template-Variables
+function parseTvValues($param, $tvsArray)
+{
+	global $modx;
+	$tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
+	if (strpos($param, '[*') !== false) {
+		$matches = $modx->getTagsFromContent($param, '[*', '*]');
+		foreach ($matches[0] as $i=>$match) {
+			if(isset($tvsArray[ $matches[1][$i] ])) {
+				if(is_array($tvsArray[ $matches[1][$i] ])) {
+					$value = $tvsArray[$matches[1][$i]]['value'];
+					$value = $value === '' ? $tvsArray[$matches[1][$i]]['default_text'] : $value;
+				} else {
+					$value = $tvsArray[ $matches[1][$i] ];
+				}
+				$param = str_replace($match, $value, $param);
+			}
+		}
+	}
+	return $param;
 }

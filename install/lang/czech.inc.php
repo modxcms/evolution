@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author modxcms.cz
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Czech
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kontrola zda je nastavení Register_Global
 $_lang["checking_registerglobals_note"] = 'Díky tomtuto nastavení je Váš portál mnohem více náchylný k hackerským útokům typu Cross Site Scripting (XSS). Měli by jste pohovořit se svým poskytovatelem hostingu a zjistit co je možné udělat k deaktivaci tohoto nastavení.';
 $_lang["checking_sessions"] = 'Kontrola zda jsou správně nakonfigurovány session: ';
 $_lang["checking_table_prefix"] = 'Kontrola prefixů tabulek `';
+$_lang["choose_language"] = 'Zvolte jazyk';
 $_lang["chunks"] = 'Chunky';
 $_lang["config_permissions_note"] = 'V nových instalacích Linux/Unix vytvořte prázdná soubor s názvem <span class="mono">config.inc.php</span> v adresáři <span class="mono">/[+MGR_DIR+]/includes/</span> s atributy 0666.';
 $_lang["connection_screen_collation"] = 'Porovnání:';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'Instalovat ukázkový portál: ';
 $_lang["language_code"] = 'cs';
 $_lang["loading"] = 'Načítám...';
 $_lang["modules"] = 'Moduly';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) projekt. Všechna práva vyhrazena. MODX je licencován pod GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) projekt. Všechna práva vyhrazena. MODX je licencován pod GNU GPL.';
 $_lang["modx_footer2"] = 'MODX je free software. Doporučujeme Vám být kreativní a používat MODX jak jen uznáte za vhodné. Pouze se ujistěte, že pokud uděláte nějaké změny a budete chtít upravený MODX distribuovat dál, musí být zdrojové kódy volně přístupné!!';
 $_lang["modx_install"] = 'MODX &raquo; Instalace';
 $_lang["modx_requires_php"] = ', a MODX vyžaduje PHP [+min_version+] nebo novější';

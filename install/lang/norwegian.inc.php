@@ -3,7 +3,7 @@
  * MODX Installer language file
  *
  * @author Bjørn Erik Sandbakk (Sylvaticus)
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Norsk
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kontrollerar att Register_Globals är inak
 $_lang["checking_registerglobals_note"] = 'Denne konfigurasjonen gj&oslash;r din nettside betydelig mer s&aring;rbar for webkodeinjeksjon (Cross Site Scripting - XSS). Du b&oslash;r kontakte din webhost og be om &aring; f&aring; inaktivert denne instillingen. Vanligvis lar det seg gj&oslash;re p&aring; tre f&oslash;lgende m&aring;ter: modifisering av den globale php.ini-filen, tillegg av regler i en .htaccess-fil i roten p&aring; din MODX-installasjon eller gjennom &aring; legge til en tilpasset php.ini-fil (som tilsidesetter den globale filen) i alla kataloger i din installasjon (og det finns masser av dem). Du kan fremdeles installere MODX, men ta denne advarselen p&aring; alvor.';
 $_lang["checking_sessions"] = 'Kontrollerer at sesjoner er korrekt konfigurert: ';
 $_lang["checking_table_prefix"] = 'Kontrollerer tabellprefixet `';
+$_lang["choose_language"] = 'Velg språk';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'For nye installasjoner i Linux/Unix-milj&oslash; m&aring; en tom fil med navnet <span class="mono">config.inc.php</span> opprettes i katalogen <span class="mono">[+MGR_DIR+]/includes/</span> med skriverrettighetene satt til 666.';
 $_lang["connection_screen_collation"] = 'Kollasjonering:';
@@ -113,7 +114,7 @@ $_lang["installing_demo_site"] = 'Installerer pr&oslash;ve-data: ';
 $_lang["language_code"] = 'no';
 $_lang["loading"] = 'Henter...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2014 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med enerett. MODX er lisensiert under GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Med enerett. MODX er lisensiert under GNU GPL.';
 $_lang["modx_footer2"] = 'MODX er fri programvare. Vi oppmuntrer deg til &aring; v&aelig;re kreativ og bruke MODX p&aring; hvilken m&aring;te du vil. V&aelig;r bare n&oslash;ye med &aring; beholde kildekoden fri om du gj&oslash;r endringer og siden velger &aring; omdistribuere din modifiserte versjon av MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installasjon';
 $_lang["modx_requires_php"] = ', og MODX krever PHP [+min_version+] eller senere.';
