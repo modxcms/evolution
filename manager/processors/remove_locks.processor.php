@@ -7,7 +7,7 @@ if(!isset($_GET['id'])) {
 	// Remove all locks
 	$modx->db->truncate($modx->getFullTableName('active_user_locks'));
 
-	$header = "Location: index.php?a=7";
+	$header = "Location: index.php?a=2";
 	header($header);
 } else {
 	// Remove single locks via AJAX / window.onbeforeunload
