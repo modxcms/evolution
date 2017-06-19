@@ -28,11 +28,16 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>
-	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
+	
+	<?php 
+	$aArr = array('2');
+	if(!in_array($_REQUEST['a'] ,$aArr)) {?>
+		<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+		<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+		<script type="text/javascript" src="media/script/tabpane.js"></script>
+	<?php } ?>
 
 	<!-- OnManagerMainFrameHeaderHTMLBlock -->
 	<?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
@@ -42,13 +47,12 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 
 		function document_onload() {
 			stopWorker();
-			hideLoader();
+			//hideLoader();
 			<?php
 			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 			}
 			?>
-			<?php if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
 
 			var actionButtons = document.getElementById('actions'),
 				actionSelect = document.getElementById('stay');
@@ -61,7 +65,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
 				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
 				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerText
+					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerHTML
 				}
 				var actionSelectNewOption = null,
 					actionSelectOptions = actionSelect.children,
@@ -72,7 +76,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 					if(!actionSelectOptions[i].selected) {
 						actionSelectNewOption = document.createElement('SPAN');
 						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerText;
+						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerHTML;
 						actionSelectNewOption.onclick = function() {
 							var s = actionSelect.querySelector('option[selected=selected]');
 							if(s) s.selected = false;
@@ -87,8 +91,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 					this.parentNode.classList.toggle('show')
 				}
 			}
-			<?php } ?>
-
 		}
 
 		function reset_path(elementName) {
@@ -158,8 +160,8 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		function hideLoader() {
 			document.getElementById('preLoader').style.display = "none";
 		}
-
-		hideL = window.setTimeout("hideLoader()", 1500);
+//
+//		hideL = window.setTimeout("hideLoader()", 1500);
 
 		// add the 'unsaved changes' warning event handler
 		if(typeof window.addEventListener !== "undefined") {
@@ -197,7 +199,3 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 	</script>
 </head>
 <body <?php echo $modx_textdir ? ' class="rtl"' : '' ?> class="<?php echo $body_class ?>">
-
-<div id="preLoader">
-	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
-</div>
