@@ -51,6 +51,13 @@ class paginate_DL_Extender extends extDocLister
             default:
                 $paginate = 'pages';
                 $requestName = $this->getRequestName('page');
+		if (
+                    isset($_GET[$requestName])
+                    && intval($_GET[$requestName]) <= 1
+                    && !$this->DocLister->getCFGDef('noRedirect',0)
+                ) {
+                    $this->modx->sendRedirect($this->getUrl());
+                }
                 $start = (isset($_GET[$requestName]) && intval($_GET[$requestName]) > 1) ? (intval($_GET[$requestName]) - 1) : 0;
                 $this->_pages['current'] = $start + 1;
                 $this->DocLister->config->setConfig(array('start' => $start * $display));
