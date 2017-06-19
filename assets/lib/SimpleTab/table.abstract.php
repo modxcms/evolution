@@ -142,7 +142,7 @@ class dataTable extends \autoTable
      * @param null $fire_events
      * @return $this
      */
-    public function delete($ids, $fire_events = null)
+    public function delete($ids, $fire_events = false)
     {
         $out = parent::delete($ids, $fire_events);
         $this->query("ALTER TABLE {$this->makeTable($this->table)} AUTO_INCREMENT = 1");
@@ -156,7 +156,7 @@ class dataTable extends \autoTable
      * @param null $fire_events
      * @return $this
      */
-    public function deleteAll($ids, $rid, $fire_events = null)
+    public function deleteAll($ids, $rid, $fire_events = false)
     {
         $this->clearIndexes($ids, $rid);
 
@@ -180,6 +180,7 @@ class dataTable extends \autoTable
      */
     public function stripName($name)
     {
+
         $filename = $this->fs->takeFileName($name);
         $ext = $this->fs->takeFileExt($name);
 
