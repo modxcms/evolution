@@ -669,7 +669,7 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:fo
 .dashboard .wm_logo { margin-top: 15px; margin-bottom: 10px; margin-left: 10px; margin-right: 15px; }
 .dashboard .wm_logo img { height: 56px; }
 .wm_buttons a { font-weight: normal !important; color: #3d5764 !important; }
-.wm_buttons .fa { margin-bottom: 5px; }
+.wm_buttons .fa { margin-bottom: 5px; font-size: 24px;}
 .dashboard h1 { margin-top: 30px; }
 .widget-wrapper { border: 1px solid #ccc; }
 .widget-wrapper .widget-title { border: 1px solid #ccc; border-width: 0 0 1px 0; }
