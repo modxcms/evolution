@@ -13,8 +13,10 @@ if(IN_MANAGER_MODE != 'true') {
 function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $modx;
 	global $icons, $iconsPrivate, $_style;
-	global $output, $_lang, $opened, $opened2, $closed2; //added global vars
+	global $_lang, $opened, $opened2, $closed2; //added global vars
 	global $modx_textdir;
+
+	$output = '';
 
 	// setup spacer
 	$level = 0;
@@ -77,7 +79,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	}
 
 	$nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
+
 	while($row = $modx->db->getRow($result)) {
+		$node = '';
 
 		$nodetitle = getNodeTitle($nodeNameSource, $row);
 		$nodetitleDisplay = $nodetitle;
@@ -239,23 +243,23 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 				$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 			}
 
-			if(!$_SESSION['tree_show_only_folders']) {
+			if($_SESSION['tree_show_only_folders']) {
 				if($row['parent'] == 0) {
-					$node = $modx->parseText($tpl, $ph);
+					$node .= $modx->parseText($tpl, $ph);
 				} else {
-					$node = '';
+					$node .= '';
 				}
 			} else {
-				$node = $modx->parseText($tpl, $ph);
+				$node .= $modx->parseText($tpl, $ph);
 			}
 
 		} else {
-			$tpl = getTplFolderNode();
 			$ph['isPrivate'] = ($row['privateweb'] || $row['privatemgr']) ? '1' : '0';
 			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
 			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
 
-			if(!$_SESSION['tree_show_only_folders']) {
+			if($_SESSION['tree_show_only_folders']) {
+				$tpl = getTplFolderNodeNotChildren();
 				$checkFolders = checkIsFolder($row['id'], 1) ? 1 : 0; // folders
 				$checkDocs = checkIsFolder($row['id'], 0) ? 1 : 0; // no folders
 				$ph['tree_page_click'] = 3;
@@ -295,12 +299,11 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
-					$node = $modx->parseText($tpl, $ph);
-					$output .= $node;
+					$node .= $modx->parseText($tpl, $ph);
 					if($checkFolders) {
-						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+						$node .= makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
 					}
-					$node = '</div></div>';
+					$node .= '</div></div>';
 				} else {
 					$closed2[] = $row['id'];
 					$ph['icon'] = $ph['icon_folder_close'];
@@ -331,10 +334,11 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
-					$node = $modx->parseText($tpl, $ph);
+					$node .= $modx->parseText($tpl, $ph);
 					$node .= '</div></div>';
 				}
 			} else {
+				$tpl = getTplFolderNode();
 				// expandAll: two type for partial expansion
 				if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
 					if($expandAll == 1) {
@@ -359,6 +363,12 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
 						$ph = $prenode;
+						if($ph['showChildren'] == 0) {
+							unset($opened2[$row['id']]);
+							$ph['node_toggle'] = 0;
+							$ph['subMenuState'] = '';
+							$tpl = getTplFolderNodeNotChildren();
+						}
 					}
 
 					if($ph['showChildren'] == 0) {
@@ -371,12 +381,11 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
-					$node = $modx->parseText($tpl, $ph);
-					$output .= $node;
+					$node .= $modx->parseText($tpl, $ph);
 					if($ph['donthit'] == 0) {
-						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+						$node .= makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
 					}
-					$node = '</div></div>';
+					$node .= '</div></div>';
 				} else {
 					$closed2[] = $row['id'];
 					$ph['icon'] = $ph['icon_folder_close'];
@@ -397,6 +406,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
 						$ph = $prenode;
+						if($ph['showChildren'] == 0) {
+							$tpl = getTplFolderNodeNotChildren();
+						}
 					}
 
 					if($ph['showChildren'] == 0) {
@@ -409,7 +421,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 					}
 
-					$node = $modx->parseText($tpl, $ph);
+					$node .= $modx->parseText($tpl, $ph);
 					$node .= '</div></div>';
 				}
 			}
@@ -427,6 +439,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 		$output .= $node;
 	}
+
+	return $output;
 }
 
 function getIconInfo($_style) {
@@ -558,16 +572,23 @@ function _htmlentities($array) {
 }
 
 function getTplSingleNode() {
-	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
-        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
+	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
+        onclick="modx.tree.treeAction(event,[+id+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
-        oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);"
+        oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
+        data-id="[+id+]"
+        data-title-esc="[+nodetitle_esc+]"
+        data-published="[+published+]"
         data-deleted="[+deleted+]"
+        data-isfolder="[+isfolder+]"
         data-href="[+url+]"
         data-private="[+isPrivate+]"
-        data-level="[+level+]">[+spacer+]<span
-        id="p[+id+]"
-        onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
+        data-level="[+level+]"
+        data-treepageclick="[+tree_page_click+]"
+        [+contextmenu+]
+        >[+spacer+]<span
+        class="icon"
+        onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
@@ -576,28 +597,78 @@ function getTplSingleNode() {
 }
 
 function getTplFolderNode() {
-	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
-        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
+	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
+        onclick="modx.tree.treeAction(event,[+id+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
-        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);"
+        oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
+        data-id="[+id+]"
+        data-title-esc="[+nodetitle_esc+]"
+        data-published="[+published+]"
         data-deleted="[+deleted+]"
+        data-isfolder="[+isfolder+]"
         data-href="[+url+]"
         data-private="[+isPrivate+]"
-        data-level="[+level+]">[+spacer+]<span
-        id="s[+id+]"
-        class="toggle"
+        data-level="[+level+]"
         data-icon-expanded="[+tree_plusnode+]"
         data-icon-collapsed="[+tree_minusnode+]"
-        onclick="modx.tree.toggleNode(event,[+indent+],[+id+],[+expandAll+]); return false;"
-        oncontextmenu="this.onclick(event); return false;"
-        >[+icon_node_toggle+]</span><span
-        id="f[+id+]"
         data-icon-folder-open="[+icon_folder_open+]"
         data-icon-folder-close="[+icon_folder_close+]"
-        onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
+        data-treepageclick="[+tree_page_click+]"
+        data-showchildren="[+showChildren+]"
+        data-openfolder="[+openFolder+]"
+        data-indent="[+indent+]"
+        data-expandall="[+expandAll+]"
+        [+contextmenu+]
+        >[+spacer+]<span
+        class="toggle"
+        onclick="modx.tree.toggleNode(event, [+id+]);"
+        oncontextmenu="this.onclick(event);"
+        >[+icon_node_toggle+]</span><span
+        class="icon"
+        onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
+}
+
+function getTplFolderNodeNotChildren() {
+	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
+        onclick="modx.tree.treeAction(event,[+id+]);"
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
+        oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
+        data-id="[+id+]"
+        data-title-esc="[+nodetitle_esc+]"
+        data-published="[+published+]"
+        data-deleted="[+deleted+]"
+        data-isfolder="[+isfolder+]"
+        data-href="[+url+]"
+        data-private="[+isPrivate+]"
+        data-level="[+level+]"
+        data-icon-expanded="[+tree_plusnode+]"
+        data-icon-collapsed="[+tree_minusnode+]"
+        data-icon-folder-open="[+icon_folder_open+]"
+        data-icon-folder-close="[+icon_folder_close+]"
+        data-treepageclick="[+tree_page_click+]"
+        data-showchildren="[+showChildren+]"
+        data-openfolder="[+openFolder+]"
+        data-indent="[+indent+]"
+        data-expandall="[+expandAll+]"
+        [+contextmenu+]
+        >[+spacer+]<span
+        class="icon"
+        onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
+        oncontextmenu="this.onclick(event);return false;"
+        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
+        >[+icon+]</span>[+lockedByUser+]<span
+        class="title"
+        title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
+}
+
+function dbug($str, $flag = false) {
+	print('<pre>');
+	print_r($str);
+	print('</pre>');
+	if($flag) exit;
 }
