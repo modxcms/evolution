@@ -452,7 +452,14 @@ class modResource extends MODxAPI
      */
     public function create($data = array())
     {
-        parent::create($data);
+        $this->close();
+        $fld = array();
+        foreach($this->tvd as $name => $tv) {
+            $fld[$name] = $tv['value'];
+        };
+        $this->store($fld);
+
+        $this->fromArray(array_merge($fld,$data));
         $this->set('createdby', null)
             ->set('editedby', null)
             ->set('createdon', time())
@@ -764,7 +771,7 @@ class modResource extends MODxAPI
      * @param $alias
      * @return string
      */
-    private function checkAlias($alias)
+    protected function checkAlias($alias)
     {
         $alias = strtolower($alias);
         if ($this->modxConfig('friendly_urls')) {
@@ -881,7 +888,7 @@ class modResource extends MODxAPI
     /**
      * @return string
      */
-    private function getAlias()
+    protected function getAlias()
     {
         if ($this->modxConfig('friendly_urls') && $this->modxConfig('automatic_alias') && $this->get('alias') == '') {
             $alias = strtr($this->get('pagetitle'), $this->table);

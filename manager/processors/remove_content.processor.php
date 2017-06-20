@@ -40,6 +40,6 @@ $modx->db->delete($modx->getFullTableName('site_content'), "deleted=1");
 	$modx->clearCache('full');
 
 	// finished emptying cache - redirect
-	$header="Location: index.php?r=1&a=7";
+	$header="Location: index.php?a=2&r=1";
 	header($header);
 ?>

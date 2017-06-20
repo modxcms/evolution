@@ -46,7 +46,7 @@ if(is_array($evtOut)) {
 			<a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="<?php echo $_lang['empty_recycle_bin_empty']; ?>"><?php echo $_style['empty_recycle_bin_empty']; ?></a>
 		<?php } ?>
 
-		<a class="treeButton<?php echo (isset($_COOKIE['MODX_themeColor']) && $_COOKIE['MODX_themeColor'] == 'dark' ? ' rotate180' : '') ?>" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>
+		<a class="treeButton<?php echo(isset($_COOKIE['MODX_themeColor']) && $_COOKIE['MODX_themeColor'] == 'dark' ? ' rotate180' : '') ?>" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>
 
 	</div>
 
@@ -59,10 +59,11 @@ if(is_array($evtOut)) {
 		}
 		?>
 		<!--<div>-->
-			<div class="rootNode" onclick="modx.tree.treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
-			echo $site_name; ?>');"><?php echo $_style['tree_showtree']; ?>&nbsp;<b><?php echo $site_name; ?></b>
-			</div>
-			<div id="treeRoot"></div>
+		<div id="node0" class="rootNode" onclick="modx.tree.treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
+		echo $site_name; ?>');"><?php echo $_style['tree_showtree']; ?>&nbsp;<b><?php echo $site_name; ?></b>
+			<div id="treeloader"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+		</div>
+		<div id="treeRoot"></div>
 		<!--</div>-->
 		<?php
 		// invoke OnManagerTreeRender event

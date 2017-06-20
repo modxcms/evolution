@@ -49,6 +49,7 @@ class modUsers extends MODxAPI
      * @var string
      */
     protected $givenPassword = '';
+    protected $groupIds = array();
 
     /**
      * @param $key
@@ -238,6 +239,9 @@ class modUsers extends MODxAPI
                 'username'     => $this->get('username')
             ), $fire_events);
         }
+        
+        if ($this->groupIds) $this->setUserGroups($this->id, $this->groupIds);
+        
         $this->invokeEvent('OnWebSaveUser', array(
             'userObj' => $this,
             'mode'    => $this->newDoc ? "new" : "upd",
@@ -562,11 +566,18 @@ class modUsers extends MODxAPI
      */
     public function setUserGroups($userID = 0, $groupIds = array())
     {
-        $user = $this->switchObject($userID);
-        if (($uid = $user->getID()) && is_array($groupIds)) {
-            foreach ($groupIds as $gid) {
-                $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+        if (!is_array($groupIds)) return $this;
+        if ($this->newDoc && $userID == 0) {
+            $this->groupIds = $groupIds;
+        } else {
+            $user = $this->switchObject($userID);
+            if ($uid = $user->getID()) {
+                foreach ($groupIds as $gid) {
+                    $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+                }
             }
+            unset($user);
+            $this->groupIds = array();
         }
 
         return $this;

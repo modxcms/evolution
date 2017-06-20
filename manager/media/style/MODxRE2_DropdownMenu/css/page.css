@@ -9,7 +9,7 @@
 #mainMenu { top: 0; left: 0; width: 100%; height: 2.2rem; overflow: hidden; z-index: 100; }
 #tree { left: 0; top: 2.2rem; bottom: 0; width: 25rem; max-width: 100%; overflow: hidden; z-index: 1; }
 #main { left: 25rem; top: 2.2rem; right: 0; bottom: 0; overflow: hidden; z-index: 2; }
-#main iframe { width: 100%; height: 100%; }
+#main #mainframe { display: block; width: 100%; height: 100%; overflow: hidden; }
 /* floater */
 #floater { position: fixed; z-index: 1000; opacity: 0; visibility: hidden; max-width: 25rem; padding: 1.5rem; top: 4rem; left: 2rem; border-radius: 0.25rem; background-color: #fff; -webkit-box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); transition-duration: 0.15s }
 #floater.show { opacity: 1; visibility: visible; }
@@ -17,3 +17,26 @@
 #resizer { position: absolute; z-index: 99; top: 2.2rem; bottom: 0; left: 25rem; width: 5px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
 #resizer:hover { background-color: rgba(0, 0, 0, 0.1); }
 #mask_resizer { position: absolute; width: 100%; height: 100%; }
+/* mainloader */
+#mainloader { position: absolute; z-index: 50000; top: 0; left: 0; width: 100%; height: 100%; text-align: center; vertical-align: middle; padding: 15% 0 0 0; background-color: rgba(255, 255, 255, 0.64); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.3s; transition-duration: 0.3s }
+#mainloader.show { opacity: 0.75; visibility: visible; -webkit-transition-duration: 0.1s; transition-duration: 0.1s }
+#mainloader img { filter: grayscale(100%); }
+#mainloader .fa { font-size: 2rem; animation: modx-color 2s infinite linear }
+#mainloader .preLoaderText { margin: auto; width: 75%; }
+@keyframes modx-color {
+0% { color: #5DB54D; transform: rotate(0deg); }
+20% { color: #5EA5D5 }
+50% { color: #EC633D; }
+70% { color: #5EA5D5 }
+100% { color: #5DB54D; transform: rotate(359deg) }
+}
+@-webkit-keyframes modx-color {
+0% { color: #5DB54D; -webkit-transform: rotate(0deg); }
+20% { color: #5EA5D5 }
+50% { color: #EC633D; }
+70% { color: #5EA5D5 }
+100% { color: #5DB54D; -webkit-transform: rotate(359deg) }
+}
+/* dark */
+.dark #main { background-color: #ecf0f1 }
+/*.dark #mainloader { background-color: rgba(0, 0, 0, 0.15); }*/

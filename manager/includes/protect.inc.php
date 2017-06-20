@@ -16,8 +16,14 @@ if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']
     die();
 
 // Unregister globals
-if (@ ini_get('register_globals')) {
-    die('Please disable register_globals!');
+if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
+    try {
+        $temp = @ini_get( 'register_globals' );
+
+        if ( in_array( $temp, array( true, 1, '1', 'on' ), true ) ) {
+            die( 'Please disable register_globals!' );
+        }
+    } catch ( Exception $e ) { }
 }
 
 global $sanitize_seed;

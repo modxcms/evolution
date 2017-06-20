@@ -189,8 +189,6 @@ class site_contentDocLister extends DocLister
                 $out = ($noneTPL != '') ? $this->parseChunk($noneTPL, $sysPlh) : '';
             }
             $out = $this->renderWrap($out);
-        } else {
-            $out = 'no template';
         }
 
         return $this->toPlaceholders($out);

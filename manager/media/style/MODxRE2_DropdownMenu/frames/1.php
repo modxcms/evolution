@@ -28,7 +28,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 }
 
 if(!isset($_SESSION['tree_show_only_folders'])) {
-	$_SESSION['tree_show_only_folders'] = 1;
+	$_SESSION['tree_show_only_folders'] = 0;
 }
 
 $body_class = '';
@@ -88,7 +88,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<style>
 		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
@@ -188,7 +188,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 		echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
 		?>
 	</script>
-	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/js/modx.js"></script>
+	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/js/modx.js?v=<?php echo $modx->config['settings_version'] ?>"></script>
 </head>
 <body class="<?php echo $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
@@ -198,10 +198,6 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			<div class="row">
 				<div class="cell">
 					<?php include('mainmenu.php'); ?>
-					<div id="statusbar">
-						<div id="buildText"></div>
-						<div id="workText"></div>
-					</div>
 				</div>
 				<div class="cell">
 					<ul id="settings" class="nav">
@@ -310,6 +306,13 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	</div>
 	<div id="main">
 		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
+		<div id="mainloader">
+			<div class="preLoaderText">
+				<img src="media/style/common/images/misc/logo.png" />
+				<p><?php echo $_lang['loading_page'] ?></p>
+				<i class="fa fa-cog fa-spin"></i>
+			</div>
+		</div>
 	</div>
 	<div id="resizer"></div>
 	<div id="searchresult"></div>
@@ -366,7 +369,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			</div>
 			<div class="form-group">
 				<label>
-					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
+					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = (this.value ? '' : 1);" <?php echo($_SESSION['tree_show_only_folders'] ? '' : ' checked="checked"') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
 			</div>
 			<div class="text-center">
 				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
