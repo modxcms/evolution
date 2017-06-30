@@ -98,15 +98,31 @@ if($count > 1) {
 $ph['RecentInfo'] = getRecentInfo();
 
 $tpl = '
-    <table class="table table-hover table-condensed">
-        <tr><td width="150">[%yourinfo_username%]</td> <td><b>[+username+]</b></td></tr>
-        <tr><td>[%yourinfo_role%]</td>                 <td><b>[+role+]</b></td></tr>
-        <tr><td>[%yourinfo_previous_login%]</td>       <td><b>[+lastlogin+]</b></td></tr>
-        <tr><td>[%yourinfo_total_logins%]</td>         <td><b>[+logincount+]</b></td></tr>
-        <tr><td>[%inbox%]</td>                         <td><a href="index.php?a=10"><b>[+msginfo+]</b></a></td></tr>
-    </table>
-';
+<table class="table table-hover table-condensed">
+	<tr>
+		<td width="150">[%yourinfo_username%]</td>
+		<td><b>[+username+]</b></td>
+	</tr>
+	<tr>
+		<td>[%yourinfo_role%]</td>
+		<td><b>[+role+]</b></td>
+	</tr>
+	<tr>
+		<td>[%yourinfo_previous_login%]</td>
+		<td><b>[+lastlogin+]</b></td>
+	</tr>
+	<tr>
+		<td>[%yourinfo_total_logins%]</td>
+		<td><b>[+logincount+]</b></td>
+	</tr>
+	<tr>
+		<td>[%inbox%]</td>
+		<td><a href="index.php?a=10"><b>[+msginfo+]</b></a></td>
+	</tr>
+</table>';
+
 $nrnewmessages = '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>';
+
 $ph['UserInfo'] = $modx->parseText($tpl, array(
 	'username' => $modx->getLoginUserName(),
 	'role' => $_SESSION['mgrPermissions']['name'],
@@ -119,6 +135,7 @@ $from = array();
 $from[] = '[+prefix+]active_user_sessions';
 $from[] = " us LEFT JOIN [+prefix+]active_users au ON au.sid=us.sid WHERE au.action <> '8'";
 $rs = $modx->db->select('*', $from, '', 'username ASC, au.sid ASC');
+
 if($modx->db->getRecordCount($rs) < 1) {
 	$html = '<p>[%no_active_users_found%]</p>';
 } else {
@@ -126,19 +143,23 @@ if($modx->db->getRecordCount($rs) < 1) {
 	$now = $_SERVER['REQUEST_TIME'] + $server_offset_time;
 	$ph['now'] = strftime('%H:%M:%S', $now);
 	$timetocheck = ($now - (60 * 20)); //+$server_offset_time;
-	$html = '[%onlineusers_message%] <b>[+now+]</b>):<br /><br />
-                <div class="table-responsive">
-                <table class="table table-hover table-condensed">
-                  <thead>
-                    <tr>
-                      <th>[%onlineusers_user%]</th>
-                      <th>ID</th>
-                      <th>[%onlineusers_ipaddress%]</th>
-                      <th>[%onlineusers_lasthit%]</th>
-                      <th>[%onlineusers_action%]</th>
-                    </tr>
-                  </thead>
-                  <tbody>';
+	$html = '
+	[%onlineusers_message%] 
+	<b>[+now+]</b>):
+	<br />
+	<br />
+	<div class="table-responsive">
+	<table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>[%onlineusers_user%]</th>
+			<th>ID</th>
+			<th>[%onlineusers_ipaddress%]</th>
+			<th>[%onlineusers_lasthit%]</th>
+			<th>[%onlineusers_action%]</th>
+		</tr>
+	</thead>
+	<tbody>';
 
 	$userList = array();
 	$userCount = array();
@@ -163,14 +184,14 @@ if($modx->db->getRecordCount($rs) < 1) {
 	}
 	foreach($userList as $params) {
 		$params[1] = $userCount[$params[4]] > 1 ? ' class="userMultipleSessions"' : '';
-		$html .= "\n" . vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
+		$html .= "\n\t\t" . vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
 	}
 
 	$html .= '
-                </tbody>
-                </table>
-                </div>
-        ';
+	</tbody>
+	</table>
+</div>
+';
 }
 $ph['OnlineInfo'] = $html;
 
@@ -217,70 +238,66 @@ $widgets['welcome'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-home',
 	'title' => '[%welcome_title%]',
-	'body' => '<div class="wm_buttons">
-							<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]-->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i><br />
-								[%security%]</a>
-							</span>
-							<!--@ENDIF-->
-							<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]-->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=99"><i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i><br />
-								[%web_users%]</a>
-							</span>
-							<!--@ENDIF-->
-							<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]-->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=106"><i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i><br />
-								[%modules%]</a>
-							</span>
-							<!--@ENDIF-->
-							<!--@IF:[[#hasAnyPermission:is(1)]] -->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=76"><i class="[&icons_resources_large&]" alt="[%element_management%]"> </i><br />
-								[%elements%]</a>
-							</span>
-							<!--@ENDIF-->
-							<!--@IF:[[#hasPermission?key=bk_manager]]-->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=93"><i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i><br />
-								[%backup%]</a>
-							</span>
-							<!--@ENDIF-->
-							<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]-->
-							<span class="wm_button" style="border:0">
-								<a class="hometblink" href="index.php?a=9"><i class="[&icons_help_large&]" alt="[%help%]"> </i><br />
-								[%help%]</a>
-							</span>
-							<!--@ENDIF-->
-						</div>
-						<div class="userprofiletable">
-							<table class="table table-hover table-condensed">
-								<tr>
-									<td width="150">[%yourinfo_username%]</td>
-									<td><b>[[#getLoginUserName]]</b></td>
-								</tr>
-								<tr>
-									<td>[%yourinfo_role%]</td>
-									<td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
-								</tr>
-								<tr>
-									<td>[%yourinfo_previous_login%]</td>
-									<td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
-								</tr>
-								<tr>
-									<td>[%yourinfo_total_logins%]</td>
-									<td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
-								</tr>
-								<!--@IF:[[#hasPermission?key=messages]]-->
-								<tr>
-									<td>[%inbox%]</td>
-									<td><a href="index.php?a=10"><b>[[#getMessageCount]]</b></a></td>
-								</tr>
-								<!--@ENDIF-->
-							</table>
-						</div>'
+	'body' => '
+				<div class="wm_buttons"> 
+					<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]--> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>
+					<br />
+					[%security%]</a> </span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]--> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=99"><i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>
+					<br />
+					[%web_users%]</a> </span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]--> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=106"><i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i>
+					<br />
+					[%modules%]</a> </span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=76"><i class="[&icons_resources_large&]" alt="[%element_management%]"> </i>
+					<br />
+					[%elements%]</a> </span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=93"><i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i>
+					<br />
+					[%backup%]</a> </span> 
+					<!--@ENDIF--> 
+					<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]--> 
+					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=9"><i class="[&icons_help_large&]" alt="[%help%]"> </i>
+					<br />
+					[%help%]</a> </span> 
+					<!--@ENDIF--> 
+				</div>
+				<div class="userprofiletable">
+					<table class="table table-hover table-condensed">
+						<tr>
+							<td width="150">[%yourinfo_username%]</td>
+							<td><b>[[#getLoginUserName]]</b></td>
+						</tr>
+						<tr>
+							<td>[%yourinfo_role%]</td>
+							<td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
+						</tr>
+						<tr>
+							<td>[%yourinfo_previous_login%]</td>
+							<td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
+						</tr>
+						<tr>
+							<td>[%yourinfo_total_logins%]</td>
+							<td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
+						</tr>
+						<!--@IF:[[#hasPermission?key=messages]]-->
+						<tr>
+							<td>[%inbox%]</td>
+							<td><a href="index.php?a=10"><b>[[#getMessageCount]]</b></a></td>
+						</tr>
+						<!--@ENDIF-->
+					</table>
+				</div>
+'
 );
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
@@ -333,11 +350,12 @@ foreach($widgets as $widget) {
 }
 $ph['widgets'] = $output;
 
-// invoke event OnManagerWelcomeRender
-$evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
-if(is_array($evtOut)) {
-	$output = implode('', $evtOut);
-	$ph['OnManagerWelcomeRender'] = $output;
+// invoke OnManagerWelcomeHome event
+$sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
+if(is_array($sitewidgets)) {
+	foreach($sitewidgets as $widget){
+		$widgets = array_merge($widgets, unserialize($widget));
+	} 
 }
 
 // load template
@@ -397,16 +415,14 @@ echo $content;
 //  <a href="javascript:;" class="closed"><i class="fa fa-close"></i></a>
 //</span>
 function getTplWidget() { // recent document info
-	return '<div class="[+cols+] pr-0" id="[+id+]">	
+	return '
+		<div class="[+cols+] pr-0" id="[+id+]">
 			<div class="card mb-1">
-				<div class="card-header">
-				    <i class="fa [+icon+]"></i> [+title+]
-				</div>
-				<div class="card-block">
-					[+body+]
-				</div>
+				<div class="card-header"> <i class="fa [+icon+]"></i> [+title+] </div>
+				<div class="card-block"> [+body+] </div>
 			</div>
-		</div>';
+		</div>
+';
 }
 
 function getRecentInfo() { // recent document info
@@ -415,22 +431,22 @@ function getRecentInfo() { // recent document info
 	$modx->addSnippet('recentInfoList', 'getRecentInfoList');
 
 	$html = '
-<div class="table-responsive">
-    <table class="table table-hover table-condensed">
-    <thead>
-        <tr>
-        <th style="width: 50px;">[%id%]</th>
-        <th>[%resource_title%]</th>
-        <th style="width: 140px;">[%page_data_edited%]</th>
-        <th style="width: 180px;">[%user%]</th>
-        <th style="width: 180px; text-align: right;">[%mgrlog_action%]</th>
-        </tr>
-    </thead>
-    <tbody>
-        [[#recentInfoList]]
-    </tbody>
-    </table>
-</div>
+			<div class="table-responsive">
+				<table class="table table-hover table-condensed">
+					<thead>
+						<tr>
+							<th style="width: 50px;">[%id%]</th>
+							<th>[%resource_title%]</th>
+							<th style="width: 140px;">[%page_data_edited%]</th>
+							<th style="width: 180px;">[%user%]</th>
+							<th style="width: 180px; text-align: right;">[%mgrlog_action%]</th>
+						</tr>
+					</thead>
+					<tbody>
+					[[#recentInfoList]]
+					</tbody>
+				</table>
+			</div>
 ';
 	return $html;
 }
@@ -446,8 +462,8 @@ function getRecentInfoList() {
 
 	$tpl = getRecentInfoRowTpl();
 
-	$btntpl['edit'] = '<a class="btn btn-xs btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
-	$btntpl['preview_btn'] = '<a class="btn btn-xs btn-info [+preview_disabled+]"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+	$btntpl['edit'] = '<a class="btn btn-sm btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+	$btntpl['preview_btn'] = '<a class="btn btn-sm btn-info [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
 	$output = array();
 	while($ph = $modx->db->getRow($rs)) {
@@ -480,9 +496,9 @@ function getRecentInfoList() {
 
 		if($modx->hasPermission('delete_document')) {
 			if($ph['deleted'] == 0) {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-sm btn-danger" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-sm btn-success" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -490,17 +506,17 @@ function getRecentInfoList() {
 		}
 
 		if($ph['deleted'] == 1 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 1 && $ph['published'] == 1) {
-			$publish_btn = '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 0 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-xs btn-primary"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} else {
-			$publish_btn = '<a class="btn btn-xs btn-warning"  title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-warning" title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		}
 		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info"></i></a>');
+		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-sm btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
 		if($ph['longtitle'] == '') {
 			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
@@ -522,31 +538,31 @@ function getRecentInfoList() {
 
 function getRecentInfoRowTpl() {
 	$tpl = '
-<tr>
-    <td data-toggle="collapse" data-target=".collapse[+id+]"><span class="label label-info">[+id+]</span></td>
-    <td><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
-    <td data-toggle="collapse" data-target=".collapse[+id+]">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
-    <td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
-    <td style="text-align: right;">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
-</tr>
-<tr>
-<td colspan="6" class="hiddenRow">
-    <div class="resource-overview-accordian collapse collapse[+id+]">
-        <div class="overview-body small">
-            <ul>
-                <li><b>[%long_title%]</b>: [+longtitle+]</li>
-                <li><b>[%description%]</b>: [+description+]</li>
-                <li><b>[%resource_summary%]</b>: [+longtitle+]</li>
-                <li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
-                <li><b>[%resource_alias%]</b>: [+alias+]</li>
-                <li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
-                <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-                <li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
-            </ul>
-        </div>
-    </div>
-    </td>
-</tr>';
+						<tr>
+							<td data-toggle="collapse" data-target=".collapse[+id+]"><span class="label label-info">[+id+]</span></td>
+							<td><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
+							<td style="text-align: right;">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="hiddenRow">
+								<div class="resource-overview-accordian collapse collapse[+id+]">
+									<div class="overview-body small">
+										<ul>
+											<li><b>[%long_title%]</b>: [+longtitle+]</li>
+											<li><b>[%description%]</b>: [+description+]</li>
+											<li><b>[%resource_summary%]</b>: [+longtitle+]</li>
+											<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
+											<li><b>[%resource_alias%]</b>: [+alias+]</li>
+											<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
+											<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
+											<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
+										</ul>
+									</div>
+								</div>
+							</td>
+						</tr>';
 	return $tpl;
 }
 
@@ -556,30 +572,21 @@ function wrapIcon($i, $action) {
 }
 
 function getStartUpScript() {
-	$script = <<<JS
+	$script = '
         <script type="text/javascript">
-        function hideConfigCheckWarning(key){
-            var myAjax = new Ajax('index.php?a=118', {
-                method: 'post',
-                data: 'action=setsetting&key=_hide_configcheck_' + key + '&value=1'
-            });
-            myAjax.addEvent('onComplete', function(resp){
-                fieldset = $(key + '_warning_wrapper').getParent().getParent();
-                var sl = new Fx.Slide(fieldset);
-                sl.slideOut();
-            });
-            myAjax.request();
+        function hideConfigCheckWarning(key) {
+        	var xhr = new XMLHttpRequest();
+        	xhr.open(\'POST\', \'index.php?a=118\', true);
+        	xhr.setRequestHeader(\'Content-Type\', \'application/x-www-form-urlencoded;\');
+        	xhr.onload = function() {
+        		if(this.readyState === 4) {
+        			var fieldset = document.getElementById(key + \'_warning_wrapper\').parentNode.parentNode;
+        			fieldset.className = "collapse";
+        		}
+        	};
+        	xhr.send(\'action=setsetting&key=_hide_configcheck_\' + key + \'&value=1\');
         }
-        
-		(function($) {
-			$('[data-toggle="collapse"]').click(function() {
-				if($(this).data('target')) {
-					$($(this).data('target')).slideToggle(150)
-				}
-			});
-		})(jQuery);
-
         </script>
-JS;
+';
 	return $script;
 }
