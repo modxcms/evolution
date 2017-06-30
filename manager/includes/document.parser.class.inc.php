@@ -74,6 +74,7 @@ class DocumentParser {
     var $time;
     var $sid;
     private $q;
+    var $decoded_request_uri;
 
     /**
      * Document constructor
@@ -993,12 +994,12 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            list($key,$context)   = explode('@',$key,2);
+            list($key,$context)   = explode('@',$key . '@',2);
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
             if($context) $value = $this->_contextValue("{$key}@{$context}");
-            else         $value = $ph[$key];
-            
+            else         $value = isset($ph[$key]) ? $ph[$key] : '';
+
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
@@ -1748,7 +1749,7 @@ class DocumentParser {
     
     function toAlias($text) {
         $suff= $this->config['friendly_url_suffix'];
-        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff,'.json'.$suff),array('.xml','.rss','.js','.css','.txt','.json'),$text);
+        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff,'.txt'.$suff,'.json'.$suff,'.pdf'.$suff),array('.xml','.rss','.js','.css','.txt','.json','.pdf'),$text);
     }
     
     /**
@@ -2219,7 +2220,8 @@ class DocumentParser {
     }
     
     function mb_basename($path, $suffix = null) {
-        return str_replace($suffix, '', end(explode('/', $path)));
+    	$exp = explode('/', $path);
+    	return str_replace($suffix, '', end($exp));
     }
 
     function _IIS_furl_fix()
