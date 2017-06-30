@@ -17,7 +17,7 @@ if(!isset($modx->config['manager_menu_height'])) {
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
-	$modx->config['manager_tree_width'] = 25; // rem
+	$modx->config['manager_tree_width'] = 20; // rem
 }
 
 if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwardToAction'])) {
@@ -86,7 +86,9 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
-	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
+	<meta name="theme-color" content="#1d2023">
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<style>
@@ -94,6 +96,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
 	</style>
 	<?php echo $jQuery ?>
+	<script type="text/javascript">
+		if(!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) {
+			document.classList.add('iphone ipad ipod')
+		}
+	</script>
 	<script type="text/javascript">
 		// GLOBAL variable modx
 		var modx = {
@@ -337,7 +344,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			<div class="form-group">
 				<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 				<label><?php echo $_lang["sort_tree"] ?></label>
-				<select name="sortby" class="form-control form-control-sm">
+				<select name="sortby" class="form-control">
 					<option value="isfolder" <?php echo $_SESSION['tree_sortby'] == 'isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
 					<option value="pagetitle" <?php echo $_SESSION['tree_sortby'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
 					<option value="longtitle" <?php echo $_SESSION['tree_sortby'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -349,14 +356,14 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 				</select>
 			</div>
 			<div class="form-group">
-				<select name="sortdir" class="form-control form-control-sm">
+				<select name="sortdir" class="form-control">
 					<option value="DESC" <?php echo $_SESSION['tree_sortdir'] == 'DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
 					<option value="ASC" <?php echo $_SESSION['tree_sortdir'] == 'ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label><?php echo $_lang["setting_resource_tree_node_name"] ?></label>
-				<select name="nodename" class="form-control form-control-sm">
+				<select name="nodename" class="form-control">
 					<option value="default" <?php echo $_SESSION['tree_nodename'] == 'default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
 					<option value="pagetitle" <?php echo $_SESSION['tree_nodename'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
 					<option value="longtitle" <?php echo $_SESSION['tree_nodename'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -372,7 +379,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = (this.value ? '' : 1);" <?php echo($_SESSION['tree_show_only_folders'] ? '' : ' checked="checked"') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
 			</div>
 			<div class="text-center">
-				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
+				<a href="javascript:;" class="btn btn-primary" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 			</div>
 		</form>
 	</div>
