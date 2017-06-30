@@ -478,7 +478,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<table border="0" cellspacing="0" cellpadding="1">
 					<tr>
 						<th><?php echo $_lang['module_name'] ?></th>
-						<td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="inputBox" style="width:150px;" onchange="documentDirty=true;">&nbsp;<span class="warning" id="savingMessage">&nbsp;</span></td>
+						<td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="inputBox" onchange="documentDirty=true;"><span class="warning" id="savingMessage"></span></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['module_desc'] ?></th>
