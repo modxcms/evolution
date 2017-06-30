@@ -210,7 +210,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 	<!-- Tab Start -->
 	<div class="sectionBody">
-		
+
 		<div class="tab-pane" id="webUserPane">
 			<script type="text/javascript">
 				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
@@ -254,7 +254,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 								<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod'] == "spec" ? 'checked="checked"' : ""; ?>>
 								<?php echo $_lang['password_gen_specify']; ?>
 								<br />
-								<div style="padding-left:20px">
+								<div>
 									<label for="specifiedpassword" style="width:120px"><?php echo $_lang['change_password_new']; ?>:</label>
 									<input type="password" name="specifiedpassword" onChange="documentdirty=true;" onKeyPress="document.userform.passwordgenmethod[1].checked=true;" size="20" />
 									<br />
@@ -323,7 +323,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_country']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><select size="1" name="country" onChange="documentDirty=true;">
+						<td><select name="country" onChange="documentDirty=true;">
 								<?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 								<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 								<?php
@@ -336,8 +336,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_dob']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;'>
-							<a href="javascript:;" onClick="document.userform.dob.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;' readonly />
+							<i onClick="document.userform.dob.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_gender']; ?>:</th>
@@ -380,14 +380,14 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<tr>
 							<th><?php echo $_lang['user_blockeduntil']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly>
-								<a href="javascript:;" onClick="document.userform.blockeduntil.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+								<i onClick="document.userform.blockeduntil.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_blockedafter']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly>
-								<a href="javascript:;" onClick="document.userform.blockedafter.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+								<i onClick="document.userform.blockedafter.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<?php
 					}
