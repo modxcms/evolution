@@ -9,7 +9,7 @@
  * MODX version:   1.0.3
 */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
-$modx->config['mgr_date_picker_path'] = 'media/style/common/moo-datepicker/datepicker.inc.php';
+$modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
 if(!$modx->config['lang_code']) {
     global $modx_lang_attribute;
     $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
