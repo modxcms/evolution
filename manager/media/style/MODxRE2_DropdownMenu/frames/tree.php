@@ -58,13 +58,11 @@ if(is_array($evtOut)) {
 			echo implode("\n", $evtOut);
 		}
 		?>
-		<!--<div>-->
-		<div id="node0" class="rootNode" onclick="modx.tree.treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
-		echo $site_name; ?>');"><?php echo $_style['tree_showtree']; ?>&nbsp;<b><?php echo $site_name; ?></b>
+		<div id="node0" class="rootNode"><a class="node" onclick="modx.tree.treeAction(event, 0)" data-id="0" data-title-esc="<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
+			echo $site_name; ?>"><span class="icon"><?php echo $_style['tree_showtree']; ?></span><span class="title"><?php echo $site_name; ?></span></a>
 			<div id="treeloader"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 		</div>
 		<div id="treeRoot"></div>
-		<!--</div>-->
 		<?php
 		// invoke OnManagerTreeRender event
 		$evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->db->escape($_REQUEST));
