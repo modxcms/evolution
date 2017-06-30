@@ -1,0 +1,163 @@
+<?php namespace FormLister;
+
+/**
+ * Контроллер для восстановления паролей
+ */
+include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/controller/Form.php');
+
+/**
+ * Class Reminder
+ * @package FormLister
+ */
+class Activate extends Form
+{
+    protected $user = null;
+
+    protected $mode = 'hash';
+    protected $userField = '';
+
+    /**
+     * Reminder constructor.
+     * @param \DocumentParser $modx
+     * @param array $cfg
+     */
+    public function __construct(\DocumentParser $modx, $cfg = array())
+    {
+        parent::__construct($modx, $cfg);
+        $this->user = $this->loadModel(
+            $this->getCFGDef('model', '\modUsers'),
+            $this->getCFGDef('modelPath', 'assets/lib/MODxAPI/modUsers.php')
+        );
+        $lang = $this->lexicon->loadLang('activate');
+        if ($lang) {
+            $this->log('Lexicon loaded', array('lexicon' => $lang));
+        }
+        $userField = $this->getCFGDef('userField', 'email');
+        $this->userField = $userField;
+        if (!isset($_REQUEST['formid']) && !isset($_REQUEST[$userField]) && (isset($_REQUEST['hash']) && !empty($_REQUEST['hash']) && isset($_REQUEST['id']) && !empty($_REQUEST['id']))) {
+            $this->setField('hash', $_REQUEST['hash']);
+            $this->setField('id', (int)$_REQUEST['id']);
+            $this->mode = 'activate';
+        }
+        $this->log('Activate mode is ' . $this->mode);
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        if ($this->modx->getLoginUserID('web')) {
+            $this->redirect('exitTo');
+            $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('activate.default_skipTpl'));
+            $this->setValid(false);
+        }
+
+        if ($this->mode == 'activate') {
+            $this->renderActivate();
+        }
+
+        return parent::render();
+    }
+
+    /**
+     * @return bool
+     */
+    public function renderActivate()
+    {
+        $hash = $this->getField('hash');
+        $uid = $this->getField('id');
+        if ($hash && $hash == $this->getUserHash($uid)) {
+            $this->process();
+        } else {
+            $this->addMessage($this->lexicon->getMsg('activate.update_failed'));
+            $this->setValid(false);
+        }
+    }
+
+    /**
+     * @param $uid
+     * @return bool|string
+     */
+    public function getUserHash($uid)
+    {
+        if (is_null($this->user)) {
+            $hash = false;
+        } else {
+            $userdata = $this->user->edit($uid)->toArray();
+            $hash = $userdata['id'] && $userdata['logincount'] < 0 ? md5(json_encode($userdata)) : false;
+        }
+
+        return $hash;
+    }
+
+    /**
+     *
+     */
+    public function process()
+    {
+        switch ($this->mode) {
+            /**
+             * Задаем хэш, отправляем пользователю ссылку для активации
+             */
+            case "hash":
+                $uid = $this->getField($this->userField);
+                $password = $this->getField('password');
+                if (($hash = $this->getUserHash($uid)) && ($password && $this->user->get('password') == $this->user->getPassword($password))) {
+                    $this->setFields($this->user->toArray());
+                    if (!$password) {
+                        $password = \APIhelpers::genPass($this->getCFGDef('passwordLength', 6));
+                        $this->user->set('password', $password)->save(true);
+                        $this->setField('user.password', $password);
+                    }
+                    $url = $this->getCFGDef('activateTo', $this->modx->config['site_start']);
+                    $this->setField('activate.url', $this->modx->makeUrl($url, "",
+                        http_build_query(array('id' => $this->getField('id'), 'hash' => $hash)),
+                        'full'));
+                    $this->mailConfig['to'] = $this->user->get('email');
+                    parent::process();
+                } else {
+                    $this->addMessage($this->lexicon->getMsg('activate.no_activation'));
+                }
+                break;
+            /**
+             * Отправляем пользователю письмо для активации, если указан шаблон такого письма
+             */
+            case "activate":
+                $uid = $this->getField('id');
+                $hash = $this->getField('hash');
+                if ($hash && $hash == $this->getUserHash($uid)) {
+                    $result = $this->user->edit($uid)->set('logincount', 0)->save(true);
+                    $this->log('Activate user', array('user' => $uid, 'result' => $result));
+                    if (!$result) {
+                        $this->addMessage($this->lexicon->getMsg('activate.update_failed'));
+                    } else {
+                        $this->setFields($this->user->toArray());
+                        $this->postProcess();
+                    }
+                } else {
+                    $this->addMessage($this->lexicon->getMsg('activate.update_failed'));
+                    parent::process();
+                }
+                break;
+        }
+    }
+
+    /**
+     *
+     */
+    public function postProcess()
+    {
+        $this->setFormStatus(true);
+        switch ($this->mode) {
+            case "hash":
+                $this->renderTpl = $this->getCFGDef('successTpl',
+                    $this->lexicon->getMsg('activate.default_successTpl'));
+                break;
+            case "activate":
+                $this->redirect();
+                $this->renderTpl = $this->getCFGDef('activateSuccessTpl',
+                    $this->lexicon->getMsg('activate.default_activateSuccessTpl'));
+        }
+    }
+}
