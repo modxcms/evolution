@@ -187,20 +187,21 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 				<form name="frmdb" method="post">
 					<input type="hidden" name="mode" value="" />
 					<p class="element-edit-message"><?php echo $_lang['table_hoverinfo'] ?></p>
-
-					<p class="actionButtons"><a href="javascript:;" class="primary" onclick="backup();return false;"><i class="<?php echo $_style['actions_save']; ?>"></i> <?php echo $_lang['database_table_clickbackup'] ?></a></p>
-					<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements'] ?></label></p>
-					<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
+					<p>
+						<a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?php echo $_style['actions_save']; ?>"></i> <?php echo $_lang['database_table_clickbackup'] ?></a>
+						<label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements'] ?></label>
+					</p>
+					<table class="grid">
 						<thead>
 						<tr>
-							<td width="160"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename'] ?></b></label></td>
-							<td align="right"><b><?php echo $_lang['database_table_records'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_collation'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_table_datasize'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_table_overhead'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_table_effectivesize'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_table_indexsize'] ?></b></td>
-							<td align="right"><b><?php echo $_lang['database_table_totalsize'] ?></b></td>
+							<td style="width: 17rem"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename'] ?></b></label></td>
+							<td><b><?php echo $_lang['database_table_records'] ?></b></td>
+							<td><b><?php echo $_lang['database_collation'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_datasize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_overhead'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_effectivesize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_indexsize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_totalsize'] ?></b></td>
 						</tr>
 						</thead>
 						<tbody>
@@ -209,7 +210,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 						$rs = $modx->db->query($sql);
 						$i = 0;
 						while($db_status = $modx->db->getRow($rs)) {
-							$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
+							//$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 
 							if(isset($tables)) {
 								$table_string = implode(',', $table);
@@ -217,7 +218,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 								$table_string = '';
 							}
 
-							echo '<tr bgcolor="' . $bgcolor . '" title="' . $db_status['Comment'] . '" style="cursor:default">' . "\n" . '<td><label><input type="checkbox" name="chk[]" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b style="color:#009933">' . $db_status['Name'] . '</b></label></td>' . "\n" . '<td align="right">' . $db_status['Rows'] . '</td>' . "\n";
+							echo '<tr bgcolor="' . $bgcolor . '" title="' . $db_status['Comment'] . '" style="cursor:default">' . "\n" . '<td><label><input type="checkbox" name="chk[]" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-success">' . $db_status['Name'] . '</b></label></td>' . "\n" . '<td align="right">' . $db_status['Rows'] . '</td>' . "\n";
 							echo '<td align="right">' . $db_status['Collation'] . '</td>' . "\n";
 
 							// Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
@@ -243,14 +244,16 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 							$totaloverhead = $totaloverhead + $db_status['Data_free'];
 						}
 						?>
-						<tr bgcolor="#CCCCCC">
-							<td valign="top"><b><?php echo $_lang['database_table_totals'] ?></b></td>
-							<td colspan="3">&nbsp;</td>
-							<td dir="ltr" align="right" valign="top"><?php echo $totaloverhead > 0 ? '<b style="color:#990033">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
-							<td colspan="2">&nbsp;</td>
-							<td dir="ltr" align="right" valign="top"><?php echo "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
-						</tr>
 						</tbody>
+						<tfoot>
+						<tr>
+							<td><b><?php echo $_lang['database_table_totals'] ?></b></td>
+							<td colspan="3">&nbsp;</td>
+							<td><?php echo $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
+							<td colspan="2">&nbsp;</td>
+							<td><?php echo "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
+						</tr>
+						</tfoot>
 					</table>
 					<?php
 					if($totaloverhead > 0) {
@@ -335,13 +338,11 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 						<label><input type="radio" name="sel" onclick="showhide('file');" <?php echo checked(!isset($_SESSION['console_mode']) || $_SESSION['console_mode'] !== 'text'); ?> /> <?php echo $_lang["bkmgr_run_sql_file_label"]; ?></label>
 						<label><input type="radio" name="sel" onclick="showhide('textarea');" <?php echo checked(isset($_SESSION['console_mode']) && $_SESSION['console_mode'] === 'text'); ?> /> <?php echo $_lang["bkmgr_run_sql_direct_label"]; ?></label>
 					</p>
-					<div><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?php echo $f_display; ?>;" /></div>
+					<div class="form-group"><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?php echo $f_display; ?>;" /></div>
 					<div id="textarea" style="display:<?php echo $t_display; ?>;">
-						<textarea name="textarea" style="width:500px;height:200px;"><?php echo $value; ?></textarea>
+						<textarea name="textarea" style="height:200px;"><?php echo $value; ?></textarea>
 					</div>
-					<div class="actionButtons" style="margin-top:10px;">
-						<a href="javascript:;" class="primary" onclick="document.mutate.save.click();"><i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_run_sql_submit"]; ?></a>
-					</div>
+					<a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_run_sql_submit"]; ?></a>
 					<input type="submit" name="save" style="display:none;" />
 				</form>
 				<?php
@@ -361,11 +362,9 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 				<form method="post" name="snapshot" action="index.php">
 					<input type="hidden" name="a" value="93" />
 					<input type="hidden" name="mode" value="snapshot" />
-					<div class="actionButtons" style="margin-top:2em;margin-bottom:2em;">
-						<?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" />
-						<a href="javascript:;" class="primary" style="display:inline-block;" onclick="document.snapshot.save.click();"><i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_snapshot_submit"]; ?></a>
-						<input type="submit" name="save" style="display:none;" />
-					</div>
+					<?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" />
+					<a href="javascript:;" class="btn btn-primary" style="display:inline-block;" onclick="document.snapshot.save.click();"> <i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_snapshot_submit"]; ?></a>
+					<input type="submit" name="save" style="display:none;" />
 				</form>
 				<style type="text/css">
 					table { background-color: #fff; border-collapse: collapse; }
@@ -392,8 +391,8 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 							'Description'
 						);
 						if(is_array($files) && 0 < $total) {
-							echo '<table>';
-							echo "<tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr>\n";
+							echo '<table class="grid">';
+							echo "<thead><tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr></thead>\n";
 							arsort($files);
 							$tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="javascript:;" onclick="confirmRevert(\'[+filename+]\');" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
 							while($file = array_shift($files)) {
