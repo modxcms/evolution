@@ -1,16 +1,16 @@
 /* -------------------------[ Tabs ]--- */
-.tab-row .tab span, .tab-row .tab.hover { text-decoration: none }
-.tab-row .tab.selected { color: #333; border-radius: 0 }
-.tab-row .tab.selected span { background-color: #fff; text-shadow: none }
-.tab-row { position: relative; z-index: 1; white-space: nowrap }
-.tab-row .tab, .tab-row .tab span { color: #1377c5; font-size: 13px }
-.tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: 0 0; cursor: pointer }
-.tab-row .tab.hover { background: 0 0; filter: none }
-.tab-row .tab.selected span, .tab-row .tab.selected.hover span { color: #1377c5 }
-.tab-row .tab.selected, .tab-row .tab.selected.hover { background: #fff; filter: none; box-shadow: 0 -3px 0 #1377c5, -1px 0 0 transparent }
-.tab-row .tab:after, .tab-row .tab:before { position: absolute; content: ''; left: 0; display: block; right: 0 }
-.tab-row .tab.selected.hover:after, .tab-row .tab.selected:after { border-radius: 3px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); top: -3px; bottom: 1px; z-index: -1 }
-.tab-row .tab.selected:before { background: #FFF; top: 90%; bottom: -4px }
-.tab-row .tab.hover, .tab-row .tab.hover span { color: #2b749d }
-.tab-row .tab .fa { margin-right: 3px; font-size: 14px }
-.tab-page { clear: both; background-color: #fff; position: relative; top: -2px; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.tab-row { position: relative; z-index: 1; white-space: nowrap; padding: 0 1.5rem }
+.tab-row::after, .tab-row-container::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 1px; background-color: #ddd }
+.tab-row .tab { position: relative; display: inline-block; margin: 0; padding: 0 0.875rem; line-height: 2.7rem; height: 2.5rem; text-transform: uppercase; border: 1px solid rgba(0, 0, 0, 0); border-bottom: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+.tab-row .tab { color: rgba(0, 0, 0, 0.6); font-size: 0.75rem }
+.tab-row .tab.selected { z-index: 2; border-color: #ddd; background-color: #fff; color: #444; font-weight: 700 }
+.tab-row .tab .fa { margin-right: 0.1em }
+/**/
+.tab-row-container { height: 2.5rem; left: 0; overflow-y: hidden; padding: 0 1.5rem; position: relative; }
+.tab-row-container .tab-row { z-index: 2; -webkit-overflow-scrolling: touch; overflow-x: auto; padding: 0 0 2rem; white-space: nowrap }
+.tab-row-container .tab-row::after { display: none }
+.tab-row-container > i { position: absolute; top: 0; height: 100%; text-align: center; font: normal normal normal 1.2rem/2.7rem FontAwesome; cursor: pointer; transition-duration: 0.2s; width: 1.5rem; }
+.tab-row-container > i.prev { left: 0; }
+.tab-row-container > i.next { right: 0; }
+.tab-row-container > i.disable { font-size: 0.8rem; color: rgba(0, 0, 0, 0.2); pointer-events: none }
+/* dark */
