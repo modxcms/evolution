@@ -5,7 +5,8 @@
  * addition to FormLister
  * 
  * @category    plugin
- * @internal    @properties &logoutKey=Request key;text;logout
+ * @version     1.6.1 
+ * @internal    @properties &logoutKey=Request key;text;logout &cookieName=Cookie Name;text;WebLoginPE &cookieLifetime=Cookie Lifetime;text;31536000
  * @internal    @disabled 1
  * @internal    @events OnWebPageInit,OnPageNotFound,OnWebLogin
 **/
