@@ -73,13 +73,8 @@ foreach($unlockTranslations as $key => $value) {
 $user = $modx->getUserInfo($modx->getLoginUserID());
 if($user['which_browser'] == 'default') {
 	$user['which_browser'] = $modx->config['which_browser'];
-}
+}javascript:;
 
-$jQuery = '';
-
-if(isset($modx->pluginCache['ElementsInTree'])) {
-	$jQuery = '<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>';
-}
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
@@ -94,11 +89,12 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	<style>
 		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
+		.ios #main {-webkit-overflow-scrolling: touch;overflow-y: scroll;}
 	</style>
-	<?php echo $jQuery ?>
+	<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
-		if(!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) {
-			document.classList.add('iphone ipad ipod')
+		if(/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+			document.documentElement.className += ' ios'
 		}
 	</script>
 	<script type="text/javascript">
