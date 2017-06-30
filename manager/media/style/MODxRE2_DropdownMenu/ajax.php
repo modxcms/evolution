@@ -20,70 +20,97 @@ include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manag
 
 $action = $_REQUEST['a'];
 
+// set limit sql query
+$limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
+
 if(isset($action)) {
 	switch($action) {
 		case '76': {
 
 			if(isset($_REQUEST['tab'])) {
+				$output = '';
+				$items = '';
 				$sql = '';
 				$a = '';
 				$role = $_SESSION['mgrRole'];
+				$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
+				$sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
+				$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
 				if($_REQUEST['tab'] == 0) {
 					$a = 16;
+					$sqlLike = $filter ? 'WHERE t1.templatename LIKE "' . $modx->db->escape($filter) . '%"' : '';
 					$sql = $modx->db->query('SELECT t1.*, t1.templatename AS name
 					FROM ' . $modx->getFullTableName('site_templates') . ' AS t1
-					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-					ORDER BY t1.templatename ASC');
+					' . $sqlLike . '
+					ORDER BY t1.templatename ASC
+					' . $sqlLimit);
 
-					echo '<li><a id="a_19" href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
+					$output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 1) {
 					$a = 301;
 					$sql = $modx->db->query('SELECT t1.*, IF(t2.templateid,0,1) AS disabled
 					FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
 					LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
-					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
+					' . $sqlLike . '
 					GROUP BY t1.id
-					ORDER BY t1.name ASC');
+					ORDER BY t1.name ASC
+					' . $sqlLimit);
 
-					echo '<li><a id="a_300" href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
+					$output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 2) {
 					$a = 78;
 					$sql = $modx->db->query('SELECT t1.*
 					FROM ' . $modx->getFullTableName('site_htmlsnippets') . ' AS t1
-					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-					ORDER BY t1.name ASC');
+					' . $sqlLike . '
+					ORDER BY t1.name ASC
+					' . $sqlLimit);
 
-					echo '<li><a id="a_77" href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
+					$output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 3) {
 					$a = 22;
 					$sql = $modx->db->query('SELECT t1.*
 					FROM ' . $modx->getFullTableName('site_snippets') . ' AS t1
-					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-					ORDER BY t1.name ASC');
+					' . $sqlLike . '
+					ORDER BY t1.name ASC
+					' . $sqlLimit);
 
-					echo '<li><a id="a_23" href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
+					$output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 4) {
 					$a = 102;
 					$sql = $modx->db->query('SELECT t1.*
 					FROM ' . $modx->getFullTableName('site_plugins') . ' AS t1
-					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-					ORDER BY t1.name ASC');
+					' . $sqlLike . '
+					ORDER BY t1.name ASC
+					' . $sqlLimit);
 
-					echo '<li><a id="a_101" href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
+					$output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
 				}
 
-				if($modx->db->getRecordCount($sql)) {
+				if($count = $modx->db->getRecordCount($sql)) {
+					if($count == $limit) {
+						$output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+					}
 					while($row = $modx->db->getRow($sql)) {
-						if($row['locked'] && $role != 1) continue;
+						if($row['locked'] && $role != 1) {
+							continue;
+						}
 
-						echo '<li class="' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__tab_' . $_REQUEST['tab'] . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+						$items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__tab_' . $_REQUEST['tab'] . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
 					}
 				}
+
+				if(isset($_REQUEST['filter'])) {
+					$output = $items;
+				} else {
+					$output .= $items;
+				}
+
+				echo $output;
 			}
 
 			break;
@@ -91,38 +118,74 @@ if(isset($action)) {
 
 		case '75': {
 			$a = 12;
+			$output = '';
+			$items = '';
+			$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+			$sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
+			$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
-			$sql = $modx->db->query('SELECT t1.*, t1.username AS name
+			$sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
 				FROM ' . $modx->getFullTableName('manager_users') . ' AS t1
-				#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-				ORDER BY t1.username ASC');
+				LEFT JOIN ' . $modx->getFullTableName('user_attributes') . ' AS t2 ON t1.id=t2.internalKey
+				' . $sqlLike . '
+				ORDER BY t1.username ASC
+				' . $sqlLimit);
 
-			echo '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
+			$output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
 
-			if($modx->db->getRecordCount($sql)) {
+			if($count = $modx->db->getRecordCount($sql)) {
+				if($count == $limit) {
+					$output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+				}
 				while($row = $modx->db->getRow($sql)) {
-					echo '<li><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+					$items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 				}
 			}
+
+			if(isset($_REQUEST['filter'])) {
+				$output = $items;
+			} else {
+				$output .= $items;
+			}
+
+			echo $output;
 
 			break;
 		}
 
 		case '99': {
 			$a = 88;
+			$output = '';
+			$items = '';
+			$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+			$sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
+			$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
-			$sql = $modx->db->query('SELECT t1.*, t1.username AS name
+			$sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
 				FROM ' . $modx->getFullTableName('web_users') . ' AS t1
-				#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
-				ORDER BY t1.username ASC');
+				LEFT JOIN ' . $modx->getFullTableName('web_user_attributes') . ' AS t2 ON t1.id=t2.internalKey
+				' . $sqlLike . '
+				ORDER BY t1.username ASC
+				' . $sqlLimit);
 
-			echo '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
+			$output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
 
-			if($modx->db->getRecordCount($sql)) {
+			if($count = $modx->db->getRecordCount($sql)) {
+				if($count == $limit) {
+					$output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+				}
 				while($row = $modx->db->getRow($sql)) {
-					echo '<li><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+					$items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 				}
 			}
+
+			if(isset($_REQUEST['filter'])) {
+				$output = $items;
+			} else {
+				$output .= $items;
+			}
+
+			echo $output;
 
 			break;
 		}
@@ -360,7 +423,7 @@ if(isset($action)) {
 						break;
 					}
 				}
-				echo json_encode($contextmenu, JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE);
+				echo json_encode($contextmenu, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
 				break;
 			}
 		}
