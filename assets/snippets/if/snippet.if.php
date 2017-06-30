@@ -24,7 +24,8 @@ $opers=explode($s,$is);
 $subject=$opers[0];
 $eq=true;
 $and=false;
-
+$or = false;
+$else = '';
 // Prepare custom conditions
 $customConditions = array();
 if(!empty($custom)) {
