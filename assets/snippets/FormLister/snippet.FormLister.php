@@ -8,7 +8,6 @@
  * @var \DocumentParser $modx
  * @var array $params
  */
-
 if (!isset($formid)) return;
 $out = '';
 $FLDir = MODX_BASE_PATH . 'assets/snippets/FormLister/';

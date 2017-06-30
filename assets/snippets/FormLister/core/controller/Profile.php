@@ -36,28 +36,31 @@ class Profile extends Form
             );
             $this->user = $user->edit($uid);
             if ($ds = $this->getCFGDef('defaultsSources')) {
-                $defaultsSources = "{$ds};user:web";
+                $defaultsSources = "{$ds};param:userdata";
             } else {
-                $defaultsSources = "user:web";
+                $defaultsSources = "param:userdata";
             }
             $this->config->setConfig(array(
                 'defaultsSources' => $defaultsSources,
+                'userdata' => $this->user->toArray()
             ));
         }
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function render()
     {
-        if (is_null($this->user)) {
+        if (is_null($this->user) || !$this->user->getID()) {
             $this->redirect('exitTo');
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('profile.default_skipTpl'));
+            $this->setValid(false);
         }
 
         return parent::render();
     }
+
 
     /**
      * @param string $param
@@ -67,6 +70,7 @@ class Profile extends Form
     {
         $rules = parent::getValidationRules($param);
         $password = $this->getField('password');
+        var_dump($rules);
         if (empty($password)) {
             $this->forbiddenFields[] = 'password';
             if (isset($rules['password'])) {
@@ -100,10 +104,15 @@ class Profile extends Form
         return $result;
     }
 
+    /**
+     * @param $fl
+     * @param $value
+     * @return bool
+     */
     public static function uniqueUsername($fl, $value)
     {
         $result = true;
-        if (!is_null($fl->user)) {
+        if (!is_null($fl->user) && ($fl->user->get("email") !== $value)) {
             $fl->user->set('username', $value);
             $result = $fl->user->checkUnique('web_users', 'username');
         }
@@ -116,17 +125,35 @@ class Profile extends Form
      */
     public function process()
     {
-        if ($this->user->get('username') == $this->user->get('email') && $this->getField('email') && !$this->getField('username')) {
+        if ($this->user->get('username') == $this->user->get('email') && !empty($this->getField('email')) && empty($this->getField('username'))) {
             $this->setField('username', $this->getField('email'));
-            $this->allowedFields[] = 'username';
+            if (!empty($this->allowedFields)) $this->allowedFields[] = 'username';
+            if (!empty($this->forbiddenFields)) {
+                $_forbidden = array_flip($this->forbiddenFields);
+                unset($_forbidden['username']);
+                $this->forbiddenFields = array_keys($_forbidden);
+            }
         }
+
         $newpassword = $this->getField('password');
         $password = $this->user->get('password');
+        if (!empty($newpassword) && ($password !== $this->user->getPassword($newpassword))) {
+            if (!empty($this->allowedFields)) $this->allowedFields[] = 'password';
+            if (!empty($this->forbiddenFields)) {
+                $_forbidden = array_flip($this->forbiddenFields);
+                unset($_forbidden['password']);
+                $this->forbiddenFields = array_keys($_forbidden);
+            }
+        }
         $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
         $result = $this->user->fromArray($fields)->save(true);
         $this->log('Update profile', array('data' => $fields, 'result' => $result));
         if ($result) {
             $this->setFormStatus(true);
+            $this->user->close();
+            $this->setFields($this->user->edit($result)->toArray());
+            $this->setField('user.password',$newpassword);
+            $this->runPrepare('preparePostProcess');
             if (!empty($newpassword) && ($password !== $this->user->getPassword($newpassword))) {
                 $this->user->logOut('WebLoginPE', true);
                 $this->redirect('exitTo');

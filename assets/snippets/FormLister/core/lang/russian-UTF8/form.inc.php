@@ -15,5 +15,6 @@ $_lang['form.minutes'] = 'мин';
 $_lang['form.seconds'] = 'сек';
 $_lang['form.dateFormat'] = 'm.d.Y в H:i:s';
 $_lang['form.default_successTpl'] = '@CODE:Форма успешно отправлена в [+form.date.value+]';
+$_lang['form.form_failed'] = 'Не удалось отправить письмо.';
 
 return $_lang;

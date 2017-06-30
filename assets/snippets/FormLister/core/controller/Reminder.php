@@ -53,24 +53,26 @@ class Reminder extends Form
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function render()
     {
         if ($this->modx->getLoginUserID('web')) {
             $this->redirect('exitTo');
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('reminder.default_skipTpl'));
-        } else {
-            if ($this->mode == 'reset') {
-                $this->renderReset();
-            }
+            $this->setValid(false);
+        }
+
+        if ($this->mode == 'reset') {
+            $this->renderReset();
         }
 
         return parent::render();
     }
 
+
     /**
-     * @return bool
+     *
      */
     public function renderReset()
     {
@@ -79,10 +81,14 @@ class Reminder extends Form
         if ($hash && $hash == $this->getUserHash($uid)) {
             if ($this->getCFGDef('resetTpl')) {
                 $this->setField('user.hash', $hash);
+                $this->setField('user.id', $uid);
                 $this->renderTpl = $this->getCFGDef('resetTpl');
-            } else {
-                $this->process();
+
+                return;
             }
+            $this->process();
+        } else {
+            $this->addMessage($this->lexicon->getMsg('reminder.update_failed'));
         }
     }
 
@@ -131,10 +137,13 @@ class Reminder extends Form
                 $uid = $this->getField($this->userField);
                 if ($hash = $this->getUserHash($uid)) {
                     $this->setFields($this->user->toArray());
-                    $url = $this->getCFGDef('resetTo', $this->modx->documentIdentifier);
+                    $url = $this->getCFGDef('resetTo', $this->modx->config['site_start']);
                     $this->setField('reset.url', $this->modx->makeUrl($url, "",
-                        "&{$this->uidField}={$this->getField($this->uidField)}&{$this->hashField}={$hash}", 'full'));
-                    $this->mailConfig['to'] = $this->user->edit($uid)->get('email');
+                        http_build_query(array($this->uidField  => $this->getField($this->uidField),
+                                               $this->hashField => $hash
+                        )),
+                        'full'));
+                    $this->mailConfig['to'] = $this->user->get('email');
                     parent::process();
                 } else {
                     $this->addMessage($this->lexicon->getMsg('reminder.users_only'));
@@ -152,7 +161,7 @@ class Reminder extends Form
                     if ($this->getField('password') == '' && !isset($this->rules['password'])) {
                         $this->setField('password', \APIhelpers::genPass($this->getCFGDef('passwordLength', 6)));
                     }
-                    $fields = $this->filterFields($this->getFormData('fields'), array($this->userField,'password'));
+                    $fields = $this->filterFields($this->getFormData('fields'), array($this->userField, 'password'));
                     $result = $this->user->edit($uid)->fromArray($fields)->save(true);
                     $this->log('Update password', array('data' => $fields, 'result' => $result));
                     if (!$result) {

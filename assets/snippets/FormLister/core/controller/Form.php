@@ -225,7 +225,58 @@ class Form extends Core
             }
         }
 
+        $userfiles = $this->config->loadArray($this->getCFGDef('attachFiles'));
+        foreach ($userfiles as $field => $files) {
+            if (is_null($files[0])) {
+                $files = array($files);
+            }
+            foreach ($files as $file) {
+                if (isset($file['filepath']) && isset($file['filename'])) {
+                    $attachments[] = array(
+                        'filepath' => MODX_BASE_PATH . $file['filepath'],
+                        'filename' => $file['filename']
+                    );
+                }
+            }
+        }
+
         return $attachments;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setFileFields()
+    {
+        $fields = array();
+        foreach ($this->getFormData('files') as $field => $files) {
+            if (is_null($files[0])) {
+                $files = array($files);
+            }
+            foreach ($files as $file) {
+                if ($file['error'] === 0) {
+                    $fields[$field][] = $file['name'];
+                }
+            }
+        }
+
+        $userfiles = $this->config->loadArray($this->getCFGDef('attachFiles'));
+        foreach ($userfiles as $field => $files) {
+            if (is_null($files[0])) {
+                $files = array($files);
+            }
+            foreach ($files as $file) {
+                if (isset($file['filename']) && isset($file['filepath'])) {
+                    $fields[$field][] = $file['filename'];
+                }
+            }
+        }
+
+        if (!empty($fields)) {
+            $this->setFields($fields);
+        }
+
+        return $this;
     }
 
     /**
@@ -241,6 +292,7 @@ class Form extends Core
         $attachments = $this->getAttachments();
         if ($attachments) {
             $mailer->attachFiles($attachments);
+            $this->log('Attachments', $attachments);
             $field = array();
             foreach ($attachments as $file) {
                 $field[] = $file['filename'];
@@ -248,7 +300,7 @@ class Form extends Core
             $this->setField('attachments', $field);
         }
         $report = $this->renderReport();
-        $out = $mailer->send($report);
+        $out = $mailer->send($report) || $this->getCFGDef('ignoreMailerResult',0);
         $this->log('Mail report', array('report' => $report, 'mailer_config' => $mailer->config, 'result' => $out));
 
         return $out;
@@ -303,7 +355,7 @@ class Form extends Core
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function render()
     {
@@ -320,6 +372,7 @@ class Form extends Core
     public function process()
     {
         $this->setField('form.date', date($this->getCFGDef('dateFormat', $this->lexicon->getMsg('form.dateFormat'))));
+        $this->setFileFields();
         //если защита сработала, то ничего не отправляем
         if ($this->checkSubmitProtection()) {
             return;
@@ -339,6 +392,10 @@ class Form extends Core
     public function postProcess()
     {
         $this->setFormStatus(true);
+        if ($this->getCFGDef('deleteAttachments',0)) {
+            $this->deleteAttachments();
+        }
+        $this->runPrepare('prepareAfterProcess');
         $this->redirect();
         $this->renderTpl = $this->getCFGDef('successTpl', $this->lexicon->getMsg('form.default_successTpl'));
     }
@@ -358,5 +415,18 @@ class Form extends Core
                 'fromName' => $this->getCFGDef($fromParam, $this->modx->config['site_name'])
             )
         );
+    }
+
+    /**
+     * @return $this
+     */
+    public function deleteAttachments()
+    {
+        $files = $this->getAttachments();
+        foreach ($files as $file) {
+            $this->fs->delete($file['filepath']);
+        }
+
+        return $this;
     }
 }

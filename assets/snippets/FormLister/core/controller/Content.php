@@ -56,7 +56,7 @@ class Content extends Form
         }
         $data = array();
         if ($this->mode == 'edit') {
-            $data = $this->content->edit($this->id);
+            $data = $this->content->edit($this->id)->toArray('', '', '_', false);
             $this->mailConfig['noemail'] = 1;
             if ($ds = $this->getCFGDef('defaultsSources')) {
                 $defaultsSources = "{$ds};param:contentdata";
@@ -65,76 +65,80 @@ class Content extends Form
             }
             $this->config->setConfig(array(
                 'defaultsSources' => $defaultsSources,
-                'contentdata'     => $data->toArray()
+                'contentdata'     => $data,
+                'formTpl'         => $this->getCFGDef('editTpl', $this->getCFGDef('formTpl')),
+                'successTpl'      => $this->getCFGDef('editSuccessTpl'),
+                'onlyUsers'       => 1
             ));
         }
         $this->log('Content mode is ' . $this->mode, array('data' => $data));
     }
 
-
     /**
-     * @return null|string
+     * @return string
      */
     public function render()
     {
         $uid = $this->modx->getLoginUserID('web');
-        $owner = $this->getCFGDef('ownerField', 'aid');
+        $ownerField = $this->getCFGDef('ownerField', 'aid');
         $mode = $this->mode;
-        //Если пользователь не авторизован и запрет для анонимов создавать записи
-        if (!$uid && $this->getCFGDef('onlyUsers', 1) && $mode == 'create') {
-            $this->redirect('exitTo');
-            $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('create.default_skipTpl'));
-        }
+        $flag = true;
 
-        //Если пользователь не авторизован и пытается редактировать запись
-        if (!$uid && $mode == 'edit') {
-            $this->redirect('exitTo');
-            $this->renderTpl = $this->getCFGDef('skipEditTpl', $this->lexicon->getMsg('edit.default_skipEditTpl'));
-        }
-
-        //Если пользователь авторизован, но не состоит в разрешенных группах
-        if ($uid && $this->getCFGDef('onlyUsers', 1) && !$this->checkUserGroups($uid, $this->getCFGDef('userGroups'))) {
-            if ($mode == 'edit') {
-                $this->redirect('badGroupTo');
-                $this->renderTpl = $this->getCFGDef('badGroupTpl', $this->lexicon->getMsg('edit.default_badGroupTpl'));
-            } else {
-                $this->redirect('badRecordTo');
-                $this->renderTpl = $this->getCFGDef('badGroupTpl',
-                    $this->lexicon->getMsg('create.default_badGroupTpl'));
-            }
-        }
-
-        if ($uid && !is_null($this->user)) {
-            $this->owner = $uid; //владелец документа
-            $userdata = $this->user->edit($uid)->toArray();
-            if ($userdata['id']) {
-                $this->setFields($userdata, 'user');
-                $this->log('Set user data', array('data' => $userdata));
+        if ($mode == 'create') {
+            if ($this->getCFGDef('onlyUsers', 1)) {
+                if (!$uid) {
+                    $this->redirect('exitTo');
+                    $this->renderTpl = $this->getCFGDef('skipTpl',
+                        $this->lexicon->getMsg('create.default_skipTpl'));
+                    $flag = false;
+                } elseif (!$this->checkUserGroups($uid, $this->getCFGDef('userGroups'))) {
+                    $this->redirect('badGroupTo');
+                    $this->renderTpl = $this->getCFGDef('badGroupTpl',
+                        $this->lexicon->getMsg('create.default_badGroupTpl'));
+                    $flag = false;
+                } else {
+                    $this->owner = $uid;
+                }
             }
         }
 
         if ($mode == 'edit') {
-            $cid = is_null($this->content) ? false : $this->content->getID();
-            if ($cid) {
-                if ($this->getCFGDef('onlyAuthors',
-                        1) && ($this->content->get($owner) && $this->content->get($owner) != $uid)
-                ) {
-                    $this->redirect('badOwnerTo');
-                    $this->renderTpl = $this->getCFGDef('badOwnerTpl',
-                        $this->lexicon->getMsg('edit.default_badOwnerTpl'));
-                } else {
-                    if (!$this->isSubmitted()) {
-                        $fields = $this->getContentFields();
-                        $this->setFields($fields);
-                    }
-                    return parent::render();
-                }
+            if (!$uid) {
+                $this->redirect('exitTo');
+                $this->renderTpl = $this->getCFGDef('skipEditTpl',
+                    $this->lexicon->getMsg('edit.default_skipEditTpl'));
+                $flag = false;
+            } elseif (!$this->checkUserGroups($uid, $this->getCFGDef('userGroups'))) {
+                $this->redirect('badGroupTo');
+                $this->renderTpl = $this->getCFGDef('badGroupTpl',
+                    $this->lexicon->getMsg('edit.default_badGroupTpl'));
+                $flag = false;
             } else {
-                $this->redirect('badRecordTo');
-                $this->renderTpl = $this->getCFGDef('badRecordTpl',
-                    $this->lexicon->getMsg('edit.default_badRecordTpl'));
+                $cid = is_null($this->content) ? false : $this->content->getID();
+                if ($cid) {
+                    $owner = $this->content->get($ownerField);
+                    if ($this->getCFGDef('onlyAuthors', 1) && $owner && $owner != $uid) {
+                        $this->redirect('badOwnerTo');
+                        $this->renderTpl = $this->getCFGDef('badOwnerTpl',
+                            $this->lexicon->getMsg('edit.default_badOwnerTpl'));
+                        $flag = false;
+                    }
+                    $this->owner = $uid;
+                } else {
+                    $this->redirect('badRecordTo');
+                    $this->renderTpl = $this->getCFGDef('badRecordTpl',
+                        $this->lexicon->getMsg('edit.default_badRecordTpl'));
+                    $flag = false;
+                }
+            }
+
+            if ($flag && !$this->isSubmitted()) {
+                $fields = $this->getContentFields();
+                $this->setFields($fields);
             }
         }
+
+        $this->setValid($flag);
 
         return parent::render();
     }
@@ -145,7 +149,7 @@ class Content extends Form
     public function process()
     {
         $fields = $this->getContentFields();
-        $owner = $this->getCFGDef('ownerField', 'aid');
+        $ownerField = $this->getCFGDef('ownerField', 'aid');
         $result = false;
         if ($fields && !is_null($this->content)) {
             $clearCache = $this->getCFGDef('clearCache', false);
@@ -155,41 +159,50 @@ class Content extends Form
                         return;
                     }
                     if ($this->owner) {
-                        $fields[$owner] = $this->owner;
+                        $fields[$ownerField] = $this->owner;
+                        $result = $this->content->create($fields)->save(true, $clearCache);
                     }
-                    $result = $this->content->create($fields)->save(true, $clearCache);
-                    $this->log('Create record', array('data' => $fields, 'result' => $result));
+                    if ($result) {
+                        $url = '';
+
+                        $evtOut = $this->modx->invokeEvent('OnMakeDocUrl', array(
+                            'invokedBy' => __CLASS__,
+                            'id'        => $result,
+                            'data'      => $this->getFormData('fields')
+                        ));
+                        if (is_array($evtOut) && count($evtOut) > 0) {
+                            $url = array_pop($evtOut);
+                        }
+                        if ($url) {
+                            $this->setField('content.url', $url);
+                        }
+                        $this->log('Created record', array('data' => $fields, 'result' => $result));
+                    }
                     break;
                 case 'edit':
                     $result = $this->content->fromArray($fields)->save(true, $clearCache);
-                    $this->log('Update record', array('data' => $fields, 'result' => $result));
-                    break;
-                default:
+                    if ($result) {
+                        $this->log('Update record', array('data' => $fields, 'result' => $result));
+                    }
                     break;
             }
-            //чтобы не получился косяк, когда плагины обновят поля
-            $this->content->close();
-            $this->setFields($this->content->edit($this->id)->toArray());
-            $this->log('Update form data', array('data' => $this->getFormData('fields')));
         }
         if (!$result) {
-            $this->addMessage($this->lexicon->getMsg('edit.update_fail'));
+            $this->addMessage($this->lexicon->getMsg('edit.update_failed'));
         } else {
-            if ($this->mode == 'create') {
-                $url = '';
-                $evtOut = $this->modx->invokeEvent('OnMakeDocUrl', array(
-                    'invokedBy' => __CLASS__,
-                    'id'        => $result,
-                    'data'      => $this->getFormData('fields')
-                ));
-                if (is_array($evtOut) && count($evtOut) > 0) {
-                    $url = array_pop($evtOut);
-                }
-                if ($url) {
-                    $this->setField('content.url', $url);
-                }
+            $this->content->close();
+            $this->setFields($this->content->edit($result)->toArray('','','_',false));
+            if ($this->getCFGDef('contentFields')) $this->setFields($this->getContentFields(true));
+            if ($this->owner) {
+                $this->setFields($this->user->edit($this->owner)->toArray(), 'user');
             }
-            parent::process();
+            $this->runPrepare('preparePostProcess');
+            $this->log('Update form data', array('data' => $this->getFormData('fields')));
+            if ($this->mode == 'create') {
+                parent::process();
+            } else {
+                $this->postProcess();
+            }
         }
     }
 
@@ -199,8 +212,9 @@ class Content extends Form
     public function postProcess()
     {
         $this->setFormStatus(true);
+        $this->runPrepare('prepareAfterProcess');
         if ($this->mode == 'create') {
-            if ($this->getCFGDef('editAfterCreate',0)) {
+            if ($this->getCFGDef('editAfterCreate', 0)) {
                 $idField = $this->getCFGDef('idField');
                 $this->redirect('redirectTo',
                     array(
@@ -212,24 +226,33 @@ class Content extends Form
             }
             $this->renderTpl = $this->getCFGDef('successTpl', $this->lexicon->getMsg('create.default_successTpl'));
         } else {
-            $this->addMessage($this->lexicon->getMsg('edit.update_success'));
+            if ($successTpl = $this->getCFGDef('successTpl')) {
+                $this->renderTpl = $successTpl;
+            } else {
+                $this->addMessage($this->lexicon->getMsg('edit.update_success'));
+            }
         }
     }
 
     /**
+     * @param bool $flip
      * @return array
      */
-    public function getContentFields()
+    public function getContentFields($flip = false)
     {
         $fields = array();
         $contentFields = $this->config->loadArray($this->getCFGDef('contentFields'));
-        if ($this->mode == 'edit' && !$this->isSubmitted()) {
-            $contentFields = array_flip($contentFields);
-        }
-        foreach ($contentFields as $field => $formField) {
-            $formField = $this->getField($formField);
-            if ($formField !== '' || $this->getCFGDef('allowEmptyFields', 1)) {
-                $fields[$field] = $formField;
+        if (!$contentFields) {
+            $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
+        } else {
+            if ($flip || ($this->mode == 'edit' && !$this->isSubmitted())) {
+                $contentFields = array_flip($contentFields);
+            }
+            foreach ($contentFields as $field => $formField) {
+                $formField = $this->getField($formField);
+                if ($formField !== '' || $this->getCFGDef('allowEmptyFields', 1)) {
+                    $fields[$field] = $formField;
+                }
             }
         }
 

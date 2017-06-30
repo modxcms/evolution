@@ -25,7 +25,7 @@ abstract class Core
 
     protected $modx = null;
     /**
-     * @var FS $fs
+     * @var \Helpers\FS $fs
      */
     public $fs = null;
 
@@ -99,6 +99,9 @@ abstract class Core
 
     public $captcha = null;
 
+    protected $gpc_seed = '';
+    protected $gpc_fields = array();
+
 
     /**
      * Core constructor.
@@ -134,6 +137,9 @@ abstract class Core
                 break;
             default:
                 $this->_rq = $_REQUEST;
+        }
+        if ($this->getCFGDef('removeGpc', 0)) {
+            $this->setGpcSeed();
         }
     }
 
@@ -209,7 +215,7 @@ abstract class Core
                 }
                 //Массив значений указывается в параметре сессии
                 case 'session':
-                    if (!empty($_source[1]) && isset($_SESSION[$_source[1]]) && is_array($_SESSION[$_source[1]])) {
+                    if (isset($_SESSION[$_source[1]]) && !empty($_source[1]) && is_array($_SESSION[$_source[1]])) {
                         $fields = $_SESSION[$_source[1]];
                         if (isset($_source[2])) {
                             $prefix = $_source[2];
@@ -233,7 +239,7 @@ abstract class Core
                     break;
                 //Массив значений берется из плейсхолдера MODX
                 case 'aplh':
-                    if (!empty($_source[1]) && isset($this->modx->placeholders[$_source[1]]) && is_array($this->modx->placeholders[$_source[1]])) {
+                    if (isset($this->modx->placeholders[$_source[1]]) && !empty($_source[1]) && is_array($this->modx->placeholders[$_source[1]])) {
                         $fields = $this->modx->placeholders[$_source[1]];
                         if (isset($_source[2])) {
                             $prefix = $_source[2];
@@ -267,14 +273,16 @@ abstract class Core
                     //Загружает поля документа
                     if ($_source[0] == 'document') {
                         $_source[0] = '\modResource';
-                        if (empty($_source[1])) {
-                            $_source[1] = $this->modx->documentIdentifier;
-                            if (!$_source[1]) {
-                                break;
+                        if ($this->modx->documentIdentifier) {
+                            if (isset($_source[1])) {
+                                $_source[2] = $source[1];
                             }
+                            $_source[1] = $this->modx->documentIdentifier;
+                        } else {
+                            break;
                         }
                     } else {
-                    //Загружает данные авторизованного пользователя, user:web:user
+                        //Загружает данные авторизованного пользователя, user:web:user
                         if (!empty($_source[1])) {
                             $_source[0] = '\modUsers';
                             $_source[1] = $this->modx->getLoginUserID($_source[1]);
@@ -289,8 +297,8 @@ abstract class Core
                         $classname = $_source[0];
                         if (!is_null($model = $this->loadModel($classname)) && isset($_source[1])) {
                             /** @var \autoTable $data */
-                            if ($data = $model->edit($_source[1])) {
-                                $fields = $data->toArray();
+                            if ($data = $model->edit($_source[1])->getID()) {
+                                $fields = $model->toArray();
                                 if (isset($_source[2])) {
                                     $prefix = $_source[2];
                                 }
@@ -318,6 +326,7 @@ abstract class Core
      */
     public function setRequestParams()
     {
+        $this->removeGpc($this->_rq);
         $this->setFields($this->_rq);
         if ($emptyFields = $this->emptyFormControls) {
             foreach ($emptyFields as $field => $value) {
@@ -346,7 +355,7 @@ abstract class Core
             $allowed = !empty($allowedFields) ? in_array($key, $allowedFields) : true;
             //поле входит в список запрещенных полей
             $forbidden = !empty($forbiddenFields) ? in_array($key, $forbiddenFields) : false;
-            if (($allowed && !$forbidden) && ($value !== '' || $this->getCFGDef('allowEmptyFields',1))) {
+            if (($allowed && !$forbidden) && ($value !== '' || $this->getCFGDef('allowEmptyFields', 1))) {
                 $out[$key] = $value;
             }
         }
@@ -703,13 +712,18 @@ abstract class Core
     {
         $plh = $fields;
         if (is_array($fields) && !empty($fields)) {
+            $sanitarTagFields = $this->getRemoveGpcFields();
             foreach ($fields as $field => $value) {
-                $field = array($field, $suffix);
-                $field = implode('.', array_filter($field));
                 if ($split && is_array($value)) {
-                    $arraySplitter = $this->getCFGDef($field . 'Splitter', $this->getCFGDef('arraySplitter', '; '));
+                    $arraySplitter = $this->getCFGDef($field . '.arraySplitter',
+                        $this->getCFGDef('arraySplitter', '; '));
                     $value = implode($arraySplitter, $value);
                 }
+                if (in_array($field, $sanitarTagFields)) {
+                    $value = \APIhelpers::sanitarTag($value);
+                }
+                $field = array($field, $suffix);
+                $field = implode('.', array_filter($field));
                 $plh[$field] = \APIhelpers::e($value);
             }
         }
@@ -850,6 +864,8 @@ abstract class Core
      */
     public function parseChunk($name, $data, $parseDocumentSource = false)
     {
+        $parseDocumentSource = $parseDocumentSource || $this->getCFGDef('parseDocumentSource', 0);
+        $rewriteUrls = $this->getCFGDef('rewriteUrls', 0);
         $DLTemplate = \DLTemplate::getInstance($this->modx)
             ->setTemplatePath($this->getCFGDef('templatePath'))
             ->setTemplateExtension($this->getCFGDef('templateExtension'))
@@ -857,18 +873,23 @@ abstract class Core
                     'FormLister' => $this,
                     'errors'     => $this->getFormData('errors'),
                     'messages'   => $this->getFormData('messages'),
+                    'plh'        => $this->placeholders
                 )
             );
         $out = $DLTemplate->parseChunk($name, $data, $parseDocumentSource);
         if ($this->lexicon->isReady()) {
             $out = $this->lexicon->parseLang($out);
         }
-        if ($this->getCFGDef('removeEmptyPlaceholders',0)) {
+        if (!$parseDocumentSource && $rewriteUrls) {
+            $out = $this->modx->rewriteUrls($out);
+        }
+        if ($this->getCFGDef('removeEmptyPlaceholders', 0)) {
             preg_match_all('~\[(\+|\*|\(|%)([^:\+\[\]]+)([^\[\]]*?)(\1|\)|%)\]~s', $out, $matches);
             if ($matches[0]) {
                 $out = str_replace($matches[0], '', $out);
             }
         }
+
         return $out;
     }
 
@@ -883,19 +904,23 @@ abstract class Core
             if ($this->fs->checkFile($wrapper)) {
                 include_once($wrapper);
                 $wrapper = ucfirst($captcha . 'Wrapper');
-                /** @var \modxCaptchaWrapper $captcha */
+                /** @var Captcha $captcha */
                 $cfg = $this->config->loadArray($this->getCFGDef('captchaParams', array()));
                 $cfg['id'] = $this->getFormId();
-                $captcha = new $wrapper ($this->modx, $cfg);
-                $captcha->init();
-                $this->rules[$this->getCFGDef('captchaField', 'vericode')] = array(
-                    "captcha" => array(
-                        "function" => "{$wrapper}::validate",
-                        "params"   => array($captcha)
-                    )
-                );
-                $this->captcha = $captcha;
-                $this->setPlaceholder('captcha', $captcha->getPlaceholder());
+                if (class_exists($wrapper)) {
+                    $captcha = new $wrapper ($this->modx, $cfg);
+                    if ($captcha instanceof CaptchaInterface) {
+                        $captcha->init();
+                        $this->rules[$this->getCFGDef('captchaField', 'vericode')] = array(
+                            "captcha" => array(
+                                "function" => "{$wrapper}::validate",
+                                "params"   => array($captcha)
+                            )
+                        );
+                        $this->captcha = $captcha;
+                        $this->setPlaceholder('captcha', $captcha->getPlaceholder());
+                    }
+                }
             }
         }
 
@@ -941,7 +966,8 @@ abstract class Core
                 $this->callPrepare($item, array(
                     'modx'       => $this->modx,
                     'data'       => $this->getFormData('fields'),
-                    'FormLister' => $this
+                    'FormLister' => $this,
+                    'name'       => $paramName
                 ));
             }
             $this->log('Prepare finished', $this->getFormData('fields'));
@@ -990,14 +1016,21 @@ abstract class Core
                 $page = $redirect;
                 $query = http_build_query($_query);
             }
-
             $redirect = $this->modx->makeUrl($page, '', $query, 'full');
             $this->setField($param, $redirect);
             $this->log('Redirect (' . $param . ') to' . $redirect, array('data' => $this->getFormData('fields')));
-            if (!$this->getCFGDef('api', 0)) {
-                $header = $header ? $header : 'HTTP/1.1 307 Temporary Redirect';
-                $this->modx->sendRedirect($redirect, 0, 'REDIRECT_HEADER', $header);
-            }
+            $this->sendRedirect($redirect, $header);
+        }
+    }
+
+    /**
+     * @param $url
+     * @param $header
+     */
+    public function sendRedirect($url, $header = 'HTTP/1.1 307 Temporary Redirect') {
+        if (!$this->getCFGDef('api', 0)) {
+            $header = $header ? $header : 'HTTP/1.1 307 Temporary Redirect';
+            $this->modx->sendRedirect($url, 0, 'REDIRECT_HEADER', $header);
         }
     }
 
@@ -1054,13 +1087,11 @@ abstract class Core
     public function loadModel($model, $path = '')
     {
         $out = null;
+        if ($path && $this->fs->checkFile($path)) {
+            include_once(MODX_BASE_PATH . $this->fs->relativePath($path));
+        }
         if (class_exists($model)) {
             $out = new $model($this->modx);
-        } else {
-            if ($path && $this->fs->checkFile($path)) {
-                include_once(MODX_BASE_PATH . $this->fs->relativePath($path));
-                $out = new $model($this->modx);
-            }
         }
 
         return $out;
@@ -1113,6 +1144,74 @@ abstract class Core
         $out = array();
         if (!empty($field) && isset($this->formData['errors'][$field]) && is_array($this->formData['errors'][$field])) {
             $out = array_values($this->formData['errors'][$field]);
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return string
+     */
+    protected function setGpcSeed()
+    {
+        $this->gpc_seed = 'sanitize_seed_' . base_convert(md5(realpath(MODX_MANAGER_PATH . 'includes/protect.inc.php')),
+                16, 36);
+
+        return $this;
+    }
+
+    /**
+     * Remove fucking modX_sanitize_gpc
+     *
+     * @param $target
+     * @param int $count
+     * @return mixed
+     */
+    protected function removeGpc(&$target, $count = 0)
+    {
+        $removeFields = $this->getRemoveGpcFields();
+        foreach ($target as $key => $value) {
+            if (!in_array($key, $removeFields)) {
+                continue;
+            }
+            if (is_array($value)) {
+                $count++;
+                if (10 < $count) {
+                    echo 'GPC Array nested too deep!';
+                    exit;
+                }
+                $this->removeGpc($value, $count);
+                $count--;
+            } else {
+                $value = str_replace($this->gpc_seed, '', $value);
+                $value = str_replace('sanitized_by_modx<s cript', '<script', $value);
+                $value = str_replace('sanitized_by_modx& ', '&', $value);
+                $target[$key] = $value;
+            }
+        }
+
+        return $target;
+    }
+
+    /**
+     * @param array $fields
+     * @return array
+     */
+    public function getRemoveGpcFields()
+    {
+        $out = $this->gpc_fields;
+        if (($removeGpc = $this->getCFGDef('removeGpc', 0)) && empty($out)) {
+            if (is_numeric($removeGpc)) {
+                $out = array_keys($this->_rq);
+            } else {
+                $fields = $this->config->loadArray($removeGpc);
+                foreach ($fields as $field) {
+                    if (isset($this->_rq[$field])) {
+                        $out[] = $field;
+                    }
+                }
+            }
+            $this->gpc_fields = $out;
         }
 
         return $out;

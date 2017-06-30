@@ -8,7 +8,7 @@
 
 $_lang = array();
 $_lang['profile.default_skipTpl'] = '@CODE:You must be logged in to change your profile.';
-$_lang['profile.update_fail'] = 'Profile update failed.';
+$_lang['profile.update_failed'] = 'Profile update failed.';
 $_lang['profile.update_success'] = 'Profile has been updated successfully.';
 
 return $_lang;

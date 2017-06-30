@@ -4,11 +4,14 @@
  */
 include_once('modxCaptcha.php');
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
+include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/captcha/Captcha.php');
 
+use FormLister\CaptchaInterface;
+use FormLister\Core;
 /**
  * Class modxCaptchaWrapper
  */
-class ModxCaptchaWrapper
+class ModxCaptchaWrapper implements CaptchaInterface
 {
     /**
      * @var array $cfg
@@ -27,7 +30,7 @@ class ModxCaptchaWrapper
      * @param $modx
      * @param $cfg
      */
-    public function __construct($modx, $cfg)
+    public function __construct(\DocumentParser $modx, $cfg = array())
     {
         $this->cfg = $cfg;
         $this->captcha = new \ModxCaptcha($modx, \APIhelpers::getkey($this->cfg, 'width', 100),
@@ -74,10 +77,10 @@ class ModxCaptchaWrapper
     /**
      * @param \FormLister\Core $FormLister
      * @param $value
-     * @param \ModxCaptchaWrapper $captcha
+     * @param \FormLister\CaptchaInterface $captcha
      * @return bool|string
      */
-    public static function validate(\FormLister\Core $FormLister, $value, \ModxCaptchaWrapper $captcha)
+    public static function validate(Core $FormLister, $value, CaptchaInterface $captcha)
     {
         if (empty($value)) {
             $out = \APIhelpers::getkey($captcha->cfg, 'errorEmptyCode', 'Введите проверочный код');

@@ -1,16 +1,17 @@
 <?php
+include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/captcha/Captcha.php');
+
+use FormLister\CaptchaInterface;
+use FormLister\Core;
 
 /**
- * Created by PhpStorm.
- * User: Pathologic
- * Date: 19.11.2016
- * Time: 0:27
+ * Class ReCaptchaWrapper
  */
-class ReCaptchaWrapper
+class ReCaptchaWrapper implements CaptchaInterface
 {
     /**
      * @var array $cfg
-     * id, secretKey, siteKey, size, theme, tabIndex, type
+     * id, secretKey, siteKey, size, theme, badge, callback, expired_callback, tabIndex, type
      */
     public $cfg = null;
     protected $modx = null;
@@ -20,7 +21,7 @@ class ReCaptchaWrapper
      * @param $modx
      * @param $cfg
      */
-    public function __construct($modx, $cfg)
+    public function __construct(\DocumentParser $modx, $cfg = array())
     {
         $this->cfg = $cfg;
         $this->modx = $modx;
@@ -49,9 +50,12 @@ class ReCaptchaWrapper
         $theme = \APIhelpers::getkey($this->cfg, 'theme', 'light');
         $id = \APIhelpers::getkey($this->cfg, 'id');
         $id = 'id="' . $id . '-recaptcha"';
+        $badge = \APIhelpers::getkey($this->cfg, 'badge', 'bottomright');
+        $callback = \APIhelpers::getkey($this->cfg, 'callback', '');
+        $expcallback = \APIhelpers::getkey($this->cfg, 'expired_callback', '');
         $out = '';
         if (!empty($siteKey)) {
-            $out = "<div {$id} class=\"g-recaptcha\" data-sitekey=\"{$siteKey}\" data-type=\"{$type}\" data-tabindex=\"{$tabindex}\" data-size=\"{$size}\" data-theme=\"{$theme}\"></div>";
+            $out = "<div {$id} class=\"g-recaptcha\" data-sitekey=\"{$siteKey}\" data-type=\"{$type}\" data-tabindex=\"{$tabindex}\" data-size=\"{$size}\" data-theme=\"{$theme}\" data-callback=\"{$callback}\" data-expired-callback=\"{$expcallback}\" data-badge=\"{$badge}\"></div>";
         }
 
         return $out;
@@ -60,10 +64,10 @@ class ReCaptchaWrapper
     /**
      * @param \FormLister\Core $FormLister
      * @param $value
-     * @param ReCaptchaWrapper $captcha
+     * @param \FormLister\CaptchaInterface $captcha
      * @return bool|string
      */
-    public static function validate(\FormLister\Core $FormLister, $value, \ReCaptchaWrapper $captcha)
+    public static function validate(Core $FormLister, $value, CaptchaInterface $captcha)
     {
         $secretKey = \APIhelpers::getkey($captcha->cfg, 'secretKey');
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secretKey . "&response=" . $value . "&remoteip=" . \APIhelpers::getUserIP();

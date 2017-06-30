@@ -12,6 +12,7 @@ include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/FormLister.abstra
 class Login extends Core
 {
     public $user = null;
+    protected $requestUri = '';
 
     /**
      * Login constructor.
@@ -25,6 +26,7 @@ class Login extends Core
             $this->getCFGDef('model', '\modUsers'),
             $this->getCFGDef('modelPath', 'assets/lib/MODxAPI/modUsers.php')
         );
+        $this->requestUri = $this->modx->config['site_url'].ltrim($_SERVER['REQUEST_URI'],'/');
         $lang = $this->lexicon->loadLang('login');
         if ($lang) {
             $this->log('Lexicon loaded', array('lexicon' => $lang));
@@ -39,11 +41,12 @@ class Login extends Core
         if ($this->modx->getLoginUserID('web')) {
             $this->redirect();
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('login.default_skipTpl'));
-            $this->setFormStatus(true);
+            $this->setValid(false);
         };
 
         return parent::render();
     }
+
 
     /**
      *
@@ -63,15 +66,32 @@ class Login extends Core
 
             return;
         }
+        $this->user->edit($login);
         $auth = $this->user->testAuth($login, $password, false, true);
         if (!$auth) {
             $this->addMessage($this->lexicon->getMsg('login.user_failed'));
 
             return;
         }
+
+        if ($this->getCFGDef('checkActivation',0) && $this->user->get('logincount') < 0) {
+            $this->addMessage($this->lexicon->getMsg('login.user_notactivated'));
+
+            return;
+        }
         $this->user->authUser($login, $remember, 'WebLoginPE', true);
         $this->setFormStatus(true);
-        $this->redirect();
+        if (isset($this->modx->documentIdentifier) && $this->modx->documentIdentifier == $this->modx->config['unauthorized_page']) {
+            $uaPage = $this->modx->makeUrl($this->modx->config['unauthorized_page'],"","","full");
+            if (array_shift(explode('?',$this->requestUri)) != $uaPage) {
+                $this->setField('redirectTo', $this->requestUri);
+                $this->sendRedirect($this->requestUri);
+            } else {
+                $this->redirect();
+            }
+        } else {
+            $this->redirect();
+        }
         $this->setFields($this->user->toArray());
         $this->renderTpl = $this->getCFGDef('successTpl');
     }

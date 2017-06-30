@@ -13,5 +13,5 @@ $_lang['form.minutes'] = 'min';
 $_lang['form.seconds'] = 'sec';
 $_lang['form.dateFormat'] = 'm.d.Y at H:i:s';
 $_lang['form.default_successTpl'] = '@CODE:Message was successfully sent [+form.date.value+]';
-
+$_lang['form.form_failed'] = 'Message failed to send.';
 return $_lang;
