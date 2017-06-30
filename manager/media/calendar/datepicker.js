@@ -1,360 +1,332 @@
-/*
- * DatePicker
- * @author Rick Hopkins
- * @modified by Micah Nolte and Martin Vašina
- * @version 0.3.2
- * @classDescription A date picker object. Created with the help of MooTools v1.11
- * MIT-style License.
-
--- start it up by doing this in your domready:
-
-$$('input.DatePicker').each( function(el){
-    new DatePicker(el);
-});
-
- */
-
+'use strict';
 var DatePicker = new Class({
-
-    /* set and create the date picker text box */
-    initialize: function(dp, options){
-
-        // Options defaults
-        this.dayChars = 1; // number of characters in day names abbreviation
-        this.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        this.format = 'dd-mm-yyyy hh:mm:00';
-        this.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        this.startDay = 7; // 1 = week starts on Monday, 7 = week starts on Sunday
-        this.yearOrder = 'asc';
-        this.yearRange = 10;
-        this.yearStart = (new Date().getFullYear());
-        this.yearOffset = -10;
-
-        // Pull the rest of the options
-        if(options) {
-            options = options;
-        } else {
-            options = [];
-        }
-        dp.options = {
-            monthNames: (options.monthNames && options.monthNames.length == 12 ? options.monthNames : this.monthNames) || this.monthNames, 
-            daysInMonth: (options.daysInMonth && options.daysInMonth.length == 12 ? options.daysInMonth : this.daysInMonth) || this.daysInMonth, 
-            dayNames: (options.dayNames && options.dayNames.length == 7 ? options.dayNames : this.dayNames) || this.dayNames,
-            startDay : options.startDay || this.startDay,
-            dayChars : options.dayChars || this.dayChars, 
-            format: options.format || this.format,
-            yearStart: options.yearStart || this.yearStart,
-            yearRange: options.yearRange || this.yearRange,
-            yearOrder: options.yearOrder || this.yearOrder,
-            yearOffset: options.yearOffset || this.yearOffset
-        };
-
-        // Finds the entered date, or uses the current date
-        dp = this.getValue(dp);
-
-        // Set beginning time and today, remember the original
-        dp.oldYear = dp.year = dp.then.getFullYear();
-        dp.oldMonth = dp.month = dp.then.getMonth();
-        dp.oldDay = dp.then.getDate();
-        dp.nowYear = dp.today.getFullYear();
-        dp.nowMonth = dp.today.getMonth();
-        dp.nowDay = dp.today.getDate();
-
-        dp.setProperties({'id':dp.getProperty('name'), 'autocomplete': 'off'});
-        dp.container = false;
-        dp.calendar = false;
-        dp.interval = null;
-        dp.active = false;
-        dp.onclick = dp.onfocus = this.create.pass(dp, this);
-    },
-
-    getValue: function(dp) {
-        if(dp.value != '') {
-            // handle dd-mm-YYYY date format as that is invalid for Date()
-            if (dp.options.format == 'dd-mm-YYYY hh:mm:00' || dp.options.format == 'dd-mm-YYYY') {
-                var dateVals = dp.value.split(' ');
-                var dateParts = dateVals[0].split('-');
-                dp.thenvalue = dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2];
-                if (dateVals[1]) dp.thenvalue = dp.thenvalue + ' ' + dateVals[1];
-            } else {
-                dp.thenvalue = dp.value;
-            }
-            dp.then = new Date(dp.thenvalue);
-            dp.today = new Date();
-        } else {
-            dp.then = dp.today = new Date();
-            dp.thenvalue = dp.then;
-        }
-        return dp;
-    },
-
-    updateValue: function(dp) {
-        el = $(document.body).getElement('td.dp_selected');
-        if(el) {
-            ds = el.axis.split('|');
-            dp.value = this.formatValue(dp, ds[0], ds[1], ds[2]);
-            this.dp.dirty = true;
-        }
-    },
-    
-    close: function(e) {
-        if (!$(this.dp.id + 'dp_container')) return;
-        e = new Event(e);
-
-        var clickOutside = ($chk(e) && e.target != this.dp && e.target != this.dp.container && !$(this.dp.id + 'dp_container').hasChild(e.target));
-        if (clickOutside) {
-            if(this.dp.dirty) this.updateValue(this.dp);
-            this.remove(this.dp);
-        }
-    },
-
-    /* create the calendar */
-    create: function(dp){
-
-        // Finds the entered date, or uses the current date
-        dp = this.getValue(dp);
-
-        this.dp = dp;
-        if (dp.calendar) return false;
-
-        this.dp.dirty = false;
-
-        /* create the outer container */
-        dp.container = new Element('div', {'class':'dp_container', 'id': dp.id + 'dp_container'}).injectBefore(dp);
-        
-        document.addEvent('mousedown', this.close.bind(this));
-
-        document.addEvents({
-            'keydown': function(e) {
-                e = new Event(e);
-                if ((e.code== 9 && !e.shift) || e.code == 27) {
-                    this.remove(this.dp);
-                }
-            }.bind(this)
-        });
-        
-        /* create the calendar */
-        dp.calendar = new Element('div', {'class':'dp_cal'}).injectInside(dp.container);
-        
-        /* create the date object */
-        var date = new Date();
-        
-        /* create the date object */
-        if ((dp.month >=0) && dp.year) {
-            date.setFullYear(dp.year, dp.month, 1);
-        } else {
-            dp.month = date.getMonth();
-            dp.year = date.getFullYear();
-            date.setDate(1);
-        }
-        dp.year % 4 == 0 ? dp.options.daysInMonth[1] = 29 : dp.options.daysInMonth[1] = 28;
-        
-        /* set the day to first of the month */
-        var firstDay = (1-(7+date.getDay()-dp.options.startDay)%7);
-
-        /* create the month select box */
-        monthSel = new Element('select', {'id':dp.id + '_monthSelect'});
-        for (var m = 0; m < dp.options.monthNames.length; m++){
-            monthSel.options[m] = new Option(dp.options.monthNames[m], m);
-            if (dp.month == m) monthSel.options[m].selected = true;
-        }
-        
-        /* create the year select box */
-        yearSel = new Element('select', {'id':dp.id + '_yearSelect'});
-        i = 0;
-        dp.options.yearStart ? dp.options.yearStart : dp.options.yearStart = date.getFullYear();
-        if (dp.options.yearOrder == 'desc'){
-            for (var y = dp.options.yearStart - dp.options.yearOffset; y > (dp.options.yearStart - dp.options.yearRange - 1); y--){
-                yearSel.options[i] = new Option(y, y);
-                if (dp.year == y) yearSel.options[i].selected = true;
-                i++;
-            }
-        } else {
-            for (var y = dp.options.yearStart + dp.options.yearOffset; y < (dp.options.yearStart + dp.options.yearRange + 1); y++){
-                yearSel.options[i] = new Option(y, y);
-                if (dp.year == y) yearSel.options[i].selected = true;
-                i++;
-            }
-        }
-
-        /* create time textbox */
-        if (!dp.time) {
-            var d = new Date(dp.thenvalue);
-            var minutes = d.getMinutes();
-            if (minutes < 10) {
-                minutes = '0' + minutes;
-            }
-            var time = d.getHours() + ':' + minutes;
-        } else {
-            var time = dp.time;
-        }
-        timeTextBox = new Element('input', {'id':dp.id + '_timeTextBox', 'class':'cal_timeTextBox', 'type':'text', 'value':time});
-        
-        /* start creating calendar */
-        calTable = new Element('table');
-        calTableThead = new Element('thead');
-        calSelRow = new Element('tr');
-        calSelCell = new Element('th', {'colspan':'7'});
-        monthSel.injectInside(calSelCell);
-        yearSel.injectInside(calSelCell);
-        calSelCell.injectInside(calSelRow);
-        calSelRow.injectInside(calTableThead);
-        calTableTbody = new Element('tbody');
-        
-        /* create day names */
-        calDayNameRow = new Element('tr');
-        for (var i = 0; i < dp.options.dayNames.length; i++) {
-            calDayNameCell = new Element('th');
-            calDayNameCell.appendText(dp.options.dayNames[(dp.options.startDay+i)%7].substr(0, dp.options.dayChars)); 
-            calDayNameCell.injectInside(calDayNameRow);
-        }
-        calDayNameRow.injectInside(calTableTbody);
-        
-        /* create the day cells */
-        while (firstDay <= dp.options.daysInMonth[dp.month]){
-            calDayRow = new Element('tr');
-            for (i = 0; i < 7; i++){
-                if ((firstDay <= dp.options.daysInMonth[dp.month]) && (firstDay > 0)){
-                    calDayCell = new Element('td', {'class':dp.id + '_calDay', 'axis':dp.year + '|' + (parseInt(dp.month) + 1) + '|' + firstDay}).appendText(firstDay).injectInside(calDayRow);
-                } else {
-                    calDayCell = new Element('td', {'class':'dp_empty'}).appendText(' ').injectInside(calDayRow);
-                }
-                // Show the previous day
-                if ( (firstDay == dp.oldDay) && (dp.month == dp.oldMonth ) && (dp.year == dp.oldYear) ) {
-                    calDayCell.addClass('dp_selected');
-                }
-                // Show today
-                if ( (firstDay == dp.nowDay) && (dp.month == dp.nowMonth ) && (dp.year == dp.nowYear) ) {
-                    calDayCell.addClass('dp_today');
-                }
-                firstDay++;
-            }
-            calDayRow.injectInside(calTableTbody);
-        }
-        
-        /* table into the calendar div */
-        calTableThead.injectInside(calTable);
-        calTableTbody.injectInside(calTable);
-        
-        /* time box */
-        //calTimeRow = new Element('tr');
-        calTimePara = new Element('p', {'class':dp.id + '_calTime'});
-        timeTextBox.injectInside(calTimePara);
-        //calTimeCell.injectInside(calTimeRow);
-        
-        calTable.injectInside(dp.calendar);
-        calTimePara.injectInside(dp.calendar);
-        
-        /* set the onmouseover events for all calendar days */
-        $$('td.' + dp.id + '_calDay').each(function(el){
-            el.onmouseover = function(){
-                el.addClass('dp_roll');
-            }.bind(this);
-        }.bind(this));
-        
-        /* set the onmouseout events for all calendar days */
-        $$('td.' + dp.id + '_calDay').each(function(el){
-            el.onmouseout = function(){
-                el.removeClass('dp_roll');
-            }.bind(this);
-        }.bind(this));
-        
-        /* set the onclick events for all calendar days */
-        $$('td.' + dp.id + '_calDay').each(function(el){
-            el.onclick = function(){
-                if( $(document.body).getElement('td.dp_selected') )
-                    $(document.body).getElement('td.dp_selected').removeClass('dp_selected');   // Remove old selected
-                el.addClass('dp_selected');                                                     // Set new selected
-                this.updateValue(this.dp);
-                // this.remove(dp);                                                             // Stay after date is picked
-            }.bind(this);
-            el.ondblclick = function(){
-                if( $(document.body).getElement('td.dp_selected') )
-                    $(document.body).getElement('td.dp_selected').removeClass('dp_selected');   // Remove old selected
-                el.addClass('dp_selected');                                                     // Set new selected
-                this.updateValue(this.dp);
-                this.remove(dp);                                                                // Close for double click
-            }.bind(this);
-        }.bind(this));
-        
-        /* set the onchange event for the month & year select boxes */
-        monthSel.onfocus = function(){ dp.active = true; };
-        monthSel.onblur = function() {
-           dp.active = true;
-        }.bind(this);      
-        monthSel.onchange = function(){
-            dp.month = monthSel.value;
-            dp.year = yearSel.value;
-            this.remove(dp);
-            this.create(dp);
-        }.bind(this);
-        
-        yearSel.onfocus = function(){ dp.active = true; };
-        yearSel.onblur = function() {
-           dp.active = true;
-        }.bind(this);
-        yearSel.onchange = function(){
-            dp.month = monthSel.value;
-            dp.year = yearSel.value;
-            this.remove(dp);
-            this.create(dp);
-        }.bind(this);
-        
-        /* set the onchange event for the timeTextBox */
-        timeTextBox.onfocus = function(){ dp.active = true; };
-        timeTextBox.onblur = function() {
-            this.updateValue(this.dp);
-        }.bind(this);
-        timeTextBox.onkeypress = function(e) {
-          this.dp.dirty = true;
-          e = new Event(e);
-          if (e.code == 13) {
-              this.updateValue(this.dp);
-	          return false;
-            }
-        }.bind(this);
-    },
-    
-    /* Format the returning date value according to the selected formation */
-    formatValue: function(dp, year, month, day) {
-        /* setup the date string variable */
-        var dateStr = '';
-        
-        /* get time */
-        var time = $(dp.id + '_timeTextBox').value.split(':');
-
-        if (time[0] < 0 || time[0] > 23) {
-            alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
-            return '';
-        }
-        if (time[1] < 0 || time[1] > 59 || time[1].length !== 2) {
-            alert('Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59');
-            return '';
-        }
-        
-        /* check the length of day */
-        if (day < 10) day = '0' + day;
-        if (month < 10) month = '0' + month;
-        
-        /* check the format & replace parts // thanks O'Rey */
-        dateStr = dp.options.format.replace( /dd/i, day ).replace( /mm/i, month ).replace( /yyyy/i, year ).replace(/hh/, time[0]).replace(/mm/, time[1]);
-        dp.month = dp.oldMonth = '' + (month - 1) + '';
-        dp.year = dp.oldYear = year;
-        dp.oldDay = day;
-
-        this.dp.thenvalue = month+'/'+day+'/'+year+' '+time[0]+':'+time[1]+':00';
-
-        /* return the date string value */
-        return dateStr;
-    },
-    
-    /* Remove the calendar from the page */
-    remove: function(dp){
-        dp.active = false;
-        if (dp.container) dp.container.remove();
-        dp.calendar = false;
-        dp.container = false;
-        $$('select.dp_hide').removeClass('dp_hide');
-    }
+	initialize: function(dp, options) {
+		var self = this;
+		this.dayChars = 1;
+		this.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+		this.format = 'dd-mm-yyyy hh:mm:00';
+		this.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		this.startDay = 7;
+		this.yearOrder = 'asc';
+		this.yearRange = 10;
+		this.yearStart = (new Date().getFullYear());
+		this.yearOffset = -10;
+		this.error = '';
+		options = options || [];
+		dp.options = {
+			monthNames: (options.monthNames && options.monthNames.length === 12 ? options.monthNames : this.monthNames) || this.monthNames,
+			daysInMonth: (options.daysInMonth && options.daysInMonth.length === 12 ? options.daysInMonth : this.daysInMonth) || this.daysInMonth,
+			dayNames: (options.dayNames && options.dayNames.length === 7 ? options.dayNames : this.dayNames) || this.dayNames,
+			startDay: options.startDay || this.startDay,
+			dayChars: options.dayChars || this.dayChars,
+			format: options.format || this.format,
+			yearStart: options.yearStart || this.yearStart,
+			yearRange: options.yearRange || this.yearRange,
+			yearOrder: options.yearOrder || this.yearOrder,
+			yearOffset: options.yearOffset || this.yearOffset
+		};
+		dp.id = dp.name;
+		dp.autocomplete = 'off';
+		dp = this.getValue(dp);
+		dp.lastValidDate = dp.value;
+		dp.oldYear = dp.year = dp.then.getFullYear();
+		dp.oldMonth = dp.month = dp.then.getMonth();
+		dp.oldDay = dp.then.getDate();
+		dp.nowYear = dp.today.getFullYear();
+		dp.nowMonth = dp.today.getMonth();
+		dp.nowDay = dp.today.getDate();
+		dp.container = false;
+		dp.calendar = false;
+		dp.interval = null;
+		dp.active = false;
+		dp.onclick = dp.onfocus = function() {
+			self.create(dp, self)
+		}
+	},
+	getValue: function(dp) {
+		if(dp.value !== '') {
+			if(dp.options.format === 'dd-mm-YYYY hh:mm:00' || dp.options.format === 'dd-mm-YYYY') {
+				var dateVals = dp.value.split(' ');
+				var dateParts = dateVals[0].split('-');
+				dp.thenvalue = dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2];
+				if(dateVals[1]) dp.thenvalue = dp.thenvalue + ' ' + dateVals[1]
+			} else {
+				dp.thenvalue = dp.value
+			}
+			dp.then = new Date(dp.thenvalue);
+			dp.today = new Date()
+		} else {
+			dp.thenvalue = dp.then = dp.today = new Date();
+			dp.thenvalue = dp.then
+		}
+		return dp
+	},
+	updateValue: function(dp) {
+		var el = document.querySelector('td.dp_selected');
+		var ds;
+		if(el) {
+			ds = el.axis.split('|');
+			var formatted = this.formatValue(dp, ds[0], ds[1], ds[2]);
+			if(formatted !== '') {
+				dp.value = formatted;
+				dp.lastValidDate = formatted
+			}
+			this.dp.dirty = true
+		}
+	},
+	alertError: function(dp) {
+		if(typeof dp.error !== 'undefined' && dp.error !== '') {
+			alert(dp.error);
+			dp.error = ''
+		}
+	},
+	hasChild: function(a, b) {
+		var parent = a.parentNode;
+		while(parent && parent !== document.body) {
+			if(parent === b) return parent;
+			else parent = parent.parentNode
+		}
+		return null
+	},
+	close: function(e) {
+		if(!document.getElementById(this.dp.id + 'dp_container')) return;
+		var clickOutside = (e.target && e.target !== this.dp && e.target !== this.dp.container && !(this.hasChild(e.target, this.dp.container)));
+		if(clickOutside) {
+			if(this.dp.dirty) {
+				this.updateValue(this.dp);
+				this.alertError(this.dp)
+			}
+			this.remove(this.dp)
+		}
+	},
+	create: function(dp) {
+		var self = this;
+		dp = this.getValue(dp);
+		this.dp = dp;
+		if(dp.calendar) return false;
+		this.dp.dirty = false;
+		dp.container = document.createElement('div');
+		dp.container.className = 'dp_container';
+		dp.container.id = dp.id + 'dp_container';
+		document.body.appendChild(dp.container);
+		document.onmousedown = function(e) {
+			self.close(e)
+		};
+		document.onkeydown = function(e) {
+			if((e.code === 9 && !e.shift) || e.code === 27 || e.code === 13) {
+				if(e.code === 13 && dp.container) {
+					e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+					if(self.dp.dirty) self.updateValue(dp);
+					self.remove(self.dp);
+					self.alertError(self.dp)
+				} else {
+					self.remove(self.dp)
+				}
+			}
+		};
+		dp.calendar = document.createElement('div');
+		dp.calendar.className = 'dp_cal';
+		dp.container.appendChild(dp.calendar);
+		var date = new Date();
+		if((dp.month >= 0) && dp.year) {
+			date.setFullYear(dp.year, dp.month, 1)
+		} else {
+			dp.month = parseInt(date.getMonth());
+			dp.year = parseInt(date.getFullYear());
+			date.setDate(1)
+		}
+		dp.year % 4 === 0 ? dp.options.daysInMonth[1] = 29 : dp.options.daysInMonth[1] = 28;
+		var firstDay = (1 - (7 + date.getDay() - dp.options.startDay) % 7);
+		var monthSel = document.createElement('select');
+		monthSel.id = dp.id + '_monthSelect';
+		for(var m = 0; m < dp.options.monthNames.length; m++) {
+			monthSel.options[m] = new Option(dp.options.monthNames[m], m);
+			if(parseInt(dp.month) === m) monthSel.options[m].selected = true
+		}
+		var yearSel = document.createElement('select');
+		yearSel.id = dp.id + '_yearSelect';
+		i = 0;
+		if(!dp.options.yearStart) dp.options.yearStart = date.getFullYear();
+		if(dp.options.yearOrder === 'desc') {
+			for(var y = dp.options.yearStart - dp.options.yearOffset; y > (dp.options.yearStart - dp.options.yearRange - 1); y--) {
+				yearSel.options[i] = new Option(y, y);
+				if(parseInt(dp.year) === y) yearSel.options[i].selected = true;
+				i++
+			}
+		} else {
+			for(var y = dp.options.yearStart + dp.options.yearOffset; y < (dp.options.yearStart + dp.options.yearRange + 1); y++) {
+				yearSel.options[i] = new Option(y, y);
+				if(parseInt(dp.year) === y) yearSel.options[i].selected = true;
+				i++
+			}
+		}
+		var time;
+		if(!dp.time) {
+			var d = new Date(dp.thenvalue);
+			var minutes = d.getMinutes();
+			if(minutes < 10) {
+				minutes = '0' + minutes
+			}
+			time = d.getHours() + ':' + minutes
+		} else {
+			time = dp.time
+		}
+		var timeTextBox = document.createElement('input');
+		timeTextBox.id = dp.id + '_timeTextBox';
+		timeTextBox.className = 'cal_timeTextBox';
+		timeTextBox.type = 'text';
+		timeTextBox.value = time;
+		var submitButton = document.createElement('button');
+		submitButton.id = dp.id + '_submit';
+		submitButton.className = 'cal_submit btn btn-secondary';
+		submitButton.innerHTML = 'OK';
+		var calTable = document.createElement('table');
+		var calTableThead = document.createElement('thead');
+		var calSelRow = document.createElement('tr');
+		var calSelCell = document.createElement('th');
+		calSelCell.colSpan = 7;
+		calSelCell.appendChild(monthSel);
+		calSelCell.appendChild(yearSel);
+		calSelRow.appendChild(calSelCell);
+		calTableThead.appendChild(calSelRow);
+		var calTableTbody = document.createElement('tbody');
+		var calDayNameRow = document.createElement('tr');
+		var calDayNameCell;
+		for(var i = 0; i < dp.options.dayNames.length; i++) {
+			calDayNameCell = document.createElement('th');
+			calDayNameCell.innerHTML = dp.options.dayNames[(dp.options.startDay + i) % 7].substr(0, dp.options.dayChars);
+			calDayNameRow.appendChild(calDayNameCell)
+		}
+		calTableTbody.appendChild(calDayNameRow);
+		var calDayRow;
+		var calDayCell;
+		while(firstDay <= dp.options.daysInMonth[dp.month]) {
+			calDayRow = document.createElement('tr');
+			for(i = 0; i < 7; i++) {
+				calDayCell = document.createElement('td');
+				if((firstDay <= dp.options.daysInMonth[dp.month]) && (firstDay > 0)) {
+					calDayCell.className = dp.id + '_calDay';
+					calDayCell.axis = dp.year + '|' + (parseInt(dp.month) + 1) + '|' + firstDay;
+					calDayCell.innerHTML = firstDay
+				} else {
+					calDayCell.className = 'dp_empty';
+					calDayCell.innerHTML = ' '
+				}
+				calDayRow.appendChild(calDayCell);
+				if((firstDay === parseInt(dp.oldDay)) && (dp.month === dp.oldMonth) && (dp.year === dp.oldYear)) {
+					calDayCell.classList.add('dp_selected')
+				}
+				if((firstDay === dp.nowDay) && (parseInt(dp.month) === dp.nowMonth) && (parseInt(dp.year) === dp.nowYear)) {
+					calDayCell.classList.add('dp_today')
+				}
+				firstDay++
+			}
+			calTableTbody.appendChild(calDayRow)
+		}
+		calTable.appendChild(calTableThead);
+		calTable.appendChild(calTableTbody);
+		var calTimePara = document.createElement('p');
+		calTimePara.id = dp.id + '_calTime';
+		calTimePara.appendChild(timeTextBox);
+		calTimePara.appendChild(submitButton);
+		dp.calendar.appendChild(calTable);
+		dp.calendar.appendChild(calTimePara);
+		dp.position = dp.getBoundingClientRect();
+		dp.container.style.left = (dp.position.left + window.scrollX) + 'px';
+		if(dp.position.top + (dp.container.offsetHeight) > window.innerHeight) {
+			dp.container.style.top = (dp.position.top + window.scrollY) - dp.container.offsetHeight + 'px'
+		} else {
+			dp.container.style.top = (dp.position.top + dp.position.height + window.scrollY) + 'px'
+		}
+		var calDays = document.querySelectorAll('td.' + dp.id + '_calDay');
+		for(var i = 0; i < calDays.length; i++) {
+			calDays[i].onmouseover = function() {
+				this.classList.add('dp_roll')
+			};
+			calDays[i].onmouseout = function() {
+				this.classList.remove('dp_roll')
+			};
+			calDays[i].onclick = function() {
+				var el = document.querySelector('td.dp_selected');
+				if(el) el.classList.remove('dp_selected');
+				this.classList.add('dp_selected');
+				self.updateValue(self.dp)
+			};
+			calDays[i].ondblclick = function() {
+				var el = document.querySelector('td.dp_selected');
+				if(el) el.classList.remove('dp_selected');
+				this.classList.add('dp_selected');
+				self.updateValue(self.dp);
+				self.remove(dp)
+			}
+		}
+		monthSel.onfocus = function() {
+			dp.active = true
+		};
+		monthSel.onblur = function() {
+			dp.active = true
+		};
+		monthSel.onchange = function() {
+			dp.month = monthSel.value;
+			dp.year = yearSel.value;
+			self.remove(dp);
+			self.create(dp)
+		};
+		yearSel.onfocus = function() {
+			dp.active = true
+		};
+		yearSel.onblur = function() {
+			dp.active = true
+		};
+		yearSel.onchange = function() {
+			dp.month = monthSel.value;
+			dp.year = yearSel.value;
+			self.remove(dp);
+			self.create(dp)
+		};
+		timeTextBox.onfocus = function() {
+			dp.active = true
+		};
+		timeTextBox.onblur = function() {
+			self.updateValue(self.dp);
+			self.alertError(self.dp)
+		};
+		timeTextBox.onkeyup = function(e) {
+			self.dp.dirty = true
+		};
+		submitButton.onclick = function(e) {
+			if(self.dp.dirty) {
+				self.updateValue(self.dp);
+				self.alertError(self.dp)
+			}
+			self.remove(self.dp);
+			e.stopPropagation()
+		}
+	},
+	formatValue: function(dp, year, month, day) {
+		var time = document.getElementById(dp.id + '_timeTextBox').value.split(':');
+		if(!time[0] || time[0] === '' || time[0] < 0 || time[0] > 23) {
+			dp.error = 'Invalid hours value: ' + time[0] + '\nAllowed range is 00:23';
+			return ''
+		}
+		if(!time[1] || time[1] === '' || time[1] < 0 || time[1] > 59 || time[1].length !== 2) {
+			dp.error = 'Invalid minutes value: ' + time[1] + '\nAllowed range is 00:59';
+			return ''
+		}
+		if(day < 10) day = '0' + day;
+		if(month < 10) month = '0' + month;
+		var dateStr = dp.options.format.replace(/dd/i, day).replace(/mm/i, month).replace(/yyyy/i, year).replace(/hh/, time[0]).replace(/mm/, time[1]);
+		dp.month = dp.oldMonth = '' + (month - 1) + '';
+		dp.year = dp.oldYear = year;
+		dp.oldDay = day;
+		this.dp.thenvalue = month + '/' + day + '/' + year + ' ' + time[0] + ':' + time[1] + ':00';
+		return dateStr
+	},
+	remove: function(dp) {
+		dp.active = false;
+		if(dp.container) dp.container.remove();
+		dp.calendar = false;
+		dp.container = false
+	}
 });
