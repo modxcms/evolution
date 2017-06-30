@@ -99,7 +99,7 @@ class OldFunctions {
 	    // Don't process when cached
 	    $modx->documentObject['hasmetatags'] = '0';
         }
-	if ($metas) $template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
+	if (!empty($metas)) $template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
         return $template;
     }
     
