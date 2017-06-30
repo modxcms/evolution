@@ -6,244 +6,116 @@
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="viewport" content="width=device-width">
 	<style type="text/css">
-		body {
-			font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
+		html { font-size: 16px; height: 100% }
+		body { margin: 0; padding: 0 1rem; height: 100%; font-family: sans-serif; font-size: 0.8rem; line-height: 1.5; color: #666; background-color: #F2F2F2; }
+		html, body, #mx_loginbox { height: 100%; }
+		* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+		a { color: #999; text-decoration: underline; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
+		a:hover { color: #444; text-decoration: none }
+		p { margin: 0; }
+		img { display: inline-block; max-width: 100% }
+		.text-center { text-align: center }
+		.clear { clear: both; width: 100%; }
+		#mx_loginbox { height: auto; min-height: 100%; width: 19rem; margin: 0 auto; padding-top: 7%; }
+		#mx_loginbox::before, #mx_loginbox::after { content: ""; display: table; width: 100% }
+		.logo { display: inline-block; padding-bottom: 1rem }
+		fieldset { display: block; margin: 0 0 2rem; padding: 1.5rem; background-color: #fff; border: none; border-radius: 0.15rem; box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1); }
+		label { display: block; font-size: 0.8rem; margin: 0 0 0.375rem; }
+		input.text, input[type=text] { font-family: inherit; border: 1px solid rgba(0, 0, 0, 0.1); background-color: #fff; margin: 0 0 1rem; padding: 0 0.5rem; width: 100%; height: 2.2rem; line-height: 2.2rem; font-size: 1.2rem; border-radius: 0.15rem; box-shadow: 0 0 5px rgba(188, 188, 188, 0.15); outline: none; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
+		input.text:focus, input[type=text]:focus { border-color: #5b9bda }
+		input.checkbox { margin: 0.5rem 0 0 0.25rem; display: inline-block; width: 1rem; height: 1rem; vertical-align: text-bottom }
+		label.remtext, .caption { display: inline-block; font-size: 0.75rem; color: #999 }
+		#submitButton, #FMP-email_button { display: block; width: 100%; padding: 0 1rem; margin: 0; min-width: 6rem; height: 2.2rem; line-height: 2.2rem; outline: none; font-size: 0.8rem; color: #fff; cursor: pointer; background-color: #32AB9A; border: none; border-radius: 0.15rem; box-shadow: 0 0 5px rgba(188, 188, 188, 0.15); -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
+		#submitButton:hover, #FMP-email_button:hover { background-color: #35baa8; }
+		#submitButton:active, #FMP-email_button:active { background-color: #32AB9A; }
+		#FMP-email_button { margin-top: 0 }
+		.loginCaptcha { display: block; padding: 0.7rem 0 0.5rem; }
+		.caption { display: block }
+		.form-footer { }
+		#onManagerLoginFormRender > a:first-child, #onManagerLoginFormRender > label:first-child { display: inline-block; padding-top: 1rem; }
+		.loginCaptcha img { height: 60px }
+		.gpl { float: right; color: #B2B2B2; margin: -2em 0.5em 0.5em; font-size: 0.85em; }
+		.gpl a, .loginLicense a { color: #B2B2B2; }
+		/* animate */
+		.animated { -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+		.animated.infinite { -webkit-animation-iteration-count: infinite; animation-iteration-count: infinite; }
+		.animated.hinge { -webkit-animation-duration: 2s; animation-duration: 2s; }
+		.scaleX { -webkit-animation: scaleX 3s ease-in-out infinite; animation: scaleX 3s ease-in-out infinite; }
+		@keyframes scaleX {
+			50% { -webkit-transform: scaleX(0.9); transform: scaleX(0.9) }
+			100% { -webkit-transform: scaleX(1); transform: scaleX(1) }
 			}
-		html:lang(ja) body {
-			font-family: Arial, "Helvetica Neue", Helvetica, Meiryo, "Hiragino Kaku Gothic Pro", sans-serif;
+		.zoomIn { -webkit-animation-name: zoomIn; animation-name: zoomIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+		@-webkit-keyframes zoomIn {
+			0% { opacity: 0; -webkit-transform: scale3d(.3, .3, .3); transform: scale3d(.3, .3, .3); }
+			50% { opacity: 1; }
 			}
-		input {
-			font-family: inherit;
+		@keyframes zoomIn {
+			0% { opacity: 0; -webkit-transform: scale3d(.3, .3, .3); transform: scale3d(.3, .3, .3); }
+			50% { opacity: 1; }
 			}
-		#login {
-			background-color: #F2F2F2;
-			margin: 7% 0 0;
-			}
-		#mx_loginbox {
-			width: 309px;
-			margin: 0 auto;
-			}
-		.sectionBody {
-			border: 1px solid #E6E6E6;
-			background: #FEFEFE;
-			padding: 25px 0 0 20px;
-			overflow: hidden;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-			}
-		.logo {
-			display: block;
-			text-align: center;
-			}
-		.logo img {
-			border: 0 none;
-			margin: 0 0 17px;
-			}
-		.sectionBody label {
-			color: #666666;
-			display: block;
-			font-size: 14px;
-			margin: 0 0 5px;
-			}
-		.sectionBody input[type="text"],
-		.sectionBody input[type="password"],
-		#FMP-email {
-			width: 261px;
-			height: 33px;
-			border: 1px solid #E5E5E5;
-			text-indent: 5px;
-			margin: 0 0 15px;
-			font-size: 18px;
-			box-shadow: 0 0 5px rgba(188, 188, 188, 0.15);
-			border-radius: 3px;
-			}
-		.sectionBody input[type="text"]:focus,
-		.sectionBody input[type="password"]:focus,
-		#FMP-email:focus {
-			border: 1px solid #3697CD;
-			box-shadow: 0 0 5px rgba(222, 203, 165, 0.3);
-			}
-		#rememberme {
-			float: left;
-			margin: 4px 5px 0 1px;
-			}
-		.sectionBody .remtext {
-			color: #999999;
-			display: block;
-			float: left;
-			font-size: 13px;
-			margin: 0;
-			margin-top: 4px;
-			}
-		#submitButton,
-		#FMP-email_button {
-			display: block;
-			float: right;
-			border: 0;
-			width: 100px;
-			height: 36px;
-			cursor: pointer;
-			/*text-indent: -9999px;*/
-			color: #fff;
-			font-size: 14px;
-			font-weight: 100;
-			margin-top: -7px;
-			margin-right: 22px;
-			margin-bottom: 10px;
-			background-color: #32AB9A;
-			border-radius: 3px;
-			-webkit-appearance: none;
-			}
-		#submitButton:hover,
-		#FMP-email_button:hover {
-			background-color: #35baa8;
-			}
-		#submitButton:active,
-		#FMP-email_button:active {
-			background-color: #32AB9A;
-			}
-		#onManagerLoginFormRender {
-			margin-top: 15px;
-			clear: both;
-			}
-		#FMP-email_label {
-			color: #666666;
-			font-size: 13px;
-			margin: 0 0 7px;
-			}
-		#FMP-email_button {
-			margin-bottom: 20px;
-			}
-		.loginLicense {
-			width: 309px;
-			margin: 0 auto;
-			display: block;
-			}
-		.loginLicense a {
-			color: #999999;
-			display: block;
-			font-size: 13px;
-			margin: 13px 0 0 21px;
-			text-decoration: underline;
-			}
-		#ForgotManagerPassword-show_form {
-			color: #999999;
-			display: block;
-			font-size: 13px;
-			margin: 0 0 20px;
-			text-align: left;
-			}
-		.error {
-			font-size: 13px;
-			color: #f00;
-			}
-		.gpl {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			color: #B2B2B2;
-			margin: 0.5em auto;
-			font-size: 80%;
-			}
-		.gpl a, .loginLicense a {
-			color: #B2B2B2;
-			}
-		.caption { font-size: 11px; color: #666; padding-right: 25px; }
-		.clear { clear: both; }
-		.form-footer { padding-bottom: 10px; }
 	</style>
-
-	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-
-	<script type="text/javascript">
-		/* <![CDATA[ */
-		if(top.frames.length) {
-			top.location = self.document.location;
-		}
-
-		window.addEvent('domready', function() {
-			$('submitButton').addEvent('click', function(e) {
-				e = new Event(e).stop();
-				params = 'ajax=1&' + $('loginfrm').toQueryString();
-				url = 'processors/login.processor.php';
-				new Ajax(url,
-					{
-						method: 'post',
-						postBody: params,
-						onComplete: ajaxReturn
-					}
-				).request();
-				$$('input').setProperty('readonly', 'readonly');
-			});
-
-			// Initial focus
-			if($('username').value != '') {
-				$('password').focus();
-			} else {
-				$('username').focus();
-			}
-
-		});
-
-		function ajaxReturn(response) {
-			var header = response.substr(0, 9);
-			if(header.toLowerCase() == 'location:') top.location = response.substr(10);
-			else {
-				var cimg = $('captcha_image');
-				if(cimg) {
-					cimg.src = 'includes/veriword.php?rand=' + Math.random();
-				}
-				$$('input').removeProperty('readonly');
-				alert(response);
-			}
-		}
-		/* ]]> */
-	</script>
 </head>
-<body id="login">
+<body>
 <div id="mx_loginbox">
 	<form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
-		<!-- anything to output before the login box via a plugin? -->
 		[+OnManagerLoginFormPrerender+]
-		<div class="sectionHeader">
+		<div class="text-center">
 			<a class="logo" href="../" title="[(site_name)]">
 				<img src="media/style/[(manager_theme)]/images/misc/login-logo.png" alt="[(site_name)]" id="logo" />
 			</a>
 		</div>
-		<div class="sectionBody">
-
-			<!--<p class="loginMessage">[+login_message+]</p>-->
-
+		<fieldset>
 			<label for="username">[+username+]</label>
 			<input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
-
 			<label for="password">[+password+]</label>
 			<input type="password" class="text" name="password" id="password" tabindex="2" value="" />
-
 			<p class="caption">[+login_captcha_message+]</p>
-
 			<p>[+captcha_image+]</p>
 			[+captcha_input+]
-
 			<div class="clear"></div>
-
 			<div class="form-footer">
-				<input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] />
-				<label for="rememberme" style="cursor:pointer" class="remtext">[+remember_username+]</label>
-				<input type="submit" class="login" id="submitButton" value="[+login_button+]" />
-				<!-- anything to output before the login box via a plugin ... like the forgot password link? -->
-				<div class="clear"></div>
+				<button type="submit" name="submitButton" class="login" id="submitButton">[+login_button+]</button>
 			</div>
-
 			[+OnManagerLoginFormRender+]
-		</div>
+		</fieldset>
 	</form>
 </div>
-<!-- close #mx_loginbox -->
-
-<!-- convert this to a language include -->
-<p class="loginLicense">
-
-</p>
+<p class="loginLicense"></p>
 <div class="gpl">&copy; 2005-2017 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
 </body>
+<script type="text/javascript">
+	/* <![CDATA[ */
+	if(window.frames.length) {
+		window.location = self.document.location;
+	}
+	var form = document.loginfrm;
+	if(form.username.value !== '') {
+		form.password.focus()
+	} else {
+		form.username.focus()
+	}
+	form.onsubmit = function(e) {
+		form.submitButton.classList.add('scaleX');
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', 'processors/login.processor.php', true);
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+		xhr.onload = function() {
+			if(this.readyState === 4) {
+				var header = this.response.substr(0, 9);
+				if(header.toLowerCase() === 'location:') {
+					window.location = this.response.substr(10);
+				} else {
+					var cimg = document.getElementById('captcha_image');
+					if(cimg) cimg.src = 'includes/veriword.php?rand=' + Math.random();
+					form.submitButton.classList.remove('scaleX');
+					alert(this.response);
+				}
+			}
+		};
+		xhr.send('ajax=1&username=' + encodeURIComponent(form.username.value) + '&password=' + encodeURIComponent(form.password.value) + (form.captcha_code ? '&captcha_code=' + encodeURIComponent(form.captcha_code.value) : ''));
+		e.preventDefault();
+	}
+	/* ]]> */
+</script>
 </html>
