@@ -271,10 +271,10 @@ td.assigned > button.btn,
 td.assigned > button.btn:hover { background-color:#37bdf4; }
 
 /* FIX BOOTSTRAP H1 BACK TO MODxRE2 */
-h1 {
+/*h1 {
     font-size: 1.8em;
     line-height: 35px;
     margin: 15px 15px 10px 15px;
-}
+}*/
 
 #category-edit table.grid .gridAltItem { background-color:#fff; }
