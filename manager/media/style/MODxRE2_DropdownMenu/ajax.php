@@ -1,6 +1,7 @@
 <?php
 
 define('MODX_API_MODE', true);
+define('IN_MANAGER_MODE', true);
 
 include_once("../../../../index.php");
 
@@ -14,17 +15,30 @@ if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQ
 	$modx->sendRedirect($modx->config['site_url']);
 }
 
-header('content-type: application/json');
-
 include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
+include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 
-$action = $_REQUEST['a'];
+$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
+$frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
 
 // set limit sql query
 $limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
 
 if(isset($action)) {
 	switch($action) {
+
+		case '1': {
+
+			switch($frame) {
+				case 'nodes':
+					include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/frames/nodes.php';
+
+					break;
+			}
+
+			break;
+		}
+
 		case '76': {
 
 			if(isset($_REQUEST['tab'])) {
