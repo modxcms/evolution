@@ -235,10 +235,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			// invoke OnManagerNodePrerender event
 			$prenode = $modx->invokeEvent("OnManagerNodePrerender", array('ph' => $ph));
 			if(is_array($prenode)) {
-				$phnew = array(); 
-				foreach($prenode as $pnode){
+				$phnew = array();
+				foreach($prenode as $pnode) {
 					$phnew = array_merge($phnew, unserialize($pnode));
-				} 
+				}
 				$ph = (count($phnew) > 0) ? $phnew : $ph;
 			}
 
@@ -294,10 +294,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'opened' => '1'
 					));
 					if(is_array($prenode)) {
-						$phnew = array(); 
-						foreach($prenode as $pnode){
+						$phnew = array();
+						foreach($prenode as $pnode) {
 							$phnew = array_merge($phnew, unserialize($pnode));
-						} 
+						}
 						$ph = (count($phnew) > 0) ? $phnew : $ph;
 					}
 
@@ -332,10 +332,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'opened' => '0'
 					));
 					if(is_array($prenode)) {
-						$phnew = array(); 
-						foreach($prenode as $pnode){
+						$phnew = array();
+						foreach($prenode as $pnode) {
 							$phnew = array_merge($phnew, unserialize($pnode));
-						} 
+						}
 						$ph = (count($phnew) > 0) ? $phnew : $ph;
 					}
 
@@ -370,10 +370,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'opened' => '1'
 					));
 					if(is_array($prenode)) {
-						$phnew = array(); 
-						foreach($prenode as $pnode){
+						$phnew = array();
+						foreach($prenode as $pnode) {
 							$phnew = array_merge($phnew, unserialize($pnode));
-						} 
+						}
 						$ph = (count($phnew) > 0) ? $phnew : $ph;
 						if($ph['showChildren'] == 0) {
 							unset($opened2[$row['id']]);
@@ -416,16 +416,16 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'opened' => '0'
 					));
 					if(is_array($prenode)) {
-						$phnew = array(); 
-						foreach($prenode as $pnode){
+						$phnew = array();
+						foreach($prenode as $pnode) {
 							$phnew = array_merge($phnew, unserialize($pnode));
-						} 
+						}
 						$ph = (count($phnew) > 0) ? $phnew : $ph;
 						if($ph['showChildren'] == 0) {
 							$tpl = getTplFolderNodeNotChildren();
 						}
 					}
-					
+
 					if($ph['showChildren'] == 0) {
 						$ph['icon_node_toggle'] = '';
 						$ph['donthit'] = 1;
@@ -685,5 +685,7 @@ function dbug($str, $flag = false) {
 	print('<pre>');
 	print_r($str);
 	print('</pre>');
-	if($flag) exit;
+	if($flag) {
+		exit;
+	}
 }
