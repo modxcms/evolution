@@ -12,7 +12,7 @@
 #mainMenu .nav > li.active > a { color: #fff; background-color: rgba(255, 255, 255, 0.07) }
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid { display: block; position: relative; z-index: 1; padding: 0 1rem; height: 2.2rem; line-height: 2.4rem; text-decoration: none; color: #bbb; transition-duration: 0.15s }
 #mainMenu .nav > li > a:hover, #mainMenu .nav .label_searchid:hover { color: #f3f3f3; }
-#mainMenu.show .nav > li.dropdown:hover > a, #mainMenu.show .nav > li.dropdown.hover > a { background-color: #fff; color: #444; }
+/*#mainMenu.show .nav > li.dropdown:hover > a, */#mainMenu.show .nav > li.dropdown.hover > a { background-color: #fff; color: #444; }
 #mainMenu .nav > li > a .icon { display: inline-block; overflow: hidden; width: auto; height: 2rem; line-height: 2rem; font-size: 1.5em; text-align: center; margin: 0.05rem 0 0 0.5rem; vertical-align: top; border-radius: 50%; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .nav > li > a .icon.photo { width: 2rem }
 #mainMenu .nav > li > a .icon .fa { font-size: 1.2rem; line-height: 2.1rem }
@@ -22,7 +22,7 @@
 .sidebar-closed #mainMenu #nav #bars .fa { width: 0.25rem; margin: 0 0.625rem; }
 #mainMenu .nav .caret, #mainMenu .nav .divider { display: none }
 #mainMenu .nav > li > ul { display: block; position: absolute; z-index: 0; overflow: auto; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.1s; transition-duration: 0.1s; }
-#mainMenu.show .nav > li:hover > a + ul, #mainMenu.show .nav > li.hover > a + ul, #mainMenu.show .nav > li.hover > ul.sub-menu.show { opacity: 1; visibility: visible }
+/*#mainMenu.show .nav > li:hover > a + ul, */#mainMenu.show .nav > li.hover > a + ul, #mainMenu.show .nav > li.hover > ul.sub-menu.show { opacity: 1; visibility: visible }
 #mainMenu.show .nav > li > ul.sub-menu { left: 15rem; opacity: 0; visibility: hidden; }
 #mainMenu.show .nav > li:hover > ul.sub-menu { }
 #mainMenu.show .nav > li:hover > ul.sub-menu.show { }
