@@ -135,12 +135,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		document.getElementById("failed").innerHTML = "0";
 	}
 
-	function deleteuser() {
-		if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
-			window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
-		}
-	}
-
 	// change name
 	function changeName() {
 		if(confirm("<?php echo $_lang['confirm_name_change']; ?>") === true) {
@@ -174,6 +168,22 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		}
 	};
 
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			document.userform.save.click();
+		},
+		delete: function() {
+			if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
+				window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			window.location.href = 'index.php?a=99';
+		}
+	}
+
 </script>
 
 <form action="index.php?a=89" method="post" name="userform">
@@ -188,25 +198,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
 	<h1><i class="fa fa fa-users"></i><?php echo $_lang['web_user_title']; ?> </h1>
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button1" class="transition"><a href="javascript:;" onClick="documentDirty=false; document.userform.save.click();"> <i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
-				<select id="stay" name="stay">
-					<?php if($modx->hasPermission('new_web_user')) { ?>
-						<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-					<?php } ?>
-					<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-					<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-				</select>
-			</li>
-			<?php if($modx->manager->action == '87') { ?>
-				<li id="Button3" class="disabled"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['delete']; ?></a></li>
-			<?php } else { ?>
-				<li id="Button3"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['delete']; ?></a></li>
-			<?php } ?>
-			<li id="Button5" class="transition"><a href="javascript:;" onClick="documentDirty=false;window.location.href='index.php?a=99';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['cancel']; ?></a></li>
-		</ul>
-	</div>
+
+	<?php echo $_style['actionsbuttons']['dynamic']['user'] ?>
 
 	<!-- Tab Start -->
 	<div class="sectionBody">
