@@ -172,17 +172,30 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			documentDirty = true;
 		}
 
-		function deletedocument() {
-			if(confirm("<?php echo $_lang['confirm_delete_resource']?>") === true) {
-				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?php echo $add_path; ?>";
+		var actions = {
+			save: function() {
+				documentDirty = false;
+				form_save = true;
+				document.mutate.save.click();
+			},
+			delete: function() {
+				if(confirm("<?php echo $_lang['confirm_delete_resource']?>") === true) {
+					document.location.href = "index.php?id=" + document.mutate.id.value + "&a=6<?php echo $add_path; ?>";
+				}
+			},
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?<?php echo($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
+			},
+			duplicate: function() {
+				if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>") === true) {
+					document.location.href = "index.php?id=<?php echo $_REQUEST['id'] ?>&a=94<?php echo $add_path; ?>";
+				}
+			},
+			view: function() {
+				window.open('<?php echo ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : $modx->config['site_url'] . 'index.php?id=' . $id ?>', 'previeWin');
 			}
-		}
-
-		function duplicatedocument() {
-			if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>") === true) {
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=94<?php echo $add_path; ?>";
-			}
-		}
+		};
 
 		var allowParentSelection = false;
 		var allowLinkSelection = false;
@@ -279,6 +292,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		var curTemplate = -1;
 		var curTemplateIndex = 0;
+
 		function storeCurTemplate() {
 			var dropTemplate = document.getElementById('template');
 			if(dropTemplate) {
@@ -588,6 +602,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				} ?>
 			</h1>
 
+			<?php echo $_style['actionsbuttons']['dynamic']['document'] ?>
+
 			<?php
 			// breadcrumbs
 			if($modx->config['use_breadcrumbs']) {
@@ -622,50 +638,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				echo '<ul class="breadcrumbs">' . $out . '</ul>';
 			}
 			?>
-
-			<div id="actions">
-				<ul class="actionButtons">
-					<li id="Button1">
-						<a href="javascript:;" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-							<i class="<?php echo $_style["actions_save"] ?>"></i><?php echo $_lang['save']; ?></a>
-						<span class="plus"> + </span>
-						<select id="stay" name="stay">
-							<?php if($modx->hasPermission('new_document')) { ?>
-								<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-							<?php } ?>
-							<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-							<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-						</select>
-					</li>
-					<?php if($modx->manager->action == '4' || $modx->manager->action == '72') { ?>
-						<li id="Button6" class="disabled">
-							<a href="javascript:;" onclick="duplicatedocument();">
-								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
-						</li>
-						<li id="Button3" class="disabled">
-							<a href="javascript:;" onclick="deletedocument();">
-								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
-						</li>
-					<?php } else { ?>
-						<li id="Button6">
-							<a href="javascript:;" onclick="setLastClickedElement(0,0);duplicatedocument();">
-								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
-						</li>
-						<li id="Button3">
-							<a href="javascript:;" onclick="setLastClickedElement(0,0);deletedocument();">
-								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
-						</li>
-					<?php } ?>
-					<li id="Button5">
-						<a href="javascript:;" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id == 0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id" . htmlspecialchars($add_path) . "';" ?>">
-							<i class="<?php echo $_style["actions_cancel"] ?>"></i><?php echo $_lang['cancel'] ?></a>
-					</li>
-					<li id="Button4">
-						<a href="javascript:;" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');">
-							<i class="<?php echo $_style["actions_preview"] ?>"></i><?php echo $_lang['preview'] ?></a>
-					</li>
-				</ul>
-			</div>
 
 			<!-- start main wrapper -->
 			<div class="sectionBody">
@@ -1453,6 +1425,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											chkpub.checked = true;
 										}
 									}
+
 									/* ]]> */
 								</script>
 								<p><?php echo $_lang['access_permissions_docs_message'] ?></p>
