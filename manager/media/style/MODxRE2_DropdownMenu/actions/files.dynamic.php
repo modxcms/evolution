@@ -201,11 +201,11 @@ if(substr($webstart_path, 0, 1) == '/') {
 	</h1>
 
 	<div id="actions">
-		<ul class="actionButtons">
+		<div class="btn-group">
 			<?php if($_POST['mode'] == 'save' || $_GET['mode'] == 'edit') : ?>
-				<li>
-					<a href="javascript:;" onclick="documentDirty=false;document.editFile.submit();"><i class="<?php echo $_style["files_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span></a>
-				</li>
+				<a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.editFile.submit();">
+					<i class="<?php echo $_style["files_save"] ?>"></i><span><?php echo $_lang['save']; ?></span>
+				</a>
 			<?php endif; ?>
 			<?php
 			if(isset($_GET['mode']) && $_GET['mode'] !== 'drill') {
@@ -213,27 +213,26 @@ if(substr($webstart_path, 0, 1) == '/') {
 			} else {
 				$href = 'a=2';
 			}
-
 			if(is_writable($startpath)) {
 				$ph = array();
 				$ph['style_path'] = $theme_image_path;
-				$tpl = '<li><a href="[+href+]" onclick="return getFolderName(this);"><i class="[+image+]"></i> [+subject+]</a></li>';
+				$tpl = '<a class="btn btn-secondary" href="[+href+]" onclick="return getFolderName(this);"><i class="[+image+]"></i><span>[+subject+]</span></a>';
 				$ph['image'] = $_style['files_folder-open'];
 				$ph['subject'] = $_lang['add_folder'];
 				$ph['href'] = 'index.php?a=31&mode=newfolder&path=' . urlencode($startpath) . '&name=';
 				$_ = parsePlaceholder($tpl, $ph);
 
-				$tpl = '<li><a href="[+href+]" onclick="return getFileName(this);"><i class="[+image+]"></i> ' . $_lang['files.dynamic.php1'] . '</a></li>';
+				$tpl = '<a class="btn btn-secondary" href="[+href+]" onclick="return getFileName(this);"><i class="[+image+]"></i><span>' . $_lang['files.dynamic.php1'] . '</span></a>';
 				$ph['image'] = $_style['files_page_html'];
 				$ph['href'] = 'index.php?a=31&mode=newfile&path=' . urlencode($startpath) . '&name=';
 				$_ .= parsePlaceholder($tpl, $ph);
 				echo $_;
 			}
 			?>
-			<li id="Button5" class="transition">
-				<a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?<?php echo $href; ?>';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a>
-			</li>
-		</ul>
+			<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?<?php echo $href; ?>';">
+				<i class="<?php echo $_style["actions_cancel"] ?>"></i><span><?php echo $_lang['cancel'] ?></span>
+			</a>
+		</div>
 	</div>
 
 	<div id="ManageFiles">
