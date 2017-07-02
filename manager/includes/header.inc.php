@@ -44,47 +44,6 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 			}
 			?>
-			<?php if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
-
-			var actionButtons = document.getElementById('actions'),
-				actionSelect = document.getElementById('stay');
-			if(actionButtons !== null && actionSelect !== null) {
-				var actionPlus = actionButtons.querySelector('.plus'),
-					actionSaveButton = actionButtons.querySelector('#Button1 > a'),
-					actionStay = [];
-				actionPlus.classList.add('dropdown-toggle');
-				actionStay['stay1'] = '<i class="<?php echo $_style['actions_file'] ?>"></i>';
-				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
-				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
-				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerText
-				}
-				var actionSelectNewOption = null,
-					actionSelectOptions = actionSelect.children,
-					div = document.createElement('div');
-				div.className = 'dropdown-menu';
-				actionSaveButton.parentNode.classList.add('dropdown');
-				for(var i = 0; i < actionSelectOptions.length; i++) {
-					if(!actionSelectOptions[i].selected) {
-						actionSelectNewOption = document.createElement('SPAN');
-						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerText;
-						actionSelectNewOption.onclick = function() {
-							var s = actionSelect.querySelector('option[selected=selected]');
-							if(s) s.selected = false;
-							actionSelect.children[this.dataset.id].selected = true;
-							actionSaveButton.click()
-						};
-						div.appendChild(actionSelectNewOption)
-					}
-				}
-				actionSaveButton.parentNode.appendChild(div);
-				actionPlus.onclick = function() {
-					this.parentNode.classList.toggle('show')
-				}
-			}
-			<?php } ?>
-
 		}
 
 		function reset_path(elementName) {
