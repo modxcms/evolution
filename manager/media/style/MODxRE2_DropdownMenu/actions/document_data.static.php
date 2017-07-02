@@ -216,25 +216,43 @@ if($numRecords > 0) {
 }
 ?>
 	<script type="text/javascript">
-		function duplicatedocument() {
-			if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>") === true) {
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=94";
+		var actions = {
+			new: function() {
+				document.location.href = "index.php?pid=<?php echo $_REQUEST['id']?>&a=4";
+			},
+			newlink: function() {
+				document.location.href = "index.php?pid=<?php echo $_REQUEST['id']?>&a=72";
+			},
+			edit: function() {
+				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=27";
+			},
+			save: function() {
+				documentDirty = false;
+				form_save = true;
+				document.mutate.save.click();
+			},
+			delete: function() {
+				if(confirm("<?php echo $_lang['confirm_delete_resource']?>") === true) {
+					document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=6";
+				}
+			},
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?<?php echo($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
+			},
+			move: function() {
+				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=51";
+			},
+			duplicate: function() {
+				if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>") === true) {
+					document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=94";
+				}
+			},
+			view: function() {
+				window.open('<?php echo ($modx->config['friendly_urls'] == '1') ? $modx->makeUrl($id) : $modx->config['site_url'] . 'index.php?id=' . $id ?>', 'previeWin');
 			}
-		}
+		};
 
-		function deletedocument() {
-			if(confirm("<?php echo $_lang['confirm_delete_resource']?>") === true) {
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=6";
-			}
-		}
-
-		function editdocument() {
-			document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=27";
-		}
-
-		function movedocument() {
-			document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=51";
-		}
 	</script>
 	<script type="text/javascript" src="media/script/tablesort.js"></script>
 
@@ -242,41 +260,7 @@ if($numRecords > 0) {
 		<i class="fa fa-info"></i><?php echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<?php if($modx->hasPermission('new_document')) { ?>
-				<li>
-					<a href="index.php?a=4&amp;pid=<?php echo $content['id'] ?>">
-						<i class="<?php echo $_style["icons_new_document"]; ?>"></i><?php echo $_lang['create_resource_here'] ?></a>
-				</li>
-				<li>
-					<a href="index.php?a=72&amp;pid=<?php echo $content['id'] ?>">
-						<i class="<?php echo $_style["icons_new_weblink"]; ?>"></i><?php echo $_lang['create_weblink_here'] ?></a>
-				</li>
-			<?php } ?>
-
-			<li id="Button1" class="primary">
-				<a href="javascript:;" onclick="editdocument();">
-					<i class="<?php echo $_style["actions_edit"] ?>"></i><?php echo $_lang['edit'] ?></a>
-			</li>
-			<li id="Button2">
-				<a href="javascript:;" onclick="movedocument();">
-					<i class="<?php echo $_style["actions_move"] ?>"></i><?php echo $_lang['move'] ?></a>
-			</li>
-			<li id="Button6">
-				<a href="javascript:;" onclick="duplicatedocument();">
-					<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
-			</li>
-			<li id="Button3">
-				<a href="javascript:;" onclick="deletedocument();">
-					<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
-			</li>
-			<li id="Button4">
-				<a href="javascript:;" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('" . $modx->makeUrl($id) . "','previeWin')" : "window.open('" . $modx->config['site_url'] . "index.php?id=$id','previeWin')"; ?>">
-					<i class="<?php echo $_style["actions_preview"] ?>"></i><?php echo $_lang['preview'] ?></a>
-			</li>
-		</ul>
-	</div>
+<?php echo $_style['actionsbuttons']['static']['document'] ?>
 
 	<div class="sectionBody">
 
