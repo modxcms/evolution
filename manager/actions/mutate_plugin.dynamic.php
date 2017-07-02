@@ -671,4 +671,3 @@ function bold($cond = false) {
 		return;
 	}
 }
-
