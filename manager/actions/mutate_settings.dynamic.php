@@ -71,7 +71,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			</ul>
 		</div>
 
-		<div style="margin: 0 10px 0 20px">
+		<div class="sectionBody">
 			<input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
 			<input type="hidden" name="settings_version" value="<?php echo $modx->getVersionData('version'); ?>" />
 			<!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
