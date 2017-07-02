@@ -7,15 +7,17 @@
  * Date:           18-Mar-2010
  * Version:        1.1
  * MODX version:   1.0.3
-*/
+ */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
 if(!$modx->config['lang_code']) {
-    global $modx_lang_attribute;
-    $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+	global $modx_lang_attribute;
+	$modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
 }
 
-if($_GET['a']==2) include_once('welcome.php');
+if($_GET['a'] == 2) {
+	include_once('welcome.php');
+}
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
@@ -170,7 +172,7 @@ $_style['actions_error']            = 'fa fa-times-circle';
 $_style['actions_info']             = 'fa fa-info-circle';
 $_style['actions_triangle']         = 'fa fa-exclamation-triangle';
 
-//for back compatibility 
+//for back compatibility
 
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_delete']             = $style_path.'icons/trash.png';
@@ -231,3 +233,226 @@ $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
 $_style['ed_save']                  = $style_path.'misc/ed_save.gif';
+
+// actions buttons templates
+$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
+$stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
+$addnew = 0;
+$run = 0;
+switch($action) {
+	case '3':
+	case '4':
+	case '27':
+	case '72':
+		if($modx->hasPermission('new_document')) {
+			$addnew = 1;
+		}
+		break;
+	case '16':
+	case '19':
+		if($modx->hasPermission('new_template')) {
+			$addnew = 1;
+		}
+		break;
+	case '300':
+	case '301':
+		if($modx->hasPermission('new_snippet') && $modx->hasPermission('new_chunk') && $modx->hasPermission('new_plugin')) {
+			$addnew = 1;
+		}
+		break;
+	case '77':
+	case '78':
+		if($modx->hasPermission('new_chunk')) {
+			$addnew = 1;
+		}
+		break;
+	case '22':
+	case '23':
+		if($modx->hasPermission('new_snippet')) {
+			$addnew = 1;
+		}
+		break;
+	case '101':
+	case '102':
+		if($modx->hasPermission('new_plugin')) {
+			$addnew = 1;
+		}
+		break;
+	case '106':
+	case '107':
+	case '108':
+		if($modx->hasPermission('new_module')) {
+			$addnew = 1;
+		}
+		if($modx->hasPermission('exec_module')) {
+			$run = 1;
+		}
+		break;
+	case '88':
+		if($modx->hasPermission('new_web_user')) {
+			$addnew = 1;
+		}
+		break;
+}
+
+$disabled = ($action == '19' || $action == '300' || $action == '77' || $action == '23' || $action == '101' || $action == '4' || $action == '72' || $action == '87' || $action == '11' || $action == '107' || $action == '38') ? ' disabled' : '';
+
+$_style['actionsbuttons'] = array(
+	'dynamic' => array(
+		'document' => '<div id="actions">
+			<div class="btn-group">
+				<div class="btn-group">
+					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
+						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					</a>
+					<span class="btn btn-success plus dropdown-toggle"></span>
+					<select id="stay" name="stay">
+						' . ($addnew ? '
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+						' : '') . '
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+					</select>
+				</div>' .
+					($addnew ? '
+					<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
+						<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+					</a>
+					' : '') . '
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
+					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+				</a>
+			</div>
+		</div>',
+		'user' => '<div id="actions">
+			<div class="btn-group">
+				<div class="btn-group">
+					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
+						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					</a>
+					<span class="btn btn-success plus dropdown-toggle"></span>
+					<select id="stay" name="stay">
+						' . ($addnew ? '
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+						' : '') . '
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+					</select>
+				</div>
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
+		'element' => '<div id="actions">
+			<div class="btn-group">
+				<div class="btn-group">
+					<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
+						<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+					</a>
+					<span class="btn btn-success plus dropdown-toggle"></span>
+					<select id="stay" name="stay">
+						' . ($addnew ? '
+							<option id="stay1" value="1" ' . ($stay == '1' ? ' selected="selected"' : '') . '>' . $_lang['stay_new'] . '</option>
+						' : '') . '
+						<option id="stay2" value="2" ' . ($stay == '2' ? ' selected="selected"' : '') . '>' . $_lang['stay'] . '</option>
+						<option id="stay3" value="" ' . ($stay == '' ? ' selected="selected"' : '') . '>' . $_lang['close'] . '</option>
+					</select>
+				</div>
+				' . ($addnew ? '
+				<a id="Button6" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.duplicate();">
+					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+				</a>
+				' : '') . '
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+				' . ($run ? '
+				<a id="Button4" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.run();">
+					<i class="' . $_style["actions_run"] . '"></i><span>' . $_lang['run_module'] . '</span>
+				</a>
+				' : '') . '
+			</div>
+		</div>',
+		'newmodule' => '<div id="actions">
+			<div class="btn-group">
+			' . ($addnew ? '
+				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
+					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
+				</a>
+			' : '') . '
+			</div>
+		</div>',
+		'close' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">
+					<i class="' . $_style["actions_close"] . '"></i><span>' . $_lang['close'] . '</span>
+				</a>
+			</div>
+		</div>',
+		'save' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
+					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
+		'savedelete' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.save();">
+					<i class="' . $_style["actions_save"] . '"></i><span>' . $_lang['save'] . '</span>
+				</a>
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
+	),
+	'static' => array(
+		'document' => '<div id="actions">
+			<div class="btn-group">' .
+				($addnew ? '
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
+						<i class="' . $_style["icons_new_document"] . '"></i><span>' . $_lang['create_resource_here'] . '</span>
+					</a>
+					<a class="btn btn-secondary" href="javascript:;" onclick="actions.newlink();">
+						<i class="' . $_style["icons_new_weblink"] . '"></i><span>' . $_lang['create_weblink_here'] . '</span>
+					</a>
+				' : '') . '
+				<a id="Button1" class="btn btn-success" href="javascript:;" onclick="actions.edit();">
+					<i class="' . $_style["actions_edit"] . '"></i><span>' . $_lang['edit'] . '</span>
+				</a>
+				<a id="Button2" class="btn btn-secondary" href="javascript:;" onclick="actions.move();">
+					<i class="' . $_style["actions_move"] . '"></i><span>' . $_lang['move'] . '</span>
+				</a>
+				<a id="Button6" class="btn btn-secondary" href="javascript:;" onclick="actions.duplicate();">
+					<i class="' . $_style["actions_duplicate"] . '"></i><span>' . $_lang['duplicate'] . '</span>
+				</a>
+				<a id="Button3" class="btn btn-secondary" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button4" class="btn btn-secondary" href="javascript:;" onclick="actions.view();">
+					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
+				</a>
+			</div>
+		</div>'
+	)
+);
