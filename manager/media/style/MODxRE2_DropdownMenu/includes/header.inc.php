@@ -58,14 +58,14 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				actionSelect = document.getElementById('stay');
 			if(actionButtons !== null && actionSelect !== null) {
 				var actionPlus = actionButtons.querySelector('.plus'),
-					actionSaveButton = actionButtons.querySelector('#Button1 > a'),
+					actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'),
 					actionStay = [];
 				actionPlus.classList.add('dropdown-toggle');
 				actionStay['stay1'] = '<i class="<?php echo $_style['actions_file'] ?>"></i>';
 				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
 				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
 				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerHTML
+					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>'
 				}
 				var actionSelectNewOption = null,
 					actionSelectOptions = actionSelect.children,
@@ -75,8 +75,9 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				for(var i = 0; i < actionSelectOptions.length; i++) {
 					if(!actionSelectOptions[i].selected) {
 						actionSelectNewOption = document.createElement('SPAN');
+						actionSelectNewOption.className = 'btn btn-block';
 						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerHTML;
+						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
 						actionSelectNewOption.onclick = function() {
 							var s = actionSelect.querySelector('option[selected=selected]');
 							if(s) s.selected = false;
