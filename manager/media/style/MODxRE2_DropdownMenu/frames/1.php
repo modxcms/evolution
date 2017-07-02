@@ -36,22 +36,22 @@ $menu_height = $modx->config['manager_menu_height'];
 $tree_width = $modx->config['manager_tree_width'];
 $tree_min_width = 0;
 
-if(isset($_COOKIE['MODX_positionSideBar'])) {
-	$MODX_positionSideBar = $_COOKIE['MODX_positionSideBar'];
+if(isset($_COOKIE['MODX_widthSideBar'])) {
+	$MODX_widthSideBar = $_COOKIE['MODX_widthSideBar'];
 } else {
-	$MODX_positionSideBar = $tree_width;
+	$MODX_widthSideBar = $tree_width;
 }
 
-if(!$MODX_positionSideBar) {
+if(!$MODX_widthSideBar) {
 	$body_class .= 'sidebar-closed';
+}
+
+if(isset($_COOKIE['MODX_themeColor'])) {
+	$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
 }
 
 if(isset($modx->pluginCache['ElementsInTree'])) {
 	$body_class .= ' ElementsInTree';
-} else {
-	if(!empty($_COOKIE['MODX_themeColor'])) {
-		$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
-	}
 }
 
 $unlockTranslations = array(
@@ -87,8 +87,8 @@ if($user['which_browser'] == 'default') {
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<style>
-		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
-		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
+		#tree { width: <?php echo $MODX_widthSideBar ?>rem }
+		#main, #resizer { left: <?php echo $MODX_widthSideBar ?>rem }
 		.ios #main { -webkit-overflow-scrolling: touch; overflow-y: scroll; }
 	</style>
 	<script type="text/javascript">
@@ -177,7 +177,7 @@ if($user['which_browser'] == 'default') {
 
 			},
 			extend: function(a, b) {
-				for(var c in a) a[c] = a[c];
+				for(var c in a) a[c] = b[c];
 			},
 			extended: function(a) {
 				for(var b in a) this[b] = a[b];
@@ -419,6 +419,8 @@ if($user['which_browser'] == 'default') {
 	?>
 
 	<script type="text/javascript">
+		<?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+
 		document.getElementById('treeMenu_openelements').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["elements"] ?>';
@@ -430,6 +432,9 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+		<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+
 		document.getElementById('treeMenu_openimages').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["files_files"] ?>';
@@ -441,6 +446,9 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+		<?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+
 		document.getElementById('treeMenu_openfiles').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["files_files"] ?>';
@@ -452,6 +460,8 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+
 	</script>
 
 	<?php
