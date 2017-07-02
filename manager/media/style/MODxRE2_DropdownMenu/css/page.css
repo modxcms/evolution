@@ -56,11 +56,11 @@
 /* dark */
 .dark #main { background-color: #ecf0f1 }
 .dark #mainloader { background-color: rgba(236, 240, 241, 0.64); }
-
 /* ElementsInTree */
+.ElementsInTree .treeframebody { background-color: #fafafa !important; border-right: 1px solid rgba(0, 0, 0, .1) }
 .ElementsInTree #treeHolder { height: 100%; max-height: 100%; overflow: hidden; padding: 10px }
 .ElementsInTree #treeHolder #tabDoc::before { display: none }
-.ElementsInTree #treeHolder .actionButtons--eit { top: 3.7rem }
+.ElementsInTree #treeHolder .actionButtons--eit { top: 3.7rem; right: 1rem }
 .ElementsInTree #treeHolder .actionButtons--eit li { float: left; margin: 0 0 0 5px !important; }
 .ElementsInTree #treeHolder .actionButtons--eit li a { padding: 0.5rem; }
 .ElementsInTree #treeHolder #treePane .tab-page { padding: 0.8rem !important; }
@@ -71,3 +71,11 @@
 .ElementsInTree .tab-page { background-color: #fff; border: 1px solid #ddd; }
 .ElementsInTree .form-control { padding: 0.25rem; font-size: 0.8rem; }
 .ElementsInTree.treeframebody { -webkit-box-shadow: none; box-shadow: none }
+.ElementsInTree .eltree img { width: 0.8em; height: 0.8em }
+.dark.ElementsInTree #tree .treeframebody { background-color: #1d2023 !important; color: #828282 }
+.dark.ElementsInTree .tab-row .tab { color: #7b7b7b; }
+.dark.ElementsInTree .tab-row .tab.selected { background-color: #1d2023; border-color: rgba(255, 255, 255, .1); color: #bfbfbf; }
+.dark.ElementsInTree .tab-page { background-color: transparent; border-color: rgba(255, 255, 255, .1) }
+.dark.ElementsInTree .form-control { background-color: rgba(0, 0, 0, 0.4); border-color: rgba(255, 255, 255, 0.09); color: #c7c7c7; }
+.dark.ElementsInTree a { color: #b7b7b7 }
+.dark.ElementsInTree .disabledPlugin a { color: #B68282 }

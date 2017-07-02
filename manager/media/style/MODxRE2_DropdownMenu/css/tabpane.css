@@ -4,7 +4,7 @@
 .tab-row .tab { position: relative; display: inline-block; margin: 0; padding: 0 0.875rem; line-height: 2.7rem; height: 2.5rem; text-transform: uppercase; border: 1px solid rgba(0, 0, 0, 0); border-bottom: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
 .tab-row .tab { color: rgba(0, 0, 0, 0.6); font-size: 0.75rem }
 .tab-row .tab.selected { z-index: 2; border-color: #ddd; background-color: #fff; color: #444; font-weight: 700 }
-.tab-row .tab .fa { margin-right: 0.1em }
+.tab-row .tab .fa { margin-right: 0.1em; font-size: 0.875rem }
 /**/
 .tab-row-container { height: 2.5rem; left: 0; overflow-y: hidden; padding: 0 1.5rem; position: relative; }
 .tab-row-container .tab-row { z-index: 2; -webkit-overflow-scrolling: touch; overflow-x: auto; padding: 0 0 2rem; white-space: nowrap }
