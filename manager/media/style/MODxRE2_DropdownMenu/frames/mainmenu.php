@@ -80,7 +80,7 @@ if($modx->hasPermission('edit_user') || $modx->hasPermission('edit_web_user') ||
 	);
 }
 
-if($modx->hasPermission('bk_manager') || $modx->hasPermission('remove_locks') || $modx->hasPermission('import_static') || $modx->hasPermission('export_static') || $modx->hasPermission('settings')) {
+if($modx->hasPermission('empty_cache') || $modx->hasPermission('bk_manager') || $modx->hasPermission('remove_locks') || $modx->hasPermission('import_static') || $modx->hasPermission('export_static')) {
 	$sitemenu['tools'] = array(
 		'tools',
 		'main',
