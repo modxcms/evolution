@@ -79,32 +79,41 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 		documentDirty = false;
 		window.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=113";
+	}
+
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			form_save = true;
+			document.mutate.save.click();
+			saveWait('mutate');
+		},
+		duplicate: function() {
+			if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") === true) {
+				documentDirty = false;
+				document.location.href = "index.php?id=<?php echo $_REQUEST['id'] ?>&a=111";
+			}
+		},
+		delete: function() {
+			if(confirm("<?php echo $_lang['confirm_delete_module'] ?>") === true) {
+				documentDirty = false;
+				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=110";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			document.location.href = 'index.php?a=106';
+		},
+		run: function() {
+			document.location.href = "index.php?id=<?php echo $_REQUEST['id'] ?>&a=112";
+		}
 	};
-
-	function duplicaterecord() {
-		if(confirm("<?php echo $_lang['confirm_duplicate_record']?>") == true) {
-			documentDirty = false;
-			document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=111";
-		}
-	}
-
-	function deletedocument() {
-		if(confirm("<?php echo $_lang['confirm_delete_module']?>") == true) {
-			documentDirty = false;
-			document.location.href = "index.php?id=" + document.mutate.id.value + "&a=110";
-		}
-	}
-
-	function runmodule() {
-		document.location.href = "index.php?id=<?php echo $_REQUEST['id']?>&a=112";
-	}
 
 	function setTextWrap(ctrl, b) {
 		if(!ctrl) return;
 		ctrl.wrap = (b) ? "soft" : "off";
 	}
 
-	// Current Params/Configurations
 	// Current Params/Configurations
 	var currentParams = {};
 	var internal = <?php echo json_encode($internal); ?>;
@@ -432,35 +441,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<i class="fa fa-cogs"></i><?php echo $_lang['module_title']; ?>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button1" class="transition">
-				<a href="javascript:;" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-					<i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span>
-				</a>
-				<span class="plus"> + </span>
-				<select id="stay" name="stay">
-					<?php if($modx->hasPermission('new_module')) { ?>
-						<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-					<?php } ?>
-					<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-					<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-				</select>
-			</li>
-			<?php if($modx->manager->action == '107') { ?>
-				<li id="Button6" class="disabled"><a href="javascript:;"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-				<li id="Button3" class="disabled"><a href="javascript:;"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } else { ?>
-				<li id="Button6"><a href="javascript:;" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-				<li id="Button3"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } ?>
-			<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=106';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-			<?php if($modx->hasPermission('exec_module')) { ?>
-				<li id="Button4"><a href="javascript:;" onclick="runmodule();"><i class="<?php echo $_style["actions_run"] ?>"></i> <span><?php echo $_lang["run_module"]; ?></span></a></li>
-			<?php } ?>
-		</ul>
-	</div>
-	<!-- end #actions -->
+	<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
 
 	<div class="sectionBody">
 		<p><?php echo $_lang['module_msg'] ?></p>
@@ -541,9 +522,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<table width="100%" border="0" cellspacing="0" cellpadding="6">
 					<tr>
 						<td>
-							<ul class="actionButtons"
-							<li><a href="javascript:;" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
-							</ul>
+							<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
 						</td>
 					</tr>
 					<tr id="displayparamrow">
@@ -571,11 +550,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</tr>
 					<tr>
 						<td>
-							<ul class="actionButtons" style="min-height:0;">
-								<li>
-									<a href="javascript:;" class="primary" onclick='tp.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
-								</li>
-							</ul>
+							<a href="javascript:;" class="btn btn-primary" onclick='tp.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 						</td>
 					</tr>
 				</table>
@@ -589,9 +564,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<tr>
 							<td align="left" valign="top">
 								<p><?php echo $_lang['module_viewdepend_msg'] ?><br /><br />
-									<a class="searchtoolbarbtn" href="javascript:;" style="float:left" onclick="loadDependencies();return false;">
+									<a class="btn btn-primary" href="javascript:;" style="float:left" onclick="loadDependencies();return false;">
 										<i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['manage_depends'] ?></a>
-									<br /><br />
 								</p>
 							</td>
 						</tr>
