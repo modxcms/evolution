@@ -5,8 +5,8 @@
 		minWidth: 840,
 		isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 		init: function() {
-			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
-				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
+			if(!localStorage.getItem('MODX_widthSideBar')) {
+				localStorage.setItem('MODX_widthSideBar', this.config.tree_width)
 			}
 			this.tree.init();
 			this.mainMenu.init();
@@ -34,10 +34,10 @@
 						$mm.addClass('show');
 						e.target.dataset.toggle = '#mainMenu'
 					}
-					$('.nav > .active').removeClass('active');
 					if($(this).closest('ul').hasClass('dropdown-menu')) {
+						$('.nav > .active').removeClass('active');
 						$('.nav li.selected').removeClass('selected');
-						$(this).closest('.nav > .active').addClass('active');
+						$(this).closest('.nav > li').addClass('active');
 						$(this).parent().addClass('selected');
 						if(this.offsetParent.id) {
 							$('#' + this.offsetParent.id.substr(7)).addClass('selected')
@@ -506,7 +506,7 @@
 					modx.resizer.oldZIndex = modx.resizer.dragElement.style.zIndex;
 					modx.resizer.dragElement.style.zIndex = modx.resizer.newZIndex;
 					modx.resizer.dragElement.style.background = modx.resizer.background;
-					localStorage.setItem('MODX_lastPositionSideBar', (modx.resizer.dragElement.offsetLeft > 0 ? modx.resizer.dragElement.offsetLeft : 0));
+					localStorage.setItem('MODX_widthSideBar', (modx.resizer.dragElement.offsetLeft > 0 ? modx.resizer.dragElement.offsetLeft : 0));
 					d.body.appendChild(modx.resizer.mask);
 					d.onmousemove = modx.resizer.onMouseMove;
 					d.body.focus();
@@ -543,7 +543,7 @@
 						d.body.classList.add('sidebar-closed');
 						modx.resizer.left = 0
 					}
-					d.cookie = 'MODX_positionSideBar=' + modx.pxToRem(modx.resizer.left);
+					d.cookie = 'MODX_widthSideBar=' + modx.pxToRem(modx.resizer.left);
 					modx.resizer.dragElement.style.zIndex = modx.resizer.oldZIndex;
 					modx.resizer.dragElement.style.background = '';
 					modx.resizer.dragElement.ondragstart = null;
@@ -558,27 +558,27 @@
 				if(modx.isMobile) {
 					if(d.body.classList.contains('sidebar-closed')) {
 						d.body.classList.remove('sidebar-closed');
-						localStorage.setItem('MODX_lastPositionSideBar', 0);
-						d.cookie = 'MODX_positionSideBar=' + modx.pxToRem(parseInt(d.getElementById('tree').offsetWidth))
+						localStorage.setItem('MODX_widthSideBar', 0);
+						d.cookie = 'MODX_widthSideBar=' + modx.pxToRem(parseInt(d.getElementById('tree').offsetWidth))
 					} else {
-						localStorage.setItem('MODX_lastPositionSideBar', parseInt(d.getElementById('tree').offsetWidth));
+						localStorage.setItem('MODX_widthSideBar', parseInt(d.getElementById('tree').offsetWidth));
 						d.body.classList.add('sidebar-closed');
-						d.cookie = 'MODX_positionSideBar=0'
+						d.cookie = 'MODX_widthSideBar=0'
 					}
 				} else {
-					var p = d.getElementById('tree').offsetWidth !== 0 ? 0 : (parseInt(localStorage.getItem('MODX_lastPositionSideBar')) ? parseInt(localStorage.getItem('MODX_lastPositionSideBar')) : modx.config.tree_width);
+					var p = d.getElementById('tree').offsetWidth !== 0 ? 0 : (parseInt(localStorage.getItem('MODX_widthSideBar')) ? parseInt(localStorage.getItem('MODX_widthSideBar')) : modx.config.tree_width);
 					modx.resizer.setWidth(p)
 				}
 			},
 			setWidth: function(a) {
 				if(a > 0) {
-					localStorage.setItem('MODX_lastPositionSideBar', 0);
+					localStorage.setItem('MODX_widthSideBar', 0);
 					d.body.classList.remove('sidebar-closed')
 				} else {
-					localStorage.setItem('MODX_lastPositionSideBar', parseInt(d.getElementById('tree').offsetWidth));
+					localStorage.setItem('MODX_widthSideBar', parseInt(d.getElementById('tree').offsetWidth));
 					d.body.classList.add('sidebar-closed')
 				}
-				d.cookie = 'MODX_positionSideBar=' + modx.pxToRem(a);
+				d.cookie = 'MODX_widthSideBar=' + modx.pxToRem(a);
 				d.getElementById('tree').style.width = modx.pxToRem(a) + 'rem';
 				d.getElementById('resizer').style.left = modx.pxToRem(a) + 'rem';
 				d.getElementById('main').style.left = modx.pxToRem(a) + 'rem'
@@ -1114,13 +1114,6 @@
 				d.getElementById('treeloader').classList.add('visible');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
-				// modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php?indent=1&parent=0&expandAll=2&id=' + this.itemToChange, {
-				// 	a: 1,
-				// 	f: 'nodes'
-				// }, function(r) {
-				// 	modx.tree.rpcLoadData(r);
-				// 	modx.tree.draggable()
-				// })
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
 					modx.tree.rpcLoadData(r);
 					modx.tree.draggable()
