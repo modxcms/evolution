@@ -297,7 +297,7 @@ switch($action) {
 
 $disabled = ($action == '19' || $action == '300' || $action == '77' || $action == '23' || $action == '101' || $action == '4' || $action == '72' || $action == '87' || $action == '11' || $action == '107' || $action == '38') ? ' disabled' : '';
 
-$_style['actionsbuttons'] = array(
+$_style['actionbuttons'] = array(
 	'dynamic' => array(
 		'document' => '<div id="actions">
 			<div class="btn-group">

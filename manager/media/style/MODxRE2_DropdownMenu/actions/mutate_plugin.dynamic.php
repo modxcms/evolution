@@ -96,7 +96,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		function showParameters(ctrl) {
 			var c, p, df, cp;
-			var ar, label, value, key, dt, defaultVal;
+			var ar, label, value, key, dt, defaultVal, tr;
 
 			currentParams = {}; // reset;
 
@@ -107,10 +107,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				if(!f) return;
 			}
 
-			tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
+			tr = document.getElementById('displayparamrow');
 
 			// check if codemirror is used
-			var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+			var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value, t, td, desc, dp;
 
 			// convert old schemed setup parameters
 			if(!IsJsonString(props)) {
@@ -127,7 +127,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						value = decode((ar[2]) ? ar[2] : '');
 
 						// convert values to new json-format
-						if(key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+						if(key && (dt === 'menu' || dt === 'list' || dt === 'list-multi' || dt === 'checkbox' || dt === 'radio')) {
 							defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
 							desc = decode((ar[5]) ? ar[5] : "");
 							currentParams[key] = [];
@@ -144,15 +144,16 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				currentParams = JSON.parse(props);
 			}
 
-			t = '<table width="100%" class="displayparams"><thead><tr><td><?php echo $_lang['parameter']; ?></td><td><?php echo $_lang['value']; ?></td><td style="text-align:right;"><?php echo $_lang["set_default"]; ?> </td></tr></thead>';
+			t = '<table width="100%" class="displayparams grid"><thead><tr><td><?php echo $_lang['parameter']; ?></td><td><?php echo $_lang['value']; ?></td><td style="text-align:right;white-space:nowrap"><?php echo $_lang["set_default"]; ?> </td></tr></thead>';
 
 			try {
 				var type, options, found, info, sd;
-				var ll, ls, sets = [];
+				var ll, ls, sets = [], lv, arrValue, split;
 
-				Object.keys(currentParams).forEach(function(key) {
+				//Object.keys(currentParams).forEach(function(key) {
+				for(var key in currentParams) {
 
-					if(key == 'internal' || currentParams[key][0]['label'] == undefined) return;
+					if(key === 'internal' || currentParams[key][0]['label'] == undefined) return;
 
 					cp = currentParams[key][0];
 					type = cp['type'];
@@ -180,38 +181,38 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					switch(type) {
 						case 'int':
-							c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+							c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
 							break;
 						case 'menu':
-							c = '<select name="prop_' + key + '" style="width:100%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
 							for(i = 0; i < ls.length; i++) {
-								c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+								c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 							}
 							c += '</select>';
 							break;
 						case 'list':
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-							c = '<select name="prop_' + key + '" size="' + ls.length + '" style="width:100%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 							for(i = 0; i < ls.length; i++) {
-								c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+								c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 							}
 							c += '</select>';
 							break;
 						case 'list-multi':
 							// value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
 							arrValue = value.split(",");
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-							c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 							for(i = 0; i < ls.length; i++) {
 								if(arrValue.length) {
 									found = false;
 									for(j = 0; j < arrValue.length; j++) {
-										if(ls[i] == arrValue[j]) {
+										if(ls[i] === arrValue[j]) {
 											found = true;
 										}
 									}
-									if(found == true) {
+									if(found === true) {
 										c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
 									} else {
 										c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
@@ -226,13 +227,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							lv = (value + '').split(",");
 							c = '';
 							for(i = 0; i < ls.length; i++) {
-								c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) == true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />&nbsp;';
+								c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) === true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />&nbsp;';
 							}
 							break;
 						case 'radio':
 							c = '';
 							for(i = 0; i < ls.length; i++) {
-								c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] == value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
+								c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] === value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
 							}
 							break;
 						case 'textarea':
@@ -245,10 +246,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					info = '';
 					info += desc ? '<br/><small>' + desc + '</small>' : '';
-					sd = defaultVal != undefined ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+					sd = defaultVal != 'undefined' ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
 
-					t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="74%">' + c + '</td><td style="align:center" bgcolor="#FFFFFF" >' + sd + '</td></tr>';
-				});
+					t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
+				};
 
 				t += '</table>';
 
@@ -258,7 +259,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				t = e + "\n\n" + props;
 			}
 
-			td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
+			td = document.getElementById('displayparams');
 			td.innerHTML = t;
 			tr.style.display = '';
 
@@ -266,8 +267,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		function setParameter(key, dt, ctrl) {
-			var v;
-			var arrValues, cboxes = [];
+			var v, arrValues, cboxes = [];
 			if(!ctrl) return null;
 			switch(dt) {
 				case 'int':
@@ -318,7 +318,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				documentDirty = false;
 				first = false;
 			}
-			;
 		}
 
 		function encode(s) {
@@ -335,6 +334,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
+		/**
+		 * @return {boolean}
+		 */
 		function IsJsonString(str) {
 			try {
 				JSON.parse(str);
@@ -358,6 +360,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			if(document.getElementById('assignEvents') === null) {
 				var button = document.createElement("div");
 				button.setAttribute('id', 'assignEvents');
+				button.className = 'form-group';
 				button.innerHTML = '<a class="btn btn-primary" href="javascript:;" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a>';
 				var tab = document.getElementById("tabEvents");
 				tab.insertBefore(button, tab.firstChild);
@@ -393,7 +396,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			var last = keys[keys.length - 1],
 				show;
 			Object.keys(currentParams).forEach(function(key) {
-				show = key == last ? 1 : 0;
+				show = key === last ? 1 : 0;
 				setDefaultParam(key, show);
 			});
 		}
@@ -422,6 +425,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 		?>
 		var internal = <?php echo json_encode($internal); ?>;
+
+		document.addEventListener('DOMContentLoaded', function() {
+			var h1help = document.querySelector('h1 > .help');
+			h1help.onclick = function() {
+				document.querySelector('.element-edit-message').classList.toggle('show')
+			}
+		});
+
 	</script>
 
 	<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
@@ -430,213 +441,214 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
 		<h1>
-			<i class="fa fa-plug"></i><?php echo $_lang['plugin_title']; ?>
+			<i class="fa fa-plug"></i><?php echo $_lang['plugin_title']; ?><i class="fa fa-question-circle help"></i>
 		</h1>
 
-		<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
+		<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
 
-		<div class="sectionBody">
+		<div class="tab-pane" id="pluginPane">
+			<script type="text/javascript">
+				tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			</script>
 
-			<div class="tab-pane" id="pluginPane">
-				<script type="text/javascript">
-					tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
-				</script>
+			<!-- General -->
+			<div class="tab-page" id="tabPlugin">
+				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabPlugin"));</script>
 
-				<!-- General -->
-				<div class="tab-page" id="tabPlugin">
-					<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-					<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabPlugin"));</script>
+				<p class="element-edit-message alert alert-info">
+					<?php echo $_lang['plugin_msg']; ?>
+				</p>
 
-					<p class="element-edit-message">
-						<?php echo $_lang['plugin_msg']; ?>
-					</p>
-
-					<table>
-						<tr>
-							<th><?php echo $_lang['plugin_name']; ?></th>
-							<td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span>
-								<script>document.getElementsByName("name")[0].focus();</script>
-							</td>
-						</tr>
-						<tr>
-							<th><?php echo $_lang['plugin_desc']; ?></th>
-							<td><input name="description" type="text" maxlength="255" value="<?php echo $content['description']; ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-						</tr>
-						<tr>
-							<th><?php echo $_lang['existing_category']; ?></th>
-							<td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
-									<option>&nbsp;</option>
-									<?php
-									include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-									foreach(getCategories() as $n => $v) {
-										echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
-									}
-									?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th><?php echo $_lang['new_category']; ?></th>
-							<td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-						</tr>
-						<tr>
-							<th colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" class="inputBox"> <?php echo $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']; ?></label></th>
-						</tr>
-						<?php if($modx->hasPermission('save_role')): ?>
-							<tr>
-								<th colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></th>
-							</tr>
-							<tr>
-								<th colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></th>
-							</tr>
-						<?php endif; ?>
-					</table>
-					<!-- PHP text editor start -->
-					<div class="section">
-						<div class="sectionHeader">
-							<span style="float:right;">&nbsp;<?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap'] == 1 ? "checked='checked'" : ""; ?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-							<?php echo $_lang['plugin_code']; ?>
-						</div>
-						<div class="sectionBody">
-							<textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_name']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
+							<small class="form-text text-danger hide" id='savingMessage'></small>
 						</div>
 					</div>
-					<!-- PHP text editor end -->
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_desc']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="description" type="text" maxlength="255" value="<?php echo $content['description']; ?>" class="form-control" onchange="documentDirty=true;" />
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+								foreach(getCategories() as $n => $v) {
+									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+								}
+								?>
+							</select>
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="form-row">
+						<label><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']; ?></label>
+					</div>
+					<?php if($modx->hasPermission('save_role')): ?>
+						<div class="form-row">
+							<div class="form-row">
+								<label><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
+								<small class="form-text text-muted"><?php echo $_lang['lock_plugin_msg']; ?></small>
+							</div>
+						</div>
+						<div class="form-row">
+							<label><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
+							<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
+						</div>
+					<?php endif; ?>
 				</div>
 
-				<!-- Config -->
-				<div class="tab-page" id="tabConfig">
-					<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-					<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
-					<table border="0" cellspacing="0" cellpadding="6" width="100%">
-						<tr>
-							<td colspan="2">
-								<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
-							</td>
-						</tr>
-						<tr id="displayparamrow">
-							<td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
-						</tr>
-					</table>
+				<!-- PHP text editor start -->
+				<label><?php echo $_lang['plugin_code']; ?></label>
+				<span class="float-xs-right"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+				<div class="row">
+					<textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
 				</div>
+				<!-- PHP text editor end -->
+			</div>
 
-				<!-- Properties -->
-				<div class="tab-page" id="tabProps">
-					<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
-					<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
-					<table border="0" cellspacing="0" cellpadding="6">
-						<tr>
-							<th><?php echo $_lang['import_params']; ?></th>
-							<td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
-									<option>&nbsp;</option>
-									<?php
-									$ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
+			<!-- Config -->
+			<div class="tab-page" id="tabConfig">
+				<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
+				</div>
+				<div id="displayparamrow">
+					<div id="displayparams"></div>
+				</div>
+			</div>
+
+			<!-- Properties -->
+			<div class="tab-page" id="tabProps">
+				<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
+				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
+
+
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								$ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
 							INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
 							INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
-									while($row = $modx->db->getRow($ds)) {
-										echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
-									}
-									?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></td>
-						</tr>
-						<tr>
-							<td colspan="2" valign="top" width="900" id="displayproperties"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']; ?></textarea><br />
-								<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
-							</td>
-						</tr>
-					</table>
-				</div>
-
-				<!-- System Events -->
-				<div class="tab-page" id="tabEvents">
-					<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
-					<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabEvents"));</script>
-					<p><?php echo $_lang['plugin_event_msg']; ?></p>
-					<table>
-						<?php
-
-						// get selected events
-						if(is_numeric($id) && $id > 0) {
-							$rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
-							$evts = $modx->db->getColumn('evtid', $rs);
-						} else {
-							if(isset($content['sysevents']) && is_array($content['sysevents'])) {
-								$evts = $content['sysevents'];
-							} else {
-								$evts = array();
-							}
-						}
-
-						// display system events
-						$evtnames = array();
-						$services = array(
-							"Parser Service Events",
-							"Manager Access Events",
-							"Web Access Service Events",
-							"Cache Service Events",
-							"Template Service Events",
-							"User Defined Events"
-						);
-						$rs = $modx->db->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
-						$limit = $modx->db->getRecordCount($rs);
-						if($limit == 0) {
-							echo "<tr><td>&nbsp;</td></tr>";
-						} else {
-							while($row = $modx->db->getRow($rs)) {
-								// display records
-								if($srv != $row['service']) {
-									$srv = $row['service'];
-									if(count($evtnames) > 0) {
-										echoEventRows($evtnames);
-									}
-									echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
-									echo "<tr><td colspan='2'><b>" . $services[$srv - 1] . "</b></td></tr>";
+								while($row = $modx->db->getRow($ds)) {
+									echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
 								}
-								// display group name
-								if($grp != $row['groupname']) {
-									$grp = $row['groupname'];
-									if(count($evtnames) > 0) {
-										echoEventRows($evtnames);
-									}
-									echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
-									echo "<tr><td colspan='2'><b>" . $row['groupname'] . "</b></td></tr>";
-								}
-								$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox"' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /><label for="' . $row['name'] . '"' . bold(in_array($row['id'], $evts)) . '>' . $row['name'] . '</label>' . "\n";
-								if(count($evtnames) == 2) {
-									echoEventRows($evtnames);
-								}
-							}
-						}
-						if(count($evtnames) > 0) {
-							echoEventRows($evtnames);
-						}
-
-						function echoEventRows(&$evtnames) {
-							echo "<tr><td>" . implode("</td><td>", $evtnames) . "</td></tr>";
-							$evtnames = array();
-						}
-
-						?>
-					</table>
-				</div>
-
-				<!-- docBlock Info -->
-				<div class="tab-page" id="tabDocBlock">
-					<h2 class="tab"><?php echo $_lang['information']; ?></h2>
-					<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
-					<div class="section">
-						<?php echo $docBlockList; ?>
+								?>
+							</select>
+							<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+						</div>
 					</div>
 				</div>
-
+				<!-- HTML text editor start -->
+				<div class="row form-group">
+					<textarea name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea>
+				</div>
+				<!-- HTML text editor end -->
+				<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 			</div>
-			<input type="submit" name="save" style="display:none">
+
+			<!-- System Events -->
+			<div class="tab-page" id="tabEvents">
+				<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
+				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabEvents"));</script>
+				<p><?php echo $_lang['plugin_event_msg']; ?></p>
+
+				<?php
+				// get selected events
+				if(is_numeric($id) && $id > 0) {
+					$rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
+					$evts = $modx->db->getColumn('evtid', $rs);
+				} else {
+					if(isset($content['sysevents']) && is_array($content['sysevents'])) {
+						$evts = $content['sysevents'];
+					} else {
+						$evts = array();
+					}
+				}
+
+				// display system events
+				$evtnames = array();
+				$services = array(
+					"Parser Service Events",
+					"Manager Access Events",
+					"Web Access Service Events",
+					"Cache Service Events",
+					"Template Service Events",
+					"User Defined Events"
+				);
+				$rs = $modx->db->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
+				$limit = $modx->db->getRecordCount($rs);
+				if($limit == 0) {
+					echo "";
+				} else {
+					while($row = $modx->db->getRow($rs)) {
+						// display records
+						if($srv != $row['service']) {
+							$srv = $row['service'];
+							if(count($evtnames) > 0) {
+								echoEventRows($evtnames);
+							}
+							echo '<hr class="clear">';
+							echo '<div class="form-group"><b>' . $services[$srv - 1] . '</b></div>';
+						}
+						// display group name
+						if($grp != $row['groupname']) {
+							$grp = $row['groupname'];
+							if(count($evtnames) > 0) {
+								echoEventRows($evtnames);
+							}
+							echo '<hr class="clear">';
+							echo '<div class="form-group"><b>' . $row['groupname'] . '</b></div>';
+						}
+						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
+						if(count($evtnames) == 2) {
+							echoEventRows($evtnames);
+						}
+					}
+				}
+				if(count($evtnames) > 0) {
+					echoEventRows($evtnames);
+				}
+
+				function echoEventRows(&$evtnames) {
+					echo '<div class="row form-row"><div class="col-sm-6 col-md-4 col-lg-3">' . implode('</div><div class="col-sm-6 col-md-4 col-lg-3">', $evtnames) . '</div></div>';
+					$evtnames = array();
+				}
+
+				?>
+			</div>
+
+			<!-- docBlock Info -->
+			<div class="tab-page" id="tabDocBlock">
+				<h2 class="tab"><?php echo $_lang['information']; ?></h2>
+				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
+				<?php echo $docBlockList; ?>
+			</div>
+
 		</div>
+		<input type="submit" name="save" style="display:none">
+
 		<?php
 		// invoke OnPluginFormRender event
 		$evtOut = $modx->invokeEvent("OnPluginFormRender", array("id" => $id));
@@ -656,4 +668,3 @@ function bold($cond = false) {
 		return;
 	}
 }
-

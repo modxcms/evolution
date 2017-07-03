@@ -602,7 +602,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				} ?>
 			</h1>
 
-			<?php echo $_style['actionsbuttons']['dynamic']['document'] ?>
+			<?php echo $_style['actionbuttons']['dynamic']['document'] ?>
 
 			<?php
 			// breadcrumbs

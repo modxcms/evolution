@@ -91,7 +91,7 @@ echo $cm->render();
 		<!-- load modules -->
 		<p class="element-edit-message"><?php echo $_lang['module_management_msg']; ?></p>
 
-		<?php echo $_style['actionsbuttons']['dynamic']['newmodule'] ?>
+		<?php echo $_style['actionbuttons']['dynamic']['newmodule'] ?>
 
 		<div>
 			<?php

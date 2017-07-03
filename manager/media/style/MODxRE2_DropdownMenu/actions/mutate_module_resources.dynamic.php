@@ -191,7 +191,7 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 		<i class="fa fa-cogs"></i><?php echo $_lang['module_resource_title']; ?>
 	</h1>
 
-	<?php echo $_style['actionsbuttons']['dynamic']['close'] ?>
+	<?php echo $_style['actionbuttons']['dynamic']['close'] ?>
 
 	<div class="section">
 		<div class="sectionHeader"><?php echo $content["name"] . " - " . $_lang['module_resource_title']; ?></div>

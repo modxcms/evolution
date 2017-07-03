@@ -260,7 +260,7 @@ if($numRecords > 0) {
 		<i class="fa fa-info"></i><?php echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
 	</h1>
 
-<?php echo $_style['actionsbuttons']['static']['document'] ?>
+<?php echo $_style['actionbuttons']['static']['document'] ?>
 
 	<div class="sectionBody">
 

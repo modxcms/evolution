@@ -22,7 +22,7 @@ if(!$modx->hasPermission('change_password')) {
 
 <h1><?php echo $_lang['change_password'] ?></h1>
 
-<?php echo $_style['actionsbuttons']['dynamic']['save'] ?>
+<?php echo $_style['actionbuttons']['dynamic']['save'] ?>
 
 <div class="section">
 	<div class="sectionHeader"><?php echo $_lang['change_password'] ?></div>

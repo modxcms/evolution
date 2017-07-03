@@ -103,7 +103,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	function showParameters(ctrl) {
 		var c, p, df, cp;
-		var ar, label, value, key, dt, defaultVal;
+		var ar, label, value, key, dt, defaultVal, tr;
 
 		currentParams = {}; // reset;
 
@@ -114,10 +114,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			if(!f) return;
 		}
 
-		tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
+		tr = document.getElementById('displayparamrow');
 
 		// check if codemirror is used
-		var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+		var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value, dp, t;
 
 		// convert old schemed setup parameters
 		if(!IsJsonString(props)) {
@@ -151,7 +151,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			currentParams = JSON.parse(props);
 		}
 
-		t = '<table width="100%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+		t = '<table width="100%" class="displayparams grid"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
 		try {
 
@@ -160,7 +160,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 			Object.keys(currentParams).forEach(function(key) {
 
-				if(key == 'internal' || currentParams[key][0]['label'] == undefined) return;
+				if(key === 'internal' || currentParams[key][0]['label'] == undefined) return;
 
 				cp = currentParams[key][0];
 				type = cp['type'];
@@ -265,7 +265,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			t = e + "\n\n" + props;
 		}
 
-		td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
+		td = document.getElementById('displayparams');
 		td.innerHTML = t;
 		tr.style.display = '';
 
@@ -316,7 +316,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	// implode parameters
 	function implodeParameters() {
 		var stringified = JSON.stringify(currentParams, null, 2);
-		if(typeof myCodeMirrors != "undefined") {
+		if(typeof myCodeMirrors !== "undefined") {
 			myCodeMirrors['properties'].setValue(stringified);
 		} else {
 			f.properties.value = stringified;
@@ -352,7 +352,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	}
 
 	function setDefaultParam(key, show) {
-		if(typeof currentParams[key][0]['default'] != 'undefined') {
+		if(typeof currentParams[key][0]['default'] !== 'undefined') {
 			currentParams[key][0]['value'] = currentParams[key][0]['default'];
 			if(show) {
 				implodeParameters();
@@ -366,7 +366,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		var last = keys[keys.length - 1],
 			show;
 		Object.keys(currentParams).forEach(function(key) {
-			show = key == last ? 1 : 0;
+			show = key === last ? 1 : 0;
 			setDefaultParam(key, show);
 		});
 	}
@@ -380,6 +380,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 		return false;
 	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		}
+	});
+
 </script>
 
 <form name="mutate" method="post" action="index.php?a=24">
@@ -399,137 +407,134 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
 	<h1 class="pagetitle">
-		<i class="fa fa-code"></i><?php echo $_lang['snippet_title']; ?>
+		<i class="fa fa-code"></i><?php echo $_lang['snippet_title']; ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
+	<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
 
-	<div class="sectionBody">
+	<div class="tab-pane" id="snipetPane">
+		<script type="text/javascript">
+			tpSnippet = new WebFXTabPane(document.getElementById("snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+		</script>
 
-		<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?' . $theme_refresher ?>" />
+		<!-- General -->
+		<div class="tab-page" id="tabSnippet">
+			<h2 class="tab"><?php echo $_lang['settings_general'] ?></h2>
+			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabSnippet"));</script>
 
-		<div class="tab-pane" id="snipetPane">
-			<script type="text/javascript">
-				tpSnippet = new WebFXTabPane(document.getElementById("snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
-			</script>
+			<div class="element-edit-message alert alert-info">
+				<?php echo $_lang['snippet_msg'] ?>
+			</div>
 
-			<!-- General -->
-			<div class="tab-page" id="tabSnippet">
-				<h2 class="tab"><?php echo $_lang['settings_general'] ?></h2>
-				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabSnippet"));</script>
-
-				<p class="element-edit-message">
-					<?php echo $_lang['snippet_msg'] ?>
-				</p>
-
-				<table>
-					<tr>
-						<th><?php echo $_lang['snippet_name'] ?></th>
-						<td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span>
-							<script>document.getElementsByName("name")[0].focus();</script>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['snippet_desc'] ?></th>
-						<td><input name="description" type="text" maxlength="255" value="<?php echo $content['description'] ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['existing_category'] ?></th>
-						<td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
-								<option>&nbsp;</option>
-								<?php
-								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-								foreach(getCategories() as $n => $v) {
-									echo '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . '</option>';
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['new_category'] ?></th>
-						<td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<?php if($modx->hasPermission('save_role')): ?>
-						<tr>
-							<th valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : "" ?> class="inputBox"> <?php echo $_lang['lock_snippet'] ?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg'] ?></span></th>
-						</tr>
-						<tr>
-							<th valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></th>
-						</tr>
-					<?php endif; ?>
-				</table>
-				<!-- PHP text editor start -->
-				<div class="section">
-					<div class="sectionHeader">
-						<span style="float:right;"><?php echo $_lang['wrap_lines'] ?><input name="wrap" type="checkbox" <?php echo $content['wrap'] == 1 ? "checked='checked'" : "" ?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-						<?php echo $_lang['snippet_code'] ?>
-					</div>
-					<div class="sectionBody">
-						<textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n"; ?></textarea>
+			<div class="form-group">
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_name'] ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
+						<small class="form-text text-danger hide" id='savingMessage'></small>
 					</div>
 				</div>
-				<!-- PHP text editor end -->
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_desc'] ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="description" type="text" maxlength="255" value="<?php echo $content['description'] ?>" class="form-control" onchange="documentDirty=true;" />
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category'] ?></label>
+					<div class="col-md-9 col-lg-10">
+						<select name="categoryid" class="form-control" onchange="documentDirty=true;">
+							<option>&nbsp;</option>
+							<?php
+							include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+							foreach(getCategories() as $n => $v) {
+								echo '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . '</option>';
+							}
+							?>
+						</select>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category'] ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
+					</div>
+				</div>
 			</div>
+			<?php if($modx->hasPermission('save_role')): ?>
+				<div class="form-group">
+					<label>
+						<input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? " checked='checked'" : "" ?> /> <?php echo $_lang['lock_snippet'] ?></label>
+					<small class="form-text text-muted"><?php echo $_lang['lock_snippet_msg']; ?></small>
+				</div>
+				<div class="form-group">
+					<label>
+						<input name="parse_docblock" type="checkbox"<?php echo $modx->manager->action == 23 ? ' checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock'] ?></label>
+					<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
+				</div>
+			<?php endif; ?>
 
-			<!-- Config -->
-			<div class="tab-page" id="tabConfig">
-				<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
-				<table border="0" cellspacing="0" cellpadding="6" width="100%">
-					<tr>
-						<td colspan="2">
-							<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
-						</td>
-					</tr>
-					<tr id="displayparamrow">
-						<td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
-					</tr>
-				</table>
+			<!-- PHP text editor start -->
+			<label><?php echo $_lang['snippet_code']; ?></label>
+			<span class="float-xs-right"><?php echo $_lang['wrap_lines'] ?><input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : "" ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+			<div class="row">
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n"; ?></textarea>
 			</div>
+			<!-- PHP text editor end -->
+		</div>
 
-			<!-- Properties -->
-			<div class="tab-page" id="tabProps">
-				<h2 class="tab"><?php echo $_lang['settings_properties'] ?></h2>
-				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
-				<table>
-					<tr>
-						<th><?php echo $_lang['import_params'] ?></th>
-						<td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
-								<option>&nbsp;</option>
-								<?php
-								$ds = $modx->db->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm 
+		<!-- Config -->
+		<div class="tab-page" id="tabConfig">
+			<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
+			<div class="form-group">
+				<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
+			</div>
+			<div id="displayparamrow">
+				<div id="displayparams"></div>
+			</div>
+		</div>
+
+		<!-- Properties -->
+		<div class="tab-page" id="tabProps">
+			<h2 class="tab"><?php echo $_lang['settings_properties'] ?></h2>
+			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
+
+			<div class="form-group">
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
+					<div class="col-md-9 col-lg-10">
+						<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
+							<option>&nbsp;</option>
+							<?php
+							$ds = $modx->db->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm 
 							INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
 							INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams=1", 'sm.name');
-								while($row = $modx->db->getRow($ds)) {
-									echo "<option value='" . $row['guid'] . "'" . ($content['moduleguid'] == $row['guid'] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row['name']) . "</option>";
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td><span class="comment"><?php echo $_lang['import_params_msg'] ?></span></td>
-					</tr>
-					<tr>
-						<td colspan="2"><textarea name="properties" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea><br />
-							<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-			<!-- docBlock Info -->
-			<div class="tab-page" id="tabDocBlock">
-				<h2 class="tab"><?php echo $_lang['information']; ?></h2>
-				<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
-				<div class="section">
-					<?php echo $docBlockList; ?>
+							while($row = $modx->db->getRow($ds)) {
+								echo "<option value='" . $row['guid'] . "'" . ($content['moduleguid'] == $row['guid'] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row['name']) . "</option>";
+							}
+							?>
+						</select>
+						<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+					</div>
 				</div>
 			</div>
-
+			<!-- HTML text editor start -->
+			<div class="row form-group">
+				<textarea name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea>
+			</div>
+			<!-- HTML text editor end -->
+			<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 		</div>
+
+		<!-- docBlock Info -->
+		<div class="tab-page" id="tabDocBlock">
+			<h2 class="tab"><?php echo $_lang['information']; ?></h2>
+			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
+			<?php echo $docBlockList; ?>
+		</div>
+
 		<input type="submit" name="save" style="display:none">
 		<?php
 		// invoke OnSnipFormRender event

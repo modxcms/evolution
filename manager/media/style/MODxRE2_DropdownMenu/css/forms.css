@@ -29,7 +29,7 @@ input[type=search] { -webkit-appearance: none }
 .form-control::placeholder { color: #636c72; opacity: 1 }
 .form-control:disabled, .form-control[readonly] { background-color: #eceeef; opacity: 1 }
 .form-control:disabled { cursor: not-allowed }
-select.form-control:not([size]):not([multiple]), select:not([size]):not([multiple]) { height: calc(2.235em + 2px) }
+select.form-control:not([size]):not([multiple]), select:not([multiple]) { height: calc(2.235em + 2px); /*padding: 0.592em 0.5em;*/ }
 select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
 .form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 1; outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
 .form-control-file, .form-control-range { display: block }
@@ -240,6 +240,11 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control::before { position: absolute; top: -1px; right: -1px; bottom: -1px; z-index: 6; display: block; height: 2.5rem; padding: .5rem 1rem; line-height: 1.5; color: #464a4c; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: 0 .25rem .25rem 0 }
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
+.form-row { margin-bottom: 0.1875rem; }
+.form-row.row { margin-left: 0 }
+.form-row label { margin-bottom: 0.15rem }
+.form-row .col, .form-row .col-1, .form-row .col-10, .form-row .col-11, .form-row .col-12, .form-row .col-2, .form-row .col-3, .form-row .col-4, .form-row .col-5, .form-row .col-6, .form-row .col-7, .form-row .col-8, .form-row .col-9, .form-row .col-lg, .form-row .col-lg-1, .form-row .col-lg-10, .form-row .col-lg-11, .form-row .col-lg-12, .form-row .col-lg-2, .form-row .col-lg-3, .form-row .col-lg-4, .form-row .col-lg-5, .form-row .col-lg-6, .form-row .col-lg-7, .form-row .col-lg-8, .form-row .col-lg-9, .form-row .col-md, .form-row .col-md-1, .form-row .col-md-10, .form-row .col-md-11, .form-row .col-md-12, .form-row .col-md-2, .form-row .col-md-3, .form-row .col-md-4, .form-row .col-md-5, .form-row .col-md-6, .form-row .col-md-7, .form-row .col-md-8, .form-row .col-md-9, .form-row .col-sm, .form-row .col-sm-1, .form-row .col-sm-10, .form-row .col-sm-11, .form-row .col-sm-12, .form-row .col-sm-2, .form-row .col-sm-3, .form-row .col-sm-4, .form-row .col-sm-5, .form-row .col-sm-6, .form-row .col-sm-7, .form-row .col-sm-8, .form-row .col-sm-9, .form-row .col-xl, .form-row .col-xl-1, .form-row .col-xl-10, .form-row .col-xl-11, .form-row .col-xl-12, .form-row .col-xl-2, .form-row .col-xl-3, .form-row .col-xl-4, .form-row .col-xl-5, .form-row .col-xl-6, .form-row .col-xl-7, .form-row .col-xl-8, .form-row .col-xl-9 { padding-left: 0 }
+.form-row .form-control { float: left; }
 input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }

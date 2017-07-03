@@ -155,11 +155,10 @@ if(is_array($evtOut)) {
 		}
 
 		// setup parameters
-		tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
-		dp = (widgetParams[df]) ? widgetParams[df].split("&") : "";
+		var tr = document.getElementById('displayparamrow'), t, td, dp = (widgetParams[df]) ? widgetParams[df].split("&") : "";
 		if(!dp) tr.style.display = 'none';
 		else {
-			t = '<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+			t = '<table class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
 			for(p = 0; p < dp.length; p++) {
 				dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
 				ar = dp[p].split("=");
@@ -167,8 +166,8 @@ if(is_array($evtOut)) {
 				ar = (ar[1] + '').split(";");
 				desc = ar[0];   // description
 				dt = ar[1];     // data type
-				value = decode((currentParams[key]) ? currentParams[key] : (dt == 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
-				if(value != currentParams[key]) currentParams[key] = value;
+				value = decode((currentParams[key]) ? currentParams[key] : (dt === 'list') ? ar[3] : (ar[2]) ? ar[2] : '');
+				if(value !== currentParams[key]) currentParams[key] = value;
 				value = (value + '').replace(/^\s|\s$/, ""); // trim
 				value = value.replace(/\"/g, "&quot;"); // replace double quotes with &quot;
 				if(dt) {
@@ -178,13 +177,13 @@ if(is_array($evtOut)) {
 							c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)" />';
 							break;
 						case 'list':
-							c = '<select name="prop_' + key + '" height="1" style="width:168px" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
-							ls = (ar[2] + '').split(",");
-							if(!currentParams[key] || currentParams[key] == 'undefined') {
+							c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + dt + '\',this)">';
+							var ls = (ar[2] + '').split(",");
+							if(!currentParams[key] || currentParams[key] === 'undefined') {
 								currentParams[key] = ls[0]; // use first list item as default
 							}
 							for(i = 0; i < ls.length; i++) {
-								c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
+								c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ls[i] + '</option>';
 							}
 							c += '</select>';
 							break;
@@ -267,6 +266,13 @@ if(is_array($evtOut)) {
 		return s;
 	}
 
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		}
+	});
+
 </script>
 
 <form name="mutate" method="post" action="index.php" enctype="multipart/form-data">
@@ -285,292 +291,299 @@ if(is_array($evtOut)) {
 	<input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']); ?>">
 
 	<h1>
-		<i class="fa fa-list-alt"></i><?php echo $_lang['tmplvars_title']; ?>
+		<i class="fa fa-list-alt"></i><?php echo $_lang['tmplvars_title']; ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
+	<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
 
-	<div class="sectionBody">
-		<div class="tab-pane" id="tmplvarsPane">
-			<script type="text/javascript">
-				tpTmplvars = new WebFXTabPane(document.getElementById("tmplvarsPane"), false);
-			</script>
+	<div class="tab-pane" id="tmplvarsPane">
+		<script type="text/javascript">
+			tpTmplvars = new WebFXTabPane(document.getElementById("tmplvarsPane"), false);
+		</script>
 
-			<div class="tab-page" id="tabGeneral">
-				<h2 class="tab"><?php echo $_lang['settings_general']; ?></h2>
-				<script type="text/javascript">tpTmplvars.addTabPage(document.getElementById("tabGeneral"));</script>
+		<div class="tab-page" id="tabGeneral">
+			<h2 class="tab"><?php echo $_lang['settings_general']; ?></h2>
+			<script type="text/javascript">tpTmplvars.addTabPage(document.getElementById("tabGeneral"));</script>
 
-				<p class="element-edit-message">
-					<?php echo $_lang['tmplvars_msg']; ?>
-				</p>
-
-				<table>
-					<tr>
-						<th><?php echo $_lang['tmplvars_name']; ?></th>
-						<td>[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_caption']; ?></th>
-						<td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']); ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
-							<script>document.getElementsByName("caption")[0].focus();</script>
-						</td>
-					</tr>
-
-					<tr>
-						<th><?php echo $_lang['tmplvars_description']; ?></th>
-						<td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']); ?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['existing_category']; ?></th>
-						<td><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
-								<option>&nbsp;</option>
-								<?php
-								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-								foreach(getCategories() as $n => $v) {
-									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['new_category']; ?></th>
-						<td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<?php if($modx->hasPermission('save_role')): ?>
-						<tr>
-							<th colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></th>
-						</tr>
-					<?php endif; ?>
-					<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_type']; ?></th>
-						<td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
-								<optgroup label="Standard Type">
-									<option value="text" <?php echo ($content['type'] == '' || $content['type'] == 'text') ? "selected='selected'" : ""; ?>>Text</option>
-									<option value="rawtext" <?php echo ($content['type'] == 'rawtext') ? "selected='selected'" : ""; ?>>Raw Text (deprecated)</option>
-									<option value="textarea" <?php echo ($content['type'] == 'textarea') ? "selected='selected'" : ""; ?>>Textarea</option>
-									<option value="rawtextarea" <?php echo ($content['type'] == 'rawtextarea') ? "selected='selected'" : ""; ?>>Raw Textarea (deprecated)</option>
-									<option value="textareamini" <?php echo ($content['type'] == 'textareamini') ? "selected='selected'" : ""; ?>>Textarea (Mini)</option>
-									<option value="richtext" <?php echo ($content['type'] == 'richtext' || $content['type'] == 'htmlarea') ? "selected='selected'" : ""; ?>>RichText</option>
-									<option value="dropdown" <?php echo ($content['type'] == 'dropdown') ? "selected='selected'" : ""; ?>>DropDown List Menu</option>
-									<option value="listbox" <?php echo ($content['type'] == 'listbox') ? "selected='selected'" : ""; ?>>Listbox (Single-Select)</option>
-									<option value="listbox-multiple" <?php echo ($content['type'] == 'listbox-multiple') ? "selected='selected'" : ""; ?>>Listbox (Multi-Select)</option>
-									<option value="option" <?php echo ($content['type'] == 'option') ? "selected='selected'" : ""; ?>>Radio Options</option>
-									<option value="checkbox" <?php echo ($content['type'] == 'checkbox') ? "selected='selected'" : ""; ?>>Check Box</option>
-									<option value="image" <?php echo ($content['type'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
-									<option value="file" <?php echo ($content['type'] == 'file') ? "selected='selected'" : ""; ?>>File</option>
-									<option value="url" <?php echo ($content['type'] == 'url') ? "selected='selected'" : ""; ?>>URL</option>
-									<option value="email" <?php echo ($content['type'] == 'email') ? "selected='selected'" : ""; ?>>Email</option>
-									<option value="number" <?php echo ($content['type'] == 'number') ? "selected='selected'" : ""; ?>>Number</option>
-									<option value="date" <?php echo ($content['type'] == 'date') ? "selected='selected'" : ""; ?>>Date</option>
-								</optgroup>
-								<optgroup label="Custom Type">
-									<option value="custom_tv" <?php echo ($content['type'] == 'custom_tv') ? "selected='selected'" : ""; ?>>Custom Input</option>
-									<?php
-									$custom_tvs = scandir(MODX_BASE_PATH . 'assets/tvs');
-									foreach($custom_tvs as $ctv) {
-										if(strpos($ctv, '.') !== 0 && $ctv != 'index.html') {
-											$selected = ($content['type'] == 'custom_tv:' . $ctv) ? "selected='selected'" : "";
-											echo '<option value="custom_tv:' . $ctv . '"  ' . $selected . '>' . $ctv . '</option>';
-										}
-									}
-									?>
-								</optgroup>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_elements']; ?><i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['tmplvars_binding_msg'] ?>"></i></th>
-						<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']); ?></textarea></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_default']; ?><i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['tmplvars_binding_msg'] ?>"></i></th>
-						<td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']); ?></textarea></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_widget']; ?></th>
-						<td>
-							<select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
-								<option value="" <?php echo ($content['display'] == '') ? "selected='selected'" : ""; ?>>&nbsp;</option>
-								<optgroup label="Widgets">
-									<option value="datagrid" <?php echo ($content['display'] == 'datagrid') ? "selected='selected'" : ""; ?>>Data Grid</option>
-									<option value="richtext" <?php echo ($content['display'] == 'richtext') ? "selected='selected'" : ""; ?>>RichText</option>
-									<option value="viewport" <?php echo ($content['display'] == 'viewport') ? "selected='selected'" : ""; ?>>View Port</option>
-									<option value="custom_widget" <?php echo ($content['display'] == 'custom_widget') ? "selected='selected'" : ""; ?>>Custom Widget</option>
-								</optgroup>
-								<optgroup label="Formats">
-									<option value="htmlentities" <?php echo ($content['display'] == 'htmlentities') ? "selected='selected'" : ""; ?>>HTML Entities</option>
-									<option value="date" <?php echo ($content['display'] == 'date') ? "selected='selected'" : ""; ?>>Date Formatter</option>
-									<option value="unixtime" <?php echo ($content['display'] == 'unixtime') ? "selected='selected'" : ""; ?>>Unixtime</option>
-									<option value="delim" <?php echo ($content['display'] == 'delim') ? "selected='selected'" : ""; ?>>Delimited List</option>
-									<option value="htmltag" <?php echo ($content['display'] == 'htmltag') ? "selected='selected'" : ""; ?>>HTML Generic Tag</option>
-									<option value="hyperlink" <?php echo ($content['display'] == 'hyperlink') ? "selected='selected'" : ""; ?>>Hyperlink</option>
-									<option value="image" <?php echo ($content['display'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
-									<option value="string" <?php echo ($content['display'] == 'string') ? "selected='selected'" : ""; ?>>String Formatter</option>
-								</optgroup>
-							</select>
-						</td>
-					</tr>
-					<tr id="displayparamrow">
-						<th><?php echo $_lang['tmplvars_widget_prop']; ?>
-							<div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><i class="<?php echo $_style['actions_refresh']; ?>" data-tooltip="<?php echo $_lang['tmplvars_reset_params']; ?>"></i></a></div>
-						</th>
-						<td id="displayparams">&nbsp;</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['tmplvars_rank']; ?></th>
-						<td><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0; ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-				</table>
-				<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
-				<div class="sectionBody">
-					<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
-					<ul class="actionButtons">
-						<li><a href="javascript:;" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a></li>
-						<li><a href="javascript:;" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a></li>
-						<li><a href="javascript:;" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a></li>
-					</ul>
-					<style type="text/css">
-						label { display: block; }
-					</style>
-					<table>
-						<?php
-						$rs = $modx->db->select(sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']), sprintf("%s as tpl
-                    LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
-                    LEFT JOIN %s as cat ON tpl.category=cat.id", $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')), '', "category, templatename");
-						?>
-						<tr>
-							<td>
-								<?php
-
-								$tplList = '<ul>';
-								$preCat = '';
-								$insideUl = 0;
-								while($row = $modx->db->getRow($rs)) {
-									$row['category'] = stripslashes($row['category']); //pixelchutes
-									if($preCat !== $row['category']) {
-										$tplList .= $insideUl ? '</ul>' : '';
-										$tplList .= '<li><strong>' . $row['category'] . ($row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '') . '</strong><ul>';
-										$insideUl = 1;
-									}
-
-									if($modx->manager->action == '300' && $modx->config['default_template'] == $row['id']) {
-										$checked = true;
-									} elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id']) {
-										$checked = true;
-									} elseif($id == 0 && is_array($_POST['template'])) {
-										$checked = in_array($row['id'], $_POST['template']);
-									} else {
-										$checked = $row['tmplvarid'];
-									}
-									$selectable = !$row['selectable'] ? ' class="disabled"' : '';
-									$checked = $checked ? ' checked="checked"' : '';
-									$tplId = '&nbsp;<small>(' . $row['id'] . ')</small>';
-									$desc = !empty($row['tpldescription']) ? ' - ' . $row['tpldescription'] : '';
-
-									$tplInfo = array();
-									if($row['tpllocked']) {
-										$tplInfo[] = $_lang['locked'];
-									}
-									if($row['id'] == $modx->config['default_template']) {
-										$tplInfo[] = $_lang['defaulttemplate_title'];
-									}
-									$tplInfo = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
-
-									$tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;">%s%s%s%s</label></li>', $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo);
-									$tplList .= '</li>';
-
-									$preCat = $row['category'];
-								}
-								$tplList .= $insideUl ? '</ul>' : '';
-								$tplList .= '</ul>';
-								echo $tplList;
-
-								?>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!-- Access Permissions -->
-				<?php
-				if($use_udperms == 1) {
-					// fetch permissions for the variable
-					$rs = $modx->db->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
-					$groupsarray = $modx->db->getColumn('documentgroup', $rs);
-
-					?>
-					<?php if($modx->hasPermission('access_permissions')) { ?>
-						<div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-						<script type="text/javascript">
-							function makePublic(b) {
-								var notPublic = false;
-								var f = document.forms['mutate'];
-								var chkpub = f['chkalldocs'];
-								var chks = f['docgroups[]'];
-								if(!chks && chkpub) {
-									chkpub.checked = true;
-									return false;
-								}
-								else if(!b && chkpub) {
-									if(!chks.length) notPublic = chks.checked;
-									else for(i = 0; i < chks.length; i++) if(chks[i].checked) notPublic = true;
-									chkpub.checked = !notPublic;
-								}
-								else {
-									if(!chks.length) chks.checked = (b) ? false : chks.checked;
-									else for(i = 0; i < chks.length; i++) if(b) chks[i].checked = false;
-									chkpub.checked = true;
-								}
-							}
-						</script>
-						<p><?php echo $_lang['tmplvar_access_msg']; ?></p>
-						<?php
-					}
-					$chk = '';
-					$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
-					if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
-						$groupsarray = $_POST['docgroups'];
-					}
-					while($row = $modx->db->getRow($rs)) {
-						$checked = in_array($row['id'], $groupsarray);
-						if($modx->hasPermission('access_permissions')) {
-							if($checked) {
-								$notPublic = true;
-							}
-							$chks .= "<label><input type='checkbox' name='docgroups[]' value='" . $row['id'] . "' " . ($checked ? "checked='checked'" : '') . " onclick=\"makePublic(false)\" />" . $row['name'] . "</label>";
-						} else {
-							if($checked) {
-								echo "<input type='hidden' name='docgroups[]'  value='" . $row['id'] . "' />";
-							}
-						}
-					}
-					if($modx->hasPermission('access_permissions')) {
-						$chks = "<label><input type='checkbox' name='chkalldocs' " . (!$notPublic ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /><span class='warning'>" . $_lang['all_doc_groups'] . "</span></label>" . $chks;
-					}
-					echo $chks;
-					?>
-					</div>
-				<?php } ?>
-
+			<div class="element-edit-message alert alert-info">
+				<?php echo $_lang['tmplvars_msg']; ?>
 			</div>
 
+			<div class="form-group">
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_name']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="name" type="text" maxlength="50" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
+						<small class="form-text text-danger hide" id='savingMessage'></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_caption']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']); ?>" class="form-control" onchange="documentDirty=true;" />
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_description']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']); ?>" class="form-control" onChange="documentDirty=true;">
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<select name="categoryid" class="form-control" onChange="documentDirty=true;">
+							<option>&nbsp;</option>
+							<?php
+							include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+							foreach(getCategories() as $n => $v) {
+								echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+							}
+							?>
+						</select>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<?php if($modx->hasPermission('save_role')): ?>
+						<label class="form-check-label">
+							<input name="locked" value="on" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> class="form-check-input" /> <?php echo $_lang['lock_tmplvars']; ?></label>
+						<small class="form-text text-muted"><?php echo $_lang['lock_tmplvars_msg']; ?></small>
+					<?php endif; ?>
+				</div>
+			</div>
 
-			<input type="submit" name="save" style="display:none">
+			<div class="form-group">
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_type']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<select name="type" size="1" class="form-control" onchange="documentDirty=true;">
+							<optgroup label="Standard Type">
+								<option value="text" <?php echo ($content['type'] == '' || $content['type'] == 'text') ? "selected='selected'" : ""; ?>>Text</option>
+								<option value="rawtext" <?php echo ($content['type'] == 'rawtext') ? "selected='selected'" : ""; ?>>Raw Text (deprecated)</option>
+								<option value="textarea" <?php echo ($content['type'] == 'textarea') ? "selected='selected'" : ""; ?>>Textarea</option>
+								<option value="rawtextarea" <?php echo ($content['type'] == 'rawtextarea') ? "selected='selected'" : ""; ?>>Raw Textarea (deprecated)</option>
+								<option value="textareamini" <?php echo ($content['type'] == 'textareamini') ? "selected='selected'" : ""; ?>>Textarea (Mini)</option>
+								<option value="richtext" <?php echo ($content['type'] == 'richtext' || $content['type'] == 'htmlarea') ? "selected='selected'" : ""; ?>>RichText</option>
+								<option value="dropdown" <?php echo ($content['type'] == 'dropdown') ? "selected='selected'" : ""; ?>>DropDown List Menu</option>
+								<option value="listbox" <?php echo ($content['type'] == 'listbox') ? "selected='selected'" : ""; ?>>Listbox (Single-Select)</option>
+								<option value="listbox-multiple" <?php echo ($content['type'] == 'listbox-multiple') ? "selected='selected'" : ""; ?>>Listbox (Multi-Select)</option>
+								<option value="option" <?php echo ($content['type'] == 'option') ? "selected='selected'" : ""; ?>>Radio Options</option>
+								<option value="checkbox" <?php echo ($content['type'] == 'checkbox') ? "selected='selected'" : ""; ?>>Check Box</option>
+								<option value="image" <?php echo ($content['type'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
+								<option value="file" <?php echo ($content['type'] == 'file') ? "selected='selected'" : ""; ?>>File</option>
+								<option value="url" <?php echo ($content['type'] == 'url') ? "selected='selected'" : ""; ?>>URL</option>
+								<option value="email" <?php echo ($content['type'] == 'email') ? "selected='selected'" : ""; ?>>Email</option>
+								<option value="number" <?php echo ($content['type'] == 'number') ? "selected='selected'" : ""; ?>>Number</option>
+								<option value="date" <?php echo ($content['type'] == 'date') ? "selected='selected'" : ""; ?>>Date</option>
+							</optgroup>
+							<optgroup label="Custom Type">
+								<option value="custom_tv" <?php echo ($content['type'] == 'custom_tv') ? "selected='selected'" : ""; ?>>Custom Input</option>
+								<?php
+								$custom_tvs = scandir(MODX_BASE_PATH . 'assets/tvs');
+								foreach($custom_tvs as $ctv) {
+									if(strpos($ctv, '.') !== 0 && $ctv != 'index.html') {
+										$selected = ($content['type'] == 'custom_tv:' . $ctv) ? "selected='selected'" : "";
+										echo '<option value="custom_tv:' . $ctv . '"  ' . $selected . '>' . $ctv . '</option>';
+									}
+								}
+								?>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_elements']; ?></label>
+					<div class="col-md-9 col-lg-10 form-row">
+						<textarea name="elements" maxlength="65535" rows="2" class="form-control" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']); ?></textarea>
+						<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_default']; ?></label>
+					<div class="col-md-9 col-lg-10 form-row">
+						<textarea name="default_text" type="text" class="form-control" rows="5" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']); ?></textarea>
+						<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_widget']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<select name="display" size="1" class="form-control" onChange='documentDirty=true;showParameters(this);'>
+							<option value="" <?php echo ($content['display'] == '') ? "selected='selected'" : ""; ?>>&nbsp;</option>
+							<optgroup label="Widgets">
+								<option value="datagrid" <?php echo ($content['display'] == 'datagrid') ? "selected='selected'" : ""; ?>>Data Grid</option>
+								<option value="richtext" <?php echo ($content['display'] == 'richtext') ? "selected='selected'" : ""; ?>>RichText</option>
+								<option value="viewport" <?php echo ($content['display'] == 'viewport') ? "selected='selected'" : ""; ?>>View Port</option>
+								<option value="custom_widget" <?php echo ($content['display'] == 'custom_widget') ? "selected='selected'" : ""; ?>>Custom Widget</option>
+							</optgroup>
+							<optgroup label="Formats">
+								<option value="htmlentities" <?php echo ($content['display'] == 'htmlentities') ? "selected='selected'" : ""; ?>>HTML Entities</option>
+								<option value="date" <?php echo ($content['display'] == 'date') ? "selected='selected'" : ""; ?>>Date Formatter</option>
+								<option value="unixtime" <?php echo ($content['display'] == 'unixtime') ? "selected='selected'" : ""; ?>>Unixtime</option>
+								<option value="delim" <?php echo ($content['display'] == 'delim') ? "selected='selected'" : ""; ?>>Delimited List</option>
+								<option value="htmltag" <?php echo ($content['display'] == 'htmltag') ? "selected='selected'" : ""; ?>>HTML Generic Tag</option>
+								<option value="hyperlink" <?php echo ($content['display'] == 'hyperlink') ? "selected='selected'" : ""; ?>>Hyperlink</option>
+								<option value="image" <?php echo ($content['display'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
+								<option value="string" <?php echo ($content['display'] == 'string') ? "selected='selected'" : ""; ?>>String Formatter</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+				<div class="row form-row" id="displayparamrow">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_widget_prop']; ?><br />
+						<a href="javascript:;" onclick="resetParameters(); return false"><i class="<?php echo $_style['actions_refresh']; ?>" data-tooltip="<?php echo $_lang['tmplvars_reset_params']; ?>"></i></a></label>
+					<div id="displayparams" class="col-md-9 col-lg-10"></div>
+				</div>
+				<div class="row form-row">
+					<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_rank']; ?></label>
+					<div class="col-md-9 col-lg-10">
+						<input name="rank" type="text" maxlength="4" size="1" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0; ?>" class="form-control" onchange="documentDirty=true;" />
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="form-group">
+				<!--<b><?php /*echo $_lang['tmplvar_tmpl_access'] */ ?></b>-->
+				<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
+				<div class="form-group">
+					<a class="btn btn-secondary btn-sm" href="javascript:;" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a>
+					<a class="btn btn-secondary btn-sm" href="javascript:;" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a>
+					<a class="btn btn-secondary btn-sm" href="javascript:;" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a>
+				</div>
+				<?php
+				$rs = $modx->db->select(sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']), sprintf("%s as tpl
+                    LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
+                    LEFT JOIN %s as cat ON tpl.category=cat.id", $modx->getFullTableName('site_templates'), $modx->getFullTableName('site_tmplvar_templates'), $id, $modx->getFullTableName('categories')), '', "category, templatename");
 
+				$tplList = '<ul>';
+				$preCat = '';
+				$insideUl = 0;
+				while($row = $modx->db->getRow($rs)) {
+					$row['category'] = stripslashes($row['category']); //pixelchutes
+					if($preCat !== $row['category']) {
+						$tplList .= $insideUl ? '</ul>' : '';
+						$tplList .= '<li><strong>' . $row['category'] . ($row['catid'] != '' ? ' <small>(' . $row['catid'] . ')</small>' : '') . '</strong><ul>';
+						$insideUl = 1;
+					}
+
+					if($modx->manager->action == '300' && $modx->config['default_template'] == $row['id']) {
+						$checked = true;
+					} elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id']) {
+						$checked = true;
+					} elseif($id == 0 && is_array($_POST['template'])) {
+						$checked = in_array($row['id'], $_POST['template']);
+					} else {
+						$checked = $row['tmplvarid'];
+					}
+					$selectable = !$row['selectable'] ? ' class="disabled"' : '';
+					$checked = $checked ? ' checked="checked"' : '';
+					$tplId = '&nbsp;<small>(' . $row['id'] . ')</small>';
+					$desc = !empty($row['tpldescription']) ? ' - ' . $row['tpldescription'] : '';
+
+					$tplInfo = array();
+					if($row['tpllocked']) {
+						$tplInfo[] = $_lang['locked'];
+					}
+					if($row['id'] == $modx->config['default_template']) {
+						$tplInfo[] = $_lang['defaulttemplate_title'];
+					}
+					$tplInfo = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
+
+					$tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;"> %s%s%s%s</label></li>', $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo);
+					$tplList .= '</li>';
+
+					$preCat = $row['category'];
+				}
+				$tplList .= $insideUl ? '</ul>' : '';
+				$tplList .= '</ul>';
+				echo $tplList;
+
+				?>
+			</div>
+
+			<!-- Access Permissions -->
 			<?php
-			// invoke OnTVFormRender event
-			$evtOut = $modx->invokeEvent('OnTVFormRender', array('id' => $id));
-			if(is_array($evtOut)) {
-				echo implode('', $evtOut);
-			}
-			?>
+			if($use_udperms == 1) {
+				// fetch permissions for the variable
+				$rs = $modx->db->select('documentgroup', $modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$id}'");
+				$groupsarray = $modx->db->getColumn('documentgroup', $rs);
+
+				?>
+				<?php if($modx->hasPermission('access_permissions')) { ?>
+					<script type="text/javascript">
+						function makePublic(b) {
+							var notPublic = false;
+							var f = document.forms['mutate'];
+							var chkpub = f['chkalldocs'];
+							var chks = f['docgroups[]'];
+							if(!chks && chkpub) {
+								chkpub.checked = true;
+								return false;
+							}
+							else if(!b && chkpub) {
+								if(!chks.length) notPublic = chks.checked;
+								else for(i = 0; i < chks.length; i++) if(chks[i].checked) notPublic = true;
+								chkpub.checked = !notPublic;
+							}
+							else {
+								if(!chks.length) chks.checked = (b) ? false : chks.checked;
+								else for(i = 0; i < chks.length; i++) if(b) chks[i].checked = false;
+								chkpub.checked = true;
+							}
+						}
+					</script>
+					<hr>
+					<div class="form-group">
+						<!--<b><?php /*echo $_lang['access_permissions']; */ ?></b>-->
+						<p><?php echo $_lang['tmplvar_access_msg']; ?></p>
+						<?php
+						$chk = '';
+						$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
+						if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
+							$groupsarray = $_POST['docgroups'];
+						}
+						while($row = $modx->db->getRow($rs)) {
+							$checked = in_array($row['id'], $groupsarray);
+							if($modx->hasPermission('access_permissions')) {
+								if($checked) {
+									$notPublic = true;
+								}
+								$chks .= "<li><label><input type='checkbox' name='docgroups[]' value='" . $row['id'] . "' " . ($checked ? "checked='checked'" : '') . " onclick=\"makePublic(false)\" /> " . $row['name'] . "</label></li>";
+							} else {
+								if($checked) {
+									echo "<input type='hidden' name='docgroups[]'  value='" . $row['id'] . "' />";
+								}
+							}
+						}
+						if($modx->hasPermission('access_permissions')) {
+							$chks = "<li><label><input type='checkbox' name='chkalldocs' " . (!$notPublic ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /> <span class='warning'>" . $_lang['all_doc_groups'] . "</span></label></li>" . $chks;
+						}
+						echo '<ul>' . $chks . '</ul>';
+						?>
+					</div>
+				<?php } ?>
+			<?php } ?>
+
 		</div>
+
+		<input type="submit" name="save" style="display:none">
+
+		<?php
+		// invoke OnTVFormRender event
+		$evtOut = $modx->invokeEvent('OnTVFormRender', array('id' => $id));
+		if(is_array($evtOut)) {
+			echo implode('', $evtOut);
+		}
+		?>
 	</div>
 </form>
 <script type="text/javascript">setTimeout('showParameters()', 10);</script>

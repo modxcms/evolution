@@ -84,7 +84,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		<h1><?php echo $_lang['role_title']; ?></h1>
 
-		<?php echo $_style['actionsbuttons']['dynamic']['savedelete'] ?>
+		<?php echo $_style['actionbuttons']['dynamic']['savedelete'] ?>
 
 		<div class="tab-page">
 			<div class="row form-check">

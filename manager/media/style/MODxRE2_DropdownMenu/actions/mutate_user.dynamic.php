@@ -210,7 +210,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
 	<h1><i class="fa fa fa-user"></i><?php echo $_lang['user_title']; ?> </h1>
 
-	<?php echo $_style['actionsbuttons']['dynamic']['user'] ?>
+	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
 
 	<!-- Tab Start -->
 	<div class="sectionBody">

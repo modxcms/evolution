@@ -441,7 +441,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<i class="fa fa-cogs"></i><?php echo $_lang['module_title']; ?>
 	</h1>
 
-	<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
+	<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
 
 	<div class="sectionBody">
 		<p><?php echo $_lang['module_msg'] ?></p>
