@@ -1,10 +1,10 @@
 /**
- * jQuery EasyUI 1.4.1
+ * jQuery EasyUI 1.5.2
  * 
- * Copyright (c) 2009-2014 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the GPL license: http://www.gnu.org/licenses/gpl.txt
- * To use it on other terms please contact us at info@jeasyui.com
+ * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
+ * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 (function($){
@@ -23,10 +23,13 @@ $(_2).numberbox("initValue",_5).numberbox("setText",_6);
 function _7(_8,_9){
 var _a=$.data(_8,"numberbox");
 var _b=_a.options;
+_b.value=parseFloat(_9);
 var _9=_b.parser.call(_8,_9);
 var _c=_b.formatter.call(_8,_9);
 _b.value=_9;
-$(_8).textbox("setValue",_9).textbox("setText",_c);
+$(_8).textbox("setText",_c).textbox("setValue",_9);
+_c=_b.formatter.call(_8,$(_8).textbox("getValue"));
+$(_8).textbox("setText",_c);
 };
 $.fn.numberbox=function(_d,_e){
 if(typeof _d=="string"){
@@ -53,11 +56,14 @@ var _11=jq.data("textbox")?jq.textbox("options"):{};
 return $.extend($.data(jq[0],"numberbox").options,{width:_11.width,originalValue:_11.originalValue,disabled:_11.disabled,readonly:_11.readonly});
 },fix:function(jq){
 return jq.each(function(){
-$(this).numberbox("setValue",$(this).numberbox("getText"));
+var _12=$(this).numberbox("options");
+_12.value=null;
+var _13=_12.parser.call(this,$(this).numberbox("getText"));
+$(this).numberbox("setValue",_13);
 });
-},setValue:function(jq,_12){
+},setValue:function(jq,_14){
 return jq.each(function(){
-_7(this,_12);
+_7(this,_14);
 });
 },clear:function(jq){
 return jq.each(function(){
@@ -70,46 +76,46 @@ $(this).textbox("reset");
 $(this).numberbox("setValue",$(this).numberbox("getValue"));
 });
 }};
-$.fn.numberbox.parseOptions=function(_13){
-var t=$(_13);
-return $.extend({},$.fn.textbox.parseOptions(_13),$.parser.parseOptions(_13,["decimalSeparator","groupSeparator","suffix",{min:"number",max:"number",precision:"number"}]),{prefix:(t.attr("prefix")?t.attr("prefix"):undefined)});
+$.fn.numberbox.parseOptions=function(_15){
+var t=$(_15);
+return $.extend({},$.fn.textbox.parseOptions(_15),$.parser.parseOptions(_15,["decimalSeparator","groupSeparator","suffix",{min:"number",max:"number",precision:"number"}]),{prefix:(t.attr("prefix")?t.attr("prefix"):undefined)});
 };
 $.fn.numberbox.defaults=$.extend({},$.fn.textbox.defaults,{inputEvents:{keypress:function(e){
-var _14=e.data.target;
-var _15=$(_14).numberbox("options");
-return _15.filter.call(_14,e);
-},blur:function(e){
 var _16=e.data.target;
-$(_16).numberbox("setValue",$(_16).numberbox("getText"));
+var _17=$(_16).numberbox("options");
+return _17.filter.call(_16,e);
+},blur:function(e){
+$(e.data.target).numberbox("fix");
 },keydown:function(e){
 if(e.keyCode==13){
-var _17=e.data.target;
-$(_17).numberbox("setValue",$(_17).numberbox("getText"));
+$(e.data.target).numberbox("fix");
 }
 }},min:null,max:null,precision:0,decimalSeparator:".",groupSeparator:"",prefix:"",suffix:"",filter:function(e){
 var _18=$(this).numberbox("options");
 var s=$(this).numberbox("getText");
-if(e.which==13){
+if(e.metaKey||e.ctrlKey){
 return true;
 }
-if(e.which==45){
-return (s.indexOf("-")==-1?true:false);
+if($.inArray(String(e.which),["46","8","13","0"])>=0){
+return true;
 }
-var c=String.fromCharCode(e.which);
-if(c==_18.decimalSeparator){
-return (s.indexOf(c)==-1?true:false);
+var tmp=$("<span></span>");
+tmp.html(String.fromCharCode(e.which));
+var c=tmp.text();
+tmp.remove();
+if(!c){
+return true;
+}
+if(c=="-"||c==_18.decimalSeparator){
+return (s.indexOf(c)==-1)?true:false;
 }else{
 if(c==_18.groupSeparator){
 return true;
 }else{
-if((e.which>=48&&e.which<=57&&e.ctrlKey==false&&e.shiftKey==false)||e.which==0||e.which==8){
-return true;
-}else{
-if(e.ctrlKey==true&&(e.which==99||e.which==118)){
+if("0123456789".indexOf(c)>=0){
 return true;
 }else{
 return false;
-}
 }
 }
 }
@@ -139,13 +145,13 @@ return _1a.prefix+s1+_1a.suffix;
 },parser:function(s){
 s=s+"";
 var _1c=$(this).numberbox("options");
-if(parseFloat(s)!=s){
 if(_1c.prefix){
 s=$.trim(s.replace(new RegExp("\\"+$.trim(_1c.prefix),"g"),""));
 }
 if(_1c.suffix){
 s=$.trim(s.replace(new RegExp("\\"+$.trim(_1c.suffix),"g"),""));
 }
+if(parseFloat(s)!=_1c.value){
 if(_1c.groupSeparator){
 s=$.trim(s.replace(new RegExp("\\"+_1c.groupSeparator,"g"),""));
 }
