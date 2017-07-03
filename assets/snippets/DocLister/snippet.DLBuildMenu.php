@@ -18,7 +18,7 @@ if ( isset( $p['config'] ) ) {
     $helper->setPath( '/assets/snippets/DocLister/' );
     $helper->loadConfig( $p['config'] );
     
-    $p = $helper->getConfig();
+    $p = array_merge( $helper->getConfig(), $p );
 }
 
 /** Текущий уровень вложенности */

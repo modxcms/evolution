@@ -23,8 +23,8 @@ class e_DL_Extender extends extDocLister
             if (is_scalar($eFields)) {
                 $eFields = explode(",", $eFields);
             }
+            $sanitarTagsFields = array();
             if ($sanitarTags = $this->DocLister->getCFGDef('sanitarTags',0)) {
-                $sanitarTagsFields = array();
                 if (is_numeric($sanitarTags) && is_array($eFields)) {
                     $sanitarTagsFields = $eFields;        
                 } elseif (is_scalar($sanitarTags)) {

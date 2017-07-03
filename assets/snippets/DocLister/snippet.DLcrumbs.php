@@ -17,7 +17,7 @@ if ( isset( $modx->event->params['config'] ) ) {
     $helper->setPath( '/assets/snippets/DocLister/' );
     $helper->loadConfig( $modx->event->params['config'] );
     
-    $modx->event->params = $helper->getConfig();
+    $modx->event->params = array_merge( $helper->getConfig(), $modx->event->params );
     extract( $modx->event->params );
 }
 
