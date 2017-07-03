@@ -390,8 +390,12 @@ class modUsers extends MODxAPI
                 $this->close();
                 $q = $this->modx->db->query("SELECT id FROM " . $this->makeTable('web_users') . " WHERE md5(username)='{$this->escape($cookie[0])}'");
                 $id = $this->modx->db->getValue($q);
-                if ($this->edit($id) && null !== $this->getID() && $this->get('password') == $cookie[1] && $this->get('sessionid') == $cookie[2] && $this->testAuth($this->getID(),
-                        $cookie[1], true)
+                if (
+                    $this->edit($id) 
+                    && null !== $this->getID() 
+                    && $this->get('password') == $cookie[1] 
+                    && $this->get('sessionid') == $cookie[2] 
+                    && !$this->checkBlock($this->getID())
                 ) {
                     $flag = $this->authUser($this->getID(), $fulltime, $cookieName, $fire_events);
 
@@ -501,13 +505,14 @@ class modUsers extends MODxAPI
      * @param bool $remember
      * @return $this
      */
-    protected function setAutoLoginCookie($cookieName, $remember = true)
+    public function setAutoLoginCookie($cookieName, $remember = true)
     {
-        if (!empty($cookieName)) {
+        if (!empty($cookieName) && $this->getID()) {
             $secure = $this->isSecure();
-            $cookieValue = array(md5($this->get('username')), $this->get('password'), $this->get('sessionid'));
+            $remember = is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember;
+            $cookieValue = array(md5($this->get('username')), $this->get('password'), $this->get('sessionid'), $remember);
             $cookieValue = implode('|', $cookieValue);
-            $cookieExpires = time() + (is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember);
+            $cookieExpires = time() + $remember;
             setcookie($cookieName, $cookieValue, $cookieExpires, '/', '', $secure, true);
         }
 

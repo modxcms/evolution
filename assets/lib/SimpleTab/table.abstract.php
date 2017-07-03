@@ -44,7 +44,6 @@ class dataTable extends \autoTable
     {
         parent::__construct($modx, $debug);
         $this->modx = $modx;
-        $this->params = (isset($modx->event->params) && is_array($modx->event->params)) ? $modx->event->params : array();
         $this->fs = \Helpers\FS::getInstance();
     }
 
@@ -130,7 +129,7 @@ class dataTable extends \autoTable
         if ($cache) {
             return;
         }
-        $thumbsCache = isset($this->params['thumbsCache']) ? $this->params['thumbsCache'] : $this->thumbsCache;
+        $thumbsCache = \APIhelpers::getkey($this->params,'thumbsCache',$this->thumbsCache);
         $thumb = $thumbsCache . $url;
         if ($this->fs->checkFile($thumb)) {
             $this->deleteThumb($thumb, true);
@@ -258,5 +257,21 @@ class dataTable extends \autoTable
 
             return false;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function setParams($params = array())
+    {
+        if (is_array($params)) $this->params = $params;
     }
 }
