@@ -3758,43 +3758,47 @@ class DocumentParser {
         else {
             $result= array ();
             // get user defined template variables
-            $fields= ($tvfields == "") ? "tv.*" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvfields))));
-            $tvsort= ($tvsort == "") ? "" : 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
+            if($tvfields) {
+                $_ = array_filter(array_map('trim', explode(',', $tvfields)));
+                foreach($_ as $i=>$v) {
+                    if($v==='value') unset($_[$i]);
+                    else             $_[$i] = 'tv.' . $v;
+                }
+                $fields = join(',', $_);
+            }
+            else $fields = "tv.*";
+            
+            if($tvsort!='') {
+                $tvsort = 'tv.' . join(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
+            }
             if ($tvidnames == "*")
                 $query= "tv.id<>0";
             else
-                $query= (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
-            if ($docgrp= $this->getUserDocGroups())
-                $docgrp= implode(",", $docgrp);
+                $query= (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . join("','", $tvidnames) . "')";
+            
+            if ($docgrp= $this->getUserDocGroups()) $docgrp= join(',', $docgrp);
 
-            $docCount= count($docs);
-            for ($i= 0; $i < $docCount; $i++) {
+            foreach ($docs as $doc) {
 
-                $docRow= $docs[$i];
-                $docid= $docRow['id'];
+                $docid= $doc['id'];
 
                 $rs = $this->db->select(
                     "{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ",
-                    $this->getFullTableName('site_tmplvars') . " tv 
-                        INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id
-                        LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
-                    "{$query} AND tvtpl.templateid = '{$docRow['template']}'",
+                    "[+prefix+]site_tmplvars tv 
+                        INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
+                        LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'",
+                    "{$query} AND tvtpl.templateid = '{$doc['template']}'",
                     ($tvsort ? "{$tvsort} {$tvsortdir}" : "")
                     );
                 $tvs = $this->db->makeArray($rs);
 
                 // get default/built-in template variables
-                ksort($docRow);
-                foreach ($docRow as $key => $value) {
-                    if ($tvidnames == "*" || in_array($key, $tvidnames))
-                        array_push($tvs, array (
-                            "name" => $key,
-                            "value" => $value
-                        ));
+                ksort($doc);
+                foreach ($doc as $key => $value) {
+                    if ($tvidnames == '*' || in_array($key, $tvidnames))
+                        $tvs[] = array ('name'=>$key,'value'=>$value);
                 }
-
-                if (count($tvs))
-                    array_push($result, $tvs);
+                if (count($tvs)) $result[] = $tvs;
             }
             return $result;
         }
