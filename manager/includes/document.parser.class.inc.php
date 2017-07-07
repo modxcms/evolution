@@ -1903,7 +1903,7 @@ class DocumentParser {
                 else          $url = $site_url;
                 if ($this->config['base_url'] != $_SERVER['REQUEST_URI']){    
                     if (empty($_POST)){
-                        if (('/?'.$qstring) != $_SERVER['REQUEST_URI']) {
+                        if (($this->config['base_url'].'?'.$qstring) != $_SERVER['REQUEST_URI']) {
                             $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
                             exit(0);
                         }
