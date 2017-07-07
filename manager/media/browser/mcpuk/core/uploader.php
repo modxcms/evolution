@@ -688,7 +688,7 @@ class uploader {
             $tile   = image::factory( $this->imageDriver, __DIR__ . '/../themes/' . $this->config['theme'] . '/img/bg_transparent.png' );
             
             imagesettile( $back->image, $tile->image );
-            imagefill( $back->image, 0, 0, IMG_COLOR_TILED );
+            imagefilledrectangle( $back->image, 0, 0, $width, $height, IMG_COLOR_TILED );
             imagecopy( $back->image, $img->image, 0, 0, 0, 0, $width, $height );
 
             $img = $back;
