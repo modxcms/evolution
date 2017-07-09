@@ -1236,7 +1236,9 @@
 						}
 					}
 					loadPositions();
-					initQuicksearch('tree_site_templates_search', 'tree_site_templates');
+					for(var i = 0; i < tabIds.length; i++) {
+						initQuicksearch(tabIds[i]+'_search', tabIds[i]);
+					}
 					var at = d.querySelectorAll('#tree .accordion-toggle');
 					for(var i = 0; i < at.length; i++) {
 						at[i].onclick = function(e) {
