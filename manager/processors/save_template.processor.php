@@ -143,30 +143,30 @@ switch ($_POST['mode']) {
 }
 
 function saveTemplateAccess($id) {
-
     global $modx;
+	if ($_POST['tvsDirty'] == 1) {
+	    $newAssignedTvs = $_POST['assignedTv'];
 
-    $newAssignedTvs = $_POST['assignedTv'];
+	    // Preserve rankings of already assigned TVs
+	    $rs = $modx->db->select( "tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "" );
 
-    // Preserve rankings of already assigned TVs
-    $rs = $modx->db->select( "tmplvarid, rank", $modx->getFullTableName('site_tmplvar_templates'), "templateid='{$id}'", "" );
+	    $ranksArr = array();
+	    $highest = 0;
+	    while($row = $modx->db->getRow($rs)) {
+	        $ranksArr[$row['tmplvarid']] = $row['rank'];
+	        $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
+	    };
 
-    $ranksArr = array();
-    $highest = 0;
-    while($row = $modx->db->getRow($rs)) {
-        $ranksArr[$row['tmplvarid']] = $row['rank'];
-        $highest = $highest < $row['rank'] ? $row['rank'] : $highest;
-    };
-
-    $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'),"templateid='{$id}'");
-    if(empty($newAssignedTvs)) return;
-    foreach($newAssignedTvs as $tvid){
-        if(!$id || !$tvid) continue;    // Dont link zeros
-        $modx->db->insert(
-            array(
-                'templateid' => $id,
-                'tmplvarid'  => $tvid,
-                'rank'  => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
-            ), $modx->getFullTableName('site_tmplvar_templates'));
-    }
+	    $modx->db->delete($modx->getFullTableName('site_tmplvar_templates'),"templateid='{$id}'");
+	    if(empty($newAssignedTvs)) return;
+	    foreach($newAssignedTvs as $tvid){
+	        if(!$id || !$tvid) continue;    // Dont link zeros
+	        $modx->db->insert(
+	            array(
+	                'templateid' => $id,
+	                'tmplvarid'  => $tvid,
+	                'rank'  => isset($ranksArr[$tvid]) ? $ranksArr[$tvid] : $highest += 1 // append TVs to rank
+	            ), $modx->getFullTableName('site_tmplvar_templates'));
+	    }
+	}
 }

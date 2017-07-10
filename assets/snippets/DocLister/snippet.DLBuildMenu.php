@@ -11,6 +11,16 @@ if ( ! is_array($p)) {
     $p = array();
 }
 
+if ( isset( $p['config'] ) ) {
+    require_once MODX_BASE_PATH . 'assets/lib/Helpers/Config.php';
+
+    $helper = new \Helpers\Config( $p );
+    $helper->setPath( '/assets/snippets/DocLister/' );
+    $helper->loadConfig( $p['config'] );
+    
+    $p = array_merge( $helper->getConfig(), $p );
+}
+
 /** Текущий уровень вложенности */
 $p['currentDepth'] = $currentDepth = \APIhelpers::getkey($p, 'currentDepth', 1);
 

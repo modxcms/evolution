@@ -675,7 +675,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = '建立/编辑插件';
 $_lang["preview"] = '预览';
-$_lang["preview_msg"] = '这个是你最后一次改动的预览. 点击这里 <a href="#" onclick="saveRefreshPreview();">保存刷新</a>你现在的页面';
+$_lang["preview_msg"] = '这个是你最后一次改动的预览. 点击这里 <a href="javascript:;" onclick="saveRefreshPreview();">保存刷新</a>你现在的页面';
 $_lang["preview_resource"] = 'Preview Resource';
 $_lang["private"] = '私有的';
 $_lang["public"] = '公共的';

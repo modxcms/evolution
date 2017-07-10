@@ -675,7 +675,7 @@ $_lang["plugin_priority_instructions"] = 'Dra för att ändra ordningen på plug
 $_lang["plugin_priority_title"] = 'Körordning för plugins';
 $_lang["plugin_title"] = 'Skapa/redigera plugin';
 $_lang["preview"] = 'Förhandsgranska';
-$_lang["preview_msg"] = 'Detta är en förhandsgranskning av dina senast sparade ändringar. Klicka här för att <a href="#" onclick="saveRefreshPreview();">spara och ladda om</a> dina nuvarande ändringar';
+$_lang["preview_msg"] = 'Detta är en förhandsgranskning av dina senast sparade ändringar. Klicka här för att <a href="javascript:;" onclick="saveRefreshPreview();">spara och ladda om</a> dina nuvarande ändringar';
 $_lang["preview_resource"] = 'Förhandsgranska';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';

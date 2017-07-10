@@ -55,10 +55,7 @@ $_SESSION['itemname'] = $content['pagetitle'];
 // empty cache
 $modx->clearCache('full');
 
-//$header="Location: index.php?r=1&id=$id&a=7";
-
-// webber
-$header="Location: index.php?r=1&id=$pid&a=7&dv=1".$add_path;
+$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
 
 header($header);
 ?>

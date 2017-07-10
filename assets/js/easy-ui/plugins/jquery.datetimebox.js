@@ -1,10 +1,10 @@
 /**
- * jQuery EasyUI 1.4.1
+ * jQuery EasyUI 1.5.2
  * 
- * Copyright (c) 2009-2014 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the GPL license: http://www.gnu.org/licenses/gpl.txt
- * To use it on other terms please contact us at info@jeasyui.com
+ * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
+ * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 (function($){
@@ -49,8 +49,8 @@ $(_12).combo("setValue",_13);
 if(!_14){
 if(_13){
 var _16=_15.parser.call(_12,_13);
-$(_12).combo("setValue",_15.formatter.call(_12,_16));
 $(_12).combo("setText",_15.formatter.call(_12,_16));
+$(_12).combo("setValue",_15.formatter.call(_12,_16));
 }else{
 $(_12).combo("setText",_13);
 }

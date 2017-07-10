@@ -47,7 +47,7 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 	if ($e->name == 'OnDocFormPrerender'){
 		global $_lang;
 		
-		$output .= includeJsCss($site.'assets/plugins/managermanager/js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
+		$output .= includeJsCss($site.'assets/plugins/managermanager/js/jquery-ui.min.js', 'html', 'jquery-ui', '1.12.1');
 		$output .= includeJsCss($widgetDir.'ddmultiplefields.css', 'html');
 		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMultipleFields.js', 'html', 'jquery.ddMM.mm_ddMultipleFields', '1.1.1');
 		
@@ -63,7 +63,13 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 			
 			foreach ($columnsDataTemp as $value){
 				//Евалим знение и записываем результат или исходное значени
-				$eval = @eval($value);
+				try {
+			    	$eval = eval($value);
+			    } catch (Throwable $t) {
+			    	echo $t->getMessage(), "\n";
+			    } catch (Exception $e) {
+			    	echo $e->getMessage(), "\n";
+			    }
 				$columnsData[] = $eval ? addslashes(json_encode($eval)) : addslashes($value);
 			}
 			//Сливаем в строку, что бы передать на клиент

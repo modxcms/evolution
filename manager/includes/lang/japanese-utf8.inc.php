@@ -681,7 +681,7 @@ $_lang["plugin_priority_instructions"] = 'プラグインの実行順を変更�
 $_lang["plugin_priority_title"] = 'プラグインの実行順';
 $_lang["plugin_title"] = 'プラグインの作成/編集';
 $_lang["preview"] = 'プレビュー';
-$_lang["preview_msg"] = 'ここには最後に更新した内容をプレビューしています。<a href="#" onclick="saveRefreshPreview();"><img src="media/images/icons/save.gif" align="absmiddle" height="12"> 更新と再描画</a>を行うにはここをクリックしてください。';
+$_lang["preview_msg"] = 'ここには最後に更新した内容をプレビューしています。<a href="javascript:;" onclick="saveRefreshPreview();"><i class="fa fa-floppy-o"></i> 更新と再描画</a>を行うにはここをクリックしてください。';
 $_lang["preview_resource"] = 'プレビュー(別窓)';
 $_lang["private"] = 'グループ設定';
 $_lang["public"] = 'グループ制限なし';

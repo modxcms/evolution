@@ -19,7 +19,7 @@ class onetableDocLister extends DocLister
     /**
      * @var string
      */
-    protected $table = 'site_content';
+    protected $table = '';
 
     /**
      * @var string
@@ -131,8 +131,6 @@ class onetableDocLister extends DocLister
                 }
             }
             $out = $this->renderWrap($out);
-        } else {
-            $out = 'none TPL';
         }
 
         return $this->toPlaceholders($out);

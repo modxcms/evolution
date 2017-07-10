@@ -80,10 +80,8 @@ $modx->db->update(
 
 	// empty cache
 	$modx->clearCache('full');
-	// finished emptying cache - redirect
-	//$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 
-// webber
-	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
+	// finished emptying cache - redirect
+	$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
 	header($header);
 ?>

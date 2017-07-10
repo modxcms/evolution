@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Arrastra para re-ordenar los Plugins b
 $_lang["plugin_priority_title"] = 'Orden de Ejecución de Plugins';
 $_lang["plugin_title"] = 'Crear/editar Plugin';
 $_lang["preview"] = 'Previsualizar';
-$_lang["preview_msg"] = 'Esta es una previsualización de tus últimos cambios guardados.  Haz clic aquí para <a href="#" onclick="saveRefreshPreview();">Guardar y Recargar</a> tus cambios actuales';
+$_lang["preview_msg"] = 'Esta es una previsualización de tus últimos cambios guardados.  Haz clic aquí para <a href="javascript:;" onclick="saveRefreshPreview();">Guardar y Recargar</a> tus cambios actuales';
 $_lang["preview_resource"] = 'Previsualizar documento';
 $_lang["private"] = 'Privado';
 $_lang["public"] = 'Público';

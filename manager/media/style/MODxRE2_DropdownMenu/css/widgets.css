@@ -1,0 +1,25 @@
+/* widgets */
+.widgets .card { margin-bottom: .75rem; border: none; border-radius: 0.15rem; background-color: #fff; box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.1), 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05) }
+.widgets .card-header { padding: .75rem 1rem; font-size: .675rem; color: #616a73; text-transform: uppercase; font-weight: 900; border: none; background-color: #f2f2f2; }
+.widgets .card-header .fa { font-size: .9rem }
+.widgets .card-block { padding: 0; }
+.widgets .card-block .card-block p { padding: 0 1rem }
+.widgets .card-block .card-body { padding: 1rem; }
+.widgets .card-block .card-body + .card-body { padding-top: 0 }
+.widgets .table { margin-bottom: 1rem }
+.widgets .table:not(.data) tr th, .widgets .table:not(.data) tr td { padding: .15rem; }
+.widgets .table tr th:first-child, .widgets .table tr td:first-child { padding-left: 1rem !important }
+.widgets .table tr th:last-child, .widgets .table tr td:last-child { padding-right: 1rem !important }
+.widgets .table .actions a .fa { margin: 0 .05rem; }
+/* custom */
+.widgets #welcome .wm_buttons { text-align: center }
+.widgets #welcome .wm_button { display: inline-block; margin: 0 .15rem .5rem; }
+.widgets #welcome .wm_button a { display: inline-block; text-decoration: none; color: #646b7b; padding: .25rem; /*min-width: 6rem; background-color: #f9f9f9;*/ border-radius: 0.25rem; box-shadow: none; transition-duration: .5s }
+.widgets #welcome .wm_button a:hover { color: #373b46; background-color: #f2f2f2 }
+.widgets #welcome .wm_button a .fa { display: inline-block; }
+.widgets #welcome .wm_button a .fa + span { display: block; font-size:.7rem; }
+.widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
+.widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
+.widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
+/* dark */
+/*.dark .widgets .card-header { color: #fff; background-color: #282c34 }*/

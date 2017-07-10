@@ -49,6 +49,7 @@ class modUsers extends MODxAPI
      * @var string
      */
     protected $givenPassword = '';
+    protected $groupIds = array();
 
     /**
      * @param $key
@@ -238,6 +239,9 @@ class modUsers extends MODxAPI
                 'username'     => $this->get('username')
             ), $fire_events);
         }
+        
+        if ($this->groupIds) $this->setUserGroups($this->id, $this->groupIds);
+        
         $this->invokeEvent('OnWebSaveUser', array(
             'userObj' => $this,
             'mode'    => $this->newDoc ? "new" : "upd",
@@ -386,8 +390,12 @@ class modUsers extends MODxAPI
                 $this->close();
                 $q = $this->modx->db->query("SELECT id FROM " . $this->makeTable('web_users') . " WHERE md5(username)='{$this->escape($cookie[0])}'");
                 $id = $this->modx->db->getValue($q);
-                if ($this->edit($id) && null !== $this->getID() && $this->get('password') == $cookie[1] && $this->get('sessionid') == $cookie[2] && $this->testAuth($this->getID(),
-                        $cookie[1], true)
+                if (
+                    $this->edit($id) 
+                    && null !== $this->getID() 
+                    && $this->get('password') == $cookie[1] 
+                    && $this->get('sessionid') == $cookie[2] 
+                    && !$this->checkBlock($this->getID())
                 ) {
                     $flag = $this->authUser($this->getID(), $fulltime, $cookieName, $fire_events);
 
@@ -497,13 +505,14 @@ class modUsers extends MODxAPI
      * @param bool $remember
      * @return $this
      */
-    protected function setAutoLoginCookie($cookieName, $remember = true)
+    public function setAutoLoginCookie($cookieName, $remember = true)
     {
-        if (!empty($cookieName)) {
+        if (!empty($cookieName) && $this->getID()) {
             $secure = $this->isSecure();
-            $cookieValue = array(md5($this->get('username')), $this->get('password'), $this->get('sessionid'));
+            $remember = is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember;
+            $cookieValue = array(md5($this->get('username')), $this->get('password'), $this->get('sessionid'), $remember);
             $cookieValue = implode('|', $cookieValue);
-            $cookieExpires = time() + (is_bool($remember) ? (60 * 60 * 24 * 365 * 5) : (int)$remember);
+            $cookieExpires = time() + $remember;
             setcookie($cookieName, $cookieValue, $cookieExpires, '/', '', $secure, true);
         }
 
@@ -562,11 +571,18 @@ class modUsers extends MODxAPI
      */
     public function setUserGroups($userID = 0, $groupIds = array())
     {
-        $user = $this->switchObject($userID);
-        if (($uid = $user->getID()) && is_array($groupIds)) {
-            foreach ($groupIds as $gid) {
-                $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+        if (!is_array($groupIds)) return $this;
+        if ($this->newDoc && $userID == 0) {
+            $this->groupIds = $groupIds;
+        } else {
+            $user = $this->switchObject($userID);
+            if ($uid = $user->getID()) {
+                foreach ($groupIds as $gid) {
+                    $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+                }
             }
+            unset($user);
+            $this->groupIds = array();
         }
 
         return $this;

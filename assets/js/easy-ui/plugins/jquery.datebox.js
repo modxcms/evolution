@@ -1,10 +1,10 @@
 /**
- * jQuery EasyUI 1.4.1
+ * jQuery EasyUI 1.5.2
  * 
- * Copyright (c) 2009-2014 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the GPL license: http://www.gnu.org/licenses/gpl.txt
- * To use it on other terms please contact us at info@jeasyui.com
+ * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
+ * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 (function($){
@@ -70,7 +70,7 @@ var tr=_12.find("tr");
 for(var i=0;i<_4.buttons.length;i++){
 var td=$("<td></td>").appendTo(tr);
 var btn=_4.buttons[i];
-var t=$("<a class=\"datebox-button-a\" href=\"javascript:void(0)\"></a>").html($.isFunction(btn.text)?btn.text(_10):btn.text).appendTo(td);
+var t=$("<a class=\"datebox-button-a\" href=\"javascript:;\"></a>").html($.isFunction(btn.text)?btn.text(_10):btn.text).appendTo(td);
 t.attr("datebox-button-index",i);
 }
 tr.find("td").css("width",(100/_4.buttons.length)+"%");
@@ -107,15 +107,14 @@ function _18(_1e,_1f,_20){
 var _21=$.data(_1e,"datebox");
 var _22=_21.options;
 var _23=_21.calendar;
-$(_1e).combo("setValue",_1f);
 _23.calendar("moveTo",_22.parser.call(_1e,_1f));
-if(!_20){
+if(_20){
+$(_1e).combo("setValue",_1f);
+}else{
 if(_1f){
 _1f=_22.formatter.call(_1e,_23.calendar("options").current);
-$(_1e).combo("setValue",_1f).combo("setText",_1f);
-}else{
-$(_1e).combo("setText",_1f);
 }
+$(_1e).combo("setText",_1f).combo("setValue",_1f);
 }
 };
 $.fn.datebox=function(_24,_25){
@@ -182,7 +181,8 @@ _16(this,q);
 }},currentText:"Today",closeText:"Close",okText:"Ok",buttons:[{text:function(_30){
 return $(_30).datebox("options").currentText;
 },handler:function(_31){
-$(_31).datebox("calendar").calendar({year:new Date().getFullYear(),month:new Date().getMonth()+1,current:new Date()});
+var now=new Date();
+$(_31).datebox("calendar").calendar({year:now.getFullYear(),month:now.getMonth()+1,current:new Date(now.getFullYear(),now.getMonth(),now.getDate())});
 _19(_31);
 }},{text:function(_32){
 return $(_32).datebox("options").closeText;

@@ -16,8 +16,14 @@ if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']
     die();
 
 // Unregister globals
-if (@ ini_get('register_globals')) {
-    die('Please disable register_globals!');
+if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
+    try {
+        $temp = @ini_get( 'register_globals' );
+
+        if ( in_array( $temp, array( true, 1, '1', 'on' ), true ) ) {
+            die( 'Please disable register_globals!' );
+        }
+    } catch ( Exception $e ) { }
 }
 
 global $sanitize_seed;
@@ -26,7 +32,7 @@ $sanitize_seed = 'sanitize_seed_' . base_convert(md5(__FILE__),16,36);
 // sanitize array
 if (!function_exists('modx_sanitize_gpc')) {
     function modx_sanitize_gpc(& $values, $depth=0) {
-        if(10 < $depth) exit('GPC Array nested too deep!');
+        if(200 < $depth) exit('GPC Array nested too deep!');
         if(is_array($values)) {
             $depth++;
             foreach ($values as $key => $value) {

@@ -691,7 +691,7 @@ $_lang["plugin_priority_title"] = 'Plug-in uitvoer volgorde';
 $_lang["purge_plugin"] = 'Verwijder verouderde Plug-ins';
 $_lang["plugin_title"] = 'Aanmaken/bewerken Plug-in';
 $_lang["preview"] = 'Voorbeeld';
-$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href="#" onclick="saveRefreshPreview();">Opslaan en vernieuwen</a>';
+$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href="javascript:;" onclick="saveRefreshPreview();">Opslaan en vernieuwen</a>';
 $_lang["preview_resource"] = 'Pagina voorbeeld';
 $_lang["private"] = 'Gesloten';
 $_lang["public"] = 'Open';

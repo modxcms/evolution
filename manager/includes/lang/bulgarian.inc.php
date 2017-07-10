@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = 'Създаване/редактиране на плъгин';
 $_lang["preview"] = 'Преглед';
-$_lang["preview_msg"] = 'Това е преглед на последно съхранените промени. Щракнете <a href="#" onclick="saveRefreshPreview();">Съхранение и Обновяване</a> на текущите промени';
+$_lang["preview_msg"] = 'Това е преглед на последно съхранените промени. Щракнете <a href="javascript:;" onclick="saveRefreshPreview();">Съхранение и Обновяване</a> на текущите промени';
 $_lang["preview_resource"] = 'Преглед на документ';
 $_lang["private"] = 'Частен';
 $_lang["public"] = 'Публичен';

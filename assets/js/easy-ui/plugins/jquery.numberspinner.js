@@ -1,17 +1,17 @@
 /**
- * jQuery EasyUI 1.4.1
+ * jQuery EasyUI 1.5.2
  * 
- * Copyright (c) 2009-2014 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the GPL license: http://www.gnu.org/licenses/gpl.txt
- * To use it on other terms please contact us at info@jeasyui.com
+ * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
+ * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 (function($){
 function _1(_2){
 $(_2).addClass("numberspinner-f");
 var _3=$.data(_2,"numberspinner").options;
-$(_2).numberbox(_3).spinner(_3);
+$(_2).numberbox($.extend({},_3,{doSize:false})).spinner(_3);
 $(_2).numberbox("setValue",_3.value);
 };
 function _4(_5,_6){

@@ -43,32 +43,6 @@
         
 </td>
 </tr>
-<tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment">  <?php echo $_lang['check_files_onlogin_message'] ?></td>
-</tr>
-<tr>
-  <td colspan="2"><div class="split"></div></td>
-</tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['failed_login_title'] ?></td>
-    <td><input type="text" name="failed_login_attempts" style="width:50px" value="<?php echo $failed_login_attempts; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['failed_login_message'] ?></td>
-  </tr>
-  <tr>
-    <td colspan="2"><div class="split"></div></td>
-  </tr>
-  <tr>
-    <td nowrap class="warning"><?php echo $_lang['blocked_minutes_title'] ?></td>
-    <td><input type="text" name="blocked_minutes" style="width:100px" value="<?php echo $blocked_minutes; ?>" /></td>
-  </tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment"><?php echo $_lang['blocked_minutes_message'] ?></td>
-  </tr>
    <tr>
     <td colspan="2"><div class="split"></div></td>
   </tr>
@@ -131,7 +105,47 @@
 <?php echo wrap_label('error + warning + information',form_radio('send_errormail','1'));?><br />
 <?php echo parseText($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?></td>
 </tr>
+   <tr>
+    <td colspan="2"><div class="split"></div></td>
+</tr>
+<tr>
+<th><?php echo $_lang['enable_bindings_title'] ?></th>
+<td>
+<?php echo wrap_label($_lang['yes'],form_radio('enable_bindings','1'));?><br />
+<?php echo wrap_label($_lang['no'], form_radio('enable_bindings','0'));?>
 
+</td>
+</tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment">  <?php echo $_lang['enable_bindings_message'] ?></td>
+</tr>
+<tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment">  <?php echo $_lang['check_files_onlogin_message'] ?></td>
+</tr>
+<tr>
+  <td colspan="2"><div class="split"></div></td>
+</tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['failed_login_title'] ?></td>
+    <td><input type="text" name="failed_login_attempts" style="width:50px" value="<?php echo $failed_login_attempts; ?>" /></td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['failed_login_message'] ?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td nowrap class="warning"><?php echo $_lang['blocked_minutes_title'] ?></td>
+    <td><input type="text" name="blocked_minutes" style="width:100px" value="<?php echo $blocked_minutes; ?>" /></td>
+  </tr>
+  <tr>
+    <td width="200">&nbsp;</td>
+    <td class="comment"><?php echo $_lang['blocked_minutes_message'] ?></td>
+  </tr>
 <tr>
   <td colspan="2"><div class="split"></div></td>
 </tr>
@@ -158,21 +172,6 @@ $phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
 <tr>
     <td width="200">&nbsp;</td>
     <td class="comment">  <?php echo $_lang['pwd_hash_algo_message']?></td>
-</tr>
-   <tr>
-    <td colspan="2"><div class="split"></div></td>
-</tr>
-<tr>
-<th><?php echo $_lang['enable_bindings_title'] ?></th>
-<td>
-<?php echo wrap_label($_lang['yes'],form_radio('enable_bindings','1'));?><br />
-<?php echo wrap_label($_lang['no'], form_radio('enable_bindings','0'));?>
-
-</td>
-</tr>
-  <tr>
-    <td width="200">&nbsp;</td>
-    <td class="comment">  <?php echo $_lang['enable_bindings_message'] ?></td>
 </tr>
    <tr>
     <td colspan="2"><div class="split"></div></td>

@@ -125,20 +125,7 @@ abstract class Plugin
             }
             $this->registerEvents($this->pluginEvents);
         }
-        $output = '';
-        $plugins = $this->modx->pluginEvent;
-        if (($this->renderEvent !== 'OnDocFormRender' || (array_search('ManagerManager',
-                    $plugins['OnDocFormRender']) === false))
-        ) {
-            $jquery = $this->assets->registerScript('jQuery', array(
-                'version' => '1.9.1',
-                'src'     => 'assets/js/jquery/jquery-1.9.1.min.js'
-            ));
-            if ($jquery !== false) {
-                $output .= $jquery;
-                $output .= '<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';
-            }
-        }
+        $output = $this->assets->registerJQuery();
         $tpl = MODX_BASE_PATH . $this->tpl;
         if ($this->fs->checkFile($tpl)) {
             $output .= '[+js+][+styles+]' . file_get_contents($tpl);
@@ -165,12 +152,7 @@ abstract class Plugin
             $scripts = $this->DLTemplate->parseChunk('@CODE:' . $scripts, $ph);
             $scripts = json_decode($scripts, true);
             $scripts = isset($scripts['scripts']) ? $scripts['scripts'] : $scripts['styles'];
-            foreach ($scripts as $name => $params) {
-                $script = $this->assets->registerScript($name, $params);
-                if ($script !== false) {
-                    $js .= $script;
-                }
-            }
+            $js = $this->assets->registerScriptsList($scripts);
         } else {
             if ($list == $this->jsListDefault) {
                 $this->modx->logEvent(0, 3, "Cannot load {$this->jsListDefault} .", $this->pluginName);

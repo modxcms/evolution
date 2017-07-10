@@ -135,7 +135,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     /**
      * @var DLCollection
      */
-    private $_decodedFields;
+    protected $_decodedFields;
 
     /**
      * @var array
@@ -755,6 +755,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     {
         $this->edit($id)->id = 0;
         $this->newDoc = true;
+        $this->store = array();
 
         return $this;
     }

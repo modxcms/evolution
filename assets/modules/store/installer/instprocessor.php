@@ -112,14 +112,14 @@ if (isset ($_POST['template']) || $installData) {
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_templates` WHERE templatename='$name'");
 
                 if ($modx->db->getRecordCount($rs)) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_templates` SET content='$template', description='$desc', category=$category_id, locked='$locked'  WHERE templatename='$name';")) {
+                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category_id', locked='$locked'  WHERE templatename='$name';")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template',$category_id,'$locked');")) {
+                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category_id','$locked');")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -159,7 +159,7 @@ if (isset ($_POST['tv']) || $installData) {
             if ($modx->db->getRecordCount($rs)) {
                 $insert = true;
                 while($row = $modx->db->getRow($rs,'assoc')) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category=$category, locked=$locked, elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id={$row['id']};")) {
+                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', category='$category', locked='$locked', elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id='{$row['id']}';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -168,7 +168,7 @@ if (isset ($_POST['tv']) || $installData) {
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
             } else {
                 //$q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM `" . $table_prefix . "categories` WHERE `category` = '$category'),$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
-                $q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',$category,$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
+                $q = "INSERT INTO `" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc','$category','$locked','$input_options','$output_widget','$output_widget_params','$input_default');";
                 if (!@ $modx->db->query($q)) {
                     echo "<p>" . mysql_error() . "</p>";
                     return;
@@ -186,18 +186,18 @@ if (isset ($_POST['tv']) || $installData) {
                     $ds=$modx->db->query("SELECT id FROM `".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';" );
                     $row = $modx->db->getRow($ds,'assoc');
                     $id = $row["id"];
-                    $modx->db->query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
+                    $modx->db->query("DELETE FROM $dbase.`" . $table_prefix . "site_tmplvar_templates` WHERE tmplvarid = '$id';");
 
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
                         $template = $modx->db->escape($assignment);
-						$where = "WHERE templatename='$template'";
-						if ($template=='*') $where ='';
+                        $where = "WHERE templatename='$template'";
+                        if ($template=='*') $where ='';
                         $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` $where;" );
                         if ($ds && $ts) {
                             $tRow = $modx->db->getRow($ts,'assoc');
                             $templateId = $tRow['id'];
-                            $modx->db->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
+                            $modx->db->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES('$id', '$templateId');");
                        }
                     }
                 }
@@ -238,7 +238,7 @@ if (isset ($_POST['chunk']) || $installData) {
                 }
                 $update = $count_original_name > 0 && $overwrite == 'true';
                 if ($update) {
-                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category=$category_id WHERE name='$name';")) {
+                    if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc', category='$category_id' WHERE name='$name';")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -248,7 +248,7 @@ if (isset ($_POST['chunk']) || $installData) {
                     if($count_original_name > 0 && $overwrite == 'false') {
                         $name = $newname;
                     }
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk',$category_id);")) {
+                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk','$category_id');")) {
                         $errors += 1;
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -270,7 +270,7 @@ if (isset ($_POST['module']) || $installData) {
             $name = $modx->db->escape($moduleModule[0]);
             $desc = $modx->db->escape($moduleModule[1]);
             $filecontent = $moduleModule[2];
-            $properties = $modx->db->escape($moduleModule[3]);
+            $properties = $moduleModule[3];
             $guid = $modx->db->escape($moduleModule[4]);
             $shared = $modx->db->escape($moduleModule[5]);
             $category = $modx->db->escape($moduleModule[6]);
@@ -288,14 +288,15 @@ if (isset ($_POST['module']) || $installData) {
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
                 if ($modx->db->getRecordCount($rs)) {
                     $row = $modx->db->getRow($rs,'assoc');
-                    $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', $category);")) {
+                    $properties = $modx->db->escape(parseProperties($properties, true));
+                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', '$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -316,7 +317,7 @@ if (isset ($_POST['plugin']) || $installData) {
             $name = $modx->db->escape($modulePlugin[0]);
             $desc = $modx->db->escape($modulePlugin[1]);
             $filecontent = $modulePlugin[2];
-            $properties = $modx->db->escape($modulePlugin[3]);
+            $properties = $modulePlugin[3];
             $events = explode(",", $modulePlugin[4]);
             $guid = $modx->db->escape($modulePlugin[5]);
             $category = $modx->db->escape($modulePlugin[6]);
@@ -347,34 +348,35 @@ if (isset ($_POST['plugin']) || $installData) {
                 if ($modx->db->getRecordCount($rs)) {
                     $insert = true;
                     while($row = $modx->db->getRow($rs,'assoc')) {
-                        $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                        $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                         if($row['description'] == $desc){
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id={$row['id']};")) {
+                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id='{$row['id']}';")) {
                                 echo "<p>" . mysql_error() . "</p>";
                                 return;
                             }
                             $insert = false;
                         } else {
-                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE id={$row['id']};")) {
+                            if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET disabled='1' WHERE id='{$row['id']}';")) {
                                 echo "<p>".mysql_error()."</p>";
                                 return;
                             }
                         }
                     }
                     if($insert === true) {
-                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);" )) {
+                        $properties = $modx->db->escape(parseProperties($properties, true));
+                        if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0','$category');" )) {
                             echo "<p>".mysql_error()."</p>";
                             return;
                         }
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-				 
-				    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid',$disabled,$category);")) {
+                    $properties = $modx->db->escape(parseProperties($properties, true));
+                    if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','$disabled','$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
-					
+                    
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -384,7 +386,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         $row = $modx->db->getRow($ds,'assoc');
                         $id = $row["id"];
                         // remove existing events
-                        $modx->db->query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_plugin_events` WHERE pluginid = \'' . $id . '\'');
+                        $modx->db->query("DELETE FROM $dbase.`" . $table_prefix . "site_plugin_events` WHERE pluginid = '$id';");
                         // add new events
                         $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM `" . $table_prefix . "system_eventnames` se WHERE name IN ('" . implode("','", $events) . "')");
                     }
@@ -405,7 +407,7 @@ if (isset ($_POST['snippet']) || $installData) {
             $name = $modx->db->escape($moduleSnippet[0]);
             $desc = $modx->db->escape($moduleSnippet[1]);
             $filecontent = $moduleSnippet[2];
-            $properties = $modx->db->escape($moduleSnippet[3]);
+            $properties = $moduleSnippet[3];
             $category = $modx->db->escape($moduleSnippet[4]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -419,18 +421,19 @@ if (isset ($_POST['snippet']) || $installData) {
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);
                 $snippet = $modx->db->escape($snippet);
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_snippets` WHERE name='$name'");
-				
+                
                 if ($modx->db->getRecordCount($rs)) {
-				
+                
                     $row = $modx->db->getRow($rs,'assoc');
-                    $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {	
-                    if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
+                } else {    
+                    $properties = $modx->db->escape(parseProperties($properties, true));
+                    if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties','$category');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -481,37 +484,75 @@ echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
 
 // Property Update function
 function propUpdate($new,$old){
-    // Split properties up into arrays
-    $returnArr = array();
-    $newArr = explode("&",$new);
-    $oldArr = explode("&",$old);
-
-    foreach ($newArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
+    $newArr = parseProperties($new);
+    $oldArr = parseProperties($old);
+    foreach ($oldArr as $k => $v){
+        if (isset($v['0']['options'])){
+            $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
         }
     }
-    foreach ($oldArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
-        }
-    }
-
-    // Make unique array
-    $returnArr = array_unique($returnArr);
-
-    // Build new string for new properties value
-    foreach ($returnArr as $k => $v) {
-        $return .= "&$k=$v ";
-    }
-
+    $return = $oldArr + $newArr;
+    $return = json_encode($return, JSON_UNESCAPED_UNICODE);
+    $return = ($return != '[]') ? $return : '';
     return $return;
 }
 
+function parseProperties($propertyString, $json=false) {  
+    $propertyString = str_replace('{}', '', $propertyString ); 
+    $propertyString = str_replace('} {', ',', $propertyString );
+
+    if(empty($propertyString)) return array();
+    if($propertyString=='{}' || $propertyString=='[]') return array();
+    
+    $jsonFormat = isJson($propertyString, true);
+    $property = array();
+    // old format
+    if ( $jsonFormat === false) {
+        $props= explode('&', $propertyString);
+        $arr = array();
+        $key = array();
+        foreach ($props as $prop) {
+            if ($prop != ''){
+                $arr = explode(';', $prop);
+                $key = explode('=', $arr['0']);
+                $property[$key['0']]['0']['label'] = trim($key['1']);
+                $property[$key['0']]['0']['type'] = trim($arr['1']);
+                switch ($arr['1']) {
+                    case 'list':
+                    case 'list-multi':
+                    case 'checkbox':
+                    case 'radio':
+                    case 'menu':
+                        $property[$key['0']]['0']['value'] = trim($arr['3']);
+                        $property[$key['0']]['0']['options'] = trim($arr['2']);
+                        $property[$key['0']]['0']['default'] = trim($arr['3']);
+                        break;
+                    default:
+                        $property[$key['0']]['0']['value'] = trim($arr['2']);
+                        $property[$key['0']]['0']['default'] = trim($arr['2']);
+                }
+                $property[$key['0']]['0']['desc'] = '';
+            }
+            
+        }
+    // new json-format
+    } else if(!empty($jsonFormat)){
+        $property = $jsonFormat;
+    }
+    if ($json) {
+        $property = json_encode($property, JSON_UNESCAPED_UNICODE);
+    }
+    $property = ($property != '[]') ? $property : '';
+    return $property;
+}
+
+function isJson($string, $returnData=false) {
+    $data = json_decode($string, true);
+    return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+}
+
 function getCreateDbCategory($category, $sqlParser) {
-	
+    
     global $modx;
     $dbase = $modx->db->config['dbase'];
     $table_prefix = $modx->db->config['table_prefix'];

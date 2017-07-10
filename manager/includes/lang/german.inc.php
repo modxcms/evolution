@@ -693,7 +693,7 @@ $_lang["plugin_priority_title"] = 'Reihenfolge der Ausführung der Plugns';
 $_lang["purge_plugin"] = 'Veraltete Plugins entfernen';
 $_lang["plugin_title"] = 'Plugin erstellen/bearbeiten';
 $_lang["preview"] = 'Vorschau';
-$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änderungen. Klicken Sie hier zum <a href="#" onclick="saveRefreshPreview();">Speichern und Aktualisieren</a>.';
+$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änderungen. Klicken Sie hier zum <a href="javascript:;" onclick="saveRefreshPreview();">Speichern und Aktualisieren</a>.';
 $_lang["preview_resource"] = 'Ressource-Vorschau';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Öffentlich';

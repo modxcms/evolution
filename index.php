@@ -45,9 +45,12 @@
  * -----------------------------
  */
 
-if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+$autoloader = 'vendor/autoload.php';
+if (file_exists($autoloader) && is_readable($autoloader)) {
+	include_once($autoloader);
+}
 
-if(is_file('autoload.php')) include_once('autoload.php');
+if(!isset($_SERVER['REQUEST_TIME_FLOAT'])) $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 
 $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))

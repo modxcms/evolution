@@ -5,7 +5,7 @@
  * Time: 12:25
  */
 
-if (is_object($this->phpcompat)){
+if (isset($this->phpcompat) && is_object($this->phpcompat)){
     return true;
 }
 

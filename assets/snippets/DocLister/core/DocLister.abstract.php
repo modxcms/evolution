@@ -238,7 +238,7 @@ abstract class DocLister
             }
             $this->config->setConfig($cfg);
 
-            $this->table = $this->getTable($this->getCFGDef('table', 'site_content'));
+            $this->table = $this->getTable(empty($this->table) ? $this->getCFGDef('table', 'site_content') : $this->table);
             $this->idField = $this->getCFGDef('idField', 'id');
             $this->parentField = $this->getCFGDef('parentField', 'parent');
 
@@ -581,7 +581,7 @@ abstract class DocLister
             $out = $this->_render($tpl);
         }
 
-        $this->outData = DLTemplate::getInstance($this->modx)->parseDocumentSource($out);
+        if ($out) $this->outData = DLTemplate::getInstance($this->modx)->parseDocumentSource($out);
         $this->debug->debugEnd('render');
 
         return $this->outData;
@@ -1009,7 +1009,7 @@ abstract class DocLister
     {
         $class = array();
 
-        $iterationName = ($i % 2 == 0) ? 'Odd' : 'Even';
+        $iterationName = ($i % 2 == 1) ? 'Odd' : 'Even';
         $tmp = strtolower($iterationName);
         $class[] = $this->getCFGDef($tmp . 'Class', $tmp);
 
@@ -1091,6 +1091,11 @@ abstract class DocLister
                 $return['rows'][] = APIHelpers::getkey($item, $key, $item);
             }
             $return['total'] = $this->getChildrenCount();
+        }elseif ('simple' == $this->getCFGDef('JSONformat', 'old')) {
+            $return = array();
+            foreach ($out as $key => $item) {
+                $return[] = APIHelpers::getkey($item, $key, $item);
+            }
         } else {
             $return = $out;
         }
