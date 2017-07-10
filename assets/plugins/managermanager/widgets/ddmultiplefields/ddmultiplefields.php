@@ -63,7 +63,13 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 			
 			foreach ($columnsDataTemp as $value){
 				//Евалим знение и записываем результат или исходное значени
-				$eval = @eval($value);
+				try {
+			    	$eval = eval($value);
+			    } catch (Throwable $t) {
+			    	echo $t->getMessage(), "\n";
+			    } catch (Exception $e) {
+			    	echo $e->getMessage(), "\n";
+			    }
 				$columnsData[] = $eval ? addslashes(json_encode($eval)) : addslashes($value);
 			}
 			//Сливаем в строку, что бы передать на клиент
