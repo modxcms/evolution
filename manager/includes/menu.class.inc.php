@@ -1,107 +1,126 @@
 <?php
+
 /*
 menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex')
 */
-class EVOmenu{
+
+class EVOmenu {
 	var $defaults = array();
 	var $menu;
 	var $output;
-	function Build($menu,$setting=array()){
-		$this->defaults['outerClass']      = 'nav';
-		$this->defaults['parentClass']     = 'dropdown';
+
+	function Build($menu, $setting = array()) {
+		$this->defaults['outerClass'] = 'nav';
+		$this->defaults['parentClass'] = 'dropdown';
 		$this->defaults['parentLinkClass'] = 'dropdown-toggle';
-		$this->defaults['parentLinkAttr']  = 'data-toggle="dropdown"';
-		$this->defaults['parentLinkIn']    = '<b class="caret"></b>';
-		$this->defaults['innerClass']      = 'subnav';
-		
-		$this->defaults = $setting + $this->defaults; 
+		$this->defaults['parentLinkAttr'] = 'data-toggle="dropdown"';
+		$this->defaults['parentLinkIn'] = '<b class="caret"></b>';
+		$this->defaults['innerClass'] = 'subnav';
+
+		$this->defaults = $setting + $this->defaults;
 		$this->Structurise($menu);
-		$this->output = $this->DrawSub('main',0);
+		$this->output = $this->DrawSub('main', 0);
 		echo $this->output;
 	}
-	
-	function Structurise($menu){
-		foreach ($menu as $key => $row) {
+
+	function Structurise($menu) {
+		foreach($menu as $key => $row) {
 			$data[$key] = $row[9];
 		}
 
-		array_multisort($data,SORT_ASC, $menu);
+		array_multisort($data, SORT_ASC, $menu);
 
-		foreach($menu as $key=>$value){
+		foreach($menu as $key => $value) {
 			$new[$value[1]][] = $value;
 		}
-		
+
 		$this->menu = $new;
 	}
-	
 
-	function DrawSub($parentid,$level){
+	function DrawSub($parentid, $level) {
 		global $modx;
-		if (isset($this->menu[$parentid])){
-			
+
+		$output = '';
+
+		if(isset($this->menu[$parentid])) {
+
 			$countChild = 0;
-			$itemTpl  = '<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]"
-				          onclick="[+onclick+]" [+a_class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
-			$outerTpl = '<ul  id="[+id+]" class="[+class+]">[+output+]</ul>';
-			foreach($this->menu[$parentid] as $key=>$value){
-				if($value[6]!=='') {
-					$permissions = explode(',',$value[6]);
+			$itemTpl = '
+			<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]" onclick="[+onclick+]"[+a_class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
+			$outerTpl = '<ul id="[+id+]" class="[+class+]">[+output+]</ul>';
+			foreach($this->menu[$parentid] as $key => $value) {
+				if($value[6] !== '') {
+					$permissions = explode(',', $value[6]);
 					foreach($permissions as $val) {
-						if(!$modx->hasPermission($val)) continue;
+						if(!$modx->hasPermission($val)) {
+							continue;
+						}
 					}
 				}
-				
+
 				$countChild++;
 				$id = $value[0];
-				$ph['id']       = $id;
+				$ph['id'] = $id;
 				$ph['li_class'] = $this->get_li_class($id) . $value[10];
-				$ph['href']     = $value[3];
-				$ph['alt']      = $value[4];
-				$ph['target']   = $value[7];
-				$ph['onclick']  = 'setLastClickedElement(0,0);'.$value[5];
-				$ph['a_class']  = $this->get_a_class($id);
+				$ph['href'] = $value[3];
+				$ph['alt'] = $value[4];
+				$ph['target'] = $value[7];
+				$ph['onclick'] = 'setLastClickedElement(0,0);' . $value[5];
+				$ph['a_class'] = $this->get_a_class($id);
 				$ph['LinkAttr'] = $this->getLinkAttr($id);
 				$ph['itemName'] = $value[2] . $this->getItemName($id);
-				
-				if (isset($this->menu[$id])){
+
+				if(isset($this->menu[$id])) {
 					$level++;
-					$ph['DrawSub'] = $this->DrawSub($id , $level);
+					$ph['DrawSub'] = $this->DrawSub($id, $level);
 					$level--;
+				} else {
+					$ph['DrawSub'] = '';
 				}
-				else $ph['DrawSub'] = '';
-				
-				$output .= $modx->parseText($itemTpl,$ph);
-				if ($value[8]==1) $output .= '<li class="divider"></li>';
+
+				$output .= $modx->parseText($itemTpl, $ph);
 			}
 
 			$ph = array();
-			if ($countChild>0) {
-				$ph['id']     = $level==0 ? $this->defaults['outerClass'] : '';
-				$ph['class']  = $level==0 ? $this->defaults['outerClass'] : $this->defaults['innerClass'];
+			if($countChild > 0) {
+				$ph['id'] = $level == 0 ? $this->defaults['outerClass'] : '';
+				$ph['class'] = $level == 0 ? $this->defaults['outerClass'] : $this->defaults['innerClass'];
 				$ph['output'] = $output;
-				$output = $modx->parseText($outerTpl,$ph);
+				$output = $modx->parseText($outerTpl, $ph);
 			}
 		}
 		return $output;
 	}
-	
+
 	function get_li_class($id) {
-		if(isset($this->menu[$id]))
+		if(isset($this->menu[$id])) {
 			return $this->defaults['parentClass'] . ' ';
+		} else {
+			return '';
+		}
 	}
-	
+
 	function get_a_class($id) {
-		if(isset($this->menu[$id]))
-			return 'class="' . $this->defaults['parentLinkClass'] . '"';
+		if(isset($this->menu[$id])) {
+			return ' class="' . $this->defaults['parentLinkClass'] . '"';
+		} else {
+			return '';
+		}
 	}
-	
+
 	function getLinkAttr($id) {
-		if(isset($this->menu[$id]))
+		if(isset($this->menu[$id])) {
 			return $this->defaults['parentLinkAttr'];
+		} else {
+			return '';
+		}
 	}
-	
+
 	function getItemName($id) {
-		if(isset($this->menu[$id]))
+		if(isset($this->menu[$id])) {
 			return $this->defaults['parentLinkIn'];
+		} else {
+			return '';
+		}
 	}
 }

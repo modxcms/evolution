@@ -38,6 +38,7 @@ echo $cm->render();
 <script type="text/javascript">
 	var selectedItem;
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
+
 	function showContentMenu(id, e) {
 		selectedItem = id;
 		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?php echo $modx_textdir ? '-190' : '';?>+ "px"; //offset menu if RTL is selected
@@ -73,6 +74,12 @@ echo $cm->render();
 	document.addEvent('click', function() {
 		contextm.style.visibility = "hidden";
 	});
+
+	var actions = {
+		new: function() {
+			document.location.href = 'index.php?a=107';
+		}
+	}
 </script>
 
 <h1>
@@ -84,13 +91,7 @@ echo $cm->render();
 		<!-- load modules -->
 		<p class="element-edit-message"><?php echo $_lang['module_management_msg']; ?></p>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<?php if(($modx->hasPermission('new_module'))) {
-					echo '<li id="newModule" class="transition"><a href="index.php?a=107"><i class="' . $_style["actions_new"] . '"></i><span>' . $_lang["new_module"] . '</span></a></li>';
-				} ?>
-			</ul>
-		</div>
+		<?php echo $_style['actionbuttons']['dynamic']['newmodule'] ?>
 
 		<div>
 			<?php

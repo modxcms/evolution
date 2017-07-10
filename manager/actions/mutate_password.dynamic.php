@@ -7,23 +7,29 @@ if(!$modx->hasPermission('change_password')) {
 }
 ?>
 
+<script type="text/javascript">
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			document.userform.save.click();
+		},
+		cancel: function() {
+			documentDirty = false;
+			document.location.href = 'index.php?a=2';
+		}
+	}
+</script>
+
 <h1><?php echo $_lang['change_password'] ?></h1>
 
-<div id="actions">
-	<ul class="actionButtons">
-		<li class="transition"><a href="javascript:;" onclick="documentDirty=false; document.userform.save.click();"><i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span></a></li>
-		<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-	</ul>
-</div>
+<?php echo $_style['actionbuttons']['dynamic']['save'] ?>
 
 <div class="section">
 	<div class="sectionHeader"><?php echo $_lang['change_password'] ?></div>
 	<div class="sectionBody">
 		<form action="index.php?a=34" method="post" name="userform">
 			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
-
 			<p><?php echo $_lang['change_password_message'] ?></p>
-
 			<table border="0" cellspacing="0" cellpadding="4">
 				<tr>
 					<td><?php echo $_lang['change_password_new'] ?>:</td>
@@ -36,7 +42,6 @@ if(!$modx->hasPermission('change_password')) {
 					<td><input type="password" name="pass2" class="inputBox" style="width:150px" value=""></td>
 				</tr>
 			</table>
-
 			<input type="submit" name="save" style="display:none">
 		</form>
 	</div>

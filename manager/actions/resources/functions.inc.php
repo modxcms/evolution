@@ -87,10 +87,10 @@ function createCombinedView($resources) {
 	}
 
 	$tpl = array(
-		'panelGroup' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_panelGroup.tpl'),
-		'panelHeading' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_panelHeading.tpl'),
-		'panelCollapse' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_panelCollapse.tpl'),
-		'elementsRow' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_elementsRow.tpl'),
+		'panelGroup' => file_get_contents(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tpl_panelGroup.tpl'),
+		'panelHeading' => file_get_contents(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tpl_panelHeading.tpl'),
+		'panelCollapse' => file_get_contents(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tpl_panelCollapse.tpl'),
+		'elementsRow' => file_get_contents(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tpl_elementsRow.tpl'),
 	);
 
 	// Easily loop through $itemsPerCategory-Array

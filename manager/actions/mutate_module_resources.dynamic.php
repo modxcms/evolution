@@ -173,6 +173,12 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 		win = window.open(url, "resource_selector", "left=" + x + ",top=" + y + ",height=" + h + ",width=" + w + ",status=yes,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=no");
 		win.opener = self;
 	};
+
+	var actions = {
+		close: function() {
+			document.location.href = 'index.php?a=106';
+		}
+	}
 </script>
 
 <form name="mutate" method="post" action="index.php?a=113">
@@ -185,11 +191,7 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 		<i class="fa fa-cogs"></i><?php echo $_lang['module_resource_title']; ?>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<li class="transition"><a href="index.php?a=106"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['close']; ?></a>
-		</ul>
-	</div>
+	<?php echo $_style['actionbuttons']['dynamic']['close'] ?>
 
 	<div class="section">
 		<div class="sectionHeader"><?php echo $content["name"] . " - " . $_lang['module_resource_title']; ?></div>
@@ -229,14 +231,16 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 						echo $grd->render();
 						?>
 					</td>
-					<td valign="top" width="120" style="background-color:#eeeeee">
-						<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['remove']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addSnippet();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_snippet']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addDocument();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_doc']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addChunk();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_chunk']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addPlugin();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_plugin']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addTV();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_tv']; ?></a><br />
-						<a class="searchtoolbarbtn" style="float:left;width:120px;" href="javascript:;" style="margin-top:2px;width:102px" onclick="addTemplate();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_template']; ?></a><br />
+					<td valign="top" style="width: 150px;">
+						<a class="btn btn-block btn-danger text-left" style="margin-bottom:10px;" href="javascript:;" onclick="removeDependencies();return false;"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['remove']; ?></a>
+						<div class="btn-group-vertical" style="min-width: 100%">
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addSnippet();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_snippet']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addDocument();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_doc']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addChunk();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_chunk']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addPlugin();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_plugin']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTV();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_tv']; ?></a>
+							<a class="btn btn-block btn-secondary text-left" href="javascript:;" onclick="addTemplate();return false;"><i class="<?php echo $_style["actions_add"] ?>"></i> <?php echo $_lang['add_template']; ?></a>
+						</div>
 					</td>
 				</tr>
 			</table>
