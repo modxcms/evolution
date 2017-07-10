@@ -2,7 +2,7 @@
 /**
  * ManagerManager
  *
- * Customize the MODX Manager to offer bespoke admin functions for end users or manipulate the display of document fields in the manager.
+ * Customize the EVO Manager to offer bespoke admin functions for end users or manipulate the display of document fields in the manager.
  *
  * @category plugin
  * @version 0.6.2
