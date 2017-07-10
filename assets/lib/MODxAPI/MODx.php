@@ -135,7 +135,7 @@ abstract class MODxAPI extends MODxAPIhelpers
     /**
      * @var DLCollection
      */
-    private $_decodedFields;
+    protected $_decodedFields;
 
     /**
      * @var array

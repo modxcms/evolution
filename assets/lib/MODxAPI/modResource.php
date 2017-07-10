@@ -144,6 +144,9 @@ class modResource extends MODxAPI
     /** @var array связи ТВ и шаблонов */
     private $tvTpl = array();
 
+    /** @var array параметры ТВ с массивами */
+    protected $tvaFields = array();
+
     /**
      * Массив администраторов
      * @var DLCollection
@@ -279,6 +282,9 @@ class modResource extends MODxAPI
             include_once MODX_MANAGER_PATH . "includes/tmplvars.format.inc.php";
             include_once MODX_MANAGER_PATH . "includes/tmplvars.commands.inc.php";
             $tvval = $this->get($tvname);
+            if ($this->isTVarrayField($tvname) && is_array($tvval)) {
+                $tvval = implode('||', $tvval);
+            }
             $param = APIHelpers::getkey($this->tvd, $tvname, array());
             $display = APIHelpers::getkey($param, 'display', '');
             $display_params = APIHelpers::getkey($param, 'display_params', '');
@@ -315,7 +321,7 @@ class modResource extends MODxAPI
      */
     public function set($key, $value)
     {
-        if (is_scalar($value) && is_scalar($key) && !empty($key)) {
+        if ((is_scalar($value) || $this->isTVarrayField($key) || $this->isJsonField($key)) && is_scalar($key) && !empty($key)) {
             switch ($key) {
                 case 'parent':
                     $value = (int)$value;
@@ -454,12 +460,12 @@ class modResource extends MODxAPI
     {
         $this->close();
         $fld = array();
-        foreach($this->tvd as $name => $tv) {
+        foreach ($this->tvd as $name => $tv) {
             $fld[$name] = $tv['value'];
         };
         $this->store($fld);
 
-        $this->fromArray(array_merge($fld,$data));
+        $this->fromArray(array_merge($fld, $data));
         $this->set('createdby', null)
             ->set('editedby', null)
             ->set('createdon', time())
@@ -477,6 +483,7 @@ class modResource extends MODxAPI
         $id = is_scalar($id) ? trim($id) : '';
         if ($this->getID() != $id) {
             $this->close();
+            $this->markAllEncode();
             $this->newDoc = false;
 
             $result = $this->query("SELECT * from {$this->makeTable('site_content')} where `id`=" . (int)$id);
@@ -490,6 +497,7 @@ class modResource extends MODxAPI
             } else {
                 $this->id = $this->field['id'];
                 $this->set('editedby', null)->touch();
+                $this->decodeFields();
             }
             $this->store($this->toArray(null, null, null, false));
             unset($this->field['id']);
@@ -533,7 +541,7 @@ class modResource extends MODxAPI
             'docObj' => $this
         ), $fire_events);
 
-        $fld = $this->toArray(null, null, null, false);
+        $fld = $this->encodeFields()->toArray(null, null, null, false);
         foreach ($this->default_field as $key => $value) {
             $tmp = $this->get($key);
             if ($this->newDoc && (!is_int($tmp) && $tmp == '')) {
@@ -607,9 +615,9 @@ class modResource extends MODxAPI
         }
 
         if (!$this->newDoc && !empty($_insertTVs)) {
-            $ids = implode(',',array_keys($_insertTVs));
+            $ids = implode(',', array_keys($_insertTVs));
             $result = $this->query("SELECT `tmplvarid` FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid`={$this->id} AND `tmplvarid` IN ({$ids})");
-            $existedTVs = $this->modx->db->getColumn('tmplvarid',$result);
+            $existedTVs = $this->modx->db->getColumn('tmplvarid', $result);
             foreach ($existedTVs as $id) {
                 $_updateTVs[$id] = $_insertTVs[$id];
                 unset($_insertTVs[$id]);
@@ -617,7 +625,7 @@ class modResource extends MODxAPI
         }
 
         if (!empty($_updateTVs)) {
-            foreach($_updateTVs as $id => $value) {
+            foreach ($_updateTVs as $id => $value) {
                 $this->query("UPDATE {$this->makeTable('site_tmplvar_contentvalues')} SET `value` = '{$value}' WHERE `contentid` = {$this->id} AND `tmplvarid` = {$id}");
             }
         }
@@ -627,12 +635,12 @@ class modResource extends MODxAPI
             foreach ($_insertTVs as $id => $value) {
                 $values[] = "({$this->id}, {$id}, '{$value}')";
             }
-            $values = implode(',',$values);
+            $values = implode(',', $values);
             $this->query("INSERT into {$this->makeTable('site_tmplvar_contentvalues')} (`contentid`,`tmplvarid`,`value`) VALUES {$values}");
         }
 
         if (!empty($_deleteTVs)) {
-            $ids = implode(',',$_deleteTVs);
+            $ids = implode(',', $_deleteTVs);
             $this->query("DELETE FROM {$this->makeTable('site_tmplvar_contentvalues')} WHERE `contentid` = '{$this->id}' AND `tmplvarid` IN ({$ids})");
         }
 
@@ -650,6 +658,7 @@ class modResource extends MODxAPI
         if ($clearCache) {
             $this->clearCache($fire_events);
         }
+        $this->decodeFields();
 
         return $this->id;
     }
@@ -812,15 +821,24 @@ class modResource extends MODxAPI
     protected function get_TV($reload = false)
     {
         if (empty($this->modx->_TVnames) || $reload) {
-            $result = $this->query('SELECT `id`,`name` FROM ' . $this->makeTable('site_tmplvars'));
+            $result = $this->query('SELECT `id`,`name`,`type` FROM ' . $this->makeTable('site_tmplvars'));
             while ($row = $this->modx->db->GetRow($result)) {
-                $this->modx->_TVnames[$row['name']] = $row['id'];
+                $this->modx->_TVnames[$row['name']] = array(
+                    "id"   => $row['id'],
+                    "type" => $row['type']
+                );
             }
         }
-        foreach ($this->modx->_TVnames as $name => $id) {
-            $this->tvid[$id] = $name;
-            $this->tv[$name] = $id;
+        $arrayTypes = array('checkbox', 'listbox-multiple');
+        $arrayTVs = array();
+        foreach ($this->modx->_TVnames as $name => $data) {
+            $this->tvid[$data['id']] = $name;
+            $this->tv[$name] = $data['id'];
+            if (in_array($data['type'], $arrayTypes)) {
+                $arrayTVs[] = $name;
+            }
         }
+        if (empty($this->tvaFields)) $this->tvaFields = $arrayTVs;
         $this->loadTVTemplate()->loadTVDefault(array_values($this->tv));
 
         return $this;
@@ -965,6 +983,94 @@ class modResource extends MODxAPI
                 break;
         }
         $this->set('template', $template);
+
+        return $this;
+    }
+
+    /**
+     * Декодирует конкретное поле
+     * @param  string $field Имя поля
+     * @param  bool $store обновить распакованное поле
+     * @return array ассоциативный массив с данными из json строки
+     */
+    public function decodeField($field, $store = false)
+    {
+        $out = array();
+        if ($this->isDecodableField($field)) {
+            $data = $this->get($field);
+            if ($this->isTVarrayField($field)) {
+                $out = explode('||', $data);
+            } else {
+                $out = jsonHelper::jsonDecode($data, array('assoc' => true), true);
+            }
+        }
+        if ($store) {
+            $this->field[$field] = $out;
+            $this->markAsDecode($field);
+        }
+
+        return $out;
+    }
+
+    /**
+     * Запаковывает конкретное поле в JSON
+     * @param  string $field Имя поля
+     * @param  bool $store обновить запакованное поле
+     * @return string|null json строка
+     */
+    public function encodeField($field, $store = false)
+    {
+        $out = null;
+        if ($this->isEncodableField($field)) {
+            $data = $this->get($field);
+            if ($this->isTVarrayField($field)) {
+                $out = is_array($data) ? implode('||', $data) : $data;
+            } else {
+                $out = json_encode($data);
+            }
+        }
+        if ($store) {
+            $this->field[$field] = $out;
+            $this->markAsEncode($field);
+        }
+
+        return $out;
+    }
+
+    /**
+     * Может ли содержать данное поле json массив
+     * @param  string $field имя поля
+     * @return boolean
+     */
+    public function isTVarrayField($field)
+    {
+        return (is_scalar($field) && in_array($field, $this->tvaFields));
+    }
+
+    /**
+     * Пометить все поля как запакованные
+     * @return $this
+     */
+    public function markAllEncode()
+    {
+        parent::markAllEncode();
+        foreach ($this->tvaFields as $field) {
+            $this->markAsEncode($field);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Пометить все поля как распакованные
+     * @return $this
+     */
+    public function markAllDecode()
+    {
+        parent::markAllDecode();
+        foreach ($this->tvaFields as $field) {
+            $this->markAsDecode($field);
+        }
 
         return $this;
     }
