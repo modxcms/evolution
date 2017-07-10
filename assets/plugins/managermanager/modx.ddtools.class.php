@@ -437,7 +437,7 @@ class ddTools {
 							);
 							
 							//Проверяем сколько строк нашлось при обновлении
-							preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
+							preg_match('/Rows matched: (\d+)/', $modx->db->info(), $updatedRows);
 							
 							//Если ничего не обновилось (не нашлось)
 							if ($updatedRows[1] == 0){
