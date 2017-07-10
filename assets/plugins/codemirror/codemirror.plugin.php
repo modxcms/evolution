@@ -23,7 +23,8 @@ $readOnly = isset( $readOnly ) && $readOnly === true ? 'true' : 'false';
 /*
  * Default Plugin configuration
  */
-$theme = (isset($theme) ? $theme : 'default');
+$theme = $defaulttheme = (isset($theme) ? $theme : 'default');
+$darktheme = (isset($darktheme) ? $darktheme : 'one-dark');
 $indentUnit = (isset($indentUnit) ? $indentUnit : 4);
 $tabSize = (isset($tabSize) ? $tabSize : 4);
 $lineWrapping = (isset($lineWrapping) ? $lineWrapping : false);
@@ -34,6 +35,11 @@ $search = (($search == 'true') ? '<script src="' . $_CM_URL . 'cm/search-compres
 $indentWithTabs = (isset($indentWithTabs) ? $indentWithTabs : false);
 $undoDepth = (isset($undoDepth) ? $undoDepth : 200);
 $historyEventDelay = (isset($historyEventDelay) ? $historyEventDelay : 1250);
+$fontSize = (isset($fontSize) ? 'font-size:' . $fontSize . 'px !important;' : '');
+$lineHeight = (isset($lineHeight) ? 'line-height:' . $lineHeight . ' !important;' : '');
+if(isset($_COOKIE['MODX_themeColor']) && $_COOKIE['MODX_themeColor'] == 'dark') {
+	$theme = $darktheme;
+}
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -136,7 +142,9 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     define('INIT_CODEMIRROR', 1);
     $output = <<< HEREDOC
     <link rel="stylesheet" href="{$_CM_URL}cm/lib/codemirror.css">
-    <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$theme}.css">
+    <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$defaulttheme}.css">
+    <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$darktheme}.css">
+    <style>.CodeMirror { {$fontSize} {$lineHeight} } .CodeMirror pre { {$fontSize} {$lineHeight} } </style>
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->
@@ -242,6 +250,8 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
         var config = {
             mode: 'MODx-{$mode}',
             theme: '{$theme}',
+            defaulttheme: '{$defaulttheme}',
+            darktheme: '{$darktheme}',
             readOnly: {$readOnly},
             indentUnit: {$indentUnit},
             tabSize: {$tabSize},
