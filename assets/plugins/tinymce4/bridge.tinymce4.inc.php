@@ -155,7 +155,7 @@ class tinymce4bridge extends modxRTEbridge
     
     // Check for simple format: Title,cssClass|Title2,cssClass
     public function isSimpleFormat($string) {
-        return preg_match('/^[a-zA-Z0-9,]+/', $string);
+        return preg_match('/^[a-zA-Z0-9,а-я,А-Я,_,]+/', $string);
     }
 
     // https://www.tinymce.com/docs/configure/editor-appearance/#resize

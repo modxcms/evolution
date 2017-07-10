@@ -1,5 +1,6 @@
 <?php
 
+
 // Hold general settings based on old Modx TinyMCE-Settings
 
 // Settings interface rows configuration
