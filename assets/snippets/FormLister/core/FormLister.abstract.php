@@ -5,12 +5,6 @@ use Helpers\FS;
 use Helpers\Lexicon;
 use Helpers\Debug;
 
-include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
-include_once(MODX_BASE_PATH . 'assets/lib/Helpers/FS.php');
-include_once(MODX_BASE_PATH . 'assets/lib/Helpers/Config.php');
-require_once(MODX_BASE_PATH . "assets/snippets/DocLister/lib/DLTemplate.class.php");
-include_once(MODX_BASE_PATH . "assets/snippets/FormLister/lib/Lexicon.php");
-
 /**
  * Class FormLister
  * @package FormLister
@@ -119,7 +113,6 @@ abstract class Core
         }
         $this->config->setConfig($cfg);
         if (isset($cfg['debug'])) {
-            include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/Debug.php');
             $this->debug = new Debug($modx, array(
                 'caller' => 'FormLister\\\\' . $cfg['controller']
             ));
@@ -485,7 +478,7 @@ abstract class Core
     public function validateForm()
     {
         $validator = $this->getCFGDef('validator', '\FormLister\Validator');
-        $validator = $this->loadModel($validator, 'assets/snippets/FormLister/lib/Validator.php');
+        $validator = $this->loadModel($validator , '', array());
         $fields = $this->getFormData('fields');
         $rules = $this->getValidationRules();
         $this->rules = array_merge($this->rules, $rules);
@@ -710,8 +703,9 @@ abstract class Core
      */
     public function fieldsToPlaceholders($fields = array(), $suffix = '', $split = false)
     {
-        $plh = $fields;
-        if (is_array($fields) && !empty($fields)) {
+        $plh = array();
+        if (is_array($fields)) {
+            $plh = $fields;
             $sanitarTagFields = $this->getRemoveGpcFields();
             foreach ($fields as $field => $value) {
                 if ($split && is_array($value)) {
@@ -900,28 +894,23 @@ abstract class Core
     {
         if ($captcha = $this->getCFGDef('captcha')) {
             $captcha = preg_replace('/[^a-zA-Z]/', '', $captcha);
-            $wrapper = MODX_BASE_PATH . "assets/snippets/FormLister/lib/captcha/{$captcha}/wrapper.php";
-            if ($this->fs->checkFile($wrapper)) {
-                include_once($wrapper);
-                $wrapper = ucfirst($captcha . 'Wrapper');
-                /** @var Captcha $captcha */
-                $cfg = $this->config->loadArray($this->getCFGDef('captchaParams', array()));
-                $cfg['id'] = $this->getFormId();
-                if (class_exists($wrapper)) {
-                    $captcha = new $wrapper ($this->modx, $cfg);
-                    if ($captcha instanceof CaptchaInterface) {
-                        $captcha->init();
-                        $this->rules[$this->getCFGDef('captchaField', 'vericode')] = array(
-                            "captcha" => array(
-                                "function" => "{$wrapper}::validate",
-                                "params"   => array($captcha)
-                            )
-                        );
-                        $this->captcha = $captcha;
-                        $this->setPlaceholder('captcha', $captcha->getPlaceholder());
-                    }
-                }
+            $className = ucfirst($captcha . 'Wrapper');
+            $cfg = $this->config->loadArray($this->getCFGDef('captchaParams', array()));
+            $cfg['id'] = $this->getFormId();
+            $captcha = $this->loadModel($className, MODX_BASE_PATH . "assets/snippets/FormLister/lib/captcha/{$captcha}/wrapper.php",array($this->modx, $cfg));
+
+            if (!is_null($captcha) && $captcha instanceof CaptchaInterface) {
+                $captcha->init();
+                $this->rules[$this->getCFGDef('captchaField', 'vericode')] = array(
+                    "captcha" => array(
+                        "function" => "{$className}::validate",
+                        "params"   => array($captcha)
+                    )
+                );
+                $this->captcha = $captcha;
+                $this->setPlaceholder('captcha', $captcha->getPlaceholder());
             }
+
         }
 
         return $this;
@@ -1004,7 +993,10 @@ abstract class Core
         if ($redirect = $this->getCFGDef($param, 0)) {
             $redirect = $this->config->loadArray($redirect);
             $query = $header = '';
-            if (is_array($redirect)) {
+            if (isset($redirect[0])) {
+                $page = $redirect[0];
+                $query = http_build_query($_query);
+            } else {
                 if (isset($redirect['query']) && is_array($redirect['query'])) {
                     $query = http_build_query(array_merge($redirect['query'], $_query));
                 }
@@ -1012,11 +1004,12 @@ abstract class Core
                     $header = $redirect['header'];
                 }
                 $page = isset($redirect['page']) ? $redirect['page'] : 0;
-            } else {
-                $page = $redirect;
-                $query = http_build_query($_query);
             }
-            $redirect = $this->modx->makeUrl($page, '', $query, 'full');
+            if (is_numeric($page)) {
+                $redirect = $this->modx->makeUrl($page, '', $query, 'full');
+            } else {
+                $redirect = $page . (empty($query) ? '' : '?' . $query);
+            }
             $this->setField($param, $redirect);
             $this->log('Redirect (' . $param . ') to' . $redirect, array('data' => $this->getFormData('fields')));
             $this->sendRedirect($redirect, $header);
@@ -1084,14 +1077,17 @@ abstract class Core
      * @param string $path
      * @return object
      */
-    public function loadModel($model, $path = '')
+    public function loadModel($model, $path = '', $init = '')
     {
         $out = null;
-        if ($path && $this->fs->checkFile($path)) {
+        if (!class_exists($model) && $path && $this->fs->checkFile($path)) {
             include_once(MODX_BASE_PATH . $this->fs->relativePath($path));
         }
         if (class_exists($model)) {
-            $out = new $model($this->modx);
+            if (!is_array($init)) {
+                $init = array($this->modx);
+            }
+            $out = new $model(...$init);
         }
 
         return $out;

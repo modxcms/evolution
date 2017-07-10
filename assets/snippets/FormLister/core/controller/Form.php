@@ -6,9 +6,6 @@ use Helpers\Mailer;
  * Контроллер для обычных форм с отправкой, типа обратной связи
  */
 
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/FormLister.abstract.php');
-include_once(MODX_BASE_PATH . 'assets/lib/Helpers/Mailer.php');
-
 /**
  * Class Form
  * @package FormLister
@@ -153,10 +150,7 @@ class Form extends Core
             return $this->isValid();
         }
         $validator = $this->getCFGDef('fileValidator', '\FormLister\FileValidator');
-        if (!class_exists($validator)) {
-            include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/FileValidator.php');
-        }
-        $validator = new $validator();
+        $validator = $this->loadModel($validator, '', array());
         $fields = $this->getFormData('files');
         $rules = $this->getValidationRules('fileRules');
         $this->fileRules = array_merge($this->fileRules, $rules);
@@ -382,7 +376,7 @@ class Form extends Core
             $this->sendAutosender();
             $this->setSubmitProtection()->postProcess();
         } else {
-            $this->addMessage($this->lexicon->getMsg('form.form_failed'));
+            $this->addMessage($this->lexicon->getMsg('form.formFailed'));
         }
     }
 

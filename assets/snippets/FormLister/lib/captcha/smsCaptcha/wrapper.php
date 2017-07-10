@@ -1,5 +1,4 @@
 <?php
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/captcha/Captcha.php');
 
 use FormLister\CaptchaInterface;
 use FormLister\Core;
@@ -66,7 +65,7 @@ class SmsCaptchaWrapper implements CaptchaInterface
                 'Получите код авторизации');
         }
 
-        $sms = $FormLister->loadModel('SmsModel', 'assets/snippets/FormLister/lib/captcha/smsCaptcha/model.php');
+        $sms = $FormLister->loadModel('SmsModel');
 
         if (is_null($sms->getData($_SESSION[$id . '.smscaptcha'], $id)->getID())) {
 

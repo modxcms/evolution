@@ -1,5 +1,4 @@
 <?php
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/captcha/Captcha.php');
 
 use FormLister\CaptchaInterface;
 use FormLister\Core;

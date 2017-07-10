@@ -5,9 +5,8 @@
  * Form processor
  *
  * @category    snippet
- * @version     1.6.2
+ * @version     1.7.2
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @properties
  * @internal    @modx_category Content
  * @internal    @installset base, sample
  * @author      Pathologic (https://github.com/pathologic)

@@ -1,7 +1,5 @@
 <?php namespace Helpers;
 
-include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
-
 /**
  * Class Lexicon
  * @package Helpers
@@ -45,15 +43,24 @@ class Lexicon
             return $this->_lang;
         }
         foreach ($name as $n) {
-            if (file_exists($langDir . "{$lang}/{$n}.inc.php")) {
-                $tmp = include($langDir . "{$lang}/{$n}.inc.php");
-                if (is_array($tmp)) {
-                    $this->_lang = array_merge($this->_lang, $tmp);
-                }
+            if ($lang != 'english') {
+                $this->loadLangFile($n, 'english', $langDir);
             }
+            $this->loadLangFile($n, $lang, $langDir);
         }
 
         return $this->_lang;
+    }
+
+    private function loadLangFile($name = 'core', $lang = '', $langDir = '')
+    {
+        $filepath = "{$langDir}{$lang}/{$name}.inc.php";
+        if (file_exists($filepath)) {
+            $tmp = include($filepath);
+            if (is_array($tmp)) {
+                $this->_lang = array_merge($this->_lang, $tmp);
+            }
+        }
     }
 
     /**

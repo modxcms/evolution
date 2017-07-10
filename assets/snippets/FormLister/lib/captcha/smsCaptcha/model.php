@@ -1,5 +1,4 @@
 <?php
-include_once(MODX_BASE_PATH . 'assets/lib/MODxAPI/autoTable.abstract.php');
 
 /**
  * Class sms

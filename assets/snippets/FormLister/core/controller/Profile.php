@@ -2,10 +2,6 @@
 
 /**
  * Контроллер для редактирования профиля
- */
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/controller/Form.php');
-
-/**
  * Class Profile
  * @package FormLister
  */

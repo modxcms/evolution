@@ -2,9 +2,6 @@
 /**
  * Обертка для работы с классом капчи
  */
-include_once('modxCaptcha.php');
-include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/captcha/Captcha.php');
 
 use FormLister\CaptchaInterface;
 use FormLister\Core;

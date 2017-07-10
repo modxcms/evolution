@@ -2,10 +2,6 @@
 
 /**
  * Контроллер для восстановления паролей
- */
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/controller/Form.php');
-
-/**
  * Class Reminder
  * @package FormLister
  */

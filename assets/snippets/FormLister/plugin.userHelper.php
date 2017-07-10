@@ -7,6 +7,17 @@
  */
 $e = $modx->event;
 include_once(MODX_BASE_PATH . 'assets/lib/MODxAPI/modUsers.php');
+if ($e->name == 'OnWebAuthentication') {
+    if ($savedpassword != $userObj->getPassword($userpassword)) {
+        $fails = (int)$userObj->get('failedlogincount');
+        $userObj->set('failedlogincount', ++$fails);
+        if ($fails > $maxFails) {
+            $userObj->set('blockeduntil', time() + $blockTime);
+            $userObj->set('failedlogincount', 0);
+        }
+        $userObj->save();
+    }
+}
 if ($e->name == 'OnWebLogin') {
     if (!$userObj->get('lastlogin')) {
         $userObj->set('lastlogin',time());
@@ -15,6 +26,7 @@ if ($e->name == 'OnWebLogin') {
     }
     $userObj->set('thislogin', time());
     $userObj->set('logincount', (int)$userObj->get('logincount') + 1);
+    $userObj->set('failedlogincount', 0);
     $userObj->save(false,false);
     if (isset($_COOKIE[$cookieName])) {
         $userObj->setAutoLoginCookie($cookieName,$cookieLifetime);

@@ -6,7 +6,6 @@
  * Date: 24.05.2016
  * Time: 12:59
  */
-include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
 /**
  * Class Debug

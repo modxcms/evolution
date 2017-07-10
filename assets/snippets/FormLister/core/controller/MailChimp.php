@@ -1,8 +1,5 @@
 <?php namespace FormLister;
 
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/core/FormLister.abstract.php');
-include_once(MODX_BASE_PATH . 'assets/snippets/FormLister/lib/MailChimp/MailChimp.php');
-
 /**
  * Class MailChimp
  * @package FormLister
