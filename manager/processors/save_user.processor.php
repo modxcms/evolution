@@ -431,7 +431,7 @@ function saveUserSettings($id) {
 	// get user setting field names
 	$settings = array();
 	foreach($_POST as $n => $v) {
-		if(in_array($n, $ignore) || (!in_array($n, $defaults) && trim($v) == '')) {
+		if(in_array($n, $ignore) || (!in_array($n, $defaults) && is_scalar($v) && trim($v) == '') || (!in_array($n, $defaults) && is_array($v) && empty($v))) {
 			continue;
 		} // ignore blacklist and empties
 		$settings[$n] = $v; // this value should be saved
