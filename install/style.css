@@ -415,6 +415,10 @@ span.mono {
   padding: 30px 0;
 }
 
+#mainheader img{
+  width:256px;
+}
+
 #contentarea h2 {
   color: #0F7096;
   font-size: 1.6em;
