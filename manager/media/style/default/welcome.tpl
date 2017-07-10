@@ -1,6 +1,3 @@
-<!--link rel="stylesheet" href="media/script/gridster/jquery.gridster.css" />
-<link rel="stylesheet" href="media/style/[(manager_theme)]/dashboard/css/dashboard.css" /-->
-
 [[@OnManagerWelcomePrerender]]
 
 <div class="container container-body">
