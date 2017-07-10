@@ -71,7 +71,7 @@ $_style['tree_page_html']           = "<i class='fa fa-file-o'></i>";
 $_style['tree_page_xml']            = "<i class='fa fa-file-code-o'></i>";
 $_style['tree_page_js']             = "<i class='fa fa-file-code-o'></i>";
 $_style['tree_page_rss']            = "<i class='fa fa-file-code-o'></i>";
-$_style['tree_page_pdf']            = "<i class='fa fa-file-fdf-o'></i>";
+$_style['tree_page_pdf']            = "<i class='fa fa-file-pdf-o'></i>";
 $_style['tree_page_word']           = "<i class='fa fa-file-word-o'></i>";
 $_style['tree_page_excel']          = "<i class='fa fa-file-excel-o'></i>";
 

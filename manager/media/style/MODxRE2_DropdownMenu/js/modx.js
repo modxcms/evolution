@@ -753,16 +753,33 @@
 				}
 			},
 			toggleTheme: function(e) {
+				var myCodeMirrors = w.main.myCodeMirrors, key;
 				if(e.currentTarget.classList.contains('rotate180')) {
 					e.currentTarget.classList.remove('rotate180');
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
-					d.cookie = 'MODX_themeColor='
+					d.cookie = 'MODX_themeColor=';
+					if(myCodeMirrors) {
+						for(key in myCodeMirrors) {
+							if(myCodeMirrors.hasOwnProperty(key)) {
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme)
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme)
+							}
+						}
+					}
 				} else {
 					e.currentTarget.classList.add('rotate180');
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
-					d.cookie = 'MODX_themeColor=dark'
+					d.cookie = 'MODX_themeColor=dark';
+					if(myCodeMirrors) {
+						for(key in myCodeMirrors) {
+							if(myCodeMirrors.hasOwnProperty(key)) {
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.darktheme)
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.defaulttheme)
+							}
+						}
+					}
 				}
 			},
 			toggleNode: function(e, id) {
@@ -1236,7 +1253,9 @@
 						}
 					}
 					loadPositions();
-					initQuicksearch('tree_site_templates_search', 'tree_site_templates');
+					for(var i = 0; i < tabIds.length; i++) {
+ 						initQuicksearch(tabIds[i]+'_search', tabIds[i]);
+ 					}
 					var at = d.querySelectorAll('#tree .accordion-toggle');
 					for(var i = 0; i < at.length; i++) {
 						at[i].onclick = function(e) {

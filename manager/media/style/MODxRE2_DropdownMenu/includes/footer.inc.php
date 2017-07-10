@@ -11,8 +11,8 @@ if(count($SystemAlertMsgQueque) > 0) {
 <script type='text/javascript'>
 	document.body.addEventListener('keydown', function(e) {
 		if((e.which === 115 || e.which === 83 ) && (e.ctrlKey || e.metaKey) && !e.altKey) {
-			var Button1 = document.getElementById('Button1');
-			if(Button1) Button1.getElementsByTagName('a')[0].click();
+			var Button1 = document.querySelector('a#Button1') || document.querySelector('#Button1 > a');
+			if(Button1) Button1.click();
 			e.preventDefault()
 		}
 	});

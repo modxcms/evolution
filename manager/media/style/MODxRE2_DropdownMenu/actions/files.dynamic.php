@@ -497,30 +497,28 @@ if($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
 	?>
 
 	<div class="section" id="file_editfile">
-		<div class="sectionHeader"><?php echo $_REQUEST['mode'] == "edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ?></div>
-		<div class="sectionBody">
-			<?php
-			$filename = $_REQUEST['path'];
-			$buffer = file_get_contents($filename);
-			// Log the change
-			logFileChange('view', $filename);
-			if($buffer === false) {
-				$modx->webAlertAndQuit("Error opening file for reading.");
-			}
-			?>
-			<form action="index.php" method="post" name="editFile">
-				<input type="hidden" name="a" value="31" />
-				<input type="hidden" name="mode" value="save" />
-				<input type="hidden" name="path" value="<?php echo $_REQUEST['path'] ?>" />
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td>
-							<textarea dir="ltr" name="content" id="content" class="phptextarea"><?php echo htmlentities($buffer, ENT_COMPAT, $modx_manager_charset) ?></textarea>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
+		<div class="navbar navbar-editor"><?php echo $_REQUEST['mode'] == "edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ?></div>
+		<?php
+		$filename = $_REQUEST['path'];
+		$buffer = file_get_contents($filename);
+		// Log the change
+		logFileChange('view', $filename);
+		if($buffer === false) {
+			$modx->webAlertAndQuit("Error opening file for reading.");
+		}
+		?>
+		<form action="index.php" method="post" name="editFile">
+			<input type="hidden" name="a" value="31" />
+			<input type="hidden" name="mode" value="save" />
+			<input type="hidden" name="path" value="<?php echo $_REQUEST['path'] ?>" />
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<textarea dir="ltr" name="content" id="content" class="phptextarea"><?php echo htmlentities($buffer, ENT_COMPAT, $modx_manager_charset) ?></textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
 	<?php
 	$pathinfo = pathinfo($filename);

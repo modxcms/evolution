@@ -1,5 +1,5 @@
 /* -------------------------[ Action Buttons ]--- */
-#actions { background: none repeat scroll 0 0 rgba(230, 230, 230, 0.8); padding: 8px; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 100; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; border-radius: 0 0 5px 5px; }
+#actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 100; border-radius: 0 0 0.3rem 0.3rem; }
 #actions .btn-group > .btn-group { display: block }
 #actions .btn-group .btn { font-size: 0.675rem; height: 2.5em }
 #actions .btn-group .btn .fa { display: none; width: 1em; font-size: 1em; text-align: center }

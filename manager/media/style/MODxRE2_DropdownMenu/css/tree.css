@@ -41,10 +41,10 @@
 #treeRoot .fa-link { margin-right: 0; font-size: 0.8em }
 #treeRoot #binFull { display: none }
 /* treeRoot dark */
-.dark #treeMenu { background-color: #2d3033; border-bottom: none; }
+.dark #treeMenu { background-color: rgba(0, 0, 0, 0.2); border-bottom: none; }
 .dark #treeMenu .treeButton { color: #a9a9a9; }
 .dark #treeMenu .treeButton:hover:not(.disabled) { background-color: #2d3033; color: #fff }
-.dark #tree .treeframebody { background-color: #1d2023 }
+.dark #tree .treeframebody { background-color: #202329 }
 .dark #treeHolder .rootNode a { color: #C5C5C5; }
 .dark #treeHolder .rootNode a:hover { color: #eee }
 .dark #treeRoot { color: #b3b3b3; }

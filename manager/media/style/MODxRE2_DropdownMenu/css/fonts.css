@@ -59,7 +59,8 @@ a:not([href]):not([tabindex]):focus { outline: 0 }
 .font-weight-bold { font-weight: 700 }
 .font-italic { font-style: italic }
 .text-white { color: #fff !important }
-.text-muted { color: #636c72 !important }
+.text-muted { color: #818a91 !important }
+.text-decoration-through { text-decoration: line-through !important }
 a.text-muted:focus, a.text-muted:hover { color: #4b5257 !important }
 .text-primary { color: #0275d8 !important }
 a.text-primary:focus, a.text-primary:hover { color: #025aa5 !important }
@@ -80,5 +81,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover { color: #101112 !important }
 .invisible { visibility: hidden !important; }
 .clear { clear: both; }
 /* custom */
+.fa { position: relative; }
+.fa > .fa-lock { position: absolute !important; left: 0; bottom: 0; text-align: left; font-size: 0.7em; color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
 .rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 .disabledPlugin a { color: #B68282; font-style: italic; }

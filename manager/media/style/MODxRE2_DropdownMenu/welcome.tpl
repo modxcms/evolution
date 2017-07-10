@@ -1,13 +1,17 @@
 <!--link rel="stylesheet" href="media/script/gridster/jquery.gridster.css" />
 <link rel="stylesheet" href="media/style/[(manager_theme)]/dashboard/css/dashboard.css" /-->
+
 [[@OnManagerWelcomePrerender]]
-<div class="container-fluid pt-2">
+
+<div class="container container-body">
+
 	<!-- logout reminder -->
 	<div id="logout_reminder" style="display:[+show_logout_reminder+]">
 		<div class="widget-wrapper alert alert-warning">
 			[+logout_reminder_msg+]
 		</div>
 	</div>
+
 	<!-- logout reminder -->
 	<div id="multiple_sessions" style="display:[+show_multiple_sessions+]">
 		<div class="widget-wrapper alert alert-warning">
@@ -22,10 +26,11 @@
 		</div>
 	</div>
 
-<!-- end  title -->
-	<div class="row mr-0">
+	<!-- end  title -->
+	<div class="row form-row widgets">
 		[+widgets+]
 	</div>
+
 	<!--a class="btn btn-secondary mb-1"><i class="fa fa-cogs"></i> Добавить виджет</a-->
 </div>
 

@@ -31,7 +31,7 @@ input[type=search] { -webkit-appearance: none }
 .form-control:disabled { cursor: not-allowed }
 select.form-control:not([size]):not([multiple]), select:not([multiple]) { height: calc(2.235em + 2px); /*padding: 0.592em 0.5em;*/ }
 select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
-.form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 1; outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
+.form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 3; outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
 .form-control-file, .form-control-range { display: block }
 .col-form-label { padding-top: calc(.5rem - 1px * 2); padding-bottom: calc(.5rem - 1px * 2); margin-bottom: 0 }
 .col-form-label-lg { padding-top: calc(.75rem - 1px * 2); padding-bottom: calc(.75rem - 1px * 2); font-size: 1.25rem }
@@ -67,20 +67,17 @@ select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
 .has-danger .form-control { border-color: #d9534f }
 .has-danger .input-group-addon { color: #d9534f; border-color: #d9534f; background-color: #fdf7f7 }
 .has-danger .form-control-danger { background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d9534f' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E") }
-.form-inline { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-flex-flow: row wrap; -ms-flex-flow: row wrap; flex-flow: row wrap; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center }
-.form-inline .form-check { width: 100% }
 @media (min-width: 576px) {
-.form-inline label { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; margin-bottom: 0 }
-.form-inline .form-group { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-flex: 0; -webkit-flex: 0 0 auto; -ms-flex: 0 0 auto; flex: 0 0 auto; -webkit-flex-flow: row wrap; -ms-flex-flow: row wrap; flex-flow: row wrap; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; margin-bottom: 0 }
+.form-inline .form-group { display: inline-block; margin-bottom: 0; vertical-align: middle }
 .form-inline .form-control { display: inline-block; width: auto; vertical-align: middle }
 .form-inline .form-control-static { display: inline-block }
-.form-inline .input-group { width: auto }
+.form-inline .input-group { display: inline-table; width: auto; vertical-align: middle }
+.form-inline .input-group .form-control, .form-inline .input-group .input-group-addon, .form-inline .input-group .input-group-btn { width: auto }
+.form-inline .input-group > .form-control { width: 100% }
 .form-inline .form-control-label { margin-bottom: 0; vertical-align: middle }
-.form-inline .form-check { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; width: auto; margin-top: 0; margin-bottom: 0 }
+.form-inline .form-check { display: inline-block; margin-top: 0; margin-bottom: 0; vertical-align: middle }
 .form-inline .form-check-label { padding-left: 0 }
-.form-inline .form-check-input { position: relative; margin-top: 0; margin-right: .25rem; margin-left: 0 }
-.form-inline .custom-control { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; padding-left: 0 }
-.form-inline .custom-control-indicator { position: static; display: inline-block; margin-right: .25rem; vertical-align: text-bottom }
+.form-inline .form-check-input { position: relative; margin-left: 0 }
 .form-inline .has-feedback .form-control-feedback { top: 0 }
 }
 .btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375em 1em; font-size: 0.8rem; border-radius: .1em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
@@ -160,12 +157,12 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none }
 .btn-block { display: block; width: 100% }
 .btn-block + .btn-block { margin-top: .5em }
 input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].btn-block { width: 100% }
-.btn-group, .btn-group-vertical { position: relative; /*display: -webkit-inline-box; */ display: -webkit-inline-flex; display: -ms-inline-flexbox; display: inline-flex; vertical-align: middle }
-.btn-group-vertical > .btn, .btn-group > .btn { position: relative; -webkit-box-flex: 0; -webkit-flex: 0 1 auto; -ms-flex: 0 1 auto; flex: 0 1 auto }
+.btn-group, .btn-group-vertical { position: relative; display: inline-block; vertical-align: middle }
+.btn-group-vertical > .btn, .btn-group > .btn { position: relative; float: left; margin-bottom: 0 }
 .btn-group-vertical > .btn:hover, .btn-group > .btn:hover { z-index: 2 }
 .btn-group-vertical > .btn.active, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn:focus, .btn-group > .btn.active, .btn-group > .btn:active, .btn-group > .btn:focus { z-index: 2 }
 .btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group, .btn-group-vertical .btn + .btn, .btn-group-vertical .btn + .btn-group, .btn-group-vertical .btn-group + .btn, .btn-group-vertical .btn-group + .btn-group { margin-left: -1px }
-.btn-toolbar { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-pack: start; -webkit-justify-content: flex-start; -ms-flex-pack: start; justify-content: flex-start }
+.btn-toolbar { margin-left: -.5rem }
 .btn-toolbar .input-group { width: auto }
 .btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) { border-radius: 0 }
 .btn-group > .btn:first-child { margin-left: 0 }
@@ -180,7 +177,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .btn + .dropdown-toggle-split::after { margin-left: 0 }
 .btn-group-sm > .btn + .dropdown-toggle-split, .btn-sm + .dropdown-toggle-split { padding-right: .375em; padding-left: .375em }
 .btn-group-lg > .btn + .dropdown-toggle-split, .btn-lg + .dropdown-toggle-split { padding-right: 1.125em; padding-left: 1.125em }
-.btn-group-vertical { /*display: -webkit-inline-box;*/ display: -webkit-inline-flex; display: -ms-inline-flexbox; display: inline-flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: start; -webkit-align-items: flex-start; -ms-flex-align: start; align-items: flex-start; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center }
+.btn-group-vertical { }
 .btn-group-vertical .btn, .btn-group-vertical .btn-group { width: 100% }
 .btn-group-vertical > .btn + .btn, .btn-group-vertical > .btn + .btn-group, .btn-group-vertical > .btn-group + .btn, .btn-group-vertical > .btn-group + .btn-group { margin-top: -1px; margin-left: 0 }
 .btn-group-vertical > .btn:not(:first-child):not(:last-child) { border-radius: 0 }
@@ -190,12 +187,12 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child, .btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle { border-bottom-right-radius: 0; border-bottom-left-radius: 0 }
 .btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child { border-top-right-radius: 0; border-top-left-radius: 0 }
 [data-toggle=buttons] > .btn input[type=checkbox], [data-toggle=buttons] > .btn input[type=radio], [data-toggle=buttons] > .btn-group > .btn input[type=checkbox], [data-toggle=buttons] > .btn-group > .btn input[type=radio] { position: absolute; clip: rect(0, 0, 0, 0); pointer-events: none }
-.input-group { position: relative; display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100% }
-.input-group .form-control { position: relative; z-index: 2; -webkit-box-flex: 1; -webkit-flex: 1 1 auto; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; margin-bottom: 0 }
+.input-group { position: relative; width: 100%; display: table; border-collapse: separate }
+.input-group .form-control { position: relative; z-index: 2; float: left; width: 100%; margin-bottom: 0 }
 .input-group .form-control:active, .input-group .form-control:focus, .input-group .form-control:hover { z-index: 3 }
-.input-group .form-control, .input-group-addon, .input-group-btn { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center }
+.input-group .form-control, .input-group-addon, .input-group-btn { display: table-cell }
 .input-group .form-control:not(:first-child):not(:last-child), .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child) { border-radius: 0 }
-.input-group-addon, .input-group-btn { white-space: nowrap; vertical-align: middle }
+.input-group-addon, .input-group-btn { width: 1%; white-space: nowrap; vertical-align: middle }
 .input-group-addon { padding: .5em .75em; margin-bottom: 0; font-size: 0.8rem; font-weight: 400; line-height: 1.25; color: #464a4c; text-align: center; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em }
 .input-group-addon.form-control-sm, .input-group-sm > .input-group-addon, .input-group-sm > .input-group-btn > .input-group-addon.btn { font-size: .675rem; }
 .input-group-addon.form-control-lg, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .input-group-addon.btn { font-size: 1.15rem; }
@@ -205,13 +202,13 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .input-group .form-control:not(:first-child), .input-group-addon:not(:first-child), .input-group-btn:not(:first-child) > .btn, .input-group-btn:not(:first-child) > .btn-group > .btn, .input-group-btn:not(:first-child) > .dropdown-toggle, .input-group-btn:not(:last-child) > .btn-group:not(:first-child) > .btn, .input-group-btn:not(:last-child) > .btn:not(:first-child) { border-bottom-left-radius: 0; border-top-left-radius: 0 }
 .form-control + .input-group-addon:not(:first-child) { border-left: 0 }
 .input-group-btn { position: relative; font-size: 0; white-space: nowrap }
-.input-group-btn > .btn { position: relative; -webkit-box-flex: 1; -webkit-flex: 1 1 0; -ms-flex: 1 1 0; flex: 1 1 0 }
+.input-group-btn > .btn { position: relative; }
 .input-group-btn > .btn + .btn { margin-left: -1px }
 .input-group-btn > .btn:active, .input-group-btn > .btn:focus, .input-group-btn > .btn:hover { z-index: 3 }
 .input-group-btn:not(:last-child) > .btn, .input-group-btn:not(:last-child) > .btn-group { margin-right: -1px }
 .input-group-btn:not(:first-child) > .btn, .input-group-btn:not(:first-child) > .btn-group { z-index: 2; margin-left: -1px }
 .input-group-btn:not(:first-child) > .btn-group:active, .input-group-btn:not(:first-child) > .btn-group:focus, .input-group-btn:not(:first-child) > .btn-group:hover, .input-group-btn:not(:first-child) > .btn:active, .input-group-btn:not(:first-child) > .btn:focus, .input-group-btn:not(:first-child) > .btn:hover { z-index: 3 }
-.custom-control { position: relative; /*display: -webkit-inline-box;*/ display: -webkit-inline-flex; display: -ms-inline-flexbox; display: inline-flex; min-height: 1.5rem; padding-left: 1.5rem; margin-right: 1rem; cursor: pointer }
+.custom-control { position: relative; display: inline-block; min-height: 1.5rem; padding-left: 1.5rem; margin-right: 1rem; cursor: pointer }
 .custom-control-input { position: absolute; z-index: -1; opacity: 0 }
 .custom-control-input:checked ~ .custom-control-indicator { color: #fff; background-color: #0275d8 }
 .custom-control-input:focus ~ .custom-control-indicator { -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px #0275d8; box-shadow: 0 0 0 1px #fff, 0 0 0 3px #0275d8 }
@@ -224,9 +221,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-indicator { background-color: #0275d8; background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='%23fff' d='M0 2h4'/%3E%3C/svg%3E") }
 .custom-radio .custom-control-indicator { border-radius: 50% }
 .custom-radio .custom-control-input:checked ~ .custom-control-indicator { background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E") }
-.custom-controls-stacked { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column }
-.custom-controls-stacked .custom-control { margin-bottom: .25rem }
-.custom-controls-stacked .custom-control + .custom-control { margin-left: 0 }
 .custom-select { display: inline-block; max-width: 100%; height: calc(2.25rem + 2px); padding: .375rem 1.75rem .375rem .75rem; line-height: 1.25; color: #464a4c; vertical-align: middle; background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center; -webkit-background-size: 8px 10px; background-size: 8px 10px; border: 1px solid rgba(0, 0, 0, .15); border-radius: .25rem; -moz-appearance: none; -webkit-appearance: none }
 .custom-select:focus { border-color: #5cb3fd; outline: 0 }
 .custom-select:focus::-ms-value { color: #464a4c; background-color: #fff }
@@ -241,10 +235,19 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
 .form-row { margin-bottom: 0.1875rem; }
-.form-row.row { margin-left: 0 }
+.form-row.row { margin-left: 0; margin-right: -1rem }
 .form-row label { margin-bottom: 0.15rem }
 .form-row .col, .form-row .col-1, .form-row .col-10, .form-row .col-11, .form-row .col-12, .form-row .col-2, .form-row .col-3, .form-row .col-4, .form-row .col-5, .form-row .col-6, .form-row .col-7, .form-row .col-8, .form-row .col-9, .form-row .col-lg, .form-row .col-lg-1, .form-row .col-lg-10, .form-row .col-lg-11, .form-row .col-lg-12, .form-row .col-lg-2, .form-row .col-lg-3, .form-row .col-lg-4, .form-row .col-lg-5, .form-row .col-lg-6, .form-row .col-lg-7, .form-row .col-lg-8, .form-row .col-lg-9, .form-row .col-md, .form-row .col-md-1, .form-row .col-md-10, .form-row .col-md-11, .form-row .col-md-12, .form-row .col-md-2, .form-row .col-md-3, .form-row .col-md-4, .form-row .col-md-5, .form-row .col-md-6, .form-row .col-md-7, .form-row .col-md-8, .form-row .col-md-9, .form-row .col-sm, .form-row .col-sm-1, .form-row .col-sm-10, .form-row .col-sm-11, .form-row .col-sm-12, .form-row .col-sm-2, .form-row .col-sm-3, .form-row .col-sm-4, .form-row .col-sm-5, .form-row .col-sm-6, .form-row .col-sm-7, .form-row .col-sm-8, .form-row .col-sm-9, .form-row .col-xl, .form-row .col-xl-1, .form-row .col-xl-10, .form-row .col-xl-11, .form-row .col-xl-12, .form-row .col-xl-2, .form-row .col-xl-3, .form-row .col-xl-4, .form-row .col-xl-5, .form-row .col-xl-6, .form-row .col-xl-7, .form-row .col-xl-8, .form-row .col-xl-9 { padding-left: 0 }
 .form-row .form-control { float: left; }
+.container-body > .form-group:last-child, .container-body > .form-row:last-child { margin-bottom: 0 }
+.form-control-name { position: relative; }
+.form-control-name .form-control { padding-right: 2em }
+.form-control-name .custom-control { display: block; overflow: hidden; position: absolute; z-index: 3; top: 0; right: 0; width: 2em; height: 100%; margin: 0; padding: 0; cursor: pointer }
+.form-control-name .custom-control input { position: absolute; left: -100% }
+.form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
+.form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
+.form-control-name .custom-control input:checked ~ .fa-lock::before { content: "\f023"; color: #d9534f }
+[type=checkbox], [type=radio] { width: auto !important }
 input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
@@ -252,3 +255,6 @@ select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
 #settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
+.navbar-editor > label { margin-bottom: 0 }
+.section-editor textarea { float: left; border-left: none; border-right: none; font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace; font-weight: 300; font-size: 0.875rem; }
+.dark .section-editor textarea { background-color: #282c34; color: #abb2bf }

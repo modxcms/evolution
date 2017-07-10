@@ -81,7 +81,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		documentDirty = false;
-		document.mutate.a.value = <?php echo $action ?>;
+		document.mutate.a.value = <?= $action ?>;
 		document.mutate.which_editor.value = newEditor;
 		document.mutate.submit();
 	}
@@ -93,13 +93,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			document.mutate.save.click();
 		},
 		duplicate: function() {
-			if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") === true) {
+			if(confirm("<?= $_lang['confirm_duplicate_record'] ?>") === true) {
 				documentDirty = false;
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id'] ?>&a=97";
+				document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=97";
 			}
 		},
 		delete: function() {
-			if(confirm("<?php echo $_lang['confirm_delete_htmlsnippet'] ?>") === true) {
+			if(confirm("<?= $_lang['confirm_delete_htmlsnippet'] ?>") === true) {
 				documentDirty = false;
 				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=80";
 			}
@@ -132,45 +132,52 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	?>
 	<input type="hidden" name="a" value="79" />
-	<input type="hidden" name="id" value="<?php echo $_REQUEST['id']; ?>" />
-	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
+	<input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>" />
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
 
 	<h1>
-		<i class="fa fa-th-large"></i><?php echo $_lang['htmlsnippet_title']; ?><i class="fa fa-question-circle help"></i>
+		<i class="fa fa-th-large"></i><?= $_lang['htmlsnippet_title'] ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
+	<?= $_style['actionbuttons']['dynamic']['element'] ?>
+
+	<div class="container element-edit-message">
+		<div class="alert alert-info"><?= $_lang['htmlsnippet_msg'] ?></div>
+	</div>
 
 	<div class="tab-pane" id="chunkPane">
 		<script type="text/javascript">
-			tpChunk = new WebFXTabPane(document.getElementById("chunkPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tpChunk = new WebFXTabPane(document.getElementById("chunkPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 		</script>
 
 		<div class="tab-page" id="tabGeneral">
-			<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+			<h2 class="tab"><?= $_lang["settings_general"] ?></h2>
 			<script type="text/javascript">tpChunk.addTabPage(document.getElementById("tabGeneral"));</script>
-
-			<div class="element-edit-message alert alert-info">
-				<?php echo $_lang['htmlsnippet_msg'] ?>
-			</div>
-
-			<div class="form-group">
+			<div class="container container-body">
 				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['htmlsnippet_name'] ?></label>
+					<label class="col-md-3 col-lg-2"><?= $_lang['htmlsnippet_name'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+						<div class="form-control-name clearfix">
+							<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<?php if($modx->hasPermission('save_role')): ?>
+								<label class="custom-control" title="<?= $_lang['lock_htmlsnippet'] . "\n" . $_lang['lock_htmlsnippet_msg'] ?>" tooltip>
+									<input name="locked" type="checkbox" value="on"<?= ($content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : '') ?> />
+									<i class="fa fa-lock"></i>
+								</label>
+							<?php endif; ?>
+						</div>
 						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-						<small class="form-text text-danger hide" id='savingMessage'></small>
+						<small class="form-text text-danger hide" id="savingMessage"></small>
 					</div>
 				</div>
 				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['htmlsnippet_desc'] ?></label>
+					<label class="col-md-3 col-lg-2"><?= $_lang['htmlsnippet_desc'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;" />
+						<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;" />
 					</div>
 				</div>
 				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category'] ?></label>
+					<label class="col-md-3 col-lg-2"><?= $_lang['existing_category'] ?></label>
 					<div class="col-md-9 col-lg-10">
 						<select name="categoryid" class="form-control" onchange="documentDirty=true;">
 							<option>&nbsp;</option>
@@ -184,40 +191,35 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 				</div>
 				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category'] ?></label>
+					<label class="col-md-3 col-lg-2"><?= $_lang['new_category'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="form-control" onChange="documentDirty=true;" />
+						<input name="newcategory" type="text" maxlength="45" value="<?= isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="form-control" onChange="documentDirty=true;" />
 					</div>
 				</div>
 			</div>
-			<?php if($modx->hasPermission('save_role')): ?>
-				<div class="form-group">
-					<label>
-						<input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : '' ?> value="on" /> <?php echo $_lang['lock_htmlsnippet'] ?></label>
-					<small class="form-text text-muted"><?php echo $_lang['lock_htmlsnippet_msg']; ?></small>
-				</div>
-			<?php endif; ?>
 
 			<!-- HTML text editor start -->
-			<label><?php echo $_lang['chunk_code']; ?></label>
-			<div class="row form-group">
-				<textarea dir="ltr" class="phptextarea" id="post" name="post" rows="20" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet']) ?></textarea>
+			<div class="navbar navbar-editor">
+				<span><?= $_lang['chunk_code'] ?></span>
+				<span class="float-xs-right"><?= $_lang['which_editor_title'] ?>
+					<select class="form-control form-control-sm" id="which_editor" name="which_editor" size="1" onchange="changeRTE();">
+						<option value="none"<?= $which_editor == 'none' ? ' selected="selected"' : '' ?>><?= $_lang['none'] ?></option>
+						<?php
+						// invoke OnRichTextEditorRegister event
+						$evtOut = $modx->invokeEvent('OnRichTextEditorRegister');
+						if(is_array($evtOut)) {
+							foreach($evtOut as $i => $editor) {
+								echo "\t" . '<option value="' . $editor . '"' . ($which_editor == $editor ? ' selected="selected"' : '') . '>' . $editor . "</option>\n";
+							}
+						}
+						?>
+					</select>
+				</span>
+			</div>
+			<div class="section-editor clearfix">
+				<textarea dir="ltr" class="phptextarea" id="post" name="post" rows="20" onChange="documentDirty=true;"><?= isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet']) ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
-
-			<span class="warning"><?php echo $_lang['which_editor_title'] ?></span>
-			<select id="which_editor" name="which_editor" size="1" onchange="changeRTE();">
-				<option value="none"<?php echo $which_editor == 'none' ? ' selected="selected"' : '' ?>><?php echo $_lang['none'] ?></option>
-				<?php
-				// invoke OnRichTextEditorRegister event
-				$evtOut = $modx->invokeEvent('OnRichTextEditorRegister');
-				if(is_array($evtOut)) {
-					foreach($evtOut as $i => $editor) {
-						echo "\t" . '<option value="' . $editor . '"' . ($which_editor == $editor ? ' selected="selected"' : '') . '>' . $editor . "</option>\n";
-					}
-				}
-				?>
-			</select>
 		</div>
 
 		<?php
