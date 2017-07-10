@@ -49,10 +49,14 @@
  *          content
  */
 
+$autoloader = '../vendor/autoload.php';
+if (file_exists($autoloader) && is_readable($autoloader)) {
+	include_once($autoloader);
+}
+
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
-
 $self      = str_replace('\\','/',__FILE__);
 $self_dir  = str_replace('/index.php','',$self);
 $mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
