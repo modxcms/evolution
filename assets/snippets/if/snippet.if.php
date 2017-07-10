@@ -25,7 +25,7 @@ $subject=$opers[0];
 $eq=true;
 $and=false;
 $or = false;
-$else = '';
+$else = isset($else) ? $else : '';
 // Prepare custom conditions
 $customConditions = array();
 if(!empty($custom)) {
