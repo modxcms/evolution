@@ -8,6 +8,11 @@ if (version_compare(phpversion(), "5.3") < 0) {
     @ ini_set('magic_quotes_sybase', 0);
 }
 
+$autoloader = '../vendor/autoload.php';
+if (file_exists($autoloader) && is_readable($autoloader)) {
+    include_once($autoloader);
+}
+
 $self = 'install/index.php';
 $base_path = str_replace($self,'',str_replace('\\','/', __FILE__));
 require_once("{$base_path}install/functions.php");
