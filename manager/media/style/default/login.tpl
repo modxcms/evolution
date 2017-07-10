@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>[(site_name)] (MODX CMF Manager Login)</title>
+	<title>[(site_name)] (Evolution CMS Manager Login)</title>
 	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="viewport" content="width=device-width">
@@ -82,7 +82,7 @@
 	</form>
 </div>
 <p class="loginLicense"></p>
-<div class="gpl">&copy; 2005-2017 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
+<div class="gpl">&copy; 2005-2017 by the <a href="http://evo.im/" target="_blank">EVO</a>. <strong>EVO</strong>&trade; is licensed under the GPL.</div>
 </body>
 <script type="text/javascript">
 	/* <![CDATA[ */
