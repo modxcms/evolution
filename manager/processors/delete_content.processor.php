@@ -121,6 +121,6 @@ $_SESSION['itemname'] = $content['pagetitle'];
 $modx->clearCache('full');
 
 // finished emptying cache - redirect
-$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
+$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
 header($header);
 ?>

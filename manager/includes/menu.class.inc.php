@@ -14,7 +14,7 @@ class EVOmenu{
 		$this->defaults['parentLinkIn']    = '<b class="caret"></b>';
 		$this->defaults['innerClass']      = 'subnav';
 		
-		$this->defaults = $this->defaults + $setting; 
+		$this->defaults = $setting + $this->defaults; 
 		$this->Structurise($menu);
 		$this->output = $this->DrawSub('main',0);
 		echo $this->output;

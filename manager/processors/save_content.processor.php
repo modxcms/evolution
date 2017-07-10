@@ -437,7 +437,7 @@ switch ($actionToTake) {
 				$a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
 			$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
 		} else {
-			$header = "Location: index.php?r=1&id=$key&a=7&dv=1";
+			$header = "Location: index.php?a=3&id=$key&r=1";
 		}
 		
         if (headers_sent()) {
@@ -677,7 +677,7 @@ switch ($actionToTake) {
 				}
 				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
 			} else {
-				$header = "Location: index.php?r=1&id=$id&a=7&dv=1".$add_path;
+				$header = "Location: index.php?a=3&id=$id&r=1".$add_path;
 			}
 		}
 		if (headers_sent()) {

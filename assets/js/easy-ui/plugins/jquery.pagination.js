@@ -1,10 +1,10 @@
 /**
- * jQuery EasyUI 1.4.1
+ * jQuery EasyUI 1.5.2
  * 
- * Copyright (c) 2009-2014 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the GPL license: http://www.gnu.org/licenses/gpl.txt
- * To use it on other terms please contact us at info@jeasyui.com
+ * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
+ * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 (function($){
@@ -17,6 +17,9 @@ var tr=_5.find("tr");
 var aa=$.extend([],_4.layout);
 if(!_4.showPageList){
 _6(aa,"list");
+}
+if(!_4.showPageInfo){
+_6(aa,"info");
 }
 if(!_4.showRefresh){
 _6(aa,"refresh");
@@ -73,6 +76,15 @@ bb.refresh=_9("refresh");
 }else{
 if(_8=="links"){
 $("<td class=\"pagination-links\"></td>").appendTo(tr);
+}else{
+if(_8=="info"){
+if(_7==aa.length-1){
+$("<div class=\"pagination-info\"></div>").appendTo(_5);
+$("<div style=\"clear:both;\"></div>").appendTo(_5);
+}else{
+$("<td><div class=\"pagination-info\"></div></td>").appendTo(tr);
+}
+}
 }
 }
 }
@@ -92,7 +104,7 @@ if(_b=="-"){
 $("<td><div class=\"pagination-btn-separator\"></div></td>").appendTo(tr);
 }else{
 var td=$("<td></td>").appendTo(tr);
-var a=$("<a href=\"javascript:void(0)\"></a>").appendTo(td);
+var a=$("<a href=\"javascript:;\"></a>").appendTo(td);
 a[0].onclick=eval(_b.handler||function(){
 });
 a.linkbutton($.extend({},_b,{plain:true}));
@@ -103,11 +115,9 @@ var td=$("<td></td>").appendTo(tr);
 $(_4.buttons).appendTo(td).show();
 }
 }
-$("<div class=\"pagination-info\"></div>").appendTo(_5);
-$("<div style=\"clear:both;\"></div>").appendTo(_5);
 function _9(_c){
 var _d=_4.nav[_c];
-var a=$("<a href=\"javascript:void(0)\"></a>").appendTo(tr);
+var a=$("<a href=\"javascript:;\"></a>").appendTo(tr);
 a.wrap("<td></td>");
 a.linkbutton({iconCls:_d.iconCls,plain:true}).unbind(".pagination").bind("click.pagination",function(){
 _d.handler.call(_2);
@@ -170,7 +180,7 @@ if(_1a<1){
 _1a=1;
 }
 for(var i=_1a;i<=_1b;i++){
-var a=$("<a class=\"pagination-link\" href=\"javascript:void(0)\"></a>").appendTo(td);
+var a=$("<a class=\"pagination-link\" href=\"javascript:;\"></a>").appendTo(td);
 a.linkbutton({plain:true,text:i});
 if(i==_18.pageNumber){
 a.linkbutton("select");
@@ -247,9 +257,9 @@ _10(this,_27);
 }};
 $.fn.pagination.parseOptions=function(_28){
 var t=$(_28);
-return $.extend({},$.parser.parseOptions(_28,[{total:"number",pageSize:"number",pageNumber:"number",links:"number"},{loading:"boolean",showPageList:"boolean",showRefresh:"boolean"}]),{pageList:(t.attr("pageList")?eval(t.attr("pageList")):undefined)});
+return $.extend({},$.parser.parseOptions(_28,[{total:"number",pageSize:"number",pageNumber:"number",links:"number"},{loading:"boolean",showPageList:"boolean",showPageInfo:"boolean",showRefresh:"boolean"}]),{pageList:(t.attr("pageList")?eval(t.attr("pageList")):undefined)});
 };
-$.fn.pagination.defaults={total:1,pageSize:10,pageNumber:1,pageList:[10,20,30,50],loading:false,buttons:null,showPageList:true,showRefresh:true,links:10,layout:["list","sep","first","prev","sep","manual","sep","next","last","sep","refresh"],onSelectPage:function(_29,_2a){
+$.fn.pagination.defaults={total:1,pageSize:10,pageNumber:1,pageList:[10,20,30,50],loading:false,buttons:null,showPageList:true,showPageInfo:true,showRefresh:true,links:10,layout:["list","sep","first","prev","sep","manual","sep","next","last","sep","refresh","info"],onSelectPage:function(_29,_2a){
 },onBeforeRefresh:function(_2b,_2c){
 },onRefresh:function(_2d,_2e){
 },onChangePageSize:function(_2f){

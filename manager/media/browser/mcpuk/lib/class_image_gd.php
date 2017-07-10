@@ -199,8 +199,11 @@ class image_gd extends image {
 
     protected function getBlankImage($width, $height) {
         $img = @imagecreatetruecolor($width, $height);
-            imagealphablending($img, false);
-            imagesavealpha($img, true);
+//        imagealphablending($img, false);
+//        imagesavealpha($img, true);
+
+        $color = imagecolorallocatealpha($img, 255, 255, 255, 127);
+        imagefill($img, 0, 0, $color);
         return $img;
     }
 

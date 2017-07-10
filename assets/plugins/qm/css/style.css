@@ -79,11 +79,6 @@
     padding: 6px 6px;
 }
 
-.qm-cancel span
-{
-    background: transparent url(images/stop.png) no-repeat left center;
-    padding-left: 20px;
-}
 
 .qm-save
 {
@@ -94,7 +89,50 @@
 {
     margin-right: 20px;
 }
-
+.qm-save, .qm-cancel
+{
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: none;
+  background: #fff;
+  filter: none;
+  color: #555;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E4E4E4;
+  border-radius: 3px !important;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
+  transition: none;
+}
+.qm-save:hover, .qm-cancel:hover
+{
+  background: none;
+  filter: none;
+  background-color: #3697cd;
+  box-shadow: none;
+  border-color: #3697cd;
+  color: #FFF !important;
+  transition: none;
+  text-decoration: none;
+}
+.qm-cancel a:hover, .qm-save a:hover    
+{
+  color: #FFF !important;
+}
+.qm-save a
+{
+  color: #fff;
+  border-color: #32AB9A;
+  background-color: #32AB9A;
+  background-image: linear-gradient(#32AB9A, #00948E);
+}
+.qm-save a:hover 
+{
+  background-color: #2b9385;
+  background-image: linear-gradient(#2b9385, #007571);
+  border-color: #2b9385;
+}
 #qm-tv-actions
 {
 	position: fixed;
@@ -167,25 +205,36 @@
 
 #qmEditor, #qmEditorClosed
 {
-	font-family: Arial, Helvetica, sans-serif !important;
-    top:0; 
-    left:0;
-    padding: 3px;
     position: fixed;
-    width: 100%;
-    line-height:1;
+	font-family: Arial, Helvetica, sans-serif !important;
+    line-height: 1;
     z-index: 2147483647;
-	background: #657587 url(images/tinylogo.png) no-repeat -2px 3px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 5px 0 0 10px;
+    color: #fff;
+	background: none;
+	background-color: #39515D !important;
+	background-image: -webkit-linear-gradient(left, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;
+	background-image: -o-linear-gradient(left, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;
+	background-image: linear-gradient(to right, #3f4850 0%, #365462 46%, #3e5554 60%, #42554d 68%, #573d4e 100%) !important;
 	text-align: left;
-	opacity:0.5; 
-    ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-	filter: alpha(opacity=50);
-	top: -28px;
+	opacity:0.7; 
+    ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; 
+	filter: alpha(opacity=70);
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
+    text-shadow: none;
 }
- 
+
+
+#qmEditor > li 
+{
+    line-height: 30px;
+}
+
+
 #qmEditor *:focus, #qmEditor *:active 
 {
     outline: none !important;
@@ -205,20 +254,15 @@
 	padding: 0;
 	line-height: normal;
 	border: 0;
+    text-decoration: none;
 }
 
 #qmEditor .qmId {
-	font-size: 20px;
-	line-height: 25px;
-	color: black;
+	font-size: 18px;
+	line-height: 30px;
+	color: #fff;
+    font-weight: normal;
 }
-
-#qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
-{
-    background: transparent url(images/save.png) no-repeat left center;
-    padding-left: 20px;
-}
-
 #qmEditor .qmButton span
 {
 
@@ -226,12 +270,26 @@
 
 #qmEditorClosed
 {
-    height: 26px;
+    height: 40px!important;
     display: none;
     width: 40px !important;
     cursor: pointer !important;
+    margin-right: 20px!important;
 }
-
+#qmEditorClosed:after
+{
+    display:block;
+    float:left;
+    font-family: FontAwesome;
+    content: "\f0a9";
+    color: #dedede;
+    font-size:22px;
+    margin-top: 3px;
+}
+div#qmEditorClosed:hover:after
+{
+    color: #fff;
+}
 #qmClose
 {
     display: block;
@@ -239,87 +297,40 @@
     margin-right: -2px !important;
 }
 
-#qmLogoClose
+a#qmLogoClose
 {
     display: block;
     float: left;
-    height: 26px !important;
-    width: 40px !important;
-    margin: 0;
+    height: 30px !important;
+    width: 30px !important;
     text-decoration: none !important;
     border: 0 !important;
-    background: transparent url(images/transparent.gif) repeat;
 }
-    
+a#qmLogoClose:after
+{
+    display:block;
+    font-family: FontAwesome;
+    content: "\f0a8";
+    color: #dedede;
+    font-size:22px;
+    margin-top: 3px;
+}
+a:hover#qmLogoClose:after 
+{
+    color: #FFF;
+}
 #qmEditor:hover, #qmEditorClosed:hover 
 {
     opacity:1; 
     -ms-filter:"" !important;
     filter:none !important;
-	top: 0px;
+/*	top: 0px;*/
 	-webkit-transition-duration: 0.2s;
 	-moz-transition-duration: 0.2s;
 	transition-duration: 0.2s;
 }
 
 
-/* Action buttons based on MODX Carbon Theme */
 
-#qmEditor ul 
-{ /* .actionButtons --> #qmEditor */
-	margin: 0;
-	padding: 0px 10px 0px 0px;
-	list-style-type: none;
-}
 
-#qmEditor li 
-{
-	margin: 0 8px 0 0;
-	float: left;
-	height: 15px;
-	line-height: 15px;
-	padding: 0;
-    list-style-type: none;
-    height: auto;
-    width: auto;
-    background: none;
-    border: 0;
-    list-style-image:none;
-}
 
-#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel  
-{
-	color: #3b454f;
-	font-weight: bold;
-	font-size: 12px;
-	background: #c7ced2 url(images/button-gradient.png) repeat-x 0px -6px; 
-    padding: 4px 6px;
-	white-space: nowrap;
-	text-decoration: none;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-text-shadow: 1px 1px 0 #fff;
-	-moz-text-shadow: 0 1px 1px #fff;
-	text-shadow: 0 1px 1px #fff;
-	border: 1px solid #8ea4be;
-	outline: none;
-}
-
-#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover  
-{
-	background-position: bottom left;
-	-webkit-box-shadow: 0 0 10px #b8c7d6;
-	-moz-box-shadow: 0 0 10px #b8c7d6;
-	box-shadow:  0 0 10px #b8c7d6;
-	-webkit-transition: -webkit-box-shadow 0.2s linear;
-}
-
-#qmEditor .qmButton:active 
-{
-	background-color: #92aac4;
-	background-position: bottom left;
-	-webkit-box-shadow: 0 0 10px #b8c7d6;
-	-moz-box-shadow: 0 0 10px #b8c7d6;
-	box-shadow:  0 0 10px #b8c7d6;
-}

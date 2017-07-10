@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Drag to reorder the Plugins under each
 $_lang["plugin_priority_title"] = 'Plugin Execution Order';
 $_lang["plugin_title"] = 'צור או ערוך התקן';
 $_lang["preview"] = 'תצוגה מקדימה';
-$_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="#" onclick="saveRefreshPreview();">Save and Refresh</a> your current changes';
+$_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="javascript:;" onclick="saveRefreshPreview();">Save and Refresh</a> your current changes';
 $_lang["preview_resource"] = 'תצוגה מקדימה למסמך';
 $_lang["private"] = 'פרטי';
 $_lang["public"] = 'ציבורי';

@@ -3,7 +3,7 @@
         fileBrowser: {
             init: function (container, options) {
                 var input = $('<input type="text" style="width:'+(container.width()-25)+'px;">').appendTo(container);
-                var button = $('<a href="javascript:void(0)"><img style="' + options.css + '" src="'+ options.icon +'"></a>').appendTo(container);
+                var button = $('<a href="javascript:void(0)">' + (options.hasOwnProperty('icon') ? '<img style="' + options.css + '" src="'+ options.icon +'">' : '<i class="'+ options.cls +'"></i>')+'</a>').appendTo(container);
                 button.click({
                     target: this,
                     field: input,
@@ -22,7 +22,7 @@
                 $(target).val(value);
             },
             resize: function (target, width) {
-                return;
+                $(target).width(width-30);
             },
             browse: function (e) {
                 var width = screen.width * 0.5;

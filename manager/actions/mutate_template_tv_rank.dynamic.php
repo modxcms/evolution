@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE != "true") {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('save_template')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -7,54 +9,56 @@ if(!$modx->hasPermission('save_template')) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 
-$tbl_site_templates         = $modx->getFullTableName('site_templates');
+$tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
-$tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
+$tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
-    $updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /></span>';
-    foreach ($_POST as $listName=>$listValue) {
-        if ($listName == 'listSubmitted' || $listName == 'reset') continue;
-        $orderArray = explode(';', rtrim($listValue, ';'));
-        foreach($orderArray as $key => $item) {
-            if (strlen($item) == 0) continue; 
-            $key = $reset ? 0 : $key;
-            $tmplvar = ltrim($item, 'item_');
-            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
-        }
-    }
-    // empty cache
-    $modx->clearCache('full');
+	$updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /></span>';
+	foreach($_POST as $listName => $listValue) {
+		if($listName == 'listSubmitted' || $listName == 'reset') {
+			continue;
+		}
+		$orderArray = explode(';', rtrim($listValue, ';'));
+		foreach($orderArray as $key => $item) {
+			if(strlen($item) == 0) {
+				continue;
+			}
+			$key = $reset ? 0 : $key;
+			$tmplvar = ltrim($item, 'item_');
+			$modx->db->update(array('rank' => $key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$id}'");
+		}
+	}
+	// empty cache
+	$modx->clearCache('full');
 }
 
-$rs = $modx->db->select(
-	"tv.name AS name, tv.caption AS caption, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
-	"{$tbl_site_tmplvar_templates} AS tr
+$rs = $modx->db->select("tv.name AS name, tv.caption AS caption, tv.id AS id, tr.templateid, tr.rank, tm.templatename", "{$tbl_site_tmplvar_templates} AS tr
 		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
-		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
-	"tr.templateid='{$id}'",
-	"tr.rank DESC, tv.rank DESC, tv.id DESC"     // workaround for correct sort of none-existing ranks
-	);
+		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id", "tr.templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tv.id DESC"     // workaround for correct sort of none-existing ranks
+);
 $limit = $modx->db->getRecordCount($rs);
 
-if($limit>1) {
-    $tvsArr = array();
-    while ($row = $modx->db->getRow($rs)) {
-        $tvsArr[] = $row;
-    }
-    $tvsArr = array_reverse($tvsArr,true);  // reverse ORDERBY DESC
-	
-    $i = 0;
-    foreach($tvsArr as $row) {
-        if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
+if($limit > 1) {
+	$tvsArr = array();
+	while($row = $modx->db->getRow($rs)) {
+		$tvsArr[] = $row;
+	}
+	$tvsArr = array_reverse($tvsArr, true);  // reverse ORDERBY DESC
+
+	$i = 0;
+	foreach($tvsArr as $row) {
+		if($i++ == 0) {
+			$evtLists .= '<strong>' . $row['templatename'] . '</strong><br /><ul id="sortlist" class="sortableList">';
+		}
 		$caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
-        $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$caption.' <small class="protectedNode" style="float:right">[*'.$row['name'].'*]</small></li>';
-    }
-    $evtLists .= '</ul>';
+		$evtLists .= '<li id="item_' . $row['id'] . '" class="sort">' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
+	}
+	$evtLists .= '</ul>';
 }
 
 $header = '
@@ -84,7 +88,7 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-            background: url("'.$_style['fade'].'") center repeat-x;
+            background: url("' . $_style['fade'] . '") center repeat-x;
             background-size: auto 100%;
             display:inline-block;
         }
@@ -143,7 +147,7 @@ $header = '
         }
         
         function resetSortOrder() {
-            if (confirm("'.$_lang["confirm_reset_sort_order"].'")==true) {
+            if (confirm("' . $_lang["confirm_reset_sort_order"] . '")==true) {
                 documentDirty=false;
                 var input = document.createElement("input");
                 input.type = "hidden";
@@ -158,20 +162,20 @@ $header = '
 $header .= '</head>
 <body ondragstart="return false;">
 
-<h1>'.$_lang["template_tv_edit_title"].'</h1>
+<h1>' . $_lang["template_tv_edit_title"] . '</h1>
 
 <div id="actions">
     <ul class="actionButtons">
-        <li class="transition"><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-        <li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$id.'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+        <li class="transition"><a href="javascript:;" onclick="save();"><i class="' . $_style["actions_save"] . '"></i> ' . $_lang['save'] . '</a></li>
+        <li class="transition"><a href="javascript:;" onclick="window.location.href=\'index.php?a=16&amp;id=' . $id . '\';"><i class="' . $_style["actions_cancel"] . '"></i> ' . $_lang['cancel'] . '</a></li>
     </ul>
 </div>
 
 <div class="section">
-<div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
+<div class="sectionHeader">' . $_lang['template_tv_edit'] . '</div>
 <div class="sectionBody">
-<button onclick="resetSortOrder();" style="float:right">'.$_lang['reset_sort_order'].'</button>
-<p>'.$_lang["template_tv_edit_message"].' (<a href="#" onclick="sort();">'.$_lang["sort_alphabetically"].'</a>)</p>';
+<button onclick="resetSortOrder();" style="float:right">' . $_lang['reset_sort_order'] . '</button>
+<p>' . $_lang["template_tv_edit_message"] . ' (<a href="javascript:;" onclick="sort();">' . $_lang["sort_alphabetically"] . '</a>)</p>';
 
 echo $header;
 
@@ -186,6 +190,3 @@ echo '
             <input type="hidden" name="listSubmitted" value="true" />
             <input type="text" id="list" name="list" value="" />
 </form>';
-
-
-?>

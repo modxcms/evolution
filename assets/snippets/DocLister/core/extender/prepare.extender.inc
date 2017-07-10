@@ -85,6 +85,9 @@ class prepare_DL_Extender extends extDocLister
     public function callPrepare($name, array $params, $ret = null)
     {
         $out = null;
+        if (empty($name)) {
+            return $params['data'];
+        }
         if ((is_object($name) && ($name instanceof Closure)) || is_callable($name)) {
             $data = call_user_func($name, $params['data'], $params['modx'], $params['_DocLister'],
                 $params['_extDocLister']);

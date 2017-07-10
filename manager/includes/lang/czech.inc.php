@@ -674,7 +674,7 @@ $_lang["plugin_priority_instructions"] = 'Pro změnu pořadí spouštěných Plu
 $_lang["plugin_priority_title"] = 'Pořadí spouštěných Pluginů';
 $_lang["plugin_title"] = 'Vytvořit/upravit plugin';
 $_lang["preview"] = 'Náhled';
-$_lang["preview_msg"] = 'Tohle je náhled na vaše poslední uložené změny. Kliknutím zde na <a href="#" onclick="saveRefreshPreview();">Uložit a obnovit</a> uložíte vaše současné změny';
+$_lang["preview_msg"] = 'Tohle je náhled na vaše poslední uložené změny. Kliknutím zde na <a href="javascript:;" onclick="saveRefreshPreview();">Uložit a obnovit</a> uložíte vaše současné změny';
 $_lang["preview_resource"] = 'Náhled dokumentu';
 $_lang["private"] = 'Soukromý';
 $_lang["public"] = 'Veřejný';

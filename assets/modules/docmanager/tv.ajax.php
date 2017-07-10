@@ -283,6 +283,3 @@ function ParseIntputOptions($v) {
 	else $a = explode("||", $v);
 	return $a;
 }
-	
- 
-?>

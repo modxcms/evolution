@@ -691,7 +691,7 @@ $_lang["plugin_priority_title"] = 'Ordine di esecuzione del Plugin';
 $_lang["purge_plugin"] = 'Elimina i plugin obsoleti';
 $_lang["plugin_title"] = 'Crea/Modifica Plugin';
 $_lang["preview"] = 'Anteprima';
-$_lang["preview_msg"] = 'Questa è solo l\'anteprima delle modifiche. Clicca su <a href="#" onclick="saveRefreshPreview();">Salva e Aggiorna</a> per salvare le modifiche';
+$_lang["preview_msg"] = 'Questa è solo l\'anteprima delle modifiche. Clicca su <a href="javascript:;" onclick="saveRefreshPreview();">Salva e Aggiorna</a> per salvare le modifiche';
 $_lang["preview_resource"] = 'Anteprima Risorsa';
 $_lang["private"] = 'Privato';
 $_lang["public"] = 'Pubblico';

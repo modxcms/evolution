@@ -325,7 +325,7 @@
     </script>
 </head>
 <body id="login">
-<div class="sectionHeader">[+site_name+]<b>MODX Evolution</b></div>
+<div class="sectionHeader">[(site_name)]<b>MODX Evolution</b></div>
 <div id="mx_loginbox">
     <form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
     <!-- anything to output before the login box via a plugin? -->
@@ -348,7 +348,7 @@
         </div>
     </form>
     <div class="loginLicense">
-    &copy; 2005-2016 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
+    &copy; 2005-2017 by <a href="http://modx.com/" target="_blank">MODX&reg;</a>, and licensed under the <strong>GPL</strong>.
     </div>
 </div>
 <!-- close #mx_loginbox -->

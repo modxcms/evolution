@@ -134,8 +134,6 @@ class shopkeeperDocLister extends site_contentDocLister
                 $out = ($noneTPL != '') ? $this->parseChunk($noneTPL, $sysPlh) : '';
             }
             $out = $this->renderWrap($out);
-        } else {
-            $out = 'no template';
         }
 
         return $this->toPlaceholders($out);

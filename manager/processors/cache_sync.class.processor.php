@@ -180,13 +180,20 @@ if(!class_exists('synccache')) {
         // get aliases modx: support for alias path
         $tmpPath = '';
         $tmpPHP .= '$this->aliasListing=array();';
-	$tmpPHP .= '$a=&$this->aliasListing;';
-	$tmpPHP .= '$d=&$this->documentListing;';
-	$tmpPHP .= '$m=&$this->documentMap;';
+        $tmpPHP .= '$a=&$this->aliasListing;';
+        $tmpPHP .= '$d=&$this->documentListing;';
+        $tmpPHP .= '$m=&$this->documentMap;';
+
+        $tableName = $modx->getFullTableName( 'site_content' );
+        
         if ($config['aliaslistingfolder'] == 1) {
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
+            $rs = $modx->db->query( "SELECT IF( c.alias = '', c.id, c.alias) AS alias, c.id, c.parent, c.isfolder, c.alias_visible 
+                FROM $tableName c
+                LEFT JOIN $tableName p ON p.id = c.parent
+                WHERE c.deleted = '0' AND ( c.isfolder = '1' OR p.alias_visible = '0' )
+                ORDER BY c.parent, c.menuindex" );
         }else{
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $tableName, 'deleted=0', 'parent, menuindex');
         }
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
@@ -201,7 +208,7 @@ if(!class_exists('synccache')) {
         }
 
         // get content types
-        $rs = $modx->db->select('id, contentType', $modx->getFullTableName('site_content'), "contentType != 'text/html'");
+        $rs = $modx->db->select('id, contentType', $tableName, "contentType != 'text/html'");
         $tmpPHP .= '$c = &$this->contentTypes;';
         while ($tmp1 = $modx->db->getRow($rs)) {
             $tmpPHP .= '$c[' . $tmp1['id'] . ']' . " = '" . $this->escapeSingleQuotes($tmp1['contentType']) . "';";

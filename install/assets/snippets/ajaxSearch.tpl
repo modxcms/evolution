@@ -4,7 +4,7 @@
  * Ajax and non-Ajax search that supports results highlighting
  *
  * @category    snippet
- * @version     1.10.1
+ * @version     1.10.2
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Search

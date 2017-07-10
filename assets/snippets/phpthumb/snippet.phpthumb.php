@@ -51,7 +51,7 @@ $tmpImagesFolder=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['di
 $tmpImagesFolder=str_replace("assets/images","",$tmpImagesFolder);
 $tmpImagesFolder=explode("/",$tmpImagesFolder);
 $ext=strtolower($path_parts['extension']);
-$options = 'f='.(in_array($ext,explode(",","png,gif,jpeg"))?$ext:"jpg&q=96").'&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
+$options = 'f='.(in_array($ext,explode(",","png,gif,jpeg"))?$ext:"jpg&q=85").'&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
 parse_str($options, $params);
 foreach ($tmpImagesFolder as $folder) {
     if (!empty($folder)) {
@@ -62,10 +62,11 @@ foreach ($tmpImagesFolder as $folder) {
         }
     }
 }
-  
-$fname_preffix=$cacheFolder."/".$params['w']."x".$params['h'].'-';
-$fname = $path_parts['filename'].".".substr(md5(serialize($params).filemtime(MODX_BASE_PATH . $input)),0,3).".".$params['f'];
-$outputFilename =MODX_BASE_PATH.$fname_preffix.$fname;
+
+$fname_preffix = "$cacheFolder/";
+$fname = $path_parts['filename'];
+$fname_suffix = "-{$params['w']}x{$params['h']}-".substr(md5(serialize($params).filemtime(MODX_BASE_PATH . $input)),0,3).".{$params['f']}";
+$outputFilename = MODX_BASE_PATH.$fname_preffix.$fname.$fname_suffix;
 if (!file_exists($outputFilename)) {
     require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
     $phpThumb = new phpthumb();
@@ -81,5 +82,5 @@ if (!file_exists($outputFilename)) {
         $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
     }
 }
-return $fname_preffix.rawurlencode($fname);
+return $fname_preffix.rawurlencode($fname).$fname_suffix;
 ?>
