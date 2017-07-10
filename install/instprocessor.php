@@ -264,7 +264,7 @@ if ($configFileFailed == true) {
 // generate new site_id and set manager theme to MODxRE
 if ($installMode == 0) {
     $siteid = uniqid('');
-    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxRE2')");
+    mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')");
 } else {
     // update site_id if missing
     $ds = mysqli_query($sqlParser->conn, "SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'");

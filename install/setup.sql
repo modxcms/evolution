@@ -855,7 +855,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, street, city, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '', '', '');
+(1, 1, 'Admin', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '', '', '');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -873,11 +873,11 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('settings_version',''),
-('manager_theme','MODxRE2'),
+('manager_theme','default'),
 ('server_offset_time','0'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODX Site'),
+('site_name','My Evolution Site'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
@@ -914,6 +914,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
 ('seostrict', '1'),
+('number_of_results','30'),
 ('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -1107,10 +1108,10 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxRE2'
+  `setting_value`='default'
   WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxRE2');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','default');
 
 UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';
