@@ -6,7 +6,7 @@ $errors = 0;
 
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
-$phpMinVersion = "5.3.0";
+$phpMinVersion = "5.4.0";
 // -1 if left is less, 0 if equal, +1 if left is higher
 if (version_compare(phpversion(), $phpMinVersion) < 0) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
