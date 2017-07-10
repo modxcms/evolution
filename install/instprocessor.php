@@ -261,7 +261,7 @@ if ($configFileFailed == true) {
     echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 
-// generate new site_id and set manager theme to MODxRE
+// generate new site_id and set manager theme to default
 if ($installMode == 0) {
     $siteid = uniqid('');
     mysqli_query($sqlParser->conn, "REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','default')");
@@ -674,7 +674,7 @@ if ($installData && $moduleSQLDataFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='MODX startup - Bootstrap'", $sqlParser->prefix);
+        $sql = sprintf("SELECT id FROM `%ssite_templates` WHERE templatename='EVO startup - Bootstrap'", $sqlParser->prefix);
         $rs = mysqli_query($sqlParser->conn, $sql);
         if(mysqli_num_rows($rs)) {
             $row = mysqli_fetch_assoc($rs);
