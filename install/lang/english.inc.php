@@ -1,13 +1,13 @@
 <?php
 /**
- * MODX Installer language file
+ * EVO Installer language file
  *
  * @author davaeron
  * @version 1.0.15
  * @date 2014/02/24
  *
  * @language English
- * @package modx
+ * @package evo
  * @subpackage installer
  *
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
@@ -31,8 +31,8 @@ $_lang["begin"] = 'Begin';
 $_lang["btnback_value"] = 'Back';
 $_lang["btnclose_value"] = 'Close';
 $_lang["btnnext_value"] = 'Next';
-$_lang["cant_write_config_file"] = 'MODX couldn\'t write the config file. Please copy the following into the file ';
-$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
+$_lang["cant_write_config_file"] = 'EVO couldn\'t write the config file. Please copy the following into the file ';
+$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into EVO Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'Checkbox select options:';
 $_lang["checking_if_cache_exist"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories exist: ';
 $_lang["checking_iconv"] = 'Checking if extension <span class="mono">iconv</span> is available: ';
@@ -49,7 +49,7 @@ $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
 $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
-$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.';
+$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your EVO install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install EVO, but consider yourself warned.';
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
 $_lang["choose_language"] = 'Choose language';
@@ -58,7 +58,7 @@ $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create 
 $_lang["connection_screen_collation"] = 'Collation:';
 $_lang["connection_screen_connection_method"] = 'Connection method:';
 $_lang["connection_screen_database_connection_information"] = 'Database information';
-$_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this MODX install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
+$_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this EVO install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
 $_lang["connection_screen_database_host"] = 'Database host:';
 $_lang["connection_screen_database_info"] = 'Database Information';
 $_lang["connection_screen_database_login"] = 'Database login name:';
@@ -83,7 +83,7 @@ $_lang["database_connection_failed_note"] = 'Please check the database login det
 $_lang["database_use_failed"] = 'Database could not be selected!';
 $_lang["database_use_failed_note"] = 'Please check the database permissions for the specified user and try again.';
 $_lang["default_language"] = 'Default Manager Language';
-$_lang["default_language_description"] = 'This is the default language that will be used in the MODX Manager back end control panel.';
+$_lang["default_language_description"] = 'This is the default language that will be used in the EVO Manager back end control panel.';
 $_lang["depedency_create"] = 'Depedency created';
 $_lang["depedency_update"] = 'Depedency updated';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
@@ -94,8 +94,8 @@ $_lang["failed"] = 'FAILED!';
 $_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://forums.modx.com/';
-$_lang["help_title"] = 'Installation assistance in the MODX forums';
-$_lang["iagree_box"] = 'I agree to the terms of <a href="../assets/docs/license.txt" target="_blank">the MODX license</a>. For translations of the GPL version 2 license, please visit the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System website</a>.';
+$_lang["help_title"] = 'Installation assistance in the EVO forums';
+$_lang["iagree_box"] = 'I agree to the terms of <a href="../assets/docs/license.txt" target="_blank">the EVO license</a>. For translations of the GPL version 2 license, please visit the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System website</a>.';
 $_lang["install"] = 'Install';
 $_lang["install_overwrite"] = 'Install/Overwrite';
 $_lang["install_results"] = 'Install results';
@@ -105,7 +105,7 @@ $_lang["installation_install_new_copy"] = 'Install a new copy of ';
 $_lang["installation_install_new_note"] = 'Please note this option may overwrite any data inside your database.';
 $_lang["installation_mode"] = 'Installation Mode';
 $_lang["installation_new_installation"] = 'New Installation';
-$_lang["installation_note"] = '<strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Tools</strong> -> System Configuration in the MODX Manager.';
+$_lang["installation_note"] = '<strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Tools</strong> -> System Configuration in the EVO Manager.';
 $_lang["installation_successful"] = 'Installation was successful!';
 $_lang["installation_upgrade_advanced"] = 'Advanced Upgrade';
 $_lang["installation_upgrade_advanced_note"] = 'For advanced database admins or moving to servers with a different database connection character set.<br /><b>You will need to know your full database name, user, password and connection/collation details.</b>';
@@ -116,10 +116,10 @@ $_lang["installing_demo_site"] = 'Installing demo site: ';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
-$_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
-$_lang["modx_install"] = 'MODX &raquo; Install';
-$_lang["modx_requires_php"] = ', and MODX requires PHP [+min_version+] or later';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] the <a href="http://evo.im/" target="_blank" style="color: green; text-decoration:underline">EVO</a> Content Management Framework (CMF) project. All rights reserved. EVO is licensed under the GNU GPL.';
+$_lang["modx_footer2"] = 'EVO is free software.  We encourage you to be creative and make use of EVO in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified EVO, that you keep the source code free!';
+$_lang["modx_install"] = 'EVO &raquo; Install';
+$_lang["modx_requires_php"] = ', and EVO requires PHP [+min_version+] or later';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
@@ -129,7 +129,7 @@ $_lang["not_found"] = 'not found';
 $_lang["ok"] = 'OK!';
 $_lang["optional_items"] = 'Optional Items';
 $_lang["optional_items_note"] = 'Please choose your installation options and click Install:';
-$_lang["php_security_notice"] = '<legend>Security notice</legend><p>While MODX will work on your PHP version, usage of MODX on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
+$_lang["php_security_notice"] = '<legend>Security notice</legend><p>While EVO will work on your PHP version, usage of EVO on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 5.6 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
 $_lang["please_correct_error"] = '. Please correct the error';
 $_lang["please_correct_errors"] = '. Please correct the errors';
 $_lang["plugins"] = 'Plugins';
@@ -149,7 +149,7 @@ $_lang["sample_web_site_note"] = 'Please note that this will <b>overwrite</b> ex
 $_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
 $_lang["session_problem_try_again"] = 'Try again?';
 $_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
-$_lang["setup_couldnt_install"] = 'MODX setup couldn\'t install/alter some tables inside the selected database.';
+$_lang["setup_couldnt_install"] = 'EVO setup couldn\'t install/alter some tables inside the selected database.';
 $_lang["setup_database"] = 'Setup will now attempt to setup the database:<br />';
 $_lang["setup_database_create_connection"] = 'Creating connection to the database: ';
 $_lang["setup_database_create_connection_failed"] = 'Database connection failed!';
@@ -174,7 +174,7 @@ $_lang["status_passed"] = 'passed - database selected';
 $_lang["status_passed_database_created"] = 'passed - database created';
 $_lang["status_passed_server"] = 'passed - collations now available';
 $_lang["strict_mode"] = ' MySQL server strict sql_mode is enabled!';
-$_lang["strict_mode_error"] = 'Certain features of MODX may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
+$_lang["strict_mode_error"] = 'Certain features of EVO may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
 $_lang["summary_setup_check"] = 'Setup has carried out a number of checks to see if everything\'s ready to start the setup.';
 $_lang["system_configuration"] = 'System Configuration';
 $_lang["system_configuration_validate_referer_description"] = 'The <strong>Validate HTTP_REFERER headers</strong> setting is recommended and can protect your site from CSRF attacks, but in some server configurations, can make your manager inaccessible.';
@@ -194,11 +194,11 @@ $_lang["unable_install_template"] = 'Unable to install template.  File';
 $_lang["upgrade_note"] = '<strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.';
 $_lang["upgraded"] = 'Upgraded';
 $_lang["validate_referer_title"] = 'Validate HTTP_REFERER headers?';
-$_lang["visit_forum"] = ', visit the <a href="http://forums.modx.com/" target="_blank">MODX Forums</a>.';
+$_lang["visit_forum"] = ', visit the <a href="http://forums.modx.com/" target="_blank">EVO Forums</a>.';
 $_lang["warning"] = 'WARNING!';
 $_lang["welcome_message_start"] = 'First, choose the type of installation to perform:';
 $_lang["welcome_message_text"] = 'This program will guide you through the rest of the installation.';
-$_lang["welcome_message_welcome"] = 'Welcome to the MODX installation program.';
+$_lang["welcome_message_welcome"] = 'Welcome to the EVO installation program.';
 $_lang["writing_config_file"] = 'Writing configuration file: ';
 $_lang["yes"] = 'Yes';
 $_lang["you_running_php"] = ' - You are running on PHP ';
