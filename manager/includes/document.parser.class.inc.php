@@ -1916,7 +1916,7 @@ class DocumentParser {
             
             if(!empty($url_query_string))
                 $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string);  // Strip conflicting id/q from query string
-            if ($qstring) $url = "{$site_url}{$strictURL}?{$qstring}";
+            if (!empty($qstring)) $url = "{$site_url}{$strictURL}?{$qstring}";
             else          $url = "{$site_url}{$strictURL}";
             $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
             exit(0);
