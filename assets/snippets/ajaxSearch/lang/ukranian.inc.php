@@ -1,6 +1,6 @@
 <?php
 /*
-ukranian.inc.php - for AjaxSearch 1.10.2
+ukranian.inc.php - for AjaxSearch 1.11.0
 Created by: Marina Ivanova & Webber
 Last Modified on 2014-10-15
 Description: Language strings for AjaxSearch

@@ -1,6 +1,6 @@
 <?php
 /*
-persian.inc.php - for AjaxSearch 1.10.2
+persian.inc.php - for AjaxSearch 1.11.0
 Created by: Mohsen (MotSmart ~ www.modxcms.ir)
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch

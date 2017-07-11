@@ -6,7 +6,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
  * Ajax and non-Ajax search that supports highlighting of results
  *
  * @category 	snippet
- * @version 	1.10.2
+ * @version 	1.11.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Search
@@ -24,7 +24,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
  */
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.10.2');
+define('AS_VERSION', '1.11.0');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file
