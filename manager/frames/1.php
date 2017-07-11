@@ -79,7 +79,7 @@ if($user['which_browser'] == 'default') {
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
 <head>
-	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
+	<title><?php echo $site_name ?>- (EVO CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
 	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
