@@ -5,6 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="viewport" content="width=device-width">
+	<link rel="icon" type="image/ico" href="media/style/[(manager_theme)]/images/favicon.ico" />
 	<style type="text/css">
 		html { font-size: 16px; height: 100% }
 		body { margin: 0; padding: 0 1rem; height: 100%; font-family: sans-serif; font-size: 0.8rem; line-height: 1.5; color: #666; background-color: #F2F2F2; }

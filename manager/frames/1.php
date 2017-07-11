@@ -86,6 +86,7 @@ if($user['which_browser'] == 'default') {
 	<meta name="theme-color" content="#1d2023">
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
+	<link rel="icon" type="image/ico" href="media/style/<?php echo $modx->config['manager_theme']; ?>/images/favicon.ico" />
 	<style>
 		#tree { width: <?php echo $MODX_widthSideBar ?>rem }
 		#main, #resizer { left: <?php echo $MODX_widthSideBar ?>rem }
