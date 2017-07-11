@@ -52,7 +52,7 @@
 70% { color: #5EA5D5 }
 100% { color: #5DB54D; -webkit-transform: rotate(359deg) }
 }
-.paused { -webkit-animation-play-state: paused; animation-play-state: paused; }
+/*.paused { -webkit-animation-play-state: paused; animation-play-state: paused; }*/
 /* dark */
 .dark #main { background-color: #ecf0f1 }
 .dark #mainloader { background-color: rgba(236, 240, 241, 0.64); }
