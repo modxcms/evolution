@@ -1,5 +1,5 @@
 // ajaxSearchCmt.js
-// Version: 1.10.2 - created by Coroico
+// Version: 1.11.0 - created by Coroico
 // 12/04/2016
 // Description: This code is used to post a comment about ajax search results
 

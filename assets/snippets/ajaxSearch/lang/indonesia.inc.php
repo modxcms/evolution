@@ -1,6 +1,6 @@
 <?php
 /*
-indonesia.inc.php - for AjaxSearch 1.10.2
+indonesia.inc.php - for AjaxSearch 1.11.0
 Created by: goldsky
 Last Modified on 2014-12-09
 Description: Language strings for AjaxSearch
