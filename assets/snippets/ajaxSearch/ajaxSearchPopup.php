@@ -13,9 +13,21 @@
 /*!
 * getUserConfigName : parse the non default configuration file name from ucfg string
 */
+
+
 function getUserConfigName($ucfg) {
     preg_match('/&config=`([^`]*)`/', $ucfg, $matches);
     return $matches[1];
+}
+
+define('MODX_API_MODE', true);
+include_once(__DIR__."/../../../index.php");
+$modx->db->connect();
+if (empty ($modx->config)) {
+    $modx->getSettings();
+}
+if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || strpos($_SERVER['HTTP_REFERER'],$modx->config['site_url']) !== 0){
+    $modx->sendErrorPage();
 }
 
 if (isset($_POST['search'])) {
@@ -24,20 +36,11 @@ if (isset($_POST['search'])) {
     define('AS_SPATH', 'assets/snippets/ajaxSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
-    require_once (MODX_MANAGER_PATH . 'includes/protect.inc.php');
     if (!isset($_POST['as_version']) || (strip_tags($_POST['as_version']) != AS_VERSION)) {
         $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODX manager.";
     }
     else {
         include_once AS_PATH . "classes/ajaxSearch.class.inc.php";
-
-        define('MODX_API_MODE', true);
-        include_once (MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
-        $modx = new DocumentParser;
-        $modx->db->connect();
-        $modx->getSettings();
-        startCMSSession();
-
         $tstart = $modx->getMicroTime();
         $default = AS_PATH . 'configs/default.config.php';
         if (file_exists($default)) include $default;
