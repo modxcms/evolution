@@ -113,7 +113,7 @@ if($mode == 'restore1') {
 		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 } else {
-	include_once MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . "/includes/header.inc.php";  // start normal header
+	include_once MODX_MANAGER_PATH . "includes/header.inc.php";  // start normal header
 }
 
 if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
