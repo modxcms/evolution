@@ -2,7 +2,7 @@
 #\.*
 
 # and any files in the cache directory
-#/assets/cache/*
+/assets/cache/*
 
 # and the config file
 /manager/includes/config.inc.php
