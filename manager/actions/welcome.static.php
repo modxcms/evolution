@@ -352,9 +352,10 @@ $widgets['security'] = array(
 
 // invoke OnManagerWelcomeHome event
 $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
-$sitewidgets = unserialize($sitewidgets[0]);
 if(is_array($sitewidgets)) {
-	$widgets = $sitewidgets;
+    foreach($sitewidgets as $widget){
+        $widgets = array_merge($widgets, unserialize($widget));
+    }
 }
 
 usort($widgets, function ($a, $b) {
@@ -367,14 +368,6 @@ foreach($widgets as $widget) {
 	$output .= $modx->parseText($tpl, $widget);
 }
 $ph['widgets'] = $output;
-
-// invoke OnManagerWelcomeHome event
-$sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
-if(is_array($sitewidgets)) {
-	foreach($sitewidgets as $widget){
-		$widgets = array_merge($widgets, unserialize($widget));
-	} 
-}
 
 // load template
 if(!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
