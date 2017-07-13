@@ -1,7 +1,7 @@
-@import 'fonts.css';
-@import "forms.css";
+@import 'fonts.css?v=1.3.0';
+@import "forms.css?v=1.3.0";
+@import "mainmenu.css?v=1.3.0";
 @import "contextmenu.css";
-@import "mainmenu.css";
 @import "tree.css";
 @import "tabpane.css";
 #frameset { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
