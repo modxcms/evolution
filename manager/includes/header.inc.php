@@ -26,8 +26,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 <head>
 	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
-	<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>
 	
