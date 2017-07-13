@@ -54,7 +54,7 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 #actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 100; border-radius: 0 0 0.3rem 0.3rem; }
 #actions .btn-group > .btn-group { display: block }
 #actions .btn-group .btn { font-size: 0.675rem; height: 2.5em }
-#actions .btn-group .btn .fa { display: none; width: 1em; font-size: 1em; text-align: center }
+#actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
 #actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
 #actions .btn-group .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-group .btn-success:hover { box-shadow: none }
@@ -101,9 +101,9 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 /* [ TABLES ] */
 /* table-data */
 .table.data { width: 100%; max-width: 100%; margin-bottom: 0; border-bottom: 1px solid #eceeef }
-.table.data th { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777 }
+.table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777 }
 .table.data td { padding: 0.55rem 0.75rem; }
-.table.data td, .table th { vertical-align: top; border-top: 1px solid #eceeef }
+.table.data td, .table.data th, .table.data thead td { vertical-align: top; border-top: 1px solid #eceeef }
 .table.data td:first-child, .table.data th:first-child { padding-left: 1.3rem }
 .table.data td:last-child, .table.data th:last-child { padding-right: 1.3rem }
 .table.data thead { background-color: #fff; }
@@ -112,12 +112,13 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data > tbody > tr:hover { cursor: default; background-color: rgba(93, 109, 202, 0.16); transition-duration: .05s }
 .table.data a { color: #555 }
 .table.data .actions { white-space: nowrap }
-.table.data .actions a .fa { position: relative; margin: 0 0.4rem; font-size: 0.9rem; }
+.table.data .actions a .fa, .table.data .actions span .fa { position: relative; margin: 0 0.375rem; font-size: 0.9rem; }
 .table.data .actions a:hover .fa { color: #000; }
 .table.data .actions a:hover .fa.fa-trash { color: #d80030 }
 .table.data .actions a .fa::before { position: relative; z-index: 2; }
 .table.data .actions a .fa::after { content: ""; position: absolute; z-index: 1; left: 50%; top: 50%; width: 1.5rem; height: 1.5rem; margin: -0.75rem 0 0 -0.75rem; border-radius: 50%; -webkit-transition: 0.15s; transition: 0.15s; }
 .table.data .actions a:hover .fa::after { background-color: #fff }
+.table.data .actions .disabled { visibility: hidden }
 /* table-data-docs */
 .table.data .doc-item .fa { width: 1.2em; font-size: 0.9rem; text-align: center; margin-right: 0.25rem }
 .table.data .doc-item { text-decoration: none }
@@ -176,6 +177,11 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .gridRowIcon:hover { background-color: #f5f5dc; }
 .grid a { text-decoration: none; }
 .grid img { vertical-align: middle; padding-right: 4px; }
+/* STYLES FOR HELP */
+#helpPane h1 { border-bottom: 1px solid #888; margin-bottom: 1em; }
+#helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
+#helpPane li > strong { display: block; font-size: 14px; }
+#helpPane pre { border: 1px solid rgba(0, 0, 0, 0.1); padding: 1em; }
 /* [ DARK THEME ] */
 .dark .section-editor textarea { background-color: #282c34; color: #abb2bf }
 .dark .tab-page, .dark .tab-row .tab.selected, .dark .tab-row .tab.selected.hover, .dark .tab-row .tab.selected:before, .dark .tab-row .tab.selected span { background: #F9F9F9; }
@@ -196,24 +202,7 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 #ManageFiles .breadcrumbs a, #ManageFiles .breadcrumbs span { display: inline-block; padding: 0 0.25em; }
 #ManageFiles #imageviewer { text-align: center; }
 #ManageFiles #imageviewer img { display: inline-block; max-width: 100%; margin-top: 1rem }
-#FilesTable { width: 100%; margin-bottom: 1rem; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
-#FilesTable tr { border-bottom: 1px solid #e8e8e8; cursor: default }
-#FilesTable th { padding: 0.675rem 1rem; font-size: 0.675rem; font-weight: 400; text-transform: uppercase; text-align: center; color: #666; white-space: nowrap; vertical-align: middle }
-#FilesTable tr > th:last-child::after { display: none }
-#FilesTable td { padding: 0.25rem 0.5rem; white-space: nowrap; text-align: right; }
-#FilesTable > thead { background: #f1f1f1; border-top: 1px solid #e8e8e8; }
-#FilesTable > thead > tr > th:first-child, #FilesTable > tbody > tr > td:first-child { text-align: left; padding-left: 1rem !important; width: 100%; }
-#FilesTable > tbody > tr > td:last-child { padding-right: 1rem !important; }
-#FilesTable > thead > tr > th:first-child .fa, #FilesTable > tbody > tr > td:first-child .fa { float: left; margin: 0.3rem 0.5rem 0 0; }
-#FilesTable > tbody > tr:nth-child(2n) { background-color: rgba(255, 255, 255, 0.64) }
-#FilesTable > tbody > tr:hover { background-color: rgba(33, 150, 243, 0.1) }
-#FilesTable > tbody > tr.viewRow, #FilesTable > tbody > tr.editRow { background-color: #1976D2; color: #fff; }
-#FilesTable > tbody > tr.viewRow a, #FilesTable > tbody > tr.editRow a { color: #fff !important; }
-#FilesTable > tbody > tr > td:last-child .fa { position: relative; width: 1.3rem; height: 1.3rem; line-height: 1.3rem; font-size: 0.9rem; text-align: center; border-radius: 50%; -webkit-transition: 0.15s; transition: 0.15s; }
-#FilesTable > tbody > tr > td:last-child a:hover .fa, #FilesTable > tbody > tr > td:last-child span:not(.disabled):hover .fa { color: #000; background-color: #88bbe9 }
-#FilesTable > tbody > tr > td:last-child a:hover .fa.fa-trash { color: #d80030 }
-#FilesTable > tbody > tr > td:last-child span.disabled { visibility: hidden }
-#FilesTable > tbody > tr > td:last-child a, #FilesTable > tbody > tr > td:last-child span { color: #666; }
+#FilesTable { margin-bottom: 1rem; border-bottom: 1px solid #ddd; }
 #file_editfile.section .sectionHeader { margin: 0; padding: 0.5rem 1rem; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
 #file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
 #file_editfile td { padding: 0 !important; }

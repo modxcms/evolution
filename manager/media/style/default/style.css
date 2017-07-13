@@ -5,17 +5,6 @@
 @import "css/tabpane.css";
 @import "css/contextmenu.css";
 /* -------------------------[ Headers and Paragraphs ]--- */
-h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
-h1 .fa { margin-right: 0.25em; color: #1377c5; }
-h1 .help { margin: 0 0 0 0.25em; color: rgba(0, 0, 0, 0.15); font-size: 0.8em; cursor: pointer }
-h1 .help:hover { color: rgba(0, 0, 0, 0.3); }
-h1 small { margin-left: 0.5em; line-height: 1em }
-.split { height: 0; font-size: 0; clear: both; padding: 0; border-top: 1px dotted rgba(0, 0, 0, .1) }
-#previewIframe { width: 100%; height: 400px; }
-.messageRead { color: #333; }
-.messageUnread { color: #3CB371; font-weight: 500; }
-.element-edit-message { display: none }
-.element-edit-message p:last-child { margin-bottom: 0 }
 /* -------------------------[ Misc stuff ]--- */
 .sectionBody fieldset { background: none repeat scroll 0 0 #FDFDFD; border: 1px solid #CCCCCC; padding: 1rem !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 1rem; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
@@ -59,18 +48,10 @@ label.disabled { color: #aaa; }
 /*a.hometblink, a.hometblink:active, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size: 12px; }
 a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 .notice { width: 100%; padding: 5px; border: 1px solid #eee; background-color: #f5f5f5; color: #707070; }
-#preLoader { position: absolute; z-index: 50000; width: 100%; height: 100%; text-align: center; vertical-align: middle; padding: 100px 0 0 0; background-color: rgba(0, 0, 0, 0.07); }
-.preLoaderText { background-color: #fff; margin: auto; width: 400px; padding: 50px; border: 1px solid #dadada; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); }
-.preLoaderText p { font-size: 18px; }
-.preLoaderText p:last-child { margin-bottom: 0 }
-#loadingmask { display: none !important; }
 /* -------------------------[ Settings Table ]--- */
 .filelist td { border-bottom: 1px solid #C2C3CF; }
 /* -------------------------[ Tabs ]--- */
-.tab-pane { }
-.tab-pane > .tab-page { display: none }
-.tab-pane > .tab-page:first-child { display: block }
-.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
 .sectionBody > .tab-pane > .tab-page { padding: 1rem; }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
@@ -229,11 +210,6 @@ table th { font-weight: 500; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
 .table th, .table td, .sectionBody td, .sectionBody th { padding: 0.15rem 0.25rem; }
 .table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { /*border-top: none*/ }
-/* STYLES FOR HELP */
-#helpPane h1 { font-size: 20px; display: block; border-bottom: 1px solid #888; margin-bottom: 1em; font-weight: 500; }
-#helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
-#helpPane li > strong { display: block; font-size: 14px; }
-#helpPane pre { font-size: 12px; border: 1px solid #888; border-radius: 5px; background-color: #fff; padding: 1em; margin: 10px 0; }
 /*
  * MODxRE2 styles
  * css above is original MODxRE
@@ -243,12 +219,6 @@ table th { font-weight: 500; }
 .alert-warning { color: #1377c5; }
 .no-events { pointer-events: none; }
 /* Required for Bootstrap3 Collapse */
-.fade { opacity: 0; -webkit-transition: opacity .15s linear; -o-transition: opacity .15s linear; transition: opacity .15s linear; }
-.fade.in { opacity: 1; }
-.collapse { display: none; }
-.collapse.in { display: block; }
-.collapsing { position: relative; height: 0; overflow: hidden; -webkit-transition-timing-function: ease; -o-transition-timing-function: ease; transition-timing-function: ease; -webkit-transition-duration: .35s; -o-transition-duration: .35s; transition-duration: .35s; -webkit-transition-property: height, visibility; -o-transition-property: height, visibility; transition-property: height, visibility; }
-.no-transition .collapsing { -webkit-transition: none; -o-transition: none; transition: none; }
 .panel-title > a::before { content: "\f107"; /* fa-angle-down */ font-family: "FontAwesome"; }
 .panel-title > a.collapsed::before { content: "\f105"; /* fa-angle-right */ padding: 0 1px 0 3px; }
 .panel-title > a { font-size: 1.1em; color: #657587; display: block; padding: 3px 0; }

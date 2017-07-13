@@ -136,6 +136,13 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 ?>
 
 	<script language="javascript">
+		var actions = {
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?a=2';
+			}
+		};
+
 		function selectAll() {
 			var f = document.forms['frmdb'];
 			var c = f.elements['chk[]'];
@@ -153,7 +160,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 		}
 
 		function confirmRevert(filename) {
-			var m = '<?php echo $_lang["bkmgr_restore_confirm"] ?>';
+			var m = '<?= $_lang["bkmgr_restore_confirm"] ?>';
 			m = m.replace('[+filename+]', filename);
 			var c = confirm(m);
 			if(c) {
@@ -161,19 +168,15 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 				document.restore2.save.click();
 			}
 		}
-		<?php echo isset($_REQUEST['r']) ? " doRefresh(" . $_REQUEST['r'] . ");" : "";?>
+		<?= (isset($_REQUEST['r']) ? " doRefresh(" . $_REQUEST['r'] . ");" : "") ?>
 
 	</script>
 
 	<h1>
-		<i class="fa fa-database"></i><?php echo $_lang['bk_manager']; ?>
+		<i class="fa fa-database"></i><?= $_lang['bk_manager'] ?>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=2';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-		</ul>
-	</div>
+	<?= $_style['actionbuttons']['static']['cancel'] ?>
 
 	<div class="sectionBody" id="lyr4">
 		<div class="tab-pane" id="dbmPane">
@@ -182,26 +185,26 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 			</script>
 
 			<div class="tab-page" id="tabBackup">
-				<h2 class="tab"><?php echo $_lang['backup'] ?></h2>
+				<h2 class="tab"><?= $_lang['backup'] ?></h2>
 				<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabBackup'));</script>
 				<form name="frmdb" method="post">
 					<input type="hidden" name="mode" value="" />
-					<p class="element-edit-message"><?php echo $_lang['table_hoverinfo'] ?></p>
+					<p class="element-edit-message"><?= $_lang['table_hoverinfo'] ?></p>
 					<p>
-						<a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?php echo $_style['actions_save']; ?>"></i> <?php echo $_lang['database_table_clickbackup'] ?></a>
-						<label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements'] ?></label>
+						<a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang['database_table_clickbackup'] ?></a>
+						<label><input type="checkbox" name="droptables" checked="checked" /><?= $_lang['database_table_droptablestatements'] ?></label>
 					</p>
 					<table class="grid">
 						<thead>
 						<tr>
-							<td style="width: 17rem"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename'] ?></b></label></td>
-							<td><b><?php echo $_lang['database_table_records'] ?></b></td>
-							<td><b><?php echo $_lang['database_collation'] ?></b></td>
-							<td><b><?php echo $_lang['database_table_datasize'] ?></b></td>
-							<td><b><?php echo $_lang['database_table_overhead'] ?></b></td>
-							<td><b><?php echo $_lang['database_table_effectivesize'] ?></b></td>
-							<td><b><?php echo $_lang['database_table_indexsize'] ?></b></td>
-							<td><b><?php echo $_lang['database_table_totalsize'] ?></b></td>
+							<td style="width: 17rem"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?= $_lang['database_table_tablename'] ?></b></label></td>
+							<td><b><?= $_lang['database_table_records'] ?></b></td>
+							<td><b><?= $_lang['database_collation'] ?></b></td>
+							<td><b><?= $_lang['database_table_datasize'] ?></b></td>
+							<td><b><?= $_lang['database_table_overhead'] ?></b></td>
+							<td><b><?= $_lang['database_table_effectivesize'] ?></b></td>
+							<td><b><?= $_lang['database_table_indexsize'] ?></b></td>
+							<td><b><?= $_lang['database_table_totalsize'] ?></b></td>
 						</tr>
 						</thead>
 						<tbody>
@@ -247,11 +250,11 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 						</tbody>
 						<tfoot>
 						<tr>
-							<td><b><?php echo $_lang['database_table_totals'] ?></b></td>
+							<td><b><?= $_lang['database_table_totals'] ?></b></td>
 							<td colspan="3">&nbsp;</td>
-							<td><?php echo $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
+							<td><?= $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
 							<td colspan="2">&nbsp;</td>
-							<td><?php echo "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
+							<td><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
 						</tr>
 						</tfoot>
 					</table>
@@ -265,11 +268,11 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 			<!-- This iframe is used when downloading file backup file -->
 			<iframe name="fileDownloader" width="1" height="1" style="display:none; width:1px; height:1px;"></iframe>
 			<div class="tab-page" id="tabRestore">
-				<h2 class="tab"><?php echo $_lang["bkmgr_restore_title"]; ?></h2>
-				<?php echo $ph['result_msg_import']; ?>
+				<h2 class="tab"><?= $_lang["bkmgr_restore_title"] ?></h2>
+				<?= $ph['result_msg_import'] ?>
 				<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
 				<div class="element-edit-message">
-					<?php echo $_lang["bkmgr_restore_msg"]; ?>
+					<?= $_lang["bkmgr_restore_msg"] ?>
 				</div>
 				<form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
 					<input type="hidden" name="a" value="93" />
@@ -335,35 +338,35 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 
 					?>
 					<p>
-						<label><input type="radio" name="sel" onclick="showhide('file');" <?php echo checked(!isset($_SESSION['console_mode']) || $_SESSION['console_mode'] !== 'text'); ?> /> <?php echo $_lang["bkmgr_run_sql_file_label"]; ?></label>
-						<label><input type="radio" name="sel" onclick="showhide('textarea');" <?php echo checked(isset($_SESSION['console_mode']) && $_SESSION['console_mode'] === 'text'); ?> /> <?php echo $_lang["bkmgr_run_sql_direct_label"]; ?></label>
+						<label><input type="radio" name="sel" onclick="showhide('file');" <?= checked(!isset($_SESSION['console_mode']) || $_SESSION['console_mode'] !== 'text') ?> /> <?= $_lang["bkmgr_run_sql_file_label"] ?></label>
+						<label><input type="radio" name="sel" onclick="showhide('textarea');" <?= checked(isset($_SESSION['console_mode']) && $_SESSION['console_mode'] === 'text') ?> /> <?= $_lang["bkmgr_run_sql_direct_label"] ?></label>
 					</p>
-					<div class="form-group"><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?php echo $f_display; ?>;" /></div>
-					<div id="textarea" style="display:<?php echo $t_display; ?>;">
-						<textarea name="textarea" style="height:200px;"><?php echo $value; ?></textarea>
+					<div class="form-group"><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?= $f_display ?>;" /></div>
+					<div id="textarea" style="display:<?= $t_display ?>;">
+						<textarea name="textarea" style="height:200px;"><?= $value ?></textarea>
 					</div>
-					<a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_run_sql_submit"]; ?></a>
+					<a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_run_sql_submit"] ?></a>
 					<input type="submit" name="save" style="display:none;" />
 				</form>
 				<?php
 				if(isset($result)) {
-					echo '<div style="margin-top:20px;"><p style="font-weight:bold;"><?php echo $_lang["bkmgr_run_sql_result"];?></p>' . $result . '</div>';
+					echo '<div style="margin-top:20px;"><p style="font-weight:bold;">' . $_lang["bkmgr_run_sql_result"] . '</p>' . $result . '</div>';
 				}
 				?>
 			</div>
 
 			<div class="tab-page" id="tabSnapshot">
-				<h2 class="tab"><?php echo $_lang["bkmgr_snapshot_title"]; ?></h2>
-				<?php echo $ph['result_msg_snapshot']; ?>
+				<h2 class="tab"><?= $_lang["bkmgr_snapshot_title"] ?></h2>
+				<?= $ph['result_msg_snapshot'] ?>
 				<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
 				<div class="element-edit-message">
-					<?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->config['snapshot_path']}")); ?>
+					<?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->config['snapshot_path']}")) ?>
 				</div>
 				<form method="post" name="snapshot" action="index.php">
 					<input type="hidden" name="a" value="93" />
 					<input type="hidden" name="mode" value="snapshot" />
-					<?php echo $_lang["description"]; ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" />
-					<a href="javascript:;" class="btn btn-primary" style="display:inline-block;" onclick="document.snapshot.save.click();"> <i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_snapshot_submit"]; ?></a>
+					<?= $_lang["description"] ?> <input type="text" name="backup_title" style="width: 350px; margin-bottom:1em;" maxlength="350" />
+					<a href="javascript:;" class="btn btn-primary" style="display:inline-block;" onclick="document.snapshot.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_snapshot_submit"] ?></a>
 					<input type="submit" name="save" style="display:none;" />
 				</form>
 				<style type="text/css">
@@ -371,7 +374,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 					table td { border: 1px solid #ccc; padding: 4px; }
 					.msg { background-color: #edffee; border: 2px solid #3ab63a; padding: 8px; margin-bottom: 8px; }
 				</style>
-				<div class="sectionHeader"><?php echo $_lang["bkmgr_snapshot_list_title"]; ?></div>
+				<div class="sectionHeader"><?= $_lang["bkmgr_snapshot_list_title"] ?></div>
 				<div class="sectionBody">
 					<form method="post" name="restore2" action="index.php">
 						<input type="hidden" name="a" value="93" />
