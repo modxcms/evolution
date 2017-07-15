@@ -175,7 +175,6 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .gridItem { background-color: #fff; padding: 3px; }
 .gridAltItem { background-color: #f7f7f7; padding: 3px; }
 .grid tbody tr:hover td { background: #E9EDF3; }
-.gridRowIcon:hover { background-color: #f5f5dc; }
 .grid a { text-decoration: none; }
 .grid img { vertical-align: middle; padding-right: 4px; }
 /* STYLES FOR HELP */
