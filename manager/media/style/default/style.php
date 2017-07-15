@@ -435,6 +435,16 @@ $_style['actionbuttons'] = array(
 				</a>
 			</div>
 		</div>',
+		'canceldelete' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
 	),
 	'static' => array(
 		'document' => '<div id="actions">

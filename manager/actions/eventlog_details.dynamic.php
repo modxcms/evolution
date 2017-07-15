@@ -15,37 +15,31 @@ $ds = $modx->db->select('el.*, IFNULL(wu.username,mu.username) as username', $mo
 $content = $modx->db->getRow($ds);
 
 ?>
-
-<h1><?php echo $_lang['eventlog']; ?></h1>
-
-<div id="actions">
-	<ul class="actionButtons">
-		<?php if($modx->hasPermission('delete_eventlog')) { ?>
-			<li id="Button3">
-				<a href="javascript:;" onclick="deletelog();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang['delete']; ?></a>
-			</li>
-		<?php } ?>
-		<li id="Button4">
-			<a href="index.php?a=114"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['cancel']; ?></a>
-		</li>
-	</ul>
-</div>
-
-<script language="JavaScript" type="text/javascript">
-	function deletelog() {
-		if(confirm("<?php echo $_lang['confirm_delete_eventlog']; ?>") === true) {
-			document.location.href = "index.php?id=" + document.resource.id.value + "&a=116";
+<script type="text/javascript">
+	var actions = {
+		delete: function() {
+			if(confirm("<?= $_lang['confirm_delete_eventlog'] ?>") === true) {
+				document.location.href = "index.php?id=" + document.resource.id.value + "&a=116";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			document.location.href = 'index.php?a=114';
 		}
-	}
+	};
 </script>
 
+<h1><?= $_lang['eventlog'] ?></h1>
+
+<?= $_style['actionbuttons']['dynamic']['canceldelete'] ?>
+
 <form name="resource" method="get">
-	<input type="hidden" name="id" value="<?php echo $id; ?>" />
-	<input type="hidden" name="a" value="<?php echo $modx->manager->action; ?>" />
-	<input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
+	<input type="hidden" name="id" value="<?= $id ?>" />
+	<input type="hidden" name="a" value="<?= $modx->manager->action ?>" />
+	<input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
 	<input type="hidden" name="op" value="" />
 	<div class="section">
-		<div class="sectionHeader"><?php echo $content['source'] . " - " . $_lang['eventlog_viewer']; ?></div>
+		<div class="sectionHeader"><?= $content['source'] . " - " . $_lang['eventlog_viewer'] ?></div>
 		<div class="sectionBody">
 			<?php
 			$date = $modx->toDateFormat($content["createdon"]);
@@ -64,15 +58,15 @@ $content = $modx->db->getRow($ds);
 			<table border="0" width="100%">
 				<tr>
 					<td colspan="4">
-						<div class="warning"><i class="<?php echo $icon ?>"></i> <?php echo $msgtype ?></div>
+						<div class="warning"><i class="<?= $icon ?>"></i> <?= $msgtype ?></div>
 						<br />
 					</td>
 				</tr>
 				<tr>
-					<td width="25%" valign="top"><?php echo $_lang["event_id"] ?>:</td>
-					<td width="25%" valign="top"><?php echo $content["eventid"] ?></td>
-					<td width="25%" valign="top"><?php echo $_lang["source"] ?>:</td>
-					<td width="25%" valign="top"><?php echo $content["source"] ?></td>
+					<td width="25%" valign="top"><?= $_lang["event_id"] ?>:</td>
+					<td width="25%" valign="top"><?= $content["eventid"] ?></td>
+					<td width="25%" valign="top"><?= $_lang["source"] ?>:</td>
+					<td width="25%" valign="top"><?= $content["source"] ?></td>
 				</tr>
 				<tr>
 					<td colspan="4">
@@ -80,10 +74,10 @@ $content = $modx->db->getRow($ds);
 					</td>
 				</tr>
 				<tr>
-					<td width="25%" valign="top"><?php echo $_lang["date"] ?>:</td>
-					<td width="25%" valign="top"><?php echo $date ?></td>
-					<td width="25%" valign="top"><?php echo $_lang["user"] ?>:</td>
-					<td width="25%" valign="top"><?php echo $content["username"] ?></td>
+					<td width="25%" valign="top"><?= $_lang["date"] ?>:</td>
+					<td width="25%" valign="top"><?= $date ?></td>
+					<td width="25%" valign="top"><?= $_lang["user"] ?>:</td>
+					<td width="25%" valign="top"><?= $content["username"] ?></td>
 				</tr>
 				<tr>
 					<td colspan="4">
@@ -92,7 +86,7 @@ $content = $modx->db->getRow($ds);
 				</tr>
 				<tr>
 					<td width="100%" colspan="4"><br />
-						<?php echo $content["description"] ?>
+						<?= $content["description"] ?>
 					</td>
 				</tr>
 			</table>
