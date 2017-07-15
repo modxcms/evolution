@@ -199,7 +199,7 @@ if($user['which_browser'] == 'default') {
 		<div class="container">
 			<div class="row">
 				<div class="cell">
-					<?php include ('mainmenu.php') ?>
+					<?php include('mainmenu.php') ?>
 				</div>
 				<div class="cell">
 					<ul id="settings" class="nav">
@@ -219,70 +219,70 @@ if($user['which_browser'] == 'default') {
 							</a>
 						</li>
 						<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
-						<li class="dropdown">
-							<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
-							<ul class="dropdown-menu">
-								<?php if($modx->hasPermission('settings')) { ?>
-								<li>
-									<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-cog fw"></i><?= $_lang['edit_settings'] ?>
-									</a>
-								</li>
-								<?php } ?>
+							<li class="dropdown">
+								<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
+								<ul class="dropdown-menu">
+									<?php if($modx->hasPermission('settings')) { ?>
+										<li>
+											<a href="index.php?a=17" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-cog fw"></i><?= $_lang['edit_settings'] ?>
+											</a>
+										</li>
+									<?php } ?>
 									<?php if($modx->hasPermission('view_eventlog')) { ?>
-								<li>
-									<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
-									</a>
-								</li>
-								<?php } ?>
+										<li>
+											<a href="index.php?a=70" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
+											</a>
+										</li>
+									<?php } ?>
 									<?php if($modx->hasPermission('view_eventlog')) { ?>
-								<li>
-									<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-exclamation-triangle"></i><?= $_lang['eventlog_viewer'] ?>
-									</a>
-								</li>
-								<?php } ?>
+										<li>
+											<a href="index.php?a=114" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-exclamation-triangle"></i><?= $_lang['eventlog_viewer'] ?>
+											</a>
+										</li>
+									<?php } ?>
 									<?php if($modx->hasPermission('logs')) { ?>
-								<li>
-									<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-user-secret"></i><?= $_lang['view_logging'] ?>
-									</a>
-								</li>
-								<li>
-									<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
-									</a>
-								</li>
-								<?php } ?>
+										<li>
+											<a href="index.php?a=13" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-user-secret"></i><?= $_lang['view_logging'] ?>
+											</a>
+										</li>
+										<li>
+											<a href="index.php?a=53" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
+											</a>
+										</li>
+									<?php } ?>
 									<?php if($modx->hasPermission('help')) { ?>
-								<li>
-									<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);">
-										<i class="fa fa-question-circle"></i><?= $_lang['help'] ?>
-									</a>
-								</li>
-								<?php } ?>
-							</ul>
-						</li>
+										<li>
+											<a href="index.php?a=9#version_notices" target="main" onclick="setLastClickedElement(0,0);">
+												<i class="fa fa-question-circle"></i><?= $_lang['help'] ?>
+											</a>
+										</li>
+									<?php } ?>
+								</ul>
+							</li>
 						<?php } ?>
 						<li class="dropdown account">
 							<a href="javascript:;" class="dropdown-toggle" onclick="return false;">
 								<span class="username"><?= $user['username'] ?></span>
 								<?php if($user['photo']) { ?>
-								<span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
+									<span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
 								<?php } else { ?>
-								<span class="icon"><i class="fa fa-user-circle"></i></span>
+									<span class="icon"><i class="fa fa-user-circle"></i></span>
 								<?php } ?>
 								<i id="msgCounter"></i>
 							</a>
 							<ul class="dropdown-menu">
 								<li id="newMail"></li>
 								<?php if($modx->hasPermission('change_password')) { ?>
-								<li>
-									<a onclick="" href="index.php?a=28" target="main">
-										<i class="fa fa-lock"></i><?= $_lang['change_password'] ?>
-									</a>
-								</li>
+									<li>
+										<a onclick="" href="index.php?a=28" target="main">
+											<i class="fa fa-lock"></i><?= $_lang['change_password'] ?>
+										</a>
+									</li>
 								<?php } ?>
 								<li>
 									<a href="index.php?a=8">
@@ -304,7 +304,7 @@ if($user['which_browser'] == 'default') {
 		</div>
 	</div>
 	<div id="tree">
-		<?php include ('tree.php') ?>
+		<?php include('tree.php') ?>
 	</div>
 	<div id="main">
 		<iframe name="main" id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
@@ -315,14 +315,18 @@ if($user['which_browser'] == 'default') {
 
 	<div id="floater" class="dropdown">
 		<?php
-		$sortParams = array('tree_sortby', 'tree_sortdir', 'tree_nodename');
+		$sortParams = array(
+			'tree_sortby',
+			'tree_sortdir',
+			'tree_nodename'
+		);
 		foreach($sortParams as $param) {
-		if(isset($_REQUEST[$param])) {
-		$modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
-		$_SESSION[$param] = $_REQUEST[$param];
-		} else if(!isset($_SESSION[$param])) {
-		$_SESSION[$param] = $modx->manager->getLastUserSetting($param);
-		}
+			if(isset($_REQUEST[$param])) {
+				$modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+				$_SESSION[$param] = $_REQUEST[$param];
+			} else if(!isset($_SESSION[$param])) {
+				$_SESSION[$param] = $modx->manager->getLastUserSetting($param);
+			}
 		}
 		?>
 		<form name="sortFrm" id="sortFrm">
@@ -379,18 +383,18 @@ if($user['which_browser'] == 'default') {
 		constructLink(7, $_style["ctx_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
 		constructLink(11, $_style["ctx_sort_menuindex"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
 		?>
-			<div class="seperator"></div>
+		<div class="seperator"></div>
 		<?php
 		constructLink(9, $_style["ctx_publish_document"], $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
 		constructLink(10, $_style["ctx_unpublish_resource"], $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
 		constructLink(4, $_style["ctx_delete"], $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
 		constructLink(8, $_style["ctx_undelete_resource"], $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
 		?>
-			<div class="seperator"></div>
+		<div class="seperator"></div>
 		<?php
 		constructLink(6, $_style["ctx_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
 		?>
-			<div class="seperator"></div>
+		<div class="seperator"></div>
 		<?php
 		constructLink(1, $_style["ctx_resource_overview"], $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
 		constructLink(12, $_style["ctx_preview_resource"], $_lang["preview_resource"], 1); // preview
@@ -399,10 +403,10 @@ if($user['which_browser'] == 'default') {
 
 	<?php
 	function constructLink($action, $img, $text, $allowed) {
-	if($allowed == 1) {
-	echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
-	echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
-	}
+		if($allowed == 1) {
+			echo sprintf('<div class="menuLink" id="item%s" onclick="modx.tree.menuHandler(%s);">', $action, $action);
+			echo sprintf('<i class="%s"></i> %s</div>', $img, $text);
+		}
 	}
 
 	?>
