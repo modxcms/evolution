@@ -278,7 +278,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					$desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
 					$locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
-					$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $_lang['edit']);
+					$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
 					$tvList .= '</li>';
 
 					$preCat = $row['category'];
