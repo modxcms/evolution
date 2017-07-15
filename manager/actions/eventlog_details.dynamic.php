@@ -38,30 +38,26 @@ $content = $modx->db->getRow($ds);
 	<input type="hidden" name="a" value="<?= $modx->manager->action ?>" />
 	<input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
 	<input type="hidden" name="op" value="" />
-	<div class="section">
-		<div class="sectionHeader"><?= $content['source'] . " - " . $_lang['eventlog_viewer'] ?></div>
-		<div class="sectionBody">
+	<div class="tab-page">
+		<div class="container container-body">
 			<?php
 			$date = $modx->toDateFormat($content["createdon"]);
 			if($content["type"] == 1) {
-				$icon = $_style['actions_info'];
+				$icon = $_style['actions_info'] . ' text-info';
 				$msgtype = $_lang["information"];
 			} else if($content["type"] == 2) {
-				$icon = $_style['actions_triangle'];
+				$icon = $_style['actions_triangle'] . ' text-warning';
 				$msgtype = $_lang["warning"];
 			} else if($content["type"] == 3) {
-				$icon = $_style['actions_error'];
+				$icon = $_style['actions_error'] . ' text-danger';
 				$msgtype = $_lang["error"];
 			}
 			?>
-
-			<table border="0" width="100%">
-				<tr>
-					<td colspan="4">
-						<div class="warning"><i class="<?= $icon ?>"></i> <?= $msgtype ?></div>
-						<br />
-					</td>
-				</tr>
+			<p><b><?= $content['source'] . " - " . $_lang['eventlog_viewer'] ?></b></p>
+			<p>
+				<i class="<?= $icon ?>"></i> <?= $msgtype ?>
+			</p>
+			<table class="table">
 				<tr>
 					<td width="25%" valign="top"><?= $_lang["event_id"] ?>:</td>
 					<td width="25%" valign="top"><?= $content["eventid"] ?></td>
@@ -69,20 +65,10 @@ $content = $modx->db->getRow($ds);
 					<td width="25%" valign="top"><?= $content["source"] ?></td>
 				</tr>
 				<tr>
-					<td colspan="4">
-						<div class='split'>&nbsp;</div>
-					</td>
-				</tr>
-				<tr>
 					<td width="25%" valign="top"><?= $_lang["date"] ?>:</td>
 					<td width="25%" valign="top"><?= $date ?></td>
 					<td width="25%" valign="top"><?= $_lang["user"] ?>:</td>
 					<td width="25%" valign="top"><?= $content["username"] ?></td>
-				</tr>
-				<tr>
-					<td colspan="4">
-						<div class='split'>&nbsp;</div>
-					</td>
 				</tr>
 				<tr>
 					<td width="100%" colspan="4"><br />
