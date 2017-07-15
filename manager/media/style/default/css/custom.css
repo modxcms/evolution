@@ -40,7 +40,7 @@ optgroup option { font-weight: normal; background-color: #fff; }
 .form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
 .form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
 .form-control-name .custom-control input:checked ~ .fa-lock::before { content: "\f023"; color: #d9534f }
-input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
+input[type=date], input[name*=date], input[name=createdon], input[name=editedon], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
