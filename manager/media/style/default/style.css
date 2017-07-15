@@ -51,7 +51,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 .filelist td { border-bottom: 1px solid #C2C3CF; }
 /* -------------------------[ Tabs ]--- */
 .tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
-.sectionBody > .tab-pane > .tab-page { padding: 1rem; }
+.sectionBody > .tab-pane > .tab-page { padding: 1.3rem; }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
@@ -101,12 +101,12 @@ form#mutate .multitv input[type="text"] { width: 300px; }
 form#mutate .imageField { width: 50%; min-width: 300px; }
 form#mutate input[name="menuindex"] { text-align: center; width: 80px; padding-left: 0; padding-right: 0; }
 form#mutate input[name="ta"].inputBox { padding-left: 30px }
-form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button] { position: relative; float: right; margin: -29px 0px 0 0; z-index: 1; height: 29px !important; border-radius: 0 3px 3px 0 !important; }
+form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button] { position: relative; float: right; margin: -29px 0px 0 0; z-index: 5; height: 29px !important; border-radius: 0 3px 3px 0 !important; }
 form#mutate input[name="ta"].inputBox:focus + input[type=button], form#mutate input[name="ta"].inputBox:focus + .CodeMirror + input[type=button] { border-color: #1377c5 #1377c5 #1377c5 #bbb; }
 form#mutate textarea.tv_textareamini { height: 100px; width: 300px; overflow-y: scroll; }
 form#mutate textarea.tv_textarea { height: 100px; width: 100%; overflow-y: scroll; }
 form#mutate #llock { position: relative; z-index: 5; float: left; width: 23px; height: 23px; margin: 3px -28px 0 5px; line-height: 25px; cursor: pointer; text-align: center; font-size: 14px; background-color: #fbfbfb; border-radius: 50%; }
-form#mutate #llock + #ta { display: block !important }
+form#mutate #llock + #ta { display: block !important; padding-left: 2rem }
 form#mutate #llock + #ta + .CodeMirror { display: none !important; z-index: 0; clear: none; min-height: 29px; margin: 0; border-color: #ddd; border-radius: 3px; }
 form#mutate #plock { width: 1.4em; cursor: pointer; font-size: 14px }
 /*
