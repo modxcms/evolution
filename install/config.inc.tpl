@@ -100,7 +100,19 @@ if(!function_exists('startCMSSession')) {
         removeInvalidCmsSessionFromStorage($_GET, $session_name);
         removeInvalidCmsSessionFromStorage($_POST, $session_name);
     }
+    function is_session_started(){
+        if (php_sapi_name() !== 'cli') {
+            if (version_compare(phpversion(), '5.4.0', '>=')) {
+                return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
+            } else {
+                return session_id() === '' ? FALSE : TRUE;
+            }
+        }
+        return FALSE;
+    }
     function startCMSSession(){
+	
+	if ( is_session_started() !== FALSE ) return;
         
         global $site_sessionname, $https_port;
         
