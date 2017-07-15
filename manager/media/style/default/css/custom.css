@@ -24,7 +24,7 @@ button, input, optgroup, select, textarea { position: relative; font-family: san
 .btn-danger { color: #fff; background-color: #d9534f; border-color: #d9534f }
 .btn-danger:hover { color: #fff; background-color: #c9302c; border-color: #c12e2a }
 textarea { width: 100%; overflow: auto; resize: vertical }
-select.form-control:not([size]):not([multiple]), select:not([multiple]) { height: calc(2.235em + 2px) }
+select.form-control:not([size]):not([multiple]), select:not([multiple]) { min-height: calc(2.235em + 2px); height: auto; }
 optgroup { font-style: normal; font-weight: 500; background-color: #ddd; }
 optgroup option { font-weight: normal; background-color: #fff; }
 .form-row { margin-bottom: 0.1875rem; }
