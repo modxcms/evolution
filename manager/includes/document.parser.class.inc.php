@@ -1564,7 +1564,7 @@ class DocumentParser {
                         list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
                         $value .= "`{$inner}`{$outer}";
                         $i++;
-                        if(20<$i) exit('The nest of values are hard to read. Please use three different quotes.');
+                        if(100<$i) exit('The nest of values are hard to read. Please use three different quotes.');
                     }
                     if($i&&$delim==='`') $value = rtrim($value, '`');
                 }
