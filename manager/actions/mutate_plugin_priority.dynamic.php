@@ -11,7 +11,7 @@ $siteURL = $modx->config['site_url'];
 $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
-	$updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
+	$updateMsg .= '<span class="warning" id="updated">' . $_lang['sort_updated'] . '<br /><br /> </span>';
 	$tbl = $modx->getFullTableName('site_plugin_events');
 
 	foreach($_POST as $listName => $listValue) {
@@ -61,20 +61,10 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 ?>
 
 <style type="text/css">
-	.topdiv {
-		border: 0;
-		}
-	.subdiv {
-		border: 0;
-		}
 	li { list-style: none; }
-	.tplbutton {
-		text-align: right;
-		}
 	ul.sortableList {
 		margin: 0px;
 		width: 300px;
-		font-family: Arial, sans-serif;
 		}
 	ul.sortableList li {
 		font-weight: bold;
@@ -87,62 +77,62 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 		}
 	#sortableListForm { display: none; }
 </style>
-<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
+
 <script type="text/javascript">
 
-	function save() {
-		setTimeout("document.sortableListForm.submit()", 1000);
-	}
+	var actions = {
+		save: function() {
+			setTimeout("document.sortableListForm.submit()", 1000);
+		},
+		cancel: function() {
+			window.location.href = 'index.php?a=76';
+		}
+	};
 
-	window.addEvent('domready', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 		<?php
 		foreach($sortables as $list) {
 		?>
-
-		new Sortables($('<?php echo $list ?>'), {
+		new Sortables(document.getElementById('<?= $list ?>'), {
 			onComplete: function() {
 				var id = null;
 				var list = this.serialize(function(el) {
-					id = el.getParent().id;
+					id = el.parentNode.id;
 					return el.id;
 				});
-				$('list_' + id).value = list;
+				document.getElementById('list_' + id).value = list;
 			}
 		});
 		<?php
 		}
 		?>
-
 	});
 </script>
 
-<h1><?php echo $_lang['plugin_priority_title'] ?></h1>
+<h1><?= $_lang['plugin_priority_title'] ?></h1>
 
-<div id="actions"
-	<ul class="actionButtons">
-		<li class="transition"><a href="javascript:;" onclick="save();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save'] ?></a></li>
-		<li class="transition"><a href="javascript:;" onclick="window.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php $_lang['cancel'] ?></a></li>
-	</ul>
-</div>
+<?= $_style['actionbuttons']['dynamic']['save'] ?>
 
-<div class="section">
-	<div class="sectionHeader"><?php echo $_lang['plugin_priority'] ?></div>
-	<div class="sectionBody">
-		<p><?php echo $_lang['plugin_priority_instructions'] ?></p>
+<div class="tab-page">
+	<div class="container container-body">
+		<b><?= $_lang['plugin_priority'] ?></b>
+		<div class="form-group">
+			<p><?= $_lang['plugin_priority_instructions'] ?></p>
 
-		<?php echo $updateMsg ?><span class="warning" style="display:none;" id="updating">Updating...<br /><br /> </span>
+			<?= $updateMsg ?><span class="warning" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?><br /><br /> </span>
 
-		<?php echo $evtLists ?>
+			<?= $evtLists ?>
 
-		<form action="" method="post" name="sortableListForm" style="display: none;">
-			<input type="hidden" name="listSubmitted" value="true" />
-			<?php
-			foreach($sortables as $list) {
-				?>
-				<input type="text" id="list_<?php echo $list ?>" name="list_<?php echo $list ?>" value="" />
+			<form action="" method="post" name="sortableListForm" style="display: none;">
+				<input type="hidden" name="listSubmitted" value="true" />
 				<?php
-			}
-			?>
-		</form>
+				foreach($sortables as $list) {
+					?>
+					<input type="text" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
+					<?php
+				}
+				?>
+			</form>
+		</div>
 	</div>
 </div>
