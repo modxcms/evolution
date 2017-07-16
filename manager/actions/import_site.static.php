@@ -114,7 +114,7 @@ function run() {
 	if(!is_numeric($maxtime)) {
 		$maxtime = 30;
 	}
-	
+
 	@set_time_limit($maxtime);
 
 	$mtime = microtime();
