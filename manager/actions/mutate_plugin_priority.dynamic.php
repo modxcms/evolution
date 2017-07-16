@@ -75,7 +75,6 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 		border: 1px solid #CCCCCC;
 		background: #f2f2f2;
 		}
-	#sortableListForm { display: none; }
 </style>
 
 <script type="text/javascript">
@@ -123,12 +122,12 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 
 			<?= $evtLists ?>
 
-			<form action="" method="post" name="sortableListForm" style="display: none;">
+			<form action="" method="post" name="sortableListForm">
 				<input type="hidden" name="listSubmitted" value="true" />
 				<?php
 				foreach($sortables as $list) {
 					?>
-					<input type="text" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
+					<input type="hidden" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
 					<?php
 				}
 				?>
