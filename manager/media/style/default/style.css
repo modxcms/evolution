@@ -245,17 +245,17 @@ div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
 .lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; padding: 0; }
 .lockCell { width: 2.5em; padding-left: 10px; }
 .mainCell { width: auto; }
-.btnCell { width: 6em; text-align: right; padding-right: 10px; }
+.btnCell { width: 6em; text-align: right; padding-right: 1rem; }
 .mainCell > span { display: block }
 /* Manage elements general styles */
-a.man_el_name { display: block; padding: .1em 0 .1em 12px; }
+a.man_el_name { display: block; padding: .1em 0 .1em 1.3rem; }
 a.man_el_name:hover { text-decoration: none; }
 .lockCell + .mainCell a.man_el_name { padding-left: 0 !important; }
 .lockCell + .mainCell a.man_el_name:before { display: none; }
 .elements_descr { color: #222; margin-left: 1em; font-size: 0.88em; }
-.resourceTable .panel-heading { margin: 0 -1rem !important; background-color: #f5f5f5; border-top: 1px dotted #dedede; border-bottom: 1px dotted #dedede; }
-.resourceTable .panel-title > a { padding: 5px 0 5px 1rem; text-decoration: none }
-.resourceTable ul.elements { margin: 0 -1rem; padding: 0 0 10px 0; }
+.resourceTable .panel-heading { margin: 0 -1.3rem !important; background-color: #f5f5f5; border-top: 1px dotted #dedede; border-bottom: 1px dotted #dedede; }
+.resourceTable .panel-title > a { padding: 5px 1.3rem; text-decoration: none }
+.resourceTable ul.elements { margin: 0 -1.3rem; padding: 0 0 10px 0; }
 .resourceTable ul.elements > li { padding: 0 !important; border-bottom: 1px dotted #dedede; border-left: 3px solid #FFF; transition: all 0.1s ease; margin: 0 !important; }
 .resourceTable ul.elements > li:hover { background: #f9f9f9; border-left: 3px solid #1377c5; }
 .resourceTable ul.elements > li::before { display: none }
