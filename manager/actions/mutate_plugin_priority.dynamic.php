@@ -78,7 +78,6 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 </style>
 
 <script type="text/javascript">
-
 	var actions = {
 		save: function() {
 			setTimeout("document.sortableListForm.submit()", 1000);
@@ -87,25 +86,6 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 			window.location.href = 'index.php?a=76';
 		}
 	};
-
-	document.addEventListener('DOMContentLoaded', function() {
-		<?php
-		foreach($sortables as $list) {
-		?>
-		new Sortables(document.getElementById('<?= $list ?>'), {
-			onComplete: function() {
-				var id = null;
-				var list = this.serialize(function(el) {
-					id = el.parentNode.id;
-					return el.id;
-				});
-				document.getElementById('list_' + id).value = list;
-			}
-		});
-		<?php
-		}
-		?>
-	});
 </script>
 
 <h1><?= $_lang['plugin_priority_title'] ?></h1>
@@ -135,3 +115,19 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var els = document.querySelectorAll('.sortableList');
+	for(var i = 0; i < els.length; i++) {
+		new Sortables(els[i], {
+			onComplete: function() {
+				var id = null;
+				var list = this.serialize(function(el) {
+					id = el.parentNode.id;
+					return el.id;
+				});
+				document.getElementById('list_' + id).value = list;
+			}
+		});
+	}
+</script>
