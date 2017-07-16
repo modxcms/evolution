@@ -89,10 +89,7 @@ $allowedfiles = array(
 			run();
 			$modx->clearCache('full');
 			?>
-				<ul class="actionButtons">
-					<li><a href="javascript:;" onclick="window.location.href='index.php?a=2';"><i class="<?= $_style["actions_close"] ?>"></i> <?= $_lang["close"] ?></a>
-					</li>
-				</ul>
+				<a href="javascript:;" class="btn btn-primary" onclick="window.location.href='index.php?a=2';"><i class="<?= $_style["actions_close"] ?>"></i> <?= $_lang["close"] ?></a>
 				<script type="text/javascript">
 					top.mainMenu.reloadtree();
 					parent.tree.ca = 'open';
