@@ -14,7 +14,6 @@ $allowedfiles = array(
 	'xml'
 );
 ?>
-
 	<script language="javascript">
 		var actions = {
 			cancel: function() {
@@ -41,59 +40,50 @@ $allowedfiles = array(
 
 <?= $_style['actionbuttons']['static']['cancel'] ?>
 
-	<div class="section">
-		<div class="sectionBody">
+	<div class="tab-page">
+		<div class="container container-body">
 			<?php
-
 			if(!isset($_POST['import'])) {
 				echo "<div class=\"element-edit-message\">" . $_lang['import_site_message'] . "</div>";
 				?>
-
-				<fieldset style="padding:10px;border:1px solid #ccc;background-color:#fff;">
-					<legend><?= $_lang['import_site'] ?></legend>
-					<form action="index.php" method="post" name="importFrm">
-						<input type="hidden" name="import" value="import" />
-						<input type="hidden" name="a" value="95" />
-						<input type="hidden" name="parent" value="0" />
-						<table border="0" cellspacing="0" cellpadding="2">
-							<tr>
-								<td nowrap="nowrap"><b><?= $_lang['import_parent_resource'] ?></b></td>
-								<td>&nbsp;</td>
-								<td><b><span id="parentName">0 (<?= $site_name ?>)</span></b></td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?= $_lang['import_site_maxtime'] ?></b></td>
-								<td>&nbsp;</td>
-								<td><input type="text" name="maxtime" value="30" />
-									<br />
-									<?= $_lang['import_site_maxtime_message'] ?>
-								</td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php1"] ?></b></td>
-								<td>&nbsp;</td>
-								<td><input type="checkbox" id="reset" name="reset" value="on" />
-									<br />
-									<?= $_lang["import_site.static.php2"] ?>
-								</td>
-							</tr>
-							<tr>
-								<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php3"] ?></b></td>
-								<td>&nbsp;</td>
-								<td>
-									<label><input type="radio" name="object" value="body" /> <?= $_lang["import_site.static.php4"] ?></label>
-									<label><input type="radio" name="object" value="all" checked="checked" /> <?= $_lang["import_site.static.php5"] ?></label>
-									<br />
-								</td>
-							</tr>
-						</table>
-						<ul class="actionButtons">
-							<li><a href="javascript:;" class="default" onclick="window.importFrm.submit();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["import_site_start"] ?></a>
-							</li>
-						</ul>
-					</form>
-				</fieldset>
-
+				<form action="index.php" method="post" name="importFrm">
+					<input type="hidden" name="import" value="import" />
+					<input type="hidden" name="a" value="95" />
+					<input type="hidden" name="parent" value="0" />
+					<table border="0" cellspacing="0" cellpadding="2">
+						<tr>
+							<td nowrap="nowrap"><b><?= $_lang['import_parent_resource'] ?></b></td>
+							<td>&nbsp;</td>
+							<td><b><span id="parentName">0 (<?= $site_name ?>)</span></b></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang['import_site_maxtime'] ?></b></td>
+							<td>&nbsp;</td>
+							<td><input type="text" name="maxtime" value="30" />
+								<br />
+								<?= $_lang['import_site_maxtime_message'] ?>
+							</td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php1"] ?></b></td>
+							<td>&nbsp;</td>
+							<td><input type="checkbox" id="reset" name="reset" value="on" />
+								<br />
+								<?= $_lang["import_site.static.php2"] ?>
+							</td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" valign="top"><b><?= $_lang["import_site.static.php3"] ?></b></td>
+							<td>&nbsp;</td>
+							<td>
+								<label><input type="radio" name="object" value="body" /> <?= $_lang["import_site.static.php4"] ?></label>
+								<label><input type="radio" name="object" value="all" checked="checked" /> <?= $_lang["import_site.static.php5"] ?></label>
+								<br />
+							</td>
+						</tr>
+					</table>
+					<a href="javascript:;" class="btn btn-primary" onclick="window.importFrm.submit();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["import_site_start"] ?></a>
+				</form>
 			<?php
 			} else {
 			run();
@@ -116,14 +106,15 @@ $allowedfiles = array(
 <?php
 function run() {
 	global $modx;
+
 	$tbl_site_content = $modx->getFullTableName('site_content');
-
 	$output = '';
-
 	$maxtime = $_POST['maxtime'];
+
 	if(!is_numeric($maxtime)) {
 		$maxtime = 30;
 	}
+	
 	@set_time_limit($maxtime);
 
 	$mtime = microtime();

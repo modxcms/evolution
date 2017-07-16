@@ -23,23 +23,23 @@ if(!$modx->hasPermission('export_static')) {
 
 <?= $_style['actionbuttons']['static']['cancel'] ?>
 
-<div class="sectionBody">
-	<div class="tab-pane" id="exportPane">
-		<script type="text/javascript">
-			tpExport = new WebFXTabPane(document.getElementById("exportPane"));
-		</script>
 
-		<div class="tab-page" id="tabMain">
-			<h2 class="tab"><?= $_lang['export_site'] ?></h2>
-			<script type="text/javascript">tpExport.addTabPage(document.getElementById("tabMain"));</script>
+<div class="tab-pane" id="exportPane">
+	<script type="text/javascript">
+		tpExport = new WebFXTabPane(document.getElementById("exportPane"));
+	</script>
 
+	<div class="tab-page" id="tabMain">
+		<h2 class="tab"><?= $_lang['export_site'] ?></h2>
+		<script type="text/javascript">tpExport.addTabPage(document.getElementById("tabMain"));</script>
+
+		<div class="container container-body">
 			<?php
 			if(isset($_POST['export'])) {
 				$rs = include_once(MODX_MANAGER_PATH . 'processors/export_site.processor.php');
 				echo $rs;
 			} else {
 				?>
-
 				<form action="index.php" method="post" name="exportFrm">
 					<input type="hidden" name="export" value="export" />
 					<input type="hidden" name="a" value="83" />
@@ -73,28 +73,26 @@ if(!$modx->hasPermission('export_static')) {
 							</td>
 						</tr>
 					</table>
-
-					<ul class="actionButtons">
-						<li id="exportButton"><a href="javascript:;" class="default" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["export_site_start"] ?></a></li>
-					</ul>
+					<a href="javascript:;" class="btn btn-primary" onclick="document.exportFrm.submit();jQuery(this).hide();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang["export_site_start"] ?></a>
 					<script>
 						jQuery('#exportButton a').click(function() {
 							jQuery(this).parent().html('<?= $_style['ajax_loader'];?>');
 						});
 					</script>
 				</form>
-
 				<?php
 			}
 			?>
-
-		</div>
-		<div class="tab-page" id="tabHelp">
-			<h2 class="tab"><?= $_lang['help'] ?></h2>
-			<script type="text/javascript">tpExport.addTabPage(document.getElementById("tabHelp"));</script>
-			<?php
-			echo '<p>' . $_lang['export_site_message'] . '</p>';
-			?>
 		</div>
 	</div>
+
+	<div class="tab-page" id="tabHelp">
+		<h2 class="tab"><?= $_lang['help'] ?></h2>
+		<script type="text/javascript">tpExport.addTabPage(document.getElementById("tabHelp"));</script>
+
+		<div class="container container-body">
+			<?= $_lang['export_site_message'] ?>
+		</div>
+	</div>
+
 </div>
