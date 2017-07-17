@@ -552,7 +552,7 @@ function getRecentInfoRowTpl() {
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
 							<td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 						</tr>
