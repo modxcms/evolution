@@ -555,7 +555,7 @@
 				}
 			},
 			toggle: function() {
-				if(modx.isMobile) {
+				if(modx.isMobile || w.innerWidth < modx.minWidth) {
 					if(d.body.classList.contains('sidebar-closed')) {
 						d.body.classList.remove('sidebar-closed');
 						localStorage.setItem('MODX_widthSideBar', 0);
