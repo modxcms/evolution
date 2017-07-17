@@ -22,32 +22,34 @@ if(!$forced) {
 		include_once "header.inc.php";
 		?>
 		<script>
-			function deletedocument() {
-				document.location.href = "index.php?id=<?php echo $id;?>&a=303&force=1";
-			}
+			var actions = {
+				delete: function() {
+					document.location.href = "index.php?id=<?= $id ?>&a=303&force=1";
+				},
+				cancel: function() {
+					window.location.href = 'index.php?a=301&id=<?= $id ?>';
+				}
+			};
 		</script>
 
-		<h1><?php echo $_lang['tmplvars']; ?></h1>
+		<h1><?= $_lang['tmplvars'] ?></h1>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<li id="cmdDelete"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang["delete"]; ?></a></li>
-				<li id="cmdCancel"><a href="javascript:;" onclick="window.location.href='index.php?a=301&id=<?php echo $id; ?>';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang["cancel"]; ?></a></li>
-			</ul>
-		</div>
+		<?= $_style['actionbuttons']['dynamic']['canceldelete'] ?>
 
 		<div class="section">
-			<div class="sectionHeader"><?php echo $_lang['tmplvars']; ?></div>
+			<div class="sectionHeader"><?= $_lang['tmplvars'] ?></div>
 			<div class="sectionBody">
+				<p><?= $_lang['tmplvar_inuse'] ?></p>
+				<ul>
+					<?php
+					while($row = $modx->db->getRow($drs)) {
+						echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['description'] != '' ? ' - ' . $row['description'] : '') . '</li>';
+					}
+					?>
+				</ul>
+			</div>
+		</div>
 		<?php
-		echo "<p>" . $_lang['tmplvar_inuse'] . "</p>";
-		echo "<ul>";
-		while($row = $modx->db->getRow($drs)) {
-			echo '<li><span style="width: 200px"><a href="index.php?id=' . $row['id'] . '&a=27">' . $row['pagetitle'] . '</a></span>' . ($row['description'] != '' ? ' - ' . $row['description'] : '') . '</li>';
-		}
-		echo "</ul>";
-		echo '</div>';
-		echo '</div>';
 		include_once "footer.inc.php";
 		exit;
 	}
@@ -59,8 +61,8 @@ $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTVFormDelete event
 $modx->invokeEvent("OnBeforeTVFormDelete", array(
-		"id" => $id
-	));
+	"id" => $id
+));
 
 // delete variable
 $modx->db->delete($modx->getFullTableName('site_tmplvars'), "id='{$id}'");
@@ -76,8 +78,8 @@ $modx->db->delete($modx->getFullTableName('site_tmplvar_access'), "tmplvarid='{$
 
 // invoke OnTVFormDelete event
 $modx->invokeEvent("OnTVFormDelete", array(
-		"id" => $id
-	));
+	"id" => $id
+));
 
 // empty cache
 $modx->clearCache('full');
@@ -85,4 +87,3 @@ $modx->clearCache('full');
 // finished emptying cache - redirect
 $header = "Location: index.php?a=76&r=2";
 header($header);
-?>

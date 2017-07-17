@@ -362,6 +362,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['tree_page_click'] = 3;
 						$ph['icon_node_toggle'] = '';
 						$ph['icon'] = $ph['icon_folder_close'];
+						$ph['showChildren'] = 0;
 					}
 
 					// invoke OnManagerNodePrerender event
@@ -379,7 +380,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 							unset($opened2[$row['id']]);
 							$ph['node_toggle'] = 0;
 							$ph['subMenuState'] = '';
-							$tpl = getTplFolderNodeNotChildren();
 						}
 					}
 
@@ -387,6 +387,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['icon_node_toggle'] = '';
 						$ph['donthit'] = 1;
 						$ph['icon'] = $ph['icon_folder_close'];
+						$tpl = getTplFolderNodeNotChildren();
 					}
 
 					if($ph['contextmenu']) {
@@ -408,6 +409,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph['tree_page_click'] = 3;
 						$ph['icon_node_toggle'] = '';
 						$ph['icon'] = $ph['icon_folder_close'];
+						$ph['showChildren'] = 0;
 					}
 
 					// invoke OnManagerNodePrerender event
@@ -421,15 +423,13 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 							$phnew = array_merge($phnew, unserialize($pnode));
 						}
 						$ph = (count($phnew) > 0) ? $phnew : $ph;
-						if($ph['showChildren'] == 0) {
-							$tpl = getTplFolderNodeNotChildren();
-						}
 					}
 
 					if($ph['showChildren'] == 0) {
 						$ph['icon_node_toggle'] = '';
 						$ph['donthit'] = 1;
 						$ph['icon'] = $ph['icon_folder_close'];
+						$tpl = getTplFolderNodeNotChildren();
 					}
 
 					if($ph['contextmenu']) {

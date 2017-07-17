@@ -19,6 +19,9 @@ if($_GET['a'] == 2) {
 	include_once('welcome.php');
 }
 
+// Favicon
+$_style['favicon']                  = (file_exists(MODX_BASE_PATH . '/favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
+
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
 $_style['add_weblink_tree']         = '<i class="fa fa-link"></i>';
@@ -425,6 +428,23 @@ $_style['actionbuttons'] = array(
 				</a>
 			</div>
 		</div>',
+		'cancel' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
+		'canceldelete' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button3" class="btn btn-secondary' . $disabled . '" href="javascript:;" onclick="actions.delete();">
+					<i class="' . $_style["actions_delete"] . '"></i><span>' . $_lang['delete'] . '</span>
+				</a>
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
 	),
 	'static' => array(
 		'document' => '<div id="actions">
@@ -453,6 +473,13 @@ $_style['actionbuttons'] = array(
 					<i class="' . $_style["actions_preview"] . '"></i><span>' . $_lang['preview'] . '</span>
 				</a>
 			</div>
-		</div>'
+		</div>',
+		'cancel' => '<div id="actions">
+			<div class="btn-group">
+				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.cancel();">
+					<i class="' . $_style["actions_cancel"] . '"></i><span>' . $_lang['cancel'] . '</span>
+				</a>
+			</div>
+		</div>',
 	)
 );
