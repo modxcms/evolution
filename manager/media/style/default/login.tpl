@@ -19,7 +19,7 @@
 		.clear { clear: both; width: 100%; }
 		#mx_loginbox { height: auto; min-height: 100%; width: 19rem; margin: 0 auto; padding-top: 7%; }
 		#mx_loginbox::before, #mx_loginbox::after { content: ""; display: table; width: 100% }
-		.logo { display: inline-block; padding-bottom: 1rem }
+		.logo { display: inline-block; width: 100%; padding-bottom: 1rem }
 		fieldset { display: block; margin: 0 0 2rem; padding: 1.5rem; background-color: #fff; border: none; border-radius: 0.15rem; box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1); }
 		label { display: block; font-size: 0.8rem; margin: 0 0 0.375rem; }
 		input.text, input[type=text] { font-family: inherit; border: 1px solid rgba(0, 0, 0, 0.1); background-color: #fff; margin: 0 0 1rem; padding: 0 0.5rem; width: 100%; height: 2.2rem; line-height: 2.2rem; font-size: 1.2rem; border-radius: 0.15rem; box-shadow: 0 0 5px rgba(188, 188, 188, 0.15); outline: none; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
