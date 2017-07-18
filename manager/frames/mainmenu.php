@@ -431,9 +431,11 @@ $menu = $modx->invokeEvent("OnManagerMenuPrerender", array('menu' => $sitemenu))
 if(is_array($menu)) {
 	$newmenu = array();
 	foreach($menu as $item){
-		$newmenu = array_merge($newmenu, unserialize($item));
+		if(is_array(unserialize($item))){ 
+			$newmenu = array_merge($newmenu, unserialize($item));
+		}
 	} 
-	$sitemenu = $newmenu;
+	if(count($newmenu)> 0) $sitemenu = $newmenu;
 }
 
 if(file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/includes/menu.class.inc.php')) {
