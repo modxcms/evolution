@@ -918,8 +918,8 @@
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
 					el = d.getElementById('node' + id) || e.target;
-					el = el.firstChild;
 				if(el) {
+					if(!el.dataset.contextmenu) el = el.firstChild;	
 					if(el.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
 						modx.hideDropDown(e);
