@@ -203,7 +203,7 @@ class shopkeeperDocLister extends site_contentDocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
             $sort = $this->SortOrderSQL("c.createdon");
             list($from) = $this->injectSortByTV($from, $sort);
 
@@ -251,7 +251,7 @@ class shopkeeperDocLister extends site_contentDocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
             $sort = $this->SortOrderSQL("c.createdon");
             list($tbl_site_content, $sort) = $this->injectSortByTV($tbl_site_content . ' ' . $this->_filters['join'],
                 $sort);
@@ -363,7 +363,7 @@ class shopkeeperDocLister extends site_contentDocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $sql = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
                 $group . " " .
