@@ -993,7 +993,10 @@ abstract class Core
         if ($redirect = $this->getCFGDef($param, 0)) {
             $redirect = $this->config->loadArray($redirect);
             $query = $header = '';
-            if (isset($redirect[0])) {
+            if (is_numeric($redirect)) {
+                $page = $redirect;
+                $query = http_build_query($_query);
+            } elseif (isset($redirect[0])) {
                 $page = $redirect[0];
                 $query = http_build_query($_query);
             } else {
@@ -1003,7 +1006,7 @@ abstract class Core
                 if (isset($redirect['header'])) {
                     $header = $redirect['header'];
                 }
-                $page = isset($redirect['page']) ? $redirect['page'] : 0;
+                $page = isset($redirect['page']) ? $redirect['page'] : $this->modx->config['site_start'];
             }
             if (is_numeric($page)) {
                 $redirect = $this->modx->makeUrl($page, '', $query, 'full');
