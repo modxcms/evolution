@@ -852,7 +852,7 @@
 			treeAction: function(e, id, title) {
 				if(e.ctrlKey) return;
 				var el = d.getElementById('node' + id).firstChild,
-					treepageclick = parseInt(el.dataset.treepageclick),
+					treepageclick = el.dataset.treepageclick,
 					showchildren = parseInt(el.dataset.showchildren),
 					openfolder = parseInt(el.dataset.openfolder);
 				title = title || (el.dataset && el.dataset.titleEsc);
@@ -918,6 +918,7 @@
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
 					el = d.getElementById('node' + id) || e.target;
+					el = el.firstChild;
 				if(el) {
 					if(el.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
@@ -975,7 +976,7 @@
 						this.selectedObjectName = title;
 						this.dopopup(this.ctx, x + 10, y)
 					} else {
-						el = el.firstChild;
+						//el = el.firstChild;
 						var ctx = d.getElementById('mx_contextmenu');
 						e.target.dataset.toggle = '#mx_contextmenu';
 						modx.hideDropDown(e);
