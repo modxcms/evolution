@@ -24,7 +24,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 if(isset($_POST['listSubmitted'])) {
-	$updateMsg .= '<span class="warning" id="updated">Updated!</span>';
+	$updateMsg .= '<div class="warning" id="updated">' . $_lang['sort_updated'] . '</div>';
 	if(strlen($items) > 0) {
 		$items = explode(';', $items);
 		foreach($items as $key => $value) {
@@ -65,136 +65,166 @@ if($id !== NULL) {
 	}
 }
 
-$header = '
-    <script>window.$j = jQuery.noConflict();</script>
-    <style type="text/css">
-        .topdiv {
-            border: 0;
-        }
-
-        .subdiv {
-            border: 0;
-        }
-        
-        ul.sortableList {
-            margin: 2em 0 0 0;
-            clear:both;
-        }
-
-        li {
-            cursor: move;
-            border: 1px solid #CCCCCC;
-            background: #eee no-repeat 2px center;
-            margin: 2px 0;
-            list-style: none;
-            padding: 1px 4px;
-            min-height: 20px;
-        }
-    </style>
-    <script type="text/javascript">
-            function save() { 
-		$j("#updated").hide();
-                $j("#updating").fadeIn();
-		setTimeout("document.sortableListForm.submit()",1000); 
-	    }
-	    
-	    function renderList() {
-                var list = \'\';
-                $$(\'li.sort\').each(function(el, i) {
-                    list += el.id + \';\';
-                });
-                $(\'list\').value = list;
-            }
-	    
-	    window.addEvent(\'domready\', function() {
-	       new Sortables($(\'sortlist\'), {
-                   initialize: function()
-                    {                    
-                        renderList();
-                    },
-	           onComplete: function() {
-	               renderList();
-	           }
-	       });
-	       
-	       if (' . $disabled . ' == true) {
-	           parent.tree.ca = \'\';
-	       }
-	    });
-	    
-	    parent.tree.updateTree();
-        
-        function sort() {
-            var items = $j(\'.sort\').get();
-            items.sort(function(a,b){
-              var keyA = $j(a).text().toLowerCase();
-              var keyB = $j(b).text().toLowerCase();
-              return keyA.localeCompare(keyB);
-            });
-            var ul = $j(\'#sortlist\');
-            var list = \'\';
-            $j.each(items, function(i, li){
-              ul.append(li);
-              list += li.id + \';\';
-            });
-            $j(\'#list\').val(list);
-        }
-        
-        function resetSortOrder() {
-            if (confirm("' . $_lang["confirm_reset_sort_order"] . '")==true) {
-                documentDirty=false;
-                var input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "reset";
-                input.value = "true";
-                document.sortableListForm.appendChild(input);
-                save();
-            }
-        }
-    </script>';
-
 $pagetitle = $id == 0 ? $site_name : $pagetitle;
+?>
 
-$header .= '</head>
-<body ondragstart="return false;">
+<style type="text/css">
+	ul.sortableList {
+		margin: 0;
+		}
+	ul.sortableList li, .sort {
+		position: relative;
+		z-index: 1;
+		max-width: 100%;
+		width: 30rem;
+		list-style: none;
+		font-weight: bold;
+		cursor: move;
+		color: #444444;
+		padding: .5rem;
+		margin: .2rem 0;
+		border: 1px solid #CCCCCC;
+		background-color: #fff;
+		display: block;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+		}
+	.sortableList .ghost {
+		z-index: 2;
+		opacity: .5;
+		}
+</style>
+
+<script type="text/javascript">
+
+	parent.tree.updateTree();
+
+	var actions = {
+		save: function() {
+			var el = document.getElementById('updated');
+			if(el) el.style.display = 'none';
+			el = document.getElementById('updating');
+			if(el) el.style.display = 'block';
+			setTimeout("document.sortableListForm.submit()", 1000);
+		},
+		cancel: function() {
+			document.location.href = 'index.php?a=2';
+		}
+	};
+
+	function renderList() {
+		var list = '';
+		var els = document.querySelectorAll('li.sort');
+		for(var i = 0; i < els.length; i++) {
+			list += els[i].id + ';';
+		}
+		document.getElementById('list').value = list
+	}
+
+	var sortdir = 'asc';
+
+	function sort() {
+		var els = document.querySelectorAll('li.sort');
+		var keyA, keyB;
+		if(sortdir === 'asc') {
+			els = [].slice.call(els).sort(function(a, b) {
+				keyA = a.innerText.toLowerCase();
+				keyB = b.innerText.toLowerCase();
+				return keyA.localeCompare(keyB);
+			});
+			sortdir = 'desc'
+		} else {
+			els = [].slice.call(els).sort(function(b, a) {
+				keyA = a.innerText.toLowerCase();
+				keyB = b.innerText.toLowerCase();
+				return keyA.localeCompare(keyB);
+			});
+			sortdir = 'asc'
+		}
+		var ul = document.getElementById('sortlist');
+		var list = '';
+		for(var i = 0; i < els.length; i++) {
+			ul.appendChild(els[i]);
+			list += els[i].id + ';';
+		}
+		document.getElementById('list').value = list
+	}
+
+	function resetSortOrder() {
+		if(confirm("<?= $_lang["confirm_reset_sort_order"] ?>") === true) {
+			documentDirty = false;
+			var input = document.createElement("input");
+			input.type = "hidden";
+			input.name = "reset";
+			input.value = "true";
+			document.sortableListForm.appendChild(input);
+			actions.save();
+		}
+	}
+</script>
 
 <h1>
-	<i class="fa fa-sort-numeric-asc"></i>' . $_lang["sort_menuindex"] . '
+	<i class="fa fa-sort-numeric-asc"></i><?= $_lang["sort_menuindex"] ?>
 </h1>
 
-<div id="actions">
-    <ul class="actionButtons">
-        ' . (!$disabled ? '<li><a href="javascript:;" onclick="save();"><i class="' . $_style["actions_save"] . '"></i> ' . $_lang['save'] . '</a></li>' : '') . '
-        <li class="transition"><a href="javascript:;" onclick="document.location.href=\'index.php?a=2\';"><i class="' . $_style["actions_cancel"] . '"></i> ' . $_lang['cancel'] . '</a></li>
-    </ul>
+<?= $_style['actionbuttons']['dynamic']['save'] ?>
+
+<div class="tab-page">
+	<div class="container container-body">
+		<b><?= $pagetitle ?> (<?= $id ?>)</b>
+		<p><?= $_lang["sort_elements_msg"] ?></p>
+		<p>
+			<a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['actions_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+			<a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+		</p>
+		<?= $updateMsg ?>
+		<span class="warning" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
+		<ul id="sortlist" class="sortableList">
+			<?= $ressourcelist ?>
+		</ul>
+
+		<form action="" method="post" name="sortableListForm">
+			<input type="hidden" name="listSubmitted" value="true" />
+			<input type="hidden" id="list" name="list" value="" />
+		</form>
+	</div>
 </div>
 
-<div class="section">
-<div class="sectionHeader">' . $pagetitle . ' (' . $id . ')</div>
-<div class="sectionBody">';
+<script type="text/javascript">
 
-if(!$disabled) {
-	$header .= '<br/><p>' . $_lang["sort_elements_msg"] . '</p>
-    <ul class="actionButtons">
-	    <li><a href="javascript:;" onclick="resetSortOrder();return false;">' . $_lang['reset_sort_order'] . '</a></li>
-	    <li><a href="javascript:;" onclick="sort();return false;">' . $_lang['sort_alphabetically'] . '</a></li>
-	</ul>';
-};
+	[].slice.call(document.querySelectorAll('.sort')).forEach(function(a) {
+		a.onmousedown = function(e) {
+			var b, c;
+			a.classList.add('ghost');
+			a.position = a.getBoundingClientRect();
+			b = e.pageY - a.position.top;
+			document.onselectstart = function() {
+				return false
+			};
+			document.onmousemove = function(e) {
+				c = e.pageY - a.position.top - b;
+				if(c >= a.offsetHeight && a.nextSibling) {
+					b += a.offsetHeight;
+					a.parentNode.insertBefore(a, a.nextSibling.nextSibling);
+					c = 0
+				} else if(c < -a.offsetHeight && a.previousSibling) {
+					b -= a.offsetHeight;
+					a.parentNode.insertBefore(a, a.previousSibling);
+					c = 0
+				} else if(!a.previousSibling && c < 0 || !a.nextSibling && c > 0) {
+					c = 0
+				}
+				a.style.webkitTransform = 'translateY(' + c + 'px)';
+				a.style.transform = 'translateY(' + c + 'px)';
+			};
+			document.onmouseup = function() {
+				a.style.webkitTransform = '';
+				a.style.transform = '';
+				a.classList.remove('ghost');
+				document.onmousemove = null;
+				renderList();
+			}
+		}
+	});
 
-echo $header;
-
-echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...</span>";
-
-if(!$disabled) {
-	echo '
-        <ul id="sortlist" class="sortableList">
-            ' . $ressourcelist . '
-        </ul>
-	<form action="" method="post" name="sortableListForm" style="display: none;">
-            <input type="hidden" name="listSubmitted" value="true" />
-            <input type="text" id="list" name="list" value="" />
-        </form>';
-}
-echo '
-</div>
-</div>';
+</script>
