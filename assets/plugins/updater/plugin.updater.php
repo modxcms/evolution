@@ -190,11 +190,11 @@ $version = "evolution-cms/evolution";
 
 downloadFile("https://github.com/".$version."/archive/" . $_GET["version"] . ".zip", "evo.zip");
 $zip = new ZipArchive;
-$res = $zip->open(dirname(__FILE__) . "/evo.zip");
-$zip->extractTo(dirname(__FILE__) . "/temp");
+$res = $zip->open(__DIR__ . "/evo.zip");
+$zip->extractTo(__DIR__ . "/temp");
 $zip->close();
 
-if ($handle = opendir(dirname(__FILE__) . "/temp")) {
+if ($handle = opendir(__DIR__ . "/temp")) {
     while (false !== ($name = readdir($handle))) {
         if ($name != "." && $name != "..") {
             $dir = $name;
@@ -202,30 +202,31 @@ if ($handle = opendir(dirname(__FILE__) . "/temp")) {
     }
     closedir($handle);
 }
-removeFolder(dirname(__FILE__) . "/temp/" . $dir . "/install/assets/chunks");
-removeFolder(dirname(__FILE__) . "/temp/" . $dir . "/install/assets/tvs");
-removeFolder(dirname(__FILE__) . "/temp/" . $dir . "/install/assets/templates");
-unlink(dirname(__FILE__) . "/temp/" . $dir . "/.htaccess");
-unlink(dirname(__FILE__) . "/temp/" . $dir . "/ht.access");
-unlink(dirname(__FILE__) . "/temp/" . $dir . "/robots.txt");
+removeFolder(__DIR__ . "/temp/" . $dir . "/install/assets/chunks");
+removeFolder(__DIR__ . "/temp/" . $dir . "/install/assets/tvs");
+removeFolder(__DIR__ . "/temp/" . $dir . "/install/assets/templates");
+unlink(__DIR__ . "/temp/" . $dir . "/ht.access");
+unlink(__DIR__ . "/temp/" . $dir . "/README.md");
+unlink(__DIR__ . "/temp/" . $dir . "/sample-robots.txt");
 
-if(is_file(dirname(__FILE__) . "/assets/cache/siteManager.php")){
 
-    unlink(dirname(__FILE__) . "/temp/" . $dir . "/assets/cache/siteManager.php");
-    include_once(dirname(__FILE__) . "/assets/cache/siteManager.php");
+if(is_file(__DIR__ . "/assets/cache/siteManager.php")){
+
+    unlink(__DIR__ . "/temp/" . $dir . "/assets/cache/siteManager.php");
+    include_once(__DIR__ . "/assets/cache/siteManager.php");
     if(!defined("MGR_DIR")){ define("MGR_DIR","manager"); }
     if(MGR_DIR != "manager"){
-        mmkDir(dirname(__FILE__)."/temp/".$dir."/".MGR_DIR);
-        copyFolder(dirname(__FILE__)."/temp/".$dir."/manager", dirname(__FILE__)."/temp/".$dir."/".MGR_DIR);
-        removeFolder(dirname(__FILE__)."/temp/".$dir."/manager");
+        mmkDir(__DIR__."/temp/".$dir."/".MGR_DIR);
+        copyFolder(__DIR__."/temp/".$dir."/manager", __DIR__."/temp/".$dir."/".MGR_DIR);
+        removeFolder(__DIR__."/temp/".$dir."/manager");
     } 
-    echo dirname(__FILE__)."/temp/".$dir."/".MGR_DIR;
+    echo __DIR__."/temp/".$dir."/".MGR_DIR;
 }
-copyFolder(dirname(__FILE__)."/temp/".$dir, dirname(__FILE__)."/");
-removeFolder(dirname(__FILE__)."/temp");
-unlink(dirname(__FILE__)."/evo.zip");
-unlink(dirname(__FILE__)."/update.php");
-header("Location: /install/index.php?action=mode");');
+copyFolder(__DIR__."/temp/".$dir, __DIR__."/");
+removeFolder(__DIR__."/temp");
+unlink(__DIR__."/evo.zip");
+unlink(__DIR__."/update.php");
+header("Location: /install/index.php?action=mode");\');
                 
 
                 echo '<html><head></head><body>
