@@ -203,7 +203,7 @@ class shopkeeperDocLister extends site_contentDocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
             $sort = $this->SortOrderSQL("c.createdon");
             list($from) = $this->injectSortByTV($from, $sort);
 

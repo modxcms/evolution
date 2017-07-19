@@ -348,7 +348,7 @@ class site_contentDocLister extends DocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($from) = $this->injectSortByTV($from, $sort);
 

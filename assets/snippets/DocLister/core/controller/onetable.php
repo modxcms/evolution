@@ -288,7 +288,7 @@ class onetableDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', '*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', "`{$this->getPK()}`"));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $sql = $this->dbQuery("SELECT {$fields} FROM " . $this->table . " " . $where . " " .
                 $group . " " .
