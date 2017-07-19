@@ -8,7 +8,7 @@ if (version_compare(phpversion(), "5.3") < 0) {
     @ ini_set('magic_quotes_sybase', 0);
 }
 
-$autoloader = '../vendor/autoload.php';
+$autoloader = realpath(__DIR__.'/../vendor/autoload.php');
 if (file_exists($autoloader) && is_readable($autoloader)) {
     include_once($autoloader);
 }

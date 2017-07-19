@@ -5,7 +5,7 @@
 * @package  AjaxSearchLog
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.2
+* @version      1.11.0
 * @date         12/04/2016
 *
 * Purpose:
@@ -154,11 +154,15 @@ if ($_POST['logid'] && $_POST['ascmt']) {
     if (($ascmt != '') && ($logid > 0) && $safeCmt) {
 
         define('MODX_API_MODE', true);
-
-        include_once (MODX_MANAGER_PATH . 'includes/document.parser.class.inc.php');
-        $modx = new DocumentParser;
+        include_once(__DIR__."/../../../../index.php");
         $modx->db->connect();
-        $modx->getSettings();
+        if (empty ($modx->config)) {
+            $modx->getSettings();
+        }
+        if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || strpos($_SERVER['HTTP_REFERER'],$modx->config['site_url']) !== 0){
+            $modx->sendErrorPage();
+        }
+        
         $asLog = new AjaxSearchLog();
         $asLog->updateComment($logid, $ascmt);
         echo "comment about record " . $logid . " registered";

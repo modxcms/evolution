@@ -3,7 +3,6 @@
 <head>
 	<title>[+lang.DM_module_title+]</title>
 	<link rel="stylesheet" type="text/css" href="media/style[+theme+]/style.css" />
-	<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<script type="text/javascript" src="[(mgr_jquery_path)]"></script>
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
@@ -60,9 +59,11 @@
 </h1>
 
 <div id="actions">
-	<ul class="actionButtons">
-		<li id="Button1"><a href="javascript:;" onclick="window.location.href='index.php?a=106';"><i class="fa fa-times-circle"></i> [+lang.DM_close+]</a></li>
-	</ul>
+	<div class="btn-group">
+		<a id="Button1" class="btn btn-success" href="javascript:;" onclick="window.location.href='index.php?a=106';">
+			<i class="fa fa-times-circle"></i><span>[+lang.DM_close+]</span>
+		</a>
+	</div>
 </div>
 
 <div class="sectionBody">
@@ -90,7 +91,7 @@
 		</div>
 
 		<div class="tab-page" id="tabOther">
-			<h2 class="tab"><i class="fa fa-tasks"></i>[+lang.DM_other+]</h2>
+			<h2 class="tab"><i class="fa fa-tasks"></i> [+lang.DM_other+]</h2>
 			<script type="text/javascript">tpResources.addTabPage(document.getElementById("tabOther"));</script>
 			[+view.misc+]
 			[+view.changeauthors+]

@@ -5,7 +5,7 @@
 * @package  AjaxSearchCtrl
 *
 * @author       Coroico - www.evo.wangba.fr
-* @version      1.10.2
+* @version      1.11.0
 * @date         12/04/2016
 *
 * Purpose:

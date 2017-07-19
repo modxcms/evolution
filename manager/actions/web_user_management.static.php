@@ -92,25 +92,16 @@ echo $cm->render();
 	<div class="section">
 		<div class="sectionBody">
 			<p class="element-edit-message"><?php echo $_lang['web_user_management_msg']; ?></p>
-			<div class="searchbar">
-				<table border="0" style="width:100%" class="actionButtons actionButtons--tableheader">
-					<tr>
-						<td><a href="index.php?a=87"><i class="<?php echo $_style["actions_new"] ?> hide4desktop"></i> <span><?php echo $_lang['new_web_user']; ?></span></a></td>
-						<td nowrap="nowrap">
-							<table border="0" style="float:right">
-								<tr>
-									<td><?php echo $_lang["search"]; ?></td>
-									<td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-									<td><a href="javascript:;" title="<?php echo $_lang["search"]; ?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-									<td><a href="javascript:;" title="<?php echo $_lang["reset"]; ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a></td>
-									<td><a href="javascript:;" title="<?php echo $_lang["list_mode"]; ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
+			<div class="searchbar form-group">
+				<a class="btn btn-secondary" href="index.php?a=87"><i class="<?php echo $_style["actions_new"] ?> hide4desktop"></i> <span><?php echo $_lang['new_web_user']; ?></span></a>
+				<div class="float-xs-right">
+					<input class="form-control" name="search" type="text" size="50" value="<?php echo $query; ?>" placeholder="<?php echo $_lang["search"] ?>" />
+					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["search"]; ?>" onclick="searchResource();return false;"><?php echo $_lang['go']; ?></a>
+					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["reset"]; ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
+					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["list_mode"]; ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+				</div>
 			</div>
-			<div>
+			<div class="table-responsive">
 				<?php
 
 				$ds = $modx->db->select("wu.id, wu.username, wua.fullname, wua.email, ELT(wua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 

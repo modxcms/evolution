@@ -149,11 +149,15 @@ class site_contentDocLister extends DocLister
                     }
 
                     if (isset($item[$date])) {
+                        if (!$item[$date] && $date == 'pub_date' && isset($item['createdon'])) {
+                            $date = 'createdon';
+                        }
                         $_date = is_numeric($item[$date]) && $item[$date] == (int)$item[$date] ? $item[$date] : strtotime($item[$date]);
                         if ($_date !== false) {
                             $_date = $_date + $this->modx->config['server_offset_time'];
-                            if ($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
-                                $item['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $_date);
+                            $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                            if ($dateFormat) {
+                                $item['date'] = strftime($dateFormat, $_date);
                             }
                         }
                     }
@@ -205,7 +209,6 @@ class site_contentDocLister extends DocLister
         $out = array();
         $fields = is_array($fields) ? $fields : explode(",", $fields);
         $date = $this->getCFGDef('dateSource', 'pub_date');
-
         /**
          * @var $extSummary summary_DL_Extender
          */
@@ -221,22 +224,27 @@ class site_contentDocLister extends DocLister
          */
         $extE = $this->getExtender('e', true, true);
 
-        foreach ($data as $num => $item) {
-            $row = $item;
+        foreach ($data as $num => $row) {
             if ((array('1') == $fields || in_array('summary', $fields)) && $extSummary) {
-                $row['summary'] = $this->getSummary($this->_docs[$num], $extSummary, 'introtext', 'content');
+                $row['summary'] = $this->getSummary($row, $extSummary, 'introtext', 'content');
             }
+
             if (array('1') == $fields || in_array('date', $fields)) {
-                if (isset($this->_docs[$num][$date])) {
-                    $_date = is_numeric($this->_docs[$num][$date]) && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date] ? $this->_docs[$num][$date] : strtotime($this->_docs[$num][$date]);
+                if (isset($row[$date])) {
+                    if (!$row[$date] && $date == 'pub_date' && isset($row['createdon'])) {
+                        $date = 'createdon';
+                    }   
+                    $_date = is_numeric($row[$date]) && $row[$date] == (int)$row[$date] ? $row[$date] : strtotime($row[$date]);
                     if ($_date !== false) {
                         $_date = $_date + $this->modx->config['server_offset_time'];
-                        if ($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
-                            $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'), $_date);
+                        $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                        if ($dateFormat) {
+                            $row['date'] = strftime($dateFormat, $_date);
                         }
                     }
                 }
             }
+
             if (array('1') == $fields || in_array(array('menutitle', 'pagetitle'), $fields)) {
                 $row['title'] = ($row['menutitle'] == '' ? $row['pagetitle'] : $row['menutitle']);
             }
@@ -340,11 +348,11 @@ class site_contentDocLister extends DocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($from) = $this->injectSortByTV($from, $sort);
 
-            $q_true = $q_true ? $q_true : $group != 'GROUP BY c.id';
+            $q_true = $q_true ? $q_true : $group != '';
 
             if ( $q_true ){
                 $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group}) as `tmp`");
@@ -395,7 +403,7 @@ class site_contentDocLister extends DocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($tbl_site_content, $sort) = $this->injectSortByTV($tbl_site_content . ' ' . $this->_filters['join'],
                 $sort);
@@ -520,7 +528,7 @@ class site_contentDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
 
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $sql = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .

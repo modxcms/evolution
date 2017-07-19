@@ -11,7 +11,7 @@ $siteURL = $modx->config['site_url'];
 $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
-	$updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
+	$updateMsg .= '<span class="warning" id="updated">' . $_lang['sort_updated'] . '<br /><br /> </span>';
 	$tbl = $modx->getFullTableName('site_plugin_events');
 
 	foreach($_POST as $listName => $listValue) {
@@ -61,88 +61,110 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 ?>
 
 <style type="text/css">
-	.topdiv {
-		border: 0;
-		}
-	.subdiv {
-		border: 0;
-		}
-	li { list-style: none; }
-	.tplbutton {
-		text-align: right;
-		}
 	ul.sortableList {
-		margin: 0px;
-		width: 300px;
-		font-family: Arial, sans-serif;
+		margin: 0;
 		}
-	ul.sortableList li {
+	ul.sortableList li, .sort {
+		position: relative;
+		z-index: 1;
+		max-width: 100%;
+		width: 30rem;
+		list-style: none;
 		font-weight: bold;
 		cursor: move;
 		color: #444444;
-		padding: 3px 5px;
-		margin: 4px 0px;
+		padding: .5rem;
+		margin: .2rem 0;
 		border: 1px solid #CCCCCC;
-		background: #f2f2f2;
+		background-color: #fff;
+		display: block;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
 		}
-	#sortableListForm { display: none; }
+	.sortableList .ghost {
+		z-index: 2;
+		opacity: .5;
+		}
 </style>
-<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
+
 <script type="text/javascript">
-
-	function save() {
-		setTimeout("document.sortableListForm.submit()", 1000);
-	}
-
-	window.addEvent('domready', function() {
-		<?php
-		foreach($sortables as $list) {
-		?>
-
-		new Sortables($('<?php echo $list ?>'), {
-			onComplete: function() {
-				var id = null;
-				var list = this.serialize(function(el) {
-					id = el.getParent().id;
-					return el.id;
-				});
-				$('list_' + id).value = list;
-			}
-		});
-		<?php
+	var actions = {
+		save: function() {
+			setTimeout("document.sortableListForm.submit()", 1000);
+		},
+		cancel: function() {
+			window.location.href = 'index.php?a=76';
 		}
-		?>
-
-	});
+	};
 </script>
 
-<h1><?php echo $_lang['plugin_priority_title'] ?></h1>
+<h1><?= $_lang['plugin_priority_title'] ?></h1>
 
-<div id="actions"
-	<ul class="actionButtons">
-		<li class="transition"><a href="javascript:;" onclick="save();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save'] ?></a></li>
-		<li class="transition"><a href="javascript:;" onclick="window.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php $_lang['cancel'] ?></a></li>
-	</ul>
-</div>
+<?= $_style['actionbuttons']['dynamic']['save'] ?>
 
-<div class="section">
-	<div class="sectionHeader"><?php echo $_lang['plugin_priority'] ?></div>
-	<div class="sectionBody">
-		<p><?php echo $_lang['plugin_priority_instructions'] ?></p>
+<div class="tab-page">
+	<div class="container container-body">
+		<b><?= $_lang['plugin_priority'] ?></b>
+		<div class="form-group">
+			<p><?= $_lang['plugin_priority_instructions'] ?></p>
 
-		<?php echo $updateMsg ?><span class="warning" style="display:none;" id="updating">Updating...<br /><br /> </span>
+			<?= $updateMsg ?><span class="warning" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?><br /><br /> </span>
 
-		<?php echo $evtLists ?>
+			<?= $evtLists ?>
 
-		<form action="" method="post" name="sortableListForm" style="display: none;">
-			<input type="hidden" name="listSubmitted" value="true" />
-			<?php
-			foreach($sortables as $list) {
-				?>
-				<input type="text" id="list_<?php echo $list ?>" name="list_<?php echo $list ?>" value="" />
+			<form action="" method="post" name="sortableListForm">
+				<input type="hidden" name="listSubmitted" value="true" />
 				<?php
-			}
-			?>
-		</form>
+				foreach($sortables as $list) {
+					?>
+					<input type="hidden" id="list_<?= $list ?>" name="list_<?= $list ?>" value="" />
+					<?php
+				}
+				?>
+			</form>
+		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	[].slice.call(document.querySelectorAll('.sortableList > li')).forEach(function(a) {
+		a.onmousedown = function(e) {
+			var b, c;
+			a.classList.add('ghost');
+			a.position = a.getBoundingClientRect();
+			b = e.pageY - a.position.top;
+			document.onselectstart = function() {
+				return false
+			};
+			document.onmousemove = function(e) {
+				c = e.pageY - a.position.top - b;
+				if(c >= a.offsetHeight && a.nextSibling) {
+					b += a.offsetHeight;
+					a.parentNode.insertBefore(a, a.nextSibling.nextSibling);
+					c = 0;
+				} else if(c < -a.offsetHeight && a.previousSibling) {
+					b -= a.offsetHeight;
+					a.parentNode.insertBefore(a, a.previousSibling);
+					c = 0;
+				} else if(!a.previousSibling && c < 0 || !a.nextSibling && c > 0) {
+					c = 0
+				}
+				a.style.webkitTransform = 'translateY(' + c + 'px)';
+				a.style.transform = 'translateY(' + c + 'px)';
+			};
+			document.onmouseup = function() {
+				a.style.webkitTransform = '';
+				a.style.transform = '';
+				a.classList.remove('ghost');
+				document.onmousemove = null;
+				var list = [];
+				for(var i = 0; i < a.parentNode.childNodes.length; i++) {
+					list.push(a.parentNode.childNodes[i].id)
+				}
+				document.getElementById('list_' + a.parentNode.id).value = list.join(',')
+			}
+		}
+	});
+
+</script>

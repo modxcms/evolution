@@ -45,7 +45,7 @@
  * -----------------------------
  */
 
-$autoloader = 'vendor/autoload.php';
+$autoloader = __DIR__.'/vendor/autoload.php';
 if (file_exists($autoloader) && is_readable($autoloader)) {
 	include_once($autoloader);
 }

@@ -1,5 +1,5 @@
 <?php
-//:: MODX Installer Setup file
+//:: EVO Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
 if (is_file($base_path . 'assets/cache/siteManager.php')) {
     include_once($base_path . 'assets/cache/siteManager.php');

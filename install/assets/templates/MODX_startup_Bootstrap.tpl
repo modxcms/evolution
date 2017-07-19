@@ -1,5 +1,5 @@
 /**
- * MODX startup - Bootstrap
+ * EVO startup - Bootstrap
  *
  * Sample template in Bootstrap
  *
@@ -251,7 +251,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-6">
-						<a href="https://modx.com" title="Learn more about MODX">MODX</a> Starter-Template &copy;2006-[[$_SERVER['REQUEST_TIME']:dateFormat=`Y` ]]
+						<a href="https://evo.im" title="Learn more about EVO">EVO</a> Starter-Template &copy;2006-[[$_SERVER['REQUEST_TIME']:dateFormat=`Y` ]]
 					</div>
 					<div class="col-sm-6 text-right">
 						Built with <a href="http://www.getbootstrap.com" target="_blank">Bootstrap</a> framework.

@@ -4,7 +4,7 @@
 * Display the content of the AjaxSearch Log table in the manager
 *
 * @category module
-* @version 	1.10.2
+* @version 	1.11.0
 * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
 * @internal	@modx_category Search
 * @author   Coroico

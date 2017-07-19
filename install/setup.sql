@@ -1,5 +1,5 @@
-# MODX Database Script for New/Upgrade Installations
-# MODX was created By Raymond Irving - Nov 2004 
+# EVO Database Script for New/Upgrade Installations
+# EVO was created By Raymond Irving - Nov 2004 
 #
 # Each sql command is separated by double lines \n\n 
 
@@ -666,7 +666,7 @@ UPDATE `{PREFIX}site_plugins` SET `disabled`='1' WHERE `name` IN ('Inherit Paren
 
 UPDATE `{PREFIX}system_settings` SET `setting_value` = '0' WHERE `setting_name` = 'validate_referer' AND `setting_value` = '00';
 
-# start related to #MODX-1321
+# start related to #EVO-1321
 
 UPDATE `{PREFIX}site_content` SET `type`='reference', `contentType`='text/html' WHERE `type`='' AND `content` REGEXP '^https?://([-\w\.]+)+(:\d+)?/?';
 
@@ -846,7 +846,7 @@ REPLACE INTO `{PREFIX}site_templates`
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODX CMS Install Success','Welcome to the MODX Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODX Evolution.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://forums.modx.com/\" target=\"_blank\">MODX Community</a> provides a great starting point to learn all things MODX Evolution, or you can also <a href=\"http://modx.com/\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODX!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0,1);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','Evolution CMS Install Success','Welcome to the EVO Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed Evolution CMS.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://evo.im/\" target=\"_blank\">EVO Community</a> provides a great starting point to learn all things Evolution CMS, or you can also <a href=\"http://evo.im/\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to EVO!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0,1);
 
 
 REPLACE INTO `{PREFIX}manager_users` 
@@ -855,7 +855,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, street, city, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '', '', '');
+(1, 1, 'Admin', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '', '', '');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -873,11 +873,11 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('settings_version',''),
-('manager_theme','MODxRE2'),
+('manager_theme','default'),
 ('server_offset_time','0'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODX Site'),
+('site_name','My Evolution Site'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
@@ -914,6 +914,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
 ('seostrict', '1'),
+('number_of_results','30'),
 ('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -1107,10 +1108,10 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxRE2'
+  `setting_value`='default'
   WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxRE2');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','default');
 
 UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';

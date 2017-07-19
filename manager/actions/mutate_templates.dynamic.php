@@ -61,19 +61,38 @@ $lockElementType = 1;
 require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
-	function duplicaterecord() {
-		if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") == true) {
-			documentDirty = false;
-			document.location.href = "index.php?id=<?php echo $_REQUEST['id']; ?>&a=96";
-		}
-	}
 
-	function deletedocument() {
-		if(confirm("<?php echo $_lang['confirm_delete_template']; ?>") == true) {
+	var actions = {
+		save: function() {
 			documentDirty = false;
-			document.location.href = "index.php?id=" + document.mutate.id.value + "&a=21";
+			form_save = true;
+			document.mutate.save.click();
+			//saveWait('mutate');
+		},
+		duplicate: function() {
+			if(confirm("<?= $_lang['confirm_duplicate_record'] ?>") === true) {
+				documentDirty = false;
+				document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=96";
+			}
+		},
+		delete: function() {
+			if(confirm("<?= $_lang['confirm_delete_template'] ?>") === true) {
+				documentDirty = false;
+				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=21";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			document.location.href = 'index.php?a=76';
 		}
-	}
+	};
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		};
+	});
 
 </script>
 
@@ -86,68 +105,61 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	}
 	?>
 	<input type="hidden" name="a" value="20">
-	<input type="hidden" name="id" value="<?php echo $_REQUEST['id']; ?>">
-	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
+	<input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
-		<i class="fa fa-newspaper-o"></i><?php echo $_lang['template_title']; ?>
+		<i class="fa fa-newspaper-o"></i><?= $_lang['template_title'] ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button1" class="transition">
-				<a href="javascript:;" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
-					<i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span>
-				</a>
-				<span class="plus"> + </span>
-				<select id="stay" name="stay">
-					<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-					<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-					<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-				</select>
-			</li>
-			<?php if($modx->manager->action == '19') { ?>
-				<li id="Button6" class="disabled"><a href="javascript:;" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-				<li id="Button3" class="disabled"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } else { ?>
-				<li id="Button6"><a href="javascript:;" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-				<li id="Button3"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } ?>
-			<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-		</ul>
+	<?= $_style['actionbuttons']['dynamic']['element'] ?>
+
+	<div class="container element-edit-message">
+		<div class="alert alert-info"><?= $_lang['template_msg'] ?></div>
 	</div>
 
-	<div class="sectionBody">
-		<div class="tab-pane" id="templatesPane">
-			<script type="text/javascript">
-				tp = new WebFXTabPane(document.getElementById("templatesPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
-			</script>
 
-			<div class="tab-page" id="tabTemplate">
-				<h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
-				<script type="text/javascript">tp.addTabPage(document.getElementById("tabTemplate"));</script>
+	<div class="tab-pane" id="templatesPane">
+		<script type="text/javascript">
+			tp = new WebFXTabPane(document.getElementById("templatesPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+		</script>
 
-				<p class="element-edit-message">
-					<?php echo $_lang['template_msg']; ?>
-				</p>
-
-				<table>
-					<tr>
-						<th><?php echo $_lang['template_name']; ?></th>
-						<td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']); ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
+		<div class="tab-page" id="tabTemplate">
+			<h2 class="tab"><?= $_lang["template_edit_tab"] ?></h2>
+			<script type="text/javascript">tp.addTabPage(document.getElementById("tabTemplate"));</script>
+			<div class="container container-body">
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2">
+							<?= $_lang['template_name'] ?>
 							<?php if($id == $modx->config['default_template']) {
-								echo ' <b>' . $_lang['defaulttemplate_title'] . '</b>';
+								echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':')) . '</small>';
 							} ?>
-							<script>document.getElementsByName("templatename")[0].focus();</script>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['template_desc']; ?></th>
-						<td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']); ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['existing_category']; ?></th>
-						<td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
+						</label>
+						<div class="col-md-9 col-lg-10">
+							<div class="form-control-name clearfix">
+								<input name="templatename" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
+								<?php if($modx->hasPermission('save_role')): ?>
+									<label class="custom-control" title="<?= $_lang['lock_template'] . "\n" . $_lang['lock_template_msg'] ?>" tooltip>
+										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
+										<i class="fa fa-lock"></i>
+									</label>
+								<?php endif; ?>
+							</div>
+							<small class="form-text text-danger hide" id='savingMessage'></small>
+							<script>if(!document.getElementsByName("templatename")[0].value) document.getElementsByName("templatename")[0].focus();</script>
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?= $_lang['template_desc'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;">
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?= $_lang['existing_category'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
 								<option>&nbsp;</option>
 								<?php
 								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
@@ -156,88 +168,91 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								}
 								?>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<th><?php echo $_lang['new_category']; ?></th>
-						<td><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-					</tr>
-					<?php if($modx->hasPermission('save_role')): ?>
-						<tr>
-							<th colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> class="inputBox"> <?php echo $_lang['lock_template']; ?></label> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></th>
-						</tr>
-						<tr>
-							<th colspan="2"><label style="display:block;"><input name="selectable" type="checkbox" <?php echo $selectable == 1 ? "checked='checked'" : ""; ?> class="inputBox"> <?php echo $_lang['template_selectable']; ?></label></th>
-						</tr>
-					<?php endif; ?>
-				</table>
-				<!-- HTML text editor start -->
-				<div class="section">
-					<div class="sectionHeader">
-						<?php echo $_lang['template_code']; ?>
+						</div>
 					</div>
-					<div class="sectionBody">
-						<textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height: 370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['content']); ?></textarea>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?= $_lang['new_category'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="newcategory" type="text" maxlength="45" value="<?= isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="form-control" onchange="documentDirty=true;">
+						</div>
 					</div>
 				</div>
-				<!-- HTML text editor end -->
-				<input type="submit" name="save" style="display:none">
+				<?php if($modx->hasPermission('save_role')): ?>
+					<div class="form-group">
+						<label>
+							<input name="selectable" type="checkbox"<?= ($selectable == 1 ? ' checked="checked"' : '') ?> /> <?= $_lang['template_selectable'] ?></label>
+					</div>
+				<?php endif; ?>
+			</div>
 
-				<?php
-				$selectedTvs = array();
-				if(!isset($_POST['assignedTv'])) {
-					$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
+			<!-- HTML text editor start -->
+			<div class="navbar navbar-editor">
+				<span><?= $_lang['template_code'] ?></span>
+			</div>
+			<div class="section-editor clearfix">
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['content'])) ?></textarea>
+			</div>
+			<!-- HTML text editor end -->
+
+			<input type="submit" name="save" style="display:none">
+
+			<?php
+			$selectedTvs = array();
+			if(!isset($_POST['assignedTv'])) {
+				$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']), sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
                 LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "templateid='{$id}'", "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
-					);
-					while($row = $modx->db->getRow($rs)) {
-						$selectedTvs[$row['tvid']] = $row;
-					}
-					$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+				);
+				while($row = $modx->db->getRow($rs)) {
+					$selectedTvs[$row['tvid']] = $row;
 				}
+				$selectedTvs = array_reverse($selectedTvs, true);       // reverse ORDERBY DESC
+			}
 
-				$unselectedTvs = array();
-				$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
+			$unselectedTvs = array();
+			$rs = $modx->db->select(sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']), sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id", $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')), "", "category, tvcaption");
-				while($row = $modx->db->getRow($rs)) {
-					$unselectedTvs[$row['tvid']] = $row;
-				}
+			while($row = $modx->db->getRow($rs)) {
+				$unselectedTvs[$row['tvid']] = $row;
+			}
 
-				// Catch checkboxes if form not validated
-				if(isset($_POST['assignedTv'])) {
-					$selectedTvs = array();
-					foreach($_POST['assignedTv'] as $tvid) {
-						if(isset($unselectedTvs[$tvid])) {
-							$selectedTvs[$tvid] = $unselectedTvs[$tvid];
-						}
-					};
-				}
+			// Catch checkboxes if form not validated
+			if(isset($_POST['assignedTv'])) {
+				$selectedTvs = array();
+				foreach($_POST['assignedTv'] as $tvid) {
+					if(isset($unselectedTvs[$tvid])) {
+						$selectedTvs[$tvid] = $unselectedTvs[$tvid];
+					}
+				};
+			}
 
-				$total = count($selectedTvs);
-				?>
-			</div>
-			<div class="tab-page" id="tabAssignedTVs">
-				<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2>
-				<script type="text/javascript">tp.addTabPage(document.getElementById("tabAssignedTVs"));
-				</script>
-				<input type="hidden" name="tvsDirty" id="tvsDirty" value="0">
+			$total = count($selectedTvs);
+			?>
+		</div>
+
+		<div class="tab-page" id="tabAssignedTVs">
+			<h2 class="tab"><?= $_lang["template_assignedtv_tab"] ?></h2>
+			<script type="text/javascript">tp.addTabPage(document.getElementById("tabAssignedTVs"));</script>
+			<input type="hidden" name="tvsDirty" id="tvsDirty" value="0">
+
+			<div class="container container-body">
 				<?php
 				if($total > 0) {
 					echo '<p>' . $_lang['template_tv_msg'] . '</p>';
 				}
 				if($modx->hasPermission('save_template') && $total > 1 && $id) {
-					echo sprintf('<ul class="actionButtons"><li><a href="index.php?a=117&amp;id=%s">%s</a></li></ul>', $id, $_lang['template_tv_edit']);
+					echo sprintf('<div class="form-group"><a class="btn btn-primary" href="index.php?a=117&amp;id=%s">%s</a></div>', $id, $_lang['template_tv_edit']);
 				}
 
 				// Selected TVs
-				$tvList = '<br/>';
+				$tvList = '';
 				if($total > 0) {
 					$tvList .= '<ul>';
 					foreach($selectedTvs as $row) {
 						$desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
 						$locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
-						$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox" checked="checked" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
+						$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" checked="checked" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
 					}
 					$tvList .= '</ul>';
 
@@ -247,7 +262,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				echo $tvList;
 
 				// Unselected TVs
-				$tvList = '<br/><hr/><br/>' . $_lang['template_notassigned_tv'] . '<br/><br/><ul>';
+				$tvList = '<hr/><p>' . $_lang['template_notassigned_tv'] . '</p><ul>';
 				$preCat = '';
 				$insideUl = 0;
 				while($row = array_shift($unselectedTvs)) {
@@ -263,7 +278,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					$desc = !empty($row['tvdescription']) ? '&nbsp;&nbsp;<small>(' . $row['tvdescription'] . ')</small>' : '';
 					$locked = $row['tvlocked'] ? ' <em>(' . $_lang['locked'] . ')</em>' : "";
-					$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" class="inputBox tvi" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');">%s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $_lang['edit']);
+					$tvList .= sprintf('<li><label><input name="assignedTv[]" value="%s" type="checkbox" onchange="documentDirty=true;jQuery(\'#tvsDirty\').val(\'1\');"> %s <small>(%s)</small> - %s%s</label>%s <a href="index.php?id=%s&a=301&or=%s&oid=%s">%s</a></li>', $row['tvid'], $row['tvname'], $row['tvid'], $row['tvcaption'], $desc, $locked, $row['tvid'], $modx->manager->action, $id, $_lang['edit']);
 					$tvList .= '</li>';
 
 					$preCat = $row['category'];
@@ -272,14 +287,16 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				$tvList .= '</ul>';
 				echo $tvList;
 
-				?></div>
-			<?php
-			// invoke OnTempFormRender event
-			$evtOut = $modx->invokeEvent("OnTempFormRender", array("id" => $id));
-			if(is_array($evtOut)) {
-				echo implode("", $evtOut);
-			}
-			?>
+				?>
+			</div>
 		</div>
+
+		<?php
+		// invoke OnTempFormRender event
+		$evtOut = $modx->invokeEvent("OnTempFormRender", array("id" => $id));
+		if(is_array($evtOut)) {
+			echo implode("", $evtOut);
+		}
+		?>
 	</div>
 </form>

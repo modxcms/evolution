@@ -37,10 +37,11 @@ echo $cm->render();
 ?>
 <script type="text/javascript">
 	var selectedItem;
-	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
+	var contextm = <?= $cm->getClientScriptObject() ?>;
+
 	function showContentMenu(id, e) {
 		selectedItem = id;
-		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?php echo $modx_textdir ? '-190' : '';?>+ "px"; //offset menu if RTL is selected
+		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?= ($modx_textdir ? '-190' : '') ?>+ "px"; //offset menu if RTL is selected
 		contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop))) + "px";
 		contextm.style.visibility = "visible";
 		e.cancelBubble = true;
@@ -58,12 +59,12 @@ echo $cm->render();
 				window.location.href = 'index.php?a=108&id=' + id;
 				break;
 			case 3:		// duplicate
-				if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") === true) {
+				if(confirm("<?= $_lang['confirm_duplicate_record'] ?>") === true) {
 					window.location.href = 'index.php?a=111&id=' + id;
 				}
 				break;
 			case 4:		// delete
-				if(confirm("<?php echo $_lang['confirm_delete_module']; ?>") === true) {
+				if(confirm("<?= $_lang['confirm_delete_module'] ?>") === true) {
 					window.location.href = 'index.php?a=110&id=' + id;
 				}
 				break;
@@ -73,50 +74,56 @@ echo $cm->render();
 	document.addEvent('click', function() {
 		contextm.style.visibility = "hidden";
 	});
+
+	var actions = {
+		new: function() {
+			document.location.href = 'index.php?a=107';
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		}
+	});
+
 </script>
 
 <h1>
-	<i class="fa fa-cogs"></i><?php echo $_lang['module_management']; ?>
+	<i class="fa fa-cogs"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
 </h1>
 
-<div class="section">
-	<div class="sectionBody">
-		<!-- load modules -->
-		<p class="element-edit-message"><?php echo $_lang['module_management_msg']; ?></p>
+<?= $_style['actionbuttons']['dynamic']['newmodule'] ?>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<?php if(($modx->hasPermission('new_module'))) {
-					echo '<li id="newModule" class="transition"><a href="index.php?a=107"><i class="' . $_style["actions_new"] . '"></i><span>' . $_lang["new_module"] . '</span></a></li>';
-				} ?>
-			</ul>
-		</div>
+<div class="container element-edit-message">
+	<div class="alert alert-info"><?= $_lang['module_management_msg'] ?></div>
+</div>
 
-		<div>
-			<?php
-
-			$ds = $modx->db->select("id,name,description,IF(locked,'{$_lang['yes']}','-') as locked,IF(disabled,'{$_lang['yes']}','-') as disabled,IF(icon<>'',icon,'{$_style['icons_modules']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
-			include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-			$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
-			$grd->noRecordMsg = $_lang["no_records_found"];
-			$grd->cssClass = "grid";
-			$grd->columnHeaderClass = "gridHeader";
-			$grd->itemClass = "gridItem";
-			$grd->altItemClass = "gridAltItem";
-			$grd->fields = "icon,name,description,locked,disabled";
-			$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["description"] . " ," . $_lang["locked"] . " ," . $_lang["disabled"];
-			$grd->colWidths = "34,,,60,60";
-			$grd->colAligns = "center,,,center,center";
-			$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='[+value+]'></i></a>||template:<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
-			if($listmode == '1') {
-				$grd->pageSize = 0;
-			}
-			if($_REQUEST['op'] == 'reset') {
-				$grd->pageNumber = 1;
-			}
-			// render grid
-			echo $grd->render();
-			?>
-		</div>
+<div class="tab-page">
+	<div class="table-responsive">
+		<?php
+		$ds = $modx->db->select("id,name,description,IF(locked,'{$_lang['yes']}','-') as locked,IF(disabled,'{$_lang['yes']}','-') as disabled,IF(icon<>'',icon,'{$_style['icons_modules']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+		include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+		$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+		$grd->noRecordMsg = $_lang["no_records_found"];
+		$grd->cssClass = "table data";
+		$grd->columnHeaderClass = "tableHeader";
+		$grd->itemClass = "tableItem";
+		$grd->altItemClass = "tableAltItem";
+		$grd->fields = "icon,name,description,locked,disabled";
+		$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["description"] . " ," . $_lang["locked"] . " ," . $_lang["disabled"];
+		$grd->colWidths = "34,,,60,60";
+		$grd->colAligns = "center,,,center,center";
+		$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='[+value+]'></i></a>||template:<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
+		if($listmode == '1') {
+			$grd->pageSize = 0;
+		}
+		if($_REQUEST['op'] == 'reset') {
+			$grd->pageNumber = 1;
+		}
+		// render grid
+		echo $grd->render();
+		?>
 	</div>
 </div>

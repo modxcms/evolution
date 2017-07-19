@@ -3,8 +3,16 @@ if(IN_MANAGER_MODE != "true") {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
 
-include_once(MODX_MANAGER_PATH . 'actions/resources/functions.inc.php');
-include_once(MODX_MANAGER_PATH . 'actions/resources/mgrResources.class.php');
+if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/functions.inc.php')) {
+	include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/functions.inc.php');
+} else {
+	include_once(MODX_MANAGER_PATH . 'actions/resources/functions.inc.php');
+}
+if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/mgrResources.class.php')) {
+	include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/mgrResources.class.php');
+} else {
+	include_once(MODX_MANAGER_PATH . 'actions/resources/mgrResources.class.php');
+}
 
 $resources = new mgrResources();
 
@@ -57,12 +65,42 @@ foreach($mraTranslations as $key => $value) $mraTranslations[$key] = iconv($modx
 		</script>
 
 		<?php
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab1_templates.inc.php');
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab2_templatevars.inc.php');
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab3_chunks.inc.php');
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab4_snippets.inc.php');
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab5_plugins.inc.php');
-		include_once(MODX_MANAGER_PATH . 'actions/resources/tab6_categoryview.inc.php');
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab1_templates.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab1_templates.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab1_templates.inc.php');
+		}
+
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab2_templatevars.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab2_templatevars.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab2_templatevars.inc.php');
+		}
+
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab3_chunks.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab3_chunks.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab3_chunks.inc.php');
+		}
+
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab4_snippets.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab4_snippets.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab4_snippets.inc.php');
+		}
+
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab5_plugins.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab5_plugins.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab5_plugins.inc.php');
+		}
+
+		if(file_exists(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab6_categoryview.inc.php')) {
+			include_once(MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/actions/resources/tab6_categoryview.inc.php');
+		} else {
+			include_once(MODX_MANAGER_PATH . '/actions/resources/tab6_categoryview.inc.php');
+		}
+
 
 		if(is_numeric($_GET['tab'])) {
 			echo '<script type="text/javascript"> tpResources.setSelectedIndex( ' . $_GET['tab'] . ' );</script>';

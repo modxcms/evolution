@@ -6,7 +6,7 @@ $errors = 0;
 
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
-$phpMinVersion = "5.3.0";
+$phpMinVersion = "5.4.0";
 // -1 if left is less, 0 if equal, +1 if left is higher
 if (version_compare(phpversion(), $phpMinVersion) < 0) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
@@ -62,7 +62,7 @@ echo "<p>" . $_lang['checking_if_cache_file_writable'];
 if (!file_exists("../assets/cache/siteCache.idx.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../assets/cache/siteCache.idx.php", 'w');
-    @ fwrite($hnd, "<?php //MODX site cache file ?>");
+    @ fwrite($hnd, "<?php //EVO site cache file ?>");
     @ fclose($hnd);
 }
 if (!is_writable("../assets/cache/siteCache.idx.php")) {
@@ -115,7 +115,7 @@ echo "<p>".$_lang['checking_if_config_exist_and_writable'];
 if (!is_file("../".MGR_DIR."/includes/config.inc.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../".MGR_DIR."/includes/config.inc.php", 'w');
-    @ fwrite($hnd, "<?php //MODX configuration file ?>");
+    @ fwrite($hnd, "<?php //EVO configuration file ?>");
     @ fclose($hnd);
 }
 else @chmod("../".MGR_DIR."/includes/config.inc.php", 0666);

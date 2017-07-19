@@ -1,10 +1,10 @@
 <?php
 /**
- * MODX Manager language file
+ * EVO Manager language file
  *
  * @version 1.0.15
  * @date 2014/02/24
- * @author The MODX Project Team
+ * @author The EVO Project Team
  *
  * @language English
  * @package modx
@@ -16,8 +16,8 @@
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX is a <a href="http://modx.com/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'About MODX';
+$_lang["about_msg"] = 'EVO is a <a href="http://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = 'About EVO';
 $_lang["access_permission_denied"] = 'You do not have the correct permissions for this Resource.';
 $_lang["access_permission_parent_denied"] = 'You do not have permission to create or move a Resource here! Please choose another location.';
 $_lang["access_permissions"] = 'Access permissions';
@@ -42,7 +42,7 @@ $_lang["access_permissions_user_message"] = 'Select which User Groups this user 
 $_lang["access_permissions_users_in_group"] = 'Users in group:';
 $_lang["access_permissions_users_tab"] = 'View the User Groups that have been created. You can also create new groups, rename groups, delete groups and see which users are members of the different groups. To add a new user to a group or to remove a user from a group, edit the user directly. Administrators (users who have been assigned the role with ID 1) always have access to all Resources, so they don\'t need to be added to any groups.';
 $_lang["account_email"] = 'Account email';
-$_lang["actioncomplete"] = '<b>Action was completed successfully!</b><br /> - Please wait while MODX cleans up.';
+$_lang["actioncomplete"] = '<b>Action was completed successfully!</b><br /> - Please wait while EVO cleans up.';
 $_lang["activity_message"] = 'This list shows the last Resources you created or edited:';
 $_lang["activity_title"] = 'Recently edited/created Resources';
 $_lang["add"] = 'Add';
@@ -81,7 +81,7 @@ $_lang["cancel"] = 'Cancel';
 $_lang["captcha_code"] = 'Security code';
 $_lang["captcha_message"] = 'Enable this to strengthen security by requiring users to enter a code which is unreadable by machines (and script-kiddy hacking scripts).';
 $_lang["captcha_title"] = 'Use CAPTCHA codes';
-$_lang["captcha_words_default"] = 'MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
+$_lang["captcha_words_default"] = 'EVO,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
 $_lang["captcha_words_message"] = 'Enter a list of CAPTCHA words to use if CAPTCHA is enabled. Separate the words with commas. This input field is limited to 255 characters.';
 $_lang["captcha_words_title"] = 'CAPTCHA Words';
 $_lang["category_heading"] = 'Category';
@@ -118,7 +118,7 @@ $_lang["collapse_tree"] = 'Collapse Site Tree';
 $_lang["comment"] = 'Comment';
 $_lang["configcheck_admin"] = 'Please contact a systems administrator and warn them about this message!';
 $_lang["configcheck_cache"] = 'cache directory not writable';
-$_lang["configcheck_cache_msg"] = 'MODX cannot write to the cache directory. MODX will still function as expected, but no caching will take place. To solve this, make the /_cache/ directory writable.';
+$_lang["configcheck_cache_msg"] = 'EVO cannot write to the cache directory. EVO will still function as expected, but no caching will take place. To solve this, make the /_cache/ directory writable.';
 $_lang["configcheck_configinc"] = 'Config file still writable';
 $_lang["configcheck_configinc_msg"] = 'Very naughty people could potentially wreak some havoc on your site and everything associated with it. <strong>Really.</strong> Please make your config file  (/[+MGR_DIR+]/includes/config.inc.php) read only!';
 $_lang["configcheck_default_msg"] = 'An unspecified warning was found. Which is strange.';
@@ -130,13 +130,13 @@ $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning
 $_lang["configcheck_images"] = 'Images directory not writable';
 $_lang["configcheck_images_msg"] = 'The images directory isn\'t writable, or doesn\'t exist. This means the Image Manager functions in the editor will not work!';
 $_lang["configcheck_installer"] = 'Installer still present';
-$_lang["configcheck_installer_msg"] = 'The /install directory contains the installer for MODX. Just imagine what might happen if an evil person finds this directory and runs the installer! They\'d probably not get too far, because they need to enter some user information for the database, but it is still best to remove this directory from your server.';
+$_lang["configcheck_installer_msg"] = 'The /install directory contains the installer for EVO. Just imagine what might happen if an evil person finds this directory and runs the installer! They\'d probably not get too far, because they need to enter some user information for the database, but it is still best to remove this directory from your server.';
 $_lang["configcheck_lang_difference"] = 'Incorrect number of entries in language file';
 $_lang["configcheck_lang_difference_msg"] = 'The currently selected language has a different number of entries than the default language. While not necessarily a problem, this may mean the language file needs to be updated.';
 $_lang["configcheck_notok"] = 'One or more configuration details didn\'t check out OK:';
 $_lang["configcheck_ok"] = 'Check passed OK - no warnings to report.';
 $_lang["configcheck_php_gdzip"] = 'GD and/or Zip PHP extensions not found';
-$_lang["configcheck_php_gdzip_msg"] = 'MODX needs the GD and Zip extension enabled for PHP. While MODX will work without them, you will not be able to take full advantage of the built-in File Manager, Image Editor or Captcha for logins.';
+$_lang["configcheck_php_gdzip_msg"] = 'EVO needs the GD and Zip extension enabled for PHP. While EVO will work without them, you will not be able to take full advantage of the built-in File Manager, Image Editor or Captcha for logins.';
 $_lang["configcheck_register_globals"] = 'register_globals is set to ON in your php.ini configuration file';
 $_lang["configcheck_register_globals_msg"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about what you can do to disable this setting.';
 $_lang["configcheck_title"] = 'Configuration check';
@@ -190,7 +190,7 @@ $_lang["create_weblink_here"] = 'Create Weblink here';
 $_lang["createdon"] = 'Creation date';
 $_lang["create_new"] = 'Create new';
 $_lang["credits"] = 'Credits';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>EVO is managed and maintained at <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Add custom content types for Resources. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = 'Custom content types';
 $_lang["database_charset"] = 'Database Charset';
@@ -300,8 +300,8 @@ $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';
 $_lang["export_site_failed_no_write"] = 'Cannot write file.';
 $_lang["export_site_html"] = 'Export site to HTML';
 $_lang["export_site_maxtime"] = 'Max export time:';
-$_lang["export_site_maxtime_message"] = 'Specify the number of seconds MODX can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
-$_lang["export_site_message"] = '<p>Use this to export the entire site to static HTML files. Please note, however, that you will lose a lot of the MODX functionality should you do so:</p><ul><li>Page reads on the exported files will not be recorded.</li><li>Interactive Snippets will NOT work in exported files</li><li>Only regular Resources will be exported, Weblinks will not be exported.</li><li>The export process may fail if your Resources contain Snippets which send redirection headers.</li><li>Depending on how you\'ve written your Resources, style sheets and images, the design of your site may be broken. To fix this, save/move your exported files to the same directory where the main MODX index.php file is located.</li></ul><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the /assets/export directory, using the Resources\' URL aliases as filenames when possible. While exporting your site, it\'s best to have the MODX configuration item \'Friendly URL aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><em>Any existing files will be overwritten by the new files if their names are identical!</em></p>';
+$_lang["export_site_maxtime_message"] = 'Specify the number of seconds EVO can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
+$_lang["export_site_message"] = '<p>Use this to export the entire site to static HTML files. Please note, however, that you will lose a lot of the EVO functionality should you do so:</p><ul><li>Page reads on the exported files will not be recorded.</li><li>Interactive Snippets will NOT work in exported files</li><li>Only regular Resources will be exported, Weblinks will not be exported.</li><li>The export process may fail if your Resources contain Snippets which send redirection headers.</li><li>Depending on how you\'ve written your Resources, style sheets and images, the design of your site may be broken. To fix this, save/move your exported files to the same directory where the main EVO index.php file is located.</li></ul><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the /assets/export directory, using the Resources\' URL aliases as filenames when possible. While exporting your site, it\'s best to have the EVO configuration item \'Friendly URL aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><em>Any existing files will be overwritten by the new files if their names are identical!</em></p>';
 $_lang["export_site_numberdocs"] = '<p><b>Found %s Resources to export...</b></p>';
 $_lang["export_site_prefix"] = 'File prefix:';
 $_lang["export_site_start"] = 'Start export';
@@ -320,7 +320,7 @@ $_lang["file_delete_folder"] = 'Delete directory';
 $_lang["file_deleted"] = 'Success!';
 $_lang["file_download_file"] = 'Download File';
 $_lang["file_download_unzip"] = 'Unzip File';
-$_lang["file_folder_chmod_error"] = 'Unable to change permissions, you will need to change permissions outside of MODX.';
+$_lang["file_folder_chmod_error"] = 'Unable to change permissions, you will need to change permissions outside of EVO.';
 $_lang["file_folder_created"] = 'Directory created successfully!';
 $_lang["file_folder_deleted"] = 'Directory was successfully deleted!';
 $_lang["file_folder_not_created"] = 'Unable to create directory';
@@ -330,7 +330,7 @@ $_lang["file_not_saved"] = 'Cannot save file, please ensure target directory is 
 $_lang["file_saved"] = 'File updated successfully!';
 $_lang["file_unzip"] = 'Unzip was successful!';
 $_lang["file_unzip_fail"] = 'Unzip Failed!';
-$_lang["filemanager_path_message"] = 'IIS often does not populate the document_root setting properly, which is used by the file manager to determine what you can see. If you are having problems using the file manager, make sure this path points to the root of your MODX installation.';
+$_lang["filemanager_path_message"] = 'IIS often does not populate the document_root setting properly, which is used by the file manager to determine what you can see. If you are having problems using the file manager, make sure this path points to the root of your EVO installation.';
 $_lang["filemanager_path_title"] = 'File Manager path';
 $_lang["files_access_denied"] = 'Access denied!';
 $_lang["files_data"] = 'Data';
@@ -372,7 +372,7 @@ $_lang["forgot_password_email_intro"] = 'A request has been made to change the p
 $_lang["forgot_password_email_link"] = 'Click here to complete the process.';
 $_lang["forgot_your_password"] = 'Forgot your password?';
 $_lang["friday"] = 'Friday';
-$_lang["friendly_alias_message"] = 'With Friendly URLs enabled, a Resource URL alias will be used when present instead of the Resource ID. E.g., if a Resource with ID 1 has an URL alias of "introduction", no prefix set (empty) and a suffix of ".html", enabling this option would generate an URL alias of  "introduction.html". If there is no URL alias set, MODX generates "1.html".';
+$_lang["friendly_alias_message"] = 'With Friendly URLs enabled, a Resource URL alias will be used when present instead of the Resource ID. E.g., if a Resource with ID 1 has an URL alias of "introduction", no prefix set (empty) and a suffix of ".html", enabling this option would generate an URL alias of  "introduction.html". If there is no URL alias set, EVO generates "1.html".';
 $_lang["friendly_alias_title"] = 'Use Friendly URL aliases';
 $_lang["friendlyurls_message"] = 'Use Search Engine Friendly URLs on Apache webservers with mod_rewrite or IIS with third-party plugins. See the .htaccess file in the site root of the distribution for more info.';
 $_lang["friendlyurls_title"] = 'Use FriendlyURLs';
@@ -387,7 +387,7 @@ $_lang["go"] = 'Go';
 $_lang["group_access_permissions"] = 'User group access';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
-$_lang["help_msg"] = '<p>You can obtain free community support by <a href="http://forums.modx.com/" target="_blank">visiting the MODX Forums</a>. There is also a growing body of <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">MODX Documentation and Guides</a> that touch on virtually every aspect of MODX.</p><p>We are planning to offer commercial support services for MODX as well. Please <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">email us if you\'re interested</a>.</p>';
+$_lang["help_msg"] = '<p>You can obtain free community support by <a href="http://forums.modx.com/" target="_blank">visiting the EVO Forums</a>. There is also a growing body of <a href="http://evolution-docs.com" target="_blank">EVO Documentation and Guides</a> that touch on virtually every aspect of EVO.</p><p>We are planning to offer commercial support services for EVO as well. Please <a href="mailto:dmi3yy@evo.im?subject=EVO Commercial Support Inquiry">email us if you\'re interested</a>.</p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Hide Site Tree';
 $_lang["home"] = 'Home';
@@ -444,7 +444,7 @@ $_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords';
 $_lang["keywords_intro"] = 'To edit a keyword, simply type in the new keyword in the text field next to the keyword you wish to change. To delete a keyword, check the \'delete\' box for that keyword. If you check the keyword\'s delete box, and also change it\'s name, it will be deleted, and the renaming of the keyword will not take place!';
-$_lang["language_message"] = 'Select the language for the MODX Content Manager.';
+$_lang["language_message"] = 'Select the language for the EVO Content Manager.';
 $_lang["language_title"] = 'Manager language';
 $_lang["last_update"] = 'Last update';
 $_lang["launch_site"] = 'View Site';
@@ -454,7 +454,7 @@ $_lang["link_attributes_help"] = 'Enter optional attributes for a link for this 
 $_lang["list_mode"] = 'Turn on/off list mode - used to list all records in the grid.';
 $_lang["loading_doc_tree"] = 'Loading Site Tree...';
 $_lang["loading_menu"] = 'Loading menu...';
-$_lang["loading_page"] = 'Please wait while MODX loads the page...';
+$_lang["loading_page"] = 'Please wait while EVO loads the page...';
 $_lang["localtime"] = 'Local Time';
 $_lang["lock_htmlsnippet"] = 'Lock Chunk for editing';
 $_lang["lock_htmlsnippet_msg"] = 'Only Administrators (Role ID 1) can edit this Chunk.';
@@ -482,7 +482,7 @@ $_lang["login_captcha_message"] = 'Please enter the security code shown in the g
 $_lang["login_homepage"] = 'Login Home Page';
 $_lang["login_homepage_message"] = 'Enter the ID of the Resource you want to send user to after he/she has logged in. <b>NOTE: make sure the ID you enter belongs to an existing Resource, and that it has been published and is accessible by this user!</b>';
 $_lang["login_message"] = 'Please enter your login credentials to start your Manager session. Your username and password are case-sensitive, so please enter them carefully!';
-$_lang["logo_slogan"] = 'MODX Content Manager - \nCreate and do more with less';
+$_lang["logo_slogan"] = 'EVO Content Manager - \nCreate and do more with less';
 $_lang["logout"] = 'Logout';
 $_lang["long_title"] = 'Long title';
 $_lang["mail_check_timeperiod_message"] = 'How often to check for new mail messages in the Manager, in seconds.';
@@ -569,11 +569,11 @@ $_lang["module_resource_title"] = 'Module Dependencies';
 $_lang["module_title"] = 'Create/edit Module';
 $_lang["module_viewdepend_msg"] = 'View the assigned Elements on which this Module depends. Click on the "Manager Dependencies" button to modify the dependencies';
 $_lang["modules"] = 'Modules';
-$_lang["modx_news"] = 'MODX News Notices';
-$_lang["modx_news_tab"] = 'MODX News';
-$_lang["modx_news_title"] = 'MODX News';
-$_lang["modx_security_notices"] = 'MODX Security Notices';
-$_lang["modx_version"] = 'MODX version';
+$_lang["modx_news"] = 'EVO News Notices';
+$_lang["modx_news_tab"] = 'EVO News';
+$_lang["modx_news_title"] = 'EVO News';
+$_lang["modx_security_notices"] = 'EVO Security Notices';
+$_lang["modx_version"] = 'EVO version';
 $_lang["monday"] = 'Monday';
 $_lang["move"] = 'Move';
 $_lang["move_resource"] = 'Move Resource';
@@ -674,7 +674,7 @@ $_lang["parse_docblock"] = 'Parse DocBlock';
 $_lang["parse_docblock_msg"] = 'Attention (!): <b>Resets</b> actual name, configuration, description and category to install-defaults by parsing the source code.';
 $_lang["password"] = 'Password';
 $_lang["password_change_request"] = 'Password change request';
-$_lang["password_gen_gen"] = 'Let MODX generate a password.';
+$_lang["password_gen_gen"] = 'Let EVO generate a password.';
 $_lang["password_gen_length"] = 'The password you specify needs to be at least 6 characters long.';
 $_lang["password_gen_method"] = 'New password method';
 $_lang["password_gen_specify"] = 'Let me specify the password:';
@@ -682,7 +682,7 @@ $_lang["password_method"] = 'Password notification method';
 $_lang["password_method_email"] = 'Send the new password by e-mail.';
 $_lang["password_method_screen"] = 'Show the new password on screen.';
 $_lang["password_msg"] = 'The new password for <b>%s</b> is <b>%s</b>.';
-$_lang["php_version_check"] = 'MODX Evolution is compatible with PHP version 5.0.0 and higher. This server is using version %s%. Please upgrade your PHP installation!';
+$_lang["php_version_check"] = 'EVO Evolution is compatible with PHP version 5.0.0 and higher. This server is using version %s%. Please upgrade your PHP installation!';
 $_lang["plugin"] = 'Plugin';
 $_lang["plugins"] = 'Plugins';
 $_lang["plugin_code"] = 'Plugin code (php)';
@@ -706,9 +706,9 @@ $_lang["public"] = 'Public';
 $_lang["publish_date"] = 'Publish Date';
 $_lang["publish_events"] = 'Publish Events';
 $_lang["publish_resource"] = 'Publish Resource';
-$_lang["rb_base_dir_message"] = 'Enter the physical path to the File Browser directory. This setting is usually automatically generated. If you\'re using IIS, however, MODX may not be able to work the path out on its own, causing the File Browser to show an error. In that case, you can enter the path to the images directory here (the path as you\'d see it in Windows Explorer). <b>NOTE:</b> The File Browser directory must contain the subdirectories images, files, flash and media in order for the file browser to function correctly.';
+$_lang["rb_base_dir_message"] = 'Enter the physical path to the File Browser directory. This setting is usually automatically generated. If you\'re using IIS, however, EVO may not be able to work the path out on its own, causing the File Browser to show an error. In that case, you can enter the path to the images directory here (the path as you\'d see it in Windows Explorer). <b>NOTE:</b> The File Browser directory must contain the subdirectories images, files, flash and media in order for the file browser to function correctly.';
 $_lang["rb_base_dir_title"] = 'File base path';
-$_lang["rb_base_url_message"] = 'Enter the virtual path to files directory. This setting is usually automatically generated. If you\'re using IIS, however, MODX may not be able to work the URL out on it\'s own, causing the File Browser to show an error. In that case, you can enter the URL to the images directory here (the URL as you\'d enter it on Internet Explorer).';
+$_lang["rb_base_url_message"] = 'Enter the virtual path to files directory. This setting is usually automatically generated. If you\'re using IIS, however, EVO may not be able to work the URL out on it\'s own, causing the File Browser to show an error. In that case, you can enter the URL to the images directory here (the URL as you\'d enter it on Internet Explorer).';
 $_lang["rb_base_url_title"] = 'File Browser URL';
 $_lang["rb_message"] = 'Select yes to enable the File Browser. This will allow your users to browse and upload files such as images, flash and media files on the server.';
 $_lang["rb_title"] = 'Enable File Browser';
@@ -752,7 +752,7 @@ $_lang["resource_metatag_help"] = 'Select the META tags or keywords you wish to 
 $_lang["resource_opt_contentdispo"] = 'Content-Disposition';
 $_lang["resource_opt_contentdispo_help"] = 'Use the content disposition field to specify how this Resource will be handled by the web browser. For file downloads select the Attachment option.';
 $_lang["resource_opt_emptycache"] = 'Empty cache';
-$_lang["resource_opt_emptycache_help"] = 'Leaving this field checked will make MODX empty the cache after you save the Resource. This way your visitors will not see an older version of the Resource.';
+$_lang["resource_opt_emptycache_help"] = 'Leaving this field checked will make EVO empty the cache after you save the Resource. This way your visitors will not see an older version of the Resource.';
 $_lang["resource_opt_folder"] = 'Container';
 $_lang["resource_opt_folder_help"] = 'Check this to make the Resource also act as a Container for other Resources. A \'Container\' is like a folder, only it can also have content.';
 $_lang["resource_opt_menu_index"] = 'Menu index';
@@ -777,7 +777,7 @@ $_lang["resource_title"] = 'Title';
 $_lang["resource_title_help"] = 'Enter the name/title of the Resource. Avoid using backslashes in the name.';
 $_lang["resource_to_be_moved"] = 'Resource to be moved';
 $_lang["resource_type"] = 'Resource Type';
-$_lang["resource_type_message"] = 'Weblinks reference Resources on the Internet including another MODX Resource, an external page, or an image or other file on the Internet. Weblinks should have a text/html Internet Media Type and Inline Content-Disposition.';
+$_lang["resource_type_message"] = 'Weblinks reference Resources on the Internet including another EVO Resource, an external page, or an image or other file on the Internet. Weblinks should have a text/html Internet Media Type and Inline Content-Disposition.';
 $_lang["resource_type_weblink"] = 'Weblink';
 $_lang["resource_type_webpage"] = 'Web page';
 $_lang["resource_weblink_help"] = 'Type the address of the object you wish to reference with this Weblink here. Alternatively insert from the File Browser or use the link selection icon and select a resource from the Site Tree.';
@@ -872,10 +872,10 @@ $_lang["role_view_unpublished"] = 'View Unpublished Resources';
 $_lang["role_web_access_persmissions"] = 'Web access permissions';
 $_lang["role_web_user_management"] = 'Web user management';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
-$_lang["rss_url_news_message"] = 'Enter the URL for the MODX News Feed.';
+$_lang["rss_url_news_message"] = 'Enter the URL for the EVO News Feed.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
 $_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
-$_lang["rss_url_security_message"] = 'Enter the URL for the MODX Security Feed.';
+$_lang["rss_url_security_message"] = 'Enter the URL for the EVO Security Feed.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = 'Run Module';
 $_lang["saturday"] = 'Saturday';
@@ -935,7 +935,7 @@ $_lang["settings_page_settings"] = 'Settings';
 $_lang["settings_photo"] = 'Photo';
 $_lang["settings_properties"] = 'Properties';
 $_lang["settings_site"] = 'Site';
-$_lang["settings_strip_image_paths_message"] = 'If this is set to \'No\', MODX  will write file browser src\'s (images, files, flash, etc.) as absolute URLs. Relative URLs are helpful should you wish to move your MODX install, e.g., from a staging site to a production site. If you have no idea what this means, it\'s best just to leave it set to \'Yes\'.';
+$_lang["settings_strip_image_paths_message"] = 'If this is set to \'No\', EVO  will write file browser src\'s (images, files, flash, etc.) as absolute URLs. Relative URLs are helpful should you wish to move your EVO install, e.g., from a staging site to a production site. If you have no idea what this means, it\'s best just to leave it set to \'Yes\'.';
 $_lang["settings_strip_image_paths_title"] = 'Rewrite browser paths?';
 $_lang["settings_templvars"] = 'Template Variables';
 $_lang["settings_title"] = 'System configuration';
@@ -1085,7 +1085,7 @@ $_lang["tree_page_click_message"] = 'The default behavior when clicking on a pag
 $_lang["use_breadcrumbs"] = 'Show navigation';
 $_lang["use_breadcrumbs_message"] = 'Show the navigation when creating or editing Resource in the Manager';
 $_lang["tree_show_protected"] = 'Show protected pages';
-$_lang["tree_show_protected_message"] = 'When set to "No", Protected Resources (and all their child-Resources) do not appear in the Site Tree menu. "No" is the legacy setting for MODX.';
+$_lang["tree_show_protected_message"] = 'When set to "No", Protected Resources (and all their child-Resources) do not appear in the Site Tree menu. "No" is the legacy setting for EVO.';
 $_lang["truncate_table"] = 'Click here to truncate this table';
 $_lang["tuesday"] = 'Tuesday';
 $_lang["tv"] = 'TV';
@@ -1183,12 +1183,12 @@ $_lang["websignupemail_message"] = 'Set the email message sent to Users when cre
 $_lang["websignupemail_title"] = 'Web Signup e-mail';
 $_lang["wednesday"] = 'Wednesday';
 $_lang["welcome_messages"] = 'Your Inbox contains <strong>%d</strong> message(s), of which <strong>%s</strong> are unread.';
-$_lang["welcome_title"] = 'Welcome to your MODX Content Manager';
-$_lang["which_editor_message"] = 'Select the rich text editor (RTE). You can download and install additional RTEs from the MODX download page.';
+$_lang["welcome_title"] = 'Welcome to your EVO Content Manager';
+$_lang["which_editor_message"] = 'Select the rich text editor (RTE). You can download and install additional RTEs from the EVO download page.';
 $_lang["which_editor_title"] = 'Editor to use';
 $_lang["working"] = 'Working...';
 $_lang["wrap_lines"] = 'Wrap lines';
-$_lang["xhtml_urls_message"] = 'Replaces ampersand (&amp;) characters in urls that are generated by MODX with the validating &amp;<!-- -->amp; htmlentity';
+$_lang["xhtml_urls_message"] = 'Replaces ampersand (&amp;) characters in urls that are generated by EVO with the validating &amp;<!-- -->amp; htmlentity';
 $_lang["xhtml_urls_title"] = 'XHTML URLs';
 $_lang["yes"] = 'Yes';
 $_lang["you_got_mail"] = 'You got mail';
@@ -1250,10 +1250,10 @@ $_lang["make_folders_title"] = 'End Container URL with Slash';
 $_lang["make_folders_message"] = 'Append trailing slash to Resources that are set as containers when using Friendly URLs.';
 
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
-$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised EVO system file and website.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have configured MODX to check important system files for possible website script attacks. This warning does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message. Changes in the following files have been found:';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have configured EVO to check important system files for possible website script attacks. This warning does not necessarily mean your site has been compromised, however, you should review the watched files in your installation (set in System configuration -> User -> Check core files on login). If you find your files unaltered or changes were made by site administrators, go to System Configuration and click to re-save settings to dismiss this message. Changes in the following files have been found:';
 
 $_lang['email_method_title'] = 'Sendmail method';
 $_lang['email_method_mail'] = 'PHP mail() function';
@@ -1267,7 +1267,7 @@ $_lang['smtp_port_title'] = 'SMTP port';
 
 $_lang["setting_resource_tree_node_name"] = 'Display Name in Resource Tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Select the Resource field to show as the Resource name in the Resource Tree. The default setting is pagetitle.';
-$_lang["setting_resource_tree_node_name_desc_add"] = 'Note: Since MODX 1.1 you can change this Display Name within Resource-Tree´s sorting option. This setting is used when Display Name in Resource Tree is set to &quot;Default&quot;.';
+$_lang["setting_resource_tree_node_name_desc_add"] = 'Note: Since EVO 1.1 you can change this Display Name within Resource-Tree´s sorting option. This setting is used when Display Name in Resource Tree is set to &quot;Default&quot;.';
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
@@ -1285,8 +1285,8 @@ $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplic
 $_lang["aliaslistingfolder_title"] = 'Use AliasListing only for Folders';
 $_lang["aliaslistingfolder_message"] = 'Reduces memory consumption when a large number of resources';
 
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file in the MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since MODX was installed in a subdirectory, it is necessary to change the content of .htaccess.';
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file in the EVO installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since EVO was installed in a subdirectory, it is necessary to change the content of .htaccess.';
 
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
@@ -1307,9 +1307,9 @@ $_lang["export_site.static.php5"] = 'Replace with';
 $_lang["export_site.static.php6"] = 'Target';
 $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
+$_lang["mutate_settings.dynamic.php6"] = 'Send mail on EVO errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
-$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a EVO error occurs. The details of the error could be seen in the EVO system events log.';
 
 $_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
 $_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
@@ -1363,7 +1363,7 @@ $_lang["position"] = "Position";
 $_lang["are_you_sure"] = "Are you sure?";
 
 $_lang['evo_downloads_title'] = "Evolution Downloads";
-$_lang['help_translating_title'] = "Help translating MODX Evolution";
+$_lang['help_translating_title'] = "Help translating EVO Evolution";
 $_lang['download'] = "Download";
 $_lang['downloads'] = "Downloads";
 $_lang["previous_releases"] = "Previous Releases";
@@ -1372,7 +1372,7 @@ $_lang["extras"] = "Extras";
 $_lang["display_locks"] = "Display Locks";
 $_lang["role_display_locks"] = "Display Locks";
 $_lang["session_timeout"] = "Session Timeout";
-$_lang["session_timeout_msg"] = "MODX will ping the server as per setting &quot;Mail Check Time Period&quot;. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
+$_lang["session_timeout_msg"] = "EVO will ping the server as per setting &quot;Mail Check Time Period&quot;. If the last ping exceeds this setting, the associated session will be considered invalid and all related locks will be removed automatically. Set value in minutes (>2min, default 15min).";
 $_lang["unlock_element_id_warning"] = "Are you sure you want to unlock this [+element_type+] (ID [+id+])?";
 $_lang["lock_element_type_1"] = "Template";
 $_lang["lock_element_type_2"] = "Template-Variable";

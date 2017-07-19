@@ -41,13 +41,20 @@ while($file = $dir->read()) {
 $dir->close();
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 ?>
-	<style type="text/css">
-		table th { text-align: left; vertical-align: top; }
-	</style>
-
 	<script type="text/javascript">
 		var displayStyle = '<?php echo $displayStyle; ?>';
 		var lang_chg = '<?php echo $_lang['confirm_setting_language_change']; ?>';
+
+		var actions = {
+			save: function() {
+				documentDirty = false;
+				document.settings.submit();
+			},
+			cancel: function() {
+				documentDirty = false;
+				document.location.href = 'index.php?a=2';
+			}
+		}
 	</script>
 	<script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
 	<form name="settings" action="index.php?a=30" method="post">
@@ -56,20 +63,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			<i class="fa fa-sliders"></i><?php echo $_lang['settings_title']; ?>
 		</h1>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<li id="Button1" class="transition">
-					<a href="javascript:;" onclick="documentDirty=false; document.settings.submit();">
-						<i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span>
-					</a>
-				</li>
-				<li id="Button5" class="transition">
-					<a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=2';">
-						<i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel']; ?></span>
-					</a>
-				</li>
-			</ul>
-		</div>
+		<?= $_style['actionbuttons']['dynamic']['save'] ?>
 
 		<div class="sectionBody">
 			<input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
