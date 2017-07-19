@@ -315,7 +315,8 @@ $widgets['welcome'] = array(
 						<!--@ENDIF-->
 					</table>
 				</div>
-'
+		',
+	'hide'=>'0'	
 );
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
@@ -323,7 +324,8 @@ $widgets['onlineinfo'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-user',
 	'title' => '[%onlineusers_title%]',
-	'body' => '<div class="userstable">[+OnlineInfo+]</div>'
+	'body' => '<div class="userstable">[+OnlineInfo+]</div>',
+	'hide'=>'0'	
 );
 $widgets['recentinfo'] = array(
 	'menuindex' => '30',
@@ -331,7 +333,8 @@ $widgets['recentinfo'] = array(
 	'cols' => 'col-sm-12',
 	'icon' => 'fa-pencil-square-o',
 	'title' => '[%activity_title%]',
-	'body' => '<div class="widget-stage">[+RecentInfo+]</div>'
+	'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
+	'hide'=>'0'	
 );
 $widgets['news'] = array(
 	'menuindex' => '40',
@@ -339,7 +342,8 @@ $widgets['news'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-rss',
 	'title' => '[%modx_news_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>'
+	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>',
+	'hide'=>'0'	
 );
 $widgets['security'] = array(
 	'menuindex' => '50',
@@ -347,15 +351,18 @@ $widgets['security'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-exclamation-triangle',
 	'title' => '[%security_notices_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>'
+	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>',
+	'hide'=>'0'	
 );
 
 // invoke OnManagerWelcomeHome event
 $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
 if(is_array($sitewidgets)) {
+	$newwidgets = array();
     foreach($sitewidgets as $widget){
-        $widgets = array_merge($widgets, unserialize($widget));
+        $newwidgets = array_merge($newwidgets, unserialize($widget));
     }
+    $widgets = $newwidgets;
 }
 
 usort($widgets, function ($a, $b) {
@@ -365,7 +372,9 @@ usort($widgets, function ($a, $b) {
 $tpl = getTplWidget();
 $output = '';
 foreach($widgets as $widget) {
-	$output .= $modx->parseText($tpl, $widget);
+	if ($widget['hide'] != '1'){
+		$output .= $modx->parseText($tpl, $widget);
+	}
 }
 $ph['widgets'] = $output;
 
