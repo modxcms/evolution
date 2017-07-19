@@ -55,7 +55,36 @@ if($limit > 1) {
 }
 
 ?>
+
+<style type="text/css">
+	ul.sortableList {
+		margin: 0;
+		}
+	ul.sortableList li, .sort {
+		position: relative;
+		z-index: 1;
+		max-width: 100%;
+		width: 30rem;
+		list-style: none;
+		font-weight: bold;
+		cursor: move;
+		color: #444444;
+		padding: .5rem;
+		margin: .2rem 0;
+		border: 1px solid #CCCCCC;
+		background-color: #fff;
+		display: block;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+		}
+	.sortableList .ghost {
+		z-index: 2;
+		opacity: .5;
+		}
+</style>
+
 <script type="text/javascript">
+
 	var actions = {
 		save: function() {
 			var el = document.getElementById('updated');
@@ -78,13 +107,26 @@ if($limit > 1) {
 		document.getElementById('list').value = list
 	}
 
+	var sortdir = 'asc';
+
 	function sort() {
 		var els = document.querySelectorAll('li.sort');
-		els = [].slice.call(els).sort(function(a, b) {
-			var keyA = a.innerText.toLowerCase();
-			var keyB = b.innerText.toLowerCase();
-			return keyA.localeCompare(keyB);
-		});
+		var keyA, keyB;
+		if(sortdir === 'asc') {
+			els = [].slice.call(els).sort(function(a, b) {
+				keyA = a.innerText.toLowerCase();
+				keyB = b.innerText.toLowerCase();
+				return keyA.localeCompare(keyB);
+			});
+			sortdir = 'desc'
+		} else {
+			els = [].slice.call(els).sort(function(b, a) {
+				keyA = a.innerText.toLowerCase();
+				keyB = b.innerText.toLowerCase();
+				return keyA.localeCompare(keyB);
+			});
+			sortdir = 'asc'
+		}
 		var ul = document.getElementById('sortlist');
 		var list = '';
 		for(var i = 0; i < els.length; i++) {
@@ -107,27 +149,6 @@ if($limit > 1) {
 	}
 </script>
 
-<style type="text/css">
-	li { list-style: none; }
-	ul.sortableList {
-		margin: 0px;
-		}
-	ul.sortableList li, .sort {
-		width: 30rem;
-		font-weight: bold;
-		cursor: move;
-		color: #444444;
-		padding: .5rem;
-		margin: .2rem 0;
-		border: 1px solid #CCCCCC;
-		background-color: #fff;
-		display: block;
-		}
-	.ghost {
-		opacity: .5;
-		}
-</style>
-
 <h1><?= $_lang["template_tv_edit_title"] ?></h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>
@@ -143,61 +164,49 @@ if($limit > 1) {
 		<?= $updateMsg ?>
 		<span class="warning" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
 		<?= $evtLists ?>
+
+		<form action="" method="post" name="sortableListForm">
+			<input type="hidden" name="listSubmitted" value="true" />
+			<input type="hidden" id="list" name="list" value="" />
+		</form>
 	</div>
 </div>
-<form action="" method="post" name="sortableListForm">
-	<input type="hidden" name="listSubmitted" value="true" />
-	<input type="hidden" id="list" name="list" value="" />
-</form>
 
 <script type="text/javascript">
-	//
-	//	var sortable = {
-	//		dragEl: null,
-	//		nextEl: null,
-	//		create: function(a) {
-	//			[].slice.call(a.childNodes).forEach(function(a) {
-	//				a.draggable = true;
-	//				a.ondragstart = sortable.ondragstart;
-	//				a.ondragover = sortable.ondragover;
-	//				a.ondragend = sortable.ondragend;
-	//			});
-	//		},
-	//		ondragstart: function(e) {
-	//			sortable.dragEl = e.target;
-	//			sortable.nextEl = sortable.dragEl.nextSibling;
-	//			sortable.dragEl.classList.add('ghost');
-	//			e.dataTransfer.effectAllowed = 'move';
-	//		},
-	//		ondragover: function(e) {
-	//			e.dataTransfer.dropEffect = 'move';
-	//			var target = e.target;
-	//			if(target && target !== sortable.dragEl && target.nodeName === 'LI') {
-	//				var pos = target.getBoundingClientRect();
-	//				var next = (e.clientY - pos.top) / (pos.bottom - pos.top) > .5;
-	//				target.parentNode.insertBefore(sortable.dragEl, next && target.nextSibling || target);
-	//			}
-	//			e.preventDefault();
-	//		},
-	//		ondragend: function(e) {
-	//			e.preventDefault();
-	//			sortable.dragEl.classList.remove('ghost');
-	//			if(sortable.nextEl !== sortable.dragEl.nextSibling) {
-	//				renderList();
-	//				e.preventDefault();
-	//			}
-	//		}
-	//	};
-	//
-	//	sortable.create(document.getElementById('sortlist'));
 
-	new Sortables($('sortlist'), {
-			initialize: function() {
-				renderList();
-			},
-			onComplete: function() {
+	[].slice.call(document.querySelectorAll('.sort')).forEach(function(a) {
+		a.onmousedown = function(e) {
+			var b, c;
+			a.classList.add('ghost');
+			a.position = a.getBoundingClientRect();
+			b = e.pageY - a.position.top;
+			document.onselectstart = function() {
+				return false
+			};
+			document.onmousemove = function(e) {
+				c = e.pageY - a.position.top - b;
+				if(c >= a.offsetHeight && a.nextSibling) {
+					b += a.offsetHeight;
+					a.parentNode.insertBefore(a, a.nextSibling.nextSibling);
+					c = 0
+				} else if(c < -a.offsetHeight && a.previousSibling) {
+					b -= a.offsetHeight;
+					a.parentNode.insertBefore(a, a.previousSibling);
+					c = 0
+				} else if(!a.previousSibling && c < 0 || !a.nextSibling && c > 0) {
+					c = 0
+				}
+				a.style.webkitTransform = 'translateY(' + c + 'px)';
+				a.style.transform = 'translateY(' + c + 'px)';
+			};
+			document.onmouseup = function() {
+				a.style.webkitTransform = '';
+				a.style.transform = '';
+				a.classList.remove('ghost');
+				document.onmousemove = null;
 				renderList();
 			}
 		}
-	);
+	});
+
 </script>

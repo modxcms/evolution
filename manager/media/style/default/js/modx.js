@@ -918,8 +918,10 @@
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
 					el = d.getElementById('node' + id) || e.target;
+				if(el.firstChild && el.firstChild.dataset && el.firstChild.dataset.contextmenu) {
+					el = el.firstChild;
+				}
 				if(el) {
-					if(!el.dataset.contextmenu) el = el.firstChild;	
 					if(el.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
 						modx.hideDropDown(e);
@@ -976,7 +978,7 @@
 						this.selectedObjectName = title;
 						this.dopopup(this.ctx, x + 10, y)
 					} else {
-						//el = el.firstChild;
+						el = el.firstChild;
 						var ctx = d.getElementById('mx_contextmenu');
 						e.target.dataset.toggle = '#mx_contextmenu';
 						modx.hideDropDown(e);

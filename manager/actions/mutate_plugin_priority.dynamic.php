@@ -61,19 +61,29 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 ?>
 
 <style type="text/css">
-	li { list-style: none; }
 	ul.sortableList {
-		margin: 0px;
-		width: 300px;
+		margin: 0;
 		}
-	ul.sortableList li {
+	ul.sortableList li, .sort {
+		position: relative;
+		z-index: 1;
+		max-width: 100%;
+		width: 30rem;
+		list-style: none;
 		font-weight: bold;
 		cursor: move;
 		color: #444444;
-		padding: 3px 5px;
-		margin: 4px 0px;
+		padding: .5rem;
+		margin: .2rem 0;
 		border: 1px solid #CCCCCC;
-		background: #f2f2f2;
+		background-color: #fff;
+		display: block;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+		}
+	.sortableList .ghost {
+		z-index: 2;
+		opacity: .5;
 		}
 </style>
 
@@ -117,17 +127,44 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 </div>
 
 <script type="text/javascript">
-	var els = document.querySelectorAll('.sortableList');
-	for(var i = 0; i < els.length; i++) {
-		new Sortables(els[i], {
-			onComplete: function() {
-				var id = null;
-				var list = this.serialize(function(el) {
-					id = el.parentNode.id;
-					return el.id;
-				});
-				document.getElementById('list_' + id).value = list;
+
+	[].slice.call(document.querySelectorAll('.sortableList > li')).forEach(function(a) {
+		a.onmousedown = function(e) {
+			var b, c;
+			a.classList.add('ghost');
+			a.position = a.getBoundingClientRect();
+			b = e.pageY - a.position.top;
+			document.onselectstart = function() {
+				return false
+			};
+			document.onmousemove = function(e) {
+				c = e.pageY - a.position.top - b;
+				if(c >= a.offsetHeight && a.nextSibling) {
+					b += a.offsetHeight;
+					a.parentNode.insertBefore(a, a.nextSibling.nextSibling);
+					c = 0;
+				} else if(c < -a.offsetHeight && a.previousSibling) {
+					b -= a.offsetHeight;
+					a.parentNode.insertBefore(a, a.previousSibling);
+					c = 0;
+				} else if(!a.previousSibling && c < 0 || !a.nextSibling && c > 0) {
+					c = 0
+				}
+				a.style.webkitTransform = 'translateY(' + c + 'px)';
+				a.style.transform = 'translateY(' + c + 'px)';
+			};
+			document.onmouseup = function() {
+				a.style.webkitTransform = '';
+				a.style.transform = '';
+				a.classList.remove('ghost');
+				document.onmousemove = null;
+				var list = [];
+				for(var i = 0; i < a.parentNode.childNodes.length; i++) {
+					list.push(a.parentNode.childNodes[i].id)
+				}
+				document.getElementById('list_' + a.parentNode.id).value = list.join(',')
 			}
-		});
-	}
+		}
+	});
+
 </script>

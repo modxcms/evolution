@@ -12,7 +12,9 @@ if (!isset($formid)) {
     $this->modx->logEvent(0, 1, "Parameter &formid is not set", 'FormLister');
     return;
 }
-include_once ('__autoload.php');
+if (!class_exists('\FormLister\Core')) {
+    include_once('__autoload.php');
+}
 $out = '';
 $FLDir = MODX_BASE_PATH . 'assets/snippets/FormLister/';
 if (isset($controller)) {

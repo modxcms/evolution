@@ -49,7 +49,7 @@
  *          content
  */
 
-$autoloader = '../vendor/autoload.php';
+$autoloader = realpath(__DIR__.'/../vendor/autoload.php');
 if (file_exists($autoloader) && is_readable($autoloader)) {
 	include_once($autoloader);
 }

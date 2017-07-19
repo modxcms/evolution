@@ -98,10 +98,15 @@ class onetableDocLister extends DocLister
                         "dl") . '.iteration'] = $i; //[+iteration+] - Number element. Starting from zero
 
                     $date = $this->getCFGDef('dateSource', 'pub_date');
-                    $date = isset($item[$date]) ? $item[$date] + $this->modx->config['server_offset_time'] : '';
-                    if ($date != '' && $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M') != '') {
-                        $item[$this->getCFGDef("sysKey", "dl") . '.date'] = strftime($this->getCFGDef('dateFormat',
-                            '%d.%b.%y %H:%M'), $date);
+                    if (isset($item[$date])) {
+                        $_date = is_numeric($item[$date]) && $item[$date] == (int)$item[$date] ? $item[$date] : strtotime($item[$date]);
+                        if ($_date !== false) {
+                            $_date = $_date + $this->modx->config['server_offset_time'];
+                            $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                            if ($dateFormat) {
+                                $item['date'] = strftime($dateFormat, $_date);
+                            }
+                        }
                     }
 
                     $findTpl = $this->renderTPL;
@@ -163,18 +168,24 @@ class onetableDocLister extends DocLister
          */
         $extE = $this->getExtender('e', true, true);
 
-        foreach ($data as $num => $item) {
-            $row = $item;
+        foreach ($data as $num => $row) {
 
             switch (true) {
                 case ((array('1') == $fields || in_array('summary', $fields)) && $extSummary):
-                    $row['summary'] = $this->getSummary($this->_docs[$num], $extSummary, 'introtext');
+                    $row['summary'] = $this->getSummary($row, $extSummary, 'introtext');
                 //without break
                 case ((array('1') == $fields || in_array('date', $fields)) && $date != 'date'):
-                    $tmp = (isset($this->_docs[$num][$date]) && $date != 'createdon' && $this->_docs[$num][$date] != 0 && $this->_docs[$num][$date] == (int)$this->_docs[$num][$date]) ? $this->_docs[$num][$date] : $this->_docs[$num]['createdon'];
-                    $row['date'] = strftime($this->getCFGDef('dateFormat', '%d.%b.%y %H:%M'),
-                        $tmp + $this->modx->config['server_offset_time']);
-                // no break
+                    if (isset($row[$date])) {
+                        $_date = is_numeric($row[$date]) && $row[$date] == (int)$row[$date] ? $row[$date] : strtotime($row[$date]);
+                        if ($_date !== false) {
+                            $_date = $_date + $this->modx->config['server_offset_time'];
+                            $dateFormat = $this->getCFGDef('dateFormat', '%d.%b.%y %H:%M');
+                            if ($dateFormat) {
+                                $row['date'] = strftime($dateFormat, $_date);
+                            }
+                        }
+                    }
+                //nobreak    
             }
 
             if ($extE && $tmp = $extE->init($this, array('data' => $row))) {
