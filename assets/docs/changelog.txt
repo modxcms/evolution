@@ -1,11 +1,17 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-Evolution CMS 1.3.1(Jul 10, 2017)
+Evolution CMS 1.3.2 (Jul 10, 2017)
+* [GitHub:#a8fc2fdf] - [F] updater plugin (dmi3yy)
+* [GitHub:#ad14254c] - [F] fix #75 (Pathologic)
+* [GitHub:#d29faf9a] - [R] refactor sortableList (64j)
+* [GitHub:#ffa63034] - [F] fix #68  (for hide widget better use  $widgets['welcome']['hide'] = 1;) (dmi3yy)
+
+Evolution CMS 1.3.1 (Jul 10, 2017)
 * [GitHub:#c2348530] - [F] DocLister 2.3.5 fix paginate (dmi3yy)
 * [GitHub:#6daadd0f] - [F] version in top menu (dmi3yy)
 
-Evolution CMS 1.3.0(Jul 10, 2017)
+Evolution CMS 1.3.0 (Jul 10, 2017)
 * [GitHub:#3dda520a] - [R] update sortables list delete mootools sortables (64j)
 * [GitHub:#9cafe6db] - [F] fix toggle menu (64j)
 * [GitHub:#6c316c18] - [I] Update DocLister add DLmenu (dmi3yy)
