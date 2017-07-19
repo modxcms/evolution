@@ -362,7 +362,7 @@ if(is_array($sitewidgets)) {
     foreach($sitewidgets as $widget){
         $newwidgets = array_merge($newwidgets, unserialize($widget));
     }
-    $widgets = $newwidgets;
+    $widgets = (count($newwidgets) > 0) ? $newwidgets : $widgets;
 }
 
 usort($widgets, function ($a, $b) {
