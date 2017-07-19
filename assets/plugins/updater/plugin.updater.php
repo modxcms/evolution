@@ -226,7 +226,7 @@ copyFolder(__DIR__."/temp/".$dir, __DIR__."/");
 removeFolder(__DIR__."/temp");
 unlink(__DIR__."/evo.zip");
 unlink(__DIR__."/update.php");
-header("Location: /install/index.php?action=mode");\');
+header("Location: /install/index.php?action=mode");');
                 
 
                 echo '<html><head></head><body>
