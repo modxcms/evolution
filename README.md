@@ -1,5 +1,7 @@
 # Evolution CMS
 
+![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6)
+----
 **What is EVO**
 
 EVO is an open source Content Management System and Application Framework. Initially inspired by Etomite 0.6, then it been MODX Evolution 0.7 - 1.0.8 is an ongoing project written by Raymond Irving and a core team of contributors MODX, and now its Evolution CMS maintained by Dmytro Lukianenko and a core team of contributors at the EVO Project. EVO is distributed under the GPL license and is now run by a professional team of developers from all over the world. Visit the Forums for more information.
