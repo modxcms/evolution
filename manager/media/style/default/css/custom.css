@@ -177,6 +177,10 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .grid tbody tr:hover td { background: #E9EDF3; }
 .grid a { text-decoration: none; }
 .grid img { vertical-align: middle; padding-right: 4px; }
+/* SORTABLELIST */
+ul.sortableList { margin: 0; }
+ul.sortableList li { position: relative; z-index: 1; float: left; clear: both; max-width: 100%; width: 30rem; list-style: none; font-weight: bold; cursor: move; padding: .5rem; margin: .0625rem 0; border: 1px solid #ccc; background-color: #fff; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); box-shadow: none; transition: color .3s, box-shadow .3s, transform .3s, z-index .3s step-end; }
+ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.15); transition: color .3s, box-shadow .3s, transform 0s, z-index 0s; }
 /* STYLES FOR HELP */
 #helpPane h1 { border-bottom: 1px solid #888; margin-bottom: 1em; }
 #helpPane li:not(:first-child) > strong { margin-top: 1.4em; }

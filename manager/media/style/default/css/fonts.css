@@ -86,7 +86,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover { color: #101112 !important }
 .fa { }
 .fa > .fa-lock { position: relative; float: left; width: auto !important; margin-top: -1em; font-size: 0.7em !important; color: #FFC107 !important; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
 .rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
-.disabledPlugin a { color: #B68282; font-style: italic; }
+.disabledPlugin, .disabledPlugin a { color: #B68282; font-style: italic; }
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { margin-right: 0.25em; color: #1377c5; }
 h1 .help { margin: 0 0 0 0.25em; color: rgba(0, 0, 0, 0.15); font-size: 0.8em; cursor: pointer }

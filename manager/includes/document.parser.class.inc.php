@@ -2060,7 +2060,7 @@ class DocumentParser {
             $source = $this->mergeSettingsContent($source);
             $source = $this->mergeDocumentContent($source);
             $source = $this->mergeChunkContent($source);
-            $source = $this->mergeDocumentMETATags($source);
+            if ($this->config['show_meta']) $source = $this->mergeDocumentMETATags($source); //TODO: Remove in next major release
             $source = $this->evalSnippets($source);
             $source = $this->mergePlaceholderContent($source);
             

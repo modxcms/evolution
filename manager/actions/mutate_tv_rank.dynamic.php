@@ -15,7 +15,7 @@ $siteURL = $modx->config['site_url'];
 $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
-	$updateMsg .= '<span class="warning" id="updated">' . $_lang['sort_updated'] . '</span>';
+	$updateMsg .= '<span class="text-success" id="updated">' . $_lang['sort_updated'] . '</span>';
 	foreach($_POST as $listName => $listValue) {
 		if($listName == 'listSubmitted' || $listName == 'reset') {
 			continue;
@@ -35,53 +35,18 @@ if(isset($_POST['listSubmitted'])) {
 }
 
 $rs = $modx->db->select("name, caption, id, rank", $tbl_site_tmplvars, "", "rank ASC, id ASC");
-$limit = $modx->db->getRecordCount($rs);
 
-if($limit > 1) {
-	$tvsArr = array();
+if($modx->db->getRecordCount($rs)) {
+	$sortableList = '<div class="clearfix"><strong>' . $row['templatename'] . '</strong><ul id="sortlist" class="sortableList">';
 	while($row = $modx->db->getRow($rs)) {
-		$tvsArr[] = $row;
-	}
-
-	$i = 0;
-	foreach($tvsArr as $row) {
-		if($i++ == 0) {
-			$evtLists .= '<strong>' . $row['templatename'] . '</strong><ul id="sortlist" class="sortableList">';
-		}
 		$caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
-		$evtLists .= '<li id="item_' . $row['id'] . '" class="sort">' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
+		$sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
 	}
-	$evtLists .= '</ul>';
+	$sortableList .= '</ul></div>';
+} else {
+	$updateMsg = '<p class="text-danger">' . $_lang['tmplvars_novars'] . '</p>';
 }
-
 ?>
-
-<style type="text/css">
-	ul.sortableList {
-		margin: 0;
-		}
-	ul.sortableList li, .sort {
-		position: relative;
-		z-index: 1;
-		max-width: 100%;
-		width: 30rem;
-		list-style: none;
-		font-weight: bold;
-		cursor: move;
-		color: #444444;
-		padding: .5rem;
-		margin: .2rem 0;
-		border: 1px solid #CCCCCC;
-		background-color: #fff;
-		display: block;
-		-webkit-transform: translateY(0);
-		transform: translateY(0);
-		}
-	.sortableList .ghost {
-		z-index: 2;
-		opacity: .5;
-		}
-</style>
 
 <script type="text/javascript">
 
@@ -100,7 +65,7 @@ if($limit > 1) {
 
 	function renderList() {
 		var list = '';
-		var els = document.querySelectorAll('li.sort');
+		var els = document.querySelectorAll('.sortableList > li');
 		for(var i = 0; i < els.length; i++) {
 			list += els[i].id + ';';
 		}
@@ -110,7 +75,7 @@ if($limit > 1) {
 	var sortdir = 'asc';
 
 	function sort() {
-		var els = document.querySelectorAll('li.sort');
+		var els = document.querySelectorAll('.sortableList > li');
 		var keyA, keyB;
 		if(sortdir === 'asc') {
 			els = [].slice.call(els).sort(function(a, b) {
@@ -149,52 +114,60 @@ if($limit > 1) {
 	}
 </script>
 
-<h1><?= $_lang["template_tv_edit_title"] ?></h1>
+<h1>
+	<i class="fa fa-sort-numeric-asc"></i><?= $_lang["template_tv_edit_title"] ?>
+</h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>
 
 <div class="tab-page">
 	<div class="container container-body">
-		<b><?= $_lang['template_tv_edit'] ?></b>
-		<p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
-		<p>
-			<a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['actions_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
-			<a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
-		</p>
-		<?= $updateMsg ?>
-		<span class="warning" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
-		<?= $evtLists ?>
-
-		<form action="" method="post" name="sortableListForm">
-			<input type="hidden" name="listSubmitted" value="true" />
-			<input type="hidden" id="list" name="list" value="" />
-		</form>
+		<?php
+		if($sortableList) {
+			?>
+			<b><?= $_lang['template_tv_edit'] ?></b>
+			<p><?= $_lang["tmplvars_rank_edit_message"] ?></p>
+			<p>
+				<a class="btn btn-secondary" href="javascript:;" onclick="sort();return false;"><i class="<?= $_style['actions_sort'] ?>"></i> <?= $_lang['sort_alphabetically'] ?></a>
+				<a class="btn btn-secondary" href="javascript:;" onclick="resetSortOrder();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i> <?= $_lang['reset_sort_order'] ?></a>
+			</p>
+			<?= $updateMsg ?>
+			<span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
+			<?= $sortableList ?>
+			<?php
+		} else {
+			echo $updateMsg;
+		}
+		?>
 	</div>
 </div>
 
+<form action="" method="post" name="sortableListForm">
+	<input type="hidden" name="listSubmitted" value="true" />
+	<input type="hidden" id="list" name="list" value="" />
+</form>
+
 <script type="text/javascript">
 
-	[].slice.call(document.querySelectorAll('.sort')).forEach(function(a) {
+	[].slice.call(document.querySelectorAll('.sortableList > li')).forEach(function(a) {
 		a.onmousedown = function(e) {
-			var b, c;
-			a.classList.add('ghost');
-			a.position = a.getBoundingClientRect();
-			b = e.pageY - a.position.top;
-			document.onselectstart = function() {
-				return false
+			var b = e.pageY, c, f = parseFloat(getComputedStyle(a).marginTop) + parseFloat(getComputedStyle(a).marginBottom);
+			a.classList.add('ghost', 'text-danger');
+			document.onselectstart = function(e) {
+				e.preventDefault()
 			};
 			document.onmousemove = function(e) {
-				c = e.pageY - a.position.top - b;
+				c = (e.pageY - b);
 				if(c >= a.offsetHeight && a.nextSibling) {
-					b += a.offsetHeight;
+					b += a.offsetHeight + f;
 					a.parentNode.insertBefore(a, a.nextSibling.nextSibling);
 					c = 0
-				} else if(c < -a.offsetHeight && a.previousSibling) {
-					b -= a.offsetHeight;
+				} else if(c <= -a.offsetHeight && a.previousSibling) {
+					b -= a.offsetHeight + f;
 					a.parentNode.insertBefore(a, a.previousSibling);
 					c = 0
 				} else if(!a.previousSibling && c < 0 || !a.nextSibling && c > 0) {
-					c = 0
+					c = 0;
 				}
 				a.style.webkitTransform = 'translateY(' + c + 'px)';
 				a.style.transform = 'translateY(' + c + 'px)';
@@ -202,8 +175,9 @@ if($limit > 1) {
 			document.onmouseup = function() {
 				a.style.webkitTransform = '';
 				a.style.transform = '';
-				a.classList.remove('ghost');
+				a.classList.remove('ghost', 'text-danger');
 				document.onmousemove = null;
+				document.onselectstart = null;
 				renderList();
 			}
 		}
