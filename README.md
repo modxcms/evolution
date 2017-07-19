@@ -1,6 +1,6 @@
 # Evolution CMS
 
-![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6)
+![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6)  [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/)
 ----
 **What is EVO**
 
