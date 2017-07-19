@@ -600,14 +600,16 @@
 				this.restoreTree()
 			},
 			draggable: function() {
-				var els = d.querySelectorAll('#treeRoot a:not(.empty)');
-				for(var i = 0; i < els.length; i++) {
-					els[i].onmousedown = this.onmousedown;
-					els[i].ondragstart = this.ondragstart;
-					els[i].ondragenter = this.ondragenter;
-					els[i].ondragover = this.ondragover;
-					els[i].ondragleave = this.ondragleave;
-					els[i].ondrop = this.ondrop;
+				if(modx.permission.dragndropdocintree) {
+					var els = d.querySelectorAll('#treeRoot a:not(.empty)');
+					for(var i = 0; i < els.length; i++) {
+						els[i].onmousedown = this.onmousedown;
+						els[i].ondragstart = this.ondragstart;
+						els[i].ondragenter = this.ondragenter;
+						els[i].ondragover = this.ondragover;
+						els[i].ondragleave = this.ondragleave;
+						els[i].ondrop = this.ondrop;
+					}
 				}
 			},
 			onmousedown: function(e) {
@@ -684,7 +686,6 @@
 					id = modx.tree.itemToChange.substr(4),
 					parent = 0,
 					menuindex = [],
-					index = 0,
 					level = 0,
 					indent = el.firstChild.querySelector('.indent'),
 					i = 0;
@@ -736,9 +737,10 @@
 					id: id,
 					parent: parent,
 					menuindex: menuindex
-				}, function() {
-					modx.tree.restoreTree()
-				});
+				}, function(r) {
+					if(r.errors) alert(r.errors);
+					modx.tree.restoreTree();
+				}, 'json');
 				var b = w.main.frameElement.contentWindow.location.search.substr(1);
 				if(parseInt(modx.main.getQueryVariable('a', b)) === 27 && parseInt(modx.main.getQueryVariable('id', b)) === parseInt(id)) {
 					var index = menuindex.indexOf(id),
@@ -1421,10 +1423,11 @@
 			};
 			x.send()
 		},
-		post: function(a, b, c) {
+		post: function(a, b, c, t) {
 			var x = this.XHR(),
 				f = '';
 			if(typeof b === 'function') {
+				t = c;
 				c = b;
 			} else if(typeof b === 'object') {
 				var e = [],
@@ -1440,6 +1443,7 @@
 			x.open('POST', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			x.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+			if(t) x.responseType = t;
 			x.onload = function() {
 				if(this.readyState === 4 && c !== u) {
 					return c(this.response)

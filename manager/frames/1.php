@@ -168,7 +168,8 @@ if($user['which_browser'] == 'default') {
 				edit_snippet: <?= $modx->hasPermission('edit_snippet') ? 1 : 0 ?>,
 				edit_template: <?= $modx->hasPermission('edit_template') ? 1 : 0 ?>,
 				new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
-				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>
+				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
+				dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
 
 			},
 			plugins: {
