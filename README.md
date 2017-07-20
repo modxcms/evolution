@@ -10,6 +10,11 @@ EVO provides a fast, lightweight and powerful framework on which to deploy and s
 
 Evolution CMS requires **PHP version 5.6 and higher**.
 
+
+### Install
+for easy and fast install you can use [Evo Installer](https://github.com/evolution-cms/installer)
+
+
 ### Screenshots
 
 ![screenshot_1](https://cloud.githubusercontent.com/assets/523389/20504423/97db8bf8-b047-11e6-9eef-550c1c7d34f2.jpg)
