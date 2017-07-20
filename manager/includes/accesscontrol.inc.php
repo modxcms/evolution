@@ -81,6 +81,7 @@ if(!isset($_SESSION['mgrValidated'])) {
 	$modx->setPlaceholder('login_message', $_lang["login_message"]);
 	$modx->setPlaceholder('manager_theme_url', MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
 	$modx->setPlaceholder('year', date('Y'));
+	$modx->setPlaceholder('manager_theme_style', (isset($_COOKIE['MODX_themeColor']) ? $_COOKIE['MODX_themeColor'] : ''));
 
 	// andrazk 20070416 - notify user of install/update
 	if(isset($_GET['installGoingOn'])) {
