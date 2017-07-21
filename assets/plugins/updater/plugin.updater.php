@@ -32,6 +32,7 @@ if($e->name == 'OnManagerWelcomeHome'){
     if (!extension_loaded('curl')){
         $errorsMessage .= '-'.$_lang['error_curl'].'<br>';
         $errors += 1;
+        $curlNotReady = true;
     }
     if (!extension_loaded('zip')){
         $errorsMessage .= '-'.$_lang['error_zip'].'<br>';
@@ -46,6 +47,23 @@ if($e->name == 'OnManagerWelcomeHome'){
         $errors += 1;
     }
 
+    // Avoid "Fatal error: Call to undefined function curl_init()"
+    if(isset($curlNotReady)) {
+        $output = '<div class="card-body">
+                <small style="color:red;font-size:10px">'.$errorsMessage.'</small></div>';
+
+        $widgets['updater'] = array(
+            'menuindex' =>'1',
+            'id' => 'updater',
+            'cols' => 'col-sm-12',
+            'icon' => 'fa-exclamation-triangle',
+            'title' => $_lang['system_update'],
+            'body' => $output
+        );
+        $e->output(serialize($widgets));
+        return;
+    }
+    
     $output = '';
     if(!file_exists(MODX_BASE_PATH . 'assets/cache/updater/check_'.date("d").'.json')){
         $ch = curl_init();
