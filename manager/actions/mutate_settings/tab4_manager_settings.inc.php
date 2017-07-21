@@ -4,7 +4,7 @@
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage5" ) );</script>
 <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['language_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['language_title']?><br><small>[(manager_language)]</small></td>
     <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true;">
 <?php echo get_lang_options(null, $manager_language);?>
       </select> </td>
@@ -17,7 +17,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['charset_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['charset_title']?><br><small>[(modx_charset)]</small></td>
     <td> <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
         <?php include "charsets.php"; ?>
       </select> </td>
@@ -30,7 +30,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['manager_theme']?></td>
+      <td nowrap class="warning"><?php echo $_lang['manager_theme']?><br><small>[(manager_theme)]</small></td>
       <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
        <?php
           $dir = dir("media/style/");
@@ -55,7 +55,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
      <tr>
-       <td nowrap class="warning"><?php echo $_lang['warning_visibility'] ?></td>
+       <td nowrap class="warning"><?php echo $_lang['warning_visibility'] ?><br><small>[(warning_visibility)]</small></td>
        <td> <label><input type="radio" name="warning_visibility" value="0" <?php echo $warning_visibility=='0' ? 'checked="checked"' : ""; ?> />
          <?php echo $_lang['administrators']?></label><br />
          <label><input type="radio" name="warning_visibility" value="1" <?php echo ($warning_visibility=='1') ? 'checked="checked"' : ""; ?> />
@@ -70,7 +70,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
      <tr>
-         <td nowrap class="warning"><?php echo $_lang['tree_page_click'] ?></td>
+         <td nowrap class="warning"><?php echo $_lang['tree_page_click'] ?><br><small>[(tree_page_click)]</small></td>
          <td>
            <label><input type="radio" name="tree_page_click" value="27" <?php echo $tree_page_click=='27' ? 'checked="checked"' : ""; ?> />
            <?php echo $_lang['edit_resource']?></label><br />
@@ -86,7 +86,7 @@
         <td colspan="2"><div class="split"></div></td>
     </tr>
     <tr>
-        <td nowrap class="warning"><?php echo $_lang['use_breadcrumbs'] ?></td>
+        <td nowrap class="warning"><?php echo $_lang['use_breadcrumbs'] ?><br><small>[(use_breadcrumbs)]</small></td>
         <td>
             <label><input type="radio" name="use_breadcrumbs" value="1" <?php echo $use_breadcrumbs=='1' ? 'checked="checked"' : ""; ?> />
             <?php echo $_lang['yes']?></label><br />
@@ -102,7 +102,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
      <tr>
-       <td nowrap class="warning"><?php echo $_lang['remember_last_tab'] ?></td>
+       <td nowrap class="warning"><?php echo $_lang['remember_last_tab'] ?><br><small>[(remember_last_tab)]</small></td>
        <td>
          <label><input type="radio" name="remember_last_tab" value="1" <?php echo $remember_last_tab=='1' ? 'checked="checked"' : ""; ?> />
          <?php echo $_lang['yes']?></label><br />
@@ -117,7 +117,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
 <tr>
-<th><?php echo $_lang['setting_resource_tree_node_name'] ?></th>
+<th><?php echo $_lang['setting_resource_tree_node_name'] ?><br><small>[(resource_tree_node_name)]</small></th>
 <td>
 <select name="resource_tree_node_name" size="1" class="inputBox">
 <?php
@@ -145,7 +145,7 @@ echo implode("\n",$output)
 <td colspan="2"><div class="split"></div></td>
 </tr>
     <tr>
-        <td nowrap class="warning"><?php echo $_lang['session_timeout'] ?></td>
+        <td nowrap class="warning"><?php echo $_lang['session_timeout'] ?><br><small>[(session_timeout)]</small></td>
         <td><input onchange="documentDirty=true;" type="text" maxlength="3" size="5" name="session_timeout" value="<?php echo $session_timeout; ?>" /></td>
     </tr>
     <tr>
@@ -156,7 +156,7 @@ echo implode("\n",$output)
         <td colspan="2"><div class="split"></div></td>
     </tr>
      <tr>
-         <td nowrap class="warning"><?php echo $_lang['tree_show_protected'] ?></td>
+         <td nowrap class="warning"><?php echo $_lang['tree_show_protected'] ?><br><small>[(tree_show_protected)]</small></td>
          <td>
            <label><input type="radio" name="tree_show_protected" value="1" <?php echo ($tree_show_protected=='1') ? 'checked="checked" ' : ''; ?>/>
            <?php echo $_lang['yes']?></label><br />
@@ -186,7 +186,7 @@ echo implode("\n",$output)
 <td colspan="2"><div class="split"></div></td>
 </tr>
 <tr>
-         <td nowrap class="warning"><?php echo $_lang['datepicker_offset'] ?></td>
+         <td nowrap class="warning"><?php echo $_lang['datepicker_offset'] ?><br><small>[(datepicker_offset)]</small></td>
          <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="datepicker_offset" value="<?php echo $datepicker_offset; ?>" /></td>
        </tr>
        <tr>
@@ -197,7 +197,7 @@ echo implode("\n",$output)
       <td colspan="2"><div class="split"></div></td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['datetime_format']?></td>
+      <td nowrap class="warning"><?php echo $_lang['datetime_format']?><br><small>[(datetime_format)]</small></td>
       <td> <select name="datetime_format" size="1" class="inputBox">
       <?php
           $datetime_format_list = array('dd-mm-YYYY', 'mm/dd/YYYY', 'YYYY/mm/dd');
@@ -220,7 +220,7 @@ echo implode("\n",$output)
       <td colspan="2"><div class="split"></div></td>
     </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['nologentries_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['nologentries_title']?><br><small>[(number_of_logs)]</small></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="number_of_logs" value="<?php echo $number_of_logs; ?>" /></td>
   </tr>
   <tr>
@@ -231,7 +231,7 @@ echo implode("\n",$output)
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['mail_check_timeperiod_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['mail_check_timeperiod_title'] ?><br><small>[(mail_check_timeperiod)]</small></td>
     <td><input type="text" name="mail_check_timeperiod" onchange="documentDirty=true;" size="5" value="<?php echo $mail_check_timeperiod; ?>" /></td>
   </tr>
   <tr>
@@ -242,7 +242,7 @@ echo implode("\n",$output)
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['nomessages_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['nomessages_title']?><br><small>[(number_of_messages)]</small></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="number_of_messages" value="<?php echo $number_of_messages; ?>" /></td>
   </tr>
   <tr>
@@ -253,7 +253,7 @@ echo implode("\n",$output)
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['noresults_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['noresults_title']?><br><small>[(number_of_results)]</small></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="50" size="5" name="number_of_results" value="<?php echo $number_of_results; ?>" /></td>
   </tr>
   <tr>
@@ -272,7 +272,7 @@ echo implode("\n",$output)
     }
 ?>
   <tr <?php echo showHide(0<count($evtOut));?>>
-    <td nowrap class="warning"><?php echo $_lang['use_editor_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['use_editor_title']?><br><small>[(use_editor)]</small></td>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('use_editor', 1, 'id="editorRowOn"'));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('use_editor', 0, 'id="editorRowOff"'));?>
@@ -288,7 +288,7 @@ echo implode("\n",$output)
   
   
   <tr class="editorRow" <?php echo showHide($use_editor==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['which_editor_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['which_editor_title']?><br><small>[(which_editor)]</small></td>
     <td>
         <select name="which_editor" onchange="documentDirty=true;">
             <?php
@@ -311,7 +311,7 @@ echo implode("\n",$output)
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="editorRow" <?php echo showHide($use_editor==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['fe_editor_lang_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['fe_editor_lang_title']?><br><small>[(fe_editor_lang)]</small></td>
     <td> <select name="fe_editor_lang" size="1" class="inputBox" onchange="documentDirty=true;">
 <?php echo get_lang_options(null, $fe_editor_lang);?>
       </select> </td>
@@ -324,7 +324,7 @@ echo implode("\n",$output)
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="editorRow" <?php echo showHide($use_editor==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['editor_css_path_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['editor_css_path_title']?><br><small>[(editor_css_path)]</small></td>
     <td><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="editor_css_path" value="<?php echo $editor_css_path; ?>" />
     </td>
   </tr>

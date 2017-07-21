@@ -192,7 +192,14 @@ if($user['which_browser'] == 'default') {
 		?>
 	</script>
 	<script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $modx->config['settings_version'] ?>"></script>
-</head>
+<?php
+// invoke OnManagerTopPrerender event
+$evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
+if(is_array($evtOut)) {
+	echo implode("\n", $evtOut);
+}
+?>
+    </head>
 <body class="<?= $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?= md5(session_id()) ?>" />
 <div id="frameset">
