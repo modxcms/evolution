@@ -714,14 +714,6 @@ class DocumentParser {
 
         $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
         
-        // remove all unused placeholders
-        if (strpos($this->documentOutput, '[+')!==false) {
-            $matches= array ();
-            preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
-            if ($matches[0])
-                $this->documentOutput= str_replace($matches[0], '', $this->documentOutput);
-        }
-
         $this->documentOutput= $this->rewriteUrls($this->documentOutput);
 
         // send out content-type and content-disposition headers
