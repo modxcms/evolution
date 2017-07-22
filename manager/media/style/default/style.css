@@ -215,7 +215,6 @@ table th { font-weight: 500; }
  * css below is basicaly MODxRE overrides to get MODxRE2 look
  */
 /* nav */
-.alert-warning { color: #1377c5; }
 .no-events { pointer-events: none; }
 /* Required for Bootstrap3 Collapse */
 .panel-title > a::before { content: "\f107"; /* fa-angle-down */ font-family: "FontAwesome"; }
