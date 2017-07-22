@@ -83,17 +83,10 @@ if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
   $dbCharset = $database_connection_charset;
   $pgCharset = array_key_exists($dbCharset,$pageCharset) ? $pageCharset[$dbCharset] : $dbCharset;
 
-  // magic quotes check
-  if (get_magic_quotes_gpc()){
-    $searched = strip_tags(stripslashes($_REQUEST['searched']));
-    $highlight = strip_tags(stripslashes($_REQUEST['highlight']));
-    if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags(stripslashes($_REQUEST['advsearch']));
-  }
-  else {
-    $searched = strip_tags($_REQUEST['searched']);
-    $highlight = strip_tags($_REQUEST['highlight']);
-    if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags($_REQUEST['advsearch']);
-  }
+  $searched = strip_tags($_REQUEST['searched']);
+  $highlight = strip_tags($_REQUEST['highlight']);
+  if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags($_REQUEST['advsearch']);
+
 
   if ($advsearch != 'nowords') {
 

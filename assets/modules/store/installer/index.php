@@ -18,13 +18,6 @@ $modx->minParserPasses=2;
 
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 
-
-
-
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
-}
 $moduleurl = $modx->config['site_url'].'assets/modules/store/installer/index.php';
 $modulePath = MODX_BASE_PATH.'assets/modules/store/installer/';
 $self = $modulePath.'/index.php';

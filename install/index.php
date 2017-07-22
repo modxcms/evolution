@@ -2,11 +2,6 @@
 /**
  * EVO Installer
  */
-// do a little bit of environment cleanup if possible
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
-}
 
 $autoloader = realpath(__DIR__.'/../vendor/autoload.php');
 if (file_exists($autoloader) && is_readable($autoloader)) {

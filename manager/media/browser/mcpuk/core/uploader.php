@@ -110,10 +110,6 @@ class uploader {
 
     public function __construct($modx) {
 
-        // DISABLE MAGIC QUOTES
-        if (function_exists('set_magic_quotes_runtime'))
-            @set_magic_quotes_runtime(false);
-
         //MODX
         try {
             if ($modx instanceof DocumentParser) {
