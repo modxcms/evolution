@@ -87,8 +87,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 		$nodetitleDisplay = $nodetitle;
 
 		$treeNodeClass = 'node';
-
-		$protectedClass = $row['hasAccess'] == 0 ? ' protected' : '';
+		$treeNodeClass .= $row['hasAccess'] == 0 ? ' protected' : '';
 
 		if($row['deleted'] == 1) {
 			$treeNodeClass .= ' deleted';
@@ -98,7 +97,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			//$nodetitleDisplay = sprintf('<span class="unpublishedNode">%s</span>', $nodetitle);
 		} elseif($row['hidemenu'] == 1) {
 			$treeNodeClass .= ' hidemenu';
-			$treeNodeClass .= $protectedClass;
 			//$nodetitleDisplay = sprintf('<span class="notInMenuNode%s">%s</span>', $protectedClass, $nodetitle);
 		} else {
 			//$nodetitleDisplay = sprintf('<span class="publishedNode%s">%s</span>', $protectedClass, $nodetitle);

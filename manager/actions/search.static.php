@@ -95,6 +95,7 @@ if(isset($_REQUEST['searchid'])) {
 //TODO: сделать поиск по уму пока сделаю что б одно поле было для id,longtitle,pagetitle,alias далее нужно думаю добавить что б и в елементах искало
 if(isset($_REQUEST['submitok'])) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
+	$tbldg = $modx->getFullTableName('document_groups');
 
 	$searchfields = htmlentities($_POST['searchfields'], ENT_QUOTES, $modx_manager_charset);
 	$searchlongtitle = $modx->db->escape($_REQUEST['searchfields']);
@@ -124,45 +125,58 @@ if(isset($_REQUEST['submitok'])) {
 	// Handle Input "Search in main fields"
 	if($searchfields != '') {
 		if(ctype_digit($searchfields)) {
-			$sqladd .= "id='{$searchfields}'";
+			$sqladd .= "sc.id='{$searchfields}'";
 		}
 		if($idFromAlias) {
 			$sqladd .= $sqladd != '' ? ' OR ' : '';
-			$sqladd .= "id='{$idFromAlias}'";
+			$sqladd .= "sc.id='{$idFromAlias}'";
 		}
 
 		$sqladd = $sqladd ? "({$sqladd})" : $sqladd;
 
 		if(!ctype_digit($searchfields)) {
 			$sqladd .= $sqladd != '' ? ' AND' : '';
-			$sqladd .= " pagetitle LIKE '%{$searchfields}%'";
-			$sqladd .= " OR longtitle LIKE '%{$searchlongtitle}%'";
-			$sqladd .= " OR description LIKE '%{$searchlongtitle}%'";
-			$sqladd .= " OR introtext LIKE '%{$searchlongtitle}%'";
-			$sqladd .= " OR menutitle LIKE '%{$searchlongtitle}%'";
-			$sqladd .= " OR alias LIKE '%{$search_alias}%'";
+			$sqladd .= " sc.pagetitle LIKE '%{$searchfields}%'";
+			$sqladd .= " OR sc.longtitle LIKE '%{$searchlongtitle}%'";
+			$sqladd .= " OR sc.description LIKE '%{$searchlongtitle}%'";
+			$sqladd .= " OR sc.introtext LIKE '%{$searchlongtitle}%'";
+			$sqladd .= " OR sc.menutitle LIKE '%{$searchlongtitle}%'";
+			$sqladd .= " OR sc.alias LIKE '%{$search_alias}%'";
 		}
 	} else if($idFromAlias) {
-		$sqladd .= " id='{$idFromAlias}'";
+		$sqladd .= " sc.id='{$idFromAlias}'";
 	}
 
 	// Handle Input "Search by template ID"
 	if($templateid !== '') {
 		$sqladd .= $sqladd != '' ? ' AND' : '';
-		$sqladd .= " template='{$templateid}'";
+		$sqladd .= " sc.template='{$templateid}'";
 	}
 
 	// Handle Input "Search by content"
 	if($searchcontent !== '') {
 		$sqladd .= $sqladd != '' ? ' AND' : '';
-		$sqladd .= $searchcontent != '' ? " content LIKE '%{$searchcontent}%'" : '';
+		$sqladd .= $searchcontent != '' ? " sc.content LIKE '%{$searchcontent}%'" : '';
 	}
+	// get document groups for current user
+	$docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
+	$showProtected = false;
+	if(isset ($modx->config['tree_show_protected'])) {
+		$showProtected = (boolean) $modx->config['tree_show_protected'];
+	}
+	$mgrRole = (isset ($_SESSION['mgrRole']) && (string) $_SESSION['mgrRole'] === '1') ? '1' : '0';
+	if($showProtected == false) {
+		$sqladd = '(' . $sqladd . ") AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
+	}
+	$docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
 
-	$fields = 'id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';
+	$fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type, MAX(IF(1=' . $mgrRole . ' OR sc.privatemgr=0 ' . $docgrp_cond . ', 1, 0)) AS hasAccess';
+	$sqladd .= ' GROUP BY sc.id';
+
 	$where = $sqladd;
 
 	if($where) {
-		$rs = $modx->db->select($fields, $tbl_site_content, $where, 'id');
+		$rs = $modx->db->select($fields, $tbl_site_content . ' AS sc LEFT JOIN ' . $tbldg . ' AS dg ON dg.document=sc.id', $where, 'sc.id');
 		$limit = $modx->db->getRecordCount($rs);
 	} else {
 		$limit = 0;
@@ -262,99 +276,114 @@ if(isset($_REQUEST['submitok'])) {
 				$output = '';
 
 				//docs
-				$docscounts = $modx->db->getRecordCount($rs);
-				if($docscounts > 0) {
-					$output .= '<li><b><i class="fa fa-sitemap"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['pagetitle'] . ' <small>(' . $row['id'] . ')</small>', $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
+					$docscounts = $modx->db->getRecordCount($rs);
+					if($docscounts > 0) {
+						$output .= '<li><b><i class="fa fa-sitemap"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['pagetitle'] . ' <small>(' . $row['id'] . ')</small>', $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
 
 				//templates
-				$rs = $modx->db->select("id,templatename", $modx->getFullTableName('site_templates'), "`id` like '%" . $searchfields . "%' 
-        OR `templatename` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%' 
-        OR `content` like '%" . $searchfields . "%'");
-				$templatecounts = $modx->db->getRecordCount($rs);
-				if($templatecounts > 0) {
-					$output .= '<li><b><i class="fa fa-newspaper-o"></i> ' . $_lang["manage_templates"] . ' (' . $templatecounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=16&id=' . $row['id'] . '" id="templates_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['templatename'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('edit_template')) {
+					$rs = $modx->db->select("id,templatename", $modx->getFullTableName('site_templates'), "`id` like '%" . $searchfields . "%' 
+					OR `templatename` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%' 
+					OR `content` like '%" . $searchfields . "%'");
+					$templatecounts = $modx->db->getRecordCount($rs);
+					if($templatecounts > 0) {
+						$output .= '<li><b><i class="fa fa-newspaper-o"></i> ' . $_lang["manage_templates"] . ' (' . $templatecounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=16&id=' . $row['id'] . '" id="templates_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['templatename'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
 
 				//tvs
-				$rs = $modx->db->select("id,name", $modx->getFullTableName('site_tmplvars'), "`id` like '%" . $searchfields . "%' 
-        OR `name` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%' 
-        OR `type` like '%" . $searchfields . "%' 
-        OR `elements` like '%" . $searchfields . "%' 
-        OR `display` like '%" . $searchfields . "%' 
-        OR `display_params` like '%" . $searchfields . "%' 
-        OR `default_text` like '%" . $searchfields . "%'");
-				$tvscounts = $modx->db->getRecordCount($rs);
-				if($tvscounts > 0) {
-					$output .= '<li><b><i class="fa fa-list-alt"></i> ' . $_lang["settings_templvars"] . ' (' . $tvscounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=301&id=' . $row['id'] . '" id="tmplvars_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
+					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_tmplvars'), "`id` like '%" . $searchfields . "%' 
+					OR `name` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%' 
+					OR `type` like '%" . $searchfields . "%' 
+					OR `elements` like '%" . $searchfields . "%' 
+					OR `display` like '%" . $searchfields . "%' 
+					OR `display_params` like '%" . $searchfields . "%' 
+					OR `default_text` like '%" . $searchfields . "%'");
+					$tvscounts = $modx->db->getRecordCount($rs);
+					if($tvscounts > 0) {
+						$output .= '<li><b><i class="fa fa-list-alt"></i> ' . $_lang["settings_templvars"] . ' (' . $tvscounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=301&id=' . $row['id'] . '" id="tmplvars_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
-				//
 
 				//Chunks
-				$rs = $modx->db->select("id,name", $modx->getFullTableName('site_htmlsnippets'), "`id` like '%" . $searchfields . "%' 
-        OR `name` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%'     
-        OR `snippet` like '%" . $searchfields . "%'");
-				$chunkscounts = $modx->db->getRecordCount($rs);
-				if($chunkscounts > 0) {
-					$output .= '<li><b><i class="fa fa-th-large"></i> ' . $_lang["manage_htmlsnippets"] . ' (' . $chunkscounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=78&id=' . $row['id'] . '" id="htmlsnippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('edit_chunk')) {
+					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_htmlsnippets'), "`id` like '%" . $searchfields . "%' 
+					OR `name` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%'     
+					OR `snippet` like '%" . $searchfields . "%'");
+					$chunkscounts = $modx->db->getRecordCount($rs);
+					if($chunkscounts > 0) {
+						$output .= '<li><b><i class="fa fa-th-large"></i> ' . $_lang["manage_htmlsnippets"] . ' (' . $chunkscounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=78&id=' . $row['id'] . '" id="htmlsnippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
 
 				//Snippets
-				$rs = $modx->db->select("id,name", $modx->getFullTableName('site_snippets'), "`id` like '%" . $searchfields . "%' 
-        OR `name` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%' 
-        OR `snippet` like '%" . $searchfields . "%'  
-        OR `properties` like '%" . $searchfields . "%'      
-        OR `moduleguid` like '%" . $searchfields . "%'");
-				$snippetscounts = $modx->db->getRecordCount($rs);
-				if($snippetscounts > 0) {
-					$output .= '<li><b><i class="fa fa-code"></i> ' . $_lang["manage_snippets"] . ' (' . $snippetscounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=22&id=' . $row['id'] . '" id="snippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('edit_snippet')) {
+					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_snippets'), "`id` like '%" . $searchfields . "%' 
+					OR `name` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%' 
+					OR `snippet` like '%" . $searchfields . "%'  
+					OR `properties` like '%" . $searchfields . "%'      
+					OR `moduleguid` like '%" . $searchfields . "%'");
+					$snippetscounts = $modx->db->getRecordCount($rs);
+					if($snippetscounts > 0) {
+						$output .= '<li><b><i class="fa fa-code"></i> ' . $_lang["manage_snippets"] . ' (' . $snippetscounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=22&id=' . $row['id'] . '" id="snippets_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
+
 				//plugins
-				$rs = $modx->db->select("id,name", $modx->getFullTableName('site_plugins'), "`id` like '%" . $searchfields . "%' 
-        OR `name` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%' 
-        OR `plugincode` like '%" . $searchfields . "%'  
-        OR `properties` like '%" . $searchfields . "%'      
-        OR `moduleguid` like '%" . $searchfields . "%'");
-				$pluginscounts = $modx->db->getRecordCount($rs);
-				if($pluginscounts > 0) {
-					$output .= '<li><b><i class="fa fa-plug"></i> ' . $_lang["manage_plugins"] . ' (' . $pluginscounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=102&id=' . $row['id'] . '" id="plugins_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('edit_plugin')) {
+					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_plugins'), "`id` like '%" . $searchfields . "%' 
+					OR `name` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%' 
+					OR `plugincode` like '%" . $searchfields . "%'  
+					OR `properties` like '%" . $searchfields . "%'      
+					OR `moduleguid` like '%" . $searchfields . "%'");
+					$pluginscounts = $modx->db->getRecordCount($rs);
+					if($pluginscounts > 0) {
+						$output .= '<li><b><i class="fa fa-plug"></i> ' . $_lang["manage_plugins"] . ' (' . $pluginscounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=102&id=' . $row['id'] . '" id="plugins_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
+
 				//modules
-				$rs = $modx->db->select("id,name", $modx->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
-        OR `name` like '%" . $searchfields . "%' 
-        OR `description` like '%" . $searchfields . "%' 
-        OR `modulecode` like '%" . $searchfields . "%'  
-        OR `properties` like '%" . $searchfields . "%'  
-        OR `guid` like '%" . $searchfields . "%'      
-        OR `resourcefile` like '%" . $searchfields . "%'");
-				$modulescounts = $modx->db->getRecordCount($rs);
-				if($modulescounts > 0) {
-					$output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
-					while($row = $modx->db->getRow($rs)) {
-						$output .= '<li><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+				if($modx->hasPermission('exec_module')) {
+					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
+					OR `name` like '%" . $searchfields . "%' 
+					OR `description` like '%" . $searchfields . "%' 
+					OR `modulecode` like '%" . $searchfields . "%'  
+					OR `properties` like '%" . $searchfields . "%'  
+					OR `guid` like '%" . $searchfields . "%'      
+					OR `resourcefile` like '%" . $searchfields . "%'");
+					$modulescounts = $modx->db->getRecordCount($rs);
+					if($modulescounts > 0) {
+						$output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
+						while($row = $modx->db->getRow($rs)) {
+							$output .= '<li><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+						}
 					}
 				}
 
