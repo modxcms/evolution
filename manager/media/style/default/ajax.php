@@ -21,6 +21,7 @@ include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
 $frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
 $role = isset($_SESSION['mgrRole']) ? $_SESSION['mgrRole'] : 0;
+$docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
 $limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
@@ -476,10 +477,10 @@ if(isset($action)) {
 						if($modx->db->getRecordCount($sql)) {
 							$document_groups = array();
 							while($row = $modx->db->getRow($sql)) {
-								$document_groups[$row['document']]['roles'][] = $row['document_group'];
+								$document_groups[$row['document']]['groups'][] = $row['document_group'];
 							}
 							foreach($document_groups as $key => $value) {
-								if(($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['roles'])) {
+								if(($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['groups'])) {
 									$json['errors'] = $_lang["error_no_privileges"];
 								}
 							}

@@ -23,7 +23,7 @@
 #treeRoot a.deleted .title { color: #A52A2A; text-decoration: line-through; }
 #treeRoot a.unpublished .title { color: #B68282; font-style: italic; }
 #treeRoot a.hidemenu .title { color: #404040; }
-#treeRoot a.protected .title { color: #aaa; }
+#treeRoot a.protected { position: relative; opacity: .5; background-color: transparent !important; }
 #treeRoot a .lockedResource { cursor: pointer; }
 #treeRoot a .editResource { margin-left: 0.2em }
 #treeRoot .indent { position: relative; z-index: -1; float: left; height: 1.5em; }
