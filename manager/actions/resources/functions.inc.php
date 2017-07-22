@@ -198,13 +198,13 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	/* row buttons */
 	$buttons = '';
 	if($modx->hasPermission($types['actions']['edit'][1])) {
-		$buttons .= '<li><a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
+		$buttons .= '<li><a title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['duplicate'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['remove'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" title="' . $_lang["delete_resource"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
 	}
 	$buttons = $buttons ? '<div class="btnCell"><ul class="elements_buttonbar">' . $buttons . '</ul></div>' : '';
 

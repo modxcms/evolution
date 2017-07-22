@@ -6,30 +6,34 @@ if(IN_MANAGER_MODE != "true") {
 
 if(isset($resources->items['site_tmplvars'])) { ?>
 	<div class="tab-page" id="tabVariables">
-		<h2 class="tab"><i class="fa fa-list-alt"></i> <?php echo $_lang["tmplvars"] ?></h2>
+		<h2 class="tab"><i class="fa fa-list-alt"></i> <?= $_lang["tmplvars"] ?></h2>
 		<script type="text/javascript">tpResources.addTabPage(document.getElementById("tabVariables"));</script>
 		<!--//
 			Modified By Raymond for Template Variables
 			Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
 		-->
 		<div id="tv-info" class="msg-container" style="display:none">
-			<p class="element-edit-message"><?php echo $_lang['tmplvars_management_msg']; ?></p>
-			<p class="viewoptions-message"><?php echo $_lang['view_options_msg']; ?></p>
+			<p class="element-edit-message"><?= $_lang['tmplvars_management_msg'] ?></p>
+			<p class="viewoptions-message"><?= $_lang['view_options_msg'] ?></p>
 		</div>
 
-		<ul class="actionButtons">
-			<li>
-				<form class="filterElements-form">
-					<input class="form-control" type="text" placeholder="<?php echo $_lang['element_filter_msg']; ?>" id="site_tmplvars_search">
-				</form>
-			</li>
-			<li><a href="index.php?a=300"><i class="<?php echo $_style["actions_new"] ?>"></i><span><?php echo $_lang['new_tmplvars']; ?></span></a></li>
-			<li><a href="index.php?a=305"><i class="<?php echo $_style["actions_sort"] ?>"></i><span><?php echo $_lang['template_tv_edit']; ?></span></a></li>
-			<li><a href="javascript:;" id="tv-help"><i class="<?php echo $_style["actions_help"] ?>"></i><span><?php echo $_lang['help']; ?></span></a></li>
-			<?php echo renderViewSwitchButtons('site_tmplvars'); ?>
-		</ul>
+		<form class="form-group row filterButtons">
+			<div class="col-xs-12">
+				<div class="input-group input-group-sm">
+					<input class="form-control" type="text" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_tmplvars_search" />
+					<div class="input-group-btn">
+						<a class="btn btn-success" href="index.php?a=300"><i class="<?= $_style["actions_new"] ?>"></i><span><?= $_lang['new_tmplvars'] ?></span></a>
+						<a class="btn btn-secondary" href="index.php?a=305"><i class="<?= $_style["actions_sort"] ?>"></i><span><?= $_lang['template_tv_edit'] ?></span></a>
+						<a class="btn btn-secondary" href="javascript:;" id="tv-help"><i class="<?= $_style["actions_help"] ?>"></i><span><?= $_lang['help'] ?></span></a>
+						<a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_tmplvars"><i class="fa fa-bars"></i> <span><?= $_lang['btn_view_options'] ?></span></a>
+					</div>
+				</div>
+			</div>
+		</form>
 
-		<?php echo createResourceList('site_tmplvars', $resources); ?>
+		<?= renderViewSwitchButtons('site_tmplvars') ?>
+
+		<?= createResourceList('site_tmplvars', $resources) ?>
 
 		<script>
 			initQuicksearch('site_tmplvars_search', 'site_tmplvars');
