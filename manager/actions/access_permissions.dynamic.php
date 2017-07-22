@@ -170,7 +170,6 @@ if($modx->db->getRecordCount($rs) < 1) {
 			$rs = $modx->db->select('dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title', $tbl_documentgroup_names . ' AS dgnames
 			LEFT JOIN ' . $tbl_document_groups . ' AS dg ON dg.document_group = dgnames.id
 			LEFT JOIN ' . $tbl_site_content . ' AS sc ON sc.id = dg.document', '', 'dgnames.name, sc.id');
-
 			if($modx->db->getRecordCount($rs) < 1) {
 				?>
 				<div class="text-danger"><?= $_lang['no_groups_found'] ?></div>
@@ -261,7 +260,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 							<li><b><?= $row['name'] ?></b></li>
 							<?php
 							if(!$row['dg_id']) {
-								echo '&raquo; <i>' . $_lang['no_groups_found'] . '</i></li>';
+								echo '<i>' . $_lang['no_groups_found'] . '</i></li>';
 								$pid = '';
 								continue;
 							} else {
