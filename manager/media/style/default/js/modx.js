@@ -618,10 +618,18 @@
 					return;
 				} else {
 					var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
-					this.parentNode.draggable = (roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true);
+					var draggable = (roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true);
+					if(draggable) {
+						this.parentNode.draggable = true;
+						modx.tree.itemToChange = this.parentNode.id;
+						this.parentNode.ondragstart = modx.tree.ondragstart
+					} else {
+						this.parentNode.draggable = false;
+						this.parentNode.ondragstart = function() {
+							return false
+						}
+					}
 				}
-				modx.tree.itemToChange = this.parentNode.id;
-				this.parentNode.ondragstart = modx.tree.ondragstart
 			},
 			ondragstart: function(e) {
 				e.dataTransfer.effectAllowed = "all";
