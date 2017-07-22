@@ -10,8 +10,9 @@
 			}
 			this.tree.init();
 			this.mainMenu.init();
-			if(w.location.hash) {
-				w.main.frameElement.contentWindow.location = 'index.php' + w.location.hash.substring(1)
+			if(w.location.hash && w.location.hash.substring(1) !== '?a=2') {
+				w.main.frameElement.src = 'index.php' + w.location.hash.substring(1)
+				//w.main.frameElement.contentWindow.location = 'index.php' + w.location.hash.substring(1)
 			}
 			this.resizer.init();
 			this.search.init();
@@ -269,7 +270,8 @@
 				this.scrollWork();
 				w.main.onclick = modx.hideDropDown;
 				w.main.oncontextmenu = this.oncontextmenu;
-				w.location.hash = w.main.frameElement.contentWindow.location.search;
+				w.history.replaceState(null, null, '#' + w.main.frameElement.contentWindow.location.search)
+				//w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
 			oncontextmenu: function(e) {
 				if(e.ctrlKey) return;
