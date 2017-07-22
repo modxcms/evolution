@@ -124,6 +124,7 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .doc-item .fa { width: 1.2em; font-size: 0.9rem; text-align: center; margin-right: 0.25rem }
 .table.data .doc-item { text-decoration: none }
 .table.data .doc-item:hover span { text-decoration: underline }
+.table.data .doc-item.private .fa::after { position: relative; float: left; margin: .5em -1em 0 0; content: "\f023"; font-size: 0.75em; color: #d9534f; }
 /* [ WIDGETS ] */
 .widgets .card { margin-bottom: .75rem; border: none; border-radius: 0.15rem; background-color: #fff; box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.1), 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05) }
 .widgets .card-header { padding: .75rem 1rem; font-size: .675rem; color: #616a73; text-transform: uppercase; font-weight: 900; border: none; background-color: #f2f2f2; }

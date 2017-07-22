@@ -103,6 +103,7 @@ if($user['which_browser'] == 'default') {
 			MGR_DIR: "<?= MGR_DIR ?>",
 			MODX_SITE_URL: "<?= MODX_SITE_URL ?>",
 			user: {
+				role: <?= (int) $user['role'] ?>,
 				username: "<?= $user['username'] ?>"
 			},
 			config: {
@@ -130,6 +131,7 @@ if($user['which_browser'] == 'default') {
 				confirm_unpublish: "<?= $_lang['confirm_unpublish'] ?>",
 				empty_recycle_bin: "<?= $_lang['empty_recycle_bin'] ?>",
 				empty_recycle_bin_empty: "<?= addslashes($_lang['empty_recycle_bin_empty']) ?>",
+				error_no_privileges: "<?= $_lang["error_no_privileges"] ?>",
 				expand_tree: "<?= $_lang['expand_tree'] ?>",
 				inbox: "<?= $_lang['inbox'] ?>",
 				loading_doc_tree: "<?= $_lang['loading_doc_tree'] ?>",

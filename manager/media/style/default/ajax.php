@@ -20,7 +20,7 @@ include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager
 
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
 $frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
-$role = isset($_SESSION['mgrRole']) ? $_SESSION['mgrRole'] : '';
+$role = isset($_SESSION['mgrRole']) ? $_SESSION['mgrRole'] : 0;
 
 // set limit sql query
 $limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
@@ -466,23 +466,45 @@ if(isset($action)) {
 
 				// set parent
 				if($id && $parent >= 0) {
-					// находим старого родителя
+
+					// find older parent
 					$parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
-					if($parent == 0 && $parent != $parentOld && (!$modx->config['udperms_allowroot'] && $role != 1)) {
+					// check privileges user for move docs
+					if(!empty($modx->config['tree_show_protected']) && $role != 1) {
+						$sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
+						if($modx->db->getRecordCount($sql)) {
+							$document_groups = array();
+							while($row = $modx->db->getRow($sql)) {
+								$document_groups[$row['document']]['roles'][] = $row['document_group'];
+							}
+							foreach($document_groups as $key => $value) {
+								if(($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['roles'])) {
+									$json['errors'] = $_lang["error_no_privileges"];
+								}
+							}
+							if($json['errors']) {
+								header('content-type: application/json');
+								echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+								break;
+							}
+						}
+					}
+
+					if($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
 						$json['errors'] = $_lang["error_no_privileges"];
 					} else {
-						// устанавливаем нового родителя
+						// set new parent
 						$modx->db->update(array(
 							'parent' => $parent
 						), $modx->getFullTableName('site_content'), 'id=' . $id);
-						// устанавливаем родителю isfolder = 1
+						// set parent isfolder = 1
 						$modx->db->update(array(
 							'isfolder' => 1
 						), $modx->getFullTableName('site_content'), 'id=' . $parent);
 
 						if($parent != $parentOld) {
-							// проверяем остались ли дочерние ресурсы у родителя и меняем значение isfolder
+							// check children docs and set parent isfolder
 							if($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
 								$modx->db->update(array(
 									'isfolder' => 1
@@ -493,29 +515,28 @@ if(isset($action)) {
 								), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
 							}
 						}
+
+						// set menuindex
+						if(!empty($menuindex)) {
+							$menuindex = explode(',', $menuindex);
+							foreach($menuindex as $key => $value) {
+								$modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
+							}
+						} else {
+							// TODO: max(*) menuindex
+						}
+
+						if(!$json['errors']) {
+							$json['success'] = $_lang["actioncomplete"];
+						}
 					}
 				}
-
-				// set menuindex
-				if(!empty($menuindex)) {
-					$menuindex = explode(',', $menuindex);
-					foreach($menuindex as $key => $value) {
-						$modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
-					}
-				} else {
-					// TODO: max(*) menuindex
-				}
-
-				if(!$json['errors']) {
-					$json['success'] = $_lang["actioncomplete"];
-				}
-
 			} else {
 				$json['errors'] = $_lang["error_no_privileges"];
 			}
 
 			header('content-type: application/json');
-			echo json_encode($json);
+			echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
 
 			break;
 		}

@@ -617,7 +617,8 @@
 					this.parentNode.removeAttribute('draggable');
 					return;
 				} else {
-					this.parentNode.draggable = true
+					var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
+					this.parentNode.draggable = (roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true);
 				}
 				modx.tree.itemToChange = this.parentNode.id;
 				this.parentNode.ondragstart = modx.tree.ondragstart
@@ -732,6 +733,12 @@
 				e.preventDefault();
 			},
 			ondragupdate: function(a, id, parent, menuindex) {
+				var roles = a.dataset.roles + (a.parentNode.parentNode.id !== 'treeRoot' ? a.parentNode.parentNode.previousSibling.dataset.roles : '');
+				if(!(roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true)) {
+					alert(modx.lang.error_no_privileges);
+					modx.tree.restoreTree();
+					return;
+				}
 				modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 					a: 'movedocument',
 					id: id,
@@ -1132,7 +1139,7 @@
 				}
 			},
 			restoreTree: function() {
-				console.log('modx.tree.restoreTree()');
+				//console.log('modx.tree.restoreTree()');
 				d.getElementById('treeloader').classList.add('visible');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
@@ -1467,7 +1474,7 @@
 		setTimeout('modx.tree.restoreTree()', 50)
 	};
 	w.mainMenu.startrefresh = function(a) {
-		console.log('mainMenu.startrefresh(' + a + ')');
+		//console.log('mainMenu.startrefresh(' + a + ')');
 		if(a === 1) {
 			modx.tree.restoreTree()
 		}
@@ -1502,7 +1509,7 @@
 		modx.tree.reloadElementsInTree()
 	};
 	w.tree.resizeTree = function() {
-		console.log('tree.resizeTree() off')
+		//console.log('tree.resizeTree() off')
 	};
 	w.onbeforeunload = function() {
 		var a = w.main.frameElement.contentWindow;
