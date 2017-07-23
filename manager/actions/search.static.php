@@ -25,21 +25,19 @@ if(isset($_REQUEST['searchid'])) {
 
 <?= $_style['actionbuttons']['static']['cancel'] ?>
 
-	<div class="section">
-		<div class="sectionBody">
-			<form action="index.php?a=71" method="post" name="searchform" enctype="multipart/form-data">
-				<table width="100%" border="0">
-					<tr>
-						<td width="180"><?= $_lang['search_criteria_top'] ?></td>
-						<td width="0">&nbsp;</td>
-						<td width="120">
-							<input name="searchfields" type="text" size="50" value="<?= (isset($_REQUEST['searchfields']) ? $_REQUEST['searchfields'] : '') ?>" />
-						</td>
-						<td><?= $_lang['search_criteria_top_msg'] ?></td>
-					</tr>
-					<tr>
-						<td width="120"><?= $_lang['search_criteria_template_id'] ?></td>
-						<td width="20">&nbsp;</td>
+	<div class="tab-page">
+		<div class="container container-body">
+			<form action="index.php?a=71" method="post" name="searchform" enctype="multipart/form-data" class="form-group">
+				<div class="row form-row">
+					<div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_top'] ?></div>
+					<div class="col-md-9 col-lg-10">
+						<input name="searchfields" type="text" value="<?= (isset($_REQUEST['searchfields']) ? $_REQUEST['searchfields'] : '') ?>" />
+						<small class="form-text"><?= $_lang['search_criteria_top_msg'] ?></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_template_id'] ?></div>
+					<div class="col-md-9 col-lg-10">
 						<?php
 						$rs = $modx->db->select('*', $modx->getFullTableName('site_templates'));
 						$option[] = '<option value="">No selected</option>';
@@ -53,40 +51,28 @@ if(isset($_REQUEST['searchid'])) {
 						}
 						$tpls = sprintf('<select name="templateid">%s</select>', join("\n", $option));
 						?>
-						<td width="120"><?= $tpls ?></td>
-						<td><?= $_lang['search_criteria_template_id_msg'] ?></td>
-					</tr>
-					<tr>
-						<td>URL</td>
-						<td>&nbsp;</td>
-						<td>
-							<input name="url" type="text" size="50" value="<?= (isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ?>" />
-						</td>
-						<td><?= $_lang['search_criteria_url_msg'] ?></td>
-					</tr>
-					<tr>
-						<td><?= $_lang['search_criteria_content'] ?></td>
-						<td>&nbsp;</td>
-						<td>
-							<input name="content" type="text" size="50" value="<?= (isset($_REQUEST['content']) ? $_REQUEST['content'] : '') ?>" />
-						</td>
-						<td><?= $_lang['search_criteria_content_msg'] ?></td>
-					</tr>
-					<tr>
-						<td colspan="4">
-							<ul class="actionButtons">
-								<li>
-									<a class="default" href="javascript:;" onClick="document.searchform.submitok.click();"><i class="<?= $_style["actions_search"] ?>"></i> <span><?= $_lang['search'] ?></span>
-									</a>
-								</li>
-								<li>
-									<a href="index.php?a=2"><i class="<?= $_style["actions_cancel"] ?>"></i> <span><?= $_lang['cancel'] ?></span>
-									</a>
-								</li>
-							</ul>
-						</td>
-					</tr>
-				</table>
+						<?= $tpls ?>
+						<small class="form-text"><?= $_lang['search_criteria_template_id_msg'] ?></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-md-3 col-lg-2">URL</div>
+					<div class="col-md-9 col-lg-10">
+						<input name="url" type="text" value="<?= (isset($_REQUEST['url']) ? $_REQUEST['url'] : '') ?>" />
+						<small class="form-text"><?= $_lang['search_criteria_url_msg'] ?></small>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-md-3 col-lg-2"><?= $_lang['search_criteria_content'] ?></div>
+					<div class="col-md-9 col-lg-10">
+						<input name="content" type="text" value="<?= (isset($_REQUEST['content']) ? $_REQUEST['content'] : '') ?>" />
+						<small class="form-text"><?= $_lang['search_criteria_content_msg'] ?></small>
+					</div>
+				</div>
+
+				<a class="btn btn-success" href="javascript:;" onClick="document.searchform.submitok.click();"><i class="<?= $_style["actions_search"] ?>"></i> <?= $_lang['search'] ?>
+				</a>
+				<a class="btn btn-secondary" href="index.php?a=2"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
 				<input type="submit" value="Search" name="submitok" style="display:none" />
 			</form>
 		</div>
@@ -165,13 +151,16 @@ if(isset($_REQUEST['submitok'])) {
 		$showProtected = (boolean) $modx->config['tree_show_protected'];
 	}
 	$mgrRole = (isset ($_SESSION['mgrRole']) && (string) $_SESSION['mgrRole'] === '1') ? '1' : '0';
-	if($showProtected == false) {
+	if($showProtected == false && $sqladd) {
 		$sqladd = '(' . $sqladd . ") AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
 	}
 	$docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
 
 	$fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type, MAX(IF(1=' . $mgrRole . ' OR sc.privatemgr=0 ' . $docgrp_cond . ', 1, 0)) AS hasAccess';
-	$sqladd .= ' GROUP BY sc.id';
+
+	if($sqladd) {
+		$sqladd .= ' GROUP BY sc.id';
+	}
 
 	$where = $sqladd;
 
@@ -183,9 +172,12 @@ if(isset($_REQUEST['submitok'])) {
 	}
 
 	?>
-	<div class="section">
-		<div class="sectionHeader"><?= $_lang['search_results'] ?></div>
-		<div class="sectionBody">
+	<div class="container navbar">
+		<?= $_lang['search_results'] ?>
+	</div>
+
+	<div class="tab-page">
+		<div class="container container-body">
 			<?php
 			if($_GET['ajax'] != 1) {
 
@@ -195,14 +187,14 @@ if(isset($_REQUEST['submitok'])) {
 					printf('<p>' . $_lang['search_results_returned_msg'] . '</p>', $limit);
 					?>
 					<script type="text/javascript" src="media/script/tablesort.js"></script>
-					<table border="0" cellpadding="2" cellspacing="0" class="sortabletable sortable-onload-2 rowstyle-even" id="table-1" width="90%">
+					<table class="grid sortabletable sortable-onload-2 rowstyle-even" id="table-1">
 						<thead>
-						<tr bgcolor="#CCCCCC">
-							<th width="20"></th>
-							<th class="sortable"><b><?= $_lang['search_results_returned_id'] ?></b></th>
+						<tr>
+							<th width="40"></th>
+							<th width="40" class="sortable"><b><?= $_lang['search_results_returned_id'] ?></b></th>
+							<th width="40"></th>
 							<th class="sortable"><b><?= $_lang['search_results_returned_title'] ?></b></th>
 							<th class="sortable"><b><?= $_lang['search_results_returned_desc'] ?></b></th>
-							<th width="20"></th>
 						</tr>
 						</thead>
 						<tbody>
@@ -243,10 +235,11 @@ if(isset($_REQUEST['submitok'])) {
 							}
 							?>
 							<tr>
-								<td align="center">
+								<td class="text-center">
 									<a href="index.php?a=3&id=<?= $row['id'] ?>" title="<?= $_lang['search_view_docdata'] ?>"><i class="<?= $_style['icons_resource_overview'] ?>" /></i></a>
 								</td>
-								<td><?= $row['id'] ?></td>
+								<td class="text-right"><?= $row['id'] ?></td>
+								<td class="text-center"><?= $icon ?></td>
 								<?php
 								if(function_exists('mb_strlen') && function_exists('mb_substr')) {
 									?>
@@ -262,7 +255,6 @@ if(isset($_REQUEST['submitok'])) {
 									<?php
 								}
 								?>
-								<td align="center"><?= $icon ?></td>
 							</tr>
 							<?php
 						}
