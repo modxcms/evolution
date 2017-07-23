@@ -34,6 +34,7 @@ optgroup option { font-weight: normal; background-color: #fff; }
 .form-row label { margin-bottom: 0.15rem }
 .form-row .col, .form-row .col-1, .form-row .col-10, .form-row .col-11, .form-row .col-12, .form-row .col-2, .form-row .col-3, .form-row .col-4, .form-row .col-5, .form-row .col-6, .form-row .col-7, .form-row .col-8, .form-row .col-9, .form-row .col-lg, .form-row .col-lg-1, .form-row .col-lg-10, .form-row .col-lg-11, .form-row .col-lg-12, .form-row .col-lg-2, .form-row .col-lg-3, .form-row .col-lg-4, .form-row .col-lg-5, .form-row .col-lg-6, .form-row .col-lg-7, .form-row .col-lg-8, .form-row .col-lg-9, .form-row .col-md, .form-row .col-md-1, .form-row .col-md-10, .form-row .col-md-11, .form-row .col-md-12, .form-row .col-md-2, .form-row .col-md-3, .form-row .col-md-4, .form-row .col-md-5, .form-row .col-md-6, .form-row .col-md-7, .form-row .col-md-8, .form-row .col-md-9, .form-row .col-sm, .form-row .col-sm-1, .form-row .col-sm-10, .form-row .col-sm-11, .form-row .col-sm-12, .form-row .col-sm-2, .form-row .col-sm-3, .form-row .col-sm-4, .form-row .col-sm-5, .form-row .col-sm-6, .form-row .col-sm-7, .form-row .col-sm-8, .form-row .col-sm-9, .form-row .col-xl, .form-row .col-xl-1, .form-row .col-xl-10, .form-row .col-xl-11, .form-row .col-xl-12, .form-row .col-xl-2, .form-row .col-xl-3, .form-row .col-xl-4, .form-row .col-xl-5, .form-row .col-xl-6, .form-row .col-xl-7, .form-row .col-xl-8, .form-row .col-xl-9 { padding-left: 0 }
 .form-row .form-control { float: left; }
+.form-inline .form-row .form-control { float: none; }
 .container-body > .form-group:last-child, .container-body > .form-row:last-child, .container-body > p:last-child, .container-body > .form-group:last-child > p:last-child { margin-bottom: 0 }
 .form-control-name { position: relative; }
 .form-control-name .form-control { padding-right: 2em }
@@ -56,8 +57,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 /* new style */
 #actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 100; border-radius: 0 0 0.3rem 0.3rem; }
 #actions .btn-group > .btn-group { display: block }
-#actions .btn-group .btn { font-size: 0.675rem; height: 2.5em }
-#actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
+#actions .btn-group .btn, #_actions .btn-group .btn, #_actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em }
+#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
 #actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
 #actions .btn-group .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-group .btn-success:hover { box-shadow: none }
@@ -71,8 +72,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 #actions .btn-group .show .dropdown-toggle::after { transform: rotate(180deg) }
 @media (max-width: 840px) {
 #actions { right: 0 }
-#actions .btn-group .btn span, #actions .btn-group select#stay { display: none }
-#actions .btn-group .btn .fa { display: inline-block }
+#actions .btn-group .btn span, #actions .btn-group select#stay, #_actions .btn-group .btn span { display: none }
+#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: inline-block }
 #actions .btn-group .dropdown-menu { width: 2rem }
 #actions .btn-group .dropdown-menu span { padding-left: 0; padding-right: 0; text-align: center }
 }

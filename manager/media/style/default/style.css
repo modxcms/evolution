@@ -266,7 +266,7 @@ ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2e
 ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width: 22px; }
 ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 /* Manage elements views-form */
-.switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
+/*.switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
 .switchForm h3.optionsTitle { color: #1377c5; padding-left: 7px; font-size: 16px; }
 .switchForm label { color: #1377c5; font-weight: 700; }
 .switchForm input.columns { width: 3em; color: #444; font-weight: normal; }
@@ -280,7 +280,7 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 .switchForm .optionsFontsSize { margin-left: 9px; padding-left: 8px; border-left: 1px solid #ededed; }
 .switchForm .optionsReset { margin-left: 8px; border-left: 1px solid #ededed; padding-left: 8px; }
 .switchForm .optionsAllTabs { clear: left; padding-top: 10px; }
-.switchForm .optionsClear { display: block; clear: both; padding-top: 8px; margin-bottom: 4px; border-bottom: 1px solid #ededed; }
+.switchForm .optionsClear { display: block; clear: both; padding-top: 8px; margin-bottom: 4px; border-bottom: 1px solid #ededed; }*/
 /* Checkbox "Icons" */
 .noicons.tab-page ul li ul li a:before, .noicons .elements_description a:before { display: none !important; }
 /* View-dependent styles */
@@ -355,12 +355,12 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 /*responsive buttons*/
 .filterButtons .input-group .form-control { width: auto; }
 .filterButtons .input-group .input-group-btn { float: left; }
-.actionButtons .fa, .filterButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
+.actionButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
 .sectionBody .actionButtons .fa, .actionButtons--eit .fa { display: inline-block; }
 .optionsTitle .fa { display: inline-block; }
 @media (max-width: 900px) {
 .actionButtons a { display: inline-block; padding: 6px 10px }
 .tab-page .actionButtons a { margin-top: 0 !important }
-.actionButtons a span, .filterButtons a span { display: none; }
-.actionButtons a .fa, .filterButtons a .fa { display: inline-block; }
+.actionButtons a span { display: none; }
+.actionButtons a .fa { display: inline-block; }
 }

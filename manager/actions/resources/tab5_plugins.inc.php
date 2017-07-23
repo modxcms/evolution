@@ -14,8 +14,8 @@ if(isset($resources->items['site_plugins'])) { ?>
 			<p class="viewoptions-message"><?= $_lang['view_options_msg'] ?></p>
 		</div>
 
-		<form class="form-group row filterButtons">
-			<div class="col-xs-12">
+		<div id="_actions">
+			<form class="btn-group form-group form-inline">
 				<div class="input-group input-group-sm">
 					<input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
 					<div class="input-group-btn">
@@ -37,8 +37,8 @@ if(isset($resources->items['site_plugins'])) { ?>
 						<a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_plugins"><i class="fa fa-bars"></i> <span><?= $_lang['btn_view_options'] ?></span></a>
 					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 
 		<?= renderViewSwitchButtons('site_plugins') ?>
 
