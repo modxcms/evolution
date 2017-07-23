@@ -33,7 +33,7 @@
 				$mm.on('click', 'a', function(e) {
 					if($(this).hasClass('dropdown-toggle')) {
 						if($mm.hasClass('show') && ($(this).hasClass('selected') || (!modx.isMobile && $(this).parent().hasClass('hover')))) {
-							$(this).removeClass('selected')
+							$(this).removeClass('selected');
 							$mm.removeClass('show')
 						} else {
 							$('.nav > li > a:not(:hover)').removeClass('selected');
