@@ -21,6 +21,6 @@
 		<label><input type="checkbox" class="cb_all" name="cb_all" value="all"> [%viewopts_cb_alltabs%]</label>
 	</div>
 	<div class="optionsLeft optionsReset">
-		<a href="javascript:;" class="btn_reset"> [%reset%]</a>
+		<a href="javascript:;" class="btn btn-danger btn_reset"> [%reset%]</a>
 	</div>
 </form>

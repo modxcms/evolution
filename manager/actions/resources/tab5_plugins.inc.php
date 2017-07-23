@@ -17,13 +17,13 @@ if(isset($resources->items['site_plugins'])) { ?>
 		<form class="form-group row filterButtons">
 			<div class="col-xs-12">
 				<div class="input-group input-group-sm">
-					<input class="form-control" type="text" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
+					<input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
 					<div class="input-group-btn">
 						<?php if($modx->hasPermission('new_plugin')) { ?>
-							<a class="btn btn-success" href="index.php?a=101"><i class="<?= $_style["actions_new"] ?>"></i><span><?= $_lang['new_plugin'] ?></span></a>
+							<a class="btn btn-success" href="index.php?a=101"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_plugin'] ?></span></a>
 						<?php } ?>
 						<?php if($modx->hasPermission('save_plugin')) { ?>
-							<a class="btn btn-secondary" href="index.php?a=100"><i class="<?= $_style["actions_sort"] ?>"></i><span><?= $_lang['plugin_priority'] ?></span></a>
+							<a class="btn btn-secondary" href="index.php?a=100"><i class="<?= $_style["actions_sort"] ?>"></i> <span><?= $_lang['plugin_priority'] ?></span></a>
 						<?php } ?>
 						<?php
 						if($modx->hasPermission('delete_plugin') && $_SESSION['mgrRole'] == 1) {
@@ -33,7 +33,7 @@ if(isset($resources->items['site_plugins'])) { ?>
 								<?php
 							}
 						} ?>
-						<a class="btn btn-secondary" href="javascript:;" id="category-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>
+						<a class="btn btn-secondary" href="javascript:;" id="plugins-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>
 						<a class="btn btn-secondary switchform-btn" href="javascript:;" data-target="switchForm_site_plugins"><i class="fa fa-bars"></i> <span><?= $_lang['btn_view_options'] ?></span></a>
 					</div>
 				</div>

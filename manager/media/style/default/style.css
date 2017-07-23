@@ -353,6 +353,8 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 .c-roleslist-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom-width: 0; }
 .c-roleslist-item--admin { font-style: italic; }
 /*responsive buttons*/
+.filterButtons .input-group .form-control { width: auto; }
+.filterButtons .input-group .input-group-btn { float: left; }
 .actionButtons .fa, .filterButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
 .sectionBody .actionButtons .fa, .actionButtons--eit .fa { display: inline-block; }
 .optionsTitle .fa { display: inline-block; }
