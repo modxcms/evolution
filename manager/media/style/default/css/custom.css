@@ -105,7 +105,7 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 /* [ TABLES ] */
 /* table-data */
 .table.data { width: 100%; max-width: 100%; margin-bottom: 0; border-bottom: 1px solid #eceeef }
-.table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777 }
+.table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777; border-bottom: 2px solid #eceeef }
 .table.data td { padding: 0.55rem 0.75rem; }
 .table.data td, .table.data th, .table.data thead td { vertical-align: top; border-top: 1px solid #eceeef }
 .table.data td:first-child, .table.data th:first-child { padding-left: 1.3rem }
