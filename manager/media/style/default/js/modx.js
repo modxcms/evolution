@@ -32,7 +32,14 @@
 				var $mm = $('#mainMenu'), timer;
 				$mm.on('click', 'a', function(e) {
 					if($(this).hasClass('dropdown-toggle')) {
-						$mm.addClass('show');
+						if($mm.hasClass('show') && ($(this).hasClass('selected') || (!modx.isMobile && $(this).parent().hasClass('hover')))) {
+							$(this).removeClass('selected')
+							$mm.removeClass('show')
+						} else {
+							$('.nav > li > a:not(:hover)').removeClass('selected');
+							$(this).addClass('selected');
+							$mm.addClass('show')
+						}
 						e.target.dataset.toggle = '#mainMenu'
 					}
 					if($(this).closest('ul').hasClass('dropdown-menu')) {
