@@ -39,30 +39,21 @@ function record_sort($array, $key) {
 
 $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
 $logs = $modx->db->makeArray($rs);
-
 ?>
 	<h1>
-		<i class="fa fa-user-secret"></i><?php echo $_lang['mgrlog_view']; ?>
+		<i class="fa fa-user-secret"></i><?= $_lang['mgrlog_view'] ?>
 	</h1>
 
-	<div class="section">
-	<div class="sectionHeader"><?php echo $_lang["mgrlog_query"] ?></div>
-	<div class="sectionBody" id="lyr1">
-		<p class="element-edit-message"><?php echo $_lang["mgrlog_query_msg"] ?></p>
-		<form action="index.php?a=13" name="logging" method="POST">
-			<table border="0" cellpadding="2" cellspacing="0">
-				<thead>
-				<tr>
-					<td width="200"><b><?php echo $_lang["mgrlog_field"] ?></b></td>
-					<td align="right"><b><?php echo $_lang["mgrlog_value"] ?></b></td>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td><b><?php echo $_lang["mgrlog_user"] ?></b></td>
-					<td align="right">
-						<select name="searchuser" class="inputBox" style="width:240px">
-							<option value="0"><?php echo $_lang["mgrlog_anyall"] ?></option>
+	<div class="tab-page">
+		<div class="container container-body">
+			<div class="element-edit-message-tab alert alert-warning"><?= $_lang["mgrlog_query_msg"] ?></div>
+
+			<form action="index.php?a=13" name="logging" method="POST" class="form-group">
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_user"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<select name="searchuser" class="form-control">
+							<option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
 							<?php
 							// get all users currently in the log
 							$logs_user = record_sort(array_unique_multi($logs, 'internalKey'), 'username');
@@ -72,13 +63,13 @@ $logs = $modx->db->makeArray($rs);
 							}
 							?>
 						</select>
-					</td>
-				</tr>
-				<tr bgcolor="#eeeeee">
-					<td><b><?php echo $_lang["mgrlog_action"]; ?></b></td>
-					<td align="right">
-						<select name="action" class="inputBox" style="width:240px;">
-							<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_action"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<select name="action" class="form-control">
+							<option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
 							<?php
 							// get all available actions in the log
 							include_once "actionlist.inc.php";
@@ -93,13 +84,13 @@ $logs = $modx->db->makeArray($rs);
 							}
 							?>
 						</select>
-					</td>
-				</tr>
-				<tr bgcolor="#ffffff">
-					<td><b><?php echo $_lang["mgrlog_itemid"]; ?></b></td>
-					<td align="right">
-						<select name="itemid" class="inputBox" style="width:240px">
-							<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_itemid"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<select name="itemid" class="form-control">
+							<option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
 							<?php
 							// get all itemid currently in logging
 							$logs_items = record_sort(array_unique_multi($logs, 'itemid'), 'itemid');
@@ -109,13 +100,13 @@ $logs = $modx->db->makeArray($rs);
 							}
 							?>
 						</select>
-					</td>
-				</tr>
-				<tr bgcolor="#eeeeee">
-					<td><b><?php echo $_lang["mgrlog_itemname"]; ?></b></td>
-					<td align="right">
-						<select name="itemname" class="inputBox" style="width:240px">
-							<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_itemname"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<select name="itemname" class="form-control">
+							<option value="0"><?= $_lang["mgrlog_anyall"] ?></option>
 							<?php
 							// get all itemname currently in logging
 							$logs_names = record_sort(array_unique_multi($logs, 'itemname'), 'itemname');
@@ -125,54 +116,59 @@ $logs = $modx->db->makeArray($rs);
 							}
 							?>
 						</select>
-					</td>
-				</tr>
-				<tr bgcolor="#ffffff">
-					<td><b><?php echo $_lang["mgrlog_msg"]; ?></b></td>
-					<td align="right">
-						<input type="text" name="message" class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>" />
-					</td>
-				</tr>
-				<tr bgcolor="#eeeeee">
-					<td><b><?php echo $_lang["mgrlog_datefr"]; ?></b></td>
-					<td align="right">
-						<input type="text" id="datefrom" name="datefrom" class="DatePicker" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : ""; ?>" />
-						<a href="javascript:;" onclick="document.logging.datefrom.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;"><i class="<?php echo $_style["actions_calendar"] ?>"></i></a>
-					</td>
-				</tr>
-				<tr bgcolor="#ffffff">
-					<td><b><?php echo $_lang["mgrlog_dateto"]; ?></b></td>
-					<td align="right">
-						<input type="text" id="dateto" name="dateto" class="DatePicker" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : ""; ?>" />
-						<a href="javascript:;" onclick="document.logging.dateto.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;"><i class="<?php echo $_style["actions_calendar"] ?>"></i></a>
-					</td>
-				</tr>
-				<tr bgcolor="#eeeeee">
-					<td><b><?php echo $_lang["mgrlog_results"]; ?></b></td>
-					<td align="right">
-						<input type="text" name="nrresults" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>" />
-					</td>
-				</tr>
-				<tr bgcolor="#FFFFFF">
-					<td colspan="2">
-						<ul class="actionButtons">
-							<li>
-								<a href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['search']; ?></a>
-							</li>
-							<li>
-								<a href="index.php?a=2" onclick="documentDirty=false;"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['cancel']; ?></a>
-							</li>
-						</ul>
-						<input type="submit" name="log_submit" value="<?php echo $_lang["mgrlog_searchlogs"] ?>" style="display:none;" />
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</form>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_msg"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<input type="text" name="message" class="form-control" value="<?= $_REQUEST['message'] ?>" />
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_datefr"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<div class="input-group">
+							<input type="text" id="datefrom" name="datefrom" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ?>" />
+							<span class="input-group-addon">
+								<a class="text-danger" href="javascript:;" onclick="document.logging.datefrom.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;"><i class="<?= $_style["actions_calendar_delete"] ?>"></i></a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_dateto"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<div class="input-group">
+							<input type="text" id="dateto" name="dateto" class="form-control unstyled DatePicker" value="<?= isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ?>" />
+							<span class="input-group-addon">
+								<a class="text-danger" href="javascript:;" onclick="document.logging.dateto.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;"><i class="<?= $_style["actions_calendar_delete"] ?>"></i></a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row form-row">
+					<div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_results"] ?></b></div>
+					<div class="col-sm-8 col-md-5 col-lg-4">
+						<input type="text" name="nrresults" class="form-control" value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs ?>" />
+					</div>
+				</div>
+
+				<a class="btn btn-success" href="javascript:;" onclick="documentDirty=false;document.logging.log_submit.click();"><i class="<?= $_style["actions_save"] ?>"></i> <?= $_lang['search'] ?></a>
+				<a class="btn btn-secondary" href="index.php?a=2" onclick="documentDirty=false;"><i class="<?= $_style["actions_cancel"] ?>"></i> <?= $_lang['cancel'] ?></a>
+
+				<input type="submit" name="log_submit" value="<?= $_lang["mgrlog_searchlogs"] ?>" style="display:none;" />
+			</form>
+
+		</div>
 	</div>
 
-	<div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div>
-	<div class="sectionBody" id="lyr2">
+	<div class="navbar">
+		<?= $_lang["mgrlog_qresults"] ?>
+	</div>
+
+	<div class="tab-page">
+	<div class="container container-body">
+
 <?php
 if(isset($_REQUEST['log_submit'])) {
 	// get the selections the user made.
@@ -216,6 +212,7 @@ if(isset($_REQUEST['log_submit'])) {
 	$limit = $num_rows = $modx->db->getValue($modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : '')));
 
 	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
+
 if($limit < 1) {
 	echo '<p>' . $_lang["mgrlog_emptysrch"] . '</p>';
 } else {
@@ -250,55 +247,63 @@ if($limit < 1) {
 	}
 	$paging .= $array_paging['next_link'] . $_lang["paging_next"] . (isset($array_paging['next_link']) ? "</a> " : " ") . " ";
 	$paging .= $array_paging['last_link'] . $_lang["paging_last"] . (isset($array_paging['last_link']) ? "</a> " : " ") . "</p>";
-	echo $paging;
 	// The above exemple print somethings like:
 	// Results 1 to 20 of 597  <<< 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 >>>
 	// Of course you can now play with array_row_paging in order to print
 	// only the results you would like...
 	?>
+
+	<?= $paging ?>
+	
 	<script type="text/javascript" src="media/script/tablesort.js"></script>
-	<table class="sortabletable rowstyle-even" id="table-1">
-		<thead>
-		<tr>
-			<th class="sortable"><b><?php echo $_lang["mgrlog_username"]; ?></b></th>
-			<th class="sortable"><b><?php echo $_lang["mgrlog_action"]; ?></b></th>
-			<th class="sortable"><b><?php echo $_lang["mgrlog_itemid"]; ?></b></th>
-			<th class="sortable"><b><?php echo $_lang["mgrlog_time"]; ?></b></th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php
-		// grab the entire log file...
-		$logentries = array();
-		$i = 0;
-		while($logentry = $modx->db->getRow($rs)) {
-			if(!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
-				$item = '<div style="text-align:center;">-</div>';
-			} elseif($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
-				$item = '<a href="index.php?a=3&amp;id=' . $logentry['itemid'] . '">' . '[' . $logentry['itemid'] . '] ' . $logentry['itemname'] . '</a>';
-			} else {
-				$item = '[' . $logentry['itemid'] . '] ' . $logentry['itemname'];
-			}
-			//index.php?a=13&searchuser=' . $logentry['internalKey'] . '&action=' . $logentry['action'] . '&itemname=' . $logentry['itemname'] . '&log_submit=true'
-			$user_drill = 'index.php?a=13&searchuser=' . $logentry['internalKey'] . '&itemname=0&log_submit=true';
-			?>
-			<tr class="<?php echo($i % 2 ? 'even' : ''); ?>">
-				<td><?php echo '<a href="' . $user_drill . '">' . $logentry['username'] . '</a>'; ?></td>
-				<td><?php echo '[' . $logentry['action'] . '] ' . $logentry['message']; ?></td>
-				<td><?php echo $item; ?></td>
-				<td><?php echo $modx->toDateFormat($logentry['timestamp'] + $server_offset_time); ?></td>
+
+	<div class="table-responsive">
+		<table class="grid sortabletable rowstyle-even" id="table-1">
+			<thead>
+			<tr>
+				<th class="sortable"><b><?= $_lang["mgrlog_username"] ?></b></th>
+				<th class="sortable"><b><?= $_lang["mgrlog_action"] ?></b></th>
+				<th class="sortable"><b><?= $_lang["mgrlog_itemid"] ?></b></th>
+				<th class="sortable"><b><?= $_lang["mgrlog_time"] ?></b></th>
 			</tr>
+			</thead>
+			<tbody>
 			<?php
-			$i++;
-		}
-		?>
-		</tbody>
-	</table>
+			// grab the entire log file...
+			$logentries = array();
+			$i = 0;
+			while($logentry = $modx->db->getRow($rs)) {
+				if(!preg_match("/^[0-9]+$/", $logentry['itemid'])) {
+					$item = '<div style="text-align:center;">-</div>';
+				} elseif($logentry['action'] == 3 || $logentry['action'] == 27 || $logentry['action'] == 5) {
+					$item = '<a href="index.php?a=3&amp;id=' . $logentry['itemid'] . '">' . '[' . $logentry['itemid'] . '] ' . $logentry['itemname'] . '</a>';
+				} else {
+					$item = '[' . $logentry['itemid'] . '] ' . $logentry['itemname'];
+				}
+				//index.php?a=13&searchuser=' . $logentry['internalKey'] . '&action=' . $logentry['action'] . '&itemname=' . $logentry['itemname'] . '&log_submit=true'
+				$user_drill = 'index.php?a=13&searchuser=' . $logentry['internalKey'] . '&itemname=0&log_submit=true';
+				?>
+				<tr class="<?= ($i % 2 ? 'even' : '') ?>">
+					<td><?= '<a href="' . $user_drill . '">' . $logentry['username'] . '</a>' ?></td>
+					<td class="text-nowrap"><?= '[' . $logentry['action'] . '] ' . $logentry['message'] ?></td>
+					<td><?= $item ?></td>
+					<td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $server_offset_time) ?></td>
+				</tr>
+				<?php
+				$i++;
+			}
+			?>
+			</tbody>
+		</table>
+	</div>
+
+<?= $paging ?>
+
 <?php
-echo $paging;
 }
 ?>
-	</div></div>
+	</div>
+	</div>
 	<?php
 	// HACK: prevent multiple "Viewing logging" entries after a search has taken place.
 	// @see index.php @ 915

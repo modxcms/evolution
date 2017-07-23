@@ -107,7 +107,7 @@ echo $cm->render();
 			<div class="searchbar form-group">
 				<div class="input-group">
 					<div class="input-group-btn">
-						<a class="btn btn-success btn-sm" href="index.php?a=11"><i class="<?= $_style["actions_new"] ?> hide4desktop"></i> <span><?= $_lang['new_user'] ?></span></a>
+						<a class="btn btn-success btn-sm" href="index.php?a=11"><i class="<?= $_style["actions_new"] ?> hide4desktop"></i> <?= $_lang['new_user'] ?></a>
 					</div>
 					<input class="form-control form-control-sm float-xs-right" name="search" type="text" size="50" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
 					<div class="input-group-btn">
