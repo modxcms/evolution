@@ -29,6 +29,13 @@ if(!$modx->hasPermission('edit_user')) {
 				<div class="row">
 					<div class="table-responsive">
 						<table class="table data">
+							<thead>
+								<tr>
+									<td><?= $_lang['role'] ?></td>
+									<td><?= $_lang["description"] ?></td>
+								</tr>
+							</thead>
+							<tbody>
 							<?php
 							while($row = $modx->db->getRow($rs)) {
 								if($row['id'] == 1) {
@@ -48,6 +55,7 @@ if(!$modx->hasPermission('edit_user')) {
 								}
 							}
 							?>
+							</tbody>
 						</table>
 					</div>
 				</div>
