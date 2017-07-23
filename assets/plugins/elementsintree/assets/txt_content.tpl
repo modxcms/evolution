@@ -286,22 +286,22 @@
         }
         
         // Issue #20 - Keep HTTP_REFERER
-        function reloadElementsInTree() {
-            // http://stackoverflow.com/a/7917528/2354531 
-            var url = "index.php?a=1&f=tree";
-            var a = document.createElement("a");
-            if (a.click)
-            {
-                // HTML5 browsers and IE support click() on <a>, early FF does not.
-                a.setAttribute("href", url);
-                a.style.display = "none";
-                document.body.appendChild(a);
-                a.click();
-            } else {
-                // Early FF can, however, use this usual method where IE cannot with secure links.
-                window.location = url;
-            }
-        }
+//        function reloadElementsInTree() {
+//            // http://stackoverflow.com/a/7917528/2354531
+//            var url = "index.php?a=1&f=tree";
+//            var a = document.createElement("a");
+//            if (a.click)
+//            {
+//                // HTML5 browsers and IE support click() on <a>, early FF does not.
+//                a.setAttribute("href", url);
+//                a.style.display = "none";
+//                document.body.appendChild(a);
+//                a.click();
+//            } else {
+//                // Early FF can, however, use this usual method where IE cannot with secure links.
+//                window.location = url;
+//            }
+//        }
         
         /////////////////////////////////////////////////////////////
         // Prepare "remember scroll-position" functions
