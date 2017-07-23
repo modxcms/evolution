@@ -221,6 +221,7 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 /* ManagerManager */
 .sectionHeader.minimizable { position: relative; z-index: 1; background-color: #fafafa; padding: 0.5rem; border: 1px solid rgba(0, 0, 0, 0.15); }
 .dark .sectionHeader.minimizable { background-color: #f2f2f2 }
+form#mutate .imageField { min-width: 100% !important; width: 100% !important }
 /* gridster */
 .gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 7px; bottom: 0 }
 .widget-controls .btn-group .btn { width: 28px }
@@ -242,15 +243,5 @@ div.CodeMirror-cursors { pointer-events: none; }
 #SimpleGallery .pagination { display: block }
 #SimpleGallery .sg_image { width: auto }
 /* multiTV */
-.multitv .list li.element a.copy, .multitv .list li.element a.remove {
-width: 25px !important;
-text-align: center;
-background: #fff !important;
-top: -10px !important;
-}
-.multitv .list li.element {
-border-radius: .25rem;
-border: 1px solid rgba(0, 0, 0, .125);
-background: #fefefe !important;
-margin-bottom: 10px !important;
-}
+.multitv .list li.element a.copy, .multitv .list li.element a.remove { width: 25px !important; text-align: center; background: #fff !important; top: -10px !important; }
+.multitv .list li.element { border-radius: .25rem; border: 1px solid rgba(0, 0, 0, .125); background: #fefefe !important; margin-bottom: 10px !important; }

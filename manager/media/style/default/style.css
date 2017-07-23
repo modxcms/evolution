@@ -104,7 +104,7 @@ form#mutate input[name="ta"].inputBox { padding-left: 30px }
 form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { position: relative; float: right; margin: -2.385em 0px 0 0; z-index: 5; border-radius: 0 .1rem .1rem 0 !important; }
 form#mutate input[name="ta"].inputBox:focus + input[type=button], form#mutate input[name="ta"].inputBox:focus + .CodeMirror + input[type=button] { border-color: #1377c5 #1377c5 #1377c5 #bbb; }
 form#mutate input[name^=tv] { display: block }
-form#mutate input[name^=tv].DatePicker, form#mutate input[name*=date].DatePicker { float: left; width: auto; padding-right: 2em }
+form#mutate input[name^=tv].DatePicker, form#mutate input[name*=date].DatePicker, form#mutate input[name=createdon].DatePicker, form#mutate input[name=editedon].DatePicker { float: left; width: auto; padding-right: 2em }
 form#mutate input[name^=tv].DatePicker + a, form#mutate input[name*=date].DatePicker + a { position: relative; z-index: 5; margin-top: 0.5em; margin-left: -1.5em; float: left; }
 form#mutate textarea.tv_textareamini { height: 100px; width: 300px; overflow-y: scroll; }
 form#mutate textarea.tv_textarea { height: 100px; width: 100%; overflow-y: scroll; }
@@ -268,22 +268,6 @@ ul.elements_buttonbar { list-style: none; margin: 0; padding: 0; display: table;
 ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2em; }
 ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width: 22px; }
 ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
-/* Manage elements views-form */
-/*.switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
-.switchForm h3.optionsTitle { color: #1377c5; padding-left: 7px; font-size: 16px; }
-.switchForm label { color: #1377c5; font-weight: 700; }
-.switchForm input.columns { width: 3em; color: #444; font-weight: normal; }
-.switchForm input.fontsize { width: 4em; color: #444; font-weight: normal; }
-.switchForm .cb_all { float: left; }
-.switchForm .btn_reset { float: right; }
-.switchForm .optionsLeft { float: left; padding: 4px 8px 4px 4px; }
-.switchForm .optionsFull { display: block; clear: both; padding: 4px 8px 4px 4px; }
-.switchForm .optionsRadios { padding-top: 6px; }
-.switchForm .optionsChecks { padding-top: 10px; }
-.switchForm .optionsFontsSize { margin-left: 9px; padding-left: 8px; border-left: 1px solid #ededed; }
-.switchForm .optionsReset { margin-left: 8px; border-left: 1px solid #ededed; padding-left: 8px; }
-.switchForm .optionsAllTabs { clear: left; padding-top: 10px; }
-.switchForm .optionsClear { display: block; clear: both; padding-top: 8px; margin-bottom: 4px; border-bottom: 1px solid #ededed; }*/
 /* Checkbox "Icons" */
 .noicons.tab-page ul li ul li a:before, .noicons .elements_description a:before { display: none !important; }
 /* View-dependent styles */
@@ -347,14 +331,6 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #modxonline_widget td strong:before { font-family: "FontAwesome"; font-style: normal; font-weight: normal; color: #3d5764; padding: 0 5px 0 0; content: '\f2be'; }
 #modxonline_widget td strong.userMultipleSessions:before { color: #bf4949; content: '\f2bd'; }
 #modxonline_widget tr.userIdle td strong.userMultipleSessions:before { color: #bf4949; content: '\f017'; }
-/* c-roleslist */
-.c-roleslist { margin-bottom: 10px; margin-left: 12px; }
-.c-roleslist-name { display: block; font-size: 13px; font-weight: 500; }
-.c-roleslist-hyphen { display: none; }
-.c-roleslist-description { color: #666; }
-.c-roleslist-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #ddd; }
-.c-roleslist-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom-width: 0; }
-.c-roleslist-item--admin { font-style: italic; }
 /*responsive buttons*/
 .filterButtons .input-group .form-control { width: auto; }
 .filterButtons .input-group .input-group-btn { float: left; }
