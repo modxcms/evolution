@@ -593,7 +593,7 @@
 				d.getElementById('main').style.left = modx.pxToRem(a) + 'rem'
 			},
 			setDefaultWidth: function() {
-				modx.resizer.setWidth(modx.config.tree_width)
+				modx.resizer.setWidth(modx.remToPx(modx.config.tree_width))
 			}
 		},
 		tree: {
@@ -1283,7 +1283,7 @@
 					}
 					loadPositions();
 					for(var i = 0; i < tabIds.length; i++) {
-						initQuicksearch(tabIds[i]+'_search', tabIds[i]);
+						initQuicksearch(tabIds[i] + '_search', tabIds[i]);
 					}
 					var at = d.querySelectorAll('#tree .accordion-toggle');
 					for(var i = 0; i < at.length; i++) {
@@ -1477,6 +1477,9 @@
 		},
 		pxToRem: function(a) {
 			return a / parseInt(w.getComputedStyle(d.documentElement).fontSize)
+		},
+		remToPx: function(a) {
+			return a * parseInt(w.getComputedStyle(d.documentElement).fontSize)
 		}
 	});
 	w.mainMenu = {};
@@ -1507,6 +1510,12 @@
 	};
 	w.mainMenu.startmsgcount = function(a, b, c) {
 		modx.updateMail(c)
+	};
+	w.mainMenu.hideTreeFrame = function() {
+		modx.resizer.setWidth(0)
+	};
+	w.mainMenu.defaultTreeFrame = function() {
+		modx.resizer.setDefaultWidth()
 	};
 	w.tree = {};
 	w.tree.ca = 'open';
