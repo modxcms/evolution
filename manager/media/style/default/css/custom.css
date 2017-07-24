@@ -56,7 +56,7 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .section-editor textarea { float: left; border-left: none; border-right: none; font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace; font-weight: 300; font-size: 0.875rem; }
 /* [ Action Buttons ] */
 /* new style */
-#actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 100; border-radius: 0 0 0.3rem 0.3rem; }
+#actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 1001; border-radius: 0 0 0.3rem 0.3rem; }
 #actions .btn-group > .btn-group { display: block }
 #actions .btn-group .btn, #_actions .btn-group .btn, #_actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em }
 #actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
