@@ -228,6 +228,7 @@ form#mutate .imageField { min-width: 100% !important; width: 100% !important }
 .widget-controls .btn-group .btn { width: 28px }
 /* MCE */
 .mce-container, .mce-container-body { box-sizing: border-box !important }
+.mce-container button { border: none; border-radius: 0; background-color: transparent; }
 #editorRow_TinyMCE { background-color: #fff; }
 #editorRow_TinyMCE tr { border: 1px dotted rgba(0, 0, 0, .05); }
 #editorRow_TinyMCE th { white-space: nowrap }
