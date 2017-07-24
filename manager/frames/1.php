@@ -120,6 +120,7 @@ if($user['which_browser'] == 'default') {
 			},
 			lang: {
 				already_deleted: "<?= $_lang['already_deleted'] ?>",
+				cm_unknown_error: "<?= $_lang['cm_unknown_error'] ?>",
 				collapse_tree: "<?= $_lang['collapse_tree'] ?>",
 				confirm_delete_resource: "<?= $_lang['confirm_delete_resource'] ?>",
 				confirm_empty_trash: "<?= $_lang['confirm_empty_trash'] ?>",

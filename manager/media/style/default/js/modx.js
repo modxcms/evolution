@@ -271,6 +271,11 @@
 			onbeforeonload: function() {
 			},
 			onload: function() {
+				w.onerror = function() {
+					if(confirm(modx.lang.cm_unknown_error) === true) {
+						d.getElementById('mainloader').classList.remove('show')
+					}
+				};
 				this.tabRow.init();
 				this.stopWork();
 				this.scrollWork();
