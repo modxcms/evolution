@@ -1,7 +1,13 @@
 <?php
 
+error_reporting(0);
 $url = "http://modx-store.com/get.php?get=file&cid=1";
 $newfname = 'update.zip';
+
+if(!preg_match('/200/', get_headers($url)[0])){
+	die('Server not response!');
+}
+
 if (ini_get('allow_url_fopen') == true) {
 	$file = fopen ($url, "rb");
 	if (! $file) {
@@ -28,9 +34,9 @@ if (ini_get('allow_url_fopen') == true) {
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 	}
 	$content = curl_exec ($ch);
-	file_put_contents($newfname,$content);				
-}		
-			
+	file_put_contents($newfname,$content);
+}
+
 $zip = new ZipArchive;
 $res = $zip->open(dirname(__FILE__).'/update.zip');
 $zip->extractTo( dirname(__FILE__) );
