@@ -103,7 +103,7 @@ form#mutate input[name="menuindex"] { text-align: center; width: 80px; padding-l
 form#mutate input[name="ta"].inputBox { padding-left: 30px }
 form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { position: relative; float: right; margin: -2.385em 0px 0 0; z-index: 5; border-radius: 0 .1rem .1rem 0 !important; }
 form#mutate input[name="ta"].inputBox:focus + input[type=button], form#mutate input[name="ta"].inputBox:focus + .CodeMirror + input[type=button] { border-color: #1377c5 #1377c5 #1377c5 #bbb; }
-form#mutate input[name^=tv] { display: block }
+form#mutate input[type=text][name^=tv], form#mutate input[type=number][name^=tv] { display: block }
 form#mutate input[name^=tv].DatePicker, form#mutate input[name*=date].DatePicker, form#mutate input[name=createdon].DatePicker, form#mutate input[name=editedon].DatePicker { float: left; width: auto; padding-right: 2em }
 form#mutate input[name^=tv].DatePicker + a, form#mutate input[name*=date].DatePicker + a { position: relative; z-index: 5; margin-top: 0.5em; margin-left: -1.5em; float: left; }
 form#mutate textarea.tv_textareamini { height: 100px; width: 300px; overflow-y: scroll; }
