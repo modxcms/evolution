@@ -6,10 +6,6 @@ define('MODX_BASE_PATH',realpath('../../../../').'/');
 include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
 
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
-}
 $moduleurl = 'assets/modules/store/installer/index.php';
 $modulePath = dirname(__FILE__);
 $self = $modulePath.'/index.php';

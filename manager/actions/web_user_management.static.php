@@ -39,7 +39,7 @@ echo $cm->render();
 	};
 
 	function resetSearch() {
-		document.resource.search.value = ''
+		document.resource.search.value = '';
 		document.resource.op.value = "reset";
 		document.resource.submit();
 	};
@@ -52,7 +52,8 @@ echo $cm->render();
 	};
 
 	var selectedItem;
-	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
+	var contextm = <?= $cm->getClientScriptObject() ?>;
+
 	function showContentMenu(id, e) {
 		selectedItem = id;
 		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft))) + "px";
@@ -69,7 +70,7 @@ echo $cm->render();
 				window.location.href = 'index.php?a=88&id=' + id;
 				break;
 			case 2:		// delete
-				if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
+				if(confirm("<?= $_lang['confirm_delete_user'] ?>") === true) {
 					window.location.href = 'index.php?a=90&id=' + id;
 				}
 				break;
@@ -79,54 +80,70 @@ echo $cm->render();
 	document.addEvent('click', function() {
 		contextm.style.visibility = "hidden";
 	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var h1help = document.querySelector('h1 > .help');
+		h1help.onclick = function() {
+			document.querySelector('.element-edit-message').classList.toggle('show')
+		}
+	});
+
 </script>
 <form name="resource" method="post">
-	<input type="hidden" name="id" value="<?php echo $id; ?>" />
-	<input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
+	<input type="hidden" name="id" value="<?= $id ?>" />
+	<input type="hidden" name="listmode" value="<?= $listmode ?>" />
 	<input type="hidden" name="op" value="" />
 
 	<h1>
-		<i class="fa fa-users"></i><?php echo $_lang['web_user_management_title']; ?>
+		<i class="fa fa-users"></i><?= $_lang['web_user_management_title'] ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<div class="section">
-		<div class="sectionBody">
-			<p class="element-edit-message"><?php echo $_lang['web_user_management_msg']; ?></p>
+	<div class="container element-edit-message">
+		<div class="alert alert-info"><?= $_lang['web_user_management_msg'] ?></div>
+	</div>
+
+	<div class="tab-page">
+		<div class="container container-body">
 			<div class="searchbar form-group">
-				<a class="btn btn-secondary" href="index.php?a=87"><i class="<?php echo $_style["actions_new"] ?> hide4desktop"></i> <span><?php echo $_lang['new_web_user']; ?></span></a>
-				<div class="float-xs-right">
-					<input class="form-control" name="search" type="text" size="50" value="<?php echo $query; ?>" placeholder="<?php echo $_lang["search"] ?>" />
-					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["search"]; ?>" onclick="searchResource();return false;"><?php echo $_lang['go']; ?></a>
-					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["reset"]; ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
-					<a class="btn btn-secondary" href="javascript:;" title="<?php echo $_lang["list_mode"]; ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+				<div class="input-group">
+					<div class="input-group-btn">
+						<a class="btn btn-success btn-sm" href="index.php?a=87"><i class="<?= $_style["actions_new"] ?> hide4desktop"></i> <?= $_lang['new_web_user'] ?></a>
+					</div>
+					<input class="form-control form-control-sm float-xs-right" name="search" type="text" size="50" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
+					<div class="input-group-btn">
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><?= $_lang['go'] ?></a>
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+					</div>
 				</div>
 			</div>
-			<div class="table-responsive">
-				<?php
-
-				$ds = $modx->db->select("wu.id, wu.username, wua.fullname, wua.email, ELT(wua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 
+			<div class="row">
+				<div class="table-responsive">
+					<?php
+					$ds = $modx->db->select("wu.id, wu.username, wua.fullname, wua.email, ELT(wua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(wua.blocked,'{$_lang['yes']}','-') as 'blocked'", $modx->getFullTableName("web_users") . " wu 
 			INNER JOIN " . $modx->getFullTableName("web_user_attributes") . " wua ON wua.internalKey=wu.id", ($sqlQuery ? "(wu.username LIKE '{$sqlQuery}%') OR (wua.fullname LIKE '%{$sqlQuery}%') OR (wua.email LIKE '%{$sqlQuery}%')" : ""), 'username');
-				include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-				$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
-				$grd->noRecordMsg = $_lang["no_records_found"];
-				$grd->cssClass = "grid";
-				$grd->columnHeaderClass = "gridHeader";
-				$grd->itemClass = "gridItem";
-				$grd->altItemClass = "gridAltItem";
-				$grd->fields = "id,username,fullname,email,gender,blocked";
-				$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["user_full_name"] . " ," . $_lang["email"] . " ," . $_lang["user_gender"] . " ," . $_lang["user_block"];
-				$grd->colWidths = "34,,,,40,34";
-				$grd->colAligns = "center,,,,center,center";
-				$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='" . $_style["icons_user"] . "'></i></a>||template:<a href='index.php?a=88&id=[+id+]' title='" . $_lang["click_to_edit_title"] . "'>[+value+]</a>";
-				if($listmode == '1') {
-					$grd->pageSize = 0;
-				}
-				if($_REQUEST['op'] == 'reset') {
-					$grd->pageNumber = 1;
-				}
-				// render grid
-				echo $grd->render();
-				?>
+					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+					$grd->noRecordMsg = $_lang["no_records_found"];
+					$grd->cssClass = "table data";
+					$grd->columnHeaderClass = "tableHeader";
+					$grd->itemClass = "tableItem";
+					$grd->altItemClass = "tableAltItem";
+					$grd->fields = "id,username,fullname,email,gender,blocked";
+					$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["user_full_name"] . " ," . $_lang["email"] . " ," . $_lang["user_gender"] . " ," . $_lang["user_block"];
+					$grd->colWidths = "1%,,,,1%,1%";
+					$grd->colAligns = "center,,,,center,right' nowrap='nowrap";
+					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='" . $_style["icons_user"] . "'></i></a>||template:<a href='index.php?a=88&id=[+id+]' title='" . $_lang["click_to_edit_title"] . "'>[+value+]</a>";
+					if($listmode == '1') {
+						$grd->pageSize = 0;
+					}
+					if($_REQUEST['op'] == 'reset') {
+						$grd->pageNumber = 1;
+					}
+					// render grid
+					echo $grd->render();
+					?>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -4,7 +4,7 @@
 <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage8" ) );</script>
 <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['rb_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['rb_title']?><br><small>[(use_browser)]</small></td>
     <td>
         <?php echo wrap_label($_lang['yes'],form_radio('use_browser', 1, 'id="rbRowOn"'));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('use_browser', 0, 'id="rbRowOff"'));?>
@@ -19,7 +19,7 @@
   </tr>
   
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['which_browser_default_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['which_browser_default_title']?><br><small>[(which_browser)]</small></td>
     <td>
         <select name="which_browser" size="1" class="inputBox" onchange="documentDirty=true;">
             <?php
@@ -41,7 +41,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['rb_webuser_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['rb_webuser_title']?><br><small>[(rb_webuser)]</small></td>
     <td>
       <label><input type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
       <?php echo $_lang['yes']?></label><br />
@@ -57,7 +57,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['rb_base_dir_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['rb_base_dir_title']?><br><small>[(rb_base_dir)]</small></td>
     <td>
         <?php echo $_lang['default']; ?> <span id="default_rb_base_dir">[(base_path)]assets/</span><br />
         <input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo $rb_base_dir; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang['reset']; ?>" name="reset_rb_base_dir">
@@ -71,7 +71,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['rb_base_url_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['rb_base_url_title']?><br><small>[(rb_base_url)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="rb_base_url" value="<?php echo $rb_base_url; ?>" />
       </td>
@@ -84,7 +84,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-      <td nowrap class="warning"><?php echo $_lang['clean_uploaded_filename']?></td>
+      <td nowrap class="warning"><?php echo $_lang['clean_uploaded_filename']?><br><small>[(clean_uploaded_filename)]</small></td>
       <td>
         <label><input type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
         <?php echo $_lang['yes']?></label><br />
@@ -100,7 +100,7 @@
   <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['settings_strip_image_paths_title']?></td>
+    <td nowrap class="warning"><?php echo $_lang['settings_strip_image_paths_title']?><br><small>[(strip_image_paths)]</small></td>
     <td>
       <label><input type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
       <?php echo $_lang['yes']?></label><br />
@@ -116,7 +116,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['maxImageWidth']?></td>
+    <td nowrap class="warning"><?php echo $_lang['maxImageWidth']?><br><small>[(maxImageWidth)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="4" style="width: 50px;" name="maxImageWidth" value="<?php echo $maxImageWidth; ?>" />
     </td>
@@ -129,7 +129,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['maxImageHeight']?></td>
+    <td nowrap class="warning"><?php echo $_lang['maxImageHeight']?><br><small>[(maxImageHeight)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="4" style="width: 50px;" name="maxImageHeight" value="<?php echo $maxImageHeight; ?>" />
     </td>
@@ -142,7 +142,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['thumbWidth']?></td>
+    <td nowrap class="warning"><?php echo $_lang['thumbWidth']?><br><small>[(thumbWidth)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="4" style="width: 50px;" name="thumbWidth" value="<?php echo $thumbWidth; ?>" />
     </td>
@@ -155,7 +155,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['thumbHeight']?></td>
+    <td nowrap class="warning"><?php echo $_lang['thumbHeight']?><br><small>[(thumbHeight)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="4" style="width: 50px;" name="thumbHeight" value="<?php echo $thumbHeight; ?>" />
     </td>
@@ -168,7 +168,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['thumbsDir']?></td>
+    <td nowrap class="warning"><?php echo $_lang['thumbsDir']?><br><small>[(thumbsDir)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="thumbsDir" value="<?php echo $thumbsDir; ?>" />
     </td>
@@ -181,7 +181,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['jpegQuality']?></td>
+    <td nowrap class="warning"><?php echo $_lang['jpegQuality']?><br><small>[(jpegQuality)]</small></td>
     <td>
       <input onchange="documentDirty=true;" type="text" maxlength="4" style="width: 50px;" name="jpegQuality" value="<?php echo $jpegQuality; ?>" />
     </td>
@@ -194,7 +194,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-       <td nowrap class="warning"><?php echo $_lang['denyZipDownload'] ?></td>
+       <td nowrap class="warning"><?php echo $_lang['denyZipDownload'] ?><br><small>[(denyZipDownload)]</small></td>
         <td>
           <label><input type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
           <?php echo $_lang['no']?></label><br />
@@ -206,7 +206,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-        <td nowrap class="warning"><?php echo $_lang['denyExtensionRename'] ?></td>
+        <td nowrap class="warning"><?php echo $_lang['denyExtensionRename'] ?><br><small>[(denyExtensionRename)]</small></td>
         <td>
            <label><input type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
            <?php echo $_lang['no']?></label><br />
@@ -218,7 +218,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="rbRow" <?php echo showHide($use_browser==1);?>>
-       <td nowrap class="warning"><?php echo $_lang['showHiddenFiles'] ?></td>
+       <td nowrap class="warning"><?php echo $_lang['showHiddenFiles'] ?><br><small>[(showHiddenFiles)]</small></td>
        <td>
          <label><input type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
          <?php echo $_lang['no']?></label><br />

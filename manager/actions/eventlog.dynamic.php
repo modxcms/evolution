@@ -110,44 +110,50 @@ echo $cm->render();
 		<!-- load modules -->
 		<div class="container container-body">
 			<div class="searchbar form-group">
-				<a class="btn btn-secondary" href="index.php?a=116&cls=1"><i class="<?= $_style["actions_delete"] ?>"></i> <span><?= $_lang['clear_log'] ?></span></a>
-				<div class="float-xs-right">
-					<input class="form-control" name="search" type="text" size="50" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
-					<a class="btn btn-secondary" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><?= $_lang['go'] ?></a>
-					<a class="btn btn-secondary" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
-					<a class="btn btn-secondary" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+				<div class="input-group">
+					<div class="input-group-btn">
+						<a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="<?= $_style["actions_delete"] ?>"></i> <?= $_lang['clear_log'] ?></a>
+					</div>
+					<input class="form-control form-control-sm float-xs-right" name="search" type="text" size="50" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
+					<div class="input-group-btn">
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><?= $_lang['go'] ?></a>
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
+						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="table-responsive">
-			<?php
-			$ds = $modx->db->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
+			<div class="row">
+				<div class="table-responsive">
+					<?php
+					$ds = $modx->db->select("el.id, ELT(el.type , 'text-info {$_style['actions_info']}' , 'text-warning {$_style['actions_triangle']}' , 'text-danger {$_style['actions_error']}' ) as icon, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as username", "{$tbl_event_log} AS el 
 			LEFT JOIN {$tbl_manager_users} AS mu ON mu.id=el.user AND el.usertype=0
 			LEFT JOIN {$tbl_web_users} AS wu ON wu.id=el.user AND el.usertype=1", ($sqlQuery ? "" . (is_numeric($sqlQuery) ? "(eventid='{$sqlQuery}') OR " : '') . "(source LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "createdon DESC");
-			include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-			$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
-			$grd->pagerClass = '';
-			$grd->pageClass = 'page-item';
-			$grd->selPageClass = 'page-item active';
-			$grd->noRecordMsg = $_lang['no_records_found'];
-			$grd->cssClass = "table data";
-			$grd->columnHeaderClass = "tableHeader";
-			$grd->itemClass = "tableItem";
-			$grd->altItemClass = "tableAltItem";
-			$grd->fields = "type,source,createdon,eventid,username";
-			$grd->columns = $_lang['type'] . " ," . $_lang['source'] . " ," . $_lang['date'] . " ," . $_lang['event_id'] . " ," . $_lang['sysinfo_userid'];
-			$grd->colWidths = "1%,,150,1%,1%";
-			$grd->colAligns = "center,,,center,center";
-			$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang['click_to_context'] . "'><i class='[+icon+]'></i></a>||template:<a href='index.php?a=115&id=[+id+]' title='" . $_lang['click_to_view_details'] . "'>[+source+]</a>||date: " . $modx->toDateFormat(null, 'formatOnly') . ' %I:%M %p';
-			if($listmode == '1') {
-				$grd->pageSize = 0;
-			}
-			if($_REQUEST['op'] == 'reset') {
-				$grd->pageNumber = 1;
-			}
-			// render grid
-			echo $grd->render();
-			?>
+					include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+					$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+					$grd->pagerClass = '';
+					$grd->pageClass = 'page-item';
+					$grd->selPageClass = 'page-item active';
+					$grd->noRecordMsg = $_lang['no_records_found'];
+					$grd->cssClass = "table data";
+					$grd->columnHeaderClass = "tableHeader";
+					$grd->itemClass = "tableItem";
+					$grd->altItemClass = "tableAltItem";
+					$grd->fields = "type,source,createdon,eventid,username";
+					$grd->columns = $_lang['type'] . " ," . $_lang['source'] . " ," . $_lang['date'] . " ," . $_lang['event_id'] . " ," . $_lang['sysinfo_userid'];
+					$grd->colWidths = "1%,,150,1%,1%";
+					$grd->colAligns = "center,,,center,center";
+					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang['click_to_context'] . "'><i class='[+icon+]'></i></a>||template:<a href='index.php?a=115&id=[+id+]' title='" . $_lang['click_to_view_details'] . "'>[+source+]</a>||date: " . $modx->toDateFormat(null, 'formatOnly') . ' %I:%M %p';
+					if($listmode == '1') {
+						$grd->pageSize = 0;
+					}
+					if($_REQUEST['op'] == 'reset') {
+						$grd->pageNumber = 1;
+					}
+					// render grid
+					echo $grd->render();
+					?>
+				</div>
+			</div>
 		</div>
 	</div>
 </form>

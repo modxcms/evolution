@@ -13,8 +13,6 @@
   */
 
 require "core/autoload.php";
-if (function_exists('set_magic_quotes_runtime'))
-    @set_magic_quotes_runtime(false);
 $input = new input();
 if (!isset($input->get['lng']) || ($input->get['lng'] == 'en')) {
     header("Content-Type: text/javascript");

@@ -31,7 +31,14 @@
 				var $mm = $('#mainMenu'), timer;
 				$mm.on('click', 'a', function(e) {
 					if($(this).hasClass('dropdown-toggle')) {
-						$mm.addClass('show');
+						if($mm.hasClass('show') && ($(this).hasClass('selected') || (!modx.isMobile && $(this).parent().hasClass('hover')))) {
+							$(this).removeClass('selected');
+							$mm.removeClass('show')
+						} else {
+							$('.nav > li > a:not(:hover)').removeClass('selected');
+							$(this).addClass('selected');
+							$mm.addClass('show')
+						}
 						e.target.dataset.toggle = '#mainMenu'
 					}
 					if($(this).closest('ul').hasClass('dropdown-menu')) {
@@ -264,12 +271,18 @@
 			onbeforeonload: function() {
 			},
 			onload: function() {
+				w.onerror = function() {
+					if(confirm(modx.lang.cm_unknown_error) === true) {
+						d.getElementById('mainloader').classList.remove('show')
+					}
+				};
 				this.tabRow.init();
 				this.stopWork();
 				this.scrollWork();
 				w.main.onclick = modx.hideDropDown;
 				w.main.oncontextmenu = this.oncontextmenu;
-				w.location.hash = w.main.frameElement.contentWindow.location.search;
+				w.history.replaceState(null, null, '#' + w.main.frameElement.contentWindow.location.search)
+				//w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
 			oncontextmenu: function(e) {
 				if(e.ctrlKey) return;
@@ -584,7 +597,7 @@
 				d.getElementById('main').style.left = modx.pxToRem(a) + 'rem'
 			},
 			setDefaultWidth: function() {
-				modx.resizer.setWidth(modx.config.tree_width)
+				modx.resizer.setWidth(modx.remToPx(modx.config.tree_width))
 			}
 		},
 		tree: {
@@ -600,14 +613,16 @@
 				this.restoreTree()
 			},
 			draggable: function() {
-				var els = d.querySelectorAll('#treeRoot a:not(.empty)');
-				for(var i = 0; i < els.length; i++) {
-					els[i].onmousedown = this.onmousedown;
-					els[i].ondragstart = this.ondragstart;
-					els[i].ondragenter = this.ondragenter;
-					els[i].ondragover = this.ondragover;
-					els[i].ondragleave = this.ondragleave;
-					els[i].ondrop = this.ondrop;
+				if(modx.permission.dragndropdocintree) {
+					var els = d.querySelectorAll('#treeRoot a:not(.empty)');
+					for(var i = 0; i < els.length; i++) {
+						els[i].onmousedown = this.onmousedown;
+						els[i].ondragstart = this.ondragstart;
+						els[i].ondragenter = this.ondragenter;
+						els[i].ondragover = this.ondragover;
+						els[i].ondragleave = this.ondragleave;
+						els[i].ondrop = this.ondrop;
+					}
 				}
 			},
 			onmousedown: function(e) {
@@ -615,10 +630,19 @@
 					this.parentNode.removeAttribute('draggable');
 					return;
 				} else {
-					this.parentNode.draggable = true
+					var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
+					var draggable = (roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true);
+					if(draggable) {
+						this.parentNode.draggable = true;
+						modx.tree.itemToChange = this.parentNode.id;
+						this.parentNode.ondragstart = modx.tree.ondragstart
+					} else {
+						this.parentNode.draggable = false;
+						this.parentNode.ondragstart = function() {
+							return false
+						}
+					}
 				}
-				modx.tree.itemToChange = this.parentNode.id;
-				this.parentNode.ondragstart = modx.tree.ondragstart
 			},
 			ondragstart: function(e) {
 				e.dataTransfer.effectAllowed = "all";
@@ -684,7 +708,6 @@
 					id = modx.tree.itemToChange.substr(4),
 					parent = 0,
 					menuindex = [],
-					index = 0,
 					level = 0,
 					indent = el.firstChild.querySelector('.indent'),
 					i = 0;
@@ -731,14 +754,21 @@
 				e.preventDefault();
 			},
 			ondragupdate: function(a, id, parent, menuindex) {
+				var roles = a.dataset.roles + (a.parentNode.parentNode.id !== 'treeRoot' ? a.parentNode.parentNode.previousSibling.dataset.roles : '');
+				if(!(roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true)) {
+					alert(modx.lang.error_no_privileges);
+					modx.tree.restoreTree();
+					return;
+				}
 				modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 					a: 'movedocument',
 					id: id,
 					parent: parent,
 					menuindex: menuindex
-				}, function() {
-					modx.tree.restoreTree()
-				});
+				}, function(r) {
+					if(r.errors) alert(r.errors);
+					modx.tree.restoreTree();
+				}, 'json');
 				var b = w.main.frameElement.contentWindow.location.search.substr(1);
 				if(parseInt(modx.main.getQueryVariable('a', b)) === 27 && parseInt(modx.main.getQueryVariable('id', b)) === parseInt(id)) {
 					var index = menuindex.indexOf(id),
@@ -1130,7 +1160,7 @@
 				}
 			},
 			restoreTree: function() {
-				console.log('modx.tree.restoreTree()');
+				//console.log('modx.tree.restoreTree()');
 				d.getElementById('treeloader').classList.add('visible');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
@@ -1257,7 +1287,7 @@
 					}
 					loadPositions();
 					for(var i = 0; i < tabIds.length; i++) {
-						initQuicksearch(tabIds[i]+'_search', tabIds[i]);
+						initQuicksearch(tabIds[i] + '_search', tabIds[i]);
 					}
 					var at = d.querySelectorAll('#tree .accordion-toggle');
 					for(var i = 0; i < at.length; i++) {
@@ -1421,10 +1451,11 @@
 			};
 			x.send()
 		},
-		post: function(a, b, c) {
+		post: function(a, b, c, t) {
 			var x = this.XHR(),
 				f = '';
 			if(typeof b === 'function') {
+				t = c;
 				c = b;
 			} else if(typeof b === 'object') {
 				var e = [],
@@ -1440,6 +1471,7 @@
 			x.open('POST', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			x.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+			if(t) x.responseType = t;
 			x.onload = function() {
 				if(this.readyState === 4 && c !== u) {
 					return c(this.response)
@@ -1449,6 +1481,9 @@
 		},
 		pxToRem: function(a) {
 			return a / parseInt(w.getComputedStyle(d.documentElement).fontSize)
+		},
+		remToPx: function(a) {
+			return a * parseInt(w.getComputedStyle(d.documentElement).fontSize)
 		}
 	});
 	w.mainMenu = {};
@@ -1463,7 +1498,7 @@
 		setTimeout('modx.tree.restoreTree()', 50)
 	};
 	w.mainMenu.startrefresh = function(a) {
-		console.log('mainMenu.startrefresh(' + a + ')');
+		//console.log('mainMenu.startrefresh(' + a + ')');
 		if(a === 1) {
 			modx.tree.restoreTree()
 		}
@@ -1479,6 +1514,12 @@
 	};
 	w.mainMenu.startmsgcount = function(a, b, c) {
 		modx.updateMail(c)
+	};
+	w.mainMenu.hideTreeFrame = function() {
+		modx.resizer.setWidth(0)
+	};
+	w.mainMenu.defaultTreeFrame = function() {
+		modx.resizer.setDefaultWidth()
 	};
 	w.tree = {};
 	w.tree.ca = 'open';
@@ -1498,7 +1539,7 @@
 		modx.tree.reloadElementsInTree()
 	};
 	w.tree.resizeTree = function() {
-		console.log('tree.resizeTree() off')
+		//console.log('tree.resizeTree() off')
 	};
 	w.onbeforeunload = function() {
 		var a = w.main.frameElement.contentWindow;

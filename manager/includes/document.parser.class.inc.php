@@ -714,14 +714,6 @@ class DocumentParser {
 
         $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
         
-        // remove all unused placeholders
-        if (strpos($this->documentOutput, '[+')!==false) {
-            $matches= array ();
-            preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
-            if ($matches[0])
-                $this->documentOutput= str_replace($matches[0], '', $this->documentOutput);
-        }
-
         $this->documentOutput= $this->rewriteUrls($this->documentOutput);
 
         // send out content-type and content-disposition headers
@@ -2060,7 +2052,7 @@ class DocumentParser {
             $source = $this->mergeSettingsContent($source);
             $source = $this->mergeDocumentContent($source);
             $source = $this->mergeChunkContent($source);
-            $source = $this->mergeDocumentMETATags($source);
+            if ($this->config['show_meta']) $source = $this->mergeDocumentMETATags($source); //TODO: Remove in next major release
             $source = $this->evalSnippets($source);
             $source = $this->mergePlaceholderContent($source);
             
@@ -4169,16 +4161,16 @@ class DocumentParser {
 
         if(!empty($context)){
             if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
-                $out = $this->stripslashes($_SESSION[$context . 'Shortname']);
+                $out = $_SESSION[$context . 'Shortname'];
             }
         }else{
             switch(true){
                 case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
-                    $out = $this->stripslashes($_SESSION['webShortname']);
+                    $out = $_SESSION['webShortname'];
                     break;
                 }
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
-                    $out = $this->stripslashes($_SESSION['mgrShortname']);
+                    $out = $_SESSION['mgrShortname'];
                     break;
                 }
             }
@@ -4541,7 +4533,6 @@ class DocumentParser {
         $results= array ();
         foreach($this->pluginEvent[$evtName] as $pluginName) { // start for loop
             if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
-            $pluginName = $this->stripslashes($pluginName);
             // reset event object
             $e= & $this->event;
             $e->_resetEventObject();
@@ -4747,7 +4738,7 @@ class DocumentParser {
                 $description_found = $r['description_found'];
                 $docblock_end_found = $r['docblock_end_found'];
                 $param = $r['param'];
-                $val = $this->stripslashes($r['val']);
+                $val = $r['val'];
                 if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
                 if(!empty($param)) {
@@ -4927,17 +4918,6 @@ class DocumentParser {
         }
         $this->config['enable_filter'] = $enable_filter;
         return $content;
-    }
-    
-    // Required in PHP 5.3 or earlier environment. However, since PHP 5.3 has already finished support on August 14, 2014, Evolution does not intend to support the stripslashes function for long time.
-    // http://php.net/manual/en/function.get-magic-quotes-gpc.php
-    function stripslashes($str='') {
-        
-        if(!get_magic_quotes_gpc()) return $str;
-        
-        $str = stripslashes($str);
-        modx_sanitize_gpc($str);
-        return $str;
     }
     
     function strip_tags($str='', $allowable_tags='') {

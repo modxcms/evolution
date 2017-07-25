@@ -16,18 +16,16 @@ $num_rows_unpub = $modx->db->getAffectedRows();
 
 ?>
 
-<h1><?php echo $_lang['refresh_title']; ?></h1>
+<h1><?= $_lang['refresh_title'] ?></h1>
 
-<div class="section">
-	<div class="sectionBody">
+<div class="tab-page">
+	<div class="container container-body">
 		<?php printf("<p>" . $_lang["refresh_published"] . "</p>", $num_rows_pub) ?>
 		<?php printf("<p>" . $_lang["refresh_unpublished"] . "</p>", $num_rows_unpub) ?>
 		<?php
 		$modx->clearCache('full', true);
-
 		// invoke OnSiteRefresh event
 		$modx->invokeEvent("OnSiteRefresh");
-
 		?>
 	</div>
 </div>

@@ -132,23 +132,33 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
 	$class = '';
+	$_lang["confirm_delete"] = $_lang["delete"];
+
 	if($resourceTable == 'site_templates') {
 		$class = $row['selectable'] ? '' : 'disabledPlugin';
 		$lockElementType = 1;
+		$_lang["confirm_delete"] = $_lang["confirm_delete_template"];
 	}
 	if($resourceTable == 'site_tmplvars') {
 		$class = $row['reltpl'] ? '' : 'disabledPlugin';
 		$lockElementType = 2;
+		$_lang["confirm_delete"] = $_lang["confirm_delete_tmplvars"];
 	}
 	if($resourceTable == 'site_htmlsnippets') {
 		$lockElementType = 3;
+		$_lang["confirm_delete"] = $_lang["confirm_delete_htmlsnippet"];
 	}
 	if($resourceTable == 'site_snippets') {
 		$lockElementType = 4;
+		$_lang["confirm_delete"] = $_lang["confirm_delete_snippet"];
 	}
 	if($resourceTable == 'site_plugins') {
 		$class = $row['disabled'] ? 'disabledPlugin' : '';
 		$lockElementType = 5;
+		$_lang["confirm_delete"] = $_lang["confirm_delete_plugin"];
+	}
+	if($resourceTable == 'site_modules') {
+		$_lang["confirm_delete"] = $_lang["confirm_delete_module"];
 	}
 
 	// Prepare displaying user-locks
@@ -198,13 +208,13 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	/* row buttons */
 	$buttons = '';
 	if($modx->hasPermission($types['actions']['edit'][1])) {
-		$buttons .= '<li><a class="btn btn-xs btn-default" title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
+		$buttons .= '<li><a title="' . $_lang["edit_resource"] . '" href="index.php?a=' . $types['actions']['edit'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-edit fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['duplicate'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_duplicate_record"] . '\')" title="' . $_lang["resource_duplicate"] . '" href="index.php?a=' . $types['actions']['duplicate'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-clone fa-fw"></i></a></li>';
 	}
 	if($modx->hasPermission($types['actions']['remove'][1])) {
-		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete_template"] . '\')" class="btn btn-xs btn-default" title="' . $_lang["delete_resource"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
+		$buttons .= '<li><a onclick="return confirm(\'' . $_lang["confirm_delete"] . '\')" title="' . $_lang["delete"] . '" href="index.php?a=' . $types['actions']['remove'][0] . '&amp;id=' . $row['id'] . '"><i class="fa fa-trash fa-fw"></i></a></li>';
 	}
 	$buttons = $buttons ? '<div class="btnCell"><ul class="elements_buttonbar">' . $buttons . '</ul></div>' : '';
 
@@ -225,4 +235,3 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 		'textdir' => $modx_textdir ? '&rlm;' : '',
 	);
 }
-

@@ -117,13 +117,6 @@ if(!function_exists('iconv')) {
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
-if (version_compare(phpversion(), "5.4") < 0) {
-	@set_magic_quotes_runtime(0);
-
-	// include_once the magic_quotes_gpc workaround
-	include_once "quotes_stripper.inc.php";
-}
-
 if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
 if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
 if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);

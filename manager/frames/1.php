@@ -83,7 +83,6 @@ if($user['which_browser'] == 'default') {
 	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
 	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
 	<meta name="theme-color" content="#1d2023">
-	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
 	<link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
 	<style>
@@ -103,6 +102,7 @@ if($user['which_browser'] == 'default') {
 			MGR_DIR: "<?= MGR_DIR ?>",
 			MODX_SITE_URL: "<?= MODX_SITE_URL ?>",
 			user: {
+				role: <?= (int) $user['role'] ?>,
 				username: "<?= $user['username'] ?>"
 			},
 			config: {
@@ -120,6 +120,7 @@ if($user['which_browser'] == 'default') {
 			},
 			lang: {
 				already_deleted: "<?= $_lang['already_deleted'] ?>",
+				cm_unknown_error: "<?= $_lang['cm_unknown_error'] ?>",
 				collapse_tree: "<?= $_lang['collapse_tree'] ?>",
 				confirm_delete_resource: "<?= $_lang['confirm_delete_resource'] ?>",
 				confirm_empty_trash: "<?= $_lang['confirm_empty_trash'] ?>",
@@ -130,6 +131,7 @@ if($user['which_browser'] == 'default') {
 				confirm_unpublish: "<?= $_lang['confirm_unpublish'] ?>",
 				empty_recycle_bin: "<?= $_lang['empty_recycle_bin'] ?>",
 				empty_recycle_bin_empty: "<?= addslashes($_lang['empty_recycle_bin_empty']) ?>",
+				error_no_privileges: "<?= $_lang["error_no_privileges"] ?>",
 				expand_tree: "<?= $_lang['expand_tree'] ?>",
 				inbox: "<?= $_lang['inbox'] ?>",
 				loading_doc_tree: "<?= $_lang['loading_doc_tree'] ?>",
@@ -168,7 +170,8 @@ if($user['which_browser'] == 'default') {
 				edit_snippet: <?= $modx->hasPermission('edit_snippet') ? 1 : 0 ?>,
 				edit_template: <?= $modx->hasPermission('edit_template') ? 1 : 0 ?>,
 				new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
-				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>
+				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
+				dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
 
 			},
 			plugins: {
@@ -191,14 +194,14 @@ if($user['which_browser'] == 'default') {
 		?>
 	</script>
 	<script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $modx->config['settings_version'] ?>"></script>
-<?php
-// invoke OnManagerTopPrerender event
-$evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
-if(is_array($evtOut)) {
-	echo implode("\n", $evtOut);
-}
-?>
-    </head>
+	<?php
+	// invoke OnManagerTopPrerender event
+	$evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
+	if(is_array($evtOut)) {
+		echo implode("\n", $evtOut);
+	}
+	?>
+</head>
 <body class="<?= $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?= md5(session_id()) ?>" />
 <div id="frameset">

@@ -170,16 +170,9 @@ if($numRecords > 0) {
 				break;
 			default:
 				if($children['isfolder']) {
-					$isPrivate = ($children['privateweb'] || $children['privatemgr']) ? '1' : '0';
-					$icon = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+					$icon = $_style['tree_folder_new'];
 				} else {
-					if($children['privateweb'] || $children['privatemgr']) {
-						if(isset($icons[$children['contentType']])) {
-							$icon = $icons[$children['contentType']];
-						} else {
-							$icon = $_style['tree_page_secure'];
-						}
-					} elseif(isset($icons[$children['contentType']])) {
+					if(isset($icons[$children['contentType']])) {
 						$icon = $icons[$children['contentType']];
 					} else {
 						$icon = $_style['tree_page'];
@@ -187,15 +180,17 @@ if($numRecords > 0) {
 				}
 		}
 
+		$private = ($children['privateweb'] || $children['privatemgr'] ? ' private' : '');
+
 		// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь
 		// для сохранения сортировки
 		$class = ($children['deleted'] ? 'text-danger text-decoration-through' : (!$children['published'] ? ' font-italic text-muted' : ' publish'));
 		//$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
 		//$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
 		if($modx->hasPermission('edit_document')) {
-			$title = '<a class="doc-item" href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a>';
+			$title = '<a class="doc-item' . $private . '" href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a>';
 		} else {
-			$title = '<span class="doc-item">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
 		}
 
 		$icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["publish_resource"] . '"><i class="' . $_style["icons_publish_document"] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["unpublish_resource"] . '"><i class="' . $_style["icons_unpublish_resource"] . '" ></i></a>';

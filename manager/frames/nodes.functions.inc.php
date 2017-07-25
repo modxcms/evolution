@@ -70,7 +70,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	}
 	$docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
 	$field = "DISTINCT sc.id, pagetitle, longtitle, menutitle, parent, isfolder, published, pub_date, unpub_date, richtext, searchable, cacheable, deleted, type, template, templatename, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
-        MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess";
+        MAX(IF(1={$mgrRole} OR sc.privatemgr=0 {$docgrp_cond}, 1, 0)) AS hasAccess, GROUP_CONCAT(document_group SEPARATOR ',') AS roles";
 	$from = "{$tblsc} AS sc LEFT JOIN {$tbldg} dg on dg.document = sc.id LEFT JOIN {$tblst} st on st.id = sc.template";
 	$where = "(parent={$parent}) {$access} GROUP BY sc.id";
 	$result = $modx->db->select($field, $from, $where, $orderby);
@@ -87,8 +87,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 		$nodetitleDisplay = $nodetitle;
 
 		$treeNodeClass = 'node';
-
-		$protectedClass = $row['hasAccess'] == 0 ? ' protected' : '';
+		$treeNodeClass .= $row['hasAccess'] == 0 ? ' protected' : '';
 
 		if($row['deleted'] == 1) {
 			$treeNodeClass .= ' deleted';
@@ -98,7 +97,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			//$nodetitleDisplay = sprintf('<span class="unpublishedNode">%s</span>', $nodetitle);
 		} elseif($row['hidemenu'] == 1) {
 			$treeNodeClass .= ' hidemenu';
-			$treeNodeClass .= $protectedClass;
 			//$nodetitleDisplay = sprintf('<span class="notInMenuNode%s">%s</span>', $protectedClass, $nodetitle);
 		} else {
 			//$nodetitleDisplay = sprintf('<span class="publishedNode%s">%s</span>', $protectedClass, $nodetitle);
@@ -193,13 +191,15 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'spacer' => $spacer,
 			'subMenuState' => '',
 			'level' => $level,
-			'isPrivate' => 0
+			'isPrivate' => 0,
+			'roles' => ($row['roles'] ? $row['roles'] : '')
 		);
 
 		$ph = $data;
 		$ph['nodetitle_esc'] = addslashes($nodetitle);
 		$ph['indent'] = $indent + 1;
 		$ph['expandAll'] = $expandAll;
+		$ph['isPrivate'] = ($row['privateweb'] || $row['privatemgr']) ? 1 : 0;
 
 		if(!$row['isfolder']) {
 			$tpl = getTplSingleNode();
@@ -217,14 +217,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$icon = $_style['tree_page_info'];
 					break;
 				default:
-					if($row['privateweb'] || $row['privatemgr']) {
-						if(isset($iconsPrivate[$row['contentType']])) {
-							$icon = $iconsPrivate[$row['contentType']];
-						} else {
-							$icon = $_style['tree_page_secure'];
-						}
-						$ph['isPrivate'] = 1;
-					} elseif(isset($icons[$row['contentType']])) {
+					if(isset($icons[$row['contentType']])) {
 						$icon = $icons[$row['contentType']];
 					} else {
 						$icon = $_style['tree_page'];
@@ -257,9 +250,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			}
 
 		} else {
-			$ph['isPrivate'] = ($row['privateweb'] || $row['privatemgr']) ? '1' : '0';
-			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
-			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+			$ph['icon_folder_open'] = $_style['tree_folderopen_new'];
+			$ph['icon_folder_close'] = $_style['tree_folder_new'];
 
 			if($_SESSION['tree_show_only_folders']) {
 				$tpl = getTplFolderNodeNotChildren();
@@ -598,6 +590,7 @@ function getTplSingleNode() {
         data-isfolder="[+isfolder+]"
         data-href="[+url+]"
         data-private="[+isPrivate+]"
+        data-roles="[+roles+]"
         data-level="[+level+]"
         data-treepageclick="[+tree_page_click+]"
         [+contextmenu+]
@@ -623,6 +616,7 @@ function getTplFolderNode() {
         data-isfolder="[+isfolder+]"
         data-href="[+url+]"
         data-private="[+isPrivate+]"
+        data-roles="[+roles+]"
         data-level="[+level+]"
         data-icon-expanded="[+tree_plusnode+]"
         data-icon-collapsed="[+tree_minusnode+]"
@@ -660,6 +654,7 @@ function getTplFolderNodeNotChildren() {
         data-isfolder="[+isfolder+]"
         data-href="[+url+]"
         data-private="[+isPrivate+]"
+        data-roles="[+roles+]"
         data-level="[+level+]"
         data-icon-expanded="[+tree_plusnode+]"
         data-icon-collapsed="[+tree_minusnode+]"
