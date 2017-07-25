@@ -125,6 +125,14 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .actions a .fa::after { content: ""; position: absolute; z-index: 1; left: 50%; top: 50%; width: 1.5rem; height: 1.5rem; margin: -0.75rem 0 0 -0.75rem; border-radius: 50%; -webkit-transition: 0.15s; transition: 0.15s; }
 .table.data .actions a:hover .fa::after { background-color: #fff }
 .table.data .actions .disabled { visibility: hidden }
+/* table-data-sortable */
+.table.data thead .sortable a, .table.data thead .sortable-text a { text-decoration: none !important; }
+.table.data thead .sortable a:hover, .table.data thead .sortable-text a:hover { color: #222 }
+.table.data thead .sortable a::after, .table.data thead .sortable-text a::after { content: "\f107"; font-family: FontAwesome; opacity: .3; margin-left: .5em; }
+.table.data thead .sortable.forwardSort a::after, .table.data thead .sortable-text.forwardSort a::after { opacity: 1; content: "\f106"; color: #d9534f }
+.table.data thead .sortable.reverseSort a::after, .table.data thead .sortable-text.reverseSort a::after { opacity: 1; content: "\f107"; color: #d9534f }
+.table.data thead .sortable a:hover::after, .table.data thead .sortable-text a:hover::after { opacity: 1 }
+.table.data thead .sortable-text span, .table.data thead .sortable-numeric span, .table.data thead .sortable-date span { display: none }
 /* table-data-docs */
 .table.data .doc-item .fa { width: 1.2em; font-size: 0.9rem; text-align: center; margin-right: 0.25rem }
 .table.data .doc-item { text-decoration: none }
