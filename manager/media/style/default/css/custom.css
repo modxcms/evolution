@@ -127,12 +127,13 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .actions a:hover .fa::after { background-color: #fff }
 .table.data .actions .disabled { visibility: hidden }
 /* table-data-sortable */
-.table.data thead .sortable a, .table.data thead .sortable-text a { text-decoration: none !important; }
+.table.data thead .sortable a, .table.data thead .sortable-text a { color: #777; text-decoration: none !important; }
 .table.data thead .sortable a:hover, .table.data thead .sortable-text a:hover { color: #222 }
 .table.data thead .sortable a::after, .table.data thead .sortable-text a::after { content: "\f107"; font-family: FontAwesome; opacity: .3; margin-left: .5em; }
 .table.data thead .sortable.forwardSort a::after, .table.data thead .sortable-text.forwardSort a::after { opacity: 1; content: "\f106"; color: #d9534f }
 .table.data thead .sortable.reverseSort a::after, .table.data thead .sortable-text.reverseSort a::after { opacity: 1; content: "\f107"; color: #d9534f }
-.table.data thead .sortable a:hover::after, .table.data thead .sortable-text a:hover::after { opacity: 1 }
+.table.data thead .sortable:hover a::after, .table.data thead .sortable-text:hover a::after, .table.data thead .sortable-numeric:hover a::after, .table.data thead .sortable-date:hover a::after { opacity: 1 }
+.table.data thead .sortable, .table.data thead .sortable-text, .table.data thead .sortable-numeric, .table.data thead .sortable-date { cursor: pointer }
 .table.data thead .sortable-text span, .table.data thead .sortable-numeric span, .table.data thead .sortable-date span { display: none }
 /* table-data-sm */
 .table.data.table-sm td, .table.data.table-sm th { padding: .25rem .5rem; }
