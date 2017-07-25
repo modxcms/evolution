@@ -119,5 +119,4 @@ class Paging
         return number_format($int_cur_page, 0);
     } // end function
 }
-
-; // End Class
+// End Class
