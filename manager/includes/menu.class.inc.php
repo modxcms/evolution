@@ -70,13 +70,25 @@ class EVOmenu {
 				$ph['LinkAttr'] = $this->getLinkAttr($id);
 				$ph['itemName'] = $value[2] . $this->getItemName($id);
 
-				if(isset($this->menu[$id])) {
-					$level++;
-					$ph['DrawSub'] = $this->DrawSub($id, $level);
-					$level--;
-				} else {
-					$ph['DrawSub'] = '';
-				}
+                $ph['DrawSub'] = '';
+
+                if(isset($this->menu[$id])) {
+                    $level++;
+                    $ph['DrawSub'] = $this->DrawSub($id, $level);
+                    $level--;
+                    // Optional buttons
+                } else if(isset($value[11]) && !empty($value[11])) {
+                    $optionalButton = '';
+                    if(is_array($value[11])) {
+                        foreach ($value[11] as $opt) {
+                            $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                        }
+                    } else {
+                        $opt = $value[11];
+                        $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                    }
+                    $ph['DrawSub'] = $optionalButton;
+                }
 
 				$output .= $modx->parseText($itemTpl, $ph);
 			}

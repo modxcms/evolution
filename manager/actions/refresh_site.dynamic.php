@@ -18,6 +18,14 @@ $num_rows_unpub = $modx->db->getAffectedRows();
 
 <h1><?= $_lang['refresh_title'] ?></h1>
 
+<div id="actions">
+    <div class="btn-group">
+        <a id="Button1" class="btn btn-success" href="index.php?a=26">
+            <i class="fa fa-recycle"></i> <span><?php echo $_lang['refresh_site']; ?></span>
+        </a>
+    </div>
+</div>
+
 <div class="tab-page">
 	<div class="container container-body">
 		<?php printf("<p>" . $_lang["refresh_published"] . "</p>", $num_rows_pub) ?>
