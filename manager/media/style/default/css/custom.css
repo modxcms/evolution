@@ -36,8 +36,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 #actions .btn-group .btn, #_actions .btn-group .btn, #_actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em }
 #actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
 #actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
-#actions .btn-group .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
-#actions .btn-group .btn-group .btn-success:hover { box-shadow: none }
+#actions .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
+#actions .btn-group .btn-success:hover { box-shadow: none }
 #actions .btn-group .plus { z-index: 2; float: right; margin: -2.5em 0 0 0; width: 2rem; padding-left: 0; padding-right: 0; text-align: center }
 #actions .btn-group select#stay { display: block; position: relative; z-index: -1; clear: both; width: auto; height: 0; margin: -100% 0 -2rem 0; font-size: 0.675rem; opacity: 0; visibility: hidden; }
 #actions .btn-group .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 2rem; margin: 0; padding: 0; text-align: left; font-size: 0.675rem; border-top: none; border-radius: 0 0 0.1em 0.1em; overflow: hidden; }
@@ -101,6 +101,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .actions a .fa::after { content: ""; position: absolute; z-index: 1; left: 50%; top: 50%; width: 1.5rem; height: 1.5rem; margin: -0.75rem 0 0 -0.75rem; border-radius: 50%; -webkit-transition: 0.15s; transition: 0.15s; }
 .table.data .actions a:hover .fa::after { background-color: #fff }
 .table.data .actions .disabled { visibility: hidden }
+/* table-data-nowrap */
+.table.data.nowrap th, .table.data.nowrap td { white-space: nowrap }
 /* table-data-sortable */
 .table.data thead .sortable a, .table.data thead .sortable-text a { color: #777; text-decoration: none !important; }
 .table.data thead .sortable a:hover, .table.data thead .sortable-text a:hover { color: #222 }
@@ -118,6 +120,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .doc-item { text-decoration: none }
 .table.data .doc-item:hover span { text-decoration: underline }
 .table.data .doc-item.private .fa::after { position: relative; float: left; margin: .5em -1em 0 0; content: "\f023"; font-size: 0.75em; color: #d9534f; }
+/* [ SEARCHBAR ] */
+.searchbar input[type=text] { max-width: 10rem }
 /* [ WIDGETS ] */
 .widgets .card { margin-bottom: .75rem; border: none; border-radius: 0.15rem; background-color: #fff; box-shadow: 0 0 0.1rem 0 rgba(0, 0, 0, 0.1), 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05) }
 .widgets .card-header { padding: .75rem 1rem; font-size: .675rem; color: #616a73; text-transform: uppercase; font-weight: 900; border: none; background-color: #f2f2f2; }

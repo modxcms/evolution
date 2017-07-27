@@ -35,15 +35,15 @@ thead td { color: #333; border-top: 1px solid #fff; }
 .deleted { color: #a52a2a; text-decoration: line-through; }
 label.disabled { color: #aaa; }
 /* -------------------------[ search bar ]--- */
-.searchbar { width: 100%; }
-.searchbar table { margin-top: -3px; }
+.sectionBody .searchbar { width: 100%; }
+.sectionBody .searchbar table { margin-top: -3px; }
 /*.searchtext { margin-top: -5px !important; height: 18px; padding: 2px; }*/
-.searchbutton { width: 22px; padding: 5px; text-decoration: none; background: #fff; border: 1px solid #d1d8df; }
-.searchbutton:hover { text-decoration: none; background: #fff; border: 1px solid #88939e; }
-.searchbutton img { vertical-align: middle; margin: 0; padding: 0 }
-.searchtoolbarbtn { text-decoration: none; border: 1px solid #d1d8df; text-decoration: none !important; background: #fff; padding: 5px 5px 5px 2px; }
-.searchtoolbarbtn img { vertical-align: middle; padding: 3px; }
-.searchtoolbarbtn:hover { text-decoration: none; border: 1px solid #88939e; background: #fff; }
+.sectionBody .searchbutton { width: 22px; padding: 5px; text-decoration: none; background: #fff; border: 1px solid #d1d8df; }
+.sectionBody .searchbutton:hover { text-decoration: none; background: #fff; border: 1px solid #88939e; }
+.sectionBody .searchbutton img { vertical-align: middle; margin: 0; padding: 0 }
+.sectionBody .searchtoolbarbtn { text-decoration: none; border: 1px solid #d1d8df; text-decoration: none !important; background: #fff; padding: 5px 5px 5px 2px; }
+.sectionBody .searchtoolbarbtn img { vertical-align: middle; padding: 3px; }
+.sectionBody .searchtoolbarbtn:hover { text-decoration: none; border: 1px solid #88939e; background: #fff; }
 /* -------------------------[ home page main links ]--- */
 /*a.hometblink, a.hometblink:active, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size: 12px; }
 a.hometblink:hover { text-decoration: underline; color: Gray; }*/
