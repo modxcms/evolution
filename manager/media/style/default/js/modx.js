@@ -784,8 +784,7 @@
 			},
 			toggleTheme: function(e) {
 				var myCodeMirrors = w.main.myCodeMirrors, key;
-				if(e.currentTarget.classList.contains('rotate180')) {
-					e.currentTarget.classList.remove('rotate180');
+				if(d.body.classList.contains('dark')) {
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
 					d.cookie = 'MODX_themeColor=';
@@ -798,7 +797,6 @@
 						}
 					}
 				} else {
-					e.currentTarget.classList.add('rotate180');
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
 					d.cookie = 'MODX_themeColor=dark';

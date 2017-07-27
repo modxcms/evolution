@@ -3499,7 +3499,7 @@ class DocumentParser {
     function runSnippet($snippetName, $params= array ()) {
         if (isset ($this->snippetCache[$snippetName])) {
             $snippet = $this->snippetCache[$snippetName];
-            $properties = $this->snippetCache[$snippetName . "Props"];
+            $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
             $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "';";
             $result = $this->db->query($sql);

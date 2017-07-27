@@ -336,17 +336,27 @@ if($modx->hasPermission('web_access_permissions')) {
 // Tools Menu
 
 $sitemenu['refresh_site'] = array(
-	'refresh_site',
-	'tools',
-	'<i class="fa fa-recycle"></i>' . $_lang['refresh_site'],
-	'index.php?a=26',
-	$_lang['refresh_site'],
-	'',
-	'',
-	'main',
-	0,
-	5,
-	''
+    'refresh_site',
+    'tools',
+    '<i class="fa fa-recycle"></i>' . $_lang['refresh_site'],
+    'index.php?a=26',
+    $_lang['refresh_site'],
+    '',
+    '',
+    'main',
+    0,
+    5,
+    'item-group',
+    array(
+        'refresh_site_in_window' => array(
+            'a', // tag
+            'javascript:;', // href
+            'btn btn-secondary', // class or btn-success
+            'modx.openWindow({url:\'index.php?a=26\', title:\'' . $_lang['refresh_site'] . '\'})', // onclick
+            $_lang['refresh_site'], // title
+            '<i class="fa fa-recycle"></i>' // innerHTML
+        )
+    )
 );
 
 $sitemenu['search'] = array(
@@ -431,10 +441,10 @@ $menu = $modx->invokeEvent("OnManagerMenuPrerender", array('menu' => $sitemenu))
 if(is_array($menu)) {
 	$newmenu = array();
 	foreach($menu as $item){
-		if(is_array(unserialize($item))){ 
+		if(is_array(unserialize($item))){
 			$newmenu = array_merge($newmenu, unserialize($item));
 		}
-	} 
+	}
 	if(count($newmenu)> 0) $sitemenu = $newmenu;
 }
 
