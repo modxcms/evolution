@@ -26,6 +26,8 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 <head>
 	<title>Evolution CMS</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+    <meta name="theme-color" content="#1d2023" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>

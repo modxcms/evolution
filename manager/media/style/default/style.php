@@ -174,6 +174,7 @@ $_style['actions_refresh']          = 'fa fa-refresh';
 $_style['actions_error']            = 'fa fa-times-circle';
 $_style['actions_info']             = 'fa fa-info-circle';
 $_style['actions_triangle']         = 'fa fa-exclamation-triangle';
+$_style['actions_table']            = 'fa fa-table';
 
 //for back compatibility
 

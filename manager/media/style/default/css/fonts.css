@@ -98,4 +98,4 @@ h1 small { margin-left: 0.5em; line-height: 1em }
 .messageRead { color: #333; }
 .messageUnread { color: #3CB371; font-weight: 500; }
 .element-edit-message { display: none }
-.element-edit-message p:last-child { margin-bottom: 0 }
+.element-edit-message p:last-child, .element-edit-message-tab p:last-child { margin-bottom: 0 }

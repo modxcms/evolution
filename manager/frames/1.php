@@ -80,9 +80,8 @@ if($user['which_browser'] == 'default') {
 <head>
 	<title><?= $site_name ?>- (EVO CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
-	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
-	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
-	<meta name="theme-color" content="#1d2023">
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+	<meta name="theme-color" content="#1d2023" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
 	<link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
 	<style>
