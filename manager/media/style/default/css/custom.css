@@ -2,6 +2,7 @@
 .row { margin-left: -1.3rem; margin-right: -1.3rem }
 .container { padding-left: 1.3rem; padding-right: 1.3rem; width: 100% }
 .container-body { padding: 1.3rem }
+.tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
 /* [ FORMS ] */
 .form-row { margin-bottom: 0.25rem; }
 .form-row.row { margin-left: 0; margin-right: -1rem }
@@ -186,7 +187,7 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 #helpPane pre { border: 1px solid rgba(0, 0, 0, 0.1); padding: 1em; }
 /* [ DARK THEME ] */
 .dark .section-editor textarea { background-color: #282c34; color: #abb2bf }
-.dark .tab-page, .dark .tab-row .tab.selected, .dark .tab-row .tab.selected.hover, .dark .tab-row .tab.selected:before, .dark .tab-row .tab.selected span { background: #f9f9f9; }
+.dark .tab-page, .dark .sectionBody .tab-page, .dark .tab-row .tab.selected, .dark .tab-row .tab.selected.hover, .dark .tab-row .tab.selected:before, .dark .tab-row .tab.selected span { background-color: #f9f9f9; }
 .dark, .dark .resourceTable .panel-heading { background: #ecf0f1 !important; }
 .dark .resourceTable .panel-heading:hover { background: #ecf0f1 !important; }
 .dark .multitv .list li.element a.copy, .multitv .list li.element a.remove { background: #f9f9f9 !important; }

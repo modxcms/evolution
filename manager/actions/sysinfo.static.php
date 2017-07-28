@@ -52,13 +52,13 @@ $serverArr = array(
         <p><b>Server</b></p>
         <div class="row">
             <div class="table-responsive">
-                <table class="table data table-sm">
+                <table class="table data table-sm nowrap">
                     <tbody>
                     <?php
                     foreach ($serverArr as $key => $value) {
                         ?>
                         <tr>
-                            <td width="1%" class="text-nowrap"><?= $key ?></td>
+                            <td width="1%"><?= $key ?></td>
                             <td>&nbsp;</td>
                             <td><b><?= $value ?></b></td>
                         </tr>
@@ -81,16 +81,16 @@ $serverArr = array(
         <p><?= $_lang['table_hoverinfo'] ?></p>
         <div class="row">
             <div class="table-responsive">
-                <table class="table data">
+                <table class="table data nowrap">
                     <thead>
                     <tr>
                         <td width="50%"><?= $_lang["database_table_tablename"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_records"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_datasize"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_overhead"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_effectivesize"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_indexsize"] ?></td>
-                        <td class="text-nowrap"><?= $_lang["database_table_totalsize"] ?></td>
+                        <td><?= $_lang["database_table_records"] ?></td>
+                        <td><?= $_lang["database_table_datasize"] ?></td>
+                        <td><?= $_lang["database_table_overhead"] ?></td>
+                        <td><?= $_lang["database_table_effectivesize"] ?></td>
+                        <td><?= $_lang["database_table_indexsize"] ?></td>
+                        <td><?= $_lang["database_table_totalsize"] ?></td>
                     </tr>
                     </thead>
                     <tbody>
@@ -144,7 +144,8 @@ $serverArr = array(
             </div>
         </div>
         <?php if ($totaloverhead > 0) { ?>
-            <p><?= $_lang['database_overhead'] ?></p>
+            <br>
+            <p class="alert alert-danger"><?= $_lang['database_overhead'] ?></p>
         <?php } ?>
     </div>
 </div>
