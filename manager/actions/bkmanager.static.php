@@ -226,7 +226,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         $table_string = '';
                                     }
 
-                                    echo '<tr title="' . $db_status['Comment'] . '" style="cursor:default">' . "\n" . '<td><label class="form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n" . '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
+                                    echo '<tr title="' . $db_status['Comment'] . '" style="cursor:default">' . "\n" . '<td><label class="form-check form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n" . '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Collation'] . '</td>' . "\n";
 
                                     // Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
