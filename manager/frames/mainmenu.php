@@ -222,7 +222,7 @@ if($modx->hasPermission('new_module')) {
 }
 
 if($modx->hasPermission('exec_module')) {
-	if($_SESSION['mgrRole'] != 1) {
+	if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
 		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
@@ -232,23 +232,23 @@ if($modx->hasPermission('exec_module')) {
 	} else {
 		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1', 'name');
 	}
-	$i = 10;
-	while($content = $modx->db->getRow($rs)) {
-		$sitemenu['module' . $content['id']] = array(
-			'module' . $content['id'],
-			'modules',
-			($content['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $content['name'],
-			'index.php?a=112&id=' . $content['id'],
-			$content['name'],
-			'',
-			'',
-			'main',
-			0,
-			$i + 10,
-			''
-		);
-		$i = $i + 10;
-	}
+	if($modx->db->getRecordCount($rs)) {
+	    while ($row = $modx->db->getRow($rs)) {
+            $sitemenu['module' . $row['id']] = array(
+                'module' . $row['id'],
+                'modules',
+                ($row['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $row['name'],
+                'index.php?a=112&id=' . $row['id'],
+                $row['name'],
+                '',
+                '',
+                'main',
+                0,
+                1,
+                ''
+            );
+        }
+    }
 }
 
 // security menu items (users)

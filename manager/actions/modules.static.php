@@ -28,7 +28,9 @@ $_PAGE['vs']['lm'] = $listmode;
 include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
 $cm->addItem($_lang["run_module"], "js:menuAction(1)", $_style['actions_run'], (!$modx->hasPermission('exec_module') ? 1 : 0));
-$cm->addSeparator();
+if($modx->hasPermission('edit_module') || $modx->hasPermission('new_module') || $modx->hasPermission('delete_module')) {
+    $cm->addSeparator();
+}
 $cm->addItem($_lang["edit"], "js:menuAction(2)", $_style['actions_edit'], (!$modx->hasPermission('edit_module') ? 1 : 0));
 $cm->addItem($_lang["duplicate"], "js:menuAction(3)", $_style['actions_duplicate'], (!$modx->hasPermission('new_module') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(4)", $_style['actions_delete'], (!$modx->hasPermission('delete_module') ? 1 : 0));
@@ -103,9 +105,26 @@ echo $cm->render();
 <div class="tab-page">
 	<div class="table-responsive">
 		<?php
-		$ds = $modx->db->select("id,name,description,IF(locked,'{$_lang['yes']}','-') as locked,IF(disabled,'{$_lang['yes']}','-') as disabled,IF(icon<>'',icon,'{$_style['icons_modules']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+        if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
+            $rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.description, mg.member, IF(disabled,"' . $_lang['yes'] . '","-") as disabled, IF(sm.icon<>"",sm.icon,"' . $_style['icons_modules'] . '") as icon
+				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
+				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
+				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
+                WHERE (mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1
+                ORDER BY sm.name');
+            if($modx->hasPermission('edit_module')) {
+                $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
+            } else if($modx->hasPermission('exec_module')) {
+                $title = "<a href='index.php?a=112&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
+            } else {
+                $title = '[+value+]';
+            }
+        } else {
+            $rs = $modx->db->select("id, name, description, IF(locked,'{$_lang['yes']}','-') as locked, IF(disabled,'{$_lang['yes']}','-') as disabled, IF(icon<>'',icon,'{$_style['icons_modules']}') as icon", $modx->getFullTableName("site_modules"), (!empty($sqlQuery) ? "(name LIKE '%{$sqlQuery}%') OR (description LIKE '%{$sqlQuery}%')" : ""), "name");
+            $title = "<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
+        }
 		include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
-		$grd = new DataGrid('', $ds, $number_of_results); // set page size to 0 t show all items
+		$grd = new DataGrid('', $rs, $number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
 		$grd->cssClass = "table data";
 		$grd->columnHeaderClass = "tableHeader";
@@ -115,7 +134,7 @@ echo $cm->render();
 		$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["description"] . " ," . $_lang["locked"] . " ," . $_lang["disabled"];
 		$grd->colWidths = "34,,,60,60";
 		$grd->colAligns = "center,,,center,center";
-		$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='[+value+]'></i></a>||template:<a href='index.php?a=108&id=[+id+]' title='" . $_lang["module_edit_click_title"] . "'>[+value+]</a>";
+		$grd->colTypes = "template:<a class='tableRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='[+value+]'></i></a>||template:" . $title;
 		if($listmode == '1') {
 			$grd->pageSize = 0;
 		}
