@@ -365,6 +365,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
   `display` varchar(20) NOT NULL default '' COMMENT 'Display Control',
   `display_params` text COMMENT 'Display Control Properties',
   `default_text` text,
+  `createdon` integer NOT NULL DEFAULT '0',  
+  `editedon` integer NOT NULL DEFAULT '0',
   PRIMARY KEY  (id),
   KEY `indx_rank`(`rank`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables';
@@ -619,6 +621,12 @@ ALTER TABLE `{PREFIX}site_templates`
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates`
   ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
+
+ALTER TABLE `{PREFIX}site_tmplvars`
+  ADD COLUMN `editedon` integer NOT NULL DEFAULT '0';
+
+ALTER TABLE `{PREFIX}site_tmplvars`
+  ADD COLUMN `createdon` integer NOT NULL DEFAULT '0';  
 
 ALTER TABLE `{PREFIX}user_attributes`
   ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
