@@ -291,7 +291,7 @@ class FS
             $owner = MODX_BASE_PATH;
         }
         if (!(empty($path) || !is_scalar($path)) && !preg_match("/^http(s)?:\/\/\w+/", $path)) {
-            $path = trim(preg_replace("#^" . $owner . "#", '', $path), '/');
+            $path = trim(preg_replace("#^" . preg_quote($owner) . "#", '', $path), DIRECTORY_SEPARATOR);
         } else {
             $path = '';
         }
