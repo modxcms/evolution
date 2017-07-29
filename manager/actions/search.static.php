@@ -89,6 +89,8 @@ if(isset($_REQUEST['submitok'])) {
 	$templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? intval($_REQUEST['templateid']) : '';
 	$searchcontent = $modx->db->escape($_REQUEST['content']);
 
+    $fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';
+
 	$sqladd = "";
 
 	// Handle Input "Search by exact URL"
@@ -144,19 +146,15 @@ if(isset($_REQUEST['submitok'])) {
 		$sqladd .= $sqladd != '' ? ' AND' : '';
 		$sqladd .= $searchcontent != '' ? " sc.content LIKE '%{$searchcontent}%'" : '';
 	}
+
 	// get document groups for current user
-	$docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
-	$showProtected = false;
-	if(isset ($modx->config['tree_show_protected'])) {
-		$showProtected = (boolean) $modx->config['tree_show_protected'];
-	}
-	$mgrRole = (isset ($_SESSION['mgrRole']) && (string) $_SESSION['mgrRole'] === '1') ? '1' : '0';
-	if($showProtected == false && $sqladd) {
+	if(!empty($modx->config['use_udperms']) && $sqladd) {
+        $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
+        $mgrRole = (isset ($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1) ? 1 : 0;
+        $docgrp_cond = $docgrp ? " OR dg.document_group IN ({$docgrp})" : '';
+        $fields .= ', MAX(IF(1=' . $mgrRole . ' OR sc.privatemgr=0' . $docgrp_cond . ',1,0)) AS hasAccess';
 		$sqladd = '(' . $sqladd . ") AND (1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? ')' : " OR dg.document_group IN ({$docgrp}))");
 	}
-	$docgrp_cond = $docgrp ? "OR dg.document_group IN ({$docgrp})" : '';
-
-	$fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type, MAX(IF(1=' . $mgrRole . ' OR sc.privatemgr=0 ' . $docgrp_cond . ', 1, 0)) AS hasAccess';
 
 	if($sqladd) {
 		$sqladd .= ' GROUP BY sc.id';
@@ -362,22 +360,47 @@ if(isset($_REQUEST['submitok'])) {
 				}
 
 				//modules
-				if($modx->hasPermission('exec_module')) {
-					$rs = $modx->db->select("id,name", $modx->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
-					OR `name` like '%" . $searchfields . "%' 
-					OR `description` like '%" . $searchfields . "%' 
-					OR `modulecode` like '%" . $searchfields . "%'  
-					OR `properties` like '%" . $searchfields . "%'  
-					OR `guid` like '%" . $searchfields . "%'      
-					OR `resourcefile` like '%" . $searchfields . "%'");
-					$modulescounts = $modx->db->getRecordCount($rs);
-					if($modulescounts > 0) {
-						$output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
-						while($row = $modx->db->getRow($rs)) {
-							$output .= '<li><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
-						}
-					}
-				}
+				if($modx->hasPermission('exec_module') || $modx->hasPermission('edit_module')) {
+                    if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
+                        if($modx->hasPermission('edit_module')) {
+                            $like = '
+                            sm.id like "%' . $searchfields . '%" 
+                            OR sm.name like "%' . $searchfields . '%" 
+                            OR sm.description like "%' . $searchfields . '%" 
+                            OR sm.modulecode like "%' . $searchfields . '%"  
+                            OR sm.properties like "%' . $searchfields . '%"  
+                            OR sm.guid like "%' . $searchfields . '%"      
+                            OR sm.resourcefile like "%' . $searchfields . '%"
+                            ';
+                        } else {
+                            $like = '
+                            sm.id like "%' . $searchfields . '%" 
+                            OR sm.name like "%' . $searchfields . '%" 
+                            OR sm.description like "%' . $searchfields . '%" 
+                            ';
+                        }
+                        $rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
+                        FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
+                        LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
+                        LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
+                        WHERE ((mg.member IS NULL OR mg.member = ' . $modx->getLoginUserID() . ') AND sm.disabled != 1 AND sm.locked != 1) AND (' . $like . ')');
+                    } else {
+                        $rs = $modx->db->select("id,name", $modx->getFullTableName('site_modules'), "`id` like '%" . $searchfields . "%' 
+                        OR `name` like '%" . $searchfields . "%' 
+                        OR `description` like '%" . $searchfields . "%' 
+                        OR `modulecode` like '%" . $searchfields . "%'  
+                        OR `properties` like '%" . $searchfields . "%'  
+                        OR `guid` like '%" . $searchfields . "%'      
+                        OR `resourcefile` like '%" . $searchfields . "%'");
+                    }
+                    $modulescounts = $modx->db->getRecordCount($rs);
+                    if($modulescounts > 0) {
+                        $output .= '<li><b><i class="fa fa-cogs"></i> ' . $_lang["modules"] . ' (' . $modulescounts . ')</b></li>';
+                        while($row = $modx->db->getRow($rs)) {
+                            $output .= '<li><a href="index.php?a=108&id=' . $row['id'] . '" id="modules_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['name'], $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+                        }
+                    }
+                }
 
 				echo $output ? '<div class="ajaxSearchResults"><ul>' . $output . '</ul></div>' : '1';
 			}
