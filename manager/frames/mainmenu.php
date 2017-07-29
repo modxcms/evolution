@@ -96,12 +96,13 @@ if($modx->hasPermission('empty_cache') || $modx->hasPermission('bk_manager') || 
 	);
 }
 
+$tab = 0;
 if($modx->hasPermission('edit_template')) {
 	$sitemenu['element_templates'] = array(
 		'element_templates',
 		'elements',
 		'<i class="fa fa-newspaper-o"></i>' . $_lang['manage_templates'],
-		'index.php?a=76&tab=0',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_templates'],
 		'',
 		'new_template,edit_template',
@@ -116,7 +117,7 @@ if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet')
 		'element_tplvars',
 		'elements',
 		'<i class="fa fa-list-alt"></i>' . $_lang['tmplvars'],
-		'index.php?a=76&tab=1',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['tmplvars'],
 		'',
 		'new_template,edit_template',
@@ -131,7 +132,7 @@ if($modx->hasPermission('edit_chunk')) {
 		'element_htmlsnippets',
 		'elements',
 		'<i class="fa fa-th-large"></i>' . $_lang['manage_htmlsnippets'],
-		'index.php?a=76&tab=2',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_htmlsnippets'],
 		'',
 		'new_chunk,edit_chunk',
@@ -146,7 +147,7 @@ if($modx->hasPermission('edit_snippet')) {
 		'element_snippets',
 		'elements',
 		'<i class="fa fa-code"></i>' . $_lang['manage_snippets'],
-		'index.php?a=76&tab=3',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_snippets'],
 		'',
 		'new_snippet,edit_snippet',
@@ -161,7 +162,7 @@ if($modx->hasPermission('edit_plugin')) {
 		'element_plugins',
 		'elements',
 		'<i class="fa fa-plug"></i>' . $_lang['manage_plugins'],
-		'index.php?a=76&tab=4',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_plugins'],
 		'',
 		'new_plugin,edit_plugin',
