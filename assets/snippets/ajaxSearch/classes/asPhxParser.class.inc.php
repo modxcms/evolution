@@ -21,8 +21,8 @@ class asPHxParser {
         $this->name = "PHx";
         $this->version = "2.1.3";
         $this->template = $this->getTemplate($template);
-        $this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
-        $this->user["usrid"] = intval($_SESSION['webInternalKey']);
+        $this->user["mgrid"] = !empty($_SESSION['mgrInternalKey']) ? intval($_SESSION['mgrInternalKey']) : '';
+        $this->user["usrid"] = !empty($_SESSION['webInternalKey']) ? intval($_SESSION['webInternalKey']) : '';
         $this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
         $this->cache["cm"] = array();
         $this->cache["ui"] = array();

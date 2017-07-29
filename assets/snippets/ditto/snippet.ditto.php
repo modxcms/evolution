@@ -167,7 +167,7 @@ $filters = array("custom"=>array(),"parsed"=>array());
     // $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
     // $filters["custom"][] = array("source","callback_function");
 
-$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>$orderBy);
+$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>(isset($orderBy) ? $orderBy : ''));
     // Variable: orderBy
     // An array that holds all criteria to sort the result set by.
     // Note that using a custom sort will disable all other sorting.
@@ -997,16 +997,17 @@ if ($count > 0) {
         // get the database fields
     $TVs = $ditto->fields["display"]["tv"];
         // get the TVs
-    
-    switch($orderBy['parsed'][0][1]) {
-        case "DESC":
-            $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset; 
-            $start += $offset;
-        break;
-        case "ASC":
-            $start += $offset;
-            $stop += $start;
-        break;
+    if(isset($orderBy['parsed'][0][1])) {
+        switch($orderBy['parsed'][0][1]) {
+            case "DESC":
+                $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset;
+                $start += $offset;
+                break;
+            case "ASC":
+                $start += $offset;
+                $stop += $start;
+                break;
+        }
     }
 
     if ($ditto->prefetch !== false) {

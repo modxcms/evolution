@@ -420,7 +420,7 @@ class ditto {
 			$this->addField($name,"display","custom");
 			$this->removeField($name,"display","unknown");
 			$source = $value[0];
-			$qe = $value[2];
+			$qe = isset($value[2]) ? $value[2] : '';
 	
 			if(is_array($source)) {
 				if(strpos($source[0],",")!==false){
@@ -817,7 +817,7 @@ class ditto {
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
 		if (count($resourceArray) != count($docIDs)) {
-			$rs = $modx->db->select("name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
+			$rs = $modx->db->select("id,name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
@@ -828,7 +828,7 @@ class ditto {
 					}
 				}
 			} else {
-				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
+				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['id']);
 				foreach ($docIDs as $id) {
 					if (!isset($resourceArray["#".$id])) {
 						$resourceArray["#$id"][$tvname] = $defaultOutput;
@@ -1142,6 +1142,7 @@ class ditto {
 		}
 
 		$modx->setPlaceholder("dittoID", $dittoID);
+		$pages = '';
 		for ($x = 0; $x <= $totalpages -1; $x++) {
 			$inc = $x * $summarize;
 			$display = $x +1;
