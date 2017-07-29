@@ -215,34 +215,39 @@ if(!class_exists('synccache')) {
         }
 
         // WRITE Chunks to cache file
-        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'), 'disabled=0');
+        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'));
         $tmpPHP .= '$c = &$this->chunkCache;';
         while ($tmp1 = $modx->db->getRow($rs)) {
 				/** without trim */
-            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['snippet']) . "';";
+            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['disabled'] ? '' : $tmp1['snippet']) . "';";
         }
 
         // WRITE snippets to cache file
         $rs = $modx->db->select(
 			'ss.*, sm.properties as sharedproperties',
-			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid WHERE ss.disabled=0'
+			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($row = $modx->db->getRow($rs)) {
-				$name = $this->escapeSingleQuotes($row['name']);
-				$code = trim($row['snippet']);
-				if($modx->config['minifyphp_incache'])
-					$code = $this->php_strip_whitespace($code);
-				$code = $this->escapeSingleQuotes($code);
-				$properties       = $modx->parseProperties($row['properties']);
-				$sharedproperties = $modx->parseProperties($row['sharedproperties']);
-				$properties = array_merge($sharedproperties,$properties);
-				$tmpPHP .= sprintf("\$s['%s']='%s';", $name, $code);
-				if (0<count($properties)) {
-    				$properties = json_encode($properties);
-    				$properties = $this->escapeSingleQuotes($properties);
-					$tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, $properties);
-				}
+                $name = $this->escapeSingleQuotes($row['name']);
+			    if($row['disabled']) {
+                    $tmpPHP .= sprintf("\$s['%s']='%s';", $name, "return false;");
+                    $tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, '');
+                } else {
+                    $code = trim($row['snippet']);
+                    if($modx->config['minifyphp_incache'])
+                        $code = $this->php_strip_whitespace($code);
+                    $code = $this->escapeSingleQuotes($code);
+                    $properties       = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties,$properties);
+                    $tmpPHP .= sprintf("\$s['%s']='%s';", $name, $code);
+                    if (0<count($properties)) {
+                        $properties = json_encode($properties);
+                        $properties = $this->escapeSingleQuotes($properties);
+                        $tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, $properties);
+                    }
+                }
 			}
 
 			// WRITE plugins to cache file
