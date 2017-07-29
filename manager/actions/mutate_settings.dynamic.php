@@ -23,8 +23,8 @@ $rs = $modx->db->select('setting_name, setting_value', '[+prefix+]system_setting
 while($row = $modx->db->getRow($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
 }
-$settings['filemanager_path'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['filemanager_path']);
-$settings['rb_base_dir'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['rb_base_dir']);
+$settings['filemanager_path'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['filemanager_path']);
+$settings['rb_base_dir'] = preg_replace('@^' . preg_quote(MODX_BASE_PATH) . '@', '[(base_path)]', $settings['rb_base_dir']);
 
 extract($settings, EXTR_OVERWRITE);
 

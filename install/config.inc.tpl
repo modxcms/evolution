@@ -46,6 +46,7 @@ if(empty($base_path)||empty($base_url)||$_REQUEST['base_path']||$_REQUEST['base_
     unset ($a);
     $base_url= $url . (substr($url, -1) != '/' ? '/' : '');
     $base_path= $pth . (substr($pth, -1) != '/' && substr($pth, -1) != '\\' ? '/' : '');
+    $base_path = str_replace('/', DIRECTORY_SEPARATOR, $base_path);
 }
 
 // check for valid hostnames
@@ -75,7 +76,7 @@ $site_url .= $base_url;
 if (!defined('MODX_BASE_PATH')) define('MODX_BASE_PATH', $base_path);
 if (!defined('MODX_BASE_URL')) define('MODX_BASE_URL', $base_url);
 if (!defined('MODX_SITE_URL')) define('MODX_SITE_URL', $site_url);
-if (!defined('MODX_MANAGER_PATH')) define('MODX_MANAGER_PATH', $base_path.MGR_DIR.'/');
+if (!defined('MODX_MANAGER_PATH')) define('MODX_MANAGER_PATH', $base_path.MGR_DIR.DIRECTORY_SEPARATOR);
 if (!defined('MODX_MANAGER_URL')) define('MODX_MANAGER_URL', $site_url.MGR_DIR.'/');
 
 // start cms session
