@@ -94,6 +94,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
+header('X-XSS-Protection: 0');
 
 // provide english $_lang for error-messages
 $_lang = array();
