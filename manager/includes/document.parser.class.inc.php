@@ -1715,7 +1715,7 @@ class DocumentParser {
         }
         else
         {
-            $where = sprintf("name='%s'",$this->db->escape($snip_name));
+            $where = sprintf("name='%s' AND disabled=0",$this->db->escape($snip_name));
             $rs= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',$where);
             $count = $this->db->getRecordCount($rs);
             if(1<$count) exit('Error $modx->_getSnippetObject()'.$snip_name);
@@ -3501,7 +3501,7 @@ class DocumentParser {
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "';";
+            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "'  AND ss.disabled=0;";
             $result = $this->db->query($sql);
             if ($this->db->getRecordCount($result) == 1) {
                 $row = $this->db->getRow($result);
@@ -3533,7 +3533,7 @@ class DocumentParser {
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
         } else {
-            $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
+            $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
             $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
             if ($this->db->getRecordCount($rs)==1) {
                 $row= $this->db->getRow($rs);

@@ -20,7 +20,7 @@ include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager
 
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
 $frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
-$role = isset($_SESSION['mgrRole']) ? $_SESSION['mgrRole'] : 0;
+$role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
@@ -134,7 +134,7 @@ if (isset($action)) {
                         $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
                     }
                     while ($row = $modx->db->getRow($sql)) {
-                        if ($row['locked'] && $role != 1) {
+                        if (($row['disabled'] || $row['locked']) && $role != 1) {
                             continue;
                         }
 

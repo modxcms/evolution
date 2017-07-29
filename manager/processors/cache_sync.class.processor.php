@@ -215,7 +215,7 @@ if(!class_exists('synccache')) {
         }
 
         // WRITE Chunks to cache file
-        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'));
+        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'), 'disabled=0');
         $tmpPHP .= '$c = &$this->chunkCache;';
         while ($tmp1 = $modx->db->getRow($rs)) {
 				/** without trim */
@@ -225,7 +225,7 @@ if(!class_exists('synccache')) {
         // WRITE snippets to cache file
         $rs = $modx->db->select(
 			'ss.*, sm.properties as sharedproperties',
-			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
+			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid WHERE ss.disabled=0'
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($row = $modx->db->getRow($rs)) {

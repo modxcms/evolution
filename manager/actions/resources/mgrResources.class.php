@@ -69,7 +69,7 @@ class mgrResources {
 	function queryResources($resourceTable, $nameField = 'name') {
 		global $modx, $_lang;
 
-		$pluginsql = ($resourceTable == 'site_plugins' || $resourceTable == 'site_modules') ? $resourceTable . '.disabled, ' : '';
+		$pluginsql = ($resourceTable == 'site_htmlsnippets' || $resourceTable == 'site_snippets' || $resourceTable == 'site_plugins' || $resourceTable == 'site_modules') ? $resourceTable . '.disabled, ' : '';
 
 		$tvsql  = '';
 		$tvjoin = '';
