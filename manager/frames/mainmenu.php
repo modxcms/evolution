@@ -205,7 +205,7 @@ if($modx->hasPermission('category_manager')) {
 }
 
 // Modules Menu Items
-if($modx->hasPermission('new_module')) {
+if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('save_module')) {
 	$sitemenu['new_module'] = array(
 		'new_module',
 		'modules',
