@@ -35,11 +35,6 @@ if (file_exists("../install/")) {
     $warnings[] = array($_lang['configcheck_installer']);
 }
 
-if (ini_get('register_globals')==TRUE) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_register_globals']);
-}
-
 if (!extension_loaded('gd') || !extension_loaded('zip')) {
     $warningspresent = 1;
     $warnings[] = array($_lang['configcheck_php_gdzip']);
