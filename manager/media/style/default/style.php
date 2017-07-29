@@ -390,15 +390,13 @@ $_style['actionbuttons'] = array(
 				' : '') . '
 			</div>
 		</div>',
-		'newmodule' => '<div id="actions">
+		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
-			' . ($addnew ? '
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
 					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
-			' : '') . '
 			</div>
-		</div>',
+		</div>' : ''),
 		'close' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">
