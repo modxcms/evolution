@@ -17,6 +17,9 @@ class ContextMenu {
 
 	function addItem($text, $action = "", $img = "", $disabled = 0) {
 		global $base_url, $_style;
+        if($disabled) {
+            return;
+        }
 		if(!$img) {
 			$img = $base_url . $_style['tx'];
 		}
@@ -28,9 +31,6 @@ class ContextMenu {
 			$action = "window.location.href='" . $action . "'";
 		}
 		$action = " onmouseover=\"this.className='cntxMnuItemOver';\" onmouseout=\"this.className='cntxMnuItem';\" onclick=\"$action; hideCntxMenu('" . $this->id . "');\"";
-		if($disabled) {
-			$action = "";
-		}
 		$this->html .= "<div class='" . ($disabled ? "cntxMnuItemDisabled" : "cntxMnuItem") . "' $action>";
 		if(substr($img, 0, 6) == 'media/') {
 			$img = '<img src="' . $img . '" />';
