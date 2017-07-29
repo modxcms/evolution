@@ -198,9 +198,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             <input name="newcategory" type="text" maxlength="45" value="<?= isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="form-control" onChange="documentDirty=true;" />
                         </div>
                     </div>
-                    <div class="form-row">
-                        <label><input name="disabled" type="checkbox" value="on"<?= ($content['disabled'] == 1 ? ' checked="checked"' : '') ?> /> <?= ($content['disabled'] == 1 ? "<span class='text-danger'>" . $_lang['disabled'] . "</span>" : $_lang['disabled']) ?></label>
-                    </div>
+                    <?php if ($_SESSION['mgrRole'] == 1): ?>
+                        <div class="form-row">
+                            <label><input name="disabled" type="checkbox" value="on"<?= ($content['disabled'] == 1 ? ' checked="checked"' : '') ?> /> <?= ($content['disabled'] == 1 ? "<span class='text-danger'>" . $_lang['disabled'] . "</span>" : $_lang['disabled']) ?></label>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- HTML text editor start -->
