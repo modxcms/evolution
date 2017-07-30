@@ -12,6 +12,7 @@ $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
 $disabled = $_POST['disabled'] == "on" ? '1' : '0';
+$currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -60,6 +61,8 @@ switch ($_POST['mode']) {
             'editor_type' => $editor_type,
             'editor_name' => $editor_name,
             'disabled' => $disabled,
+            'createdon' => $currentdate,
+            'editedon' => $currentdate
         ), $modx->getFullTableName('site_htmlsnippets'));
 
         // invoke OnChunkFormSave event
@@ -108,6 +111,7 @@ switch ($_POST['mode']) {
             'editor_type' => $editor_type,
             'editor_name' => $editor_name,
             'disabled' => $disabled,
+            'editedon' => $currentdate
         ), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
 
         // invoke OnChunkFormSave event

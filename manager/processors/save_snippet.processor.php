@@ -12,6 +12,7 @@ $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
 $disabled = $_POST['disabled'] == "on" ? '1' : '0';
+$currentdate = time() + $modx->config['server_offset_time'];
 
 // strip out PHP tags from snippets
 if (strncmp($snippet, "<?", 2) == 0) {
@@ -91,6 +92,8 @@ switch ($_POST['mode']) {
             'properties' => $properties,
             'category' => $categoryid,
             'disabled' => $disabled,
+            'createdon' => $currentdate,
+            'editedon' => $currentdate
         ), $modx->getFullTableName('site_snippets'));
 
         // invoke OnSnipFormSave event
@@ -139,6 +142,7 @@ switch ($_POST['mode']) {
             'properties' => $properties,
             'category' => $categoryid,
             'disabled' => $disabled,
+            'editedon' => $currentdate
         ), $modx->getFullTableName('site_snippets'), "id='{$id}'");
 
         // invoke OnSnipFormSave event

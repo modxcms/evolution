@@ -16,6 +16,7 @@ $disabled = $_POST['disabled'] == "on" ? '1' : '0';
 $moduleguid = $modx->db->escape($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 $parse_docblock = $_POST['parse_docblock'] == "1" ? '1' : '0';
+$currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -80,6 +81,8 @@ switch ($_POST['mode']) {
             'locked' => $locked,
             'properties' => $properties,
             'category' => $categoryid,
+            'createdon' => $currentdate,
+            'editedon' => $currentdate
         ), $tblSitePlugins);
 
         // save event listeners
@@ -134,6 +137,7 @@ switch ($_POST['mode']) {
             'locked' => $locked,
             'properties' => $properties,
             'category' => $categoryid,
+            'editedon' => $currentdate
         ), $tblSitePlugins, "id='{$id}'");
 
         // save event listeners
