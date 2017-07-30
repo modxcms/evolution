@@ -232,5 +232,3 @@ function saveDocumentAccessPermissons()
         }
     }
 }
-
-?>
