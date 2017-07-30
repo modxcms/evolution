@@ -32,11 +32,11 @@ class ContextMenu {
 		}
 		$action = " onmouseover=\"this.className='cntxMnuItemOver';\" onmouseout=\"this.className='cntxMnuItem';\" onclick=\"$action; hideCntxMenu('" . $this->id . "');\"";
 		$this->html .= "<div class='" . ($disabled ? "cntxMnuItemDisabled" : "cntxMnuItem") . "' $action>";
-		if(substr($img, 0, 6) == 'media/') {
-			$img = '<img src="' . $img . '" />';
-		} else if(strpos($img, '<') !== 0) {
-			$img = '<i class="' . $img . '"></i>';
-		}
+        if(substr($img, 0, 5) == 'fa fa') {
+            $img = '<i class="' . $img . '"></i>';
+        } else if(substr($img, 0, 1) != '<') {
+            $img = '<img src="' . $img . '" />';
+        }
 		$this->html .= $img . '&nbsp;' . $text . '</div>';
 	}
 
