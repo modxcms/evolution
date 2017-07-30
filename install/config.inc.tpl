@@ -11,7 +11,7 @@ $database_connection_method = '[+connection_method+]';
 $dbase             = '`[+dbase+]`';
 $table_prefix      = '[+table_prefix+]';
 
-$lastInstallTime = [+lastInstallTime+];
+$lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
 
