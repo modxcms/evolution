@@ -21,12 +21,12 @@
 
 		<div id="manage-categories-pane" class="tab-pane">
 			<script type="text/javascript">
-				tpCategories = new WebFXTabPane($('manage-categories-pane'));
+				tpCategories = new WebFXTabPane(document.getElementById('manage-categories-pane'));
 			</script>
 
 			<div id="tab-add-category" class="tab-page">
 				<h2 id="tab-header-add" class="tab"><i class="fa fa-plus-square-o"></i> <?= $view->txt('cm_add_new_category') ?></h2>
-				<script type="text/javascript">tpCategories.addTabPage($('tab-add-category'));</script>
+				<script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-add-category'));</script>
 				<?php $view->renderView('chunks/messages', $view->getMessages('add')) ?>
 				<?php $view->renderView('add') ?>
 			</div><!-- end __ #tab-add-category .tab-page -->
@@ -35,21 +35,21 @@
 
 				<div id="tab-edit-categories" class="tab-page">
 					<h2 id="tab-header-edit" class="tab"><i class="fa fa-pencil"></i> <?= $view->txt('cm_edit_categories') ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-edit-categories'));</script>
+					<script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-edit-categories'));</script>
 					<?php $view->renderView('chunks/messages', $view->getMessages('edit')) ?>
 					<?php $view->renderView('edit', $data) ?>
 				</div><!-- end __ #tab-edit-categories .tab-page -->
 
 				<div id="tab-sort-categories" class="tab-page">
 					<h2 id="tab-header-sort" class="tab"><i class="fa fa-sort"></i> <?= $view->txt('cm_sort_categories') ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-sort-categories'));</script>
+					<script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-sort-categories'));</script>
 					<?php $view->renderView('chunks/messages', $view->getMessages('sort')) ?>
 					<?php $view->renderView('sort', $data) ?>
 				</div><!-- end __ #tab-sort-categories .tab-page -->
 
 				<div id="tab-categorize-elements" class="tab-page">
 					<h2 id="tab-header-categorize" class="tab"><i class="fa fa-arrows"></i> <?= $view->txt('cm_categorize_elements') ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-categorize-elements'));</script>
+					<script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-categorize-elements'));</script>
 					<?php $view->renderView('chunks/messages', $view->getMessages('categorize')) ?>
 					<?php $view->renderView('categorize', $data) ?>
 				</div><!-- end __ #tab-edit-categories .tab-page -->
@@ -60,7 +60,7 @@
 
 				<div id="tab-translate-phrases" class="tab-page">
 					<h2 id="tab-header-translate" class="tab"><?= $view->txt('Translations') ?></h2>
-					<script type="text/javascript">tpCategories.addTabPage($('tab-translate-phrases'));</script>
+					<script type="text/javascript">tpCategories.addTabPage(document.getElementById('tab-translate-phrases'));</script>
 					<?php $view->renderView('chunks/messages', $view->getMessages('translate')) ?>
 					<?php $view->renderView('translate', $view->new_translations[$view->get('manager_language')]) ?>
 				</div><!-- end __ #tab-translate-phrases .tab-page -->
