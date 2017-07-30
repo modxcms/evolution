@@ -195,7 +195,7 @@ class ManagerAPI {
 	function setSystemChecksum($checksum) {
 		global $modx;
 		$tbl_system_settings = $modx->getFullTableName('system_settings');
-		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','{$checksum}')";
+		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','" . $modx->db->escape($checksum) . "')";
         $modx->db->query($sql);
 	}
 	
