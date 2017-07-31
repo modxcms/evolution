@@ -2,6 +2,7 @@
 class DBAPI {
 	var $conn;
 	var $config;
+	var $lastQuery;
 	var $isConnected;
 
 	function __construct($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
@@ -94,6 +95,7 @@ class DBAPI {
 			$this->connect();
 		}
 		$tstart = $modx->getMicroTime();
+		$this->lastQuery = $sql;
 		if (!($result = $this->conn->query($sql))) {
 			if(!$watchError) return;
             switch(mysqli_errno($this->conn)) {
