@@ -764,6 +764,9 @@ class DocumentParser {
         
         $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
 
+        if    (strpos($this->documentOutput,'\{')!==false) $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+        elseif(strpos($this->documentOutput,'\[')!==false) $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+        
         echo $this->documentOutput;
 
         if ($this->dumpSQL) echo $this->queryCode;
@@ -793,6 +796,22 @@ class DocumentParser {
         ob_end_flush();
     }
 
+    function RecoveryEscapedTags($contents) {
+        $tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]';
+        $tags = explode(',',$tags);
+        $rTags = $this->_getEscapedTags($tags);
+        $contents = str_replace($rTags,$tags,$contents);
+        return $contents;
+    }
+    
+    function _getEscapedTags($tags) {
+        $rTags = array();
+        foreach($tags as $tag) {
+            $rTags[] = '\\'.$tag[0].'\\'.$tag[1];
+        }
+        return $rTags;
+    }
+    
     function getTimerStats($tstart) {
         $stats = array();
 
