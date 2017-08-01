@@ -77,15 +77,6 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   KEY `user`(`user`)
 ) ENGINE=MyISAM COMMENT='Stores event and error logs';
 
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}keyword_xref` (
-  `content_id` int(11) NOT NULL default '0',
-  `keyword_id` int(11) NOT NULL default '0',
-  KEY `content_id` (`content_id`),
-  KEY `keyword_id` (`keyword_id`)
-) ENGINE=MyISAM COMMENT='Cross reference bewteen keywords and content';
-
-
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `id` int(10) NOT NULL auto_increment,
   `timestamp` int(20) NOT NULL default '0',
@@ -160,8 +151,6 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `publishedby` int(10) NOT NULL default '0' COMMENT 'ID of user who published the document',
   `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title',
   `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count',
-  `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords',
-  `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags',
   `privateweb` tinyint(1) NOT NULL default '0' COMMENT 'Private web document',
   `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document',
   `content_dispo` tinyint(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
@@ -174,14 +163,6 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   KEY typeidx (`type`),
   FULLTEXT KEY `content_ft_idx` (`pagetitle`,`description`,`content`)
 ) ENGINE=MyISAM COMMENT='Contains the site document tree.';
-
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
-  `content_id` int(11) NOT NULL default '0',
-  `metatag_id` int(11) NOT NULL default '0',
-  KEY `content_id` (`content_id`),
-  KEY `metatag_id` (`metatag_id`)
-) ENGINE=MyISAM COMMENT='Reference table between meta tags and content';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
@@ -199,25 +180,6 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the snippet',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains the site chunks.';
-
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
-  `id` int(11) NOT NULL auto_increment,
-  `keyword` varchar(40) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `keyword` (`keyword`)
-) ENGINE=MyISAM COMMENT='Site keyword list';
-
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
-  `id` integer NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `tag` varchar(50) NOT NULL DEFAULT '' COMMENT 'tag name',
-  `tagvalue` varchar(255) NOT NULL DEFAULT '',
-  `http_equiv` tinyint NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
-  PRIMARY KEY(`id`)
-) ENGINE=MyISAM COMMENT='Site meta tags';
-
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
   `id` integer NOT NULL AUTO_INCREMENT,
@@ -480,8 +442,6 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `exec_module` int(1) NOT NULL DEFAULT 0,
   `view_eventlog` int(1) NOT NULL DEFAULT 0,
   `delete_eventlog` int(1) NOT NULL DEFAULT 0,
-  `manage_metatags` int(1) NOT NULL DEFAULT 0 COMMENT 'manage site meta tags and keywords',
-  `edit_doc_metatags` int(1) NOT NULL DEFAULT 0 COMMENT 'edit document meta tags and keywords' ,
   `new_web_user` int(1) NOT NULL default '0',
   `edit_web_user` int(1) NOT NULL default '0',
   `save_web_user` int(1) NOT NULL default '0',
@@ -929,9 +889,9 @@ REPLACE INTO `{PREFIX}user_attributes`
 
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks,category_manager) VALUES
-(2,'Editor','Limited to managing content',1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,0),
-(3,'Publisher','Editor with expanded permissions including manage users\, update Elements and site settings',1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0);
+(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks,category_manager) VALUES
+(2,'Editor','Limited to managing content',1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,0),
+(3,'Publisher','Editor with expanded permissions including manage users\, update Elements and site settings',1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0);
 
 
 # ]]non-upgrade-able
@@ -988,8 +948,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks,category_manager) VALUES 
-(1, 'Administrator', 'Site administrators have full access to all functions',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks,category_manager) VALUES 
+(1, 'Administrator', 'Site administrators have full access to all functions',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 
 # 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
@@ -1150,8 +1110,6 @@ UPDATE `{PREFIX}user_roles` SET
   exec_module=1,
   view_eventlog = 1,
   delete_eventlog = 1,
-  manage_metatags = 1,
-  edit_doc_metatags = 1,
   new_web_user = 1,
   edit_web_user = 1,
   save_web_user = 1,

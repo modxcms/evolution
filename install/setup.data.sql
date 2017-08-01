@@ -2,18 +2,6 @@
 #
 # Each sql command is separated by double lines
 
-
-#
-# Dumping data for table `keyword_xref`
-#
-
-
-REPLACE INTO `{PREFIX}keyword_xref` VALUES ('3','1');
-
-
-REPLACE INTO `{PREFIX}keyword_xref` VALUES ('4','1');
-
-
 #
 # Dumping data for table `documentgroup_names`
 #
@@ -95,25 +83,6 @@ INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'reflect_month_tpl', 'For 
 
 
 INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'ContactStyles', 'Styles for form validation', 0, 'none', 1, 0, '<style type="text/css">\r\ndiv.errors{ color:#F00; }\r\n#EmailForm .invalidValue{ background: #FFDFDF; border:1px solid #F00; }\r\n#EmailForm .requiredValue{ background: #FFFFDF; border:1px solid #F00; }\r\n</style>', 0);
-
-
-
-#
-# Dumping data for table `site_keywords`
-#
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('1','MODX');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('2','content management system');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('3','Front End Editing');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('4','login');
-
 
 #
 # Dumping data for table `site_tmplvar_contentvalues`

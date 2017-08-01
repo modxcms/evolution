@@ -46,11 +46,7 @@ $tbl_document_group_names = $modx->getFullTableName('documentgroup_names');
 $tbl_member_groups = $modx->getFullTableName('member_groups');
 $tbl_membergroup_access = $modx->getFullTableName('membergroup_access');
 $tbl_document_groups = $modx->getFullTableName('document_groups');
-$tbl_keyword_xref = $modx->getFullTableName('keyword_xref');
 $tbl_site_content = $modx->getFullTableName('site_content');
-$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
-$tbl_site_keywords = $modx->getFullTableName('site_keywords');
-$tbl_site_metatags = $modx->getFullTableName('site_metatags');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_access = $modx->getFullTableName('site_tmplvar_access');
 $tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
@@ -274,20 +270,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				}
 			}
 			return true;
-		}
-
-		function clearKeywordSelection() {
-			var opt = document.mutate.elements["keywords[]"].options;
-			for(var i = 0; i < opt.length; i++) {
-				opt[i].selected = false;
-			}
-		}
-
-		function clearMetatagSelection() {
-			var opt = document.mutate.elements["metatags[]"].options;
-			for(var i = 0; i < opt.length; i++) {
-				opt[i].selected = false;
-			}
 		}
 
 		var curTemplate = -1;
@@ -1222,82 +1204,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</div><!-- end #tabSettings -->
 					<?php } ?>
 
-					<!-- :TODO  tab META deleted in the future-->
-
-					<?php if($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
-						// get list of site keywords
-						$keywords = array();
-						$ds = $modx->db->select('id, keyword', $tbl_site_keywords, '', 'keyword ASC');
-						while($row = $modx->db->getRow($ds)) {
-							$keywords[$row['id']] = $row['keyword'];
-						}
-						// get selected keywords using document's id
-						if(isset ($content['id']) && count($keywords) > 0) {
-							$keywords_selected = array();
-							$ds = $modx->db->select('keyword_id', $tbl_keyword_xref, "content_id='{$content['id']}'");
-							while($row = $modx->db->getRow($ds)) {
-								$keywords_selected[$row['keyword_id']] = ' selected="selected"';
-							}
-						}
-
-						// get list of site META tags
-						$metatags = array();
-						$ds = $modx->db->select('id, name', $tbl_site_metatags);
-						while($row = $modx->db->getRow($ds)) {
-							$metatags[$row['id']] = $row['name'];
-						}
-						// get selected META tags using document's id
-						if(isset ($content['id']) && count($metatags) > 0) {
-							$metatags_selected = array();
-							$ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, "content_id='{$content['id']}'");
-							while($row = $modx->db->getRow($ds)) {
-								$metatags_selected[$row['metatag_id']] = ' selected="selected"';
-							}
-						}
-						?>
-						<!-- META Keywords -->
-						<div class="tab-page" id="tabMeta">
-							<h2 class="tab"><?= $_lang['meta_keywords'] ?></h2>
-							<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabMeta"));</script>
-
-							<table>
-								<tr>
-									<td><?= $_lang['resource_metatag_help'] ?><br /><br />
-										<table>
-											<tr>
-												<td><span class="warning"><?= $_lang['keywords'] ?></span><br />
-													<select name="keywords[]" multiple="multiple" size="16" class="inputBox" onchange="documentDirty=true;">
-														<?php
-														foreach($keywords as $key => $value) {
-															$selected = $keywords_selected[$key];
-															echo "\t\t\t\t" . '<option value="' . $key . '"' . $selected . '>' . $value . "</option>\n";
-														}
-														?>
-													</select>
-													<br />
-													<input type="button" value="<?= $_lang['deselect_keywords'] ?>" onclick="clearKeywordSelection();" />
-												</td>
-												<td><span class="warning"><?= $_lang['metatags'] ?></span><br />
-													<select name="metatags[]" multiple="multiple" size="16" class="inputBox" onchange="documentDirty=true;">
-														<?php
-														foreach($metatags as $key => $value) {
-															$selected = $metatags_selected[$key];
-															echo "\t\t\t\t" . '<option value="' . $key . '"' . $selected . '>' . $value . "</option>\n";
-														}
-														?>
-													</select>
-													<br />
-													<input type="button" value="<?= $_lang['deselect_metatags'] ?>" onclick="clearMetatagSelection();" />
-												</td>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</div><!-- end #tabMeta -->
+					
 
 						<?php
-					}
-
 					/*******************************
 					 * Document Access Permissions */
 					if($use_udperms == 1) {

@@ -863,17 +863,6 @@ switch ($action) {
 		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
 	break;
 /********************************************************************/
-/* keywords management                                              */
-/********************************************************************/
-	case 81:
-		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
-		include_once(includeFileProcessor("actions/manage_metatags.dynamic.php",$manager_theme));
-		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
-	break;
-	case 82:
-		include_once(includeFileProcessor("processors/metatags.processor.php",$manager_theme));
-	break;
-/********************************************************************/
 /* Export to file                                                   */
 /********************************************************************/
 	case 83:

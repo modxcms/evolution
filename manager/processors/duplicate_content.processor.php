@@ -113,8 +113,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// Duplicate the Document
 	$newparent = $modx->db->insert($content, $tblsc);
 
-	// duplicate document's TVs & Keywords
-	duplicateKeywords($docid, $newparent);
+	// duplicate document's TVs
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
 	
@@ -132,18 +131,6 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 
 	// return the new doc id
 	return $newparent;
-}
-
-// Duplicate Keywords
-function duplicateKeywords($oldid,$newid){
-	global $modx;
-
-	$tblkw = $modx->getFullTableName('keyword_xref');
-
-	$modx->db->insert(
-		array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
-		"{$newid}, keyword_id", $tblkw, "content_id='{$oldid}'" // Copy from
-	);
 }
 
 // Duplicate Document TVs
