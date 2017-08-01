@@ -167,9 +167,6 @@ echo implode("\n",$output)
            <td width="200">&nbsp;</td>
            <td class="comment"><?php echo $_lang['tree_show_protected_message']?></td>
          </tr>
-    <tr>
-      <td colspan="2"><div class="split"></div></td>
-    </tr>
 <tr>
 <td colspan="2"><div class="split"></div></td>
 </tr>
