@@ -797,19 +797,17 @@ class DocumentParser {
     }
 
     function RecoveryEscapedTags($contents) {
-        $tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]';
-        $tags = explode(',',$tags);
-        $rTags = $this->_getEscapedTags($tags);
-        $contents = str_replace($rTags,$tags,$contents);
-        return $contents;
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        return str_replace($rTags,$sTags,$contents);
     }
     
-    function _getEscapedTags($tags) {
-        $rTags = array();
-        foreach($tags as $tag) {
-            $rTags[] = '\\'.$tag[0].'\\'.$tag[1];
+    function getTagsForEscape($tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]') {
+        $srcTags = explode(',',$tags);
+        $repTags = array();
+        foreach($srcTags as $tag) {
+            $repTags[] = '\\'.$tag[0].'\\'.$tag[1];
         }
-        return $rTags;
+        return array($srcTags,$repTags);
     }
     
     function getTimerStats($tstart) {
