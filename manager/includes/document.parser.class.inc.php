@@ -3548,6 +3548,8 @@ class DocumentParser {
         if(empty($chunkName)) return $out;
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
+        } else if(stripos($chunkName,'@FILE')===0) {
+            $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
             $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
             $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
@@ -5013,7 +5015,7 @@ class DocumentParser {
         
         $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'].'files/', '');
         
-        if(strpos($str,'@FILE')!==0) return $str;
+        if(stripos($str,'@FILE')!==0) return $str;
         if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
         if($this->getExtFromFilename($str)==='.php') return 'Could not retrieve PHP file.';
@@ -5488,7 +5490,7 @@ class DocumentParser {
     }
     
     function splitKeyAndFilter($key) {
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false && stripos($key,'@FILE')!==0)
             list($key,$modifiers) = explode(':', $key, 2);
         else
             $modifiers = false;
