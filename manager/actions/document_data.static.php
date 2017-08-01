@@ -303,7 +303,6 @@ if($numRecords > 0) {
 						<td valign="top"><?= $_lang['resource_alias'] ?>:</td>
 						<td><?= $content['alias'] != '' ? $content['alias'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
 					</tr>
-					<?php
 					<tr>
 						<td colspan="2">&nbsp;</td>
 					</tr>
