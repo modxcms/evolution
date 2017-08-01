@@ -170,18 +170,6 @@ echo implode("\n",$output)
     <tr>
       <td colspan="2"><div class="split"></div></td>
     </tr>
-     <tr>
-         <td nowrap class="warning"><?php echo $_lang['show_meta'] ?></td>
-         <td>
-           <label><input type="radio" name="show_meta" value="1" <?php echo $show_meta=='1' ? 'checked="checked"' : ""; ?> />
-           <?php echo $_lang['yes']?></label><br />
-           <label><input type="radio" name="show_meta" value="0" <?php echo ($show_meta=='0') ? 'checked="checked"' : ''; ?> />
-           <?php echo $_lang['no']?></label></td>
-       </tr>
-     <tr>
-       <td width="200">&nbsp;</td>
-       <td class="comment"><?php echo $_lang['show_meta_message']?></td>
-     </tr>
 <tr>
 <td colspan="2"><div class="split"></div></td>
 </tr>
