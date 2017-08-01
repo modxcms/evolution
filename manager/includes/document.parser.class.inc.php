@@ -989,6 +989,7 @@ class DocumentParser {
      * @return string
      */
     function mergeDocumentContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[*') === false)
             return $content;
         if(!isset($this->documentIdentifier)) return $content;
@@ -1114,6 +1115,7 @@ class DocumentParser {
      * @return string
      */
     function mergeSettingsContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[(') === false)
             return $content;
         
@@ -1141,6 +1143,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if(strpos($content,'{{')===false) return $content;
         
         if(!$ph) $ph = $this->chunkCache;
@@ -1326,6 +1329,19 @@ class DocumentParser {
             $content = str_replace($addBreakMatches,'',$content);
             if(strpos($content,$left)!==false)
                 $content = str_replace($matches[0],'',$content);
+        }
+        return $content;
+    }
+    
+    function escapeLiteralTagsContent($content, $left='<@LITERAL>', $right='<@ENDLITERAL>') {
+        if(stripos($content,$left)===false) return $content;
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        if(!empty($matches)) {
+            foreach($matches[1] as $i=>$v) {
+                $v = str_ireplace($sTags,$rTags,$v);
+                $content = str_replace($matches[0][$i],$v,$content);
+            }
         }
         return $content;
     }
@@ -3579,6 +3595,8 @@ class DocumentParser {
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
+        
+        if(stripos($tpl,'<@LITERAL>')!==false) $tpl= $this->escapeLiteralTagsContent($tpl);
         
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
