@@ -42,7 +42,11 @@ class site_content_menuDocLister extends site_contentDocLister
         $maxDepth = $this->getCFGDef('maxDepth', 10);
         //TODO кэширование
         if ($this->getCFGDef('hideSubMenus', 0) && empty($this->getCFGDef('openIds'))) {
-            $maxDepth = $this->setActiveBranch($this->getHereId());
+            $maxDepth = min($maxDepth, $this->setActiveBranch($this->getHereId()));
+            if (empty(array_intersect($this->IDs, $this->activeBranch))) {
+                $maxDepth = 1;
+                $this->config->setConfig(array('hideSubMenus' => 0));
+            };
         } else {
             $this->setActiveBranch($this->getHereId());
         }
@@ -243,6 +247,7 @@ class site_content_menuDocLister extends site_contentDocLister
             unset($docs[$currentLevel]);
             $currentLevel--;
         }
+
         unset($data);
         $out = '';
         $joinMenus = $this->getCFGDef('joinMenus', 0) && !$this->getCFGDef('showParents', 0);
