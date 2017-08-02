@@ -108,22 +108,21 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 b.className = 'evo-tooltip';
                 let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
                 [].slice.call(a).forEach(function(f) {
-                    f.addEventListener('mouseenter', function() {
+                    f.addEventListener('mouseenter', function(e) {
                         b.innerHTML = (this.dataset && this.dataset.tooltip ? this.dataset.tooltip : this.innerHTML);
-                        this.position = this.getBoundingClientRect();
-                        if (this.position.left + b.offsetWidth > window.innerWidth) {
-                            b.style.left = Math.round(this.position.left - b.offsetWidth - (c * 2)) + 'px';
+                        if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
+                            b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
                             b.classList.add('evo-tooltip-right');
                         } else {
-                            b.style.left = Math.round(this.position.left + this.position.width) + 'px';
+                            b.style.left = Math.round(e.pageX) + 'px';
                             b.classList.add('evo-tooltip-left');
                         }
-                        if (this.position.top - (b.offsetHeight / 2) - c < 0) {
+                        if (e.pageY - (b.offsetHeight / 2) - c < 0) {
                             b.style.top = 0;
-                        } else if (this.position.top + (b.offsetHeight / 2) > window.innerHeight) {
+                        } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
                             b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
                         } else {
-                            b.style.top = Math.round(this.position.top - (b.offsetHeight / 2)) - c + 'px';
+                            b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
                         }
                         b.classList.add('show');
                     });
