@@ -1004,7 +1004,7 @@ class DocumentParser {
             list($key,$context)   = explode('@',$key,2);
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
-            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            if($context) $value = $this->_contextValue("{$key}@{$context}",$this->documentObject['parent']);
             else         $value = isset($ph[$key]) ? $ph[$key] : '';
 
             if (is_array($value)) {
