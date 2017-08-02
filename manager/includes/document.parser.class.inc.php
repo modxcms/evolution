@@ -794,19 +794,17 @@ class DocumentParser {
     }
 
     function RecoveryEscapedTags($contents) {
-        $tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]';
-        $tags = explode(',',$tags);
-        $rTags = $this->_getEscapedTags($tags);
-        $contents = str_replace($rTags,$tags,$contents);
-        return $contents;
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        return str_replace($rTags,$sTags,$contents);
     }
     
-    function _getEscapedTags($tags) {
-        $rTags = array();
-        foreach($tags as $tag) {
-            $rTags[] = '\\'.$tag[0].'\\'.$tag[1];
+    function getTagsForEscape($tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]') {
+        $srcTags = explode(',',$tags);
+        $repTags = array();
+        foreach($srcTags as $tag) {
+            $repTags[] = '\\'.$tag[0].'\\'.$tag[1];
         }
-        return $rTags;
+        return array($srcTags,$repTags);
     }
     
     function getTimerStats($tstart) {
@@ -988,6 +986,7 @@ class DocumentParser {
      * @return string
      */
     function mergeDocumentContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[*') === false)
             return $content;
         if(!isset($this->documentIdentifier)) return $content;
@@ -1113,6 +1112,7 @@ class DocumentParser {
      * @return string
      */
     function mergeSettingsContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[(') === false)
             return $content;
         
@@ -1140,6 +1140,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if(strpos($content,'{{')===false) return $content;
         
         if(!$ph) $ph = $this->chunkCache;
@@ -1325,6 +1326,19 @@ class DocumentParser {
             $content = str_replace($addBreakMatches,'',$content);
             if(strpos($content,$left)!==false)
                 $content = str_replace($matches[0],'',$content);
+        }
+        return $content;
+    }
+    
+    function escapeLiteralTagsContent($content, $left='<@LITERAL>', $right='<@ENDLITERAL>') {
+        if(stripos($content,$left)===false) return $content;
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        if(!empty($matches)) {
+            foreach($matches[1] as $i=>$v) {
+                $v = str_ireplace($sTags,$rTags,$v);
+                $content = str_replace($matches[0][$i],$v,$content);
+            }
         }
         return $content;
     }
@@ -3543,6 +3557,8 @@ class DocumentParser {
         if(empty($chunkName)) return $out;
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
+        } else if(stripos($chunkName,'@FILE')===0) {
+            $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
             $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
             $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
@@ -3572,6 +3588,8 @@ class DocumentParser {
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
+        
+        if(stripos($tpl,'<@LITERAL>')!==false) $tpl= $this->escapeLiteralTagsContent($tpl);
         
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
@@ -5008,7 +5026,7 @@ class DocumentParser {
         
         $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'].'files/', '');
         
-        if(strpos($str,'@FILE')!==0) return $str;
+        if(stripos($str,'@FILE')!==0) return $str;
         if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
         if($this->getExtFromFilename($str)==='.php') return 'Could not retrieve PHP file.';
@@ -5483,7 +5501,7 @@ class DocumentParser {
     }
     
     function splitKeyAndFilter($key) {
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false && stripos($key,'@FILE')!==0)
             list($key,$modifiers) = explode(':', $key, 2);
         else
             $modifiers = false;
