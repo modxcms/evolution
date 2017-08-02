@@ -4,9 +4,9 @@
 		<li><a id="categorize-submit" class="primary" href="javascript:;" onclick="document.getElementById('categorize-form').submit();return false;"><?php echo $view->txt('cm_save_categorization'); ?></a></li>
 		<li><a href="javascript:;" id="categorize-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
-	<div id="categorize-info" style="display:none">
-		<p class="element-edit-message-tab">Categorize elements easily by dragging them into categories.</p>
-	</div>
+	<p id="categorize-info" class="element-edit-message">
+		Categorize elements easily by dragging them into categories.
+	</p>
 	<script>
 		jQuery("#categorize-help").click(function() {
 			jQuery('#categorize-info').toggle();

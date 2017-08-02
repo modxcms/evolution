@@ -4,9 +4,9 @@
 		<li><a class="primary" href="javascript:;" onclick="document.getElementById('categories-sort-form').submit();return false;"><?php echo $view->txt('cm_save_new_sorting'); ?></a></li>
 		<li><a href="javascript:;" id="sort-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
-	<div id="sort-info" style="display:none">
-		<p class="element-edit-message-tab">Drag category up or down to change its rank. Can be very useful when used with <a href="https://github.com/pmfx/CategorizedTabs" target="_blank">CategorizedTabs</a> plugin to change tabs order.</p>
-	</div>
+	<p id="sort-info" class="element-edit-message">
+		Drag category up or down to change its rank. Can be very useful when used with <a href="https://github.com/pmfx/CategorizedTabs" target="_blank">CategorizedTabs</a> plugin to change tabs order.
+	</p>
 	<script>
 		jQuery("#sort-help").click(function() {
 			jQuery('#sort-info').toggle();

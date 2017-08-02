@@ -4,9 +4,9 @@
 		<li><a class="primary" href="javascript:;" onclick="document.getElementById('category-edit-form').submit();return false;"><?php echo $view->txt('cm_update_categories'); ?></a></li>
 		<li><a href="javascript:;" id="edit-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
-	<div id="edit-info" style="display:none">
-		<p class="element-edit-message-tab">Change category name or delete category from the Manager.</p>
-	</div>
+	<p id="edit-info" class="element-edit-message">
+		Change category name or delete category from the Manager.
+	</p>
 	<script>
 		jQuery("#edit-help").click(function() {
 			jQuery('#edit-info').toggle();

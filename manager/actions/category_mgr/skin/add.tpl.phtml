@@ -4,9 +4,9 @@
 		<li><a class="primary" href="javascript:;" onclick="document.getElementById('add_form').submit();return false;"><?php echo $view->txt('cm_create_new_category'); ?></a></li>
 		<li><a href="javascript:;" id="add-help"><?php echo $_lang['help']; ?></a></li>
 	</ul>
-	<div id="add-info" style="display:none">
-		<p class="element-edit-message-tab">Add a new category to the Manager.</p>
-	</div>
+	<p id="add-info" class="element-edit-message">
+		Add a new category to the Manager.
+	</p>
 	<script>
 		jQuery("#add-help").click(function() {
 			jQuery('#add-info').toggle();
