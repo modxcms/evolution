@@ -878,7 +878,7 @@ class DocumentParser {
      */
     function postProcess() {
         // if the current document was generated, cache it!
-        if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
+        if ($this->config['enable_cache'] && $this->documentGenerated && $this->documentObject['cacheable'] && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
@@ -2292,7 +2292,12 @@ class DocumentParser {
      */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
-        $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+        
+        if($this->config['enable_cache']==2 && $this->isLoggedIn()) $this->config['enable_cache'] = 0;
+        
+        if($this->config['enable_cache'])
+            $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+        else $this->documentContent= '';
         
         if ($this->documentContent == '') {
             // get document object from DB

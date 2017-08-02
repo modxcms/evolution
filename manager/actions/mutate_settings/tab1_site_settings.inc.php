@@ -216,6 +216,15 @@ table.sysSettings tr.noborder td {border:none;}
 </tr>
 
 <tr>
+<th><?php echo $_lang['enable_cache_title'] ?><br><small>[(enable_cache)]</small></th>
+<td>
+    <?php echo wrap_label($_lang['enabled'],form_radio('enable_cache', 1));?><br />
+    <?php echo wrap_label($_lang['disabled'], form_radio('enable_cache', 0));?><br />
+    <?php echo wrap_label($_lang['disabled_at_login'], form_radio('enable_cache', 2));?>
+</td>
+</tr>
+
+<tr>
 <th><?php echo $_lang['cache_type_title'] ?><br><small>[(cache_type)]</small></th>
 <td>
 <?php echo wrap_label($_lang['cache_type_1'],form_radio('cache_type', 1));?><br />
