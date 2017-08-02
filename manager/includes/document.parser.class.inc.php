@@ -103,7 +103,7 @@ class DocumentParser {
         $this->dumpPlugins  = false;
         $this->stopOnNotice = false;
         $this->snipLapCount = 0;
-        $this->time = time(); // for having global timestamp
+        $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
     }
@@ -686,7 +686,7 @@ class DocumentParser {
 
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
-            $this->recentUpdate = time() + $this->config['server_offset_time'];
+            $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
             
             $this->documentOutput= str_replace('[!', '[[', $this->documentOutput);
             $this->documentOutput= str_replace('!]', ']]', $this->documentOutput);
@@ -2821,7 +2821,7 @@ class DocumentParser {
         $this->db->insert(array(
             'eventid' => $evtid,
             'type' =>$type,
-            'createdon' => time() + $this->config['server_offset_time'],
+            'createdon' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
             'source' => $esc_source,
             'description' => $msg,
             'user' => $LoginUserID,
@@ -4154,7 +4154,7 @@ class DocumentParser {
                 'sender'      => $from,
                 'recipient'   => $to,
                 'private'     => $private,
-                'postdate'    => time() + $this->config['server_offset_time'],
+                'postdate'    => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
                 'messageread' => 0,
             ), $this->getFullTableName('user_messages'));
     }
@@ -5218,7 +5218,7 @@ class DocumentParser {
         $table[] = array('Referer' , $referer);
         $table[] = array('User Agent' , $ua);
         $table[] = array('IP' , $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time' , date("Y-m-d H:i:s", time() + $this->config['server_offset_time']));
+        $table[] = array('Current time' , date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time']));
         $str .= $MakeTable->create($table, array('Basic info',''));
         $str .= "<br />";
 
