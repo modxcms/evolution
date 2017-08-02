@@ -56,7 +56,7 @@ to { transform: rotate(360deg) }
 .ElementsInTree #tree .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
 .ElementsInTree #tree .tab-row { padding: 0; margin-bottom: -1px; }
 .ElementsInTree #tree .tab-row .tab { height: 2rem; line-height: 2rem; }
-.ElementsInTree #tree .tab-page { background-color: #fff; border: 1px solid #ddd; }
+.ElementsInTree #tree .tab-page { background-color: #fff; border: 1px solid #ddd; box-shadow: none }
 .ElementsInTree #tree .form-control { padding: 0.25rem; font-size: 0.8rem; }
 .ElementsInTree #tree .eltree { line-height: 1.5 }
 .ElementsInTree #tree .eltree img { width: 0.8em; height: 0.8em }
