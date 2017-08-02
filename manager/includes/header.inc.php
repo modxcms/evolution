@@ -109,7 +109,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
                 [].slice.call(a).forEach(function(f) {
                     f.addEventListener('mouseenter', function(e) {
-                        b.innerHTML = (this.dataset && this.dataset.tooltip ? this.dataset.tooltip : this.innerHTML);
+                        b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
                         if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
                             b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
                             b.classList.add('evo-tooltip-right');
