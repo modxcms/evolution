@@ -16,7 +16,6 @@ $BINDINGS = array (
 
 function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
-    $etomite = & $modx;
     $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')

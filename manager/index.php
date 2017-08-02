@@ -127,8 +127,6 @@ if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
 	$_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
 }
 
-define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
-
 // include_once config file
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
@@ -145,7 +143,6 @@ include_once "document.parser.class.inc.php";
 $modx = new DocumentParser;
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
-$etomite = &$modx; // for backward compatibility
 $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 

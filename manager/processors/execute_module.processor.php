@@ -64,7 +64,6 @@ include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
 // evalModule
 function evalModule($moduleCode,$params){
 	global $modx;
-	$etomite = &$modx;
 	$modx->event->params = &$params; // store params inside event object
 	if(is_array($params)) {
 		extract($params, EXTR_SKIP);

@@ -320,9 +320,6 @@ class DocumentParser {
             }
         }
 
-        // added for backwards compatibility - garry FS#104
-        $this->config['etomite_charset'] = & $this->config['modx_charset'];
-
         // setup default site id - new installation should generate a unique id for the site.
         if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
 
@@ -1357,7 +1354,6 @@ class DocumentParser {
      * @param array $params
      */
     function evalPlugin($pluginCode, $params) {
-        $etomite = $modx = & $this;
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1401,7 +1397,6 @@ class DocumentParser {
      * @return string
      */
     function evalSnippet($phpcode, $params) {
-        $etomite = $modx = & $this;
         /*
         if(isset($params) && is_array($params)) {
             foreach($params as $k=>$v) {
@@ -1446,8 +1441,6 @@ class DocumentParser {
     function evalSnippets($content)
     {
         if(strpos($content,'[[')===false) return $content;
-        
-        $etomite= & $this;
         
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
