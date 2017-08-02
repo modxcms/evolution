@@ -608,57 +608,57 @@ class DocumentParser {
         
         $cache_path = $this->getHashFile($key);
         
-        if (is_file($cache_path)) {
-            $content = file_get_contents($cache_path, false);
-            if(substr($content,0,5)==='<?php') $content = substr($content, strpos($content,'?>')+2); // remove php header
-            $a= explode('<!--__MODxCacheSpliter__-->', $content, 2);
-            if (count($a) == 1)
-                $result = $a[0]; // return only document content
-            else {
-                $docObj= unserialize($a[0]); // rebuild document object
-                // check page security
-                if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
-                    $pass= false;
-                    $usrGrps= $this->getUserDocGroups();
-                    $docGrps= explode(',', $docObj['__MODxDocGroups__']);
-                    // check is user has access to doc groups
-                    if (is_array($usrGrps)) {
-                        foreach ($usrGrps as $k => $v)
-                            if (in_array($v, $docGrps)) {
-                                $pass= true;
-                                break;
-                            }
-                    }
-                    // diplay error pages if user has no access to cached doc
-                    if (!$pass) {
-                        if ($this->config['unauthorized_page']) {
-                            // check if file is not public
-                            $rs= $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
-                            $total= $this->db->getValue($rs);
-                        }
-                        else $total = 0;
-                        
-                        if ($total > 0) $this->sendUnauthorizedPage();
-                        else            $this->sendErrorPage();
-                        
-                        exit; // stop here
-                    }
-                }
-                // Grab the Scripts
-                if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
-                if (isset($docObj['__MODxJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
-
-                // Remove intermediate variables
-                unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
-
-                $this->documentObject= $docObj;
-                
-                $result = $a[1]; // return document content
-            }
-        } else {
+        if (!is_file($cache_path)) {
             $this->documentGenerated= 1;
             return '';
         }
+        $content = file_get_contents($cache_path, false);
+        if(substr($content,0,5)==='<?php') $content = substr($content, strpos($content,'?>')+2); // remove php header
+        $a= explode('<!--__MODxCacheSpliter__-->', $content, 2);
+        if (count($a) == 1)
+            $result = $a[0]; // return only document content
+        else {
+            $docObj= unserialize($a[0]); // rebuild document object
+            // check page security
+            if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
+                $pass= false;
+                $usrGrps= $this->getUserDocGroups();
+                $docGrps= explode(',', $docObj['__MODxDocGroups__']);
+                // check is user has access to doc groups
+                if (is_array($usrGrps)) {
+                    foreach ($usrGrps as $k => $v) {
+                        if (!in_array($v, $docGrps)) continue;
+                        $pass= true;
+                        break;
+                    }
+                }
+                // diplay error pages if user has no access to cached doc
+                if (!$pass) {
+                    if ($this->config['unauthorized_page']) {
+                        // check if file is not public
+                        $rs= $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                        $total= $this->db->getValue($rs);
+                    }
+                    else $total = 0;
+                    
+                    if ($total > 0) $this->sendUnauthorizedPage();
+                    else            $this->sendErrorPage();
+                    
+                    exit; // stop here
+                }
+            }
+            // Grab the Scripts
+            if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
+            if (isset($docObj['__MODxJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
+
+            // Remove intermediate variables
+            unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
+
+            $this->documentObject= $docObj;
+            
+            $result = $a[1]; // return document content
+        }
+        
         $this->documentGenerated= 0;
         // invoke OnLoadWebPageCache  event
         $this->documentContent = $result;
