@@ -78,19 +78,19 @@ $serverArr = array(
 <div class="tab-page">
     <div class="container container-body">
         <p><b><?= $_lang['database_tables'] ?></b></p>
-        <p><?= $_lang['table_hoverinfo'] ?></p>
         <div class="row">
             <div class="table-responsive">
                 <table class="table data nowrap">
                     <thead>
                     <tr>
-                        <td width="50%"><?= $_lang["database_table_tablename"] ?></td>
-                        <td><?= $_lang["database_table_records"] ?></td>
-                        <td><?= $_lang["database_table_datasize"] ?></td>
-                        <td><?= $_lang["database_table_overhead"] ?></td>
-                        <td><?= $_lang["database_table_effectivesize"] ?></td>
-                        <td><?= $_lang["database_table_indexsize"] ?></td>
-                        <td><?= $_lang["database_table_totalsize"] ?></td>
+                        <td><?= $_lang["database_table_tablename"] ?></td>
+                        <td width="1%"></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_records"] ?></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_datasize"] ?></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_overhead"] ?></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_effectivesize"] ?></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_indexsize"] ?></td>
+                        <td class="text-xs-center"><?= $_lang["database_table_totalsize"] ?></td>
                     </tr>
                     </thead>
                     <tbody>
@@ -100,8 +100,9 @@ $serverArr = array(
                     $i = 0;
                     while ($log_status = $modx->db->getRow($rs)) {
                         ?>
-                        <tr title="<?= $log_status['Comment'] ?>" style="cursor:default">
+                        <tr>
                             <td class="text-primary"><b><?= $log_status['Name'] ?></b></td>
+                            <td class="text-xs-center"><?= (!empty($log_status['Comment']) ? '<i class="' . $_style['actions_help'] . '" data-tooltip="' . $log_status['Comment'] . '"></i>' : '') ?></td>
                             <td class="text-xs-right"><?= $log_status['Rows'] ?></td>
 
                             <?php
@@ -134,7 +135,7 @@ $serverArr = array(
                     ?>
                     <tr class="unstyled">
                         <td class="text-xs-right"><?= $_lang['database_table_totals'] ?></td>
-                        <td colspan="2">&nbsp;</td>
+                        <td colspan="3">&nbsp;</td>
                         <td class="text-xs-right"><?= $totaloverhead > 0 ? "<b class=\"text-danger\">" . $modx->nicesize($totaloverhead) . "</b><br />(" . number_format($totaloverhead) . " B)" : "-" ?></td>
                         <td colspan="2">&nbsp;</td>
                         <td class="text-xs-right"><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>

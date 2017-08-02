@@ -216,13 +216,13 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <tr>
                                     <td><label class="form-check-label"><input type="checkbox" name="chkselall" class="form-check-input" onclick="selectAll();" title="Select All Tables" /> <?= $_lang['database_table_tablename'] ?></label></td>
                                     <td width="1%"></td>
-                                    <td><?= $_lang['database_table_records'] ?></td>
-                                    <td><?= $_lang['database_collation'] ?></td>
-                                    <td><?= $_lang['database_table_datasize'] ?></td>
-                                    <td><?= $_lang['database_table_overhead'] ?></td>
-                                    <td><?= $_lang['database_table_effectivesize'] ?></td>
-                                    <td><?= $_lang['database_table_indexsize'] ?></td>
-                                    <td><?= $_lang['database_table_totalsize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_records'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_collation'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_datasize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_overhead'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_effectivesize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_indexsize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_totalsize'] ?></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -259,7 +259,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? $modx->nicesize($db_status['Data_free']) : '-') . '</td>' . "\n";
                                     }
 
-                                    echo '<td class="text-xs-right">' . $modx->nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td>' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
+                                    echo '<td class="text-xs-right">' . $modx->nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
 
                                     $total = $total + $db_status['Index_length'] + $db_status['Data_length'];
                                     $totaloverhead = $totaloverhead + $db_status['Data_free'];
@@ -269,7 +269,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <tfoot>
                                 <tr>
                                     <td class="text-xs-right"><?= $_lang['database_table_totals'] ?></td>
-                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="4">&nbsp;</td>
                                     <td class="text-xs-right"><?= $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
                                     <td colspan="2">&nbsp;</td>
                                     <td class="text-xs-right"><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
