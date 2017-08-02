@@ -96,7 +96,7 @@ if($numRecords > 0) {
 	//	$rowHeaderClass = 'gridHeader';
 	//	$rowRegularClass = 'gridItem';
 	//	$rowAlternateClass = 'gridAltItem';
-	$tableClass = 'table data';
+	$tableClass = 'table data nowrap';
 	$columnHeaderClass = array(
 		'text-center',
 		'text-left',
@@ -188,7 +188,7 @@ if($numRecords > 0) {
 		//$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
 		//$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
 		if($modx->hasPermission('edit_document')) {
-			$title = '<a class="doc-item' . $private . '" href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a></span>';
 		} else {
 			$title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
 		}
