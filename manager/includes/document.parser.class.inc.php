@@ -1369,6 +1369,7 @@ class DocumentParser {
      * @param array $params
      */
     function evalPlugin($pluginCode, $params) {
+        $modx = & $this;
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1412,6 +1413,7 @@ class DocumentParser {
      * @return string
      */
     function evalSnippet($phpcode, $params) {
+        $modx = & $this;
         /*
         if(isset($params) && is_array($params)) {
             foreach($params as $k=>$v) {
