@@ -1181,6 +1181,7 @@ class DocumentParser {
      */
     function mergePlaceholderContent($content,$ph=false) {
         
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[+') === false) return $content;
         
         if(!$ph) $ph = $this->placeholders;
