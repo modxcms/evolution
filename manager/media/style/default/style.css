@@ -139,10 +139,10 @@ form#mutate select.tv_url_select { padding: 5px 3px; }
 /* ppb:
 * Style mootools tooltips
 */
+.evo-tooltip, .custom-tip { position: fixed; z-index: 13000; width: 13rem; margin: 1rem; padding: 0.9rem 1rem; font-size: 0.75rem; line-height: 1.5; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; visibility: hidden; transition-duration: .3s; transform: translate3d(1rem, 0, 0); -webkit-box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15); box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15); }
+.evo-tooltip { opacity: 0; content: attr(data-tooltip); }
+.evo-tooltip.show { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
 [data-tooltip] { cursor: help }
-[data-tooltip]::after, .custom-tip { position: absolute; z-index: 13000; width: 13rem; margin-left: 1rem; padding: 0.9rem 1rem; font-size: 0.75rem; line-height: 1.5; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; transform: translate3d(1rem, 0, 0); }
-[data-tooltip]::after { opacity: 0; content: attr(data-tooltip); }
-[data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
 [data-tooltip].fa-question-circle { opacity: 0.15; }
 [data-tooltip].fa-question-circle:hover { opacity: 1; }
 th > [data-tooltip].fa-question-circle, td > [data-tooltip].fa-question-circle { float: right; }
