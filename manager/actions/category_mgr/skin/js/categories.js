@@ -4,16 +4,16 @@
 /**
  * Tips
  */
-new Tips($$('.mootooltip'),{className:'custom'} );
-new MooTips($$('.mootooltip_dom'), {
-    className :'assigned',
-    showOnClick: true,
-    showOnMouseEnter: true,
-    showDelay: 200,
-    hideDelay: 200,
-    offsets: {'x': 20, 'y': 20},
-    fixed: true
-});
+//new Tips($$('.mootooltip'),{className:'custom'} );
+//new MooTips($$('.mootooltip_dom'), {
+//    className :'assigned',
+//    showOnClick: true,
+//    showOnMouseEnter: true,
+//    showDelay: 200,
+//    hideDelay: 200,
+//    offsets: {'x': 20, 'y': 20},
+//    fixed: true
+//});
 
 /**
  * Sort Categories
@@ -29,10 +29,10 @@ new Sortables($('categories-sort'), {
         this.list.getChildren().each(function(element, i){
             element.getElement('input.sort').setProperty( 'value', (i+1) );
             element.getElement('span.sort').setHTML( (i+1) );
-            element.getElements('td').each(function(td){
-                td.removeClass('gridItem').removeClass('gridAltItem');
-                td.addClass( ( i%2===0 ) ? 'gridItem' : 'gridAltItem' );
-            });
+//            element.getElements('td').each(function(td){
+//                td.removeClass('gridItem').removeClass('gridAltItem');
+//                td.addClass( ( i%2===0 ) ? 'gridItem' : 'gridAltItem' );
+//            });
         });
     }
 });
@@ -42,7 +42,7 @@ new Sortables($('categories-sort'), {
  */
 var reset_position = function( drag ) {
     drag.setStyles({ left:0+"px", top:0+"px"  });
-}
+};
           
 var optDrop = {
     over: function(drag) {
@@ -58,7 +58,7 @@ var optDrop = {
         drag.injectInside(this);
         reset_position(drag);
     }
-}
+};
 
 var optDrag = {
     onStart: function(drag) {
@@ -68,7 +68,7 @@ var optDrag = {
         drag.setOpacity(1).setStyle('z-index', 1000);
         reset_position(drag);
     }
-}
+};
     
 var init_drag = function() {
 
