@@ -1001,7 +1001,7 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            list($key,$context)   = explode('@',$key . '@',2);
+            list($key,$context)   = explode('@',$key,2);
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
             if($context) $value = $this->_contextValue("{$key}@{$context}");
