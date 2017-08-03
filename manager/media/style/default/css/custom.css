@@ -113,6 +113,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data thead .sortable:hover a::after, .table.data thead .sortable-text:hover a::after, .table.data thead .sortable-numeric:hover a::after, .table.data thead .sortable-date:hover a::after { opacity: 1 }
 .table.data thead .sortable, .table.data thead .sortable-text, .table.data thead .sortable-numeric, .table.data thead .sortable-date { cursor: pointer }
 .table.data thead .sortable-text span, .table.data thead .sortable-numeric span, .table.data thead .sortable-date span { display: none }
+.table.data.table-sortable > tbody > tr { cursor: move; transition-duration: .5s }
+.table.data.table-sortable > tbody > tr.ghost { background-color: rgba(93, 109, 202, 0.16); color: #d9534f !important; transition: background-color .5s, color .5s, transform 0s }
 /* table-data-sm */
 .table.data.table-sm td, .table.data.table-sm th { padding: .25rem .5rem; }
 .table.data.table-sm th, .table.data.table-sm thead td { font-size: 0.75rem; text-transform: none; }

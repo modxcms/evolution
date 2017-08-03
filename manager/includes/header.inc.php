@@ -35,8 +35,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <?php
     $aArr = array('2');
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
-    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+        <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+        <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <?php } ?>
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
@@ -48,6 +48,96 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         if (typeof evo !== 'object') {
             evo = {};
         }
+
+        // evoTooltips
+        evo.tooltips = function(a) {
+            if (!a) {
+                return;
+            }
+            let b = document.querySelector('.evo-tooltip');
+            if (!b) {
+                b = document.createElement('div');
+            }
+            document.body.appendChild(b);
+            b.className = 'evo-tooltip';
+            let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
+            [].slice.call(a).forEach(function(f) {
+                f.addEventListener('mouseenter', function(e) {
+                    b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
+                    if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
+                        b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
+                        b.classList.add('evo-tooltip-right');
+                    } else {
+                        b.style.left = Math.round(e.pageX) + 'px';
+                        b.classList.add('evo-tooltip-left');
+                    }
+                    if (e.pageY - (b.offsetHeight / 2) - c < 0) {
+                        b.style.top = 0;
+                    } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
+                        b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
+                    } else {
+                        b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
+                    }
+                    b.classList.add('show');
+                });
+                f.addEventListener('mouseleave', function() {
+                    b.className = 'evo-tooltip';
+                });
+            });
+        };
+
+        // evoSortable
+        evo.sortable = function(a, b) {
+            if (!a && 'string' !== typeof a) {
+                return;
+            }
+            let h = {
+                handleClass: b.handleClass || 'ghost', complete: function(a) {
+                    if ('function' === typeof b.complete) {
+                        b.complete(a);
+                    }
+                }, enter: function(a) {
+                    if ('function' === typeof b.enter) {
+                        b.enter(a);
+                    }
+                },
+            };
+            [].slice.call(document.querySelectorAll(a)).forEach(function(c) {
+                c.onmousedown = function(e) {
+                    let d = e.pageY, f, g = parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom);
+                    c.classList.add(h.handleClass);
+                    document.onselectstart = function(e) {
+                        e.preventDefault();
+                    };
+                    document.onmousemove = function(e) {
+                        f = (e.pageY - d);
+                        if (f >= c.offsetHeight && c.nextElementSibling) {
+                            d += c.offsetHeight + g;
+                            c.parentNode.insertBefore(c, c.nextElementSibling.nextElementSibling);
+                            h.enter(document.querySelectorAll(a));
+                            f = 0;
+                        } else if (f <= -c.offsetHeight && c.previousElementSibling) {
+                            d -= c.offsetHeight + g;
+                            c.parentNode.insertBefore(c, c.previousElementSibling);
+                            h.enter(document.querySelectorAll(a));
+                            f = 0;
+                        } else if (!c.previousElementSibling && f < 0 || !c.nextElementSibling && f > 0) {
+                            f = 0;
+                        }
+                        c.style.webkitTransform = 'translateY(' + f + 'px)';
+                        c.style.transform = 'translateY(' + f + 'px)';
+                    };
+                    document.onmouseup = function() {
+                        c.style.webkitTransform = '';
+                        c.style.transform = '';
+                        c.classList.remove(h.handleClass);
+                        document.onmousemove = null;
+                        document.onselectstart = null;
+                        h.complete(c, document.querySelectorAll(a));
+                    };
+                };
+            });
+        };
 
         function document_onload()
         {
@@ -94,43 +184,6 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                     this.parentNode.classList.toggle('show');
                 };
             }
-
-            // evoTooltips
-            evo.tooltips = function(a) {
-                if (!a) {
-                    return;
-                }
-                let b = document.querySelector('.evo-tooltip');
-                if (!b) {
-                    b = document.createElement('div');
-                }
-                document.body.appendChild(b);
-                b.className = 'evo-tooltip';
-                let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
-                [].slice.call(a).forEach(function(f) {
-                    f.addEventListener('mouseenter', function(e) {
-                        b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
-                        if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
-                            b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
-                            b.classList.add('evo-tooltip-right');
-                        } else {
-                            b.style.left = Math.round(e.pageX) + 'px';
-                            b.classList.add('evo-tooltip-left');
-                        }
-                        if (e.pageY - (b.offsetHeight / 2) - c < 0) {
-                            b.style.top = 0;
-                        } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
-                            b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
-                        } else {
-                            b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
-                        }
-                        b.classList.add('show');
-                    });
-                    f.addEventListener('mouseleave', function() {
-                        b.className = 'evo-tooltip';
-                    });
-                });
-            };
             evo.tooltips(document.querySelectorAll('[data-tooltip]'));
         }
 
