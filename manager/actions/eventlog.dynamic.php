@@ -33,9 +33,9 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang['view_log'], "js:menuAction(1)", '<i class="' . $_style['actions_preview'] . '"></i>');
+$cm->addItem($_lang['view_log'], "js:menuAction(1)", $_style['actions_preview']);
 $cm->addSeparator();
-$cm->addItem($_lang['delete'], "js:menuAction(2)", '<i class="' . $_style['actions_delete'] . '"></i>', (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
+$cm->addItem($_lang['delete'], "js:menuAction(2)", $_style['actions_delete'], (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -82,7 +82,7 @@ echo $cm->render();
 		}
 	}
 
-	document.addEvent('click', function() {
+	document.addEventListener('click', function() {
 		contextm.style.visibility = "hidden";
 	});
 

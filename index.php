@@ -82,7 +82,6 @@ ob_start();
  *	Function: This file loads and executes the parser. *
  */
 
-define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
 if (!defined('IN_MANAGER_MODE')) {
 	define("IN_MANAGER_MODE", "false");
@@ -107,7 +106,6 @@ startCMSSession();
 // initiate a new document parser
 include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
-$etomite = &$modx; // for backward compatibility
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes

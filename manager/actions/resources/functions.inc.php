@@ -145,10 +145,12 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 		$_lang["confirm_delete"] = $_lang["confirm_delete_tmplvars"];
 	}
 	if($resourceTable == 'site_htmlsnippets') {
+        $class = $row['disabled'] ? 'disabledPlugin' : '';
 		$lockElementType = 3;
 		$_lang["confirm_delete"] = $_lang["confirm_delete_htmlsnippet"];
 	}
 	if($resourceTable == 'site_snippets') {
+        $class = $row['disabled'] ? 'disabledPlugin' : '';
 		$lockElementType = 4;
 		$_lang["confirm_delete"] = $_lang["confirm_delete_snippet"];
 	}
@@ -158,6 +160,7 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 		$_lang["confirm_delete"] = $_lang["confirm_delete_plugin"];
 	}
 	if($resourceTable == 'site_modules') {
+        $class = $row['disabled'] ? '' : 'disabledPlugin';
 		$_lang["confirm_delete"] = $_lang["confirm_delete_module"];
 	}
 

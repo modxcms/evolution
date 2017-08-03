@@ -72,7 +72,7 @@
 							} else {
 								$(ul).removeClass('show');
 								timer = setTimeout(function() {
-									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&parent=' + self.id : '';
+									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&elements=' + self.id : '';
 									$.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href, function(data) {
 										if(data) {
 											$(ul).attr('id', 'parent_' + self.id).html(data);

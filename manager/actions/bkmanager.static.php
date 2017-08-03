@@ -119,12 +119,12 @@ if ($mode == 'restore1') {
 if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
     switch ($_SESSION['result_msg']) {
         case 'import_ok':
-            $ph['result_msg_import'] = '<div class="msg">' . $_lang["bkmgr_import_ok"] . '</div>';
-            $ph['result_msg_snapshot'] = '<div class="msg">' . $_lang["bkmgr_import_ok"] . '</div>';
+            $ph['result_msg_import'] = '<div class="alert alert-success">' . $_lang["bkmgr_import_ok"] . '</div>';
+            $ph['result_msg_snapshot'] = '<div class="alert alert-success">' . $_lang["bkmgr_import_ok"] . '</div>';
             break;
         case 'snapshot_ok':
             $ph['result_msg_import'] = '';
-            $ph['result_msg_snapshot'] = '<div class="msg">' . $_lang["bkmgr_snapshot_ok"] . '</div>';
+            $ph['result_msg_snapshot'] = '<div class="alert alert-success">' . $_lang["bkmgr_snapshot_ok"] . '</div>';
             break;
     }
     $_SESSION['result_msg'] = '';
@@ -165,10 +165,22 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
         {
             var m = '<?= $_lang["bkmgr_restore_confirm"] ?>';
             m = m.replace('[+filename+]', filename);
-            var c = confirm(m);
-            if (c) {
+            if (confirm(m) === true) {
                 document.restore2.filename.value = filename;
                 document.restore2.save.click();
+            }
+        }
+
+        function showhide(a)
+        {
+            var f = document.getElementById('sqlfile');
+            var t = document.getElementById('textarea');
+            if (a == 'file') {
+                f.style.display = 'block';
+                t.style.display = 'none';
+            } else {
+                t.style.display = 'block';
+                f.style.display = 'none';
             }
         }
         <?= (isset($_REQUEST['r']) ? " doRefresh(" . $_REQUEST['r'] . ");" : "") ?>
@@ -180,7 +192,6 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
     </h1>
 
 <?= $_style['actionbuttons']['static']['cancel'] ?>
-
 
     <div class="tab-pane" id="dbmPane">
         <script type="text/javascript">
@@ -194,7 +205,6 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
             <div class="container container-body">
                 <form name="frmdb" method="post">
                     <input type="hidden" name="mode" value="" />
-                    <div class="element-edit-message-tab alert alert-warning"><?= $_lang['table_hoverinfo'] ?></div>
                     <p>
                         <a href="javascript:;" class="btn btn-primary" onclick="backup();return false;"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang['database_table_clickbackup'] ?></a>
                         <label><input type="checkbox" name="droptables" checked="checked" /><?= $_lang['database_table_droptablestatements'] ?></label>
@@ -205,13 +215,14 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <thead>
                                 <tr>
                                     <td><label class="form-check-label"><input type="checkbox" name="chkselall" class="form-check-input" onclick="selectAll();" title="Select All Tables" /> <?= $_lang['database_table_tablename'] ?></label></td>
-                                    <td><?= $_lang['database_table_records'] ?></td>
-                                    <td><?= $_lang['database_collation'] ?></td>
-                                    <td><?= $_lang['database_table_datasize'] ?></td>
-                                    <td><?= $_lang['database_table_overhead'] ?></td>
-                                    <td><?= $_lang['database_table_effectivesize'] ?></td>
-                                    <td><?= $_lang['database_table_indexsize'] ?></td>
-                                    <td><?= $_lang['database_table_totalsize'] ?></td>
+                                    <td width="1%"></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_records'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_collation'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_datasize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_overhead'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_effectivesize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_indexsize'] ?></td>
+                                    <td class="text-xs-center"><?= $_lang['database_table_totalsize'] ?></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -226,7 +237,9 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         $table_string = '';
                                     }
 
-                                    echo '<tr title="' . $db_status['Comment'] . '" style="cursor:default">' . "\n" . '<td><label class="form-check form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n" . '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
+                                    echo '<tr>' . "\n" . '<td><label class="form-check form-check-label"><input type="checkbox" name="chk[]" class="form-check-input" value="' . $db_status['Name'] . '"' . (strstr($table_string, $db_status['Name']) === false ? '' : ' checked="checked"') . ' /><b class="text-primary">' . $db_status['Name'] . '</b></label></td>' . "\n";
+                                    echo '<td class="text-xs-center">' . (!empty($db_status['Comment']) ? '<i class="' . $_style['actions_help'] . '" data-tooltip="' . $db_status['Comment'] . '"></i>' : '') . '</td>' . "\n";
+                                    echo '<td class="text-xs-right">' . $db_status['Rows'] . '</td>' . "\n";
                                     echo '<td class="text-xs-right">' . $db_status['Collation'] . '</td>' . "\n";
 
                                     // Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
@@ -246,7 +259,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                         echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? $modx->nicesize($db_status['Data_free']) : '-') . '</td>' . "\n";
                                     }
 
-                                    echo '<td class="text-xs-right">' . $modx->nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td>' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
+                                    echo '<td class="text-xs-right">' . $modx->nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
 
                                     $total = $total + $db_status['Index_length'] + $db_status['Data_length'];
                                     $totaloverhead = $totaloverhead + $db_status['Data_free'];
@@ -256,7 +269,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <tfoot>
                                 <tr>
                                     <td class="text-xs-right"><?= $_lang['database_table_totals'] ?></td>
-                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="4">&nbsp;</td>
                                     <td class="text-xs-right"><?= $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
                                     <td colspan="2">&nbsp;</td>
                                     <td class="text-xs-right"><?= "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
@@ -286,20 +299,6 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                 <form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
                     <input type="hidden" name="a" value="93" />
                     <input type="hidden" name="mode" value="restore1" />
-                    <script type="text/javascript">
-                        function showhide(a)
-                        {
-                            var f = document.getElementById('sqlfile');
-                            var t = document.getElementById('textarea');
-                            if (a == 'file') {
-                                f.style.display = 'block';
-                                t.style.display = 'none';
-                            } else {
-                                t.style.display = 'block';
-                                f.style.display = 'none';
-                            }
-                        }
-                    </script>
                     <?php
                     if (isset($_SESSION['textarea']) && !empty($_SESSION['textarea'])) {
                         $value = $_SESSION['textarea'];
@@ -324,7 +323,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                             foreach ($last_result['0'] as $k => $v) {
                                 $title[] = $k;
                             }
-                            $result = '<tr><th>' . implode('</th><th>', $title) . '</th></tr>';
+                            $result = '<thead><tr><th>' . implode('</th><th>', $title) . '</th></tr></thead>';
+                            $result .= '<tbody>';
                             foreach ($last_result as $row) {
                                 $result_value = array();
                                 if ($row) {
@@ -334,7 +334,8 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                     $result .= '<tr><td>' . implode('</td><td>', $result_value) . '</td></tr>';
                                 }
                             }
-                            $result = '<table>' . $result . '</table>';
+                            $result .= '</tbody>';
+                            $result = '<table class="table data">' . $result . '</table>';
                         }
                     }
 
@@ -350,27 +351,28 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                         <label><input type="radio" name="sel" onclick="showhide('file');" <?= checked(!isset($_SESSION['console_mode']) || $_SESSION['console_mode'] !== 'text') ?> /> <?= $_lang["bkmgr_run_sql_file_label"] ?></label>
                         <label><input type="radio" name="sel" onclick="showhide('textarea');" <?= checked(isset($_SESSION['console_mode']) && $_SESSION['console_mode'] === 'text') ?> /> <?= $_lang["bkmgr_run_sql_direct_label"] ?></label>
                     </p>
-                    <div class="form-group"><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?= $f_display ?>;" /></div>
+                    <div class="form-group"><input type="file" name="sqlfile" id="sqlfile" style="display:<?= $f_display ?>;" /></div>
                     <div id="textarea" style="display:<?= $t_display ?>;">
-                        <textarea name="textarea" style="height:200px;"><?= $value ?></textarea>
+                        <textarea name="textarea" rows="10"><?= $value ?></textarea>
                     </div>
                     <a href="javascript:;" class="btn btn-primary" onclick="document.mutate.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_run_sql_submit"] ?></a>
                     <input type="submit" name="save" style="display:none;" />
                 </form>
-                <?php
-                if (isset($result)) {
-                    echo '<div style="margin-top:20px;"><p style="font-weight:bold;">' . $_lang["bkmgr_run_sql_result"] . '</p>' . $result . '</div>';
-                }
-                ?>
+                <?php if (isset($result)): ?>
+                    <b><?= $_lang["bkmgr_run_sql_result"] ?></b>
+                    <div class="row">
+                        <div class="table-responsive"><?= $result ?></div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
         <div class="tab-page" id="tabSnapshot">
             <h2 class="tab"><?= $_lang["bkmgr_snapshot_title"] ?></h2>
-            <?= $ph['result_msg_snapshot'] ?>
             <script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
 
             <div class="container container-body">
+                <?= $ph['result_msg_snapshot'] ?>
                 <div class="element-edit-message-tab alert alert-warning">
                     <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->config['snapshot_path']}")) ?>
                 </div>
@@ -381,12 +383,14 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <div class="form-group input-group">
                         <input type="text" name="backup_title" class="form-control" maxlength="350" />
                         <div class="input-group-btn">
-                            <a href="javascript:;" class="btn btn-primary" style="display:inline-block;" onclick="document.snapshot.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_snapshot_submit"] ?></a>
+                            <a href="javascript:;" class="btn btn-success" onclick="document.snapshot.save.click();"> <i class="<?= $_style['actions_save'] ?>"></i> <?= $_lang["bkmgr_snapshot_submit"] ?></a>
                         </div>
                     </div>
                     <input type="submit" name="save" style="display:none;" />
                 </form>
-                <b><?= $_lang["bkmgr_snapshot_list_title"] ?></b>
+                <div>
+                    <b><?= $_lang["bkmgr_snapshot_list_title"] ?></b>
+                </div>
                 <form method="post" name="restore2" action="index.php">
                     <input type="hidden" name="a" value="93" />
                     <input type="hidden" name="mode" value="restore2" />
@@ -405,55 +409,69 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                         'Description'
                     );
                     if (is_array($files) && 0 < $total) {
-                        echo '<table class="grid">';
-                        echo "<thead><tr><th>{$_lang["files_filename"]}</th><th>{$_lang["files_filesize"]}</th><th>{$_lang["description"]}</th><th>{$_lang["modx_version"]}</th><th>{$_lang["database_name"]}</th><th>{$_lang["onlineusers_action"]}</th></tr></thead>\n";
-                        arsort($files);
-                        $tpl = '<tr><td>[+filename+]</td><td>[+filesize+]</td><td>[+filedesc+]</td><td>[+modx_version+]</td><td>[+database_name+]</td><td><a href="javascript:;" onclick="confirmRevert(\'[+filename+]\');" title="[+tooltip+]">' . $_lang["bkmgr_restore_submit"] . '</a></td></tr>' . "\n";
-                        while ($file = array_shift($files)) {
-                            $filename = substr($file, strrpos($file, '/') + 1);
-                            $filesize = $modx->nicesize(filesize($file));
+                        ?>
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table data nowrap">
+                                    <thead>
+                                    <tr>
+                                        <th><?= $_lang["files_filename"] ?></th>
+                                        <th width="1%"></th>
+                                        <th><?= $_lang["files_filesize"] ?></th>
+                                        <th><?= $_lang["description"] ?></th>
+                                        <th><?= $_lang["modx_version"] ?></th>
+                                        <th><?= $_lang["database_name"] ?></th>
+                                        <th width="1%"><?= $_lang["onlineusers_action"] ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    arsort($files);
+                                    while ($file = array_shift($files)) {
+                                        $filename = substr($file, strrpos($file, '/') + 1);
+                                        $filesize = $modx->nicesize(filesize($file));
 
-                            $file = fopen($file, "r");
-                            $count = 0;
-                            $details = array();
-                            while ($count < 11) {
-                                $line = fgets($file);
-                                foreach ($detailFields as $label) {
-                                    $fileLabel = '# ' . $label;
-                                    if (strpos($line, $fileLabel) !== false) {
-                                        $details[$label] = htmlentities(trim(str_replace(array(
-                                            $fileLabel,
-                                            ':',
-                                            '`'
-                                        ), '', $line)), ENT_QUOTES, $modx_manager_charset);
+                                        $file = fopen($file, "r");
+                                        $count = 0;
+                                        $details = array();
+                                        while ($count < 11) {
+                                            $line = fgets($file);
+                                            foreach ($detailFields as $label) {
+                                                $fileLabel = '# ' . $label;
+                                                if (strpos($line, $fileLabel) !== false) {
+                                                    $details[$label] = htmlentities(trim(str_replace(array(
+                                                        $fileLabel,
+                                                        ':',
+                                                        '`'
+                                                    ), '', $line)), ENT_QUOTES, $modx_manager_charset);
+                                                }
+                                            }
+                                            $count++;
+                                        };
+                                        fclose($file);
+
+                                        $tooltip = "Generation Time: " . $details["Generation Time"] . "\n";
+                                        $tooltip .= "Server version: " . $details["Server version"] . "\n";
+                                        $tooltip .= "PHP Version: " . $details["PHP Version"] . "\n";
+                                        $tooltip .= "Host: " . $details["Host"] . "\n";
+                                        ?>
+                                        <tr>
+                                            <td><?= $filename ?></td>
+                                            <td><i class="<?= $_style['actions_help'] ?>" data-tooltip="<?= $tooltip ?>"></i></td>
+                                            <td><?= $filesize ?></td>
+                                            <td><?= $details['Description'] ?></td>
+                                            <td><?= $details['MODX Version'] ?></td>
+                                            <td><?= $details['Database'] ?></td>
+                                            <td><a href="javascript:;" onclick="confirmRevert('<?= $filename ?>');" title="<?= $tooltip ?>"><?= $_lang["bkmgr_restore_submit"] ?></a></td>
+                                        </tr>
+                                        <?php
                                     }
-                                }
-                                $count++;
-                            };
-                            fclose($file);
-
-                            $tooltip = "Generation Time: " . $details["Generation Time"] . "\n";
-                            $tooltip .= "Server version: " . $details["Server version"] . "\n";
-                            $tooltip .= "PHP Version: " . $details["PHP Version"] . "\n";
-                            $tooltip .= "Host: " . $details["Host"] . "\n";
-
-                            echo str_replace(array(
-                                '[+filename+]',
-                                '[+filesize+]',
-                                '[+filedesc+]',
-                                '[+modx_version+]',
-                                '[+database_name+]',
-                                '[+tooltip+]'
-                            ), array(
-                                $filename,
-                                $filesize,
-                                $details['Description'],
-                                $details['MODX Version'],
-                                $details['Database'],
-                                $tooltip
-                            ), $tpl);
-                        }
-                        echo '</table>';
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <?php
                     } else {
                         echo $_lang["bkmgr_snapshot_nothing"];
                     }

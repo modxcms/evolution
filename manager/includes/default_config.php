@@ -95,6 +95,7 @@ $c['xhtml_urls']               = '1';
 $c['allow_duplicate_alias']    = '0';
 $c['automatic_alias']          = '1';
 $c['datetime_format']          = 'dd-mm-YYYY';
+$c['enable_cache']             = '1';
 $c['cache_type']               = '1';
 $c['server_protocol']          = 'http';
 $c['settings_version']         = 0;

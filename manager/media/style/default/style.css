@@ -57,11 +57,6 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 .sortabletable th:active { background: #ccc; padding: 3px 4px 1px 6px; }
 /* -------------------------[ Pagination table ]--- */
 #max-display-records { margin: 10px 0; }
-#pagination { margin: 10px 0; }
-#pagination ul { margin: 10px 0; display: inline; }
-#pagination li { list-style: none; display: inline; width: 1rem; margin: 0 0 0 1px; }
-#pagination li a { padding: 3px 8px; border: 1px solid #d9e7c2; text-decoration: none; color: #333; }
-#pagination li.currentPage a, #pagination li a:hover { color: #060; border: 1px solid #060; }
 fieldset.tab-page { border: 1px solid #e4e4e4 !important; }
 h2#edit_document_title { font-size: 0.9rem; color: #f5f5f5; width: 100%; border-bottom: none; padding: 5px 10px; }
 fieldset#preview h2.tab { float: right; }
@@ -107,14 +102,6 @@ form#mutate input.date, form#mutate input.tvdate { margin-right: 10px; }
 form#mutate fieldset#settings_page_settings input#pub_date, form#mutate fieldset#settings_page_settings input#unpub_date { width: 150px; }
 form#mutate fieldset#settings_page_settings select { width: 155px; }
 /*
-* Individual Styles for fieldset#meta_keywords
-*/
-form#mutate fieldset#meta_keywords select.inputBox { display: block; margin-bottom: 0; }
-form#mutate fieldset#meta_keywords dl.keywords { float: left; margin-right: 30px; }
-form#mutate fieldset#meta_keywords dl.metatags { float: left; }
-form#mutate fieldset#meta_keywords dl dt label { width: 100px; }
-form#mutate fieldset#meta_keywords dl dd { margin-left: 110px; }
-/*
 * Individual Styles for fieldset#preview
 */
 fieldset#preview iframe { width: 100%; margin: 0 auto; border: 1px solid #f5f5f5; }
@@ -136,16 +123,6 @@ fieldset#settings_templvars .tv_url_input { width: 220px; }
 fieldset#settings_templvars dd.tvCheckBox label input, fieldset#settings_templvars dd.tvRadioOptions label input { margin-right: 10px; }
 fieldset#settings_templvars .tv_date { width: 150px; }
 form#mutate select.tv_url_select { padding: 5px 3px; }
-/* ppb:
-* Style mootools tooltips
-*/
-[data-tooltip] { cursor: help }
-[data-tooltip]::after, .custom-tip { position: absolute; z-index: 13000; width: 13rem; margin-left: 1rem; padding: 0.9rem 1rem; font-size: 0.75rem; line-height: 1.5; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; transform: translate3d(1rem, 0, 0); }
-[data-tooltip]::after { opacity: 0; content: attr(data-tooltip); }
-[data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
-[data-tooltip].fa-question-circle { opacity: 0.15; }
-[data-tooltip].fa-question-circle:hover { opacity: 1; }
-th > [data-tooltip].fa-question-circle, td > [data-tooltip].fa-question-circle { float: right; }
 /* ppb:
 * Some styling for legacy mode fieldsets
 */
@@ -174,7 +151,6 @@ td#displayparams > table.displayparams { border: none; }
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] { color: yellow !important; }
 .selected strong[style*='color:#ffeb00'] { color: red !important; }
-#tabEvents table, #tabEvents td { padding: 2px; }
 code { font-size: inherit; font-family: Consolas, 'Courier New', 'Courier', monospace; background-color: #eee; border: 1px solid #ccc; padding: 1px 2px; }
 #resourcesPane .disabledPlugin a:hover { color: #aaa; }
 /* breadcrumbs */
@@ -189,7 +165,7 @@ li.breadcrumbs__li_current { font-size: 12px; font-weight: 500; }
 #documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
 #documentPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1rem); }
-#documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip].fa-question-circle { margin-top: 0.3rem; }
+#documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { float: right; margin-top: 0.3rem; }
 .table--edit { margin-bottom: 1rem; }
 .table th, .table td { text-align: left; vertical-align: middle; }
 table th { font-weight: 500; }
@@ -296,8 +272,6 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 table.actionButtons { margin-top: 1rem; margin-bottom: 10px; }
 table.actionButtons img { display: inline-block; }
 table.actionButtons .searchtext { padding: 5px; height: 24px; width: 150px; }
-/* backup */
-#tabBackup p.actionButtons { margin-top: 20px; margin-bottom: 1rem; }
 /* filter elements */
 .filterElements-form { margin-bottom: 10px; margin-top: 5px; }
 .actionButtons .filterElements-form { margin-top: 0; margin-bottom: 0; }
@@ -317,8 +291,6 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #modxonline_widget td strong.userMultipleSessions:before { color: #bf4949; content: '\f2bd'; }
 #modxonline_widget tr.userIdle td strong.userMultipleSessions:before { color: #bf4949; content: '\f017'; }
 /*responsive buttons*/
-.filterButtons .input-group .form-control { width: auto; }
-.filterButtons .input-group .input-group-btn { float: left; }
 .actionButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
 .sectionBody .actionButtons .fa, .actionButtons--eit .fa { display: inline-block; }
 .optionsTitle .fa { display: inline-block; }

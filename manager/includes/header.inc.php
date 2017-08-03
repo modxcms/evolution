@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true") {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
@@ -9,197 +9,246 @@ $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir === 'rtl' ? 'rtl' : 'ltr';
-if(!isset($modx->config['mgr_jquery_path'])) {
-	$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
+if (!isset($modx->config['mgr_jquery_path'])) {
+    $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 }
-if(!isset($modx->config['mgr_date_picker_path'])) {
-	$modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
+if (!isset($modx->config['mgr_date_picker_path'])) {
+    $modx->config['mgr_date_picker_path'] = 'media/script/air-datepicker/datepicker.inc.php';
 }
 
-if(!empty($_COOKIE['MODX_themeColor'])) {
-	$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+if (!empty($_COOKIE['MODX_themeColor'])) {
+    $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
 }
 
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $mxla; ?>" dir="<?php echo $textdir; ?>">
+<html lang="<?= $mxla ?>" dir="<?= $textdir ?>">
 <head>
-	<title>Evolution CMS</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
+    <title>Evolution CMS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
-	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>
-	
-	<?php 
-	$aArr = array('2');
-	if(!in_array($_REQUEST['a'] ,$aArr)) {?>
-		<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-		<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
-	<?php } ?>
+    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/style.css?v=<?= $modx->config['settings_version'] ?>" />
+    <script type="text/javascript" src="media/script/tabpane.js"></script>
+    <?= sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
 
-	<!-- OnManagerMainFrameHeaderHTMLBlock -->
-	<?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
+    <?php
+    $aArr = array('2');
+    if (!in_array($_REQUEST['a'], $aArr)) { ?>
+    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+    <?php } ?>
 
-	<script type="text/javascript">
-		/* <![CDATA[ */
+    <!-- OnManagerMainFrameHeaderHTMLBlock -->
+    <?= $onManagerMainFrameHeaderHTMLBlock . "\n" ?>
 
-		function document_onload() {
-			stopWorker();
+    <script type="text/javascript">
+        /* <![CDATA[ */
 
-			<?php
-			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
-				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
-			}
-			?>
+        if (typeof evo !== 'object') {
+            evo = {};
+        }
 
-			var actionButtons = document.getElementById('actions'),
-				actionSelect = document.getElementById('stay');
-			if(actionButtons !== null && actionSelect !== null) {
-				var actionPlus = actionButtons.querySelector('.plus'),
-					actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'),
-					actionStay = [];
-				actionPlus.classList.add('dropdown-toggle');
-				actionStay['stay1'] = '<i class="<?php echo $_style['actions_file'] ?>"></i>';
-				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
-				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
-				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>'
-				}
-				var actionSelectNewOption = null,
-					actionSelectOptions = actionSelect.children,
-					div = document.createElement('div');
-				div.className = 'dropdown-menu';
-				actionSaveButton.parentNode.classList.add('dropdown');
-				for(var i = 0; i < actionSelectOptions.length; i++) {
-					if(!actionSelectOptions[i].selected) {
-						actionSelectNewOption = document.createElement('SPAN');
-						actionSelectNewOption.className = 'btn btn-block';
-						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
-						actionSelectNewOption.onclick = function() {
-							var s = actionSelect.querySelector('option[selected=selected]');
-							if(s) s.selected = false;
-							actionSelect.children[this.dataset.id].selected = true;
-							actionSaveButton.click()
-						};
-						div.appendChild(actionSelectNewOption)
-					}
-				}
-				actionSaveButton.parentNode.appendChild(div);
-				actionPlus.onclick = function() {
-					this.parentNode.classList.toggle('show')
-				}
-			}
-		}
+        function document_onload()
+        {
+            stopWorker();
 
-		function reset_path(elementName) {
-			document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
-		}
+            <?php
+            if (isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
+                echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
+            }
+            ?>
 
-		var dontShowWorker = false;
+            var actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
+            if (actionButtons !== null && actionSelect !== null) {
+                var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
+                actionPlus.classList.add('dropdown-toggle');
+                actionStay['stay1'] = '<i class="<?= $_style['actions_file'] ?>"></i>';
+                actionStay['stay2'] = '<i class="<?= $_style['actions_pencil'] ?>"></i>';
+                actionStay['stay3'] = '<i class="<?= $_style['actions_reply'] ?>"></i>';
+                if (actionSelect.value) {
+                    actionSaveButton.innerHTML += '<i class="<?= $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
+                }
+                var actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
+                div.className = 'dropdown-menu';
+                actionSaveButton.parentNode.classList.add('dropdown');
+                for (var i = 0; i < actionSelectOptions.length; i++) {
+                    if (!actionSelectOptions[i].selected) {
+                        actionSelectNewOption = document.createElement('SPAN');
+                        actionSelectNewOption.className = 'btn btn-block';
+                        actionSelectNewOption.dataset.id = i;
+                        actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
+                        actionSelectNewOption.onclick = function() {
+                            var s = actionSelect.querySelector('option[selected=selected]');
+                            if (s) {
+                                s.selected = false;
+                            }
+                            actionSelect.children[this.dataset.id].selected = true;
+                            actionSaveButton.click();
+                        };
+                        div.appendChild(actionSelectNewOption);
+                    }
+                }
+                actionSaveButton.parentNode.appendChild(div);
+                actionPlus.onclick = function() {
+                    this.parentNode.classList.toggle('show');
+                };
+            }
 
-		function document_onunload() {
-			if(!dontShowWorker) {
-				top.mainMenu.work();
-			}
-		}
+            // evoTooltips
+            evo.tooltips = function(a) {
+                if (!a) {
+                    return;
+                }
+                let b = document.querySelector('.evo-tooltip');
+                if (!b) {
+                    b = document.createElement('div');
+                }
+                document.body.appendChild(b);
+                b.className = 'evo-tooltip';
+                let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
+                [].slice.call(a).forEach(function(f) {
+                    f.addEventListener('mouseenter', function(e) {
+                        b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
+                        if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
+                            b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
+                            b.classList.add('evo-tooltip-right');
+                        } else {
+                            b.style.left = Math.round(e.pageX) + 'px';
+                            b.classList.add('evo-tooltip-left');
+                        }
+                        if (e.pageY - (b.offsetHeight / 2) - c < 0) {
+                            b.style.top = 0;
+                        } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
+                            b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
+                        } else {
+                            b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
+                        }
+                        b.classList.add('show');
+                    });
+                    f.addEventListener('mouseleave', function() {
+                        b.className = 'evo-tooltip';
+                    });
+                });
+            };
+            evo.tooltips(document.querySelectorAll('[data-tooltip]'));
+        }
 
-		// set tree to default action.
-		if(parent.tree) parent.tree.ca = "open";
+        function reset_path(elementName)
+        {
+            document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
+        }
 
-		// call the updateMail function, updates mail notification in top navigation
-		if(top.mainMenu) {
-			if(top.mainMenu.updateMail) {
-				top.mainMenu.updateMail(true);
-			}
-		}
+        var dontShowWorker = false;
 
-		function stopWorker() {
-			try {
-				parent.mainMenu.stopWork();
-			} catch(oException) {
-				ww = window.setTimeout('stopWorker()', 500);
-			}
-		}
+        function document_onunload()
+        {
+            if (!dontShowWorker) {
+                top.mainMenu.work();
+            }
+        }
 
-		function doRefresh(r) {
-			try {
-				rr = r;
-				top.mainMenu.startrefresh(rr);
-			} catch(oException) {
-				vv = window.setTimeout('doRefresh()', 1000);
-			}
-		}
+        // set tree to default action.
+        if (parent.tree) {
+            parent.tree.ca = 'open';
+        }
 
-		var documentDirty = false;
-		var timerForUnload;
+        // call the updateMail function, updates mail notification in top navigation
+        if (top.mainMenu) {
+            if (top.mainMenu.updateMail) {
+                top.mainMenu.updateMail(true);
+            }
+        }
 
-		function checkDirt(evt) {
-			if(documentDirty === true) {
-				var message = "<?php echo $_lang['warning_not_saved']; ?>";
-				if(typeof evt === 'undefined') {
-					evt = window.event;
-				}
-				if(evt) {
-					evt.returnValue = message;
-				}
-				timerForUnload = setTimeout('stopWorker()', 100);
-				return message;
-			}
-		}
+        function stopWorker()
+        {
+            try {
+                parent.mainMenu.stopWork();
+            } catch (oException) {
+                ww = window.setTimeout('stopWorker()', 500);
+            }
+        }
 
-		function saveWait(fName) {
-			document.getElementById("savingMessage").innerHTML = "<?php echo $_lang['saving']; ?>";
-			for(i = 0; i < document.forms[fName].elements.length; i++) {
-				document.forms[fName].elements[i].disabled = 'disabled';
-			}
-		}
+        function doRefresh(r)
+        {
+            try {
+                rr = r;
+                top.mainMenu.startrefresh(rr);
+            } catch (oException) {
+                vv = window.setTimeout('doRefresh()', 1000);
+            }
+        }
 
-		var managerPath = "";
+        var documentDirty = false;
+        var timerForUnload;
 
-		function hideLoader() {
-			document.getElementById('preLoader').style.display = "none";
-		}
+        function checkDirt(evt)
+        {
+            if (documentDirty === true) {
+                var message = '<?= addslashes($_lang['warning_not_saved']) ?>';
+                if (typeof evt === 'undefined') {
+                    evt = window.event;
+                }
+                if (evt) {
+                    evt.returnValue = message;
+                }
+                timerForUnload = setTimeout('stopWorker()', 100);
+                return message;
+            }
+        }
 
-		// add the 'unsaved changes' warning event handler
-		if(typeof window.addEventListener !== "undefined") {
-			window.addEventListener('beforeunload', function() {
-				checkDirt();
-				document_onunload()
-			}, false)
-		} else if(typeof window.attachEvent !== "undefined") {
-			window.attachEvent('onbeforeunload', function() {
-				checkDirt();
-				document_onunload()
-			})
-		} else {
-			window.onbeforeunload = function() {
-				checkDirt();
-				document_onunload()
-			}
-		}
+        function saveWait(fName)
+        {
+            document.getElementById('savingMessage').innerHTML = '<?= $_lang['saving'] ?>';
+            for (i = 0; i < document.forms[fName].elements.length; i++) {
+                document.forms[fName].elements[i].disabled = 'disabled';
+            }
+        }
 
-		if(typeof window.addEventListener !== "undefined") {
-			window.addEventListener("load", function() {
-				document_onload()
-			}, false);
-		} else if(typeof window.attachEvent !== "undefined") {
-			window.attachEvent("onload", function() {
-				document_onload()
-			})
-		} else {
-			window.onload = function() {
-				document_onload()
-			}
-		}
+        var managerPath = '';
 
-		window.onunload = function() {
-			clearTimeout(timerForUnload);
-		}
+        function hideLoader()
+        {
+            document.getElementById('preLoader').style.display = 'none';
+        }
 
-		/* ]]> */
-	</script>
+        // add the 'unsaved changes' warning event handler
+        if (typeof window.addEventListener !== 'undefined') {
+            window.addEventListener('beforeunload', function() {
+                checkDirt();
+                document_onunload();
+            }, false);
+        } else if (typeof window.attachEvent !== 'undefined') {
+            window.attachEvent('onbeforeunload', function() {
+                checkDirt();
+                document_onunload();
+            });
+        } else {
+            window.onbeforeunload = function() {
+                checkDirt();
+                document_onunload();
+            };
+        }
+
+        if (typeof window.addEventListener !== 'undefined') {
+            window.addEventListener('load', function() {
+                document_onload();
+            }, false);
+        } else if (typeof window.attachEvent !== 'undefined') {
+            window.attachEvent('onload', function() {
+                document_onload();
+            });
+        } else {
+            window.onload = function() {
+                document_onload();
+            };
+        }
+
+        window.onunload = function() {
+            clearTimeout(timerForUnload);
+        };
+
+        /* ]]> */
+    </script>
 </head>
-<body <?php echo $modx_textdir ? ' class="rtl"' : '' ?> class="<?php echo $body_class ?>">
+<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>">

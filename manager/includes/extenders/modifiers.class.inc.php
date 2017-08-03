@@ -77,7 +77,7 @@ class MODIFIERS {
     function _getRemainModifiers($mode,$delim,$modifiers) {
         if($delim) {
             if($mode=='(')
-                return substr($modifiers,strpos($modifiers, $delim . ')' )+2);
+                return trim(substr($modifiers,strpos($modifiers, $delim . ')' )+2));
             else {
                 $modifiers = trim($modifiers);
                 $modifiers = substr($modifiers,1);
@@ -112,7 +112,7 @@ class MODIFIERS {
                 
                 $delim     = $this->_getDelim($c,$modifiers);
                 $opt       = $this->_getOpt($c,$delim,$modifiers);
-                $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
+                $modifiers = trim($this->_getRemainModifiers($c,$delim,$modifiers));
                 
                 $result[]=array('cmd'=>trim($match[1]),'opt'=>$opt,'debuginfo'=>$debuginfo);
                 $cmd = '';
@@ -121,7 +121,7 @@ class MODIFIERS {
                 $modifiers = $m1 = trim($modifiers);
                 $delim     = $this->_getDelim($c,$modifiers);
                 $opt       = $this->_getOpt($c,$delim,$modifiers);
-                $modifiers = $this->_getRemainModifiers($c,$delim,$modifiers);
+                $modifiers = trim($this->_getRemainModifiers($c,$delim,$modifiers));
                 $debuginfo = "#i=1 #c=[{$c}] #delim=[{$delim}] #m1=[{$m1}] remainMdf=[{$modifiers}]";
                 
                 $result[]=array('cmd'=>trim($cmd),'opt'=>$opt,'debuginfo'=>$debuginfo);

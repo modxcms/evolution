@@ -103,7 +103,7 @@ class DocumentParser {
         $this->dumpPlugins  = false;
         $this->stopOnNotice = false;
         $this->snipLapCount = 0;
-        $this->time = time(); // for having global timestamp
+        $this->time = $_SERVER['REQUEST_TIME']; // for having global timestamp
 
         $this->q = self::_getCleanQueryString();
     }
@@ -319,9 +319,6 @@ class DocumentParser {
                 }
             }
         }
-
-        // added for backwards compatibility - garry FS#104
-        $this->config['etomite_charset'] = & $this->config['modx_charset'];
 
         // setup default site id - new installation should generate a unique id for the site.
         if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
@@ -611,57 +608,57 @@ class DocumentParser {
         
         $cache_path = $this->getHashFile($key);
         
-        if (is_file($cache_path)) {
-            $content = file_get_contents($cache_path, false);
-            if(substr($content,0,5)==='<?php') $content = substr($content, strpos($content,'?>')+2); // remove php header
-            $a= explode('<!--__MODxCacheSpliter__-->', $content, 2);
-            if (count($a) == 1)
-                $result = $a[0]; // return only document content
-            else {
-                $docObj= unserialize($a[0]); // rebuild document object
-                // check page security
-                if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
-                    $pass= false;
-                    $usrGrps= $this->getUserDocGroups();
-                    $docGrps= explode(',', $docObj['__MODxDocGroups__']);
-                    // check is user has access to doc groups
-                    if (is_array($usrGrps)) {
-                        foreach ($usrGrps as $k => $v)
-                            if (in_array($v, $docGrps)) {
-                                $pass= true;
-                                break;
-                            }
-                    }
-                    // diplay error pages if user has no access to cached doc
-                    if (!$pass) {
-                        if ($this->config['unauthorized_page']) {
-                            // check if file is not public
-                            $rs= $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
-                            $total= $this->db->getValue($rs);
-                        }
-                        else $total = 0;
-                        
-                        if ($total > 0) $this->sendUnauthorizedPage();
-                        else            $this->sendErrorPage();
-                        
-                        exit; // stop here
-                    }
-                }
-                // Grab the Scripts
-                if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
-                if (isset($docObj['__MODxJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
-
-                // Remove intermediate variables
-                unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
-
-                $this->documentObject= $docObj;
-                
-                $result = $a[1]; // return document content
-            }
-        } else {
+        if (!is_file($cache_path)) {
             $this->documentGenerated= 1;
             return '';
         }
+        $content = file_get_contents($cache_path, false);
+        if(substr($content,0,5)==='<?php') $content = substr($content, strpos($content,'?>')+2); // remove php header
+        $a= explode('<!--__MODxCacheSpliter__-->', $content, 2);
+        if (count($a) == 1)
+            $result = $a[0]; // return only document content
+        else {
+            $docObj= unserialize($a[0]); // rebuild document object
+            // check page security
+            if ($docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
+                $pass= false;
+                $usrGrps= $this->getUserDocGroups();
+                $docGrps= explode(',', $docObj['__MODxDocGroups__']);
+                // check is user has access to doc groups
+                if (is_array($usrGrps)) {
+                    foreach ($usrGrps as $k => $v) {
+                        if (!in_array($v, $docGrps)) continue;
+                        $pass= true;
+                        break;
+                    }
+                }
+                // diplay error pages if user has no access to cached doc
+                if (!$pass) {
+                    if ($this->config['unauthorized_page']) {
+                        // check if file is not public
+                        $rs= $this->db->select('count(id)', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                        $total= $this->db->getValue($rs);
+                    }
+                    else $total = 0;
+                    
+                    if ($total > 0) $this->sendUnauthorizedPage();
+                    else            $this->sendErrorPage();
+                    
+                    exit; // stop here
+                }
+            }
+            // Grab the Scripts
+            if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
+            if (isset($docObj['__MODxJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
+
+            // Remove intermediate variables
+            unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
+
+            $this->documentObject= $docObj;
+            
+            $result = $a[1]; // return document content
+        }
+        
         $this->documentGenerated= 0;
         // invoke OnLoadWebPageCache  event
         $this->documentContent = $result;
@@ -689,7 +686,7 @@ class DocumentParser {
 
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
-            $this->recentUpdate = time() + $this->config['server_offset_time'];
+            $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
             
             $this->documentOutput= str_replace('[!', '[[', $this->documentOutput);
             $this->documentOutput= str_replace('!]', ']]', $this->documentOutput);
@@ -764,6 +761,9 @@ class DocumentParser {
         
         $this->documentOutput = $this->removeSanitizeSeed($this->documentOutput);
 
+        if    (strpos($this->documentOutput,'\{')!==false) $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+        elseif(strpos($this->documentOutput,'\[')!==false) $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+        
         echo $this->documentOutput;
 
         if ($this->dumpSQL) echo $this->queryCode;
@@ -793,6 +793,20 @@ class DocumentParser {
         ob_end_flush();
     }
 
+    function RecoveryEscapedTags($contents) {
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        return str_replace($rTags,$sTags,$contents);
+    }
+    
+    function getTagsForEscape($tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]') {
+        $srcTags = explode(',',$tags);
+        $repTags = array();
+        foreach($srcTags as $tag) {
+            $repTags[] = '\\'.$tag[0].'\\'.$tag[1];
+        }
+        return array($srcTags,$repTags);
+    }
+    
     function getTimerStats($tstart) {
         $stats = array();
 
@@ -864,7 +878,7 @@ class DocumentParser {
      */
     function postProcess() {
         // if the current document was generated, cache it!
-        if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
+        if ($this->config['enable_cache'] && $this->documentGenerated && $this->documentObject['cacheable'] && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
@@ -972,6 +986,7 @@ class DocumentParser {
      * @return string
      */
     function mergeDocumentContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[*') === false)
             return $content;
         if(!isset($this->documentIdentifier)) return $content;
@@ -986,10 +1001,10 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            list($key,$context)   = explode('@',$key . '@',2);
+            list($key,$context)   = explode('@',$key,2);
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
-            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            if($context) $value = $this->_contextValue("{$key}@{$context}",$this->documentObject['parent']);
             else         $value = isset($ph[$key]) ? $ph[$key] : '';
 
             if (is_array($value)) {
@@ -1097,6 +1112,7 @@ class DocumentParser {
      * @return string
      */
     function mergeSettingsContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[(') === false)
             return $content;
         
@@ -1124,6 +1140,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content,$ph=false) {
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if(strpos($content,'{{')===false) return $content;
         
         if(!$ph) $ph = $this->chunkCache;
@@ -1164,6 +1181,7 @@ class DocumentParser {
      */
     function mergePlaceholderContent($content,$ph=false) {
         
+        if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if (strpos($content, '[+') === false) return $content;
         
         if(!$ph) $ph = $this->placeholders;
@@ -1313,6 +1331,19 @@ class DocumentParser {
         return $content;
     }
     
+    function escapeLiteralTagsContent($content, $left='<@LITERAL>', $right='<@ENDLITERAL>') {
+        if(stripos($content,$left)===false) return $content;
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        list($sTags,$rTags) = $this->getTagsForEscape();
+        if(!empty($matches)) {
+            foreach($matches[1] as $i=>$v) {
+                $v = str_ireplace($sTags,$rTags,$v);
+                $content = str_replace($matches[0][$i],$v,$content);
+            }
+        }
+        return $content;
+    }
+    
     /**
      * Detect PHP error according to MODX error level
      *
@@ -1338,7 +1369,7 @@ class DocumentParser {
      * @param array $params
      */
     function evalPlugin($pluginCode, $params) {
-        $etomite = $modx = & $this;
+        $modx = & $this;
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1382,7 +1413,7 @@ class DocumentParser {
      * @return string
      */
     function evalSnippet($phpcode, $params) {
-        $etomite = $modx = & $this;
+        $modx = & $this;
         /*
         if(isset($params) && is_array($params)) {
             foreach($params as $k=>$v) {
@@ -1427,8 +1458,6 @@ class DocumentParser {
     function evalSnippets($content)
     {
         if(strpos($content,'[[')===false) return $content;
-        
-        $etomite= & $this;
         
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
@@ -1715,7 +1744,7 @@ class DocumentParser {
         }
         else
         {
-            $where = sprintf("name='%s'",$this->db->escape($snip_name));
+            $where = sprintf("name='%s' AND disabled=0",$this->db->escape($snip_name));
             $rs= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',$where);
             $count = $this->db->getRecordCount($rs);
             if(1<$count) exit('Error $modx->_getSnippetObject()'.$snip_name);
@@ -2052,7 +2081,6 @@ class DocumentParser {
             $source = $this->mergeSettingsContent($source);
             $source = $this->mergeDocumentContent($source);
             $source = $this->mergeChunkContent($source);
-            if ($this->config['show_meta']) $source = $this->mergeDocumentMETATags($source); //TODO: Remove in next major release
             $source = $this->evalSnippets($source);
             $source = $this->mergePlaceholderContent($source);
             
@@ -2264,7 +2292,12 @@ class DocumentParser {
      */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
-        $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+        
+        if($this->config['enable_cache']==2 && $this->isLoggedIn()) $this->config['enable_cache'] = 0;
+        
+        if($this->config['enable_cache'])
+            $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+        else $this->documentContent= '';
         
         if ($this->documentContent == '') {
             // get document object from DB
@@ -2788,7 +2821,7 @@ class DocumentParser {
         $this->db->insert(array(
             'eventid' => $evtid,
             'type' =>$type,
-            'createdon' => time() + $this->config['server_offset_time'],
+            'createdon' => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
             'source' => $esc_source,
             'description' => $msg,
             'user' => $LoginUserID,
@@ -3501,7 +3534,7 @@ class DocumentParser {
             $snippet = $this->snippetCache[$snippetName];
             $properties = !empty($this->snippetCache[$snippetName . "Props"]) ? $this->snippetCache[$snippetName . "Props"] : '';
         } else { // not in cache so let's check the db
-            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "';";
+            $sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "'  AND ss.disabled=0;";
             $result = $this->db->query($sql);
             if ($this->db->getRecordCount($result) == 1) {
                 $row = $this->db->getRow($result);
@@ -3532,8 +3565,10 @@ class DocumentParser {
         if(empty($chunkName)) return $out;
         if (isset ($this->chunkCache[$chunkName])) {
             $out = $this->chunkCache[$chunkName];
+        } else if(stripos($chunkName,'@FILE')===0) {
+            $out = $this->chunkCache[$chunkName] = $this->atBindFileContent($chunkName);
         } else {
-            $where = sprintf("`name`='%s'", $this->db->escape($chunkName));
+            $where = sprintf("`name`='%s' AND disabled=0", $this->db->escape($chunkName));
             $rs= $this->db->select('snippet', '[+prefix+]site_htmlsnippets', $where);
             if ($this->db->getRecordCount($rs)==1) {
                 $row= $this->db->getRow($rs);
@@ -3561,6 +3596,8 @@ class DocumentParser {
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
+        
+        if(stripos($tpl,'<@LITERAL>')!==false) $tpl= $this->escapeLiteralTagsContent($tpl);
         
         $matches = $this->getTagsFromContent($tpl,$left,$right);
         if(!$matches) return $tpl;
@@ -4117,7 +4154,7 @@ class DocumentParser {
                 'sender'      => $from,
                 'recipient'   => $to,
                 'private'     => $private,
-                'postdate'    => time() + $this->config['server_offset_time'],
+                'postdate'    => $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'],
                 'messageread' => 0,
             ), $this->getFullTableName('user_messages'));
     }
@@ -4997,7 +5034,7 @@ class DocumentParser {
         
         $search_path = array('assets/tvs/', 'assets/chunks/', 'assets/templates/', $this->config['rb_base_url'].'files/', '');
         
-        if(strpos($str,'@FILE')!==0) return $str;
+        if(stripos($str,'@FILE')!==0) return $str;
         if(strpos($str,"\n")!==false) $str = substr($str,0,strpos("\n",$str));
         
         if($this->getExtFromFilename($str)==='.php') return 'Could not retrieve PHP file.';
@@ -5181,7 +5218,7 @@ class DocumentParser {
         $table[] = array('Referer' , $referer);
         $table[] = array('User Agent' , $ua);
         $table[] = array('IP' , $_SERVER['REMOTE_ADDR']);
-        $table[] = array('Current time' , date("Y-m-d H:i:s", time() + $this->config['server_offset_time']));
+        $table[] = array('Current time' , date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time']));
         $str .= $MakeTable->create($table, array('Basic info',''));
         $str .= "<br />";
 
@@ -5472,7 +5509,7 @@ class DocumentParser {
     }
     
     function splitKeyAndFilter($key) {
-        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false && stripos($key,'@FILE')!==0)
             list($key,$modifiers) = explode(':', $key, 2);
         else
             $modifiers = false;

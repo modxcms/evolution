@@ -13,3 +13,11 @@
 .tab-row-container > i.prev { left: 0; }
 .tab-row-container > i.next { right: 0; }
 .tab-row-container > i.disable { font-size: 0.8rem; color: rgba(0, 0, 0, 0.2); pointer-events: none }
+/* tab-page */
+.tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
+.tab-header { padding: .5rem 1.3rem; }
+.tab-content > .tab-header { padding-left: 0; padding-right: 0 }
+.tab-content { width: 100%; padding: 1.3rem; }
+.tab-page > .tab-header + .tab-content { padding-top: .5rem }
+.tab-content::after { display: table; width: 100%; content: '' }
+.tab-content > .form-group:last-child, .tab-content > .form-row:last-child, .tab-content > p:last-child, .tab-content > .form-group:last-child > p:last-child { margin-bottom: 0 }

@@ -9,6 +9,7 @@ class DBAPI {
 
    var $conn;
    var $config;
+   var $lastQuery;
    var $isConnected;
 
    /**
@@ -183,6 +184,7 @@ class DBAPI {
          $this->connect();
       }
       $tstart = $modx->getMicroTime();
+      $this->lastQuery = $sql;
       if (!$result = @ mysql_query($sql, $this->conn)) {
          if(!$watchError) return;
             switch(mysql_errno()) {

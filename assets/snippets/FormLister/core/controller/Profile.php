@@ -66,7 +66,6 @@ class Profile extends Form
     {
         $rules = parent::getValidationRules($param);
         $password = $this->getField('password');
-        var_dump($rules);
         if (empty($password)) {
             $this->forbiddenFields[] = 'password';
             if (isset($rules['password'])) {

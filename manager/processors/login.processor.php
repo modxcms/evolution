@@ -23,7 +23,6 @@ $modx = new DocumentParser;
 $modx->loadExtension('ManagerAPI');
 $modx->loadExtension('phpass');
 $modx->getSettings();
-$etomite = &$modx;
 
 // include_once the language file
 $_lang = array();
