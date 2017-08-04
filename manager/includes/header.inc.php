@@ -88,7 +88,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
 
         // evoSortable
         evo.sortable = function(a, b) {
-            if (!a && 'string' !== typeof a) {
+            if (!a || 'string' !== typeof a) {
                 return;
             }
             let h = {
