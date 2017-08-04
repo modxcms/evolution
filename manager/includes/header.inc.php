@@ -61,6 +61,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
             document.body.appendChild(b);
             b.className = 'evo-tooltip';
             let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
+            a = 'string' === typeof a ? document.querySelectorAll(a) : a;
             [].slice.call(a).forEach(function(f) {
                 f.addEventListener('mouseenter', function(e) {
                     b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
