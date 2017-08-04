@@ -253,7 +253,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         {
             evt = evt || window.event
             if (!evo.checkConnectionToServer()) {
-                let message = '<?= $_lang["error_internet_connection"] ?>'
+                let message = '<?= $_lang['error_internet_connection'] ?>'
                 setTimeout(function () {
                     alert(message)
                 }, 10)
