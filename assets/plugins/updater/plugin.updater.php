@@ -91,7 +91,7 @@ if($e->name == 'OnManagerWelcomeHome'){
 
     $_SESSION['updatelink'] = md5(time());
     $_SESSION['updateversion'] = $git['version'];
-    if ($git['version'] != $currentVersion['version'] && $git['version'] != '') {
+    if (version_compare($git['version'], $currentVersion['version'],'>') && $git['version'] != '') {
         // get manager role
         $role = $_SESSION['mgrRole'];
         if(($role!=1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
