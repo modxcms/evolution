@@ -316,6 +316,13 @@ class DocumentParser {
                     while ($row= $this->db->getRow($result)) {
                         $this->config[$row['setting_name']]= $row['setting_value'];
                     }
+                    if ($this->config['enable_filter']) {
+                        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+                        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+                        if ($count) {
+                            $this->config['enable_filter'] = '0';
+                        }
+                    }
                 }
             }
         }
@@ -333,10 +340,6 @@ class DocumentParser {
         $this->error_reporting              = $this->config['error_reporting'];
         $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
         $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
-        
-        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
-        if($count) $this->config['enable_filter'] = '0';
         
         // now merge user settings into MODX-configuration
         $this->getUserSettings();
