@@ -54,10 +54,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
             if (!a) {
                 return;
             }
-            let b = document.querySelector('.evo-tooltip');
-            if (!b) {
-                b = document.createElement('div');
-            }
+            let b = document.querySelector('.evo-tooltip') || document.createElement('div');
             document.body.appendChild(b);
             b.className = 'evo-tooltip';
             let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
