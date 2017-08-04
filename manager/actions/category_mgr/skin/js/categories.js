@@ -19,11 +19,11 @@
  * Sort Categories
  */
 evo.sortable('.table-sortable tbody > tr', {
-    complete: function(a, b) {
-        for(let i = 0; i < b.length; i++) {
-            let item = b[i].querySelector('input.sort');
-            b[i].querySelector('input.sort').value = i + 1;
-            b[i].querySelector('span.sort').innerHTML = i + 1
+    complete: function() {
+        let els = document.querySelectorAll('.table-sortable tbody > tr');
+        for(let i = 0; i < els.length; i++) {
+			els[i].querySelector('input.sort').value = i + 1;
+			els[i].querySelector('span.sort').innerHTML = i + 1
         }
     }
 });
