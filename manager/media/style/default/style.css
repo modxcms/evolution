@@ -81,9 +81,7 @@ form#mutate .multitv input[type="text"] { width: 300px; }
 form#mutate .imageField { width: 50%; min-width: 300px; }
 form#mutate input[name="menuindex"] { text-align: center; width: 80px; padding-left: 0; padding-right: 0; }
 form#mutate input[name="ta"].inputBox { padding-left: 30px }
-form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { position: relative; float: right; margin: -2.385em 0px 0 0; z-index: 5; border-radius: 0 .1rem .1rem 0 !important; }
 form#mutate input[name="ta"].inputBox:focus + input[type=button], form#mutate input[name="ta"].inputBox:focus + .CodeMirror + input[type=button] { border-color: #1377c5 #1377c5 #1377c5 #bbb; }
-form#mutate input[type=text][name^=tv], form#mutate input[type=number][name^=tv] { display: block }
 form#mutate input[name^=tv].DatePicker, form#mutate input[name*=date].DatePicker, form#mutate input[name=createdon].DatePicker, form#mutate input[name=editedon].DatePicker { float: left; width: auto; padding-right: 2em }
 form#mutate input[name^=tv].DatePicker + a, form#mutate input[name*=date].DatePicker + a { position: relative; z-index: 5; margin-top: 0.5em; margin-left: -1.5em; float: left; }
 form#mutate textarea.tv_textareamini { height: 100px; width: 300px; overflow-y: scroll; }
@@ -260,9 +258,6 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 .sectionBody .actionButtons { padding-top: 0; min-height: 40px; }
 .sectionBody .actionButtons li { margin-right: 10px; }
 .sectionBody .actionButtons a { display: inline-block; padding: 9px 10px; line-height: 1; }
-#range input#pids { width: 100% !important; }
-#range input#pids + input[name=fsubmit] { margin-top: 0.5rem; }
-#range::after { content: ""; display: table; width: 100% }
 #content_body #which_editor { margin-top: 12px; }
 /* resource children list */
 #tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6) { text-align: center; white-space: nowrap }

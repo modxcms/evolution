@@ -24,8 +24,9 @@ input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
-#settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
-#settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
+#settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo], #range input#pids, form#mutate input[type=text][name^=tv]:not(.DatePicker), form#mutate input[type=number][name^=tv] { float: left; width: 100% !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
+#settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button], #range input#pids + input[name=fsubmit], form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { z-index: 5; float: right; margin-top: -2.34375em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
+#range::after { content: ""; display: table; width: 100% }
 /* [ Editor ] */
 .navbar.navbar-editor { padding: .5rem 1.3rem; border-radius: 0 }
 .navbar-editor > label { margin-bottom: 0 }
@@ -33,9 +34,10 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 /* [ Action Buttons ] */
 /* new style */
 #actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 1001; border-radius: 0 0 0.3rem 0.3rem; }
+#actions .btn-group { margin: 0 }
 #actions .btn-group > .btn-group { display: block }
-#actions .btn-group .btn, #_actions .btn-group .btn, #_actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em }
-#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
+#actions .btn-group .btn, #actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em; line-height: 2.4em }
+#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 2.4em; font-size: 1em; text-align: center }
 #actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
 #actions .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-success:hover { box-shadow: none }
