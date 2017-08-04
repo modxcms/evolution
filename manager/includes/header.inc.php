@@ -92,13 +92,13 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 return;
             }
             let h = {
-                handleClass: b.handleClass || 'ghost', complete: function(a) {
+                handleClass: b.handleClass || 'ghost', complete: function(a, j) {
                     if ('function' === typeof b.complete) {
-                        b.complete(a);
+                        b.complete(a, j);
                     }
-                }, enter: function(a) {
+                }, enter: function(a, j) {
                     if ('function' === typeof b.enter) {
-                        b.enter(a);
+                        b.enter(a, j);
                     }
                 },
             };
@@ -114,12 +114,12 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                         if (f >= c.offsetHeight && c.nextElementSibling) {
                             d += c.offsetHeight + g;
                             c.parentNode.insertBefore(c, c.nextElementSibling.nextElementSibling);
-                            h.enter(document.querySelectorAll(a));
+                            h.enter(c, document.querySelectorAll(a));
                             f = 0;
                         } else if (f <= -c.offsetHeight && c.previousElementSibling) {
                             d -= c.offsetHeight + g;
                             c.parentNode.insertBefore(c, c.previousElementSibling);
-                            h.enter(document.querySelectorAll(a));
+                            h.enter(c, document.querySelectorAll(a));
                             f = 0;
                         } else if (!c.previousElementSibling && f < 0 || !c.nextElementSibling && f > 0) {
                             f = 0;
