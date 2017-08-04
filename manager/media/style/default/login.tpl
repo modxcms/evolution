@@ -5,7 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="viewport" content="width=device-width">
-	<link rel="icon" type="image/ico" href="media/style/[(manager_theme)]/images/favicon.ico" />
+	<link rel="icon" type="image/ico" href="[+favicon+]" />
 	<link rel="stylesheet" type="text/css" href="media/style/[(manager_theme)]/style.css" />
 	<style>
 		html, body { min-height: 100%; height: 100%; }
