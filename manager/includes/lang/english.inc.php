@@ -1328,6 +1328,7 @@ $_lang["error_no_group_selected"]     = "No group selected as recipient of this 
 $_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
 $_lang["error_movedocument2"]         = "Document's ID not passed in request!";
 $_lang["error_movedocument3"]         = "New parent not set in request!";
+$_lang["error_internet_connection"]   = "Сервер недоступен, проверьте подключение к интернету!";
 
 $_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
 $_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";

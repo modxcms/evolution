@@ -1317,6 +1317,7 @@ $_lang["error_no_group_selected"]     = "Не указанна группа по
 $_lang["error_movedocument1"]         = "Документ не может быть своим родителем!";
 $_lang["error_movedocument2"]         = "ID документа не прошел в запросе!";
 $_lang["error_movedocument3"]         = "Новый родитель не указан!";
+$_lang["error_internet_connection"]   = "Сервер недоступен, проверьте подключение к интернету!";
 
 $_lang["login_processor_unknown_user"]       = "Неверно указан логин или пароль!";
 $_lang["login_processor_wrong_password"]     = "Неверно указан логин или пароль!";
