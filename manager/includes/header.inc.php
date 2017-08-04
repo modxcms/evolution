@@ -88,21 +88,22 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
 
         // evoSortable
         evo.sortable = function(a, b) {
-            if (!a || 'string' !== typeof a) {
+            if (!a) {
                 return;
             }
             let h = {
-                handleClass: b.handleClass || 'ghost', complete: function(a, j) {
+                handleClass: b.handleClass || 'ghost', complete: function() {
                     if ('function' === typeof b.complete) {
-                        b.complete(a, j);
+                        b.complete();
                     }
-                }, enter: function(a, j) {
-                    if ('function' === typeof b.enter) {
-                        b.enter(a, j);
+                }, change: function() {
+                    if ('function' === typeof b.change) {
+                        b.change();
                     }
                 },
             };
-            [].slice.call(document.querySelectorAll(a)).forEach(function(c) {
+            a = 'string' === typeof a ? document.querySelectorAll(a) : a;
+            [].slice.call(a).forEach(function(c) {
                 c.onmousedown = function(e) {
                     let d = e.pageY, f, g = parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom);
                     c.classList.add(h.handleClass);
@@ -114,12 +115,12 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                         if (f >= c.offsetHeight && c.nextElementSibling) {
                             d += c.offsetHeight + g;
                             c.parentNode.insertBefore(c, c.nextElementSibling.nextElementSibling);
-                            h.enter(c, document.querySelectorAll(a));
+                            h.change();
                             f = 0;
                         } else if (f <= -c.offsetHeight && c.previousElementSibling) {
                             d -= c.offsetHeight + g;
                             c.parentNode.insertBefore(c, c.previousElementSibling);
-                            h.enter(c, document.querySelectorAll(a));
+                            h.change();
                             f = 0;
                         } else if (!c.previousElementSibling && f < 0 || !c.nextElementSibling && f > 0) {
                             f = 0;
@@ -133,7 +134,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                         c.classList.remove(h.handleClass);
                         document.onmousemove = null;
                         document.onselectstart = null;
-                        h.complete(c, document.querySelectorAll(a));
+                        h.complete();
                     };
                 };
             });
