@@ -33,7 +33,7 @@ class modxRTEbridge
 
         // Check right path
         $file = !empty($basePath) ? $basePath : __FILE__;
-        $current_path = str_replace('\\', '/', dirname($file) . /);
+        $current_path = str_replace('\\', '/', dirname($file) . '/');
         if (strpos($current_path, MODX_BASE_PATH) !== false) {
             $path = substr($current_path, strlen(MODX_BASE_PATH));
             $basePath = MODX_BASE_PATH . $path;
