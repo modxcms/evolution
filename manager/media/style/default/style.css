@@ -9,12 +9,9 @@
 .sectionBody fieldset { background: none repeat scroll 0 0 #fdfdfd; border: 1px solid #ccc; padding: 1rem !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 1rem; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 .sectionBody fieldset h3 { font-size: 14px; color: #789; font-weight: 500; padding-bottom: 0; margin-bottom: 0; }
-.sectionHeader, .showHideVisible { color: #333; margin: 0 1rem; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #fff; }
-.sectionHeader + .sectionBody, .showHideVisible + .sectionBody { margin-top: -1px !important }
-.tab-page .sectionHeader { margin: 1rem 3px 0; }
+.showHideVisible { color: #333; margin: 0 1rem; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #fff; }
+.showHideVisible + .sectionBody { margin-top: -1px !important }
 .sectionBody, .layerVisible { position: relative; }
-.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { border-top: 1px solid #ccc; margin: 0 3px 1rem; padding: 7px; }
-.section .sectionBody { margin: 0 1rem 1rem; padding: 1rem; background-color: #fff; border: 1px solid #ccc; }
 .sectionBody > p:first-child { margin-left: 1rem; margin-right: 1rem }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
@@ -40,8 +37,6 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 /* -------------------------[ Tabs ]--- */
 .sectionBody .tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
 .sectionBody > .tab-pane > .tab-page { padding: 1.25rem; }
-.sectionHeader { padding: 7px 0px; }
-.tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Welcome Page ]--- */
 /*#mainActionPages { background: #f5f5f5; }*/

@@ -219,7 +219,7 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 #file_editfile td { padding: 0 !important; }
 #file_editfile #content { float: left; width: 100%; min-height: 25rem; border: none; border-bottom: 1px solid rgba(0, 0, 0, .15) }
 /* STYLES FOR PAGE HELP */
-#helpPane h1 { border-bottom: 1px solid #888; margin-bottom: 1em; }
+#helpPane h1 { margin-bottom: 1em; padding: .5rem; font-size: .8rem; border-bottom: 1px solid #e0e0e0; }
 #helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
 #helpPane li > strong { display: block; font-size: 14px; }
 #helpPane pre { border: 1px solid rgba(0, 0, 0, 0.1); padding: 1em; }
