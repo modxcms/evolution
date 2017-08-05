@@ -1144,6 +1144,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content,$ph=false) {
+        if(strpos($content,'{{ ')!==false) $content = str_replace(array('{{ ',' }}'),array('\{\{ ',' \}\}'),$content);
         if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if(strpos($content,'{{')===false) return $content;
         
