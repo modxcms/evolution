@@ -161,9 +161,12 @@ class DBAPI {
 		
 		$fields = $this->replaceFullTableName($fields);
 		$from = $this->replaceFullTableName($from);
-        if(trim($where) !== '')   $where   = "WHERE {$where}";
-        if(trim($orderby) !== '') $orderby = "ORDER BY {$orderby}";
-        if(trim($limit) !== '')   $limit   = "LIMIT {$limit}";
+        $where   = trim($where);
+        $orderby = trim($orderby);
+        $limit   = trim($limit);
+        if($where && stripos($where,'WHERE')!==0)     $where   = "WHERE {$where}";
+        if($orderby && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+        if($limit && stripos($limit,'LIMIT')!==0)     $limit   = "LIMIT {$limit}";
 		return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
 	}
 
