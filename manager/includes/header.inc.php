@@ -53,8 +53,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         evo.tooltips = function (a) {
             if (!a) {
                 return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
             }
-            a = 'string' === typeof a ? document.querySelectorAll(a) : a
             let b = document.querySelector('.evo-tooltip')
             if (!b) {
                 b = document.createElement('div')
@@ -91,6 +92,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         evo.sortable = function (a, b) {
             if (!a) {
                 return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
             }
             let h = {
                 handleClass: b.handleClass || 'ghost', complete: function () {
@@ -102,8 +105,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                         b.change()
                     }
                 },
-            }
-            a = 'string' === typeof a ? document.querySelectorAll(a) : a;
+            };
             [].slice.call(a).forEach(function (c) {
                 c.onmousedown = function (e) {
                     let d = e.pageY, f, g = parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom)
@@ -136,6 +138,32 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                         document.onmousemove = null
                         document.onselectstart = null
                         h.complete()
+                    }
+                }
+            })
+        }
+
+        // evo collapse
+        evo.collapse = function (a, b) {
+            if (!a) {
+                return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
+            }
+            let h = {
+                containerClass: b && b.containerClass || 'tab-body',
+            };
+            [].slice.call(a).forEach(function (c) {
+                if (c.nextElementSibling && c.nextElementSibling.classList.contains(h.containerClass)) {
+                    c.nextElementSibling.classList.add('collapse', 'in')
+                    c.onclick = function () {
+                        if (c.nextElementSibling.classList.contains('in')) {
+                            c.nextElementSibling.classList.remove('in')
+                            c.classList.add('collapsed')
+                        } else {
+                            c.nextElementSibling.classList.add('in')
+                            c.classList.remove('collapsed')
+                        }
                     }
                 }
             })
@@ -198,7 +226,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                     this.parentNode.classList.toggle('show')
                 }
             }
-            evo.tooltips(document.querySelectorAll('[data-tooltip]'))
+            evo.tooltips('[data-tooltip]')
         }
 
         function reset_path (elementName)
