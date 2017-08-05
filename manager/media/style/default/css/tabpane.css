@@ -18,21 +18,21 @@
 .tab-page .tab-header, .sectionHeader { margin-top: 1em; padding: .5rem 1.25rem; letter-spacing: .03rem }
 .tab-page .tab-header + .tab-header, .tab-page .sectionHeader + .sectionHeader { margin-top: 0; border-top: 1px solid #ccc; }
 .tab-page > .tab-body .tab-header { padding-left: 0; padding-right: 0 }
-.tab-page > .tab-header:first-child, .tab-page > .tab-body > .tab-header:first-child, .tab-page .sectionHeader:first-child { margin-top: 0 }
+.tab-page > .tab-header:first-child, .tab-page > .tab-body > .tab-header:first-child, .tab-page .sectionHeader:first-child, .tab-page > script + .sectionHeader { margin-top: 0 }
 .tab-page > .tab-body { width: 100%; padding: 1.25rem; }
 .tab-page > .tab-body > .tab-body, .tab-page .sectionBody { padding: 1rem 0; }
 .tab-page > .tab-header + .tab-body, .tab-page > .tab-body .tab-header + .tab-body, .tab-page .sectionHeader + .sectionBody { padding-top: 1em; border-top: 1px solid rgba(0, 0, 0, 0.1); }
 .tab-page > .tab-body::after { display: table; width: 100%; content: '' }
-.tab-page .tab-body > .form-group:last-child, .tab-page .tab-body > .form-row:last-child, .tab-page .tab-body > p:last-child, .tab-page .tab-body > .form-group:last-child > p:last-child { margin-bottom: 0 }
+.tab-page .tab-body > .form-group:last-child, .tab-page .tab-body > .form-row:last-child, .tab-page .tab-body > p:last-child, .tab-page .tab-body > .form-group:last-child > p:last-child, .tab-page .sectionBody:last-child { margin-bottom: 0 }
 .tab-page .tab-section, .tab-page .sectionHeader + .sectionBody { margin-top: 1.25rem; background-color: #fafafa; border: 1px solid #e0e0e0; border-radius: .1rem; }
 .tab-page .tab-section:first-child, .tab-page .sectionHeader + .sectionBody, .tab-page .sectionBody ~ .sectionHeader { margin-top: 0 }
-.tab-page .tab-section .tab-header, .sectionHeader { margin-left: -1px; margin-right: -1px; padding-left: .5rem; padding-right: .5rem; background-color: #efeff6; border: 1px solid #e0e0e0; border-bottom: 2px solid #e0e0ec; }
-.tab-page .tab-section .tab-header:first-child, .sectionHeader { margin-top: 0; border-top: none }
-.tab-page .tab-section .tab-header + .tab-header, .tab-page .tab-section .tab-body + .tab-header, .sectionHeader { border-top: 1px solid #e0e0e0; }
+.tab-page .tab-section .tab-header, .tab-page .sectionHeader { margin-left: -1px; margin-right: -1px; padding-left: .5rem; padding-right: .5rem; background-color: #efeff6; border: 1px solid #e0e0e0; border-bottom: 2px solid #e0e0ec; }
+.tab-page .tab-section .tab-header:first-child, .tab-page .sectionHeader { margin-top: 0; border-top: none }
+.tab-page .tab-section .tab-header + .tab-header, .tab-page .tab-section .tab-body + .tab-header, .tab-page .sectionHeader { border-top: 1px solid #e0e0e0; }
 .tab-page .tab-section .tab-body, .tab-page .sectionBody { padding: 1rem; }
-.sectionHeader { margin: 1.25rem .25rem 0 }
+.tab-page > .sectionHeader { margin-top: 1rem; margin-left: .25rem; margin-right: .25rem }
 .tab-page .sectionBody { margin: 1rem .25rem; }
-.tab-page .sectionHeader + .sectionBody { border-radius: 0 }
+.tab-page .sectionHeader + .sectionBody { border-top-color: transparent; border-radius: 0 }
 /* tab-page-header collapse */
 .tab-page .tab-header[data-toggle="collapse"]::after { float: right; content: "\f107"; font-family: FontAwesome; font-size: 1rem; line-height: 1em; color: #777; cursor: pointer; transition-duration: .3s }
 .tab-page .tab-header[data-toggle="collapse"].collapsed::after { transform: rotate(180deg) }
