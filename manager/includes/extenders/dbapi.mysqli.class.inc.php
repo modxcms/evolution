@@ -95,6 +95,7 @@ class DBAPI {
 			$this->connect();
 		}
 		$tstart = $modx->getMicroTime();
+		if(is_array($sql)) $sql = join("\n", $sql);
 		$this->lastQuery = $sql;
 		if (!($result = $this->conn->query($sql))) {
 			if(!$watchError) return;
