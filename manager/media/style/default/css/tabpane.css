@@ -18,7 +18,7 @@
 .tab-page .tab-header, .sectionHeader { margin-top: 1em; padding: .5rem 1.25rem; letter-spacing: .03rem }
 .tab-page .tab-header + .tab-header, .tab-page .sectionHeader + .sectionHeader { margin-top: 0; border-top: 1px solid #ccc; }
 .tab-page > .tab-body .tab-header { padding-left: 0; padding-right: 0 }
-.tab-page > .tab-header:first-child, .tab-page > .tab-body > .tab-header:first-child, .tab-page .sectionHeader:first-child, .tab-page > script + .sectionHeader { margin-top: 0 }
+.tab-page > .tab-header:first-child, .tab-page > .tab-body > .tab-header:first-child, .tab-page .sectionHeader:first-child, .tab-page > script + .sectionHeader, .sectionBody .tab-page > script + .tab-section { margin-top: 0 }
 .tab-page > .tab-body { width: 100%; padding: 1.25rem; }
 .tab-page > .tab-body > .tab-body, .tab-page .sectionBody { padding: 1rem 0; }
 .tab-page > .tab-header + .tab-body, .tab-page > .tab-body .tab-header + .tab-body, .tab-page .sectionHeader + .sectionBody { padding-top: 1em; border-top: 1px solid rgba(0, 0, 0, 0.1); }
@@ -30,9 +30,13 @@
 .tab-page .tab-section .tab-header:first-child, .tab-page .sectionHeader { margin-top: 0; border-top: none }
 .tab-page .tab-section .tab-header + .tab-header, .tab-page .tab-section .tab-body + .tab-header, .tab-page .sectionHeader { border-top: 1px solid #e0e0e0; }
 .tab-page .tab-section .tab-body, .tab-page .sectionBody { padding: 1rem; }
-.tab-page > .sectionHeader { margin-top: 1rem; margin-left: .25rem; margin-right: .25rem }
+.tab-page > .sectionHeader, .sectionBody .tab-page > .tab-section { margin-top: 1rem; margin-left: .25rem; margin-right: .25rem }
 .tab-page .sectionBody { margin: 1rem .25rem; }
 .tab-page .sectionHeader + .sectionBody { border-top-color: transparent; border-radius: 0 }
+.tab-page > .tab-section .tab-pane { padding-top: 1.25rem }
+.tab-page > .tab-pane { margin-left: -1.25rem; margin-right: -1.25rem }
+.tab-page > .tab-pane > .tab-page { box-shadow: none; }
+.tab-page > .tab-pane > .tab-page > .tab-body { padding-bottom: 0 }
 /* tab-page-header collapse */
 .tab-page .tab-header[data-toggle="collapse"]::after { float: right; content: "\f107"; font-family: FontAwesome; font-size: 1rem; line-height: 1em; color: #777; cursor: pointer; transition-duration: .3s }
 .tab-page .tab-header[data-toggle="collapse"].collapsed::after { transform: rotate(180deg) }
