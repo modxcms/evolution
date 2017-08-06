@@ -22,7 +22,7 @@ input.form-control, input[type=text]:not(.form-control), input[type=password], i
 .btn-danger:hover { color: #fff; background-color: #c9302c; border-color: #c12e2a }
 .btn-default { color: #bbb; background-color: #202329; border-color: #202329 }
 .btn-default:hover { color: #fff; background-color: #1a1c21; border-color: #1a1c21 }
-textarea { width: 100%; padding: .375em .5em; line-height: 1.5; overflow: auto; resize: vertical }
+textarea, textarea.form-control { width: 100%; padding: .375em .5em; line-height: 1.5; overflow: auto; resize: vertical }
 select.form-control:not([size]):not([multiple]), select:not([multiple]) { min-height: 2.34375em; height: auto; }
 optgroup { font-style: normal; font-weight: 500; background-color: #ddd; }
 optgroup option { font-weight: normal; background-color: #fff; }
