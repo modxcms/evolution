@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
   PRIMARY KEY  (`id`),
   KEY `document` (`document`),
   KEY `document_group` (`document_group`),
-  UNIQUE INDEX ix_dg_id (`document_group`,`document`)
+  UNIQUE INDEX `ix_dg_id` (`document_group`,`document`)
 ) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
@@ -858,7 +858,7 @@ ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_gr
 
 ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
-ALTER TABLE `{PREFIX}document_groups` ADD UNIQUE INDEX ix_dg_id (`document_group`,`document`);
+ALTER TABLE `{PREFIX}document_groups` ADD UNIQUE INDEX `ix_dg_id` (`document_group`,`document`);
 
 # ]]upgrade-able
 
