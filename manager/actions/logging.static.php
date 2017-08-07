@@ -270,11 +270,11 @@ if ($limit < 1) {
             <table class="table data">
                 <thead>
                 <tr>
-                    <th class="sortable"><?= $_lang["mgrlog_username"] ?></th>
+                    <th class="sortable" width="1%"><?= $_lang["mgrlog_username"] ?></th>
                     <th class="sortable"><?= $_lang["mgrlog_action"] ?></th>
                     <th class="sortable sortable-numeric" width="1%"><?= $_lang["mgrlog_itemid"] ?></th>
                     <th class="sortable"><?= $_lang["mgrlog_itemname"] ?></th>
-                    <th class="sortable"><?= $_lang["mgrlog_time"] ?></th>
+                    <th class="sortable" width="1%"><?= $_lang["mgrlog_time"] ?></th>
                 </tr>
                 </thead>
                 <tbody>

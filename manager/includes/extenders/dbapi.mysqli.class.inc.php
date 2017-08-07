@@ -2,6 +2,7 @@
 class DBAPI {
 	var $conn;
 	var $config;
+	var $lastQuery;
 	var $isConnected;
 
 	function __construct($host='', $dbase='', $uid='', $pwd='', $pre=NULL, $charset='', $connection_method='SET CHARACTER SET') {
@@ -94,6 +95,8 @@ class DBAPI {
 			$this->connect();
 		}
 		$tstart = $modx->getMicroTime();
+		if(is_array($sql)) $sql = join("\n", $sql);
+		$this->lastQuery = $sql;
 		if (!($result = $this->conn->query($sql))) {
 			if(!$watchError) return;
             switch(mysqli_errno($this->conn)) {
@@ -149,17 +152,22 @@ class DBAPI {
 		
 		if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
 		if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+		if(is_array($where))  $where  = join(' ', $where);
 		
 		if (!$from) {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::select().");
-		} else {
-			$fields = $this->replaceFullTableName($fields);
-			$from = $this->replaceFullTableName($from);
-			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-			$limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
-			return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
+			exit;
 		}
+		
+		$fields = $this->replaceFullTableName($fields);
+		$from = $this->replaceFullTableName($from);
+        $where   = trim($where);
+        $orderby = trim($orderby);
+        $limit   = trim($limit);
+        if($where && stripos($where,'WHERE')!==0)     $where   = "WHERE {$where}";
+        if($orderby && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+        if($limit && stripos($limit,'LIMIT')!==0)     $limit   = "LIMIT {$limit}";
+		return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
 	}
 
 	function update($fields, $table, $where = "") {

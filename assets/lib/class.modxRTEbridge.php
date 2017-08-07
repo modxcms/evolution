@@ -33,7 +33,7 @@ class modxRTEbridge
 
         // Check right path
         $file = !empty($basePath) ? $basePath : __FILE__;
-        $current_path = str_replace('\\', '/', dirname($file)) . '/';
+        $current_path = str_replace('\\', '/', dirname($file) . '/');
         if (strpos($current_path, MODX_BASE_PATH) !== false) {
             $path = substr($current_path, strlen(MODX_BASE_PATH));
             $basePath = MODX_BASE_PATH . $path;
@@ -266,6 +266,7 @@ class modxRTEbridge
                 // Loop through tvs
                 $output .= file_get_contents("{$this->pluginParams['base_path']}tpl/tpl.{$this->editorKey}.init.html") ."\n";
                 $output  = $modx->parseText($output, $ph);
+                $output = str_replace('\\', '/', $output);
             }
 
         } else {
@@ -652,7 +653,7 @@ class modxRTEbridge
         }
 
         foreach (glob("{$themeDir}*") as $file) {
-            $file = str_replace('\\', '/', $file);
+            //$file = str_replace('\\', '/', $file);
             $file = str_replace($themeDir, '', $file);
             $file = str_replace('theme.' . $this->editorKey . '.', '', $file);
 
@@ -689,7 +690,7 @@ class modxRTEbridge
                 break;
         }
         foreach (glob("{$skinDir}*", GLOB_ONLYDIR) as $dir) {
-            $dir = str_replace('\\', '/', $dir);
+            //$dir = str_replace('\\', '/', $dir);
             $skin_name = substr($dir, strrpos($dir, '/') + 1);
             $skins[$skin_name][] = 'default';
             $styles = glob("{$dir}/ui_*.css");

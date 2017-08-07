@@ -19,6 +19,12 @@ class ModxCaptcha
     protected $im_width = 0;
     protected $im_height = 0;
 
+    /**
+     * ModxCaptcha constructor.
+     * @param DocumentParser $modx
+     * @param int $width
+     * @param int $height
+     */
     public function __construct(DocumentParser $modx, $width = 200, $height = 160)
     {
         $this->modx = $modx;
@@ -82,45 +88,61 @@ class ModxCaptcha
         $dir->close();
         $text_font = (string)$fontstmp[array_rand($fontstmp)];
         $chars = str_split($this->word);
-        /* angle for text inclination */
-        /* initial text size */
+        $_chars = array();
+        $maxWidth = $this->im_width / count($chars);
+        $text_size = round(max($maxWidth, $this->im_height) * 3 /4.5 );
+        $maxHeight = 0;
+        $totalWidth = 0;
+        foreach ($chars as $index => $value) {
+            $text_angle = rand(-20, 20);
+            $size = $text_size;
+            $box = imagettfbbox($size, $text_angle, $text_font, $value);
+            $charWidth = $box[2] - $box[0];
+            $charHeight = abs($box[5] - $box[3]);
+            $_chars[] = array(
+                'angle' => $text_angle,
+                'size' => $size,
+                'width' =>  $charWidth,
+                'height' => $charHeight
+            );
+            if ($charHeight > $maxHeight) $maxHeight = $charHeight;
+            $totalWidth += $charWidth;
+        }
+
+        $minRatio = min(1, $this->im_width / $totalWidth, $this->im_height / $maxHeight);
+        $size = round($text_size * $minRatio * 0.9);
+
+        $totalWidth = 0;
+        foreach ($_chars as $index => &$data) {
+            $data['size'] = $size;
+            $box = imagettfbbox($data['size'], $data['angle'], $text_font, $chars[$index]);
+            $charWidth = $box[2] - $box[0];
+            $charHeight = abs($box[5] - $box[3]);
+            $data['width'] = $charWidth;
+            $data['height'] = $charHeight;
+            $totalWidth += $charWidth;
+        }
         /* create canvas for text drawing */
         $im_text = imagecreate($this->im_width, $this->im_height);
         $bg_color = imagecolorallocate($im_text, 255, 255, 255);
-
-        $len = count($chars);
-        foreach ($chars as $index => $value) {
-            $text_angle = rand(-30, 30);
-            /* initial text size */
-            $text_size = 30;
-            /* calculate text width and height */
-            $box = imagettfbbox($text_size, $text_angle, $text_font, $this->word);
-            $text_width = $box[2] - $box[0]; //text width
-            /* adjust text size */
-            $text_size = round((30 * $this->im_width) / $text_width);
-            /* recalculate text width and height */
-            $box = imagettfbbox($text_size, $text_angle, $text_font, $this->word);
-            $text_width = ($box[2] - $box[0]) / $len; //text width
-            $text_height = $box[5] - $box[3]; //text height
-
+        $text_x = ($this->im_width - $totalWidth) / 2;
+        foreach ($_chars as $index => $data) {
             /* calculate center position of text */
-            $text_x = ($this->im_width - $len * $text_width) / 2 + $index * $text_width;
-            $text_y = ($this->im_height - $text_height) / 2;
-
-
+            $text_y = ($this->im_height + $data['height'])/2;
             /* pick color for text */
             $text_color = imagecolorallocate($im_text, rand(10, 200), rand(10, 200), rand(10, 200));
 
             /* draw text into canvas */
             imagettftext(
                 $im_text,
-                $text_size,
-                $text_angle,
+                $data['size'],
+                $data['angle'],
                 $text_x,
                 $text_y,
                 $text_color,
                 $text_font,
-                $value);
+                $chars[$index]);
+            $text_x += $data['width'];
         }
         /* remove background color */
         imagecolortransparent($im_text, $bg_color);

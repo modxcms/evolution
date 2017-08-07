@@ -196,21 +196,29 @@ class template{
 	// ---------------------------------------------------
 	function fetch($tpl){
 		global $modx;
-		$template = "";
-		if ($modx->getChunk($tpl) != "") {
-			$template = $modx->getChunk($tpl);
-		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(MODX_BASE_PATH.substr($tpl, 6));
-		} else if(substr($tpl, 0, 6) == "@CODE:") {
+		$template = '';
+		if(substr($tpl, 0, 6) == '@CHUNK') {
+			$template = $modx->getChunk(substr($tpl, 7));
+		} elseif(substr($tpl, 0, 5) == '@FILE') {
+			$path = trim(substr($tpl, 6));
+			if(strpos($path, $modx->config['base_url'].'manager/includes/config.inc.php')===false)
+				$template = file_get_contents($path);
+		} elseif(substr($tpl, 0, 5) == '@CODE') {
 			$template = substr($tpl, 6);
-		} else if(substr($tpl, 0, 5) == "@FILE") {
-			$template = $this->get_file_contents(trim(substr($tpl, 5)));
-		} else if(substr($tpl, 0, 5) == "@CODE") {
-			$template = trim(substr($tpl, 5));
+		} elseif(strpos($tpl, '[+') !==false) {
+			$template = $tpl;
+		} elseif(substr($tpl, 0, 9) == '@DOCUMENT') {
+			$docid = trim(substr($tpl, 10));
+			if(preg_match('@^[1-9][0-9]*$@',$docid))
+				$template = $modx->getField('content',$docid);
 		} else {
-			$template = $this->language['missing_placeholders_tpl'];
+			$template = $modx->getChunk($tpl);
 		}
-		if(strpos($template,'[!')!==false) $template = str_replace(array('[!','!]'),array('[[',']]'),$template);
+		
+		if(strpos($template,'[!')!==false)
+			$template = str_replace(array('[!','!]'),array('[[',']]'),$template);
+		elseif($template===''||$template===false)
+			$template = $this->language['missing_placeholders_tpl'];
 		return $template;
 	}
 

@@ -167,7 +167,7 @@ $filters = array("custom"=>array(),"parsed"=>array());
     // $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
     // $filters["custom"][] = array("source","callback_function");
 
-$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>$orderBy);
+$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>(isset($orderBy) ? $orderBy : ''));
     // Variable: orderBy
     // An array that holds all criteria to sort the result set by.
     // Note that using a custom sort will disable all other sorting.
@@ -665,21 +665,6 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     - <globalFilterDelimiter>
     - <parseFilters>
 */
-$keywords = (isset($keywords))? $keywords : 0;
-/*
-    Param: keywords
-    
-    Purpose:
-    Enable fetching of associated keywords for each document
-    Can be used as [+keywords+] or as a tagData source
-    
-    Options:
-    0 - off
-    1 - on
-    
-    Default:
-    0 - off
-*/
 
 $randomize = (isset($randomize))? $randomize : 0;
 /*
@@ -814,7 +799,7 @@ $ditto->setDisplayFields($ditto->template->fields,$hiddenFields);
 $ditto->parseFields($placeholders,$seeThruUnpub,$dateSource,$randomize);
     // parse the fields into the field array
     
-$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $where, $keywords, $dateSource, $queryLimit, $display, $filter,$paginate, $randomize);
+$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $where, $dateSource, $queryLimit, $display, $filter,$paginate, $randomize);
     // retrieves a list of document IDs that meet the criteria and populates the $resources array with them
 $count = count($documentIDs);
     // count the number of documents to be retrieved
@@ -997,16 +982,17 @@ if ($count > 0) {
         // get the database fields
     $TVs = $ditto->fields["display"]["tv"];
         // get the TVs
-    
-    switch($orderBy['parsed'][0][1]) {
-        case "DESC":
-            $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset; 
-            $start += $offset;
-        break;
-        case "ASC":
-            $start += $offset;
-            $stop += $start;
-        break;
+    if(isset($orderBy['parsed'][0][1])) {
+        switch($orderBy['parsed'][0][1]) {
+            case "DESC":
+                $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset;
+                $start += $offset;
+                break;
+            case "ASC":
+                $start += $offset;
+                $stop += $start;
+                break;
+        }
     }
 
     if ($ditto->prefetch !== false) {
@@ -1024,7 +1010,7 @@ if ($count > 0) {
         $queryLimit = ($queryLimit == 0) ? "" : $queryLimit;
     }
     
-    $resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $orderBy, $showPublishedOnly, 0, $hidePrivate, $where, $queryLimit, $keywords, $randomize, $dateSource);
+    $resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $orderBy, $showPublishedOnly, 0, $hidePrivate, $where, $queryLimit, $randomize, $dateSource);
         // retrieves documents
     $output = $header;
         // initialize the output variable and send the header

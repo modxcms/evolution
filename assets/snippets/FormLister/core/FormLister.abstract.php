@@ -290,7 +290,7 @@ abstract class Core
                         $classname = $_source[0];
                         if (!is_null($model = $this->loadModel($classname)) && isset($_source[1])) {
                             /** @var \autoTable $data */
-                            if ($data = $model->edit($_source[1])->getID()) {
+                            if ($model->edit($_source[1])->getID()) {
                                 $fields = $model->toArray();
                                 if (isset($_source[2])) {
                                     $prefix = $_source[2];
@@ -1176,8 +1176,7 @@ abstract class Core
             if (is_array($value)) {
                 $count++;
                 if (10 < $count) {
-                    echo 'GPC Array nested too deep!';
-                    exit;
+                    break;
                 }
                 $this->removeGpc($value, $count);
                 $count--;

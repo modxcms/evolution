@@ -188,15 +188,16 @@ class Form extends Core
 
     /**
      * Получает тему письма из шаблона или строки
+     * @param string $param
      * @return mixed|null|string
      */
-    public function renderSubject()
+    public function renderSubject($param = 'subject')
     {
-        $subject = $this->getCFGDef('subjectTpl');
+        $subject = $this->getCFGDef($param . 'Tpl');
         if (!empty($subject)) {
             $subject = $this->parseChunk($subject, $this->prerenderForm(true));
         } else {
-            $subject = $this->getCFGDef('subject');
+            $subject = $this->getCFGDef($param);
         }
 
         return $subject;
@@ -310,7 +311,7 @@ class Form extends Core
         if (empty($to)) {
             $out = true;
         } else {
-            $mailer = new Mailer($this->modx, $this->getMailSendConfig($to, 'autosenderFromName'));
+            $mailer = new Mailer($this->modx, $this->getMailSendConfig($to, 'autosenderFromName', 'autoSubject'));
             $report = $this->renderReport('automessageTpl');
             $out = $mailer->send($report);
             $this->log('Mail autosender report', array(
@@ -335,7 +336,7 @@ class Form extends Core
             $out = true;
         } else {
             if ($this->getCFGDef('ccSender', 0)) {
-                $mailer = new Mailer($this->modx, $this->getMailSendConfig($to, 'ccSenderFromName'));
+                $mailer = new Mailer($this->modx, $this->getMailSendConfig($to, 'ccSenderFromName', 'ccSubject'));
                 $report = $this->renderReport('ccSenderTpl');
                 $out = $mailer->send($report);
                 $this->log('Mail CC report',
@@ -376,7 +377,7 @@ class Form extends Core
             $this->sendAutosender();
             $this->setSubmitProtection()->postProcess();
         } else {
-            $this->addMessage($this->lexicon->getMsg('form.formFailed'));
+            $this->addMessage($this->lexicon->getMsg('form.form_failed'));
         }
     }
 
@@ -397,14 +398,17 @@ class Form extends Core
     /**
      * @param string $to
      * @param string $fromParam
+     * @param string $subjectParam
      * @return array
      */
-    public function getMailSendConfig($to, $fromParam)
+    public function getMailSendConfig($to, $fromParam, $subjectParam = 'subject')
     {
+        $subject = empty($this->getCFGDef($subjectParam)) ? $this->renderSubject() : $this->renderSubject($subjectParam);
+
         return array_merge(
             $this->mailConfig,
             array(
-                'subject'  => $this->renderSubject(),
+                'subject'  => $subject,
                 'to'       => $to,
                 'fromName' => $this->getCFGDef($fromParam, $this->modx->config['site_name'])
             )

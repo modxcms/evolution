@@ -102,7 +102,7 @@ class AjaxSearchUtil {
     */
     function setBacktrackLimit($backtrackLimit) {
         $this->_current_pcre_backtrack = ini_get('pcre.backtrack_limit');
-        if ($dbg) $this->dbgRecord($current_pcre_backtrack, "AjaxSearch - pcre.backtrack_limit");
+        if (isset($dbg)) $this->dbgRecord($current_pcre_backtrack, "AjaxSearch - pcre.backtrack_limit");
         ini_set( 'pcre.backtrack_limit', $backtrackLimit);
     }
     /*

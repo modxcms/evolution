@@ -20,7 +20,7 @@ if($_GET['a'] == 2) {
 }
 
 // Favicon
-$_style['favicon']                  = (file_exists(MODX_BASE_PATH . '/favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
+$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
@@ -174,6 +174,7 @@ $_style['actions_refresh']          = 'fa fa-refresh';
 $_style['actions_error']            = 'fa fa-times-circle';
 $_style['actions_info']             = 'fa fa-info-circle';
 $_style['actions_triangle']         = 'fa fa-exclamation-triangle';
+$_style['actions_table']            = 'fa fa-table';
 
 //for back compatibility
 
@@ -389,15 +390,13 @@ $_style['actionbuttons'] = array(
 				' : '') . '
 			</div>
 		</div>',
-		'newmodule' => '<div id="actions">
+		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
-			' . ($addnew ? '
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
 					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
-			' : '') . '
 			</div>
-		</div>',
+		</div>' : ''),
 		'close' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">

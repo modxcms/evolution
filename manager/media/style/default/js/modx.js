@@ -19,8 +19,8 @@
 			if(this.config.session_timeout > 0) {
 				w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
 			}
-			if(modx.config.mail_check_timeperiod > 0) {
-				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
+			if(modx.config.mail_check_timeperiod > 0 && modx.permission.messages) {
+				setTimeout('modx.updateMail(true)', 1000)
 			}
 			d.onclick = this.hideDropDown
 		},
@@ -72,7 +72,7 @@
 							} else {
 								$(ul).removeClass('show');
 								timer = setTimeout(function() {
-									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&parent=' + self.id : '';
+									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&elements=' + self.id : '';
 									$.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href, function(data) {
 										if(data) {
 											$(ul).attr('id', 'parent_' + self.id).html(data);
@@ -784,8 +784,7 @@
 			},
 			toggleTheme: function(e) {
 				var myCodeMirrors = w.main.myCodeMirrors, key;
-				if(e.currentTarget.classList.contains('rotate180')) {
-					e.currentTarget.classList.remove('rotate180');
+				if(d.body.classList.contains('dark')) {
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
 					d.cookie = 'MODX_themeColor=';
@@ -798,7 +797,6 @@
 						}
 					}
 				} else {
-					e.currentTarget.classList.add('rotate180');
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
 					d.cookie = 'MODX_themeColor=dark';

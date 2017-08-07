@@ -147,7 +147,7 @@ class AjaxSearchLog {
 //==============================================================================
 /* The code below handles comment sent if the $_POST variables are set.
 Used when the user post comment from the ajaxSearch results window  */
-if ($_POST['logid'] && $_POST['ascmt']) {
+if (!empty($_POST['logid']) && !empty($_POST['ascmt'])) {
     $ascmt = strip_tags($_POST['ascmt']);
     $logid = intval($_POST['logid']);
     $safeCmt = (strlen($ascmt) < CMT_MAX_LENGTH) && (substr_count($ascmt, 'http') < CMT_MAX_LINKS);

@@ -385,6 +385,7 @@ $_lang["functionnotimpl_message"] = 'This function has not been implemented yet.
 $_lang["further_info"] = 'Further information';
 $_lang["go"] = 'Go';
 $_lang["group_access_permissions"] = 'User group access';
+$_lang['group_tvs'] = 'Group TV';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
 $_lang["help_msg"] = '<p>You can obtain free community support by <a href="http://forums.modx.com/" target="_blank">visiting the EVO Forums</a>. There is also a growing body of <a href="http://evolution-docs.com" target="_blank">EVO Documentation and Guides</a> that touch on virtually every aspect of EVO.</p><p>We are planning to offer commercial support services for EVO as well. Please <a href="mailto:dmi3yy@evo.im?subject=EVO Commercial Support Inquiry">email us if you\'re interested</a>.</p>';
@@ -928,6 +929,8 @@ $_lang["settings_dependencies"] = 'Dependencies';
 $_lang["settings_events"] = 'System Events';
 $_lang["settings_furls"] = 'Friendly URLs';
 $_lang["settings_general"] = 'General';
+$_lang["settings_group_tv_message"] = 'Choose if Template Variables should be grouped in sections or tabs (named by TV category) when editing a Resource';
+$_lang["settings_group_tv_options"] = 'No,Sections in General tab,Tabs in General tab,Sections in new tab,Tabs in new tab,New tabs';
 $_lang["settings_misc"] = 'File Manager';
 $_lang["settings_security"] = 'Security';
 $_lang["settings_KC"] = 'File Browser';
@@ -1277,6 +1280,9 @@ $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
 
+$_lang["enable_cache_title"] = 'Document caching';
+$_lang["disabled_at_login"] = 'Disabled at login';
+
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on Resource ID (standard)';
 $_lang["cache_type_2"] = 'Cache is based on Resource ID and $_GET parameters';
@@ -1325,6 +1331,7 @@ $_lang["error_no_group_selected"]     = "No group selected as recipient of this 
 $_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
 $_lang["error_movedocument2"]         = "Document's ID not passed in request!";
 $_lang["error_movedocument3"]         = "New parent not set in request!";
+$_lang["error_internet_connection"]   = "Server isn't available. Check your internet connection!";
 
 $_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
 $_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";

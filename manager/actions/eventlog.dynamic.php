@@ -33,9 +33,9 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang['view_log'], "js:menuAction(1)", '<i class="' . $_style['actions_preview'] . '"></i>');
+$cm->addItem($_lang['view_log'], "js:menuAction(1)", $_style['actions_preview']);
 $cm->addSeparator();
-$cm->addItem($_lang['delete'], "js:menuAction(2)", '<i class="' . $_style['actions_delete'] . '"></i>', (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
+$cm->addItem($_lang['delete'], "js:menuAction(2)", $_style['actions_delete'], (!$modx->hasPermission('delete_eventlog') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -82,7 +82,7 @@ echo $cm->render();
 		}
 	}
 
-	document.addEvent('click', function() {
+	document.addEventListener('click', function() {
 		contextm.style.visibility = "hidden";
 	});
 
@@ -109,19 +109,19 @@ echo $cm->render();
 	<div class="tab-page">
 		<!-- load modules -->
 		<div class="container container-body">
-			<div class="searchbar form-group">
-				<div class="input-group">
-					<div class="input-group-btn">
-						<a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="<?= $_style["actions_delete"] ?>"></i> <?= $_lang['clear_log'] ?></a>
-					</div>
-					<input class="form-control form-control-sm float-xs-right" name="search" type="text" size="50" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
-					<div class="input-group-btn">
-						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><?= $_lang['go'] ?></a>
-						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="fa fa-refresh"></i></a>
-						<a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="fa fa-table"></i></a>
-					</div>
-				</div>
-			</div>
+            <div class="searchbar form-group">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <a class="btn btn-danger btn-sm" href="index.php?a=116&cls=1"><i class="<?= $_style["actions_delete"] ?>"></i> <?= $_lang['clear_log'] ?></a>
+                    </div>
+                    <input class="form-control form-control-sm float-xs-right" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
+                    <div class="input-group-btn">
+                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['actions_search'] ?>"></i></a>
+                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["reset"] ?>" onclick="resetSearch();return false;"><i class="<?= $_style['actions_refresh'] ?>"></i></a>
+                        <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["list_mode"] ?>" onclick="changeListMode();return false;"><i class="<?= $_style['actions_table'] ?>"></i></a>
+                    </div>
+                </div>
+            </div>
 			<div class="row">
 				<div class="table-responsive">
 					<?php
@@ -134,13 +134,13 @@ echo $cm->render();
 					$grd->pageClass = 'page-item';
 					$grd->selPageClass = 'page-item active';
 					$grd->noRecordMsg = $_lang['no_records_found'];
-					$grd->cssClass = "table data";
+					$grd->cssClass = "table data nowrap";
 					$grd->columnHeaderClass = "tableHeader";
 					$grd->itemClass = "tableItem";
 					$grd->altItemClass = "tableAltItem";
 					$grd->fields = "type,source,createdon,eventid,username";
 					$grd->columns = $_lang['type'] . " ," . $_lang['source'] . " ," . $_lang['date'] . " ," . $_lang['event_id'] . " ," . $_lang['sysinfo_userid'];
-					$grd->colWidths = "1%,,150,1%,1%";
+					$grd->colWidths = "1%,,1%,1%,1%";
 					$grd->colAligns = "center,,,center,center";
 					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang['click_to_context'] . "'><i class='[+icon+]'></i></a>||template:<a href='index.php?a=115&id=[+id+]' title='" . $_lang['click_to_view_details'] . "'>[+source+]</a>||date: " . $modx->toDateFormat(null, 'formatOnly') . ' %I:%M %p';
 					if($listmode == '1') {

@@ -96,12 +96,13 @@ if($modx->hasPermission('empty_cache') || $modx->hasPermission('bk_manager') || 
 	);
 }
 
+$tab = 0;
 if($modx->hasPermission('edit_template')) {
 	$sitemenu['element_templates'] = array(
 		'element_templates',
 		'elements',
 		'<i class="fa fa-newspaper-o"></i>' . $_lang['manage_templates'],
-		'index.php?a=76&tab=0',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_templates'],
 		'',
 		'new_template,edit_template',
@@ -116,7 +117,7 @@ if($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet')
 		'element_tplvars',
 		'elements',
 		'<i class="fa fa-list-alt"></i>' . $_lang['tmplvars'],
-		'index.php?a=76&tab=1',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['tmplvars'],
 		'',
 		'new_template,edit_template',
@@ -131,7 +132,7 @@ if($modx->hasPermission('edit_chunk')) {
 		'element_htmlsnippets',
 		'elements',
 		'<i class="fa fa-th-large"></i>' . $_lang['manage_htmlsnippets'],
-		'index.php?a=76&tab=2',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_htmlsnippets'],
 		'',
 		'new_chunk,edit_chunk',
@@ -146,7 +147,7 @@ if($modx->hasPermission('edit_snippet')) {
 		'element_snippets',
 		'elements',
 		'<i class="fa fa-code"></i>' . $_lang['manage_snippets'],
-		'index.php?a=76&tab=3',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_snippets'],
 		'',
 		'new_snippet,edit_snippet',
@@ -161,7 +162,7 @@ if($modx->hasPermission('edit_plugin')) {
 		'element_plugins',
 		'elements',
 		'<i class="fa fa-plug"></i>' . $_lang['manage_plugins'],
-		'index.php?a=76&tab=4',
+		'index.php?a=76&tab=' . $tab++,
 		$_lang['manage_plugins'],
 		'',
 		'new_plugin,edit_plugin',
@@ -205,7 +206,7 @@ if($modx->hasPermission('category_manager')) {
 }
 
 // Modules Menu Items
-if($modx->hasPermission('new_module')) {
+if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('save_module')) {
 	$sitemenu['new_module'] = array(
 		'new_module',
 		'modules',
@@ -222,7 +223,7 @@ if($modx->hasPermission('new_module')) {
 }
 
 if($modx->hasPermission('exec_module')) {
-	if($_SESSION['mgrRole'] != 1) {
+	if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
 		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
@@ -232,23 +233,23 @@ if($modx->hasPermission('exec_module')) {
 	} else {
 		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1', 'name');
 	}
-	$i = 10;
-	while($content = $modx->db->getRow($rs)) {
-		$sitemenu['module' . $content['id']] = array(
-			'module' . $content['id'],
-			'modules',
-			($content['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $content['name'],
-			'index.php?a=112&id=' . $content['id'],
-			$content['name'],
-			'',
-			'',
-			'main',
-			0,
-			$i + 10,
-			''
-		);
-		$i = $i + 10;
-	}
+	if($modx->db->getRecordCount($rs)) {
+	    while ($row = $modx->db->getRow($rs)) {
+            $sitemenu['module' . $row['id']] = array(
+                'module' . $row['id'],
+                'modules',
+                ($row['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $row['name'],
+                'index.php?a=112&id=' . $row['id'],
+                $row['name'],
+                '',
+                '',
+                'main',
+                0,
+                1,
+                ''
+            );
+        }
+    }
 }
 
 // security menu items (users)
@@ -336,17 +337,27 @@ if($modx->hasPermission('web_access_permissions')) {
 // Tools Menu
 
 $sitemenu['refresh_site'] = array(
-	'refresh_site',
-	'tools',
-	'<i class="fa fa-recycle"></i>' . $_lang['refresh_site'],
-	'index.php?a=26',
-	$_lang['refresh_site'],
-	'',
-	'',
-	'main',
-	0,
-	5,
-	''
+    'refresh_site',
+    'tools',
+    '<i class="fa fa-recycle"></i>' . $_lang['refresh_site'],
+    'index.php?a=26',
+    $_lang['refresh_site'],
+    '',
+    '',
+    'main',
+    0,
+    5,
+    'item-group',
+    array(
+        'refresh_site_in_window' => array(
+            'a', // tag
+            'javascript:;', // href
+            'btn btn-secondary', // class or btn-success
+            'modx.openWindow({url:\'index.php?a=26\', title:\'' . $_lang['refresh_site'] . '\'})', // onclick
+            $_lang['refresh_site'], // title
+            '<i class="fa fa-recycle"></i>' // innerHTML
+        )
+    )
 );
 
 $sitemenu['search'] = array(
@@ -431,10 +442,10 @@ $menu = $modx->invokeEvent("OnManagerMenuPrerender", array('menu' => $sitemenu))
 if(is_array($menu)) {
 	$newmenu = array();
 	foreach($menu as $item){
-		if(is_array(unserialize($item))){ 
+		if(is_array(unserialize($item))){
 			$newmenu = array_merge($newmenu, unserialize($item));
 		}
-	} 
+	}
 	if(count($newmenu)> 0) $sitemenu = $newmenu;
 }
 

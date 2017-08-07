@@ -236,8 +236,8 @@ if ($placeholder === false) {
         "tpl" => $itemTemplate,
     );
     
-    $source = $dittoSnippetName;
-    $params = $dittoSnippetParameters;
+    $source = isset($dittoSnippetName) ? $dittoSnippetName : '';
+    $params = isset($dittoSnippetParameters) ? $dittoSnippetParameters : '';
         // TODO: Remove after 3.0
         
     if (isset($params)) {
@@ -407,6 +407,7 @@ function reflect($templatesDocumentID, $showItems, $groupByYears, $resource, $te
     $cal = array();
     $output = '';
     $ph = array('year'=>'','month'=>'','item'=>'','out'=>'');
+    $phx = isset($phx) ? $phx : '';
     $build = array();
     $stop = count($resource);
 

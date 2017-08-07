@@ -4,36 +4,27 @@
 /**
  * Tips
  */
-new Tips($$('.mootooltip'),{className:'custom'} );
-new MooTips($$('.mootooltip_dom'), {
-    className :'assigned',
-    showOnClick: true,
-    showOnMouseEnter: true,
-    showDelay: 200,
-    hideDelay: 200,
-    offsets: {'x': 20, 'y': 20},
-    fixed: true
-});
+//new Tips($$('.mootooltip'),{className:'custom'} );
+//new MooTips($$('.mootooltip_dom'), {
+//    className :'assigned',
+//    showOnClick: true,
+//    showOnMouseEnter: true,
+//    showDelay: 200,
+//    hideDelay: 200,
+//    offsets: {'x': 20, 'y': 20},
+//    fixed: true
+//});
 
 /**
  * Sort Categories
  */
-new Sortables($('categories-sort'), {
-    //handles:'span.handle',
-    onStart: function(element){
-        element.toggleClass('move');
-    },
-    onComplete: function(element){
-        element.toggleClass('move');
-        // reorder the indexes
-        this.list.getChildren().each(function(element, i){
-            element.getElement('input.sort').setProperty( 'value', (i+1) );
-            element.getElement('span.sort').setHTML( (i+1) );
-            element.getElements('td').each(function(td){
-                td.removeClass('gridItem').removeClass('gridAltItem');
-                td.addClass( ( i%2===0 ) ? 'gridItem' : 'gridAltItem' );
-            });
-        });
+evo.sortable('.table-sortable tbody > tr', {
+    complete: function() {
+        let els = document.querySelectorAll('.table-sortable tbody > tr');
+        for(let i = 0; i < els.length; i++) {
+			els[i].querySelector('input.sort').value = i + 1;
+			els[i].querySelector('span.sort').innerHTML = i + 1
+        }
     }
 });
 
@@ -42,7 +33,7 @@ new Sortables($('categories-sort'), {
  */
 var reset_position = function( drag ) {
     drag.setStyles({ left:0+"px", top:0+"px"  });
-}
+};
           
 var optDrop = {
     over: function(drag) {
@@ -58,7 +49,7 @@ var optDrop = {
         drag.injectInside(this);
         reset_position(drag);
     }
-}
+};
 
 var optDrag = {
     onStart: function(drag) {
@@ -68,7 +59,7 @@ var optDrag = {
         drag.setOpacity(1).setStyle('z-index', 1000);
         reset_position(drag);
     }
-}
+};
     
 var init_drag = function() {
 

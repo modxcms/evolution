@@ -54,7 +54,22 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	$rs = $modx->db->select('*', $tblsc, "id='{$docid}'");
 	$content = $modx->db->getRow($rs);
 
-	unset($content['id']); // remove the current id.
+	// Handle incremental ID
+	switch($modx->config['docid_incrmnt_method'])
+	{
+		case '1':
+			$from = "{$tblsc} AS T0 LEFT JOIN {$tblsc} AS T1 ON T0.id + 1 = T1.id";
+			$rs = $modx->db->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
+			$content['id'] = $modx->db->getValue($rs);
+			break;
+		case '2':
+			$rs = $modx->db->select('MAX(id)+1',$tblsc);
+			$content['id'] = $modx->db->getValue($rs);
+			break;
+
+		default:
+			unset($content['id']); // remove the current id.
+	}
 
 	// Once we've grabbed the document object, start doing some modifications
 	if ($_toplevel == 0) {
@@ -98,8 +113,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// Duplicate the Document
 	$newparent = $modx->db->insert($content, $tblsc);
 
-	// duplicate document's TVs & Keywords
-	duplicateKeywords($docid, $newparent);
+	// duplicate document's TVs
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
 	
@@ -117,18 +131,6 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 
 	// return the new doc id
 	return $newparent;
-}
-
-// Duplicate Keywords
-function duplicateKeywords($oldid,$newid){
-	global $modx;
-
-	$tblkw = $modx->getFullTableName('keyword_xref');
-
-	$modx->db->insert(
-		array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
-		"{$newid}, keyword_id", $tblkw, "content_id='{$oldid}'" // Copy from
-	);
 }
 
 // Duplicate Document TVs

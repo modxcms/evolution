@@ -18,7 +18,7 @@ class ditto {
 		$this->sqlOrderBy = array();
 		$this->customReset = array();
 		$this->constantFields[] = array("db","tv");
-		$this->constantFields["db"] = array("id","type","contentType","pagetitle","longtitle","description","alias","link_attributes","published","pub_date","unpub_date","parent","isfolder","introtext","content","richtext","template","menuindex","searchable","cacheable","createdby","createdon","editedby","editedon","deleted","deletedon","deletedby","publishedon","publishedby","menutitle","donthit","haskeywords","hasmetatags","privateweb","privatemgr","content_dispo","hidemenu");
+		$this->constantFields["db"] = array("id","type","contentType","pagetitle","longtitle","description","alias","link_attributes","published","pub_date","unpub_date","parent","isfolder","introtext","content","richtext","template","menuindex","searchable","cacheable","createdby","createdon","editedby","editedon","deleted","deletedon","deletedby","publishedon","publishedby","menutitle","donthit","privateweb","privatemgr","content_dispo","hidemenu");
 		$this->constantFields["tv"] = $this->getTVList();
 		$GLOBALS["ditto_constantFields"] = $this->constantFields;
 		$this->fields = array("display"=>array(),"backend"=>array("tv"=>array(),"db"=>array("id", "published")));
@@ -420,7 +420,7 @@ class ditto {
 			$this->addField($name,"display","custom");
 			$this->removeField($name,"display","unknown");
 			$source = $value[0];
-			$qe = $value[2];
+			$qe = isset($value[2]) ? $value[2] : '';
 	
 			if(is_array($source)) {
 				if(strpos($source[0],",")!==false){
@@ -590,7 +590,7 @@ class ditto {
 	// Get Document IDs for future use
 	// ---------------------------------------------------
 		
-	function determineIDs($IDs, $IDType, $TVs, $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $myWhere, $keywords, $dateSource, $limit, $summarize, $filter, $paginate, $randomize) {
+	function determineIDs($IDs, $IDType, $TVs, $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $myWhere, $dateSource, $limit, $summarize, $filter, $paginate, $randomize) {
 		global $modx;
 		if (($summarize == 0 && $summarize != "all") || count($IDs) == 0 || ($IDs == false && $IDs != "0")) {
 			return array();
@@ -608,7 +608,7 @@ class ditto {
 			break;
 		}
 		
-		if ($this->advSort == false && $hideFolders==0 && $showInMenuOnly==0 && $myWhere == "" && $filter == false && $hidePrivate == 1 && $keywords==0) { 
+		if ($this->advSort == false && $hideFolders==0 && $showInMenuOnly==0 && $myWhere == "" && $filter == false && $hidePrivate == 1) { 
 			$this->prefetch = false;
 				$documents = $this->getDocumentsIDs($documentIDs, $showPublishedOnly);
 				$documentIDs = array();
@@ -638,7 +638,6 @@ class ditto {
 			// set limit
 
 		$customReset = $this->customReset;
-		if ($keywords) {$this->addField("haskeywords","*","db");$this->addField("hasmetatags","*","db");}
 		if ($this->debug) {$this->addField("pagetitle","backend","db");}
 // intersel edit
 // Bug when we use a date field ("pub_date","unpub_date","editedon","deletedon","publishedon")
@@ -652,11 +651,11 @@ class ditto {
 
 /*
                 if (count($customReset) > 0) {$this->addField("createdon","backend","db");}
-                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limit,$keywords,$randomize,$dateSource);
+                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limit,$randomize,$dateSource);
 */
                 $limitSearch=$limit;
                 if (count($customReset) > 0) {$this->addField("createdon","backend","db"); $limitSearch=0;}
-                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limitSearch,$keywords,$randomize,$dateSource);
+                $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limitSearch,$randomize,$dateSource);
 
 // EPO - End of change (then see line 692 - if ($limit) array_slice($resource, 0, $limit);    )
 
@@ -817,7 +816,7 @@ class ditto {
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
 		if (count($resourceArray) != count($docIDs)) {
-			$rs = $modx->db->select("name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
+			$rs = $modx->db->select("id,name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
 			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
@@ -828,7 +827,7 @@ class ditto {
 					}
 				}
 			} else {
-				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
+				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['id']);
 				foreach ($docIDs as $id) {
 					if (!isset($resourceArray["#".$id])) {
 						$resourceArray["#$id"][$tvname] = $defaultOutput;
@@ -838,39 +837,6 @@ class ditto {
 			}
 		}
 		return $resourceArray;
-	}
-	
-	// ---------------------------------------------------
-	// Function: appendKeywords
-	// Append keywords's to the resource array
-	// ---------------------------------------------------
-		
-	function appendKeywords($resource) {
-		$keys = $this->fetchKeywords($resource);
-		$resource["keywords"] = "$keys";
-		return $resource;
-	}
-
-	// ---------------------------------------------------
-	// Function: fetchKeywords
-	// Helper function to <appendKeywords>
-	// ---------------------------------------------------
-		
-	function fetchKeywords($resource) {
-		global $modx;
-	  if($resource['haskeywords']==1) {
-	    // insert keywords
-	    $metas = implode(",",$modx->getKeywords($resource["id"]));
-	  }
-	  if($resource['hasmetatags']==1){
-	    // insert meta tags
-	    $tags = $modx->getMETATags($resource["id"]);
-	    foreach ($tags as $n=>$col) {
-	      $tag = strtolower($col['tag']);
-	      $metas.= ",".$col['tagvalue'];
-	    }
-	  }
-	  return $metas;
 	}
 	
 	// ---------------------------------------------------
@@ -897,7 +863,7 @@ class ditto {
 	// Get documents and append TVs + Prefetch Data, and sort
 	// ---------------------------------------------------
 	
-	function getDocuments($ids= array (), $fields, $TVs, $orderBy, $published= 1, $deleted= 0, $public= 1, $where= '', $limit= "",$keywords=0,$randomize=0,$dateSource=false) {
+	function getDocuments($ids= array (), $fields, $TVs, $orderBy, $published= 1, $deleted= 0, $public= 1, $where= '', $limit= "",$randomize=0,$dateSource=false) {
 	global $modx;
 
 	if (count($ids) == 0) {
@@ -950,9 +916,6 @@ class ditto {
 				if ($modx->config["server_offset_time"] != 0 && $dateSource !== false) {
 					$dateValue = (is_int($resource[$dateSource]) !== true) ? $resource[$dateSource] : strtotime($resource[$dateSource]);
 					$resource[$dateSource] = $dateValue + $modx->config["server_offset_time"];
-				}
-				if($keywords) {
-					$resource = $this->appendKeywords($resource);
 				}
 				if ($this->prefetch == true && $this->sortOrder !== false) $resource["ditto_sort"] = $this->sortOrder[$resource["id"]];
 					$TVIDs[] = $resource["id"];
@@ -1142,6 +1105,7 @@ class ditto {
 		}
 
 		$modx->setPlaceholder("dittoID", $dittoID);
+		$pages = '';
 		for ($x = 0; $x <= $totalpages -1; $x++) {
 			$inc = $x * $summarize;
 			$display = $x +1;

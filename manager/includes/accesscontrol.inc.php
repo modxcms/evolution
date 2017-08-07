@@ -69,6 +69,7 @@ if(!isset($_SESSION['mgrValidated'])) {
 
 	$modx->setPlaceholder('modx_charset', $modx_manager_charset);
 	$modx->setPlaceholder('theme', $manager_theme);
+    $modx->setPlaceholder('favicon', (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico'));
 
 	// invoke OnManagerLoginFormPrerender event
 	$evtOut = $modx->invokeEvent('OnManagerLoginFormPrerender');
