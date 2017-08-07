@@ -852,27 +852,28 @@ class DocumentParser {
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
         $recent_update = 0;
-        @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
+        @include(MODX_BASE_PATH . $this->getCacheFolder() . 'sitePublishing.idx.php');
         $this->recentUpdate = $recent_update;
+        
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
-        if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
-            // now, check for documents that need publishing
-            $this->db->update(
-                array(
-                    'published'   => 1,
-                    'publishedon' => $timeNow,
-                ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
+        if ($timeNow<$cacheRefreshTime || $cacheRefreshTime == 0) return;
+        
+        // now, check for documents that need publishing
+        $this->db->update(
+            array(
+                'published'   => 1,
+                'publishedon' => $timeNow,
+            ), '[+prefix+]site_content', "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
-            // now, check for documents that need un-publishing
-            $this->db->update(
-                array(
-                    'published'   => 0,
-                    'publishedon' => 0,
-                ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
+        // now, check for documents that need un-publishing
+        $this->db->update(
+            array(
+                'published'   => 0,
+                'publishedon' => 0,
+            ), '[+prefix+]site_content', "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
 
-            // clear the cache
-            $this->clearCache('full');
-        }
+        // clear the cache
+        $this->clearCache('full');
     }
 
     /**
