@@ -418,23 +418,6 @@ class DocumentParser {
     }
     
     /**
-     * Get the method by which the current document/resource was requested
-     *
-     * @return string 'alias' (friendly url alias) or 'id'
-     */
-    function getDocumentMethod() {
-        // function to test the query and find the retrieval method
-        if (!empty ($_REQUEST['q'])) { //LANG
-            return "alias";
-        }
-        elseif (isset ($_GET['id'])) {
-            return "id";
-        } else {
-            return "none";
-        }
-    }
-
-    /**
      * Returns the document identifier of the current request
      *
      * @param string $method id and alias are allowed
@@ -442,25 +425,13 @@ class DocumentParser {
      */
     function getDocumentIdentifier($method) {
         // function to test the query and find the retrieval method
-        $docIdentifier= $this->config['site_start'];
-        switch ($method) {
-            case 'alias' :
-                $docIdentifier= $this->db->escape($_REQUEST['q']);
-                break;
-            case 'id' :
-                if (!is_numeric($_GET['id'])) {
-                    $this->sendErrorPage();
-                } else {
-                    $docIdentifier= intval($_GET['id']);
-                }
-                break;
-            default:
-                if(strpos($_SERVER['REQUEST_URI'],'index.php')!==false) {
-                    list(,$_) = explode('index.php', $_SERVER['REQUEST_URI'], 2);
-                    if(substr($_,0,1)==='/') $this->sendErrorPage();
-                }
+        if($method==='alias')                             return $this->db->escape($_REQUEST['q']);
+        elseif(isset($_GET['id'])) {
+            if(preg_match('@^[1-9][0-9]*$@',$_GET['id'])) return $_GET['id'];
+            else                                          $this->sendErrorPage();
         }
-        return $docIdentifier;
+        elseif(strpos($_SERVER['REQUEST_URI'],'index.php/')!==false) $this->sendErrorPage();
+        else                                              return $this->config['site_start'];
     }
 
     /**
@@ -2148,12 +2119,10 @@ class DocumentParser {
             $this->checkPublishStatus();
 
             // find out which document we need to display
-            $this->documentMethod= $this->getDocumentMethod();
+            if(!isset($_REQUEST['q']) || empty($_REQUEST['q']))
+                $this->documentMethod= 'id';
+            else $this->documentMethod= 'alias';
             $this->documentIdentifier= $this->getDocumentIdentifier($this->documentMethod);
-        }
-
-        if ($this->documentMethod == "none") {
-            $this->documentMethod= "id"; // now we know the site_start, change the none method to id
         }
 
         if ($this->documentMethod == "alias") {
