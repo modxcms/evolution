@@ -883,7 +883,8 @@ class DocumentParser {
      */
     function postProcess() {
         // if the current document was generated, cache it!
-        if ($this->config['enable_cache'] && $this->documentGenerated && $this->documentObject['cacheable'] && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
+        $cacheable = ($this->config['enable_cache'] && $this->documentObject['cacheable']) ? 1 : 0;
+        if ($cacheable && $this->documentGenerated && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
