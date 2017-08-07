@@ -9,12 +9,9 @@
 .sectionBody fieldset { background: none repeat scroll 0 0 #fdfdfd; border: 1px solid #ccc; padding: 1rem !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 1rem; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 .sectionBody fieldset h3 { font-size: 14px; color: #789; font-weight: 500; padding-bottom: 0; margin-bottom: 0; }
-.sectionHeader, .showHideVisible { color: #333; margin: 0 1rem; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #fff; }
-.sectionHeader + .sectionBody, .showHideVisible + .sectionBody { margin-top: -1px !important }
-.tab-page .sectionHeader { margin: 1rem 3px 0; }
+.showHideVisible { color: #333; margin: 0 1rem; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #fff; }
+.showHideVisible + .sectionBody { margin-top: -1px !important }
 .sectionBody, .layerVisible { position: relative; }
-.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { border-top: 1px solid #ccc; margin: 0 3px 1rem; padding: 7px; }
-.section .sectionBody { margin: 0 1rem 1rem; padding: 1rem; background-color: #fff; border: 1px solid #ccc; }
 .sectionBody > p:first-child { margin-left: 1rem; margin-right: 1rem }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
@@ -39,9 +36,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 .filelist td { border-bottom: 1px solid #c2c3cf; }
 /* -------------------------[ Tabs ]--- */
 .sectionBody .tab-page { clear: both; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
-.sectionBody > .tab-pane > .tab-page { padding: 1.3rem; }
-.sectionHeader { padding: 7px 0px; }
-.tab-page .sectionBody { padding: 12px 0px; }
+.sectionBody > .tab-pane > .tab-page { padding: 1.25rem; }
 .tab-page > table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Welcome Page ]--- */
 /*#mainActionPages { background: #f5f5f5; }*/
@@ -81,9 +76,7 @@ form#mutate .multitv input[type="text"] { width: 300px; }
 form#mutate .imageField { width: 50%; min-width: 300px; }
 form#mutate input[name="menuindex"] { text-align: center; width: 80px; padding-left: 0; padding-right: 0; }
 form#mutate input[name="ta"].inputBox { padding-left: 30px }
-form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { position: relative; float: right; margin: -2.385em 0px 0 0; z-index: 5; border-radius: 0 .1rem .1rem 0 !important; }
 form#mutate input[name="ta"].inputBox:focus + input[type=button], form#mutate input[name="ta"].inputBox:focus + .CodeMirror + input[type=button] { border-color: #1377c5 #1377c5 #1377c5 #bbb; }
-form#mutate input[type=text][name^=tv], form#mutate input[type=number][name^=tv] { display: block }
 form#mutate input[name^=tv].DatePicker, form#mutate input[name*=date].DatePicker, form#mutate input[name=createdon].DatePicker, form#mutate input[name=editedon].DatePicker { float: left; width: auto; padding-right: 2em }
 form#mutate input[name^=tv].DatePicker + a, form#mutate input[name*=date].DatePicker + a { position: relative; z-index: 5; margin-top: 0.5em; margin-left: -1.5em; float: left; }
 form#mutate textarea.tv_textareamini { height: 100px; width: 300px; overflow-y: scroll; }
@@ -93,36 +86,15 @@ form#mutate #llock + #ta { display: block !important; padding-left: 2rem }
 form#mutate #llock + #ta + .CodeMirror { display: none !important; }
 form#mutate #plock { width: 1.4em; cursor: pointer; font-size: 14px }
 /*
-* Styling for datepicker elements in settings and templavars
-*/
-form#mutate input.date, form#mutate input.tvdate { margin-right: 10px; }
-/*
-* Individual Styles for fieldset#settings_page_settings
-*/
-form#mutate fieldset#settings_page_settings input#pub_date, form#mutate fieldset#settings_page_settings input#unpub_date { width: 150px; }
-form#mutate fieldset#settings_page_settings select { width: 155px; }
-/*
 * Individual Styles for fieldset#preview
 */
 fieldset#preview iframe { width: 100%; margin: 0 auto; border: 1px solid #f5f5f5; }
-/*
-* Individual Styles for fieldset#document_content
-*/
-fieldset#document_content textarea#ta { width: 100%; height: 400px; font-size: 1em; }
 /*
 * Individual Styles for fieldset#access_permissions
 */
 fieldset#access_permissions dt label { width: 200px; }
 fieldset#access_permissions dd { margin-left: 210px; }
 fieldset#access_permissions dl dd ul li { list-style-type: none; }
-/* ppb:
-* fieldset#settings_templvars
-*/
-fieldset#settings_templvars .tv_url_select { width: 70px; margin-right: 10px; }
-fieldset#settings_templvars .tv_url_input { width: 220px; }
-fieldset#settings_templvars dd.tvCheckBox label input, fieldset#settings_templvars dd.tvRadioOptions label input { margin-right: 10px; }
-fieldset#settings_templvars .tv_date { width: 150px; }
-form#mutate select.tv_url_select { padding: 5px 3px; }
 /* ppb:
 * Some styling for legacy mode fieldsets
 */
@@ -153,26 +125,18 @@ strong[style*='color:#EF1D1D'] { color: yellow !important; }
 .selected strong[style*='color:#ffeb00'] { color: red !important; }
 code { font-size: inherit; font-family: Consolas, 'Courier New', 'Courier', monospace; background-color: #eee; border: 1px solid #ccc; padding: 1px 2px; }
 #resourcesPane .disabledPlugin a:hover { color: #aaa; }
-/* breadcrumbs */
-ul.breadcrumbs { margin: 0 1rem 12px 1rem; padding: 0 0 9px 0; line-height: normal; font-size: 0; border-bottom: 1px dotted #cecaca; }
-li.breadcrumbs__li { list-style: none; display: inline-block; padding: 0; margin: 0; }
-a.breadcrumbs__a { font-size: 12px; text-decoration: none; }
-.breadcrumbs__sep { font-size: 13px; margin: 0 6px; color: #777; }
-li.breadcrumbs__li_current { font-size: 12px; font-weight: 500; }
-/* end breadcrumbs */
 /* table styles*/
-.table, #documentPane #tv_body table, #documentPane [id*="table-"], #documentPane [id*="table-tv"] { width: 100%; }
+.table, #documentPane #tv_body table, #documentPane .tmplvars table, #documentPane [id*="table-"], #documentPane [id*="table-tv"] { width: 100%; }
 #documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
 #documentPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1rem); }
-#documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { float: right; margin-top: 0.3rem; }
+#documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { margin-top: 0.3rem; vertical-align: top }
 .table--edit { margin-bottom: 1rem; }
 .table th, .table td { text-align: left; vertical-align: middle; }
 table th { font-weight: 500; }
 .table--edit th { width: 200px; color: #555; font-size: inherit; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
 .table th, .table td, .sectionBody td, .sectionBody th { padding: 0.15rem 0.25rem; }
-.table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { /*border-top: none*/ }
 /*
  * MODxRE2 styles
  * css above is original MODxRE
@@ -211,14 +175,14 @@ div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
 .btnCell { width: 6em; text-align: right; padding-right: 1rem; }
 .mainCell > span { display: block }
 /* Manage elements general styles */
-a.man_el_name { display: block; padding: .1em 0 .1em 1.3rem; }
+a.man_el_name { display: block; padding: .1em 0 .1em 1.25rem; }
 a.man_el_name:hover { text-decoration: none; }
 .lockCell + .mainCell a.man_el_name { padding-left: 0 !important; }
 .lockCell + .mainCell a.man_el_name:before { display: none; }
 .elements_descr { color: #222; margin-left: 1em; font-size: 0.88em; }
-.resourceTable .panel-heading { margin: 0 -1.3rem !important; background-color: #f5f5f5; border-top: 1px dotted #dedede; border-bottom: 1px dotted #dedede; }
-.resourceTable .panel-title > a { padding: 5px 1.3rem; text-decoration: none }
-.resourceTable ul.elements { margin: 0 -1.3rem; padding: 0 0 10px 0; }
+.resourceTable .panel-heading { margin: 0 -1.25rem !important; background-color: #f5f5f5; border-top: 1px dotted #dedede; border-bottom: 1px dotted #dedede; }
+.resourceTable .panel-title > a { padding: 5px 1.25rem; text-decoration: none }
+.resourceTable ul.elements { margin: 0 -1.25rem; padding: 0 0 10px 0; }
 .resourceTable ul.elements > li { padding: 0 !important; border-bottom: 1px dotted #dedede; border-left: 3px solid #fff; transition: all 0.1s ease; margin: 0 !important; }
 .resourceTable ul.elements > li:hover { background: #f9f9f9; border-left: 3px solid #1377c5; }
 .resourceTable ul.elements > li::before { display: none }
@@ -260,9 +224,6 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 .sectionBody .actionButtons { padding-top: 0; min-height: 40px; }
 .sectionBody .actionButtons li { margin-right: 10px; }
 .sectionBody .actionButtons a { display: inline-block; padding: 9px 10px; line-height: 1; }
-#range input#pids { width: 100% !important; }
-#range input#pids + input[name=fsubmit] { margin-top: 0.5rem; }
-#range::after { content: ""; display: table; width: 100% }
 #content_body #which_editor { margin-top: 12px; }
 /* resource children list */
 #tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6) { text-align: center; white-space: nowrap }

@@ -18,22 +18,13 @@
 /**
  * Sort Categories
  */
-new Sortables($('categories-sort'), {
-    //handles:'span.handle',
-    onStart: function(element){
-        element.toggleClass('move');
-    },
-    onComplete: function(element){
-        element.toggleClass('move');
-        // reorder the indexes
-        this.list.getChildren().each(function(element, i){
-            element.getElement('input.sort').setProperty( 'value', (i+1) );
-            element.getElement('span.sort').setHTML( (i+1) );
-//            element.getElements('td').each(function(td){
-//                td.removeClass('gridItem').removeClass('gridAltItem');
-//                td.addClass( ( i%2===0 ) ? 'gridItem' : 'gridAltItem' );
-//            });
-        });
+evo.sortable('.table-sortable tbody > tr', {
+    complete: function() {
+        let els = document.querySelectorAll('.table-sortable tbody > tr');
+        for(let i = 0; i < els.length; i++) {
+			els[i].querySelector('input.sort').value = i + 1;
+			els[i].querySelector('span.sort').innerHTML = i + 1
+        }
     }
 });
 

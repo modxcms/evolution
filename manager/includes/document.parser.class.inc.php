@@ -255,6 +255,7 @@ class DocumentParser {
             $this->prepareResponse();
             exit();
         } else {
+            $this->messageQuit("Internal Server Error id={$id}");
             header('HTTP/1.0 500 Internal Server Error');
             die('<h1>ERROR: Too many forward attempts!</h1><p>The request could not be completed due to too many unsuccessful forward attempts.</p>');
         }
@@ -316,6 +317,13 @@ class DocumentParser {
                     while ($row= $this->db->getRow($result)) {
                         $this->config[$row['setting_name']]= $row['setting_value'];
                     }
+                    if ($this->config['enable_filter']) {
+                        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+                        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
+                        if ($count) {
+                            $this->config['enable_filter'] = '0';
+                        }
+                    }
                 }
             }
         }
@@ -333,10 +341,6 @@ class DocumentParser {
         $this->error_reporting              = $this->config['error_reporting'];
         $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
         $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
-        
-        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
-        if($count) $this->config['enable_filter'] = '0';
         
         // now merge user settings into MODX-configuration
         $this->getUserSettings();
@@ -1001,7 +1005,8 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            list($key,$context)   = explode('@',$key,2);
+            if(strpos($key,'@')!==false) list($key,$context) = explode('@',$key,2);
+            else                         $context = false;
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
             if($context) $value = $this->_contextValue("{$key}@{$context}",$this->documentObject['parent']);
@@ -1140,6 +1145,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content,$ph=false) {
+        if(strpos($content,'{{ ')!==false) $content = str_replace(array('{{ ',' }}'),array('\{\{ ',' \}\}'),$content);
         if(stripos($content,'<@LITERAL>')!==false) $content= $this->escapeLiteralTagsContent($content);
         if(strpos($content,'{{')===false) return $content;
         

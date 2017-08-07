@@ -7,7 +7,7 @@
 
 /* UI Theme /----------------------------------------------------------------------------------- */
 .cm-s-one-dark.CodeMirror {
-border: none;
+border-color: transparent;
 font-size: 1em;
 }
 .cm-s-one-dark.CodeMirror pre {

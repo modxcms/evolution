@@ -35,8 +35,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <?php
     $aArr = array('2');
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
-    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+        <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+        <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <?php } ?>
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
@@ -46,12 +46,144 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         /* <![CDATA[ */
 
         if (typeof evo !== 'object') {
-            evo = {};
+            evo = {}
         }
 
-        function document_onload()
+        // evoTooltips
+        evo.tooltips = function (a) {
+            if (!a) {
+                return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
+            }
+            let b = document.querySelector('.evo-tooltip')
+            if (!b) {
+                b = document.createElement('div')
+                document.body.appendChild(b)
+                b.className = 'evo-tooltip'
+            }
+            let c = parseInt(window.getComputedStyle(b).getPropertyValue('margin-top'));
+            [].slice.call(a).forEach(function (f) {
+                f.addEventListener('mouseenter', function (e) {
+                    b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML)
+                    if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
+                        b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px'
+                        b.classList.add('evo-tooltip-right')
+                    } else {
+                        b.style.left = Math.round(e.pageX) + 'px'
+                        b.classList.add('evo-tooltip-left')
+                    }
+                    if (e.pageY - (b.offsetHeight / 2) - c < 0) {
+                        b.style.top = 0
+                    } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
+                        b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px'
+                    } else {
+                        b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px'
+                    }
+                    b.classList.add('show')
+                })
+                f.addEventListener('mouseleave', function () {
+                    b.className = 'evo-tooltip'
+                })
+            })
+        }
+
+        // evoSortable
+        evo.sortable = function (a, b) {
+            if (!a) {
+                return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
+            }
+            let h = {
+                handleClass: b.handleClass || 'ghost', complete: function () {
+                    if ('function' === typeof b.complete) {
+                        b.complete()
+                    }
+                }, change: function () {
+                    if ('function' === typeof b.change) {
+                        b.change()
+                    }
+                },
+            };
+            [].slice.call(a).forEach(function (c) {
+                c.onmousedown = function (e) {
+                    let d = e.pageY, f, g = parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom)
+                    c.classList.add(h.handleClass)
+                    document.onselectstart = function (e) {
+                        e.preventDefault()
+                    }
+                    document.onmousemove = function (e) {
+                        f = (e.pageY - d)
+                        if (f >= c.offsetHeight && c.nextElementSibling) {
+                            d += c.offsetHeight + g
+                            c.parentNode.insertBefore(c, c.nextElementSibling.nextElementSibling)
+                            h.change()
+                            f = 0
+                        } else if (f <= -c.offsetHeight && c.previousElementSibling) {
+                            d -= c.offsetHeight + g
+                            c.parentNode.insertBefore(c, c.previousElementSibling)
+                            h.change()
+                            f = 0
+                        } else if (!c.previousElementSibling && f < 0 || !c.nextElementSibling && f > 0) {
+                            f = 0
+                        }
+                        c.style.webkitTransform = 'translateY(' + f + 'px)'
+                        c.style.transform = 'translateY(' + f + 'px)'
+                    }
+                    document.onmouseup = function () {
+                        c.style.webkitTransform = ''
+                        c.style.transform = ''
+                        c.classList.remove(h.handleClass)
+                        document.onmousemove = null
+                        document.onselectstart = null
+                        h.complete()
+                    }
+                }
+            })
+        }
+
+        // evo collapse
+        evo.collapse = function (a, b) {
+            if (!a) {
+                return
+            } else {
+                a = 'string' === typeof a ? document.querySelectorAll(a) : a
+            }
+            let h = {
+                containerClass: b && b.containerClass || 'tab-body',
+            };
+            [].slice.call(a).forEach(function (c) {
+                if (c.nextElementSibling && c.nextElementSibling.classList.contains(h.containerClass)) {
+                    c.nextElementSibling.classList.add('collapse', 'in')
+                    c.onclick = function () {
+                        if (c.nextElementSibling.classList.contains('in')) {
+                            c.nextElementSibling.classList.remove('in')
+                            c.classList.add('collapsed')
+                        } else {
+                            c.nextElementSibling.classList.add('in')
+                            c.classList.remove('collapsed')
+                        }
+                    }
+                }
+            })
+        }
+
+        // check connection to server
+        evo.checkConnectionToServer = function () {
+            let xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP')
+            xhr.open('HEAD', '//' + window.location.hostname + window.location.pathname.replace('index.php', 'includes/version.inc.php') + '?time=' + new Date().getTime(), false)
+            try {
+                xhr.send()
+                return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)
+            } catch (error) {
+                return false
+            }
+        }
+
+        function document_onload ()
         {
-            stopWorker();
+            stopWorker()
 
             <?php
             if (isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
@@ -59,194 +191,162 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
             }
             ?>
 
-            var actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
+            let actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay')
             if (actionButtons !== null && actionSelect !== null) {
-                var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
-                actionPlus.classList.add('dropdown-toggle');
-                actionStay['stay1'] = '<i class="<?= $_style['actions_file'] ?>"></i>';
-                actionStay['stay2'] = '<i class="<?= $_style['actions_pencil'] ?>"></i>';
-                actionStay['stay3'] = '<i class="<?= $_style['actions_reply'] ?>"></i>';
+                let actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = []
+                actionPlus.classList.add('dropdown-toggle')
+                actionStay['stay1'] = '<i class="<?= $_style['actions_file'] ?>"></i>'
+                actionStay['stay2'] = '<i class="<?= $_style['actions_pencil'] ?>"></i>'
+                actionStay['stay3'] = '<i class="<?= $_style['actions_reply'] ?>"></i>'
                 if (actionSelect.value) {
-                    actionSaveButton.innerHTML += '<i class="<?= $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
+                    actionSaveButton.innerHTML += '<i class="<?= $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>'
                 }
-                var actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
-                div.className = 'dropdown-menu';
-                actionSaveButton.parentNode.classList.add('dropdown');
-                for (var i = 0; i < actionSelectOptions.length; i++) {
+                let actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div')
+                div.className = 'dropdown-menu'
+                actionSaveButton.parentNode.classList.add('dropdown')
+                for (let i = 0; i < actionSelectOptions.length; i++) {
                     if (!actionSelectOptions[i].selected) {
-                        actionSelectNewOption = document.createElement('SPAN');
-                        actionSelectNewOption.className = 'btn btn-block';
-                        actionSelectNewOption.dataset.id = i;
-                        actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
-                        actionSelectNewOption.onclick = function() {
-                            var s = actionSelect.querySelector('option[selected=selected]');
+                        actionSelectNewOption = document.createElement('SPAN')
+                        actionSelectNewOption.className = 'btn btn-block'
+                        actionSelectNewOption.dataset.id = i
+                        actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>'
+                        actionSelectNewOption.onclick = function () {
+                            let s = actionSelect.querySelector('option[selected=selected]')
                             if (s) {
-                                s.selected = false;
+                                s.selected = false
                             }
-                            actionSelect.children[this.dataset.id].selected = true;
-                            actionSaveButton.click();
-                        };
-                        div.appendChild(actionSelectNewOption);
+                            actionSelect.children[this.dataset.id].selected = true
+                            actionSaveButton.click()
+                        }
+                        div.appendChild(actionSelectNewOption)
                     }
                 }
-                actionSaveButton.parentNode.appendChild(div);
-                actionPlus.onclick = function() {
-                    this.parentNode.classList.toggle('show');
-                };
+                actionSaveButton.parentNode.appendChild(div)
+                actionPlus.onclick = function () {
+                    this.parentNode.classList.toggle('show')
+                }
             }
-
-            // evoTooltips
-            evo.tooltips = function(a) {
-                if (!a) {
-                    return;
-                }
-                let b = document.querySelector('.evo-tooltip');
-                if (!b) {
-                    b = document.createElement('div');
-                }
-                document.body.appendChild(b);
-                b.className = 'evo-tooltip';
-                let c = parseInt(window.getComputedStyle(b, null).getPropertyValue('margin-top'));
-                [].slice.call(a).forEach(function(f) {
-                    f.addEventListener('mouseenter', function(e) {
-                        b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
-                        if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
-                            b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
-                            b.classList.add('evo-tooltip-right');
-                        } else {
-                            b.style.left = Math.round(e.pageX) + 'px';
-                            b.classList.add('evo-tooltip-left');
-                        }
-                        if (e.pageY - (b.offsetHeight / 2) - c < 0) {
-                            b.style.top = 0;
-                        } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
-                            b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
-                        } else {
-                            b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
-                        }
-                        b.classList.add('show');
-                    });
-                    f.addEventListener('mouseleave', function() {
-                        b.className = 'evo-tooltip';
-                    });
-                });
-            };
-            evo.tooltips(document.querySelectorAll('[data-tooltip]'));
+            evo.tooltips('[data-tooltip]')
         }
 
-        function reset_path(elementName)
+        function reset_path (elementName)
         {
-            document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
+            document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML
         }
 
-        var dontShowWorker = false;
+        let dontShowWorker = false
 
-        function document_onunload()
+        function document_onunload (e)
         {
             if (!dontShowWorker) {
-                top.mainMenu.work();
+                top.mainMenu.work()
             }
         }
 
         // set tree to default action.
         if (parent.tree) {
-            parent.tree.ca = 'open';
+            parent.tree.ca = 'open'
         }
 
         // call the updateMail function, updates mail notification in top navigation
         if (top.mainMenu) {
             if (top.mainMenu.updateMail) {
-                top.mainMenu.updateMail(true);
+                top.mainMenu.updateMail(true)
             }
         }
 
-        function stopWorker()
+        function stopWorker ()
         {
             try {
-                parent.mainMenu.stopWork();
+                parent.mainMenu.stopWork()
             } catch (oException) {
-                ww = window.setTimeout('stopWorker()', 500);
+                ww = window.setTimeout('stopWorker()', 500)
             }
         }
 
-        function doRefresh(r)
+        function doRefresh (r)
         {
             try {
-                rr = r;
-                top.mainMenu.startrefresh(rr);
+                rr = r
+                top.mainMenu.startrefresh(rr)
             } catch (oException) {
-                vv = window.setTimeout('doRefresh()', 1000);
+                vv = window.setTimeout('doRefresh()', 1000)
             }
         }
 
-        var documentDirty = false;
-        var timerForUnload;
+        let documentDirty = false
+        let timerForUnload
 
-        function checkDirt(evt)
+        function checkDirt (evt)
         {
+            evt = evt || window.event
+            if (!evo.checkConnectionToServer()) {
+                let message = '<?= addslashes($_lang['error_internet_connection']) ?>'
+                setTimeout(function () {
+                    alert(message)
+                }, 10)
+                evt.returnValue = message
+                timerForUnload = setTimeout('stopWorker()', 100)
+                return message
+            }
             if (documentDirty === true) {
-                var message = '<?= addslashes($_lang['warning_not_saved']) ?>';
-                if (typeof evt === 'undefined') {
-                    evt = window.event;
-                }
-                if (evt) {
-                    evt.returnValue = message;
-                }
-                timerForUnload = setTimeout('stopWorker()', 100);
-                return message;
+                let message = '<?= addslashes($_lang['warning_not_saved']) ?>'
+                evt.returnValue = message
+                timerForUnload = setTimeout('stopWorker()', 100)
+                return message
             }
         }
 
-        function saveWait(fName)
+        function saveWait (fName)
         {
-            document.getElementById('savingMessage').innerHTML = '<?= $_lang['saving'] ?>';
-            for (i = 0; i < document.forms[fName].elements.length; i++) {
-                document.forms[fName].elements[i].disabled = 'disabled';
+            document.getElementById('savingMessage').innerHTML = '<?= $_lang['saving'] ?>'
+            for (let i = 0; i < document.forms[fName].elements.length; i++) {
+                document.forms[fName].elements[i].disabled = 'disabled'
             }
         }
 
-        var managerPath = '';
+        let managerPath = ''
 
-        function hideLoader()
+        function hideLoader ()
         {
-            document.getElementById('preLoader').style.display = 'none';
+            document.getElementById('preLoader').style.display = 'none'
         }
 
         // add the 'unsaved changes' warning event handler
         if (typeof window.addEventListener !== 'undefined') {
-            window.addEventListener('beforeunload', function() {
-                checkDirt();
-                document_onunload();
-            }, false);
+            window.addEventListener('beforeunload', function (e) {
+                checkDirt(e)
+                document_onunload()
+            }, false)
         } else if (typeof window.attachEvent !== 'undefined') {
-            window.attachEvent('onbeforeunload', function() {
-                checkDirt();
-                document_onunload();
-            });
+            window.attachEvent('onbeforeunload', function (e) {
+                checkDirt(e)
+                document_onunload()
+            })
         } else {
-            window.onbeforeunload = function() {
-                checkDirt();
-                document_onunload();
-            };
+            window.onbeforeunload = function (e) {
+                checkDirt(e)
+                document_onunload()
+            }
         }
 
         if (typeof window.addEventListener !== 'undefined') {
-            window.addEventListener('load', function() {
-                document_onload();
-            }, false);
+            window.addEventListener('load', function () {
+                document_onload()
+            }, false)
         } else if (typeof window.attachEvent !== 'undefined') {
-            window.attachEvent('onload', function() {
-                document_onload();
-            });
+            window.attachEvent('onload', function () {
+                document_onload()
+            })
         } else {
-            window.onload = function() {
-                document_onload();
-            };
+            window.onload = function () {
+                document_onload()
+            }
         }
 
-        window.onunload = function() {
-            clearTimeout(timerForUnload);
-        };
+        window.addEventListener('unload', function () {
+            clearTimeout(timerForUnload)
+        })
 
         /* ]]> */
     </script>

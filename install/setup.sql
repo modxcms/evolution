@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
   `document` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `document` (`document`),
-  KEY `document_group` (`document_group`)
+  KEY `document_group` (`document_group`),
+  UNIQUE INDEX `ix_dg_id` (`document_group`,`document`)
 ) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
@@ -303,7 +304,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
   PRIMARY KEY  (id),
   KEY idx_tmplvarid (tmplvarid),
   KEY idx_id (contentid),
-  FULLTEXT KEY `value_ft_idx` (`value`)
+  FULLTEXT KEY `value_ft_idx` (`value`),
+  UNIQUE INDEX `ix_tvid_contentid` (`tmplvarid`,`contentid`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
@@ -855,6 +857,8 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD PRIMARY KEY (`tmplvarid`, `temp
 ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
 
 ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
+
+ALTER TABLE `{PREFIX}document_groups` ADD UNIQUE INDEX `ix_dg_id` (`document_group`,`document`);
 
 # ]]upgrade-able
 

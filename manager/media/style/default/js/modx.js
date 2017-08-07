@@ -19,8 +19,8 @@
 			if(this.config.session_timeout > 0) {
 				w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
 			}
-			if(modx.config.mail_check_timeperiod > 0) {
-				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
+			if(modx.config.mail_check_timeperiod > 0 && modx.permission.messages) {
+				setTimeout('modx.updateMail(true)', 1000)
 			}
 			d.onclick = this.hideDropDown
 		},

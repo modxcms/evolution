@@ -32,7 +32,7 @@ body.drag::after { bottom: 0; content: ""; left: 0; position: fixed; right: 0; t
 body, ul, li { padding: 0; margin: 0; }
 ul { margin-left: 1rem; margin-right: 1rem; }
 li { list-style: none }
-img { max-width: 100% }
+img { max-width: 100%; height: auto }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit }
 .h1, h1 { font-size: 1.75rem }
 .h2, h2 { font-size: 1.5rem }

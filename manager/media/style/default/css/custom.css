@@ -1,8 +1,8 @@
 /* [ COLS ] */
-.row { margin-left: -1.3rem; margin-right: -1.3rem }
-.container { padding-left: 1.3rem; padding-right: 1.3rem; width: 100% }
+.row { margin-left: -1.25rem; margin-right: -1.25rem }
+.container { padding-left: 1.25rem; padding-right: 1.25rem; width: 100% }
 /* :TODO .container-body need remove and replace .tab-content */
-.container-body { padding: 1.3rem }
+.container-body { padding: 1.25rem }
 /* [ FORMS ] */
 .form-row { margin-bottom: 0.25rem; }
 .form-row.row { margin-left: 0; margin-right: -1rem }
@@ -24,18 +24,20 @@ input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
-#settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
-#settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
+#settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo], #range input#pids, form#mutate input[type=text][name^=tv]:not(.DatePicker), form#mutate input[type=number][name^=tv] { float: left; width: 100% !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
+#settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button], #range input#pids + input[name=fsubmit], form#mutate input[name="ta"].inputBox + input[type=button], form#mutate input[name="ta"].inputBox + .CodeMirror + input[type=button], form#mutate input[name^=tv] + input[type=button], form#mutate input[name^=tv].DatePicker + a { z-index: 5; float: right; margin-top: -2.34375em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
+#range::after { content: ""; display: table; width: 100% }
 /* [ Editor ] */
-.navbar.navbar-editor { padding: .5rem 1.3rem; border-radius: 0 }
+.navbar.navbar-editor { padding: .5rem 1.25rem; border-radius: 0 }
 .navbar-editor > label { margin-bottom: 0 }
 .section-editor textarea { float: left; border-left: none; border-right: none; font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace; font-weight: 300; font-size: 0.875rem; }
 /* [ Action Buttons ] */
 /* new style */
 #actions { background: rgba(199, 199, 199, 0.25); padding: 0.5rem; position: fixed; top: 0; right: 1rem; text-align: right; z-index: 1001; border-radius: 0 0 0.3rem 0.3rem; }
+#actions .btn-group { margin: 0 }
 #actions .btn-group > .btn-group { display: block }
-#actions .btn-group .btn, #_actions .btn-group .btn, #_actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em }
-#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 1.6; font-size: 1em; text-align: center }
+#actions .btn-group .btn, #actions .btn-group .form-control { font-size: 0.675rem; height: 2.5em; line-height: 2.4em }
+#actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; line-height: 2.4em; font-size: 1em; text-align: center }
 #actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
 #actions .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-success:hover { box-shadow: none }
@@ -86,8 +88,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data th, .table.data thead td { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777; border-bottom: 2px solid #eceeef }
 .table.data td { padding: 0.55rem 0.75rem; }
 .table.data td, .table.data th, .table.data thead td { vertical-align: top; border-top: 1px solid #eceeef }
-.table.data td:first-child, .table.data th:first-child, .table.data.table-sm td:first-child, .table.data.table-sm th:first-child { padding-left: 1.3rem }
-.table.data td:last-child, .table.data th:last-child, .table.data.table-sm td:last-child, .table.data.table-sm th:last-child { padding-right: 1.3rem }
+.table.data td:first-child, .table.data th:first-child, .table.data.table-sm td:first-child, .table.data.table-sm th:first-child { padding-left: 1.25rem }
+.table.data td:last-child, .table.data th:last-child, .table.data.table-sm td:last-child, .table.data.table-sm th:last-child { padding-right: 1.25rem }
 .table.data thead { background-color: #fff; }
 .table.data > tbody > tr { background-color: #f9f9f9; transition-duration: .5s }
 .table.data > tbody > tr:nth-child(2n) { background-color: #fff }
@@ -113,6 +115,8 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data thead .sortable:hover a::after, .table.data thead .sortable-text:hover a::after, .table.data thead .sortable-numeric:hover a::after, .table.data thead .sortable-date:hover a::after { opacity: 1 }
 .table.data thead .sortable, .table.data thead .sortable-text, .table.data thead .sortable-numeric, .table.data thead .sortable-date { cursor: pointer }
 .table.data thead .sortable-text span, .table.data thead .sortable-numeric span, .table.data thead .sortable-date span { display: none }
+.table.data.table-sortable > tbody > tr { cursor: move; transition-duration: .5s }
+.table.data.table-sortable > tbody > tr.ghost { background-color: rgba(93, 109, 202, 0.16); color: #d9534f !important; transition: background-color .5s, color .5s, transform 0s }
 /* table-data-sm */
 .table.data.table-sm td, .table.data.table-sm th { padding: .25rem .5rem; }
 .table.data.table-sm th, .table.data.table-sm thead td { font-size: 0.75rem; text-transform: none; }
@@ -125,8 +129,14 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 .table.data .doc-item { text-decoration: none }
 .table.data .doc-item:hover span { text-decoration: underline }
 .table.data .doc-item.private .fa::after { position: relative; float: left; margin: .5em -1em 0 0; content: "\f023"; font-size: 0.75em; color: #d9534f; }
+/* [ BREADCRUMBS ] */
+ul.breadcrumbs { margin: 0 1rem .5rem; padding: 0 0 .5rem; line-height: normal; font-size: .675rem; color: #888; border-bottom: 1px dotted #cecaca; }
+ul.breadcrumbs li { list-style: none; display: inline-block; padding: 0; margin: 0; }
+ul.breadcrumbs a { text-decoration: none; }
+ul.breadcrumbs span { display: inline-block; width: 1.25em; vertical-align: top; text-indent: -2.25em; overflow: hidden; }
+ul.breadcrumbs span::after { margin-left: 2em; font-family: FontAwesome; content: "\f105" }
 /* [ PAGINATION ] */
-#pagination { padding: 0 1.3rem; margin: .5rem 0 0; }
+#pagination { padding: 0 1.25rem; margin: .5rem 0 0; }
 #pagination ul { margin: 0 0 0 .5rem; display: inline-block; }
 #pagination li { list-style: none; display: inline-block; margin: 0 0 0 1px; }
 #pagination li a { display: inline-block; padding: 0 .5rem; line-height: 1.7; border: 1px solid #ddd; text-decoration: none; color: #333; }
@@ -197,8 +207,19 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 [data-tooltip] { cursor: help }
 [data-tooltip].fa-question-circle { opacity: 0.15; }
 [data-tooltip].fa-question-circle:hover { opacity: 1; }
-/* STYLES FOR HELP */
-#helpPane h1 { border-bottom: 1px solid #888; margin-bottom: 1em; }
+/* [ FILES MANAGER ] */
+#ManageFiles { padding-bottom: 1rem; }
+#ManageFiles .breadcrumbs { }
+#ManageFiles .breadcrumbs a, #ManageFiles .breadcrumbs span { display: inline-block; padding: 0 0.25em; }
+#ManageFiles #imageviewer { text-align: center; }
+#ManageFiles #imageviewer img { display: inline-block; max-width: 100%; margin-top: 1rem }
+#FilesTable { margin-bottom: 1rem; border-bottom: 1px solid #ddd; }
+#file_editfile.section .sectionHeader { margin: 0; padding: 0.5rem 1rem; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
+#file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
+#file_editfile td { padding: 0 !important; }
+#file_editfile #content { float: left; width: 100%; min-height: 25rem; border: none; border-bottom: 1px solid rgba(0, 0, 0, .15) }
+/* STYLES FOR PAGE HELP */
+#helpPane h1 { margin-bottom: 1em; padding: .5rem; font-size: .8rem; border-bottom: 1px solid #e0e0e0; }
 #helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
 #helpPane li > strong { display: block; font-size: 14px; }
 #helpPane pre { border: 1px solid rgba(0, 0, 0, 0.1); padding: 1em; }
@@ -215,27 +236,15 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 .dark .content-blocks .block .fields-group { border: 1px dashed #e2e2e2; }
 .dark .content-blocks input[type="text"], .dark .content-blocks input[type="password"], .dark .content-blocks input[type="number"], .dark .content-blocks textarea { background-color: #fbfbfb !important; border-color: #dbdbdb !important; }
 .dark .content-blocks .controls { background: transparent !important; }
-/* OTHERS COMPONENTS */
-/* Manage Files */
-#ManageFiles { padding-bottom: 1rem; }
-#ManageFiles .breadcrumbs { }
-#ManageFiles .breadcrumbs a, #ManageFiles .breadcrumbs span { display: inline-block; padding: 0 0.25em; }
-#ManageFiles #imageviewer { text-align: center; }
-#ManageFiles #imageviewer img { display: inline-block; max-width: 100%; margin-top: 1rem }
-#FilesTable { margin-bottom: 1rem; border-bottom: 1px solid #ddd; }
-#file_editfile.section .sectionHeader { margin: 0; padding: 0.5rem 1rem; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
-#file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
-#file_editfile td { padding: 0 !important; }
-#file_editfile #content { float: left; width: 100%; min-height: 25rem; border: none; border-bottom: 1px solid rgba(0, 0, 0, .15) }
+/*
+ [ OTHERS COMPONENTS ] - this components need fix css
+*/
 /* extras */
 .catalog_item select[name=link] { width: auto !important; margin-left: 0.5rem }
 /* ManagerManager */
 .sectionHeader.minimizable { position: relative; z-index: 1; background-color: #fafafa; padding: 0.5rem; border: 1px solid rgba(0, 0, 0, 0.15); }
 .dark .sectionHeader.minimizable { background-color: #f2f2f2 }
 form#mutate .imageField { min-width: 100% !important; width: 100% !important }
-/* gridster */
-.gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 7px; bottom: 0 }
-.widget-controls .btn-group .btn { width: 28px }
 /* MCE */
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 .mce-container button { border: none; border-radius: 0; background-color: transparent; }
@@ -248,9 +257,6 @@ form#mutate .imageField { min-width: 100% !important; width: 100% !important }
 .CodeMirror pre { word-break: break-all !important; }
 .CodeMirror > div:first-child > textarea { /*opacity: 0;*/ z-index: -1; left: -9999rem; }
 div.CodeMirror-cursors { pointer-events: none; }
-/* bootstrap */
-.dropdown-menu { display: none }
-.show > .dropdown-menu { display: block }
 /* SimpleGallery */
 #SimpleGallery .pagination { display: block }
 #SimpleGallery .sg_image { width: auto }
