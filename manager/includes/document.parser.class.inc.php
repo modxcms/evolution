@@ -839,6 +839,8 @@ class DocumentParser {
         $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
         $this->db->update($field, '[+prefix+]site_content', $where);
         
+        $this->recentUpdate = $timeNow;
+
         // clear the cache
         $this->clearCache('full');
     }
