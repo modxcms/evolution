@@ -17,7 +17,7 @@ $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://e
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'EVO is a <a href="http://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'About EVO';
+$_lang["about_title"] = 'About Evolution';
 $_lang["access_permission_denied"] = 'You do not have the correct permissions for this Resource.';
 $_lang["access_permission_parent_denied"] = 'You do not have permission to create or move a Resource here! Please choose another location.';
 $_lang["access_permissions"] = 'Access permissions';
@@ -1370,7 +1370,7 @@ $_lang["position"] = "Position";
 $_lang["are_you_sure"] = "Are you sure?";
 
 $_lang['evo_downloads_title'] = "Evolution Downloads";
-$_lang['help_translating_title'] = "Help translating EVO Evolution";
+$_lang['help_translating_title'] = "Help translating Evolution";
 $_lang['download'] = "Download";
 $_lang['downloads'] = "Downloads";
 $_lang["previous_releases"] = "Previous Releases";
