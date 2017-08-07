@@ -5,7 +5,7 @@ html { font-size: 16px; }
 @media (max-width: 400px) {
 html { font-size: 16px; }
 }
-body { font-weight: normal; font-style: normal; font-size: 0.8rem; line-height: 1.5; font-family: sans-serif; -webkit-font-smoothing: subpixel-antialiased }
+body { font-weight: normal; font-style: normal; font-size: 0.8125rem; line-height: 1.5; font-family: sans-serif; -webkit-font-smoothing: subpixel-antialiased }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -38,7 +38,7 @@ img { max-width: 100%; height: auto }
 .h2, h2 { font-size: 1.5rem }
 .h3, h3 { font-size: 1.25rem }
 .h4, h4 { font-size: 1rem }
-.h5, h5 { font-size: 0.8rem }
+.h5, h5 { font-size: 0.8125rem }
 .h6, h6 { font-size: 0.7rem }
 a { color: #0275d8; text-decoration: none }
 a:focus, a:hover { color: #014c8c; text-decoration: underline }
