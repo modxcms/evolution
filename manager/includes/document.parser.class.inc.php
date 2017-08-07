@@ -425,10 +425,12 @@ class DocumentParser {
      */
     function getDocumentIdentifier($method) {
         // function to test the query and find the retrieval method
-        if($method==='alias')                             return $this->db->escape($_REQUEST['q']);
-        elseif(isset($_GET['id'])) {
-            if(preg_match('@^[1-9][0-9]*$@',$_GET['id'])) return $_GET['id'];
-            else                                          $this->sendErrorPage();
+        if($method==='alias') return $this->db->escape($_REQUEST['q']);
+        
+        $id_ = filter_input(INPUT_GET, 'id');
+        if($id_) {
+            if(preg_match('@^[1-9][0-9]*$@',$id_)) return $id_;
+            else                                   $this->sendErrorPage();
         }
         elseif(strpos($_SERVER['REQUEST_URI'],'index.php/')!==false) $this->sendErrorPage();
         else                                              return $this->config['site_start'];
@@ -2117,9 +2119,7 @@ class DocumentParser {
             $this->checkPublishStatus();
 
             // find out which document we need to display
-            if(!isset($_REQUEST['q']) || empty($_REQUEST['q']))
-                $this->documentMethod= 'id';
-            else $this->documentMethod= 'alias';
+            $this->documentMethod= filter_input(INPUT_GET,'q') ? 'alias' : 'id';
             $this->documentIdentifier= $this->getDocumentIdentifier($this->documentMethod);
         }
 
