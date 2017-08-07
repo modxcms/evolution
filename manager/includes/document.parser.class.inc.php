@@ -2125,8 +2125,6 @@ class DocumentParser {
             $this->getSettings();
         }
 
-        //$this->q = $this->setRequestQ($_SERVER['REQUEST_URI']);
-
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
             $this->_IIS_furl_fix(); // IIS friendly url fix
 
@@ -2273,18 +2271,6 @@ class DocumentParser {
         $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
         $this->q = $qp['path'];
         return $qp['path'];
-    }
-
-    function setRequestQ($request_uri) {
-        if(isset($_GET['id'])) $q = null;
-        else {
-            $q = substr($request_uri,strlen($this->config['base_url']));
-            if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
-            if($q=='index.php')        $q = '';
-        }
-
-        $this->q = $q;
-        return $q;
     }
     
     /**
