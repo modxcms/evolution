@@ -830,19 +830,15 @@ class DocumentParser {
         if ($timeNow<$cacheRefreshTime || $cacheRefreshTime == 0) return;
         
         // now, check for documents that need publishing
-        $this->db->update(
-            array(
-                'published'   => 1,
-                'publishedon' => $timeNow,
-            ), '[+prefix+]site_content', "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
+        $field = array('published'=>1, 'publishedon'=> $timeNow);
+        $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
+        $this->db->update($field, '[+prefix+]site_content', $where);
 
         // now, check for documents that need un-publishing
-        $this->db->update(
-            array(
-                'published'   => 0,
-                'publishedon' => 0,
-            ), '[+prefix+]site_content', "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
-
+        $field = array('published'=>0, 'publishedon'=>0);
+        $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
+        $this->db->update($field, '[+prefix+]site_content', $where);
+        
         // clear the cache
         $this->clearCache('full');
     }
