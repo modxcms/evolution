@@ -2127,8 +2127,7 @@ class DocumentParser {
             $this->getSettings();
         }
 
-        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
-            $this->_IIS_furl_fix(); // IIS friendly url fix
+        $this->_IIS_furl_fix(); // IIS friendly url fix
 
         // check site settings
         if (!$this->checkSiteStatus()) {
@@ -2253,6 +2252,8 @@ class DocumentParser {
     function _IIS_furl_fix()
     {
         if($this->config['friendly_urls'] != 1) return;
+        
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') === false) return;
         
         $url= $_SERVER['QUERY_STRING'];
         $err= substr($url, 0, 3);
