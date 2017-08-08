@@ -5,7 +5,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 define('MODX_BASE_PATH',realpath('../../../../').'/');
 include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
-
+$autoloader = realpath(MODX_BASE_PATH .'vendor/autoload.php');
+if (file_exists($autoloader) && is_readable($autoloader)) {
+    include_once($autoloader);
+}
 $moduleurl = 'assets/modules/store/installer/index.php';
 $modulePath = dirname(__FILE__);
 $self = $modulePath.'/index.php';
@@ -57,7 +60,7 @@ $modx->db->connect();
 $modx->getSettings();
 startCMSSession();
 $modx->minParserPasses=2;
-
+$modx->invokeEvent('OnManagerPageInit');
 global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;
