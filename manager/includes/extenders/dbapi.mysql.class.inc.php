@@ -233,9 +233,12 @@ class DBAPI {
          $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where   = !empty($where)  ? (stripos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-         $orderby = $orderby !== '' ? (stripos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-         $limit   = $limit !== ''   ? (stripos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         $where   = trim($where);
+         $orderby = trim($orderby);
+         $limit   = trim($limit);
+         if($where!==''   && stripos($where,   'WHERE')!==0)    $where   = "WHERE {$where}";
+         if($orderby!=='' && stripos($orderby, 'ORDER BY')!==0) $orderby = "ORDER BY {$orderby}";
+         if($limit!==''   && stripos($limit,   'LIMIT')!==0)    $limit   = "LIMIT {$limit}";
          return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
@@ -261,9 +264,9 @@ class DBAPI {
       $where   = trim($where);
       $orderby = trim($orderby);
       $limit   = trim($limit);
-      if($where && stripos($where,'WHERE')!==0)     $where   = "WHERE {$where}";
-      if($orderby !== '' && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
-      if($limit !== '' && stripos($limit,'LIMIT')!==0)     $limit   = "LIMIT {$limit}";
+      if($where!==''   && stripos($where,'WHERE')!==0)   $where   = "WHERE {$where}";
+      if($orderby!=='' && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+      if($limit!==''   && stripos($limit,'LIMIT')!==0)   $limit   = "LIMIT {$limit}";
       return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
    }
 
@@ -288,7 +291,8 @@ class DBAPI {
 			 }
             $fields = implode(",", $fields);
          }
-         $where = !empty($where) ? (stripos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         $where = trim($where);
+         if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
          return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
@@ -313,8 +317,10 @@ class DBAPI {
                if (version_compare($this->getVersion(),"4.0.14")>=0) {
                   $fromtable = $this->replaceFullTableName($fromtable);
                   $fields = "(".implode(",", array_keys($fields)).")";
-                  $where = !empty($where) ? (stripos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
-                  $limit = $limit !== '' ? (stripos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $where = trim($where);
+                  $limit = trim($limit);
+                  if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
+                  if($limit!=='' && stripos($limit, 'LIMIT')!==0) $limit = "LIMIT {$limit}";
                   $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
                } else {
                   $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
