@@ -3,10 +3,10 @@ legend { font-size: 1em; }
 label { cursor: pointer; display: inline-block; margin-bottom: .5em }
 label:not([for]) { cursor: default }
 button, input { margin: 0; padding: 0; border: none; font: inherit; line-height: normal; }
-input[type=checkbox], input[type=radio] { width: 0.8125rem !important; height: 0.8125rem !important; margin-right: 0.25em; vertical-align: -0.15em; border: 1px solid #999; background: #fff no-repeat center center; outline: none; opacity: .64; transition-duration: .3s }
+input[type=checkbox], input[type=radio] { width: 0.8125rem !important; height: 0.8125rem !important; margin-right: 0.25em; vertical-align: -0.15em; border: 1px solid #999; background: #fff no-repeat center center; outline: none; opacity: .64; /*transition-duration: .3s*/ }
 input[type=radio] { border-radius: 50% }
 input[type=checkbox]:hover, input[type=radio]:hover { opacity: 1; }
-input[type=checkbox]:active, input[type=radio]:active { background-color: #fafafa; transition-duration: 0s }
+input[type=checkbox]:active, input[type=radio]:active { background-color: #fafafa; /*transition-duration: 0s*/ }
 input[type=checkbox]:checked { background-image: url('data:image/svg+xml;utf8,%3Csvg width=".675em" height=".675em" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="%23000"/%3E%3C/svg%3E') }
 input[type=radio]:checked { background-image: url('data:image/svg+xml;utf8,%3Csvg width="0.538461em" height="0.538461em" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M1664 896q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="%23000"/%3E%3C/svg%3E') }
 button, input, optgroup, select, textarea { position: relative; font-family: sans-serif; font-size: 0.8125rem; line-height: 1.23076923; margin: 0; -webkit-appearance: none; -moz-appearance: none; -ms-appearance: none; appearance: none !important; }
