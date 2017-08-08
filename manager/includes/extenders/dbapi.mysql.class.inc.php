@@ -233,9 +233,9 @@ class DBAPI {
          $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where   = !empty($where)  ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-         $orderby = $orderby !== '' ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-         $limit   = $limit !== ''   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         $where   = !empty($where)  ? (stripos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = $orderby !== '' ? (stripos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = $limit !== ''   ? (stripos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
          return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
@@ -288,7 +288,7 @@ class DBAPI {
 			 }
             $fields = implode(",", $fields);
          }
-         $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         $where = !empty($where) ? (stripos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
          return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
@@ -313,8 +313,8 @@ class DBAPI {
                if (version_compare($this->getVersion(),"4.0.14")>=0) {
                   $fromtable = $this->replaceFullTableName($fromtable);
                   $fields = "(".implode(",", array_keys($fields)).")";
-                  $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
-                  $limit = $limit !== '' ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $where = !empty($where) ? (stripos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+                  $limit = $limit !== '' ? (stripos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
                   $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
                } else {
                   $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
