@@ -140,8 +140,8 @@ class DBAPI {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
 		} else {
 			$from = $this->replaceFullTableName($from);
-			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+			$where   = !empty($where)  ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+			$orderby = $orderby !== '' ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
 			$limit   = $limit !== ''   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
 			return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
 		}
@@ -165,7 +165,7 @@ class DBAPI {
         $orderby = trim($orderby);
         $limit   = trim($limit);
         if($where && stripos($where,'WHERE')!==0)     $where   = "WHERE {$where}";
-        if($orderby && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+        if($orderby !== '' && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
         if($limit !== '' && stripos($limit,'LIMIT')!==0)     $limit   = "LIMIT {$limit}";
 		return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
 	}
