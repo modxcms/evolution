@@ -31,7 +31,7 @@ textarea, textarea.form-control { width: 100%; line-height: 1.5; overflow: auto;
 select:not([size]):not([multiple]), select[size="1"] { padding-right: 2em !important; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMS41ZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMzk1IDczNnEwIDEzLTEwIDIzbC00NjYgNDY2cS0xMCAxMC0yMyAxMHQtMjMtMTBsLTQ2Ni00NjZxLTEwLTEwLTEwLTIzdDEwLTIzbDUwLTUwcTEwLTEwIDIzLTEwdDIzIDEwbDM5MyAzOTMgMzkzLTM5M3ExMC0xMCAyMy0xMHQyMyAxMGw1MCA1MHExMCAxMCAxMCAyM3oiLz48L3N2Zz4=') !important; background-repeat: no-repeat; background-position: right center; }
 optgroup { font-style: normal; font-weight: 500; background-color: #ddd; }
 optgroup option { font-weight: normal; background-color: #fff; }
-.input-group-addon { font-size: 0.8125rem; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em; }
+.input-group-addon { padding: 0.46153846em .75em; font-size: 0.8125rem; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em; }
 .form-control.dropdown-item:focus, .form-control.dropdown-item:hover { background-color: inherit }
 ::-ms-value { border: none; margin: 0; padding: 0 0 1px; line-height: 1 }
 select::-ms-expand { display: none; }
