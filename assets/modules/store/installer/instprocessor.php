@@ -6,6 +6,10 @@ $_POST['installmode'] = 1;
 $sqlParser = '';
 
 define('MODX_API_MODE', true);
+$autoloader = realpath(MODX_BASE_PATH .'vendor/autoload.php');
+if (file_exists($autoloader) && is_readable($autoloader)) {
+    include_once($autoloader);
+}
 include_once MGR.'/includes/protect.inc.php';
 include_once MGR.'/includes/config.inc.php';
 include_once MGR.'/includes/document.parser.class.inc.php';
@@ -14,7 +18,7 @@ $modx->db->connect();
 $modx->getSettings();
 startCMSSession();
 $modx->minParserPasses=2;
-
+$modx->invokeEvent('OnManagerPageInit');
 global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;

@@ -418,23 +418,6 @@ class DocumentParser {
     }
     
     /**
-     * Get the method by which the current document/resource was requested
-     *
-     * @return string 'alias' (friendly url alias) or 'id'
-     */
-    function getDocumentMethod() {
-        // function to test the query and find the retrieval method
-        if (!empty ($_REQUEST['q'])) { //LANG
-            return "alias";
-        }
-        elseif (isset ($_GET['id'])) {
-            return "id";
-        } else {
-            return "none";
-        }
-    }
-
-    /**
      * Returns the document identifier of the current request
      *
      * @param string $method id and alias are allowed
@@ -442,25 +425,15 @@ class DocumentParser {
      */
     function getDocumentIdentifier($method) {
         // function to test the query and find the retrieval method
-        $docIdentifier= $this->config['site_start'];
-        switch ($method) {
-            case 'alias' :
-                $docIdentifier= $this->db->escape($_REQUEST['q']);
-                break;
-            case 'id' :
-                if (!is_numeric($_GET['id'])) {
-                    $this->sendErrorPage();
-                } else {
-                    $docIdentifier= intval($_GET['id']);
-                }
-                break;
-            default:
-                if(strpos($_SERVER['REQUEST_URI'],'index.php')!==false) {
-                    list(,$_) = explode('index.php', $_SERVER['REQUEST_URI'], 2);
-                    if(substr($_,0,1)==='/') $this->sendErrorPage();
-                }
+        if($method==='alias') return $this->db->escape($_REQUEST['q']);
+        
+        $id_ = filter_input(INPUT_GET, 'id');
+        if($id_) {
+            if(preg_match('@^[1-9][0-9]*$@',$id_)) return $id_;
+            else                                   $this->sendErrorPage();
         }
-        return $docIdentifier;
+        elseif(strpos($_SERVER['REQUEST_URI'],'index.php/')!==false) $this->sendErrorPage();
+        else                                              return $this->config['site_start'];
     }
 
     /**
@@ -852,27 +825,26 @@ class DocumentParser {
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
         $recent_update = 0;
-        @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
+        @include(MODX_BASE_PATH . $this->getCacheFolder() . 'sitePublishing.idx.php');
         $this->recentUpdate = $recent_update;
+        
         $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
-        if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
-            // now, check for documents that need publishing
-            $this->db->update(
-                array(
-                    'published'   => 1,
-                    'publishedon' => $timeNow,
-                ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
+        if ($timeNow<$cacheRefreshTime || $cacheRefreshTime == 0) return;
+        
+        // now, check for documents that need publishing
+        $field = array('published'=>1, 'publishedon'=> $timeNow);
+        $where = "pub_date <= {$timeNow} AND pub_date!=0 AND published=0";
+        $this->db->update($field, '[+prefix+]site_content', $where);
 
-            // now, check for documents that need un-publishing
-            $this->db->update(
-                array(
-                    'published'   => 0,
-                    'publishedon' => 0,
-                ), $this->getFullTableName('site_content'), "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1");
+        // now, check for documents that need un-publishing
+        $field = array('published'=>0, 'publishedon'=>0);
+        $where = "unpub_date <= {$timeNow} AND unpub_date!=0 AND published=1";
+        $this->db->update($field, '[+prefix+]site_content', $where);
+        
+        $this->recentUpdate = $timeNow;
 
-            // clear the cache
-            $this->clearCache('full');
-        }
+        // clear the cache
+        $this->clearCache('full');
     }
 
     /**
@@ -882,7 +854,8 @@ class DocumentParser {
      */
     function postProcess() {
         // if the current document was generated, cache it!
-        if ($this->config['enable_cache'] && $this->documentGenerated && $this->documentObject['cacheable'] && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
+        $cacheable = ($this->config['enable_cache'] && $this->documentObject['cacheable']) ? 1 : 0;
+        if ($cacheable && $this->documentGenerated && $this->documentObject['type'] == 'document' && $this->documentObject['published']) {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
@@ -2125,10 +2098,7 @@ class DocumentParser {
             $this->getSettings();
         }
 
-        //$this->q = $this->setRequestQ($_SERVER['REQUEST_URI']);
-
-        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
-            $this->_IIS_furl_fix(); // IIS friendly url fix
+        $this->_IIS_furl_fix(); // IIS friendly url fix
 
         // check site settings
         if (!$this->checkSiteStatus()) {
@@ -2149,12 +2119,8 @@ class DocumentParser {
             $this->checkPublishStatus();
 
             // find out which document we need to display
-            $this->documentMethod= $this->getDocumentMethod();
+            $this->documentMethod= filter_input(INPUT_GET,'q') ? 'alias' : 'id';
             $this->documentIdentifier= $this->getDocumentIdentifier($this->documentMethod);
-        }
-
-        if ($this->documentMethod == "none") {
-            $this->documentMethod= "id"; // now we know the site_start, change the none method to id
         }
 
         if ($this->documentMethod == "alias") {
@@ -2254,6 +2220,8 @@ class DocumentParser {
     {
         if($this->config['friendly_urls'] != 1) return;
         
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') === false) return;
+        
         $url= $_SERVER['QUERY_STRING'];
         $err= substr($url, 0, 3);
         if ($err !== '404' && $err !== '405') return;
@@ -2273,18 +2241,6 @@ class DocumentParser {
         $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
         $this->q = $qp['path'];
         return $qp['path'];
-    }
-
-    function setRequestQ($request_uri) {
-        if(isset($_GET['id'])) $q = null;
-        else {
-            $q = substr($request_uri,strlen($this->config['base_url']));
-            if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
-            if($q=='index.php')        $q = '';
-        }
-
-        $this->q = $q;
-        return $q;
     }
     
     /**

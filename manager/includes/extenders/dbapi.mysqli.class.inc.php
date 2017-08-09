@@ -33,9 +33,9 @@ class DBAPI {
 				if (isset($modx->config['send_errormail']) && $modx->config['send_errormail'] !== '0') {
 					if ($modx->config['send_errormail'] <= 2) {
 						$logtitle    = 'Failed to create the database connection!';
-						$request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
-						$ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
-						$referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
+						$request_uri = $modx->htmlspecialchars($_SERVER['REQUEST_URI']);
+						$ua          = $modx->htmlspecialchars($_SERVER['HTTP_USER_AGENT']);
+						$referer     = $modx->htmlspecialchars($_SERVER['HTTP_REFERER']);
 						$modx->sendmail(array(
 							'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
 							'body' => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
@@ -140,9 +140,12 @@ class DBAPI {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
 		} else {
 			$from = $this->replaceFullTableName($from);
-			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-			$limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+			$where   = trim($where);
+			$orderby = trim($orderby);
+			$limit   = trim($limit);
+			if($where!==''    && stripos($where,  'WHERE')!==0)    $where   = "WHERE {$where}";
+			if($orderby!== '' && stripos($orderby,'ORDER BY')!==0) $orderby = "ORDER BY {$orderby}";
+			if($limit!== ''   && stripos($limit,  'LIMIT')!==0)    $limit   = "LIMIT {$limit}";
 			return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
 		}
 	}
@@ -164,9 +167,9 @@ class DBAPI {
         $where   = trim($where);
         $orderby = trim($orderby);
         $limit   = trim($limit);
-        if($where && stripos($where,'WHERE')!==0)     $where   = "WHERE {$where}";
-        if($orderby && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
-        if($limit && stripos($limit,'LIMIT')!==0)     $limit   = "LIMIT {$limit}";
+        if($where!==''   && stripos($where,'WHERE')!==0)   $where   = "WHERE {$where}";
+        if($orderby!=='' && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+        if($limit!==''   && stripos($limit,'LIMIT')!==0)   $limit   = "LIMIT {$limit}";
 		return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
 	}
 
@@ -187,7 +190,8 @@ class DBAPI {
 				}
 				$fields = implode(",", $fields);
 			}
-			$where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+			$where = trim($where);
+			if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
 			return $this->query("UPDATE {$table} SET {$fields} {$where}");
 		}
 	}
@@ -207,8 +211,10 @@ class DBAPI {
 				} else {
 					$fromtable = $this->replaceFullTableName($fromtable);
 					$fields = "(".implode(",", array_keys($fields)).")";
-					$where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
-					$limit = !empty($limit) ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+					$where = trim($where);
+					$limit = trim($limit);
+					if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
+					if($limit!=='' && stripos($limit, 'LIMIT')!==0) $limit = "LIMIT {$limit}";
 					$rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
 				}
 			}
