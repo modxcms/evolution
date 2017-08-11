@@ -46,9 +46,6 @@ echo createList($_lang['help_translating_title'], $translationLinks);
 <?php echo $_lang['about_msg']; ?><?php echo $_lang['credits_shouts_msg']; ?>
 </div>
 
-<div class="sectionHeader"><?php echo $_lang['help_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['help_msg']; ?>
-</div>
 
 
 
