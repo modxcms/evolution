@@ -503,7 +503,7 @@ $seeThruUnpub = (isset($seeThruUnpub))? $seeThruUnpub : 1 ;
     - <showInMenuOnly>
     - <where>
 */
-$queryLimit = (isset($queryLimit))? $queryLimit : 0;
+$queryLimit = (isset($queryLimit))? $queryLimit : '';
 /*
     Param: queryLimit
 
