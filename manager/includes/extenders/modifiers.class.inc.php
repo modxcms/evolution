@@ -328,19 +328,19 @@ class MODIFIERS {
                 $this->condition[] = '&&';break;
             case 'show':
             case 'this':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
                 else          return NULL;
                 break;
             case 'then':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid)  return $opt;
                 else           return NULL;
                 break;
             case 'else':
-                $conditional = implode(' ',$this->condition);
+                $conditional = implode('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if (!$isvalid) return $opt;
                 break;
