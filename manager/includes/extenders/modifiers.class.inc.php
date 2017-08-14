@@ -744,6 +744,10 @@ class MODIFIERS {
             case 'fullurl':
                 if(!is_numeric($value)) return $value;
                 return $modx->makeUrl($value);
+            case 'makeurl':
+                if(!is_numeric($value)) return $value;
+                if(!$opt) $opt = 'full';
+                return $modx->makeUrl($value,'','',$opt);
                 
             #####  File system
             case 'getimageinfo':
