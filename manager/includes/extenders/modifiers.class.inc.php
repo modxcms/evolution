@@ -124,6 +124,11 @@ class MODIFIERS {
                 $result[]=array('cmd'=>trim($match[1]),'opt'=>$opt,'debuginfo'=>$debuginfo);
                 $cmd = '';
             }
+            elseif(in_array($c,array('+','-','*','/')) && preg_match('@^[0-9]+@', $modifiers, $match)) { // :+3, :-3, :*3 ...
+                $modifiers = substr($modifiers,strlen($match[0]));
+                $result[]=array('cmd'=>'math','opt'=>'%s'.$c.$match[0]);
+                $cmd = '';
+            }
             elseif($c==='(' || $c==='=') {
                 $modifiers = $m1 = trim($modifiers);
                 $delim     = $this->_getDelim($c,$modifiers);
