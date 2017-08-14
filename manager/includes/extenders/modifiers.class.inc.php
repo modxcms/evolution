@@ -328,19 +328,19 @@ class MODIFIERS {
                 $this->condition[] = '&&';break;
             case 'show':
             case 'this':
-                $conditional = implode('*',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
                 else          return NULL;
                 break;
             case 'then':
-                $conditional = implode('*',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid)  return $opt;
                 else           return NULL;
                 break;
             case 'else':
-                $conditional = implode('*',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if (!$isvalid) return $opt;
                 break;
@@ -1107,12 +1107,12 @@ class MODIFIERS {
     }
     function strrev($str) {
         preg_match_all('/./us', $str, $ar);
-        return implode(array_reverse($ar[0]));
+        return join(array_reverse($ar[0]));
     }
     function str_shuffle($str) {
         preg_match_all('/./us', $str, $ar);
         shuffle($ar[0]);
-        return implode($ar[0]);
+        return join($ar[0]);
     }
     function str_word_count($str) {
         return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
