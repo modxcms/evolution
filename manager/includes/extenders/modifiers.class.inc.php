@@ -50,8 +50,8 @@ class MODIFIERS {
         if(!in_array($c, array('"', "'", '`')) ) return false;
         
         $modifiers = substr($modifiers,1);
-        $clodure = $mode=='(' ? "{$c})" : $c;
-        if(strpos($modifiers, $clodure)===false) return false;
+        $closure = $mode=='(' ? "{$c})" : $c;
+        if(strpos($modifiers, $closure)===false) return false;
         
         return  $c;
     }
