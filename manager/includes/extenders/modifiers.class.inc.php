@@ -27,7 +27,7 @@ class MODIFIERS {
     function phxFilter($key,$value,$modifiers)
     {
         global $modx;
-        $value = $this->parseDocumentSource($value);
+        if(substr($modifiers,0,3)!=='id(') $value = $this->parseDocumentSource($value);
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
         $modifiers = ':'.trim($modifiers,':');
