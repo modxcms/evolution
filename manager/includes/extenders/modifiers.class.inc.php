@@ -737,7 +737,7 @@ class MODIFIERS {
                 $where = join(' AND ', $where);
                 $children = $modx->getDocumentChildren($value, $published, '0', 'id', $where);
                 $result = array();
-                foreach((array)$children as $child){ // $children が null だった時にエラーになるため型キャスト
+                foreach((array)$children as $child){
                     $result[] = $child['id'];
                 }
                 return join(',', $result);
