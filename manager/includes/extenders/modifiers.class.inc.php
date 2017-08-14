@@ -77,15 +77,15 @@ class MODIFIERS {
     function _getRemainModifiers($mode,$delim,$modifiers) {
         if($delim) {
             if($mode=='(')
-                return trim(substr($modifiers,strpos($modifiers, $delim . ')' )+2));
+                return $this->_fetchContent($modifiers, $delim . ')');
             else {
                 $modifiers = trim($modifiers);
                 $modifiers = substr($modifiers,1);
-                return substr($modifiers,strpos($modifiers, $delim)+1);
+                return $this->_fetchContent($modifiers, $delim);
             }
         }
         else {
-            if($mode=='(') return substr($modifiers,strpos($modifiers, ')' )+1);
+            if($mode=='(') return $this->_fetchContent($modifiers, ')');
             $chars = str_split($modifiers);
             foreach($chars as $c) {
                 if($c==':') return $modifiers;
@@ -94,6 +94,13 @@ class MODIFIERS {
             return $modifiers;
         }
     }
+    
+    function _fetchContent($string,$delim) {
+        $len = strlen($delim);
+        $string = $this->parseDocumentSource($string);
+        return substr($string,strpos($string, $delim)+$len);
+    }
+    
     function splitEachModifiers($modifiers) {
         global $modx;
         
@@ -104,7 +111,7 @@ class MODIFIERS {
             $c = substr($modifiers,0,1);
             $modifiers = substr($modifiers,1);
             
-            if(preg_match('@^:(!?[<>=]{1,2})@', $c.$modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
+            if($c===':' && preg_match('@^(!?[<>=]{1,2})@', $modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
                 $c = substr($modifiers,strlen($match[1]),1);
                 $debuginfo = "#i=0 #c=[{$c}] #m=[{$modifiers}]";
                 if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
