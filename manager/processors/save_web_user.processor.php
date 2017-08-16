@@ -108,22 +108,6 @@ switch($input['mode']) {
 		// Save User Settings
 		saveUserSettings($internalKey);
 
-		// invoke OnWebSaveUser event
-		$modx->invokeEvent("OnWebSaveUser", array(
-			"mode" => "new",
-			"userid" => $internalKey,
-			"username" => $newusername,
-			"userpassword" => $newpassword,
-			"useremail" => $email,
-			"userfullname" => $fullname
-		));
-
-		// invoke OnWUsrFormSave event
-		$modx->invokeEvent("OnWUsrFormSave", array(
-			"mode" => "new",
-			"id" => $internalKey
-		));
-
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
 
@@ -141,6 +125,22 @@ switch($input['mode']) {
 			}
 		}
 		// end of user_groups stuff!
+
+        // invoke OnWebSaveUser event
+        $modx->invokeEvent("OnWebSaveUser", array(
+            "mode" => "new",
+            "userid" => $internalKey,
+            "username" => $newusername,
+            "userpassword" => $newpassword,
+            "useremail" => $email,
+            "userfullname" => $fullname
+        ));
+
+        // invoke OnWUsrFormSave event
+        $modx->invokeEvent("OnWUsrFormSave", array(
+            "mode" => "new",
+            "id" => $internalKey
+        ));
 
 		if($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
@@ -244,33 +244,6 @@ switch($input['mode']) {
 		// Set the item name for logger
 		$_SESSION['itemname'] = $newusername;
 
-		// invoke OnWebSaveUser event
-		$modx->invokeEvent("OnWebSaveUser", array(
-			"mode" => "upd",
-			"userid" => $id,
-			"username" => $newusername,
-			"userpassword" => $newpassword,
-			"useremail" => $email,
-			"userfullname" => $fullname,
-			"oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
-			"olduseremail" => (($oldemail != $email) ? $oldemail : "")
-		));
-
-		// invoke OnWebChangePassword event
-		if($genpassword == 1) {
-			$modx->invokeEvent("OnWebChangePassword", array(
-				"userid" => $id,
-				"username" => $newusername,
-				"userpassword" => $newpassword
-			));
-		}
-
-		// invoke OnWUsrFormSave event
-		$modx->invokeEvent("OnWUsrFormSave", array(
-			"mode" => "upd",
-			"id" => $id
-		));
-
 		/*******************************************************************************/
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
@@ -288,6 +261,33 @@ switch($input['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
+
+        // invoke OnWebSaveUser event
+        $modx->invokeEvent("OnWebSaveUser", array(
+            "mode" => "upd",
+            "userid" => $id,
+            "username" => $newusername,
+            "userpassword" => $newpassword,
+            "useremail" => $email,
+            "userfullname" => $fullname,
+            "oldusername" => (($oldusername != $newusername) ? $oldusername : ""),
+            "olduseremail" => (($oldemail != $email) ? $oldemail : "")
+        ));
+
+        // invoke OnWebChangePassword event
+        if($genpassword == 1) {
+            $modx->invokeEvent("OnWebChangePassword", array(
+                "userid" => $id,
+                "username" => $newusername,
+                "userpassword" => $newpassword
+            ));
+        }
+
+        // invoke OnWUsrFormSave event
+        $modx->invokeEvent("OnWUsrFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
 
 		if($genpassword == 1 && $passwordnotifymethod == 's') {
 			if($input['stay'] != '') {
