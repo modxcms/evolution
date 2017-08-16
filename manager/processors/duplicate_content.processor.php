@@ -75,6 +75,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	if ($_toplevel == 0) {
 		// count duplicates
 		$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$docid}'"));
+		$pagetitle = $modx->db->escape($pagetitle);
 		$count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "pagetitle LIKE '{$pagetitle} Duplicate%'"));
 		if($count>=1) $count = ' '.($count+1);
 		else $count = '';
@@ -113,7 +114,8 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// Duplicate the Document
 	$newparent = $modx->db->insert($content, $tblsc);
 
-	// duplicate document's TVs
+	// duplicate document's TVs & Keywords
+	duplicateKeywords($docid, $newparent);
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
 	
@@ -131,6 +133,18 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 
 	// return the new doc id
 	return $newparent;
+}
+
+// Duplicate Keywords
+function duplicateKeywords($oldid,$newid){
+	global $modx;
+
+	$tblkw = $modx->getFullTableName('keyword_xref');
+
+	$modx->db->insert(
+		array('content_id'=>'', 'keyword_id'=>''), $tblkw, // Insert into
+		"{$newid}, keyword_id", $tblkw, "content_id='{$oldid}'" // Copy from
+	);
 }
 
 // Duplicate Document TVs
