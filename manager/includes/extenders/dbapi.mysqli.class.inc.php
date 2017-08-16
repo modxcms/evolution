@@ -318,24 +318,6 @@ class DBAPI {
 		}
 	}
 
-	function getXML($dsq) {
-		if (!is_object($dsq)) {
-			$dsq = $this->query($dsq);
-		}
-		$xmldata = "<xml>\r\n<recordset>\r\n";
-		while ($row = $this->getRow($dsq, "both")) {
-			$xmldata .= "<item>\r\n";
-			for ($j = 0; $line = each($row); $j++) {
-				if ($j % 2) {
-					$xmldata .= "<$line[0]>$line[1]</$line[0]>\r\n";
-				}
-			}
-			$xmldata .= "</item>\r\n";
-		}
-		$xmldata .= "</recordset>\r\n</xml>";
-		return $xmldata;
-	}
-
 	function getTableMetaData($table) {
 		$metadata = false;
 		if (!empty ($table)) {
@@ -369,46 +351,6 @@ class DBAPI {
 			}
 		}
 		return $date;
-	}
-
-	function getHTMLGrid($dsq, $params) {
-		if (!is_object($dsq)) {
-			$dsq = $this->query($dsq);
-		}
-		if ($dsq) {
-			include_once MODX_MANAGER_PATH . 'includes/controls/datagrid.class.php';
-			$grd = new DataGrid('', $dsq);
-
-			$grd->noRecordMsg = $params['noRecordMsg'];
-
-			$grd->columnHeaderClass = $params['columnHeaderClass'];
-			$grd->cssClass = $params['cssClass'];
-			$grd->itemClass = $params['itemClass'];
-			$grd->altItemClass = $params['altItemClass'];
-
-			$grd->columnHeaderStyle = $params['columnHeaderStyle'];
-			$grd->cssStyle = $params['cssStyle'];
-			$grd->itemStyle = $params['itemStyle'];
-			$grd->altItemStyle = $params['altItemStyle'];
-
-			$grd->columns = $params['columns'];
-			$grd->fields = $params['fields'];
-			$grd->colWidths = $params['colWidths'];
-			$grd->colAligns = $params['colAligns'];
-			$grd->colColors = $params['colColors'];
-			$grd->colTypes = $params['colTypes'];
-			$grd->colWraps = $params['colWraps'];
-
-			$grd->cellPadding = $params['cellPadding'];
-			$grd->cellSpacing = $params['cellSpacing'];
-			$grd->header = $params['header'];
-			$grd->footer = $params['footer'];
-			$grd->pageSize = $params['pageSize'];
-			$grd->pagerLocation = $params['pagerLocation'];
-			$grd->pagerClass = $params['pagerClass'];
-			$grd->pagerStyle = $params['pagerStyle'];
-			return $grd->render();
-		}
 	}
 
 	function makeArray($rs='',$index=false){
