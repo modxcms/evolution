@@ -1,6 +1,5 @@
-<!--<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />-->
 <link rel="stylesheet" type="text/css" href="actions/category_mgr/skin/css/module.css" />
-<!--<script type="text/javascript" src="actions/category_mgr/skin/js/mootips.js"></script>-->
+
 <?php if (!empty($view->js_output)) : ?>
     <script type="text/javascript">
         <?= $view->js_output ?>
@@ -21,7 +20,7 @@
 
         <div id="manage-categories-pane" class="tab-pane">
             <script type="text/javascript">
-                tpCategories = new WebFXTabPane(document.getElementById('manage-categories-pane'));
+              let tpCategories = new WebFXTabPane(document.getElementById('manage-categories-pane'));
             </script>
 
             <div id="tab-add-category" class="tab-page">
@@ -83,28 +82,8 @@
 
 <?php endif; /* if $data === TABLE_COLUMN_SORT_NOT_SET */ ?>
 
-
 <script type="text/javascript">
-    let ajax_url = 'index.php?a=121';
-    let request_key = '<?= $view->get('request_key') ?>';
-    let categorizeWorkbench = document.getElementById('categorize-workbench');
-    document.getElementById('elements-select').onchange = function(e) {
-        categorizeWorkbench.innerHTML = '';
-        categorizeWorkbench.classList.add('ajax_loading');
-        document.getElementById('categorize-elements').classList.remove('hidden');
-        document.getElementById('categorize-formfields').innerHTML = '';
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', ajax_url, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-        xhr.onload = function() {
-            if (this.readyState === 4) {
-                categorizeWorkbench.classList.remove('ajax_loading');
-                categorizeWorkbench.innerHTML = this.responseText;
-                init_drag(); // mootools
-            }
-        };
-        xhr.send(request_key + '[ajax]=1&' + request_key + '[task]=categorize_load_elements&' + request_key + '[elements]=' + e.target.value);
-    };
+  const request_key = '<?= $view->get('request_key') ?>';
 </script>
 <script type="text/javascript" src="actions/category_mgr/skin/js/categories.js"></script>
 <script type="text/javascript" src="media/script/bootstrap/js/bootstrap.min.js"></script>
