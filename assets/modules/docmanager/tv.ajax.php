@@ -15,9 +15,9 @@ $modx->getSettings();
 $dm = new DocManager($modx);
 $dm->getLang();
 $dm->getTheme();
- 
+
  $output = '';
- 
+
  if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
  	$rs = $modx->db->select(
 		'*',
@@ -26,7 +26,7 @@ $dm->getTheme();
 		"tvt.templateid ='{$_POST['tplID']}'"
 		);
  	$limit = $modx->db->getRecordCount($rs);
- 	
+
  	if ($limit > 0) {
 		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
@@ -35,7 +35,7 @@ $dm->getTheme();
 		while ($row = $modx->db->getRow($rs)) {
 
 				if($i++>0) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
-				
+
 				$output.='<tr style="height: 24px;">
 				<td align="left" valign="top" width="200">
 					<span class=\'warning\'><input type=\'checkbox\' name=\'update_tv_' . $row['id'] . '\' id=\'cb_update_tv_' . $row['id'] . '\' value=\'yes\' />&nbsp;'.$row['caption'].'</span><br /><span class=\'comment\'>'.$row['description'].'</span>
@@ -50,12 +50,12 @@ $dm->getTheme();
  	} else {
  		print $dm->lang['DM_tv_no_tv'];
  	}
- 	
+
  	print $output;
  } else {
  	print '';
  }
- 
+
 
 
 function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='') {
@@ -84,7 +84,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%;">' . htmlspecialchars($field_value) .'</textarea>';
 			break;
 		case "date":
-			$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
+			$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));
             if($field_value=='') $field_value=0;
 			$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
 			$field_html .=  ' <a onclick="document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'templatevariables\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style'.$dm->theme.'/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
@@ -102,7 +102,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			$field_html .=  "</select>";
 			break;
 		case "listbox": // handler for select boxes
-			$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="8">';	
+			$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="8">';
 			$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
 			while (list($item, $itemvalue) = each ($index_list))
 			{
@@ -161,7 +161,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 		case "image":	// handles image fields using htmlarea image manager
 			global $ResourceManagerLoaded;
 			global $content,$use_editor,$which_editor,$which_browser;
-			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
+			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
 				$field_html .="
 				<script type=\"text/javascript\">
 						var lastImageCtrl;
@@ -206,8 +206,8 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							}
 						}
 				</script>";
-				$ResourceManagerLoaded  = true;					
-			} 
+				$ResourceManagerLoaded  = true;
+			}
 			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
 			break;
 		case "file": // handles the input of file uploads
@@ -215,7 +215,7 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 			global $ResourceManagerLoaded;
 			global $content,$use_editor,$which_editor;
 			if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
-			/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
+			/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */
 				$field_html .="
 				<script type=\"text/javascript\">
 						var lastImageCtrl;
@@ -261,10 +261,10 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							}
 						}
 				</script>";
-				$ResourceManagerLoaded  = true;					
-			} 
+				$ResourceManagerLoaded  = true;
+			}
 			$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$dm->lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
-            
+
 			break;
 		default: // the default handler -- for errors, mostly
 			$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
