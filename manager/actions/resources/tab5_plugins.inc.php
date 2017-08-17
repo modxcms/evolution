@@ -17,7 +17,7 @@ if (isset($resources->items['site_plugins'])) { ?>
         <div id="_actions">
             <form class="btn-group form-group form-inline">
                 <div class="input-group input-group-sm">
-                    <input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
+                    <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_plugins_search" />
                     <div class="input-group-btn">
                         <?php if ($modx->hasPermission('new_plugin')) { ?>
                             <a class="btn btn-success" href="index.php?a=101"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_plugin'] ?></span></a>
