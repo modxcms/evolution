@@ -26,6 +26,14 @@
             }
             document.getElementById('results').innerHTML = this.response;
             document.getElementById('tvloading').style.display = 'none';
+            var DatePickers = document.querySelectorAll('input.DatePicker');
+            if (DatePickers) {
+              for (var i = 0; i < DatePickers.length; i++) {
+                new DatePicker(DatePickers[i], {
+                  yearOffset: dpOffset, format: dpformat, dayNames: dpdayNames, monthNames: dpmonthNames, startDay: dpstartDay,
+                });
+              }
+            }
           }
         };
         xhr.send('theme=[+theme+]&tplID=' + tplId);
