@@ -9,9 +9,15 @@ Evolution CMS requires **PHP >= 5.4**, but snippet FormLister need **PHP >=5.6**
 
 **EVO** is an open source Content Management System and Application Framework.
 
+## History
+
 Initially inspired by **Etomite 0.6**, then it been **MODX Evolution 0.7 - 1.0.8** is an ongoing project written by *Raymond Irving* and a core team of contributors **MODX**, and now its **Evolution CMS** maintained by *Dmytro Lukianenko* and a core team of contributors at the **EVO Project**.
 
+## License
+
 **EVO** is distributed under the **GPL license** and is now run by a professional team of developers from all over the world. Visit the Forums for more information.
+
+## Features
 
 **EVO** provides a fast, lightweight and powerful framework on which to deploy and secure your website and web applications.
 
