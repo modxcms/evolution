@@ -7,14 +7,29 @@ Evolution CMS requires **PHP >= 5.4**, but snippet FormLister need **PHP >=5.6**
 
 ## What is EVO
 
-EVO is an open source Content Management System and Application Framework. Initially inspired by Etomite 0.6, then it been MODX Evolution 0.7 - 1.0.8 is an ongoing project written by Raymond Irving and a core team of contributors MODX, and now its Evolution CMS maintained by Dmytro Lukianenko and a core team of contributors at the EVO Project. EVO is distributed under the GPL license and is now run by a professional team of developers from all over the world. Visit the Forums for more information.
+**EVO** is an open source Content Management System and Application Framework.
 
-EVO provides a fast, lightweight and powerful framework on which to deploy and secure your website and web applications. For example, it gives you a true system for registered web users and groups that is separate from administration users. You can grant some web users access to one page and others access to another page. For content management, you can easily duplicate documents, folders (and all their children!), chunks and snippets. Most significant, though, is EVO's ability to empower you to quickly and easily create and maintain a rich and dynamic website like never before.
+## History
+
+Initially inspired by **Etomite 0.6**, then it been **MODX Evolution 0.7 - 1.0.8** is an ongoing project written by *Raymond Irving* and a core team of contributors **MODX**, and now its **Evolution CMS** maintained by *Dmytro Lukianenko* and a core team of contributors at the **EVO Project**.
+
+## License
+
+**EVO** is distributed under the **GPL license** and is now run by a professional team of developers from all over the world. Visit the Forums for more information.
+
+## Features
+
+**EVO** provides a fast, lightweight and powerful framework on which to deploy and secure your website and web applications.
+
+For example, it gives you a true system for registered web users and groups that is separate from administration users. You can grant some web users access to one page and others access to another page.
+
+For content management, you can easily duplicate documents, folders (and all their children!), chunks and snippets.
+
+Most significant, though, is **EVO's** ability to empower you to quickly and easily create and maintain a rich and dynamic website like never before.
 
 
-
-### Install
-for easy and fast install you can use [Evo Installer](https://github.com/evolution-cms/installer)
+## Install
+Just use [Evo Installer](https://github.com/evolution-cms/installer)
 
 
 ### Screenshots
