@@ -15,7 +15,7 @@
     <div id="_actions">
         <form class="btn-group form-group form-inline">
             <div class="input-group input-group-sm">
-                <input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="categories_list_search" />
+                <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="categories_list_search" />
                 <div class="input-group-btn">
                     <a class="btn btn-secondary" href="index.php?a=120"><i class="<?= $_style["actions_categories"] ?>"></i> <span><?= $_lang['manage_categories'] ?></span></a>
                     <a class="btn btn-secondary" href="javascript:;" id="category-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>

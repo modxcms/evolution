@@ -25,7 +25,8 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
 $ditto_version = "2.1.2";
     // Ditto version being executed
 
-$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
+if(!isset($ditto_base)) $ditto_base = 'assets/snippets/ditto/';
+$ditto_base = $modx->config['base_path'].ltrim($ditto_base,'/');
 /*
     Param: ditto_base
     
@@ -38,8 +39,8 @@ $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $mod
     Default:
     [(base_path)]assets/snippets/ditto/
 */
-$dittoID = (!isset($id)) ? "" : $id."_";
-$GLOBALS["dittoID"] = $dittoID;
+$dittoID = (isset($id)) ? $id.'_' : '';
+$GLOBALS['dittoID'] = $dittoID;
 /*
     Param: id
 
@@ -54,9 +55,9 @@ $GLOBALS["dittoID"] = $dittoID;
 
     Default:
     "" - blank
-*/      
-$language = (isset($language))? $language : $modx->config['manager_language'];
-if (!file_exists($ditto_base."lang/".$language.".inc.php")) {
+*/
+if(!isset($language)) $language = $modx->config['manager_language'];
+if (!is_file("{$ditto_base}lang/{$language}.inc.php")) {
     $language ="english";
 }
 /*
@@ -503,7 +504,7 @@ $seeThruUnpub = (isset($seeThruUnpub))? $seeThruUnpub : 1 ;
     - <showInMenuOnly>
     - <where>
 */
-$queryLimit = (isset($queryLimit))? $queryLimit : 0;
+$queryLimit = (isset($queryLimit))? $queryLimit : '';
 /*
     Param: queryLimit
 

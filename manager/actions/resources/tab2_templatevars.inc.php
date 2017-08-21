@@ -20,7 +20,7 @@ if (isset($resources->items['site_tmplvars'])) { ?>
         <div id="_actions">
             <form class="btn-group form-group form-inline">
                 <div class="input-group input-group-sm">
-                    <input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_tmplvars_search" />
+                    <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_tmplvars_search" />
                     <div class="input-group-btn">
                         <a class="btn btn-success" href="index.php?a=300"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_tmplvars'] ?></span></a>
                         <a class="btn btn-secondary" href="index.php?a=305"><i class="<?= $_style["actions_sort"] ?>"></i> <span><?= $_lang['template_tv_edit'] ?></span></a>

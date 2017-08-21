@@ -80,22 +80,6 @@ class mgrResources {
 		}
 		else $sttfield = '';
 
-		//$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
-
-		switch ($resourceTable) {
-			case 'site_plugins':
-				$orderby = '6,2';
-				break;
-			case 'site_tmplvars':
-				$orderby = '7,3';
-				break;
-			case 'site_templates':
-				$orderby = '6,1';
-				break;
-			default:
-				$orderby = '5,1';
-		}
-
 		$selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
 
 		$rs = $modx->db->select(
@@ -103,7 +87,7 @@ class mgrResources {
 			$modx->getFullTableName($resourceTable) . " AS {$resourceTable}
 	            LEFT JOIN " . $modx->getFullTableName('categories') . " AS categories ON {$resourceTable}.category = categories.id {$tvjoin}",
 			"",
-			$orderby
+			"category,name"
 		);
 		$limit = $modx->db->getRecordCount($rs);
 		

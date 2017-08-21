@@ -1,15 +1,15 @@
 //<?php
 /**
- * DLMenu
+ * DLReflect
  *
- * Snippet to build menu with DocLister
+ * Построение списка дат для фильтрации по ним документов
  *
  * @category 	snippet
- * @version 	1.2.0
+ * @version 	2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Content
  * @internal    @installset base, sample
  */
 
-return require MODX_BASE_PATH.'assets/snippets/DocLister/snippet.DLMenu.php';
+return require MODX_BASE_PATH.'assets/snippets/DocLister/snippet.DLReflect.php';

@@ -27,7 +27,7 @@ class MODIFIERS {
     function phxFilter($key,$value,$modifiers)
     {
         global $modx;
-        $value = $this->parseDocumentSource($value);
+        if(substr($modifiers,0,3)!=='id(') $value = $this->parseDocumentSource($value);
         $this->srcValue = $value;
         $modifiers = trim($modifiers);
         $modifiers = ':'.trim($modifiers,':');
@@ -50,8 +50,8 @@ class MODIFIERS {
         if(!in_array($c, array('"', "'", '`')) ) return false;
         
         $modifiers = substr($modifiers,1);
-        $clodure = $mode=='(' ? "{$c})" : $c;
-        if(strpos($modifiers, $clodure)===false) return false;
+        $closure = $mode=='(' ? "{$c})" : $c;
+        if(strpos($modifiers, $closure)===false) return false;
         
         return  $c;
     }
@@ -77,15 +77,15 @@ class MODIFIERS {
     function _getRemainModifiers($mode,$delim,$modifiers) {
         if($delim) {
             if($mode=='(')
-                return trim(substr($modifiers,strpos($modifiers, $delim . ')' )+2));
+                return $this->_fetchContent($modifiers, $delim . ')');
             else {
                 $modifiers = trim($modifiers);
                 $modifiers = substr($modifiers,1);
-                return substr($modifiers,strpos($modifiers, $delim)+1);
+                return $this->_fetchContent($modifiers, $delim);
             }
         }
         else {
-            if($mode=='(') return substr($modifiers,strpos($modifiers, ')' )+1);
+            if($mode=='(') return $this->_fetchContent($modifiers, ')');
             $chars = str_split($modifiers);
             foreach($chars as $c) {
                 if($c==':') return $modifiers;
@@ -94,6 +94,13 @@ class MODIFIERS {
             return $modifiers;
         }
     }
+    
+    function _fetchContent($string,$delim) {
+        $len = strlen($delim);
+        $string = $this->parseDocumentSource($string);
+        return substr($string,strpos($string, $delim)+$len);
+    }
+    
     function splitEachModifiers($modifiers) {
         global $modx;
         
@@ -104,7 +111,7 @@ class MODIFIERS {
             $c = substr($modifiers,0,1);
             $modifiers = substr($modifiers,1);
             
-            if(preg_match('@^:(!?[<>=]{1,2})@', $c.$modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
+            if($c===':' && preg_match('@^(!?[<>=]{1,2})@', $modifiers, $match)) { // :=, :!=, :<=, :>=, :!<=, :!>=
                 $c = substr($modifiers,strlen($match[1]),1);
                 $debuginfo = "#i=0 #c=[{$c}] #m=[{$modifiers}]";
                 if($c==='(') $modifiers = substr($modifiers,strlen($match[1])+1);
@@ -115,6 +122,11 @@ class MODIFIERS {
                 $modifiers = trim($this->_getRemainModifiers($c,$delim,$modifiers));
                 
                 $result[]=array('cmd'=>trim($match[1]),'opt'=>$opt,'debuginfo'=>$debuginfo);
+                $cmd = '';
+            }
+            elseif(in_array($c,array('+','-','*','/')) && preg_match('@^[0-9]+@', $modifiers, $match)) { // :+3, :-3, :*3 ...
+                $modifiers = substr($modifiers,strlen($match[0]));
+                $result[]=array('cmd'=>'math','opt'=>'%s'.$c.$match[0]);
                 $cmd = '';
             }
             elseif($c==='(' || $c==='=') {
@@ -328,19 +340,19 @@ class MODIFIERS {
                 $this->condition[] = '&&';break;
             case 'show':
             case 'this':
-                $conditional = implode(' ',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
                 else          return NULL;
                 break;
             case 'then':
-                $conditional = implode(' ',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid)  return $opt;
                 else           return NULL;
                 break;
             case 'else':
-                $conditional = implode(' ',$this->condition);
+                $conditional = join('*',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if (!$isvalid) return $opt;
                 break;
@@ -725,13 +737,17 @@ class MODIFIERS {
                 $where = join(' AND ', $where);
                 $children = $modx->getDocumentChildren($value, $published, '0', 'id', $where);
                 $result = array();
-                foreach((array)$children as $child){ // $children が null だった時にエラーになるため型キャスト
+                foreach((array)$children as $child){
                     $result[] = $child['id'];
                 }
                 return join(',', $result);
             case 'fullurl':
                 if(!is_numeric($value)) return $value;
                 return $modx->makeUrl($value);
+            case 'makeurl':
+                if(!is_numeric($value)) return $value;
+                if(!$opt) $opt = 'full';
+                return $modx->makeUrl($value,'','',$opt);
                 
             #####  File system
             case 'getimageinfo':
@@ -1107,12 +1123,12 @@ class MODIFIERS {
     }
     function strrev($str) {
         preg_match_all('/./us', $str, $ar);
-        return implode(array_reverse($ar[0]));
+        return join(array_reverse($ar[0]));
     }
     function str_shuffle($str) {
         preg_match_all('/./us', $str, $ar);
         shuffle($ar[0]);
-        return implode($ar[0]);
+        return join($ar[0]);
     }
     function str_word_count($str) {
         return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));

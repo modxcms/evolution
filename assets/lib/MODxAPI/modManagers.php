@@ -582,10 +582,12 @@ class modManagers extends MODxAPI
             $member_groups = $this->makeTable('member_groups');
             $membergroup_names = $this->makeTable('membergroup_names');
 
-            $sql = "SELECT `ugn`.`name` FROM {$member_groups} as `ug`
+            $rs = $this->query("SELECT `ug`.`user_group`, `ugn`.`name` FROM {$member_groups} as `ug`
                 INNER JOIN {$membergroup_names} as `ugn` ON `ugn`.`id`=`ug`.`user_group`
-                WHERE `ug`.`member` = " . $user->getID();
-            $out = $this->modx->db->getColumn('name', $this->query($sql));
+                WHERE `ug`.`member` = " . $user->getID());
+            while ($row = $this->modx->db->getRow($rs)) {
+                $out[$row['user_group']] = $row['name'];
+            }
         }
         unset($user);
 
@@ -609,6 +611,10 @@ class modManagers extends MODxAPI
             if ($uid = $user->getID()) {
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('member_groups')} (`user_group`, `member`) VALUES ('{$gid}', '{$uid}')");
+                }
+                if (!$this->newDoc) {
+                    $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
+                    $this->query("DELETE FROM {$this->makeTable('member_groups')} WHERE `member`={$uid} AND `user_group` NOT IN ({$groupIds})");
                 }
             }
             unset($user);

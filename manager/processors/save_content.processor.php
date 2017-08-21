@@ -461,6 +461,12 @@ switch ($actionToTake) {
 			$modx->manager->saveFormValues(27);
 			$modx->webAlertAndQuit("Document can not be it's own parent!");
 		}
+
+		$parents = $modx->getParentIds($parent);
+        if (in_array($oldparent, $parents)) {
+            $modx->webAlertAndQuit("Document descendant can not be it's parent!");
+        }
+        
 		// check to see document is a folder
 		$rs = $modx->db->select('count(id)', $tbl_site_content, "parent='{$id}'");
 		$count = $modx->db->getValue($rs);

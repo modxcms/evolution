@@ -75,6 +75,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	if ($_toplevel == 0) {
 		// count duplicates
 		$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$docid}'"));
+		$pagetitle = $modx->db->escape($pagetitle);
 		$count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "pagetitle LIKE '{$pagetitle} Duplicate%'"));
 		if($count>=1) $count = ' '.($count+1);
 		else $count = '';

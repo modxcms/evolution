@@ -17,7 +17,7 @@ if (isset($resources->items['site_htmlsnippets'])) { ?>
         <div id="_actions">
             <form class="btn-group form-group form-inline">
                 <div class="input-group input-group-sm">
-                    <input class="form-control" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_htmlsnippets_search" />
+                    <input class="form-control filterElements-form" type="text" size="30" placeholder="<?= $_lang['element_filter_msg'] ?>" id="site_htmlsnippets_search" />
                     <div class="input-group-btn">
                         <a class="btn btn-success" href="index.php?a=77"><i class="<?= $_style["actions_new"] ?>"></i> <span><?= $_lang['new_htmlsnippet'] ?></span></a>
                         <a class="btn btn-secondary" href="javascript:;" id="chunks-help"><i class="<?= $_style["actions_help"] ?>"></i> <span><?= $_lang['help'] ?></span></a>

@@ -40,10 +40,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 		case 'publishedon':
 		case 'pub_date':
 		case 'unpub_date':
-			$sortby = sprintf('CASE WHEN %s IS NULL THEN 1 ELSE 0 END, %s', $_SESSION['tree_sortby'], $_SESSION['tree_sortby']);
+			$sortby = sprintf('CASE WHEN %s IS NULL THEN 1 ELSE 0 END, %s', 'sc.' . $_SESSION['tree_sortby'], 'sc.' . $_SESSION['tree_sortby']);
 			break;
 		default:
-			$sortby = $_SESSION['tree_sortby'];
+			$sortby = 'sc.' . $_SESSION['tree_sortby'];
 	};
 
 	$orderby = $modx->db->escape($sortby . ' ' . $_SESSION['tree_sortdir']);

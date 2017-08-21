@@ -554,10 +554,12 @@ class modUsers extends MODxAPI
             $web_groups = $this->makeTable('web_groups');
             $webgroup_names = $this->makeTable('webgroup_names');
 
-            $sql = "SELECT `ugn`.`name` FROM {$web_groups} as `ug`
+            $rs = $this->query("SELECT `ug`.`webgroup`, `ugn`.`name` FROM {$web_groups} as `ug`
                 INNER JOIN {$webgroup_names} as `ugn` ON `ugn`.`id`=`ug`.`webgroup`
-                WHERE `ug`.`webuser` = " . $user->getID();
-            $out = $this->modx->db->getColumn('name', $this->query($sql));
+                WHERE `ug`.`webuser` = " . $user->getID());
+            while ($row = $this->modx->db->getRow($rs)) {
+                $out[$row['webgroup']] = $row['name'];
+            }
         }
         unset($user);
 
@@ -579,6 +581,10 @@ class modUsers extends MODxAPI
             if ($uid = $user->getID()) {
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+                }
+                if (!$this->newDoc) {
+                    $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
+                    $this->query("DELETE FROM {$this->makeTable('web_groups')} WHERE `webuser`={$uid} AND `webgroup` NOT IN ({$groupIds})");
                 }
             }
             unset($user);
