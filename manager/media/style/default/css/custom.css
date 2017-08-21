@@ -27,7 +27,6 @@ select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button], #range input#pids + input[name=fsubmit], input[name="ta"].inputBox + input[type=button], input[name="ta"].inputBox + .CodeMirror + input[type=button], #documentPane input[name^=tv]:not([class^=mtv]) + input[type=button] { z-index: 5; float: right; margin-top: -2.30769em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
 #settingsPane [name=site_name], #settingsPane [name=txt_custom_contenttype], #settingsPane [name=filemanager_path], #settingsPane [name=rb_base_dir], input[name=photo], #range input#pids, input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
 #range::after { content: ""; display: table; width: 100% }
-
 /* [ Editor ] */
 .navbar.navbar-editor { padding: .5rem 1.25rem; border-radius: 0 }
 .navbar-editor > label { margin-bottom: 0 }
@@ -51,12 +50,18 @@ select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 #actions .btn-group .dropdown-menu > span:hover { background-color: #e6e6e6; }
 #actions .btn-group .dropdown-toggle::after { margin: 0; border-width: 0.4em; transition-duration: 0.25s }
 #actions .btn-group .show .dropdown-toggle::after { transform: rotate(180deg) }
+#_actions .btn-group .input-group-btn .btn { margin-left: .1875rem }
+#_actions .btn-group .form-control, #_actions .btn-group .btn { border-radius: .1rem }
 @media (max-width: 840px) {
 #actions { right: 0 }
 #actions .btn-group .btn span, #actions .btn-group select#stay, #_actions .btn-group .btn span { display: none }
 #actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: inline-block }
 #actions .btn-group .dropdown-menu { width: 2rem }
 #actions .btn-group .dropdown-menu span { padding-left: 0; padding-right: 0; text-align: center }
+#_actions .btn-group .input-group-btn .btn { margin-left: -1px }
+#_actions .btn-group .form-control, #_actions .btn-group .btn { border-radius: 0 }
+#_actions .btn-group .form-control:first-child { border-top-left-radius: .1rem; border-bottom-left-radius: .1rem; }
+#_actions .btn-group .btn:last-child { border-top-right-radius: .1rem; border-bottom-right-radius: .1rem; }
 }
 /* old style */
 #actions .actionButtons { float: left; min-height: 32px }
