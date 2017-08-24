@@ -639,9 +639,9 @@ class ditto {
 
 		$customReset = $this->customReset;
 		if ($this->debug) {$this->addField("pagetitle","backend","db");}
-        $limitSearch=$limit;
-        if (count($customReset) > 0) {$this->addField("createdon","backend","db"); $limitSearch=0;}
-        $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limitSearch,$randomize,$dateSource);
+       
+        if (count($customReset) > 0) {$this->addField("createdon","backend","db");}
+        $resource = $this->getDocuments($documentIDs,$this->fields["backend"]["db"],$TVs,$orderBy,$showPublishedOnly,0,$hidePrivate,$where,$limit,$randomize,$dateSource);
 
 // EPO - End of change (then see line 692 - if ($limit) array_slice($resource, 0, $limit);    )
 
