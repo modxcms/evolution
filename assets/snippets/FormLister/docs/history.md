@@ -1,4 +1,12 @@
 ## History
+### 1.7.8
+* [Refactor] Переименованы файлы документации.
+* [Refactor] Параметр removeEmptyPlaceholders по умолчанию включен (Core).
+* [Refactor] Параметр rewriteUrls по умолчанию включен (Core).
+* [Refactor] Плейсхолдеры ошибок [+field.error+] не устанавливаются, если нет сообщения об ошибке (Core).
+* [Enhancement] Плейсхолдеры [+field.class+] (включает class="") и [+field.classname+] (не включает class="") (Core).
+* [Refactor] Параметр lexicon может содержать или имена файлов (без расширения) через запятую или массив с языковыми строками (Lexicon).
+
 ### 1.7.7
 * [Enhancement] Возможность указывать разный subject для разных типов писем (Form).
 
