@@ -49,6 +49,15 @@ class site_contentDocLister extends DocLister
         
         $this->extTV->getAllTV_Name();
 
+        /**
+         * @var $extJotCount jotcount_DL_Extender
+         */
+        $extJotCount = $this->getCFGdef('jotcount', 0) ? $this->getExtender('jotcount', true) : null;
+
+        if ($extJotCount) {
+            $extJotCount->init($this);
+        }
+
         if ($this->extPaginate = $this->getExtender('paginate')) {
             $this->extPaginate->init($this);
         } else {
@@ -111,15 +120,6 @@ class site_contentDocLister extends DocLister
                  */
                 $extPrepare = $this->getExtender('prepare');
 
-                /**
-                 * @var $extJotCount jotcount_DL_Extender
-                 */
-                $extJotCount = $this->getCFGdef('jotcount', 0) ? $this->getExtender('jotcount', true) : null;
-
-                if ($extJotCount) {
-                    $comments = $extJotCount->countComments(array_keys($this->_docs));
-                }
-
                 $this->skippedDocs = 0;
                 foreach ($this->_docs as $item) {
                     $this->renderTPL = $tpl;
@@ -128,10 +128,6 @@ class site_contentDocLister extends DocLister
                     }
 
                     $item['summary'] = $extSummary ? $this->getSummary($item, $extSummary, 'introtext', 'content') : '';
-
-                    if ($extJotCount) {
-                        $item['jotcount'] = APIHelpers::getkey($comments, $item['id'], 0);
-                    }
 
                     $item = array_merge($item,
                         $sysPlh); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey

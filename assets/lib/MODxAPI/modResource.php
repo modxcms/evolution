@@ -435,25 +435,6 @@ class modResource extends MODxAPI
     }
 
     /**
-     * @param $value
-     * @return int|mixed|string
-     */
-    protected function getTime($value)
-    {
-        $value = trim($value);
-        if (!empty($value)) {
-            if (!is_numeric($value)) {
-                $value = (int)strtotime($value);
-            }
-            if (!empty($value)) {
-                $value += $this->modxConfig('server_offset_time');
-            }
-        }
-
-        return $value;
-    }
-
-    /**
      * @param array $data
      * @return $this
      */

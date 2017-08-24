@@ -1641,6 +1641,22 @@ abstract class DocLister
     }
 
     /**
+     * @param string $join
+     * @return $this
+     */
+    public function setFiltersJoin($join = '') {
+        if (!empty($join)) {
+            if (!empty($this->_filters['join'])) {
+                $this->_filters['join'] .= ' ' . $join;
+            } else {
+                $this->_filters['join'] = $join;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Приведение типа поля
      *
      * @param $field string имя поля

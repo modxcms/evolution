@@ -330,18 +330,13 @@ class DLTemplate
                     $out = str_replace(array_keys($item), array_values($item), $out);
                 }
                 if (preg_match("/:([^:=]+)(?:=`(.*?)`(?=:[^:=]+|$))?/is", $out)) {
-                    if($this->modx->config['enable_filter']) {
-                        $out = $this->modx->parseText($out,$data);
+                    if (is_null($this->phx) || !($this->phx instanceof DLphx)) {
+                        $this->phx = $this->createPHx(0, 1000);
                     }
-                    else {
-                        if (is_null($this->phx) || !($this->phx instanceof DLphx)) {
-                            $this->phx = $this->createPHx(0, 1000);
-                        }
-                        $this->phx->placeholders = array();
-                        $this->setPHxPlaceholders($data);
-                        $out = $this->phx->Parse($out);
-                        $out = $this->cleanPHx($out);
-                    }
+                    $this->phx->placeholders = array();
+                    $this->setPHxPlaceholders($data);
+                    $out = $this->phx->Parse($out);
+                    $out = $this->cleanPHx($out);
                 }
             }
         }

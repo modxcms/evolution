@@ -11,15 +11,15 @@ class modManagers extends MODxAPI
      */
     protected $default_field = array(
         'user'      => array(
-            'username' => "",
-            'password' => "",
+            'username' => '',
+            'password' => '',
         ),
         'attribute' => array(
-            'fullname'         => "",
+            'fullname'         => '',
             'role'             => 0,
-            'email'            => "",
-            'phone'            => "",
-            'mobilephone'      => "",
+            'email'            => '',
+            'phone'            => '',
+            'mobilephone'      => '',
             'blocked'          => 0,
             'blockeduntil'     => 0,
             'blockedafter'     => 0,
@@ -27,17 +27,19 @@ class modManagers extends MODxAPI
             'lastlogin'        => 0,
             'thislogin'        => 0,
             'failedlogincount' => 0,
-            'sessionid'        => "",
+            'sessionid'        => '',
             'dob'              => 0,
-            'gender'           => "",
-            'country'          => "",
-            'state'            => "",
-            'city'             => "",
-            'street'           => "",
-            'zip'              => "",
-            'fax'              => "",
-            'photo'            => "",
-            'comment'          => ""
+            'gender'           => 0,
+            'country'          => '',
+            'state'            => '',
+            'city'             => '',
+            'street'           => '',
+            'zip'              => '',
+            'fax'              => '',
+            'photo'            => '',
+            'comment'          => '',
+            'createdon'        => 0,
+            'editedon'         => 0
         ),
         'hidden'    => array(
             'internalKey'
@@ -98,6 +100,18 @@ class modManagers extends MODxAPI
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    public function create($data = array())
+    {
+        parent::create($data);
+        $this->set('createdon', time());
+
+        return $this;
+    }
+
+    /**
      * @param $id
      * @return $this
      */
@@ -111,6 +125,7 @@ class modManagers extends MODxAPI
             if (!$find = $this->findUser($id)) {
                 $this->id = null;
             } else {
+                $this->set('editedon', time());
                 $result = $this->query("
                     SELECT * from {$this->makeTable('user_attributes')} as attribute
                     LEFT JOIN {$this->makeTable('manager_users')} as user ON user.id=attribute.internalKey
@@ -148,6 +163,10 @@ class modManagers extends MODxAPI
                 case 'sessionid':
                     session_regenerate_id(false);
                     $value = session_id();
+                    break;
+                case 'editedon':
+                case 'createdon':
+                    $value = $this->getTime($value);
                     break;
             }
             $this->field[$key] = $value;
