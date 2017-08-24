@@ -7,6 +7,7 @@
 */
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+if (empty($_SESSION['mgrInternalKey'])) return;
 
 $version = 'evolution-cms/evolution';
 $type = isset($type) ? $type: 'tags';
