@@ -158,7 +158,7 @@ class APIhelpers
      * @param $data
      * @return bool|false|string
      */
-    private static function _getEnv($data)
+    public static function getEnv($data)
     {
         switch (true) {
             case (isset($_SERVER[$data])):
@@ -197,25 +197,25 @@ class APIhelpers
     {
         //Порядок условий зависит от приоритетов
         switch (true) {
-            case ($tmp = self::_getEnv('HTTP_COMING_FROM')):
+            case ($tmp = self::getEnv('HTTP_COMING_FROM')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_COMING_FROM')):
+            case ($tmp = self::getEnv('HTTP_X_COMING_FROM')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_VIA')):
+            case ($tmp = self::getEnv('HTTP_VIA')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_FORWARDED')):
+            case ($tmp = self::getEnv('HTTP_FORWARDED')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_FORWARDED_FOR')):
+            case ($tmp = self::getEnv('HTTP_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_FORWARDED')):
+            case ($tmp = self::getEnv('HTTP_X_FORWARDED')):
                 $out = $tmp;
                 break;
-            case ($tmp = self::_getEnv('HTTP_X_FORWARDED_FOR')):
+            case ($tmp = self::getEnv('HTTP_X_FORWARDED_FOR')):
                 $out = $tmp;
                 break;
             case (!empty($_SERVER['REMOTE_ADDR'])):

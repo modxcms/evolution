@@ -7,5 +7,10 @@
 # and the config file
 /manager/includes/config.inc.php
 
+# Windows and Mac
+Thumbs.db
+Desktop.ini
+.DS_Store
+
 # except do not ignore .gitignore
 !.gitignore

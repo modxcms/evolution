@@ -94,6 +94,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
+header('X-XSS-Protection: 0');
 
 // provide english $_lang for error-messages
 $_lang = array();
@@ -117,13 +118,6 @@ if(!function_exists('iconv')) {
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
-if (version_compare(phpversion(), "5.4") < 0) {
-	@set_magic_quotes_runtime(0);
-
-	// include_once the magic_quotes_gpc workaround
-	include_once "quotes_stripper.inc.php";
-}
-
 if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
 if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
 if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
@@ -132,8 +126,6 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
 	$_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
 }
-
-define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 
 // include_once config file
 $config_filename = "./includes/config.inc.php";
@@ -151,7 +143,6 @@ include_once "document.parser.class.inc.php";
 $modx = new DocumentParser;
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
-$etomite = &$modx; // for backward compatibility
 $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 
@@ -867,17 +858,6 @@ switch ($action) {
 		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
 		include_once(includeFileProcessor("actions/resources.static.php",$manager_theme));
 		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
-	break;
-/********************************************************************/
-/* keywords management                                              */
-/********************************************************************/
-	case 81:
-		include_once(includeFileProcessor("includes/header.inc.php",$manager_theme));
-		include_once(includeFileProcessor("actions/manage_metatags.dynamic.php",$manager_theme));
-		include_once(includeFileProcessor("includes/footer.inc.php",$manager_theme));
-	break;
-	case 82:
-		include_once(includeFileProcessor("processors/metatags.processor.php",$manager_theme));
 	break;
 /********************************************************************/
 /* Export to file                                                   */

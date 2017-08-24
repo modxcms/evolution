@@ -118,7 +118,8 @@ abstract class Core
             ));
         }
         $this->lexicon = new Lexicon($modx, array(
-            'langDir' => 'assets/snippets/FormLister/core/lang/'
+            'langDir' => 'assets/snippets/FormLister/core/lang/',
+            'lang'    => $this->getCFGDef('lang', $this->modx->config['manager_language'])
         ));
         $this->formid = $this->getCFGDef('formid');
         switch (strtolower($this->getCFGDef('formMethod', 'post'))) {
@@ -146,14 +147,15 @@ abstract class Core
         $lexicon = $this->getCFGDef('lexicon');
         if ($lexicon) {
             $_lexicon = $this->config->loadArray($lexicon);
-            if (is_array($_lexicon)) {
-                $lang = $this->lexicon->fromArray($_lexicon);
+            if (isset($_lexicon[0])) {
+                $lang = $this->lexicon->loadLang($_lexicon);
             } else {
-                $lang = $this->lexicon->loadLang($lexicon, $this->getCFGDef('lang'),
-                    $this->getCFGDef('langDir'));
+                $lang = $this->lexicon->fromArray($_lexicon);
             }
-            if ($lang) {
+            if (!empty($lang)) {
                 $this->log('Custom lexicon loaded', array('lexicon' => $lang));
+            } else {
+                $this->log('Failed to load lexicon', array('lexicon' => $_lexicon));
             }
         }
         $this->allowedFields = array_merge($this->allowedFields,
@@ -290,7 +292,7 @@ abstract class Core
                         $classname = $_source[0];
                         if (!is_null($model = $this->loadModel($classname)) && isset($_source[1])) {
                             /** @var \autoTable $data */
-                            if ($data = $model->edit($_source[1])->getID()) {
+                            if ($model->edit($_source[1])->getID()) {
                                 $fields = $model->toArray();
                                 if (isset($_source[2])) {
                                     $prefix = $_source[2];
@@ -478,7 +480,7 @@ abstract class Core
     public function validateForm()
     {
         $validator = $this->getCFGDef('validator', '\FormLister\Validator');
-        $validator = $this->loadModel($validator , '', array());
+        $validator = $this->loadModel($validator, '', array());
         $fields = $this->getFormData('fields');
         $rules = $this->getValidationRules();
         $this->rules = array_merge($this->rules, $rules);
@@ -738,10 +740,14 @@ abstract class Core
         foreach ($this->getFormData('errors') as $field => $error) {
             foreach ($error as $type => $message) {
                 $classType = ($type == 'required') ? 'required' : 'error';
-                $plh[$field . '.error'] = $this->parseChunk($this->getCFGDef('errorTpl',
-                    '@CODE:<div class="error">[+message+]</div>'), array('message' => $message));
+                if (!empty($message)) {
+                    $plh[$field . '.error'] = $this->parseChunk($this->getCFGDef('errorTpl',
+                        '@CODE:<div class="error">[+message+]</div>'), array('message' => $message));
+                }
                 $plh[$field . '.' . $classType . 'Class'] = $this->getCFGDef($field . '.' . $classType . 'Class',
                     $this->getCFGDef($classType . 'Class', $classType));
+                $plh[$field . '.class'] = "class=\"{$plh[$field . '.' . $classType . 'Class']}\"";
+                $plh[$field . '.classname'] = "{$plh[$field . '.' . $classType . 'Class']}";
             }
         }
 
@@ -859,7 +865,7 @@ abstract class Core
     public function parseChunk($name, $data, $parseDocumentSource = false)
     {
         $parseDocumentSource = $parseDocumentSource || $this->getCFGDef('parseDocumentSource', 0);
-        $rewriteUrls = $this->getCFGDef('rewriteUrls', 0);
+        $rewriteUrls = $this->getCFGDef('rewriteUrls', 1);
         $DLTemplate = \DLTemplate::getInstance($this->modx)
             ->setTemplatePath($this->getCFGDef('templatePath'))
             ->setTemplateExtension($this->getCFGDef('templateExtension'))
@@ -877,7 +883,7 @@ abstract class Core
         if (!$parseDocumentSource && $rewriteUrls) {
             $out = $this->modx->rewriteUrls($out);
         }
-        if ($this->getCFGDef('removeEmptyPlaceholders', 0)) {
+        if ($this->getCFGDef('removeEmptyPlaceholders', 1)) {
             preg_match_all('~\[(\+|\*|\(|%)([^:\+\[\]]+)([^\[\]]*?)(\1|\)|%)\]~s', $out, $matches);
             if ($matches[0]) {
                 $out = str_replace($matches[0], '', $out);
@@ -897,7 +903,9 @@ abstract class Core
             $className = ucfirst($captcha . 'Wrapper');
             $cfg = $this->config->loadArray($this->getCFGDef('captchaParams', array()));
             $cfg['id'] = $this->getFormId();
-            $captcha = $this->loadModel($className, MODX_BASE_PATH . "assets/snippets/FormLister/lib/captcha/{$captcha}/wrapper.php",array($this->modx, $cfg));
+            $captcha = $this->loadModel($className,
+                MODX_BASE_PATH . "assets/snippets/FormLister/lib/captcha/{$captcha}/wrapper.php",
+                array($this->modx, $cfg));
 
             if (!is_null($captcha) && $captcha instanceof CaptchaInterface) {
                 $captcha->init();
@@ -1023,7 +1031,8 @@ abstract class Core
      * @param $url
      * @param $header
      */
-    public function sendRedirect($url, $header = 'HTTP/1.1 307 Temporary Redirect') {
+    public function sendRedirect($url, $header = 'HTTP/1.1 307 Temporary Redirect')
+    {
         if (!$this->getCFGDef('api', 0)) {
             $header = $header ? $header : 'HTTP/1.1 307 Temporary Redirect';
             $this->modx->sendRedirect($url, 0, 'REDIRECT_HEADER', $header);
@@ -1176,8 +1185,7 @@ abstract class Core
             if (is_array($value)) {
                 $count++;
                 if (10 < $count) {
-                    echo 'GPC Array nested too deep!';
-                    exit;
+                    break;
                 }
                 $this->removeGpc($value, $count);
                 $count--;

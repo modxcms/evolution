@@ -10,5 +10,6 @@ if (!include_once(MODX_MANAGER_PATH . 'includes/extenders/modxmailer.class.inc.p
     return false;
 }else{
     $this->mail = new MODxMailer;
+    $this->mail->init($this);
     return true;
 }

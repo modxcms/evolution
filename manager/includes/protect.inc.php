@@ -5,26 +5,9 @@
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
-// php bug 53632 (php 4 <= 4.4.9 and php 5 <= 5.3.4)
-if (strstr(str_replace('.','',serialize(array_merge($_GET, $_POST, $_COOKIE))), '22250738585072011')) {
-    header('Status: 422 Unprocessable Entity');
-    die();
-}
-
 // Null is evil
 if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)) !== false)
     die();
-
-// Unregister globals
-if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
-    try {
-        $temp = @ini_get( 'register_globals' );
-
-        if ( in_array( $temp, array( true, 1, '1', 'on' ), true ) ) {
-            die( 'Please disable register_globals!' );
-        }
-    } catch ( Exception $e ) { }
-}
 
 global $sanitize_seed;
 $sanitize_seed = 'sanitize_seed_' . base_convert(md5(__FILE__),16,36);

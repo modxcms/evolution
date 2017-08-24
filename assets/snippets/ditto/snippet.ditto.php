@@ -25,7 +25,8 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
 $ditto_version = "2.1.2";
     // Ditto version being executed
 
-$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
+if(!isset($ditto_base)) $ditto_base = 'assets/snippets/ditto/';
+$ditto_base = $modx->config['base_path'].ltrim($ditto_base,'/');
 /*
     Param: ditto_base
     
@@ -38,8 +39,8 @@ $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $mod
     Default:
     [(base_path)]assets/snippets/ditto/
 */
-$dittoID = (!isset($id)) ? "" : $id."_";
-$GLOBALS["dittoID"] = $dittoID;
+$dittoID = (isset($id)) ? $id.'_' : '';
+$GLOBALS['dittoID'] = $dittoID;
 /*
     Param: id
 
@@ -54,9 +55,9 @@ $GLOBALS["dittoID"] = $dittoID;
 
     Default:
     "" - blank
-*/      
-$language = (isset($language))? $language : $modx->config['manager_language'];
-if (!file_exists($ditto_base."lang/".$language.".inc.php")) {
+*/
+if(!isset($language)) $language = $modx->config['manager_language'];
+if (!is_file("{$ditto_base}lang/{$language}.inc.php")) {
     $language ="english";
 }
 /*
@@ -167,7 +168,7 @@ $filters = array("custom"=>array(),"parsed"=>array());
     // $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
     // $filters["custom"][] = array("source","callback_function");
 
-$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>$orderBy);
+$orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>(isset($orderBy) ? $orderBy : ''));
     // Variable: orderBy
     // An array that holds all criteria to sort the result set by.
     // Note that using a custom sort will disable all other sorting.
@@ -503,7 +504,7 @@ $seeThruUnpub = (isset($seeThruUnpub))? $seeThruUnpub : 1 ;
     - <showInMenuOnly>
     - <where>
 */
-$queryLimit = (isset($queryLimit))? $queryLimit : 0;
+$queryLimit = (isset($queryLimit))? $queryLimit : '';
 /*
     Param: queryLimit
 
@@ -665,21 +666,6 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     - <globalFilterDelimiter>
     - <parseFilters>
 */
-$keywords = (isset($keywords))? $keywords : 0;
-/*
-    Param: keywords
-    
-    Purpose:
-    Enable fetching of associated keywords for each document
-    Can be used as [+keywords+] or as a tagData source
-    
-    Options:
-    0 - off
-    1 - on
-    
-    Default:
-    0 - off
-*/
 
 $randomize = (isset($randomize))? $randomize : 0;
 /*
@@ -814,7 +800,7 @@ $ditto->setDisplayFields($ditto->template->fields,$hiddenFields);
 $ditto->parseFields($placeholders,$seeThruUnpub,$dateSource,$randomize);
     // parse the fields into the field array
     
-$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $where, $keywords, $dateSource, $queryLimit, $display, $filter,$paginate, $randomize);
+$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $where, $dateSource, $queryLimit, $display, $filter,$paginate, $randomize);
     // retrieves a list of document IDs that meet the criteria and populates the $resources array with them
 $count = count($documentIDs);
     // count the number of documents to be retrieved
@@ -997,16 +983,17 @@ if ($count > 0) {
         // get the database fields
     $TVs = $ditto->fields["display"]["tv"];
         // get the TVs
-    
-    switch($orderBy['parsed'][0][1]) {
-        case "DESC":
-            $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset; 
-            $start += $offset;
-        break;
-        case "ASC":
-            $start += $offset;
-            $stop += $start;
-        break;
+    if(isset($orderBy['parsed'][0][1])) {
+        switch($orderBy['parsed'][0][1]) {
+            case "DESC":
+                $stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset;
+                $start += $offset;
+                break;
+            case "ASC":
+                $start += $offset;
+                $stop += $start;
+                break;
+        }
     }
 
     if ($ditto->prefetch !== false) {
@@ -1024,7 +1011,7 @@ if ($count > 0) {
         $queryLimit = ($queryLimit == 0) ? "" : $queryLimit;
     }
     
-    $resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $orderBy, $showPublishedOnly, 0, $hidePrivate, $where, $queryLimit, $keywords, $randomize, $dateSource);
+    $resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $orderBy, $showPublishedOnly, 0, $hidePrivate, $where, $queryLimit, $randomize, $dateSource);
         // retrieves documents
     $output = $header;
         // initialize the output variable and send the header

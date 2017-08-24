@@ -11,15 +11,15 @@ class modManagers extends MODxAPI
      */
     protected $default_field = array(
         'user'      => array(
-            'username' => "",
-            'password' => "",
+            'username' => '',
+            'password' => '',
         ),
         'attribute' => array(
-            'fullname'         => "",
+            'fullname'         => '',
             'role'             => 0,
-            'email'            => "",
-            'phone'            => "",
-            'mobilephone'      => "",
+            'email'            => '',
+            'phone'            => '',
+            'mobilephone'      => '',
             'blocked'          => 0,
             'blockeduntil'     => 0,
             'blockedafter'     => 0,
@@ -27,17 +27,19 @@ class modManagers extends MODxAPI
             'lastlogin'        => 0,
             'thislogin'        => 0,
             'failedlogincount' => 0,
-            'sessionid'        => "",
+            'sessionid'        => '',
             'dob'              => 0,
-            'gender'           => "",
-            'country'          => "",
-            'state'            => "",
-            'city'             => "",
-            'street'           => "",
-            'zip'              => "",
-            'fax'              => "",
-            'photo'            => "",
-            'comment'          => ""
+            'gender'           => 0,
+            'country'          => '',
+            'state'            => '',
+            'city'             => '',
+            'street'           => '',
+            'zip'              => '',
+            'fax'              => '',
+            'photo'            => '',
+            'comment'          => '',
+            'createdon'        => 0,
+            'editedon'         => 0
         ),
         'hidden'    => array(
             'internalKey'
@@ -98,6 +100,18 @@ class modManagers extends MODxAPI
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    public function create($data = array())
+    {
+        parent::create($data);
+        $this->set('createdon', time());
+
+        return $this;
+    }
+
+    /**
      * @param $id
      * @return $this
      */
@@ -111,6 +125,7 @@ class modManagers extends MODxAPI
             if (!$find = $this->findUser($id)) {
                 $this->id = null;
             } else {
+                $this->set('editedon', time());
                 $result = $this->query("
                     SELECT * from {$this->makeTable('user_attributes')} as attribute
                     LEFT JOIN {$this->makeTable('manager_users')} as user ON user.id=attribute.internalKey
@@ -148,6 +163,10 @@ class modManagers extends MODxAPI
                 case 'sessionid':
                     session_regenerate_id(false);
                     $value = session_id();
+                    break;
+                case 'editedon':
+                case 'createdon':
+                    $value = $this->getTime($value);
                     break;
             }
             $this->field[$key] = $value;
@@ -582,10 +601,12 @@ class modManagers extends MODxAPI
             $member_groups = $this->makeTable('member_groups');
             $membergroup_names = $this->makeTable('membergroup_names');
 
-            $sql = "SELECT `ugn`.`name` FROM {$member_groups} as `ug`
+            $rs = $this->query("SELECT `ug`.`user_group`, `ugn`.`name` FROM {$member_groups} as `ug`
                 INNER JOIN {$membergroup_names} as `ugn` ON `ugn`.`id`=`ug`.`user_group`
-                WHERE `ug`.`member` = " . $user->getID();
-            $out = $this->modx->db->getColumn('name', $this->query($sql));
+                WHERE `ug`.`member` = " . $user->getID());
+            while ($row = $this->modx->db->getRow($rs)) {
+                $out[$row['user_group']] = $row['name'];
+            }
         }
         unset($user);
 
@@ -609,6 +630,10 @@ class modManagers extends MODxAPI
             if ($uid = $user->getID()) {
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('member_groups')} (`user_group`, `member`) VALUES ('{$gid}', '{$uid}')");
+                }
+                if (!$this->newDoc) {
+                    $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
+                    $this->query("DELETE FROM {$this->makeTable('member_groups')} WHERE `member`={$uid} AND `user_group` NOT IN ({$groupIds})");
                 }
             }
             unset($user);

@@ -11,34 +11,36 @@ class modUsers extends MODxAPI
      */
     protected $default_field = array(
         'user'      => array(
-            'username' => null,
-            'password' => null,
-            'cachepwd' => null
+            'username' => '',
+            'password' => '',
+            'cachepwd' => ''
         ),
         'attribute' => array(
-            'fullname'         => null,
-            'role'             => null,
-            'email'            => null,
-            'phone'            => null,
-            'mobilephone'      => null,
-            'blocked'          => null,
-            'blockeduntil'     => null,
-            'blockedafter'     => null,
-            'logincount'       => null,
-            'lastlogin'        => null,
-            'thislogin'        => null,
-            'failedlogincount' => null,
-            'sessionid'        => null,
-            'dob'              => null,
-            'gender'           => null,
-            'country'          => null,
-            'state'            => null,
-            'city'             => null,
-            'street'           => null,
-            'zip'              => null,
-            'fax'              => null,
-            'photo'            => null,
-            'comment'          => null
+            'fullname'         => '',
+            'role'             => '',
+            'email'            => '',
+            'phone'            => '',
+            'mobilephone'      => '',
+            'blocked'          => 0,
+            'blockeduntil'     => 0,
+            'blockedafter'     => 0,
+            'logincount'       => 0,
+            'lastlogin'        => 0,
+            'thislogin'        => 0,
+            'failedlogincount' => 0,
+            'sessionid'        => '',
+            'dob'              => 0,
+            'gender'           => 0,
+            'country'          => '',
+            'state'            => '',
+            'city'             => '',
+            'street'           => '',
+            'zip'              => '',
+            'fax'              => '',
+            'photo'            => '',
+            'comment'          => '',
+            'createdon'        => 0,
+            'editedon'         => 0
         ),
         'hidden'    => array(
             'internalKey'
@@ -85,6 +87,18 @@ class modUsers extends MODxAPI
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    public function create($data = array())
+    {
+        parent::create($data);
+        $this->set('createdon', time());
+
+        return $this;
+    }
+
+    /**
      * @param $id
      * @return $this
      */
@@ -98,6 +112,7 @@ class modUsers extends MODxAPI
             if (!$find = $this->findUser($id)) {
                 $this->id = null;
             } else {
+                $this->set('editedon', time());
                 $result = $this->query("
                     SELECT * from {$this->makeTable('web_user_attributes')} as attribute
                     LEFT JOIN {$this->makeTable('web_users')} as user ON user.id=attribute.internalKey
@@ -131,6 +146,10 @@ class modUsers extends MODxAPI
                 case 'sessionid':
                     session_regenerate_id(false);
                     $value = session_id();
+                    break;
+                case 'editedon':
+                case 'createdon':
+                    $value = $this->getTime($value);
                     break;
             }
             $this->field[$key] = $value;
@@ -174,6 +193,7 @@ class modUsers extends MODxAPI
 
             return false;
         }
+        $time = 
         $this->set('sessionid', '');
         $fld = $this->toArray();
         foreach ($this->default_field['user'] as $key => $value) {
@@ -554,10 +574,12 @@ class modUsers extends MODxAPI
             $web_groups = $this->makeTable('web_groups');
             $webgroup_names = $this->makeTable('webgroup_names');
 
-            $sql = "SELECT `ugn`.`name` FROM {$web_groups} as `ug`
+            $rs = $this->query("SELECT `ug`.`webgroup`, `ugn`.`name` FROM {$web_groups} as `ug`
                 INNER JOIN {$webgroup_names} as `ugn` ON `ugn`.`id`=`ug`.`webgroup`
-                WHERE `ug`.`webuser` = " . $user->getID();
-            $out = $this->modx->db->getColumn('name', $this->query($sql));
+                WHERE `ug`.`webuser` = " . $user->getID());
+            while ($row = $this->modx->db->getRow($rs)) {
+                $out[$row['webgroup']] = $row['name'];
+            }
         }
         unset($user);
 
@@ -579,6 +601,10 @@ class modUsers extends MODxAPI
             if ($uid = $user->getID()) {
                 foreach ($groupIds as $gid) {
                     $this->query("REPLACE INTO {$this->makeTable('web_groups')} (`webgroup`, `webuser`) VALUES ('{$gid}', '{$uid}')");
+                }
+                if (!$this->newDoc) {
+                    $groupIds = empty($groupIds) ? '0' : implode(',', $groupIds);
+                    $this->query("DELETE FROM {$this->makeTable('web_groups')} WHERE `webuser`={$uid} AND `webgroup` NOT IN ({$groupIds})");
                 }
             }
             unset($user);

@@ -23,7 +23,7 @@
 #treeRoot a.deleted .title { color: #A52A2A; text-decoration: line-through; }
 #treeRoot a.unpublished .title { color: #B68282; font-style: italic; }
 #treeRoot a.hidemenu .title { color: #404040; }
-#treeRoot a.protected .title { color: #aaa; }
+#treeRoot a.protected { position: relative; opacity: .5; background-color: transparent !important; }
 #treeRoot a .lockedResource { cursor: pointer; }
 #treeRoot a .editResource { margin-left: 0.2em }
 #treeRoot .indent { position: relative; z-index: -1; float: left; height: 1.5em; }
@@ -34,8 +34,8 @@
 #treeRoot .toggle { float: left; margin: 1px 0.2em 1px -1.5em; width: 1.3em; height: 1.3em; line-height: 1.4em; text-align: center; vertical-align: top; cursor: pointer; border-radius: 50%; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.5); }
 #treeRoot .toggle .fa { margin: 0; width: auto; }
-#treeRoot .fa:not(.fa-lock), #treeHolder .rootNode .fa:not(.fa-lock) { margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center; color: #565656; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
-#treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
+#treeRoot .fa, #treeHolder .rootNode .fa { margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center; color: #565656; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
+#treeRoot a[data-private="1"] .icon::after { position: relative; float: left; margin: .5em -1em 0 0; content: "\f023"; font-family: FontAwesome; font-size: 0.75em; color: #d9534f; }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { margin-top: 0.1em; text-align: left }
 #treeRoot .fa-link { margin-right: 0; font-size: 0.8em }

@@ -86,10 +86,10 @@ class Config
      * @param array $cfg массив настроек
      * @return int результат сохранения настроек
      */
-    public function setConfig($cfg)
+    public function setConfig($cfg, $overwrite = false)
     {
         if (is_array($cfg)) {
-            $this->_cfg = array_merge($this->_cfg, $cfg);
+            $this->_cfg = $overwrite ? $cfg : array_merge($this->_cfg, $cfg);
             $ret = count($this->_cfg);
         } else {
             $ret = false;
@@ -98,6 +98,11 @@ class Config
         return $ret;
     }
 
+    /**
+     * @param $name
+     * @param null $def
+     * @return mixed
+     */
     public function getCFGDef($name, $def = null)
     {
         return \APIhelpers::getkey($this->_cfg, $name, $def);

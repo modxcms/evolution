@@ -19,8 +19,8 @@
 			if(this.config.session_timeout > 0) {
 				w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
 			}
-			if(modx.config.mail_check_timeperiod > 0) {
-				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
+			if(modx.config.mail_check_timeperiod > 0 && modx.permission.messages) {
+				setTimeout('modx.updateMail(true)', 1000)
 			}
 			d.onclick = this.hideDropDown
 		},
@@ -31,7 +31,14 @@
 				var $mm = $('#mainMenu'), timer;
 				$mm.on('click', 'a', function(e) {
 					if($(this).hasClass('dropdown-toggle')) {
-						$mm.addClass('show');
+						if($mm.hasClass('show') && ($(this).hasClass('selected') || (!modx.isMobile && $(this).parent().hasClass('hover')))) {
+							$(this).removeClass('selected');
+							$mm.removeClass('show')
+						} else {
+							$('.nav > li > a:not(:hover)').removeClass('selected');
+							$(this).addClass('selected');
+							$mm.addClass('show')
+						}
 						e.target.dataset.toggle = '#mainMenu'
 					}
 					if($(this).closest('ul').hasClass('dropdown-menu')) {
@@ -65,7 +72,7 @@
 							} else {
 								$(ul).removeClass('show');
 								timer = setTimeout(function() {
-									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&parent=' + self.id : '';
+									var href = $('a', self).attr('href') && $('a', self).attr('target') === 'main' ? $('a', self).attr('href').split('?')[1] + '&elements=' + self.id : '';
 									$.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href, function(data) {
 										if(data) {
 											$(ul).attr('id', 'parent_' + self.id).html(data);
@@ -264,12 +271,18 @@
 			onbeforeonload: function() {
 			},
 			onload: function() {
+				w.onerror = function() {
+					if(confirm(modx.lang.cm_unknown_error) === true) {
+						d.getElementById('mainloader').classList.remove('show')
+					}
+				};
 				this.tabRow.init();
 				this.stopWork();
 				this.scrollWork();
 				w.main.onclick = modx.hideDropDown;
 				w.main.oncontextmenu = this.oncontextmenu;
-				w.location.hash = w.main.frameElement.contentWindow.location.search;
+				w.history.replaceState(null, null, '#' + w.main.frameElement.contentWindow.location.search)
+				//w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
 			oncontextmenu: function(e) {
 				if(e.ctrlKey) return;
@@ -584,7 +597,7 @@
 				d.getElementById('main').style.left = modx.pxToRem(a) + 'rem'
 			},
 			setDefaultWidth: function() {
-				modx.resizer.setWidth(modx.config.tree_width)
+				modx.resizer.setWidth(modx.remToPx(modx.config.tree_width))
 			}
 		},
 		tree: {
@@ -617,10 +630,19 @@
 					this.parentNode.removeAttribute('draggable');
 					return;
 				} else {
-					this.parentNode.draggable = true
+					var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
+					var draggable = (roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true);
+					if(draggable) {
+						this.parentNode.draggable = true;
+						modx.tree.itemToChange = this.parentNode.id;
+						this.parentNode.ondragstart = modx.tree.ondragstart
+					} else {
+						this.parentNode.draggable = false;
+						this.parentNode.ondragstart = function() {
+							return false
+						}
+					}
 				}
-				modx.tree.itemToChange = this.parentNode.id;
-				this.parentNode.ondragstart = modx.tree.ondragstart
 			},
 			ondragstart: function(e) {
 				e.dataTransfer.effectAllowed = "all";
@@ -732,6 +754,12 @@
 				e.preventDefault();
 			},
 			ondragupdate: function(a, id, parent, menuindex) {
+				var roles = a.dataset.roles + (a.parentNode.parentNode.id !== 'treeRoot' ? a.parentNode.parentNode.previousSibling.dataset.roles : '');
+				if(!(roles && modx.user.role !== 1 ? (roles.split(",").map(Number).indexOf(modx.user.role) > -1) : true)) {
+					alert(modx.lang.error_no_privileges);
+					modx.tree.restoreTree();
+					return;
+				}
 				modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 					a: 'movedocument',
 					id: id,
@@ -756,8 +784,7 @@
 			},
 			toggleTheme: function(e) {
 				var myCodeMirrors = w.main.myCodeMirrors, key;
-				if(e.currentTarget.classList.contains('rotate180')) {
-					e.currentTarget.classList.remove('rotate180');
+				if(d.body.classList.contains('dark')) {
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
 					d.cookie = 'MODX_themeColor=';
@@ -770,7 +797,6 @@
 						}
 					}
 				} else {
-					e.currentTarget.classList.add('rotate180');
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
 					d.cookie = 'MODX_themeColor=dark';
@@ -1132,7 +1158,7 @@
 				}
 			},
 			restoreTree: function() {
-				console.log('modx.tree.restoreTree()');
+				//console.log('modx.tree.restoreTree()');
 				d.getElementById('treeloader').classList.add('visible');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
@@ -1259,7 +1285,7 @@
 					}
 					loadPositions();
 					for(var i = 0; i < tabIds.length; i++) {
-						initQuicksearch(tabIds[i]+'_search', tabIds[i]);
+						initQuicksearch(tabIds[i] + '_search', tabIds[i]);
 					}
 					var at = d.querySelectorAll('#tree .accordion-toggle');
 					for(var i = 0; i < at.length; i++) {
@@ -1453,6 +1479,9 @@
 		},
 		pxToRem: function(a) {
 			return a / parseInt(w.getComputedStyle(d.documentElement).fontSize)
+		},
+		remToPx: function(a) {
+			return a * parseInt(w.getComputedStyle(d.documentElement).fontSize)
 		}
 	});
 	w.mainMenu = {};
@@ -1467,7 +1496,7 @@
 		setTimeout('modx.tree.restoreTree()', 50)
 	};
 	w.mainMenu.startrefresh = function(a) {
-		console.log('mainMenu.startrefresh(' + a + ')');
+		//console.log('mainMenu.startrefresh(' + a + ')');
 		if(a === 1) {
 			modx.tree.restoreTree()
 		}
@@ -1483,6 +1512,12 @@
 	};
 	w.mainMenu.startmsgcount = function(a, b, c) {
 		modx.updateMail(c)
+	};
+	w.mainMenu.hideTreeFrame = function() {
+		modx.resizer.setWidth(0)
+	};
+	w.mainMenu.defaultTreeFrame = function() {
+		modx.resizer.setDefaultWidth()
 	};
 	w.tree = {};
 	w.tree.ca = 'open';
@@ -1502,7 +1537,7 @@
 		modx.tree.reloadElementsInTree()
 	};
 	w.tree.resizeTree = function() {
-		console.log('tree.resizeTree() off')
+		//console.log('tree.resizeTree() off')
 	};
 	w.onbeforeunload = function() {
 		var a = w.main.frameElement.contentWindow;

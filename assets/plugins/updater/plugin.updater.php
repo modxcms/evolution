@@ -7,6 +7,7 @@
 */
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+if (empty($_SESSION['mgrInternalKey'])) return;
 
 $version = 'evolution-cms/evolution';
 $type = isset($type) ? $type: 'tags';
@@ -32,6 +33,7 @@ if($e->name == 'OnManagerWelcomeHome'){
     if (!extension_loaded('curl')){
         $errorsMessage .= '-'.$_lang['error_curl'].'<br>';
         $errors += 1;
+        $curlNotReady = true;
     }
     if (!extension_loaded('zip')){
         $errorsMessage .= '-'.$_lang['error_zip'].'<br>';
@@ -46,6 +48,23 @@ if($e->name == 'OnManagerWelcomeHome'){
         $errors += 1;
     }
 
+    // Avoid "Fatal error: Call to undefined function curl_init()"
+    if(isset($curlNotReady)) {
+        $output = '<div class="card-body">
+                <small style="color:red;font-size:10px">'.$errorsMessage.'</small></div>';
+
+        $widgets['updater'] = array(
+            'menuindex' =>'1',
+            'id' => 'updater',
+            'cols' => 'col-sm-12',
+            'icon' => 'fa-exclamation-triangle',
+            'title' => $_lang['system_update'],
+            'body' => $output
+        );
+        $e->output(serialize($widgets));
+        return;
+    }
+    
     $output = '';
     if(!file_exists(MODX_BASE_PATH . 'assets/cache/updater/check_'.date("d").'.json')){
         $ch = curl_init();
@@ -73,7 +92,7 @@ if($e->name == 'OnManagerWelcomeHome'){
 
     $_SESSION['updatelink'] = md5(time());
     $_SESSION['updateversion'] = $git['version'];
-    if ($git['version'] != $currentVersion['version'] && $git['version'] != '') {
+    if (version_compare($git['version'], $currentVersion['version'],'>') && $git['version'] != '') {
         // get manager role
         $role = $_SESSION['mgrRole'];
         if(($role!=1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {

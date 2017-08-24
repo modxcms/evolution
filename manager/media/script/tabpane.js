@@ -120,7 +120,7 @@ WebFXTabPane.prototype.getSelectedIndex = function () {
 WebFXTabPane.prototype.addTabPage = function ( oElement, callBackFnc) { // modifed by Raymond
 	if ( !hasSupport() ) return;
 	
-	if ( oElement.tabPage == this )	// already added
+	if ( typeof oElement.tabPage === this )	// already added
 		return oElement.tabPage;
 
 	var n = this.pages.length;

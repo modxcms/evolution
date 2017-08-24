@@ -83,7 +83,7 @@ class Wayfinder {
         
         //Loop through each document to render output
         foreach ($subDocs as $docId => $docInfo) {
-            $docInfo['level'] = $level;
+            $docInfo['level'] = $docInfo['wf.level'] = $level;
             $docInfo['first'] = $counter==1 ? 1 : 0;
             
             //Determine if last item in group

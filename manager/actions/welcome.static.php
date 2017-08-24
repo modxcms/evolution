@@ -336,24 +336,28 @@ $widgets['recentinfo'] = array(
 	'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
 	'hide'=>'0'	
 );
-$widgets['news'] = array(
-	'menuindex' => '40',
-	'id' => 'news',
-	'cols' => 'col-sm-6',
-	'icon' => 'fa-rss',
-	'title' => '[%modx_news_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>',
-	'hide'=>'0'	
-);
-$widgets['security'] = array(
-	'menuindex' => '50',
-	'id' => 'security',
-	'cols' => 'col-sm-6',
-	'icon' => 'fa-exclamation-triangle',
-	'title' => '[%security_notices_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>',
-	'hide'=>'0'	
-);
+if ($modx->config['rss_url_news']) {
+    $widgets['news'] = array(
+        'menuindex' => '40',
+        'id' => 'news',
+        'cols' => 'col-sm-6',
+        'icon' => 'fa-rss',
+        'title' => '[%modx_news_title%]',
+        'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>',
+        'hide'=>'0'
+    );
+}
+if ($modx->config['rss_url_security']) {
+    $widgets['security'] = array(
+        'menuindex' => '50',
+        'id' => 'security',
+        'cols' => 'col-sm-6',
+        'icon' => 'fa-exclamation-triangle',
+        'title' => '[%security_notices_title%]',
+        'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>',
+        'hide'=>'0'
+    );
+}
 
 // invoke OnManagerWelcomeHome event
 $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
