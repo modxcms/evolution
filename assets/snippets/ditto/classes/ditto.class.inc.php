@@ -352,7 +352,8 @@ class ditto {
 			$i = 0;
 			while($i<10) {
 				$_ = $output;
-				$output = $modx->parseText($output,$placeholders);
+				if(strpos($output,'[+')!==false) $output = $modx->parseText($output,$placeholders);
+				else                             $output = $modx->parseDocumentSource($output);
 				if($_===$output) break;
 				$i++;
 			}
