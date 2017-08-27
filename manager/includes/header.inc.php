@@ -106,15 +106,18 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           b = b || {};
         }
         let o = {
-          el: null, handleClass: b.handleClass || 'ghost', complete: function() {
+          el: null,
+          handleClass: b.handleClass || 'ghost',
+          complete: function(c) {
             if ('function' === typeof b.complete) {
-              b.complete();
-            }
-          }, change: function() {
-            if ('function' === typeof b.change) {
-              b.change();
+              b.complete(c);
             }
           },
+          change: function(c) {
+            if ('function' === typeof b.change) {
+              b.change(c);
+            }
+          }
         };
 
         function onmousedown(e)
@@ -152,7 +155,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           o.el.style.transform = 'translateY(' + y + 'px)';
         }
 
-        function onmouseup(e)
+        function onmouseup()
         {
           o.el.style.webkitTransform = '';
           o.el.style.transform = '';
@@ -160,7 +163,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           document.removeEventListener('mousemove', onmousemove);
           document.removeEventListener('mouseup', onmouseup);
           document.onselectstart = null;
-          o.complete();
+          o.complete(o.el);
         }
 
         for (let i = 0; i < a.length; i++) {
@@ -181,18 +184,24 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           handle: {
             start: function(c) {
               'function' === typeof b.handle.start ? b.handle.start.call(c) : '';
-            }, end: function(c) {
+            },
+            end: function(c) {
               'function' === typeof b.handle.end ? b.handle.end.call(c) : '';
-            },
-          }, container: {
-            className: b.container.className || 'drop', classOver: b.container.classOver || 'over', over: function(c) {
-              'function' === typeof b.container.over ? b.container.over.call(c) : '';
-            }, leave: function(c) {
-              'function' === typeof b.container.leave ? b.container.leave.call(c) : '';
-            }, drop: function(c, i) {
-              'function' === typeof b.container.drop ? b.container.drop.call(c, i) : '';
-            },
+            }
           },
+          container: {
+            className: b.container.className || 'drop',
+            classOver: b.container.classOver || 'over',
+            over: function(c) {
+              'function' === typeof b.container.over ? b.container.over.call(c) : '';
+            },
+            leave: function(c) {
+              'function' === typeof b.container.leave ? b.container.leave.call(c) : '';
+            },
+            drop: function(c, i) {
+              'function' === typeof b.container.drop ? b.container.drop.call(c, i) : '';
+            }
+          }
         };
 
         o.container.els = document.querySelectorAll('.' + o.container.className);
@@ -224,7 +233,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           }
         }
 
-        function onmouseup(e)
+        function onmouseup()
         {
           document.removeEventListener('mousemove', onmousemove);
           document.removeEventListener('mouseup', onmouseup);
@@ -267,7 +276,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
         }
         let h = {
-          containerClass: b && b.containerClass || 'tab-body',
+          containerClass: b && b.containerClass || 'tab-body'
         };
 
         for (let i = 0; i < a.length; i++) {
@@ -281,7 +290,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 a[i].nextElementSibling.classList.add('in');
                 a[i].classList.remove('collapsed');
               }
-            };
+            }
           }
         }
       };
@@ -391,8 +400,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         }
       }
 
-      let documentDirty = false;
-      let timerForUnload;
+      var documentDirty = false;
+      var timerForUnload;
 
       function checkDirt(evt)
       {
