@@ -298,7 +298,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       // check connection to server
       evo.checkConnectionToServer = function() {
         let xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP');
-        xhr.open('HEAD', '//' + window.location.hostname + window.location.pathname.replace('index.php', 'includes/version.inc.php') + '?time=' + new Date().getTime(), false);
+        xhr.open('HEAD', '<?= MODX_MANAGER_URL ?>includes/version.inc.php?time=' + new Date().getTime(), false);
         try {
           xhr.send();
           return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
