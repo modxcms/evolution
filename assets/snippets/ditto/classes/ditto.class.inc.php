@@ -305,7 +305,7 @@ class ditto {
 		if (in_array("date",$this->fields["display"]["custom"])) {
 			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];
 			if (is_array($timestamp)) {
-			    $timestamp[1] = is_int($timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
+			    $timestamp[1] = preg_match('@^[1-9][0-9]*$@',$timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
                 $timestamp = $timestamp[1] + $timestamp[0];
             }
 			$placeholders['date'] = strftime($dateFormat,$timestamp);
@@ -902,7 +902,7 @@ class ditto {
 		$TVIDs = array();
 		while ($resource = $modx->db->getRow($rs)) {
 			if ($dateSource !== false) {
-				if(!is_int($resource[$dateSource])) $resource[$dateSource] = strtotime($resource[$dateSource]);
+				if(!preg_match('@^[1-9][0-9]*$@',$resource[$dateSource])) $resource[$dateSource] = strtotime($resource[$dateSource]);
 				if($modx->config['server_offset_time'] != 0)
 					$resource[$dateSource] += $modx->config['server_offset_time'];
 			}
