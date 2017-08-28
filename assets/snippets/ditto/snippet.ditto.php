@@ -6,7 +6,7 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
  * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
  *
  * @category    snippet
- * @version 	2.1.2
+ * @version     2.1.2
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Content
@@ -218,9 +218,9 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
-	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
-	$ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
-	// create a new Ditto instance in the specified format and language with the requested debug level
+    $dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
+    $ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
+    // create a new Ditto instance in the specified format and language with the requested debug level
 } else {
     $modx->logEvent(1,3,$_lang['invalid_class'],'Ditto '.$ditto_version);
     return $_lang['invalid_class'];
@@ -700,12 +700,12 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-	'default' => '@CODE' . $_lang['default_template'],
-	'base' => (isset($tpl)) ? $tpl : NULL,
-	'alt' => (isset($tplAlt)) ? $tplAlt : NULL,
-	'first' => (isset($tplFirst)) ? $tplFirst : NULL,
-	'last' => (isset($tplLast)) ? $tplLast : NULL,
-	'current' => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
+    'default' => '@CODE' . $_lang['default_template'],
+    'base' => (isset($tpl)) ? $tpl : NULL,
+    'alt' => (isset($tplAlt)) ? $tplAlt : NULL,
+    'first' => (isset($tplFirst)) ? $tplFirst : NULL,
+    'last' => (isset($tplLast)) ? $tplLast : NULL,
+    'current' => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
@@ -1081,8 +1081,8 @@ if ($debug == 1) {
 }
 // outerTpl by Dmi3yy & Jako
 if (isset($outerTpl) && $resource) {
-	$outerTpl = $ditto->template->fetch($outerTpl);
-	$output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
+    $outerTpl = $ditto->template->fetch($outerTpl);
+    $output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
 }
 
 return ($save != 3) ? $output : '';
