@@ -2044,7 +2044,7 @@ class DocumentParser {
         for ($i= 0; $i < $passes; $i++) {
             // get source length if this is the final pass
             if ($i == ($passes -1))
-                $st= strlen($source);
+                $st= md5($source);
             if ($this->dumpSnippets == 1) {
                 $this->snippetsCode .= "<fieldset><legend><b style='color: #821517;'>PARSE PASS " . ($i +1) . "</b></legend><p>The following snippets (if any) were parsed during this pass.</p>";
             }
@@ -2067,9 +2067,8 @@ class DocumentParser {
                 $this->snippetsCode .= "</fieldset><br />";
             }
             if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
-                // check if source length was changed
-                $et= strlen($source);
-                if ($st != $et)
+                // check if source content was changed
+                if ($st != md5($source))
                     $passes++; // if content change then increase passes because
             } // we have not yet reached maxParserPasses
         }
