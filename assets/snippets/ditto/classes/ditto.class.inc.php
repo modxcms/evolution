@@ -716,35 +716,29 @@ class ditto {
 	    $from[] = 'LEFT JOIN [+prefix+]site_tmplvars AS stv ON stv.id=stc.tmplvarid';
 	    $where = sprintf("stv.name='%s' AND stc.contentid IN (%s)", $modx->db->escape($tvname), join($docIDs,','));
 		$rs= $modx->db->select($fields, $from, $where, 'stc.contentid ASC');
+
 		$docs = array();
 		while ($row = $modx->db->getRow($rs)) {
-			extract($row,EXTR_PREFIX_ALL,'p_');
-			$key = '#'.$p_contentid;
-			$docs[$key][$tvname] = getTVDisplayFormat($p_name,$p_value,$p_display,$p_display_params,$p_type,$p_contentid);
-			$docs[$key]['tv'.$tvname] = $docs[$key][$tvname];
+			$docs["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
+			$docs["#".$row['contentid']]["tv".$row['name']] = $docs["#".$row['contentid']][$row['name']];
 		}
 		if (count($docs) != count($docIDs)) {
-			$field = 'id,name,type,display,display_params,default_text';
-			$where = sprintf("name='%s'",$modx->db->escape($tvname));
-			$rs = $modx->db->select($field, '[+prefix+]site_tmplvars', $where, '', 1);
+			$rs = $modx->db->select("name,type,display,display_params,default_text", '[+prefix+]site_tmplvars', "name='{$tvname}'", '', 1);
 			$row = $modx->db->getRow($rs);
-			extract($row,EXTR_PREFIX_ALL,'p_');
-			if (strtoupper($p_default_text) == '@INHERIT') {
+			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
-					$defaultOutput = getTVDisplayFormat($p_name, $p_default_text, $p_display, $p_display_params, $p_type, $id);
-					$k = '#'.$id;
-					if (!isset($docs[$k])) {
-						$docs[$k][$tvname]      = $defaultOutput;
-						$docs[$k]['tv'.$tvname] = $docs[$k][$tvname];
+					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+					if (!isset($resourceArray["#".$id])) {
+						$docs["#$id"][$tvname] = $defaultOutput;
+						$docs["#$id"]["tv".$tvname] = $docs["#$id"][$tvname];
 					}
 				}
 			} else {
-				$defaultOutput = getTVDisplayFormat($p_name, $p_default_text, $p_display, $p_display_params, $p_type, $p_id);
+				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 				foreach ($docIDs as $id) {
-					$k = '#'.$id;
-					if (!isset($docs[$k])) {
-						$docs[$k][$tvname]      = $defaultOutput;
-						$docs[$k]['tv'.$tvname] = $docs[$k][$tvname];
+					if (!isset($docs["#".$id])) {
+						$docs["#$id"][$tvname] = $defaultOutput;
+						$docs["#$id"]["tv".$tvname] = $docs["#$id"][$tvname];
 					}
 				}
 			}
