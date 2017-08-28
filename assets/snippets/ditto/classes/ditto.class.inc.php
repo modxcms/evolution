@@ -498,7 +498,7 @@ class ditto {
 				}
 			}
 			
-			$js = "window.open('".MODX_MANAGER_URL."index.php?a=112&id=".$id."&doc=".$resource["id"]."&var=".$ds."', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');";
+			$js = sprintf("window.open('%sindex.php?a=112&id=%s&doc=%s&var=%s', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');", MODX_MANAGER_URL,$id,$resource['id'],$ds);
 			$url = $this->buildURL("qe_open=true",$modx->documentIdentifier,$dittoID);
 			
 			unset($custom[3]);
@@ -542,10 +542,11 @@ class ditto {
 		// user contributed
 		$sortfields = array_filter(array_map('trim', explode(',', $fields)));
 
-		$code = "";
-		for ($c = 0; $c < count($sortfields); $c++)
-			$code .= "\$retval = strnatcmp(\$a['$sortfields[$c]'], \$b['$sortfields[$c]']); if(\$retval) return \$retval; ";
-		$code .= "return \$retval;";
+		$code = '';
+		foreach($sortfields as $field) {
+			$code .= sprintf('$retval = strnatcmp($a["%s"], $b["%s"]); if($retval) return $retval; ',$field,$field);
+		}
+		$code .= 'return $retval;';
 
 		$params = ($order == 'ASC') ? '$a,$b' : '$b,$a';
 		uasort($data, create_function($params, $code));
@@ -578,11 +579,11 @@ class ditto {
 			}
 		}
 		
-		$array_multisort = 'return array_multisort(';
+		$_ ='';
 		foreach ($orderBy['parsed'] as $sort) {
-			$array_multisort .= '$sort_arr["'.$sort[0].'"], SORT_'.$sort[1].', ';
+			$_ .= sprintf('$sort_arr["%s"], SORT_%s, ', $sort[0], $sort[1]);
 		}
-		$array_multisort .= '$resource);';
+		$array_multisort = sprintf('return array_multisort( %s $resource);', $_);
 		eval($array_multisort);
 		return $resource;
 	}
@@ -789,37 +790,40 @@ class ditto {
 	    include_once $baspath . '/tmplvars.format.inc.php';
 	    include_once $baspath . '/tmplvars.commands.inc.php';
 
-		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
-		$tb2 = $modx->getFullTableName("site_tmplvars");
-
-		$rs= $modx->db->select(
-			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
-			"{$tb1} AS stc LEFT JOIN {$tb2} AS stv ON stv.id=stc.tmplvarid",
-			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
-			"stc.contentid ASC"
-			);
+	    $fields = 'stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value';
+	    $from[] = '[+prefix+]site_tmplvar_contentvalues AS stc';
+	    $from[] = 'LEFT JOIN [+prefix+]site_tmplvars AS stv ON stv.id=stc.tmplvarid';
+	    $where = sprintf("stv.name='%s' AND stc.contentid IN (%s)", $modx->db->escape($tvname), join($docIDs,','));
+		$rs= $modx->db->select($fields, $from, $where, 'stc.contentid ASC');
 		$resourceArray = array();
 		while ($row = $modx->db->getRow($rs)) {
-			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
-			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
+			extract($row,EXTR_PREFIX_ALL,'p_');
+			$key = '#'.$p_contentid;
+			$resourceArray[$key][$tvname] = getTVDisplayFormat($p_name,$p_value,$p_display,$p_display_params,$p_type,$p_contentid);
+			$resourceArray[$key]['tv'.$tvname] = $resourceArray[$key][$tvname];
 		}
 		if (count($resourceArray) != count($docIDs)) {
-			$rs = $modx->db->select("id,name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
+			$field = 'id,name,type,display,display_params,default_text';
+			$where = sprintf("name='%s'",$modx->db->escape($tvname));
+			$rs = $modx->db->select($field, '[+prefix+]site_tmplvars', $where, '', 1);
 			$row = $modx->db->getRow($rs);
-			if (strtoupper($row['default_text']) == '@INHERIT') {
+			extract($row,EXTR_PREFIX_ALL,'p_');
+			if (strtoupper($p_default_text) == '@INHERIT') {
 				foreach ($docIDs as $id) {
-					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
-					if (!isset($resourceArray["#".$id])) {
-						$resourceArray["#$id"][$tvname] = $defaultOutput;
-						$resourceArray["#$id"]["tv".$tvname] = $resourceArray["#$id"][$tvname];
+					$defaultOutput = getTVDisplayFormat($p_name, $p_default_text, $p_display, $p_display_params, $p_type, $id);
+					$k = '#'.$id;
+					if (!isset($resourceArray[$k])) {
+						$resourceArray[$k][$tvname]      = $defaultOutput;
+						$resourceArray[$k]['tv'.$tvname] = $resourceArray[$k][$tvname];
 					}
 				}
 			} else {
-				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['id']);
+				$defaultOutput = getTVDisplayFormat($p_name, $p_default_text, $p_display, $p_display_params, $p_type, $p_id);
 				foreach ($docIDs as $id) {
-					if (!isset($resourceArray["#".$id])) {
-						$resourceArray["#$id"][$tvname] = $defaultOutput;
-						$resourceArray["#$id"]["tv".$tvname] = $resourceArray["#$id"][$tvname];
+					$k = '#'.$id;
+					if (!isset($resourceArray[$k])) {
+						$resourceArray[$k][$tvname]      = $defaultOutput;
+						$resourceArray[$k]['tv'.$tvname] = $resourceArray[$k][$tvname];
 					}
 				}
 			}
