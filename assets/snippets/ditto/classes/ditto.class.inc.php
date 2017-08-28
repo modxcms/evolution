@@ -12,11 +12,11 @@ class ditto {
 
 	function __construct($dittoID,$format,$language,$debug) {
 		$this->format = $format;
-		$GLOBALS['ditto_lang'] = $language;
-		$this->prefetch = false;
-		$this->advSort = false;
-		$this->sqlOrderBy = array();
-		$this->customReset = array();
+		$GLOBALS['ditto_lang']  = $language;
+		$this->prefetch         = false;
+		$this->advSort          = false;
+		$this->sqlOrderBy       = array();
+		$this->customReset      = array();
 		$this->constantFields[] = array('db','tv');
 		$this->constantFields['db'] = explode(',', 'id,type,contentType,pagetitle,longtitle,description,alias,link_attributes,published,pub_date,unpub_date,parent,isfolder,introtext,content,richtext,template,menuindex,searchable,cacheable,createdby,createdon,editedby,editedon,deleted,deletedon,deletedby,publishedon,publishedby,menutitle,donthit,privateweb,privatemgr,content_dispo,hidemenu');
 		$this->constantFields['tv'] = $this->getTVList();
@@ -26,7 +26,7 @@ class ditto {
 		$this->customPlaceholdersMap = array();
 		$this->template = new template();
 		
-		if (!is_null($debug)) {$this->debug = new debug($debug);}
+		if (!is_null($debug)) $this->debug = new debug($debug);
 	}
 
 	// ---------------------------------------------------
@@ -36,7 +36,7 @@ class ditto {
 		
 	function getTVList() {
 		global $modx;
-			// TODO: make it so that it only pulls those that apply to the current template
+		// TODO: make it so that it only pulls those that apply to the current template
 		$tvs = $modx->db->select('name', '[+prefix+]site_tmplvars');
 		$dbfields = $modx->db->getColumn('name', $tvs);
 		return $dbfields;
@@ -56,10 +56,8 @@ class ditto {
 			$name = substr($name, 2);
 		}
 		if ($location == '*') {
-			if(!in_array($name,$this->fields['backend'][$type]))
-				$this->fields['backend'][$type][] = $name;
-			if(!in_array($name,$this->fields['display'][$type]))
-				$this->fields['display'][$type][] = $name;
+			if(!in_array($name,$this->fields['backend'][$type])) $this->fields['backend'][$type][] = $name;
+			if(!in_array($name,$this->fields['display'][$type])) $this->fields['display'][$type][] = $name;
 		} elseif(!in_array($name,$this->fields[$location][$type])) {
 			$this->fields[$location][$type][] = $name;
 		}
@@ -74,11 +72,8 @@ class ditto {
 	function addFields($fields,$location='*',$delimiter=',',$callback=false) {
 		if (empty($fields)) return false;
 		if  (!is_array($fields)) {
-			if (strpos($fields,$delimiter) !== false) {
-				$fields = explode($delimiter,$fields);
-			} else {
-				$fields = array($fields);
-			}
+			if (strpos($fields,$delimiter)!==false) $fields = explode($delimiter,$fields);
+			else                                    $fields = array($fields);
 		}
 		foreach ($fields as $field) {
 			if (is_array($field)) {
@@ -90,9 +85,7 @@ class ditto {
 			}
 			
 			$this->addField($name,$location,$type);
-			if ($callback !== false) {
-				call_user_func_array($callback, array($name));
-			}
+			if ($callback !== false) call_user_func_array($callback, array($name));
 		}
 		return true;
 	}
@@ -104,9 +97,7 @@ class ditto {
 	
 	function removeField($name,$location,$type) {
 		$key = array_search ($name, $this->fields[$location][$type]);
-		if ($key !== false) {
-			unset($this->fields[$location][$type][$key]);
-		}
+		if ($key !== false) unset($this->fields[$location][$type][$key]);
 	}
 	
 	// ---------------------------------------------------
@@ -116,9 +107,7 @@ class ditto {
 	
 	function setDisplayFields($fields,$hiddenFields) {
 		$this->fields['display'] = $fields;
-		if ($hiddenFields) {
-			$this->addFields($hiddenFields,'display');
-		}
+		if ($hiddenFields) $this->addFields($hiddenFields,'display');
 	}
 
 	// ---------------------------------------------------
@@ -128,18 +117,14 @@ class ditto {
 	
 	function getDocVarType($field) {
 		global $ditto_constantFields;
+		
 		$tvFields = $ditto_constantFields['tv'];
 		$dbFields = $ditto_constantFields['db'];
-		if(in_array($field, $tvFields)){
-			return 'tv';
-		}elseif(in_array(substr($field,2), $tvFields)) {
-			return 'tv:prefix';
-				// TODO: Remove TV Prefix support
-		} elseif(in_array($field, $dbFields)){
-			return 'db';
-		} else {
-			return 'unknown';
-		}
+		
+		if(in_array($field, $tvFields))               return 'tv';
+		elseif(in_array(substr($field,2), $tvFields)) return 'tv:prefix'; // TODO: Remove TV Prefix support
+		elseif(in_array($field, $dbFields))           return 'db';
+		else                                          return 'unknown';
 	}
 
 	// ---------------------------------------------------
