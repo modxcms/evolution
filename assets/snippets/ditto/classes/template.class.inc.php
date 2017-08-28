@@ -15,18 +15,17 @@ class template{
 	// Set the class language and fields variables
 	// ---------------------------------------------------
 	function __construct() {
-		$this->language = $GLOBALS["ditto_lang"];
+		$this->language = $GLOBALS['ditto_lang'];
 		$this->fields = array (
-			"db" => array (),
-			"tv" => array (),
-			"custom" => array (),
-			"item" => array (),
-			"qe" => array (),
-			"phx" => array (),
-			"rss" => array (),
-			"json" => array (),
-			"xml" => array (),
-			"unknown" => array()
+			'db' => array (),
+			'tv' => array (),
+			'custom' => array (),
+			'item' => array (),
+			'phx' => array (),
+			'rss' => array (),
+			'json' => array (),
+			'xml' => array (),
+			'unknown' => array()
 		);
 	}
 
@@ -36,42 +35,29 @@ class template{
 	// Check to make sure they have fields, and sort the fields
 	// ---------------------------------------------------
 	function process($template) {
-		if (!isset($template["base"])) {
-			$template["base"] = $template["default"];
-		} else {
-			unset($template["default"]);
-		}
+		if (!isset($template['base'])) $template['base'] = $template['default'];
+		else                           unset($template['default']);
+		
 		foreach ($template as $name=>$tpl) {
-			if(!empty($tpl) && $tpl != "") {
-				$templates[$name] = $this->fetch($tpl);
-			}
+			if(!empty($tpl) && $tpl != '') $templates[$name] = $this->fetch($tpl);
 		}
 		$fieldList = array();
 		foreach ($templates as $tplName=>$tpl) {
 			$check = $this->findTemplateVars($tpl);
-			if (is_array($check)) {
-				$fieldList = array_merge($check, $fieldList);
-			} else {
+			if (is_array($check)) $fieldList = array_merge($check, $fieldList);
+			else {
 				switch ($tplName) {
-					case "base":
-						$displayName = "tpl";
-					break;
-					
-					case "default":
-						$displayName = "tpl";
-					break;
-					
-					default:
-						$displayName = "tpl".$tplName;
-					break;
+					case 'base'   :
+					case 'default': $displayName = 'tpl';break;
+					default       : $displayName = 'tpl'.$tplName;
 				}
-				$templates[$tplName] = str_replace("[+tpl+]",$displayName,$this->language["bad_tpl"]);
+				$templates[$tplName] = str_replace('[+tpl+]',$displayName,$this->language['bad_tpl']);
 			}
 		}
 
 		$fieldList = array_unique($fieldList);
 		$fields = $this->sortFields($fieldList);
-		$checkAgain = array ("qe", "json", "xml");
+		$checkAgain = array ('json', 'xml');
 		foreach ($checkAgain as $type) {
 			$fields = array_merge_recursive($fields, $this->sortFields($fields[$type]));
 		}
@@ -87,7 +73,7 @@ class template{
 		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
 		$TVs = array();
 		foreach($matches[1] as $tv) {
-			$match = explode(":", $tv);
+			$match = explode(':', $tv);
 			$TVs[strtolower($match[0])] = $match[0];
 		}
 		if (count($TVs) >= 1) {
@@ -103,48 +89,35 @@ class template{
 	// ---------------------------------------------------
 	function sortFields ($fieldList) {
 		global $ditto_constantFields;
-		$dbFields = $ditto_constantFields["db"];
-		$tvFields = $ditto_constantFields["tv"];
+		$dbFields = $ditto_constantFields['db'];
+		$tvFields = $ditto_constantFields['tv'];
 		$fields = array (
-			"db" => array (),
-			"tv" => array (),
-			"custom" => array (),
-			"item" => array (),
-			"qe" => array (),
-			"phx" => array (),
-			"rss" => array (),
-			"json" => array (),
-			"xml" => array (),
-			"unknown" => array()
+			'db' => array (),
+			'tv' => array (),
+			'custom' => array (),
+			'item' => array (),
+			'phx' => array (),
+			'rss' => array (),
+			'json' => array (),
+			'xml' => array (),
+			'unknown' => array()
 		);
 		
-		$custom = array("author","date","url","title","ditto_iteration");
+		$custom = array('author','date','url','title','ditto_iteration');
 
 		foreach ($fieldList as $field) {
-			if (substr($field, 0, 4) == "rss_") {
-				$fields['rss'][] = substr($field,4);
-			}else if (substr($field, 0, 4) == "xml_") {
-				$fields['xml'][] = substr($field,4);
-			}else if (substr($field, 0, 5) == "json_") {
-				$fields['json'][] = substr($field,5);
-			}else if (substr($field, 0, 5) == "item[") {
-				$fields['item'][] = substr($field, 4);
-			}else if (substr($field, 0, 1) == "#") {
-				$fields['qe'][] = substr($field,1);
-			}else if (substr($field, 0, 4) == "phx:") {
-				$fields['phx'][] = $field;
-			}else if (in_array($field, $dbFields)) {
-				$fields['db'][] = $field;
-			}else if(in_array($field, $tvFields)){
-				$fields['tv'][] = $field;
-			}else if(substr($field, 0, 2) == "tv" && in_array(substr($field,2), $tvFields)) {
-				$fields['tv'][] = substr($field,2);
+			if (substr($field, 0, 4)    == 'rss_')  $fields['rss'][]  = substr($field,4);
+			elseif(substr($field, 0, 4) == 'xml_')  $fields['xml'][]  = substr($field,4);
+			elseif(substr($field, 0, 5) == 'json_') $fields['json'][] = substr($field,5);
+			elseif(substr($field, 0, 5) == 'item[') $fields['item'][] = substr($field,4);
+			elseif(substr($field, 0, 4) == 'phx:')  $fields['phx'][]  = $field;
+			elseif(in_array($field, $dbFields))     $fields['db'][]   = $field;
+			elseif(in_array($field, $tvFields))     $fields['tv'][]   = $field;
+			elseif(substr($field, 0, 2) == 'tv' && in_array(substr($field,2), $tvFields))
+				                                    $fields['tv'][]   = substr($field,2);
 					// TODO: Remove TV Prefix support in Ditto
-			}else if (in_array($field, $custom)) {
-				$fields['custom'][] = $field;
-			}else {
-				$fields['unknown'][] = $field; 
-			}
+			elseif(in_array($field, $custom))       $fields['custom'][]  = $field;
+			else                                    $fields['unknown'][] = $field; 
 		}
 		return $fields;
 	}
@@ -171,19 +144,13 @@ class template{
 		global $modx;
 
 		// determine current template
-		$currentTPL = "base";
-		if ($x % 2 && !empty($templates["alt"])) {
-			$currentTPL = "alt";
-		}
-		if ($id == $modx->documentObject['id'] && !empty($templates["current"])){
-			$currentTPL = "current";
-		}
-		if ($x == 0 && !empty($templates["first"])) {
-			$currentTPL = "first";
-		}
-		if ($x == ($stop -1) && !empty($templates["last"])) {
-			$currentTPL = "last";
-		} 
+		if ($x == ($stop -1) && !empty($templates['last'])) $currentTPL = 'last';
+		elseif ($x == 0 && !empty($templates['first']))     $currentTPL = 'first';
+		elseif ($id == $modx->documentIdentifier && !empty($templates['current']))
+			                                                $currentTPL = 'current';
+		elseif ($x % 2 && !empty($templates['alt']))        $currentTPL = 'alt';
+		else                                                $currentTPL = 'base';
+		
 		$this->current = $currentTPL;
 		return $templates[$currentTPL];
 	}
@@ -201,7 +168,7 @@ class template{
 			$template = $modx->getChunk(substr($tpl, 7));
 		} elseif(substr($tpl, 0, 5) == '@FILE') {
 			$path = trim(substr($tpl, 6));
-			if(strpos($path, $modx->config['base_url'].'manager/includes/config.inc.php')===false)
+			if(strpos($path, 'manager/includes/config.inc.php')===false)
 				$template = file_get_contents($path);
 		} elseif(substr($tpl, 0, 5) == '@CODE') {
 			$template = substr($tpl, 6);
@@ -230,7 +197,7 @@ class template{
 	// ---------------------------------------------------
 	function get_file_contents($filename) {
 		if (!function_exists('file_get_contents')) {
-			$fhandle = fopen($filename, "r");
+			$fhandle = fopen($filename, 'r');
 			$fcontents = fread($fhandle, filesize($filename));
 			fclose($fhandle);
 		} else	{
@@ -239,5 +206,3 @@ class template{
 		return $fcontents;
 	}
 }
-
-?>
