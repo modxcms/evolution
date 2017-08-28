@@ -358,7 +358,7 @@ class ditto {
 		$this->addField('parent','display','db');
 		$checkOptions = array('pub_date','unpub_date','editedon','deletedon','publishedon');
 		if (in_array($dateSource,$checkOptions)) {
-			$this->addField($dateSource,'display');
+			$this->addField('createdon','display');
 		}
 		if (in_array('date',$this->fields['display']['custom'])) {
 			$this->addField($dateSource,'display');
