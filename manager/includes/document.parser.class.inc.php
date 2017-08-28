@@ -3570,7 +3570,8 @@ class DocumentParser {
                 list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
-            if(!isset($ph[$key])) continue;
+//          if(!isset($ph[$key])) continue;  
+            if(!array_key_exists($key,$ph)) continue; //NULL values must be saved in placeholders, if we got them from database string
             
             $value = $ph[$key];
             
