@@ -44,8 +44,6 @@ class modResource extends MODxAPI
         'publishedby'     => 0,
         'menutitle'       => '',
         'donthit'         => 0,
-        'haskeywords'     => 0,
-        'hasmetatags'     => 0,
         'privateweb'      => 0,
         'privatemgr'      => 0,
         'content_dispo'   => 0,
