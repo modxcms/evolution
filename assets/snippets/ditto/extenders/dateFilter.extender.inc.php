@@ -101,7 +101,7 @@ if ($source == 'get') {
 	$year = (!empty($_GET[$dittoID.'year']) && $_GET[$dittoID.'year'] != 'false') ? intval($_GET[$dittoID.'year']) : 0;
 	$month = (!empty($_GET[$dittoID.'month']) && $_GET[$dittoID.'month'] != 'false') ? intval($_GET[$dittoID.'month']) : 0;
 	$day = (!empty($_GET[$dittoID.'day']) && $_GET[$dittoID.'day'] != 'false') ? intval($_GET[$dittoID.'day']) : 0;
-} else if ($source == 'params'){
+} elseif ($source == 'params'){
 	$month = isset($month) ? intval($month) : 0;
 	/*
 		Param: month
@@ -226,5 +226,3 @@ if ($year || ($year && $month) || ($year && $month && $day)) {
 	$dateFilterOject = new dateFilter($month,$year,$day,$dateSource);
 	$filters["custom"]["dateFilter"] = array($dateSource,array($dateFilterOject,"execute"));
 }
-
-?>
