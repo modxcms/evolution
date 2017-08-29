@@ -26,7 +26,7 @@ $ditto_version = '2.1.2';
     // Ditto version being executed
 
 if(isset($ditto_base)) $ditto_base = $modx->config['base_path'].ltrim($ditto_base,'/');
-else                   $ditto_base = __DIR__ . '/';
+else                   $ditto_base = str_replace('\\','/',__DIR__) . '/';
 /*
     Param: ditto_base
     
