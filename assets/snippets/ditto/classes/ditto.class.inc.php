@@ -770,7 +770,7 @@ class ditto {
 	// Get documents and append TVs + Prefetch Data, and sort
 	// ---------------------------------------------------
 	
-	function getDocuments($ids= array (), $fields, $TVs, $orderBy, $published= 1, $deleted= 0, $public= 1, $where= '', $limit='',$randomize=0,$dateSource=false) {
+	function getDocuments($ids= array (), $fields, $TVs, $orderBy, $published= 1, $deleted= 0, $pubOnly= 1, $where= '', $limit='',$randomize=0,$dateSource=false) {
 		global $modx;
 		
 		if (count($ids) == 0) return false;
@@ -790,16 +790,18 @@ class ditto {
 			$left_join_tvc = '';
 		}
 		
-		if ($public) {
+		if ($pubOnly) {
 			if($modx->isFrontend())         $access = 'sc.privateweb=0';
 			elseif($_SESSION['mgrRole']!=1) $access = 'sc.privatemgr=0';
 			else                            $access = '';
-			// get document groups for current user
-			if ($docgrp= $modx->getUserDocGroups()) {
-				if($access) $access .= ' OR ';
-				$docgrp= join(',', $docgrp);
-				$access .= "dg.document_group IN ({$docgrp})";
-			}
+			
+	    	if($access) {
+	    		$docgrp=$modx->getUserDocGroups();
+	    		if($docgrp) {
+	    			$access .= sprintf(' OR dg.document_group IN (%s)', join(',', $docgrp));
+	    			$access = "({$access})";
+	    		}
+	    	}
 		}
 		
 		$published = ($published) ? 'AND sc.published=1' : '';
@@ -809,10 +811,10 @@ class ditto {
 		$from[] = 'LEFT JOIN [+prefix+]document_groups dg on dg.document = sc.id';
 		$sqlWhere = array();
 		$sqlWhere[] = sprintf('sc.id IN (%s)', join(',', $ids));
-		$sqlWhere[] =$published;
-		$sqlWhere[] ="AND sc.deleted='{$deleted}'";
+		$sqlWhere[] = $published;
+		$sqlWhere[] = "AND sc.deleted='{$deleted}'";
 		$sqlWhere[] = $where;
-		if($public && $access) $sqlWhere[] = "AND ({$access})";
+		if($pubOnly && $access) $sqlWhere[] = "AND {$access}";
 		$sqlWhere[] = 'GROUP BY sc.id';
 		$rs= $modx->db->select("DISTINCT {$fields}",$from,$sqlWhere,$sort,$limit);
 		if(!$modx->db->getRecordCount($rs)) return false;
@@ -863,14 +865,26 @@ class ditto {
 	    if (count($ids) == 0) {
 	        return false;
 	    } else {
-	        if ($docgrp= $modx->getUserDocGroups())
-	            $docgrp= join(',', $docgrp);
+	    	$ids = join(',',$ids);
 			$from[] = '[+prefix+]site_content sc';
 			$from[] = 'LEFT JOIN [+prefix+]document_groups dg on dg.document=sc.id';
 			$published = $published ? 'AND sc.published=1' : '';
-	        $access = $modx->isFrontend() ? 'sc.privateweb=0' : sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
-	        if($docgrp) $access.= " OR dg.document_group IN ($docgrp)";
-			$where = sprintf('(sc.id IN (%s) %s AND sc.deleted=0) AND (%s) GROUP BY sc.id', join(',',$ids), $published, $access);
+	        if($modx->isFrontend())         $access = 'sc.privateweb=0';
+	        elseif($_SESSION['mgrRole']!=1) $access = 'sc.privatemgr=0';
+	        else                            $access = '';
+	        
+	    	if($access) {
+	    		$docgrp=$modx->getUserDocGroups();
+	    		if($docgrp) {
+	    			$access .= sprintf(' OR dg.document_group IN (%s)', join(',', $docgrp));
+	    			$access = "({$access})";
+	    		}
+	        	$access = "AND {$access}";
+	    	}
+	        
+			if($published) $where = sprintf('(sc.id IN (%s) AND sc.published=1 AND sc.deleted=0) %s GROUP BY sc.id', $ids, $access);
+			else           $where = sprintf('(sc.id IN (%s) AND sc.deleted=0)                    %s GROUP BY sc.id', $ids, $access);
+			
 	        $rs= $modx->db->select('DISTINCT sc.id', $from, $where);
 	        $docs = $modx->db->makeArray($rs);
 	        return $docs;
