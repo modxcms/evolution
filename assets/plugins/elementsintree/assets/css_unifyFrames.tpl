@@ -1,16 +1,17 @@
-        /* Unify Frames */
-        body,
-        div.treeframebody {
-            background-color: #f2f2f2 !important;
-        }
+/* Unify frames */
 
-        div.treeframebody {
-            background-color: transparent !important;
-            -webkit-box-shadow: none !important;
-            box-shadow: none !important;
-        }
+body,
+div.treeframebody {
+  background-color: #f2f2f2 !important;
+}
 
-        #treeMenu {
-            background-color: transparent !important;
-            border-bottom-color: transparent !important;
-        }
+div.treeframebody {
+  background-color: transparent !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+#treeMenu {
+  background-color: transparent !important;
+  border-bottom-color: transparent !important;
+}

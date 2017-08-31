@@ -1,198 +1,356 @@
 <style>
-#tabDoc {
+  #tabDoc {
+      overflow: hidden;
+  }
+
+  #tabDoc::before {
+      position: absolute;
+      content: "";
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%, rgba(255,255,255,1) 100%);
+      background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
+  }
+
+  #treePane .tab-page ul {
+      margin: 0;
+      margin-bottom: 5px;
+      padding: 0;
+  }
+
+  #treePane .tab-page ul li {
+      list-style: none;
+      padding-left: 8px;
+  }
+
+  #treePane .tab-page ul li li {
+      list-style: none;
+      padding-left: 5px;
+      line-height: 1.6;
+  }
+
+  #treePane .tab-page ul li a {
+      text-decoration: none;
+  }
+
+  #treePane .tab-page ul li a:hover {
+      text-decoration: underline;
+  }
+
+  #treePane .tab {
+      padding-left: 7px;
+      padding-right: 7px;
+  }
+
+  #treePane .tab > span > .fa {
+      margin-right: 2px;
+      margin-left: 2px;
+  }
+
+  #treePane .tab.selected {
+      padding-bottom: 6px;
+  }
+
+  #treePane .tab-row .tab span {
+      font-size: 14px;
+  }
+
+  /* Clearfix to avoid .tab-row height() = 0 */
+  #treePane .tab-row:after {
+      content: ".";
+      clear: both;
+      display: block;
+      visibility: hidden;
+      height: 0px;
+  }
+
+  #treePane .ext-ico {
+      text-decoration:none!important;
+      color:#97D19C!important;
+  }
+
+  #treePane ul > li > strong > a.catname
+  {
+      color: #444;
+  }
+
+  #treePane .fade {
+      opacity: 0;
+      -webkit-transition: opacity .15s linear;
+      -o-transition: opacity .15s linear;
+      transition: opacity .15s linear;
+  }
+
+  #treePane .fade.in {
+      opacity: 1;
+  }
+
+  #treePane .collapse {
+      display: none;
+  }
+
+  #treePane .collapse.in {
+      display: block;
+  }
+
+  #treePane tr.collapse.in {
+      display: table-row;
+  }
+
+  #treePane tbody.collapse.in {
+      display: table-row-group;
+  }
+
+  #treePane .collapsing {
+      position: relative;
+      height: 0;
+      overflow: hidden;
+      -webkit-transition-timing-function: ease;
+               -o-transition-timing-function: ease;
+                      transition-timing-function: ease;
+      -webkit-transition-duration: .35s;
+               -o-transition-duration: .35s;
+                      transition-duration: .35s;
+      -webkit-transition-property: height;
+      -o-transition-property: height;
+      transition-property: height;
+  }
+
+  #treePane.no-transition .collapsing {
+      -webkit-transition: none;
+      -o-transition: none;
+      transition: none;
+  }
+
+  #treePane .panel-title a{
+      display: block;
+      padding: 4px 0 4px 17px;
+      color: #657587;
+      font-weight: bold;
+  }
+  #treePane .panel-title a:hover {
+      text-decoration: none;
+      color:#3697CD;
+  }
+
+  #treePane .panel-title > a::before {
+      content: "\f107"; /* fa-angle-down */
+      font-family: "FontAwesome";
+      margin-left:-17px;
+  }
+  #treePane .panel-title > a.collapsed::before {
+      content: "\f105"; /* fa-angle-right */
+      padding:0 2px;
+  }
+  #treePane .panel-title > a[aria-expanded="true"] {
+      color: #657587;
+  }
+
+  #treePane li.eltree {
+      margin-left: 5px;
+      line-height: 1.4em;
+  }
+
+  #treePane li.eltree:before {
+      font-family: FontAwesome;
+      padding:0 5px 0 0;
+      margin-right:2px;
+      color: #657587;
+  }
+
+  .filterElements-form--eit {
+      width: 200px;
+      width: calc(100% - 70px);
+  }
+
+  .actionButtons--eit {
+      position: absolute;
+      top: 25px;
+      right: 10px;
+  }
+
+  .actionButtons--eit li {
+      margin-right: 5px;
+      padding-left: 0 !important;
+  }
+
+  .actionButtons--eit a {
+      padding: 5px 8px;
+      font-size: 14px;
+  }
+
+  #tabTemp li.eltree:before {content: "\f1ea";}
+  #tabCH   li.eltree:before {content: "\f009";}
+  #tabSN   li.eltree:before {content: "\f121";}
+  #tabTV   li.eltree:before {content: "\f022";}
+  #tabPL   li.eltree:before {content: "\f1e6";}
+  #tabMD   li.eltree:before {content: "\f085";}
+
+  .tab-page { margin-bottom:0; }
+  
+  /* ElementsInTree main styles */
+
+  .ElementsInTree #tree .treeframebody {
+    background-color: #fafafa !important;
+    border-right: 1px solid rgba(0, 0, 0, .1)
+  }
+
+  .ElementsInTree #tree #treeHolder {
+    height: 100%;
+    max-height: 100%;
     overflow: hidden;
-}
+    padding: 0
+  }
 
-#tabDoc::before {
-    position: absolute;
-    content: "";
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%, rgba(255,255,255,1) 100%);
-    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
-}
+  .ElementsInTree #tree .actionButtons--eit {
+    top: 3.1rem;
+    right: 1rem
+  }
 
-#treePane .tab-page ul {
-    margin: 0;
-    margin-bottom: 5px;
+  .ElementsInTree #tree .actionButtons--eit li {
+    float: left;
+    margin: 0 0 0 5px !important;
+  }
+
+  .ElementsInTree #tree .actionButtons--eit li a {
+    padding: 0.5rem;
+  }
+
+  .ElementsInTree #tree .tab-page {
+    padding: 0.8rem 0 0.8rem 0.8rem !important;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-width: 1px 0;
+    box-shadow: none;
+    min-height: 55px;
+  }
+
+  .ElementsInTree #tree .tab-page .panel-group .panel,
+  .ElementsInTree #tree #tabDoc.tab-page>div {
+    max-height: calc(100vh - 10rem) !important;
+    overflow: auto;
+  }
+
+  .ElementsInTree #tree .tab-page .panel-group {
+    overflow: visible !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    padding-top: 5px;
+  }
+
+  .ElementsInTree #tree .tab-row {
     padding: 0;
-}
+    margin-bottom: -1px;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-top: 1px solid #ddd;
+  }
 
-#treePane .tab-page ul li {
-    list-style: none;
-    padding-left: 8px;
-}
+  .ElementsInTree #tree .tab-row .tab {
+    height: 2rem;
+    line-height: 2rem;
+    background-color: transparent;
+    border-color: #ddd;
+    border-width: 0 1px 0 0;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+  }
 
-#treePane .tab-page ul li li {
-    list-style: none;
-    padding-left: 5px;
-    line-height: 1.6;
-}
+  .ElementsInTree #tree .tab-row .tab:last-child {
+    border-width: 0;
+  }
 
-#treePane .tab-page ul li a {
-    text-decoration: none;
-}
+  .ElementsInTree #tree .tab-row .tab.selected {
+    padding-bottom: 0;
+    background-color: #fff;
+  }
 
-#treePane .tab-page ul li a:hover {
-    text-decoration: underline;
-}
+  .ElementsInTree #tree .form-control {
+    padding: 0.25rem;
+    font-size: 0.8rem;
+  }
 
-#treePane .tab {
-    padding-left: 7px;
-    padding-right: 7px;
-}
+  .ElementsInTree #tree .eltree {
+    line-height: 1.5
+  }
 
-#treePane .tab > span > .fa {
-    margin-right: 2px;
-    margin-left: 2px;
-}
+  .ElementsInTree #tree .eltree img {
+    width: 0.8em;
+    height: 0.8em
+  }
 
-#treePane .tab.selected {
-    padding-bottom: 6px;
-}
-
-#treePane .tab-row .tab span {
-    font-size: 14px;
-}
-
-/* Clearfix to avoid .tab-row height() = 0 */
-#treePane .tab-row:after {
-    content: ".";
-    clear: both;
-    display: block;
-    visibility: hidden;
-    height: 0px;
-}
-
-#treePane .ext-ico {
-    text-decoration:none!important;
-    color:#97D19C!important;
-}
-
-#treePane ul > li > strong > a.catname
-{
-    color: #444;
-}
-
-#treePane .fade {
-    opacity: 0;
-    -webkit-transition: opacity .15s linear;
-    -o-transition: opacity .15s linear;
-    transition: opacity .15s linear;
-}
-
-#treePane .fade.in {
-    opacity: 1;
-}
-
-#treePane .collapse {
-    display: none;
-}
-
-#treePane .collapse.in {
-    display: block;
-}
-
-#treePane tr.collapse.in {
-    display: table-row;
-}
-
-#treePane tbody.collapse.in {
-    display: table-row-group;
-}
-
-#treePane .collapsing {
-    position: relative;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition-timing-function: ease;
-             -o-transition-timing-function: ease;
-                    transition-timing-function: ease;
-    -webkit-transition-duration: .35s;
-             -o-transition-duration: .35s;
-                    transition-duration: .35s;
-    -webkit-transition-property: height;
-    -o-transition-property: height;
-    transition-property: height;
-}
-
-#treePane.no-transition .collapsing {
-    -webkit-transition: none;
-    -o-transition: none;
-    transition: none;
-}
-
-#treePane .panel-title a{
-    display: block;
-    padding: 4px 0 4px 17px;
-    color: #657587;
-    font-weight: bold;
-}
-#treePane .panel-title a:hover {
-    text-decoration: none;
-    color:#3697CD;
-}
-
-#treePane .panel-title > a::before {
-    content: "\f107"; /* fa-angle-down */
-    font-family: "FontAwesome";
-    margin-left:-17px;
-}
-#treePane .panel-title > a.collapsed::before {
-    content: "\f105"; /* fa-angle-right */
-    padding:0 2px;
-}
-#treePane .panel-title > a[aria-expanded="true"] {
-    color: #657587;
-}
-
-#treePane li.eltree {
-    margin-left: 5px;
-    line-height: 1.4em;
-}
-
-#treePane li.eltree:before {
-    font-family: FontAwesome;
-    padding:0 5px 0 0;
-    margin-right:2px;
-    color: #657587;
-}
-
-.filterElements-form--eit {
-    width: 200px;
-    width: calc(100% - 70px);
-}
-
-.actionButtons--eit {
-    position: absolute;
-    top: 25px;
-    right: 10px;
-}
-
-.actionButtons--eit li {
-    margin-right: 5px;
+  .ElementsInTree #tree #tabDoc {
+    padding-top: 7px !important;
     padding-left: 0 !important;
-}
+    padding-left: 0 !important;
+  }
 
-.actionButtons--eit a {
-    padding: 5px 8px;
-    font-size: 14px;
-}
+  .ElementsInTree #tree #tabDoc::before {
+    display: none
+  }
 
-#tabTemp li.eltree:before {content: "\f1ea";}
-#tabCH   li.eltree:before {content: "\f009";}
-#tabSN   li.eltree:before {content: "\f121";}
-#tabTV   li.eltree:before {content: "\f022";}
-#tabPL   li.eltree:before {content: "\f1e6";}
-#tabMD   li.eltree:before {content: "\f085";}
+  .ElementsInTree #treeMenu.is-intab {
+    margin-left: 0.1rem;
+  }
 
-.tab-page { margin-bottom:0; }
+  .ElementsInTree.treeframebody {
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
 
-[+unifyFrames_css+]
-[+treeButtonsInTab_css+]
+  .ElementsInTree .filterElements-form--eit {
+    width: 200px !important;
+    width: calc(100% - 85px) !important;
+  }
+
+  .dark.ElementsInTree #tree .treeframebody {
+    background-color: #1d2023 !important;
+    color: #828282
+  }
+
+  .dark.ElementsInTree #tree .tab-row {
+    border-top-color: #343739;
+  }
+
+  .dark.ElementsInTree #tree .tab-row .tab {
+    color: #7b7b7b;
+    border-color: #343739;
+  }
+
+  .dark.ElementsInTree #tree .tab-row .tab.selected {
+    background-color: #24272A;
+    border-color: #343739;
+    color: #bfbfbf;
+  }
+
+  .dark.ElementsInTree #tree .tab-page {
+    background-color: #24272A;
+    border-color: rgba(255, 255, 255, .1)
+  }
+
+  .dark.ElementsInTree #tree .form-control {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.09);
+    color: #c7c7c7;
+  }
+
+  .dark.ElementsInTree #tree a {
+    color: #b7b7b7
+  }
+
+  .dark.ElementsInTree #tree .disabledPlugin a {
+    color: #b68282
+  }
+
+
+  [+unifyFrames_css+]
+  [+treeButtonsInTab_css+]
 
 </style>
 
