@@ -1190,106 +1190,94 @@ class DocumentParser {
 
     function mergeConditionalTagsContent($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>')
     {
-        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ',$iftag,$content);
-        if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
-        if(strpos($content,$iftag)===false)          return $content;
-        if(strpos($content,'<!--@ELSEIF:')!==false)  $content = str_replace('<!--@ELSEIF:', $elseiftag,  $content);
-        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', $elsetag,   $content);
-        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->',$endiftag,$content);
-        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);
-
-        $bt = md5($content);
+        $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
+        if(strpos($content,$iftag)===false) return $content;
         
-        $_ = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
-        $s = array('<@IF:'    ,     '<@ELSEIF:',     '<@ELSE>',     '<@ENDIF>');
-        $r = array("{$_}<@IF:", "{$_}<@ELSEIF:", "{$_}<@ELSE>", "{$_}<@ENDIF>");
-        $content = str_replace($s, $r, $content);
-        $splits = explode($_, $content);
-        unset($_);
-        foreach($splits as $i=>$split) {
+        $sp = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
+        $content = str_replace(array('<?php','?>'),array("{$sp}b","{$sp}e"),$content);
+        
+        $pieces = explode('<@IF:', $content);
+        foreach($pieces as $i=>$split) {
             if($i===0) {
                 $content = $split;
-                $excute  = false;
-                $depth = 0;
                 continue;
             }
-            
-            if    (substr($split,0,5)==='<@IF:')     $scope = '@IF';
-            elseif(substr($split,0,9)==='<@ELSEIF:') $scope = '@ELSEIF';
-            elseif(substr($split,0,6)==='<@ELSE')    $scope = '@ELSE';
-            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '@ENDIF';
-            else exit('Unknown error '.__LINE__);
-            
-            if($scope==='@IF')    $depth++;
-            if(1<$depth) {
-                if($scope==='@ENDIF') $depth--;
-                if($excute) $content .= $split;
+            list($cmd, $text) = explode('>', $split, 2);
+            $cmd = str_replace("'","\'",$cmd);
+            $content .= "<?php if(\$this->_parseCTagCMD('" . $cmd . "')): ?>";
+            $content .= $text;
+        }            
+        $pieces = explode('<@ELSEIF:', $content);
+        foreach($pieces as $i=>$split) {
+            if($i===0) {
+                $content = $split;
                 continue;
             }
-            if($scope==='@ENDIF') $depth--;
-            
-            if($scope==='@IF' || $scope==='@ELSEIF') {
-                if($excute) continue;
-                $_ = md5('@:>@');
-                if(strpos($split,':>')!==false) $split = str_replace(':>', ':'.$_, $split);
-                list($cmd, $text) = explode('>', $split, 2);
-                $cmd = rtrim($cmd,'-');
-                if(strpos($cmd,$_)!==false)  $cmd  = str_replace($_, '>', $cmd);
-                if(strpos($text,$_)!==false) $text = str_replace($_, '>', $text);
-                $cmd = substr($cmd,strpos($cmd,':')+1);
-                $cmd = trim($cmd);
-                $reverse = substr($cmd,0,1)==='!' ? true : false;
-                if($reverse) $cmd = ltrim($cmd,'!');
-                
-                if(strpos($cmd,'[!')!==false) $cmd = str_replace(array('[!','!]'),array('[[',']]'),$cmd);
-                $safe=0;
-                $bt=md5('');
-                $_ = $this->config['enable_filter'];
-                $this->config['enable_filter'] = 1;
-                while($bt!==md5($cmd)) {
-                    $bt = md5($cmd);
-                    if(strpos($cmd,'[*')!==false) $cmd= $this->mergeDocumentContent($cmd);
-                    if(strpos($cmd,'[(')!==false) $cmd= $this->mergeSettingsContent($cmd);
-                    if(strpos($cmd,'{{')!==false) $cmd= $this->mergeChunkContent($cmd);
-                    if(strpos($cmd,'[[')!==false) $cmd= $this->evalSnippets($cmd);
-                    if(strpos($cmd,'[+')!==false
-                     &&strpos($cmd,'[[')===false) $cmd= $this->mergePlaceholderContent($cmd);
-                    $safe++;
-                    if(20<$safe) break;
-                }
-                $this->config['enable_filter'] = $_;
-                $cmd = ltrim($cmd);
-                $cmd = rtrim($cmd,'-');
-                $cmd = trim($cmd);
-                $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
-                
-                if($cmd!=='' && !preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
-                    $cmd = (int) eval("return {$cmd};");
-                if($cmd < 0) $cmd = 0;
-                
-                if( (!$reverse && !empty($cmd)) || ($reverse && empty($cmd)) ) {
-                    $content .= $text;
-                    $excute = true;
-                }
-                else $excute = false;
-            }
-            elseif($scope==='@ELSE') {
-                if($excute) continue;
-                list(, $text) = explode('>', $split, 2);
-                $content .= $text;
-                $excute = true;
-            }
-            elseif($scope==='@ENDIF') {
-                list(, $text) = explode('>', $split, 2);
-                $content .= $text;
-                $excute = false;
-            }
-        }
+            list($cmd, $text) = explode('>', $split, 2);
+            $cmd = str_replace("'","\'",$cmd);
+            $content .= "<?php elseif(\$this->_parseCTagCMD('" . $cmd . "')): ?>";
+            $content .= $text;
+        }            
         
-        if(strpos($content,$iftag) && $bt!==md5($content))
-            $content = $this->mergeConditionalTagsContent($content, $iftag, $elseiftag, $elsetag, $endiftag);
+        $content = str_replace(array('<@ELSE>','<@ENDIF>'), array('<?php else:?>','<?php endif;?>'), $content);
+        ob_start();
+        $content = eval('?>'.$content);
+        $content = ob_get_clean();
+        $content = str_replace(array("{$sp}b","{$sp}e"),array('<?php','?>'),$content);
         
         return $content;
+    }
+    
+    private function _prepareCTag($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>') {
+        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ',$iftag,$content); // for jp
+        if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
+        if(strpos($content,$iftag)===false)          return $content;
+        if(strpos($content,'<!--@ELSEIF:')!==false)  $content = str_replace('<!--@ELSEIF:', $elseiftag,  $content); // for jp
+        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', $elsetag,   $content);  // for jp
+        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->',$endiftag,$content);    // for jp
+        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);
+        $tags = array($iftag, $elseiftag, $elsetag, $endiftag);
+        $content = str_ireplace($tags,$tags,$content); // Change to capital letters
+        return $content;
+    }
+    
+    private function _parseCTagCMD($cmd) {
+        $cmd = trim($cmd);
+        $reverse = substr($cmd,0,1)==='!' ? true : false;
+        if($reverse) $cmd = ltrim($cmd,'!');
+        if(strpos($cmd,'[!')!==false) $cmd = str_replace(array('[!','!]'),array('[[',']]'),$cmd);
+        $safe=0;
+        $bt='';
+        while($safe < 20) {
+            $bt = md5($cmd);
+            if(strpos($cmd,'[*')!==false) $cmd= $this->mergeDocumentContent($cmd);
+            if(strpos($cmd,'[(')!==false) $cmd= $this->mergeSettingsContent($cmd);
+            if(strpos($cmd,'{{')!==false) $cmd= $this->mergeChunkContent($cmd);
+            if(strpos($cmd,'[[')!==false) $cmd= $this->evalSnippets($cmd);
+            if(strpos($cmd,'[+')!==false
+             &&strpos($cmd,'[[')===false) $cmd= $this->mergePlaceholderContent($cmd);
+            if($bt===md5($cmd)) break;
+            $safe++;
+        }
+        $cmd = ltrim($cmd);
+        $cmd = rtrim($cmd,'-');
+        $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
+        
+        if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
+            $cmd = (int) eval("return {$cmd};");
+        else {
+            $_ = explode(',', '[*,[(,{{,[[,[!,[+');
+            foreach($_ as $left) {
+                if(strpos($cmd,$left)!==false) {
+                    $cmd = 0;
+                    break;
+                }
+            }
+            $cmd = (int) $cmd;
+        }
+        if($cmd < 0) $cmd = 0;
+        if($reverse) $cmd = !$cmd;
+        return $cmd;
     }
     
     /**
