@@ -1,16 +1,16 @@
 @import "../../common/bootstrap/css/bootstrap.min.css?v=4.0.0-alpha.5";
 @import "../../common/font-awesome/css/font-awesome.min.css?v=4.7.0";
-@import 'fonts.css?v=1.3.3';
-@import "forms.css?v=1.3.3";
-@import "mainmenu.css?v=1.3.3";
+@import 'fonts.css?v=1.3.5';
+@import "forms.css?v=1.3.5";
+@import "mainmenu.css?v=1.3.5";
 @import "tree.css";
 @import "tabpane.css";
 @import "contextmenu.css";
 #frameset { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
 #mainMenu, #tree, #main { position: absolute; }
 #mainMenu { top: 0; left: 0; width: 100%; height: 2.2rem; z-index: 100; }
-#tree { left: 0; top: 2.2rem; bottom: 0; width: 25rem; max-width: 100%; overflow: hidden; z-index: 1; }
-#main { left: 25rem; top: 2.2rem; right: 0; bottom: 0; z-index: 2; }
+#tree { left: 0; top: 2.2rem; bottom: 0; width: 25rem; max-width: 100%; overflow: hidden; z-index: 2; }
+#main { left: 25rem; top: 2.2rem; right: 0; bottom: 0; z-index: 1; }
 #main #mainframe { display: block; position: absolute; width: 100%; height: 100%; overflow: auto; }
 /* floater */
 #floater { position: fixed; z-index: 1000; opacity: 0; visibility: hidden; max-width: 20rem; padding: 1.5rem; top: 4rem; left: 2rem; border-radius: 0.25rem; background-color: #fff; -webkit-box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3); transition-duration: 0.15s }
@@ -43,4 +43,4 @@ to { transform: rotate(360deg) }
 }
 /* dark */
 .dark #main { background-color: #ecf0f1 }
-.dark #mainloader { background-color: rgba(236, 240, 241, 0.64); }
+.dark #mainloader { background-color: rgba(0, 0, 0, 0.1); }
