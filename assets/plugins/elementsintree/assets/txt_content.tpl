@@ -192,6 +192,14 @@
   .tab-page { margin-bottom:0; }
   
   /* ElementsInTree main styles */
+  
+  @media (max-width: 840px) {
+
+    .ElementsInTree #tree {
+      max-width: 345px;
+    }
+    
+  }
 
   .ElementsInTree #tree .treeframebody {
     background-color: #fafafa !important;
