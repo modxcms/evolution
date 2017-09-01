@@ -140,7 +140,7 @@ $pagetitle = $id == 0 ? $site_name : $pagetitle;
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= $_lang["sort_menuindex"] ?>
+    <i class="fa fa-sort-numeric-asc"></i><?= ($pagetitle ? $pagetitle . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>

@@ -35,15 +35,17 @@ $_SESSION['itemname'] = $pagetitle;
     var actions = {
         save: function() {
             document.newdocumentparent.submit();
-        }, cancel: function() {
+        },
+        cancel: function() {
             documentDirty = false;
             <?= ($id == 0 ? 'document.location.href="index.php?a=2";' : 'document.location.href="index.php?a=3&id=' . $id . '";') ?>
-        },
+        }
     };
 
     function setMoveValue(pId, pName)
     {
-        if (pId == 0 || checkParentChildRelation(pId, pName)) {
+        if (pId === 0 || checkParentChildRelation(pId, pName)) {
+            documentDirty = true;
             document.newdocumentparent.new_parent.value = pId;
             document.getElementById('parentName').innerHTML = '<?= $_lang['new_parent'] ?>: <span class="text-primary"><b>' + pId + '</b> (' + pName + ')</span>';
         }
@@ -59,13 +61,13 @@ $_SESSION['itemname'] = $pagetitle;
         if (!pn) {
             return;
         }
-        if (pn.id.substr(4) == id) {
+        if (pn.id.substr(4) === id) {
             alert('<?= $_lang['illegal_parent_self'] ?>');
             return;
         } else {
             while (pn.p > 0) {
                 pn = (tdoc.getElementById) ? tdoc.getElementById('node' + pn.p) : tdoc.all['node' + pn.p];
-                if (pn.id.substr(4) == id) {
+                if (pn.id.substr(4) === id) {
                     alert('<?= $_lang['illegal_parent_child'] ?>');
                     return;
                 }
@@ -77,7 +79,7 @@ $_SESSION['itemname'] = $pagetitle;
 </script>
 
 <h1>
-    <i class="fa fa-arrows"></i><?= $_lang['move_resource_title'] ?>
+    <i class="fa fa-arrows"></i><?= ($pagetitle ? $pagetitle . '<small>(' . $id . ')</small>' : $_lang['move_resource_title']) ?>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>

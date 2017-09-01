@@ -197,7 +197,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
-	<h1><i class="fa fa fa-users"></i><?php echo $_lang['web_user_title']; ?> </h1>
+
+	<h1>
+        <i class="fa fa fa-users"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['web_user_title']) ?>
+    </h1>
 
 	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
 
