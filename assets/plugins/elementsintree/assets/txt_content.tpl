@@ -295,8 +295,15 @@
     display: none
   }
 
+  .ElementsInTree #treeMenu {
+    height: 1.8rem;
+    background-color: #E7E7E7 !important;
+  }
+
   .ElementsInTree #treeMenu.is-intab {
     margin-left: 0.1rem;
+    height: 1.875rem;
+    background-color: transparent !important;
   }
 
   .ElementsInTree.treeframebody {
