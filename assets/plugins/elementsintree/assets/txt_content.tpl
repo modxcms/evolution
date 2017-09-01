@@ -247,7 +247,7 @@
     display: table;
     width: 100%;
     table-layout: fixed;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #CFD2D6;
   }
 
   .ElementsInTree #tree .tab-row .tab {
@@ -353,6 +353,14 @@
 
   .dark.ElementsInTree #tree .disabledPlugin a {
     color: #b68282
+  }
+
+  .dark.ElementsInTree #treeMenu {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .dark.ElementsInTree #treeMenu.is-intab {
+    background-color: transparent !important;
   }
 
 
