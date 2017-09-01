@@ -487,9 +487,6 @@ class CJot {
 			// For every field posted loop
 			foreach($_POST as $n=>$v) {
 			
-						// Stripslashes if needed
-						if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
-
 						// Avoid XSS
 						$v = $modx->htmlspecialchars($v, ENT_QUOTES);
 

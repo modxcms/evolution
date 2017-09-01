@@ -9,9 +9,13 @@ if(!class_exists('synccache')) {
 		var $aliases = array();
 		var $parents = array();
 		var $aliasVisible = array();
+		var $request_time;
 
 
 		function __construct() {
+			global $modx;
+			
+			$this->request_time = $_SERVER['REQUEST_TIME']+$modx->config['server_offset_time'];
 		}
 		
 		function setCachepath($path)
@@ -43,7 +47,7 @@ if(!class_exists('synccache')) {
 		{ // modx:returns child's parent
 			global $modx;
 			if (empty($this->aliases)) {
-				$qh = $modx->db->select('id, IF(alias=\'\', id, alias) AS alias, parent, alias_visible', $modx->getFullTableName('site_content'));
+				$qh = $modx->db->select('id, IF(alias=\'\', id, alias) AS alias, parent, alias_visible', '[+prefix+]site_content');
 				while ($row = $modx->db->getRow($qh)) {
 					$this->aliases[$row['id']] = $row['alias'];
 					$this->parents[$row['id']] = $row['parent'];
@@ -103,7 +107,6 @@ if(!class_exists('synccache')) {
 
 	public function publishTimeConfig($cacheRefreshTime='')
 	{
-
 		$cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
 		if(!preg_match('@^[0-9]+$]@',$cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime)
 			$cacheRefreshTime = $cacheRefreshTimeFromDB;
@@ -112,7 +115,7 @@ if(!class_exists('synccache')) {
 		// write the file
 		$content = array();
 		$content[] = '<?php';
-		$content[] = sprintf('$recent_update = %s;'   , $_SERVER['REQUEST_TIME']);
+		$content[] = sprintf('$recent_update = %s;'   , $this->request_time);
 		$content[] = sprintf('$cacheRefreshTime = %s;', $cacheRefreshTime);
 
 		$filename = $this->cachePath.'/sitePublishing.idx.php';
@@ -134,16 +137,15 @@ if(!class_exists('synccache')) {
 
 		// update publish time file
 		$timesArr = array();
-		$current_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 
-		$result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.$current_time);
+		$result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>'.$this->request_time);
 		if(!$result) echo "Couldn't determine next publish event!";
 
 		$minpub = $modx->db->getValue($result);
 		if($minpub!=NULL)
 			$timesArr[] = $minpub;
 
-		$result = $modx->db->select('MIN(unpub_date) AS minunpub', $modx->getFullTableName('site_content'), 'unpub_date>'.$current_time);
+		$result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>'.$this->request_time);
 		if(!$result) echo "Couldn't determine next unpublish event!";
 
 		$minunpub = $modx->db->getValue($result);
@@ -219,7 +221,7 @@ if(!class_exists('synccache')) {
         $tmpPHP .= '$c = &$this->chunkCache;';
         while ($tmp1 = $modx->db->getRow($rs)) {
 				/** without trim */
-            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['snippet']) . "';";
+            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['disabled'] ? '' : $tmp1['snippet']) . "';";
         }
 
         // WRITE snippets to cache file
@@ -229,20 +231,25 @@ if(!class_exists('synccache')) {
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($row = $modx->db->getRow($rs)) {
-				$name = $this->escapeSingleQuotes($row['name']);
-				$code = trim($row['snippet']);
-				if($modx->config['minifyphp_incache'])
-					$code = $this->php_strip_whitespace($code);
-				$code = $this->escapeSingleQuotes($code);
-				$properties       = $modx->parseProperties($row['properties']);
-				$sharedproperties = $modx->parseProperties($row['sharedproperties']);
-				$properties = array_merge($sharedproperties,$properties);
-				$tmpPHP .= sprintf("\$s['%s']='%s';", $name, $code);
-				if (0<count($properties)) {
-    				$properties = json_encode($properties);
-    				$properties = $this->escapeSingleQuotes($properties);
-					$tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, $properties);
-				}
+                $name = $this->escapeSingleQuotes($row['name']);
+			    if($row['disabled']) {
+                    $tmpPHP .= sprintf("\$s['%s']='%s';", $name, "return false;");
+                    $tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, '');
+                } else {
+                    $code = trim($row['snippet']);
+                    if($modx->config['minifyphp_incache'])
+                        $code = $this->php_strip_whitespace($code);
+                    $code = $this->escapeSingleQuotes($code);
+                    $properties       = $modx->parseProperties($row['properties']);
+                    $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                    $properties = array_merge($sharedproperties,$properties);
+                    $tmpPHP .= sprintf("\$s['%s']='%s';", $name, $code);
+                    if (0<count($properties)) {
+                        $properties = json_encode($properties);
+                        $properties = $this->escapeSingleQuotes($properties);
+                        $tmpPHP .= sprintf("\$s['%sProps']='%s';", $name, $properties);
+                    }
+                }
 			}
 
 			// WRITE plugins to cache file

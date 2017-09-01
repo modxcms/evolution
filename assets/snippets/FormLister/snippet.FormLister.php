@@ -9,7 +9,7 @@
  * @var array $params
  */
 if (!isset($formid)) {
-    $this->modx->logEvent(0, 1, "Parameter &formid is not set", 'FormLister');
+    $modx->logEvent(0, 1, "Parameter &formid is not set", 'FormLister');
     return;
 }
 if (!class_exists('\FormLister\Core')) {
@@ -49,7 +49,7 @@ if (class_exists($classname)) {
         $FormLister->debug->saveLog();
     }
 } else {
-    $this->modx->logEvent(0, 1, "Controller {$classname} is missing", 'FormLister');
+    $modx->logEvent(0, 1, "Controller {$classname} is missing", 'FormLister');
 }
 
 return $out;

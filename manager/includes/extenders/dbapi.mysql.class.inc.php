@@ -9,6 +9,7 @@ class DBAPI {
 
    var $conn;
    var $config;
+   var $lastQuery;
    var $isConnected;
 
    /**
@@ -99,9 +100,9 @@ class DBAPI {
                if($modx->config['send_errormail'] <= 2)
                {
                   $logtitle    = 'Failed to create the database connection!';
-                  $request_uri = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
-                  $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
-                  $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
+                  $request_uri = $modx->htmlspecialchars($_SERVER['REQUEST_URI']);
+                  $ua          = $modx->htmlspecialchars($_SERVER['HTTP_USER_AGENT']);
+                  $referer     = $modx->htmlspecialchars($_SERVER['HTTP_REFERER']);
 
                   $modx->sendmail(array(
 					  'subject' => 'Missing to create the database connection! from ' . $modx->config['site_name'],
@@ -183,6 +184,8 @@ class DBAPI {
          $this->connect();
       }
       $tstart = $modx->getMicroTime();
+      if(is_array($sql)) $sql = join("\n", $sql);
+      $this->lastQuery = $sql;
       if (!$result = @ mysql_query($sql, $this->conn)) {
          if(!$watchError) return;
             switch(mysql_errno()) {
@@ -230,9 +233,12 @@ class DBAPI {
          $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         $where   = trim($where);
+         $orderby = trim($orderby);
+         $limit   = trim($limit);
+         if($where!==''   && stripos($where,   'WHERE')!==0)    $where   = "WHERE {$where}";
+         if($orderby!=='' && stripos($orderby, 'ORDER BY')!==0) $orderby = "ORDER BY {$orderby}";
+         if($limit!==''   && stripos($limit,   'LIMIT')!==0)    $limit   = "LIMIT {$limit}";
          return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
@@ -246,17 +252,22 @@ class DBAPI {
       
       if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
       if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+      if(is_array($where))  $where  = join(' ', $where);
       
-      if (!$from)
+      if (!$from) {
          $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
-      else {
-         $fields = $this->replaceFullTableName($fields);
-         $from = $this->replaceFullTableName($from);
-         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
-         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
-         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
-         return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
+         exit;
       }
+      
+      $fields = $this->replaceFullTableName($fields);
+      $from = $this->replaceFullTableName($from);
+      $where   = trim($where);
+      $orderby = trim($orderby);
+      $limit   = trim($limit);
+      if($where!==''   && stripos($where,'WHERE')!==0)   $where   = "WHERE {$where}";
+      if($orderby!=='' && stripos($orderby,'ORDER')!==0) $orderby = "ORDER BY {$orderby}";
+      if($limit!==''   && stripos($limit,'LIMIT')!==0)   $limit   = "LIMIT {$limit}";
+      return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
    }
 
    /**
@@ -280,7 +291,8 @@ class DBAPI {
 			 }
             $fields = implode(",", $fields);
          }
-         $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         $where = trim($where);
+         if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
          return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
@@ -305,8 +317,10 @@ class DBAPI {
                if (version_compare($this->getVersion(),"4.0.14")>=0) {
                   $fromtable = $this->replaceFullTableName($fromtable);
                   $fields = "(".implode(",", array_keys($fields)).")";
-                  $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
-                  $limit = !empty($limit) ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $where = trim($where);
+                  $limit = trim($limit);
+                  if($where!=='' && stripos($where, 'WHERE')!==0) $where = "WHERE {$where}";
+                  if($limit!=='' && stripos($limit, 'LIMIT')!==0) $limit = "LIMIT {$limit}";
                   $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
                } else {
                   $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
@@ -473,27 +487,6 @@ class DBAPI {
    }
 
    /**
-    * @name:  getXML
-    * @desc:  returns an XML formay of the dataset $ds
-    */
-   function getXML($dsq) {
-      if (!is_resource($dsq))
-         $dsq = $this->query($dsq);
-      $xmldata = "<xml>\r\n<recordset>\r\n";
-      while ($row = $this->getRow($dsq, "both")) {
-         $xmldata .= "<item>\r\n";
-         for ($j = 0; $line = each($row); $j++) {
-            if ($j % 2) {
-               $xmldata .= "<$line[0]>$line[1]</$line[0]>\r\n";
-            }
-         }
-         $xmldata .= "</item>\r\n";
-      }
-      $xmldata .= "</recordset>\r\n</xml>";
-      return $xmldata;
-   }
-
-   /**
     * @name:  getTableMetaData
     * @desc:  returns an array of MySQL structure detail for each column of a
     *         table
@@ -542,72 +535,6 @@ class DBAPI {
       return $date;
    }
 
-   /**
-    * @name:  getHTMLGrid
-    * @param: $params: Data grid parameters
-    *         columnHeaderClass
-    *         tableClass
-    *         itemClass
-    *         altItemClass
-    *         columnHeaderStyle
-    *         tableStyle
-    *         itemStyle
-    *         altItemStyle
-    *         columns
-    *         fields
-    *         colWidths
-    *         colAligns
-    *         colColors
-    *         colTypes
-    *         cellPadding
-    *         cellSpacing
-    *         header
-    *         footer
-    *         pageSize
-    *         pagerLocation
-    *         pagerClass
-    *         pagerStyle
-    *
-    */
-   function getHTMLGrid($dsq, $params) {
-      if (!is_resource($dsq))
-         $dsq = $this->query($dsq);
-      if ($dsq) {
-         include_once MODX_MANAGER_PATH . 'includes/controls/datagrid.class.php';
-         $grd = new DataGrid('', $dsq);
-
-         $grd->noRecordMsg = $params['noRecordMsg'];
-
-         $grd->columnHeaderClass = $params['columnHeaderClass'];
-         $grd->cssClass = $params['cssClass'];
-         $grd->itemClass = $params['itemClass'];
-         $grd->altItemClass = $params['altItemClass'];
-
-         $grd->columnHeaderStyle = $params['columnHeaderStyle'];
-         $grd->cssStyle = $params['cssStyle'];
-         $grd->itemStyle = $params['itemStyle'];
-         $grd->altItemStyle = $params['altItemStyle'];
-
-         $grd->columns = $params['columns'];
-         $grd->fields = $params['fields'];
-         $grd->colWidths = $params['colWidths'];
-         $grd->colAligns = $params['colAligns'];
-         $grd->colColors = $params['colColors'];
-         $grd->colTypes = $params['colTypes'];
-         $grd->colWraps = $params['colWraps'];
-
-         $grd->cellPadding = $params['cellPadding'];
-         $grd->cellSpacing = $params['cellSpacing'];
-         $grd->header = $params['header'];
-         $grd->footer = $params['footer'];
-         $grd->pageSize = $params['pageSize'];
-         $grd->pagerLocation = $params['pagerLocation'];
-         $grd->pagerClass = $params['pagerClass'];
-         $grd->pagerStyle = $params['pagerStyle'];
-         return $grd->render();
-      }
-   }
-   
    /**
    * @name:  makeArray
    * @desc:  turns a recordset into a multidimensional array

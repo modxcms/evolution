@@ -73,10 +73,10 @@ $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 // connect to the database
 echo "<p>". $_lang['setup_database_create_connection'];
 if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
-    echo "<span class=\"notok\">".$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
+    echo '<span class="notok">'.$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
     return;
 } else {
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // select database
@@ -87,7 +87,7 @@ if (!mysqli_select_db($conn, str_replace("`", "", $dbase))) {
 } else {
 	if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_charset);
     mysqli_query($conn, "{$database_connection_method} {$database_connection_charset}");
-    echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // try to create the database
@@ -95,7 +95,7 @@ if ($create) {
     echo "<p>".$_lang['setup_database_creation']. str_replace("`", "", $dbase) . "`: ";
     //	if(!@mysqli_create_db(str_replace("`","",$dbase), $conn)) {
     if (! mysqli_query($conn, "CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-        echo "<span class=\"notok\">".$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
+        echo '<span class="notok">'.$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
         $errors += 1;
 ?>
         <pre>
@@ -107,7 +107,7 @@ if ($create) {
 
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -115,12 +115,12 @@ if ($create) {
 if ($installMode == 0) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
     if (@ $rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
+        echo '<span class="notok">' . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -203,7 +203,7 @@ if ($moduleSQLBaseFile) {
         echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
         return;
     } else {
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 
@@ -247,7 +247,7 @@ if (@ fwrite($handle, $configString) === FALSE) {
 $chmodSuccess = @chmod($filename, 0404);
 
 if ($configFileFailed == true) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+    echo '<span class="notok">' . $_lang['failed'] . "</span></p>";
     $errors += 1;
 ?>
     <p><?php echo $_lang['cant_write_config_file']?><span class="mono"><?php echo MGR_DIR; ?>/includes/config.inc.php</span></p>
@@ -258,7 +258,7 @@ if ($configFileFailed == true) {
 <?php
     return;
 } else {
-    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+    echo '<span class="ok">'.$_lang['ok']."</span></p>";
 }
 
 // generate new site_id and set manager theme to default
@@ -295,7 +295,7 @@ if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+		echo '<span class="ok">'.$_lang['ok']."</span></p>";
 	}
 }
 
@@ -581,7 +581,7 @@ if (isset ($_POST['plugin']) || $installData) {
                         }
                     }
                     if($insert === true) {
-                        $properties = mysqli_real_escape_string($conn, parseProperties($properties, true));
+                        $properties = mysqli_real_escape_string($conn, propUpdate($properties,$row['properties']));
                         if(!mysqli_query($sqlParser->conn, "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);")) {
                             echo "<p>".mysqli_error($sqlParser->conn)."</p>";
                             return;
@@ -681,7 +681,7 @@ if ($installData && $moduleSQLDataFile) {
             $sql = sprintf('UPDATE `%ssite_content` SET template=%s WHERE template=4', $sqlParser->prefix, $row['id']);
             mysqli_query($sqlParser->conn, $sql);
         }
-        echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
+        echo '<span class="ok">'.$_lang['ok']."</span></p>";
     }
 }
 

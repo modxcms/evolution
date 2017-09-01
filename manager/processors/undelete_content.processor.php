@@ -75,13 +75,19 @@ $modx->db->update(
 		'deletedon' => 0,
 	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
-	// Set the item name for logger
-	$_SESSION['itemname'] = $content['pagetitle'];
+$modx->invokeEvent("OnDocFormUnDelete",
+    array(
+        "id"=>$id,
+        "children"=>$children
+    ));
 
-	// empty cache
-	$modx->clearCache('full');
+// Set the item name for logger
+$_SESSION['itemname'] = $content['pagetitle'];
 
-	// finished emptying cache - redirect
-	$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
-	header($header);
+// empty cache
+$modx->clearCache('full');
+
+// finished emptying cache - redirect
+$header="Location: index.php?a=3&id=$pid&r=1".$add_path;
+header($header);
 ?>

@@ -96,7 +96,7 @@ if($numRecords > 0) {
 	//	$rowHeaderClass = 'gridHeader';
 	//	$rowRegularClass = 'gridItem';
 	//	$rowAlternateClass = 'gridAltItem';
-	$tableClass = 'table data';
+	$tableClass = 'table data nowrap';
 	$columnHeaderClass = array(
 		'text-center',
 		'text-left',
@@ -170,16 +170,9 @@ if($numRecords > 0) {
 				break;
 			default:
 				if($children['isfolder']) {
-					$isPrivate = ($children['privateweb'] || $children['privatemgr']) ? '1' : '0';
-					$icon = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+					$icon = $_style['tree_folder_new'];
 				} else {
-					if($children['privateweb'] || $children['privatemgr']) {
-						if(isset($icons[$children['contentType']])) {
-							$icon = $icons[$children['contentType']];
-						} else {
-							$icon = $_style['tree_page_secure'];
-						}
-					} elseif(isset($icons[$children['contentType']])) {
+					if(isset($icons[$children['contentType']])) {
 						$icon = $icons[$children['contentType']];
 					} else {
 						$icon = $_style['tree_page'];
@@ -187,15 +180,17 @@ if($numRecords > 0) {
 				}
 		}
 
+		$private = ($children['privateweb'] || $children['privatemgr'] ? ' private' : '');
+
 		// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь
 		// для сохранения сортировки
 		$class = ($children['deleted'] ? 'text-danger text-decoration-through' : (!$children['published'] ? ' font-italic text-muted' : ' publish'));
 		//$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
 		//$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
 		if($modx->hasPermission('edit_document')) {
-			$title = '<a class="doc-item" href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a></span>';
 		} else {
-			$title = '<span class="doc-item">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
+			$title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></span>';
 		}
 
 		$icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["publish_resource"] . '"><i class="' . $_style["icons_publish_document"] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . $_lang["unpublish_resource"] . '"><i class="' . $_style["icons_unpublish_resource"] . '" ></i></a>';
@@ -308,47 +303,6 @@ if($numRecords > 0) {
 						<td valign="top"><?= $_lang['resource_alias'] ?>:</td>
 						<td><?= $content['alias'] != '' ? $content['alias'] : "(<i>" . $_lang['not_set'] . "</i>)" ?></td>
 					</tr>
-					<?php
-					if($modx->config['show_meta'] === '1'):
-						$tbl_keyword_xref = $modx->getFullTableName('keyword_xref');
-						$tbl_site_keywords = $modx->getFullTableName('site_keywords');
-						$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
-						$tbl_site_metatags = $modx->getFullTableName('site_metatags');
-						// Get list of current keywords for this document
-						$keywords = array();
-						$rs = $modx->db->select('k.keyword', "{$tbl_site_keywords} AS k, {$tbl_keyword_xref} AS x ", "k.id = x.keyword_id AND x.content_id='{$id}'", 'k.keyword ASC');
-						$keywords = $modx->db->getColumn('keyword', $rs);
-
-						// Get list of selected site META tags for this document
-						$metatags_selected = array();
-						$rs = $modx->db->select('meta.id, meta.name, meta.tagvalue', "{$tbl_site_metatags} AS meta LEFT JOIN {$tbl_site_content_metatags} AS sc ON sc.metatag_id = meta.id", "sc.content_id='{$content['id']}'");
-						while($row = $modx->db->getRow($rs)) {
-							$metatags_selected[] = $row['name'] . ': <i>' . $row['tagvalue'] . '</i>';
-						}
-						?>
-						<tr>
-							<td valign="top"><?= $_lang['keywords'] ?>:</td>
-							<td><?php // Keywords
-								if(count($keywords) != 0) {
-									echo implode(', ', $keywords);
-								} else {
-									echo "(<i>" . $_lang['not_set'] . "</i>)";
-								}
-								?></td>
-						</tr>
-						<tr>
-							<td valign="top"><?= $_lang['metatags'] ?>:</td>
-							<td><?php // META Tags
-								if(count($metatags_selected) != 0) {
-									echo implode('<br />', $metatags_selected);
-								} else {
-									echo "(<i>" . $_lang['not_set'] . "</i>)";
-								}
-								?></td>
-						</tr>
-						<?php
-					endif;
-					?>
 					<tr>
 						<td colspan="2">&nbsp;</td>
 					</tr>

@@ -208,6 +208,7 @@ class Store{
 		$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
 		foreach($objects as $name => $object)
 		{
+			if (!$objects->getDepth() && $object->isFile()) continue;
 			$startsAt = substr(dirname($name), strlen($path));
 			self::mkDir($dest.$startsAt);
 			if ( $object->isDir() ) {

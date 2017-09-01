@@ -49,6 +49,15 @@ class site_contentDocLister extends DocLister
         
         $this->extTV->getAllTV_Name();
 
+        /**
+         * @var $extJotCount jotcount_DL_Extender
+         */
+        $extJotCount = $this->getCFGdef('jotcount', 0) ? $this->getExtender('jotcount', true) : null;
+
+        if ($extJotCount) {
+            $extJotCount->init($this);
+        }
+
         if ($this->extPaginate = $this->getExtender('paginate')) {
             $this->extPaginate->init($this);
         } else {
@@ -87,8 +96,6 @@ class site_contentDocLister extends DocLister
             $tpl = $this->getCFGDef('tpl', '@CODE:<a href="[+url+]">[+pagetitle+]</a><br />');
         }
         if ($tpl != '') {
-            $date = $this->getCFGDef('dateSource', 'pub_date');
-
             $this->toPlaceholders(count($this->_docs), 1, "display"); // [+display+] - сколько показано на странице.
 
             $i = 1;
@@ -111,15 +118,6 @@ class site_contentDocLister extends DocLister
                  */
                 $extPrepare = $this->getExtender('prepare');
 
-                /**
-                 * @var $extJotCount jotcount_DL_Extender
-                 */
-                $extJotCount = $this->getCFGdef('jotcount', 0) ? $this->getExtender('jotcount', true) : null;
-
-                if ($extJotCount) {
-                    $comments = $extJotCount->countComments(array_keys($this->_docs));
-                }
-
                 $this->skippedDocs = 0;
                 foreach ($this->_docs as $item) {
                     $this->renderTPL = $tpl;
@@ -128,10 +126,6 @@ class site_contentDocLister extends DocLister
                     }
 
                     $item['summary'] = $extSummary ? $this->getSummary($item, $extSummary, 'introtext', 'content') : '';
-
-                    if ($extJotCount) {
-                        $item['jotcount'] = APIHelpers::getkey($comments, $item['id'], 0);
-                    }
 
                     $item = array_merge($item,
                         $sysPlh); //inside the chunks available all placeholders set via $modx->toPlaceholders with prefix id, and with prefix sysKey
@@ -147,7 +141,7 @@ class site_contentDocLister extends DocLister
                             $item['url'] = $this->modx->makeUrl($item['id'], '', '', $this->getCFGDef('urlScheme', ''));
                         }
                     }
-
+                    $date = $this->getCFGDef('dateSource', 'pub_date');
                     if (isset($item[$date])) {
                         if (!$item[$date] && $date == 'pub_date' && isset($item['createdon'])) {
                             $date = 'createdon';
@@ -245,16 +239,17 @@ class site_contentDocLister extends DocLister
                 }
             }
 
-            if (array('1') == $fields || in_array(array('menutitle', 'pagetitle'), $fields)) {
-                $row['title'] = ($row['menutitle'] == '' ? $row['pagetitle'] : $row['menutitle']);
+            if (array('1') == $fields || in_array('title', $fields)) {
+                if (isset($row['pagetitle'])) {
+                    $row['title'] = empty($row['menutitle']) ? $row['pagetitle'] : $row['menutitle'];
+                }
             }
-            if ((bool)$this->getCFGDef('makeUrl', 1) && (array('1') == $fields || in_array(array('content', 'type'),
-                        $fields))
+            if ((bool)$this->getCFGDef('makeUrl', 1) && (array('1') == $fields || in_array('url',$fields))
             ) {
-                if ($row['type'] == 'reference') {
+                if (isset($row['type']) && $row['type'] == 'reference' && isset($row['content'])) {
                     $row['url'] = is_numeric($row['content']) ? $this->modx->makeUrl($row['content'], '', '',
                         $this->getCFGDef('urlScheme', '')) : $row['content'];
-                } else {
+                } elseif (isset($row['id'])) {
                     $row['url'] = $this->modx->makeUrl($row['id'], '', '', $this->getCFGDef('urlScheme', ''));
                 }
             }
@@ -348,14 +343,13 @@ class site_contentDocLister extends DocLister
             if (trim($where) == 'WHERE') {
                 $where = '';
             }
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
-            $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
-            list($from) = $this->injectSortByTV($from, $sort);
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
 
             $q_true = $q_true ? $q_true : $group != '';
-
             if ( $q_true ){
-                $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group}) as `tmp`");
+                $maxDocs = $this->getCFGDef('maxDocs', 0);
+                $limit = $maxDocs > 0 ? $this->LimitSQL($this->getCFGDef('maxDocs', 0)) : '';
+                $rs = $this->dbQuery("SELECT count(*) FROM (SELECT count(*) FROM {$from} {$where} {$group} {$limit}) as `tmp`");
                 $out = $this->modx->db->getValue($rs);
             }
             else {
@@ -412,11 +406,9 @@ class site_contentDocLister extends DocLister
 
             $rs = $this->dbQuery("SELECT {$fields} FROM {$tbl_site_content} {$where} {$group} {$sort} {$limit}");
 
-            $rows = $this->modx->db->makeArray($rs);
-
-            foreach ($rows as $item) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
-            }
+            };
         }
 
         return $out;
@@ -428,6 +420,7 @@ class site_contentDocLister extends DocLister
      */
     public function getChildrenFolder($id)
     {
+        $out = array();
         $where = $this->getCFGDef('addWhereFolder', '');
         $where = sqlHelper::trimLogicalOp($where);
         if ($where != '') {
@@ -444,9 +437,7 @@ class site_contentDocLister extends DocLister
 
         $rs = $this->dbQuery("SELECT id FROM {$tbl_site_content} {$where}");
 
-        $rows = $this->modx->db->makeArray($rs);
-        $out = array();
-        foreach ($rows as $item) {
+        while ($item = $this->modx->db->getRow($rs)) {
             $out[] = $item['id'];
         }
 
@@ -531,15 +522,13 @@ class site_contentDocLister extends DocLister
         $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
 
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
-            $sql = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
+            $rs = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .
                 $group . " " .
                 $sort . " " .
                 $this->LimitSQL($this->getCFGDef('queryLimit', 0))
             );
 
-            $rows = $this->modx->db->makeArray($sql);
-
-            foreach ($rows as $item) {
+            while ($item = $this->modx->db->getRow($rs)) {
                 $out[$item['id']] = $item;
             }
         }

@@ -9,7 +9,7 @@
 <table border="0" cellspacing="0" cellpadding="3">
 
 <tr>
-<th><?php echo $_lang['allow_eval_title']; ?></th>
+<th><?php echo $_lang['allow_eval_title']; ?><br><small>[(allow_eval)]</small></th>
 <td>
 <?php echo wrap_label($_lang['allow_eval_with_scan']         , form_radio('allow_eval','with_scan'));?><br />
 <?php echo wrap_label($_lang['allow_eval_with_scan_at_post'] , form_radio('allow_eval','with_scan_at_post'));?><br />
@@ -24,7 +24,7 @@
   <td colspan="2"><div class="split"></div></td>
 </tr>
 <tr>
-  <td nowrap class="warning"><?php echo $_lang['safe_functions_at_eval_title'] ?></td>
+  <td nowrap class="warning"><?php echo $_lang['safe_functions_at_eval_title'] ?><br><small>[(safe_functions_at_eval)]</small></td>
   <td >
     <input onchange="documentDirty=true;" type="text" style="width: 350px;" name="safe_functions_at_eval" value="<?php echo $safe_functions_at_eval; ?>" />
     <div class="comment">
@@ -37,7 +37,7 @@
 </tr>
 
 <tr>
-    <th><?php echo $_lang['check_files_onlogin_title'] ?></th>
+    <th><?php echo $_lang['check_files_onlogin_title'] ?><br><small>[(check_files_onlogin)]</small></th>
     <td>
       <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
         
@@ -47,7 +47,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['validate_referer_title'] ?></td>
+      <td nowrap class="warning"><?php echo $_lang['validate_referer_title'] ?><br><small>[(validate_referer)]</small></td>
       <td>
         <?php echo wrap_label($_lang['yes'],form_radio('validate_referer', 1));?><br />
         <?php echo wrap_label($_lang['no'], form_radio('validate_referer', 0));?>
@@ -61,7 +61,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['valid_hostnames_title'] ?></td>
+      <td nowrap class="warning"><?php echo $_lang['valid_hostnames_title'] ?><br><small>[(valid_hostnames)]</small></td>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 200px;" name="valid_hostnames" value="<?php echo $modx->htmlspecialchars($valid_hostnames); ?>" /></td>
     </tr>
     <tr>
@@ -72,7 +72,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
     <tr>
-      <td nowrap class="warning"><?php echo $_lang['rss_url_security_title'] ?></td>
+      <td nowrap class="warning"><?php echo $_lang['rss_url_security_title'] ?><br><small>[(rss_url_security)]</small></td>
       <td ><input onchange="documentDirty=true;" type="text" maxlength="350" style="width: 350px;" name="rss_url_security" value="<?php echo $rss_url_security; ?>" /></td>
     </tr>
     <tr>
@@ -83,7 +83,7 @@
       <td colspan="2"><div class="split"></div></td>
     </tr>
   <tr>
-<th><?php echo $_lang['a17_error_reporting_title']; ?></th>
+<th><?php echo $_lang['a17_error_reporting_title']; ?><br><small>[(error_reporting)]</small></th>
 <td>
 <?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0'));?><br />
 <?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1'));?><br />
@@ -97,7 +97,7 @@
 </tr>
 <tr><td colspan="2"><div class="split"></div></td></tr>
 <tr>
-<th><?php echo $_lang['mutate_settings.dynamic.php6']; ?></th>
+<th><?php echo $_lang['mutate_settings.dynamic.php6']; ?><br><small>[(send_errormail)]</small></th>
 <td>
 <?php echo wrap_label($_lang['mutate_settings.dynamic.php7'],form_radio('send_errormail','0'));?><br />
 <?php echo wrap_label('error',form_radio('send_errormail','3'));?><br />
@@ -109,7 +109,7 @@
     <td colspan="2"><div class="split"></div></td>
 </tr>
 <tr>
-<th><?php echo $_lang['enable_bindings_title'] ?></th>
+<th><?php echo $_lang['enable_bindings_title'] ?><br><small>[(enable_bindings)]</small></th>
 <td>
 <?php echo wrap_label($_lang['yes'],form_radio('enable_bindings','1'));?><br />
 <?php echo wrap_label($_lang['no'], form_radio('enable_bindings','0'));?>
@@ -128,7 +128,7 @@
   <td colspan="2"><div class="split"></div></td>
 </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['failed_login_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['failed_login_title'] ?><br><small>[(failed_login_attempts)]</small></td>
     <td><input type="text" name="failed_login_attempts" style="width:50px" value="<?php echo $failed_login_attempts; ?>" /></td>
   </tr>
   <tr>
@@ -139,7 +139,7 @@
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['blocked_minutes_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['blocked_minutes_title'] ?><br><small>[(blocked_minutes)]</small></td>
     <td><input type="text" name="blocked_minutes" style="width:100px" value="<?php echo $blocked_minutes; ?>" /></td>
   </tr>
   <tr>
@@ -150,7 +150,7 @@
   <td colspan="2"><div class="split"></div></td>
 </tr>
 <tr>
-<th><?php echo $_lang['pwd_hash_algo_title'] ?></th>
+<th><?php echo $_lang['pwd_hash_algo_title'] ?><br><small>[(pwd_hash_algo)]</small></th>
 <td>
 <?php
 if(empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
@@ -185,7 +185,7 @@ $gdAvailable = extension_loaded('gd');
 if(!$gdAvailable) $use_captcha = 0;
 ?>
   <tr>
-    <td nowrap class="warning"><?php echo $_lang['captcha_title'] ?></td>
+    <td nowrap class="warning"><?php echo $_lang['captcha_title'] ?><br><small>[(use_captcha)]</small></td>
     <td> <label><input type="radio" id="captchaOn" name="use_captcha" value="1" <?php echo ($use_captcha==1) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : ''; ?> />
       <?php echo $_lang['yes']?></label><br />
       <label><input type="radio" id="captchaOff" name="use_captcha" value="0" <?php echo ($use_captcha==0) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : '';?> />
@@ -199,7 +199,7 @@ if(!$gdAvailable) $use_captcha = 0;
     <td colspan="2"><div class="split"></div></td>
   </tr>
   <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
-    <td nowrap class="warning"><?php echo $_lang['captcha_words_title'] ?>
+    <td nowrap class="warning"><?php echo $_lang['captcha_words_title'] ?><br><small>[(captcha_words)]</small>
       <br />
       <p><?php echo $_lang['update_settings_from_language']; ?></p>
       <select name="reload_captcha_words" id="reload_captcha_words_select" onchange="confirmLangChange(this, 'captcha_words_default', 'captcha_words_input');">

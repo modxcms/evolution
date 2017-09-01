@@ -14,9 +14,11 @@
  */
  
 $GLOBALS['docCounter'] = 0;
- 
+
 $filters['custom']['countDocs'] = array('id', 'countDocuments');
- 
+
+$placeholders['count'] = array('id', 'setCountPlaceholder');
+
 if (!function_exists('countDocuments')) {
     function countDocuments($resource) {
         # count documents
@@ -24,13 +26,9 @@ if (!function_exists('countDocuments')) {
         return 1;
     }
 }
- 
-$placeholders['count'] = array('id', 'setCountPlaceholder');
- 
+
 if (!function_exists('setCountPlaceholder')) {
     function setCountPlaceholder($resource) {
         return $GLOBALS['docCounter'];
     }
 }
- 
-?>

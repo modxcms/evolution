@@ -205,7 +205,7 @@ div#section-body-categories div.drag p {
 }
 
 div#section-body-categories div.drag:hover p {
-  display: block;
+  /*display: block;*/
 }
 
 div#section-body-categories div.uncategorized_elements,

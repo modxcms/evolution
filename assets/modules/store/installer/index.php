@@ -4,8 +4,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 define('MODX_BASE_PATH',realpath('../../../../').'/');
 include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
-
-
+$autoloader = realpath(MODX_BASE_PATH . 'vendor/autoload.php');
+if (file_exists($autoloader) && is_readable($autoloader)) {
+    include_once($autoloader);
+}
 
 define('MODX_API_MODE', true);
 include_once MGR.'/includes/config.inc.php';
@@ -15,16 +17,9 @@ $modx->db->connect();
 $modx->getSettings();
 startCMSSession();
 $modx->minParserPasses=2;
-
+$modx->invokeEvent('OnManagerPageInit');
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 
-
-
-
-if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
-}
 $moduleurl = $modx->config['site_url'].'assets/modules/store/installer/index.php';
 $modulePath = MODX_BASE_PATH.'assets/modules/store/installer/';
 $self = $modulePath.'/index.php';

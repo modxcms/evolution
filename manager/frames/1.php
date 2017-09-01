@@ -1,7 +1,7 @@
 <?php
 
 if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 header("X-XSS-Protection: 0");
 
@@ -80,10 +80,8 @@ if($user['which_browser'] == 'default') {
 <head>
 	<title><?= $site_name ?>- (EVO CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
-	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
-	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
-	<meta name="theme-color" content="#1d2023">
-	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+	<meta name="theme-color" content="#1d2023" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
 	<link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
 	<style>
@@ -103,6 +101,7 @@ if($user['which_browser'] == 'default') {
 			MGR_DIR: "<?= MGR_DIR ?>",
 			MODX_SITE_URL: "<?= MODX_SITE_URL ?>",
 			user: {
+				role: <?= (int) $user['role'] ?>,
 				username: "<?= $user['username'] ?>"
 			},
 			config: {
@@ -120,6 +119,7 @@ if($user['which_browser'] == 'default') {
 			},
 			lang: {
 				already_deleted: "<?= $_lang['already_deleted'] ?>",
+				cm_unknown_error: "<?= $_lang['cm_unknown_error'] ?>",
 				collapse_tree: "<?= $_lang['collapse_tree'] ?>",
 				confirm_delete_resource: "<?= $_lang['confirm_delete_resource'] ?>",
 				confirm_empty_trash: "<?= $_lang['confirm_empty_trash'] ?>",
@@ -130,6 +130,7 @@ if($user['which_browser'] == 'default') {
 				confirm_unpublish: "<?= $_lang['confirm_unpublish'] ?>",
 				empty_recycle_bin: "<?= $_lang['empty_recycle_bin'] ?>",
 				empty_recycle_bin_empty: "<?= addslashes($_lang['empty_recycle_bin_empty']) ?>",
+				error_no_privileges: "<?= $_lang["error_no_privileges"] ?>",
 				expand_tree: "<?= $_lang['expand_tree'] ?>",
 				inbox: "<?= $_lang['inbox'] ?>",
 				loading_doc_tree: "<?= $_lang['loading_doc_tree'] ?>",
@@ -167,8 +168,10 @@ if($user['which_browser'] == 'default') {
 				edit_plugin: <?= $modx->hasPermission('edit_plugin') ? 1 : 0 ?>,
 				edit_snippet: <?= $modx->hasPermission('edit_snippet') ? 1 : 0 ?>,
 				edit_template: <?= $modx->hasPermission('edit_template') ? 1 : 0 ?>,
+                messages: <?= $modx->hasPermission('messages') ? 1 : 0 ?>,
 				new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
-				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>
+				publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
+				dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
 
 			},
 			plugins: {
@@ -191,6 +194,13 @@ if($user['which_browser'] == 'default') {
 		?>
 	</script>
 	<script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $modx->config['settings_version'] ?>"></script>
+	<?php
+	// invoke OnManagerTopPrerender event
+	$evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
+	if(is_array($evtOut)) {
+		echo implode("\n", $evtOut);
+	}
+	?>
 </head>
 <body class="<?= $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?= md5(session_id()) ?>" />
@@ -276,7 +286,9 @@ if($user['which_browser'] == 'default') {
 								<i id="msgCounter"></i>
 							</a>
 							<ul class="dropdown-menu">
+                                <?php if($modx->hasPermission('messages')): ?>
 								<li id="newMail"></li>
+                                <?php endif; ?>
 								<?php if($modx->hasPermission('change_password')) { ?>
 									<li>
 										<a onclick="" href="index.php?a=28" target="main">
@@ -291,7 +303,7 @@ if($user['which_browser'] == 'default') {
 								</li>
 								<?php
 								$style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
-								$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
+								$version = 'Evolution';
 								?>
 								<?php
 								echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);

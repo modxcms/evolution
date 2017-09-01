@@ -77,6 +77,14 @@ abstract class autoTable extends MODxAPI
      */
     public function save($fire_events = null, $clearCache = false)
     {
+        foreach ($this->jsonFields as $field) {
+            if ($this->get($field) === null 
+                && isset($this->default_field[$field]) 
+                && is_array($this->default_field[$field])) 
+            {
+                $this->set($field, $this->default_field[$field]);
+            }
+        }
         $fld = $this->encodeFields()->toArray();
         foreach ($this->default_field as $key => $value) {
             if ($this->newDoc && $this->get($key) === null && $this->get($key) !== $value) {

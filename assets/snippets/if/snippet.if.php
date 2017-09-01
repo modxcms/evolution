@@ -54,7 +54,7 @@ for ($i=1;$i<count($opers);$i++){
     if ($and) {$subject=$opers[$i];$and=false;continue;}
 
     $operator = $opers[$i];
-    $operand  = $opers[$i+1];
+    $operand  = isset($opers[$i+1]) ? $opers[$i+1] : '';
 
     if (isset($subject)) {
         if (!empty($operator)) {

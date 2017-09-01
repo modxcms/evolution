@@ -39,16 +39,14 @@ $GLOBALS['forceUTF8'] = $GLOBALS['forceUTF8'] ? 'u' : '';
 $filters['custom']['glossaryFilter'] = array($GLOBALS['filterVar'], 'glossaryFilter');
 
 if (!function_exists('glossaryFilter')) {
-	function glossaryFilter($resource) {
-		if (!$GLOBALS['filterBy']) {
-			# do nothing (simply leave document within final dataset)
-			return 1;
-		}
+    function glossaryFilter($resource) {
+        if (!$GLOBALS['filterBy']) {
+            // do nothing (simply leave document within final dataset)
+            return 1;
+        }
         $regExpBegin = preg_match('/^(chunk|custom)$/', $GLOBALS['filterMode']) ? '' : '/^[';
         $regExpEnd = preg_match('/^(chunk|custom)$/', $GLOBALS['filterMode']) ? '' : ']/i' . $GLOBALS['forceUTF8'];
-        # do filtering
+        // do filtering
         return preg_match($regExpBegin . $GLOBALS['filterBy'] . $regExpEnd, $resource[$GLOBALS['filterVar']]) ? 1 : 0;
-	}
+    }
 }
-
-?>

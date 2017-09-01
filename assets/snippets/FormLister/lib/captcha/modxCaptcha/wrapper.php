@@ -82,7 +82,7 @@ class ModxCaptchaWrapper implements CaptchaInterface
         if (empty($value)) {
             $out = \APIhelpers::getkey($captcha->cfg, 'errorEmptyCode', 'Введите проверочный код');
         } else {
-            $out = $value == $captcha->lastValue ? true : \APIhelpers::getkey($captcha->cfg,
+            $out = strtolower($value) == strtolower($captcha->lastValue) ? true : \APIhelpers::getkey($captcha->cfg,
                 'errorCodeFailed', 'Неверный проверочный код');
         }
         $FormLister->log('Validate captcha value '.$value.' against '.$captcha->lastValue);
