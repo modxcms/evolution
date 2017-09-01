@@ -734,6 +734,7 @@ class ditto {
 					}
 				}
 			} else {
+				$row['contentid'] = isset($row['contentid']) ? $row['contentid'] : '';
 				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 				foreach ($docIDs as $id) {
 					if (!isset($docs["#".$id])) {
