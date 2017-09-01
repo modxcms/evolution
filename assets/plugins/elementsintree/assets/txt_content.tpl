@@ -195,7 +195,7 @@
 
   .ElementsInTree #tree .treeframebody {
     background-color: #fafafa !important;
-    border-right: 1px solid rgba(0, 0, 0, .1)
+    border-right: 1px solid #cfd2d6
   }
 
   .ElementsInTree #tree #treeHolder {
@@ -248,13 +248,14 @@
     width: 100%;
     table-layout: fixed;
     border-top: 1px solid #CFD2D6;
+    background-color: #dfdfdf;
   }
 
   .ElementsInTree #tree .tab-row .tab {
     height: 1.8rem;
     line-height: 1.75rem;
     background-color: transparent;
-    border-color: #ddd;
+    border-color: #cfd2d6;
     border-width: 0 1px 0 0;
     display: table-cell;
     text-align: center;
@@ -318,7 +319,8 @@
 
   .dark.ElementsInTree #tree .treeframebody {
     background-color: #1d2023 !important;
-    color: #828282
+    color: #828282;
+    border-color: #2a2d33
   }
 
   .dark.ElementsInTree #tree .tab-row {
@@ -327,7 +329,8 @@
 
   .dark.ElementsInTree #tree .tab-row .tab {
     color: #7b7b7b;
-    border-color: #343739;
+    border-color: #2a2d33;
+    background-color: #1a1c21;
   }
 
   .dark.ElementsInTree #tree .tab-row .tab.selected {
