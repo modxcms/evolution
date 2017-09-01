@@ -267,6 +267,10 @@
     border-width: 0;
   }
 
+  .ElementsInTree #tree .tab-row .tab:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+   }
+
   .ElementsInTree #tree .tab-row .tab.selected {
     padding-bottom: 0;
     background-color: #fff;
