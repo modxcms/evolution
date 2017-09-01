@@ -44,27 +44,3 @@ to { transform: rotate(360deg) }
 /* dark */
 .dark #main { background-color: #ecf0f1 }
 .dark #mainloader { background-color: rgba(236, 240, 241, 0.64); }
-/* ElementsInTree */
-.ElementsInTree #tree .treeframebody { background-color: #fafafa !important; border-right: 1px solid rgba(0, 0, 0, .1) }
-.ElementsInTree #tree #treeHolder { height: 100%; max-height: 100%; overflow: hidden; padding: 10px }
-.ElementsInTree #tree #tabDoc::before { display: none }
-.ElementsInTree #tree .actionButtons--eit { top: 3.7rem; right: 1rem }
-.ElementsInTree #tree .actionButtons--eit li { float: left; margin: 0 0 0 5px !important; }
-.ElementsInTree #tree .actionButtons--eit li a { padding: 0.5rem; }
-.ElementsInTree #tree .tab-page { padding: 0.8rem !important; }
-.ElementsInTree #tree .tab-page .panel-group .panel, .ElementsInTree #tree #tabDoc.tab-page > div { max-height: calc(100vh - 11rem) !important; overflow: auto; }
-.ElementsInTree #tree .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
-.ElementsInTree #tree .tab-row { padding: 0; margin-bottom: -1px; }
-.ElementsInTree #tree .tab-row .tab { height: 2rem; line-height: 2rem; }
-.ElementsInTree #tree .tab-page { background-color: #fff; border: 1px solid #ddd; box-shadow: none }
-.ElementsInTree #tree .form-control { padding: 0.25rem; font-size: 0.8rem; }
-.ElementsInTree #tree .eltree { line-height: 1.5 }
-.ElementsInTree #tree .eltree img { width: 0.8em; height: 0.8em }
-.ElementsInTree.treeframebody { -webkit-box-shadow: none; box-shadow: none }
-.dark.ElementsInTree #tree .treeframebody { background-color: #1d2023 !important; color: #828282 }
-.dark.ElementsInTree #tree .tab-row .tab { color: #7b7b7b; }
-.dark.ElementsInTree #tree .tab-row .tab.selected { background-color: #1d2023; border-color: rgba(255, 255, 255, .1); color: #bfbfbf; }
-.dark.ElementsInTree #tree .tab-page { background-color: transparent; border-color: rgba(255, 255, 255, .1) }
-.dark.ElementsInTree #tree .form-control { background-color: rgba(0, 0, 0, 0.4); border-color: rgba(255, 255, 255, 0.09); color: #c7c7c7; }
-.dark.ElementsInTree #tree a { color: #b7b7b7 }
-.dark.ElementsInTree #tree .disabledPlugin a { color: #b68282 }

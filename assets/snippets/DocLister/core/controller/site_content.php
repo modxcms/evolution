@@ -96,8 +96,6 @@ class site_contentDocLister extends DocLister
             $tpl = $this->getCFGDef('tpl', '@CODE:<a href="[+url+]">[+pagetitle+]</a><br />');
         }
         if ($tpl != '') {
-            $date = $this->getCFGDef('dateSource', 'pub_date');
-
             $this->toPlaceholders(count($this->_docs), 1, "display"); // [+display+] - сколько показано на странице.
 
             $i = 1;
@@ -143,7 +141,7 @@ class site_contentDocLister extends DocLister
                             $item['url'] = $this->modx->makeUrl($item['id'], '', '', $this->getCFGDef('urlScheme', ''));
                         }
                     }
-
+                    $date = $this->getCFGDef('dateSource', 'pub_date');
                     if (isset($item[$date])) {
                         if (!$item[$date] && $date == 'pub_date' && isset($item['createdon'])) {
                             $date = 'createdon';
