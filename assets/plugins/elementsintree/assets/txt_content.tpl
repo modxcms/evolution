@@ -251,8 +251,8 @@
   }
 
   .ElementsInTree #tree .tab-row .tab {
-    height: 2rem;
-    line-height: 2rem;
+    height: 1.8rem;
+    line-height: 1.75rem;
     background-color: transparent;
     border-color: #ddd;
     border-width: 0 1px 0 0;
