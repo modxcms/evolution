@@ -297,7 +297,7 @@
 
   .ElementsInTree #treeMenu {
     height: 1.8rem;
-    background-color: #E7E7E7 !important;
+    background-color: #DFDFDF !important;
   }
 
   .ElementsInTree #treeMenu.is-intab {
