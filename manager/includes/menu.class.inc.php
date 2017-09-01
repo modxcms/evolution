@@ -69,7 +69,7 @@ class EVOmenu
                 $ph['href'] = $value[3];
                 $ph['alt'] = $value[4];
                 $ph['target'] = $value[7];
-                $ph['onclick'] = 'setLastClickedElement(0,0);' . $value[5];
+                $ph['onclick'] = $value[5];
                 $ph['a_class'] = $this->get_a_class($id);
                 $ph['LinkAttr'] = $this->getLinkAttr($id);
                 $ph['itemName'] = $value[2] . $this->getItemName($id);
