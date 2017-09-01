@@ -30,7 +30,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <meta name="theme-color" content="#1d2023" />
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/style.css?v=<?= $modx->config['settings_version'] ?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
-    <?= sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
+    <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
 
     <?php
     $aArr = array('2');
@@ -57,15 +57,15 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         } else {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
         }
-        let b = document.querySelector('.evo-tooltip');
+        var b = document.querySelector('.evo-tooltip');
         if (!b) {
           b = document.createElement('div');
-          document.body.appendChild(b);
           b.className = 'evo-tooltip';
+          document.body.appendChild(b);
         }
         b.style.pointerEvents = 'none';
-        let c = parseInt(window.getComputedStyle(b).getPropertyValue('margin-top'));
-        for (let i = 0; i < a.length; i++) {
+        var c = parseFloat(getComputedStyle(b).marginTop);
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mouseenter', function(e) {
             if (e.buttons) {
               return;
@@ -105,9 +105,10 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
           b = b || {};
         }
-        let o = {
+        var o = {
           el: null,
           handleClass: b.handleClass || 'ghost',
+          position: b.position || 'vertical',
           complete: function(c) {
             if ('function' === typeof b.complete) {
               b.complete(c);
@@ -128,31 +129,50 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           o.marginX = parseFloat(getComputedStyle(o.el).marginLeft) + parseFloat(getComputedStyle(o.el).marginRight);
           o.marginY = parseFloat(getComputedStyle(o.el).marginTop) + parseFloat(getComputedStyle(o.el).marginBottom);
           o.el.classList.add(o.handleClass);
-          document.addEventListener('mousemove', onmousemove);
-          document.addEventListener('mouseup', onmouseup);
-          document.onselectstart = function(e) {
+          o.el.ownerDocument.addEventListener('mousemove', onmousemove);
+          o.el.ownerDocument.addEventListener('mouseup', onmouseup);
+          o.el.ownerDocument.onselectstart = function(e) {
             e.preventDefault();
           };
         }
 
         function onmousemove(e)
         {
-          let y = (e.pageY - o.y);
-          if (y >= o.el.offsetHeight && o.el.nextElementSibling) {
-            o.y += o.el.offsetHeight + o.marginY;
-            o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
-            o.change();
-            y = 0;
-          } else if (y <= -o.el.offsetHeight && o.el.previousElementSibling) {
-            o.y -= o.el.offsetHeight + o.marginY;
-            o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
-            o.change();
-            y = 0;
-          } else if (!o.el.previousElementSibling && y < 0 || !o.el.nextElementSibling && y > 0) {
-            y = 0;
+          if (o.position === 'vertical') {
+            var y = (e.pageY - o.y);
+            if (y >= o.el.offsetHeight && o.el.nextElementSibling) {
+              o.y += o.el.offsetHeight + o.marginY;
+              o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
+              o.change();
+              y = 0;
+            } else if (y <= -o.el.offsetHeight && o.el.previousElementSibling) {
+              o.y -= o.el.offsetHeight + o.marginY;
+              o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
+              o.change();
+              y = 0;
+            } else if (!o.el.previousElementSibling && y < 0 || !o.el.nextElementSibling && y > 0) {
+              y = 0;
+            }
+            o.el.style.webkitTransform = 'translateY(' + y + 'px)';
+            o.el.style.transform = 'translateY(' + y + 'px)';
+          } else {
+            var x = (e.pageX - o.x);
+            if (x >= o.el.offsetWidth && o.el.nextElementSibling) {
+              o.x += o.el.offsetWidth + o.marginX;
+              o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
+              o.change();
+              x = 0;
+            } else if (x <= -o.el.offsetWidth && o.el.previousElementSibling) {
+              o.x -= o.el.offsetHeight + o.marginX;
+              o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
+              o.change();
+              x = 0;
+            } else if (!o.el.previousElementSibling && x < 0 || !o.el.nextElementSibling && x > 0) {
+              x = 0;
+            }
+            o.el.style.webkitTransform = 'translateX(' + x + 'px)';
+            o.el.style.transform = 'translateX(' + x + 'px)';
           }
-          o.el.style.webkitTransform = 'translateY(' + y + 'px)';
-          o.el.style.transform = 'translateY(' + y + 'px)';
         }
 
         function onmouseup()
@@ -160,13 +180,13 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           o.el.style.webkitTransform = '';
           o.el.style.transform = '';
           o.el.classList.remove(o.handleClass);
-          document.removeEventListener('mousemove', onmousemove);
-          document.removeEventListener('mouseup', onmouseup);
-          document.onselectstart = null;
+          o.el.ownerDocument.removeEventListener('mousemove', onmousemove);
+          o.el.ownerDocument.removeEventListener('mouseup', onmouseup);
+          o.el.ownerDocument.onselectstart = null;
           o.complete(o.el);
         }
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mousedown', onmousedown);
         }
       };
@@ -180,7 +200,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
           b = b || {};
         }
-        let o = {
+        var o = {
           handle: {
             start: function(c) {
               'function' === typeof b.handle.start ? b.handle.start.call(c) : '';
@@ -223,7 +243,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
 
         function onmousemove(e)
         {
-          let x = e.pageX - o.x, y = e.pageY - o.y;
+          var x = e.pageX - o.x, y = e.pageY - o.y;
           if (Math.abs(x) + Math.abs(y) > 10) {
             o.draggable = true;
             o.el.style.pointerEvents = 'none';
@@ -244,7 +264,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
             o.el.style.left = '';
             o.el.style.top = '';
             o.el.draggable = false;
-            let h = document.querySelector('.' + o.container.classOver);
+            var h = document.querySelector('.' + o.container.classOver);
             if (h && h !== o.parent) {
               h.appendChild(o.el);
               o.container.drop(h, o.el);
@@ -253,11 +273,11 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           }
         }
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mousedown', onmousedown);
         }
 
-        for (let i = 0; i < o.container.els.length; i++) {
+        for (var i = 0; i < o.container.els.length; i++) {
           o.container.els[i].onmouseenter = function() {
             this.classList.add(b.container.classOver);
           };
@@ -275,11 +295,11 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         } else {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
         }
-        let h = {
+        var h = {
           containerClass: b && b.containerClass || 'tab-body'
         };
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           if (a[i].nextElementSibling && a[i].nextElementSibling.classList.contains(h.containerClass)) {
             a[i].nextElementSibling.classList.add('collapse', 'in');
             a[i].onclick = function() {
@@ -297,7 +317,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
 
       // check connection to server
       evo.checkConnectionToServer = function() {
-        let xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP');
+        var xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP');
         xhr.open('HEAD', '<?= MODX_MANAGER_URL ?>includes/version.inc.php?time=' + new Date().getTime(), false);
         try {
           xhr.send();
@@ -317,9 +337,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           }
           ?>
 
-        let actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
+        var actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
         if (actionButtons !== null && actionSelect !== null) {
-          let actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
+          var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
           actionPlus.classList.add('dropdown-toggle');
           actionStay['stay1'] = '<i class="<?= $_style['actions_file'] ?>"></i>';
           actionStay['stay2'] = '<i class="<?= $_style['actions_pencil'] ?>"></i>';
@@ -327,17 +347,17 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           if (actionSelect.value) {
             actionSaveButton.innerHTML += '<i class="<?= $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
           }
-          let actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
+          var actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
           div.className = 'dropdown-menu';
           actionSaveButton.parentNode.classList.add('dropdown');
-          for (let i = 0; i < actionSelectOptions.length; i++) {
+          for (var i = 0; i < actionSelectOptions.length; i++) {
             if (!actionSelectOptions[i].selected) {
               actionSelectNewOption = document.createElement('SPAN');
               actionSelectNewOption.className = 'btn btn-block';
               actionSelectNewOption.dataset.id = i;
               actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
               actionSelectNewOption.onclick = function() {
-                let s = actionSelect.querySelector('option[selected=selected]');
+                var s = actionSelect.querySelector('option[selected=selected]');
                 if (s) {
                   s.selected = false;
                 }
@@ -360,7 +380,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
       }
 
-      let dontShowWorker = false;
+      var dontShowWorker = false;
 
       function document_onunload(e)
       {
@@ -406,8 +426,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       function checkDirt(evt)
       {
         evt = evt || window.event;
+        var message = '';
         if (!evo.checkConnectionToServer()) {
-          let message = '<?= addslashes($_lang['error_internet_connection']) ?>';
+          message = '<?= addslashes($_lang['error_internet_connection']) ?>';
           setTimeout(function() {
             alert(message);
           }, 10);
@@ -416,7 +437,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           return message;
         }
         if (documentDirty === true) {
-          let message = '<?= addslashes($_lang['warning_not_saved']) ?>';
+          message = '<?= addslashes($_lang['warning_not_saved']) ?>';
           evt.returnValue = message;
           timerForUnload = setTimeout('stopWorker()', 100);
           return message;
@@ -426,12 +447,12 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       function saveWait(fName)
       {
         document.getElementById('savingMessage').innerHTML = '<?= $_lang['saving'] ?>';
-        for (let i = 0; i < document.forms[fName].elements.length; i++) {
+        for (var i = 0; i < document.forms[fName].elements.length; i++) {
           document.forms[fName].elements[i].disabled = 'disabled';
         }
       }
 
-      let managerPath = '';
+      var managerPath = '';
 
       function hideLoader()
       {
