@@ -333,6 +333,10 @@
     background-color: #1a1c21;
   }
 
+  .dark.ElementsInTree #tree .tab-row .tab:hover {
+      background-color: #2d3033;
+   }
+
   .dark.ElementsInTree #tree .tab-row .tab.selected {
     background-color: #24272A;
     border-color: #343739;
