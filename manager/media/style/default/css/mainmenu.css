@@ -1,5 +1,5 @@
 /* #mainMenu */
-#mainMenu { background-color: #1d2023; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
+#mainMenu { background-color: #1d2023; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
 #mainMenu.show { overflow: visible }
 #mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { content: ""; position: absolute; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1); }
 #mainMenu > .container { display: table; width: 100%; border-collapse: collapse }
@@ -31,12 +31,12 @@
 #mainMenu #settings.nav > li > ul { left: auto; right: 0 }
 #mainMenu .nav > li > ul > li { border-bottom: 1px solid rgba(0, 0, 0, 0.05); margin-bottom: -1px; }
 #mainMenu .nav > li > ul > li:last-child { border: none; margin-bottom: 0 }
-#mainMenu .nav > li > ul > li.item-input { padding: 0.35em 0.5em; }
+#mainMenu .nav > li > ul > li.item-input { padding: 0.375em 0.5em; }
 #mainMenu .nav > li > ul > li > a:first-child, #mainMenu .nav > li > ul > li > span { display: block; position: relative; padding: 0 2rem 0 1rem; line-height: 2.2rem; color: #444; text-decoration: none }
 #mainMenu .nav > li > ul > li.hover > a:first-child { color: #fff; background-color: #1976d2; }
 #mainMenu .nav > li > ul > li > span:first-child { padding: 0 1em; text-align: center; font-size: 0.875em; color: #aaa; }
 #mainMenu .nav > li > ul > li .fa { width: 1.3em; margin-right: 0.5em; font-size: .8rem; line-height: .8rem; text-align: center; vertical-align: baseline }
-#mainMenu .nav > li > ul > li.selected a:first-child::before { content: ''; position: absolute; right: 0.25em; top: 0.25em; width: 0.5em; height: 0.5em; background-color: #ffc107; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; }
+#mainMenu .nav > li > ul > li.selected a:first-child::before, #main .evo-tab-row .tab.changed::before { content: ''; position: absolute; right: 0.25em; top: 0.25em; width: 0.5em; height: 0.5em; background-color: #ffc107; -webkit-border-radius: 50%; border-radius: 50%; pointer-events: none }
 #mainMenu .nav > li > ul > li.toggle-dropdown > a::after { content: "\f105"; position: absolute; top: 0.6em; right: 0.6em; font: normal normal normal 1.2em/1 FontAwesome; }
 #mainMenu .nav > li > ul > li.disabled > a { opacity: 0.5; color: #7d2a24; }
 #mainMenu .nav > li > ul > li.locked > a { font-style: italic }

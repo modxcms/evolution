@@ -27,7 +27,7 @@ if(is_array($evtOut)) {
 		<a class="treeButton" id="treeMenu_sortingtree" onclick="modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a>
 
 		<?php if($modx->hasPermission('edit_document')) { ?>
-			<a class="treeButton" id="treeMenu_sortingindex" onclick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex']; ?>"><?php echo $_style['sort_menuindex']; ?></a>
+			<a class="treeButton" id="treeMenu_sortingindex" onclick="modx.tabs({url: '<?= MODX_MANAGER_URL ?>index.php?a=56&id=0', title: '<?php echo $_lang['sort_menuindex']; ?>'});" title="<?php echo $_lang['sort_menuindex']; ?>"><?php echo $_style['sort_menuindex']; ?></a>
 		<?php } ?>
 
 		<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>

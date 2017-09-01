@@ -254,7 +254,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+									'url' => "index.php?a=22&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -270,7 +270,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+									'url' => "index.php?a=23&itemname=" . $name
                                 )
                             );
                         }
@@ -292,7 +292,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+									'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -308,7 +308,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+									'url' => "index.php?a=77&itemname=" . $name
                                 )
                             );
                         }
@@ -329,7 +329,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+									'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -353,7 +353,7 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+										'url' => "index.php?a=22&id=" . $row['id']
                                     )
                                 );
                                 if (!empty($row['description'])) {
@@ -369,11 +369,11 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+										'url' => "index.php?a=77&itemname=" . $name
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+										'url' => "index.php?a=23&itemname=" . $name
                                     )
                                 );
                             }
@@ -441,7 +441,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
+									'url' => "index.php?a=301&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -457,7 +457,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
+									'url' => "index.php?a=300&itemname=" . $name
                                 )
                             );
                         }

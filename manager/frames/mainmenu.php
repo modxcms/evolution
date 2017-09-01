@@ -353,7 +353,7 @@ $sitemenu['refresh_site'] = array(
             'a', // tag
             'javascript:;', // href
             'btn btn-secondary', // class or btn-success
-            'modx.openWindow({url:\'index.php?a=26\', title:\'' . $_lang['refresh_site'] . '\'})', // onclick
+            'modx.popup({url:\'index.php?a=26\', title:\'' . $_lang['refresh_site'] . '\', icon: \'fa-recycle\', iframe: \'ajax\', selector: \'.tab-page>.container\', position: \'right top\', width: \'auto\', maxheight: \'50%\'})', // onclick
             $_lang['refresh_site'], // title
             '<i class="fa fa-recycle"></i>' // innerHTML
         )
