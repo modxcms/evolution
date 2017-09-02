@@ -32,18 +32,8 @@
       if (modx.config.mail_check_timeperiod > 0 && modx.permission.messages) {
         setTimeout('modx.updateMail(true)', 1000)
       }
-      d.addEventListener('click', function(e) {
-        modx.hideDropDown(e);
-        if (modx.config.global_tabs && e.target && ((e.target.tagName === 'A' && e.target.target === 'main') || (e.target.parentNode.tagName === 'A' && e.target.parentNode.target === 'main'))) {
-          var a = e.target.tagName === 'A' && e.target || e.target.parentNode.tagName === 'A' && e.target.parentNode;
-          e.preventDefault();
-          if (e.shiftKey) {
-            modx.openWindow({url: a.href})
-          } else {
-            modx.tabs({url: a.href, title: a.innerHTML})
-          }
-        }
-      }, false);
+      d.addEventListener('click', modx.hideDropDown, false);
+      d.addEventListener('click', modx.tabsInit, false);
     },
     mainMenu: {
       id: 'mainMenu',
@@ -320,22 +310,10 @@
         modx.main.stopWork();
         modx.main.scrollWork();
         modx.tree.restoreTree();
-        w.main.document.onclick = modx.hideDropDown;
-        w.main.document.oncontextmenu = modx.main.oncontextmenu;
+        w.main.document.addEventListener('contextmenu', modx.main.oncontextmenu, false);
+        w.main.document.addEventListener('click', modx.hideDropDown, false);
+        w.main.document.addEventListener('click', modx.tabsInit, false);
         w.history.replaceState(null, d.title, (w.main.location.search === '?a=2' ? modx.MODX_MANAGER_URL : '#' + w.main.location.search));
-        if (w.main.frameElement.id === 'mainframe') {
-          w.main.addEventListener('click', function(e) {
-            if (modx.config.global_tabs && e.target && ((e.target.tagName === 'A' && e.target.target === '') || (e.target.parentNode.tagName === 'A' && e.target.parentNode.target === ''))) {
-              var a = e.target.tagName === 'A' && e.target || e.target.parentNode.tagName === 'A' && e.target.parentNode;
-              e.preventDefault();
-              if (e.shiftKey) {
-                modx.openWindow({url: a.href})
-              } else {
-                modx.tabs({url: a.href, title: a.innerHTML})
-              }
-            }
-          })
-        }
       },
       oncontextmenu: function(e) {
         if (e.ctrlKey) return;
@@ -1490,8 +1468,19 @@
         }
       }
     },
+    tabsInit: function(e) {
+      if (modx.config.global_tabs && e.target && ((e.target.tagName === 'A' && e.target.target === 'main') || (e.target.parentNode.tagName === 'A' && e.target.parentNode.target === 'main'))) {
+        var a = e.target.tagName === 'A' && e.target || e.target.parentNode.tagName === 'A' && e.target.parentNode;
+        if (e.shiftKey) {
+          modx.openWindow({url: a.href})
+        } else {
+          modx.tabs({url: a.href, title: a.innerHTML})
+        }
+        e.preventDefault();
+      }
+    },
     tabs: function(a) {
-      if (typeof a === 'object' && a.url) {
+      if (typeof a === 'object' && a.url && /(index.php|http)/.test(a.url)) {
         if (modx.config.global_tabs) {
           var o = {
             url: a.url,
@@ -1770,6 +1759,9 @@
                 o.el.classList.remove('show');
               }
               o.calc(1);
+              if (o.o && o.o.parentNode) {
+                o.o.parentNode.removeChild(o.o)
+              }
               o.el.timer = setTimeout(function(e) {
                 clearTimeout(o.el.timer);
                 if (o.el.parentNode) {
@@ -1887,7 +1879,7 @@
             o.el.lastChild.style.overflowY = 'auto';
             o.el.lastChild.style.maxHeight = o.maxheight + 'px';
           }
-          if (o.url.substr(0, 4) === 'http' || o.url.substr(0, 9) === 'index.php') {
+          if (/(index.php|http)/.test(o.url)) {
             if (o.iframe === 'iframe') {
               o.uid = modx.urlToUid(a.url);
               o.el.className += ' ' + o.addclass + ' ' + o.className + '-iframe';
