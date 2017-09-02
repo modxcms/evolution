@@ -41,11 +41,11 @@ function getLockedByUser($lockType,$rowLock,$id) {
         $ph['username'] = $rowLock['username'];
         $title = $modx->parseText($_lang['lock_element_locked_by'], $ph);
             if($modx->hasPermission('remove_locks')) {
-            $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource">%s</a>';
+            $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource">%s </a>';
             $params = array($lockType, $id, $title, $_style['icons_secured']);
             return vsprintf($tpl, $params);
             } else {
-            $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;">%s</span>';
+            $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;">%s </span>';
             $params = array($title, $_style['icons_secured']);
             return vsprintf($tpl, $params);
             }
