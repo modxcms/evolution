@@ -277,7 +277,7 @@
 
   .ElementsInTree #tree .tab-page .panel-group .panel,
   .ElementsInTree #tree #tabDoc.tab-page>div {
-    max-height: calc(100vh - 10rem) !important;
+    max-height: calc(100vh - 8rem) !important;
     overflow: auto;
   }
 

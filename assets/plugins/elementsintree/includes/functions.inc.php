@@ -34,18 +34,18 @@ function getLockedByUser($lockType,$rowLock,$id) {
     
     if($rowLock['sid'] == $modx->sid) {
         $title = $modx->parseText($_lang['lock_element_editing'], $ph);
-        $tpl = '<span title="%s" class="editResource" style="cursor:context-menu;"><img src="%s" /></span>&nbsp;';
-        $params = array($title, $_style['icons_preview_resource']);
+        $tpl = '<span title="%s" class="editResource" style="cursor:context-menu;"><i class="%s"></i></span>&nbsp;';
+        $params = array($title, $_style['actions_preview']);
         return vsprintf($tpl, $params);
     } else {
         $ph['username'] = $rowLock['username'];
         $title = $modx->parseText($_lang['lock_element_locked_by'], $ph);
             if($modx->hasPermission('remove_locks')) {
-            $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource"><img src="%s" /></a>';
+            $tpl = '<a href="#" onclick="unlockElement(%s,%s,this);return false;" title="%s" class="lockedResource">%s</a>';
             $params = array($lockType, $id, $title, $_style['icons_secured']);
             return vsprintf($tpl, $params);
             } else {
-            $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;"><img src="%s" /></span>';
+            $tpl = '<span title="%s" class="lockedResource" style="cursor:context-menu;">%s</span>';
             $params = array($title, $_style['icons_secured']);
             return vsprintf($tpl, $params);
             }
