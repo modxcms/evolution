@@ -138,6 +138,16 @@
     background-color: #F2F2F2;
   }
 
+  .dark #treePane .panel-heading {
+    border-top: 1px solid #3e4144;
+    border-bottom: 1px solid #3e4144;
+    background-color: #2f3236;
+  }
+
+  .dark #treePane .panel-heading:hover {
+    background-color: #35383c;
+  }
+
   #treePane .panel-collapse {
   }
 
@@ -247,6 +257,10 @@
     color: #404040;
   }
 
+  .dark.ElementsInTree #tree .actionButtons--eit li a:hover {
+    color: #bfbfbf;
+  }
+
   .ElementsInTree #tree .tab-page {
     padding: 0 !important;
     background-color: #fff;
@@ -324,6 +338,10 @@
 
   .ElementsInTree #tree .eltree:hover {
     background-color: rgba(33, 150, 243, 0.1);
+  }
+
+  .dark.ElementsInTree #tree .eltree:hover {
+    background-color: rgba(255, 255, 255, 0.15);
   }
 
   .ElementsInTree #tree .eltree img {
@@ -408,17 +426,20 @@
   }
 
   .dark.ElementsInTree #tree .form-control {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.09);
+    background-color: transparent;
     color: #c7c7c7;
   }
 
   .dark.ElementsInTree #tree a {
-    color: #b7b7b7
+    color: #b7b7b7;
+  }
+
+  .dark.ElementsInTree #tree a:hover {
+    color: #dbdbdb;
   }
 
   .dark.ElementsInTree #tree .disabledPlugin a {
-    color: #b68282
+    color: #b68282;
   }
 
   .dark.ElementsInTree #treeMenu {
