@@ -131,15 +131,21 @@
       color: #657587;
       font-weight: bold;
   }
+  
   #treePane .panel-title a:hover {
       text-decoration: none;
-      color:#3697CD;
+  }
+  
+  #treePane .panel-title a:focus {
+      text-decoration: none;
   }
 
   #treePane .panel-title > a::before {
       content: "\f107"; /* fa-angle-down */
       font-family: "FontAwesome";
       margin-left:-17px;
+      width: 10px;
+      display: inline-block;
   }
   #treePane .panel-title > a.collapsed::before {
       content: "\f105"; /* fa-angle-right */
@@ -201,6 +207,10 @@
     
   }
 
+  .ElementsInTree #tree a {
+    color: #404040;
+  }
+
   .ElementsInTree #tree .treeframebody {
     background-color: #fafafa !important;
     border-right: 1px solid #cfd2d6
@@ -214,7 +224,7 @@
   }
 
   .ElementsInTree #tree .actionButtons--eit {
-    top: 3.1rem;
+    top: 2.8rem;
     right: 1rem
   }
 
