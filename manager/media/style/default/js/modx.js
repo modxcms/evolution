@@ -1563,15 +1563,15 @@
             },
             events: {
               click: function() {
-                if (typeof w.main.documentDirty && w.main.documentDirty && !o.tab.classList.contains('changed')) {
+                if (typeof w.main.documentDirty !== 'undefined' && w.main.documentDirty && !o.tab.classList.contains('changed')) {
                   o.tab.classList.add('changed');
-                  w.main.removeEventListener('click', o.events.click)
+                  w.main.document.removeEventListener('click', o.events.click)
                 }
               },
               keyup: function() {
-                if (typeof w.main.documentDirty && w.main.documentDirty && !o.tab.classList.contains('changed')) {
+                if (typeof w.main.documentDirty !== 'undefined' && !o.tab.classList.contains('changed')) {
                   o.tab.classList.add('changed');
-                  w.main.removeEventListener('keyup', o.events.click)
+                  w.main.document.removeEventListener('keyup', o.events.keyup)
                 }
               }
             }
@@ -1643,9 +1643,9 @@
                   modx.tree.setItemToChange();
                   modx.main.onload(e)
                 }
+                w.main.document.addEventListener('click', o.events.click, false);
+                w.main.document.addEventListener('keyup', o.events.keyup, false);
               }
-              w.main.addEventListener('click', o.events.click, false);
-              w.main.addEventListener('keyup', o.events.click, false);
             };
             o.el.appendChild(o.frame);
             o.show(0)
