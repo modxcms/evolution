@@ -16,14 +16,12 @@
   }
 
   #treePane .tab-page ul {
-    margin: 0;
-    margin-bottom: 5px;
+    margin: 5px 0;
     padding: 0;
   }
 
   #treePane .tab-page ul li {
     list-style: none;
-    padding-left: 8px;
   }
 
   #treePane .tab-page ul li li {
@@ -37,7 +35,7 @@
   }
 
   #treePane .tab-page ul li a:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   #treePane .tab {
@@ -125,9 +123,27 @@
     transition: none;
   }
 
+  #treePane .panel-heading {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background-color: #FAFAFA;
+    margin-top: -1px;
+  }
+
+  #treePane .panel {
+    padding-top: 1px;
+  }
+
+  #treePane .panel-heading:hover {
+    background-color: #F2F2F2;
+  }
+
+  #treePane .panel-collapse {
+  }
+
   #treePane .panel-title a{
     display: block;
-    padding: 4px 0 4px 17px;
+    padding: 4px 0 4px 1.9rem;
     color: #657587;
     font-weight: bold;
   }
@@ -153,19 +169,6 @@
     padding:0 2px;
   }
   #treePane .panel-title > a[aria-expanded="true"] {
-    color: #657587;
-  }
-
-  #treePane li.eltree {
-    margin-left: 5px;
-    line-height: 1.4em;
-  }
-
-  #treePane li.eltree:before {
-    font-family: "FontAwesome";
-    font-size: 14px;
-    padding:0 5px 0 0;
-    margin-right:2px;
     color: #657587;
   }
 
@@ -226,8 +229,8 @@
   }
 
   .ElementsInTree #tree .actionButtons--eit {
-    top: 2.8rem;
-    right: 1rem
+    top: 1.95rem;
+    right: 0.8rem;
   }
 
   .ElementsInTree #tree .actionButtons--eit li {
@@ -237,10 +240,15 @@
 
   .ElementsInTree #tree .actionButtons--eit li a {
     padding: 0.5rem;
+    color: #888;
+  }
+
+  .ElementsInTree #tree .actionButtons--eit li a:hover {
+    color: #404040;
   }
 
   .ElementsInTree #tree .tab-page {
-    padding: 0.8rem 0 0.8rem 0.8rem !important;
+    padding: 0 !important;
     background-color: #fff;
     border: 1px solid #ddd;
     border-width: 1px 0;
@@ -258,7 +266,7 @@
     overflow: visible !important;
     max-height: none !important;
     box-sizing: border-box !important;
-    padding-top: 5px;
+    padding-top: 0;
   }
 
   .ElementsInTree #tree .tab-row {
@@ -296,13 +304,26 @@
     background-color: #fff;
   }
 
-  .ElementsInTree #tree .form-control {
-    padding: 0.25rem;
-    font-size: 0.8rem;
+  .ElementsInTree #tree .eltree {
+    line-height: 1.5;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 1.7rem;
+    background-color: rgba(33, 150, 243, 0);
+    -webkit-transition-duration: 0.15s;
+    transition-duration: 0.15s;
   }
 
-  .ElementsInTree #tree .eltree {
-    line-height: 1.5
+  .ElementsInTree #tree .eltree:before {
+    font-family: "FontAwesome";
+    font-size: 14px;
+    padding:0 5px 0 0;
+    margin-right:2px;
+    color: #657587;
+  }
+
+  .ElementsInTree #tree .eltree:hover {
+    background-color: rgba(33, 150, 243, 0.1);
   }
 
   .ElementsInTree #tree .eltree img {
@@ -312,13 +333,18 @@
   }
 
   .ElementsInTree #tree #tabDoc {
-    padding-top: 7px !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.8rem !important;
     padding-left: 0 !important;
-    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   .ElementsInTree #tree #tabDoc::before {
     display: none
+  }
+
+  .ElementsInTree #treeRoot a {
+    padding-left: 2em;
   }
 
   .ElementsInTree #treeMenu {
@@ -340,6 +366,14 @@
   .ElementsInTree .filterElements-form--eit {
     width: 200px !important;
     width: calc(100% - 85px) !important;
+  }
+
+  .ElementsInTree .filterElements-form--eit .form-control {
+    padding: 0.25rem;
+    padding-left: 0.5rem;
+    height: 2rem;
+    font-size: 0.8rem;
+    border-width: 0;
   }
 
   .dark.ElementsInTree #tree .treeframebody {
