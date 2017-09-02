@@ -1503,7 +1503,7 @@
                   w.main.document.querySelectorAll('.tab-row-container .tab-row .tab')[modx.main.getQueryVariable('tab', o.url)].click()
                 }
                 modx.main.tabRow.scroll(o.navbar, o.tab);
-                o.checkDirt()
+                modx.tree.setItemToChange()
               } else {
                 modx.main.tabRow.scroll(o.navbar)
               }
@@ -1530,7 +1530,7 @@
                 delete d.getElementById(o.tab.dataset.target);
                 delete o.tab;
                 o.tab = o.navbar.querySelector('.selected');
-                o.checkDirt()
+                modx.tree.setItemToChange()
               }
             },
             select: function(e) {
@@ -1550,21 +1550,22 @@
                 w.main = o.el.firstElementChild.contentWindow;
                 w.history.replaceState(null, d.title, w.main.location.search === '?a=2' ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
                 modx.main.tabRow.scroll(o.navbar, o.tab);
-                o.checkDirt()
+                modx.tree.setItemToChange()
               }
             },
-            checkDirt: function() {
-              clearTimeout(modx.tabsTimer);
-              if (!o.tab.classList.contains('changed') && typeof o.el.firstElementChild.contentWindow.documentDirty && o.el.firstElementChild.contentWindow.document.getElementById('Button1')) {
-                modx.tabsTimer = setInterval(function() {
-                  //console.log('tab: ' + o.tab.dataset.target + ', timer: ' + modx.tabsTimer);
-                  if (o.el && o.el.firstElementChild.contentWindow.documentDirty) {
-                    clearInterval(modx.tabsTimer);
-                    o.tab.classList.add('changed')
-                  }
-                }, 1000)
+            events: {
+              click: function() {
+                if (typeof w.main.documentDirty && w.main.documentDirty && !o.tab.classList.contains('changed')) {
+                  o.tab.classList.add('changed');
+                  w.main.removeEventListener('click', o.events.click)
+                }
+              },
+              keyup: function() {
+                if (typeof w.main.documentDirty && w.main.documentDirty && !o.tab.classList.contains('changed')) {
+                  o.tab.classList.add('changed');
+                  w.main.removeEventListener('keyup', o.events.click)
+                }
               }
-              modx.tree.setItemToChange()
             }
           };
           for (var k in a) {
@@ -1631,10 +1632,12 @@
                   o.tab.querySelector('.tab-title').innerHTML = a.title;
                   o.tab.querySelector('.tab-title').title = a.title.replace(/<\/?[^>]+>|^\s+|\s+$/g, '');
                   e.target.parentNode.id = 'evo-tab-page-' + o.uid;
-                  o.checkDirt();
+                  modx.tree.setItemToChange();
                   modx.main.onload(e)
                 }
               }
+              w.main.addEventListener('click', o.events.click, false);
+              w.main.addEventListener('keyup', o.events.click, false);
             };
             o.el.appendChild(o.frame);
             o.show(0)
