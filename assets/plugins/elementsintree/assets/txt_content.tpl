@@ -225,6 +225,11 @@
   .ElementsInTree #tree a {
     color: #404040;
   }
+  
+  .ElementsInTree #tree .disabledPlugin, 
+  .ElementsInTree #tree .disabledPlugin a {
+    color: #B68282;
+  }
 
   .ElementsInTree #tree .treeframebody {
     background-color: #fafafa !important;
@@ -432,6 +437,11 @@
 
   .dark.ElementsInTree #tree a {
     color: #b7b7b7;
+  }
+
+  .dark.ElementsInTree #tree .disabledPlugin, 
+  .dark.ElementsInTree #tree .disabledPlugin a {
+    color: #B68282;
   }
 
   .dark.ElementsInTree #tree a:hover {
