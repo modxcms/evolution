@@ -323,6 +323,19 @@
         w.main.document.onclick = modx.hideDropDown;
         w.main.document.oncontextmenu = modx.main.oncontextmenu;
         w.history.replaceState(null, d.title, (w.main.location.search === '?a=2' ? modx.MODX_MANAGER_URL : '#' + w.main.location.search));
+        if (w.main.frameElement.id === 'mainframe') {
+          w.main.addEventListener('click', function(e) {
+            if (modx.config.global_tabs && e.target && ((e.target.tagName === 'A' && e.target.target === '') || (e.target.parentNode.tagName === 'A' && e.target.parentNode.target === ''))) {
+              var a = e.target.tagName === 'A' && e.target || e.target.parentNode.tagName === 'A' && e.target.parentNode;
+              e.preventDefault();
+              if (e.shiftKey) {
+                modx.openWindow({url: a.href})
+              } else {
+                modx.tabs({url: a.href, title: a.innerHTML})
+              }
+            }
+          })
+        }
       },
       oncontextmenu: function(e) {
         if (e.ctrlKey) return;
