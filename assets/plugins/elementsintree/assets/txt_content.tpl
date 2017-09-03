@@ -130,6 +130,10 @@
     margin-top: -1px;
   }
 
+  #treePane .panel-heading:first-child {
+      border-top: none
+  }
+
   #treePane .panel {
     padding-top: 1px;
   }
@@ -141,11 +145,11 @@
   .dark #treePane .panel-heading {
     border-top: 1px solid #3e4144;
     border-bottom: 1px solid #3e4144;
-    background-color: #2f3236;
+    background-color: #2f323a;
   }
 
   .dark #treePane .panel-heading:hover {
-    background-color: #35383c;
+    background-color: #363942;
   }
 
   #treePane .panel-collapse {
@@ -232,7 +236,7 @@
   }
 
   .ElementsInTree #tree .treeframebody {
-    background-color: #fafafa !important;
+    background-color: #fff !important;
     border-right: 1px solid #cfd2d6
   }
 
@@ -269,7 +273,6 @@
   .ElementsInTree #tree .tab-page {
     padding: 0 !important;
     background-color: #fff;
-    border: 1px solid #ddd;
     border-width: 1px 0;
     box-shadow: none;
     min-height: 55px;
@@ -286,11 +289,11 @@
     max-height: none !important;
     box-sizing: border-box !important;
     padding-top: 0;
+    border-top: 1px solid #ddd;
   }
 
   .ElementsInTree #tree .tab-row {
     padding: 0;
-    margin-bottom: -1px;
     display: table;
     width: 100%;
     table-layout: fixed;
@@ -341,11 +344,11 @@
     color: #657587;
   }
 
-  .ElementsInTree #tree .eltree:hover {
+  .ElementsInTree #tree .eltree:hover, .ElementsInTree #tree .eltree.current {
     background-color: rgba(33, 150, 243, 0.1);
   }
 
-  .dark.ElementsInTree #tree .eltree:hover {
+  .dark.ElementsInTree #tree .eltree:hover, .dark.ElementsInTree #tree .eltree.current {
     background-color: rgba(255, 255, 255, 0.15);
   }
 
@@ -400,13 +403,13 @@
   }
 
   .dark.ElementsInTree #tree .treeframebody {
-    background-color: #1d2023 !important;
+    background-color: #202329 !important;
     color: #828282;
     border-color: #2a2d33
   }
 
   .dark.ElementsInTree #tree .tab-row {
-    border-top-color: #343739;
+    border-top-color: #2a2d33;
   }
 
   .dark.ElementsInTree #tree .tab-row .tab {
@@ -420,14 +423,16 @@
   }
 
   .dark.ElementsInTree #tree .tab-row .tab.selected {
-    background-color: #24272A;
-    border-color: #343739;
+    background-color: #202329;
     color: #bfbfbf;
   }
 
   .dark.ElementsInTree #tree .tab-page {
-    background-color: #24272A;
-    border-color: rgba(255, 255, 255, .1)
+    background-color: #202329;
+  }
+
+  .dark.ElementsInTree #tree .tab-page .panel-group {
+    border-color: #2a2d33;
   }
 
   .dark.ElementsInTree #tree .form-control {
