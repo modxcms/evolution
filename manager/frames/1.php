@@ -408,7 +408,7 @@ if ($user['which_browser'] == 'default') {
         constructLink(2, $_style["ctx_edit_document"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
         constructLink(5, $_style["ctx_move_document"], $_lang["move_resource"], $modx->hasPermission('save_document')); // move
         constructLink(7, $_style["ctx_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
-        constructLink(11, $_style["ctx_sort_menuindex"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
+        constructLink(11, $_style["ctx_sort_menuindex"], $_lang["sort_menuindex"], !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
         ?>
         <div class="seperator"></div>
         <?php
