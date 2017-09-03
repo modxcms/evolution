@@ -537,7 +537,7 @@ if (isset($action)) {
                         if (!empty($menuindex)) {
                             $menuindex = explode(',', $menuindex);
                             foreach ($menuindex as $key => $value) {
-                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
+                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
                             }
                         } else {
                             // TODO: max(*) menuindex
@@ -554,6 +554,32 @@ if (isset($action)) {
 
             header('content-type: application/json');
             echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+
+            break;
+        }
+
+        case 'getLockedElements': {
+            $type = isset($_REQUEST['type']) ? (int)$_REQUEST['type'] : 0;
+            $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
+
+            $output = !!$modx->elementIsLocked($type, $id, true);
+
+            if (!$output) {
+                $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
+                $docgrp_cond = $docgrp ? ' OR dg.document_group IN (' . $docgrp . ')' : '';
+                $sql = '
+                    SELECT MAX(IF(1=' . $role . ' OR sc.privatemgr=0' . $docgrp_cond . ', 0, 1)) AS locked
+                    FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
+                    LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
+                    WHERE sc.id=' . $id . ' GROUP BY sc.id';
+                $sql = $modx->db->query($sql);
+                if ($modx->db->getRecordCount($sql)) {
+                    $row = $modx->db->getRow($sql);
+                    $output = !!$row['locked'];
+                }
+            }
+            
+            echo $output;
 
             break;
         }
