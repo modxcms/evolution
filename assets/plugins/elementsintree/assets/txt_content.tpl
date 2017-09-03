@@ -131,7 +131,7 @@
   }
 
   #treePane .panel-heading:first-child {
-      border-top: none
+      border-top-color: transparent !important;
   }
 
   #treePane .panel {
@@ -432,7 +432,7 @@
   }
 
   .dark.ElementsInTree #tree .tab-page .panel-group {
-    border-color: #2a2d33;
+    border-color: #3e4144;
   }
 
   .dark.ElementsInTree #tree .form-control {
