@@ -44,8 +44,7 @@
   }
 
   #treePane .tab > span > .fa {
-    margin-right: 2px;
-    margin-left: 2px;
+    margin: 0;
   }
 
   #treePane .tab.selected {
@@ -61,8 +60,7 @@
     content: ".";
     clear: both;
     display: block;
-    visibility: hidden;
-    height: 0px;
+    background-color: #cfd2d6;
   }
 
   #treePane .ext-ico {
@@ -297,12 +295,11 @@
     display: table;
     width: 100%;
     table-layout: fixed;
-    border-top: 1px solid #CFD2D6;
     background-color: #dfdfdf;
   }
 
   .ElementsInTree #tree .tab-row .tab {
-    height: 1.8rem;
+    height: 1.875rem;
     line-height: 1.75rem;
     background-color: transparent;
     border-color: #cfd2d6;
@@ -311,6 +308,7 @@
     text-align: center;
     vertical-align: middle;
     width: 100%;
+    z-index: 2;
   }
 
   .ElementsInTree #tree .tab-row .tab:last-child {
@@ -373,13 +371,7 @@
     padding-left: 2em;
   }
 
-  .ElementsInTree #treeMenu {
-    height: 1.8rem;
-    background-color: #DFDFDF !important;
-  }
-
   .ElementsInTree #treeMenu.is-intab {
-    margin-left: 0.1rem;
     height: 1.875rem;
     background-color: transparent !important;
   }
@@ -406,10 +398,6 @@
     background-color: #202329 !important;
     color: #828282;
     border-color: #2a2d33
-  }
-
-  .dark.ElementsInTree #tree .tab-row {
-    border-top-color: #2a2d33;
   }
 
   .dark.ElementsInTree #tree .tab-row .tab {
@@ -477,11 +465,6 @@
     background-color: transparent !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
-  }
-
-  #treeMenu {
-    background-color: transparent !important;
-    border-bottom-color: transparent !important;
   }
 
   [+treeButtonsInTab_css+]
@@ -683,7 +666,7 @@
       });
 
       // Get size of invisible elements - http://stackoverflow.com/a/8839261/2354531
-      jQuery.fn.getSize = function() {    
+      jQuery.fn.getSize = function() {
         var $wrap = jQuery("<div />").appendTo(jQuery("body"));
         $wrap.css({
           "position":   "absolute !important",
@@ -706,49 +689,49 @@
 
       jQuery(document).ready(function() {
 
-        jQuery(".filterElements-form").keydown(function (e) {
-          if(e.keyCode == 13) e.preventDefault();
+        jQuery('.filterElements-form').keydown(function(e) {
+          if (e.keyCode === 13) e.preventDefault();
         });
 
         [+treeButtonsInTab_js+]
 
-         // Shift-Mouseclick opens/collapsed all categories
-         jQuery(".accordion-toggle").click(function(e) {
-         e.preventDefault();
-         var thisItemCollapsed = jQuery(this).hasClass("collapsed");
-         if (e.shiftKey) {
-         // Shift-key pressed
-         var toggleItems = jQuery(this).closest(".panel-group").find("> .panel .accordion-toggle");
-         var collapseItems = jQuery(this).closest(".panel-group").find("> .panel > .panel-collapse");
-         if(thisItemCollapsed) {
-         toggleItems.removeClass("collapsed");
-         collapseItems.collapse("show");
-         } else {
-         toggleItems.addClass("collapsed");
-         collapseItems.collapse("hide");
-         }
-         // Save states to localStorage
-         toggleItems.each(function() {
-         state = jQuery(this).hasClass("collapsed") ? 1 : 0;
-         setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
-         });
-         writeElementsInTreeParamsToStorage();
-         } else {
-         jQuery(this).toggleClass("collapsed");
-         jQuery(jQuery(this).attr("href")).collapse("toggle");
-         // Save state to localStorage
-         state = thisItemCollapsed ? 0 : 1;
-         setLastCollapsedCategory(jQuery(this).data("cattype"), jQuery(this).data("catid"), state);
-         writeElementsInTreeParamsToStorage();
-         }
-         });
+        // Shift-Mouseclick opens/collapsed all categories
+        jQuery('.accordion-toggle').click(function(e) {
+          e.preventDefault();
+          var thisItemCollapsed = jQuery(this).hasClass('collapsed');
+          if (e.shiftKey) {
+            // Shift-key pressed
+            var toggleItems = jQuery(this).closest('.panel-group').find('> .panel .accordion-toggle');
+            var collapseItems = jQuery(this).closest('.panel-group').find('> .panel > .panel-collapse');
+            if (thisItemCollapsed) {
+              toggleItems.removeClass('collapsed');
+              collapseItems.collapse('show');
+            } else {
+              toggleItems.addClass('collapsed');
+              collapseItems.collapse('hide');
+            }
+            // Save states to localStorage
+            toggleItems.each(function() {
+              state = jQuery(this).hasClass('collapsed') ? 1 : 0;
+              setLastCollapsedCategory(jQuery(this).data('cattype'), jQuery(this).data('catid'), state);
+            });
+            writeElementsInTreeParamsToStorage();
+          } else {
+            jQuery(this).toggleClass('collapsed');
+            jQuery(jQuery(this).attr('href')).collapse('toggle');
+            // Save state to localStorage
+            state = thisItemCollapsed ? 0 : 1;
+            setLastCollapsedCategory(jQuery(this).data('cattype'), jQuery(this).data('catid'), state);
+            writeElementsInTreeParamsToStorage();
+          }
+        });
 
-         setRememberCollapsedCategories();
+        setRememberCollapsedCategories();
 
-         });
-         } catch(err) {
-         alert("document.ready error: " + err);
-         }
+      });
+    } catch (err) {
+      alert('document.ready error: ' + err);
+    }
   </script>
   <script type="text/javascript">
     treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
