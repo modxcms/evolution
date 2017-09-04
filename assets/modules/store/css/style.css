@@ -1,17 +1,39 @@
- body {
-     padding: 10px;
-     background: #eeeeee url('../img/body.jpg');
- }
+body {padding:0;margin:0;overflow-x:hidden;}
 
-.pagetitle {position: relative; left: -10px}
+.pagetitle {position: relative; left: 10px}
  .github {
      background: url(../img/github.png);
      display: block;
      position: absolute;
      width: 100px;
      height: 100px;
-     left: 20px;
-     bottom: 50px;
+     left: -42px;
+     top: -42px;
+ }
+ .typesbadge {
+     border-top: 1px solid #e0e0e0;
+     background: #fafafa;
+     font-weight: 700;
+     display: block;
+     position: absolute;
+     width: 80px;
+     height: 25px;
+     right: 0px;
+     top: 0px;
+     padding:3px;
+     text-align:center;
+     border-radius: 0 0 0 10px;
+     border: 1px solid #dfdfdf;
+     border-width: 0 0 1px 1px;
+ }
+ .infobadge {
+     font-weight: 700;
+     display: block;
+     position: absolute;
+     width: 25px;
+     height: 25px;
+     left: 0px;
+     top: 0px;
  }
  .curr {
      margin-left: 6px;
@@ -23,7 +45,7 @@
  .pack_old .item-update,
  .pack_alredy .item-reinstall,
  .pack_install item-install {
-     display: block!important
+  display: block!important
  }
  .pack_install .item-reinstall,
  .pack_install .item-update {
@@ -87,13 +109,12 @@
      display: block;
  }
  .types {
-     font-size: 145%;
-     color: rgba(0, 0, 0, 0.3)
+     font-size: 125%;
+     color: rgba(0, 0, 0, 0.5)
  }
  .warning {
      color: #ff0000!important;
      padding-left: 20px;
-     display: inline-block;
      margin: 6px 20px 6px 0px;
  }
  .info span {
@@ -102,33 +123,24 @@
  .info span strong {
      color: #555;
  }
- .item_list .catalog_item {
-     border: 1px solid #e0e0e0;
- }
- .item_list .catalog_item:nth-child(odd) {
-     background: #f7f7f7;
- }
- .item_list .catalog_item:hover {
+
+ .item_list .catalog_item .item_content:hover {
      background: #fff;
-     background: #fff;
-     box-shadow: 0px 0px 3px rgba(119, 117, 117, 0.1);
+	 border: 1px solid #3697cd;
  }
  .row-category H3 {
-     margin: 0;
-     float: left
+    margin:0;
+    padding: 4px 0;
  }
  .catalog_thumb {
      border: 1px solid #AAA;
      background: #fff;
-     float: left;
-     margin-right: 10px;
+     margin-bottom:3px;
  }
- .clear {
-     clear: both;
- }
- .fr {
-     float: right;
- }
+.img-fluid {
+  max-width: 100%;
+  height: 140px;
+}
  nav ul li {
      float: left;
      list-style: none;
@@ -141,15 +153,10 @@
      float: left;
  }
  .cont {
-     margin-left: 230px;
      margin-bottom: 20px;
  }
- .sidebar {
-     float: left;
-     width: 230px;
- }
+
  .box {
-     width: 220px;
      border: 1px solid #e0e0e0;
      background: #fff;
      padding: 10px;
@@ -163,13 +170,20 @@
  .mh {
      min-height: 150px;
  }
- .catalog_item {
-     margin: 5px;
-     padding: 5px;
-     min-height: 80px;
-     position: relative;
+ .catalog_item {     
+     padding: 5px 10px 5px 5px;
      overflow: hidden;
  }
+
+  .item_content {
+     min-height: 350px;
+     border: 1px solid #e0e0e0;
+     padding: 5px;
+     overflow: hidden;
+     background:#FFF;
+     position: relative;
+ }
+
  .grid TD {
      padding-left: 5px;
  }
@@ -177,29 +191,60 @@
      padding-left: 5px;
      font-size: 12px;
  }
+  .info {
+     border-top: 1px solid #ececec;
+     background: #fff;
+     display: block;
+     position: absolute;
+     height: 30px;
+     width:100%;
+     left: 0;
+     bottom: 0;
+     text-align:center;
+ }
+
+.install_extras {
+     border-top: 1px solid #e0e0e0;
+     background: #fafafa;
+     display: block;
+     position: absolute;
+     height: 68px;
+     width:100%;
+     left: 0;
+     bottom: 0;
+     text-align:center;
+     padding:4px;
+ }
+ .catalog_item.col-lg-12 .install_extras {
+     text-align:right;
+ }
+.info_extras {
+     display: block;
+     background: #fff;
+     position: absolute;
+     height: 28px;
+     width:100%;
+     left: 0;
+     bottom: 70px;
+     text-align:right;
+     padding:0px 3px;
+     z-index:2;
+ }
  .info .version {
-     min-width: 90px;
      overflow: hidden;
-     display: inline-block;
-     padding-left: 20px;
+     padding-left: 0px;
  }
  .info .autor {
-     min-width: 120px;
      overflow: hidden;
-     display: inline-block;
-     padding-left: 20px;
+     padding-left: 5px;
  }
  .info .date {
-     min-width: 80px;
      overflow: hidden;
-     display: inline-block;
-     padding-left: 20px;
+     padding-left: 5px;
  }
  .info .download {
-     width: 20px;
      overflow: hidden;
-     display: inline-block;
-     padding-left: 20px;
+     padding-left: 5px;
  }
  .info .version:before {
      font-family: FontAwesome;
@@ -230,9 +275,8 @@
      font-style: normal;
      font-weight: normal;
      color: #3697cd;
-     position: absolute;
-     right: 18px;
-     padding: 0 10px 0 0px;
+     color: #3697cd;
+     padding: 0 5px 0 12px;
      content: '\f019';
  }
  .descript {
@@ -241,7 +285,7 @@
      margin-bottom: -15px;
  }
  div.search {
-     padding-left: 12px;
+     padding-left: 20px;
  }
  input[type="email"],
  input[type="password"],
@@ -273,7 +317,7 @@
      width: 300px;
      height: 28px;
      padding: 4px;
-     margin-left: -6px;
+     margin-left: 8px;
  }
  input#store_search:focus {
      border-color: #3697cd!important;
@@ -282,7 +326,7 @@
      color: red;
  }
  .cart_list input {
-     width: 198px;
+     width: 100%;
  }
  #loading {
      background: url(../img/loading.png);
@@ -300,7 +344,7 @@
  }
  .loginbut {
      margin: 5px 0;
-     width: 196px;
+     width: 100%;
      text-align: center;
      display: block;
      padding-left: 0px!important;
@@ -312,4 +356,61 @@
  }
  .row-category h3 {
      padding: 0px!important;
+ }
+ 
+ .text-info {font-size: 2em;cursor:pointer;}
+ 
+ .col-buttons {
+ 	padding-right:28px;
+ }
+ .bt-active {
+ 	color: #3697cd;
+ }
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/*liststyle*/
+ .catalog_item.liststyle .item_content {
+     min-height: 100px;
+ } 
+ .catalog_item.liststyle .info_extras {
+     display: block;
+     background: transparent;
+     position: absolute;
+     height: 28px;
+     width:100%;
+     right: 0;
+     bottom: 2px;
+     text-align:right;
+     padding:0px 3px;
+     z-index:2;
+ }
+  .catalog_item.liststyle .catalog_thumb, .catalog_item.liststyle .info {
+  		display: none !important;
+  		visibility: hidden !important;
+ } 
+  .catalog_item.liststyle .install_extras {
+     border-top: 1px solid #e0e0e0;
+     background: #fff;
+     display: block;
+     position: absolute;
+     height: 38px;
+     left: 0;
+     bottom: 0;
+     text-align:left;
+     padding:4px;
+ }
+   .catalog_item.liststyle .row-category h3:before {
+     font-family: FontAwesome;
+     font-style: normal;
+     font-weight: normal;
+     color: #444;
+     padding: 0 12px 0 5px;
+     content: '\f09b';
+ }
+
+  .item_list .catalog_item.liststyle:nth-child(odd) .item_content, .item_list .catalog_item.liststyle:nth-child(odd) .install_extras {
+    background: #f7f7f7;
  }
