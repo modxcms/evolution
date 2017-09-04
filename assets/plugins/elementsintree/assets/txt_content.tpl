@@ -57,7 +57,7 @@
 
   /* Clearfix to avoid .tab-row height() = 0 */
   #treePane .tab-row:after {
-    content: ".";
+    content: " ";
     clear: both;
     display: block;
     background-color: #cfd2d6;
@@ -124,7 +124,7 @@
   #treePane .panel-heading {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    background-color: #FAFAFA;
+    background-color: #F2F2F2;
     margin-top: -1px;
   }
 
@@ -137,7 +137,7 @@
   }
 
   #treePane .panel-heading:hover {
-    background-color: #F2F2F2;
+    background-color: #eaeaea;
   }
 
   .dark #treePane .panel-heading {
@@ -234,7 +234,7 @@
   }
 
   .ElementsInTree #tree .treeframebody {
-    background-color: #fff !important;
+    background-color: #fafafa !important;
     border-right: 1px solid #cfd2d6
   }
 
@@ -270,7 +270,7 @@
 
   .ElementsInTree #tree .tab-page {
     padding: 0 !important;
-    background-color: #fff;
+    background-color: #fafafa;
     border-width: 1px 0;
     box-shadow: none;
     min-height: 55px;
@@ -321,7 +321,7 @@
 
   .ElementsInTree #tree .tab-row .tab.selected {
     padding-bottom: 0;
-    background-color: #fff;
+    background-color: #fafafa;
   }
 
   .ElementsInTree #tree .eltree {
@@ -392,6 +392,7 @@
     height: 2rem;
     font-size: 0.8rem;
     border-width: 0;
+    background-color: #fafafa;
   }
 
   .dark.ElementsInTree #tree .treeframebody {
