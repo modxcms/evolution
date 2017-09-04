@@ -295,7 +295,7 @@
     display: table;
     width: 100%;
     table-layout: fixed;
-    background-color: #dfdfdf;
+    background-color: #f2f2f2;
   }
 
   .ElementsInTree #tree .tab-row .tab {
