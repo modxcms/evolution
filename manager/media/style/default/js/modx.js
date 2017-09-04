@@ -1552,6 +1552,9 @@
                 delete d.getElementById(o.tab.dataset.target);
                 delete o.tab;
                 o.tab = o.navbar.querySelector('.selected');
+                if (modx.plugins.ElementsInTree) {
+                  setTimeout('modx.tree.reloadElementsInTree()', 50)
+                }
                 modx.tree.setItemToChange();
               }
             },
