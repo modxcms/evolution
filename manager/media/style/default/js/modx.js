@@ -2004,11 +2004,11 @@
       if (!(/dropdown\-item/.test(e.target.className))
       //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
       ) {
-        var els = d.querySelectorAll('.dropdown'),
+        var els = d.querySelectorAll('.dropdown.show'),
             n = null,
             t = e.target || e.target.parentNode,
             i;
-        if (t.dataset && t.dataset.toggle) {
+        if (typeof t.dataset.toggle !== 'undefined') {
           n = d.querySelector(t.dataset.toggle);
         } else if (t.classList.contains('dropdown-toggle')) {
           n = t.offsetParent;
@@ -2018,7 +2018,7 @@
             els[i].classList.remove('show')
           }
         }
-        els = w.main.document.querySelectorAll('.dropdown');
+        els = w.main.document.querySelectorAll('.dropdown.show');
         for (i = 0; i < els.length; i++) {
           if (n !== els[i]) {
             els[i].classList.remove('show')
