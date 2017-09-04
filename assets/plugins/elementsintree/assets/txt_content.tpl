@@ -298,6 +298,10 @@
     background-color: #f2f2f2;
   }
 
+  .ElementsInTree #tree.has-treemenu-intab .tab-row {
+    background-color: #DFDFDF;
+  }
+
   .ElementsInTree #tree .tab-row .tab {
     height: 1.875rem;
     line-height: 1.75rem;
