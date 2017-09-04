@@ -193,7 +193,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 								<input class="form-control" type="text" name="newgroupname" value="<?= $modx->htmlspecialchars($row['name']) ?>" />
 								<div class="input-group-btn">
 									<input class="btn btn-secondary" type="submit" value="<?= $_lang['rename'] ?>" />
-									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'usergroup');" />
+									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'documentgroup');" />
 								</div>
 							</div>
 						</form>
