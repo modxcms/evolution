@@ -11,8 +11,8 @@ if (empty ($modx->config)) {
     $modx->getSettings();
 }
 
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
-    $modx->sendRedirect($modx->config['site_url']);
+if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
+    $modx->sendErrorPage();
 }
 
 include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
@@ -197,7 +197,7 @@ if (isset($action)) {
             $a = 88;
             $output = '';
             $items = '';
-            $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+            $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -233,10 +233,11 @@ if (isset($action)) {
         }
 
         case 'modxTagHelper': {
-            $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : false;
-            $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : false;
+            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $modx->db->escape($_REQUEST['name']) : false;
+            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $modx->db->escape($_REQUEST['type']) : false;
+            $contextmenu = '';
 
-            if ($name && $type) {
+            if ($role && $name && $type) {
                 switch ($type) {
                     case 'Snippet':
                     case 'SnippetNoCache': {
@@ -468,6 +469,8 @@ if (isset($action)) {
                 echo json_encode($contextmenu, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
                 break;
             }
+
+            break;
         }
 
         case 'movedocument' : {
@@ -476,7 +479,7 @@ if (isset($action)) {
             if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
                 $id = !empty($_REQUEST['id']) ? (int)$_REQUEST['id'] : '';
                 $parent = isset($_REQUEST['parent']) ? (int)$_REQUEST['parent'] : 0;
-                $menuindex = isset($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
+                $menuindex = isset($_REQUEST['menuindex']) && is_scalar($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
 
                 // set parent
                 if ($id && $parent >= 0) {
