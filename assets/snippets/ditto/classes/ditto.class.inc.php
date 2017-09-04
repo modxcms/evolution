@@ -55,12 +55,12 @@ class ditto {
 			$type = 'tv';
 			$name = substr($name, 2);
 		}
-		if ($location == '*') {
-			if(!in_array($name,$this->fields['backend'][$type])) $this->fields['backend'][$type][] = $name;
-			if(!in_array($name,$this->fields['display'][$type])) $this->fields['display'][$type][] = $name;
-		} elseif(!in_array($name,$this->fields[$location][$type])) {
-			$this->fields[$location][$type][] = $name;
-		}
+		if ($location == "*") {
+            $this->fields["backend"][$type][] = $name;
+            $this->fields["display"][$type][] = $name;
+        } else {
+            $this->fields[$location][$type][] = $name;
+        }
 	}
 	
 	// ---------------------------------------------------
