@@ -43,7 +43,7 @@ if (isset($action)) {
 
         case '76': {
 
-            $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? $_REQUEST['elements'] : '';
+            $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? htmlentities($_REQUEST['elements']) : '';
 
             if ($elements) {
                 $output = '';
