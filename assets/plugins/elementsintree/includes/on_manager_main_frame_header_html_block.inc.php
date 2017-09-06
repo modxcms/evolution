@@ -11,7 +11,7 @@ if((in_array($_GET['a'],$triggerRequiredActions) && $_SESSION['elementsInTree'][
     $html  = "<!-- elementsInTree Start -->\n";
     $html .= "<script>";
     $html .= "jQuery(document).ready(function() {";
-    $html .= "top.tree.reloadElementsInTree();";
+    $html .= "top.reloadElementsInTree();";
     $html .= "})\n";
     $html .= "</script>\n";
     $html .= "<!-- elementsInTree End -->\n";
