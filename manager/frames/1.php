@@ -82,6 +82,7 @@ if ($user['which_browser'] == 'default') {
     <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
@@ -117,7 +118,7 @@ if ($user['which_browser'] == 'default') {
           which_browser: '<?= $user['which_browser'] ?>',
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',
-          global_tabs: <?= (int)$modx->config['global_tabs'] ?>
+          global_tabs: <?= $modx->config['global_tabs'] && $user['role'] == 1 ? 1 : 0 ?>
         },
         lang: {
           already_deleted: "<?= $_lang['already_deleted'] ?>",
@@ -325,7 +326,7 @@ if ($user['which_browser'] == 'default') {
         <?php include('tree.php') ?>
     </div>
     <div id="main">
-        <?php if($modx->config['global_tabs']): ?>
+        <?php if($modx->config['global_tabs'] && $user['role'] == 1): ?>
         <div class="tab-row-container evo-tab-row">
             <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
         </div>

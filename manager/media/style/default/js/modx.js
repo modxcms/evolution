@@ -672,6 +672,7 @@
       selectedObjectDeleted: 0,
       selectedObjectUrl: '',
       drag: false,
+      deleted: [],
       init: function() {
         this.restoreTree()
       },
@@ -931,7 +932,7 @@
             if (this.rpcNode.id === 'treeRoot') {
               el = d.getElementById('binFull');
               if (el) {
-                this.showBin(true);
+                this.showBin(true)
               } else {
                 this.showBin(false)
               }
@@ -1318,6 +1319,8 @@
       emptyTrash: function() {
         if (confirm(modx.lang.confirm_empty_trash) === true) {
           modx.tabs({url: modx.MODX_MANAGER_URL + '?a=64', title: modx.lang.confirm_empty_trash});
+          modx.tabsClose();
+          this.deleted = [];
           modx.tree.restoreTree()
         }
       },
@@ -1330,6 +1333,10 @@
             el.innerHTML = modx.style.empty_recycle_bin;
             el.onclick = function() {
               modx.tree.emptyTrash()
+            };
+            var els = d.getElementById('tree').querySelectorAll('.deleted');
+            for (var i = 0; i < els.length; i++) {
+              this.deleted['tab' + els[i].dataset.id] = 'evo-tab-page-' + modx.urlToUid('a=27&id=' + els[i].dataset.id)
             }
           } else {
             el.title = modx.lang.empty_recycle_bin_empty;
@@ -1490,6 +1497,19 @@
         e.preventDefault();
       }
     },
+    tabsClose: function() {
+      if (modx.config.global_tabs) {
+        for (var k in modx.tree.deleted) {
+          if (modx.tree.deleted.hasOwnProperty(k)) {
+            var el = d.getElementById(modx.tree.deleted[k]);
+            if (el) {
+              el.firstElementChild.contentWindow.documentDirty = false;
+              el.close()
+            }
+          }
+        }
+      }
+    },
     tabs: function(a) {
       if (typeof a === 'object' && a.url && /(index.php|http)/.test(a.url)) {
         if (modx.config.global_tabs) {
@@ -1575,7 +1595,16 @@
                 w.main = o.el.firstElementChild.contentWindow;
                 w.history.replaceState(null, d.title, modx.getActionFromUrl(w.main.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
                 modx.main.tabRow.scroll(o.navbar, o.tab);
-                modx.tree.setItemToChange()
+                modx.tree.setItemToChange();
+                if (o.tab.timer) {
+                  clearTimeout(o.tab.timer);
+                  o.tab.timer = null;
+                  w.main.location.reload();
+                } else {
+                  o.tab.timer = setTimeout(function() {
+                    o.tab.timer = null
+                  }, 250);
+                }
               }
             },
             events: {
@@ -2093,8 +2122,9 @@
       var b = '',
           c;
       a = a.split('?');
-      if (a && a[1]) {
-        c = modx.main.getQueryVariable('a', a[1]);
+      a = a[1] || a[0];
+      if (a) {
+        c = modx.main.getQueryVariable('a', a);
         if (c) {
           if (modx.typesactions[c]) {
             b += '&type=' + modx.typesactions[c]
@@ -2102,11 +2132,11 @@
             b += '&a=' + c
           }
         }
-        if (modx.main.getQueryVariable('id', a[1])) {
-          b += '&id=' + modx.main.getQueryVariable('id', a[1])
+        if (modx.main.getQueryVariable('id', a)) {
+          b += '&id=' + modx.main.getQueryVariable('id', a)
         }
-        if (modx.main.getQueryVariable('type', a[1])) {
-          b += '&type=' + modx.main.getQueryVariable('type', a[1])
+        if (modx.main.getQueryVariable('type', a)) {
+          b += '&type=' + modx.main.getQueryVariable('type', a)
         }
         b = modx.toHash(b);
       }
