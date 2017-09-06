@@ -1,5 +1,5 @@
 /* tree */
-#treeloader { position: absolute; display: block; overflow: hidden; right: 0.3em; top: 0.3em; opacity: 0; visibility: hidden; -webkit-transition-duration: 0.5s; transition-duration: 0.5s }
+#treeloader { position: absolute; display: block; overflow: hidden; right: 0.3em; top: 0.15em; opacity: 0; visibility: hidden; -webkit-transition-duration: 0.5s; transition-duration: 0.5s }
 #treeloader .fa { font-size: 1em; }
 #treeloader.visible { opacity: 0.7; visibility: visible; -webkit-transition-duration: 0s; transition-duration: 0s }
 .treeframebody { height: 100%; background-color: #fafafa; border-right: 1px solid #cfd2d6; }
@@ -10,6 +10,7 @@
 #treeMenu .treeButton .fa { display: block; width: 1.2em; height: 1.2em; margin: auto; line-height: 1.6em; font-size: 1.1em; }
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
+#treeHolder .rootNode { position: relative; }
 #treeHolder .rootNode a { display: block; padding: 0.25em 0.5em; color: #333; cursor: pointer; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeHolder .rootNode a .fa { margin-right: 0.5em }
 #treeRoot { float: left; width: 100%; color: #333; }

@@ -444,58 +444,62 @@ if ($user['which_browser'] == 'default') {
     <script type="text/javascript">
         <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
-        document.getElementById('treeMenu_openelements').onclick = function(e) {
-          e.preventDefault();
-          if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL ?>index.php?a=76', title: '<?= $_lang["elements"] ?>'});
-          } else {
-            var randomNum = '<?= $_lang["elements"] ?>';
-            if (e.shiftKey) {
-              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
-            }
-            modx.openWindow({
-              url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
-              title: randomNum
-            })
-          }
-        };
-        <?php } ?>
-        <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+        if (document.getElementById('treeMenu')) {
 
-        document.getElementById('treeMenu_openimages').onclick = function(e) {
-          e.preventDefault();
-          if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=images', title: '<?= $_lang["images_management"] ?>'});
-          } else {
-            var randomNum = '<?= $_lang["files_files"] ?>';
-            if (e.shiftKey) {
-              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+          document.getElementById('treeMenu_openelements').onclick = function(e) {
+            e.preventDefault();
+            if (modx.config.global_tabs && !e.shiftKey) {
+              modx.tabs({url: '<?= MODX_MANAGER_URL ?>index.php?a=76', title: '<?= $_lang["elements"] ?>'});
+            } else {
+              var randomNum = '<?= $_lang["elements"] ?>';
+              if (e.shiftKey) {
+                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+              }
+              modx.openWindow({
+                url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
+                title: randomNum
+              })
             }
-            modx.openWindow({
-              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
-              title: randomNum
-            })
-          }
-        };
-        <?php } ?>
-        <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+          };
+            <?php } ?>
+            <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
 
-        document.getElementById('treeMenu_openfiles').onclick = function(e) {
-          e.preventDefault();
-          if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=files', title: '<?= $_lang["files_files"] ?>'});
-          } else {
-            var randomNum = '<?= $_lang["files_files"] ?>';
-            if (e.shiftKey) {
-              randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+          document.getElementById('treeMenu_openimages').onclick = function(e) {
+            e.preventDefault();
+            if (modx.config.global_tabs && !e.shiftKey) {
+              modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=images', title: '<?= $_lang["images_management"] ?>'});
+            } else {
+              var randomNum = '<?= $_lang["files_files"] ?>';
+              if (e.shiftKey) {
+                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+              }
+              modx.openWindow({
+                url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
+                title: randomNum
+              })
             }
-            modx.openWindow({
-              url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
-              title: randomNum
-            })
-          }
-        };
-        <?php } ?>
+          };
+            <?php } ?>
+            <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+
+          document.getElementById('treeMenu_openfiles').onclick = function(e) {
+            e.preventDefault();
+            if (modx.config.global_tabs && !e.shiftKey) {
+              modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?filemanager=media/browser/<?= $which_browser ?>/browse.php&type=files', title: '<?= $_lang["files_files"] ?>'});
+            } else {
+              var randomNum = '<?= $_lang["files_files"] ?>';
+              if (e.shiftKey) {
+                randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
+              }
+              modx.openWindow({
+                url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
+                title: randomNum
+              })
+            }
+          };
+            <?php } ?>
+
+        }
 
     </script>
 
