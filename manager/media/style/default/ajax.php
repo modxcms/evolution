@@ -24,7 +24,7 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
+$limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
 
 if (isset($action)) {
     switch ($action) {
@@ -43,14 +43,14 @@ if (isset($action)) {
 
         case '76': {
 
-            $elements = isset($_REQUEST['elements']) ? $_REQUEST['elements'] : '';
+            $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? $_REQUEST['elements'] : '';
 
             if ($elements) {
                 $output = '';
                 $items = '';
                 $sql = '';
                 $a = '';
-                $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
+                $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
                 $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
                 $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -158,7 +158,7 @@ if (isset($action)) {
             $a = 12;
             $output = '';
             $items = '';
-            $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+            $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
