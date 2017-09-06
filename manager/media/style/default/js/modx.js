@@ -12,7 +12,7 @@
         localStorage.setItem('MODX_widthSideBar', this.config.tree_width)
       }
       this.tree.init();
-      this.mainMenu.init();
+      this.mainmenu.init();
       if (w.location.hash) {
         if (modx.getActionFromUrl(w.location.hash, 2)) {
           w.history.replaceState(null, d.title, modx.MODX_MANAGER_URL)
@@ -38,7 +38,7 @@
       d.addEventListener('click', modx.hideDropDown, false);
       d.addEventListener('click', modx.tabsInit, false);
     },
-    mainMenu: {
+    mainmenu: {
       id: 'mainMenu',
       init: function() {
         //console.log('modx.mainMenu.init()');
@@ -119,7 +119,7 @@
                       }
                       ul.classList.add('show');
                       setTimeout(function() {
-                        modx.mainMenu.search(href, ul)
+                        modx.mainmenu.search(href, ul)
                       }, 200)
                     }
                   })
@@ -187,125 +187,97 @@
       }
     },
     search: {
-      id: 'searchform',
-      idResult: 'searchresult',
-      idInput: 'searchid',
-      classResult: 'ajaxSearchResults',
-      classMask: 'mask',
+      result: null,
+      results: null,
+      input: null,
+      mask: null,
+      loader: null,
       timer: 0,
       init: function() {
-        this.result = d.getElementById(this.idResult);
+        this.result = d.getElementById('searchresult');
+        this.input = d.getElementById('searchid');
+        this.mask = d.querySelector('#searchform .mask');
         if (!this.result) {
           this.result = d.createElement('div');
-          this.result.id = this.idResult;
+          this.result.id = 'searchresult';
           d.body.appendChild(this.result);
         }
-        var t = this,
-            el = d.getElementById(this.idInput),
-            r = d.createElement('i');
-        r.className = 'fa fa-refresh fa-spin fa-fw';
-        el.parentNode.appendChild(r);
+        this.loader = d.createElement('i');
+        this.loader.className = 'fa fa-refresh fa-spin fa-fw';
+        this.input.parentNode.appendChild(this.loader);
         if (modx.config.global_tabs) {
-          el.parentNode.onsubmit = function(e) {
+          this.input.parentNode.onsubmit = function(e) {
             e.preventDefault();
             this.target = 'mainsearch';
             modx.tabs({url: this.action, title: 'Search', name: 'mainsearch'});
             this.submit();
           }
         }
-        el.onkeyup = function(e) {
+        var s = this;
+        this.input.onkeyup = function(e) {
           e.preventDefault();
-          clearTimeout(t.timer);
-          if (el.value.length !== '' && el.value.length > 2) {
-            t.timer = setTimeout(function() {
-              var xhr = modx.XHR();
-              xhr.open('GET', modx.MODX_MANAGER_URL + '?a=71&ajax=1&submitok=Search&searchid=' + el.value, true);
-              xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-              xhr.onload = function() {
-                if (this.status === 200) {
-                  r.style.display = 'none';
-                  var div = d.createElement('div');
-                  div.innerHTML = this.responseText;
-                  var o = div.getElementsByClassName(t.classResult)[0];
-                  if (o) {
-                    if (o.innerHTML !== '') {
-                      t.result.innerHTML = o.outerHTML;
-                      t.open();
-                      t.result.onclick = function(e) {
-                        if (e.target.tagName === 'I') {
-                          modx.openWindow({
-                            title: e.target.parentNode.innerText,
-                            id: e.target.parentNode.id,
-                            url: e.target.parentNode.href
-                          });
-                          return false
-                        }
-                        var p = (e.target.tagName === 'A' && e.target) || e.target.parentNode;
-                        if (p.tagName === 'A') {
-                          var el = t.result.querySelector('.selected');
-                          if (el) el.className = '';
-                          p.className = 'selected';
-                          if (modx.isMobile) t.close()
-                        }
-                      }
+          clearTimeout(s.timer);
+          if (s.input.value.length !== '' && s.input.value.length > 2) {
+            s.timer = setTimeout(function() {
+              s.loader.style.display = 'block';
+              modx.get(modx.MODX_MANAGER_URL + '?a=71&ajax=1&submitok=Search&searchid=' + s.input.value, function(data) {
+                s.loader.style.display = 'none';
+                s.results = data.querySelector('.ajaxSearchResults');
+                if (s.results && s.results.innerHTML !== '') {
+                  s.result.innerHTML = s.results.outerHTML;
+                  s.open();
+                  s.result.onclick = function(e) {
+                    var t = e.target,
+                        p = t.parentNode;
+                    if (t.tagName === 'I') {
+                      modx.openWindow({
+                        title: p.innerText,
+                        id: p.id,
+                        url: p.href
+                      });
+                      e.preventDefault();
+                      e.stopPropagation()
                     } else {
-                      t.empty()
+                      var a = (t.tagName === 'A' && t) || (p.tagName === 'A' && p);
+                      if (a) {
+                        var el = s.result.querySelector('.selected');
+                        if (el) el.className = '';
+                        a.className = 'selected';
+                        if (modx.isMobile) s.close()
+                      }
                     }
-                  } else {
-                    t.empty()
                   }
+                } else {
+                  s.empty()
                 }
-              };
-              xhr.onloadstart = function() {
-                r.style.display = 'block'
-              };
-              xhr.onerror = function() {
-                console.warn(this.status)
-              };
-              xhr.send()
+              }, 'document');
             }, 300)
           } else {
-            t.empty()
+            s.empty()
           }
         };
         if (modx.isMobile) {
-          el.onblur = function() {
-            t.close()
-          }
+          this.input.onblur = this.close
         }
-        el.onfocus = function() {
-          t.open()
-        };
-        el.onclick = function() {
-          t.open()
-        };
-        el.onmouseenter = function() {
-          t.open()
-        };
-        this.result.onmouseover = function() {
-          t.open()
-        };
-        this.result.onmouseout = function() {
-          t.close()
-        };
-        d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseenter = function() {
-          t.open()
-        };
-        d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseout = function() {
-          t.close()
-        }
+        this.input.onfocus = this.open;
+        this.input.onclick = this.open;
+        this.input.onmouseenter = this.open;
+        this.result.onmouseenter = this.open;
+        this.result.onmouseleave = this.close;
+        this.mask.onmouseenter = this.open;
+        this.mask.onmouseleave = this.close
       },
       open: function() {
-        if (this.result.getElementsByClassName(this.classResult)[0]) {
-          this.result.classList.add('open')
+        if (modx.search.results) {
+          modx.search.result.classList.add('open')
         }
       },
       close: function() {
-        this.result.classList.remove('open')
+        modx.search.result.classList.remove('open')
       },
       empty: function() {
-        this.result.classList.remove('open');
-        this.result.innerHTML = ''
+        modx.search.result.classList.remove('open');
+        modx.search.result.innerHTML = ''
       }
     },
     main: {
@@ -2188,10 +2160,10 @@
         }
         return false
       });
-      if (b && b[c](a)) return b;
+      if (b && c && b[c](a)) return b;
       while (b) {
         d = b.parentElement;
-        if (d && d[c](a)) return d;
+        if (d && c && d[c](a)) return d;
         b = d
       }
       return null;
