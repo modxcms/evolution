@@ -38,7 +38,7 @@ select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 #actions .btn-group > .btn-group { display: block }
 #actions .btn-group .btn, #actions .btn-group .form-control { font-size: .6772rem; height: 2.4em; line-height: 1.4 }
 #actions .btn-group .btn .fa, #_actions .btn-group .btn .fa { display: none; width: 1em; font-size: 1em; text-align: center }
-#actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; }
+#actions .btn-group .btn-group #Button1 { min-width: 100%; text-align: left; float: right; }
 #actions .btn-group .btn-success { box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .07); }
 #actions .btn-group .btn-success:hover { box-shadow: none }
 #actions .btn-group .plus { z-index: 2; float: right; margin: -2.4em 0 0 0; width: 2rem; padding-left: 0; padding-right: 0; text-align: center }

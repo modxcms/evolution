@@ -583,6 +583,82 @@
       //            }
       //        }
 
+      function reloadElementsInTree() {
+        jQuery.ajax({
+          url: 'index.php?a=1&f=tree',
+          method: 'get'
+        }).done(function(data) {
+          savePositions();
+          var div = document.createElement('div');
+          div.innerHTML = data;
+          var tabs = div.getElementsByClassName('tab-page');
+          var el, i, p, r;
+          for (i = 0; i < tabs.length; i++) {
+            if (tabs[i].id !== 'tabDoc') {
+              el = tabs[i].getElementsByClassName('panel-group')[0];
+              el.style.display = 'none';
+              el.classList.add('clone');
+              p = document.getElementById(tabs[i].id);
+              if (p) {
+                r = p.getElementsByClassName('panel-group')[0];
+                p.insertBefore(el, r)
+              }
+            }
+          }
+          setRememberCollapsedCategories();
+          for (i = 0; i < tabs.length; i++) {
+            if (tabs[i].id !== 'tabDoc') {
+              el = document.getElementById(tabs[i].id);
+              if (el) {
+                el = el.getElementsByClassName('panel-group')[1];
+                el.parentNode.removeChild(el);
+              }
+              el = document.getElementById(tabs[i].id);
+              if (el) {
+                el = el.getElementsByClassName('panel-group')[0];
+                el.classList.remove('clone');
+                el.style.display = 'block'
+              }
+            }
+          }
+          loadPositions();
+          for (i = 0; i < tabIds.length; i++) {
+            initQuicksearch(tabIds[i] + '_search', tabIds[i]);
+          }
+          var at = document.querySelectorAll('#tree .accordion-toggle');
+          for (i = 0; i < at.length; i++) {
+            at[i].onclick = function(e) {
+              e.preventDefault();
+              var thisItemCollapsed = $(this).hasClass('collapsed');
+              if (e.shiftKey) {
+                var toggleItems = $(this).closest('.panel-group').find('> .panel .accordion-toggle');
+                var collapseItems = $(this).closest('.panel-group').find('> .panel > .panel-collapse');
+                if (thisItemCollapsed) {
+                  toggleItems.removeClass('collapsed');
+                  collapseItems.collapse('show')
+                } else {
+                  toggleItems.addClass('collapsed');
+                  collapseItems.collapse('hide')
+                }
+                toggleItems.each(function() {
+                  var state = $(this).hasClass('collapsed') ? 1 : 0;
+                  setLastCollapsedCategory($(this).data('cattype'), $(this).data('catid'), state)
+                });
+                writeElementsInTreeParamsToStorage()
+              } else {
+                $(this).toggleClass('collapsed');
+                $($(this).attr('href')).collapse('toggle');
+                var state = thisItemCollapsed ? 0 : 1;
+                setLastCollapsedCategory($(this).data('cattype'), $(this).data('catid'), state);
+                writeElementsInTreeParamsToStorage()
+              }
+            }
+          }
+        }).fail(function(xhr, ajaxOptions, thrownError) {
+          alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText)
+        })
+      }
+
       /////////////////////////////////////////////////////////////
       // Prepare "remember scroll-position" functions
       var tabIds = ["tree_site_templates","tree_site_tmplvars","tree_site_htmlsnippets","tree_site_snippets","tree_site_plugins","tree_site_modules"];

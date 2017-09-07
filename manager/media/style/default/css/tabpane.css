@@ -87,7 +87,8 @@
 .evo-tab-row .tab-row #evo-tab-home.tab i { float: left; margin: 0; line-height: 2rem; }
 .evo-tab-row .tab-row .tab { height: 1.875rem; line-height: 2rem; font-size: .8125rem; text-transform: none; border: none; border-right: 1px solid #cfd2d6; border-left: 1px solid #cfd2d6; margin-left: -1px; }
 .evo-tab-row .tab-row .tab:hover { background-color: rgba(255, 255, 255, 0.5) }
-.evo-tab-row .tab-row .tab.selected { font-weight: normal; background-color: #fafafa; }
+.evo-tab-row .tab-row .tab.changed { color: #0275d8; }
+.evo-tab-row .tab-row .tab.selected { font-weight: normal; color: #444; background-color: #fafafa; }
 .evo-tab-row .tab-row .tab small { margin-left: .25em }
 .evo-tab-row .tab-row .tab:not(#evo-tab-home) i.help { display: none }
 .evo-tab-row .tab-row .tab:not(#evo-tab-home) i { margin-right: .2em }
@@ -102,5 +103,6 @@
 .dark .evo-tab-row:after { background-color: #1a1c21; }
 .dark .evo-tab-row .tab-row .tab { color: #aaa; border-color: #2a2d33 }
 .dark .evo-tab-row .tab-row .tab:hover { background-color: #2d3033 }
-.dark .evo-tab-row .tab-row .tab.selected { background-color: #ecf0f1; color: #444 }
+.dark .evo-tab-row .tab-row .tab.changed { color: #7cb2dc; }
+.dark .evo-tab-row .tab-row .tab.selected { background-color: #414550; color: #eee; border-bottom: 3px solid #1976d2; }
 .dark .evo-tab-page, .dark .evo-tab-page iframe { background-color: #ecf0f1 }
