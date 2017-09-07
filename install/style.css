@@ -441,7 +441,7 @@ span.mono {
 #content {
   overflow: hidden;
   zoom: 1;
-  padding: 20px;
+  padding: 40px;
   background: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -642,74 +642,73 @@ input#adminemail {
 
 /*steps*/
 .clearleft {
-  clear: left;
-    display:block;
-    padding-bottom:20px;
-    margin-bottom:20px;
-    border-bottom:1px solid #d0cccc;
+  clear: both;
+  display:block;
 }
 div.stepcontainer {
-    display:block;
-    width: 100%!important;
-    margin: 0 0 20px 0; 
-
-
-  }
+  display:block;
+  box-sizing: border-box;
+  width: 100%!important;
+  margin-bottom: 40px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #E6E6E6;
+}
 .progressbar {
-      counter-reset: step;      
-  }
-  .progressbar li {
-      list-style-type: none;
-      width: 15%;
-      float: left;
-      font-size: 12px;
-      position: relative;
-      text-align: center;
-      text-transform: uppercase;
-      color: #d0cccc;
-      background:#FFF;
-      position:relative;
-      z-index: 2;
-  }
+  counter-reset: step;      
+}
+.progressbar li {
+  list-style-type: none;
+  width: 15%;
+  float: left;
+  font-size: 12px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #d0cccc;
+  background:#FFF;
+  position:relative;
+  z-index: 2;
+}
 .progressbar li:before {
-      width: 30px;
-      height: 30px;
-      content: counter(step);
-      counter-increment: step;
-      line-height: 30px;
-      border: 2px solid #d0cccc;
-      display: block;
-      text-align: center;
-      margin: 0 auto 10px auto;
-      border-radius: 50%;
-      background-color: white;
-  }
+  width: 30px;
+  height: 30px;
+  content: counter(step);
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #d0cccc;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: #fff;
+  z-index: 1;
+}
 .progressbar li:after {
-      width: 99%;
-      height: 2px;
-      content: '';
-      position: absolute;
-      background-color: #d0cccc;
-      top: 15px;
-      left: -59%;
-      z-index: 0;
-  }
+  width: 99%;
+  height: 2px;
+  content: '';
+  position: absolute;
+  background-color: #d0cccc;
+  top: 15px;
+  left: -59%;
+  z-index: -1;
+}
 .progressbar li:first-child:after {
-      content: none;
-  }
+  content: none;
+}
 .progressbar li.visisted {
-      color: #5cb85c;
-  }
+  color: #5cb85c;
+}
 .progressbar li.visisted:before {
-      border-color: #55b776;
-  }
+  border-color: #55b776;
+}
 .progressbar li.visisted + li:after {
-      background-color: #55b776;
-  }
+  background-color: #55b776;
+}
 .progressbar li.active {
-      color: #3189ba;
-  }
+  color: #3189ba;
+}
 .progressbar li.active:before {
-      border-color: #3189ba;
-  }
-
+  border-color: #3189ba;
+}
