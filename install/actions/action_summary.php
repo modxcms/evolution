@@ -2,9 +2,9 @@
 $installMode = intval($_POST['installmode']);
 echo "<div class=\"stepcontainer\">
       <ul class=\"progressbar\">
-          <li>" . $_lang['choose_language'] . ":   </li>
-          <li>" . $_lang['installation_mode'] . "</li>
-          <li>" . $_lang['optional_items'] . "</li>
+          <li class=\"visisted\">" . $_lang['choose_language'] . ":   </li>
+          <li class=\"visisted\">" . $_lang['installation_mode'] . "</li>
+          <li class=\"visisted\">" . $_lang['optional_items'] . "</li>
           <li class=\"active\">" . $_lang['preinstall_validation'] . "</li>
           <li>" . $_lang['install_results'] . "</li>
   </ul>

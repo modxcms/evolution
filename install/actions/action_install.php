@@ -1,9 +1,9 @@
 <div class="stepcontainer">
       <ul class="progressbar">
-          <li><?php echo $_lang['choose_language']?>:   </li>
-          <li><?php echo $_lang['installation_mode']?></li>
-          <li><?php echo $_lang['optional_items']?></li>
-          <li><?php echo $_lang['preinstall_validation']?></li>
+          <li class="visisted"><?php echo $_lang['choose_language']?>:   </li>
+          <li class="visisted"><?php echo $_lang['installation_mode']?></li>
+          <li class="visisted"><?php echo $_lang['optional_items']?></li>
+          <li class="visisted"><?php echo $_lang['preinstall_validation']?></li>
           <li class="active"><?php echo $_lang['install_results']?></li>
   </ul>
 </div>
