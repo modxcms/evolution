@@ -644,3 +644,70 @@ select {
 input#adminemail {
   width: 350px;
 }
+
+/*steps*/
+.clearleft {
+  clear: left;
+    display:block;
+    padding-bottom:20px;
+    margin-bottom:20px;
+    border-bottom:1px solid #d0cccc;
+}
+div.stepcontainer {
+    display:block;
+    width: 100%!important;
+    margin: 0 0 20px 0; 
+
+
+  }
+.progressbar {
+      counter-reset: step;      
+  }
+  .progressbar li {
+      list-style-type: none;
+      width: 15%;
+      float: left;
+      font-size: 12px;
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      color: #d0cccc;
+      background:#FFF;
+      position:relative;
+      z-index: 2;
+  }
+.progressbar li:before {
+      width: 30px;
+      height: 30px;
+      content: counter(step);
+      counter-increment: step;
+      line-height: 30px;
+      border: 2px solid #d0cccc;
+      display: block;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      border-radius: 50%;
+      background-color: white;
+  }
+.progressbar li:after {
+      width: 99%;
+      height: 2px;
+      content: '';
+      position: absolute;
+      background-color: #d0cccc;
+      top: 15px;
+      left: -60%;
+      z-index: 0;
+  }
+.progressbar li:first-child:after {
+      content: none;
+  }
+.progressbar li.active {
+      color: green;
+  }
+.progressbar li.active:before {
+      border-color: #55b776;
+  }
+.progressbar li.active + li:after {
+      background-color: #55b776;
+  }
