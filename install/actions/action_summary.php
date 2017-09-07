@@ -8,8 +8,8 @@ echo "<div class=\"stepcontainer\">
           <li class=\"active\">" . $_lang['preinstall_validation'] . "</li>
           <li>" . $_lang['install_results'] . "</li>
   </ul>
+  <div class=\"clearleft\"></div>
 </div>
-<div class=\"clearleft\"></div>
 <h2>" . $_lang['preinstall_validation'] . "</h2>";
 
 echo "<h3>" . $_lang['summary_setup_check'] . "</h3>";
