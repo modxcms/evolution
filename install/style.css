@@ -697,13 +697,13 @@ div.stepcontainer {
 .progressbar li:first-child:after {
   content: none;
 }
-.progressbar li.visisted {
+.progressbar li.visited {
   color: #5cb85c;
 }
-.progressbar li.visisted:before {
+.progressbar li.visited:before {
   border-color: #55b776;
 }
-.progressbar li.visisted + li:after {
+.progressbar li.visited + li:after {
   background-color: #55b776;
 }
 .progressbar li.active {
