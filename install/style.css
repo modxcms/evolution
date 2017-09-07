@@ -691,7 +691,7 @@ div.stepcontainer {
       position: absolute;
       background-color: #d0cccc;
       top: 15px;
-      left: -60%;
+      left: -59%;
       z-index: 0;
   }
 .progressbar li:first-child:after {
