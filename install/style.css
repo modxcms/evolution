@@ -685,14 +685,12 @@ div.stepcontainer {
       background-color: white;
   }
 .progressbar li:after {
-      width: 98%;
-      height: 4px;
+      width: 99%;
+      height: 2px;
       content: '';
       position: absolute;
-      background-color: #EcEcEc;
-    	background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
-    	background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
-      top: 14px;
+      background-color: #d0cccc;
+      top: 15px;
       left: -59%;
       z-index: 0;
   }
