@@ -1,6 +1,17 @@
 <?php
 $installMode = intval($_POST['installmode']);
-echo "<h2>" . $_lang['preinstall_validation'] . "</h2>";
+echo "<div class=\"stepcontainer\">
+      <ul class=\"progressbar\">
+          <li>" . $_lang['choose_language'] . ":   </li>
+          <li>" . $_lang['installation_mode'] . "</li>
+          <li>" . $_lang['optional_items'] . "</li>
+          <li class=\"active\">" . $_lang['preinstall_validation'] . "</li>
+          <li>" . $_lang['install_results'] . "</li>
+  </ul>
+</div>
+<div class=\"clearleft\"></div>
+<h2>" . $_lang['preinstall_validation'] . "</h2>";
+
 echo "<h3>" . $_lang['summary_setup_check'] . "</h3>";
 $errors = 0;
 
