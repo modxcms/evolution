@@ -289,11 +289,11 @@
         modx.main.tabRow.init();
         modx.main.stopWork();
         modx.main.scrollWork();
-        modx.tree.restoreTree();
         w.main.document.addEventListener('click', modx.hideDropDown, false);
         w.main.document.addEventListener('click', modx.tabsInit, false);
         w.main.document.addEventListener('contextmenu', modx.main.oncontextmenu, false);
         w.history.replaceState(null, d.title, modx.main.getQueryVariable('a', w.main.location.search) === '2' ? modx.MODX_MANAGER_URL : '#' + w.main.location.search);
+        setTimeout('modx.tree.restoreTree()', 100);
       },
       oncontextmenu: function(e) {
         if (e.ctrlKey) return;
