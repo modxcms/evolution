@@ -1543,7 +1543,7 @@
               tab = d.getElementById('evo-tab-home');
           tab.onclick = o.select;
           if (tabpage) {
-            if (~o.closeactions.indexOf(o.action)) {
+            if (~o.closeactions.indexOf(o.action) || o.uid === 'home') {
               tabpage.firstElementChild.src = o.url;
             }
             o.show();
