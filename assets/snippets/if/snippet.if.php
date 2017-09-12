@@ -33,10 +33,14 @@ if(!empty($custom)) {
     $snippetPath = realpath(dirname(__FILE__));
     $cc = explode(',', $custom);
     foreach($cc as $cCond) {
-        $ccFile = $snippetPath.'/custom/if.'.$cCond.'.php';
-        if(!function_exists($cCond) && is_file($ccFile)) {
-            include($ccFile);
+        if(function_exists($cCond)) {
             $customConditions[$cCond] = true;
+        } else {
+            $ccFile = $snippetPath.'/custom/if.'.$cCond.'.php';
+            if(is_file($ccFile)) {
+                include($ccFile);
+                $customConditions[$cCond] = true;
+            }
         }
     }
 }
