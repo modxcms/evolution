@@ -321,15 +321,7 @@ class ditto {
 	function parseModifiers($tpl,$ph,$contentVars){
 		global $modx;
 		if ($modx->config['enable_filter']) {
-			$content = $tpl;
-			$i = 0;
-			while($i<10) {
-				$bt = $content;
-				if(strpos($content,'[+')!==false) $content = $modx->parseText($content,$ph);
-				else                              $content = $modx->parseDocumentSource($content);
-				if($bt===$content) break;
-				$i++;
-			}
+			$content = $this->parseDocumentSource($tpl,$ph);
 		}
 		else {
 			foreach($ph as $key=>$content) {
@@ -342,6 +334,38 @@ class ditto {
 		return $content;
 	}
 	
+    function parseDocumentSource($content='',$ph)
+    {
+        global $modx;
+        
+        if(strpos($content,'[')===false && strpos($content,'{')===false) return $content;
+        
+        $loopLimit = @ $modx->maxParserPasses ?: 10;
+        $bt='';
+        $i=0;
+        while($bt!==$content)
+        {
+            $bt = $content;
+            if(strpos($content,'[+')!==false) $content = $modx->parseText($content,$ph);
+            if(strpos($content,'[+')!==false) continue;
+
+            if(strpos($content,'[*')!==false && $modx->documentIdentifier)
+                                              $content = $modx->mergeDocumentContent($content);
+            if(strpos($content,'[+')!==false && $content!==$bt) continue;
+            if(strpos($content,'[(')!==false) $content = $modx->mergeSettingsContent($content);
+            if(strpos($content,'[+')!==false && $content!==$bt) continue;
+            if(strpos($content,'{{')!==false) $content = $modx->mergeChunkContent($content);
+            if(strpos($content,'[+')!==false && $content!==$bt) continue;
+            if(strpos($content,'[!')!==false) $content = str_replace(array('[!','!]'),array('[[',']]'),$content);
+            if(strpos($content,'[[')!==false) $content = $modx->evalSnippets($content);
+
+            if($content===$bt)  break;
+            if($loopLimit < $i) break;
+            $i++;
+        }
+        return $content;
+    }
+
 	// ---------------------------------------------------
 	// Function: parseFields
 	// Find the fields that are contained in the custom placeholders or those that are needed in other functions
