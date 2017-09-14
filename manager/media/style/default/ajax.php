@@ -3,7 +3,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("./../../../../index.php");
+include_once("../../../../index.php");
 
 $modx->db->connect();
 
@@ -14,6 +14,8 @@ if (empty ($modx->config)) {
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
     $modx->sendErrorPage();
 }
+
+$modx->sid = session_id();
 
 $_lang = array();
 include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
