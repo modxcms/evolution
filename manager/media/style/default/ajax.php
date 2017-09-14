@@ -3,7 +3,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("../../../../index.php");
+include_once("./../../../../index.php");
 
 $modx->db->connect();
 
