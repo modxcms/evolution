@@ -482,18 +482,9 @@ class DocumentParser {
      * @return boolean
      */
     function checkSiteStatus() {
-        $siteStatus= $this->config['site_status'];
-        if ($siteStatus == 1) {
-            // site online
-            return true;
-        }
-        elseif ($siteStatus == 0 && $this->isLoggedIn()) {
-            // site offline but launched via the manager
-            return true;
-        } else {
-            // site is offline
-            return false;
-        }
+        if($this->config['site_status']) return true;  // site online
+        elseif($this->isLoggedin())      return true;  // site offline but launched via the manager
+        else                             return false; // site is offline
     }
 
      /**
