@@ -501,9 +501,9 @@ class DocumentParser {
         /* Save path if any */
         /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
         if ($this->config['use_alias_path'] == 1) {
-            $this->virtualDir= dirname($q);
-            $this->virtualDir= ($this->virtualDir == '.' ? '' : $this->virtualDir);
-            $q = preg_replace('/.*[\/\\\]/', '', $q);
+            $_ = strrpos($q,'/');
+            $this->virtualDir = $_!==false ? substr($q,0,$_) : $q;
+            if(strpos($q,'/')) $q = preg_replace('@.*/@', '', $q);
         } else {
             $this->virtualDir= '';
         }
