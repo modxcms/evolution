@@ -171,11 +171,11 @@ if(!class_exists('synccache')) {
         // SETTINGS & DOCUMENT LISTINGS CACHE
 
         // get settings
-        $rs = $modx->db->select('*', $modx->getFullTableName('system_settings'));
+        $rs = $modx->db->select('*', '[+prefix+]system_settings');
         $config = array();
-			$tmpPHP .= '$c=&$this->config;';
+		$tmpPHP .= '$c=&$this->config;';
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
-				$tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($key) . '\']' . '="' . $this->escapeDoubleQuotes($value) . "\";";
+			$tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($key), $this->escapeDoubleQuotes($value));
             $config[$key] = $value;
         }
 
@@ -195,7 +195,7 @@ if(!class_exists('synccache')) {
                 WHERE c.deleted = '0' AND ( c.isfolder = '1' OR p.alias_visible = '0' )
                 ORDER BY c.parent, c.menuindex" );
         }else{
-            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder, alias_visible', $tableName, 'deleted=0', 'parent, menuindex');
+            $rs = $modx->db->select("IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible", $tableName, 'deleted=0', 'parent, menuindex');
         }
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
