@@ -494,7 +494,7 @@ class DocumentParser {
      * @return string
      */
     function cleanDocumentIdentifier($qOrig) {
-        (!empty($qOrig)) or $qOrig = $this->config['site_start'];
+        if(!$qOrig) $qOrig = $this->config['site_start'];
         $q= $qOrig;
         /* First remove any / before or after */
         $q = trim($q,'/');
