@@ -815,7 +815,7 @@ class DocumentParser {
     /**
      * Checks the publish state of page
      */
-    function checkPublishStatus() {
+    function updatePubStatus() {
         $cacheRefreshTime= 0;
         $recent_update = 0;
         @include(MODX_BASE_PATH . $this->getCacheFolder() . 'sitePublishing.idx.php');
@@ -838,6 +838,10 @@ class DocumentParser {
 
         // clear the cache
         $this->clearCache('full');
+    }
+
+    function checkPublishStatus() {
+        $this->updatePubStatus();
     }
 
     /**
