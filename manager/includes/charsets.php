@@ -1,4 +1,5 @@
 <?php
+$_['UTF-8']             = 'Unicode (UTF-8) - utf-8';
 $_['ASMO-708']          = 'Arabic (ASMO 708) - ASMO-708';
 $_['DOS-720']           = 'Arabic (DOS) - DOS-720';
 $_['iso-8859-6']        = 'Arabic (ISO) - iso-8859-6';
@@ -56,7 +57,6 @@ $_['windows-1254']      = 'Turkish (Windows) - windows-1254';
 $_['unicode']           = 'Unicode - unicode';
 $_['unicodeFFFE']       = 'Unicode (Big-Endian) - unicodeFFFE';
 $_['UTF-7']             = 'Unicode (UTF-7) - utf-7';
-$_['UTF-8']             = 'Unicode (UTF-8) - utf-8';
 $_['us-ascii']          = 'US-ASCII - us-ascii';
 $_['windows-1258']      = 'Vietnamese (Windows) - windows-1258';
 $_['ibm850']            = 'Western European (DOS) - ibm850';
