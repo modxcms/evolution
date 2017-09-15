@@ -175,9 +175,16 @@ if(!class_exists('synccache')) {
         $config = array();
 		$tmpPHP .= '$c=&$this->config;';
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
-			$tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($key), $this->escapeDoubleQuotes($value));
             $config[$key] = $value;
-        }
+		}
+		if ($config['enable_filter']) {
+			$where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+			$count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
+			if ($count) $config['enable_filter'] = '0';
+		}
+		foreach($config as $key=>$value) {
+			$tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($key), $this->escapeDoubleQuotes($value));
+		}
 
         // get aliases modx: support for alias path
         $tmpPath = '';
