@@ -2085,7 +2085,14 @@ class DocumentParser {
         $this->_IIS_furl_fix(); // IIS friendly url fix
 
         // check site settings
-        if (!$this->checkSiteStatus()) {
+        if ($this->checkSiteStatus()) {
+            // make sure the cache doesn't need updating
+            $this->updatePubStatus();
+
+            // find out which document we need to display
+            $this->documentMethod= filter_input(INPUT_GET,'q') ? 'alias' : 'id';
+            $this->documentIdentifier= $this->getDocumentIdentifier($this->documentMethod);
+        } else {
             header('HTTP/1.0 503 Service Unavailable');
             $this->systemCacheKey = 'unavailable';
             if (!$this->config['site_unavailable_page']) {
@@ -2095,16 +2102,9 @@ class DocumentParser {
                 exit; // stop processing here, as the site's offline
             } else {
                 // setup offline page document settings
-                $this->documentMethod= "id";
+                $this->documentMethod= 'id';
                 $this->documentIdentifier= $this->config['site_unavailable_page'];
             }
-        } else {
-            // make sure the cache doesn't need updating
-            $this->checkPublishStatus();
-
-            // find out which document we need to display
-            $this->documentMethod= filter_input(INPUT_GET,'q') ? 'alias' : 'id';
-            $this->documentIdentifier= $this->getDocumentIdentifier($this->documentMethod);
         }
 
         if ($this->documentMethod == "alias") {
