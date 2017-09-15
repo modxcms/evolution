@@ -297,11 +297,12 @@ class DocumentParser {
      * Get MODX settings including, but not limited to, the system_settings table
      */
     function getSettings() {
-        $tbl_system_settings   = $this->getFullTableName('system_settings');
         if (!isset($this->config['site_name'])) {
-            if ($included= is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
-                $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
-            }
+            
+            $site_cache_path = MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
+
+            if ($included= is_file($site_cache_path)) $included= include_once ($site_cache_path);
+
             if (!$included || !isset($this->config['site_name'])) {
                 include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
@@ -309,11 +310,11 @@ class DocumentParser {
                 $cache->setReport(false);
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
-                if($rebuilt && is_file(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
-                    $included= include(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
-                }
+                
+                if($rebuilt && is_file($site_cache_path)) $included= include($site_cache_path);
+
                 if(!$included) {
-                    $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
+                    $result= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
                     while ($row= $this->db->getRow($result)) {
                         $this->config[$row['setting_name']]= $row['setting_value'];
                     }
