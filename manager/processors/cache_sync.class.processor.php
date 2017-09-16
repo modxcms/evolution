@@ -120,14 +120,12 @@ if(!class_exists('synccache')) {
 
 		$filename = $this->cachePath.'/sitePublishing.idx.php';
 		if (!$handle = fopen($filename, 'w')) {
-			echo 'Cannot open file ('.$filename.')';
-			exit;
+			exit("Cannot open file ({$filename}");
 		}
 
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, implode("\n",$content)) === FALSE) {
-			echo 'Cannot write publishing info file! Make sure the assets/cache directory is writable!';
-			exit;
+			exit("Cannot write publishing info file! Make sure the assets/cache directory is writable!");
 		}
 	}
 
@@ -307,8 +305,7 @@ if(!class_exists('synccache')) {
 			if ($modx) $modx->invokeEvent('OnBeforeCacheUpdate');
 
 			if (!$handle = fopen($filename, 'w')) {
-				echo 'Cannot open file (', $filename, ')';
-				exit;
+				exit("Cannot open file ({$filename}");
 			}
 
 			if (!is_file($this->cachePath . '/.htaccess')) {
@@ -317,8 +314,7 @@ if(!class_exists('synccache')) {
 
 			// Write $somecontent to our opened file.
 			if (fwrite($handle, $somecontent) === FALSE) {
-				echo 'Cannot write main MODX cache file! Make sure the assets/cache directory is writable!';
-				exit;
+				exit("Cannot write main MODX cache file! Make sure the assets/cache directory is writable!");
 			}
 			fclose($handle);
 
