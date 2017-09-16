@@ -360,10 +360,11 @@ class MODIFIERS {
                 $map = array();
                 $c = count($raw);
                 for($m=0; $m<$c; $m++) {
-                    $mi = explode('=',$raw[$m]);
+                    $mi = explode('=',$raw[$m],2);
                     $map[$mi[0]] = $mi[1];
                 }
-                return $map[$value];
+                if(isset($map[$value])) return $map[$value];
+                else                    return '';
             ##### End of Conditional Modifiers
             
             #####  Encode / Decode / Hash / Escape
@@ -540,7 +541,7 @@ class MODIFIERS {
                 break;
             case 'replace_to':
             case 'tpl':
-                if($value!=='') return str_replace(array('[+value+]','[+output+]','{value}'),$value,$opt);
+                if($value!=='') return str_replace(array('[+value+]','[+output+]','{value}','%s'),$value,$opt);
                 break;
             case 'eachtpl':
                 $value = explode('||',$value);
@@ -641,7 +642,7 @@ class MODIFIERS {
             case 'calc':
                 $value = (int)$value;
                 if(empty($value)) $value = '0';
-                $filter = str_replace(array('[+value+]','%s'),'?',$opt);
+                $filter = str_replace(array('[+value+]','[+output+]','{value}','%s'),'?',$opt);
                 $filter = preg_replace('@([a-zA-Z\n\r\t\s])@','',$filter);
                 if(strpos($filter,'?')===false) $filter = "?{$filter}";
                 $filter = str_replace('?',$value,$filter);
