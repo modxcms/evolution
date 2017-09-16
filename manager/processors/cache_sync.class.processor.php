@@ -30,8 +30,8 @@ if(!class_exists('synccache')) {
 
 		function escapeDoubleQuotes($s)
 		{
-			$q1 = array("\\", "\"", "\r", "\n", "\$");
-			$q2 = array("\\\\", "\\\"", "\\r", "\\n", "\\$");
+			$q1 = array("\\", '"', "\r", "\n", "\$");
+			$q2 = array("\\\\", '\\"', "\\r", "\\n", "\\$");
 			return str_replace($q1, $q2, $s);
 		}
 
@@ -191,42 +191,51 @@ if(!class_exists('synccache')) {
         $tmpPHP .= '$d=&$this->documentListing;';
         $tmpPHP .= '$m=&$this->documentMap;';
 
-        $tableName = $modx->getFullTableName( 'site_content' );
-        
         if ($config['aliaslistingfolder'] == 1) {
-            $rs = $modx->db->query( "SELECT IF( c.alias = '', c.id, c.alias) AS alias, c.id, c.parent, c.isfolder, c.alias_visible 
-                FROM $tableName c
-                LEFT JOIN $tableName p ON p.id = c.parent
-                WHERE c.deleted = '0' AND ( c.isfolder = '1' OR p.alias_visible = '0' )
-                ORDER BY c.parent, c.menuindex" );
+            $f['alias']         = "IF( c.alias='', c.id, c.alias)";
+            $f['id']            = 'c.id';
+            $f['parent']        = 'c.parent';
+            $f['isfolder']      = 'c.isfolder';
+            $f['alias_visible'] = 'c.alias_visible'; 
+            $from = array();
+            $from[] = '[+prefix+]site_content';
+            $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
+            $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
+            $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
         }else{
-            $rs = $modx->db->select("IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible", $tableName, 'deleted=0', 'parent, menuindex');
+            $f = "IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible";
+            $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
         }
-        while ($tmp1 = $modx->db->getRow($rs)) {
+        while ($doc = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
-                $tmpPath = $this->getParents($tmp1['parent']);
-                $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1['alias'];
-                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($alias) . '\']' . " = " . $tmp1['id'] . ";";
+                $tmpPath = $this->getParents($doc['parent']);
+                $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
+                $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($alias), $doc['id'] );
             } else {
-                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($tmp1['alias']) . '\']' . " = " . $tmp1['id'] . ";";
+                $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($doc['alias']), $doc['id'] );
             }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'alias_visible' => " . $tmp1['alias_visible'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");";
-            $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');";
+            $doc['alias'] = $this->escapeDoubleQuotes($doc['alias']);
+            if($tmpPath) $tmpPath = $this->escapeDoubleQuotes($tmpPath);
+            $param = array($doc['id'],$doc['alias'],$tmpPath,$doc['parent'],$doc['alias_visible'],$doc['isfolder']);
+            $tpl = '$a[%1$s]=array("id"=>%1$s,"alias"=>"%2$s","path"=>"%3$s","parent"=>%4$s,"alias_visible"=>%5$s,"isfolder"=>%6$s);';
+            $tmpPHP .= vsprintf($tpl, $param);
+            $tmpPHP .= sprintf('$m[]=array("%s"=>"%s");', $doc['parent'], $doc['id']);
         }
 
         // get content types
-        $rs = $modx->db->select('id, contentType', $tableName, "contentType != 'text/html'");
+        $rs = $modx->db->select('id, contentType', '[+prefix+]site_content', "contentType != 'text/html'");
         $tmpPHP .= '$c = &$this->contentTypes;';
-        while ($tmp1 = $modx->db->getRow($rs)) {
-            $tmpPHP .= '$c[' . $tmp1['id'] . ']' . " = '" . $this->escapeSingleQuotes($tmp1['contentType']) . "';";
+        while ($doc = $modx->db->getRow($rs)) {
+            $tmpPHP .= sprintf('$c[%s]="%s";', $doc['id'], $this->escapeDoubleQuotes($doc['contentType']));
         }
 
         // WRITE Chunks to cache file
-        $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'));
+        $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
         $tmpPHP .= '$c = &$this->chunkCache;';
-        while ($tmp1 = $modx->db->getRow($rs)) {
-				/** without trim */
-            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['disabled'] ? '' : $tmp1['snippet']) . "';";
+        while ($doc = $modx->db->getRow($rs)) {
+            /** without trim */
+            $code = (!$doc['disabled']) ? $this->escapeDoubleQuotes($doc['snippet']) : '';
+            $tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($doc['name']), $code);
         }
 
         // WRITE snippets to cache file
@@ -277,15 +286,13 @@ if(!class_exists('synccache')) {
 			}
 
 			// WRITE system event triggers
-			$events = array();
-			$rs = $modx->db->select(
-				'sysevt.name as evtname, event.pluginid, plugin.name',
-				'[+prefix+]system_eventnames sysevt
-				INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id
-				INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid',
-				'plugin.disabled=0',
-				'sysevt.name, event.priority'
-			);
+            $events = array();
+            $f = 'sysevt.name as evtname, event.pluginid, plugin.name';
+            $from = array();
+            $from[] = '[+prefix+]system_eventnames sysevt';
+            $from[] = 'INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id';
+            $from[] = 'INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid';
+			$rs = $modx->db->select($f,$from, 'plugin.disabled=0', 'sysevt.name, event.priority');
 			$tmpPHP .= '$e = &$this->pluginEvent;';
 			while ($evt = $modx->db->getRow($rs)) {
 				if (!isset($events[$evt['evtname']])) {
@@ -294,7 +301,8 @@ if(!class_exists('synccache')) {
 				$events[$evt['evtname']][] = $evt['name'];
 			}
 			foreach ($events as $evtname => $pluginnames) {
-				$tmpPHP .= '$e[\'' . $this->escapeSingleQuotes($evtname) . '\']=array(\'' . implode("','", $this->escapeSingleQuotes($pluginnames)) . "');";
+                $param = array($this->escapeDoubleQuotes($evtname), join('","', $this->escapeDoubleQuotes($pluginnames)));
+				$tmpPHP .= vsprintf('$e["%s"]=array("%s");', $param);
 			}
 
 			// close and write the file
