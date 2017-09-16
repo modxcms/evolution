@@ -1262,7 +1262,7 @@ class DocumentParser {
         $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
         
         if(!preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
-            $cmd = (int) eval("return {$cmd};");
+            $cmd = eval("return {$cmd};");
         else {
             $_ = explode(',', '[*,[(,{{,[[,[!,[+');
             foreach($_ as $left) {
@@ -1271,10 +1271,12 @@ class DocumentParser {
                     break;
                 }
             }
-            $cmd = (int) $cmd;
         }
-        if($cmd < 0) $cmd = 0;
+        if(!preg_match('@^[0-9]+$@',$cmd)) $cmd = empty(trim($cmd)) ? 0 : 1;
+        elseif($cmd <= 0)                  $cmd = 0;
+
         if($reverse) $cmd = !$cmd;
+        
         return $cmd;
     }
     
@@ -1457,6 +1459,7 @@ class DocumentParser {
         list($key,$modifiers) = $this->splitKeyAndFilter($key);
         $this->config['enable_filter'] = $_;
         $key = str_replace(array('(',')'),array("['","']"),$key);
+        $key = rtrim($key,';');
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
