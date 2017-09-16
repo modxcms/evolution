@@ -1558,10 +1558,10 @@
               w.main = e.target.contentWindow;
               o.url = w.main.location.search || w.location.hash;
               o.uid = modx.urlToUid(o.url);
+              tab = d.getElementById('evo-tab-' + o.uid) || null;
+              tabpage = e.target.parentNode;
               if (!!w.main.__alertQuit) {
                 var message = w.main.document.body.querySelector('p').innerHTML;
-                tabpage = e.target.parentNode;
-                tab = d.getElementById('evo-tab-' + o.uid) || null;
                 w.main.alert = function() {};
                 history.pushState(null, d.title, modx.getActionFromUrl(w.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.location.search);
                 window.onpopstate = function() {
@@ -1584,7 +1584,7 @@
                 });
               } else {
                 var old_uid = tabpage.id.replace('evo-tab-page-', '');
-                if (modx.main.getQueryVariable('a', o.url) === '2') {
+                if (modx.getActionFromUrl(o.url, 2)) {
                   tabpage.close();
                 } else if (old_uid !== o.uid && d.getElementById('evo-tab-' + o.uid)) {
                   tabpage.close();
@@ -2061,10 +2061,10 @@
   w.mainMenu.reloadtree = function() {
     //console.log('mainMenu.reloadtree()');
     if (modx.plugins.ElementsInTree) {
-      setTimeout('reloadElementsInTree()', 40);
+      setTimeout('reloadElementsInTree()', 50);
     }
     if (modx.config.global_tabs) {
-      setTimeout('modx.tree.restoreTree()', 50);
+      setTimeout('modx.tree.restoreTree()', 100);
     }
   };
   w.mainMenu.startrefresh = function(a) {
