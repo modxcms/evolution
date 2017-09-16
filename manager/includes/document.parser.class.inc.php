@@ -1301,12 +1301,12 @@ class DocumentParser {
     function escapeLiteralTagsContent($content, $left='<@LITERAL>', $right='<@ENDLITERAL>') {
         if(stripos($content,$left)===false) return $content;
         $matches = $this->getTagsFromContent($content,$left,$right);
+        if(empty($matches)) return $content;
+
         list($sTags,$rTags) = $this->getTagsForEscape();
-        if(!empty($matches)) {
-            foreach($matches[1] as $i=>$v) {
-                $v = str_ireplace($sTags,$rTags,$v);
-                $content = str_replace($matches[0][$i],$v,$content);
-            }
+        foreach($matches[1] as $i=>$v) {
+            $v = str_ireplace($sTags,$rTags,$v);
+            $content = str_replace($matches[0][$i],$v,$content);
         }
         return $content;
     }
