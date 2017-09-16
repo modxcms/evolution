@@ -340,19 +340,17 @@ class MODIFIERS {
                 $this->condition[] = '&&';break;
             case 'show':
             case 'this':
-                $conditional = join('*',$this->condition);
+                $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
-                else          return NULL;
                 break;
             case 'then':
-                $conditional = join('*',$this->condition);
+                $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid)  return $opt;
-                else           return NULL;
                 break;
             case 'else':
-                $conditional = join('*',$this->condition);
+                $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if (!$isvalid) return $opt;
                 break;
