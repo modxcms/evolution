@@ -857,17 +857,19 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
-            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen(MODX_BASE_PATH.$this->getHashFile($this->cacheKey), "w")) {
+            if (!empty($this->cacheKey) && is_scalar($this->cacheKey)) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
-                $rs = $this->db->select('document_group', $this->getFullTableName("document_groups"), "document='{$this->documentIdentifier}'");
-                $docGroups= $this->db->getColumn("document_group", $rs);
+                $where = "document='{$this->documentIdentifier}'";
+                $rs = $this->db->select('document_group', '[+prefix+]document_groups', $where);
+                $docGroups= $this->db->getColumn('document_group', $rs);
 
                 // Attach Document Groups and Scripts
                 if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
 
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
-                fputs($fp, "<?php die('Unauthorized access.'); ?>$cacheContent");
+                $page_cache_path = MODX_BASE_PATH.$this->getHashFile($this->cacheKey);
+                file_put_contents($page_cache_path, "<?php die('Unauthorized access.'); ?>$cacheContent");
                 fclose($fp);
             }
         }
