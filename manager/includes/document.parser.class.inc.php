@@ -3289,14 +3289,9 @@ class DocumentParser {
             $sync->emptyCache();
         } else {
             $files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
-            $deletedfiles = array();
-            while ($file = array_shift($files)) {
-                $name = preg_replace('/.*[\/\\\]/', '', $file);
-                if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
-                    $deletedfiles[] = $name;
-                    unlink($file);
-                    clearstatcache();
-                }
+            foreach ($files as $file) {
+                if (strpos($name,'.pageCache.php')===false) continue;
+                if (is_file($file)) unlink($file);
             }
         }
     }
