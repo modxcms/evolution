@@ -83,16 +83,16 @@ if ($friendly_urls) {
 				$alias = $tempAlias;
 			}
 		}else{
-                if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
-                        $cnt = 1;
-                        $tempAlias = $alias;
-                        while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
-                                $tempAlias = $alias;
-                                $tempAlias .= $cnt;
-                                $cnt++;
-                        }
-                        $alias = $tempAlias;
-                }                       
+            if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
+                $cnt = 1;
+                $tempAlias = $alias;
+                while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
+                    $tempAlias = $alias;
+                    $tempAlias .= $cnt;
+                    $cnt++;
+                }
+                $alias = $tempAlias;
+            }                       
 		}
 	}
 
@@ -121,15 +121,15 @@ if ($friendly_urls) {
 		$alias = $modx->stripAlias($alias);
 		//webber
 		$docid = $modx->db->getValue($modx->db->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
-                if ($docid > 0) {
-                        if ($actionToTake == 'edit') {
-                                $modx->manager->saveFormValues(27);
-                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
-                        } else {
-                                $modx->manager->saveFormValues(4);
-                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
-                        }
-                }
+        if ($docid > 0) {
+            if ($actionToTake == 'edit') {
+                $modx->manager->saveFormValues(27);
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
+            } else {
+                $modx->manager->saveFormValues(4);
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
+            }
+        }
         //end webber        
 	}
 }
@@ -138,7 +138,7 @@ elseif ($alias) {
 }
 
 // determine published status
-$currentdate = time() + $modx->config['server_offset_time'];
+$currentdate = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 
 if (empty ($pub_date)) {
 	$pub_date = 0;
@@ -452,7 +452,7 @@ switch ($actionToTake) {
 			$modx->manager->saveFormValues(27);
 			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
 		}
-		$today = time();
+		$today = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 		if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
 			$modx->manager->saveFormValues(27);
 			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
@@ -653,8 +653,16 @@ switch ($actionToTake) {
 		$_SESSION['itemname'] = $no_esc_pagetitle;
 
 		if ($syncsite == 1) {
-			// empty cache
-			$modx->clearCache('full');
+            // empty cache
+            $keys = array('alias','parent','published');
+            $flag = '';
+            foreach($keys as $key) {
+                if ($existingDocument[$key]===$_POST[$key]) continue;
+                $flag = 'full';
+                break;
+            }
+            if($flag==='full') $modx->clearCache('full');
+            else               $modx->clearCache($id);
 		}
 		
 		if ($_POST['refresh_preview'] == '1')
@@ -687,5 +695,3 @@ switch ($actionToTake) {
 	default :
 		$modx->webAlertAndQuit("No operation set in request.");
 }
-
-?>

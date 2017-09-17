@@ -857,17 +857,19 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
-            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen(MODX_BASE_PATH.$this->getHashFile($this->cacheKey), "w")) {
+            if (!empty($this->cacheKey) && is_scalar($this->cacheKey)) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
-                $rs = $this->db->select('document_group', $this->getFullTableName("document_groups"), "document='{$this->documentIdentifier}'");
-                $docGroups= $this->db->getColumn("document_group", $rs);
+                $where = "document='{$this->documentIdentifier}'";
+                $rs = $this->db->select('document_group', '[+prefix+]document_groups', $where);
+                $docGroups= $this->db->getColumn('document_group', $rs);
 
                 // Attach Document Groups and Scripts
                 if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
 
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
-                fputs($fp, "<?php die('Unauthorized access.'); ?>$cacheContent");
+                $page_cache_path = MODX_BASE_PATH.$this->getHashFile($this->cacheKey);
+                file_put_contents($page_cache_path, "<?php die('Unauthorized access.'); ?>$cacheContent");
                 fclose($fp);
             }
         }
@@ -3282,21 +3284,24 @@ class DocumentParser {
      */
     function clearCache($type='', $report=false) {
         if ($type=='full') {
-        include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
-        $sync = new synccache();
-        $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
-        $sync->setReport($report);
-        $sync->emptyCache();
+            include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
+            $sync = new synccache();
+            $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
+            $sync->setReport($report);
+            $sync->emptyCache();
+        } elseif(preg_match('@^[1-9][0-9]*$@',$type)) {
+            $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($type) : $type;
+            $file_name = "docid_" . $key . "_*.pageCache.php";
+            $cache_path = MODX_BASE_PATH . $this->getCacheFolder() . $file_name;
+            $files = glob($cache_path);
+            foreach($files as $file) {
+                if(is_file($file)) unlink($file);
+            }
         } else {
             $files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
-            $deletedfiles = array();
-            while ($file = array_shift($files)) {
-                $name = preg_replace('/.*[\/\\\]/', '', $file);
-                if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
-                    $deletedfiles[] = $name;
-                    unlink($file);
-                    clearstatcache();
-                }
+            foreach ($files as $file) {
+                if (strpos($name,'.pageCache.php')===false) continue;
+                if (is_file($file)) unlink($file);
             }
         }
     }
