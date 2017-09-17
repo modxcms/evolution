@@ -83,16 +83,16 @@ if ($friendly_urls) {
 				$alias = $tempAlias;
 			}
 		}else{
-                if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
-                        $cnt = 1;
-                        $tempAlias = $alias;
-                        while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
-                                $tempAlias = $alias;
-                                $tempAlias .= $cnt;
-                                $cnt++;
-                        }
-                        $alias = $tempAlias;
-                }                       
+            if ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$alias'")) != 0) {
+                $cnt = 1;
+                $tempAlias = $alias;
+                while ($modx->db->getValue($modx->db->select('COUNT(id)', $tbl_site_content, "id<>'$id' AND parent=$parent AND alias='$tempAlias'")) != 0) {
+                    $tempAlias = $alias;
+                    $tempAlias .= $cnt;
+                    $cnt++;
+                }
+                $alias = $tempAlias;
+            }                       
 		}
 	}
 
@@ -121,15 +121,15 @@ if ($friendly_urls) {
 		$alias = $modx->stripAlias($alias);
 		//webber
 		$docid = $modx->db->getValue($modx->db->select('id', $tbl_site_content, "id<>'$id' AND alias='$alias' AND parent=$parent", '', 1));
-                if ($docid > 0) {
-                        if ($actionToTake == 'edit') {
-                                $modx->manager->saveFormValues(27);
-                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
-                        } else {
-                                $modx->manager->saveFormValues(4);
-                                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
-                        }
-                }
+        if ($docid > 0) {
+            if ($actionToTake == 'edit') {
+                $modx->manager->saveFormValues(27);
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=27&id={$id}");
+            } else {
+                $modx->manager->saveFormValues(4);
+                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
+            }
+        }
         //end webber        
 	}
 }
