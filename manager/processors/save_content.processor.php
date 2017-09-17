@@ -653,8 +653,17 @@ switch ($actionToTake) {
 		$_SESSION['itemname'] = $no_esc_pagetitle;
 
 		if ($syncsite == 1) {
-			// empty cache
-			$modx->clearCache('full');
+            // empty cache
+            $keys = array('alias','parent','published');
+            $flag = '';
+            foreach($keys as $key) {
+                if ($existingDocument[$key]!==$_POST[$key]) {
+                    $flag = 'full';
+                    break;
+                }
+            }
+            if($flag==='full') $modx->clearCache('full');
+            else               $modx->clearCache($id);
 		}
 		
 		if ($_POST['refresh_preview'] == '1')
