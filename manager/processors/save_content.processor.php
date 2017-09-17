@@ -138,7 +138,7 @@ elseif ($alias) {
 }
 
 // determine published status
-$currentdate = time() + $modx->config['server_offset_time'];
+$currentdate = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 
 if (empty ($pub_date)) {
 	$pub_date = 0;
@@ -452,7 +452,7 @@ switch ($actionToTake) {
 			$modx->manager->saveFormValues(27);
 			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
 		}
-		$today = time();
+		$today = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
 		if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
 			$modx->manager->saveFormValues(27);
 			$modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
