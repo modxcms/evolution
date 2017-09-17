@@ -1558,9 +1558,9 @@
               w.main = e.target.contentWindow;
               o.url = w.main.location.search || w.location.hash;
               o.uid = modx.urlToUid(o.url);
-              tab = d.getElementById('evo-tab-' + o.uid) || null;
               tabpage = e.target.parentNode;
               if (!!w.main.__alertQuit) {
+                tab = d.getElementById('evo-tab-' + o.uid) || null;
                 var message = w.main.document.body.querySelector('p').innerHTML;
                 w.main.alert = function() {};
                 history.pushState(null, d.title, modx.getActionFromUrl(w.location.search, 2) ? modx.MODX_MANAGER_URL : '#' + w.location.search);
@@ -1584,6 +1584,7 @@
                 });
               } else {
                 var old_uid = tabpage.id.replace('evo-tab-page-', '');
+                tab = d.getElementById('evo-tab-' + old_uid);
                 if (modx.getActionFromUrl(o.url, 2)) {
                   tabpage.close();
                 } else if (old_uid !== o.uid && d.getElementById('evo-tab-' + o.uid)) {
