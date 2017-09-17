@@ -657,10 +657,9 @@ switch ($actionToTake) {
             $keys = array('alias','parent','published');
             $flag = '';
             foreach($keys as $key) {
-                if ($existingDocument[$key]!==$_POST[$key]) {
-                    $flag = 'full';
-                    break;
-                }
+                if ($existingDocument[$key]===$_POST[$key]) continue;
+                $flag = 'full';
+                break;
             }
             if($flag==='full') $modx->clearCache('full');
             else               $modx->clearCache($id);
