@@ -3282,11 +3282,11 @@ class DocumentParser {
      */
     function clearCache($type='', $report=false) {
         if ($type=='full') {
-        include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
-        $sync = new synccache();
-        $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
-        $sync->setReport($report);
-        $sync->emptyCache();
+            include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
+            $sync = new synccache();
+            $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
+            $sync->setReport($report);
+            $sync->emptyCache();
         } else {
             $files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
             $deletedfiles = array();
