@@ -86,162 +86,162 @@ if(!class_exists('synccache')) {
                 }
             }
 
-        $this->buildCache($modx);
+            $this->buildCache($modx);
 
-		$this->publishTimeConfig();
+            $this->publishTimeConfig();
 
-        // finished cache stuff.
-        if($this->showReport==true) {
-        global $_lang;
-            printf($_lang['refresh_cache'], $filesincache, $deletedfilesincache);
-            $limit = count($deletedfiles);
-            if($limit > 0) {
-                echo '<p>'.$_lang['cache_files_deleted'].'</p><ul>';
-                for($i=0;$i<$limit; $i++) {
-                    echo '<li>',$deletedfiles[$i],'</li>';
+            // finished cache stuff.
+            if($this->showReport==true) {
+            global $_lang;
+                printf($_lang['refresh_cache'], $filesincache, $deletedfilesincache);
+                $limit = count($deletedfiles);
+                if($limit > 0) {
+                    echo '<p>'.$_lang['cache_files_deleted'].'</p><ul>';
+                    for($i=0;$i<$limit; $i++) {
+                        echo '<li>',$deletedfiles[$i],'</li>';
+                    }
+                    echo '</ul>';
                 }
-                echo '</ul>';
             }
         }
-    }
 
-	public function publishTimeConfig($cacheRefreshTime='')
-	{
-		$cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
-		if(!preg_match('@^[0-9]+$]@',$cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime)
-			$cacheRefreshTime = $cacheRefreshTimeFromDB;
+        public function publishTimeConfig($cacheRefreshTime='')
+        {
+            $cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
+            if(!preg_match('@^[0-9]+$]@',$cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime)
+                $cacheRefreshTime = $cacheRefreshTimeFromDB;
 
 
-		// write the file
-		$content = array();
-		$content[] = '<?php';
-		$content[] = sprintf('$recent_update = %s;'   , $this->request_time);
-		$content[] = sprintf('$cacheRefreshTime = %s;', $cacheRefreshTime);
+            // write the file
+            $content = array();
+            $content[] = '<?php';
+            $content[] = sprintf('$recent_update = %s;'   , $this->request_time);
+            $content[] = sprintf('$cacheRefreshTime = %s;', $cacheRefreshTime);
 
-		$filename = $this->cachePath.'/sitePublishing.idx.php';
-		if (!$handle = fopen($filename, 'w')) {
-			exit("Cannot open file ({$filename}");
-		}
-
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, implode("\n",$content)) === FALSE) {
-			exit("Cannot write publishing info file! Make sure the assets/cache directory is writable!");
-		}
-	}
-
-	public function getCacheRefreshTime()
-	{
-		global $modx;
-
-		// update publish time file
-		$timesArr = array();
-
-		$result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>'.$this->request_time);
-		if(!$result) echo "Couldn't determine next publish event!";
-
-		$minpub = $modx->db->getValue($result);
-		if($minpub!=NULL)
-			$timesArr[] = $minpub;
-
-		$result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>'.$this->request_time);
-		if(!$result) echo "Couldn't determine next unpublish event!";
-
-		$minunpub = $modx->db->getValue($result);
-		if($minunpub!=NULL)
-			$timesArr[] = $minunpub;
-
-		if(isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime))
-			$timesArr[] = $this->cacheRefreshTime;
-
-		if(count($timesArr)>0) $cacheRefreshTime = min($timesArr);
-		else                   $cacheRefreshTime = 0;
-		return $cacheRefreshTime;
-	}
-
-    /**
-     * build siteCache file
-     * @param  DocumentParser $modx
-     * @return boolean success
-     */
-    public function buildCache($modx) {
-        $tmpPHP = "<?php\n";
-
-        // SETTINGS & DOCUMENT LISTINGS CACHE
-
-        // get settings
-        $rs = $modx->db->select('*', '[+prefix+]system_settings');
-        $config = array();
-		$tmpPHP .= '$c=&$this->config;';
-        while(list($key,$value) = $modx->db->getRow($rs,'num')) {
-            $config[$key] = $value;
-		}
-		if ($config['enable_filter']) {
-			$where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-			$count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
-			if ($count) $config['enable_filter'] = '0';
-		}
-		foreach($config as $key=>$value) {
-			$tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($key), $this->escapeDoubleQuotes($value));
-		}
-
-        // get aliases modx: support for alias path
-        $tmpPath = '';
-        $tmpPHP .= '$this->aliasListing=array();';
-        $tmpPHP .= '$a=&$this->aliasListing;';
-        $tmpPHP .= '$d=&$this->documentListing;';
-        $tmpPHP .= '$m=&$this->documentMap;';
-
-        if ($config['aliaslistingfolder'] == 1) {
-            $f['alias']         = "IF( c.alias='', c.id, c.alias)";
-            $f['id']            = 'c.id';
-            $f['parent']        = 'c.parent';
-            $f['isfolder']      = 'c.isfolder';
-            $f['alias_visible'] = 'c.alias_visible'; 
-            $from = array();
-            $from[] = '[+prefix+]site_content';
-            $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
-            $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
-            $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
-        }else{
-            $f = "IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible";
-            $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
-        }
-        while ($doc = $modx->db->getRow($rs)) {
-            if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
-                $tmpPath = $this->getParents($doc['parent']);
-                $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
-                $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($alias), $doc['id'] );
-            } else {
-                $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($doc['alias']), $doc['id'] );
+            $filename = $this->cachePath.'/sitePublishing.idx.php';
+            if (!$handle = fopen($filename, 'w')) {
+                exit("Cannot open file ({$filename}");
             }
-            $doc['alias'] = $this->escapeDoubleQuotes($doc['alias']);
-            if($tmpPath) $tmpPath = $this->escapeDoubleQuotes($tmpPath);
-            $param = array($doc['id'],$doc['alias'],$tmpPath,$doc['parent'],$doc['alias_visible'],$doc['isfolder']);
-            $tpl = '$a[%1$s]=array("id"=>%1$s,"alias"=>"%2$s","path"=>"%3$s","parent"=>%4$s,"alias_visible"=>%5$s,"isfolder"=>%6$s);';
-            $tmpPHP .= vsprintf($tpl, $param);
-            $tmpPHP .= sprintf('$m[]=array("%s"=>"%s");', $doc['parent'], $doc['id']);
+
+            // Write $somecontent to our opened file.
+            if (fwrite($handle, implode("\n",$content)) === FALSE) {
+                exit("Cannot write publishing info file! Make sure the assets/cache directory is writable!");
+            }
         }
 
-        // get content types
-        $rs = $modx->db->select('id, contentType', '[+prefix+]site_content', "contentType != 'text/html'");
-        $tmpPHP .= '$c = &$this->contentTypes;';
-        while ($doc = $modx->db->getRow($rs)) {
-            $tmpPHP .= sprintf('$c[%s]="%s";', $doc['id'], $this->escapeDoubleQuotes($doc['contentType']));
+        public function getCacheRefreshTime()
+        {
+            global $modx;
+
+            // update publish time file
+            $timesArr = array();
+
+            $result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>'.$this->request_time);
+            if(!$result) echo "Couldn't determine next publish event!";
+
+            $minpub = $modx->db->getValue($result);
+            if($minpub!=NULL)
+                $timesArr[] = $minpub;
+
+            $result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>'.$this->request_time);
+            if(!$result) echo "Couldn't determine next unpublish event!";
+
+            $minunpub = $modx->db->getValue($result);
+            if($minunpub!=NULL)
+                $timesArr[] = $minunpub;
+
+            if(isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime))
+                $timesArr[] = $this->cacheRefreshTime;
+
+            if(count($timesArr)>0) $cacheRefreshTime = min($timesArr);
+            else                   $cacheRefreshTime = 0;
+            return $cacheRefreshTime;
         }
 
-        // WRITE Chunks to cache file
-        $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
-        $tmpPHP .= '$c = &$this->chunkCache;';
-        while ($doc = $modx->db->getRow($rs)) {
-            /** without trim */
-            $code = (!$doc['disabled']) ? $this->escapeDoubleQuotes($doc['snippet']) : '';
-            $tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($doc['name']), $code);
-        }
+        /**
+        * build siteCache file
+        * @param  DocumentParser $modx
+        * @return boolean success
+        */
+        public function buildCache($modx) {
+            $tmpPHP = "<?php\n";
 
-        // WRITE snippets to cache file
-        $rs = $modx->db->select(
-			'ss.*, sm.properties as sharedproperties',
-			'[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
+            // SETTINGS & DOCUMENT LISTINGS CACHE
+
+            // get settings
+            $rs = $modx->db->select('*', '[+prefix+]system_settings');
+            $config = array();
+            $tmpPHP .= '$c=&$this->config;';
+            while(list($key,$value) = $modx->db->getRow($rs,'num')) {
+                $config[$key] = $value;
+            }
+            if ($config['enable_filter']) {
+                $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+                $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
+                if ($count) $config['enable_filter'] = '0';
+            }
+            foreach($config as $key=>$value) {
+                $tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($key), $this->escapeDoubleQuotes($value));
+            }
+
+            // get aliases modx: support for alias path
+            $tmpPath = '';
+            $tmpPHP .= '$this->aliasListing=array();';
+            $tmpPHP .= '$a=&$this->aliasListing;';
+            $tmpPHP .= '$d=&$this->documentListing;';
+            $tmpPHP .= '$m=&$this->documentMap;';
+
+            if ($config['aliaslistingfolder'] == 1) {
+                $f['alias']         = "IF( c.alias='', c.id, c.alias)";
+                $f['id']            = 'c.id';
+                $f['parent']        = 'c.parent';
+                $f['isfolder']      = 'c.isfolder';
+                $f['alias_visible'] = 'c.alias_visible'; 
+                $from = array();
+                $from[] = '[+prefix+]site_content';
+                $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
+                $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
+                $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
+            }else{
+                $f = "IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible";
+                $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
+            }
+            while ($doc = $modx->db->getRow($rs)) {
+                if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
+                    $tmpPath = $this->getParents($doc['parent']);
+                    $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
+                    $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($alias), $doc['id'] );
+                } else {
+                    $tmpPHP .= sprintf('$d["%s"]=%s;', $this->escapeDoubleQuotes($doc['alias']), $doc['id'] );
+                }
+                $doc['alias'] = $this->escapeDoubleQuotes($doc['alias']);
+                if($tmpPath) $tmpPath = $this->escapeDoubleQuotes($tmpPath);
+                $param = array($doc['id'],$doc['alias'],$tmpPath,$doc['parent'],$doc['alias_visible'],$doc['isfolder']);
+                $tpl = '$a[%1$s]=array("id"=>%1$s,"alias"=>"%2$s","path"=>"%3$s","parent"=>%4$s,"alias_visible"=>%5$s,"isfolder"=>%6$s);';
+                $tmpPHP .= vsprintf($tpl, $param);
+                $tmpPHP .= sprintf('$m[]=array("%s"=>"%s");', $doc['parent'], $doc['id']);
+            }
+
+            // get content types
+            $rs = $modx->db->select('id, contentType', '[+prefix+]site_content', "contentType != 'text/html'");
+            $tmpPHP .= '$c = &$this->contentTypes;';
+            while ($doc = $modx->db->getRow($rs)) {
+                $tmpPHP .= sprintf('$c[%s]="%s";', $doc['id'], $this->escapeDoubleQuotes($doc['contentType']));
+            }
+
+            // WRITE Chunks to cache file
+            $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
+            $tmpPHP .= '$c = &$this->chunkCache;';
+            while ($doc = $modx->db->getRow($rs)) {
+                /** without trim */
+                $code = (!$doc['disabled']) ? $this->escapeDoubleQuotes($doc['snippet']) : '';
+                $tmpPHP .= sprintf('$c["%s"]="%s";', $this->escapeDoubleQuotes($doc['name']), $code);
+            }
+
+            // WRITE snippets to cache file
+            $rs = $modx->db->select(
+                'ss.*, sm.properties as sharedproperties',
+                '[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid'
 			);
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($row = $modx->db->getRow($rs)) {
