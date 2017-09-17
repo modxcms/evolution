@@ -3287,6 +3287,14 @@ class DocumentParser {
             $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
             $sync->setReport($report);
             $sync->emptyCache();
+        } elseif(preg_match('@^[1-9][0-9]*$@',$type)) {
+            $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($type) : $type;
+            $file_name = "docid_" . $key . "_*.pageCache.php";
+            $cache_path = MODX_BASE_PATH . $this->getCacheFolder() . $file_name;
+            $files = glob($cache_path);
+            foreach($files as $file) {
+                if(is_file($file)) unlink($file);
+            }
         } else {
             $files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
             foreach ($files as $file) {
