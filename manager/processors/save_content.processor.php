@@ -696,5 +696,3 @@ switch ($actionToTake) {
 	default :
 		$modx->webAlertAndQuit("No operation set in request.");
 }
-
-?>
