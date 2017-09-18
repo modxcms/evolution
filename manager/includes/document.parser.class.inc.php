@@ -993,9 +993,13 @@ class DocumentParser {
                 $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
             
-            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
+            $s = &$matches[0][$i];
+            if($modifiers!==false) {
+                $value = $this->applyFilter($value,$modifiers,$key);
+            }
             
-            $content= str_replace($matches[0][$i], $value, $content);
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('mergeDocumentContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         
         return $content;
@@ -1108,7 +1112,9 @@ class DocumentParser {
             else continue;
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            $content= str_replace($matches[0][$i], $value, $content);
+            $s = &$matches[0][$i];
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('mergeSettingsContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         return $content;
     }
@@ -1149,7 +1155,9 @@ class DocumentParser {
             
             if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
             
-            $content= str_replace($matches[0][$i], $value, $content);
+            $s = &$matches[0][$i];
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('mergeChunkContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         return $content;
     }
@@ -1185,7 +1193,9 @@ class DocumentParser {
                 $modifiers = $this->mergePlaceholderContent($modifiers);
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
-            $content= str_replace($matches[0][$i], $value, $content);
+            $s = &$matches[0][$i];
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('mergePlaceholderContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         return $content;
     }
@@ -1310,7 +1320,9 @@ class DocumentParser {
         list($sTags,$rTags) = $this->getTagsForEscape();
         foreach($matches[1] as $i=>$v) {
             $v = str_ireplace($sTags,$rTags,$v);
-            $content = str_replace($matches[0][$i],$v,$content);
+            $s = &$matches[0][$i];
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('ignoreCommentedTagsContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         return $content;
     }
@@ -1439,16 +1451,19 @@ class DocumentParser {
             $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
         
         foreach($matches[1] as $i=>$call) {
+            $s = &$matches[0][$i];
             if(substr($call,0,2)==='$_') {
                 if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
-                else                                          $value = $matches[0][$i];
-                $content = str_replace($matches[0][$i], $value, $content);
+                else                                          $value = $s;
+                if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+                else $this->addLog('evalSnippetsSGVar parse error',$_SERVER['REQUEST_URI'].$s,2);
                 continue;
             }
             $value = $this->_get_snip_result($call);
             if(is_null($value)) continue;
             
-            $content = str_replace($matches[0][$i], $value, $content);
+            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            else $this->addLog('evalSnippets parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
@@ -3578,13 +3593,15 @@ class DocumentParser {
             
             $value = $ph[$key];
             
+            $s = &$matches[0][$i];
             if($modifiers!==false) {
                 if(strpos($modifiers,$left)!==false) {
                     $modifiers = $this->parseText($modifiers,$ph,$left,$right);
                 }
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
-            $tpl = str_replace($matches[0][$i], $value, $tpl);
+            if(strpos($tpl,$s)!==false) $tpl= str_replace($s, $value, $tpl);
+            else $this->addLog('parseText parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         
         return $tpl;
