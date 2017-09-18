@@ -83,6 +83,7 @@ class DocumentParser {
      */
     function __construct() {
         $this->apiVersion = '1.0.0'; // This is New evolution
+        if($this->isLoggedIn()) ini_set('display_errors', 1);
         global $database_server;
         if(substr(PHP_OS,0,3) === 'WIN' && $database_server==='localhost') $database_server = '127.0.0.1';
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
