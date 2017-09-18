@@ -3283,25 +3283,33 @@ class DocumentParser {
      * @return boolean 
      */
     function clearCache($type='', $report=false) {
-        if ($type=='full') {
+        $cache_dir = MODX_BASE_PATH . $this->getCacheFolder();
+        if(is_array($type)) {
+            foreach($type as $_) {
+                $this->clearCache($_,$report);
+            }
+        } elseif ($type=='full') {
             include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
             $sync = new synccache();
-            $sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
+            $sync->setCachepath($cache_dir);
             $sync->setReport($report);
             $sync->emptyCache();
         } elseif(preg_match('@^[1-9][0-9]*$@',$type)) {
             $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($type) : $type;
             $file_name = "docid_" . $key . "_*.pageCache.php";
-            $cache_path = MODX_BASE_PATH . $this->getCacheFolder() . $file_name;
+            $cache_path = $cache_dir . $file_name;
             $files = glob($cache_path);
+            $files[] = $cache_dir . "docid_" . $key . ".pageCache.php";
             foreach($files as $file) {
-                if(is_file($file)) unlink($file);
+                if (!is_file($file)) continue;
+                unlink($file);
             }
         } else {
-            $files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
+            $files = glob($cache_dir.'*');
             foreach ($files as $file) {
                 if (strpos($name,'.pageCache.php')===false) continue;
-                if (is_file($file)) unlink($file);
+                if (!is_file($file)) continue;
+                unlink($file);
             }
         }
     }
