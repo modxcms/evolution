@@ -65,7 +65,7 @@ class synccache
         $deletedfiles = array();
         while ($file = array_shift($files)) {
             $name = basename($file);
-            if (strpos($name,'.pageCache/')!==false && !in_array($name, $deletedfiles)) {
+            if (strpos($name,'.pageCache.php')!==false && !in_array($name, $deletedfiles)) {
                 $deletedfilesincache++;
                 $deletedfiles[] = $name;
                 @unlink($file);
