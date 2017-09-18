@@ -654,7 +654,7 @@ switch ($actionToTake) {
 
         if ($syncsite == 1) {
             // empty cache
-            $keys = array('alias','parent','published');
+            $keys = array('alias','parent','published','isfolder','menuindex','alias_visible');
             $flag = '';
             foreach($keys as $key) {
                 if ($existingDocument[$key]===$_POST[$key]) continue;
