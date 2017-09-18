@@ -189,7 +189,7 @@ class synccache
         $documentListing = array();
         $aliasListing    = array();
         $documentMap     = array();
-        while ($doc      = $modx->db->getRow($rs)) {
+        while ($doc = $modx->db->getRow($rs)) {
             $docid = $doc['id'];
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
                 $tmpPath = $this->getParents($doc['parent']);
@@ -197,7 +197,10 @@ class synccache
                 $key = $alias;
             }
             else $key = $doc['alias'];
+            
             $documentListing[$key] = $docid;
+
+            $documentMap[] = array($doc['parent']=>$docid);
 
             $param = array();
             $param['id']            = $docid;
@@ -207,7 +210,6 @@ class synccache
             $param['alias_visible'] = $doc['alias_visible'];
             $param['isfolder']      = $doc['isfolder'];
             $aliasListing[$docid]   = $param;
-            $documentMap[]          = array($doc['parent'], $docid);
         }
 
         $content .= sprintf('$this->documentListing=%s;', var_export($documentListing,true));
