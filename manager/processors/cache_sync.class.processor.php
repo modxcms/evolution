@@ -30,7 +30,8 @@ class synccache
     { // modx:returns child's parent
         global $modx;
         if (empty($this->aliases)) {
-            $rs = $modx->db->select("id, IF(alias='', id, alias) AS alias, parent, alias_visible", '[+prefix+]site_content');
+            $f = "id, IF(alias='', id, alias) AS alias, parent, alias_visible";
+            $rs = $modx->db->select($f, '[+prefix+]site_content','deleted=0');
             while ($row = $modx->db->getRow($rs)) {
                 $docid = $row['id'];
                 $this->aliases[$docid]      = $row['alias'];
@@ -57,19 +58,16 @@ class synccache
             $modx->messageQuit("Cache path not set.");
         }
         $filesincache = 0;
-        $deletedfilesincache = 0;
 
         // New and improved!
-        $files = glob(realpath($this->cachePath) . '/*.php');
+        $files = glob(realpath($this->cachePath) . '/*.pageCache.php');
         $filesincache = count($files);
         $deletedfiles = array();
         while ($file = array_shift($files)) {
             $name = basename($file);
-            if (strpos($name,'.pageCache.php')!==false && !in_array($name, $deletedfiles)) {
-                $deletedfilesincache++;
-                $deletedfiles[] = $name;
-                @unlink($file);
-                clearstatcache();
+            if (strpos($name,'.pageCache.php')===false) continue;
+            if(is_file($file)) {
+                if(unlink($file)) $deletedfiles[] = $name;;
             }
         }
 
@@ -80,9 +78,9 @@ class synccache
         // finished cache stuff.
         if($this->showReport==true) {
             global $_lang;
-            echo sprintf($_lang['refresh_cache'], $filesincache, $deletedfilesincache);
-            $limit = count($deletedfiles);
-            if($limit > 0) {
+            $total = count($deletedfiles);
+            echo sprintf($_lang['refresh_cache'], $filesincache, $total);
+            if($total > 0) {
                 echo '<p>'.$_lang['cache_files_deleted'].'</p><ul>';
                 foreach($deletedfiles as $deletedfile) {
                     echo '<li>'.$deletedfile.'</li>';
@@ -168,12 +166,9 @@ class synccache
         }
         $content .= sprintf('$this->config=%s;', var_export($config,true));
         
-        // get aliases modx: support for alias path
-        $tmpPath = '';
-
         if ($config['aliaslistingfolder'] == 1) {
-            $f['alias']         = "IF( c.alias='', c.id, c.alias)";
             $f['id']            = 'c.id';
+            $f['alias']         = "IF( c.alias='', c.id, c.alias)";
             $f['parent']        = 'c.parent';
             $f['isfolder']      = 'c.isfolder';
             $f['alias_visible'] = 'c.alias_visible'; 
@@ -183,33 +178,27 @@ class synccache
             $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
             $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
         }else{
-            $f = "IF(alias='', id, alias) AS alias, id, parent, isfolder, alias_visible";
+            $f = "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible";
             $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
         }
         $documentListing = array();
         $aliasListing    = array();
         $documentMap     = array();
+        $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
+        $tmpPath = '';
         while ($doc = $modx->db->getRow($rs)) {
             $docid = $doc['id'];
-            if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
+            if ($use_alias_path) {
                 $tmpPath = $this->getParents($doc['parent']);
                 $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
                 $key = $alias;
             }
             else $key = $doc['alias'];
             
+            $doc['path'] = $tmpPath;
+            $aliasListing[$docid]  = $doc;
             $documentListing[$key] = $docid;
-
-            $documentMap[] = array($doc['parent']=>$docid);
-
-            $param = array();
-            $param['id']            = $docid;
-            $param['alias']         = $doc['alias'];
-            $param['path']          = $tmpPath;
-            $param['parent']        = $doc['parent'];
-            $param['alias_visible'] = $doc['alias_visible'];
-            $param['isfolder']      = $doc['isfolder'];
-            $aliasListing[$docid]   = $param;
+            $documentMap[]         = array($doc['parent'] => $docid);
         }
 
         $content .= sprintf('$this->documentListing=%s;', var_export($documentListing,true));
