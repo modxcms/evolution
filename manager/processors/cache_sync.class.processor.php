@@ -57,17 +57,15 @@ class synccache
         if (!isset($this->cachePath)) {
             $modx->messageQuit("Cache path not set.");
         }
-        $filesincache = 0;
 
-        // New and improved!
         $files = glob(realpath($this->cachePath) . '/*.pageCache.php');
         $filesincache = count($files);
         $deletedfiles = array();
         while ($file = array_shift($files)) {
             $name = basename($file);
-            if (strpos($name,'.pageCache.php')===false) continue;
+            clearstatcache();
             if(is_file($file)) {
-                if(unlink($file)) $deletedfiles[] = $name;;
+                if(unlink($file)) $deletedfiles[] = $name;
             }
         }
 
