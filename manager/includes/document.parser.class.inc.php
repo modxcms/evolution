@@ -3579,7 +3579,9 @@ class DocumentParser {
             $value = $ph[$key];
             
             if($modifiers!==false) {
-                if(strpos($modifiers,$left)!==false) $modifiers=$this->parseText($modifiers,$ph,$left,$right);
+                if(strpos($modifiers,$left)!==false) {
+                    $modifiers = $this->parseText($modifiers,$ph,$left,$right);
+                }
                 $value = $this->applyFilter($value,$modifiers,$key);
             }
             $tpl = str_replace($matches[0][$i], $value, $tpl);
