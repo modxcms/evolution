@@ -162,7 +162,7 @@ class synccache
             $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
             if ($count) $config['enable_filter'] = '0';
         }
-        $content .= sprintf('$this->config=%s;', var_export($config,true));
+        $content .= sprintf('$this->config=%s;', $this->php_strip_whitespace(var_export($config,true)));
         
         if ($config['aliaslistingfolder'] == 1) {
             $f['id']            = 'c.id';
@@ -199,9 +199,9 @@ class synccache
             $documentMap[]         = array($doc['parent'] => $docid);
         }
 
-        $content .= sprintf('$this->documentListing=%s;', var_export($documentListing,true));
-        $content .= sprintf('$this->aliasListing=%s;',    var_export($aliasListing,true));
-        $content .= sprintf('$this->documentMap=%s;',     var_export($documentMap,true));
+        $content .= sprintf('$this->documentListing=%s;', $this->php_strip_whitespace(var_export($documentListing,true)));
+        $content .= sprintf('$this->aliasListing=%s;',    $this->php_strip_whitespace(var_export($aliasListing,true)));
+        $content .= sprintf('$this->documentMap=%s;',     $this->php_strip_whitespace(var_export($documentMap,true)));
 
         // get content types
         $rs = $modx->db->select('id, contentType', '[+prefix+]site_content', "contentType!='text/html'");
@@ -279,7 +279,7 @@ class synccache
         foreach ($events as $evtname => $pluginnames) {
             $events[$evtname] = $pluginnames;
         }
-        $content .= sprintf('$this->pluginEvent=%s;', var_export($events,true));
+        $content .= sprintf('$this->pluginEvent=%s;', $this->php_strip_whitespace(var_export($events,true)));
 
         // close and write the file
         $filename = $this->cachePath . 'siteCache.idx.php';
