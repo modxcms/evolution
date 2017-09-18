@@ -544,20 +544,21 @@ class DocumentParser {
         return $this->getCacheFolder()."docid_" . $key . ".pageCache.php";
     }
     public function makePageCacheKey($id){
-        $hash = $id;
-        $tmp = null;
-        $params = array();
+        $params = $_GET;
+        if(isset($params['q'])) unset($params['q']);
+
         if(!empty($this->systemCacheKey)){
             $hash = $this->systemCacheKey;
-        }else {
-            if (!empty($_GET)) {
-                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-                $params = $_GET;
-                ksort($params);
-                $hash .= '_'.md5(http_build_query($params));
-            }
+        } elseif (!empty($params)) {
+            // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+            ksort($params);
+            $hash .= '_'.md5(http_build_query($params));
         }
-        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
+        else $hash = $id;
+
+        if(isset($_GET['q'])) $params['q'] = $_GET['q'];
+        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array ('hash' => $hash, 'id' => $id, 'params' => $params));
+        $tmp = array();
         if (is_array($evtOut) && count($evtOut) > 0){
             $tmp = array_pop($evtOut);
         }
