@@ -8,73 +8,73 @@ if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
 if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
 
 class DocumentParser {
-    var $apiVersion;
-    var $db; // db object
-    var $event, $Event; // event object
-    var $pluginEvent;
-    var $config= null;
-    var $configGlobal= null; // contains backup of settings overwritten by user-settings 
-    var $rs;
-    var $result;
-    var $sql;
-    var $table_prefix;
-    var $debug;
-    var $documentIdentifier;
-    var $documentMethod;
-    var $documentGenerated;
-    var $documentContent;
-    var $documentOutput;
-    var $tstart;
-    var $mstart;
-    var $minParserPasses;
-    var $maxParserPasses;
-    var $documentObject;
-    var $templateObject;
-    var $snippetObjects;
-    var $stopOnNotice;
-    var $executedQueries;
-    var $queryTime;
-    var $currentSnippet;
-    var $documentName;
-    var $aliases;
-    var $visitor;
-    var $entrypage;
-    var $documentListing;
-    var $dumpSnippets;
-    var $snippetsCode;
-    var $snippetsTime=array();
-    var $chunkCache;
-    var $snippetCache;
-    var $contentTypes;
-    var $dumpSQL;
-    var $queryCode;
-    var $virtualDir;
-    var $placeholders;
-    var $sjscripts;
-    var $jscripts;
-    var $loadedjscripts;
-    var $documentMap;
-    var $forwards= 3;
-    var $error_reporting;
-    var $dumpPlugins;
-    var $pluginsCode;
-    var $pluginsTime=array();
-    var $pluginCache=array();
-    var $aliasListing;
-    var $lockedElements=null;
-    var $tmpCache = array();
+    public $apiVersion;
+    public $db; // db object
+    public $event, $Event; // event object
+    public $pluginEvent;
+    public $config= null;
+    public $configGlobal= null; // contains backup of settings overwritten by user-settings 
+    public $rs;
+    public $result;
+    public $sql;
+    public $table_prefix;
+    public $debug;
+    public $documentIdentifier;
+    public $documentMethod;
+    public $documentGenerated;
+    public $documentContent;
+    public $documentOutput;
+    public $tstart;
+    public $mstart;
+    public $minParserPasses;
+    public $maxParserPasses;
+    public $documentObject;
+    public $templateObject;
+    public $snippetObjects;
+    public $stopOnNotice;
+    public $executedQueries;
+    public $queryTime;
+    public $currentSnippet;
+    public $documentName;
+    public $aliases;
+    public $visitor;
+    public $entrypage;
+    public $documentListing;
+    public $dumpSnippets;
+    public $snippetsCode;
+    public $snippetsTime=array();
+    public $chunkCache;
+    public $snippetCache;
+    public $contentTypes;
+    public $dumpSQL;
+    public $queryCode;
+    public $virtualDir;
+    public $placeholders;
+    public $sjscripts;
+    public $jscripts;
+    public $loadedjscripts;
+    public $documentMap;
+    public $forwards= 3;
+    public $error_reporting;
+    public $dumpPlugins;
+    public $pluginsCode;
+    public $pluginsTime=array();
+    public $pluginCache=array();
+    public $aliasListing;
+    public $lockedElements=null;
+    public $tmpCache = array();
     private $version=array();
     public $extensions = array();
     public $cacheKey = null;
     public $recentUpdate = 0;
     public $useConditional = false;
     protected $systemCacheKey = null;
-    var $snipLapCount;
-    var $messageQuitCount;
-    var $time;
-    var $sid;
+    public $snipLapCount;
+    public $messageQuitCount;
+    public $time;
+    public $sid;
     private $q;
-    var $decoded_request_uri;
+    public $decoded_request_uri;
 
     /**
      * Document constructor
@@ -5530,11 +5530,11 @@ class DocumentParser {
  * System Event Class
  */
 class SystemEvent {
-    var $name;
-    var $_propagate;
-    var $_output;
-    var $activated;
-    var $activePlugin;
+    public $name;
+    public $_propagate;
+    public $_output;
+    public $activated;
+    public $activePlugin;
 
     /**
      * @param string $name Name of the event
