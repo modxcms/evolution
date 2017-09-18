@@ -5286,7 +5286,8 @@ class DocumentParser {
                     $functionName = $val['function'];
             }
             $tmp = 1;
-            $args = array_pad(array(), count($val['args']), '$var');
+            $_ = (!empty($val['args'])) ? count($val['args']) : 0;
+            $args = array_pad(array(), $_, '$var');
             $args = implode(", ", $args);
             $modx = & $this;
             $args = preg_replace_callback('/\$var/', function() use($modx, &$tmp, $val){
