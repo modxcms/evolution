@@ -30,7 +30,7 @@ class synccache
     { // modx:returns child's parent
         global $modx;
         if (empty($this->aliases)) {
-            $rs = $modx->db->select("d, IF(alias='', id, alias) AS alias, parent, alias_visible", '[+prefix+]site_content');
+            $rs = $modx->db->select("id, IF(alias='', id, alias) AS alias, parent, alias_visible", '[+prefix+]site_content');
             while ($row = $modx->db->getRow($rs)) {
                 $docid = $row['id'];
                 $this->aliases[$docid]      = $row['alias'];
