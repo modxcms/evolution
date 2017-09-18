@@ -872,7 +872,6 @@ class DocumentParser {
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
                 $page_cache_path = MODX_BASE_PATH.$this->getHashFile($this->cacheKey);
                 file_put_contents($page_cache_path, "<?php die('Unauthorized access.'); ?>$cacheContent");
-                fclose($fp);
             }
         }
 
