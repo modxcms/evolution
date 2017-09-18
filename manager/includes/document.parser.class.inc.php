@@ -298,54 +298,55 @@ class DocumentParser {
      * Get MODX settings including, but not limited to, the system_settings table
      */
     function getSettings() {
-        if (!isset($this->config['site_name'])) {
-            
-            $site_cache_path = MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
-
-            if ($included= is_file($site_cache_path)) $included= include_once ($site_cache_path);
-
-            if (!$included || !isset($this->config['site_name'])) {
-                include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
-                $cache = new synccache();
-                $cache->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
-                $cache->setReport(false);
-                $rebuilt = $cache->buildCache($this);
-                $included = false;
-                
-                if($rebuilt && is_file($site_cache_path)) $included= include($site_cache_path);
-
-                if(!$included) {
-                    $result= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
-                    while ($row= $this->db->getRow($result)) {
-                        $this->config[$row['setting_name']]= $row['setting_value'];
-                    }
-                    if ($this->config['enable_filter']) {
-                        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-                        $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
-                        if ($count) {
-                            $this->config['enable_filter'] = '0';
-                        }
-                    }
-                }
-            }
-        }
+        if (!isset($this->config['site_name'])) $this->recoverySiteCache();
 
         // setup default site id - new installation should generate a unique id for the site.
         if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
 
         // store base_url and base_path inside config array
-        $this->config['base_url']           = MODX_BASE_URL;
-        $this->config['base_path']          = MODX_BASE_PATH;
-        $this->config['site_url']           = MODX_SITE_URL;
-        $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
-        $this->config['site_manager_url']   = MODX_MANAGER_URL;
-        $this->config['site_manager_path']  = MODX_MANAGER_PATH;
-        $this->error_reporting              = $this->config['error_reporting'];
-        $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-        $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+        $this->config['base_url']          = MODX_BASE_URL;
+        $this->config['base_path']         = MODX_BASE_PATH;
+        $this->config['site_url']          = MODX_SITE_URL;
+        $this->config['valid_hostnames']   = MODX_SITE_HOSTNAMES;
+        $this->config['site_manager_url']  = MODX_MANAGER_URL;
+        $this->config['site_manager_path'] = MODX_MANAGER_PATH;
+        $this->error_reporting             = $this->config['error_reporting'];
+        $this->config['filemanager_path']  = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+        $this->config['rb_base_dir']       = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
         
-        // now merge user settings into MODX-configuration
+        // now merge user settings into evo-configuration
         $this->getUserSettings();
+    }
+
+    private function recoverySiteCache() {
+        $site_cache_dir  = MODX_BASE_PATH . $this->getCacheFolder();
+        $site_cache_path = $site_cache_dir. 'siteCache.idx.php';
+
+        if (is_file($site_cache_path)) include($site_cache_path);
+        if (isset($this->config['site_name'])) return;
+
+        include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
+        $cache = new synccache();
+        $cache->setCachepath($site_cache_dir);
+        $cache->setReport(false);
+        $cache->buildCache($this);
+
+        clearstatcache();
+        if (is_file($site_cache_path)) include($site_cache_path);
+        if (isset($this->config['site_name'])) return;
+
+        $rs= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
+        while ($row= $this->db->getRow($rs)) {
+            $this->config[$row['setting_name']]= $row['setting_value'];
+        }
+
+        if (!$this->config['enable_filter']) return;
+
+        $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+        $rs = $this->db->select('id', '[+prefix+]site_plugins', $where);
+        if ($this->db->getRecordCount($rs)) {
+            $this->config['enable_filter'] = '0';
+        }
     }
 
     /**
