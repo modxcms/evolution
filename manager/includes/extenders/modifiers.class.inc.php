@@ -410,7 +410,7 @@ class MODIFIERS {
                     $value = preg_replace('@(<br[ /]*>)\n@','$1',$value);
                     $value = preg_replace('@<br[ /]*>@',"\n",$value);
                 }
-                return strip_tags($value,$params);
+                return $this->strip_tags($value,$params);
             case 'urlencode':
             case 'encode_url':
                 return urlencode($value);
@@ -1131,5 +1131,17 @@ class MODIFIERS {
     }
     function str_word_count($str) {
         return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
+    }
+    function strip_tags($value,$params='') {
+        global $modx;
+
+        if(stripos($params,'style')===false && stripos($value,'</style>')!==false) {
+            $value = preg_replace('@<style.*?>.*?</style>@is', '', $value);
+        }
+        if(stripos($params,'script')===false && stripos($value,'</script>')!==false) {
+            $value = preg_replace('@<script.*?>.*?</script>@is', '', $value);        
+        }
+  
+        return trim(strip_tags($value,$params));
     }
 }
