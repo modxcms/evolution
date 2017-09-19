@@ -341,8 +341,9 @@ class synccache
                 case T_DOUBLE_ARROW :
                 case T_BOOLEAN_AND :
                 case T_BOOLEAN_OR :
+                case T_START_HEREDOC :
+                    if($prev_token!=T_START_HEREDOC) $_ = trim($_);
                     $prev_token=$type;
-                    $_ = trim($_);
                     $_ .= $text;
                     break;
                 default:
