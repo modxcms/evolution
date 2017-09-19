@@ -171,7 +171,7 @@ class synccache
             $f['isfolder']      = 'c.isfolder';
             $f['alias_visible'] = 'c.alias_visible'; 
             $from = array();
-            $from[] = '[+prefix+]site_content';
+            $from[] = '[+prefix+]site_content c';
             $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
             $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
             $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
