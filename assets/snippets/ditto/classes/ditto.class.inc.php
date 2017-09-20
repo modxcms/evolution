@@ -160,6 +160,7 @@ class ditto {
 				$orderBy['parsed'][] = array($sortBy,strtoupper($sortDir));
 			}
 		}
+        if(!isset($orderBy['parsed'][0])) $orderBy['parsed'][0] = array('id','ASC');
 		$orderBy['sql'] = join(', ',$this->sqlOrderBy);
 		unset($orderBy['unparsed']);
 		return $orderBy;
