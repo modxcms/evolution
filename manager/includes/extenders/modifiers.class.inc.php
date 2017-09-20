@@ -343,12 +343,12 @@ class MODIFIERS {
                 $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
-                break;
+                return NULL;
             case 'then':
                 $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
                 if ($isvalid)  return $opt;
-                break;
+                return null;
             case 'else':
                 $conditional = join(' ',$this->condition);
                 $isvalid = intval(eval("return ({$conditional});"));
