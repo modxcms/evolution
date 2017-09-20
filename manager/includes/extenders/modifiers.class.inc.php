@@ -554,7 +554,6 @@ class MODIFIERS {
                     $_[] = str_replace(array('[+value+]','[+output+]','{value}','%s'),$v,$opt);
                 }
                 return join("\n", $_);
-                break;
             case 'array_pop':
             case 'array_shift':
                 if(strpos($value,'||')!==false) $delim = '||';
@@ -813,7 +812,6 @@ class MODIFIERS {
                     return $size;
                 }
                 else return '';
-                break;
             #####  User info
             case 'username':
             case 'fullname':
@@ -920,7 +918,6 @@ class MODIFIERS {
             // If we haven't yet found the modifier, let's look elsewhere
             default:
                 $value = $this->getValueFromElement($key, $value, $cmd, $opt);
-                break;
         }
         return $value;
     }
