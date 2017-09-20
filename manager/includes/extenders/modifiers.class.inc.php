@@ -807,8 +807,8 @@ class MODIFIERS {
                 $filename = MODX_BASE_PATH.$opt.$filename;
                 
                 if(is_file($filename)){
-                    $size = filesize($filename);
                     clearstatcache();
+                    $size = filesize($filename);
                     return $size;
                 }
                 else return '';
