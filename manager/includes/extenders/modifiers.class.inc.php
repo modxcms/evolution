@@ -373,6 +373,7 @@ class MODIFIERS {
                 return htmlentities($value,ENT_QUOTES,$modx->config['modx_charset']);
             case 'html_entity_decode':
             case 'decode_html':
+            case 'html_decode':
                 return html_entity_decode($value,ENT_QUOTES,$modx->config['modx_charset']);
             case 'esc':
             case 'escape':
@@ -384,6 +385,7 @@ class MODIFIERS {
             case 'htmlspecialchars':
             case 'hsc':
             case 'encode_html':
+            case 'html_encode':
                 return preg_replace('/&amp;(#[0-9]+|[a-z]+);/i', '&$1;', htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']));
             case 'spam_protect':
                 return str_replace(array('@','.'),array('&#64;','&#46;'),$value);
@@ -412,6 +414,7 @@ class MODIFIERS {
                 }
                 return $this->strip_tags($value,$params);
             case 'urlencode':
+            case 'url_encode':
             case 'encode_url':
                 return urlencode($value);
             case 'base64_decode':
@@ -421,6 +424,7 @@ class MODIFIERS {
             case 'encode_sha1': $cmd = 'sha1';
             case 'addslashes':
             case 'urldecode':
+            case 'url_decode':
             case 'rawurlencode':
             case 'rawurldecode':
             case 'base64_encode':
