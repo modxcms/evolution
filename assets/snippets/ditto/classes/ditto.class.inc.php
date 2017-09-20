@@ -149,12 +149,8 @@ class ditto {
         if (!is_null($orderBy['unparsed'])) {
             $inputs = array_filter(array_map('trim', explode(',', $orderBy['unparsed'])));
             foreach ($inputs as $input) {
-                $position = strrpos($input,' ');
-                    // find last space
-                $sortBy = substr($input,0,$position);
-                    $sortBy = !empty($sortBy) ? $sortBy : 'id';
-                $sortDir = substr($input,$position);
-                    $sortDir = !empty($sortDir) ? trim($sortDir) : 'asc';
+                if(strpos($input,' ')===false) $input .= ' ASC';
+                list($sortBy,$sortDir) = explode(' ',$input);
                 $sortBy = $this->checkAdvSort($sortBy,$sortDir);
                 $this->addField($sortBy,'backend');
                 $orderBy['parsed'][] = array($sortBy,strtoupper($sortDir));
