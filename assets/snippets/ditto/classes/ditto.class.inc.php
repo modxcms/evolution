@@ -537,7 +537,7 @@ class ditto {
         
     function determineIDs($IDs, $IDType, $TVs, $orderBy, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $myWhere, $dateSource, $limit, $summarize, $filter, $paginate, $randomize) {
         global $modx;
-        if (($summarize == 0 && $summarize != 'all') || empty($IDs)) {
+        if (($summarize == 0 && $summarize != 'all') || $IDs=='') {
             return array();
         }
         
