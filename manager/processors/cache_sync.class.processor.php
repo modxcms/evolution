@@ -318,6 +318,7 @@ class synccache
                 elseif(in_array($token,array('(','{')) && in_array($prev_token,array(T_IF,T_ELSE,T_ELSEIF)))
                     $_ = trim($_);
                 $_ .= $token;
+                if($prev_token==T_END_HEREDOC) $_.="\n";
                 continue;
             }
             
@@ -328,7 +329,7 @@ class synccache
                 case T_DOC_COMMENT:
                     break;
                 case T_WHITESPACE :
-                    $_ = trim($_);
+                    if($prev_token!=T_END_HEREDOC) $_ = trim($_);
                     $lastChar = substr($_,-1);
                     if( !in_array($lastChar,$chars ) ) {// ,320,327,288,284,289
                         if(!in_array($prev_token,array(T_FOREACH,T_WHILE,T_FOR,T_BOOLEAN_AND,T_BOOLEAN_OR,T_DOUBLE_ARROW)))
