@@ -255,7 +255,7 @@ if(count($extenders) > 0) {
 if (isset($startID) && !isset($parents)) {$parents = $startID;}
 if (isset($summarize)) {$display = $summarize;}
 if (isset($limit)) {$queryLimit = $limit;}
-if (isset($sortBy) || isset($sortDir) || is_null($orderBy['unparsed'])) {
+if (isset($sortBy) || isset($sortDir) || !$orderBy['unparsed']) {
     $sortDir = isset($sortDir) ? strtoupper($sortDir) : 'DESC';
     $sortBy = isset($sortBy) ? $sortBy : 'createdon';
     $orderBy['parsed'][]=array($sortBy,$sortDir);
