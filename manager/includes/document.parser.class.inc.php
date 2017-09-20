@@ -1809,15 +1809,11 @@ class DocumentParser {
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
             $aliases= array ();
-            /* foreach ($this->aliasListing as $item) {
-                $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
-                $isfolder[$item['id']]= $item['isfolder'];
-            } */
             if (is_array($this->documentListing)){
-            foreach($this->documentListing as $key=>$val){
-                $aliases[$val] = $key;
-                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
-            }
+                foreach($this->documentListing as $path=>$docid) { // This is big Loop on large site!
+                    $aliases[$docid]  = $path;
+                    $isfolder[$docid] = $this->aliasListing[$docid]['isfolder'];
+                }
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
