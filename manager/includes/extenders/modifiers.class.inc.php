@@ -555,6 +555,11 @@ class MODIFIERS {
                 }
                 return join("\n", $_);
                 break;
+            case 'array_pop':
+            case 'array_shift':
+                if(strpos($value,'||')!==false) $delim = '||';
+                else                            $delim = ',';
+                return $cmd(explode($delim,$value));
             case 'preg_replace':
             case 'regex_replace':
                 if(empty($opt) || strpos($opt,',')===false) break;
