@@ -1826,7 +1826,7 @@ class DocumentParser {
                 if ($ids) {
                     $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
-                        if ($this->config['use_alias_path'] == '1') {
+                        if ($this->config['use_alias_path'] == '1' && $row['parent']!=0) {
                             $parent = $row['parent'];
                             $path   = $aliases[$parent];
 
