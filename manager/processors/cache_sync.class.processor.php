@@ -1,4 +1,5 @@
 <?php
+
 class synccache
 {
     var $cachePath;
@@ -10,12 +11,13 @@ class synccache
     var $request_time;
 
 
-    function __construct() {
+    function __construct()
+    {
         global $modx;
-        
-        $this->request_time = $_SERVER['REQUEST_TIME']+$modx->config['server_offset_time'];
+
+        $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
     }
-    
+
     function setCachepath($path)
     {
         $this->cachePath = $path;
@@ -26,16 +28,21 @@ class synccache
         $this->showReport = $bool;
     }
 
-    function escapeSingleQuotes($s) {
-        $q1 = array("\\","'");
-        $q2 = array("\\\\","\\'");
-        return str_replace($q1,$q2,$s);
+    function escapeSingleQuotes($s)
+    {
+        if ($s == '') {
+            return $s;
+        }
+        $q1 = array("\\", "'");
+        $q2 = array("\\\\", "\\'");
+        return str_replace($q1, $q2, $s);
     }
 
-    function escapeDoubleQuotes($s) {
-        $q1 = array("\\","\"","\r","\n","\$");
-        $q2 = array("\\\\","\\\"","\\r","\\n","\\$");
-        return str_replace($q1,$q2,$s);
+    function escapeDoubleQuotes($s)
+    {
+        $q1 = array("\\", "\"", "\r", "\n", "\$");
+        $q2 = array("\\\\", "\\\"", "\\r", "\\n", "\\$");
+        return str_replace($q1, $q2, $s);
     }
 
     function getParents($id, $path = '')
@@ -43,18 +50,21 @@ class synccache
         global $modx;
         if (empty($this->aliases)) {
             $f = "id, IF(alias='', id, alias) AS alias, parent, alias_visible";
-            $rs = $modx->db->select($f, '[+prefix+]site_content','deleted=0');
+            $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0');
             while ($row = $modx->db->getRow($rs)) {
                 $docid = $row['id'];
-                $this->aliases[$docid]      = $row['alias'];
-                $this->parents[$docid]      = $row['parent'];
+                $this->aliases[$docid] = $row['alias'];
+                $this->parents[$docid] = $row['parent'];
                 $this->aliasVisible[$docid] = $row['alias_visible'];
             }
         }
         if (isset($this->aliases[$id])) {
-            if($this->aliasVisible[$id]==1) {
-                if($path!='') $path = $this->aliases[$id] . '/' . $path;
-                else          $path = $this->aliases[$id];
+            if ($this->aliasVisible[$id] == 1) {
+                if ($path != '') {
+                    $path = $this->aliases[$id] . '/' . $path;
+                } else {
+                    $path = $this->aliases[$id];
+                }
             }
             return $this->getParents($this->parents[$id], $path);
         }
@@ -76,8 +86,10 @@ class synccache
         while ($file = array_shift($files)) {
             $name = basename($file);
             clearstatcache();
-            if(is_file($file)) {
-                if(unlink($file)) $deletedfiles[] = $name;
+            if (is_file($file)) {
+                if (unlink($file)) {
+                    $deletedfiles[] = $name;
+                }
             }
         }
 
@@ -86,33 +98,34 @@ class synccache
         $this->publishTimeConfig();
 
         // finished cache stuff.
-        if($this->showReport==true) {
+        if ($this->showReport == true) {
             global $_lang;
             $total = count($deletedfiles);
             echo sprintf($_lang['refresh_cache'], $filesincache, $total);
-            if($total > 0) {
-                echo '<p>'.$_lang['cache_files_deleted'].'</p><ul>';
-                foreach($deletedfiles as $deletedfile) {
-                    echo '<li>'.$deletedfile.'</li>';
+            if ($total > 0) {
+                echo '<p>' . $_lang['cache_files_deleted'] . '</p><ul>';
+                foreach ($deletedfiles as $deletedfile) {
+                    echo '<li>' . $deletedfile . '</li>';
                 }
                 echo '</ul>';
             }
         }
     }
 
-    public function publishTimeConfig($cacheRefreshTime='')
+    public function publishTimeConfig($cacheRefreshTime = '')
     {
         $cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
-        if(!preg_match('@^[0-9]+$]@',$cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime)
+        if (!preg_match('@^[0-9]+$]@', $cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime) {
             $cacheRefreshTime = $cacheRefreshTimeFromDB;
+        }
 
 
         // write the file
         $content = '<?php' . "\n";
         $content .= '$recent_update=\'' . $this->request_time . '\';' . "\n";
-        $content .= '$cacheRefreshTime=\''. $cacheRefreshTime . '\';' . "\n";
+        $content .= '$cacheRefreshTime=\'' . $cacheRefreshTime . '\';' . "\n";
 
-        $filename = $this->cachePath.'/sitePublishing.idx.php';
+        $filename = $this->cachePath . '/sitePublishing.idx.php';
         if (!$handle = fopen($filename, 'w')) {
             exit("Cannot open file ({$filename}");
         }
@@ -120,7 +133,7 @@ class synccache
         $content .= "\n";
 
         // Write $somecontent to our opened file.
-        if (fwrite($handle, $content) === FALSE) {
+        if (fwrite($handle, $content) === false) {
             exit("Cannot write publishing info file! Make sure the assets/cache directory is writable!");
         }
     }
@@ -132,34 +145,45 @@ class synccache
         // update publish time file
         $timesArr = array();
 
-        $result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>'.$this->request_time);
-        if(!$result) echo "Couldn't determine next publish event!";
+        $result = $modx->db->select('MIN(pub_date) AS minpub', '[+prefix+]site_content', 'pub_date>' . $this->request_time);
+        if (!$result) {
+            echo "Couldn't determine next publish event!";
+        }
 
         $minpub = $modx->db->getValue($result);
-        if($minpub!=NULL)
+        if ($minpub != null) {
             $timesArr[] = $minpub;
+        }
 
-        $result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>'.$this->request_time);
-        if(!$result) echo "Couldn't determine next unpublish event!";
+        $result = $modx->db->select('MIN(unpub_date) AS minunpub', '[+prefix+]site_content', 'unpub_date>' . $this->request_time);
+        if (!$result) {
+            echo "Couldn't determine next unpublish event!";
+        }
 
         $minunpub = $modx->db->getValue($result);
-        if($minunpub!=NULL)
+        if ($minunpub != null) {
             $timesArr[] = $minunpub;
+        }
 
-        if(isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime))
+        if (isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime)) {
             $timesArr[] = $this->cacheRefreshTime;
+        }
 
-        if(count($timesArr)>0) $cacheRefreshTime = min($timesArr);
-        else                   $cacheRefreshTime = 0;
+        if (count($timesArr) > 0) {
+            $cacheRefreshTime = min($timesArr);
+        } else {
+            $cacheRefreshTime = 0;
+        }
         return $cacheRefreshTime;
     }
 
     /**
-    * build siteCache file
-    * @param  DocumentParser $modx
-    * @return boolean success
-    */
-    public function buildCache($modx) {
+     * build siteCache file
+     * @param  DocumentParser $modx
+     * @return boolean success
+     */
+    public function buildCache($modx)
+    {
         $content = "<?php\n";
 
         // SETTINGS & DOCUMENT LISTINGS CACHE
@@ -168,8 +192,8 @@ class synccache
         $rs = $modx->db->select('*', '[+prefix+]system_settings');
         $config = array();
         $content .= '$c=&$this->config;';
-        while(list($key,$value) = $modx->db->getRow($rs,'num')) {
-            $content .= '$c[\'' . $key . '\']=\'' . $this->escapeDoubleQuotes($value) . '\';';
+        while (list($key, $value) = $modx->db->getRow($rs, 'num')) {
+            $content .= '$c[\'' . $key . '\']="' . $this->escapeDoubleQuotes($value) . '";';
             $config[$key] = $value;
         }
 
@@ -180,19 +204,19 @@ class synccache
                 $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
         }
-        
+
         if ($config['aliaslistingfolder'] == 1) {
-            $f['id']            = 'c.id';
-            $f['alias']         = "IF( c.alias='', c.id, c.alias)";
-            $f['parent']        = 'c.parent';
-            $f['isfolder']      = 'c.isfolder';
-            $f['alias_visible'] = 'c.alias_visible'; 
+            $f['id'] = 'c.id';
+            $f['alias'] = "IF( c.alias='', c.id, c.alias)";
+            $f['parent'] = 'c.parent';
+            $f['isfolder'] = 'c.isfolder';
+            $f['alias_visible'] = 'c.alias_visible';
             $from = array();
             $from[] = '[+prefix+]site_content c';
             $from[] = 'LEFT JOIN [+prefix+]site_content p ON p.id=c.parent';
             $where = 'c.deleted=0 AND (c.isfolder=1 OR p.alias_visible=0)';
-            $rs = $modx->db->select( $f, $from, $where, 'c.parent, c.menuindex');
-        }else{
+            $rs = $modx->db->select($f, $from, $where, 'c.parent, c.menuindex');
+        } else {
             $f = "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible";
             $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
         }
@@ -207,7 +231,7 @@ class synccache
             $docid = $doc['id'];
             if ($use_alias_path) {
                 $tmpPath = $this->getParents($doc['parent']);
-                $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
+                $alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '') . $doc['alias'];
                 $key = $alias;
             } else {
                 $key = $doc['alias'];
@@ -230,27 +254,31 @@ class synccache
         $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->db->getRow($rs)) {
+            if ($modx->config['minifyphp_incache']) {
+                $doc['snippet'] = preg_replace(array('|\s+|', '|<!--|', '|-->|', '|-->\s+<!--|'), array(' ', "\n" . '<!--', '-->' . "\n", '-->' . "\n" . '<!--'), $doc['snippet']);
+            }
             $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
 
         // WRITE snippets to cache file
-        $f    = 'ss.*, sm.properties as sharedproperties';
+        $f = 'ss.*, sm.properties as sharedproperties';
         $from = '[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid';
-        $rs = $modx->db->select($f,$from);
+        $rs = $modx->db->select($f, $from);
         $content .= '$s=&$this->snippetCache;';
         while ($row = $modx->db->getRow($rs)) {
             $key = $row['name'];
-            if($row['disabled']) {
+            if ($row['disabled']) {
                 $content .= '$s[\'' . $key . '\']=\'return false;\';';
-            }
-            else {
+            } else {
                 $value = trim($row['snippet']);
-                if($modx->config['minifyphp_incache']) $value = $this->php_strip_whitespace($value);
+                if ($modx->config['minifyphp_incache']) {
+                    $value = $this->php_strip_whitespace($value);
+                }
                 $content .= '$s[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
-                $properties       = $modx->parseProperties($row['properties']);
+                $properties = $modx->parseProperties($row['properties']);
                 $sharedproperties = $modx->parseProperties($row['sharedproperties']);
-                $properties = array_merge($sharedproperties,$properties);
-                if (0<count($properties)) {
+                $properties = array_merge($sharedproperties, $properties);
+                if (0 < count($properties)) {
                     $content .= '$s[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
             }
@@ -261,16 +289,18 @@ class synccache
         $from = array();
         $from[] = '[+prefix+]site_plugins sp';
         $from[] = 'LEFT JOIN [+prefix+]site_modules sm on sm.guid=sp.moduleguid';
-        $rs = $modx->db->select($f,$from,'sp.disabled=0');
+        $rs = $modx->db->select($f, $from, 'sp.disabled=0');
         $content .= '$p=&$this->pluginCache;';
         while ($row = $modx->db->getRow($rs)) {
             $key = $row['name'];
             $value = trim($row['plugincode']);
-            if($modx->config['minifyphp_incache']) $value = $this->php_strip_whitespace($value);
+            if ($modx->config['minifyphp_incache']) {
+                $value = $this->php_strip_whitespace($value);
+            }
             $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
                 $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
-                $content .= '$p[\'' . $key . 'Props\']=\'' .  $properties . '\';';
+                $content .= '$p[\'' . $key . 'Props\']=\'' . $properties . '\';';
             }
         }
 
@@ -280,12 +310,14 @@ class synccache
         $from[] = '[+prefix+]system_eventnames sysevt';
         $from[] = 'INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id';
         $from[] = 'INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid';
-        $rs = $modx->db->select($f,$from, 'plugin.disabled=0', 'sysevt.name, event.priority');
+        $rs = $modx->db->select($f, $from, 'plugin.disabled=0', 'sysevt.name, event.priority');
         $content .= '$e=&$this->pluginEvent;';
         $events = array();
         while ($row = $modx->db->getRow($rs)) {
             $evtname = $row['evtname'];
-            if (!isset($events[$evtname])) $events[$evtname] = array();
+            if (!isset($events[$evtname])) {
+                $events[$evtname] = array();
+            }
             $events[$evtname][] = $row['pname'];
         }
         foreach ($events as $evtname => $pluginnames) {
@@ -295,13 +327,15 @@ class synccache
 
         $content .= "\n";
 
-            // close and write the file
+        // close and write the file
         $filename = $this->cachePath . 'siteCache.idx.php';
 
         // invoke OnBeforeCacheUpdate event
-        if ($modx) $modx->invokeEvent('OnBeforeCacheUpdate');
+        if ($modx) {
+            $modx->invokeEvent('OnBeforeCacheUpdate');
+        }
 
-        if (@file_put_contents($filename, $content)===false) {
+        if (@file_put_contents($filename, $content) === false) {
             exit("Cannot write main MODX cache file! Make sure the assets/cache directory is writable!");
         }
 
@@ -310,29 +344,37 @@ class synccache
         }
 
         // invoke OnCacheUpdate event
-        if ($modx) $modx->invokeEvent('OnCacheUpdate');
+        if ($modx) {
+            $modx->invokeEvent('OnCacheUpdate');
+        }
 
         return true;
     }
-    
+
     // ref : http://php.net/manual/en/tokenizer.examples.php
-    function php_strip_whitespace($source) {
+    function php_strip_whitespace($source)
+    {
 
         $source = trim($source);
-        if(substr($source,0,5)!=='<?php') $source = '<?php ' . $source;
+        if (substr($source, 0, 5) !== '<?php') {
+            $source = '<?php ' . $source;
+        }
 
         $tokens = token_get_all($source);
         $_ = '';
         $prev_token = 0;
         $chars = explode(' ', '( ) ; , = { } ? :');
-        foreach ($tokens as $i=>$token) {
+        foreach ($tokens as $i => $token) {
             if (is_string($token)) {
-                if(in_array($token,array('=',':')))
+                if (in_array($token, array('=', ':'))) {
                     $_ = trim($_);
-                elseif(in_array($token,array('(','{')) && in_array($prev_token,array(T_IF,T_ELSE,T_ELSEIF)))
+                } elseif (in_array($token, array('(', '{')) && in_array($prev_token, array(T_IF, T_ELSE, T_ELSEIF))) {
                     $_ = trim($_);
+                }
                 $_ .= $token;
-                if($prev_token==T_END_HEREDOC) $_.="\n";
+                if ($prev_token == T_END_HEREDOC) {
+                    $_ .= "\n";
+                }
                 continue;
             }
 
@@ -343,11 +385,14 @@ class synccache
                 case T_DOC_COMMENT:
                     break;
                 case T_WHITESPACE :
-                    if($prev_token!=T_END_HEREDOC) $_ = trim($_);
-                    $lastChar = substr($_,-1);
-                    if( !in_array($lastChar,$chars ) ) {// ,320,327,288,284,289
-                        if(!in_array($prev_token,array(T_FOREACH,T_WHILE,T_FOR,T_BOOLEAN_AND,T_BOOLEAN_OR,T_DOUBLE_ARROW)))
+                    if ($prev_token != T_END_HEREDOC) {
+                        $_ = trim($_);
+                    }
+                    $lastChar = substr($_, -1);
+                    if (!in_array($lastChar, $chars)) {// ,320,327,288,284,289
+                        if (!in_array($prev_token, array(T_FOREACH, T_WHILE, T_FOR, T_BOOLEAN_AND, T_BOOLEAN_OR, T_DOUBLE_ARROW))) {
                             $_ .= ' ';
+                        }
                     }
                     break;
                 case T_IS_EQUAL :
@@ -357,12 +402,14 @@ class synccache
                 case T_BOOLEAN_AND :
                 case T_BOOLEAN_OR :
                 case T_START_HEREDOC :
-                    if($prev_token!=T_START_HEREDOC) $_ = trim($_);
-                    $prev_token=$type;
+                    if ($prev_token != T_START_HEREDOC) {
+                        $_ = trim($_);
+                    }
+                    $prev_token = $type;
                     $_ .= $text;
                     break;
                 default:
-                    $prev_token=$type;
+                    $prev_token = $type;
                     $_ .= $text;
             }
         }
