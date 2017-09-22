@@ -108,7 +108,7 @@ class synccache
 
 
         // write the file
-        $content = '<?php';
+        $content = '<?php' . "\n";
         $content .= '$recent_update=\'' . $this->request_time . '\';' . "\n";
         $content .= '$cacheRefreshTime=\''. $cacheRefreshTime . '\';' . "\n";
 
