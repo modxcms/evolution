@@ -26,6 +26,12 @@ class synccache
         $this->showReport = $bool;
     }
 
+    function escapeSingleQuotes($s) {
+        $q1 = array("\\","'");
+        $q2 = array("\\\\","\\'");
+        return str_replace($q1,$q2,$s);
+    }
+
     function getParents($id, $path = '')
     { // modx:returns child's parent
         global $modx;
@@ -96,10 +102,9 @@ class synccache
 
 
         // write the file
-        $content = array();
-        $content[] = '<?php';
-        $content[] = sprintf('$recent_update = %s;'   , $this->request_time);
-        $content[] = sprintf('$cacheRefreshTime = %s;', $cacheRefreshTime);
+        $content = '<?php';
+        $content .= '$recent_update=\'' . $this->request_time . '\';' . "\n";
+        $content .= '$cacheRefreshTime=\''. $cacheRefreshTime . '\';' . "\n";
 
         $filename = $this->cachePath.'/sitePublishing.idx.php';
         if (!$handle = fopen($filename, 'w')) {
@@ -107,7 +112,7 @@ class synccache
         }
 
         // Write $somecontent to our opened file.
-        if (fwrite($handle, implode("\n",$content)) === FALSE) {
+        if (fwrite($handle, $content) === FALSE) {
             exit("Cannot write publishing info file! Make sure the assets/cache directory is writable!");
         }
     }
@@ -156,13 +161,16 @@ class synccache
         $config = array();
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
             $config[$key] = $value;
+            if ($config['enable_filter']) {
+                $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+                $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
+                if ($count) {
+                    $content .= '$this->config[\'enable_filter\']=\'0\';';
+                }
+            } else {
+                $content .= '$this->config[\'' . $key . '\']=\'' . $value . '\';';
+            }
         }
-        if ($config['enable_filter']) {
-            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-            $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
-            if ($count) $config['enable_filter'] = '0';
-        }
-        $content .= sprintf('$this->config=%s;', $this->php_strip_whitespace(var_export($config,true)));
         
         if ($config['aliaslistingfolder'] == 1) {
             $f['id']            = 'c.id';
@@ -179,9 +187,7 @@ class synccache
             $f = "id, IF(alias='', id, alias) AS alias, parent, isfolder, alias_visible";
             $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0', 'parent, menuindex');
         }
-        $documentListing = array();
-        $aliasListing    = array();
-        $documentMap     = array();
+
         $use_alias_path = ($config['friendly_urls'] && $config['use_alias_path']) ? 1 : 0;
         $tmpPath = '';
         while ($doc = $modx->db->getRow($rs)) {
@@ -194,55 +200,44 @@ class synccache
             else $key = $doc['alias'];
             
             $doc['path'] = $tmpPath;
-            $aliasListing[$docid]  = $doc;
-            $documentListing[$key] = $docid;
-            $documentMap[]         = array($doc['parent'] => $docid);
+            $content .= '$this->aliasListing[' . $docid . ']=array(\'id\'=>' . $docid . ',\'alias\'=>\'' . $doc['alias'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
+            $content .= '$this->documentListing[\'' . $key . '\']=' . $docid . ';';
+            $content .= '$this->documentMap[]=array(' . $doc['parent'] . '=>' . $docid . ');';
         }
-
-        $content .= sprintf('$this->documentListing=%s;', $this->php_strip_whitespace(var_export($documentListing,true)));
-        $content .= sprintf('$this->aliasListing=%s;',    $this->php_strip_whitespace(var_export($aliasListing,true)));
-        $content .= sprintf('$this->documentMap=%s;',     $this->php_strip_whitespace(var_export($documentMap,true)));
 
         // get content types
         $rs = $modx->db->select('id, contentType', '[+prefix+]site_content', "contentType!='text/html'");
-        $contentType = array();
         while ($doc = $modx->db->getRow($rs)) {
-            $docid = $doc['id'];
-            $contentType[$docid] = $doc['contentType'];
+            $content .= '$this->contentType[\'' . $doc['id'] . '\']=\'' . $doc['contentType'] . '\';';
         }
-        $content .= sprintf('$this->contentType=%s;', var_export($contentType,true));
 
         // WRITE Chunks to cache file
         $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
-        $chunkCache = array();
         while ($doc = $modx->db->getRow($rs)) {
-            $code = (!$doc['disabled']) ? $doc['snippet'] : '';
-            $key = $doc['name'];
-            $chunkCache[$key] = $code;
+            $content .= '$this->chunkCache[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
-        $content .= sprintf('$this->chunkCache=%s;', var_export($chunkCache,true));
 
         // WRITE snippets to cache file
         $f    = 'ss.*, sm.properties as sharedproperties';
         $from = '[+prefix+]site_snippets ss LEFT JOIN [+prefix+]site_modules sm on sm.guid=ss.moduleguid';
         $rs = $modx->db->select($f,$from);
-        $snippetCache = array();
         while ($row = $modx->db->getRow($rs)) {
             $key = $row['name'];
-            if($row['disabled']) $snippetCache[$key] = 'return false;';
+            if($row['disabled']) {
+                $content .= '$this->snippetCache[\'' . $key . '\']=\'return false;\';';
+            }
             else {
                 $value = trim($row['snippet']);
                 if($modx->config['minifyphp_incache']) $value = $this->php_strip_whitespace($value);
-                $snippetCache[$key] = $value;
+                $content .= '$this->snippetCache[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
                 $properties       = $modx->parseProperties($row['properties']);
                 $sharedproperties = $modx->parseProperties($row['sharedproperties']);
                 $properties = array_merge($sharedproperties,$properties);
                 if (0<count($properties)) {
-                    $snippetCache[$key.'Props'] = json_encode($properties);
+                    $content .= '$this->snippetCache[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
             }
         }
-        $content .= sprintf('$this->snippetCache=%s;', var_export($snippetCache,true));
 
         // WRITE plugins to cache file
         $f = 'sp.*, sm.properties as sharedproperties';
@@ -250,17 +245,17 @@ class synccache
         $from[] = '[+prefix+]site_plugins sp';
         $from[] = 'LEFT JOIN [+prefix+]site_modules sm on sm.guid=sp.moduleguid';
         $rs = $modx->db->select($f,$from,'sp.disabled=0');
-        $pluginCache = array();
         while ($row = $modx->db->getRow($rs)) {
             $key = $row['name'];
             $value = trim($row['plugincode']);
             if($modx->config['minifyphp_incache']) $value = $this->php_strip_whitespace($value);
-            $pluginCache[$key] = $value;
+            $content .= '$this->pluginCache[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
-                $pluginCache[$key.'Props'] = trim($row['properties'] . ' ' . $row['sharedproperties']);
+                $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
+                if($modx->config['minifyphp_incache']) $properties = $this->php_strip_whitespace($properties);
+                $content .= '$this->pluginCache[\'' . $key . 'Props\']=\'' .  $properties . '\';';
             }
         }
-        $content .= sprintf('$this->pluginCache=%s;', var_export($pluginCache,true));
 
         // WRITE system event triggers
         $f = 'sysevt.name as evtname, event.pluginid, plugin.name as pname';
@@ -269,7 +264,6 @@ class synccache
         $from[] = 'INNER JOIN [+prefix+]site_plugin_events event ON event.evtid=sysevt.id';
         $from[] = 'INNER JOIN [+prefix+]site_plugins plugin ON plugin.id=event.pluginid';
         $rs = $modx->db->select($f,$from, 'plugin.disabled=0', 'sysevt.name, event.priority');
-        $pluginEvent = array();
         $events = array();
         while ($row = $modx->db->getRow($rs)) {
             $evtname = $row['evtname'];
@@ -278,8 +272,8 @@ class synccache
         }
         foreach ($events as $evtname => $pluginnames) {
             $events[$evtname] = $pluginnames;
+            $content .= '$this->pluginEvent[\'' . $evtname . '\']=array(\'' . implode('\',\'', $this->escapeSingleQuotes($pluginnames)) . '\');';
         }
-        $content .= sprintf('$this->pluginEvent=%s;', $this->php_strip_whitespace(var_export($events,true)));
 
         // close and write the file
         $filename = $this->cachePath . 'siteCache.idx.php';
@@ -303,10 +297,10 @@ class synccache
     
     // ref : http://php.net/manual/en/tokenizer.examples.php
     function php_strip_whitespace($source) {
-        
+
         $source = trim($source);
         if(substr($source,0,5)!=='<?php') $source = '<?php ' . $source;
-        
+
         $tokens = token_get_all($source);
         $_ = '';
         $prev_token = 0;
@@ -321,9 +315,9 @@ class synccache
                 if($prev_token==T_END_HEREDOC) $_.="\n";
                 continue;
             }
-            
+
             list($type, $text) = $token;
-            
+
             switch ($type) {
                 case T_COMMENT    :
                 case T_DOC_COMMENT:
