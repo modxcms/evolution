@@ -252,7 +252,6 @@ class synccache
             $content .= '$this->pluginCache[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
                 $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
-                if($modx->config['minifyphp_incache']) $properties = $this->php_strip_whitespace($properties);
                 $content .= '$this->pluginCache[\'' . $key . 'Props\']=\'' .  $properties . '\';';
             }
         }
