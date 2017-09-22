@@ -545,6 +545,7 @@ class DocumentParser {
     }
     public function makePageCacheKey($id){
         $params = $_GET;
+        $hash = '';
         if(isset($params['q'])) unset($params['q']);
 
         if(!empty($this->systemCacheKey)){
@@ -1321,7 +1322,7 @@ class DocumentParser {
         foreach($matches[1] as $i=>$v) {
             $v = str_ireplace($sTags,$rTags,$v);
             $s = &$matches[0][$i];
-            if(strpos($content,$s)!==false) $content= str_replace($s, $value, $content);
+            if(strpos($content,$s)!==false) $content= str_replace($s, $v, $content);
             else $this->addLog('ignoreCommentedTagsContent parse error',$_SERVER['REQUEST_URI'].$s,2);
         }
         return $content;
@@ -3320,6 +3321,7 @@ class DocumentParser {
         } else {
             $files = glob($cache_dir.'*');
             foreach ($files as $file) {
+                $name = basename($file);
                 if (strpos($name,'.pageCache.php')===false) continue;
                 if (!is_file($file)) continue;
                 unlink($file);
