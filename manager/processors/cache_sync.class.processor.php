@@ -32,6 +32,12 @@ class synccache
         return str_replace($q1,$q2,$s);
     }
 
+    function escapeDoubleQuotes($s) {
+        $q1 = array("\\","\"","\r","\n","\$");
+        $q2 = array("\\\\","\\\"","\\r","\\n","\\$");
+        return str_replace($q1,$q2,$s);
+    }
+
     function getParents($id, $path = '')
     { // modx:returns child's parent
         global $modx;
@@ -160,15 +166,15 @@ class synccache
         $rs = $modx->db->select('*', '[+prefix+]system_settings');
         $config = array();
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
+            $content .= '$this->config[\'' . $key . '\']=\'' . $this->escapeDoubleQuotes($value) . '\';';
             $config[$key] = $value;
-            if ($config['enable_filter']) {
-                $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
-                $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
-                if ($count) {
-                    $content .= '$this->config[\'enable_filter\']=\'0\';';
-                }
-            } else {
-                $content .= '$this->config[\'' . $key . '\']=\'' . $value . '\';';
+        }
+
+        if ($config['enable_filter']) {
+            $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
+            $count = $modx->db->getRecordCount($modx->db->select('id', '[+prefix+]site_plugins', $where));
+            if ($count) {
+                $content .= '$this->config[\'enable_filter\']=\'0\';';
             }
         }
         
@@ -252,6 +258,7 @@ class synccache
             $content .= '$this->pluginCache[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
                 $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
+                if($modx->config['minifyphp_incache']) $properties = $this->php_strip_whitespace($properties);
                 $content .= '$this->pluginCache[\'' . $key . 'Props\']=\'' .  $properties . '\';';
             }
         }
