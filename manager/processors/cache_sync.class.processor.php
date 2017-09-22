@@ -202,11 +202,12 @@ class synccache
                 $tmpPath = $this->getParents($doc['parent']);
                 $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$doc['alias'];
                 $key = $alias;
+            } else {
+                $key = $doc['alias'];
             }
-            else $key = $doc['alias'];
-            
+
             $doc['path'] = $tmpPath;
-            $content .= '$this->aliasListing[' . $docid . ']=array(\'id\'=>' . $docid . ',\'alias\'=>\'' . $doc['alias'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
+            $content .= '$this->aliasListing[' . $docid . ']=array(\'id\'=>' . $docid . ',\'alias\'=>\'' . $doc['alias'] . '\',\'path\'=>\'' . $doc['path'] . '\',\'parent\'=>' . $doc['parent'] . ',\'isfolder\'=>' . $doc['isfolder'] . ',\'alias_visible\'=>' . $doc['alias_visible'] . ');';
             $content .= '$this->documentListing[\'' . $key . '\']=' . $docid . ';';
             $content .= '$this->documentMap[]=array(' . $doc['parent'] . '=>' . $docid . ');';
         }
