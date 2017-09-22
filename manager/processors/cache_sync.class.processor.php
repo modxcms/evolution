@@ -300,6 +300,9 @@ class synccache
             $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
                 $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
+                if ($modx->config['minifyphp_incache']) {
+                    $properties = $this->php_strip_whitespace($properties);
+                }
                 $content .= '$p[\'' . $key . 'Props\']=\'' . $properties . '\';';
             }
         }
@@ -413,7 +416,7 @@ class synccache
                     $_ .= $text;
             }
         }
-        $source = preg_replace('@^<\?php@i', '', $_);
+        $source = preg_replace(array('@^<\?php@i', '|\s+|', '|<!--|', '|-->|', '|-->\s+<!--|'), array('', ' ', "\n" . '<!--', '-->' . "\n", '-->' . "\n" . '<!--'), $_);
         $source = trim($source);
         return $source;
     }
