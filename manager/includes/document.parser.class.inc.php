@@ -1532,10 +1532,10 @@ class DocumentParser
      */
     function mergeConditionalTagsContent($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
     {
-        $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
         if (strpos($content, $iftag) === false) {
             return $content;
         }
+        $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
 
         $sp = '#' . md5('ConditionalTags' . $_SERVER['REQUEST_TIME']) . '#';
         $content = str_replace(array('<?php', '?>'), array("{$sp}b", "{$sp}e"), $content);
