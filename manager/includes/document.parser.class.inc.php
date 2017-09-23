@@ -5414,7 +5414,7 @@ class DocumentParser
                     } else {
                         $value = $row;
                     }
-                    if (isset($value) && $value !== "") {
+                    if (isset($value)) {
                         $property[$key] = $value;
                     }
                 }
