@@ -5953,17 +5953,23 @@ class DocumentParser
                     if ($this->error_reporting <= 2) {
                         return true;
                     }
+                    $isError = false;
+                    $msg = 'PHP Minor Problem (this message show logged in only)';
                     break;
                 case E_STRICT:
                 case E_DEPRECATED:
                     if ($this->error_reporting <= 1) {
                         return true;
                     }
+                    $isError = true;
+                    $msg = 'PHP Strict Standards Problem';
                     break;
                 default:
                     if ($this->error_reporting === 0) {
                         return true;
                     }
+                    $isError = true;
+                    $msg = 'PHP Parse Error';
             }
         }
         if (is_readable($file)) {
@@ -5972,7 +5978,8 @@ class DocumentParser
         } else {
             $source = "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
-        $this->messageQuit("PHP Parse Error", '', true, $nr, $file, $source, $text, $line);
+        
+        $this->messageQuit($msg, '', $isError, $nr, $file, $source, $text, $line);
     }
 
     /**
@@ -6013,13 +6020,13 @@ class DocumentParser
         $ua = $this->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
         $referer = $this->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
         if ($is_error) {
-            $str = '<h2 style="color:red">&laquo; MODX Parse Error &raquo;</h2>';
+            $str = '<h2 style="color:red">&laquo; Evo Parse Error &raquo;</h2>';
             if ($msg != 'PHP Parse Error') {
                 $str .= '<h3 style="color:red">' . $msg . '</h3>';
             }
         } else {
-            $str = '<h2 style="color:#003399">&laquo; MODX Debug/ stop message &raquo;</h2>';
-            $str .= '<h3 style="color:red">' . $msg . '</h3>';
+            $str = '<h2 style="color:#003399">&laquo; Evo Debug/ stop message &raquo;</h2>';
+            $str .= '<h3 style="color:#003399">' . $msg . '</h3>';
         }
 
         if (!empty ($query)) {
