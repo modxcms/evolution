@@ -355,6 +355,8 @@ class DocumentParser
         $this->error_reporting = $this->config['error_reporting'];
         $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['filemanager_path']);
         $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
+        
+        if (!isset($this->config['enable_at_syntax'])) $this->config['enable_at_syntax'] = 1; // @TODO: This line is temporary, should be remove in next version
 
         // now merge user settings into evo-configuration
         $this->getUserSettings();
