@@ -1542,6 +1542,8 @@ class DocumentParser
             return $content;
         }
         
+        if (!$this->config['enable_at_syntax']) return $content;
+
         $sp = '#' . md5('ConditionalTags' . $_SERVER['REQUEST_TIME']) . '#';
         $content = str_replace(array('<?php', '?>'), array("{$sp}b", "{$sp}e"), $content);
 
@@ -1587,6 +1589,8 @@ class DocumentParser
      */
     private function _prepareCTag($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
     {
+        if (!$this->config['enable_at_syntax']) return $content;
+        
         if (strpos($content, '<!--@IF ') !== false) {
             $content = str_replace('<!--@IF ', $iftag, $content);
         } // for jp
@@ -1692,6 +1696,8 @@ class DocumentParser
             return $content;
         }
 
+        if (!$this->config['enable_at_syntax']) return $content;
+        
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (!empty($matches)) {
             foreach ($matches[0] as $i => $v) {
@@ -1716,6 +1722,9 @@ class DocumentParser
         if (stripos($content, $left) === false) {
             return $content;
         }
+        
+        if (!$this->config['enable_at_syntax']) return $content;
+        
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (empty($matches)) {
             return $content;
