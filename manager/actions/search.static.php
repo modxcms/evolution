@@ -274,7 +274,7 @@ if (isset($_REQUEST['submitok'])) {
                     if ($docscounts > 0) {
                         $output .= '<li><b><i class="fa fa-sitemap"></i> ' . $_lang["manage_documents"] . ' (' . $docscounts . ')</b></li>';
                         while ($row = $modx->db->getRow($rs)) {
-                            $output .= '<li><a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['pagetitle'] . ' <small>(' . $row['id'] . ')</small>', $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
+                            $output .= '<li' . addClassForItemList('', !$row['published'], $row['deleted']) . '><a href="index.php?a=27&id=' . $row['id'] . '" id="content_' . $row['id'] . '" target="main">' . highlightingCoincidence($row['pagetitle'] . ' <small>(' . $row['id'] . ')</small>', $_REQUEST['searchfields']) . $_style['icons_external_link'] . '</a></li>';
                         }
                     }
                 }
@@ -401,7 +401,7 @@ function highlightingCoincidence($text, $search)
     return preg_replace($regexp, '<span class="text-danger">$1</span>', $text);
 }
 
-function addClassForItemList($locked = '', $disabled = '')
+function addClassForItemList($locked = '', $disabled = '', $deleted = '')
 {
     $class = '';
     if ($locked) {
@@ -410,8 +410,11 @@ function addClassForItemList($locked = '', $disabled = '')
     if ($disabled) {
         $class .= ' disabled';
     }
+    if ($deleted) {
+        $class .= ' deleted';
+    }
     if ($class) {
-        $class = ' class="' . $class . '"';
+        $class = ' class="' . trim($class) . '"';
     }
     return $class;
 }
