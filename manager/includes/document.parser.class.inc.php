@@ -1532,8 +1532,10 @@ class DocumentParser
      */
     function mergeConditionalTagsContent($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
     {
-        $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
-
+        if (strpos($content, '@IF') !== false) {
+            $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
+        }
+        
         if (strpos($content, $iftag) === false) {
             return $content;
         }
