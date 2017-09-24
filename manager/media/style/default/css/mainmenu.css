@@ -77,7 +77,8 @@
 #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
 #searchresult .ajaxSearchResults a.selected .text-danger { color: #ffc107; text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
 #searchresult .ajaxSearchResults .locked a { font-style: italic; color: #646464; }
-#searchresult .ajaxSearchResults .disabled a { opacity: 0.5; color: #7d2a24; }
+#searchresult .ajaxSearchResults .disabled a { opacity: .5; color: #7d2a24; }
+#searchresult .ajaxSearchResults .deleted a { color: #a52a2a; text-decoration: line-through }
 @media (min-width: 1020px) {
 /*#mainMenu #nav > li > a > .fa { font-size: 1.2rem }*/
 }
