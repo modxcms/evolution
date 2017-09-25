@@ -193,9 +193,9 @@ function saveEventListeners($id, $sysevents, $mode)
         }
         $insert_sysevents[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
     }
-    $modx->db->delete($tblSitePluginEvents, "pluginid='{$id}'");
+    
     foreach ($insert_sysevents as $insert_sysevent) {
-        $modx->db->insert($insert_sysevent, $tblSitePluginEvents);
+        $modx->db->save($insert_sysevent, '[+prefix+]site_plugin_events',"pluginid='{$id}'");
     }
 }
 
