@@ -1178,7 +1178,7 @@ class DocumentParser
      */
     function mergeDocumentContent($content, $ph = false)
     {
-        if (stripos($content, '<@LITERAL>') !== false) {
+        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
             $content = $this->escapeLiteralTagsContent($content);
         }
         if (strpos($content, '[*') === false) {
@@ -1367,7 +1367,7 @@ class DocumentParser
      */
     function mergeSettingsContent($content, $ph = false)
     {
-        if (stripos($content, '<@LITERAL>') !== false) {
+        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
             $content = $this->escapeLiteralTagsContent($content);
         }
         if (strpos($content, '[(') === false) {
@@ -1417,7 +1417,7 @@ class DocumentParser
         if (strpos($content, '{{ ') !== false) {
             $content = str_replace(array('{{ ', ' }}'), array('\{\{ ', ' \}\}'), $content);
         }
-        if (stripos($content, '<@LITERAL>') !== false) {
+        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
             $content = $this->escapeLiteralTagsContent($content);
         }
         if (strpos($content, '{{') === false) {
@@ -1451,7 +1451,7 @@ class DocumentParser
 
             $value = $this->parseText($value,$params); // parse local scope placeholers for ConditionalTags
             $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
-            $value = $this->mergeConditionalTagsContent($value);
+            $value = !$this->config['enable_at_syntax'] ? $value : $this->mergeConditionalTagsContent($value);
             $value = $this->mergeDocumentContent($value);
             $value = $this->mergeSettingsContent($value);
             $value = $this->mergeChunkContent($value);
@@ -1480,7 +1480,7 @@ class DocumentParser
     function mergePlaceholderContent($content, $ph = false)
     {
 
-        if (stripos($content, '<@LITERAL>') !== false) {
+        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
             $content = $this->escapeLiteralTagsContent($content);
         }
         if (strpos($content, '[+') === false) {
@@ -1491,7 +1491,7 @@ class DocumentParser
             $ph = $this->placeholders;
         }
 
-        $content = $this->mergeConditionalTagsContent($content);
+        $content = !$this->config['enable_at_syntax'] ? $content : $this->mergeConditionalTagsContent($content);
         $content = $this->mergeDocumentContent($content);
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
@@ -1541,8 +1541,6 @@ class DocumentParser
         if (strpos($content, $iftag) === false) {
             return $content;
         }
-        
-        if (!$this->config['enable_at_syntax']) return $content;
 
         $sp = '#' . md5('ConditionalTags' . $_SERVER['REQUEST_TIME']) . '#';
         $content = str_replace(array('<?php', '?>'), array("{$sp}b", "{$sp}e"), $content);
@@ -1589,8 +1587,6 @@ class DocumentParser
      */
     private function _prepareCTag($content, $iftag = '<@IF:', $elseiftag = '<@ELSEIF:', $elsetag = '<@ELSE>', $endiftag = '<@ENDIF>')
     {
-        if (!$this->config['enable_at_syntax']) return $content;
-        
         if (strpos($content, '<!--@IF ') !== false) {
             $content = str_replace('<!--@IF ', $iftag, $content);
         } // for jp
@@ -1695,8 +1691,6 @@ class DocumentParser
         if (strpos($content, $left) === false) {
             return $content;
         }
-
-        if (!$this->config['enable_at_syntax']) return $content;
         
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (!empty($matches)) {
@@ -1722,8 +1716,6 @@ class DocumentParser
         if (stripos($content, $left) === false) {
             return $content;
         }
-        
-        if (!$this->config['enable_at_syntax']) return $content;
         
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (empty($matches)) {
@@ -2579,8 +2571,8 @@ class DocumentParser
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            $source = $this->ignoreCommentedTagsContent($source);
-            $source = $this->mergeConditionalTagsContent($source);
+            $source = !$this->config['enable_at_syntax'] ? $source : $this->ignoreCommentedTagsContent($source);
+            $source = !$this->config['enable_at_syntax'] ? $source : $this->mergeConditionalTagsContent($source);
 
             $source = $this->mergeSettingsContent($source);
             $source = $this->mergeDocumentContent($source);
@@ -4223,7 +4215,7 @@ class DocumentParser
             return $tpl;
         }
 
-        if (stripos($tpl, '<@LITERAL>') !== false) {
+        if ($this->config['enable_at_syntax'] && stripos($tpl, '<@LITERAL>') !== false) {
             $tpl = $this->escapeLiteralTagsContent($tpl);
         }
 
