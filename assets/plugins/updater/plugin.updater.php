@@ -148,16 +148,26 @@ function downloadFile($url, $path)
 {
     $newfname = $path;
     try {
-        $file = fopen($url, "rb");
-        if ($file) {
-            $newf = fopen($newfname, "wb");
-            if ($newf) {
-                while (!feof($file)) {
-                    fwrite($newf, fread($file, 1024 * 8), 1024 * 8);
+        if( ini_get("allow_url_fopen") ) {
+            $file = fopen($url, "rb");
+            if ($file) {
+                $newf = fopen($newfname, "wb");
+                if ($newf) {
+                    while (!feof($file)) {
+                        fwrite($newf, fread($file, 1024 * 8), 1024 * 8);
+                    }
                 }
             }
+        } elseif (function_exists("curl_version")) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            $content = curl_exec($ch);
+            curl_close($ch);
+	        file_put_contents($newfname,$content);
         }
-
     } catch (Exception $e) {
         $this->errors[] = array("ERROR:Download", $e->getMessage());
         return false;
