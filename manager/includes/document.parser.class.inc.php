@@ -5429,7 +5429,7 @@ class DocumentParser
                     } else {
                         $value = $row;
                     }
-                    if (isset($value)) {
+                    if (isset($value) && $value !== '') {
                         $property[$key] = $value;
                     }
                 }
