@@ -370,6 +370,7 @@ if ($user['which_browser'] == 'default') {
                     <option value="createdon" <?= $_SESSION['tree_sortby'] == 'createdon' ? "selected='selected'" : "" ?>><?= $_lang['createdon'] ?></option>
                     <option value="editedon" <?= $_SESSION['tree_sortby'] == 'editedon' ? "selected='selected'" : "" ?>><?= $_lang['editedon'] ?></option>
                     <option value="publishedon" <?= $_SESSION['tree_sortby'] == 'publishedon' ? "selected='selected'" : "" ?>><?= $_lang['page_data_publishdate'] ?></option>
+                    <option value="alias" <?= $_SESSION['tree_sortby'] == 'alias' ? "selected='selected'" : "" ?>><?= $_lang['page_data_alias'] ?></option>
                 </select>
             </div>
             <div class="form-group">

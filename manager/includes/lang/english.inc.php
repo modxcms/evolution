@@ -636,6 +636,7 @@ $_lang["onlineusers_title"] = 'Online users';
 $_lang["onlineusers_user"] = 'User';
 $_lang["onlineusers_userid"] = 'User\'s ID';
 $_lang["optimize_table"] = 'Click here to optimize this table';
+$_lang["page_data_alias"] = 'Alias';
 $_lang["page_data_cacheable"] = 'Cacheable';
 $_lang["page_data_cacheable_help"] = 'This allows the Resource to be saved to the site cache, and affects all Snippets on the page.';
 $_lang["page_data_cached"] = '<b>Source retrieved from cache:</b>';
