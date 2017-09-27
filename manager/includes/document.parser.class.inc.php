@@ -355,8 +355,10 @@ class DocumentParser
         $this->error_reporting = $this->config['error_reporting'];
         $this->config['filemanager_path'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['filemanager_path']);
         $this->config['rb_base_dir'] = str_replace('[(base_path)]', MODX_BASE_PATH, $this->config['rb_base_dir']);
-        
-        if (!isset($this->config['enable_at_syntax'])) $this->config['enable_at_syntax'] = 1; // @TODO: This line is temporary, should be remove in next version
+
+        if (!isset($this->config['enable_at_syntax'])) {
+            $this->config['enable_at_syntax'] = 1;
+        } // @TODO: This line is temporary, should be remove in next version
 
         // now merge user settings into evo-configuration
         $this->getUserSettings();
@@ -1178,8 +1180,10 @@ class DocumentParser
      */
     function mergeDocumentContent($content, $ph = false)
     {
-        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
-            $content = $this->escapeLiteralTagsContent($content);
+        if ($this->config['enable_at_syntax']) {
+            if (stripos($content, '<@LITERAL>') !== false) {
+                $content = $this->escapeLiteralTagsContent($content);
+            }
         }
         if (strpos($content, '[*') === false) {
             return $content;
@@ -1367,8 +1371,10 @@ class DocumentParser
      */
     function mergeSettingsContent($content, $ph = false)
     {
-        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
-            $content = $this->escapeLiteralTagsContent($content);
+        if ($this->config['enable_at_syntax']) {
+            if (stripos($content, '<@LITERAL>') !== false) {
+                $content = $this->escapeLiteralTagsContent($content);
+            }
         }
         if (strpos($content, '[(') === false) {
             return $content;
@@ -1414,11 +1420,13 @@ class DocumentParser
      */
     function mergeChunkContent($content, $ph = false)
     {
-        if (strpos($content, '{{ ') !== false) {
-            $content = str_replace(array('{{ ', ' }}'), array('\{\{ ', ' \}\}'), $content);
-        }
-        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
-            $content = $this->escapeLiteralTagsContent($content);
+        if ($this->config['enable_at_syntax']) {
+            if (strpos($content, '{{ ') !== false) {
+                $content = str_replace(array('{{ ', ' }}'), array('\{\{ ', ' \}\}'), $content);
+            }
+            if (stripos($content, '<@LITERAL>') !== false) {
+                $content = $this->escapeLiteralTagsContent($content);
+            }
         }
         if (strpos($content, '{{') === false) {
             return $content;
@@ -1449,9 +1457,11 @@ class DocumentParser
                 continue;
             }
 
-            $value = $this->parseText($value,$params); // parse local scope placeholers for ConditionalTags
-            $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
-            $value = !$this->config['enable_at_syntax'] ? $value : $this->mergeConditionalTagsContent($value);
+            if ($this->config['enable_at_syntax']) {
+                $value = $this->parseText($value, $params); // parse local scope placeholers for ConditionalTags
+                $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
+                $value = $this->mergeConditionalTagsContent($value);
+            }
             $value = $this->mergeDocumentContent($value);
             $value = $this->mergeSettingsContent($value);
             $value = $this->mergeChunkContent($value);
@@ -1480,8 +1490,10 @@ class DocumentParser
     function mergePlaceholderContent($content, $ph = false)
     {
 
-        if ($this->config['enable_at_syntax'] && stripos($content, '<@LITERAL>') !== false) {
-            $content = $this->escapeLiteralTagsContent($content);
+        if ($this->config['enable_at_syntax']) {
+            if (stripos($content, '<@LITERAL>') !== false) {
+                $content = $this->escapeLiteralTagsContent($content);
+            }
         }
         if (strpos($content, '[+') === false) {
             return $content;
@@ -1491,7 +1503,10 @@ class DocumentParser
             $ph = $this->placeholders;
         }
 
-        $content = !$this->config['enable_at_syntax'] ? $content : $this->mergeConditionalTagsContent($content);
+        if ($this->config['enable_at_syntax']) {
+            $content = $this->mergeConditionalTagsContent($content);
+        }
+
         $content = $this->mergeDocumentContent($content);
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
@@ -1537,7 +1552,7 @@ class DocumentParser
         if (strpos($content, '@IF') !== false) {
             $content = $this->_prepareCTag($content, $iftag, $elseiftag, $elsetag, $endiftag);
         }
-        
+
         if (strpos($content, $iftag) === false) {
             return $content;
         }
@@ -1691,7 +1706,7 @@ class DocumentParser
         if (strpos($content, $left) === false) {
             return $content;
         }
-        
+
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (!empty($matches)) {
             foreach ($matches[0] as $i => $v) {
@@ -1716,7 +1731,7 @@ class DocumentParser
         if (stripos($content, $left) === false) {
             return $content;
         }
-        
+
         $matches = $this->getTagsFromContent($content, $left, $right);
         if (empty($matches)) {
             return $content;
@@ -2571,8 +2586,10 @@ class DocumentParser
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            $source = !$this->config['enable_at_syntax'] ? $source : $this->ignoreCommentedTagsContent($source);
-            $source = !$this->config['enable_at_syntax'] ? $source : $this->mergeConditionalTagsContent($source);
+            if ($this->config['enable_at_syntax']) {
+                $source = $this->ignoreCommentedTagsContent($source);
+                $source = $this->mergeConditionalTagsContent($source);
+            }
 
             $source = $this->mergeSettingsContent($source);
             $source = $this->mergeDocumentContent($source);
@@ -4215,8 +4232,10 @@ class DocumentParser
             return $tpl;
         }
 
-        if ($this->config['enable_at_syntax'] && stripos($tpl, '<@LITERAL>') !== false) {
-            $tpl = $this->escapeLiteralTagsContent($tpl);
+        if ($this->config['enable_at_syntax']) {
+            if (stripos($tpl, '<@LITERAL>') !== false) {
+                $tpl = $this->escapeLiteralTagsContent($tpl);
+            }
         }
 
         $matches = $this->getTagsFromContent($tpl, $left, $right);
@@ -5985,7 +6004,7 @@ class DocumentParser
         } else {
             $source = "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
-        
+
         $this->messageQuit($msg, '', $isError, $nr, $file, $source, $text, $line);
     }
 
