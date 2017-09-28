@@ -120,8 +120,8 @@ if ($user['which_browser'] == 'default') {
     showAlpha: false,
     showPaletteOnly: true,
     togglePaletteOnly: true,
-    togglePaletteMoreText: 'more',
-    togglePaletteLessText: 'less',
+    togglePaletteMoreText: '+',
+    togglePaletteLessText: '-',
     preferredFormat: "hex3",
     palette:[
       ["#000","#111","#222","#333","#444","#555","#666","#777","#777"],
