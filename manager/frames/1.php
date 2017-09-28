@@ -84,6 +84,7 @@ if ($user['which_browser'] == 'default') {
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
+    <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
         #tree { width: <?= $MODX_widthSideBar ?>rem }
@@ -96,6 +97,52 @@ if ($user['which_browser'] == 'default') {
       }
     </script>
     <script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
+    <script language="javascript">
+    $(document).ready(function() {
+    var bgColour = " ";
+    if(localStorage.getItem("EvoMenuColour")){
+      bgColour = localStorage.getItem("EvoMenuColour");
+    }
+    $("#mainMenu").css({backgroundColor:bgColour});
+    $("form").on("submit", function(ev){
+    ev.preventDefault();
+    var newColour =$("#picker").spectrum("get");
+    newColour = newColour.toHexString() // "#ff0000"
+    localStorage.setItem("EvoMenuColour",newColour);
+    $("#colPicked").html(newColour);
+    $("#mainMenu").css({backgroundColor:bgColour});
+    location.reload();
+    });
+    $("#picker").spectrum({
+    flat: true,
+    showInput: true,
+    showAlpha: false,
+    showPaletteOnly: true,
+    togglePaletteOnly: true,
+    togglePaletteMoreText: 'more',
+    togglePaletteLessText: 'less',
+    preferredFormat: "hex3",
+    palette:[
+      ["#000","#111","#222","#333","#444","#555","#666","#777","#777"],
+      ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79","#c65fac"],
+      ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47","#9d2661"],
+      ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130","#6d1945"],
+      ["#520101","#623404","#6c5201","#1c380e","#082329","#062d50","#180d3b","#3c0d26","#581538"],
+    ],
+    color: localStorage.getItem("EvoMenuColour")
+    });
+});
+</script>
+<script type="text/javascript">
+function cleanLocalStorage(keys) {
+keys = keys.split(',');
+for (var i = 0; i < keys.length; i++) {
+delete localStorage[keys[i]];
+}
+location.reload();
+}
+</script>
     <script type="text/javascript">
       // GLOBAL variable modx
       var modx = {
@@ -282,6 +329,18 @@ if ($user['which_browser'] == 'default') {
                                 </ul>
                             </li>
                         <?php } ?>
+                        <li class="dropdown menupicker">
+                          <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
+                            <ul class="dropdown-menu">
+                              <li><form method="" action="">
+                                <input type="text" id="picker" name="EvoMenuColour"/><br/>
+                                <input type="reset" onclick="cleanLocalStorage('EvoMenuColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2rem;">
+                                <input type="submit" class="btn btn-success" value="<?= $_lang['submit'] ?>" style="margin-left:2.4rem;">
+                                </form>
+                                <p id="colPicked"></p>
+                              </li>
+                          </ul>
+                        </li>
                         <li class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
                                 <span class="username"><?= $user['username'] ?></span>
