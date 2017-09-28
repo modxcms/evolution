@@ -137,7 +137,7 @@
 				<div class="col-sm-12" itemscope itemtype="http://schema.org/Organization">
 
 					<a class="logo" href="[~[(site_start)]~]" title="[(site_name)]" itemprop="url">
-						<img src="[(site_url)]assets/images/modx-logo.png" itemprop="logo" width="240" height="100" alt="[(site_name)]" />
+						<img src="[(site_url)]assets/images/evo-logo.png" itemprop="logo" width="240" height="100" alt="[(site_name)]" />
 					</a>
 
 					<div class="clearfix"></div>

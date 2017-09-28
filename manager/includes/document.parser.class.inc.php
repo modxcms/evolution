@@ -1086,18 +1086,11 @@ class DocumentParser
         if (strpos($content, $left) === false) {
             return array();
         }
-        if (strpos($content, ';}}') !== false) {
-            $content = str_replace(';}}', '', $content);
-        }
-        if (strpos($content, '{{}}') !== false) {
-            $content = str_replace('{{}}', '', $content);
-        }
-        if (strpos($content, ']]]]') !== false) {
-            $content = str_replace(']] ]]', '', $content);
-        }
-        if (strpos($content, ']]]') !== false) {
-            $content = str_replace('] ]]', '', $content);
-        }
+        $spacer = md5('<<<EVO>>>');
+        if($left==='{{' && strpos($content,';}}')!==false)  $content = str_replace(';}}', sprintf(';}%s}',   $spacer),$content);
+        if($left==='{{' && strpos($content,'{{}}')!==false) $content = str_replace('{{}}',sprintf('{%$1s{}%$1s}',$spacer),$content);
+        if($left==='[[' && strpos($content,']]]]')!==false) $content = str_replace(']]]]',sprintf(']]%s]]',  $spacer),$content);
+        if($left==='[[' && strpos($content,']]]')!==false)  $content = str_replace(']]]', sprintf(']%s]]',   $spacer),$content);
 
         $pos['<![CDATA['] = strpos($content, '<![CDATA[');
         $pos[']]>'] = strpos($content, ']]>');
@@ -1166,6 +1159,9 @@ class DocumentParser
                     continue;
                 }
             }
+        }
+        foreach($tags as $i=>$tag) {
+            if(strpos($tag,$spacer)!==false) $tags[$i] = str_replace($spacer, '', $tag);
         }
         return $tags;
     }
