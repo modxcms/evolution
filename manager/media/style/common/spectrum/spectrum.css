@@ -347,10 +347,13 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 
 .sp-container a.sp-palette-toggle{
 color:#1976d2;
-cursor:pointer;}
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+padding:4px 10px;}
 }
 .sp-container a.sp-palette-toggle:hover{
-background:#444;
+color:#444;
 }
 }
 
