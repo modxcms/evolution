@@ -312,11 +312,13 @@
             }, function(r) {
               if (r) {
                 r = JSON.parse(r);
-                if (r.item.url) {
-                  if (modx.config.global_tabs) {
-                    r.item.onclick = 'if(event.shiftKey){modx.openWindow({url:\'' + r.item.url + '\'})}else{modx.popup({url:\'' + r.item.url + '\',width:\'95%\',height:\'95%\',margin:0,hide:0,hover:0,overlay:1,overlayclose:1,position:\'center elements\',wrap:\'evo-tab-page-' + modx.urlToUid(w.location.hash) + '\'})}';
-                  } else {
-                    r.item.onclick = 'if(event.shiftKey){modx.openWindow({url:\'' + r.item.url + '\'})}else{modx.popup({url:\'' + r.item.url + '\',width:\'95%\',height:\'95%\',margin:0,hide:0,hover:0,overlay:1,overlayclose:1,position:\'center elements\',wrap:\'main\'})}';
+                for (var k in r) {
+                  if (r.hasOwnProperty(k) && r[k].url) {
+                    if (modx.config.global_tabs) {
+                      r[k]['onclick'] = 'if(event.shiftKey){modx.openWindow({url:\'' + r[k].url + '\'})}else{modx.popup({url:\'' + r[k].url + '\',width:\'95%\',height:\'95%\',margin:0,hide:0,hover:0,overlay:1,overlayclose:1,position:\'center elements\',wrap:\'evo-tab-page-' + modx.urlToUid(w.location.hash) + '\'})}';
+                    } else {
+                      r[k]['onclick'] = 'if(event.shiftKey){modx.openWindow({url:\'' + r[k].url + '\'})}else{modx.popup({url:\'' + r[k].url + '\',width:\'95%\',height:\'95%\',margin:0,hide:0,hover:0,overlay:1,overlayclose:1,position:\'center elements\',wrap:\'main\'})}';
+                    }
                   }
                 }
                 r = JSON.stringify(r);
@@ -1030,9 +1032,11 @@
                   if (dataJson[key].hasOwnProperty(k)) {
                     if (k.substring(0, 2) === 'on') {
                       var onEvent = dataJson[key][k];
-                      item.addEventListener(k.substring(2), function(event) {
-                        eval(onEvent);
-                      }, false);
+                      item[k] = function(onEvent) {
+                        return function(event) {
+                          eval(onEvent)
+                        }
+                      }(onEvent)
                     } else {
                       item[k] = dataJson[key][k];
                     }
