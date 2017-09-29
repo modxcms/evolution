@@ -347,15 +347,14 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 
 .sp-container a.sp-palette-toggle{
 color:#1976d2;
-font-size:17px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
-padding:4px 10px;}
+padding:1px 10px 2px 10px;}
 }
-.sp-container a.sp-palette-toggle:hover{
-color:#444;
-}
-}
+.sp-container a.sp-palette-toggle:hover
+{ color: #292b2c; background-color: #e6e6e6!important; border-color: #adadad }
+
 
 /* Initial */
 .sp-initial {
