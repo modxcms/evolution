@@ -516,7 +516,7 @@ class Qm {
                             .butttext {display:none}
                             .butticon {display:inline!important}
                             #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
+                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
                             #qmLogoClose {padding: 5px 0 0 10px!important;}
                             #qmEditorClosed {padding: 10px 0 5px 10px!important;}
                             #qmEditor li {line-height:38px!important}
@@ -545,7 +545,7 @@ class Qm {
                             .butticon {display:inline!important}
                             #qmEditor, #qmEditorClosed {height: 48px!important;}
                             #qmEditor, #qmEditorClosed { left:0; top: -38px; width: 100%;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
+                            qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
                             #qmLogoClose {padding: 5px 0 0 10px!important;}
                             #qmEditorClosed {padding: 10px 0 5px 10px!important;}
                             #qmEditor li {line-height:38px!important}
@@ -573,7 +573,7 @@ class Qm {
                             .butttext {display:none}
                             .butticon {display:inline!important}
                             #qmEditor, #qmEditorClosed {height: 34px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 0px;}
+                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
                             #qmLogoClose {padding: 5px 0 0 10px!important;}
                             #qmEditorClosed {padding: 10px 0 5px 10px!important;}
                             #qmEditor li {line-height:38px!important}
@@ -602,7 +602,7 @@ class Qm {
                             .butticon {display:inline!important}
                             #qmEditor, #qmEditorClosed {height: 48px!important;}
                             #qmEditor, #qmEditorClosed { left:0; bottom: -38px; width: 100%;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
+                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
                             #qmLogoClose {padding: 5px 0 0 10px!important;}
                             #qmEditorClosed {padding: 10px 0 5px 10px!important;}
                             #qmEditor li {line-height:38px!important}
@@ -630,7 +630,7 @@ class Qm {
                             .butttext {display:none}
                             .butticon {display:inline!important}
                             #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {padding: 7px 15px 11px 10px;}
+                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
                             #qmLogoClose {padding: 5px 0 0 10px!important;}
                             #qmEditorClosed {padding: 10px 0 5px 10px!important;}
                             #qmEditor li {line-height:38px!important}
