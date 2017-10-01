@@ -108,32 +108,67 @@ if ($user['which_browser'] == 'default') {
     $("form").on("submit", function(ev){
     ev.preventDefault();
     var newColour =$("#picker").spectrum("get");
-    newColour = newColour.toHexString() // "#ff0000"
     localStorage.setItem("EvoMenuColour",newColour);
     $("#colPicked").html(newColour);
-    $("#mainMenu").css({backgroundColor:bgColour});
+    $("#mainMenu").css({backgroundColor:newColour});
     location.reload();
     });
     $("#picker").spectrum({
     flat: true,
     showInput: true,
     showAlpha: false,
+    allowEmpty: true,
+    color: '',
     showPaletteOnly: true,
     togglePaletteOnly: true,
     togglePaletteMoreText: '+',
     togglePaletteLessText: '-',
     preferredFormat: "hex3",
-    palette:[
-      ["#000","#111","#222","#333","#444","#555","#666","#777","#777"],
-      ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79","#c65fac"],
-      ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47","#9d2661"],
-      ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130","#6d1945"],
-      ["#520101","#623404","#6c5201","#1c380e","#082329","#062d50","#180d3b","#3c0d26","#581538"],
-    ],
-    color: localStorage.getItem("EvoMenuColour")
+        palette:[
+        ["#000","#111","#222","#333","#444","#555","#666","#999","#BBB"],
+        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79","#c65fac"],
+        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47","#9d2661"],
+        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130","#6d1945"],
+        ["#520101","#623404","#6c5201","#1c380e","#082329","#062d50","#180d3b","#3c0d26","#581538"],
+        ],
+        color: localStorage.getItem("EvoMenuColour")
+        });
     });
-});
-</script>
+    </script>
+    <script language="javascript">
+        $(document).ready(function() {
+            var txColour = " ";
+            if(localStorage.getItem("EvoMenuTextColour")){
+	       txColour = localStorage.getItem("EvoMenuTextColour");
+            }
+            $("#mainMenu .nav > li > a").css({color:txColour});
+            $("#mainMenu .nav .label_searchid").css({color:txColour});
+            $("form").on("submit", function(ev){
+            ev.preventDefault();
+            var newTColour =$("#textpicker").spectrum("get");
+            localStorage.setItem("EvoMenuTextColour",newTColour);
+            $("#colPicked2").html(newTColour);
+            $("#mainMenu .nav > li > a").css({color:newTColour});
+            $("#mainMenu .nav .label_searchid").css({color:newTColour});    
+            location.reload();
+            });
+            $("#textpicker").spectrum({
+            flat: true,
+            showInput: true,
+            showAlpha: false,
+            allowEmpty: true,
+            showPaletteOnly: true,
+            togglePaletteOnly: true,
+            togglePaletteMoreText: '+',
+            togglePaletteLessText: '-',
+            preferredFormat: "hex3",
+            palette:[
+        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fafafa","#fff"]
+        ],
+            color: localStorage.getItem("EvoMenuTextColour")
+            });
+        });
+    </script>
 <script type="text/javascript">
 function cleanLocalStorage(keys) {
 keys = keys.split(',');
@@ -332,13 +367,18 @@ location.reload();
                         <li class="dropdown menupicker">
                           <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
                             <ul class="dropdown-menu">
+                             <li class="item-group"><a href=""><i class="fa fa-paint-brush"></i> Background Color <span id="colPicked"></span></a>
+                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
                               <li><form method="" action="">
                                 <input type="text" id="picker" name="EvoMenuColour"/><br/>
-                                <input type="reset" onclick="cleanLocalStorage('EvoMenuColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2rem;">
-                                <input type="submit" class="btn btn-success" value="<?= $_lang['submit'] ?>" style="margin-left:2.4rem;">
-                                </form>
-                                <p id="colPicked"></p>
+                                </form>                               
                               </li>
+                              <li class="item-group"><a href=""><i class="fa fa-paint-brush"></i> Text Color<span id="colPicked"></span></a>
+                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
+                              <li><form method="" action="">
+                                <input type="text" id="textpicker" name="EvoMenuTextColour"/> <br/>               <input type="reset" onclick="cleanLocalStorage('EvoMenuColour,EvoMenuTextColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2.2rem;">
+                                <input type="submit" class="btn btn-success" value="<?= $_lang['submit'] ?>" style="margin-left:2.5rem;">
+                                </form>
                           </ul>
                         </li>
                         <li class="dropdown account">
