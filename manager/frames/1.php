@@ -367,13 +367,13 @@ location.reload();
                         <li class="dropdown menupicker">
                           <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
                             <ul class="dropdown-menu">
-                             <li class="item-group"><a href=""><i class="fa fa-paint-brush"></i> Background Color <span id="colPicked"></span></a>
+                             <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Background Color <span id="colPicked"></span></a>
                             <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
                               <li><form method="" action="">
                                 <input type="text" id="picker" name="EvoMenuColour"/><br/>
                                 </form>                               
                               </li>
-                              <li class="item-group"><a href=""><i class="fa fa-paint-brush"></i> Text Color<span id="colPicked"></span></a>
+                              <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Text Color<span id="colPicked"></span></a>
                             <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
                               <li><form method="" action="">
                                 <input type="text" id="textpicker" name="EvoMenuTextColour"/> <br/>               <input type="reset" onclick="cleanLocalStorage('EvoMenuColour,EvoMenuTextColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2.2rem;">
