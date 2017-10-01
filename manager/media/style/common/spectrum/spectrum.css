@@ -18,7 +18,7 @@ License: MIT
 }
 .sp-container.sp-flat {
     position: relative;
-    width:100%;
+    width:95%;
     background:#FFF;
     border:none;
 }
@@ -259,9 +259,12 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 
 .sp-container {
     border-radius: 0;
-    background-color: #ECECEC;
-    border: solid 1px #f0c49B;
+    background-color: #fff;
+    border: 0;
     padding: 0;
+    top:1px;
+    left:0;
+    margin-bottom:3px
 }
 .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear {
     font: normal 12px "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
@@ -343,7 +346,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 .sp-thumb-el {
     position:relative;
 }
-.sp-palette-toggle {margin-right:117px;margin-top:3px;}
+.sp-palette-toggle {margin-right:110px;margin-top:3px;}
 
 .sp-container a.sp-palette-toggle{
 color:#1976d2;
@@ -439,11 +442,6 @@ padding:1px 10px 2px 10px;}
 /* Buttons: http://hellohappy.org/css3-buttons/ */
 .sp-container button {
   background-color: #eeeeee;
-  background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: linear-gradient(to bottom, #eeeeee, #cccccc);
   border: 1px solid #ccc;
   border-bottom: 1px solid #bbb;
   border-radius: 3px;
@@ -457,11 +455,6 @@ padding:1px 10px 2px 10px;}
 }
 .sp-container button:hover {
     background-color: #dddddd;
-    background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);
-    background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
-    background-image: -ms-linear-gradient(top, #dddddd, #bbbbbb);
-    background-image: -o-linear-gradient(top, #dddddd, #bbbbbb);
-    background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
     border: 1px solid #bbb;
     border-bottom: 1px solid #999;
     cursor: pointer;
@@ -470,11 +463,6 @@ padding:1px 10px 2px 10px;}
 .sp-container button:active {
     border: 1px solid #aaa;
     border-bottom: 1px solid #888;
-    -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
-    -moz-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
-    -ms-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
-    -o-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
-    box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
 }
 .sp-cancel {
     font-size: 11px;
@@ -524,3 +512,4 @@ padding:1px 10px 2px 10px;}
     background-position: center;
     background-image: url(data:image/gif;base64,R0lGODlhFAAUAPcAAAAAAJmZmZ2dnZ6enqKioqOjo6SkpKWlpaampqenp6ioqKmpqaqqqqurq/Hx8fLy8vT09PX19ff39/j4+Pn5+fr6+vv7+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAUABQAAAihAP9FoPCvoMGDBy08+EdhQAIJCCMybCDAAYUEARBAlFiQQoMABQhKUJBxY0SPICEYHBnggEmDKAuoPMjS5cGYMxHW3IiT478JJA8M/CjTZ0GgLRekNGpwAsYABHIypcAgQMsITDtWJYBR6NSqMico9cqR6tKfY7GeBCuVwlipDNmefAtTrkSzB1RaIAoXodsABiZAEFB06gIBWC1mLVgBa0AAOw==);
 }
+#mainMenu.show .nav > li.dropdown.hover > a { background-color: #fff; color: #444!important; }
