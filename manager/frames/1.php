@@ -412,6 +412,7 @@ location.reload();
                                 </ul>
                             </li>
                         <?php } ?>
+                        <?php if ($modx->config['show_picker'] != "0") { ?>
                         <li class="dropdown menupicker">
                           <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
                             <ul class="dropdown-menu">
@@ -434,6 +435,7 @@ location.reload();
                                 </form>
                           </ul>
                         </li>
+                        <?php } ?>
                         <li class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
                                 <span class="username"><?= $user['username'] ?></span>
