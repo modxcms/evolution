@@ -175,15 +175,13 @@ function saveEventListeners($id, $sysevents, $mode)
 {
     global $modx;
     // save selected system events
-    $tblSitePluginEvents = $modx->getFullTableName('site_plugin_events');
-    $insert_sysevents = array();
-    for ($i = 0; $i < count($sysevents); $i++) {
-        $evtId = $sysevents[$i];
-        $evtId = !is_numeric($evtId) ? getEventIdByName($evtId) : $evtId;
+    $formEventList = array();
+    foreach ($sysevents as $evtId) {
+        if(!preg_match('@^[1-9][0-9]*$@',$evtId)) $evtId = getEventIdByName($evtId);
         if ($mode == '101') {
-            $rs = $modx->db->select('max(priority) as priority', $tblSitePluginEvents, "evtid='{$evtId}'");
+            $rs = $modx->db->select('max(priority) as priority', '[+prefix+]site_plugin_events', "evtid='{$evtId}'");
         } else {
-            $rs = $modx->db->select('priority', $tblSitePluginEvents, "evtid='{$evtId}' and pluginid='{$id}'");
+            $rs = $modx->db->select('priority', '[+prefix+]site_plugin_events', "evtid='{$evtId}' and pluginid='{$id}'");
         }
         $prevPriority = $modx->db->getValue($rs);
         if ($mode == '101') {
@@ -191,22 +189,66 @@ function saveEventListeners($id, $sysevents, $mode)
         } else {
             $priority = isset($prevPriority) ? $prevPriority : 1;
         }
-        $insert_sysevents[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
+        $formEventList[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
     }
     
-    foreach ($insert_sysevents as $insert_sysevent) {
-        $modx->db->save($insert_sysevent, '[+prefix+]site_plugin_events',"pluginid='{$id}'");
+    $evtids = array();
+    foreach ($formEventList as $eventInfo) {
+        $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
+        $modx->db->save($eventInfo, '[+prefix+]site_plugin_events', $where);
+        $evtids[] = $eventInfo['evtid'];
+    }
+    
+    $rs = $modx->db->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
+    $dbEventList = array();
+    $del = array();
+    while($row = $modx->db->getRow($rs)) {
+        if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
+    }
+    
+    if(!$del) return;
+    
+    foreach($del as $delid) {
+        $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
     }
 }
 
 function getEventIdByName($name)
 {
-    global $modx, $eventIds;
-    if (empty($eventIds)) {
-        $rs = $modx->db->select('id, name', $modx->getFullTableName('system_eventnames'));
-        while ($row = $modx->db->getRow($rs)) {
-            $eventIds[$row['name']] = $row['id'];
-        }
+    global $modx;
+    static $eventIds=array();
+    
+    if(isset($eventIds[$name])) return $eventIds[$name];
+    
+    $rs = $modx->db->select('id, name', '[+prefix+]system_eventnames');
+    while ($row = $modx->db->getRow($rs)) {
+        $eventIds[$row['name']] = $row['id'];
     }
+    
     return $eventIds[$name];
+}
+
+function _setSystemEvents($pid,$code) {
+    global $modx;
+    
+    if(substr($code,0,2)!=='//') return;
+    
+    list($sysevents, $null) = explode("\n", $code, 2);
+    $sysevents = str_ireplace('@events:','',$sysevents);
+    $sysevents = ltrim($sysevents, '/ ');
+    $sysevents = explode(',', $sysevents);
+    foreach($sysevents as $i=>$v) {
+        $sysevents[$i] = trim($v);
+    }
+    if(substr($sysevents[0],0,2)!=='On') return;
+    
+    $rs = $modx->db->select('*','[+prefix+]system_eventnames');
+    $names = array();
+    while($row = $modx->db->getRow($rs)) {
+        $names[] = $row['name'];
+    }
+    foreach($sysevents as $i=>$v) {
+        if(!in_array($v,$names)) unset($sysevents[$i]);
+    }
+    saveEventListeners($pid, $sysevents, $_POST['mode']);
 }
