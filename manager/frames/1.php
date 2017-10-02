@@ -84,7 +84,9 @@ if ($user['which_browser'] == 'default') {
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
+    <?php if ($modx->config['show_picker'] != "0") { ?>
     <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
+    <?php } ?>
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
         #tree { width: <?= $MODX_widthSideBar ?>rem }
@@ -97,6 +99,7 @@ if ($user['which_browser'] == 'default') {
       }
     </script>
     <script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
+    <?php if ($modx->config['show_picker'] != "0") { ?>
     <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
     <script language="javascript">
     $(document).ready(function() {
@@ -226,6 +229,7 @@ delete localStorage[keys[i]];
 location.reload();
 }
 </script>
+<?php } ?>
     <script type="text/javascript">
       // GLOBAL variable modx
       var modx = {
