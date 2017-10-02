@@ -228,27 +228,3 @@ function getEventIdByName($name)
     return $eventIds[$name];
 }
 
-function _setSystemEvents($pid,$code) {
-    global $modx;
-    
-    if(substr($code,0,2)!=='//') return;
-    
-    list($sysevents, $null) = explode("\n", $code, 2);
-    $sysevents = str_ireplace('@events:','',$sysevents);
-    $sysevents = ltrim($sysevents, '/ ');
-    $sysevents = explode(',', $sysevents);
-    foreach($sysevents as $i=>$v) {
-        $sysevents[$i] = trim($v);
-    }
-    if(substr($sysevents[0],0,2)!=='On') return;
-    
-    $rs = $modx->db->select('*','[+prefix+]system_eventnames');
-    $names = array();
-    while($row = $modx->db->getRow($rs)) {
-        $names[] = $row['name'];
-    }
-    foreach($sysevents as $i=>$v) {
-        if(!in_array($v,$names)) unset($sysevents[$i]);
-    }
-    saveEventListeners($pid, $sysevents, $_POST['mode']);
-}
