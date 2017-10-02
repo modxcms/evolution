@@ -169,7 +169,7 @@ if ($user['which_browser'] == 'default') {
             if(localStorage.getItem("EvoMenuTextColour")){
 	       txColour = localStorage.getItem("EvoMenuTextColour");
             }
-            $("#mainMenu .nav > li > a").mouseover(function() {
+            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
             $(this).css({color:txHColour});
             }).mouseout(function() {
             $(this).css({color:txColour});
@@ -179,6 +179,7 @@ if ($user['which_browser'] == 'default') {
             }).mouseout(function() {
             $(this).css({color:txColour});
             });
+            $("#mainMenu .nav > li.active > a").css({color:txHColour});
             $("form").on("submit", function(ev){
             ev.preventDefault();
             var newTColour =$("#textpicker").spectrum("get");
@@ -186,7 +187,7 @@ if ($user['which_browser'] == 'default') {
             var newTHColour =$("#textHpicker").spectrum("get");
             localStorage.setItem("EvoMenuTextHColour",newTHColour);
             $("#colPicked3").html(newTHColour);
-            $("#mainMenu .nav > li > a").mouseover(function() {
+            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
             $(this).css({color:newTHColour});
             }).mouseout(function() {
             $(this).css({color:newTColour});
@@ -195,7 +196,8 @@ if ($user['which_browser'] == 'default') {
             $(this).css({color:newTHColour});
             }).mouseout(function() {
             $(this).css({color:newTColour});
-            });    
+            }); 
+            $("#mainMenu .nav > li.active > a").css({color:newTHColour});
             location.reload();
             });
             $("#textHpicker").spectrum({
