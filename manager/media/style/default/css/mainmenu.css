@@ -10,7 +10,7 @@
 #mainMenu .nav { margin: 0; white-space: nowrap; font-size: 0 }
 #mainMenu .nav > li { position: relative; display: inline-block; font-size: 0.8rem; vertical-align: top }
 #mainMenu .nav > li.active > a { color: #fff; background-color: rgba(255, 255, 255, 0.07) }
-#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { display: block; position: relative; z-index: 1; padding: 0 1rem; height: 2.2rem; line-height: 2.4rem; text-decoration: none; color: #bbb; transition-duration: 0.15s }
+#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { display: block; position: relative; z-index: 1; padding: 0 1rem; height: 2.2rem; line-height: 2.3rem; text-decoration: none; color: #bbb; transition-duration: 0.15s }
 #mainMenu .nav > li > a:hover, #mainMenu .nav .label_searchid:hover { color: #f3f3f3; }
 /*#mainMenu.show .nav > li.dropdown:hover > a, */
 #mainMenu.show .nav > li.dropdown.hover > a { background-color: #fff; color: #444; }
