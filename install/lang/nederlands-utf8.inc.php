@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = 'Controleren of <span class="mono">/asset
 $_lang["checking_if_config_exist_and_writable"] = 'Controleren of <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> bestaat en schrijfbaar is:';
 $_lang["checking_if_export_exists"] = 'Controleren of <span class="mono">/assets/export</span> map bestaat:';
 $_lang["checking_if_export_writable"] = 'Controleren of <span class="mono">/assets/export</span> map schrijfbaar is:';
-$_lang["checking_if_images_exist"] = 'Controleren of <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> en <span class="mono">/assets/.thumbs</span> map bestaat:';
-$_lang["checking_if_images_writable"] = 'Controleren of <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> en <span class="mono">/assets/.thumbs</span> mappen beschrijfbaar zijn:';
+$_lang["checking_if_images_exist"] = 'Controleren of <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> en <span class="mono">/assets/.thumbs</span> map bestaat:';
+$_lang["checking_if_images_writable"] = 'Controleren of <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> en <span class="mono">/assets/.thumbs</span> mappen beschrijfbaar zijn:';
 $_lang["checking_mysql_strict_mode"] = 'Controleren MySQL voor strikte sql_mode:';
 $_lang["checking_mysql_version"] = 'Versie van MYSQL nakijken:';
 $_lang["checking_php_version"] = 'PHP versie nakijken:';
