@@ -519,6 +519,7 @@ class Qm {
                             .butticon {display:inline}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -541,6 +542,7 @@ class Qm {
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -563,6 +565,7 @@ class Qm {
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -585,6 +588,7 @@ class Qm {
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -607,6 +611,7 @@ class Qm {
                             .butticon {display:none}                            
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
