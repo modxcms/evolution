@@ -253,9 +253,7 @@
 }
 
 #qmEditor .qmId {
-	font-size: 16px;
-	line-height: 28px;
-	color: #bbb;
+    color: #bbb;
     font-weight: normal;
 }
 #qmEditor .qmButton span
