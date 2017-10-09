@@ -519,12 +519,7 @@ class Qm {
                             .butticon {display:inline}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -547,13 +542,7 @@ class Qm {
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor, #qmEditorClosed { left:0; top: -38px; width: 100%;}
-                            qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -571,17 +560,12 @@ class Qm {
                         if ($this->position == 'before') {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0px; width: 100%; height:35px; opacity:1; -ms-filter:"" !important; filter:none !important;}
-                            #qmEditor:hover, #qmEditorClosed:hover {top: 0px;}
+                            #qmEditor, #qmEditorClosed {position: relative; left:0; top: 0; width: 100%; height:35px; opacity:1; -ms-filter:"" !important; filter:none !important;}
+                            #qmEditor:hover, #qmEditorClosed:hover {top: 0}
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 34px!important;}
-                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -600,17 +584,11 @@ class Qm {
                             $css .= '
                             <style type="text/css">
                             #qmEditor, #qmEditorClosed { left:0; bottom: -30px; width: 100%;}
-                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0;}
                             .butticon {display:none}
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor, #qmEditorClosed { left:0; bottom: -38px; width: 100%;}
-                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -628,17 +606,12 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'bottom')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed { left:0; bottom: 0px; width: 100%;}
-                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0px;}
+                            #qmEditor, #qmEditorClosed { left:0; bottom: 0; width: 100%;}
+                            #qmEditor:hover, #qmEditorClosed:hover {bottom: 0;}
                             .butticon {display:none}                            
                             @media only screen and (max-width: 728px) {
                             .butttext {display:none}
-                            .butticon {display:inline!important}
-                            #qmEditor, #qmEditorClosed {height: 48px!important;}
-                            #qmEditor .qmButton.qmClose {margin: -6px 15px 11px 10px;}
-                            #qmLogoClose {padding: 5px 0 0 10px!important;}
-                            #qmEditorClosed {padding: 10px 0 5px 10px!important;}
-                            #qmEditor li {line-height:38px!important}
+                            #qmUser {display:none}
                             }
                             @media only screen 
                             and (min-device-width: 768px) 
@@ -655,14 +628,15 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'left')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:5px; left:-33px; top: 0px; width: 40px; height:100%}
-                            #qmEditor:hover, #qmEditorClosed:hover {left: 0px;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {margin: 0px 8px 4px -4px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {left:-33px; top: 0; width: 40px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {left: 0}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
                             #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:40px; font-size:13px; text-align:center; margin:-5px 16px 0 -3px;}
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -671,13 +645,14 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'left')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:5px; left:0px; top: 0px; width: 40px; height:100%}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {margin: 0px 8px 4px -4px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {left:0; top: 0; width: 40px; height:100%}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
                             #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:40px; font-size:13px; text-align:center; margin:-5px 16px 0 -3px;}
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -685,14 +660,15 @@ class Qm {
                         if (($this->autohide == 'true') && ($this->position == 'right')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:1px; right:-33px; top: 0px; width: 40px; height:100%}
-                            #qmEditor:hover, #qmEditorClosed:hover {right: 0px;}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px 4px 8px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {margin: 0px 16px 4px 0px; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {right:-33px; top: 0; width: 40px; height:100%}
+                            #qmEditor:hover, #qmEditorClosed:hover {right: 0;}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
                             #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:40px; font-size:13px; text-align:center; margin:-5px 0 0 2px;} 
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
@@ -701,13 +677,14 @@ class Qm {
                         if (($this->autohide == 'false') && ($this->position == 'right')) {
                             $css .= '
                             <style type="text/css">
-                            #qmEditor, #qmEditorClosed {padding-left:1px; right:0px; top: 0px; width: 40px; height:100%}
-                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 4px 4px 4px 8px; margin-bottom:3px;}
-                            #qmEditor .qmClose, #qmClose {margin: 0px 16px 4px 0px;; float: left !important; margin-bottom: 10px;}
+                            #qmEditor, #qmEditorClosed {right:0; top: 0; width: 40px; height:100%}
+                            #qmEditor .qmButton, .qm-edit, .qm-new {padding: 6px 7px; margin-bottom:3px;}
                             #qmUser {display:none;}
                             .butttext, span.textid {display:none}
-                            #qmEditor .qmId {width:40px; font-size:13px; text-align:center; margin:-5px 0 0 2px;} 
-                            #qmEditorClosed:after, a#qmLogoClose, a#qmLogoClose:after {display:none;}
+                            #qmEditor .qmId {width:40px; font-size:12px; text-align:center;}
+                            #qmEditorClosed { width:40px !important;}
+                            #qmEditorClosed:after {margin-left:18px!important;}
+                            #qmLogoClose:after {margin-left:11px!important;}
                             </style>
                             ';
                         }
