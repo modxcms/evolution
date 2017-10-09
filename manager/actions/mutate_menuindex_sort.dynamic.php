@@ -168,7 +168,7 @@ $pagetitle = $id == 0 ? $site_name : $pagetitle;
             <?= $updateMsg ?>
             <span class="text-danger" style="display:none;" id="updating"><?= $_lang['sort_updating'] ?></span>
             <?= $ressourcelist ?>
-            <?
+            <?php
         } else {
             echo $updateMsg;
         }
