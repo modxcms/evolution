@@ -1273,7 +1273,7 @@ class DocumentParser {
                 $cmd = rtrim($cmd,'-');
                 $cmd = trim($cmd);
                 $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
-                
+                $cmd = trim($cmd,'|');
                 if($cmd!=='' && !preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
                     $cmd = (int) eval("return {$cmd};");
                 if($cmd < 0) $cmd = 0;
