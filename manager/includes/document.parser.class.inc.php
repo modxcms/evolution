@@ -4656,14 +4656,16 @@ class DocumentParser
             $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
-            ksort($docRow);
+            if(is_array($docRow)){ 
+                ksort($docRow);
 
-            foreach ($docRow as $key => $value) {
-                if ($idnames == '*' || in_array($key, $idnames)) {
-                    array_push($result, array(
-                        'name' => $key,
-                        'value' => $value
-                    ));
+                foreach ($docRow as $key => $value) {
+                    if ($idnames == '*' || in_array($key, $idnames)) {
+                        array_push($result, array(
+                            'name' => $key,
+                            'value' => $value
+                        ));
+                    }
                 }
             }
 
