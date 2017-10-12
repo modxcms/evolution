@@ -3,7 +3,7 @@
       <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
       <meta content="jquery,ui,easy,easyui,web" name="keywords">
       <meta content="easyui help you build your web page easily!" name="description">
-      <title>MODx Store</title>
+      <title>EVO Store</title>
       <link rel="stylesheet" type="text/css" href="media/style/[+manager_theme+]/style.css" />
       <link rel="stylesheet" type="text/css" href="[+site_url+]/assets/modules/store/css/style.css" />
       <!--- <link rel="stylesheet" type="text/css" href="media/style/[+manager_theme+]/store.css" /> -->
@@ -21,7 +21,7 @@
          <i class="fa fa-archive"></i>
          </span>
          <span class="pagetitle-text">
-         [+store_name+] <span class="version">[+v+]</span>
+         [+store_name+] <span class="version">[+v+]</span> 
          </span>
       </h1>
       <br>
@@ -29,7 +29,7 @@
          <span class="warning">[+version_evailble+]: <span class="new_version">0.2</span> (<a href="javascript:store.update()">[+update+]</a>)</span>
       </div>
       <div class="wrapper">
-         <aside class="sidebar">
+         <div id="sidebar2" class="sidebar2 col-sm-3">
             <div class="box mh">
                <h4>[+category+]:</h4>
                <div class="category_list">
@@ -44,8 +44,8 @@
                   <input type="password" name="password" type="password" placeholder="[+password+]">
                   <span class="error" style="display:none">[+login_errors+]</span>
                </div>
-               <ul class="actionButtons loginul">
-                  <li><a href="javascript:store.login()" class="loginbut">[+enter+]</a></li>
+               <ul class="loginul">
+                  <li><a href="javascript:store.login()" class="btn btn-sm btn-success loginbut">[+enter+]</a></li>
                </ul>
                <a href="http://extras.evolution-cms.com/my-repo/register.html" target="_blank" class="">[+register+]</a>
             </div>
@@ -75,12 +75,12 @@
             </div>
             <div class="box">
                <ul>
-                  <li>Copyright 2013</li>
+                  <li>Copyright 2017</li>
                   <li><a href="http://evolution-cms.com" target="_blank">Bumkaka & Dmi3yy</a></li>
                </ul>
             </div>
-         </aside>
-         <div class="cont">
+         </div>
+         <div class="cont2">
             <div class="item_header" style="display:none">
                <select size="1" name="sort">
                   <option value="createdon" selected="">[+s1_1_reated_on+]</option>
@@ -94,10 +94,16 @@
                </select>
                <input type="hidden" name="parent" value="2">
             </div>
-            <div class="search">
+            <div class="layout-buttons search col-sm-6"><button id="hide-side" type="button" class="btn"><i id="hide-icon" class="fa fa-columns"></i></button>
                <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" />
             </div>
-            <div class="item_list">
+            <div class="col-sm-3 text-right col-buttons pull-right">
+            
+             <button id="3col-btn" type="button" class="btn bt-active"><i class="fa fa-th" aria-hidden="true"></i></button>
+             <button id="2col-btn" type="button" class="btn"><i class="fa fa-th-large" aria-hidden="true"></i></button>
+             <button id="list-btn" type="button" class="btn"><i class="fa fa-list" aria-hidden="true"></i></button>
+            </div>
+            <div class="item_list col-sm-9">
             </div>
             <!-- <div class="item_footer">
                <ul class="paginate">
@@ -111,7 +117,7 @@
             <br/>
          </div>
       </div>
-      <div class="clear"></div>
+      <div class="clearz"></div>
       <div style="display:none" class="tpl">
          <textarea name="types">[+_type+]</textarea>
          <input type="hidden" name="language" value="[+lang+]">
@@ -127,29 +133,29 @@
             </li>
          </div>
          <div id="tpl_list">
-            <div class="catalog_item %cls%">
+            <div class="col-sm-4 catalog_item %cls%">
+                <div class="item_content">
                <div class="info_block">
-                  <div class="catalog_thumb"><i class="%zip%"></i><img src="" width="100px" height="100px"></div>
+                  <div id="catalog_img" class="catalog_thumb col-sm-12"><i class="%zip%"></i><span class="typesbadge">%type%</span><br /><img class="img-fluid" src="" width="100%" height="180px"></div>
                   <div class="catalog_info">
-                     <div class="info fr">
-                        <span class="version"><strong>%version%</strong></span>
-                        <span class="autor"><strong>%author%</strong></span>
-                        <span class="date"><strong>%date%</strong></span>
-                        <span class="download"><strong>%downloads%</strong></span>
-                     </div>
                      <a class="row-category">
                         <h3>%title%</h3>
                      </a>
-                     &nbsp;<i class="types">(%type%)</i><br />
-                     <span class="descript">%description%</span>
-                     <br>
-                     <ul class="actionButtons">
-                        <li><a href="#" class="primary item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a></li>
-                        <li><a href="#" class="primary item-reinstall" data-text="[+alert_overwrite+]"  data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+reinstall+] <i class="curr">[+installed+]</i></a> </li>
-                        <li>							<a href="#" class="item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+update+] <i class="curr">[+installed+] - %current_version%</i></a></li>
+                    <span class="descript">%description%</span>
+                      <div class="info_extras">
+                      <button class="btn btn-sm btn-link pull-right" onclick="window.parent.modx.popup({content:'<h2>%title% %version%</h2><h3>%type%</h3><p>%description%</p><span class=\'fa fa-refresh\'></span> version: <strong>%version%</strong><br/><span class=\'fa fa-clock-o\'></span> Updated: <strong>%date%</strong><br/><span class=\'fa fa-user\'> </span> Author: <strong>%author%</strong><br/><span class=\'fa fa-download\'> </span>  Downloads:  <strong>%downloads%</strong>',type:'default',width:'400px',height:'400px',hide:0,hover:0,overlay:0,overlayclose:1})"><i class="fa fa-info"></i> more</button>
+                    </div>
+                     <div class="install_extras">
+                        <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-download" aria-hidden="true"></i> [+install+]</a>
+                        <a href="#" class="btn btn-primary item-reinstall" data-text="[+alert_overwrite+]"  data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-repeat" aria-hidden="true"></i>  [+reinstall+] <i class="curr">[+installed+]</i></a> 
+                        <a href="#" class="btn btn-primary item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-download" aria-hidden="true"></i>   [+update+] <i class="curr">[+installed+] - %current_version%</i></a>
                         <select name="link"></select>
-                     </ul>
+                      </div>
                   </div>
+                     </div>                 
+              <div class="info">
+                        <div class="col-sm-6"><span class="version"><strong>%version%</strong></span></div>
+                        <div class="col-sm-6"><span class="download"><strong>%downloads%</strong></span></div>                        
                </div>
                <div class="blocked_item"></div>
                <div class="informer loader"></div>
@@ -158,6 +164,7 @@
                </div>
             </div>
          </div>
+        </div>
          <div id="tpl_cart">
             <div class="catalog_item tpl-cart %cls%">
                <div class="info_block">
@@ -190,4 +197,52 @@
       </div>
       <div id="loading" style="display:none;"></div>
    </body>
+    <script>
+    $("#hide-side").click(function() {
+    var x = document.getElementById('sidebar2');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+   $('.item_list').removeClass('col-sm-12');
+   $('.item_list').addClass('col-sm-9');
+   $('#hide-icon').removeClass('fa-columns');
+   $('#hide-icon').addClass('fa-window-maximize');
+    } else {
+        x.style.display = 'none';
+    $('.item_list').removeClass('col-sm-9');
+    $('.item_list').addClass('col-sm-12');
+    $('#hide-icon').removeClass('fa-window-maximize');
+    $('#hide-icon').addClass('fa-columns');
+    }        
+
+});
+    $("#2col-btn").click(function() {
+    $('.catalog_item').removeClass('col-sm-4');
+    $('.catalog_item').removeClass('col-sm-12');
+    $('.catalog_item').addClass('col-sm-6');
+    $('#3col-btn').removeClass('bt-active');
+    $('#list-btn').removeClass('bt-active');
+    $('#2col-btn').addClass('bt-active');
+    $('.catalog_item').removeClass('liststyle');
+
+});
+    $("#3col-btn").click(function() {
+    $('.catalog_item').removeClass('col-sm-6');
+    $('.catalog_item').removeClass('col-sm-12');
+    $('.catalog_item').addClass('col-sm-4');
+    $('#2col-btn').removeClass('bt-active');
+    $('#list-btn').removeClass('bt-active');
+    $('#3col-btn').addClass('bt-active');
+    $('.catalog_item').removeClass('liststyle');
+});
+    $("#list-btn").click(function() {
+    $('.catalog_item').removeClass('col-sm-6');
+    $('.catalog_item').addClass('col-sm-12');
+    $('.catalog_item').addClass('liststyle');
+    $('.install_extras').addClass('col-sm-6');
+    $('.info_extras').addClass('col-sm-6');
+    $('#2col-btn').removeClass('bt-active');
+    $('#3col-btn').removeClass('bt-active');
+    $('#list-btn').addClass('bt-active');
+});
+    </script>
 </html>

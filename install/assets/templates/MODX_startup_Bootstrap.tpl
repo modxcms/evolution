@@ -77,10 +77,12 @@
 	section.main .container{background-color:#fff; padding-bottom:20px;}
 	footer.footer .container{background-color:#000; color:#fff; line-height:40px;}
 
-	section.main ul{list-style:none; margin:0 0 1em 0; padding:0;}
-	section.main ul li{padding-left:1em;}
-	section.main ul li:before{content:'\2022'; position:absolute; line-height:1.85em; margin-left:-1em;}
+	section.main .content ul{list-style:none; margin:0 0 1em 0; padding:0;}
+	section.main .content ul li{padding-left:1em;}
+	section.main .content ul li:before{content:'\2022'; position:absolute; line-height:1.85em; margin-left:-1em;}
 
+	.breadcrumb {padding: 0px 0px;margin-bottom: 0px;list-style: none;background-color:#fff;border-radius: 0px;}	
+	
 	.footer{text-align:center;}
 	.footer .text-right{text-align:center;}
 
@@ -135,7 +137,7 @@
 				<div class="col-sm-12" itemscope itemtype="http://schema.org/Organization">
 
 					<a class="logo" href="[~[(site_start)]~]" title="[(site_name)]" itemprop="url">
-						<img src="[(site_url)]assets/images/modx-logo.png" itemprop="logo" width="240" height="100" alt="[(site_name)]" />
+						<img src="[(site_url)]assets/images/evo-logo.png" itemprop="logo" width="240" height="100" alt="[(site_name)]" />
 					</a>
 
 					<div class="clearfix"></div>
@@ -178,12 +180,12 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="bread">
-							[[Breadcrumbs]]
+							[[DLCrumbs? &showCurrent=`1`]]
 						</div>
 					</div>
 				</div>
 
-				<div class="row">
+				<div class="row content">
 
 					<div class="col-sm-8">
 						<h1>[*#longtitle*]</h1>

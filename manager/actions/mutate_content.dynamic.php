@@ -197,13 +197,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		var allowLinkSelection = false;
 
 		function enableLinkSelection(b) {
-			parent.tree.ca = "link";
 			var llock = document.getElementById('llock');
 			if(b) {
+				parent.tree.ca = "link";
 				llock.className = "<?= $_style["actions_chain_broken"] ?>";
 				allowLinkSelection = true;
 			}
 			else {
+				parent.tree.ca = "open";
 				llock.className = "<?= $_style["actions_chain"] ?>";
 				allowLinkSelection = false;
 			}
@@ -220,13 +221,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		function enableParentSelection(b) {
-			parent.tree.ca = "parent";
 			var plock = document.getElementById('plock');
 			if(b) {
+				parent.tree.ca = "parent";
 				plock.className = "<?= $_style["actions_folder_open"] ?>";
 				allowParentSelection = true;
 			}
 			else {
+				parent.tree.ca = "open";
 				plock.className = "<?= $_style["actions_folder"] ?>";
 				allowParentSelection = false;
 			}
@@ -476,10 +478,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
-		function setLastClickedElement(type, id) {
-			localStorage.setItem('MODX_lastClickedElement', '[' + type + ',' + id + ']');
-		}
-
 		<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 		var lastImageCtrl;
 		var lastFileCtrl;
@@ -580,7 +578,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
 					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
-					echo $_lang['create_resource_title'];
+				    if ($modx->manager->action == '4') {
+                        echo $_lang['add_resource'];
+                    } else if ($modx->manager->action == '72') {
+                        echo $_lang['add_weblink'];
+                    } else {
+                        echo $_lang['create_resource_title'];
+                    }
 				} ?>
 			</h1>
 
@@ -626,7 +630,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				<div class="tab-pane" id="documentPane">
 					<script type="text/javascript">
-						tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+						var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 					</script>
 
 					<!-- General -->

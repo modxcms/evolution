@@ -3,7 +3,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("../../../../index.php");
+include_once("./../../../../index.php");
 
 $modx->db->connect();
 
@@ -11,12 +11,19 @@ if (empty ($modx->config)) {
     $modx->getSettings();
 }
 
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
-    $modx->sendRedirect($modx->config['site_url']);
+if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
+    $modx->sendErrorPage();
 }
 
-include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
-include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
+$modx->sid = session_id();
+$modx->loadExtension("ManagerAPI");
+
+$_lang = array();
+include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
+if ($modx->config['manager_language'] != 'english') {
+    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
+}
+include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
 $frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
@@ -24,7 +31,7 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
+$limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
 
 if (isset($action)) {
     switch ($action) {
@@ -33,7 +40,7 @@ if (isset($action)) {
 
             switch ($frame) {
                 case 'nodes':
-                    include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/frames/nodes.php';
+                    include_once MODX_MANAGER_PATH . '/frames/nodes.php';
 
                     break;
             }
@@ -43,14 +50,14 @@ if (isset($action)) {
 
         case '76': {
 
-            $elements = isset($_REQUEST['elements']) ? $_REQUEST['elements'] : '';
+            $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? htmlentities($_REQUEST['elements']) : '';
 
             if ($elements) {
                 $output = '';
                 $items = '';
                 $sql = '';
                 $a = '';
-                $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
+                $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
                 $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
                 $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -158,7 +165,7 @@ if (isset($action)) {
             $a = 12;
             $output = '';
             $items = '';
-            $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+            $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -197,7 +204,7 @@ if (isset($action)) {
             $a = 88;
             $output = '';
             $items = '';
-            $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+            $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -233,10 +240,11 @@ if (isset($action)) {
         }
 
         case 'modxTagHelper': {
-            $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : false;
-            $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : false;
+            $name = isset($_REQUEST['name']) && is_scalar($_REQUEST['name']) ? $modx->db->escape($_REQUEST['name']) : false;
+            $type = isset($_REQUEST['type']) && is_scalar($_REQUEST['type']) ? $modx->db->escape($_REQUEST['type']) : false;
+            $contextmenu = '';
 
-            if ($name && $type) {
+            if ($role && $name && $type) {
                 switch ($type) {
                     case 'Snippet':
                     case 'SnippetNoCache': {
@@ -254,7 +262,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=22&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -270,7 +278,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=23&itemname=" . $name
                                 )
                             );
                         }
@@ -292,7 +300,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -308,7 +316,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=77&itemname=" . $name
                                 )
                             );
                         }
@@ -329,7 +337,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -353,7 +361,7 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+                                        'url' => "index.php?a=22&id=" . $row['id']
                                     )
                                 );
                                 if (!empty($row['description'])) {
@@ -369,11 +377,11 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+                                        'url' => "index.php?a=77&itemname=" . $name
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+                                        'url' => "index.php?a=23&itemname=" . $name
                                     )
                                 );
                             }
@@ -441,7 +449,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=301&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -457,7 +465,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=300&itemname=" . $name
                                 )
                             );
                         }
@@ -468,6 +476,8 @@ if (isset($action)) {
                 echo json_encode($contextmenu, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
                 break;
             }
+
+            break;
         }
 
         case 'movedocument' : {
@@ -476,7 +486,7 @@ if (isset($action)) {
             if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
                 $id = !empty($_REQUEST['id']) ? (int)$_REQUEST['id'] : '';
                 $parent = isset($_REQUEST['parent']) ? (int)$_REQUEST['parent'] : 0;
-                $menuindex = isset($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
+                $menuindex = isset($_REQUEST['menuindex']) && is_scalar($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
 
                 // set parent
                 if ($id && $parent >= 0) {
@@ -534,7 +544,7 @@ if (isset($action)) {
                         if (!empty($menuindex)) {
                             $menuindex = explode(',', $menuindex);
                             foreach ($menuindex as $key => $value) {
-                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
+                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
                             }
                         } else {
                             // TODO: max(*) menuindex
@@ -551,6 +561,32 @@ if (isset($action)) {
 
             header('content-type: application/json');
             echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+
+            break;
+        }
+
+        case 'getLockedElements': {
+            $type = isset($_REQUEST['type']) ? (int)$_REQUEST['type'] : 0;
+            $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
+
+            $output = !!$modx->elementIsLocked($type, $id, true);
+
+            if (!$output) {
+                $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
+                $docgrp_cond = $docgrp ? ' OR dg.document_group IN (' . $docgrp . ')' : '';
+                $sql = '
+                    SELECT MAX(IF(1=' . $role . ' OR sc.privatemgr=0' . $docgrp_cond . ', 0, 1)) AS locked
+                    FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
+                    LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
+                    WHERE sc.id=' . $id . ' GROUP BY sc.id';
+                $sql = $modx->db->query($sql);
+                if ($modx->db->getRecordCount($sql)) {
+                    $row = $modx->db->getRow($sql);
+                    $output = !!$row['locked'];
+                }
+            }
+            
+            echo $output;
 
             break;
         }

@@ -27,6 +27,9 @@ $ditto_version = '2.1.2';
 
 if(isset($ditto_base)) $ditto_base = $modx->config['base_path'].ltrim($ditto_base,'/');
 else                   $ditto_base = str_replace('\\','/',__DIR__) . '/';
+
+$ditto_params =& $modx->event->params;
+
 /*
     Param: ditto_base
     
@@ -249,10 +252,10 @@ if(count($extenders) > 0) {
 }
 
 //---Parameters------------------------------------------------------- /*
-if (isset($startID)) {$parents = $startID;}
+if (isset($startID) && !isset($parents)) {$parents = $startID;}
 if (isset($summarize)) {$display = $summarize;}
 if (isset($limit)) {$queryLimit = $limit;}
-if (isset($sortBy) || isset($sortDir) || is_null($orderBy['unparsed'])) {
+if (isset($sortBy) || isset($sortDir) || !$orderBy['unparsed']) {
     $sortDir = isset($sortDir) ? strtoupper($sortDir) : 'DESC';
     $sortBy = isset($sortBy) ? $sortBy : 'createdon';
     $orderBy['parsed'][]=array($sortBy,$sortDir);
@@ -1062,7 +1065,6 @@ if ($count > 0) {
 // ---------------------------------------------------
 
 if ($debug == 1) {
-    $ditto_params =& $modx->event->params;
     if (!isset($_GET['ditto_'.$dittoID.'debug'])) {
     $_SESSION['ditto_debug_$dittoID'] = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params, $documentIDs, array('db'=>$dbFields,'tv'=>$TVs), $display, $templates, $orderBy, $start, $stop, $total,$filter,$resource);
     }

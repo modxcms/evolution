@@ -142,8 +142,12 @@
                 var r = confirm(confirmMsg);
                 if (r != true) return;
             }
-            
-            top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+
+            if (typeof modx !== 'undefined' && modx.config.global_tabs) {
+              modx.tabs({url: modx.MODX_MANAGER_URL + '?a=' + actionsIds[action] + (id ? '&id=' + id : ''), title: name})
+            } else {
+              top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+            }
         }
       </script>
 <@ENDIF>
