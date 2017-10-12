@@ -463,7 +463,7 @@ switch ($actionToTake) {
         }
 
         $parents = $modx->getParentIds($parent);
-        if (in_array($oldparent, $parents)) {
+        if (in_array($id, $parents)) {
             $modx->webAlertAndQuit("Document descendant can not be it's parent!");
         }
         
