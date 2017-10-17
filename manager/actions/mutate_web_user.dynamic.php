@@ -83,6 +83,7 @@ if($manager_language != "english" && file_exists($modx->config['site_manager_pat
 } else {
 	include_once "lang/country/english_country.inc.php";
 }
+asort($_country_lang);
 
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 ?>
