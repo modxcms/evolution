@@ -86,6 +86,7 @@ if ($user['which_browser'] == 'default') {
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
     <?php if ($modx->config['show_picker'] != "0") { ?>
     <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/color.switcher.css" />
     <?php } ?>
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
@@ -99,137 +100,6 @@ if ($user['which_browser'] == 'default') {
       }
     </script>
     <script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
-    <?php if ($modx->config['show_picker'] != "0") { ?>
-    <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
-    <script language="javascript">
-    $(document).ready(function() {
-    var bgColour = "#1d2023";
-    if(localStorage.getItem("EvoMenuColour")){
-      bgColour = localStorage.getItem("EvoMenuColour");
-    }
-    $("#mainMenu").css({backgroundColor:bgColour});
-    $("form").on("submit", function(ev){
-    ev.preventDefault();
-    var newColour =$("#picker").spectrum("get");
-    localStorage.setItem("EvoMenuColour",newColour);
-    $("#colPicked").html(newColour);
-    $("#mainMenu").css({backgroundColor:newColour});
-    location.reload();
-    });
-    $("#picker").spectrum({
-    flat: true,
-    showInput: true,
-    showAlpha: false,
-    allowEmpty: true,
-    color: '',
-    showPaletteOnly: true,
-    togglePaletteOnly: true,
-    togglePaletteMoreText: '+',
-    togglePaletteLessText: '-',
-    preferredFormat: "hex3",
-        palette:[
-        ["#000","#1d2023","#333","#444","#555","#bbb","#f3f3f3","#fafafa","#fff"],
-        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47","#9d2661"]
-        ],
-        color: localStorage.getItem("EvoMenuColour")
-        });
-         //text color
-            var txColour = " ";
-            if(localStorage.getItem("EvoMenuTextColour")){
-	       txColour = localStorage.getItem("EvoMenuTextColour");
-            }
-            $("#mainMenu .nav > li > a").css({color:txColour});
-            $("#mainMenu .nav .label_searchid").css({color:txColour});
-            $("form").on("submit", function(ev){
-            ev.preventDefault();
-            var newTColour =$("#textpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextColour",newTColour);
-            $("#colPicked2").html(newTColour);
-            $("#mainMenu .nav > li > a").css({color:newTColour});
-            $("#mainMenu .nav .label_searchid").css({color:newTColour});    
-            location.reload();
-            });
-            $("#textpicker").spectrum({
-            flat: true,
-            showInput: true,
-            showAlpha: false,
-            allowEmpty: true,
-            showPaletteOnly: true,
-            togglePaletteOnly: true,
-            togglePaletteMoreText: '+',
-            togglePaletteLessText: '-',
-            preferredFormat: "hex3",
-            palette:[
-        ["#000","#444","#666","#bbb","#ccc","#eee","#f3f3f3","#fafafa","#fff"]
-        ],
-            color: localStorage.getItem("EvoMenuTextColour")
-            });
-            var txHColour = " ";
-            if(localStorage.getItem("EvoMenuTextHColour")){
-	       txHColour = localStorage.getItem("EvoMenuTextHColour");
-            }
-           var txColour = "";
-            if(localStorage.getItem("EvoMenuTextColour")){
-	       txColour = localStorage.getItem("EvoMenuTextColour");
-            }
-            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
-            $(this).css({color:txHColour});
-            }).mouseout(function() {
-            $(this).css({color:txColour});
-            });
-            $("#mainMenu .nav .label_searchid").mouseover(function() {
-            $(this).css({color:txHColour});
-            }).mouseout(function() {
-            $(this).css({color:txColour});
-            });
-            $("#mainMenu .nav > li.active > a").css({color:txHColour});
-            $("form").on("submit", function(ev){
-            ev.preventDefault();
-            var newTColour =$("#textpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextColour",newTColour);
-            var newTHColour =$("#textHpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextHColour",newTHColour);
-            $("#colPicked3").html(newTHColour);
-            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
-            $(this).css({color:newTHColour});
-            }).mouseout(function() {
-            $(this).css({color:newTColour});
-            });
-            $("#mainMenu .nav .label_searchid").mouseover(function() {
-            $(this).css({color:newTHColour});
-            }).mouseout(function() {
-            $(this).css({color:newTColour});
-            }); 
-            $("#mainMenu .nav > li.active > a").css({color:newTHColour});
-            location.reload();
-            });
-            $("#textHpicker").spectrum({
-            flat: true,
-            showInput: true,
-            showAlpha: false,
-            allowEmpty: true,
-            showPaletteOnly: true,
-            togglePaletteOnly: true,
-            togglePaletteMoreText: '+',
-            togglePaletteLessText: '-',
-            preferredFormat: "hex3",
-            palette:[
-        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fafafa","#fff"]
-        ],
-            color: localStorage.getItem("EvoMenuTextHColour")
-            });
-        });
-    </script>
-<script type="text/javascript">
-function cleanLocalStorage(keys) {
-keys = keys.split(',');
-for (var i = 0; i < keys.length; i++) {
-delete localStorage[keys[i]];
-}
-location.reload();
-}
-</script>
-<?php } ?>
     <script type="text/javascript">
       // GLOBAL variable modx
       var modx = {
@@ -335,6 +205,11 @@ location.reload();
       ?>
     </script>
     <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $modx->config['settings_version'] ?>"></script>
+    <?php if ($modx->config['show_picker'] != "0") { ?>
+     <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
+    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <?php } ?>
     <?php
     // invoke OnManagerTopPrerender event
     $evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
@@ -349,10 +224,10 @@ location.reload();
     <div id="mainMenu" class="dropdown">
         <div class="container">
             <div class="row">
-                <div class="cell">
+                <div class="cell" data-evocp="bgmColor">
                     <?php include('mainmenu.php') ?>
                 </div>
-                <div class="cell">
+                <div class="cell" data-evocp="bgmColor">
                     <ul id="settings" class="nav">
                         <li id="searchform">
                             <form action="index.php?a=71" method="post" target="main">
@@ -415,30 +290,6 @@ location.reload();
                                     <?php } ?>
                                 </ul>
                             </li>
-                        <?php } ?>
-                        <?php if ($modx->config['show_picker'] != "0") { ?>
-                        <li class="dropdown menupicker">
-                          <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
-                            <ul class="dropdown-menu">
-                             <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Background Color <span id="colPicked"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#1d2023' id="picker" name="EvoMenuColour"/><br/>
-                                </form>                               
-                              </li>
-                              <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Text Color<span id="colPicked2"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#bbb' id="textpicker" name="EvoMenuTextColour"/> <br/>               
-                                </form>
-                            <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Text Hover<span id="colPicked2"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextHColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#f3f3f3' id="textHpicker" name="EvoMenuTextHColour"/> <br/>               <input type="reset" onclick="cleanLocalStorage('EvoMenuColour,EvoMenuTextHColour,EvoMenuTextColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2.2rem;">
-                                <input type="submit" class="btn btn-success" value="<?= $_lang['submit'] ?>" style="margin-left:2.5rem;">
-                                </form>
-                          </ul>
-                        </li>
                         <?php } ?>
                         <li class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
@@ -668,6 +519,8 @@ location.reload();
     ?>
 
 </div>
-
+<?php if ($modx->config['show_picker'] != "0") { 
+ include('media/style/'.$modx->config['manager_theme'].'/color.switcher.php');   
+  } ?>
 </body>
 </html>
