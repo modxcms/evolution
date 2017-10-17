@@ -32,7 +32,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/style.css?v=<?= $modx->config['settings_version'] ?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
-
+    <?php if ($modx->config['show_picker'] != "0") { ?>
+    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <?php } ?>
     <?php
     $aArr = array('2');
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
@@ -500,4 +502,4 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       /* ]]> */
     </script>
 </head>
-<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>">
+<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>"  data-evocp="color">
