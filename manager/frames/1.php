@@ -239,6 +239,25 @@ if ($user['which_browser'] == 'default') {
                                 <div class="mask"></div>
                             </form>
                         </li>
+                       <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
+                       <?php if($modx->hasPermission('new_document')) { ?>
+                       <li class="dropdown newresource">
+                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
+                             <ul class="dropdown-menu">
+                                    <li>
+                                        <a onclick="" href="index.php?a=4" target="main">
+                                            <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="" href="index.php?a=72" target="main">
+                                            <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
+                                        </a>
+                                    </li>
+                            </ul>
+                        </li>
+                        <?php } ?>
+                        <?php } ?>
                         <li>
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
                                 <i class="fa fa-desktop"></i>
@@ -326,6 +345,13 @@ if ($user['which_browser'] == 'default') {
                                 ?>
                             </ul>
                         </li>
+                        <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
+                        <li id="fullscreen">
+                        <a href="javascript:;" onclick="toggleFullScreen()" id="toggleFullScreen" title="Toggle Fullscreen">
+                                <i class="fa fa-expand"></i>
+                            </a>
+                        </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
@@ -512,7 +538,34 @@ if ($user['which_browser'] == 'default') {
         }
 
     </script>
-
+    <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
+    <script>
+    function toggleFullScreen() {
+    if ((document.fullScreenElement && document.fullScreenElement !== null) ||    
+            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+         if (document.documentElement.requestFullScreen) {  
+            document.documentElement.requestFullScreen();  
+          } else if (document.documentElement.mozRequestFullScreen) {  
+            document.documentElement.mozRequestFullScreen();  
+          } else if (document.documentElement.webkitRequestFullScreen) {  
+            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
+          }  
+        } else {  
+        if (document.cancelFullScreen) {  
+        document.cancelFullScreen();  
+        } else if (document.mozCancelFullScreen) {  
+        document.mozCancelFullScreen();  
+        } else if (document.webkitCancelFullScreen) {  
+        document.webkitCancelFullScreen();  
+        }  
+        }  
+    }
+        $('#toggleFullScreen').click(function(){
+        icon = $(this).find("i");
+        icon.toggleClass("fa-expand fa-compress")
+   })
+    </script>
+    <?php } ?>
     <?php
     // invoke OnManagerFrameLoader
     $modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
