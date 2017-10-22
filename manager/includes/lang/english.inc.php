@@ -943,7 +943,11 @@ $_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Settings';
 $_lang["settings_photo"] = 'Photo';
 $_lang["settings_properties"] = 'Properties';
+$_lang["show_fullscreen_btn_message"] = 'Show Menu toggle Fullscreen button';
+$_lang["show_newresource_btn_message"] = 'Show Menu New Resource button';
 $_lang["settings_show_picker_message"] = 'Customize manager theme and save to localstorage';
+$_lang["show_fullscreen_btn"] = 'Toggle Fullscreen button';
+$_lang["show_newresource_btn"] = 'New Resource button';
 $_lang["settings_site"] = 'Site';
 $_lang["settings_strip_image_paths_message"] = 'If this is set to \'No\', EVO  will write file browser src\'s (images, files, flash, etc.) as absolute URLs. Relative URLs are helpful should you wish to move your EVO install, e.g., from a staging site to a production site. If you have no idea what this means, it\'s best just to leave it set to \'Yes\'.';
 $_lang["settings_strip_image_paths_title"] = 'Rewrite browser paths?';
@@ -1000,7 +1004,7 @@ $_lang["sysinfo_activity_message"] = 'This list show which Resources have been r
 $_lang["sysinfo_userid"] = 'User';
 $_lang["system_email_signup"] = '<!doctype html>
 <html>
-Hello [+uid+] 
+Hello [+uid+]
 
 Here are your login details for [+sname+] Content Manager:
 
@@ -1224,7 +1228,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 $_lang["enable_filter_title"] = 'Enable filters';
-$_lang["enable_filter_message"] = 'Filters allow you to manipulate the way data is presented or parsed in a tag. They allow you to modify values from inside your templates. This is analogous to PHx. <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">More info</a>'; // todo: change link to documentation 
+$_lang["enable_filter_message"] = 'Filters allow you to manipulate the way data is presented or parsed in a tag. They allow you to modify values from inside your templates. This is analogous to PHx. <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">More info</a>'; // todo: change link to documentation
 $_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 
 $_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
