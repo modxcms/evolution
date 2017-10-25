@@ -1201,6 +1201,7 @@ class DocumentParser
         }
 
         foreach ($matches[1] as $i => $key) {
+            if(strpos($key,'[+')!==false) continue; // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
             if (substr($key, 0, 1) == '#') {
                 $key = substr($key, 1);
             } // remove # for QuickEdit format
