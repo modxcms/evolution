@@ -19,30 +19,26 @@ $('body').noContext();
     <div id="folders"></div>
 </div>
 <div id="right">
+   <div id="collapseSide"><a href="javascript:;" id="hide-side"><i id="hide-icon" class="fa fa-bars"></i></a></div>
     <div id="toolbar">
-        <div>
+         
+        <div>        
         <a href="kcact:upload"><?php echo $this->label("Upload") ?></a>
         <a href="kcact:refresh"><?php echo $this->label("Refresh") ?></a>
         <a href="kcact:settings"><?php echo $this->label("Settings") ?></a>
         <a href="kcact:maximize"><?php echo $this->label("Maximize") ?></a>
-        <a href="kcact:about"><?php echo $this->label("About") ?></a>
+        
+      
+        <div id="view">        
+        <input id="viewThumbs" type="radio" name="view" value="thumbs" />
+        <label class="radio-thumbs" for="viewThumbs"></label>
+        <input id="viewList" type="radio" name="view" value="list" />
+        <label class="radio-list" for="viewList"></label>        
+        </div>            
         <div id="loading"></div>
         </div>
     </div>
     <div id="settings">
-
-    <div>
-    <fieldset>
-    <legend><?php echo $this->label("View:") ?></legend>
-        <table summary="view" id="view"><tr>
-        <th><input id="viewThumbs" type="radio" name="view" value="thumbs" /></th>
-        <td><label for="viewThumbs">&nbsp;<?php echo $this->label("Thumbnails") ?></label> &nbsp;</td>
-        <th><input id="viewList" type="radio" name="view" value="list" /></th>
-        <td><label for="viewList">&nbsp;<?php echo $this->label("List") ?></label></td>
-        </tr></table>
-    </fieldset>
-    </div>
-
     <div>
     <fieldset>
     <legend><?php echo $this->label("Show:") ?></legend>
@@ -53,7 +49,8 @@ $('body').noContext();
         <td><label for="showSize">&nbsp;<?php echo $this->label("Size") ?></label> &nbsp;</td>
         <th><input id="showTime" type="checkbox" name="time" /></th>
         <td><label for="showTime">&nbsp;<?php echo $this->label("Date") ?></label></td>
-        </tr></table>
+ </tr></table>
+        
     </fieldset>
     </div>
 
@@ -82,5 +79,36 @@ $('body').noContext();
 </div>
 <div id="status"><span id="fileinfo">&nbsp;</span></div>
 </div>
+<script>
+$(document).ready(function() {
+       if ($("#viewThumbs").is(":checked")) {
+         $('label.radio-thumbs').addClass('labelchecked');
+       }
+        else {$('label.radio-list').addClass('labelchecked');}
+});  
+    
+$("#hide-side").click(function() {
+    var x = document.getElementById('left');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+   $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
+   $('#right').css("width", "74%");
+    } else {
+        x.style.display = 'none';
+    $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
+    $('#right').css("width", "99%");
+    $('#files').css("width", "99%");
+    }        
+
+});
+    $("label.radio-list").click(function() {
+    $('label.radio-list').addClass('labelchecked');
+    $('label.radio-thumbs').removeClass('labelchecked');
+    });
+     $("label.radio-thumbs").click(function() {
+    $('label.radio-thumbs').addClass('labelchecked');
+    $('label.radio-list').removeClass('labelchecked');
+    });
+    </script>
 </body>
 </html>
