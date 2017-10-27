@@ -1,0 +1,10 @@
+This folder contains files for designing EVO visual theme for KCFinder customized for evolution cms
+
+
+Theme Details:
+
+Project:  KCFinder - http://kcfinder.sunhater.com
+Version:  2.54
+Author:   Evo team evo.im
+Licenses: GPLv2 - http://www.opensource.org/licenses/gpl-2.0.php
+          LGPLv2 - http://www.opensource.org/licenses/lgpl-2.1.php
