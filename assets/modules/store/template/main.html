@@ -94,7 +94,7 @@
                </select>
                <input type="hidden" name="parent" value="2">
             </div>
-            <div class="layout-buttons search col-sm-6"><button id="hide-side" type="button" class="btn"><i id="hide-icon" class="fa fa-columns"></i></button>
+            <div class="layout-buttons search col-sm-6"><button id="hide-side" type="button" class="btn btn-secondary"><i id="hide-icon" class="fa fa-bars"></i></button>
                <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" />
             </div>
             <div class="col-sm-3 text-right col-buttons pull-right">
@@ -143,7 +143,7 @@
                      </a>
                     <span class="descript">%description%</span>
                       <div class="info_extras">
-                      <button class="btn btn-sm btn-link pull-right" onclick="window.parent.modx.popup({content:'<h2>%title% %version%</h2><h3>%type%</h3><p>%description%</p><span class=\'fa fa-refresh\'></span> version: <strong>%version%</strong><br/><span class=\'fa fa-clock-o\'></span> Updated: <strong>%date%</strong><br/><span class=\'fa fa-user\'> </span> Author: <strong>%author%</strong><br/><span class=\'fa fa-download\'> </span>  Downloads:  <strong>%downloads%</strong>',type:'default',width:'400px',height:'400px',hide:0,hover:0,overlay:0,overlayclose:1})"><i class="fa fa-info"></i> more</button>
+                      <button class="btn btn-sm btn-secondary pull-right" onclick="window.parent.modx.popup({content:'<h2>%title% %version%</h2><h3>%type%</h3><p>%description%</p><span class=\'fa fa-refresh\'></span> version: <strong>%version%</strong><br/><span class=\'fa fa-clock-o\'></span> Updated: <strong>%date%</strong><br/><span class=\'fa fa-user\'> </span> Author: <strong>%author%</strong><br/><span class=\'fa fa-download\'> </span>  Downloads:  <strong>%downloads%</strong>',type:'default',width:'400px',height:'400px',hide:0,hover:0,overlay:0,overlayclose:1})"><i class="fa fa-info"></i> more</button>
                     </div>
                      <div class="install_extras">
                         <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-download" aria-hidden="true"></i> [+install+]</a>
@@ -196,22 +196,19 @@
          </div>
       </div>
       <div id="loading" style="display:none;"></div>
-   </body>
-    <script>
+    <script type="text/javascript">
     $("#hide-side").click(function() {
     var x = document.getElementById('sidebar2');
     if (x.style.display === 'none') {
         x.style.display = 'block';
    $('.item_list').removeClass('col-sm-12');
    $('.item_list').addClass('col-sm-9');
-   $('#hide-icon').removeClass('fa-columns');
-   $('#hide-icon').addClass('fa-window-maximize');
+   $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
     } else {
         x.style.display = 'none';
     $('.item_list').removeClass('col-sm-9');
     $('.item_list').addClass('col-sm-12');
-    $('#hide-icon').removeClass('fa-window-maximize');
-    $('#hide-icon').addClass('fa-columns');
+    $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
     }        
 
 });
@@ -238,11 +235,10 @@
     $('.catalog_item').removeClass('col-sm-6');
     $('.catalog_item').addClass('col-sm-12');
     $('.catalog_item').addClass('liststyle');
-    $('.install_extras').addClass('col-sm-6');
-    $('.info_extras').addClass('col-sm-6');
     $('#2col-btn').removeClass('bt-active');
     $('#3col-btn').removeClass('bt-active');
     $('#list-btn').addClass('bt-active');
 });
     </script>
+   </body>
 </html>
