@@ -16,11 +16,11 @@ body {padding:0;margin:0;overflow-x:hidden;}
      font-weight: 700;
      display: block;
      position: absolute;
-     width: 80px;
+     min-width: 80px;
      height: 25px;
      right: 0px;
      top: 0px;
-     padding:3px;
+     padding:3px 5px;
      text-align:center;
      border-radius: 0 0 0 10px;
      border: 1px solid #dfdfdf;
@@ -228,7 +228,7 @@ body {padding:0;margin:0;overflow-x:hidden;}
      bottom: 70px;
      text-align:right;
      padding:0px 3px;
-     z-index:2;
+     z-index:1;
  }
  .info .version {
      overflow: hidden;
@@ -365,6 +365,7 @@ body {padding:0;margin:0;overflow-x:hidden;}
  }
  .bt-active {
  	color: #3697cd;
+ 	box-shadow:none;
  }
 .hidden {
   display: none !important;
@@ -410,7 +411,18 @@ body {padding:0;margin:0;overflow-x:hidden;}
      padding: 0 12px 0 5px;
      content: '\f09b';
  }
+ .catalog_item.liststyle .catalog_info  {
 
+ }
+  .catalog_item.liststyle .catalog_info .info_extras {
+     position: absolute;
+     height: 38px;
+     left: 91%;
+     bottom: -10px;
+ 	  width:100px;
+ }
   .item_list .catalog_item.liststyle:nth-child(odd) .item_content, .item_list .catalog_item.liststyle:nth-child(odd) .install_extras {
     background: #f7f7f7;
  }
+#hide-side {
+    min-width:40px;}
