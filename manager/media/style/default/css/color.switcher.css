@@ -8,10 +8,10 @@
     width: 300px;
     min-height: 100%;
     top: 35px;
-    right: -270px;
+    right: -300px;
     color: #444;
     z-index: 10;
-    transition: 0.5s cubic-bezier(1, 1.48, 0.76, 0.95) right;
+    transition: 0.5s cubic-bezier(1, 1.48, 0.76, 0.95) right, box-shadow .5s;
 }
 .evocp-icon {
     position: absolute;
@@ -19,10 +19,9 @@
     height: 29px;
     vertical-align: middle;
     line-height: 28px;
-    left: 0;
-    bottom: 440;
+    left: -34px;
     background: #fafafa;
-    box-shadow: -2px 0px 3px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: -3px 0 2px 1px rgba(0, 0, 0, 0.1);
     border-radius: 50% 0 0 50%;
     text-align: center;
     font-size: 17px;
@@ -119,16 +118,15 @@ i.evocpicon:hover {
 }
 .evocp-box .evocp-frame {
     position: absolute;
-    width: calc(100% - 30px);
+    width: 100%;
     height: 100%;
     top: 0;
     right: 0;
     background: #fafafa;
-    box-shadow: -3px 0px 4px 1px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-weight: 700;
     color: #444;
-    padding: 0px 0px 20px 0px;
+    padding: 0 0 20px 0;
 }
 .dark .evocp-box .evocp-frame {
     color: #dedede;
@@ -141,7 +139,7 @@ i.evocpicon:hover {
 .evocp-box .evocp-colors,
 .evocp-box .evocp-alinkcolors {
     margin: 10px;
-    padding-bottom: 20px;
+    overflow: hidden;
 }
 .evocp-box .evocp-menuHColor,
 .evocp-box .evocp-menuColor,
@@ -184,6 +182,7 @@ i.evocpicon:hover {
 }
 .appear-it {
     right: 0;
+    box-shadow: -3px 0 4px 1px rgba(0, 0, 0, 0.1);
 }
 
 .evocp-frame h2 {
@@ -210,12 +209,14 @@ i.evocpicon:hover {
 .dark .evocp-frame h3:hover {
     color: #fff;
 }
+.evocp-frame .panel {
+    margin-bottom: 2px;
+}
 .evocp-frame .panel-heading {
     text-align: left;
     border-top: 1px solid #dedede;
     border-bottom: 1px solid #dedede;
     background-color: #f2f2f2;
-    margin-bottom: 2px;
     padding: 0 0 0 8px;
     text-transform: uppercase;
 }
@@ -277,7 +278,7 @@ i.evocpicon:hover {
 }
 /* color picker*/
 .sp-picker-container {
-	width:200px
+	width:200px;
 	border-left:0!important;
 }
 .sp-container {width:270px; background: #f2f2f2; border: 1px solid #dedede;}
