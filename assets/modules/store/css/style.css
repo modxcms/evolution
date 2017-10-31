@@ -363,7 +363,7 @@ body {padding:0;margin:0;overflow-x:hidden;}
  .col-buttons {
  	padding-right:28px;
  }
- .bt-active {
+ .bt-active, .dark .bt-active {
  	color: #3697cd;
  	box-shadow:none;
  }
