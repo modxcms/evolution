@@ -244,6 +244,7 @@ if ($user['which_browser'] == 'default') {
                        <li class="dropdown newresource">
                              <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
                              <ul class="dropdown-menu">
+                                 <?php if($modx->hasPermission('new_document')) { ?>
                                     <li>
                                         <a onclick="" href="index.php?a=4" target="main">
                                             <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
@@ -254,6 +255,21 @@ if ($user['which_browser'] == 'default') {
                                             <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
                                         </a>
                                     </li>
+                                 <?php } ?>
+                                 <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+                                    <li>
+                                        <a onclick="" href="media/browser/mcpuk/browse.php?&type=images" target="main">
+                                            <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
+                                        </a>
+                                    </li>
+                                 <?php } ?>
+                                 <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+                                    <li>
+                                        <a onclick="" href="media/browser/mcpuk/browse.php?&type=files" target="main">
+                                            <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
+                                        </a>
+                                    </li>
+                                 <?php } ?>
                             </ul>
                         </li>
                         <?php } ?>
