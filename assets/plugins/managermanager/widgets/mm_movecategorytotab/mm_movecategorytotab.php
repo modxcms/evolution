@@ -20,7 +20,7 @@
 function mm_moveCategoryToTab($categoryId, $tabId, $roles = '', $templates = ''){
 	global $modx;
 	$e = &$modx->Event;
-	$res = $modx->db->select("name", $modx->getFullTableName('site_tmplvars'),  "category='" . $categoryId ."'");
+	$res = $modx->db->select("name", $modx->getFullTableName('site_tmplvars'),  "category='" . $categoryId ."'", "rank ASC");
 	$fieldsArr = array();
 	while( $row = $modx->db->getRow( $res ) ) {  
 		$fieldsArr[] = $row['name'];  
