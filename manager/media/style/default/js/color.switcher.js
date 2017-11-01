@@ -223,8 +223,7 @@ jQuery(document).ready(function($) {
     function setColor(color) {
         $('[data-evocp="color"]').css('color', color);
         $('[data-evocp="borderColor"]').css('border-color', color);
-        $('h1 .fa:not(.help)').css('color', color);
-        $('.widgets .card-header').css('color', color);    
+        $('h1 .fa:not(.help)').css('color', color); 
    }
     //store the color value in a variable
     $('.evocp-color').each(function(i) {
