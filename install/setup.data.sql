@@ -100,7 +100,7 @@ REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('3','8','9','assets/im
 # Table structure for table `site_snippets`
 #
 
-REPLACE INTO `{PREFIX}site_snippets` VALUES ('24','ifsnippet','','0','1','0','\nif (!isset($modx->snippetCache[$name])) {\n	return \'<p class=\"bg-danger\">For work \'.$name.\' in demo site you need install <b>\'.$name.\'</b> from <a href=\"\'.MODX_MANAGER_URL.\'#?a=112&id=1\">Extras</a> module</p>\';\n}','0','{}',' ','1509819147','1509826185','0');
+REPLACE INTO `{PREFIX}site_snippets` VALUES ('24','ifsnippet','','0','1','0','\nif (!isset($modx->snippetCache[$name])) {\n	return \'<p class=\"bg-danger\">For work \'.$name.\' in demo site you need install <b>\'.$name.\'</b> from <a href=\"\'.MODX_MANAGER_URL.\'#?a=112&id=2\">Extras</a> module</p>\';\n}','0','{}',' ','1509819147','1509826185','0');
 
 REPLACE INTO `{PREFIX}site_snippets` VALUES ('23','prepareBlog','','0','1','0','\nif ($data[\'image\'] != \'\'){\n	$data[\'blog-image\'] = \'<img src=\"\'.$modx->runSnippet(\'phpthumb\', array(\'input\'=>$data[\'image\'], \'options\'=>\'w=600,h=280,zc=1\')).\'\" alt=\"\'.$data[\'pagetitle\'].\'\">\';\n}else{\n	$data[\'blog-image\'] = \'\';\n}\nreturn $data;','0','{}',' ','1507723822','1509819933','0');
 
