@@ -5,41 +5,14 @@
 #
 # Dumping data for table `documentgroup_names`
 #
-ALTER TABLE `{PREFIX}site_htmlsnippets`
-  ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
-
-ALTER TABLE `{PREFIX}site_htmlsnippets`
-  ADD COLUMN `createdon` integer NOT NULL DEFAULT '0';  
-
-ALTER TABLE `{PREFIX}site_htmlsnippets`
-  ADD COLUMN `editedon` integer NOT NULL DEFAULT '0';
-
-ALTER TABLE `{PREFIX}site_htmlsnippets`
-  ADD COLUMN `disabled` tinyint NOT NULL DEFAULT '0';
-
-ALTER TABLE `{PREFIX}site_content` DROP COLUMN `haskeywords`;
-ALTER TABLE `{PREFIX}site_content` DROP COLUMN `hasmetatags`;
-
-ALTER TABLE `{PREFIX}web_user_attributes`
-  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
-
-ALTER TABLE `{PREFIX}web_user_attributes`
-  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
-
-
-
 
 REPLACE INTO `{PREFIX}document_groups` VALUES ('1','1','3');
 
-
 REPLACE INTO `{PREFIX}documentgroup_names` VALUES ('1','Site Admin Pages','0','0');
-
 
 #
 # Dumping data for table `site_content`
 #
-
-
 
 REPLACE INTO `{PREFIX}site_content` VALUES ('1','document','text/html','Home','Welcome to EVO','Introduction to EVO','index','','1','0','0','0','0','Create and do amazing things with EVO','<h3>Install successful!</h3>\n<p>You have successfully installed and configured EVO. We hope you find this site an adequate starting configuration for many small business, organization or personal websites; just change the template and content, and you\'ll be good to go! This site is preconfigured with a variety of options we hope are helpful, relevant and just plain cool for many marketing or personal sites:</p>\n<ul>\n<li><strong>Simple Blog.</strong> When logged into your site, you\'ll be able to create new entries from the front end. This can also be turned into a News publishing or PR publishing system. <a href=\"blog\">View example blog</a></li>\n<li><strong>Easy Comments.</strong> When logged into your site, your registered site users can comment on your posts. <a href=\"blog/article-1126081344\">View example</a></li>\n<li><strong>RSS Feeds.</strong> Your site visitors can stay up to date using your site feeds. <a href=\"feed.rss\">View RSS feed</a></li>\n<li><strong>Automatic User Registration.</strong> Those that wish to comment on blogs must first create an account. This comes pre-configured with a \"Captcha\" anti-robot registration feature. <a href=\"request-an-account\">View registration form</a></li>\n<li><strong>QuickEdit.</strong> When you\'re logged into the manager, you can edit a page directly from the front end! <a href=\"features/cms\">More about CMS features</a></li>\n<li><strong>Integrated Site Search.</strong> Allows visitors to search only the pages you wish them to search. Uses Ajax to display results without loading a new page.</li>\n<li><strong>Powerful Navigation Builder.</strong> Duplicate or build virtually any navigation system with our dynamic menu builder code. The menu above, for example. <a href=\"features/menus\">More about menu features</a></li>\n<li><strong>Ajax ready.</strong> You\'re on your way to Web 2.0 and AJAX goodness. <a href=\"features/ajax\">More about Ajax features</a></li>\n<li><strong>Custom \"page not found (404)\" page.</strong> Help visitors who go astray to find what they\'re looking for. <a href=\"doc-not-found\">View 404 page</a></li>\n<li><strong>Contact Us form.</strong> A highly configurable contact form you <em>should</em> customize to point to the right email address. Comes pre-configured to prevent mail-form-injection so your site does <em>not</em> become a source for spam. <a href=\"contact-us\">View form</a></li>\n<li><strong>Newest documents list.</strong> Shows your visitor the most recently added pages (configurable).</li>\n<li><strong>Customizable Content Manager.</strong> Preview uploaded images, hide or rename fields and lots more. See <a href=\"http://code.divandesign.biz/modx/managermanager\">ManagerManager\'s documentation</a> for details and instructions. <em>Quick start:</em> ManagerManager by default will look for \"rules\" in a Chunk named \"mm_rules\". Simply copy or rename the Chunk named \"mm_demo_rules\" to \"mm_rules\" and try it out!</li>\n<li><strong>phpThumb.</strong> Examples to use <a href=\"http://i--gu.ru/phpthumb\">phpThumb</a> to crop images.</li>\n</ul>\n<p>Full documentation can be found on the official <a href=\"http://www.evolution-docs.com/extras/\" target=\"_blank\" rel=\"noopener\">documentation site</a>.</p>\n<p><strong>To log into the EVO Control Panel and start customizing this site, point your browser to <a href=\"manager\">/manager/</a>.</strong></p>','1','4','0','1','1','1','1144904400','1','1507728141','0','0','0','0','0','Home','0','0','0','0','0','1');
 
