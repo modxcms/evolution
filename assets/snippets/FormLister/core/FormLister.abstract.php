@@ -270,7 +270,7 @@ abstract class Core
                         $_source[0] = '\modResource';
                         if ($this->modx->documentIdentifier) {
                             if (isset($_source[1])) {
-                                $_source[2] = $source[1];
+                                $_source[2] = $_source[1];
                             }
                             $_source[1] = $this->modx->documentIdentifier;
                         } else {

@@ -35,8 +35,10 @@ class Register extends Form
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID('web')) {
+        if ($id = $this->modx->getLoginUserID('web')) {
             $this->redirect('exitTo');
+            $this->user->edit($id);
+            $this->setFields($this->user->toArray());
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('register.default_skipTpl'));
             $this->setValid(false);
         };
