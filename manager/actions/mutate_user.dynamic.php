@@ -87,6 +87,7 @@ include_once "lang/country/english_country.inc.php";
 if($manager_language != "english" && file_exists($modx->config['site_manager_path'] . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
 	include_once "lang/country/" . $manager_language . "_country.inc.php";
 }
+asort($_country_lang);
 
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 if($which_browser == 'default') {
