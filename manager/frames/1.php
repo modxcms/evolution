@@ -286,7 +286,7 @@ if ($user['which_browser'] == 'default') {
                                     <?php if ($modx->hasPermission('settings')) { ?>
                                         <li>
                                             <a href="index.php?a=17" target="main">
-                                                <i class="fa fa-cog fw"></i><?= $_lang['edit_settings'] ?>
+                                                <i class="fa fa-sliders fw"></i><?= $_lang['edit_settings'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>

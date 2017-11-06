@@ -31,7 +31,7 @@ if($modx->hasPermission('messages')) {
 
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%security%]';
+	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%users%]';
 	$ph['SecurityIcon'] = wrapIcon($icon, 75);
 }
 if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
