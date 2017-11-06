@@ -1899,9 +1899,9 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } /*else {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
-            }
+            }*/
         }
 
         if ($this->dumpSnippets) {
