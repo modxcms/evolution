@@ -20,6 +20,11 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 ALTER TABLE `{PREFIX}site_content` DROP COLUMN `haskeywords`;
 ALTER TABLE `{PREFIX}site_content` DROP COLUMN `hasmetatags`;
 
+ALTER TABLE `{PREFIX}web_user_attributes`
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 
 
