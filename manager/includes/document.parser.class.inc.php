@@ -1225,7 +1225,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeDocumentContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1393,7 +1393,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeSettingsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1462,7 +1462,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeChunkContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1521,7 +1521,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergePlaceholderContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1733,7 +1733,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $v, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('ignoreCommentedTagsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1887,7 +1887,7 @@ class DocumentParser
                 }
                 if (strpos($content, $s) !== false) {
                     $content = str_replace($s, $value, $content);
-                } else {
+                } elseif($this->debug) {
                     $this->addLog('evalSnippetsSGVar parse error', $_SERVER['REQUEST_URI'] . $s, 2);
                 }
                 continue;
@@ -1899,9 +1899,9 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } /*else {
+            } elseif($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
-            }*/
+            }
         }
 
         if ($this->dumpSnippets) {
@@ -4257,7 +4257,7 @@ class DocumentParser
             }
             if (strpos($tpl, $s) !== false) {
                 $tpl = str_replace($s, $value, $tpl);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('parseText parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
