@@ -52,7 +52,7 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="fa fa-cogs"></i>' . $_lang['modules'],
+		'<i class="fa fa-cubes"></i>' . $_lang['modules'],
 		'javascript:;',
 		$_lang['modules'],
 		' return false;',
