@@ -79,7 +79,7 @@ class Form extends Core
     {
         $submitLimit = $this->getCFGDef('submitLimit', 60);
         $result = false;
-        if ($this->isSubmitted() && $submitLimit > 0) {
+        if (isset($_SESSION[$this->formid . '_limit']) && $this->isSubmitted() && $submitLimit > 0) {
             if (time() < $submitLimit + $_SESSION[$this->formid . '_limit']) {
                 $result = true;
                 $this->addMessage('[%form.submitLimit%] ' .
@@ -178,7 +178,7 @@ class Form extends Core
         if (empty($tpl) && $tplParam == 'reportTpl') {
             $tpl = '@CODE:';
             foreach ($this->getFormData('fields') as $key => $value) {
-                $tpl .= "[+{$key}+]: [+{$key}.value+]" . PHP_EOL;
+                $tpl .=  \APIhelpers::e($key) . ": [+{$key}.value+]" . PHP_EOL;
             }
         }
         $out = $this->parseChunk($tpl, $this->prerenderForm(true));
