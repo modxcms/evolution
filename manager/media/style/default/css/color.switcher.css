@@ -281,7 +281,7 @@ i.evocpicon:hover {
 	width:200px;
 	border-left:0!important;
 }
-.sp-container {width:270px; background: #f2f2f2; border: 1px solid #dedede;}
+.sp-container {width:300px; background: #f2f2f2; border: 1px solid #dedede;}
 .dark .sp-container {background: #2f323a; border: 1px solid #3e4144;}
 .evo-cp-replacer, .sp-replacer.sp-light {padding:2px; background: #f2f2f2; border-color: #dedede; margin:3px auto;}
 .dark .evo-cp-replacer, .dark .sp-replacer.sp-light {background: #2f323a; border-color: #3e4144;}
