@@ -1090,6 +1090,7 @@ $_lang["tmplvars_type"] = 'Input Type';
 $_lang["tmplvars_widget"] = 'Widget';
 $_lang["tmplvars_widget_prop"] = 'Widget Properties';
 $_lang["to"] = 'to';
+$_lang["toggle_fullscreen"] = 'Toggle Fullscreen';
 $_lang["tools"] = 'Tools';
 $_lang["top_howmany_message"] = 'When viewing reports, how large should the \'Top ...\' lists be?';
 $_lang["top_howmany_title"] = 'Top how many';

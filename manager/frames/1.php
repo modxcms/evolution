@@ -387,7 +387,7 @@ if ($modx->config['manager_theme'] == 'default') {
                         </li>
                         <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
                         <li id="fullscreen">
-                        <a href="javascript:;" onclick="toggleFullScreen()" id="toggleFullScreen" title="Toggle Fullscreen">
+                        <a href="javascript:;" onclick="toggleFullScreen()" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
                                 <i class="fa <?= $_style['menu_expand'] ?>"></i>
                             </a>
                         </li>
