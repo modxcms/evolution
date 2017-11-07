@@ -95,7 +95,7 @@ echo $cm->render();
 </script>
 
 <h1>
-    <i class="fa fa-cogs"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
+    <i class="fa fa-cubes"></i><?= $_lang['module_management'] ?><i class="fa fa-question-circle help"></i>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['newmodule'] ?>

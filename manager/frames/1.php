@@ -257,7 +257,7 @@ if ($modx->config['manager_theme'] == 'default') {
                             <form action="index.php?a=71" method="post" target="main">
                                 <input type="hidden" value="Search" name="submitok" />
                                 <label for="searchid" class="label_searchid">
-                                    <i class="fa fa-search"></i>
+                                    <?= $_style['menu_search'] ?>
                                 </label>
                                 <input type="text" id="searchid" name="searchid" size="25" />
                                 <div class="mask"></div>
@@ -266,31 +266,31 @@ if ($modx->config['manager_theme'] == 'default') {
                        <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
                        <?php if($modx->hasPermission('new_document')) { ?>
                        <li class="dropdown newresource">
-                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><i class="fa fa-plus"></i></a>
+                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
                              <ul class="dropdown-menu">
                                  <?php if($modx->hasPermission('new_document')) { ?>
                                     <li>
                                         <a onclick="" href="index.php?a=4" target="main">
-                                            <i class="fa fa-file"></i><?= $_lang['add_resource'] ?>
+                                            <?= $_style['add_doc_tree'] ?><?= $_lang['add_resource'] ?>
                                         </a>
                                     </li>
                                     <li>
                                         <a onclick="" href="index.php?a=72" target="main">
-                                            <i class="fa fa-link"></i><?= $_lang['add_weblink'] ?>
+                                            <?= $_style['add_weblink_tree'] ?><?= $_lang['add_weblink'] ?>
                                         </a>
                                     </li>
                                  <?php } ?>
                                  <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
                                     <li>
                                         <a onclick="" href="media/browser/mcpuk/browse.php?&type=images" target="main">
-                                            <i class="fa fa-camera"></i><?= $_lang['images_management'] ?>
+                                            <?= $_style['images_management'] ?><?= $_lang['images_management'] ?>
                                         </a>
                                     </li>
                                  <?php } ?>
                                  <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
                                     <li>
                                         <a onclick="" href="media/browser/mcpuk/browse.php?&type=files" target="main">
-                                            <i class="fa fa-files-o"></i><?= $_lang['files_management'] ?>
+                                            <?= $_style['files_management'] ?><?= $_lang['files_management'] ?>
                                         </a>
                                     </li>
                                  <?php } ?>
@@ -300,50 +300,50 @@ if ($modx->config['manager_theme'] == 'default') {
                         <?php } ?>
                         <li>
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
-                                <i class="fa fa-desktop"></i>
+                                <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
                             <li class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-cogs"></i></a>
+                                <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
                                         <li>
                                             <a href="index.php?a=17" target="main">
-                                                <i class="fa fa-sliders fw"></i><?= $_lang['edit_settings'] ?>
+                                                <?= $_style['page_settings'] ?><?= $_lang['edit_settings'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=70" target="main">
-                                                <i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
+                                                <?= $_style['page_shedule'] ?><?= $_lang['site_schedule'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=114" target="main">
-                                                <i class="fa fa-exclamation-triangle"></i><?= $_lang['eventlog_viewer'] ?>
+                                                <?= $_style['page_eventlog'] ?></i><?= $_lang['eventlog_viewer'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('logs')) { ?>
                                         <li>
                                             <a href="index.php?a=13" target="main">
-                                                <i class="fa fa-user-secret"></i><?= $_lang['view_logging'] ?>
+                                                <?= $_style['page_manager_logs'] ?><?= $_lang['view_logging'] ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="index.php?a=53" target="main">
-                                                <i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
+                                                <?= $_style['page_sys_info'] ?><?= $_lang['view_sysinfo'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('help')) { ?>
                                         <li>
                                             <a href="index.php?a=9" target="main">
-                                                <i class="fa fa-question-circle"></i><?= $_lang['help'] ?>
+                                                <?= $_style['page_help'] ?><?= $_lang['help'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
@@ -356,7 +356,7 @@ if ($modx->config['manager_theme'] == 'default') {
                                 <?php if ($user['photo']) { ?>
                                     <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
                                 <?php } else { ?>
-                                    <span class="icon"><i class="fa fa-user-circle"></i></span>
+                                    <span class="icon"><?= $_style['menu_user'] ?></span>
                                 <?php } ?>
                                 <i id="msgCounter"></i>
                             </a>
@@ -367,13 +367,13 @@ if ($modx->config['manager_theme'] == 'default') {
                                 <?php if ($modx->hasPermission('change_password')) { ?>
                                     <li>
                                         <a onclick="" href="index.php?a=28" target="main">
-                                            <i class="fa fa-lock"></i><?= $_lang['change_password'] ?>
+                                            <?= $_style['page_change_password'] ?><?= $_lang['change_password'] ?>
                                         </a>
                                     </li>
                                 <?php } ?>
                                 <li>
                                     <a href="index.php?a=8">
-                                        <i class="fa fa-sign-out"></i><?= $_lang['logout'] ?>
+                                        <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
                                     </a>
                                 </li>
                                 <?php
@@ -388,7 +388,7 @@ if ($modx->config['manager_theme'] == 'default') {
                         <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
                         <li id="fullscreen">
                         <a href="javascript:;" onclick="toggleFullScreen()" id="toggleFullScreen" title="Toggle Fullscreen">
-                                <i class="fa fa-expand"></i>
+                                <i class="fa <?= $_style['menu_expand'] ?>"></i>
                             </a>
                         </li>
                         <?php } ?>
@@ -602,7 +602,7 @@ if ($modx->config['manager_theme'] == 'default') {
     }
         $('#toggleFullScreen').click(function(){
         icon = $(this).find("i");
-        icon.toggleClass("fa-expand fa-compress")
+        icon.toggleClass("<?= $_style['menu_expand'] ?> <?= $_style['menu_compress'] ?>")
    })
     </script>
     <?php } ?>
