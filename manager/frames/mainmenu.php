@@ -193,7 +193,7 @@ if($modx->hasPermission('category_manager')) {
 	$sitemenu['manage_categories'] = array(
 		'manage_categories',
 		'elements',
-		'<i class="fa fa-folder-open"></i>' . $_lang['manage_categories'],
+		'<i class="fa fa-object-group"></i>' . $_lang['manage_categories'],
 		'index.php?a=120',
 		$_lang['manage_categories'],
 		'',
