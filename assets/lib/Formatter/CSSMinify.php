@@ -6,7 +6,6 @@ class CSSMinify
 
     public function __construct($cssFilesPath = array())
     {
-        define('X', "\x1A");
         if (is_array($cssFilesPath) && !empty($cssFilesPath)) {
             $this->cssPath = $cssFilesPath;
         }
