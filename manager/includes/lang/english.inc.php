@@ -1002,6 +1002,7 @@ $_lang["sunday"] = 'Sunday';
 $_lang["sys_alert"] = 'System Alert';
 $_lang["sysinfo_activity_message"] = 'This list show which Resources have been recently edited by your users.';
 $_lang["sysinfo_userid"] = 'User';
+$_lang["system"] = 'System';
 $_lang["system_email_signup"] = '<!doctype html>
 <html>
 Hello [+uid+]
