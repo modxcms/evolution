@@ -210,7 +210,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 	$sitemenu['new_module'] = array(
 		'new_module',
 		'modules',
-		'<i class="fa fa-cogs"></i>' . $_lang['module_management'],
+		'<i class="fa fa-cubes"></i>' . $_lang['module_management'],
 		'index.php?a=106',
 		$_lang['module_management'],
 		'',
@@ -238,7 +238,7 @@ if($modx->hasPermission('exec_module')) {
             $sitemenu['module' . $row['id']] = array(
                 'module' . $row['id'],
                 'modules',
-                ($row['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $row['name'],
+                ($row['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-cube"></i>') . $row['name'],
                 'index.php?a=112&id=' . $row['id'],
                 $row['name'],
                 '',
