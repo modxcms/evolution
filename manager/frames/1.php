@@ -228,7 +228,7 @@ if ($modx->config['manager_theme'] == 'default') {
       echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
       ?>
     </script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $lastInstallTime ?>"></script>
+    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= $lastInstallTime ?>"></script>
     <?php if ($modx->config['show_picker'] != "0") { ?>
      <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
