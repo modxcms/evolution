@@ -22,6 +22,25 @@ if($_GET['a'] == 2) {
 // Favicon
 $_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
 
+//Main Menu
+$_style['menu_search']              = '<i class="fa fa-search"></i>';
+$_style['menu_preview_site']        = '<i class="fa fa-desktop"></i>';
+$_style['menu_new_resource']        = '<i class="fa fa-plus"></i>';
+$_style['menu_system']              = '<i class="fa fa-cogs"></i>';
+$_style['menu_user']                = '<i class="fa fa-user-circle"></i>';
+// full screen
+$_style['menu_expand']              = 'fa-expand';
+$_style['menu_compress']            = 'fa-compress';
+//pages
+$_style['page_settings']            = '<i class="fa fa-sliders fw"></i>';
+$_style['page_shedule']             = '<i class="fa fa-calendar"></i>';
+$_style['page_eventlog']            = '<i class="fa fa-exclamation-triangle"></i>';
+$_style['page_manager_logs']        = '<i class="fa fa-user-secret"></i>';
+$_style['page_sys_info']            = '<i class="fa fa-info-circle"></i>';
+$_style['page_help']                = '<i class="fa fa-question-circle"></i>';
+$_style['page_change_password']     = '<i class="fa fa-lock"></i>';
+$_style['page_logout']              = '<i class="fa fa-sign-out"></i>';
+
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
 $_style['add_weblink_tree']         = '<i class="fa fa-link"></i>';
