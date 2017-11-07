@@ -85,7 +85,7 @@
 .evo-popup.alert.evo-popup-iframe .close:hover { opacity: 1; background-color: #d9534f; }
 .evo-popup.alert.evo-popup-iframe > div { position: relative; z-index: 1; }
 .evo-popup.alert.evo-popup-iframe.changed { box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.1), 0 0 .2rem .2rem #ffc107 }
-.evo-popup-overlay { position: absolute; z-index: 10499; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.64); }
+.evo-popup-overlay { position: absolute; z-index: 10499; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.3); }
 .dark .evo-popup.alert.evo-popup-iframe { background-color: #ecf0f1 }
 /* [ EVO-TABS ] */
 .evo-tab-row { height: 1.875rem; padding: 0; background-color: #dfdfdf; }
