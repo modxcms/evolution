@@ -211,6 +211,7 @@ $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
 $_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
 
 //modules
+$_style['icons_module']            = 'fa fa-cube';
 $_style['icons_modules']            = 'fa fa-cubes'; //$style_path.'icons/modules.png';
 $_style['icons_run']                = $style_path.'icons/play.png';
 

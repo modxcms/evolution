@@ -33,8 +33,8 @@ class CSSMinify
             }
             $filename = basename($css);
             $css = file_get_contents($css);
-            $css = preg_replace("/\s{2,}/", " ", $css);
-            $css = str_replace(array("\n", ', ', ': ', '; ', ' > ', ' }', '} ', ';}', '{ ', ' {', ' (', ') '), array('', ',', ':', ';', '>', '}', '}', '}', '{', '{', '(', ')'), $css);
+            $css = preg_replace("/\s{2,}/", "", $css);
+            $css = str_replace(array("\n", ', ', ': ', '; ', ' > ', ' }', '} ', ';}', '{ ', ' {'), array('', ',', ':', ';', '>', '}', '}', '}', '{', '{'), $css);
             $css = preg_replace('/\/\*.*?\*\//s', '', $css);
 
             $allCss[] = '/* ' . $filename . ' */' . "\n" . $css;
