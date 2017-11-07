@@ -7,7 +7,7 @@ $tabLabel_tv        = '<i class="fa fa-list-alt"></i>';
 $tabLabel_chunk     = '<i class="fa fa-th-large"></i>';
 $tabLabel_snippet   = '<i class="fa fa-code"></i>';
 $tabLabel_plugin    = '<i class="fa fa-plug"></i>';
-$tabLabel_module    = '<i class="fa fa-cogs"></i>';
+$tabLabel_module    = '<i class="fa fa-cubes"></i>';
 $tabLabel_create    = '<i class="fa fa-plus"></i>';
 $tabLabel_refresh   = '<i class="fa fa-refresh"></i>';
 
