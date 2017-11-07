@@ -1034,9 +1034,9 @@
                       var onEvent = dataJson[key][k];
                       item[k] = function(onEvent) {
                         return function(event) {
-                          eval(onEvent)
-                        }
-                      }(onEvent)
+                          eval(onEvent);
+                        };
+                      }(onEvent);
                     } else {
                       item[k] = dataJson[key][k];
                     }
@@ -1126,7 +1126,14 @@
             if (e.target.parentNode.parentNode.classList.contains('node')) x += 50;
             this.itemToChange = id;
             this.selectedObjectName = title;
-            this.dopopup(ctx, x + 10, y);
+            if (ctx.classList.contains('show')) {
+              ctx.classList.remove('show');
+              setTimeout(function() {
+                modx.tree.dopopup(ctx, x + 10, y);
+              }, 100);
+            } else {
+              this.dopopup(ctx, x + 10, y);
+            }
           }
           e.stopPropagation();
         }
@@ -1139,9 +1146,7 @@
         f.innerHTML = this.selectedObjectName;
         el.style.left = a + (modx.config.textdir ? '-190' : '') + 'px';
         el.style.top = b + 'px';
-        setTimeout(function() {
-          el.classList.add('show');
-        }, 150);
+        el.classList.add('show');
       },
       menuHandler: function(a) {
         switch (a) {
