@@ -24,7 +24,7 @@ class Login extends Core
             $this->getCFGDef('modelPath', 'assets/lib/MODxAPI/modUsers.php')
         );
         $requestUri = $_SERVER['REQUEST_URI'];
-        if (0 === str_pos($requestUri, MODX_BASE_URL)) {
+        if (0 === strpos($requestUri, MODX_BASE_URL)) {
             $requestUri = substr($requestUri, strlen(MODX_BASE_URL));
         } 
         $this->requestUri = $this->modx->config['site_url'] . $requestUri;

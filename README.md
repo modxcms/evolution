@@ -1,8 +1,8 @@
 # Evolution CMS
 
-![PHP version](https://img.shields.io/badge/PHP->=v5.4-green.svg?php=5.4)    [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/)
+![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6)    [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/)
 
-Evolution CMS requires **PHP >= 5.4**, but snippet FormLister need **PHP >=5.6**
+Evolution CMS requires **PHP >= 5.6**
 
 
 ## What is EVO
