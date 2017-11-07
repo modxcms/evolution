@@ -266,7 +266,7 @@ if(is_file(__DIR__ . "/assets/cache/siteManager.php")){
         copyFolder(__DIR__."/temp/".$dir."/manager", __DIR__."/temp/".$dir."/".MGR_DIR);
         removeFolder(__DIR__."/temp/".$dir."/manager");
     } 
-    echo __DIR__."/temp/".$dir."/".MGR_DIR;
+    // echo __DIR__."/temp/".$dir."/".MGR_DIR;
 }
 copyFolder(__DIR__."/temp/".$dir, __DIR__."/");
 removeFolder(__DIR__."/temp");
