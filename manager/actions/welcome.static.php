@@ -31,11 +31,11 @@ if($modx->hasPermission('messages')) {
 
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%users%]';
+	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%user_management_title%]';
 	$ph['SecurityIcon'] = wrapIcon($icon, 75);
 }
 if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_users%]';
+	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
 	$ph['WebUserIcon'] = wrapIcon($icon, 99);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
@@ -244,7 +244,7 @@ $widgets['welcome'] = array(
 					<span class="wm_button">
 						<a href="index.php?a=75">
 							<i class="[&icons_security_large&]" title="[%user_management_title%]"></i>
-							<span>[%security%]</span>
+							<span>[%user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
@@ -252,7 +252,7 @@ $widgets['welcome'] = array(
 					<span class="wm_button">
 						<a href="index.php?a=99">
 							<i class="[&icons_webusers_large&]" title="[%web_user_management_title%]"></i>
-							<span>[%web_users%]</span>
+							<span>[%web_user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
