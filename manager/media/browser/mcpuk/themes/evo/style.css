@@ -210,7 +210,10 @@ div.file .name {
     height: 16px;
     overflow: hidden;
 }
-
+tr.file td {
+    font-size: 12px;
+}
+/*
 div.file .time {
     font-size: 10px;
 }
@@ -218,7 +221,7 @@ div.file .time {
 div.file .size {
     font-size: 10px;
 }
-
+*/
 #files div.selected,
 #files div.selected:hover {
     background-color: #5b9bda;
@@ -229,6 +232,7 @@ div.file .size {
 tr.file > td {
     padding: 3px 4px;
     background-color: #f8f7f6
+
 }
 
 tr.file:hover > td {
@@ -663,4 +667,14 @@ span.close, span.clicked {
 }
 .pull-right a {
 	color:#bbb!important;
+}
+div.file .thumb {
+    background-size: cover;
+}
+.rangeTextContainer, .rangeThumbContainer {display:inline-block;padding: 0.4rem 0.4rem 0.2rem 0.4rem; margin-left: 2px;}
+.hiddenrange {display:none}
+.thumbsize, .textsize {display:inline-block;margin-left: 10px;}
+
+input[type=range]::-moz-range-track  {
+  margin-top: 2px;
 }
