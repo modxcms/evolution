@@ -305,7 +305,7 @@ if ($modx->config['manager_theme'] == 'default') {
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
                             <li class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-cogs"></i></a>
+                                <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><i class="fa fa-cogs"></i></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
                                         <li>
