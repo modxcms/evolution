@@ -653,30 +653,22 @@ class DocumentParser
      * @param $id
      * @return array|mixed|null|string
      */
-    public function makePageCacheKey($id)
-    {
-        $params = $_GET;
-        $hash = '';
-        if (isset($params['q'])) {
-            unset($params['q']);
-        }
-
-        if (!empty($this->systemCacheKey)) {
+    public function makePageCacheKey($id){
+        $hash = $id;
+        $tmp = null;
+        $params = array();
+        if(!empty($this->systemCacheKey)){
             $hash = $this->systemCacheKey;
-        } elseif (!empty($params)) {
-            // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-            ksort($params);
-            $hash .= '_' . md5(http_build_query($params));
-        } else {
-            $hash = $id;
+        }else {
+            if (!empty($_GET)) {
+                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+                $params = $_GET;
+                ksort($params);
+                $hash .= '_'.md5(http_build_query($params));
+            }
         }
-
-        if (isset($_GET['q'])) {
-            $params['q'] = $_GET['q'];
-        }
-        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array('hash' => $hash, 'id' => $id, 'params' => $params));
-        $tmp = array();
-        if (is_array($evtOut) && count($evtOut) > 0) {
+        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
+        if (is_array($evtOut) && count($evtOut) > 0){
             $tmp = array_pop($evtOut);
         }
         return empty($tmp) ? $hash : $tmp;
@@ -1201,6 +1193,7 @@ class DocumentParser
         }
 
         foreach ($matches[1] as $i => $key) {
+            if(strpos($key,'[+')!==false) continue; // Allow chunk {{chunk?&param=`xxx`}} with [*tv_name_[+param+]*] as content
             if (substr($key, 0, 1) == '#') {
                 $key = substr($key, 1);
             } // remove # for QuickEdit format
@@ -1232,7 +1225,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeDocumentContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1400,7 +1393,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeSettingsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1469,7 +1462,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergeChunkContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1528,7 +1521,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('mergePlaceholderContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1677,8 +1670,9 @@ class DocumentParser
                 }
             }
         }
+        $cmd = trim($cmd);
         if (!preg_match('@^[0-9]+$@', $cmd)) {
-            $cmd = empty(trim($cmd)) ? 0 : 1;
+            $cmd = empty($cmd) ? 0 : 1;
         } elseif ($cmd <= 0) {
             $cmd = 0;
         }
@@ -1739,7 +1733,7 @@ class DocumentParser
             $s = &$matches[0][$i];
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $v, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('ignoreCommentedTagsContent parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -1893,7 +1887,7 @@ class DocumentParser
                 }
                 if (strpos($content, $s) !== false) {
                     $content = str_replace($s, $value, $content);
-                } else {
+                } elseif($this->debug) {
                     $this->addLog('evalSnippetsSGVar parse error', $_SERVER['REQUEST_URI'] . $s, 2);
                 }
                 continue;
@@ -1905,7 +1899,7 @@ class DocumentParser
 
             if (strpos($content, $s) !== false) {
                 $content = str_replace($s, $value, $content);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -4263,7 +4257,7 @@ class DocumentParser
             }
             if (strpos($tpl, $s) !== false) {
                 $tpl = str_replace($s, $value, $tpl);
-            } else {
+            } elseif($this->debug) {
                 $this->addLog('parseText parse error', $_SERVER['REQUEST_URI'] . $s, 2);
             }
         }
@@ -4656,14 +4650,16 @@ class DocumentParser
             $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
-            ksort($docRow);
+            if(is_array($docRow)){ 
+                ksort($docRow);
 
-            foreach ($docRow as $key => $value) {
-                if ($idnames == '*' || in_array($key, $idnames)) {
-                    array_push($result, array(
-                        'name' => $key,
-                        'value' => $value
-                    ));
+                foreach ($docRow as $key => $value) {
+                    if ($idnames == '*' || in_array($key, $idnames)) {
+                        array_push($result, array(
+                            'name' => $key,
+                            'value' => $value
+                        ));
+                    }
                 }
             }
 

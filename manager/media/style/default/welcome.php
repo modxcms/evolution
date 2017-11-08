@@ -14,8 +14,8 @@ $modx->addSnippet('getMessageCount',$code);
 // Large Icons
 $_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
 $_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
-$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-2x';
+$_style['icons_modules_large']      = 'fa fa-cubes fa-fw fa-2x';
 $_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
-$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-2x';
+$_style['icons_security_large']     = 'fa fa-user fa-fw fa-2x';
 $_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
 $_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';

@@ -669,12 +669,14 @@
         if (modx.permission.dragndropdocintree) {
           var els = d.querySelectorAll('#treeRoot a:not(.empty)');
           for (var i = 0; i < els.length; i++) {
-            els[i].onmousedown = this.onmousedown;
-            els[i].ondragstart = this.ondragstart;
-            els[i].ondragenter = this.ondragenter;
-            els[i].ondragover = this.ondragover;
-            els[i].ondragleave = this.ondragleave;
-            els[i].ondrop = this.ondrop;
+            var el = els[i];
+            el.onmousedown = this.onmousedown;
+            el.onmousedown = this.onmousedown;
+            el.ondragstart = this.ondragstart;
+            el.ondragenter = this.ondragenter;
+            el.ondragover = this.ondragover;
+            el.ondragleave = this.ondragleave;
+            el.ondrop = this.ondrop;
           }
         }
       },
@@ -685,9 +687,10 @@
         } else {
           var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
           var draggable = roles && modx.user.role !== 1 ? roles.split(',').map(Number).indexOf(modx.user.role) > -1 : true;
+          modx.tree.itemToChange = this.dataset.id || this.parentNode.id.replace('node', '');
+          modx.tree.selectedObjectName = this.dataset.titleEsc;
           if (draggable) {
             this.parentNode.draggable = true;
-            modx.tree.itemToChange = this.parentNode.id;
             this.parentNode.ondragstart = modx.tree.ondragstart;
           } else {
             this.parentNode.draggable = false;
@@ -1034,9 +1037,9 @@
                       var onEvent = dataJson[key][k];
                       item[k] = function(onEvent) {
                         return function(event) {
-                          eval(onEvent)
-                        }
-                      }(onEvent)
+                          eval(onEvent);
+                        };
+                      }(onEvent);
                     } else {
                       item[k] = dataJson[key][k];
                     }
@@ -1126,7 +1129,14 @@
             if (e.target.parentNode.parentNode.classList.contains('node')) x += 50;
             this.itemToChange = id;
             this.selectedObjectName = title;
-            this.dopopup(ctx, x + 10, y);
+            if (ctx.classList.contains('show')) {
+              ctx.classList.remove('show');
+              setTimeout(function() {
+                modx.tree.dopopup(ctx, x + 10, y);
+              }, 100);
+            } else {
+              this.dopopup(ctx, x + 10, y);
+            }
           }
           e.stopPropagation();
         }
@@ -1139,9 +1149,7 @@
         f.innerHTML = this.selectedObjectName;
         el.style.left = a + (modx.config.textdir ? '-190' : '') + 'px';
         el.style.top = b + 'px';
-        setTimeout(function() {
-          el.classList.add('show');
-        }, 150);
+        el.classList.add('show');
       },
       menuHandler: function(a) {
         switch (a) {
@@ -1309,10 +1317,11 @@
       },
       emptyTrash: function() {
         if (confirm(modx.lang.confirm_empty_trash) === true) {
-          modx.tabs({url: modx.MODX_MANAGER_URL + '?a=64', title: modx.lang.confirm_empty_trash});
-          modx.tabsClose(this.deleted);
-          this.deleted = [];
-          modx.tree.restoreTree();
+          modx.get(modx.MODX_MANAGER_URL + '?a=64', function() {
+            modx.tabsClose(modx.tree.deleted);
+            modx.tree.deleted = [];
+            modx.tree.restoreTree();
+          });
         }
       },
       showBin: function(a) {
@@ -1449,7 +1458,15 @@
                 action: modx.main.getQueryVariable('a', a.url),
                 closeactions: ['6', '61', '62', '63'],
                 reload: 0,
-                show: function(uid, title) {
+                show: function(uid, title, callback) {
+                  if (typeof uid === 'function') {
+                    callback = uid;
+                    uid = '';
+                  }
+                  if (typeof title === 'function') {
+                    callback = title;
+                    title = '';
+                  }
                   uid = uid || o.uid;
                   var el = tabs.querySelector('.selected');
                   if (el) {
@@ -1477,6 +1494,9 @@
                   tabpage.classList.add('show');
                   modx.tree.setItemToChange();
                   modx.main.tabRow.scroll(tabs, tab, 350);
+                  if (callback) {
+                    callback();
+                  }
                 },
                 close: function(e) {
                   o.event = e || o.event || w.event;
@@ -1545,10 +1565,34 @@
               tab = d.getElementById('evo-tab-home');
           tab.onclick = o.select;
           if (tabpage) {
-            if (~o.closeactions.indexOf(o.action) || o.uid === 'home') {
+            if (o.uid === 'home') {
               tabpage.firstElementChild.src = o.url;
             }
-            o.show();
+            if (~o.closeactions.indexOf(o.action)) {
+              if (o.action === '61' || o.action === '62') {
+                o.show(function() {
+                  var el = w.main.document.getElementsByName('publishedcheck')[0];
+                  if (el) {
+                    el.checked = o.action === '61';
+                    w.main.document.getElementsByName('published')[0].value = +el.checked;
+                  }
+                  if (modx.getActionFromUrl(w.main.location.search, 3)) {
+                    w.main.location.reload();
+                  }
+                });
+              } else {
+                o.show();
+              }
+              modx.get(o.url, function() {
+                modx.tree.restoreTree();
+              });
+            } else {
+              o.show();
+            }
+          } else if (~o.closeactions.indexOf(o.action)) {
+            modx.get(o.url, function() {
+              modx.tree.restoreTree();
+            });
           } else {
             d.getElementById('mainloader').className = 'show';
             tabpage = d.createElement('div');

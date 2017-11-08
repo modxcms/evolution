@@ -23,7 +23,7 @@ $parent = intval($_REQUEST['parent']);
 $expandAll = intval($_REQUEST['expandAll']);
 $output = '';
 $theme = $manager_theme . "/";
-$hereid = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : '';
+$hereid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : '';
 
 if (isset($_REQUEST['showonlyfolders'])) {
     $_SESSION['tree_show_only_folders'] = $_REQUEST['showonlyfolders'];

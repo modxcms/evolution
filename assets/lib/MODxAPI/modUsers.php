@@ -193,7 +193,6 @@ class modUsers extends MODxAPI
 
             return false;
         }
-        $time = 
         $this->set('sessionid', '');
         $fld = $this->toArray();
         foreach ($this->default_field['user'] as $key => $value) {

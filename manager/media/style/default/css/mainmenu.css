@@ -22,7 +22,7 @@
 #mainMenu #nav #bars .fa { display: inline-block; width: 1.5rem; margin: 0; text-align: center; overflow: hidden; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 .sidebar-closed #mainMenu #nav #bars .fa { width: 0.25rem; margin: 0 0.625rem; }
 #mainMenu .nav .caret, #mainMenu .nav .divider, .dropdown-toggle::after { display: none }
-#mainMenu .nav > li > ul { display: block; position: absolute; z-index: 0; overflow: auto; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); font-size: 1em; border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.1s; transition-duration: 0.1s; }
+#mainMenu .nav > li > ul { display: block; position: absolute; z-index: 0; overflow: auto; overflow-x: hidden; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); font-size: 1em; border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.1s; transition-duration: 0.1s; }
 /*#mainMenu.show .nav > li:hover > a + ul, */
 #mainMenu.show .nav > li.hover > a + ul, #mainMenu.show .nav > li.hover > ul.sub-menu.show { opacity: 1; visibility: visible }
 #mainMenu.show .nav > li > ul.sub-menu { left: 15rem; opacity: 0; visibility: hidden; }

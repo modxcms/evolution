@@ -52,7 +52,7 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="fa fa-cogs"></i>' . $_lang['modules'],
+		'<i class="'.$_style['icons_modules'] .'"></i>' . $_lang['modules'],
 		'javascript:;',
 		$_lang['modules'],
 		' return false;',
@@ -193,7 +193,7 @@ if($modx->hasPermission('category_manager')) {
 	$sitemenu['manage_categories'] = array(
 		'manage_categories',
 		'elements',
-		'<i class="fa fa-folder-open"></i>' . $_lang['manage_categories'],
+		'<i class="fa fa-object-group"></i>' . $_lang['manage_categories'],
 		'index.php?a=120',
 		$_lang['manage_categories'],
 		'',
@@ -210,7 +210,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 	$sitemenu['new_module'] = array(
 		'new_module',
 		'modules',
-		'<i class="fa fa-cogs"></i>' . $_lang['module_management'],
+		'<i class="'.$_style['icons_modules'] .'"></i>' . $_lang['module_management'],
 		'index.php?a=106',
 		$_lang['module_management'],
 		'',
@@ -224,7 +224,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 
 if($modx->hasPermission('exec_module')) {
 	if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
+		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm,icon, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
@@ -238,7 +238,7 @@ if($modx->hasPermission('exec_module')) {
             $sitemenu['module' . $row['id']] = array(
                 'module' . $row['id'],
                 'modules',
-                ($row['name'] == 'Extras' ? '<i class="fa fa-archive"></i>' : '<i class="fa fa-file-text"></i>') . $row['name'],
+                ($row['icon'] != '' ? '<i class="'.$row['icon'].'"></i>' : '<i class="'.$_style['icons_module'].'"></i>') . $row['name'],
                 'index.php?a=112&id=' . $row['id'],
                 $row['name'],
                 '',

@@ -38,7 +38,7 @@ class Debug
      */
     public function log($message, $data = array())
     {
-        if (is_array($data) && is_array($data[0])) {
+        if (is_array($data) && isset($data[0]) && is_array($data[0])) {
             $data = array_pop($data);
         }
         $this->log[] = array(

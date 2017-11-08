@@ -220,7 +220,7 @@ License: MIT
 .sp-cf:before, .sp-cf:after { content: ""; display: table; }
 .sp-cf:after { clear: both; }
 .sp-cf { *zoom: 1; }
-button.sp-choose, .sp-cancel { display:none; }
+
 
 /* Mobile devices, make hue slider bigger so it is easier to slide */
 @media (max-device-width: 480px) {
@@ -317,8 +317,8 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     border:none;
 }
 .sp-picker-container {
-    width: 172px;
-    border-left: solid 1px #fff;
+    width: 210px;
+  /*  border-left: solid 1px #fff;*/
 }
 
 /* Palettes */

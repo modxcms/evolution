@@ -43,7 +43,7 @@ foreach ($urls as $section=>$url) {
 
     $items = array_slice($rss->items, 0, $itemsNumber);
     foreach ($items as $item) {
-        $href = $item['link'];
+        $href = 'https://github.com'.$item['link'];
         $title = $item['title'];
         $pubdate = $item['pubdate'];
         $pubdate = $modx->toDateFormat(strtotime($pubdate));

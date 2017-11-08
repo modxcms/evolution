@@ -210,7 +210,7 @@
   #tabSN   li.eltree:before {content: "\f121";}
   #tabTV   li.eltree:before {content: "\f022";}
   #tabPL   li.eltree:before {content: "\f1e6";}
-  #tabMD   li.eltree:before {content: "\f085";}
+  #tabMD   li.eltree:before {content: "\f1b2";}
 
   .tab-page { margin-bottom:0; }
 
@@ -418,6 +418,10 @@
   .dark.ElementsInTree #tree .tab-row .tab.selected {
     background-color: #202329;
     color: #bfbfbf;
+  }
+
+  .dark.ElementsInTree #tree .tab-row .tab span {
+    background-color: transparent;
   }
 
   .dark.ElementsInTree #tree .tab-page {

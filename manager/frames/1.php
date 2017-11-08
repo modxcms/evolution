@@ -74,6 +74,32 @@ $user = $modx->getUserInfo($modx->getLoginUserID());
 if ($user['which_browser'] == 'default') {
     $user['which_browser'] = $modx->config['which_browser'];
 }
+
+$css = 'media/style/' . $modx->config['manager_theme'] . '/css/page.css?v=' . $lastInstallTime;
+
+if ($modx->config['manager_theme'] == 'default') {
+    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css') && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
+        require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
+        $minifier = new Formatter\CSSMinify();
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css');
+        $css = $minifier->minify();
+        file_put_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css', $css);
+    }
+    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html <?= (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"' ?>>
@@ -83,9 +109,10 @@ if ($user['which_browser'] == 'default') {
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/page.css?v=<?= $modx->config['settings_version'] ?>" />
+    <link rel="stylesheet" type="text/css" href="<?= $css ?>" />
     <?php if ($modx->config['show_picker'] != "0") { ?>
-    <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
+        <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
+        <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/color.switcher.css" />
     <?php } ?>
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
@@ -95,141 +122,10 @@ if ($user['which_browser'] == 'default') {
     </style>
     <script type="text/javascript">
       if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        document.documentElement.className += ' ios'
+        document.documentElement.className += ' ios';
       }
     </script>
     <script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
-    <?php if ($modx->config['show_picker'] != "0") { ?>
-    <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
-    <script language="javascript">
-    $(document).ready(function() {
-    var bgColour = "#1d2023";
-    if(localStorage.getItem("EvoMenuColour")){
-      bgColour = localStorage.getItem("EvoMenuColour");
-    }
-    $("#mainMenu").css({backgroundColor:bgColour});
-    $("form").on("submit", function(ev){
-    ev.preventDefault();
-    var newColour =$("#picker").spectrum("get");
-    localStorage.setItem("EvoMenuColour",newColour);
-    $("#colPicked").html(newColour);
-    $("#mainMenu").css({backgroundColor:newColour});
-    location.reload();
-    });
-    $("#picker").spectrum({
-    flat: true,
-    showInput: true,
-    showAlpha: false,
-    allowEmpty: true,
-    color: '',
-    showPaletteOnly: true,
-    togglePaletteOnly: true,
-    togglePaletteMoreText: '+',
-    togglePaletteLessText: '-',
-    preferredFormat: "hex3",
-        palette:[
-        ["#000","#1d2023","#333","#444","#555","#bbb","#f3f3f3","#fafafa","#fff"],
-        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47","#9d2661"]
-        ],
-        color: localStorage.getItem("EvoMenuColour")
-        });
-         //text color
-            var txColour = " ";
-            if(localStorage.getItem("EvoMenuTextColour")){
-	       txColour = localStorage.getItem("EvoMenuTextColour");
-            }
-            $("#mainMenu .nav > li > a").css({color:txColour});
-            $("#mainMenu .nav .label_searchid").css({color:txColour});
-            $("form").on("submit", function(ev){
-            ev.preventDefault();
-            var newTColour =$("#textpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextColour",newTColour);
-            $("#colPicked2").html(newTColour);
-            $("#mainMenu .nav > li > a").css({color:newTColour});
-            $("#mainMenu .nav .label_searchid").css({color:newTColour});    
-            location.reload();
-            });
-            $("#textpicker").spectrum({
-            flat: true,
-            showInput: true,
-            showAlpha: false,
-            allowEmpty: true,
-            showPaletteOnly: true,
-            togglePaletteOnly: true,
-            togglePaletteMoreText: '+',
-            togglePaletteLessText: '-',
-            preferredFormat: "hex3",
-            palette:[
-        ["#000","#444","#666","#bbb","#ccc","#eee","#f3f3f3","#fafafa","#fff"]
-        ],
-            color: localStorage.getItem("EvoMenuTextColour")
-            });
-            var txHColour = " ";
-            if(localStorage.getItem("EvoMenuTextHColour")){
-	       txHColour = localStorage.getItem("EvoMenuTextHColour");
-            }
-           var txColour = "";
-            if(localStorage.getItem("EvoMenuTextColour")){
-	       txColour = localStorage.getItem("EvoMenuTextColour");
-            }
-            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
-            $(this).css({color:txHColour});
-            }).mouseout(function() {
-            $(this).css({color:txColour});
-            });
-            $("#mainMenu .nav .label_searchid").mouseover(function() {
-            $(this).css({color:txHColour});
-            }).mouseout(function() {
-            $(this).css({color:txColour});
-            });
-            $("#mainMenu .nav > li.active > a").css({color:txHColour});
-            $("form").on("submit", function(ev){
-            ev.preventDefault();
-            var newTColour =$("#textpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextColour",newTColour);
-            var newTHColour =$("#textHpicker").spectrum("get");
-            localStorage.setItem("EvoMenuTextHColour",newTHColour);
-            $("#colPicked3").html(newTHColour);
-            $("#mainMenu .nav > li:not(.active) > a").mouseover(function() {
-            $(this).css({color:newTHColour});
-            }).mouseout(function() {
-            $(this).css({color:newTColour});
-            });
-            $("#mainMenu .nav .label_searchid").mouseover(function() {
-            $(this).css({color:newTHColour});
-            }).mouseout(function() {
-            $(this).css({color:newTColour});
-            }); 
-            $("#mainMenu .nav > li.active > a").css({color:newTHColour});
-            location.reload();
-            });
-            $("#textHpicker").spectrum({
-            flat: true,
-            showInput: true,
-            showAlpha: false,
-            allowEmpty: true,
-            showPaletteOnly: true,
-            togglePaletteOnly: true,
-            togglePaletteMoreText: '+',
-            togglePaletteLessText: '-',
-            preferredFormat: "hex3",
-            palette:[
-        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fafafa","#fff"]
-        ],
-            color: localStorage.getItem("EvoMenuTextHColour")
-            });
-        });
-    </script>
-<script type="text/javascript">
-function cleanLocalStorage(keys) {
-keys = keys.split(',');
-for (var i = 0; i < keys.length; i++) {
-delete localStorage[keys[i]];
-}
-location.reload();
-}
-</script>
-<?php } ?>
     <script type="text/javascript">
       // GLOBAL variable modx
       var modx = {
@@ -324,7 +220,7 @@ location.reload();
           for (var b in a) {
             this[b] = a[b];
           }
-          delete a[b]
+          delete a[b];
         },
         openedArray: [],
         lockedElementsTranslation: <?= json_encode($unlockTranslations, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE) . "\n" ?>
@@ -334,7 +230,12 @@ location.reload();
       echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
       ?>
     </script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.js?v=<?= $modx->config['settings_version'] ?>"></script>
+    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= $lastInstallTime ?>"></script>
+    <?php if ($modx->config['show_picker'] != "0") { ?>
+        <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
+        <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <?php } ?>
     <?php
     // invoke OnManagerTopPrerender event
     $evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
@@ -349,96 +250,107 @@ location.reload();
     <div id="mainMenu" class="dropdown">
         <div class="container">
             <div class="row">
-                <div class="cell">
+                <div class="cell" data-evocp="bgmColor">
                     <?php include('mainmenu.php') ?>
                 </div>
-                <div class="cell">
+                <div class="cell" data-evocp="bgmColor">
                     <ul id="settings" class="nav">
                         <li id="searchform">
                             <form action="index.php?a=71" method="post" target="main">
                                 <input type="hidden" value="Search" name="submitok" />
                                 <label for="searchid" class="label_searchid">
-                                    <i class="fa fa-search"></i>
+                                    <?= $_style['menu_search'] ?>
                                 </label>
                                 <input type="text" id="searchid" name="searchid" size="25" />
                                 <div class="mask"></div>
                             </form>
                         </li>
+                        <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
+                            <?php if ($modx->hasPermission('new_document')) { ?>
+                                <li class="dropdown newresource">
+                                    <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
+                                    <ul class="dropdown-menu">
+                                        <?php if ($modx->hasPermission('new_document')) { ?>
+                                            <li>
+                                                <a onclick="" href="index.php?a=4" target="main">
+                                                    <?= $_style['add_doc_tree'] ?><?= $_lang['add_resource'] ?>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a onclick="" href="index.php?a=72" target="main">
+                                                    <?= $_style['add_weblink_tree'] ?><?= $_lang['add_weblink'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+                                            <li>
+                                                <a onclick="" href="media/browser/mcpuk/browse.php?&type=images" target="main">
+                                                    <?= $_style['images_management'] ?><?= $_lang['images_management'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+                                            <li>
+                                                <a onclick="" href="media/browser/mcpuk/browse.php?&type=files" target="main">
+                                                    <?= $_style['files_management'] ?><?= $_lang['files_management'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
                         <li>
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
-                                <i class="fa fa-desktop"></i>
+                                <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
                             <li class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
+                                <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
                                         <li>
                                             <a href="index.php?a=17" target="main">
-                                                <i class="fa fa-cog fw"></i><?= $_lang['edit_settings'] ?>
+                                                <?= $_style['page_settings'] ?><?= $_lang['edit_settings'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=70" target="main">
-                                                <i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
+                                                <?= $_style['page_shedule'] ?><?= $_lang['site_schedule'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('view_eventlog')) { ?>
                                         <li>
                                             <a href="index.php?a=114" target="main">
-                                                <i class="fa fa-exclamation-triangle"></i><?= $_lang['eventlog_viewer'] ?>
+                                                <?= $_style['page_eventlog'] ?></i><?= $_lang['eventlog_viewer'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('logs')) { ?>
                                         <li>
                                             <a href="index.php?a=13" target="main">
-                                                <i class="fa fa-user-secret"></i><?= $_lang['view_logging'] ?>
+                                                <?= $_style['page_manager_logs'] ?><?= $_lang['view_logging'] ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="index.php?a=53" target="main">
-                                                <i class="fa fa-info-circle"></i><?= $_lang['view_sysinfo'] ?>
+                                                <?= $_style['page_sys_info'] ?><?= $_lang['view_sysinfo'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($modx->hasPermission('help')) { ?>
                                         <li>
                                             <a href="index.php?a=9" target="main">
-                                                <i class="fa fa-question-circle"></i><?= $_lang['help'] ?>
+                                                <?= $_style['page_help'] ?><?= $_lang['help'] ?>
                                             </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
                             </li>
-                        <?php } ?>
-                        <?php if ($modx->config['show_picker'] != "0") { ?>
-                        <li class="dropdown menupicker">
-                          <a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-paint-brush"></i></a>
-                            <ul class="dropdown-menu">
-                             <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Background Color <span id="colPicked"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#1d2023' id="picker" name="EvoMenuColour"/><br/>
-                                </form>                               
-                              </li>
-                              <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Text Color<span id="colPicked2"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#bbb' id="textpicker" name="EvoMenuTextColour"/> <br/>               
-                                </form>
-                            <li class="item-group"><a style="cursor:default;" href="javascript:;"><i class="fa fa-paint-brush"></i> Text Hover<span id="colPicked2"></span></a>
-                            <a title="<?= $_lang['reset'] ?>" href="javascript:;" onclick="cleanLocalStorage('EvoMenuTextHColour')" class="resetcolor btn btn-secondary"><i class="fa fa-refresh"></i></a></li>
-                              <li><form method="" action="">
-                                <input type="text" value='#f3f3f3' id="textHpicker" name="EvoMenuTextHColour"/> <br/>               <input type="reset" onclick="cleanLocalStorage('EvoMenuColour,EvoMenuTextHColour,EvoMenuTextColour')" class="btn btn-secondary" value="<?= $_lang['reset'] ?>" style="margin-left:2.2rem;">
-                                <input type="submit" class="btn btn-success" value="<?= $_lang['submit'] ?>" style="margin-left:2.5rem;">
-                                </form>
-                          </ul>
-                        </li>
                         <?php } ?>
                         <li class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
@@ -446,7 +358,7 @@ location.reload();
                                 <?php if ($user['photo']) { ?>
                                     <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . $user['photo'] ?>);"></span>
                                 <?php } else { ?>
-                                    <span class="icon"><i class="fa fa-user-circle"></i></span>
+                                    <span class="icon"><?= $_style['menu_user'] ?></span>
                                 <?php } ?>
                                 <i id="msgCounter"></i>
                             </a>
@@ -457,13 +369,13 @@ location.reload();
                                 <?php if ($modx->hasPermission('change_password')) { ?>
                                     <li>
                                         <a onclick="" href="index.php?a=28" target="main">
-                                            <i class="fa fa-lock"></i><?= $_lang['change_password'] ?>
+                                            <?= $_style['page_change_password'] ?><?= $_lang['change_password'] ?>
                                         </a>
                                     </li>
                                 <?php } ?>
                                 <li>
                                     <a href="index.php?a=8">
-                                        <i class="fa fa-sign-out"></i><?= $_lang['logout'] ?>
+                                        <?= $_style['page_logout'] ?><?= $_lang['logout'] ?>
                                     </a>
                                 </li>
                                 <?php
@@ -475,6 +387,13 @@ location.reload();
                                 ?>
                             </ul>
                         </li>
+                        <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
+                            <li id="fullscreen">
+                                <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
+                                    <i class="fa <?= $_style['menu_expand'] ?>"></i>
+                                </a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
@@ -484,15 +403,15 @@ location.reload();
         <?php include('tree.php') ?>
     </div>
     <div id="main">
-        <?php if($modx->config['global_tabs'] && $user['role'] == 1): ?>
-        <div class="tab-row-container evo-tab-row">
-            <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
-        </div>
-        <div id="evo-tab-page-home" class="evo-tab-page show">
-            <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event)"></iframe>
-        </div>
+        <?php if ($modx->config['global_tabs'] && $user['role'] == 1): ?>
+            <div class="tab-row-container evo-tab-row">
+                <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
+            </div>
+            <div id="evo-tab-page-home" class="evo-tab-page show">
+                <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
         <?php else: ?>
-            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event)"></iframe>
+            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
         <?php endif; ?>
         <div id="mainloader"></div>
     </div>
@@ -617,7 +536,7 @@ location.reload();
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -635,7 +554,7 @@ location.reload();
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -653,7 +572,7 @@ location.reload();
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -661,13 +580,44 @@ location.reload();
         }
 
     </script>
+    <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
+        <script>
+          function toggleFullScreen()
+          {
+            if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+              if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+              } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+              } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+              }
+            } else {
+              if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+              } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+              } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+              }
+            }
+          }
 
+          $('#toggleFullScreen').click(function() {
+            var icon = $(this).find('i');
+            icon.toggleClass('<?= $_style['menu_expand'] ?> <?= $_style['menu_compress'] ?>');
+          });
+        </script>
+    <?php } ?>
     <?php
     // invoke OnManagerFrameLoader
     $modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
     ?>
 
 </div>
-
+<?php if ($modx->config['show_picker'] != "0") {
+    include('media/style/' . $modx->config['manager_theme'] . '/color.switcher.php');
+} ?>
 </body>
 </html>

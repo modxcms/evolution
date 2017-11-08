@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * Paginate extender for DocLister
  *
@@ -86,15 +82,25 @@ class paginate_DL_Extender extends extDocLister
                 break;
         }
 
-
-        $this->DocLister->toPlaceholders($pages + 1 - $this->currentPage(), 1, "current");
+        if ($this->reverse) {
+            $currentPage = $pages + 1 - $this->currentPage();
+            $diff = $currentPage == $this->totalPage() ? 0 : $display * $pages - $this->count;
+            $from = ($this->currentPage() - 1) * $display + 1 - $diff;
+            $to = $currentPage == $this->totalPage() ? $display : $from - 1 + $display;
+        } else {
+            $currentPage = $this->currentPage();
+            $from = ($this->currentPage() - 1) * $display + 1;
+            $to = $currentPage == $this->totalPage() ? $this->count : $from - 1 + $display;
+        }
+        $this->DocLister->toPlaceholders($currentPage, 1, "current");
+        $this->DocLister->toPlaceholders($from, 1, "from");
+        $this->DocLister->toPlaceholders($to, 1, "to");
         $this->DocLister->toPlaceholders($this->renderPages($paginate), 1, "pages");
         $this->DocLister->toPlaceholders(($this->currentPage() == 1 ? 1 : 0), 1,
             "isstart"); //[+isstart+] – is start page
         $this->DocLister->toPlaceholders(($this->currentPage() == $pages ? 1 : 0), 1,
             "isstop"); //[+isstop+] – is end page
         $this->DocLister->toPlaceholders($pages, 1, "totalPages"); // [+totalPages+] - total page.
-
         $limit = $this->DocLister->getCFGDef('maxDocs', 0);
         if ($limit > 0 && !$this->reverse) {
             switch ($paginate) {
@@ -129,7 +135,7 @@ class paginate_DL_Extender extends extDocLister
             $this->_pages['total'] = 1;
         } else {
             $addTables = $this->DocLister->AddTable;
-            $tmp = $this->count = $this->DocLister->getChildrenCount();
+            $tmp = $this->count = (int)$this->DocLister->getChildrenCount();
             $this->DocLister->AddTable = $addTables;
 
             $display = $this->DocLister->getCFGDef('display', 0);
@@ -138,10 +144,6 @@ class paginate_DL_Extender extends extDocLister
                     0)
             ) {
                 $this->DocLister->toPlaceholders($tmp, 1, "count");
-                $from = ($this->currentPage() - 1) * $display + 1;
-                $this->DocLister->toPlaceholders($from, 1, "from");
-                $to = ($this->currentPage() == $this->totalPage()) ? $from - 1 + $tmp - ($this->currentPage() - 1) * $display : $from - 1 + $display;
-                $this->DocLister->toPlaceholders($to, 1, "to");
             } else {
                 $this->modx->sendRedirect($this->getUrl());
             }

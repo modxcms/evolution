@@ -95,7 +95,7 @@
                 <div class="split"></div>
             </td>
         </tr>
-        <tr>
+        
         <tr>
             <td nowrap class="warning"><?= $_lang['warning_visibility'] ?><br>
                 <small>[(warning_visibility)]</small>
@@ -224,6 +224,48 @@
         <tr>
             <td width="200">&nbsp;</td>
             <td class="comment"><?= $_lang['settings_group_tv_message'] ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap class="warning"><?= $_lang['show_newresource_btn'] ?><br>
+                <small>[(show_newresource_btn)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="show_newresource_btn" value="1" <?= $show_newresource_btn == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="show_newresource_btn" value="0" <?= ($show_newresource_btn == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?= $_lang['show_newresource_btn_message'] ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+                <tr>
+            <td nowrap class="warning"><?= $_lang['show_fullscreen_btn'] ?><br>
+                <small>[(show_fullscreen_btn)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="show_fullscreen_btn" value="1" <?= $show_fullscreen_btn == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="show_fullscreen_btn" value="0" <?= ($show_fullscreen_btn == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?= $_lang['show_fullscreen_btn_message'] ?></td>
         </tr>
         <tr>
             <td colspan="2">

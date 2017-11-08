@@ -24,7 +24,7 @@ $_CONFIG = array(
     'denyExtensionRename' => $modx->config['denyExtensionRename'],
     'showHiddenFiles' => $modx->config['showHiddenFiles'],
 	
-    'theme' => "oxygen",
+    'theme' => "evo",
 
     'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
     'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
