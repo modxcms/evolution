@@ -22,7 +22,7 @@ else if(($role!=$ThisRole) AND ($wdgVisibility == 'ThisRoleOnly')) {
 else if(($user!=$ThisUser) AND ($wdgVisibility == 'ThisUserOnly')) {    
 }
 else {
-$version = 'evolution-cms/evolution';
+$version = isset($version) ? $version : 'evolution-cms/evolution';
 $type = isset($type) ? $type: 'tags';
 $showButton = isset($showButton) ? $showButton: 'AdminOnly';
 
