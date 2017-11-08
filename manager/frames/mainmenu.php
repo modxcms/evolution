@@ -52,7 +52,7 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="fa fa-cubes"></i>' . $_lang['modules'],
+		'<i class="'.$_style['icons_modules'] .'"></i>' . $_lang['modules'],
 		'javascript:;',
 		$_lang['modules'],
 		' return false;',
@@ -210,7 +210,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 	$sitemenu['new_module'] = array(
 		'new_module',
 		'modules',
-		'<i class="fa fa-cubes"></i>' . $_lang['module_management'],
+		'<i class="'.$_style['icons_modules'] .'"></i>' . $_lang['module_management'],
 		'index.php?a=106',
 		$_lang['module_management'],
 		'',
@@ -238,7 +238,7 @@ if($modx->hasPermission('exec_module')) {
             $sitemenu['module' . $row['id']] = array(
                 'module' . $row['id'],
                 'modules',
-                ($row['icon'] != '' ? '<i class="'.$row['icon'].'"></i>' : '<i class="fa fa-cube"></i>') . $row['name'],
+                ($row['icon'] != '' ? '<i class="'.$row['icon'].'"></i>' : '<i class="'.$_style['icons_module'].'"></i>') . $row['name'],
                 'index.php?a=112&id=' . $row['id'],
                 $row['name'],
                 '',
