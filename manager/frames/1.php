@@ -109,8 +109,8 @@ if ($modx->config['manager_theme'] == 'default') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="<?= $css ?>" />
     <?php if ($modx->config['show_picker'] != "0") { ?>
-    <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/color.switcher.css" />
+        <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
+        <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/css/color.switcher.css" />
     <?php } ?>
     <link rel="icon" type="image/ico" href="<?= $_style['favicon'] ?>" />
     <style>
@@ -120,7 +120,7 @@ if ($modx->config['manager_theme'] == 'default') {
     </style>
     <script type="text/javascript">
       if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        document.documentElement.className += ' ios'
+        document.documentElement.className += ' ios';
       }
     </script>
     <script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
@@ -149,27 +149,27 @@ if ($modx->config['manager_theme'] == 'default') {
           global_tabs: <?= $modx->config['global_tabs'] && $user['role'] == 1 ? 1 : 0 ?>
         },
         lang: {
-          already_deleted: "<?= $_lang['already_deleted'] ?>",
-          cm_unknown_error: "<?= $_lang['cm_unknown_error'] ?>",
-          collapse_tree: "<?= $_lang['collapse_tree'] ?>",
-          confirm_delete_resource: "<?= $_lang['confirm_delete_resource'] ?>",
-          confirm_empty_trash: "<?= $_lang['confirm_empty_trash'] ?>",
-          confirm_publish: "<?= $_lang['confirm_publish'] ?>",
-          confirm_remove_locks: "<?= $_lang['confirm_remove_locks'] ?>",
-          confirm_resource_duplicate: "<?= $_lang['confirm_resource_duplicate'] ?>",
-          confirm_undelete: "<?= $_lang['confirm_undelete'] ?>",
-          confirm_unpublish: "<?= $_lang['confirm_unpublish'] ?>",
-          empty_recycle_bin: "<?= $_lang['empty_recycle_bin'] ?>",
-          empty_recycle_bin_empty: "<?= $_lang['empty_recycle_bin_empty'] ?>",
-          error_no_privileges: "<?= $_lang["error_no_privileges"] ?>",
-          expand_tree: "<?= $_lang['expand_tree'] ?>",
-          inbox: "<?= $_lang['inbox'] ?>",
-          loading_doc_tree: "<?= $_lang['loading_doc_tree'] ?>",
-          loading_menu: "<?= $_lang['loading_menu'] ?>",
-          not_deleted: "<?= $_lang['not_deleted'] ?>",
-          unable_set_link: "<?= $_lang['unable_set_link'] ?>",
-          unable_set_parent: "<?= $_lang['unable_set_parent'] ?>",
-          working: "<?= $_lang['working'] ?>"
+          already_deleted: '<?= $_lang['already_deleted'] ?>',
+          cm_unknown_error: '<?= $_lang['cm_unknown_error'] ?>',
+          collapse_tree: '<?= $_lang['collapse_tree'] ?>',
+          confirm_delete_resource: '<?= $_lang['confirm_delete_resource'] ?>',
+          confirm_empty_trash: '<?= $_lang['confirm_empty_trash'] ?>',
+          confirm_publish: '<?= $_lang['confirm_publish'] ?>',
+          confirm_remove_locks: '<?= $_lang['confirm_remove_locks'] ?>',
+          confirm_resource_duplicate: '<?= $_lang['confirm_resource_duplicate'] ?>',
+          confirm_undelete: '<?= $_lang['confirm_undelete'] ?>',
+          confirm_unpublish: '<?= $_lang['confirm_unpublish'] ?>',
+          empty_recycle_bin: '<?= $_lang['empty_recycle_bin'] ?>',
+          empty_recycle_bin_empty: '<?= $_lang['empty_recycle_bin_empty'] ?>',
+          error_no_privileges: '<?= $_lang["error_no_privileges"] ?>',
+          expand_tree: '<?= $_lang['expand_tree'] ?>',
+          inbox: '<?= $_lang['inbox'] ?>',
+          loading_doc_tree: '<?= $_lang['loading_doc_tree'] ?>',
+          loading_menu: '<?= $_lang['loading_menu'] ?>',
+          not_deleted: '<?= $_lang['not_deleted'] ?>',
+          unable_set_link: '<?= $_lang['unable_set_link'] ?>',
+          unable_set_parent: '<?= $_lang['unable_set_parent'] ?>',
+          working: '<?= $_lang['working'] ?>'
         },
         style: {
           actions_file: '<?= addslashes($_style['actions_file']) ?>',
@@ -218,7 +218,7 @@ if ($modx->config['manager_theme'] == 'default') {
           for (var b in a) {
             this[b] = a[b];
           }
-          delete a[b]
+          delete a[b];
         },
         openedArray: [],
         lockedElementsTranslation: <?= json_encode($unlockTranslations, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE) . "\n" ?>
@@ -230,9 +230,9 @@ if ($modx->config['manager_theme'] == 'default') {
     </script>
     <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/modx.min.js?v=<?= $lastInstallTime ?>"></script>
     <?php if ($modx->config['show_picker'] != "0") { ?>
-     <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
-    <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+        <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
+        <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
     <?php } ?>
     <?php
     // invoke OnManagerTopPrerender event
@@ -263,40 +263,40 @@ if ($modx->config['manager_theme'] == 'default') {
                                 <div class="mask"></div>
                             </form>
                         </li>
-                       <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
-                       <?php if($modx->hasPermission('new_document')) { ?>
-                       <li class="dropdown newresource">
-                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
-                             <ul class="dropdown-menu">
-                                 <?php if($modx->hasPermission('new_document')) { ?>
-                                    <li>
-                                        <a onclick="" href="index.php?a=4" target="main">
-                                            <?= $_style['add_doc_tree'] ?><?= $_lang['add_resource'] ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a onclick="" href="index.php?a=72" target="main">
-                                            <?= $_style['add_weblink_tree'] ?><?= $_lang['add_weblink'] ?>
-                                        </a>
-                                    </li>
-                                 <?php } ?>
-                                 <?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
-                                    <li>
-                                        <a onclick="" href="media/browser/mcpuk/browse.php?&type=images" target="main">
-                                            <?= $_style['images_management'] ?><?= $_lang['images_management'] ?>
-                                        </a>
-                                    </li>
-                                 <?php } ?>
-                                 <?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
-                                    <li>
-                                        <a onclick="" href="media/browser/mcpuk/browse.php?&type=files" target="main">
-                                            <?= $_style['files_management'] ?><?= $_lang['files_management'] ?>
-                                        </a>
-                                    </li>
-                                 <?php } ?>
-                            </ul>
-                        </li>
-                        <?php } ?>
+                        <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
+                            <?php if ($modx->hasPermission('new_document')) { ?>
+                                <li class="dropdown newresource">
+                                    <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
+                                    <ul class="dropdown-menu">
+                                        <?php if ($modx->hasPermission('new_document')) { ?>
+                                            <li>
+                                                <a onclick="" href="index.php?a=4" target="main">
+                                                    <?= $_style['add_doc_tree'] ?><?= $_lang['add_resource'] ?>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a onclick="" href="index.php?a=72" target="main">
+                                                    <?= $_style['add_weblink_tree'] ?><?= $_lang['add_weblink'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+                                            <li>
+                                                <a onclick="" href="media/browser/mcpuk/browse.php?&type=images" target="main">
+                                                    <?= $_style['images_management'] ?><?= $_lang['images_management'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+                                            <li>
+                                                <a onclick="" href="media/browser/mcpuk/browse.php?&type=files" target="main">
+                                                    <?= $_style['files_management'] ?><?= $_lang['files_management'] ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                            <?php } ?>
                         <?php } ?>
                         <li>
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
@@ -386,11 +386,11 @@ if ($modx->config['manager_theme'] == 'default') {
                             </ul>
                         </li>
                         <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
-                        <li id="fullscreen">
-                        <a href="javascript:;" onclick="toggleFullScreen()" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
-                                <i class="fa <?= $_style['menu_expand'] ?>"></i>
-                            </a>
-                        </li>
+                            <li id="fullscreen">
+                                <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="<?= $_lang["toggle_fullscreen"] ?>">
+                                    <i class="fa <?= $_style['menu_expand'] ?>"></i>
+                                </a>
+                            </li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -401,15 +401,15 @@ if ($modx->config['manager_theme'] == 'default') {
         <?php include('tree.php') ?>
     </div>
     <div id="main">
-        <?php if($modx->config['global_tabs'] && $user['role'] == 1): ?>
-        <div class="tab-row-container evo-tab-row">
-            <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
-        </div>
-        <div id="evo-tab-page-home" class="evo-tab-page show">
-            <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event)"></iframe>
-        </div>
+        <?php if ($modx->config['global_tabs'] && $user['role'] == 1): ?>
+            <div class="tab-row-container evo-tab-row">
+                <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="fa fa-home"></i></h2></div>
+            </div>
+            <div id="evo-tab-page-home" class="evo-tab-page show">
+                <iframe id="mainframe" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
+            </div>
         <?php else: ?>
-            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event)"></iframe>
+            <iframe id="mainframe" name="main" src="index.php?a=<?= $initMainframeAction ?>" scrolling="auto" frameborder="0" onload="modx.main.onload(event);"></iframe>
         <?php endif; ?>
         <div id="mainloader"></div>
     </div>
@@ -534,7 +534,7 @@ if ($modx->config['manager_theme'] == 'default') {
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>index.php?a=76',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -552,7 +552,7 @@ if ($modx->config['manager_theme'] == 'default') {
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=images',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -570,7 +570,7 @@ if ($modx->config['manager_theme'] == 'default') {
               modx.openWindow({
                 url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>/browse.php?&type=files',
                 title: randomNum
-              })
+              });
             }
           };
             <?php } ?>
@@ -579,32 +579,34 @@ if ($modx->config['manager_theme'] == 'default') {
 
     </script>
     <?php if ($modx->config['show_fullscreen_btn'] != "0") { ?>
-    <script>
-    function toggleFullScreen() {
-    if ((document.fullScreenElement && document.fullScreenElement !== null) ||    
-            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-         if (document.documentElement.requestFullScreen) {  
-            document.documentElement.requestFullScreen();  
-          } else if (document.documentElement.mozRequestFullScreen) {  
-            document.documentElement.mozRequestFullScreen();  
-          } else if (document.documentElement.webkitRequestFullScreen) {  
-            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
-          }  
-        } else {  
-        if (document.cancelFullScreen) {  
-        document.cancelFullScreen();  
-        } else if (document.mozCancelFullScreen) {  
-        document.mozCancelFullScreen();  
-        } else if (document.webkitCancelFullScreen) {  
-        document.webkitCancelFullScreen();  
-        }  
-        }  
-    }
-        $('#toggleFullScreen').click(function(){
-        icon = $(this).find("i");
-        icon.toggleClass("<?= $_style['menu_expand'] ?> <?= $_style['menu_compress'] ?>")
-   })
-    </script>
+        <script>
+          function toggleFullScreen()
+          {
+            if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+              if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+              } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+              } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+              }
+            } else {
+              if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+              } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+              } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+              }
+            }
+          }
+
+          $('#toggleFullScreen').click(function() {
+            var icon = $(this).find('i');
+            icon.toggleClass('<?= $_style['menu_expand'] ?> <?= $_style['menu_compress'] ?>');
+          });
+        </script>
     <?php } ?>
     <?php
     // invoke OnManagerFrameLoader
@@ -612,8 +614,8 @@ if ($modx->config['manager_theme'] == 'default') {
     ?>
 
 </div>
-<?php if ($modx->config['show_picker'] != "0") { 
- include('media/style/'.$modx->config['manager_theme'].'/color.switcher.php');   
-  } ?>
+<?php if ($modx->config['show_picker'] != "0") {
+    include('media/style/' . $modx->config['manager_theme'] . '/color.switcher.php');
+} ?>
 </body>
 </html>
