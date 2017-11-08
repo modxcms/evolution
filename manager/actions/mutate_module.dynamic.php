@@ -513,14 +513,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['icon'] ?>
-							<small class="text-muted">(32x32)</small>
+							<small class="text-muted"><?= $_lang["icon_description"] ?></small>
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="input-group">
 								<input type="text" maxlength="255" name="icon" value="<?= $content['icon'] ?>" class="form-control" onchange="documentDirty=true;" />
-								<span class="input-group-btn">
-									<button type="button" value="" class="btn btn-secondary" onclick="BrowseServer();"><?= $_lang['insert'] ?></button>
-								</span>
 							</div>
 						</div>
 					</div>
