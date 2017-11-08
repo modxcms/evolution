@@ -420,6 +420,10 @@
     color: #bfbfbf;
   }
 
+  .dark.ElementsInTree #tree .tab-row .tab span {
+    background-color: transparent;
+  }
+
   .dark.ElementsInTree #tree .tab-page {
     background-color: #202329;
   }
