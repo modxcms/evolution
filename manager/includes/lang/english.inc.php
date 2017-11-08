@@ -405,6 +405,7 @@ $_lang["htmlsnippet_msg"] = 'Add and edit Chunks. Remember, Chunks are \'raw\' H
 $_lang["htmlsnippet_name"] = 'Chunk name';
 $_lang["htmlsnippet_title"] = 'Create/edit Chunk';
 $_lang["icon"] = 'Icon';
+$_lang["icon_description"] = 'CSS class value. e.g. fa&nbsp;fa-star';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Parent Assignment:\n\nResource is a child of the selected Resource.';
 $_lang["illegal_parent_self"] = 'Parent Assignment:\n\nThe selected Resource cannot be assigned to itself.';
