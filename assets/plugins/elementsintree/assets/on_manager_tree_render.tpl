@@ -96,7 +96,7 @@
         });
         
         function eitAction(name, action, type, id) {
-            var actionIds, deleteMsg;
+            var actionsIds, deleteMsg;
             
             switch(type) {
                 case "site_templates" :
@@ -129,7 +129,7 @@
             }
             
             // Actions that need confirmation
-            var confirmMsg = false;
+            var confirmMsg = '';
             switch(action) {
                 case "create" : id = false; break;
                 case "edit" : break;
@@ -139,8 +139,7 @@
             
             if(confirmMsg) {
                 confirmMsg += " \n \n " + name + " ("+id+")";
-                var r = confirm(confirmMsg);
-                if (r != true) return;
+                if (confirm(confirmMsg) !== true) return;
             }
 
             if (typeof modx !== 'undefined' && modx.config.global_tabs) {
