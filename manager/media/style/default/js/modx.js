@@ -1314,10 +1314,11 @@
       },
       emptyTrash: function() {
         if (confirm(modx.lang.confirm_empty_trash) === true) {
-          modx.tabs({url: modx.MODX_MANAGER_URL + '?a=64', title: modx.lang.confirm_empty_trash});
-          modx.tabsClose(this.deleted);
-          this.deleted = [];
-          modx.tree.restoreTree();
+          modx.get(modx.MODX_MANAGER_URL + '?a=64', function() {
+            modx.tabsClose(modx.tree.deleted);
+            modx.tree.deleted = [];
+            modx.tree.restoreTree();
+          });
         }
       },
       showBin: function(a) {
@@ -1454,7 +1455,15 @@
                 action: modx.main.getQueryVariable('a', a.url),
                 closeactions: ['6', '61', '62', '63'],
                 reload: 0,
-                show: function(uid, title) {
+                show: function(uid, title, callback) {
+                  if (typeof uid === 'function') {
+                    callback = uid;
+                    uid = '';
+                  }
+                  if (typeof title === 'function') {
+                    callback = title;
+                    title = '';
+                  }
                   uid = uid || o.uid;
                   var el = tabs.querySelector('.selected');
                   if (el) {
@@ -1482,6 +1491,9 @@
                   tabpage.classList.add('show');
                   modx.tree.setItemToChange();
                   modx.main.tabRow.scroll(tabs, tab, 350);
+                  if (callback) {
+                    callback();
+                  }
                 },
                 close: function(e) {
                   o.event = e || o.event || w.event;
@@ -1550,10 +1562,34 @@
               tab = d.getElementById('evo-tab-home');
           tab.onclick = o.select;
           if (tabpage) {
-            if (~o.closeactions.indexOf(o.action) || o.uid === 'home') {
+            if (o.uid === 'home') {
               tabpage.firstElementChild.src = o.url;
             }
-            o.show();
+            if (~o.closeactions.indexOf(o.action)) {
+              if (o.action === '61' || o.action === '62') {
+                o.show(function() {
+                  var el = w.main.document.getElementsByName('publishedcheck')[0];
+                  if (el) {
+                    el.checked = o.action === '61';
+                    w.main.document.getElementsByName('published')[0].value = +el.checked;
+                  }
+                  if (modx.getActionFromUrl(w.main.location.search, 3)) {
+                    w.main.location.reload();
+                  }
+                });
+              } else {
+                o.show();
+              }
+              modx.get(o.url, function() {
+                modx.tree.restoreTree();
+              });
+            } else {
+              o.show();
+            }
+          } else if (~o.closeactions.indexOf(o.action)) {
+            modx.get(o.url, function() {
+              modx.tree.restoreTree();
+            });
           } else {
             d.getElementById('mainloader').className = 'show';
             tabpage = d.createElement('div');
