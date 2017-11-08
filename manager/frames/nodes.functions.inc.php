@@ -581,7 +581,6 @@ function _htmlentities($array) {
 function getTplSingleNode() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
         data-id="[+id+]"
         data-title-esc="[+nodetitle_esc+]"
@@ -598,7 +597,6 @@ function getTplSingleNode() {
         class="icon"
         onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
         oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a></div>';
@@ -607,7 +605,6 @@ function getTplSingleNode() {
 function getTplFolderNode() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
         data-id="[+id+]"
         data-title-esc="[+nodetitle_esc+]"
@@ -636,7 +633,6 @@ function getTplFolderNode() {
         class="icon"
         onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
         oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
@@ -645,7 +641,6 @@ function getTplFolderNode() {
 function getTplFolderNodeNotChildren() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         oncontextmenu="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');"
         data-id="[+id+]"
         data-title-esc="[+nodetitle_esc+]"
@@ -670,7 +665,6 @@ function getTplFolderNodeNotChildren() {
         class="icon"
         onclick="modx.tree.showPopup(event,[+id+],\'[+nodetitle_esc+]\');return false;"
         oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
         class="title"
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
