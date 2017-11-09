@@ -669,12 +669,14 @@
         if (modx.permission.dragndropdocintree) {
           var els = d.querySelectorAll('#treeRoot a:not(.empty)');
           for (var i = 0; i < els.length; i++) {
-            els[i].onmousedown = this.onmousedown;
-            els[i].ondragstart = this.ondragstart;
-            els[i].ondragenter = this.ondragenter;
-            els[i].ondragover = this.ondragover;
-            els[i].ondragleave = this.ondragleave;
-            els[i].ondrop = this.ondrop;
+            var el = els[i];
+            el.onmousedown = this.onmousedown;
+            el.onmousedown = this.onmousedown;
+            el.ondragstart = this.ondragstart;
+            el.ondragenter = this.ondragenter;
+            el.ondragover = this.ondragover;
+            el.ondragleave = this.ondragleave;
+            el.ondrop = this.ondrop;
           }
         }
       },
@@ -685,9 +687,10 @@
         } else {
           var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
           var draggable = roles && modx.user.role !== 1 ? roles.split(',').map(Number).indexOf(modx.user.role) > -1 : true;
+          modx.tree.itemToChange = this.dataset.id || this.parentNode.id.replace('node', '');
+          modx.tree.selectedObjectName = this.dataset.titleEsc;
           if (draggable) {
             this.parentNode.draggable = true;
-            modx.tree.itemToChange = this.parentNode.id;
             this.parentNode.ondragstart = modx.tree.ondragstart;
           } else {
             this.parentNode.draggable = false;
@@ -1453,7 +1456,7 @@
                 name: a.name || '',
                 uid: modx.getActionFromUrl(a.url, 2) ? 'home' : modx.urlToUid(a.url),
                 action: modx.main.getQueryVariable('a', a.url),
-                closeactions: ['6', '61', '62', '63'],
+                closeactions: ['6', '61', '62', '63', '94'],
                 reload: 0,
                 show: function(uid, title, callback) {
                   if (typeof uid === 'function') {

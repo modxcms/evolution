@@ -75,8 +75,10 @@ if ($user['which_browser'] == 'default') {
     $user['which_browser'] = $modx->config['which_browser'];
 }
 
+$css = 'media/style/' . $modx->config['manager_theme'] . '/css/page.css?v=' . $lastInstallTime;
+
 if ($modx->config['manager_theme'] == 'default') {
-    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css') && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
         require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
         $minifier = new Formatter\CSSMinify();
         $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
@@ -93,9 +95,9 @@ if ($modx->config['manager_theme'] == 'default') {
         $css = $minifier->minify();
         file_put_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css', $css);
     }
-    $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
-} else {
-    $css = 'media/style/' . $modx->config['manager_theme'] . '/css/page.css?v=' . $lastInstallTime;
+    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+    }
 }
 
 ?>
