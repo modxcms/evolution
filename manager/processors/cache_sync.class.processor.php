@@ -266,7 +266,6 @@ class synccache
         while ($doc = $modx->db->getRow($rs)) {
             if ($modx->config['minifyphp_incache']) {
                 $doc['snippet'] = $this->php_strip_whitespace($doc['snippet']);
-                $doc['snippet'] = preg_replace(array('|\s+|', '|<!--|', '|-->|', '|-->\s+<!--|'), array(' ', "\n" . '<!--', '-->' . "\n", '-->' . "\n" . '<!--'), $doc['snippet']);
             }
             $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
