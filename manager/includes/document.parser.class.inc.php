@@ -1508,10 +1508,8 @@ class DocumentParser
 
             if (isset($ph[$key])) {
                 $value = $ph[$key];
-            } elseif ($key === 'phx') {
-                $value = '';
             } else {
-                continue;
+                $value = '';
             }
 
             if ($modifiers !== false) {
