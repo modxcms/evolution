@@ -706,7 +706,7 @@
         e.dataTransfer.setData('text', this.id.substr(4));
       },
       ondragenter: function(e) {
-        if (d.getElementById(modx.tree.itemToChange) === (this.parentNode.closest('#' + modx.tree.itemToChange) || this.parentNode)) {
+        if (d.getElementById('node' + modx.tree.itemToChange) === (this.parentNode.closest('#node' + modx.tree.itemToChange) || this.parentNode)) {
           this.parentNode.className = '';
           e.dataTransfer.effectAllowed = 'none';
           e.dataTransfer.dropEffect = 'none';
@@ -759,9 +759,9 @@
         e.preventDefault();
       },
       ondrop: function(e) {
-        var el = d.getElementById(modx.tree.itemToChange),
+        var el = d.getElementById('node' + modx.tree.itemToChange),
             els = null,
-            id = modx.tree.itemToChange.substr(4),
+            id = modx.tree.itemToChange,
             parent = 0,
             menuindex = [],
             level = 0,

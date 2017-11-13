@@ -272,7 +272,7 @@ class modManagers extends MODxAPI
             if ($value == '' || !$this->isChanged($key)) {
                 continue;
             }
-            $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('web_user_settings')} WHERE `user` = '{$this->id}' AND `setting_name` = '{$key}'");
+            $result = $this->query("SELECT `setting_value` FROM {$this->makeTable('user_settings')} WHERE `user` = '{$this->id}' AND `setting_name` = '{$key}'");
             if ($this->modx->db->getRecordCount($result) > 0) {
                 $this->query("UPDATE {$this->makeTable('user_settings')} SET `setting_value` = '{$value}' WHERE `user` = '{$this->id}' AND `setting_name` = '{$key}';");
             } else {
