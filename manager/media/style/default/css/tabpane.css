@@ -14,7 +14,8 @@
 .tab-row-container > i.next { right: 0; }
 .tab-row-container > i.disable { font-size: 0.8rem; color: rgba(0, 0, 0, 0.2); pointer-events: none }
 /* tab-page */
-.tab-pane > .tab-page { display: none }
+.tab-pane > .tab-page { display: block }
+.tab-pane > .tab-page ~ .tab-page { display: none }
 .tab-pane > .tab-page:first-of-type { display: block; margin-top: 2.5rem; }
 .tab-pane > .tab-page > .tab { top: -2.5rem; left: 1.5rem; background-color: #f9f9f9; border-color: #ddd; }
 .sectionBody > .tab-pane > .tab-page > .tab { top: -3.7rem; left: 0.3rem; }
