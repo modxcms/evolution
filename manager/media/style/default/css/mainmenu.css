@@ -1,7 +1,7 @@
 /* #mainMenu */
 #mainMenu { background-color: #1d2023; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
 #mainMenu.show { overflow: visible }
-#mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { content: ""; position: absolute; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1); }
+#mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { content: ""; position: fixed; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1); }
 #mainMenu > .container { display: table; width: 100%; border-collapse: collapse }
 #mainMenu > .container > .row { display: table-row }
 #mainMenu > .container > .row > .cell { display: table-cell; vertical-align: top; }
