@@ -55,8 +55,7 @@ body {
 }
 
 .pack_old .item-update,
-.pack_alredy .item-reinstall,
-.pack_install .item-install {
+.pack_alredy .item-reinstall {
   display: block !important
 }
 
@@ -484,10 +483,11 @@ body,
 
 .catalog_item.liststyle .catalog_info .info_extras {
   position: absolute;
-  height: 38px;
-  left: 91%;
-  bottom: -10px;
-  width: 100px;
+  width: auto;
+  height: 37px;
+  left: auto;
+  right: 3px;
+  bottom: -6px;
 }
 
 .item_list .catalog_item.liststyle:nth-child(odd) .item_content,
