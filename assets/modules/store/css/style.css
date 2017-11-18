@@ -4,6 +4,11 @@ body {
   overflow-x: hidden;
 }
 
+.fa,
+.btn .fa {
+  font-size: 14px;
+}
+
 .pagetitle {
   position: relative;
   left: 10px
