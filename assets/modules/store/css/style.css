@@ -482,8 +482,6 @@ body,
   content: '\f09b';
 }
 
-.catalog_item.liststyle .catalog_info {}
-
 .catalog_item.liststyle .catalog_info .info_extras {
   position: absolute;
   height: 38px;
