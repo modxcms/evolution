@@ -437,6 +437,10 @@ body,
   height: auto;
 }
 
+.wrapper {
+  margin-top: 5px;
+}
+
 .loginbut {
   margin: 5px 0;
   width: 100%;
