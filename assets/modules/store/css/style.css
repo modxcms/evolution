@@ -490,11 +490,6 @@ body,
   bottom: -6px;
 }
 
-.item_list .catalog_item.liststyle:nth-child(odd) .item_content,
-.item_list .catalog_item.liststyle:nth-child(odd) .install_extras {
-  background: #f7f7f7;
-}
-
 #hide-side {
   min-width: 40px;
 }
