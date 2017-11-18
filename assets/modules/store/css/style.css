@@ -4,6 +4,13 @@ body {
   overflow-x: hidden;
 }
 
+/* bootstrap defaults */
+.container-fluid .row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+/* fix icon rendering */
 .fa,
 .btn .fa {
   font-size: 14px;
@@ -217,7 +224,8 @@ nav ul li {
 }
 
 .catalog_item {
-  padding: 5px 10px 5px 5px;
+  padding-top: 5px;
+  padding-bottom: 20px;
   overflow: hidden;
 }
 
@@ -346,9 +354,12 @@ nav ul li {
   opacity: .6;
 }
 
-div.search {
-  padding-left: 20px;
-  margin-bottom: 10px;
+.cont2 {
+  margin-left: -15px;
+}
+
+.list-tools {
+  margin-bottom: 7px;
 }
 
 input[type="email"],
@@ -437,10 +448,6 @@ body,
   cursor: pointer;
 }
 
-.col-buttons {
-  padding-right: 28px;
-}
-
 .bt-active,
 .dark .bt-active {
   color: #3697cd;
@@ -453,6 +460,10 @@ body,
 }
 
 /*liststyle*/
+
+.catalog_item.liststyle {
+  padding-bottom: 5px;
+}
 
 .catalog_item.liststyle .item_content {
   min-height: 120px;

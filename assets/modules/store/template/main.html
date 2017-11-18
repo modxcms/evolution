@@ -29,83 +29,102 @@
       <span class="warning">[+version_evailble+]: <span class="new_version">0.2</span> (<a href="javascript:store.update()">[+update+]</a>)</span>
     </div>
     <div class="wrapper">
-      <div id="sidebar2" class="sidebar2 col-sm-3">
-        <div class="box mh">
-          <h4>[+category+]:</h4>
-          <div class="category_list">
-          </div>
-        </div>
-        <div class="box mh" id="login">
-          <h4>[+enter_in_own_repository+]:</h4>
-          <div class="cart_list">
-            Email:<br / >
-            <input type="email" name="name" value="[+user_email+]" placeholder="[+user_email+]">
-            [+password+]:<br / >
-            <input type="password" name="password" type="password" placeholder="[+password+]">
-            <span class="error" style="display:none">[+login_errors+]</span>
-          </div>
-          <ul class="loginul">
-            <li><a href="javascript:store.login()" class="btn btn-sm btn-success loginbut">[+enter+]</a></li>
-          </ul>
-          <a href="http://extras.evolution-cms.com/my-repo/register.html" target="_blank" class="">[+register+]</a>
-        </div>
-        <!-- <div class="box logined" style="display:none;">
+      <div class="container-fluid">
+        <div class="row">
+
+          <!-- sidebar col -->
+          <div class="col-sm-3">
+            <div id="sidebar2" class="sidebar2">
+              <div class="box mh">
+                <h4>[+category+]:</h4>
+                <div class="category_list">
+                </div>
+              </div>
+              <div class="box mh" id="login">
+                <h4>[+enter_in_own_repository+]:</h4>
+                <div class="cart_list">
+                  Email:<br / >
+                  <input type="email" name="name" value="[+user_email+]" placeholder="[+user_email+]">
+                  [+password+]:<br / >
+                  <input type="password" name="password" type="password" placeholder="[+password+]">
+                  <span class="error" style="display:none">[+login_errors+]</span>
+                </div>
+                <ul class="loginul">
+                  <li><a href="javascript:store.login()" class="btn btn-sm btn-success loginbut">[+enter+]</a></li>
+                </ul>
+                <a href="http://extras.evolution-cms.com/my-repo/register.html" target="_blank" class="">[+register+]</a>
+              </div>
+              <!-- <div class="box logined" style="display:none;">
 <h4><span id="username"></span>:</h4>
 <br/>
 <ul class="actionButtons">
 <li><a href="javascript:store.logout()" class="fr" style="margin-left:10px" >[+exit+]</a></li>
 </ul>
 </div> -->
-        <div class="box mh logined" style="display:none;">
-          <h4><span id="username"></span>:</h4>
-          <a href="javascript:store.logout()" class="fr" style="margin-left:10px" >[+exit+]</a>
-          <h4>[+own_repository+]:</h4>
-          <div class="category_list2">
-            <ul>
-              <li><a href="#" class="row.category" data-id="5">Избранное</a><span> &nbsp;<small>(2) </small></span></li>
-              <li><a href="#" class="row.category" data-id="2">Каталог</a><span> &nbsp;<small>(9) </small></span></li>
-            </ul>
+              <div class="box mh logined" style="display:none;">
+                <h4><span id="username"></span>:</h4>
+                <a href="javascript:store.logout()" class="fr" style="margin-left:10px" >[+exit+]</a>
+                <h4>[+own_repository+]:</h4>
+                <div class="category_list2">
+                  <ul>
+                    <li><a href="#" class="row.category" data-id="5">Избранное</a><span> &nbsp;<small>(2) </small></span></li>
+                    <li><a href="#" class="row.category" data-id="2">Каталог</a><span> &nbsp;<small>(9) </small></span></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="box">
+                <h4>FAQ:</h4>
+                <ul>
+                  [+faq+]
+                </ul>
+              </div>
+              <div class="box">
+                <ul>
+                  <li>Copyright 2017</li>
+                  <li><a href="http://evolution-cms.com" target="_blank">Bumkaka & Dmi3yy</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="box">
-          <h4>FAQ:</h4>
-          <ul>
-            [+faq+]
-          </ul>
-        </div>
-        <div class="box">
-          <ul>
-            <li>Copyright 2017</li>
-            <li><a href="http://evolution-cms.com" target="_blank">Bumkaka & Dmi3yy</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="cont2">
-        <div class="item_header" style="display:none">
-          <select size="1" name="sort">
-            <option value="createdon" selected="">[+s1_1_reated_on+]</option>
-            <option value="pagetitle">[+s1_2_name+]</option>
-            <option value="menuindex">[+s1_3_position+]</option>
-            <option value="published">[+s1_4_published+]</option>
-          </select>
-          <select size="1" name="dir">
-            <option value="DESC" selected="">[+s2_1_up+]</option>
-            <option value="ASC">[+s2_2_down+]</option>
-          </select>
-          <input type="hidden" name="parent" value="2">
-        </div>
-        <div class="layout-buttons search col-sm-6"><button id="hide-side" type="button" class="btn btn-secondary"><i id="hide-icon" class="fa fa-bars"></i></button>
-          <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" />
-        </div>
-        <div class="col-sm-3 text-right col-buttons pull-right">
 
-          <button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
-          <button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
-          <button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
-        </div>
-        <div class="item_list col-sm-9">
-        </div>
-        <!-- <div class="item_footer">
+          <!-- list col -->
+          <div class="col-sm-9">
+            <div class="cont2">
+              <div class="item_header" style="display:none">
+                <select size="1" name="sort">
+                  <option value="createdon" selected="">[+s1_1_reated_on+]</option>
+                  <option value="pagetitle">[+s1_2_name+]</option>
+                  <option value="menuindex">[+s1_3_position+]</option>
+                  <option value="published">[+s1_4_published+]</option>
+                </select>
+                <select size="1" name="dir">
+                  <option value="DESC" selected="">[+s2_1_up+]</option>
+                  <option value="ASC">[+s2_2_down+]</option>
+                </select>
+                <input type="hidden" name="parent" value="2">
+              </div>
+
+              <div class="list-tools">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <div class="layout-buttons search"><button id="hide-side" type="button" class="btn btn-secondary"><i id="hide-icon" class="fa fa-bars"></i></button>
+                      <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" />
+                    </div>
+                  </div>
+                  <div class="col-sm-4 text-right">
+                    <div class="col-buttons">
+
+                      <button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
+                      <button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
+                      <button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="item_list row">
+              </div>
+              <!-- <div class="item_footer">
 <ul class="paginate">
 <li><a href=""> < </a></li>
 <li><span>1</span></li>
@@ -114,7 +133,11 @@
 <li><a href=""> > </a></li>
 </ul>
 </div> -->
-        <br/>
+              <br/>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
     <div class="clearz"></div>
