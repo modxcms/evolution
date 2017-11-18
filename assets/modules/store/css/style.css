@@ -354,12 +354,12 @@ nav ul li {
   opacity: .6;
 }
 
-.cont2 {
-  margin-left: -15px;
+.sidebar2 {
+  padding-left: 5px;
 }
 
 .list-tools {
-  margin-bottom: 7px;
+  margin-bottom: 15px;
 }
 
 input[type="email"],
@@ -391,10 +391,9 @@ select:focus {
 }
 
 input#store_search {
-  width: 300px;
-  height: 28px;
   padding: 4px;
-  margin-left: 8px;
+  padding-left: 6px;
+  height: 28px;
 }
 
 input#store_search:focus {

@@ -105,21 +105,20 @@
               </div>
 
               <div class="list-tools">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <div class="layout-buttons search"><button id="hide-side" type="button" class="btn btn-secondary"><i id="hide-icon" class="fa fa-bars"></i></button>
-                      <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" />
-                    </div>
-                  </div>
-                  <div class="col-sm-4 text-right">
-                    <div class="col-buttons">
-
-                      <button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
-                      <button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
-                      <button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
+               
+                <div class="input-group">
+                  <input id="store_search" class="form-control" onkeyup="store_search( $(this).val() )" placeholder="[+search+]" type="text" name="store_search" value="" >
+                  <span class="input-group-btn">
+                    <button id="list-btn" type="button" class="btn btn-secondary bt-active"><i class="fa fa-list" aria-hidden="true"></i></button>
+                  </span>
+                  <span class="input-group-btn">
+                    <button id="3col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th" aria-hidden="true"></i></button>
+                  </span>
+                  <span class="input-group-btn">
+                    <button id="2col-btn" type="button" class="btn btn-secondary"><i class="fa fa-th-large" aria-hidden="true"></i></button>
+                  </span>
                 </div>
+                
               </div>
 
               <div class="item_list row">
