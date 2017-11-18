@@ -344,6 +344,7 @@ nav ul li {
 
 div.search {
   padding-left: 20px;
+  margin-bottom: 10px;
 }
 
 input[type="email"],
