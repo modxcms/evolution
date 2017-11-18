@@ -56,8 +56,8 @@ body {
 
 .pack_old .item-update,
 .pack_alredy .item-reinstall,
-.pack_install item-install {
-  display: block!important
+.pack_install .item-install {
+  display: block !important
 }
 
 .pack_install .item-reinstall,
@@ -84,7 +84,7 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   display: none;
   opacity: 0;
-  vertical-alig: middle;
+  vertical-align: middle;
   text-align: center;
 }
 
@@ -137,7 +137,7 @@ body {
 }
 
 .warning {
-  color: #ff0000!important;
+  color: #ff0000 !important;
   padding-left: 20px;
   margin: 6px 20px 6px 0px;
 }
