@@ -450,7 +450,11 @@ body,
 /*liststyle*/
 
 .catalog_item.liststyle .item_content {
-  min-height: 100px;
+  min-height: 120px;
+}
+
+.catalog_item.liststyle .descript {
+  margin-top: 4px;
 }
 
 .catalog_item.liststyle .info_extras {
@@ -477,11 +481,11 @@ body,
   background: #fff;
   display: block;
   position: absolute;
-  height: 38px;
+  height: 45px;
   left: 0;
   bottom: 0;
   text-align: left;
-  padding: 4px;
+  padding: 7px;
 }
 
 .catalog_item.liststyle .row-category h3:before {
@@ -498,8 +502,8 @@ body,
   width: auto;
   height: 37px;
   left: auto;
-  right: 3px;
-  bottom: -6px;
+  right: 6px;
+  bottom: -2px;
 }
 
 #hide-side {
