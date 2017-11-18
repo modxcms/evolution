@@ -15,13 +15,17 @@ body {
 }
 
 .github {
-  background: url(../img/github.png);
-  display: block;
+  display: inline-block;
   position: absolute;
-  width: 100px;
-  height: 100px;
-  left: -42px;
-  top: -42px;
+  top: -13px;
+  left: -3px;
+  font-style: normal;
+}
+.github::before {
+  display: inline-block;
+  font-family: 'FontAwesome';
+  font-size: 28px;
+  content: "\f09b";
 }
 
 .typesbadge {
@@ -36,7 +40,7 @@ body {
   top: 0px;
   padding: 3px 5px;
   text-align: center;
-  border-radius: 0 0 0 10px;
+  border-radius: 0 0 0 5px;
   border: 1px solid #dfdfdf;
   border-width: 0 0 1px 1px;
 }
@@ -164,9 +168,10 @@ body {
 }
 
 .catalog_thumb {
-  border: 1px solid #AAA;
+  position: relative;
+  border: 1px solid #e0e0e0;
   background: #fff;
-  margin-bottom: 3px;
+  margin-bottom: 7px;
 }
 
 .img-fluid {
@@ -215,7 +220,7 @@ nav ul li {
 .item_content {
   min-height: 350px;
   border: 1px solid #e0e0e0;
-  padding: 5px;
+  padding: 10px;
   overflow: hidden;
   background: #FFF;
   position: relative;
@@ -239,7 +244,8 @@ nav ul li {
   width: 100%;
   left: 0;
   bottom: 0;
-  text-align: center;
+  padding-top: 5px;
+  padding-left: 10px;
 }
 
 .install_extras {
@@ -247,12 +253,12 @@ nav ul li {
   background: #fafafa;
   display: block;
   position: absolute;
-  height: 68px;
+  height: 75px;
   width: 100%;
   left: 0;
   bottom: 0;
-  text-align: center;
-  padding: 4px;
+  text-align: left;
+  padding: 7px 9px;
 }
 
 .catalog_item.col-lg-12 .install_extras {
@@ -261,14 +267,13 @@ nav ul li {
 
 .info_extras {
   display: block;
-  background: #fff;
+  background-color: transparent;
   position: absolute;
   height: 28px;
-  width: 100%;
-  left: 0;
-  bottom: 70px;
+  right: 10px;
+  bottom: 82px;
   text-align: right;
-  padding: 0px 3px;
+  padding: 0;
   z-index: 1;
 }
 
@@ -297,7 +302,7 @@ nav ul li {
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
-  padding: 0 5px 0 12px;
+  padding: 0 5px 0 0;
   content: '\f021 ';
 }
 
@@ -306,7 +311,7 @@ nav ul li {
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
-  padding: 0 5px 0 12px;
+  padding: 0 5px 0 0;
   content: '\f007';
 }
 
@@ -315,7 +320,7 @@ nav ul li {
   font-style: normal;
   font-weight: normal;
   color: #3697cd;
-  padding: 0 5px 0 12px;
+  padding: 0 5px 0 0;
   content: '\f017 ';
 }
 
@@ -325,7 +330,7 @@ nav ul li {
   font-weight: normal;
   color: #3697cd;
   color: #3697cd;
-  padding: 0 5px 0 12px;
+  padding: 0 5px 0 0;
   content: '\f019';
 }
 
@@ -333,6 +338,8 @@ nav ul li {
   min-height: 36px;
   display: block;
   margin-bottom: -15px;
+  line-height: 1.25em;
+  opacity: .6;
 }
 
 div.search {

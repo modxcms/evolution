@@ -136,7 +136,7 @@
             <div class="col-sm-4 catalog_item %cls%">
                 <div class="item_content">
                <div class="info_block">
-                  <div id="catalog_img" class="catalog_thumb col-sm-12"><i class="%zip%"></i><span class="typesbadge">%type%</span><br /><img class="img-fluid" src="" width="100%" height="180px"></div>
+                  <div id="catalog_img" class="catalog_thumb"><i class="%zip%"></i><span class="typesbadge">%type%</span><br /><img class="img-fluid" src="" width="100%" height="180px"></div>
                   <div class="catalog_info">
                      <a class="row-category">
                         <h3>%title%</h3>
@@ -146,16 +146,16 @@
                       <button class="btn btn-sm btn-secondary pull-right" onclick="window.parent.modx.popup({content:'<h2>%title% %version%</h2><h3>%type%</h3><p>%description%</p><span class=\'fa fa-refresh\'></span> version: <strong>%version%</strong><br/><span class=\'fa fa-clock-o\'></span> Updated: <strong>%date%</strong><br/><span class=\'fa fa-user\'> </span> Author: <strong>%author%</strong><br/><span class=\'fa fa-download\'> </span>  Downloads:  <strong>%downloads%</strong>',type:'default',width:'400px',height:'400px',hide:0,hover:0,overlay:0,overlayclose:1})"><i class="fa fa-info"></i> more</button>
                     </div>
                      <div class="install_extras">
-                        <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-download" aria-hidden="true"></i> [+install+]</a>
-                        <a href="#" class="btn btn-primary item-reinstall" data-text="[+alert_overwrite+]"  data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-repeat" aria-hidden="true"></i>  [+reinstall+] <i class="curr">[+installed+]</i></a> 
-                        <a href="#" class="btn btn-primary item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%"><i class="fa fa-download" aria-hidden="true"></i>   [+update+] <i class="curr">[+installed+] - %current_version%</i></a>
+                        <a href="#" class="btn btn-success item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a>
+                        <a href="#" class="btn btn-primary item-reinstall" data-text="[+alert_overwrite+]"  data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+reinstall+] <i class="curr">[+installed+]</i></a> 
+                        <a href="#" class="btn btn-primary item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+update+] <i class="curr">[+installed+] - %current_version%</i></a>
                         <select name="link"></select>
                       </div>
                   </div>
                      </div>                 
               <div class="info">
-                        <div class="col-sm-6"><span class="version"><strong>%version%</strong></span></div>
-                        <div class="col-sm-6"><span class="download"><strong>%downloads%</strong></span></div>                        
+                        <span class="version"><strong>%version%</strong></span>
+                        <span class="download"><strong>%downloads%</strong></span>          
                </div>
                <div class="blocked_item"></div>
                <div class="informer loader"></div>
