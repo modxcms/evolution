@@ -180,11 +180,13 @@ body {
   border: 1px solid #e0e0e0;
   background: #fff;
   margin-bottom: 7px;
+  text-align: center;
 }
 
 .img-fluid {
   max-width: 100%;
   height: 140px;
+  width: auto;
 }
 
 nav ul li {
