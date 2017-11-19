@@ -171,7 +171,8 @@ if ($modx->config['manager_theme'] == 'default') {
           not_deleted: "<?= $_lang['not_deleted'] ?>",
           unable_set_link: "<?= $_lang['unable_set_link'] ?>",
           unable_set_parent: "<?= $_lang['unable_set_parent'] ?>",
-          working: "<?= $_lang['working'] ?>"
+          working: "<?= $_lang['working'] ?>",
+          paging_prev: "<?= $_lang["paging_prev"] ?>"
         },
         style: {
           actions_file: '<?= addslashes($_style['actions_file']) ?>',
