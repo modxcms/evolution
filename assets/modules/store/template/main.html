@@ -219,6 +219,22 @@
     </div>
     <div id="loading" style="display:none;"></div>
     <script type="text/javascript">
+	jQuery(document).ready(function($) {
+     var HideExtraSide;
+    // Get sidebar state
+    var hide_xtraSidebar = localStorage.getItem('hide_xtraSidebar');
+    if (hide_xtraSidebar) {
+        HideExtraSide = hide_xtraSidebar;
+        setxtraSide(HideExtraSide);
+    }
+    function setxtraSide(HideExtraSide) {
+      var x = document.getElementById('sidebar2');
+	  x.style.display = 'none';
+      $('.extras-list').removeClass('col-sm-9');
+      $('.extras-list').addClass('col-sm-12');
+      $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
+	  }
+	});
       $('.catalog_item').removeClass('col-sm-6');
       $('.catalog_item').addClass('col-sm-12');
       $('.catalog_item').addClass('liststyle');
@@ -232,13 +248,16 @@
           $('.extras-list').removeClass('col-sm-12');
           $('.extras-list').addClass('col-sm-9');
           $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
+		  xtraSide = "visible";
+          localStorage.removeItem('hide_xtraSidebar');
         } else {
           x.style.display = 'none';
           $('.extras-list').removeClass('col-sm-9');
           $('.extras-list').addClass('col-sm-12');
           $('#hide-icon').toggleClass('fa-bars fa-ellipsis-v');
-        }        
-
+		  HideExtraSide = "1";
+          localStorage.setItem('hide_xtraSidebar', HideExtraSide);
+        }      
       });
       $("#2col-btn").click(function() {
         $('.catalog_item').removeClass('col-sm-4');
