@@ -224,7 +224,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || 
 
 if($modx->hasPermission('exec_module')) {
 	if($_SESSION['mgrRole'] != 1 && !empty($modx->config['use_udperms'])) {
-		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm,icon, mg.member
+		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, sm.icon, mg.member
 				FROM ' . $modx->getFullTableName('site_modules') . ' AS sm
 				LEFT JOIN ' . $modx->getFullTableName('site_module_access') . ' AS sma ON sma.module = sm.id
 				LEFT JOIN ' . $modx->getFullTableName('member_groups') . ' AS mg ON sma.usergroup = mg.user_group
