@@ -441,7 +441,7 @@ echo $content;
 function getTplWidget() { // recent document info
 	return '
 		<div class="[+cols+]" id="[+id+]">
-			<div class="card"[+bodyAttr+]>
+			<div class="card"[+cardAttr+]>
 				<div class="card-header"[+headAttr+]> <i class="fa [+icon+]"></i> [+title+] </div>
 				<div class="card-block"[+bodyAttr+]> [+body+] </div>
 			</div>
