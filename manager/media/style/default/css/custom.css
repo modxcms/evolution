@@ -287,10 +287,10 @@ ul.sortableList li.ghost { z-index: 2; box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0
 .dark .multitv .list li.element { background: #fefefe !important; }
 .dark .split { border-color: rgba(0, 0, 0, .05) }
 .dark hr { background: transparent; }
-.dark .content-blocks .block { background: #fefefe; border: 1px solid #e3e3e3; }
-.dark .content-blocks .block .fields-group { border: 1px dashed #e2e2e2; }
+/*.dark .content-blocks .block { background: #fefefe; border: 1px solid #e3e3e3; }
+.dark .content-blocks .block .fields-group { border: 1px dashed #e2e2e2; }*/
 .dark .content-blocks input[type="text"], .dark .content-blocks input[type="password"], .dark .content-blocks input[type="number"], .dark .content-blocks textarea { background-color: #fbfbfb !important; border-color: #dbdbdb !important; }
-.dark .content-blocks .controls { background: transparent !important; }
+.dark .content-blocks .controls { background: #f9f9f9 !important; }
 .dark .widgets .card-header { color: #616a73; background-color: #fff; }
 /*
  [ OTHERS COMPONENTS ] - this components need fix css
