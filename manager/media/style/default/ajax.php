@@ -494,70 +494,94 @@ if (isset($action)) {
                     // find older parent
                     $parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
-                    // check privileges user for move docs
-                    if (!empty($modx->config['tree_show_protected']) && $role != 1) {
-                        $sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
-                        if ($modx->db->getRecordCount($sql)) {
-                            $document_groups = array();
-                            while ($row = $modx->db->getRow($sql)) {
-                                $document_groups[$row['document']]['groups'][] = $row['document_group'];
-                            }
-                            foreach ($document_groups as $key => $value) {
-                                if (($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['groups'])) {
-                                    $json['errors'] = $_lang["error_no_privileges"];
-                                }
-                            }
-                            if ($json['errors']) {
-                                header('content-type: application/json');
-                                echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
-                                break;
-                            }
+                    $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
+                        'id_document' => $id,
+                        'old_parent'  => $parentOld,
+                        'new_parent'  => $parent,
+                    ]);
+
+                    if (is_array($eventOut) && count($eventOut) > 0) {
+                        $eventParent = array_pop($eventOut);
+
+                        if ($eventParent == $parentOld) {
+                            $json['errors'] = $_lang['error_movedocument2'];
+                        } else {
+                            $parent = $eventParent;
                         }
                     }
 
-                    if ($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
-                        $json['errors'] = $_lang["error_no_privileges"];
-                    } else {
-                        // set new parent
-                        $modx->db->update(array(
-                            'parent' => $parent
-                        ), $modx->getFullTableName('site_content'), 'id=' . $id);
-                        // set parent isfolder = 1
-                        $modx->db->update(array(
-                            'isfolder' => 1
-                        ), $modx->getFullTableName('site_content'), 'id=' . $parent);
-
-                        if ($parent != $parentOld) {
-                            // check children docs and set parent isfolder
-                            if ($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
-                                $modx->db->update(array(
-                                    'isfolder' => 1
-                                ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
-                            } else {
-                                $modx->db->update(array(
-                                    'isfolder' => 0
-                                ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                    if (empty($json['errors'])) {
+                        // check privileges user for move docs
+                        if (!empty($modx->config['tree_show_protected']) && $role != 1) {
+                            $sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
+                            if ($modx->db->getRecordCount($sql)) {
+                                $document_groups = array();
+                                while ($row = $modx->db->getRow($sql)) {
+                                    $document_groups[$row['document']]['groups'][] = $row['document_group'];
+                                }
+                                foreach ($document_groups as $key => $value) {
+                                    if (($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['groups'])) {
+                                        $json['errors'] = $_lang["error_no_privileges"];
+                                    }
+                                }
+                                if ($json['errors']) {
+                                    header('content-type: application/json');
+                                    echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+                                    break;
+                                }
                             }
                         }
 
-                        // set menuindex
-                        if (!empty($menuindex)) {
-                            $menuindex = explode(',', $menuindex);
-                            foreach ($menuindex as $key => $value) {
-                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
-                            }
+                        if ($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
+                            $json['errors'] = $_lang["error_no_privileges"];
                         } else {
-                            // TODO: max(*) menuindex
-                        }
+                            // set new parent
+                            $modx->db->update(array(
+                                'parent' => $parent
+                            ), $modx->getFullTableName('site_content'), 'id=' . $id);
+                            // set parent isfolder = 1
+                            $modx->db->update(array(
+                                'isfolder' => 1
+                            ), $modx->getFullTableName('site_content'), 'id=' . $parent);
 
-                        if (!$json['errors']) {
-                            $json['success'] = $_lang["actioncomplete"];
+                            if ($parent != $parentOld) {
+                                // check children docs and set parent isfolder
+                                if ($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
+                                    $modx->db->update(array(
+                                        'isfolder' => 1
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                } else {
+                                    $modx->db->update(array(
+                                        'isfolder' => 0
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                }
+                            }
+
+                            // set menuindex
+                            if (!empty($menuindex)) {
+                                $menuindex = explode(',', $menuindex);
+                                foreach ($menuindex as $key => $value) {
+                                    $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
+                                }
+                            } else {
+                                // TODO: max(*) menuindex
+                            }
+
+                            if (!$json['errors']) {
+                                $json['success'] = $_lang["actioncomplete"];
+                            }
                         }
                     }
                 }
             } else {
                 $json['errors'] = $_lang["error_no_privileges"];
             }
+
+            $modx->invokeEvent('onAfterMoveDocument', [
+                'id_document' => $id,
+                'old_parent'  => $parentOld,
+                'new_parent'  => $parent,
+            ]);
 
             header('content-type: application/json');
             echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
