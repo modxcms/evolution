@@ -569,6 +569,12 @@ if (isset($action)) {
 
                             if (!$json['errors']) {
                                 $json['success'] = $_lang["actioncomplete"];
+
+                                $modx->invokeEvent('onAfterMoveDocument', [
+                                    'id_document' => $id,
+                                    'old_parent'  => $parentOld,
+                                    'new_parent'  => $parent,
+                                ]);
                             }
                         }
                     }
@@ -576,12 +582,6 @@ if (isset($action)) {
             } else {
                 $json['errors'] = $_lang["error_no_privileges"];
             }
-
-            $modx->invokeEvent('onAfterMoveDocument', [
-                'id_document' => $id,
-                'old_parent'  => $parentOld,
-                'new_parent'  => $parent,
-            ]);
 
             header('content-type: application/json');
             echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
