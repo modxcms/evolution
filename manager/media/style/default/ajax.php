@@ -138,7 +138,7 @@ if (isset($action)) {
 
                 if ($count = $modx->db->getRecordCount($sql)) {
                     if ($count == $limit) {
-                        $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                        $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
                     while ($row = $modx->db->getRow($sql)) {
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
@@ -182,7 +182,7 @@ if (isset($action)) {
 
             if ($count = $modx->db->getRecordCount($sql)) {
                 if ($count == $limit) {
-                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->db->getRow($sql)) {
                     $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
@@ -221,7 +221,7 @@ if (isset($action)) {
 
             if ($count = $modx->db->getRecordCount($sql)) {
                 if ($count == $limit) {
-                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->db->getRow($sql)) {
                     $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
