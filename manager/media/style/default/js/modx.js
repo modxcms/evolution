@@ -64,11 +64,11 @@
             $('.nav > .active').removeClass('active');
             $('.nav li.selected').removeClass('selected');
             $(this).closest('.nav > li').addClass('active');
-            this.parentNode.classList.add('selected');
             if (this.offsetParent.id) {
               d.getElementById(this.offsetParent.id.substr(7)).classList.add('selected');
             }
-            if ((modx.isMobile || w.innerWidth < modx.minWidth) && $(this).parent().hasClass('toggle-dropdown')) {
+            if ((modx.isMobile || w.innerWidth < modx.minWidth) && $(e.target).hasClass('toggle')) {
+              this.parentNode.classList.add('selected');
               e.stopPropagation();
               e.preventDefault();
             }
@@ -79,7 +79,10 @@
             els[i].classList.remove('hover');
           }
           this.classList.add('hover');
-          $('.nav ul.selected', $mm).removeClass('selected');
+        }).on('click', '.nav li', function(e) {
+          if ((modx.isMobile || w.innerWidth < modx.minWidth)) {
+            $('.nav ul.selected', $mm).removeClass('selected');
+          }
         }).on('mouseenter', '.nav > li li', function(e) {
           var self = this, ul;
           var els = mm.querySelectorAll('.nav > li li.hover:not(:hover)');
@@ -102,13 +105,15 @@
               d.querySelector('.nav .sub-menu.show').classList.remove('show');
             }
             ul.style.left = self.offsetWidth + 'px';
-            if (self.classList.contains('toggle-dropdown')) {
+            if (self.classList.contains('dropdown-toggle')) {
               if (ul.id === 'parent_' + self.id) {
                 if (modx.isMobile) {
                   self.parentNode.classList.add('selected');
                 } else {
-                  self.onclick = function() {
-                    self.parentNode.classList.add('selected');
+                  self.onclick = function(e) {
+                    if (e.target.classList.contains('toggle')) {
+                      self.parentNode.classList.add('selected');
+                    }
                   };
                 }
                 ul.classList.add('show');
@@ -152,10 +157,14 @@
                       }
                       ul.classList.add('show');
                       if (modx.isMobile) {
-                        self.parentNode.classList.add('selected');
-                      } else {
-                        self.onclick = function() {
+                        if (e.target.classList.contains('toggle')) {
                           self.parentNode.classList.add('selected');
+                        }
+                      } else {
+                        self.onclick = function(e) {
+                          if (e.target.classList.contains('toggle')) {
+                            self.parentNode.classList.add('selected');
+                          }
                         };
                       }
                       setTimeout(function() {
