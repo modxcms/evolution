@@ -1005,7 +1005,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 </div>
                             </div>
                             
-                            <div class="tab-section">
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
                                 <div class="tab-header">' . $row['category'] . '</div>
                                 <div class="tab-body tmplvars">
                                     <table>';
