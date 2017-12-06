@@ -148,7 +148,9 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
     }
 
     if ($e->name == 'OnPageNotFound') {
-
+        if (empty($_SESSION['mgrInternalKey']) || empty($_SESSION['updatelink']) ) {
+            return;
+        }
         switch ($_GET['q']) {
             case $_SESSION['updatelink']:
                 $currentVersion = $modx->getVersionData();
