@@ -17,7 +17,7 @@
 #mainMenu .nav > li > a .icon { display: inline-block; overflow: hidden; width: auto; height: 2rem; line-height: 2rem; font-size: 1.5em; text-align: center; margin: 0.05rem 0 0 0.5rem; vertical-align: top; border-radius: 50%; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .nav > li > a .icon.photo { width: 2rem }
 #mainMenu .nav > li > a .icon .fa { font-size: 1.2rem; line-height: 2.1rem }
-#mainMenu .nav > li .fa { line-height: 2.2rem; font-size: .9rem; vertical-align: top }
+#mainMenu .nav > li .fa { min-width: 1em; line-height: 2.2rem; font-size: .9rem; vertical-align: top }
 #mainMenu #nav > li > a > .fa { margin-right: 0.5rem; }
 #mainMenu #nav #bars { width: 3.5rem; text-align: center }
 #mainMenu #nav #bars .fa { display: inline-block; width: 1.5rem; margin: 0; text-align: center; overflow: hidden; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
@@ -40,7 +40,7 @@
 #mainMenu .nav > li > ul > li.dropdown-back > span * { pointer-events: none }
 #mainMenu .nav > li > ul > li .fa { width: 1.3em; margin-right: 0.5em; font-size: .9rem; line-height: .8rem; text-align: center; vertical-align: baseline }
 #mainMenu .nav > li > ul > li.selected a:first-child::before, #main .evo-tab-row .tab.changed::before { content: ''; position: absolute; right: 0.25em; top: 0.25em; width: 0.5em; height: 0.5em; background-color: #ffc107; -webkit-border-radius: 50%; border-radius: 50%; pointer-events: none }
-#mainMenu .nav > li > ul > li.toggle-dropdown > a::after { content: "\f105"; position: absolute; top: 0.6em; right: 0.6em; font: normal normal normal 1.2em/1 FontAwesome; }
+#mainMenu .nav > li > ul > li.dropdown-toggle > a > .toggle { position: absolute; top: 0; right: 0; height: 100%; width: 2rem; margin: 0; line-height: 2rem; text-align: center; }
 #mainMenu .nav > li > ul > li.disabled > a { opacity: 0.5; color: #7d2a24; }
 #mainMenu .nav > li > ul > li.locked > a { font-style: italic }
 #mainMenu .nav > li > ul > li > a small { line-height: 1em }

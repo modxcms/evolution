@@ -148,7 +148,9 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
     }
 
     if ($e->name == 'OnPageNotFound') {
-
+        if (empty($_SESSION['mgrInternalKey']) || empty($_SESSION['updatelink']) ) {
+            return;
+        }
         switch ($_GET['q']) {
             case $_SESSION['updatelink']:
                 $currentVersion = $modx->getVersionData();
@@ -243,7 +245,7 @@ function mmkDir($folder, $perm = 0777)
     }
 }
 
-$version = "evolution-cms/evolution";
+$version = "' . $version . '";
 
 downloadFile("https://github.com/".$version."/archive/" . $_GET["version"] . ".zip", "evo.zip");
 $zip = new ZipArchive;
@@ -283,15 +285,18 @@ copyFolder(__DIR__."/temp/".$dir, __DIR__."/");
 removeFolder(__DIR__."/temp");
 unlink(__DIR__."/evo.zip");
 unlink(__DIR__."/update.php");
-header("Location: install/index.php?action=mode");');
-
+header("Location: ' . constant('MODX_SITE_URL') . 'install/index.php?action=mode");');
+                if ($result === false){
+                    echo 'Update failed: cannot write to ' . MODX_BASE_PATH . 'update.php';
+                } else {
                     echo '<html><head></head><body>
-                      Evo Updater
-                      <script>window.location = "' . MODX_SITE_URL . 'update.php?version=' . $_SESSION['updateversion'] . '";</script>
-                      </body></html>';
+						  Downloading the latest version. You will be redirected to the update wizard in a few moments.
+						  <script>window.location = "' . MODX_SITE_URL . 'update.php?version=' . $_SESSION['updateversion'] . '";</script>
+						  </body></html>';
                 }
-                die();
-                break;
+            }
+            die();
+            break;
         }
     }
 }

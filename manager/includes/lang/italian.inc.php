@@ -1,22 +1,22 @@
 <?php
 /**
- * MODX Manager language file
+ * EVO Manager language file
  *
- * @version 1.0.15
- * @date 2014/02/24
- * @author The MODX Project Team
+ * @version 1.4
+ * @date 2017/12/13
+ * @author The EVO Project Team
  *
- * @language English
- * @package modx
+ * @language Italian
+ * @package evo
  * @subpackage manager
  *
- * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ * Please commit your language changes on Transifex (https://www.transifex.com/evolutioncms/evolution/) or on GitHub (https://github.com/evolution-cms/evolution).
  */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
-$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+$modx_lang_attribute = 'it'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'EVO è un <a href="http://modx.com/" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'EVO è un <a href="http://evo.im/" target="_blank">PHP Application Framework e Content Management System</a> distribuito sotto licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Cos\'è EVO';
 $_lang["access_permission_denied"] = 'Non avete i permessi per accedere alla Risorsa.';
 $_lang["access_permission_parent_denied"] = 'Non avete il permesso di creare o spostare qui una Risorsa! Scegliete un\'altra destinazione.';
@@ -126,6 +126,8 @@ $_lang["configcheck_errorpage_unavailable"] = 'La pagina di Errore del vostro si
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Ciò significa che la pagina di Errore non esiste o non è accessibile da parte dei normali visitatori web. Questo può generare un loop ricorsivo e scrivere numerosi errori nel log del vostro sito. Verificate che non ci siano Gruppi di Utenti Web assegnati a questa pagina.';
 $_lang["configcheck_errorpage_unpublished"] = 'La pagina di Errore del vostro sito non esiste o non è stata pubblicata.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Ciò significa che la pagina di Errore non è accessibile da parte del pubblico. Pubblicate la pagina o selezionate una Risorsa esistente nella struttura ad albero del vostro sito dal menu Strumenti -> Configurazione.';
+$_lang["configcheck_filemanager_path"] = 'La configurazione del <a href="/[+MGR_DIR+]/#?a=17&tab=5">percorso del File Manager </a> sembra errata.';
+$_lang["configcheck_filemanager_path_msg"] = 'Questo può accadere, per esempio, quando si sposta l\'installazione di EVO in una differente cartella o server. Per favore, controlla e aggiorna la configurazione di sistema di EVO.';
 $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Non mostrare più questo messaggio.</em></a>';
 $_lang["configcheck_images"] = 'Impossibile scrivere nella directory delle immagini';
 $_lang["configcheck_images_msg"] = 'La cartella immagini non è scrivibile o non esiste. Questo significa che il sistema di gestione immagini dell\'editor non funzionerà!';
@@ -137,6 +139,8 @@ $_lang["configcheck_notok"] = 'Verificare alcuni dettagli della configurazione: 
 $_lang["configcheck_ok"] = 'Controllo OK - Nessun avviso da segnalare.';
 $_lang["configcheck_php_gdzip"] = 'Le estensioni PHP GD e/o Zip non sono state trovate';
 $_lang["configcheck_php_gdzip_msg"] = 'EVO richiede le estensioni PHP GD e Zip. EVO funziona anche senza, ma non potrete utilizzare File Manager, Image Editor e Captcha.';
+$_lang["configcheck_rb_base_dir"] = 'La configurazione del <a href="/[+MGR_DIR+]/#?a=17&tab=6">File base path</a> sembra errata.';
+$_lang["configcheck_rb_base_dir_msg"] = 'Questo può accadere, per esempio, quando si sposta l\'installazione di EVO in una differente cartella o server. Per favore, controlla e aggiorna la configurazione di sistema di EVO.';
 $_lang["configcheck_register_globals"] = 'Nel vostro file di configurazione php.ini, il valore register_globals è impostato su ON';
 $_lang["configcheck_register_globals_msg"] = 'Questa configurazione rende il vostro sito molto più suscettibile agli attacchi di Cross Site Scripting (XSS). Contattate il vostro fornitore di hosting per capire cosa si può fare per disabilitare questa impostazione.';
 $_lang["configcheck_title"] = 'Controllo della configurazione';
@@ -190,7 +194,7 @@ $_lang["create_weblink_here"] = 'Crea un Link Web';
 $_lang["createdon"] = 'Data di creazione';
 $_lang["create_new"] = 'Crea nuovo';
 $_lang["credits"] = 'Crediti';
-$_lang["credits_shouts_msg"] = 'EVO è gestito e mantenuto su <a href="http://modx.com/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>EVO è gestito e mantenuto da <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Qui potete impostare il \'content type\' delle Risorse pubblicate. Per aggiungere un nuovo \'content type\' inseritelo nel campo e fate clic sul pulsante \'Aggiungi\'.';
 $_lang["custom_contenttype_title"] = 'Tipo di Contenuto personalizzato:';
 $_lang["database_charset"] = 'Set di Caratteri del Database';
@@ -300,7 +304,7 @@ $_lang["export_site_failed_no_retrieve"] = 'Impossibile trovare la Risorsa.';
 $_lang["export_site_failed_no_write"] = 'Impossibile scrivere il file.';
 $_lang["export_site_html"] = 'Esporta sito in HTML';
 $_lang["export_site_maxtime"] = 'Tempo massimo di esportazione:';
-$_lang["export_site_maxtime_message"] = 'Qui potete specificare il numero massimo di secondi che EVO può impiegare per esportare il sito (escludendo le impostazioni PHP). Inserite 0 per un tempo illimitato. Da notare che non è consigliabile impostare 0 o un numero troppo alto di secondi in quanto ciò potrebbe causare effetti indesiderati sul server.';
+$_lang["export_site_maxtime_message"] = 'Qui potete specificare il numero di secondi che il sistema può impiegare per importare il sito (ignorando le impostazioni PHP). Inserite 0 per un tempo illimitato. Attenzione, un\'impostazione 0 o molto alta può causare un timeout del server, quindi non è raccomandata.';
 $_lang["export_site_message"] = '<p>Usando questa funzione potete esportare l\'intero sito in HTML. Considerate che così facendo perderete molte funzionalità di EVO:</p><ul><li>Gli accessi alle pagine dei files esportati non saranno registrati.</li><li>Gli Snippets interattivi NON funzionano nei file esportati.</li><li>Solo le normali Risorse saranno esportate, i Link Web non lo saranno.</li><li>Il processo di esportazione potrebbe fallire se le Risorse contengono Snippets che inviano headers HTTP di redirezione.</li><li>A seconda di come avete scritto i documenti, i fogli di stile e le immagini, il layout del sito potrebbe rompersi. Per sistemarlo, potete provare a salvare/spostare i file esportati nella stessa cartella dove risiede il file index.php di EVO.</li></ul><p>Compilate il form e premete \'Avvia esportazione\' per avviare il processo. I file creati saranno salvati nel punto specificato usando, ove possibile, gli alias dei documenti come nomi dei file. Nell\'esportare il sito, sarebbe meglio aver attivato gli \'URL Semplici\' nella configurazione di EVO. In base alla dimensione del sito, l\'esportazione potrebbe impiegare un po\' di tempo.</p><p><b>Ogni file già esistente sarà sovrascritto dai nuovi file se hanno gli stessi nomi!</b></p>';
 $_lang["export_site_numberdocs"] = '<p><b>Trovate %s Risorse da esportare...</b></p>';
 $_lang["export_site_prefix"] = 'Prefisso file:';
@@ -383,8 +387,10 @@ $_lang["friendlyurlsuffix_title"] = 'Suffisso per gli URL Semplici:';
 $_lang["functionnotimpl"] = 'Spiacente!';
 $_lang["functionnotimpl_message"] = 'Questa funzione non è ancora stata implementata.';
 $_lang["further_info"] = 'Ulteriori informazioni';
+$_lang["global_tabs"] = 'Global Tabs';
 $_lang["go"] = 'Vai';
 $_lang["group_access_permissions"] = 'Gruppi di accesso';
+$_lang['group_tvs'] = 'Raggruppa TV';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Aiuto';
 $_lang["help_msg"] = '<p>Se avete bisogno di aiuto nell\'utilizzo di EVO, vi consigliamo di visitare i <a href="http://forums.modx.com/" target="_blank">Forum EVO</a>. Inoltre, il sito EVO contiene tutta la <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">documentazione</a> riguardo l\'uso di EVO o su come configurarlo, la risposta che state cercando potrebbe essere qui.</p><p>Prevediamo anche di offrire servizi di supporto di tipo commerciale per EVO. Se siete interessati, <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">inviateci un messaggio email</a>.';
@@ -399,6 +405,7 @@ $_lang["htmlsnippet_msg"] = 'Qui potete aggiungere/modificare i Chunks. Ricordat
 $_lang["htmlsnippet_name"] = 'Nome Chunk';
 $_lang["htmlsnippet_title"] = 'Crea/Modifica Chunk';
 $_lang["icon"] = 'Icona';
+$_lang["icon_description"] = 'classe CSS. i.e. fa&nbsp;fa-star';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Assegnazione parentela:\n\nLa Risorsa è un sottodocumento della Risorsa selezionata.';
 $_lang["illegal_parent_self"] = 'Assegnazione parentela:\n\nLa Risorsa selezionata non può essere assegnata a se stessa.';
@@ -571,7 +578,7 @@ $_lang["module_viewdepend_msg"] = 'Qui potete vedere gli Elementi dai quali dipe
 $_lang["modules"] = 'Moduli';
 $_lang["modx_news"] = 'Ultime Notizie EVO';
 $_lang["modx_news_tab"] = 'Novità EVO';
-$_lang["modx_news_title"] = 'Novità MODX';
+$_lang["modx_news_title"] = 'Novità EVO';
 $_lang["modx_security_notices"] = 'Avvisi di Protezione EVO';
 $_lang["modx_version"] = 'Versione EVO';
 $_lang["monday"] = 'Lunedì';
@@ -630,6 +637,7 @@ $_lang["onlineusers_title"] = 'Utenti online';
 $_lang["onlineusers_user"] = 'Utente';
 $_lang["onlineusers_userid"] = 'ID dell\'utente';
 $_lang["optimize_table"] = 'Cliccate qui per ottimizzare questa tabella';
+$_lang["page_data_alias"] = 'Alias';
 $_lang["page_data_cacheable"] = 'Situabile in cache';
 $_lang["page_data_cacheable_help"] = 'Selezionando questo campo permetterete alla Risorsa di essere salvata nella cache. Se la Risorsa contiene Snippets, assicuratevi che il campo non sia selezionato.';
 $_lang["page_data_cached"] = '<b>Sorgente recuperata dalla cache:</b>';
@@ -682,7 +690,7 @@ $_lang["password_method"] = 'Come volete notificare la nuova password all\'utent
 $_lang["password_method_email"] = 'Invia la nuova password per e-mail.';
 $_lang["password_method_screen"] = 'Mostra la nuova password sullo schermo.';
 $_lang["password_msg"] = 'La nuova password per <b>%s</b> è <b>%s</b>.';
-$_lang["php_version_check"] = 'EVO è compatibile con PHP versione 5.4.0 o superiore. Il vostro server usa la versione %s%. Si prega di aggiornare l\'installazione di PHP!';
+$_lang["php_version_check"] = 'EVO è compatibile con PHP versione 5.0.0 o superiore. Il vostro server usa la versione %s%. Si prega di aggiornare l\'installazione di PHP!';
 $_lang["plugin"] = 'Plugin';
 $_lang["plugins"] = 'Plugins';
 $_lang["plugin_code"] = 'Codice del Plugin (PHP)';
@@ -906,7 +914,7 @@ $_lang["search_results_returned_id"] = 'ID';
 $_lang["search_results_returned_msg"] = 'I criteri di ricerca hanno restituito <b>%s</b> Risorse. Se i risultati sono troppi, provate con una ricerca più specifica. Le due colonne più a sinistra permettono di trovare la Risorsa nella struttura ad albero o di visualizzarla. Le due colonne più a destra mostrano, rispettivamente, se una Risorsa è stata eliminata e qual\'è il suo stato di pubblicazione.';
 $_lang["search_results_returned_title"] = 'Titolo';
 $_lang["search_view_docdata"] = 'Visualizza questo elemento';
-$_lang["security"] = 'Sicurezza';
+$_lang["security"] = 'Utenti';
 $_lang["security_notices_tab"] = 'Avvisi di Protezione';
 $_lang["security_notices_title"] = 'Avvisi di Protezione';
 $_lang["select_date"] = 'Seleziona data';
@@ -928,14 +936,21 @@ $_lang["settings_dependencies"] = 'Dipendenze';
 $_lang["settings_events"] = 'Eventi di Sistema';
 $_lang["settings_furls"] = 'Impostazioni URL Semplici';
 $_lang["settings_general"] = 'Informazioni Generali';
+$_lang["settings_group_tv_message"] = 'Scegli se le Template Variabili devono essere raggruppate in sezioni o schede (nominate dalla categoria TV) quando si modifica una risorsa';
+$_lang["settings_group_tv_options"] = 'No, Sezioni in General tab, Tabs in General tab, Sezioni in nuove tab, Tabs in nuove tab, Nuove tabs';
 $_lang["settings_misc"] = 'Impostazioni varie';
 $_lang["settings_security"] = 'Sicurezza';
 $_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Impostazioni Pagina';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Proprietà';
+$_lang["show_fullscreen_btn_message"] = 'Mostra nel menu il bottone Attiva / disattiva schermo intero';
+$_lang["show_newresource_btn_message"] = 'Mostra il menu Nuova Risorsa';
+$_lang["settings_show_picker_message"] = 'Personalizza il tema del manager e salva in localstorage';
+$_lang["show_fullscreen_btn"] = 'Attiva / disattiva schermo intero';
+$_lang["show_newresource_btn"] = 'Menu Nuova Risorsa';
 $_lang["settings_site"] = 'Impostazioni sito';
-$_lang["settings_strip_image_paths_message"] = 'Se questo valore è impostato su \'No\', EVO imposterà come assoluti gli URL di quello che caricate col File Browser (immagini, file, flash, ecc.). Impostando su \'Si\' si avranno degli URL relativi (non assoluti), utili se dovete spostare l\'installazione di EVO (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciate impostato su \'Si\'.';
+$_lang["settings_strip_image_paths_message"] = 'Se questo valore è impostato su \'No\', EVO imposterà come assoluti gli URL di quello che caricate col File Browser (immagini, file, flash, ecc.). Impostando su \'Si\' si avranno degli URL relativi, utili se dovete spostare l\'installazione di EVO, ad esempio da un sito di test ad uno di produzione. Se non avete idea di cosa significa, lasciate impostato su \'Si\'.';
 $_lang["settings_strip_image_paths_title"] = 'Riscrivere gli URL del Browser:';
 $_lang["settings_templvars"] = 'Variabili di Template';
 $_lang["settings_title"] = 'Impostazioni EVO';
@@ -944,6 +959,7 @@ $_lang["settings_users"] = 'Impostazioni utente';
 $_lang["show_meta"] = 'Mostra le META Keywords:';
 $_lang["show_meta_message"] = 'Mostra META Keywords (deprecato) quando si modificano le Risorse nel Manager.';
 $_lang["show_tree"] = 'Mostra struttura ad albero';
+$_lang["show_picker"] = 'Mostra Color Switcher';
 $_lang["showing"] = 'Visualizzo';
 $_lang["signupemail_message"] = 'Qui potete impostare il messaggio con il quale inviare la userid e la password agli utenti a cui create un account.<br />
 <b>Nota:</b> I seguenti Placeholders sono valorizzati da EVO all\'invio del messaggio:<br /><br />
@@ -995,9 +1011,47 @@ $_lang["sunday"] = 'Domenica';
 $_lang["sys_alert"] = 'Avviso di sistema';
 $_lang["sysinfo_activity_message"] = 'Questa lista mostra le Risorse modificate di recente dagli utenti.';
 $_lang["sysinfo_userid"] = 'Utente';
-$_lang["system_email_signup"] = 'Salve [+uid+] \n\nqui ci sono le credenziali di autenticazione per il sistema di gestione dei contenuti di [+sname+]:\n\nNome utente: [+uid+]\nPassword: [+pwd+]\n\nQuando ti sarai autenticato nel sistema di gestione ([+surl+]), potrai cambiare la tua password.\n\nCordiali Saluti, l\'amministratore del Sito';
-$_lang["system_email_webreminder"] = 'Salve [+uid+]\n\nPer attivare la tua password clicca sul link sottostante:\n\n[+surl+]\n\nIn seguito potrai usare la seguente password per accedere:\n\nPassword:[+pwd+]\n\nSe non hai richiesto questa mail, ignorala.\n\nCordiali Saluti, l\'amministratore del Sito';
-$_lang["system_email_websignup"] = 'Salve [+uid+] \n\nqui ci sono le credenziali di autenticazione per [+sname+]:\n\nNome utente: [+uid+]\nPassword: [+pwd+]\n\nQuando ti sarai autenticato in [+sname+] ([+surl+]), potrai cambiare la tua password.\n\nCordiali Saluti, l\'amministratore del Sito';
+$_lang["system"] = 'Sistema';
+$_lang["system_email_signup"] = '<!doctype html>
+<html>
+Salve [+uid+]
+
+qui ci sono le credenziali di autenticazione per il sistema di gestione dei contenuti di [+sname+] :
+
+Username: [+uid+]
+Password: [+pwd+]
+
+Quando ti sarai autenticato nel sistema di gestione ([+surl+]), potrai cambiare la tua password.
+
+Cordiali Saluti,
+
+ l\'amministratore del Sito
+</html>';
+$_lang["system_email_webreminder"] = 'Salve [+uid+]
+
+Per attivare la tua password clicca sul link sottostante:
+
+[+surl+]
+
+In seguito potrai usare la seguente password per accedere:
+
+Password:[+pwd+]
+
+e non hai richiesto questa mail, ignorala.
+
+Cordiali Saluti,
+l\'amministratore del Sito';
+$_lang["system_email_websignup"] = 'Salve [+uid+]
+
+qui ci sono le credenziali di autenticazione per  [+sname+]:
+
+Nome utente: [+uid+]
+Password: [+pwd+]
+
+Quando ti sarai autenticato in [+sname+] ([+surl+]), potrai cambiare la tua password.
+
+Cordiali Saluti,
+ l\'amministratore del Sito';
 $_lang["table_hoverinfo"] = 'Portate il cursore sopra il nome di una tabella per vedere una breve descrizione della funzione della tabella (non tutte le tabelle hanno dei <i>commenti</i> impostati o tradotti).';
 $_lang["table_prefix"] = 'Prefisso Tabella';
 $_lang["tag"] = 'Tag';
@@ -1046,12 +1100,13 @@ $_lang["tmplvars_type"] = 'Tipo di input';
 $_lang["tmplvars_widget"] = 'Widget';
 $_lang["tmplvars_widget_prop"] = 'Proprietà Widget';
 $_lang["to"] = 'a';
+$_lang["toggle_fullscreen"] = 'Attiva/Disattiva schermo intero';
 $_lang["tools"] = 'Strumenti';
 $_lang["top_howmany_message"] = 'Nel visualizzare i resoconti, quanto deve essere grande la lista \'I primi ...\'?';
 $_lang["top_howmany_title"] = 'Quanti \'I primi\':';
 $_lang["total"] = 'totale';
-$_lang["track_visitors_message"] = 'Predispone un connettore per eventuali Plugins di monitoraggio degli accessi, ad esempio per il fare il log degli accessi a determinate Risorse. Se non si utilizza la funzionalità lasciare disattivato.';
-$_lang["track_visitors_title"] = 'Registra visite (statistiche):';
+$_lang["track_visitors_message"] = 'Seleziona per mostrare le risorse secondarie nell\'albero del documento';
+$_lang["track_visitors_title"] = 'Mostra le risorse secondarie';
 $_lang["tree_page_click"] = 'Azione del click su una pagina:';
 $_lang["tree_page_click_message"] = 'Cosa succede facendo click su una pagina nell\'albero del sito.';
 $_lang["use_breadcrumbs"] = 'Mostra navigazione';
@@ -1093,6 +1148,7 @@ $_lang["use_alias_path_message"] = 'Abilitando questa opzione verrà generato un
 $_lang["use_alias_path_title"] = 'Usa percorso completo per l\'alias:';
 $_lang["use_editor_message"] = 'Volete abilitare l\'editor rich text? Se ritenete più comodo scrivere direttamente in HTML, con questa impostazione potete disabilitarlo. Da notare che le impostazioni si applicano a tutte le Risorse e a tutti gli utenti!';
 $_lang["use_editor_title"] = 'Abilita editor rich text:';
+$_lang["use_global_tabs"] = 'Usa Global Tabs';
 $_lang["user"] = 'Utente';
 $_lang["user_block"] = 'Bloccato';
 $_lang["user_blockedafter"] = 'Bloccato dopo';
@@ -1125,7 +1181,7 @@ $_lang["user_upload_message"] = 'Se volete impedire che questo utente possa cari
 $_lang["user_use_config"] = 'Usare le Impostazioni di Sistema';
 $_lang["user_zip"] = 'CAP';
 $_lang["username"] = 'Nome utente';
-$_lang["users"] = 'Sicurezza';
+$_lang["users"] = 'Utenti';
 $_lang["valid_hostnames_message"] = 'Inserendo una lista di nomi di host consentiti per questa installazione di EVO è possibile prevenire che con un attacco XSS si possa falsificare l\'impostazione di sistema site_url. Può essere importante farlo per alcuni tipi di server condivisi o altri server direttamente accessibili da un indirizzo IP. Il primo nome di host della lista verà usato quando HTTP_HOST non corrisponde ad alcun nome di host valido.';
 $_lang["valid_hostnames_title"] = 'Nomi di host consentiti:';
 $_lang["validate_referer_message"] = 'Validare gli headers HTTP_REFERER per ridurre il rischio di essere vittime di un attacco CSRF (Cross Site Request Forgery). Alcune configurazioni possono non essere in grado di gestire questa opzione se il server non invia gli headers HTTP_REFERER.';
@@ -1184,10 +1240,13 @@ $_lang["pwd_hash_algo_message"] = 'Password algoritmo di hash.';
 $_lang["enable_bindings_title"] = 'Abilita comandi @Bindings:';
 $_lang["enable_bindings_message"] = 'Impedisce l\'esecuzione di funzioni PHP attraverso Variabili di Template di tipo @Bindings. Utile se avete utenti del manager che non devono poter creare codice PHP, ma che possono creare o modificare le Variabili di Template. L\'output di qualsiasi Variabile di Template @Bindings risulta "@Bindings disabled".';
 $_lang["enable_filter_title"] = 'Abilita filtri';
-$_lang["enable_filter_message"] = 'I filtri consentono di manipolare il modo in cui viene mostrato un tag. Inoltre, consentono di modificare i valori dall\'interno template. Funzionalità analoghe a PHx.  <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">Maggiori info</a>'; // todo: change link to documentation 
+$_lang["enable_filter_message"] = 'I filtri consentono di manipolare il modo in cui viene mostrato un tag. Inoltre, consentono di modificare i valori dall\'interno template. Funzionalità analoghe a PHx.  <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">Maggiori info</a>'; // todo: change link to documentation
 $_lang["enable_filter_phx_warning"] = 'Quando PHx è abilitato, i filtri sono disabilitati.';
 
 $_lang["enable_filter_phx_warning"] = 'Quando PHx è abilitato, i filtri sono disabilitati.';
+
+$_lang["enable_at_syntax_title"] = 'Abilita &lt;@SYNTAX&gt;';
+$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt;(atmark syntax) è una sintassi di template semplice e leggera. Questo è progettato per considerare la coesistenza con tag HTML e stringhe di contenuto.';
 
 $_lang["bkmgr_alert_mkdir"] = 'Non è possibile creare un file nella cartella. Controlla i permessi di scrittura di [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Tabelle del database che potrebbero essere recuperate dall\'SQL:</p>';
@@ -1249,6 +1308,9 @@ $_lang["docid_incrmnt_method_0"] = 'Incremento automatico DB';
 $_lang["docid_incrmnt_method_1"] = 'ID libero più basso';
 $_lang["docid_incrmnt_method_2"] = 'ID più grande + 1';
 
+$_lang["enable_cache_title"] = 'Cache delle risorse';
+$_lang["disabled_at_login"] = 'Disabilitato all\'accesso';
+
 $_lang["cache_type_title"] = 'Tipologia della cache dei documenti:';
 $_lang["cache_type_1"] = 'La cache si basa solo sull\'ID della Risorsa (standard)';
 $_lang["cache_type_2"] = 'La cache si basa sull\'ID della risorsa e sui parametri $_GET';
@@ -1297,6 +1359,7 @@ $_lang["error_no_group_selected"]     = "Non è stato selezionato il gruppo a cu
 $_lang["error_movedocument1"]         = "Il documento non può essere genitore di se stesso!";
 $_lang["error_movedocument2"]         = "Nella richiesta manca l'ID del documento!";
 $_lang["error_movedocument3"]         = "Nella richiesta non è stato indicato il nuovo genitore!";
+$_lang["error_internet_connection"]   = "Il server non è disponibile. Controlla la tua connessione Internet!";
 
 $_lang["login_processor_unknown_user"]       = "Username o password errati!";
 $_lang["login_processor_wrong_password"]     = "Username o password errati!";
@@ -1372,7 +1435,7 @@ $_lang["allow_eval_dont_eval"]         = "Non consentire tutte le funzioni";
 $_lang["safe_functions_at_eval_title"] = "Funzioni in cui consentire eval";
 $_lang["safe_functions_at_eval_msg"]   = "Elenco separato da virgole";
 
-$_lang["multiple_sessions_msg"]   = "Informazione: Rilevate contemporaneamente sessioni multiple attive (totale [+total+]) per l'utente <b> [+username+] </ b>.";
+$_lang["multiple_sessions_msg"]   = "Informazione: Rilevate contemporaneamente sessioni multiple attive (totale [+total+]) per l'utente <b>[+username+]</b>.";
 $_lang["iconv_not_available"]     = "È importante installare / abilitare l'estensione iconv..  Contatta il tuo fornitore di l'host, se non sai come abilitarlo.";
 
 $_lang["cm_create_new_category"] = "Crea una nuova categoria";

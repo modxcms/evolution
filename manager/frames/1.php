@@ -212,10 +212,15 @@ if ($modx->config['manager_theme'] == 'default') {
           ElementsInTree: <?= isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
           EVOmodal: <?= isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
         },
-        extend: function(a, b) {
-          for (var c in a) {
-            a[c] = b[c];
+        extend: function() {
+          for (var i = 1; i < arguments.length; i++) {
+            for (var key in arguments[i]) {
+              if (arguments[i].hasOwnProperty(key)) {
+                arguments[0][key] = arguments[i][key];
+              }
+            }
           }
+          return arguments[0];
         },
         extended: function(a) {
           for (var b in a) {
