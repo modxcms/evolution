@@ -4688,7 +4688,7 @@ class DocumentParser
      */
     function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
-        if (count($idnames) == 0) {
+        if (is_array($idnames) && count($idnames) == 0) {
             return false;
         } else {
             $output = array();
