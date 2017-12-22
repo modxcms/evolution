@@ -353,7 +353,7 @@
         var el = e.target;
         if (modx.user.role === 1 && /modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
           var id = Date.now(),
-              name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
+              name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`|:]/g, ''),
               type = el.className.replace(/cm-modx/, ''),
               n = !!name.replace(/^\d+$/, '');
           if (name && n) {
