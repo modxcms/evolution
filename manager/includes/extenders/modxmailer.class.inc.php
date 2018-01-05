@@ -8,7 +8,11 @@
  *******************************************************
  */
 
-include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/class.phpmailer.php';
+include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/PHPMailer.php';
+include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/OAuth.php';
+include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class MODxMailer
@@ -30,7 +34,7 @@ class MODxMailer extends PHPMailer
 
         switch ($modx->config['email_method']) {
             case 'smtp':
-                $this->IsSMTP();
+                $this->isSMTP();
                 $this->SMTPSecure = $modx->config['smtp_secure'] === 'none' ? '' : $modx->config['smtp_secure'];
                 $this->Port = $modx->config['smtp_port'];
                 $this->Host = $modx->config['smtp_host'];
@@ -45,13 +49,13 @@ class MODxMailer extends PHPMailer
                 break;
             case 'mail':
             default:
-                $this->IsMail();
+                $this->isMail();
         }
 
         $this->From = $modx->config['emailsender'];
         $this->Sender = $modx->config['emailsender'];
         $this->FromName = $modx->config['site_name'];
-        $this->IsHTML(true);
+        $this->isHTML(true);
 
         if (isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {
             $mail_charset = $modx->config['mail_charset'];
@@ -74,7 +78,7 @@ class MODxMailer extends PHPMailer
                 $this->Encoding = '7bit';
                 $this->mb_language = 'Japanese';
                 $this->encode_header_method = 'mb_encode_mimeheader';
-                $this->IsHTML(false);
+                $this->isHTML(false);
                 break;
             case 'windows-1251':
                 $this->CharSet = 'cp1251';
@@ -97,11 +101,13 @@ class MODxMailer extends PHPMailer
     }
 
     /**
-     * Encode a header string optimally.
-     * Picks shortest of Q, B, quoted-printable or none.
-     * @access public
-     * @param string $str
-     * @param string $position
+     * Encode a header value (not including its label) optimally.
+     * Picks shortest of Q, B, or none. Result includes folding if needed.
+     * See RFC822 definitions for phrase, comment and text positions.
+     *
+     * @param string $str      The header value to encode
+     * @param string $position What context the string will be used in
+     *
      * @return string
      */
     public function EncodeHeader($str, $position = 'text')
@@ -118,34 +124,23 @@ class MODxMailer extends PHPMailer
     /**
      * Create a message and send it.
      * Uses the sending method specified by $Mailer.
-     * @throws phpmailerException
-     * @return boolean false on error - See the ErrorInfo property for details of the error.
+     *
+     * @throws Exception
+     *
+     * @return bool false on error - See the ErrorInfo property for details of the error
      */
     public function Send()
     {
         $this->Body = $this->modx->removeSanitizeSeed($this->Body);
         $this->Subject = $this->modx->removeSanitizeSeed($this->Subject);
 
-        try {
-            if (!$this->PreSend()) {
-                return false;
-            }
-
-            return $this->PostSend();
-        } catch (phpmailerException $e) {
-            $this->setMailHeader();
-            $this->SetError($e->getMessage());
-            if ($this->exceptions) {
-                throw $e;
-            }
-
-            return false;
-        }
+        return parent::send();
     }
 
     /**
-     * @param string $header
-     * @param string $body
+     * @param string $header The message headers
+     * @param string $body   The message body
+     * 
      * @return bool
      */
     public function MailSend($header, $body)
@@ -180,7 +175,7 @@ class MODxMailer extends PHPMailer
         }
         switch ($mode) {
             case 'normal':
-                return parent::MailSend($header, $body);
+                return parent::mailSend($header, $body);
                 break;
             case 'mb':
                 return $this->mbMailSend($header, $body);
@@ -189,8 +184,9 @@ class MODxMailer extends PHPMailer
     }
 
     /**
-     * @param $header
-     * @param $body
+     * @param string $header The message headers
+     * @param string $body   The message body
+     * 
      * @return bool
      */
     public function mbMailSend($header, $body)
@@ -245,9 +241,8 @@ class MODxMailer extends PHPMailer
 
     /**
      * Add an error message to the error container.
-     * @access protected
+     *
      * @param string $msg
-     * @return void
      */
     public function SetError($msg)
     {
@@ -260,6 +255,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param $address
+     * 
      * @return array
      */
     public function address_split($address)
@@ -292,6 +288,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $header
+     * 
      * @return $this
      */
     public function setMIMEHeader($header = '') {
@@ -302,6 +299,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $body
+     * 
      * @return $this
      */
     public function setMIMEBody($body = '') {
@@ -312,6 +310,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $header
+     * 
      * @return $this
      */
     public function setMailHeader($header = '') {
