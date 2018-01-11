@@ -8,11 +8,12 @@
  *******************************************************
  */
 
-include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/PHPMailer.php';
-include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/OAuth.php';
-include_once MODX_MANAGER_PATH . 'includes/controls/phpmailer/SMTP.php';
-
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require MODX_MANAGER_PATH . 'includes/controls/phpmailer/Exception.php';
+require MODX_MANAGER_PATH . 'includes/controls/phpmailer/PHPMailer.php';
+require MODX_MANAGER_PATH . 'includes/controls/phpmailer/SMTP.php';
 
 /**
  * Class MODxMailer
