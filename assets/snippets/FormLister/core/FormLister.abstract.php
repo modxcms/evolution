@@ -112,7 +112,7 @@ abstract class Core
             $this->config->loadConfig($cfg['config']);
         }
         $this->config->setConfig($cfg);
-        if (isset($cfg['debug'])) {
+        if (isset($cfg['debug']) && $cfg['debug'] > 0) {
             $this->debug = new Debug($modx, array(
                 'caller' => 'FormLister\\\\' . $cfg['controller']
             ));
