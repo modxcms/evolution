@@ -165,7 +165,11 @@ function getPlugins($presets=array()) {
         $ph['i']     = $i;
         $ph['name']  = $preset[0];
         $ph['desc']  = $preset[1];
-        $ph['class'] = !in_array('sample', $preset[8]) ? 'toggle' : 'toggle demo';
+        if (is_array($preset[8])) {
+            $ph['class'] = !in_array('sample', $preset[8]) ? 'toggle' : 'toggle demo';
+        }else{
+            $ph['class'] = 'toggle demo';
+        }
         $ph['checked']   = in_array($i, $selected) || (!isset($_POST['options_selected'])) ? 'checked' : '';
         $_[] = parse($tpl,$ph);
         $i++;

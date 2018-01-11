@@ -82,9 +82,10 @@ if(isset($_SESSION['show_logout_reminder'])) {
 }
 
 // Check multiple sessions
-$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
-$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
-$count = $modx->db->getValue($rs);
+//$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
+//$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
+//$count = $modx->db->getValue($rs);
+/*
 if($count > 1) {
 	$ph['multiple_sessions_msg'] = $modx->parseText($_lang['multiple_sessions_msg'], array(
 		'username' => $_SESSION['mgrShortname'],
@@ -93,7 +94,8 @@ if($count > 1) {
 	$ph['show_multiple_sessions'] = 'block';
 } else {
 	$ph['show_multiple_sessions'] = 'none';
-}
+}*/
+$ph['show_multiple_sessions'] = 'none';
 
 $ph['RecentInfo'] = getRecentInfo();
 
