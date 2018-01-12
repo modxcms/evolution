@@ -315,7 +315,7 @@ class DLTemplate
      * @param bool $parseDocumentSource render html template via DocumentParser::parseDocumentSource()
      * @return string html template with data without placeholders
      */
-    public function parseChunk($name, $data, $parseDocumentSource = false)
+    public function parseChunk($name, $data = array(), $parseDocumentSource = false)
     {
         $out = $this->getChunk($name);
         if ($this->twigEnabled && ($out != '') && ($twig = $this->getTwig($name, $out))) {

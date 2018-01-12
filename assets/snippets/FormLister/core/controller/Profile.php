@@ -92,7 +92,7 @@ class Profile extends Form
     {
         $result = true;
         if (!is_null($fl->user) && ($fl->user->get("email") !== $value)) {
-            $fl->user->set('email', $value);
+            $fl->user->set('email', strtolower($value));
             $result = $fl->user->checkUnique('web_user_attributes', 'email', 'internalKey');
         }
 
@@ -108,7 +108,7 @@ class Profile extends Form
     {
         $result = true;
         if (!is_null($fl->user) && ($fl->user->get("email") !== $value)) {
-            $fl->user->set('username', $value);
+            $fl->user->set('username', strtolower($value));
             $result = $fl->user->checkUnique('web_users', 'username');
         }
 
@@ -141,6 +141,8 @@ class Profile extends Form
             }
         }
         $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
+        $fields['username'] = strtolower($fields['username']);
+        $fields['email'] = strtolower($fields['email']);
         $result = $this->user->fromArray($fields)->save(true);
         $this->log('Update profile', array('data' => $fields, 'result' => $result));
         if ($result) {

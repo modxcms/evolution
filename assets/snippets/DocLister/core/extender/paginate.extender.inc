@@ -185,6 +185,7 @@ class paginate_DL_Extender extends extDocLister
      */
     private function renderPages($mode = '')
     {
+        $currentPage = $this->currentPage();
         $p = $this->reverse ? new DLpaginateReversed : new DLpaginate;
         $p->nextT = $this->DocLister->getChunkByParam('TplNextP', '@CODE:<a href="[+link+]">[%paginate.next%] ></a>');
         $p->prevT = $this->DocLister->getChunkByParam('TplPrevP', '@CODE:<a href="[+link+]">< [%paginate.prev%]</a>');
@@ -211,13 +212,13 @@ class paginate_DL_Extender extends extDocLister
         $p->limit($this->DocLister->getCFGDef("pageLimit", 1)); //show page count
         $p->adjacents($this->DocLister->getCFGDef("pageAdjacents", 4));
         $p->target($this->getUrl());
-        $p->currentPage($this->currentPage());
+        $p->currentPage($currentPage);
 
         switch (true) {
             case ($mode == 'offset' && $this->totalPage() > 1):
                 $display = $this->DocLister->getCFGDef('display', 0);
                 $offset = $this->reverse ? $this->totalPage() * $display - $this->count : 0;
-                if ($this->currentPage() == 1) {
+                if ($currentPage == 1) {
                     $this->DocLister->config->setConfig(array('display'=>$display - $offset));
                 }
                 $p->setMode('offset', array(
@@ -227,6 +228,24 @@ class paginate_DL_Extender extends extDocLister
             case ($mode == 'pages' && $this->totalPage() > 1):
                 $p->parameterName($this->getRequestName('page'));
                 break;
+        }
+        if ($this->DocLister->getCFGDef('paginationMeta', 0)) {
+            $nextPage = $prevPage = 0;
+            if ($this->reverse) {
+                $currentPage = $this->totalPage() + 1 - $currentPage;
+            } 
+            if ($currentPage > 1) {
+                $prevPage = $currentPage - 1;
+            }
+            if ($currentPage < $this->totalPage()) {
+                $nextPage = $currentPage + 1;
+            }
+            if ($nextPage) {
+                $this->modx->regClientStartupHTMLBlock('<link rel="next" href="' . $p->get_pagenum_link($nextPage) . '">');
+            }
+            if ($prevPage) {
+                $this->modx->regClientStartupHTMLBlock('<link rel="prev" href="' . $p->get_pagenum_link($prevPage) . '">');
+            }
         }
 
         return $p->getOutput();
