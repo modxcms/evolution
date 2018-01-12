@@ -4493,7 +4493,7 @@ class DocumentParser
                         $tvs[] = array('name' => $key, 'value' => $value);
                     }
                 }
-                if (count($tvs)) {
+                if (is_array($tvs) && count($tvs)) {
                     $result[] = $tvs;
                 }
             }

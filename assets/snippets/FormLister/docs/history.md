@@ -1,4 +1,11 @@
 ## History
+### 1.7.12
+* [Enhancement] Возможность указывать имя параметра с id пользователя в ссылках (Reminder, Activate).
+* [Refactor] Имя пользователя и E-mail принудительно приводятся в нижний регистр (Login, Register, Profile).
+* [Fix] Неверное значение по умолчанию параметра resetTo (Reminder).
+* [Fix] Неверное значение по умолчанию параметра activateTo (Activate).
+* [Fix] Ошибка при расчете хэша для активации учетной записи (Register, Activate). 
+ 
 ### 1.7.11
 * [Fix] Предупреждения в PHP 7 (Core).
 * [Enhancement] Вывод сообщений в лог при проблемах с параметрами rules, fileRules и contentFields (Core, Content). 

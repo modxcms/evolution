@@ -139,21 +139,22 @@ class Register extends Form
         if (!$result) {
             $this->addMessage($this->lexicon->getMsg('register.registration_failed'));
         } else {
+            $this->user->close();
+            $userdata = $this->user->edit($result)->toArray();
+            $this->setFields($userdata);
+            $this->setField('user.password',$password);
+            $this->runPrepare('preparePostProcess');
             if ($checkActivation) {
-                $fields = $this->user->edit($result)->toArray();
-                $hash = md5(json_encode($fields));
+                $hash = md5(json_encode($userdata));
+                $uidName = $this->getCFGDef('uidName', $this->user->fieldPKName());
                 $query = http_build_query(array(
-                    'id'   => $result,
+                    $uidName   => $result,
                     'hash' => $hash
                 ));
                 $url = $this->getCFGDef('activateTo',$this->modx->config['site_start']);
-                $this->setField('activate.url', $this->modx->makeUrl($url, "",
+                $this->setField('activate.url', $this->modx->makeUrl($url, '',
                     $query, 'full'));
             }
-            $this->user->close();
-            $this->setFields($this->user->edit($result)->toArray());
-            $this->setField('user.password',$password);
-            $this->runPrepare('preparePostProcess');
             parent::process();
         }
     }

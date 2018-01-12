@@ -122,7 +122,7 @@ class Mailer
         $this->Subject = $this->modx->removeSanitizeSeed($this->mail->Subject);
         try {
             $result = $this->mail->preSend() && $this->saveMessage();
-        } catch (\Exception $e) {
+        } catch (\phpmailerException $e) {
             $this->mail->SetError($e->getMessage());
 
             $result = false;
