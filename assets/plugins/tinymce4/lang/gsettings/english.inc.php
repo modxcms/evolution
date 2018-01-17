@@ -10,7 +10,7 @@
 
 $_lang['lang_code'] = 'en';
 $_lang['editor_theme_title'] = 'Theme';
-$_lang['editor_theme_message'] = 'Here you can select which theme or skin to use with the editor.';
+$_lang['editor_theme_message'] = 'Here you can select which configuration should be used. See ';
 $_lang['editor_custom_plugins_title'] = 'Custom Plugins';
 $_lang['editor_custom_plugins_message'] = 'Enter the plugins to use for the \'custom\' theme as a comma separated list.';
 $_lang['editor_custom_buttons_title'] = 'Custom Buttons';
@@ -28,7 +28,9 @@ $_lang['theme_logic'] = 'xhtml';
 $_lang['theme_legacy'] = 'legacy style';
 $_lang['theme_global_settings'] = 'Use the global setting';
 $_lang['editor_skin_title'] = 'Skin';
-$_lang['editor_skin_message'] = 'Design of toolbar. see ';
+$_lang['editor_skin_message'] = 'Skin of TinyMCE toolbar. See ';
+$_lang['editor_skintheme_title'] = 'Skin-Theme';
+$_lang['editor_skintheme_message'] = 'Skin-Theme of TinyMCE toolbar. See ';
 $_lang['editor_entermode_title'] = 'Enter Key Mode';
 $_lang['editor_entermode_message'] = 'Operation when the enter key is pressed is set up.';
 $_lang['entermode_opt1'] = 'Wrap &lt;p&gt;&lt;/p&gt;';
