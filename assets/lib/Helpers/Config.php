@@ -125,6 +125,7 @@ class Config
                 }
                 break;
             case 'array':
+                $out = $arr;
                 break;
             default:
                 $out = array();
