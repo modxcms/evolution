@@ -449,7 +449,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
-		<i class="fa fa-cogs"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
+		<i class="<?= ($content['icon'] != '' ? $content['icon'] : $_style['icons_module']) ?>"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
 	<?= $_style['actionbuttons']['dynamic']['element'] ?>
@@ -513,14 +513,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</div>
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['icon'] ?>
-							<small class="text-muted">(32x32)</small>
+							<small class="text-muted"><?= $_lang["icon_description"] ?></small>
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="input-group">
 								<input type="text" maxlength="255" name="icon" value="<?= $content['icon'] ?>" class="form-control" onchange="documentDirty=true;" />
-								<span class="input-group-btn">
-									<button type="button" value="" class="btn btn-secondary" onclick="BrowseServer();"><?= $_lang['insert'] ?></button>
-								</span>
 							</div>
 						</div>
 					</div>

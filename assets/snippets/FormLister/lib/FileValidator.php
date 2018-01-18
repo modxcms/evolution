@@ -2,7 +2,7 @@
 
 /**
  * Правила проверки файлов
- * Class fValidator
+ * Class FileValidator
  * @package FormLister
  */
 class FileValidator
@@ -192,6 +192,6 @@ class FileValidator
      */
     protected function isArray($value)
     {
-        return !is_null($value[0]);
+        return isset($value[0]);
     }
 }

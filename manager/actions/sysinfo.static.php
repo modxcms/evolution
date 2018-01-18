@@ -62,7 +62,7 @@ $serverArr = array(
                             <td>&nbsp;</td>
                             <td><b><?= $value ?></b></td>
                         </tr>
-                        <?
+                        <?php
                     }
                     ?>
                     </tbody>

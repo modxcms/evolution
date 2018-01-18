@@ -1,4 +1,24 @@
 ## History
+### 1.7.12
+* [Enhancement] Возможность указывать имя параметра с id пользователя в ссылках (Reminder, Activate).
+* [Refactor] Имя пользователя и E-mail принудительно приводятся в нижний регистр (Login, Register, Profile).
+* [Fix] Неверное значение по умолчанию параметра resetTo (Reminder).
+* [Fix] Неверное значение по умолчанию параметра activateTo (Activate).
+* [Fix] Ошибка при расчете хэша для активации учетной записи (Register, Activate). 
+ 
+### 1.7.11
+* [Fix] Предупреждения в PHP 7 (Core).
+* [Enhancement] Вывод сообщений в лог при проблемах с параметрами rules, fileRules и contentFields (Core, Content). 
+* [Refactor] Обработка языковых плейсхолдеров в сообщениях (Core).
+* [Enhancement] Из prepare-сниппетов можно возвращать массив значений полей, который будет передан в метод setFields (Core).
+
+### 1.7.10
+* [Enhancement] Возможность использовать плейсхолдеры с данными пользователя в шаблоне skipTpl (Login, Activate, Register, Reminder).
+* [Fix] Неверное определение страницы для редиректа (Login).
+
+### 1.7.9
+* [Fix] Исправления ошибок.
+
 ### 1.7.8
 * [Refactor] Переименованы файлы документации.
 * [Refactor] Параметр removeEmptyPlaceholders по умолчанию включен (Core).

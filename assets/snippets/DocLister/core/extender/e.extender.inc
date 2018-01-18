@@ -1,7 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
 include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
 
 /**

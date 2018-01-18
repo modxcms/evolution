@@ -1,7 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
 /**
  * DocLister class
  *
@@ -233,7 +230,7 @@ abstract class DocLister
                 case 'parents':
                 default:
                     $cfg['idType'] = "parents";
-                    if (($IDs = $this->getCFGDef('parents')) === null) {
+                    if (($IDs = $this->getCFGDef('parents', '')) === '') {
                         $IDs = $this->getCurrentMODXPageID();
                     }
                     break;
@@ -278,6 +275,10 @@ abstract class DocLister
         for ($i = 0; $i <= $strlen; $i++) {
             $e = mb_substr($str, $i, 1, 'UTF-8');
             switch ($e) {
+                case '\\':
+                    $cur .= $e;
+                    $cur .= mb_substr($str, ++$i, 1, 'UTF-8');
+                    break;
                 case ')':
                     $open--;
                     if ($open == 0) {
@@ -1616,7 +1617,7 @@ abstract class DocLister
                 $output = false;
             } else {
                 $output['join'] = $filter->get_join();
-                $output['where'] = $filter->get_where();
+                $output['where'] = stripslashes($filter->get_where());
             }
         }
         $this->debug->debug('getFilter');
@@ -1698,23 +1699,29 @@ abstract class DocLister
         $out = false;
         $fltr_params = explode(':', $filter, 2);
         $fltr = APIHelpers::getkey($fltr_params, 0, null);
+        /**
+        * @var tv_DL_filter|content_DL_filter $fltr_class
+        */
+        $fltr_class = $fltr . '_DL_filter';
         // check if the filter is implemented
-        if (!is_null($fltr) && file_exists(dirname(__FILE__) . '/filter/' . $fltr . '.filter.php')) {
-            require_once dirname(__FILE__) . '/filter/' . $fltr . '.filter.php';
-            /**
-             * @var tv_DL_filter|content_DL_filter $fltr_class
-             */
-            $fltr_class = $fltr . '_DL_filter';
-            $this->totalFilters++;
-            $fltr_obj = new $fltr_class();
-            if ($fltr_obj->init($this, $filter)) {
-                $out = $fltr_obj;
-            } else {
-                $this->debug->error("Wrong filter parameter: '{$this->debug->dumpData($filter)}'", 'Filter');
+        if (!is_null($fltr)) {
+            if (!class_exists($fltr_class) && file_exists(__DIR__ . '/filter/' . $fltr . '.filter.php')) {
+                require_once dirname(__FILE__) . '/filter/' . $fltr . '.filter.php';
             }
-        } else {
+            if (class_exists($fltr_class)) {
+                $this->totalFilters++;
+                $fltr_obj = new $fltr_class();
+                if ($fltr_obj->init($this, $filter)) {
+                    $out = $fltr_obj;
+                } else {
+                    $this->debug->error("Wrong filter parameter: '{$this->debug->dumpData($filter)}'", 'Filter');
+                }
+            }
+        }
+        if (!$out) {
             $this->debug->error("Error load Filter: '{$this->debug->dumpData($filter)}'", 'Filter');
         }
+            
         $this->debug->debugEnd("loadFilter");
 
         return $out;

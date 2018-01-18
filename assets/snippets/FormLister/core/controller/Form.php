@@ -79,7 +79,7 @@ class Form extends Core
     {
         $submitLimit = $this->getCFGDef('submitLimit', 60);
         $result = false;
-        if ($this->isSubmitted() && $submitLimit > 0) {
+        if (isset($_SESSION[$this->formid . '_limit']) && $this->isSubmitted() && $submitLimit > 0) {
             if (time() < $submitLimit + $_SESSION[$this->formid . '_limit']) {
                 $result = true;
                 $this->addMessage('[%form.submitLimit%] ' .
@@ -178,7 +178,7 @@ class Form extends Core
         if (empty($tpl) && $tplParam == 'reportTpl') {
             $tpl = '@CODE:';
             foreach ($this->getFormData('fields') as $key => $value) {
-                $tpl .= "[+{$key}+]: [+{$key}.value+]" . PHP_EOL;
+                $tpl .=  \APIhelpers::e($key) . ": [+{$key}.value+]" . PHP_EOL;
             }
         }
         $out = $this->parseChunk($tpl, $this->prerenderForm(true));
@@ -210,7 +210,7 @@ class Form extends Core
     {
         $attachments = array();
         foreach ($this->getFormData('files') as $files) {
-            if (is_null($files[0])) {
+            if (!isset($files[0])) {
                 $files = array($files);
             }
             foreach ($files as $file) {
@@ -222,7 +222,7 @@ class Form extends Core
 
         $userfiles = $this->config->loadArray($this->getCFGDef('attachFiles'));
         foreach ($userfiles as $field => $files) {
-            if (is_null($files[0])) {
+            if (!isset($files[0])) {
                 $files = array($files);
             }
             foreach ($files as $file) {
@@ -245,7 +245,7 @@ class Form extends Core
     {
         $fields = array();
         foreach ($this->getFormData('files') as $field => $files) {
-            if (is_null($files[0])) {
+            if (!isset($files[0])) {
                 $files = array($files);
             }
             foreach ($files as $file) {
@@ -257,7 +257,7 @@ class Form extends Core
 
         $userfiles = $this->config->loadArray($this->getCFGDef('attachFiles'));
         foreach ($userfiles as $field => $files) {
-            if (is_null($files[0])) {
+            if (!isset($files[0])) {
                 $files = array($files);
             }
             foreach ($files as $file) {
