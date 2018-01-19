@@ -72,7 +72,7 @@ class modxRTEbridge
 
         // Modx default WYSIWYG-params
         $modxParamsArr = array(
-            'theme', 'skin', 'skintheme', 'entermode', 'element_format', 'schema', 'css_selectors',
+            'theme', 'skin', 'entermode', 'element_format', 'schema', 'css_selectors',
             'custom_plugins', 'custom_buttons1', 'custom_buttons2', 'custom_buttons3', 'custom_buttons4',
             'template_docs', 'template_chunks'
         );
@@ -123,7 +123,6 @@ class modxRTEbridge
         $this->pluginParams['editorVersion']  = isset($bridgeConfig['editorVersion']) ? $bridgeConfig['editorVersion'] : 'No editorVersion set';
         $this->pluginParams['editorLogo']     = isset($bridgeConfig['editorLogo']) ? $bridgeConfig['editorLogo'] : '';
         $this->pluginParams['skinsDirectory'] = isset($bridgeConfig['skinsDirectory']) && !empty($bridgeConfig['skinsDirectory']) ? trim($bridgeConfig['skinsDirectory'], "/") . "/" : '';
-        $this->pluginParams['skinthemeDirectory'] = isset($bridgeConfig['skinthemeDirectory']) && !empty($bridgeConfig['skinthemeDirectory']) ? trim($bridgeConfig['skinthemeDirectory'], "/") . "/" : '';
         $this->pluginParams['base_path']      = $basePath;
         $this->pluginParams['base_url']       = $baseUrl;
     }
@@ -518,10 +517,7 @@ class modxRTEbridge
 
         // Prepare setting "skin"
         $ph['skin_options'] = $this->getSkinNames();
-        
-        // Prepare setting "skin-theme"
-        $ph['skintheme_options'] = $this->getSkinThemeNames();
-        
+
         // Prepare setting "entermode_options"
         $entermode = !empty($ph[$this->editorKey . '_entermode']) ? $ph[$this->editorKey . '_entermode'] : 'p';
         $ph['entermode_options'] = '<label><input name="[+name+]" type="radio" value="p" ' . $this->checked($entermode == 'p') . '/>' . $this->lang('entermode_opt1') . '</label><br />';
@@ -660,9 +656,7 @@ class modxRTEbridge
             //$file = str_replace('\\', '/', $file);
             $file = str_replace($themeDir, '', $file);
             $file = str_replace('theme.' . $this->editorKey . '.', '', $file);
-            
-            if(in_array($file,array('index.html'))) continue;
-            
+
             $theme = trim(str_replace('.inc.php', '', $file));
             if ($theme == 'base') continue; // Why should user select base-theme?
             $label = $this->lang("theme_{$theme}", true) ? $this->lang("theme_{$theme}") : $theme; // Get optional translation or show raw themeKey
@@ -719,36 +713,6 @@ class modxRTEbridge
         }
 
         return is_array($option) ? implode("\n", $option) : '<!-- ' . $this->editorKey . ': No skins found -->';
-    }
-
-    public function getSkinThemeNames()
-    {
-        global $modx;
-        $params = $this->pluginParams;
-
-        $themeDir = "{$params['base_path']}{$params['skinthemeDirectory']}";
-
-        switch ($modx->manager->action) {
-            case '11':
-            case '12':
-            case '119':
-                $selected = $this->selected(empty($params[$this->editorKey . '_skintheme']));
-                $option[] = '<option value=""' . $selected . '>' . $this->lang('theme_global_settings') . '</option>';
-                break;
-        }
-
-        foreach (glob("{$themeDir}*") as $theme) {
-            //$file = str_replace('\\', '/', $file);
-            $theme = str_replace($themeDir, '', $theme);
-            
-            if(in_array($theme,array('index.html'))) continue;
-
-            $selected = $this->selected($theme == $this->modxParams['skintheme']);
-
-            $option[] = '<option value="' . $theme . '"' . $selected . '>' . "{$theme}</option>";
-        }
-
-        return isset($option) && is_array($option) ? implode("\n", $option) : '<!-- ' . $this->editorKey . ': No themes found -->';
     }
 
     public function selected($cond = false)
