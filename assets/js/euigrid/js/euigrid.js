@@ -114,9 +114,9 @@
                 'target':{},
                 'source':{},
                 'point': point,
-                'sf_rid': this._options.rid,
                 'orderDir': this._orderDir
             };
+            data[this._options.parentField] = this._options.rid;
             data['target'][idField] = targetRow[idField];
             data['target'][indexField] = targetRow[indexField];
             data['source'][idField] = sourceRow[idField];
@@ -134,15 +134,15 @@
                 } else {
                     rows = grid.edatagrid('getRows');
                     if (tgt < src) {
-                        rows[tgt][indexName] = targetRow[indexName];
+                        rows[tgt][indexField] = targetRow[indexField];
                         for (var i = tgt; i <= src; i++) {
-                            rows[i][indexName] = rows[i - 1] != undefined ? rows[i - 1][indexName] - (orderDir == 'desc' ? 1 : -1) : rows[i][indexName];
+                            rows[i][indexField] = rows[i - 1] != undefined ? rows[i - 1][indexField] - (orderDir == 'desc' ? 1 : -1) : rows[i][indexField];
                             grid.edatagrid('refreshRow', i);
                         }
                     } else {
-                        rows[tgt][indexName] = targetRow[indexName];
+                        rows[tgt][indexField] = targetRow[indexField];
                         for (var i = tgt; i >= src; i--) {
-                            rows[i][indexName] = rows[i + 1] != undefined ? parseInt(rows[i + 1][indexName]) + (orderDir == 'desc' ? 1 : -1) : rows[i][indexName];
+                            rows[i][indexField] = rows[i + 1] != undefined ? parseInt(rows[i + 1][indexField]) + (orderDir == 'desc' ? 1 : -1) : rows[i][indexField];
                             grid.edatagrid('refreshRow', i);
                         }
                     }
