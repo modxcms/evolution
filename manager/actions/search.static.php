@@ -137,14 +137,14 @@ if (isset($_REQUEST['submitok'])) {
         if (ctype_digit($searchfields)) {
             $sqladd .= "sc.id='{$searchfields}'";
             if (strlen($searchfields) > 3) {
-				
+				$sqladd .= $articul_id_query;//search by TV
                 $sqladd .= " OR sc.pagetitle LIKE '%{$searchfields}%'";
             }
         }
         if ($idFromAlias) {
             $sqladd .= $sqladd != '' ? ' OR ' : '';
             $sqladd .= "sc.id='{$idFromAlias}'";
-			$sqladd .= $articul_id_query;//search by TV
+			
         }
 
         $sqladd = $sqladd ? "({$sqladd})" : $sqladd;
