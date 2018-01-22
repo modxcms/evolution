@@ -4619,7 +4619,7 @@ class DocumentParser
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
+        if (($idnames != '*' && !is_array($idnames)) || empty($idnames) ) {
             return false;
         } else {
 
@@ -4691,7 +4691,7 @@ class DocumentParser
      */
     function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
-        if (is_array($idnames) && count($idnames) == 0) {
+        if (is_array($idnames) && empty($idnames) ) {
             return false;
         } else {
             $output = array();
