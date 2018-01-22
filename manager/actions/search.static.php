@@ -112,15 +112,39 @@ if (isset($_REQUEST['submitok'])) {
 
     // Handle Input "Search in main fields"
     if ($searchfields != '') {
+	
+		/*start search by TV. Added Rising13*/
+		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+		$articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
+		$articul_result = $modx->db->query($articul_query);
+		$articul_id_array = $modx->db->makeArray($articul_result);
+		if(count($articul_id_array)>0){
+			$articul_id = '';
+			$i = 1;
+			foreach( $articul_id_array as $articul ) {
+				$articul_id.=$articul['contentid'];
+				if($i !== count($articul_id_array)){
+					$articul_id.=',';
+				}
+				$i++;
+			}  
+		$articul_id_query = " OR sc.id IN ({$articul_id})";
+		}else{
+			$articul_id_query = '';
+		}
+		/*end search by TV*/
+		
         if (ctype_digit($searchfields)) {
             $sqladd .= "sc.id='{$searchfields}'";
             if (strlen($searchfields) > 3) {
+				
                 $sqladd .= " OR sc.pagetitle LIKE '%{$searchfields}%'";
             }
         }
         if ($idFromAlias) {
             $sqladd .= $sqladd != '' ? ' OR ' : '';
             $sqladd .= "sc.id='{$idFromAlias}'";
+			$sqladd .= $articul_id_query;//search by TV
         }
 
         $sqladd = $sqladd ? "({$sqladd})" : $sqladd;
@@ -133,6 +157,7 @@ if (isset($_REQUEST['submitok'])) {
             $sqladd .= " OR sc.introtext LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.menutitle LIKE '%{$searchlongtitle}%'";
             $sqladd .= " OR sc.alias LIKE '%{$search_alias}%'";
+			$sqladd .= $articul_id_query;//search by TV
         }
     } else if ($idFromAlias) {
         $sqladd .= " sc.id='{$idFromAlias}'";
