@@ -2801,7 +2801,7 @@ class DocumentParser
         }
 
         if ($this->config['enable_cache']) {
-            $this->documentContent = $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+            $this->getDocumentObjectFromCache($this->documentIdentifier, true);
         } else {
             $this->documentContent = '';
         }
