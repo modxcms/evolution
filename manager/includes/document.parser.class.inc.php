@@ -588,8 +588,21 @@ class DocumentParser
             $qOrig = $this->config['site_start'];
         }
         $q = $qOrig;
+
+        $pre = $this->config['friendly_url_prefix'];
+        $suf = $this->config['friendly_url_suffix'];
+        $pre = preg_quote($pre, '/');
+        $suf = preg_quote($suf, '/');
+        if ($pre && preg_match('@^' . $pre . '(.*)$@', $q, $_)) {
+            $q = $_[1];
+        }
+        if ($suf && preg_match('@(.*)' . $suf . '$@', $q, $_)) {
+            $q = $_[1];
+        }
+
         /* First remove any / before or after */
         $q = trim($q, '/');
+
         /* Save path if any */
         /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
         if ($this->config['use_alias_path'] == 1) {
@@ -601,14 +614,7 @@ class DocumentParser
         } else {
             $this->virtualDir = '';
         }
-        $pre = $this->config['friendly_url_prefix'];
-        $suf = $this->config['friendly_url_suffix'];
-        if ($pre && preg_match('@^' . $pre . '(.*)$@', $q, $_)) {
-            $q = $_[1];
-        }
-        if ($suf && preg_match('@(.*)' . $suf . '$@', $q, $_)) {
-            $q = $_[1];
-        }
+
         if (preg_match('@^[1-9][0-9]*$@', $q) && !isset($this->documentListing[$q])) { /* we got an ID returned, check to make sure it's not an alias */
             /* FS#476 and FS#308: check that id is valid in terms of virtualDir structure */
             if ($this->config['use_alias_path'] == 1) {
@@ -2661,13 +2667,11 @@ class DocumentParser
                     //@TODO: check new $alias;
                     if ($this->config['aliaslistingfolder'] == 1) {
                         $tbl_site_content = $this->getFullTableName('site_content');
-                        $alias = $this->db->escape($this->q);
 
-                        $parentAlias = dirname($alias);
-                        $parentId = $this->getIdFromAlias($parentAlias);
+                        $parentId = $this->getIdFromAlias($this->virtualDir);
                         $parentId = ($parentId > 0) ? $parentId : '0';
 
-                        $docAlias = $this->mb_basename($alias, $this->config['friendly_url_suffix']);
+                        $docAlias = $this->db->escape($this->documentIdentifier);
 
                         $rs = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if ($this->db->getRecordCount($rs) == 0) {
@@ -2676,6 +2680,7 @@ class DocumentParser
                         $docId = $this->db->getValue($rs);
 
                         if (!$docId) {
+                            $alias = $this->q;
                             if (!empty($this->config['friendly_url_suffix'])) {
                                 $pos = strrpos($alias, $this->config['friendly_url_suffix']);
 
@@ -2709,14 +2714,12 @@ class DocumentParser
                     } else {
                         $this->sendErrorPage();
                     }
-
                 }
             } else {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
                 } else {
-                    $alias = $this->db->escape($this->q);
-                    $docAlias = basename($alias, $this->config['friendly_url_suffix']);
+                    $docAlias = $this->db->escape($this->documentIdentifier);
                     $rs = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
                     $this->documentIdentifier = (int)$this->db->getValue($rs);
                 }
@@ -4616,7 +4619,7 @@ class DocumentParser
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
+        if (($idnames != '*' && !is_array($idnames)) || empty($idnames) ) {
             return false;
         } else {
 
@@ -4688,7 +4691,7 @@ class DocumentParser
      */
     function getTemplateVarOutput($idnames = array(), $docid = '', $published = 1, $sep = '')
     {
-        if (is_array($idnames) && count($idnames) == 0) {
+        if (is_array($idnames) && empty($idnames) ) {
             return false;
         } else {
             $output = array();

@@ -52,8 +52,7 @@ function mm_hideFields($fields, $roles = '', $templates = ''){
 				//break;
 				
 				case 'which_editor':
-					$output .= '$j("select#which_editor").prev("span.warning").hide();'."\n";
-					$output .= '$j("select#which_editor").hide();'."\n";
+					$output .= '$j("select#which_editor").parent("label").hide();'."\n";
 				break;
 				
 				case 'content':
