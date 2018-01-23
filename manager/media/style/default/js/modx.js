@@ -711,7 +711,6 @@
           for (var i = 0; i < els.length; i++) {
             var el = els[i];
             el.onmousedown = this.onmousedown;
-            el.onmousedown = this.onmousedown;
             el.ondragstart = this.ondragstart;
             el.ondragenter = this.ondragenter;
             el.ondragover = this.ondragover;

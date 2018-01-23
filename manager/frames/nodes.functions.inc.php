@@ -441,7 +441,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			$evtOut = implode("\n", $evtOut);
 		}
 		if($evtOut != '') {
-			$node = $evtOut;
+			$node = trim($evtOut);
 		}
 
 		$output .= $node;
