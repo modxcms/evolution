@@ -5724,8 +5724,6 @@ class DocumentParser
             return $content;
         }
 
-        $content = $this->removeSanitizeSeed($content);
-
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
         $_ = array('[* *]', '[( )]', '{{ }}', '[[ ]]', '[+ +]');
