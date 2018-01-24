@@ -1553,7 +1553,7 @@ class DocumentParser
         }
 
         $sp = '#' . md5('ConditionalTags' . $_SERVER['REQUEST_TIME']) . '#';
-        $content = str_replace(array('<?php', '?>'), array("{$sp}b", "{$sp}e"), $content);
+        $content = str_replace(array('<?php', '<?=', '<?', '?>'), array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"), $content);
 
         $pieces = explode('<@IF:', $content);
         foreach ($pieces as $i => $split) {
@@ -1582,7 +1582,7 @@ class DocumentParser
         ob_start();
         $content = eval('?>' . $content);
         $content = ob_get_clean();
-        $content = str_replace(array("{$sp}b", "{$sp}e"), array('<?php', '?>'), $content);
+        $content = str_replace(array("{$sp}b", "{$sp}p", "{$sp}s", "{$sp}e"), array('<?php', '<?=', '<?', '?>'), $content);
 
         return $content;
     }
@@ -2801,7 +2801,7 @@ class DocumentParser
         }
 
         if ($this->config['enable_cache']) {
-            $this->documentContent = $this->getDocumentObjectFromCache($this->documentIdentifier, true);
+            $this->getDocumentObjectFromCache($this->documentIdentifier, true);
         } else {
             $this->documentContent = '';
         }
@@ -5723,8 +5723,6 @@ class DocumentParser
         if ($this->minParserPasses < 1) {
             return $content;
         }
-
-        $content = $this->removeSanitizeSeed($content);
 
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
