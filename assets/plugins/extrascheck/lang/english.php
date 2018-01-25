@@ -13,7 +13,7 @@
 //
 
 $_oec_lang['title'] = 'Extras compatibility check';
-$_oec_lang['isoutdated'] = 'is <b>outdated</b> and no more compatible with';
+$_oec_lang['isoutdated'] = 'is <b>outdated</b> and no longer compatible with';
 $_oec_lang['please_update'] = 'Please update';
 $_oec_lang["to_latest"] = 'to the latest version';
 $_oec_lang['min _required'] = 'min required';
