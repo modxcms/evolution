@@ -14,6 +14,7 @@
 
 $_lang['pluginname'] = 'Updater';
 $_lang['system_update'] = 'System Update';
+$_lang['are_you_sure_update'] = 'Are you sure you want to run a system update?';
 $_lang["cms_outdated_msg"] = 'Content management system is outdated. To update contact the site developers. Current version';
 $_lang['bkp_before_msg'] = 'We strongly recommend making a backup before upgrading the system, the update is performed at your own risk !!';
 $_lang['updateButton_txt'] = 'Update to version';
