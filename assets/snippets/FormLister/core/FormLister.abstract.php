@@ -145,10 +145,12 @@ abstract class Core
     public function initForm()
     {
         $lexicon = $this->getCFGDef('lexicon');
+        $langDir = $this->getCFGDef('langDir', 'assets/snippets/FormLister/core/lang/');
+        $lang = $this->getCFGDef('lang', $this->modx->config['manager_language']);
         if ($lexicon) {
             $_lexicon = $this->config->loadArray($lexicon);
             if (isset($_lexicon[0])) {
-                $lang = $this->lexicon->loadLang($_lexicon);
+                $lang = $this->lexicon->loadLang($_lexicon, $lang, $langDir);
             } else {
                 $lang = $this->lexicon->fromArray($_lexicon);
             }
