@@ -73,13 +73,15 @@ class AssetsHelper
         $output = '';
         $plugins = $this->modx->pluginEvent;
         //файл проверяется чтобы определить новую админку
-        if ((array_search('ManagerManager', $plugins['OnDocFormRender']) === false) || !file_exists(MODX_MANAGER_PATH . 'media/script/jquery/jquery.min.js')) {
-            $output .= $this->registerScript('jQuery', array(
+        if (file_exists(MODX_MANAGER_PATH . 'media/script/jquery/jquery.min.js') || array_search('ManagerManager', $plugins['OnDocFormRender']) !== false) {
+            return $output;
+        }
+
+        $output .= $this->registerScript('jQuery', array(
                 'src'     => 'assets/js/jquery/jquery-1.9.1.min.js',
                 'version' => '1.9.1'
             ));
-            $output .= '<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';
-        }
+        $output .= '<script type="text/javascript">var jQuery = jQuery.noConflict(true);</script>';
 
         return $output;
     }

@@ -3,7 +3,7 @@
 define('MODX_API_MODE', true);
 define('IN_MANAGER_MODE', true);
 
-include_once("../../../../index.php");
+include_once("./../../../../index.php");
 
 $modx->db->connect();
 
@@ -15,8 +15,15 @@ if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH'
     $modx->sendErrorPage();
 }
 
-include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
-include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
+$modx->sid = session_id();
+$modx->loadExtension("ManagerAPI");
+
+$_lang = array();
+include_once MODX_MANAGER_PATH . '/includes/lang/english.inc.php';
+if ($modx->config['manager_language'] != 'english') {
+    include_once MODX_MANAGER_PATH . '/includes/lang/' . $modx->config['manager_language'] . '.inc.php';
+}
+include_once MODX_MANAGER_PATH . '/media/style/' . $modx->config['manager_theme'] . '/style.php';
 
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
 $frame = isset($_REQUEST['f']) ? $_REQUEST['f'] : '';
@@ -24,7 +31,7 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
+$limit = !empty($modx->config['number_of_results']) ? (int) $modx->config['number_of_results'] : 100;
 
 if (isset($action)) {
     switch ($action) {
@@ -33,7 +40,7 @@ if (isset($action)) {
 
             switch ($frame) {
                 case 'nodes':
-                    include_once MODX_BASE_PATH . MGR_DIR . '/media/style/' . $modx->config['manager_theme'] . '/frames/nodes.php';
+                    include_once MODX_MANAGER_PATH . '/frames/nodes.php';
 
                     break;
             }
@@ -43,14 +50,14 @@ if (isset($action)) {
 
         case '76': {
 
-            $elements = isset($_REQUEST['elements']) ? $_REQUEST['elements'] : '';
+            $elements = isset($_REQUEST['elements']) && is_scalar($_REQUEST['elements']) ? htmlentities($_REQUEST['elements']) : '';
 
             if ($elements) {
                 $output = '';
                 $items = '';
                 $sql = '';
                 $a = '';
-                $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
+                $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
                 $sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
                 $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -131,7 +138,7 @@ if (isset($action)) {
 
                 if ($count = $modx->db->getRecordCount($sql)) {
                     if ($count == $limit) {
-                        $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                        $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                     }
                     while ($row = $modx->db->getRow($sql)) {
                         if (($row['disabled'] || $row['locked']) && $role != 1) {
@@ -158,7 +165,7 @@ if (isset($action)) {
             $a = 12;
             $output = '';
             $items = '';
-            $filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+            $filter = !empty($_REQUEST['filter']) && is_scalar($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
             $sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
             $sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
@@ -175,7 +182,7 @@ if (isset($action)) {
 
             if ($count = $modx->db->getRecordCount($sql)) {
                 if ($count == $limit) {
-                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->db->getRow($sql)) {
                     $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
@@ -214,7 +221,7 @@ if (isset($action)) {
 
             if ($count = $modx->db->getRecordCount($sql)) {
                 if ($count == $limit) {
-                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" /></li>';
+                    $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 while ($row = $modx->db->getRow($sql)) {
                     $items .= '<li class="item ' . ($row['blocked'] ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
@@ -255,7 +262,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=22&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -271,7 +278,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=23&itemname=" . $name
                                 )
                             );
                         }
@@ -293,7 +300,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -309,7 +316,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=77&itemname=" . $name
                                 )
                             );
                         }
@@ -330,7 +337,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=78&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -354,7 +361,7 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+                                        'url' => "index.php?a=22&id=" . $row['id']
                                     )
                                 );
                                 if (!empty($row['description'])) {
@@ -370,11 +377,11 @@ if (isset($action)) {
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+                                        'url' => "index.php?a=77&itemname=" . $name
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
-                                        'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+                                        'url' => "index.php?a=23&itemname=" . $name
                                     )
                                 );
                             }
@@ -442,7 +449,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
+                                    'url' => "index.php?a=301&id=" . $row['id']
                                 )
                             );
                             if (!empty($row['description'])) {
@@ -458,7 +465,7 @@ if (isset($action)) {
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
-                                    'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
+                                    'url' => "index.php?a=300&itemname=" . $name
                                 )
                             );
                         }
@@ -487,64 +494,88 @@ if (isset($action)) {
                     // find older parent
                     $parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
 
-                    // check privileges user for move docs
-                    if (!empty($modx->config['tree_show_protected']) && $role != 1) {
-                        $sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
-                        if ($modx->db->getRecordCount($sql)) {
-                            $document_groups = array();
-                            while ($row = $modx->db->getRow($sql)) {
-                                $document_groups[$row['document']]['groups'][] = $row['document_group'];
-                            }
-                            foreach ($document_groups as $key => $value) {
-                                if (($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['groups'])) {
-                                    $json['errors'] = $_lang["error_no_privileges"];
-                                }
-                            }
-                            if ($json['errors']) {
-                                header('content-type: application/json');
-                                echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
-                                break;
-                            }
+                    $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
+                        'id_document' => $id,
+                        'old_parent'  => $parentOld,
+                        'new_parent'  => $parent,
+                    ]);
+
+                    if (is_array($eventOut) && count($eventOut) > 0) {
+                        $eventParent = array_pop($eventOut);
+
+                        if ($eventParent == $parentOld) {
+                            $json['errors'] = $_lang['error_movedocument2'];
+                        } else {
+                            $parent = $eventParent;
                         }
                     }
 
-                    if ($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
-                        $json['errors'] = $_lang["error_no_privileges"];
-                    } else {
-                        // set new parent
-                        $modx->db->update(array(
-                            'parent' => $parent
-                        ), $modx->getFullTableName('site_content'), 'id=' . $id);
-                        // set parent isfolder = 1
-                        $modx->db->update(array(
-                            'isfolder' => 1
-                        ), $modx->getFullTableName('site_content'), 'id=' . $parent);
-
-                        if ($parent != $parentOld) {
-                            // check children docs and set parent isfolder
-                            if ($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
-                                $modx->db->update(array(
-                                    'isfolder' => 1
-                                ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
-                            } else {
-                                $modx->db->update(array(
-                                    'isfolder' => 0
-                                ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                    if (empty($json['errors'])) {
+                        // check privileges user for move docs
+                        if (!empty($modx->config['tree_show_protected']) && $role != 1) {
+                            $sql = $modx->db->select('*', $modx->getFullTableName('document_groups'), 'document IN(' . $id . ',' . $parent . ',' . $parentOld . ')');
+                            if ($modx->db->getRecordCount($sql)) {
+                                $document_groups = array();
+                                while ($row = $modx->db->getRow($sql)) {
+                                    $document_groups[$row['document']]['groups'][] = $row['document_group'];
+                                }
+                                foreach ($document_groups as $key => $value) {
+                                    if (($key == $parent || $key == $parentOld || $key == $id) && !in_array($role, $value['groups'])) {
+                                        $json['errors'] = $_lang["error_no_privileges"];
+                                    }
+                                }
+                                if ($json['errors']) {
+                                    header('content-type: application/json');
+                                    echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+                                    break;
+                                }
                             }
                         }
 
-                        // set menuindex
-                        if (!empty($menuindex)) {
-                            $menuindex = explode(',', $menuindex);
-                            foreach ($menuindex as $key => $value) {
-                                $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
-                            }
+                        if ($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
+                            $json['errors'] = $_lang["error_no_privileges"];
                         } else {
-                            // TODO: max(*) menuindex
-                        }
+                            // set new parent
+                            $modx->db->update(array(
+                                'parent' => $parent
+                            ), $modx->getFullTableName('site_content'), 'id=' . $id);
+                            // set parent isfolder = 1
+                            $modx->db->update(array(
+                                'isfolder' => 1
+                            ), $modx->getFullTableName('site_content'), 'id=' . $parent);
 
-                        if (!$json['errors']) {
-                            $json['success'] = $_lang["actioncomplete"];
+                            if ($parent != $parentOld) {
+                                // check children docs and set parent isfolder
+                                if ($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
+                                    $modx->db->update(array(
+                                        'isfolder' => 1
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                } else {
+                                    $modx->db->update(array(
+                                        'isfolder' => 0
+                                    ), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+                                }
+                            }
+
+                            // set menuindex
+                            if (!empty($menuindex)) {
+                                $menuindex = explode(',', $menuindex);
+                                foreach ($menuindex as $key => $value) {
+                                    $modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id=' . $value);
+                                }
+                            } else {
+                                // TODO: max(*) menuindex
+                            }
+
+                            if (!$json['errors']) {
+                                $json['success'] = $_lang["actioncomplete"];
+
+                                $modx->invokeEvent('onAfterMoveDocument', [
+                                    'id_document' => $id,
+                                    'old_parent'  => $parentOld,
+                                    'new_parent'  => $parent,
+                                ]);
+                            }
                         }
                     }
                 }
@@ -554,6 +585,32 @@ if (isset($action)) {
 
             header('content-type: application/json');
             echo json_encode($json, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
+
+            break;
+        }
+
+        case 'getLockedElements': {
+            $type = isset($_REQUEST['type']) ? (int)$_REQUEST['type'] : 0;
+            $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
+
+            $output = !!$modx->elementIsLocked($type, $id, true);
+
+            if (!$output) {
+                $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(',', $_SESSION['mgrDocgroups']) : '';
+                $docgrp_cond = $docgrp ? ' OR dg.document_group IN (' . $docgrp . ')' : '';
+                $sql = '
+                    SELECT MAX(IF(1=' . $role . ' OR sc.privatemgr=0' . $docgrp_cond . ', 0, 1)) AS locked
+                    FROM ' . $modx->getFullTableName('site_content') . ' AS sc 
+                    LEFT JOIN ' . $modx->getFullTableName('document_groups') . ' dg ON dg.document=sc.id
+                    WHERE sc.id=' . $id . ' GROUP BY sc.id';
+                $sql = $modx->db->query($sql);
+                if ($modx->db->getRecordCount($sql)) {
+                    $row = $modx->db->getRow($sql);
+                    $output = !!$row['locked'];
+                }
+            }
+            
+            echo $output;
 
             break;
         }

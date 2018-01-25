@@ -20,9 +20,9 @@ if($modx->hasPermission('messages')) {
 	$_SESSION['nrnewmessages'] = $nrnewmessages;
 
 	$msg = array();
-	$msg[] = sprintf('<a href="index.php?a=10"><img src="%s" /></a>', $_style['icons_mail_large']);
+	$msg[] = sprintf('<a href="index.php?a=10" target="main"><img src="%s" /></a>', $_style['icons_mail_large']);
 	$nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? ' (<span style="color:red">' . $_SESSION['nrnewmessages'] . '</span>)' : '';
-	$msg[] = sprintf('<span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10">[%%inbox%%]</a>%s</span><br />', $nrnewmessages);
+	$msg[] = sprintf('<span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;<a class="wm_messages_inbox_link" href="index.php?a=10" target="main">[%%inbox%%]</a>%s</span><br />', $nrnewmessages);
 	$nrnewmessages = $_SESSION['nrnewmessages'] > 0 ? '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>' : '0';
 	$welcome_messages = sprintf($_lang['welcome_messages'], $_SESSION['nrtotalmessages'], $nrnewmessages);
 	$msg[] = sprintf('<span class="comment">%s</span>', $welcome_messages);
@@ -31,11 +31,11 @@ if($modx->hasPermission('messages')) {
 
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%security%]';
+	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%user_management_title%]';
 	$ph['SecurityIcon'] = wrapIcon($icon, 75);
 }
 if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_users%]';
+	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
 	$ph['WebUserIcon'] = wrapIcon($icon, 99);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
@@ -82,9 +82,10 @@ if(isset($_SESSION['show_logout_reminder'])) {
 }
 
 // Check multiple sessions
-$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
-$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
-$count = $modx->db->getValue($rs);
+//$where = sprintf("internalKey='%s'", $modx->db->escape($_SESSION['mgrInternalKey']));
+//$rs = $modx->db->select('count(*) AS count', '[+prefix+]active_user_sessions', $where);
+//$count = $modx->db->getValue($rs);
+/*
 if($count > 1) {
 	$ph['multiple_sessions_msg'] = $modx->parseText($_lang['multiple_sessions_msg'], array(
 		'username' => $_SESSION['mgrShortname'],
@@ -93,7 +94,8 @@ if($count > 1) {
 	$ph['show_multiple_sessions'] = 'block';
 } else {
 	$ph['show_multiple_sessions'] = 'none';
-}
+}*/
+$ph['show_multiple_sessions'] = 'none';
 
 $ph['RecentInfo'] = getRecentInfo();
 
@@ -117,7 +119,7 @@ $tpl = '
 	</tr>
 	<tr>
 		<td>[%inbox%]</td>
-		<td><a href="index.php?a=10"><b>[+msginfo+]</b></a></td>
+		<td><a href="index.php?a=10" target="main"><b>[+msginfo+]</b></a></td>
 	</tr>
 </table>';
 
@@ -242,23 +244,23 @@ $widgets['welcome'] = array(
 				<div class="wm_buttons card-body"> 
 					<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=75">
+						<a target="main" href="index.php?a=75">
 							<i class="[&icons_security_large&]" title="[%user_management_title%]"></i>
-							<span>[%security%]</span>
+							<span>[%user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=99">
+						<a target="main" href="index.php?a=99">
 							<i class="[&icons_webusers_large&]" title="[%web_user_management_title%]"></i>
-							<span>[%web_users%]</span>
+							<span>[%web_user_management_title%]</span>
 						</a>
 					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=106">
+						<a target="main" href="index.php?a=106">
 							<i class="[&icons_modules_large&]" title="[%manage_modules%]"></i>
 							<span>[%modules%]</span>
 						</a>
@@ -266,7 +268,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
 					<span class="wm_button">
-						<a href="index.php?a=76">
+						<a target="main" href="index.php?a=76">
 							<i class="[&icons_resources_large&]" title="[%element_management%]"></i>
 							<span>[%elements%]</span>
 						</a>
@@ -274,7 +276,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=93">
+						<a target="main" href="index.php?a=93">
 							<i class="[&icons_backup_large&]" title="[%bk_manager%]"></i>
 							<span>[%backup%]</span>
 						</a>
@@ -282,7 +284,7 @@ $widgets['welcome'] = array(
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]--> 
 					<span class="wm_button">
-						<a href="index.php?a=9">
+						<a target="main" href="index.php?a=9">
 							<i class="[&icons_help_large&]" title="[%help%]"></i>
 							<span>[%help%]</span>
 						</a>
@@ -310,7 +312,7 @@ $widgets['welcome'] = array(
 						<!--@IF:[[#hasPermission?key=messages]]-->
 						<tr>
 							<td>[%inbox%]</td>
-							<td><a href="index.php?a=10"><b>[[#getMessageCount]]</b></a></td>
+							<td><a href="index.php?a=10" target="main"><b>[[#getMessageCount]]</b></a></td>
 						</tr>
 						<!--@ENDIF-->
 					</table>
@@ -441,9 +443,9 @@ echo $content;
 function getTplWidget() { // recent document info
 	return '
 		<div class="[+cols+]" id="[+id+]">
-			<div class="card">
-				<div class="card-header"> <i class="fa [+icon+]"></i> [+title+] </div>
-				<div class="card-block"> [+body+] </div>
+			<div class="card"[+cardAttr+]>
+				<div class="card-header"[+headAttr+]> <i class="fa [+icon+]"></i> [+title+] </div>
+				<div class="card-block"[+bodyAttr+]> [+body+] </div>
 			</div>
 		</div>
 ';
@@ -486,7 +488,7 @@ function getRecentInfoList() {
 
 	$tpl = getRecentInfoRowTpl();
 
-	$btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+	$btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]" target="main"><i class="fa fa-edit fa-fw"></i></a> ';
 	$btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
 	$output = array();
@@ -520,9 +522,9 @@ function getRecentInfoList() {
 
 		if($modx->hasPermission('delete_document')) {
 			if($ph['deleted'] == 0) {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]" target="main"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]" target="main"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -530,13 +532,13 @@ function getRecentInfoList() {
 		}
 
 		if($ph['deleted'] == 1 && $ph['published'] == 0) {
-			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 1 && $ph['published'] == 1) {
-			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 0 && $ph['published'] == 0) {
-			$publish_btn = '<a title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]" target="main"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} else {
-			$publish_btn = '<a title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]" target="main"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		}
 		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
@@ -564,7 +566,7 @@ function getRecentInfoRowTpl() {
 	$tpl = '
 						<tr>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]" target="main">[+pagetitle+]</a></td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right text-nowrap">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
 							<td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
@@ -590,7 +592,7 @@ function getRecentInfoRowTpl() {
 
 // setup icons
 function wrapIcon($i, $action) {
-	return sprintf('<a href="index.php?a=%s"><span class="wm_button" style="border:0">%s</span></a>', $action, $i);
+	return sprintf('<a href="index.php?a=%s" target="main"><span class="wm_button" style="border:0">%s</span></a>', $action, $i);
 }
 
 function getStartUpScript() {

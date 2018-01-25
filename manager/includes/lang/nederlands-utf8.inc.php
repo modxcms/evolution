@@ -1,23 +1,23 @@
 <?php
 /**
- * MODX Manager language file
+ * EVO Manager language file
  *
- * @version 1.2.1
- * @date 2017/01/06
- * @author The MODX Project Team
+ * @version 1.4
+ * @date 2017/12/13
+ * @author The EVO Project Team
  *
  * @language Dutch
- * @package modx
+ * @package evo
  * @subpackage manager
  *
- * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
+ * Please commit your language changes on Transifex (https://www.transifex.com/evolutioncms/evolution/) or on GitHub (https://github.com/evolution-cms/evolution).
  */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'nl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX is een <a href="http://modx.com/" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'Over MODX';
+$_lang["about_msg"] = 'EVO is een <a href="http://evo.im/" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> met de licentie <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = 'Over Evolution';
 $_lang["access_permission_denied"] = 'U heeft niet de juiste toegangsrechten voor deze Pagina.';
 $_lang["access_permission_parent_denied"] = 'U heeft niet genoeg toegangsrechten om hier een Pagina aan te maken of te verplaatsen! Kies a.u.b. een andere locatie.';
 $_lang["access_permissions"] = 'Toegangsrechten';
@@ -42,7 +42,7 @@ $_lang["access_permissions_user_message"] = 'Geef aan tot welke groepen deze Geb
 $_lang["access_permissions_users_in_group"] = 'Gebruikers in deze groep:';
 $_lang["access_permissions_users_tab"] = 'Bekijk de Gebruikersgroepen. U kunt ook nieuwe groepen maken, bestaande bewerken of verwijderen, of nagaan wie deel uitmaakt van een groep. Om een Gebruiker uit een groep te halen of aan een groep toe te wijzen, wijzigt u de gegevens van de Gebruiker. Beheerders (dit zijn Gebruikers met profiel ID 1) hebben altijd toegang tot alle Pagina\'s dus hoeft u hen niet toe te voegen aan een groep.';
 $_lang["account_email"] = 'E-mail account';
-$_lang["actioncomplete"] = '<b>De bewerking is succesvol uitgevoerd!</b><br /> - Een moment geduld a.u.b. MODX is bezig met opschonen.';
+$_lang["actioncomplete"] = '<b>Actie is succesvol afgerond!</b><br /> - Moment geduld. EVO wordt opgeschoond.';
 $_lang["activity_message"] = 'Deze lijst toont de laatst bewerkte/gemaakte pagina\'s:';
 $_lang["activity_title"] = 'Recent gemaakte/bewerkte Pagina\'s';
 $_lang["add"] = 'Toevoegen';
@@ -81,10 +81,13 @@ $_lang["cancel"] = 'Annuleren';
 $_lang["captcha_code"] = 'Beveiligingscode';
 $_lang["captcha_message"] = 'Door CAPTCHA aan te zetten, worden Gebruikers verplicht een beveiligingscode over te typen. Deze code is in een Afbeelding verwerkt en is daardoor onleesbaar voor machines en automatische programma\'s die erop uit zijn in te breken op uw website.';
 $_lang["captcha_title"] = 'CAPTCHA codes gebruiken';
-$_lang["captcha_words_default"] = 'MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
+$_lang["captcha_words_default"] = 'EVO,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join,Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
 $_lang["captcha_words_message"] = 'Vul hier een lijst van woorden in, van elkaar gescheiden door komma\'s, die gebruikt zal worden indien CAPTCHA is ingeschakeld. Het veld kan maximaal 255 tekens bevatten.';
 $_lang["captcha_words_title"] = 'CAPTCHA woorden';
 $_lang["category_heading"] = 'Categorie';
+$_lang["category_manager"] = 'Categorie Manager';
+$_lang["category_management"] = 'Categorie beheren';
+$_lang["manage_categories"] = 'Beheer categorieën';
 $_lang["category_msg"] = 'Bekijk en wijzig hier alle Elementen gegroepeerd per categorie.';
 $_lang["cfg_base_path"] = 'MODX_BASE_PATH';
 $_lang["cfg_base_url"] = 'MODX_BASE_URL';
@@ -94,7 +97,7 @@ $_lang["cfg_site_url"] = 'MODX_SITE_URL';
 $_lang["change_name"] = 'Naam wijzigen';
 $_lang["change_password"] = 'Wachtwoord wijzigen';
 $_lang["change_password_confirm"] = 'Wachtwoord bevestigen';
-$_lang["change_password_message"] = 'Voer a.u.b. uw nieuwe wachtwoord in en voer het dan ter bevestiging nogmaals in. Uw wachtwoord moet tussen de 6 en 15 tekens lang zijn.';
+$_lang["change_password_message"] = 'Voer uw nieuwe wachtwoord in en voer het nogmaals in om te bevestigen. Uw wachtwoord moet minimaal 6 tekens lang zijn.';
 $_lang["change_password_new"] = 'Nieuw wachtwoord';
 $_lang["charset_message"] = 'Kies de standaard karakterset codering voor de [(modx_charset)] systeem variabele. Dit be&iuml;nvloed niet het Content Management Systeem.';
 $_lang["charset_title"] = 'Karakterset codering';
@@ -115,7 +118,7 @@ $_lang["collapse_tree"] = 'Website boomstructuur inschuiven';
 $_lang["comment"] = 'Opmerking';
 $_lang["configcheck_admin"] = 'Neem a.u.b. contact op met een systeembeheerder en geef deze melding door!';
 $_lang["configcheck_cache"] = 'Kan niet schrijven in de cache Map';
-$_lang["configcheck_cache_msg"] = 'MODX kan niet naar de cache Map schrijven. MODX blijft normaal functioneren, maar er zal geen caching plaatsvinden. Om dit probleem op te lossen dient u de /_cache/ Map schrijfrechten te geven.';
+$_lang["configcheck_cache_msg"] = 'EVO kan niet naar de cache map schrijven. EVO functioneert nog steeds zoals verwacht, maar er vindt geen caching plaats. Om dit op te lossen, maak de /cache/ map schrijfbaar.';
 $_lang["configcheck_configinc"] = 'Configuratiebestand heeft nog schrijfrechten';
 $_lang["configcheck_configinc_msg"] = 'Kwaadwillenden zouden mogelijk schade aan uw website kunnen toebrengen met alle gevolgen van dien. Zet uw configuratiebestand (/[+MGR_DIR+]/includes/config.inc.php) op alleen-lezen!';
 $_lang["configcheck_default_msg"] = 'Er is een ongedefinieerde waarschuwing gevonden. Dit is zeer vreemd.';
@@ -123,17 +126,21 @@ $_lang["configcheck_errorpage_unavailable"] = 'Er is geen \'Fout\'-pagina voor u
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Dit houdt in dat uw \'Fout\'-pagina niet toegankelijk is voor normale Webgebruikers of niet bestaat. Dit kan leiden tot een oneindige lus en veel foutmeldingen in uw logbestand. Zorg ervoor dat de Pagina niet aan een Webgebruikersgroep is toegewezen.';
 $_lang["configcheck_errorpage_unpublished"] = 'De \'Fout\'-pagina voor uw website is niet gepubliceerd of bestaat niet.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Dit houdt in dat uw \'Fout\'-pagina niet toegankelijk is voor bezoekers. Publiceer de Pagina of zorg ervoor dat het is toegewezen aan een bestaande Pagina in de inhoudsopgave van uw website met het Beheer &gt; Configuratie menu.';
+$_lang["configcheck_filemanager_path"] = 'Het momenteel ingestelde <a href="/[+MGR_DIR+]/#?a=17&tab=5">Bestandsbeheer pad</a> lijkt onjuist te zijn.';
+$_lang["configcheck_filemanager_path_msg"] = 'Dit kan bijvoorbeeld gebeuren door uw installatie naar een andere directory of server te verhuizen. Controleer en update uw Evo systeemconfiguratie.';
 $_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Niet meer tonen.</em></a>';
 $_lang["configcheck_images"] = 'De Map images is niet schrijfbaar';
 $_lang["configcheck_images_msg"] = 'De Map images is niet schrijfbaar of bestaat niet. Dit betekent dat de Afbeeldingen beheer opties in de teksteditor niet werken!';
 $_lang["configcheck_installer"] = 'Het installatiebestand is nog niet verwijderd';
-$_lang["configcheck_installer_msg"] = 'De \'/install\'-Map bevat de installer voor MODX. Probeert u eens in te denken wat een vervelend persoon zou kunnen doen als hij de installer zou vinden! We raden u aan om de \'install\'-Map van uw server te verwijderen, om zo uw website veilig te houden.';
+$_lang["configcheck_installer_msg"] = 'De map /install bevat het installatieprogramma voor EVO. Stelt u zich eens voor wat er zou kunnen gebeuren als een boosaardig persoon deze map vindt en het installatieprogramma uitvoert! Ze komen waarschijnlijk niet te ver, omdat ze wat gebruikersinformatie voor de database moeten invoeren, maar het is nog steeds het beste om deze map van je server te verwijderen.';
 $_lang["configcheck_lang_difference"] = 'Ongeldig aantal regels in het vertaalbestand';
 $_lang["configcheck_lang_difference_msg"] = 'De taal die u heeft geselecteerd (Nederlands) heeft een verschillend aantal eenheden ten opzichte van de standaardtaal. Dit hoeft niet tot problemen te leiden, maar het is wel aan te raden om het huidige vertaalbestand te updaten.';
 $_lang["configcheck_notok"] = '&Eacute;&eacute;n of meer configuratie opties zijn onjuist gebleken: ';
 $_lang["configcheck_ok"] = 'Controle is geslaagd - er zijn geen onjuistheden gevonden.';
 $_lang["configcheck_php_gdzip"] = 'GD en/of Zip PHP extensies niet gevonden';
-$_lang["configcheck_php_gdzip_msg"] = 'MODX heeft de GD en Zip extensie aanstaan voor PHP. MODX werkt zonder hen maar je zal niet optimaal gebruik kunnen maken van de ingebouwde File Manager, Image Editor of Captcha voor inlog.';
+$_lang["configcheck_php_gdzip_msg"] = 'EVO heeft de GD- en Zip-extensie ingeschakeld voor PHP. Hoewel EVO zonder deze functies werkt, kunt u niet volledig profiteren van de ingebouwde bestandsbeheerder, afbeeldingseditor of Captcha voor aanmeldingen.';
+$_lang["configcheck_rb_base_dir"] = 'Het momenteel ingestelde basis <a href="/[+MGR_DIR+]/#?a=17&tab=6">Bestandsbeheer pad</a> lijkt onjuist te zijn.';
+$_lang["configcheck_rb_base_dir_msg"] = 'Dit kan bijvoorbeeld gebeuren door uw installatie naar een andere directory of server te verplaatsen. Controleer en update uw Evo systeemconfiguratie.';
 $_lang["configcheck_register_globals"] = 'register_globals staat op AAN in uw php.ini configuratiebestand';
 $_lang["configcheck_register_globals_msg"] = 'Deze instelling maakt uw website veel gevoeliger voor Cross Site Scripting (XSS) aanvallen. Neem contact op met uw host over hoe u deze instelling kunt uitzetten.';
 $_lang["configcheck_title"] = 'Configuratietest';
@@ -150,6 +157,7 @@ $_lang["configcheck_validate_referer_msg"] = 'De configuratie instelling <strong
 $_lang["configcheck_warning"] = 'Configuratie waarschuwing:';
 $_lang["configcheck_what"] = 'Wat betekent dit?';
 $_lang["confirm_block"] = 'Weet u zeker dat u deze Gebruiker wilt blokkeren?';
+$_lang["confirm_delete_category"] = 'Weet u zeker dat u deze categorie wilt verwijderen?';
 $_lang["confirm_delete_eventlog"] = 'Weet u zeker dat u het logboek (events) wilt leegmaken?';
 $_lang["confirm_delete_file"] = 'Weet u zeker dat u dit bestand wilt verwijderen?\n\nHet zou kunnen dat hierdoor uw website niet meer werkt! Verwijder dit bestand uitsluitend indien u zeker bent dat u hiermee niks stuk maakt.';
 $_lang["confirm_delete_group"] = 'Weet u zeker dat u deze Groep wilt verwijderen?';
@@ -186,7 +194,7 @@ $_lang["create_weblink_here"] = 'Nieuwe Weblink';
 $_lang["createdon"] = 'Datum aangemaakt';
 $_lang["create_new"] = 'Nieuwe aanmaken';
 $_lang["credits"] = 'Dankwoord';
-$_lang["credits_shouts_msg"] = '<p>MODX wordt beheerd en onderhouden via <a href="http://modx.com/" target="_blank">modx.com</ a>.</ p>';
+$_lang["credits_shouts_msg"] = '<p>EVO wordt beheerd en bijgehouden op <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Voeg eigen \'content types\' toe. Vul een nieuw type in en klik op de knop \'Toevoegen\' om een nieuw type toe te voegen';
 $_lang["custom_contenttype_title"] = 'Toegevoegde content types';
 $_lang["database_charset"] = 'Database Karakterset';
@@ -296,8 +304,8 @@ $_lang["export_site_failed_no_retrieve"] = 'Kan Pagina niet ophalen.';
 $_lang["export_site_failed_no_write"] = 'Kan niet naar bestand schrijven.';
 $_lang["export_site_html"] = 'Exporteer website naar HTML';
 $_lang["export_site_maxtime"] = 'Maximale export tijd:';
-$_lang["export_site_maxtime_message"] = 'Specificeer hoeveel seconden MODX mag spenderen aan het exporteren van de website, onafhankelijk van de PHP instelling. Geef 0 in voor een onbeperkt aantal seconden. Let op dat 0 of een erg hoog nummer rare dingen kan veroorzaken op uw webserver en dat dit daarom niet aanbevolen is.';
-$_lang["export_site_message"] = '<p>Gebruik dit om de volledige website te exporteren naar HTML bestanden. Daardoor verliest u dan wel een heel aantal voordelen van MODX:</p><ul><li>Bezoekersstatistieken worden NIET meer bijgehouden.</li><li>Interactieve Snippets werken niet meer.</li><li>Enkel gewone Pagina\'s worden ge&euml;xporteerd, gelinkte Pagina\'s niet.</li><li>Het exporteren kan mislukken indien uw Pagina\'s Snippets bevatten die \'redirection headers\' sturen.</li><li>Afhankelijk van hoe uw Pagina\'s, style sheets en Afbeeldingen werden gemaakt, kan de layout van uw website wijzigen. Om dit op te lossen kunt u de ge&euml;xporteerde bestanden verhuizen naar de Map waar de basis MODX index.php staat.</li></ul><p>Vul het formulier in en klik op \'Start export\'. De bestanden zullen bewaard worden op de plaats die u opgeeft. Waar mogelijk zal het bestand als naam de alias van de Pagina krijgen. Daarom is het beter om in de MODX configuratie de optie \'zoekmachine vriendelijke URL\'s\' aan te zetten. De export kan een tijdje duren, afhankelijk van de grootte van uw website.</p><p><em>Bestaande bestanden met dezelfde naam worden overschreven!</em></p>';
+$_lang["export_site_maxtime_message"] = 'Specificeer het aantal seconden dat EVO mag gebruiken om de site te exporteren (overschrijven van PHP-instellingen). Voer 0 in voor onbeperkte tijd. Let op, het instellen van 0 of een heel hoog aantal kan vreemde dingen doen op uw server en wordt niet aanbevolen.';
+$_lang["export_site_message"] = '<p>Gebruik dit om de hele site te exporteren naar statische HTML-bestanden. Houd er echter rekening mee dat u in dat geval veel van de EVO functionaliteit verliest: </p><ul><li>Het lezen van pagina\'s op de geëxporteerde bestanden wordt niet opgenomen.</li><li> Interactieve fragmenten werkt NIET in geëxporteerde bestanden </li> <li>Alleen gewone resources worden geëxporteerd, webkoppelingen worden niet geëxporteerd.</li><li>Het exportproces kan mislukken als uw bronnen fragmenten bevatten die doorsturingen bevatten.</li> li><li>Afhankelijk van hoe u uw bronnen, stylesheets en afbeeldingen hebt geschreven, is het ontwerp van uw site mogelijk beschadigd. Om dit op te lossen, bewaart/verplaats je de geëxporteerde bestanden naar dezelfde map waar het hoofdindexbestand EVO index.php zich bevindt.</li></ul><p>Vul het formulier in en druk op \'Exporteren\' om het exporteren te starten werkwijze. De gecreëerde bestanden worden opgeslagen in de map/assets/export, waarbij de URL-aliassen van Resources worden gebruikt als bestandsnamen, indien mogelijk. Tijdens het exporteren van uw site is het het beste om het EVO configuratie tem \'Friendly URL aliases\' in te stellen op \'yes\'. Afhankelijk van de grootte van uw site kan het exporteren even duren.</p><p><em>Bestaande bestanden worden overschreven door de nieuwe bestanden als hun namen identiek zijn!</em></p>';
 $_lang["export_site_numberdocs"] = '<p><b>%s Pagina\'s gevonden om te exporteren ...</b></p>';
 $_lang["export_site_prefix"] = 'Bestand voorvoegsel:';
 $_lang["export_site_start"] = 'Start exporteren';
@@ -316,7 +324,7 @@ $_lang["file_delete_folder"] = 'Verwijder Map';
 $_lang["file_deleted"] = 'Gelukt!';
 $_lang["file_download_file"] = 'Bestand downloaden';
 $_lang["file_download_unzip"] = 'Bestand uitpakken';
-$_lang["file_folder_chmod_error"] = 'Wijzigen toegangsrechten mislukt. U dient de toegangsrechten buiten MODX om aan te passen.';
+$_lang["file_folder_chmod_error"] = 'Geen rechten om machtigingen te wijzigen.';
 $_lang["file_folder_created"] = 'Map is aangemaakt!';
 $_lang["file_folder_deleted"] = 'Map is verwijderd!';
 $_lang["file_folder_not_created"] = 'Kan Map niet aanmaken';
@@ -326,8 +334,8 @@ $_lang["file_not_saved"] = 'Het bestand kan niet worden bewaard. Verzeker uzelf 
 $_lang["file_saved"] = 'Bestand succesvol bewaard!';
 $_lang["file_unzip"] = 'Uitpakken is gelukt!';
 $_lang["file_unzip_fail"] = 'Uitpakken is mislukt!';
-$_lang["filemanager_path_message"] = 'IIS kan het pad naar de MODX installatie niet vinden. Dit pad wordt gebruikt door het bestandsbeheer om te bepalen wat u te zien krijgt. Indien u problemen ondervindt met het bestandsbeheer, controleer dan of dit pad juist staat.';
-$_lang["filemanager_path_title"] = 'Pad naar de MODX installatie';
+$_lang["filemanager_path_message"] = 'In IIS wordt de instelling document root vaak niet correct ingevuld. Deze wordt door de bestandsbeheerder gebruikt om te bepalen wat u kunt zien. Als u problemen ondervindt bij het gebruik van Bestandsbeheer, zorg er dan voor dat dit pad naar de hoofdmap van uw EVO installatie wijst.';
+$_lang["filemanager_path_title"] = 'Pad naar de bestanden';
 $_lang["files_access_denied"] = 'Toegang geweigerd!';
 $_lang["files_data"] = 'Gegevens';
 $_lang["files_dir_listing"] = 'Bestandenlijst voor:';
@@ -368,7 +376,7 @@ $_lang["forgot_password_email_intro"] = 'Er is een verzoek gedaan om het wachtwo
 $_lang["forgot_password_email_link"] = 'Klik hier om het proces af te ronden.';
 $_lang["forgot_your_password"] = 'Wachtwoord vergeten?';
 $_lang["friday"] = 'Vrijdag';
-$_lang["friendly_alias_message"] = 'Indien u zoekmachine vriendelijke URL\'s gebruikt en de Pagina heeft een alias, dan zal deze alias gebruikt worden in plaats van de zoekmachine vriendelijke URL. Door deze optie aan te zetten wordt het voor- en achtervoegsel ook toegepast op de alias. Bijvoorbeeld, een Pagina met ID 1 en als alias \'introductie\', zal met voorvoegsel \'\' en achtervoegsel \'.html\' vertaald worden naar \'introdcutie.html\'. Indien de Pagina geen alias heeft zal MODX de link vertalen naar \'1.html\'.';
+$_lang["friendly_alias_message"] = 'Wanneer \'Friendly URLs\' is ingeschakeld wordt er een pagina URL gebruikt in plaats van het pagina ID. Dit wordt voor zoekoptimalisatie aangeraden.';
 $_lang["friendly_alias_title"] = 'Gebruik zoekmachine vriendelijke URL\'s';
 $_lang["friendlyurls_message"] = 'Gebruik zoekmachine vriendelijke URL\'s op Apache webservers met mod_rewrite of IIS met externe Plug-ins. Zie voor meer informatie het bij de distributie toegevoegde .htaccess bestand.';
 $_lang["friendlyurls_title"] = 'Zoekmachine vriendelijke URL\'s';
@@ -379,20 +387,25 @@ $_lang["friendlyurlsuffix_title"] = 'Achtervoegsel zoekmachine vriendelijke URL\
 $_lang["functionnotimpl"] = 'Sorry!';
 $_lang["functionnotimpl_message"] = 'Deze functie is nog niet ontwikkeld.';
 $_lang["further_info"] = 'Meer informatie';
+$_lang["global_tabs"] = 'Algemene tabbladen';
 $_lang["go"] = 'Start';
 $_lang["group_access_permissions"] = 'Groepstoegang';
+$_lang['group_tvs'] = 'TV groep';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
-$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
+$_lang["help_msg"] = '<p>U kunt ondersteuning verkrijgen door <a href="http://forums.modx.com/" target="_blank">de EVO-forums te bezoeken</a> of bekijk de <a href="http://evolution-docs.com" target="_blank">EVO documentatie site.</a></p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Website boomstructuur verbergen';
 $_lang["home"] = 'Start';
+$_lang["htmlsnippet"] = 'Chunk';
+$_lang["htmlsnippets"] = 'Chunks';
 $_lang["htmlsnippet_desc"] = 'Beschrijving';
 $_lang["htmlsnippet_management_msg"] = 'Hier kunt u Chunks toevoegen en bewerken.';
 $_lang["htmlsnippet_msg"] = 'Chunk toevoegen of bewerken. Denk eraan, Chunks zijn stukjes HTML code en kunnen geen PHP code bevatten.';
 $_lang["htmlsnippet_name"] = 'Naam Chunk';
 $_lang["htmlsnippet_title"] = 'Maak/wijzig Chunk';
 $_lang["icon"] = 'Icoon';
+$_lang["icon_description"] = 'CSS class b.v. \'fa fa-star\'';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Hoofdpagina toekenning:\n\nPagina is een kind van de geselecteerde Pagina.';
 $_lang["illegal_parent_self"] = 'Hoofdpagina toekenning::\n\nDe geselecteerde Pagina kan niet zijn eigen Hoofdpagina zijn.';
@@ -438,7 +451,7 @@ $_lang["showHiddenFiles"] = 'Toon verborgen bestanden in de Bestandsbrowser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords (sleutelwoorden)';
 $_lang["keywords_intro"] = 'Een keyword kan worden veranderd door in het invulveld naast het keyword de nieuwe waarde op te geven. Vink \'verwijder keyword\' aan om een keyword te verwijderen. Let erop dat verwijderen voorrang heeft op bewerken.';
-$_lang["language_message"] = 'U kunt hier de taal voor het MODX Content Management Systeem selecteren.';
+$_lang["language_message"] = 'Selecteer de taal voor de Manager.';
 $_lang["language_title"] = 'Manager taalkeuze';
 $_lang["last_update"] = 'Laatste update';
 $_lang["launch_site"] = 'Website bekijken';
@@ -448,7 +461,7 @@ $_lang["link_attributes_help"] = 'Hier kunt u attributen opgeven voor de link na
 $_lang["list_mode"] = 'Lijst weergave aan/uit - geeft alle rijen in de tabel weer.';
 $_lang["loading_doc_tree"] = 'Website boomstructuur wordt geladen...';
 $_lang["loading_menu"] = 'Menu wordt geladen...';
-$_lang["loading_page"] = 'Een moment geduld a.u.b., MODX is de Pagina aan het laden...';
+$_lang["loading_page"] = 'Even geduld, de pagina wordt geladen..';
 $_lang["localtime"] = 'Lokale tijd';
 $_lang["lock_htmlsnippet"] = 'Blokkeer Chunk wijzigingen.';
 $_lang["lock_htmlsnippet_msg"] = 'Alleen beheerders (profiel ID 1) kunnen deze Chunk wijzigen.';
@@ -475,8 +488,8 @@ $_lang["login_cancelled_site_was_updated"] = 'Installatie / update op deze websi
 $_lang["login_captcha_message"] = ' De beheerder heeft de Captcha validatie ingeschakeld. Dit betekent dat u deze beveiligingscode hier moet ingeven.\n\nIndien de code slecht leesbaar is, kan u op de code zelf klikken om een nieuwe code te laten aanmaken.';
 $_lang["login_homepage"] = 'Login Startpagina';
 $_lang["login_homepage_message"] = 'Voer de ID in van de Pagina waarnaar Gebruikers worden verwezen als ze aangemeld zijn. <b>NB: Zorg ervoor dat de ID dat u invoert een bestaand, gepubliceerd en voor deze Gebruiker toegankelijke Pagina is!</b>';
-$_lang["login_message"] = 'Om MODX te gebruiken dient u zich eerst aan te melden. Let op: hierbij wordt onderscheid gemaakt tussen hoofd- en kleine letters!';
-$_lang["logo_slogan"] = 'MODX Content Management Systeem - \nCre&#235;er en doe meer met minder';
+$_lang["login_message"] = 'Om Evolution te gebruiken dient u zich eerst aan te melden. Let op: hierbij wordt onderscheid gemaakt tussen hoofd- en kleine letters!';
+$_lang["logo_slogan"] = 'EVO Content Manager - \nCreate and do more with less';
 $_lang["logout"] = 'Afmelden';
 $_lang["long_title"] = 'Uitgebreide titel';
 $_lang["mail_check_timeperiod_message"] = 'Hoe vaak in het Content Management Systeem gecontroleerd wordt op nieuwe berichten, in seconden.';
@@ -489,6 +502,7 @@ $_lang["manage_modules"] = 'Modulebeheer';
 $_lang["manage_plugins"] = 'Plug-ins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
+$_lang["manage_documents"] = 'Documenten';
 $_lang["manager"] = 'Content Management Systeem';
 $_lang["manager_lockout_message"] = 'U bent momenteel aangemeld bij het Content Management Systeem. Als u uw sessie wilt sluiten, klik dan a.u.b. op de knop "Afmelden". <p />Wilt u naar uw start- of homepage klik dan op de knop "Start".';
 $_lang["manager_permissions"] = 'Toegangsbeheer';
@@ -562,11 +576,11 @@ $_lang["module_resource_title"] = 'Module afhankelijkheden';
 $_lang["module_title"] = 'Modules bewerken/toevoegen';
 $_lang["module_viewdepend_msg"] = 'Een Module is afhankelijk van bepaalde Elementen. Klik op de knop \'Beheer afhankelijkheden\' om deze te bewerken.';
 $_lang["modules"] = 'Modules';
-$_lang["modx_news"] = 'MODX nieuws waarschuwingen';
-$_lang["modx_news_tab"] = 'MODX nieuws';
-$_lang["modx_news_title"] = 'MODX nieuws';
-$_lang["modx_security_notices"] = 'MODX beveiligingswaarschuwingen';
-$_lang["modx_version"] = 'MODX versie';
+$_lang["modx_news"] = 'Nieuwsmeldingen';
+$_lang["modx_news_tab"] = 'EVO Nieuws';
+$_lang["modx_news_title"] = 'EVO Nieuws';
+$_lang["modx_security_notices"] = 'Beveiligingswaarschuwingen';
+$_lang["modx_version"] = 'EVO versie';
 $_lang["monday"] = 'Maandag';
 $_lang["move"] = 'Verplaatsen';
 $_lang["move_resource"] = 'Verplaats Pagina';
@@ -588,7 +602,7 @@ $_lang["new_role"] = 'Nieuwe Rol';
 $_lang["new_snippet"] = 'Nieuwe Snippet toevoegen';
 $_lang["new_template"] = 'Nieuwe Template toevoegen';
 $_lang["new_tmplvars"] = 'Nieuwe Template Variabele toevoegen';
-$_lang["new_user"] = 'Nieuwe Gebruiker toevoegen';
+$_lang["new_user"] = 'Nieuwe Manager gebruiker';
 $_lang["new_web_user"] = 'Nieuwe Webgebruiker toevoegen';
 $_lang["new_resource"] = 'Nieuwe pagina';
 $_lang["no"] = 'Nee';
@@ -623,6 +637,7 @@ $_lang["onlineusers_title"] = 'Gebruikers online';
 $_lang["onlineusers_user"] = 'Gebruiker';
 $_lang["onlineusers_userid"] = 'Gebruikers ID';
 $_lang["optimize_table"] = 'Klik hier om deze tabel te optimaliseren';
+$_lang["page_data_alias"] = 'Alias';
 $_lang["page_data_cacheable"] = 'Cache-baar';
 $_lang["page_data_cacheable_help"] = 'Dit zorgt ervoor dat deze Pagina in de cache opgeslagen kan worden. Zorg dat deze optie niet aangevinkt is als uw Pagina Snippets bevat!';
 $_lang["page_data_cached"] = '<b>Bron uit cache gehaald:</b>';
@@ -667,7 +682,7 @@ $_lang["parse_docblock"] = 'Parse DocBlock';
 $_lang["parse_docblock_msg"] = 'Let op (!): <b>Hersteld</b> de oorspronkelijke naam, configuratie, beschrijving en categorie naar standaard instellingen door het parsen van de broncode.';
 $_lang["password"] = 'Wachtwoord';
 $_lang["password_change_request"] = 'Verzoek wachtwoord wijzigen';
-$_lang["password_gen_gen"] = 'Laat MODX het wachtwoord genereren.';
+$_lang["password_gen_gen"] = 'Wachtwoord laten genereren';
 $_lang["password_gen_length"] = 'Het wachtwoord moet minstens 6 karakters lang zijn.';
 $_lang["password_gen_method"] = 'Hoe wilt u het wachtwoord voor deze Gebruiker aanmaken?';
 $_lang["password_gen_specify"] = 'Laat mij het wachtwoord specificeren:';
@@ -675,8 +690,9 @@ $_lang["password_method"] = 'Hoe wilt u deze Gebruiker op de hoogte stellen van 
 $_lang["password_method_email"] = 'Verstuur het nieuwe wachtwoord via e-mail.';
 $_lang["password_method_screen"] = 'Geef het nieuwe wachtwoord op het beeldscherm weer.';
 $_lang["password_msg"] = 'Het nieuwe wachtwoord voor <b>%s</b> is <b>%s</b>.';
-$_lang["php_version_check"] = 'MODX is geschikt voor PHP versie 5.0.0 en hoger. U dient uw PHP distributie te upgraden!';
+$_lang["php_version_check"] = 'Je gebruikt PHP versie %s%. Voer een upgrade van uw PHP-installatie uit!';
 $_lang["plugin"] = 'Plug-in';
+$_lang["plugins"] = 'Plugins';
 $_lang["plugin_code"] = 'Plug-in code (php)';
 $_lang["plugin_config"] = 'Plug-in configuratie';
 $_lang["plugin_desc"] = 'Beschrijving';
@@ -691,16 +707,16 @@ $_lang["plugin_priority_title"] = 'Plug-in uitvoer volgorde';
 $_lang["purge_plugin"] = 'Verwijder verouderde Plug-ins';
 $_lang["plugin_title"] = 'Aanmaken/bewerken Plug-in';
 $_lang["preview"] = 'Voorbeeld';
-$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href="javascript:;" onclick="saveRefreshPreview();">Opslaan en vernieuwen</a>';
+$_lang["preview_msg"] = 'Dit is een voorbeeld van uw laatst opgeslagen wijzigingen. Klik hier om uw huidige wijzigingen <a href="javascript:;" onclick="saveRefreshPreview();">op te slaan en te vernieuwen</a>.';
 $_lang["preview_resource"] = 'Pagina voorbeeld';
 $_lang["private"] = 'Gesloten';
 $_lang["public"] = 'Open';
 $_lang["publish_date"] = 'Publicatiedatum';
 $_lang["publish_events"] = 'Publiceer gebeurtenissen';
 $_lang["publish_resource"] = 'Publiceer Pagina';
-$_lang["rb_base_dir_message"] = 'Het fysieke pad naar de Map met bestanden. Normaal gesproken wordt dit automatisch gegenereerd. Helaas komt het bij het gebruik van IIS voor dat MODX niet in staat is om het pad automatisch te genereren. In dat geval kan hier het pad naar de Map worden opgegeven (dit is het pad dat u ziet in Windows Verkenner). <b>NB:</b> Voor een juiste werking van het bestandsbeheer moet de hier opgegeven Map de volgende submappen bevatten: images, files, flash en media.';
+$_lang["rb_base_dir_message"] = 'Voer het fysieke pad naar de map Bestandsbrowser in. Deze instelling wordt meestal automatisch gegenereerd. Als u IIS echter gebruikt, is het mogelijk dat EVO het pad niet zelfstandig kan bewerken, waardoor de bestandsbrowser een foutmelding geeft.';
 $_lang["rb_base_dir_title"] = 'Pad naar de bestanden';
-$_lang["rb_base_url_message"] = 'Het virtuele pad naar de bestanden. Normaal gesproken wordt dit automatisch gegenereerd. Helaas komt het bij het gebruik van IIS voor dat MODX niet in staat is om het pad automatisch te genereren. In dat geval kan hier het pad naar de Map worden opgegeven (dit is het pad dat u ziet in uw web browser)';
+$_lang["rb_base_url_message"] = 'Voer de virtuele pad naar de bestanden map in. Deze instelling wordt meestal automatisch gegenereerd. Als u IIS echter gebruikt, is het mogelijk dat EVO de URL niet zelf kan bewerken, waardoor de bestandsbrowser een foutmelding vertoont. In dat geval kunt u hier de URL van de afbeeldingenlijst invoeren.';
 $_lang["rb_base_url_title"] = 'URL naar de bestanden';
 $_lang["rb_message"] = 'Kies \'ja\' om de bestandsbeheer in te schakelen. Met bestandsbeheer is het voor Gebruikers eenvoudig mogelijk om bestanden zoals afbeeldingen, flash en media op de server te plaatsen.';
 $_lang["rb_title"] = 'Bestandsbeheer inschakelen';
@@ -744,9 +760,9 @@ $_lang["resource_metatag_help"] = 'Selecteer de \'META tags\' of keywords die u 
 $_lang["resource_opt_contentdispo"] = 'Content-Disposition';
 $_lang["resource_opt_contentdispo_help"] = 'Gebruik \'Content-Disposition\' om aan te geven hoe de Pagina wordt behandeld door de webbrowser. Gebruik \'Bijlage\' voor separate bestanden.';
 $_lang["resource_opt_emptycache"] = 'Cache leegmaken?';
-$_lang["resource_opt_emptycache_help"] = 'Laat dit aangevinkt zodat MODX de cache leegmaakt na het opslaan van de Pagina. Dit zorgt ervoor dat uw bezoekers geen oude versie van de Pagina te zien krijgen.';
+$_lang["resource_opt_emptycache_help"] = 'Als dit veld wordt aangevinkt, wordt de cache leeggemaakt nadat u de pagina hebt opgeslagen. Op deze manier zien uw bezoekers geen oudere versie van de pagina.';
 $_lang["resource_opt_folder"] = 'Map?';
-$_lang["resource_opt_folder_help"] = 'U kunt deze optie aanvinken om deze Pagina als een Map voor andere Pagina\'s te gebruiken. U hoeft hier niet te veel aandacht aan te besteden, aangezien MODX Mapinstellingen over het algemeen automatisch verzorgt.';
+$_lang["resource_opt_folder_help"] = 'U kunt deze optie aanvinken om deze pagina als een map voor andere pagina\'s te gebruiken. U hoeft hier niet te veel aandacht aan te besteden, aangezien Evolution map instellingen over het algemeen automatisch verzorgt.';
 $_lang["resource_opt_menu_index"] = 'Menu index';
 $_lang["resource_opt_menu_index_help"] = 'De menu-index is een veld waarmee u het sorteren van Pagina\'s kunt be&iuml;nvloeden, voornamelijk in menu\'s en opsommingen. U kunt het ook voor andere doeleinden gebruiken in uw Snippets.';
 $_lang["resource_opt_menu_title"] = 'Menu titel';
@@ -769,7 +785,7 @@ $_lang["resource_title"] = 'Titel';
 $_lang["resource_title_help"] = 'U kunt hier de titel van de Pagina opgeven. Vermijdt het gebruik van backslashes in de naam!';
 $_lang["resource_to_be_moved"] = 'De te verplaatsen Pagina';
 $_lang["resource_type"] = 'Resource Type';
-$_lang["resource_type_message"] = 'Weblinks verwijzen Pagina\'s op Internet, waaronder een andere MODX Pagina, een externe pagina, of een afbeelding of een ander bestand op internet. Weblinks moeten een text / html Internet Media Type hebben en Inline Content-Disposition';
+$_lang["resource_type_message"] = 'Verwijzingen naar weblinks Bronnen op internet, inclusief een andere interne bron, een externe pagina of een afbeelding of ander bestand op internet. Webkoppelingen moeten een tekst/html internetmediatype en inline content afhandeling hebben.';
 $_lang["resource_type_weblink"] = 'Weblink';
 $_lang["resource_type_webpage"] = 'Webpagina';
 $_lang["resource_weblink_help"] = 'Typ het adres van het object dat u wilt verwijzen met deze weblink. Als alternatief kunt u deze invoegen via de bestand browser of gebruik het selectie icoon en kies een bron van de site van de paginaboom aan de linker kant.';
@@ -783,6 +799,7 @@ $_lang["role_assets_images"] = 'Beheer afbeeldingen';
 $_lang["role_assets_files"] = 'Beheer bestanden';
 $_lang["role_bk_manager"] = 'Backupbeheer gebruiken';
 $_lang["role_cache_refresh"] = 'De cache van de website leegmaken';
+$_lang["role_category_manager"] = 'Gebruik de Categorie Manager';
 $_lang["role_change_password"] = 'Wachtwoord wijzigen';
 $_lang["role_change_resourcetype"] = 'Pagina type aanpassen';
 $_lang["role_chunk_management"] = 'Chunk beheer';
@@ -802,7 +819,7 @@ $_lang["role_delete_plugin"] = 'Plug-ins verwijderen';
 $_lang["role_delete_role"] = 'Rollen verwijderen';
 $_lang["role_delete_snippet"] = 'Snippets verwijderen';
 $_lang["role_delete_template"] = 'Templates verwijderen';
-$_lang["role_delete_user"] = 'Gebruikers verwijderen';
+$_lang["role_delete_user"] = 'Verwijder manager gebruikers';
 $_lang["role_delete_web_user"] = 'Webgebruikers verwijderen';
 $_lang["role_edit_chunk"] = 'Chunks bewerken';
 $_lang["role_edit_doc"] = 'Een Pagina bewerken';
@@ -813,7 +830,7 @@ $_lang["role_edit_role"] = 'Rollen bewerken';
 $_lang["role_edit_settings"] = 'Website instellingen veranderen';
 $_lang["role_edit_snippet"] = 'Snippets bewerken';
 $_lang["role_edit_template"] = 'Website Templates bewerken';
-$_lang["role_edit_user"] = 'Gebruikers bewerken';
+$_lang["role_edit_user"] = 'Bewerk manager gebruikers';
 $_lang["role_edit_web_user"] = 'Webgebruikers bewerken';
 $_lang["role_empty_trash"] = 'Verwijderde Pagina\'s permanent verwijderen';
 $_lang["role_errors"] = 'Waarschuwingsvenster weergeven';
@@ -834,7 +851,7 @@ $_lang["role_module_management"] = 'Modulebeheer';
 $_lang["role_name"] = 'Naam Rol';
 $_lang["role_new_module"] = 'Nieuwe Module maken';
 $_lang["role_new_role"] = 'Nieuwe Rollen maken';
-$_lang["role_new_user"] = 'Nieuwe Gebruikers toevoegen';
+$_lang["role_new_user"] = 'Maak nieuwe manager gebruikers aan';
 $_lang["role_new_web_user"] = 'Webgebruikers toevoegen';
 $_lang["role_plugin_management"] = 'Plug-inbeheer';
 $_lang["role_publish_doc"] = 'Pagina\'s publiceren';
@@ -849,24 +866,24 @@ $_lang["role_save_plugin"] = 'Plug-ins opslaan';
 $_lang["role_save_role"] = 'Rollen opslaan';
 $_lang["role_save_snippet"] = 'Snippets opslaan';
 $_lang["role_save_template"] = 'Templates opslaan';
-$_lang["role_save_user"] = 'Gebruikers opslaan';
+$_lang["role_save_user"] = 'Manager gebruikers opslaan';
 $_lang["role_save_web_user"] = 'Webgebruikers opslaan';
 $_lang["role_snippet_management"] = 'Snippetbeheer';
 $_lang["role_template_management"] = 'Templatebeheer';
 $_lang["role_title"] = 'Rol aanmaken/bewerken';
 $_lang["role_udperms"] = 'Toegangsrechtenbeheer';
-$_lang["role_user_management"] = 'Gebruikersbeheer';
+$_lang["role_user_management"] = 'Manager gebruikersbeheer';
 $_lang["role_view_docdata"] = 'Paginagegevens weergeven';
 $_lang["role_view_eventlog"] = 'Bekijk logboek (events)';
 $_lang["role_view_logs"] = 'Systeemlogboek weergeven';
 $_lang["role_view_unpublished"] = 'Bekijk niet gepubliceerde Pagina\'s';
 $_lang["role_web_access_persmissions"] = 'Webtoegangsbeheer';
 $_lang["role_web_user_management"] = 'Webgebruikersbeheer';
-$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
-$_lang["rss_url_news_message"] = 'Geef hier de URL voor de MODX Nieuws Feed.';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/evocms-release-news';
+$_lang["rss_url_news_message"] = 'Voer de URL in voor de Nieuws Feed.';
 $_lang["rss_url_news_title"] = 'RSS nieuws feed';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
-$_lang["rss_url_security_message"] = 'Geef hier de URL voor de MODX Beveiligings Feed.';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/evocms-security-news';
+$_lang["rss_url_security_message"] = 'Voer de URL in voor de beveiligingsfeed.';
 $_lang["rss_url_security_title"] = 'RSS Beveiliging Feed';
 $_lang["run_module"] = 'Module uitvoeren';
 $_lang["saturday"] = 'Zaterdag';
@@ -897,7 +914,7 @@ $_lang["search_results_returned_id"] = 'ID';
 $_lang["search_results_returned_msg"] = 'Uw zoekcriteria hebben <b>%s</b> Pagina\'s opgeleverd. Als het teveel resultaten heeft opgeleverd, probeer dan een specifiekere zoekopdracht. Met de twee linker kolommen kunt u het bestand in de Website boomstructuur vinden of de Pagina bekijken. De twee meest rechtse kolommen geven aan of een Pagina verwijderd is en wat de publicatiestatus is.<p />';
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Geef dit item weer';
-$_lang["security"] = 'Beveiliging';
+$_lang["security"] = 'Gebruikers';
 $_lang["security_notices_tab"] = 'Beveiligingswaarschuwingen';
 $_lang["security_notices_title"] = 'Beveiligingswaarschuwingen';
 $_lang["select_date"] = 'Selecteer een datum';
@@ -913,20 +930,27 @@ $_lang["servertime"] = 'Server tijd';
 $_lang["set_automatic"] = 'Stel in als automatisch';
 $_lang["set_default"] = 'Stel in als standaard';
 $_lang["set_default_all"] = 'Stel standaarden in';
-$_lang["settings_after_install"] = 'Indien dit een nieuwe installatie betreft, moet u deze instellingen controleren en wijzigen waar nodig. Na controle klikt u op \'Opslaan\' om de wijzigingen in het bestand op te slaan.';
+$_lang["settings_after_install"] = 'Omdat dit een nieuwe installatie is, moet u deze instellingen bekijken en wijzigen waar nodig. Nadat u de instellingen hebt bekeken, drukt u op \'Opslaan\' om de instellingen bij te werken.';
 $_lang["settings_config"] = 'Configuratie';
 $_lang["settings_dependencies"] = 'Afhankelijkheden';
 $_lang["settings_events"] = 'Systeemgebeurtenissen';
 $_lang["settings_furls"] = 'Zoekmachine vriendelijke URL\'s';
 $_lang["settings_general"] = 'Algemeen';
+$_lang["settings_group_tv_message"] = 'Kies of Template Variabelen moeten worden gegroepeerd in secties of tabbladen (benoemd door tv-categorie) bij het bewerken van een pagina';
+$_lang["settings_group_tv_options"] = 'Nee, secties op het tabblad Algemeen, tabbladen op het tabblad Algemeen, secties op nieuw tabblad, tabbladen op nieuw tabblad, nieuwe tabbladen';
 $_lang["settings_misc"] = 'Overige';
 $_lang["settings_security"] = 'Beveiliging';
 $_lang["settings_KC"] = 'Bestandsbrowser';
 $_lang["settings_page_settings"] = 'Pagina instellingen';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Instellingen';
+$_lang["show_fullscreen_btn_message"] = 'Toon Volledig scherm knop';
+$_lang["show_newresource_btn_message"] = 'Toon Nieuwe pagina knop';
+$_lang["settings_show_picker_message"] = 'Pas het thema van de manager aan en sla op in de lokale opslag';
+$_lang["show_fullscreen_btn"] = 'Volledig scherm switchen';
+$_lang["show_newresource_btn"] = 'Nieuwe pagina knop';
 $_lang["settings_site"] = 'Website';
-$_lang["settings_strip_image_paths_message"] = 'Als dit op \'Nee\' is gezet zal MODX de locaties van Afbeeldingen / Bestanden / Flash e.d. uit de bestandsbeheer browser omzetten naar absolute paden. Relatieve URL\'s zijn handig als u uw MODX installatie wilt verhuizen van bijvoorbeeld een test naar productie website. Als u geen idee heeft wat dit betekend laat u deze optie het beste op \'Ja\' staan.';
+$_lang["settings_strip_image_paths_message"] = 'Als dit op \'Nee\' staat zal de bestandsbrowser src\'s (afbeeldingen, bestanden, enz.) als absolute URL\'s worden geplaatst. Relatieve URL\'s zijn handig als u uw installatie wilt verplaatsen, bijvoorbeeld van een demosite naar een productiesite. Als je geen idee hebt wat dit betekent, kun je het het beste gewoon laten staan op \'Ja\'.';
 $_lang["settings_strip_image_paths_title"] = 'Browserpaden herschrijven?';
 $_lang["settings_templvars"] = 'Template Variabelen';
 $_lang["settings_title"] = 'Systeem configuratie';
@@ -935,8 +959,9 @@ $_lang["settings_users"] = 'Gebruiker';
 $_lang["show_meta"] = 'Toon META Keywords tab';
 $_lang["show_meta_message"] = 'Toon de verouderde META Keywords tab wanneer Pagina\'s worden aangepast in the Manager.';
 $_lang["show_tree"] = 'Website boomstructuur weergeven';
+$_lang["show_picker"] = 'Toon manager kleurenpalet';
 $_lang["showing"] = 'Weergeven';
-$_lang["signupemail_message"] = 'Hier kunt u het bericht instellen die naar uw Gebruikers verstuurd wordt wanneer u voor hun een account heeft aangemaakt en MODX een e-mail laat sturen met hun Gebruikersnaam en wachtwoord. <br /><br /><b>NB:</b> De volgende codes worden door MODX vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de website, <br />[+uid+] - Gebruikersnaam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de Gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw Gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';
+$_lang["signupemail_message"] = 'Hier kunt u het bericht instellen die naar uw gebruikers verstuurd wordt wanneer u voor hun een account heeft aangemaakt en Evolution een e-mail laat sturen met hun gebruikersnaam en wachtwoord. <br /><br />De volgende codes worden door Evolution vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - naam van uw website, <br />[+saddr+] - e-mail adres van uw website, <br />[+surl+] - adres van de website, <br />[+uid+] - gebruikersnaam of id, <br />[+pwd+] - wachtwoord, <br />[+ufn+] - volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';
 $_lang["signupemail_title"] = 'Registratie e-mail';
 $_lang["site"] = 'Website';
 $_lang["site_schedule"] = 'Website planning';
@@ -952,6 +977,7 @@ $_lang["siteunavailable_page_message"] = 'Geef de ID van de Pagina dat wordt wee
 $_lang["siteunavailable_page_title"] = 'Website niet beschikbaar pagina';
 $_lang["siteunavailable_title"] = 'Website niet beschikbaar bericht';
 $_lang["snippet"] = 'Snippet';
+$_lang["snippets"] = 'Snippets';
 $_lang["snippet_code"] = 'Snippet code (php)';
 $_lang["snippet_desc"] = 'Beschrijving';
 $_lang["snippet_execonsave"] = 'Snippet uitvoeren na opslaan.';
@@ -977,45 +1003,51 @@ $_lang["sunday"] = 'Zondag';
 $_lang["sys_alert"] = 'Systeem waarschuwing';
 $_lang["sysinfo_activity_message"] = 'Deze lijst toont de Pagina\'s die recent door uw Gebruikers werden gewijzigd.';
 $_lang["sysinfo_userid"] = 'Gebruiker';
-$_lang["system_email_signup"] = 'Hallo [+uid+]
+$_lang["system"] = 'Systeem';
+$_lang["system_email_signup"] = '<!doctype html>
+<html>
+Hallo [+uid+]
 
-Hier zijn uw inloggegevens voor [+sname+] Content Management Systeem ([+surl+]):
+Hier zijn uw inloggegevens voor [+sname+] Content Manager:
 
 Gebruikersnaam: [+uid+]
 Wachtwoord: [+pwd+]
 
-Nadat u ingelogd bent in het Content Management Systeem, kunt u uw wachtwoord wijzigen.
+Zodra u zich aanmeldt bij Content Manager ([+surl+]), kunt u uw wachtwoord wijzigen.
 
 Met vriendelijke groet,
-Uw Website Beheerder';
+Website Admin
+</html>';
 $_lang["system_email_webreminder"] = 'Hallo [+uid+]
 
-Om uw wachtwoord te activeren klikt u op de volgende link:
+Klik op de volgende link om uw nieuwe wachtwoord te activeren:
 
 [+surl+]
 
-Wanneer dit succesvol is kunt u met het volgende wachtwoord inloggen:
+Als dit lukt, kunt u het volgende wachtwoord gebruiken om in te loggen:
 
 Wachtwoord:[+pwd+]
 
-Wanneer u niet om deze mail gevraagd heeft kunt u deze e-mail verwijderen zonder aktie te ondernemen.
+Als u deze e-mail niet heeft aangevraagd, negeert u deze.
 
 Met vriendelijke groet,
-Uw Website Beheerder';
+Website Admin';
 $_lang["system_email_websignup"] = 'Hallo [+uid+]
 
-Hier zijn uw inloggegevens voor [+sname+] ([+surl+]):
+Hier zijn uw inloggegevens voor [+sname+]:
 
 Gebruikersnaam: [+uid+]
 Wachtwoord: [+pwd+]
 
-Na dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.
+Nadat u zich hebt aangemeld bij [+sname+] ([+surl+]), kunt u uw wachtwoord wijzigen.
+
 Met vriendelijke groet,
-Uw Website Beheerder';
+Website Admin';
 $_lang["table_hoverinfo"] = 'Beweeg de muiscursor over een tabelnaam om een korte beschrijving te zien van de funktie van de tabel (niet voor alle tabellen is <i>informatie</i> beschikbaar).';
 $_lang["table_prefix"] = 'Tabel voorvoegsel (prefix)';
 $_lang["tag"] = 'Tag';
 $_lang["template"] = 'Template';
+$_lang["templates"] = 'Templates';
 $_lang["template_assignedtv_tab"] = 'Toegekende Template Variabelen';
 $_lang["template_code"] = 'Template code (html)';
 $_lang["template_desc"] = 'Beschrijving';
@@ -1059,18 +1091,19 @@ $_lang["tmplvars_type"] = 'Invoer type';
 $_lang["tmplvars_widget"] = 'Widget';
 $_lang["tmplvars_widget_prop"] = 'Widget instellingen';
 $_lang["to"] = 'naar';
+$_lang["toggle_fullscreen"] = 'Volledig scherm switchen';
 $_lang["tools"] = 'Beheer';
 $_lang["top_howmany_message"] = 'Wanneer u de statistieken bekijkt, hoe lang wilt u de \'Top ...\' lijst hebben?';
 $_lang["top_howmany_title"] = 'Toon aantal statistieken';
 $_lang["total"] = 'totaal';
-$_lang["track_visitors_message"] = 'Deze optie zorgt voor een aanhechtingspunt voor analytische Plug-ins (bezoekersstatistieken). Het kan worden gebruikt om te be&iuml;nvloeden of website bezoeken worden gelogd.';
-$_lang["track_visitors_title"] = 'Bezoeken loggen';
+$_lang["track_visitors_message"] = 'Vink aan om de onderliggende bronnen in de documentenstructuur weer te geven';
+$_lang["track_visitors_title"] = 'Toon onderliggende pagina\'s';
 $_lang["tree_page_click"] = 'Pagina klik gedrag';
 $_lang["tree_page_click_message"] = 'Het standaard gedrag bij het klikken op een pagina in de boomstructuur.';
 $_lang["use_breadcrumbs"] = 'Toon navigatie';
 $_lang["use_breadcrumbs_message"] = 'Toon de navigatie bij het maken of bewerken van pagina\'s in de Manager';
 $_lang["tree_show_protected"] = 'Toon beschermde pagina\'s';
-$_lang["tree_show_protected_message"] = 'Als dit op "Nee" staat, worden beschermde Pagina\'s en al hun afstammelingen niet getoond in de Website boomstructuur. "Nee" is de legacy (erfenis) instelling van MODX.';
+$_lang["tree_show_protected_message"] = 'Wanneer ingesteld op "Nee", worden beschermde bronnen (en al hun onderliggende bronnen) niet weergegeven in de boomstructuur.';
 $_lang["truncate_table"] = 'Klik hier om deze tabel in te korten';
 $_lang["tuesday"] = 'Dinsdag';
 $_lang["tv"] = 'TV';
@@ -1106,6 +1139,7 @@ $_lang["use_alias_path_message"] = 'Door \'Ja\' te selecteren wordt er een virtu
 $_lang["use_alias_path_title"] = 'Gebruik gebruiksvriendelijke alias paden';
 $_lang["use_editor_message"] = 'Bewerken met de geavanceerde teksteditor aanzetten. Deze setting geld voor alle Pagina\'s, maar kan worden overschreven in de instellingen van de Gebruiker.';
 $_lang["use_editor_title"] = 'Teksteditor aan/uitzetten';
+$_lang["use_global_tabs"] = 'Gebruik de algemene tabbladen';
 $_lang["user"] = 'Gebruiker';
 $_lang["user_block"] = 'Geblokkeerd';
 $_lang["user_blockedafter"] = 'Geblokkeerd na';
@@ -1133,12 +1167,12 @@ $_lang["user_photo_message"] = 'Voer een url voor de foto van deze Gebruiker in 
 $_lang["user_prevlogin"] = 'Laatste keer aangemeld';
 $_lang["user_role"] = 'Rol';
 $_lang["user_state"] = 'Provincie';
-$_lang["user_title"] = 'Gebruiker toevoegen of bewerken';
+$_lang["user_title"] = 'Manager gebruiker creëren/bewerken';
 $_lang["user_upload_message"] = 'Als u wilt voorkomen dat deze Gebruiker bestanden in deze categorie kan uploaden, Zorg dan dat \'Gebruik Systeem Configuratie Instellingen\' niet is aangevinkt en laat het veld leeg.';
 $_lang["user_use_config"] = 'Gebruik Systeem Configuratie Instellingen';
 $_lang["user_zip"] = 'Postcode';
 $_lang["username"] = 'Gebruikersnaam';
-$_lang["users"] = 'Beveiliging';
+$_lang["users"] = 'Gebruikers';
 $_lang["valid_hostnames_message"] = 'Help XSS exploits misbruik te voorkomen met de systeem instelling site_url  door een komma gescheiden lijst van geldige hostnamen voor deze installatie te gebruiken. Dit is belangrijk voor bepaalde typen gedeelde hosts of hosts rechtstreeks via een IP-adres te benaderen. De eerste hostnaam in de lijst wordt gebruikt als de HTTP_HOST wanneer deze niet overeenkomt met een geldige hostnaam.';
 $_lang["valid_hostnames_title"] = 'Geldige hostnamen';
 $_lang["validate_referer_message"] = 'Valideer de HTTP_REFERER headers om het risico te verkleinen dat uw website beheerders bedonderd worden door een CSRF (Cross Site Request Forgery) aanval. Soms is dit echter niet mogelijk als uw server geen HTTP_REFERER headers verzend.';
@@ -1162,18 +1196,18 @@ $_lang["web_user_management_title"] = 'Webgebruikers';
 $_lang["web_user_title"] = 'Aanmaken/bewerken Webgebruiker';
 $_lang["web_users"] = 'Webgebruikers';
 $_lang["weblink"] = 'Weblink';
-$_lang["webpwdreminder_message"] = 'Hier kunt u de boodschap instellen die naar uw Gebruikers verstuurd wordt als zij een nieuw wachtwoord aanvragen per e-mail. MODX zal een e-mail sturen met het nieuwe wachtwoord en activerings informatie.<br /><br /><b>NB:</b> De volgende codes worden door MODX vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de website, <br />[+uid+] - Aanmeld naam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de Gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw Gebruikers daardoor hun aanmeldgevens niet ontvangen!</b>';
+$_lang["webpwdreminder_message"] = 'Hier kunt u de boodschap instellen die naar uw gebruikers verstuurd wordt als zij een nieuw wachtwoord aanvragen per e-mail. Evolution zal een e-mail sturen met het nieuwe wachtwoord en activeringsinformatie.<br /><br />De volgende codes worden door Evolution vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - naam van uw website, <br />[+saddr+] - e-mail adres van uw website, <br />[+surl+] - adres van de website, <br />[+uid+] - aanmeld naam of id, <br />[+pwd+] - wachtwoord, <br />[+ufn+] - volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw gebruikers daardoor hun aanmeld gegevens niet ontvangen!</b>';
 $_lang["webpwdreminder_title"] = 'Herinnering e-mailadres';
-$_lang["websignupemail_message"] = 'Hier kunt u de boodschap instellen die naar uw Gebruikers verstuurd wordt wanneer u voor hen een webaccount heeft aangemaakt en MODX een e-mail laat sturen met hun Gebruikersnaam en wachtwoord. <br /><br /><b>NB:</b> De volgende codes worden door MODX vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de website, <br />[+uid+] - Aanmeld naam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de Gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw Gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';
+$_lang["websignupemail_message"] = 'Hier kunt u de boodschap instellen die naar uw gebruikers verstuurd wordt wanneer u voor hen een web account heeft aangemaakt en Evolution een e-mail laat sturen met hun gebruikersnaam en wachtwoord. <br /><br />De volgende codes worden door Evolution vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - naam van uw website, <br />[+saddr+] - e-mail adres van uw website, <br />[+surl+] - adres van de website, <br />[+uid+] - aanmeld naam of id, <br />[+pwd+] - wachtwoord, <br />[+ufn+] - volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw gebruikers daardoor hun aanmeld gegevens niet ontvangen!</b>';
 $_lang["websignupemail_title"] = 'Bevestiging e-mail bij aanmelding:<br />(Webgebruiker)';
 $_lang["wednesday"] = 'Woensdag';
 $_lang["welcome_messages"] = 'In uw inbox staan <b>%d</b> bericht(en), waarvan <b>%s</b> ongelezen.';
-$_lang["welcome_title"] = 'Welkom bij uw MODX Content Management Systeem';
-$_lang["which_editor_message"] = 'Hier kiest u welke teksteditor u wenst te gebruiken. TinyMCE en FCKeditor werken goed maar zijn nog niet uitgebreid getest met MODX. Xihna (gabaseerd op HTMLArea) is minder geschikt voor strikte, op CCS gebaseerde ontwerpen, maar heeft meer functies.';
+$_lang["welcome_title"] = 'Welkom bij uw Evolution CMS Content Manager';
+$_lang["which_editor_message"] = 'Selecteer uw Texteditor (RTE). U kunt extra RTE\'s downloaden en installeren vanaf de downloadpagina.';
 $_lang["which_editor_title"] = 'Kies uw teksteditor';
 $_lang["working"] = 'Wordt verwerkt...';
 $_lang["wrap_lines"] = 'Regels afbreken';
-$_lang["xhtml_urls_message"] = 'Vervangt ampersand (&amp;) tekens in urls die zijn gegenereerd door MODX met de validerende &amp;<!-- -->amp; html entiteit';
+$_lang["xhtml_urls_message"] = 'Vervangt ampersand (&amp;) tekens in urls die worden gegenereerd door EVO met de validatie &amp;<!-- -->amp; htmlentity';
 $_lang["xhtml_urls_title"] = 'XHTML URL\'s';
 $_lang["yes"] = 'Ja';
 $_lang["you_got_mail"] = 'U heeft een nieuw bericht';
@@ -1201,6 +1235,9 @@ $_lang["enable_filter_message"] = 'Filters kunt u manipuleren van de manier waar
 $_lang["enable_filter_phx_warning"] = 'Wanneer de PHx plugin is ingeschakeld staan de ingebouwde filters standaard uitgeschakeld';
 
 $_lang["enable_filter_phx_warning"] = 'Wanneer de PHx plugin is ingeschakeld staan de ingebouwde filters standaard uitgeschakeld';
+
+$_lang["enable_at_syntax_title"] = '&lt;@SYNTAX&gt; aanzetten';
+$_lang["enable_at_syntax_message"] = '&lt;@SYNTAX&gt; is een eenvoudig en lichtgewicht. Dit is ontworpen om mede-existentie met HTML-tags en inhoudstrings te overwegen.';
 
 $_lang["bkmgr_alert_mkdir"] = 'Een bestand kan niet worden gemaakt in een directory. Kijk wat de toestemming (permission) is van [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Een website kan worden hersteld door het gebruik van een SQL bestand.</p>';
@@ -1235,10 +1272,10 @@ $_lang["make_folders_title"] = 'Voeg eind slash toe aan de URL';
 $_lang["make_folders_message"] = 'Een slash toevoegen aan Pagina\'s die als mappen worden gebruikt wanneer u gebruik maakt van FURLs.';
 
 $_lang["check_files_onlogin_title"] = 'Bekijk Core bestanden bij inloggen';
-$_lang["check_files_onlogin_message"] = 'Wanneer u deze optie inschakelt, zullen belangrijke systeembestanden worden gecontroleerd of deze zijn aangepast of gescript en uw website aanvallen. Hoewel dit geen waterdichte garantie kan het u helpen te waarschuwen.';
+$_lang["check_files_onlogin_message"] = 'Door deze optie in te schakelen, worden belangrijke systeembestanden gecontroleerd op aanpassingen die kenmerkend zijn voor gescripte website-aanvallen. Hoewel het geen garantie is, kan het u waarschuwen voor een aangetast systeembestand en website.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Belangrijke Systeem bestanden zijn aangepast!';
-$_lang["configcheck_sysfiles_mod_msg"] = 'MODX is geconfigureerd om belangrijke systeembestanden te controleren op mogelijke script aanvallen. Deze waarschuwing betekent niet noodzakelijk dat uw site in gevaar is gebracht. Je kunt de beveiligde bestanden in uw installatie (ingesteld in systeemconfiguratie -> Gebruikers -> Controleer core bestanden bij inloggen) aanpassen. Ga naar Systeem Configuratie en klik op opnieuw op slaan om deze boodschap te verbergen. Veranderingen in de volgende bestanden zijn gevonden in:';
+$_lang["configcheck_sysfiles_mod_msg"] = 'U hebt EVO geconfigureerd om belangrijke systeembestanden te controleren op mogelijke website-scriptaanvallen. Deze waarschuwing betekent niet noodzakelijk dat uw site is gehackt, maar u moet de gecontroleerde bestanden in uw installatie bekijken (ingesteld in Systeemconfiguratie -> Gebruiker -> Controleer kernbestanden bij inloggen). Als u merkt dat uw bestanden ongewijzigd blijven of wijzigingen zijn aangebracht door sitebeheerders, gaat u naar Systeemconfiguratie en klikt u op om instellingen opnieuw op te slaan om dit bericht te sluiten. Wijzigingen in de volgende bestanden zijn gevonden:';
 
 $_lang['email_method_title'] = 'Sendmail methode';
 $_lang['email_method_mail'] = 'mail() PHP functie';
@@ -1252,7 +1289,7 @@ $_lang['smtp_port_title'] = 'SMTP poort';
 
 $_lang["setting_resource_tree_node_name"] = 'De hoofdnaam van de boomstructuur';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificeer het paginaveld om gebruik te maken van de hoofdnaam in de boomstructuur bij het renderen. Standaard staat deze op Pagina Titel, hoewel elk Pagina veld kan worden gebruikt, zoals menutitel en alias.';
-$_lang["setting_resource_tree_node_name_desc_add"] = 'Let op: Sinds versie MODX 1.1 kunt u de weergave van getoonde namen veranderen bij de sorteeropties in de boomstructuur. Deze instelling wordt gebruikt wanneer de weergave naam in de boomstructuur is ingesteld op &quot;Standaard&quot;.';
+$_lang["setting_resource_tree_node_name_desc_add"] = 'Opmerking: U kunt deze weergavenaam wijzigen in de sorteeroptie van de boomstructuur. Deze instelling wordt gebruikt wanneer Display Name in boomstructuur is ingesteld op Standaard.';
 
 $_lang["resource_opt_alvisibled"] = 'Gebruik huidige alias als alias pad';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
@@ -1262,6 +1299,9 @@ $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimaal aantal gemiste ID';
 $_lang["docid_incrmnt_method_2"] = 'Maximaal ID+1';
 
+$_lang["enable_cache_title"] = 'Document caching';
+$_lang["disabled_at_login"] = 'Uitgeschakeld bij inloggen';
+
 $_lang["cache_type_title"] = 'Document cache type';
 $_lang["cache_type_1"] = 'Cache is gebaseerd op document id (standaard)';
 $_lang["cache_type_2"] = 'Cache is gebaseerd op document id en $_GET parameters';
@@ -1270,8 +1310,8 @@ $_lang["seostrict_message"] = 'Gebruik van strikte URL\'s om dubbele inhoud te v
 $_lang["aliaslistingfolder_title"] = 'Gebruik AliasListing alleen bij mappen';
 $_lang["aliaslistingfolder_message"] = 'Vermindert het geheugengebruik wanneer de site veel pagina\'s heeft';
 
-$_lang["settings_friendlyurls_alert"] = 'Het is noodzakelijk om het ht.access bestand van een MODX installatie te hernoemen naar .htaccess om de Friendly URL-functie te gebruiken.';
-$_lang["settings_friendlyurls_alert2"] = 'Aangezien MODX in een subdirectory is geïnstalleerd, moet de inhoud van .htaccess gewijzigd worden.';
+$_lang["settings_friendlyurls_alert"] = 'Het is noodzakelijk om het ht.access bestand in de EVO-installatiemap naar .htaccess te hernoemen voor het gebruik van de Friendly URL-functie.';
+$_lang["settings_friendlyurls_alert2"] = 'Omdat EVO in een submap is geïnstalleerd, is het noodzakelijk om de inhoud van .htaccess te wijzigen.';
 
 $_lang["user_street"] = 'Adres';
 $_lang["user_city"] = 'Stad';
@@ -1292,9 +1332,9 @@ $_lang["export_site.static.php5"] = 'Vervang string (na)';
 $_lang["export_site.static.php6"] = 'Doel';
 $_lang["export_site.static.php7"] = 'Bestanden kunnen niet worden aangepast naar [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Verstuur een e-mail bij MODX foutmeldingen';
-$_lang["mutate_settings.dynamic.php7"] = 'Geen notificatie';
-$_lang["mutate_settings.dynamic.php8"] = 'Een e-mail met de foutmelding wordt verzonden naar [(emailsender)] ([+emailsender+]) wanneer er een systeem probleem in MODX voorkomt. De details kunt u bekijken in het systeem error log bestand.';
+$_lang["mutate_settings.dynamic.php6"] = 'Verzend e-mail bij fouten';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'Een e-mail met de foutbron wordt verzonden naar [(emailsender)] ([+emailsender+]) als er een fout optreedt. De details van de fout zijn te zien in het gebeurtenissenlogboek van de manager.';
 
 $_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
 $_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
@@ -1310,6 +1350,7 @@ $_lang["error_no_group_selected"]     = "Geen groep geselecteerd als ontvanger v
 $_lang["error_movedocument1"]         = "Document kan niet zijn eigen onderliggende document zijn!";
 $_lang["error_movedocument2"]         = "Document ID niet doorgegeven in aanvraag!";
 $_lang["error_movedocument3"]         = "Nieuwe onderliggende document niet in aanvraag!";
+$_lang["error_internet_connection"]   = "Server is niet beschikbaar. Controleer je internetverbinding!";
 
 $_lang["login_processor_unknown_user"]       = "Onjuiste gebruikersnaam of wachtwoord ingevoerd!";
 $_lang["login_processor_wrong_password"]     = "Onjuiste gebruikersnaam of wachtwoord ingevoerd!";
@@ -1333,7 +1374,7 @@ $_lang["check_toggle"] = "Selectie aan/uit";
 
 $_lang["version_notices"] = "Meldingen over versies";
 
-$_lang["em_button_shift"] = "(Shift+muisklik om meerdere vensters te openen)";
+$_lang["em_button_shift"] = "(Shift+muiseklik om meerdere vensters te openen)";
 
 $_lang["reset_sysfiles_checksum_button"] = "Heropbouw Checksums";
 $_lang["reset_sysfiles_checksum_alert"] = "Weet u zeker dat u de systeembestanden checksums wil resetten?";
@@ -1342,11 +1383,13 @@ $_lang["file_browser_disabled_msg"] = "De Bestandsbrowser custom optie staat nie
 $_lang["which_browser_default_title"]= "Standaard bestandsbrowser";
 $_lang["which_browser_default_msg"]= "Kies de Bestandsbrowser welke u liever als standaard gebruikt. Bij de gebruikers instellingen kunt u kiezen voor een custom Bestandsbrowser per gebruiker.";
 $_lang["which_browser_title"]= "Bestandsbrowser";
-$_lang["which_browser_msg"]= "U kunt kiezen om een aangepaste bestandsbrowser te gebruiken voor deze gebruiker.";
+$_lang["which_browser_msg"]= "U kunt kiezen om een aangepaste Bestandsbrowser te gebruiken voor deze gebruiker.";
 $_lang["option_default"] = "Standaard";
+$_lang["position"] = "Positie";
+$_lang["are_you_sure"] = "Weet u het zeker?";
 
-$_lang['evo_downloads_title'] = "Evolution downloads";
-$_lang['help_translating_title'] = "Help MODX Evolution vertalen";
+$_lang['evo_downloads_title'] = "Evolution Downloads";
+$_lang['help_translating_title'] = "Help Evolution vertalen";
 $_lang['download'] = "Download";
 $_lang['downloads'] = "Downloads";
 $_lang["previous_releases"] = "Vorige versies";
@@ -1355,7 +1398,7 @@ $_lang["extras"] = "Extra's";
 $_lang["display_locks"] = "Toon geblokkeerde";
 $_lang["role_display_locks"] = "Toon geblokkeerde";
 $_lang["session_timeout"] = "Sessie timeout";
-$_lang["session_timeout_msg"] = "MODX zal de server pingen volgens de instelling &quot;Mail Check Time Period&quot;. Als de laatste ping deze instelling overschrijdt, wordt de bijbehorende sessie ongeldig beschouwd en alle gerelateerde sloten worden automatisch verwijderd. Stel waarde in minuten (> 2 min, standaard 15 min).";
+$_lang["session_timeout_msg"] = "EVO pingt de server volgens de instelling &quot;Mail Check Time Period&quot;. Als de laatste ping deze instelling overschrijdt, wordt de bijbehorende sessie als ongeldig beschouwd en worden alle gerelateerde vergrendelingen automatisch verwijderd. Stel de waarde in minuten in (> 2min, standaard 15min).";
 $_lang["unlock_element_id_warning"] = "Weet u zeker dat je [+element_type+] (ID [+id+]) wilt vrijgeven voor bewerken?";
 $_lang["lock_element_type_1"] = "Template";
 $_lang["lock_element_type_2"] = "Template Variabele";
@@ -1368,8 +1411,8 @@ $_lang["lock_element_type_8"] = "Rol";
 $_lang["lock_element_editing"] = "U past element [+element_type+] aan sinds\n[+lasthit_df+]";
 $_lang["lock_element_locked_by"] = "[+element_type+] is geblokkeerd door gebruiker\n[+username+] sinds [+lasthit_df+]";
 
-$_lang["minifyphp_incache_title"] = 'Minify php codes in de site cache';
-$_lang["minifyphp_incache_message"] = 'Minify php codes (snippets en plugins) en sla op in de site cache file, zie ook: <a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
+$_lang["minifyphp_incache_title"] = 'Minify php code in de site cache';
+$_lang["minifyphp_incache_message"] = 'Minify php code (snippets en plugins) en sla op in het site cache bestand. Zie: <a href="https://github.com/modxcms/evolution/issues/938" target="_blank">#938</a>';
 
 $_lang["logout_reminder_msg"] = "Ter herinnering: Het lijkt er op dat op [+datum+] je vergeten bent om uit te loggen. In de toekomst kun je dit beter wel doen na je werk!";
 
@@ -1383,5 +1426,55 @@ $_lang["allow_eval_dont_eval"]         = "Niet alle functies toelaten";
 $_lang["safe_functions_at_eval_title"] = "Functies die eval mogen toestaan";
 $_lang["safe_functions_at_eval_msg"]   = "Met komma's gescheiden lijst";
 
-
 $_lang["multiple_sessions_msg"]   = "Ter informatie: Meerdere actieve gebruiker sessies (in totaal [+totaal+]) gevonden voor de gebruiker <b>[+gebruikersnaam+]</b>.";
+$_lang["iconv_not_available"]     = "Heb is belangrijk om de extentie iconv te installeren of aan te zetten. Ga na bij uw hostingpartij om deze aan te zetten mocht u hier geen kaas van hebben gegeten.";
+
+$_lang["cm_create_new_category"] = "Creëer een nieuwe categorie";
+$_lang["cm_category_name"] = "Categorie naam";
+$_lang["cm_category_position"] = "Categorie positie";
+$_lang["cm_no_x_assigned"] = "Geen %s toegewezen";
+$_lang["cm_save_categorization"] = "Sla categorisering op";
+$_lang["cm_update_categories"] = "Categorieën updaten";
+$_lang["cm_assigned_elements"] = "Toegekende elementen";
+$_lang["cm_edit_name"] = "Naam aanpassen";
+$_lang["cm_mark_for_deletion"] = "Aanvinken voor verwijdering";
+$_lang["cm_delete_now"] = "Verwijder direct";
+$_lang["cm_delete_element_x_now"] = "Verwijder &quot;%s&quot; direct";
+$_lang["cm_select_element_group"] = "Selecteer een elementengroep";
+$_lang["cm_global_messages"] = "Globale meldingen";
+$_lang["cm_add_new_category"] = "Nieuwe categorie toevoegen";
+$_lang["cm_edit_categories"] = "Categorieën wijzigen";
+$_lang["cm_sort_categories"] = "Sorteer categorieën";
+$_lang["cm_categorize_elements"] = "Elementen categoriseren ";
+$_lang["cm_translation"] = "Vertaling";
+$_lang["cm_translations"] = "Vertalingen";
+$_lang["cm_categorize_x"] = "Categoriseer <span class=\"highlight\">%s</span>";
+$_lang["cm_unknown_error"] = "Er is iets niet goed gegaan.";
+$_lang["cm_x_assigned_to_category_y"] = "<span class=\"highlight\">%s(%s)</span> is toegewezen aan categorie <span class=\"highlight\">%s(%s)</span>";
+$_lang["cm_no_categorization"] = "Geen indeling gemaakt.";
+$_lang["cm_no_changes"] = "Niets te veranderen, dus geen wijzigingen.";
+$_lang["cm_x_changes_made"] = "<span class=\"highlight\">%s</span> aanpassingen gemaakt";
+$_lang["cm_enter_name_for_category"] = "Geef een naam voor de nieuwe categorie.";
+$_lang["cm_category_x_exists"] = "Categorie <span class=\"highlight\">%s</span> bestaat al.";
+$_lang["cm_category_x_saved_at_position_y"] = "De nieuwe caterogie <span class=\"highlight\">%s</span> is opgeslagen op positie <span class=\"highlight\">%s</span>.";
+$_lang["cm_category_x_moved_to_position_y"] = "Categorie <span class=\"highlight\">%s</span> is verplaatst naar positie <span class=\"highlight\">%s</span>";
+$_lang["cm_category_x_deleted"] = "Categorie <span class=\"highlight\">%s</span> is verwijderd";
+$_lang["cm_category_x_renamed_to_y"] = "Categorie <span class=\"highlight\">%s</span> is hernoemd naar <span class=\"highlight\">%s</span>";
+$_lang["cm_translation_for_x_empty"] = "Vertaling voor <span class=\"highlight\">%s</span> is leeg";
+$_lang["cm_translation_for_x_to_y_success"] = "Vertaling van <span class=\"highlight\">%s</span> naar <span class=\"highlight\">%s</span> is succesvol opgeslagen";
+$_lang["cm_save_new_sorting"] = "Bewaar nieuwe volgorde";
+$_lang["cm_translate_phrases"] = "Vertaal zinnen";
+$_lang["cm_translate_module_phrases"] = "Vertaal module-zinnen";
+$_lang["cm_native_phrase"] = "Inheemse zin";
+
+$_lang["btn_view_options"] = 'Toon opties';
+$_lang["view_options_msg"] = 'Tonen van elementen kan worden aangepast via &quot;Toon opties&quot; knop. Instellingen worden opgeslagen en bijgewerkt per browser door gebruik van HTML5 localStorage.';
+$_lang["viewopts_title"] = 'Toon opties';
+$_lang["viewopts_cb_buttons"] = 'Knoppen';
+$_lang["viewopts_cb_descriptions"] = 'Omschrijvingen';
+$_lang["viewopts_cb_icons"] = 'Iconen';
+$_lang["viewopts_radio_list"] = 'Lijst';
+$_lang["viewopts_radio_inline"] = 'Inline';
+$_lang["viewopts_radio_flex"] = 'Flex';
+$_lang["viewopts_fontsize"] = 'Fontgrootte';
+$_lang["viewopts_cb_alltabs"] = 'Alle tabs';

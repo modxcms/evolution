@@ -478,7 +478,7 @@ function bold($cond = false)
     <input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
     <h1>
-        <i class="fa fa-plug"></i><?= $_lang['plugin_title'] ?><i class="fa fa-question-circle help"></i>
+        <i class="fa fa-plug"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_plugin']) ?><i class="fa fa-question-circle help"></i>
     </h1>
 
     <?= $_style['actionbuttons']['dynamic']['element'] ?>

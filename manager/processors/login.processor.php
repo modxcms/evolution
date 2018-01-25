@@ -181,9 +181,9 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 	if($hashType == 'phpass') {
 		$matchPassword = login($username, $_REQUEST['password'], $dbasePassword);
 	} elseif($hashType == 'md5') {
-		$matchPassword = loginMD5($internalKey, $givenPassword, $dbasePassword, $username);
+		$matchPassword = loginMD5($internalKey, $_REQUEST['password'], $dbasePassword, $username);
 	} elseif($hashType == 'v1') {
-		$matchPassword = loginV1($internalKey, $givenPassword, $dbasePassword, $username);
+		$matchPassword = loginV1($internalKey, $_REQUEST['password'], $dbasePassword, $username);
 	} else {
 		$matchPassword = false;
 	}

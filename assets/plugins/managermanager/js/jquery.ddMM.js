@@ -96,8 +96,8 @@ $.ddMM = {
 
 						$row.appendTo($target.find('> table:first')).after(ruleHtml);
 					}else{
-						$('#content_body').appendTo($target);
-						$('#content_header').hide();
+						$('#content_body').parent('td').appendTo($target.find('> table tbody:last'));
+						//$('#content_header').hide();
 					}
 				//We can't move these fields because they belong in a particular place
 				}else if (

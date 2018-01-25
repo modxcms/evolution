@@ -35,8 +35,10 @@ class Register extends Form
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID('web')) {
+        if ($id = $this->modx->getLoginUserID('web')) {
             $this->redirect('exitTo');
+            $this->user->edit($id);
+            $this->setFields($this->user->toArray());
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('register.default_skipTpl'));
             $this->setValid(false);
         };
@@ -72,7 +74,7 @@ class Register extends Form
     {
         $result = true;
         if (!is_null($fl->user)) {
-            $fl->user->set('email', $value);
+            $fl->user->set('email', strtolower($value));
             $result = $fl->user->checkUnique('web_user_attributes', 'email', 'internalKey');
         }
 
@@ -90,7 +92,7 @@ class Register extends Form
     {
         $result = true;
         if (!is_null($fl->user)) {
-            $fl->user->set('username', $value);
+            $fl->user->set('username', strtolower($value));
             $result = $fl->user->checkUnique('web_users', 'username');
         }
 
@@ -128,6 +130,8 @@ class Register extends Form
         $fields = $this->filterFields($this->getFormData('fields'), $this->allowedFields, $this->forbiddenFields);
         $checkActivation = $this->getCFGDef('checkActivation',0);
         if ($checkActivation) $fields['logincount'] = -1;
+        $fields['username'] = strtolower($fields['username']);
+        $fields['email'] = strtolower($fields['email']);
         $this->user->create($fields);
         $this->addWebUserToGroups(0, $this->config->loadArray($this->getCFGDef('userGroups')));
         $result = $this->user->save(true);
@@ -135,21 +139,22 @@ class Register extends Form
         if (!$result) {
             $this->addMessage($this->lexicon->getMsg('register.registration_failed'));
         } else {
+            $this->user->close();
+            $userdata = $this->user->edit($result)->toArray();
+            $this->setFields($userdata);
+            $this->setField('user.password',$password);
+            $this->runPrepare('preparePostProcess');
             if ($checkActivation) {
-                $fields = $this->user->edit($result)->toArray();
-                $hash = md5(json_encode($fields));
+                $hash = md5(json_encode($userdata));
+                $uidName = $this->getCFGDef('uidName', $this->user->fieldPKName());
                 $query = http_build_query(array(
-                    'id'   => $result,
+                    $uidName   => $result,
                     'hash' => $hash
                 ));
                 $url = $this->getCFGDef('activateTo',$this->modx->config['site_start']);
-                $this->setField('activate.url', $this->modx->makeUrl($url, "",
+                $this->setField('activate.url', $this->modx->makeUrl($url, '',
                     $query, 'full'));
             }
-            $this->user->close();
-            $this->setFields($this->user->edit($result)->toArray());
-            $this->setField('user.password',$password);
-            $this->runPrepare('preparePostProcess');
             parent::process();
         }
     }

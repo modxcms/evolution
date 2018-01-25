@@ -20,6 +20,31 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     $body_class .= ' ' . $_COOKIE['MODX_themeColor'];
 }
 
+$css = 'media/style/' . $modx->config['manager_theme'] . '/style.css?v=' . $lastInstallTime;
+
+if ($modx->config['manager_theme'] == 'default') {
+    if (!file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css') && is_writable(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css')) {
+        require_once MODX_BASE_PATH . 'assets/lib/Formatter/CSSMinify.php';
+        $minifier = new Formatter\CSSMinify();
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/bootstrap/css/bootstrap.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/common/font-awesome/css/font-awesome.min.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/fonts.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/forms.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/mainmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tree.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/custom.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/tabpane.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/contextmenu.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/index.css');
+        $minifier->addFile(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/main.css');
+        $css = $minifier->minify();
+        file_put_contents(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css', $css);
+    }
+    if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css')) {
+        $css = 'media/style/' . $modx->config['manager_theme'] . '/css/styles.min.css?v=' . $lastInstallTime;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="<?= $mxla ?>" dir="<?= $textdir ?>">
@@ -28,10 +53,13 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
     <meta http-equiv="Content-Type" content="text/html; charset=<?= $modx_manager_charset ?>" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?= $modx->config['manager_theme'] ?>/style.css?v=<?= $modx->config['settings_version'] ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="<?= $css ?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
-    <?= sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
-
+    <?= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $modx->config['mgr_jquery_path']) ?>
+    <?php if ($modx->config['show_picker'] != "0") { ?>
+        <script src="media/style/<?= $modx->config['manager_theme'] ?>/js/color.switcher.js" type="text/javascript"></script>
+    <?php } ?>
     <?php
     $aArr = array('2');
     if (!in_array($_REQUEST['a'], $aArr)) { ?>
@@ -49,6 +77,8 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         var evo = {};
       }
 
+      var actions;
+
       // evoTooltips
       evo.tooltips = function(a) {
         'use strict';
@@ -57,33 +87,34 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         } else {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
         }
-        let b = document.querySelector('.evo-tooltip');
+        var b = document.querySelector('.evo-tooltip');
         if (!b) {
           b = document.createElement('div');
-          document.body.appendChild(b);
           b.className = 'evo-tooltip';
+          document.body.appendChild(b);
         }
         b.style.pointerEvents = 'none';
-        let c = parseInt(window.getComputedStyle(b).getPropertyValue('margin-top'));
-        for (let i = 0; i < a.length; i++) {
+        var c = parseFloat(getComputedStyle(b).marginTop);
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mouseenter', function(e) {
             if (e.buttons) {
               return;
             }
+            var x = e.clientX, y = e.clientY;
             b.innerHTML = (this.dataset && this.dataset.tooltip ? (this.dataset.tooltip[0] === '#' ? document.querySelector(this.dataset.tooltip).innerHTML : this.dataset.tooltip) : this.innerHTML);
-            if (e.pageX + b.offsetWidth + (c * 2) > window.innerWidth) {
-              b.style.left = Math.round(e.pageX - b.offsetWidth - (c * 2)) + 'px';
+            if (x + b.offsetWidth + (c * 2) > window.innerWidth) {
+              b.style.left = Math.round(x - b.offsetWidth - (c * 2)) + 'px';
               b.classList.add('evo-tooltip-right');
             } else {
-              b.style.left = Math.round(e.pageX) + 'px';
+              b.style.left = Math.round(x) + 'px';
               b.classList.add('evo-tooltip-left');
             }
-            if (e.pageY - (b.offsetHeight / 2) - c < 0) {
+            if (y - (b.offsetHeight / 2) - c < 0) {
               b.style.top = 0;
-            } else if (e.pageY + (b.offsetHeight / 2) > window.innerHeight) {
+            } else if (y + (b.offsetHeight / 2) > window.innerHeight) {
               b.style.top = Math.round(window.innerHeight - b.offsetHeight) - (c * 2) + 'px';
             } else {
-              b.style.top = Math.round(e.pageY - (b.offsetHeight / 2)) - c + 'px';
+              b.style.top = Math.round(y - (b.offsetHeight / 2)) - c + 'px';
             }
             b.classList.add('show');
           });
@@ -105,9 +136,10 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
           b = b || {};
         }
-        let o = {
+        var o = {
           el: null,
           handleClass: b.handleClass || 'ghost',
+          position: b.position || 'vertical',
           complete: function(c) {
             if ('function' === typeof b.complete) {
               b.complete(c);
@@ -128,31 +160,50 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           o.marginX = parseFloat(getComputedStyle(o.el).marginLeft) + parseFloat(getComputedStyle(o.el).marginRight);
           o.marginY = parseFloat(getComputedStyle(o.el).marginTop) + parseFloat(getComputedStyle(o.el).marginBottom);
           o.el.classList.add(o.handleClass);
-          document.addEventListener('mousemove', onmousemove);
-          document.addEventListener('mouseup', onmouseup);
-          document.onselectstart = function(e) {
+          o.el.ownerDocument.addEventListener('mousemove', onmousemove);
+          o.el.ownerDocument.addEventListener('mouseup', onmouseup);
+          o.el.ownerDocument.onselectstart = function(e) {
             e.preventDefault();
           };
         }
 
         function onmousemove(e)
         {
-          let y = (e.pageY - o.y);
-          if (y >= o.el.offsetHeight && o.el.nextElementSibling) {
-            o.y += o.el.offsetHeight + o.marginY;
-            o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
-            o.change();
-            y = 0;
-          } else if (y <= -o.el.offsetHeight && o.el.previousElementSibling) {
-            o.y -= o.el.offsetHeight + o.marginY;
-            o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
-            o.change();
-            y = 0;
-          } else if (!o.el.previousElementSibling && y < 0 || !o.el.nextElementSibling && y > 0) {
-            y = 0;
+          if (o.position === 'vertical') {
+            var y = (e.pageY - o.y);
+            if (y >= o.el.offsetHeight && o.el.nextElementSibling) {
+              o.y += o.el.offsetHeight + o.marginY;
+              o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
+              o.change();
+              y = 0;
+            } else if (y <= -o.el.offsetHeight && o.el.previousElementSibling) {
+              o.y -= o.el.offsetHeight + o.marginY;
+              o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
+              o.change();
+              y = 0;
+            } else if (!o.el.previousElementSibling && y < 0 || !o.el.nextElementSibling && y > 0) {
+              y = 0;
+            }
+            o.el.style.webkitTransform = 'translateY(' + y + 'px)';
+            o.el.style.transform = 'translateY(' + y + 'px)';
+          } else {
+            var x = (e.pageX - o.x);
+            if (x >= o.el.offsetWidth && o.el.nextElementSibling) {
+              o.x += o.el.offsetWidth + o.marginX;
+              o.el.parentNode.insertBefore(o.el, o.el.nextElementSibling.nextElementSibling);
+              o.change();
+              x = 0;
+            } else if (x <= -o.el.offsetWidth && o.el.previousElementSibling) {
+              o.x -= o.el.offsetHeight + o.marginX;
+              o.el.parentNode.insertBefore(o.el, o.el.previousElementSibling);
+              o.change();
+              x = 0;
+            } else if (!o.el.previousElementSibling && x < 0 || !o.el.nextElementSibling && x > 0) {
+              x = 0;
+            }
+            o.el.style.webkitTransform = 'translateX(' + x + 'px)';
+            o.el.style.transform = 'translateX(' + x + 'px)';
           }
-          o.el.style.webkitTransform = 'translateY(' + y + 'px)';
-          o.el.style.transform = 'translateY(' + y + 'px)';
         }
 
         function onmouseup()
@@ -160,13 +211,13 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           o.el.style.webkitTransform = '';
           o.el.style.transform = '';
           o.el.classList.remove(o.handleClass);
-          document.removeEventListener('mousemove', onmousemove);
-          document.removeEventListener('mouseup', onmouseup);
-          document.onselectstart = null;
+          o.el.ownerDocument.removeEventListener('mousemove', onmousemove);
+          o.el.ownerDocument.removeEventListener('mouseup', onmouseup);
+          o.el.ownerDocument.onselectstart = null;
           o.complete(o.el);
         }
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mousedown', onmousedown);
         }
       };
@@ -180,7 +231,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
           b = b || {};
         }
-        let o = {
+        var o = {
           handle: {
             start: function(c) {
               'function' === typeof b.handle.start ? b.handle.start.call(c) : '';
@@ -223,7 +274,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
 
         function onmousemove(e)
         {
-          let x = e.pageX - o.x, y = e.pageY - o.y;
+          var x = e.pageX - o.x, y = e.pageY - o.y;
           if (Math.abs(x) + Math.abs(y) > 10) {
             o.draggable = true;
             o.el.style.pointerEvents = 'none';
@@ -244,7 +295,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
             o.el.style.left = '';
             o.el.style.top = '';
             o.el.draggable = false;
-            let h = document.querySelector('.' + o.container.classOver);
+            var h = document.querySelector('.' + o.container.classOver);
             if (h && h !== o.parent) {
               h.appendChild(o.el);
               o.container.drop(h, o.el);
@@ -253,11 +304,11 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           }
         }
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           a[i].addEventListener('mousedown', onmousedown);
         }
 
-        for (let i = 0; i < o.container.els.length; i++) {
+        for (var i = 0; i < o.container.els.length; i++) {
           o.container.els[i].onmouseenter = function() {
             this.classList.add(b.container.classOver);
           };
@@ -275,11 +326,11 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         } else {
           a = 'string' === typeof a ? document.querySelectorAll(a) : a;
         }
-        let h = {
+        var h = {
           containerClass: b && b.containerClass || 'tab-body'
         };
 
-        for (let i = 0; i < a.length; i++) {
+        for (var i = 0; i < a.length; i++) {
           if (a[i].nextElementSibling && a[i].nextElementSibling.classList.contains(h.containerClass)) {
             a[i].nextElementSibling.classList.add('collapse', 'in');
             a[i].onclick = function() {
@@ -290,14 +341,14 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
                 a[i].nextElementSibling.classList.add('in');
                 a[i].classList.remove('collapsed');
               }
-            }
+            };
           }
         }
       };
 
       // check connection to server
       evo.checkConnectionToServer = function() {
-        let xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP');
+        var xhr = new ( window.ActiveXObject || XMLHttpRequest )('Microsoft.XMLHTTP');
         xhr.open('HEAD', '<?= MODX_MANAGER_URL ?>includes/version.inc.php?time=' + new Date().getTime(), false);
         try {
           xhr.send();
@@ -317,9 +368,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           }
           ?>
 
-        let actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
+        var actionButtons = document.getElementById('actions'), actionSelect = document.getElementById('stay');
         if (actionButtons !== null && actionSelect !== null) {
-          let actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
+          var actionPlus = actionButtons.querySelector('.plus'), actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'), actionStay = [];
           actionPlus.classList.add('dropdown-toggle');
           actionStay['stay1'] = '<i class="<?= $_style['actions_file'] ?>"></i>';
           actionStay['stay2'] = '<i class="<?= $_style['actions_pencil'] ?>"></i>';
@@ -327,17 +378,17 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           if (actionSelect.value) {
             actionSaveButton.innerHTML += '<i class="<?= $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>';
           }
-          let actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
+          var actionSelectNewOption = null, actionSelectOptions = actionSelect.children, div = document.createElement('div');
           div.className = 'dropdown-menu';
           actionSaveButton.parentNode.classList.add('dropdown');
-          for (let i = 0; i < actionSelectOptions.length; i++) {
+          for (var i = 0; i < actionSelectOptions.length; i++) {
             if (!actionSelectOptions[i].selected) {
               actionSelectNewOption = document.createElement('SPAN');
               actionSelectNewOption.className = 'btn btn-block';
               actionSelectNewOption.dataset.id = i;
               actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
               actionSelectNewOption.onclick = function() {
-                let s = actionSelect.querySelector('option[selected=selected]');
+                var s = actionSelect.querySelector('option[selected=selected]');
                 if (s) {
                   s.selected = false;
                 }
@@ -353,6 +404,45 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           };
         }
         evo.tooltips('[data-tooltip]');
+
+        if (document.forms.length && document.forms.mutate && window.frameElement.parentNode.parentNode.classList.contains('evo-popup')) {
+          window.focus();
+          document.forms.mutate.addEventListener('submit', function(e) {
+            if ((actionSelect && actionSelect.value === '') || (!actionSelect && actionSaveButton)) {
+              if (actionSelect) {
+                actionSelect.parentNode.removeChild(actionSelect);
+              }
+              if (top.mainMenu) {
+                top.mainMenu.work();
+              }
+              var xhr = new XMLHttpRequest();
+              xhr.onload = function() {
+                if (this.status === 200 && this.readyState === 4) {
+                  if (top.mainMenu) {
+                    top.mainMenu.stopWork();
+                  }
+                  if (top.tree) {
+                    top.tree.restoreTree();
+                  }
+                  window.frameElement.parentNode.parentNode.close(e);
+                }
+              };
+              xhr.open(document.forms.mutate.method, document.forms.mutate.action, true);
+              xhr.send(new FormData(document.forms.mutate));
+              e.preventDefault();
+            }
+          }, false);
+
+          actions.cancel = function() {
+            window.frameElement.parentNode.parentNode.close();
+          };
+
+          window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 27) {
+              window.frameElement.parentNode.parentNode.close();
+            }
+          })
+        }
       }
 
       function reset_path(elementName)
@@ -360,7 +450,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
         document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
       }
 
-      let dontShowWorker = false;
+      var dontShowWorker = false;
 
       function document_onunload(e)
       {
@@ -406,8 +496,9 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       function checkDirt(evt)
       {
         evt = evt || window.event;
+        var message = '';
         if (!evo.checkConnectionToServer()) {
-          let message = '<?= addslashes($_lang['error_internet_connection']) ?>';
+          message = '<?= addslashes($_lang['error_internet_connection']) ?>';
           setTimeout(function() {
             alert(message);
           }, 10);
@@ -416,7 +507,7 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
           return message;
         }
         if (documentDirty === true) {
-          let message = '<?= addslashes($_lang['warning_not_saved']) ?>';
+          message = '<?= addslashes($_lang['warning_not_saved']) ?>';
           evt.returnValue = message;
           timerForUnload = setTimeout('stopWorker()', 100);
           return message;
@@ -426,12 +517,12 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       function saveWait(fName)
       {
         document.getElementById('savingMessage').innerHTML = '<?= $_lang['saving'] ?>';
-        for (let i = 0; i < document.forms[fName].elements.length; i++) {
+        for (var i = 0; i < document.forms[fName].elements.length; i++) {
           document.forms[fName].elements[i].disabled = 'disabled';
         }
       }
 
-      let managerPath = '';
+      var managerPath = '';
 
       function hideLoader()
       {
@@ -477,4 +568,4 @@ if (!empty($_COOKIE['MODX_themeColor'])) {
       /* ]]> */
     </script>
 </head>
-<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>">
+<body <?= ($modx_textdir ? ' class="rtl"' : '') ?> class="<?= $body_class ?>" data-evocp="color">

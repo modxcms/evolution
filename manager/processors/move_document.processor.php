@@ -97,7 +97,7 @@ if (!array_search($newParentID, $children)) {
 	// empty cache & sync site
 	$modx->clearCache('full');
 
-	$header="Location: index.php?a=3&id={$documentID}&r=1";
+	$header="Location: index.php?a=3&id={$documentID}&r=9";
 	header($header);
 } else {
 	$modx->webAlertAndQuit("You cannot move a document to a child document!");

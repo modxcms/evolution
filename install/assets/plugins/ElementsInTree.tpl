@@ -5,9 +5,9 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.5.8
+ * @version     1.5.9
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &adminRoleOnly=Administrators only;list;yes,no;yes;;Show tabs only for users with administrator role. &treeButtonsInTab=Tree buttons in tab;list;yes,no;yes;;Move Tree buttons into Site Tree tab. &useIcons=Tab icons;list;yes,no;yes;;Use icons in tabs. &unifyFrames=Unify frames;list;yes,no;yes;;Unify style of Tree and Main frame style. &tabTreeTitle=Tree tab title;text;Site;;Custom title of Site Tree tab.
+ * @internal    @properties &adminRoleOnly=Administrators only;list;yes,no;yes;;Show tabs only for users with administrator role. &treeButtonsInTab=Tree buttons in tab;list;yes,no;yes;;Move Tree buttons into Site Tree tab.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
@@ -20,7 +20,7 @@
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
  * @author      yama https://github.com/yama
- * @lastupdate  31/08/2017
+ * @lastupdate  01/09/2017
  */
 
 require MODX_BASE_PATH.'assets/plugins/elementsintree/plugin.elementsintree.php';

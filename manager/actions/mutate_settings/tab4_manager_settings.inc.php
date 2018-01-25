@@ -75,6 +75,28 @@
             </td>
         </tr>
         <tr>
+            <td nowrap class="warning"><?= $_lang['show_picker'] ?><br>
+                <small>[(show_picker)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="show_picker" value="1" <?= $show_picker == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="show_picker" value="0" <?= ($show_picker == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?= $_lang['settings_show_picker_message'] ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        
+        <tr>
             <td nowrap class="warning"><?= $_lang['warning_visibility'] ?><br>
                 <small>[(warning_visibility)]</small>
             </td>
@@ -160,6 +182,23 @@
             </td>
         </tr>
         <tr>
+            <td nowrap class="warning"><?= $_lang['use_global_tabs'] ?><br>
+                <small>[(global_tabs)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="global_tabs" value="1" <?= $global_tabs == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="global_tabs" value="0" <?= ($global_tabs == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        <tr>
             <td class="warning"><?= $_lang['group_tvs'] ?>
                 <br>
                 <small>[(group_tvs)]</small>
@@ -185,6 +224,48 @@
         <tr>
             <td width="200">&nbsp;</td>
             <td class="comment"><?= $_lang['settings_group_tv_message'] ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap class="warning"><?= $_lang['show_newresource_btn'] ?><br>
+                <small>[(show_newresource_btn)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="show_newresource_btn" value="1" <?= $show_newresource_btn == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="show_newresource_btn" value="0" <?= ($show_newresource_btn == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?= $_lang['show_newresource_btn_message'] ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="split"></div>
+            </td>
+        </tr>
+                <tr>
+            <td nowrap class="warning"><?= $_lang['show_fullscreen_btn'] ?><br>
+                <small>[(show_fullscreen_btn)]</small>
+            </td>
+            <td>
+                <label><input type="radio" name="show_fullscreen_btn" value="1" <?= $show_fullscreen_btn == '1' ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['yes'] ?></label>
+                <br />
+                <label><input type="radio" name="show_fullscreen_btn" value="0" <?= ($show_fullscreen_btn == '0') ? 'checked="checked"' : "" ?> />
+                    <?= $_lang['no'] ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?= $_lang['show_fullscreen_btn_message'] ?></td>
         </tr>
         <tr>
             <td colspan="2">

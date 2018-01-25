@@ -28,7 +28,7 @@ case 'install':
 	if ($file!='%url%' && $file!='' && $file!=' '){
 		$url = $file;
 	} else {
-		$url = "http://extras.evolution-cms.com/get.php?get=file&cid=".$id;
+		$url = "http://extras.evo.im/get.php?get=file&cid=".$id;
 	}
 
 	if (!$Store->downloadFile($url ,MODX_BASE_PATH."assets/cache/store/temp.zip")){
@@ -164,11 +164,7 @@ class Store{
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($ch, CURLOPT_HEADER, 0);
 					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-					$safeMode = @ini_get('safe_mode');
-					$openBasedir = @ini_get('open_basedir');
-					if (empty($safeMode) && empty($openBasedir)) {
-						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-					}
+					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 					$content = curl_exec ($ch);
 					file_put_contents($newfname,$content);				
 				return true;

@@ -57,9 +57,12 @@ class APIhelpers
     }
 
     /**
-     * @param  mixed $data
-     * @param string $key
-     * @param mixed $default null
+     * Получение значения по ключу из массива, либо возврат значения по умолчанию
+     *
+     * @param mixed $data массив
+     * @param string $key ключ массива
+     * @param mixed $default null значение по умолчанию
+     * @param Closure $validate null функция дополнительной валидации значения (должна возвращать true или false)
      * @return mixed
      */
     public static function getkey($data, $key, $default = null)
@@ -68,7 +71,9 @@ class APIhelpers
         if (is_array($data) && (is_int($key) || is_string($key)) && $key !== '' && array_key_exists($key, $data)) {
             $out = $data[$key];
         }
-
+        if (!empty($validate) && is_callable($validate)) {
+            $out = (($validate($out) === true) ? $out : $default);
+        }
         return $out;
     }
 

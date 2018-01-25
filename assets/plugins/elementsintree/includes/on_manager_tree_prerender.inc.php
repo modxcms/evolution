@@ -5,9 +5,6 @@ if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 // use icons
 $ph['tabPadding'] = ($useIcons == 'yes') ? '10px' : '9px';
 
-// unify frames
-$ph['unifyFrames_css'] = ($unifyFrames == 'yes') ? file_get_contents($eit_base_path.'assets/css_unifyFrames.tpl') : '';
-
 // tree buttons in tab
 $ph['treeButtonsInTab_js']  = ($treeButtonsInTab == 'yes') ? file_get_contents($eit_base_path.'assets/js_treeButtonsInTab.tpl') : '';
 $ph['treeButtonsInTab_css'] = ($treeButtonsInTab == 'yes') ? file_get_contents($eit_base_path.'assets/css_treeButtonsInTab.tpl') : '';

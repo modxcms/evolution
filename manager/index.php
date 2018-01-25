@@ -131,7 +131,7 @@ if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
 	echo "<h3>Unable to load configuration settings</h3>";
-	echo "Please run the MODX <a href='../install'>install utility</a>";
+	echo "Please run the EVO <a href='../install'>install utility</a>";
 	exit;
 }
 
