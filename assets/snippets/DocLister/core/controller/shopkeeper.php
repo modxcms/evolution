@@ -33,6 +33,7 @@ class shopkeeperDocLister extends site_contentDocLister
     public function _render($tpl = '')
     {
         $out = '';
+        $separator = $this->getCFGDef('outputSeparator', '');
         if ($tpl == '') {
             $tpl = $this->getCFGDef('tpl', '@CODE:<a href="[+url+]">[+pagetitle+]</a><br />');
         }
@@ -123,6 +124,9 @@ class shopkeeperDocLister extends site_contentDocLister
                             "item[" . $i . "]"); // [+item[x]+] – individual placeholder for each iteration documents on this page
                     }
                     $out .= $tmp;
+                    if (next($this->_docs) !== false) {
+                        $out .= $separator;
+                    }
                     $i++;
                 }
             } else {
