@@ -9,7 +9,7 @@
  * @package     evo
  * @author      Author: Nicola Lambathakis
  * @internal    @events OnManagerWelcomeHome
- * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;All &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &EformVersion=Min eForm version:;string;1.4.9 &AjaxSearchVersion=Min AjaxSearch version:;string;1.11.0 &WayfinderVersion=Min Wayfinder version:;string;2.0.5 &WebLoginVersion=Min WebLogin version:;string;1.2 &WebSignupVersion=Min WebSignup version:;string;1.1.2 &WebChangePwdVersion=Min WebChangePwd version:;string;1.1.2 &BreadcrumbsVersion=Min Breadcrumbs version:;string;1.0.5 &ReflectVersion=Min Reflect version:;string;2.2 &MtvVersion=Min multiTV version:;string;2.0.12 &badthemes=Outdated Manager Themes:;string;MODxRE2_DropdownMenu,MODxRE2,MODxRE,MODxCarbon,MODxFLAT,wMOD,ScienceStyle
+ * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;All &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &EformVersion=Min eForm version:;string;1.4.9 &AjaxSearchVersion=Min AjaxSearch version:;string;1.11.0 &WayfinderVersion=Min Wayfinder version:;string;2.0.5 &WebLoginVersion=Min WebLogin version:;string;1.2 &WebSignupVersion=Min WebSignup version:;string;1.1.5 &WebChangePwdVersion=Min WebChangePwd version:;string;1.1.2 &BreadcrumbsVersion=Min Breadcrumbs version:;string;1.0.5 &ReflectVersion=Min Reflect version:;string;2.2 &JotVersion=Min Jot version:;string;1.1.5 &MtvVersion=Min multiTV version:;string;2.0.12 &badthemes=Outdated Manager Themes:;string;MODxRE2_DropdownMenu,MODxRE2,MODxRE,MODxCarbon,MODxFLAT,wMOD,ScienceStyle
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @internal    @disabled 0
@@ -231,6 +231,23 @@ $output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-excl
 	}
 } 
 //end check Reflect
+
+//check Jot
+//get min version from config
+$minJotVersion = $JotVersion;
+//search the snippet by name
+$CheckJot = $modx->db->select( "id, name, description", $table, "name='Jot'" );
+if($CheckJot != ''){
+while( $row = $modx->db->getRow( $CheckJot ) ) {
+//extract snippet version from description <strong></strong> tags 
+$curr_Jot_version = getver($row['description'],"strong");
+//check snippet version and return an alert if outdated
+if ($curr_Jot_version < $minJotVersion){
+$output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>' . $row['name'] . '</b> '.$_lang["snippet"].' (version ' . $curr_Jot_version . ') '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>. '.$_oec_lang['please_update'].' <b>' . $row['name'] . '</b> '.$_oec_lang["to_latest"].' ('.$_oec_lang['min _required'].' '.$minJotVersion.') '.$_oec_lang['from'].' <a target="main" href="index.php?a=112&id='.$ExtrasID.'">'.$_oec_lang['extras_module'].'</a>.</div>';
+		}
+	}
+} 
+//end check Jot
 	
 //check Multitv
 //get min version from config
