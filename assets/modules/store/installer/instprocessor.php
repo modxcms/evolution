@@ -405,7 +405,7 @@ if (isset ($_POST['snippet']) || $installData) {
     echo "<h3>" . $_lang['snippets'] . ":</h3> ";
     $selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k=>$moduleSnippet) {
-
+        if (!is_array($moduleSnippet) || !isset($moduleSnippet[5]) || !is_array($moduleSnippet[5])) continue;
         $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
         if($installSample || in_array($k, $selSnips)) {
             $name = $modx->db->escape($moduleSnippet[0]);
