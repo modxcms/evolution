@@ -16,6 +16,7 @@ $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
+$templatename = '';
 
 if (isset($_POST['listSubmitted'])) {
     $updateMsg .= '<div class="text-success" id="updated">' . $_lang['sort_updated'] . '</div>';
@@ -42,8 +43,9 @@ $rs = $modx->db->select("tv.name AS name, tv.caption AS caption, tv.id AS id, tr
 		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id", "tr.templateid='{$id}'", "tr.rank ASC, tv.rank ASC, tv.id ASC");
 
 if ($modx->db->getRecordCount($rs)) {
-    $sortableList = '<div class="clearfix"><strong>' . $row['templatename'] . '</strong><ul id="sortlist" class="sortableList">';
+    $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
     while ($row = $modx->db->getRow($rs)) {
+        $templatename = $row['templatename'];
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
         $sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
     }
@@ -126,7 +128,7 @@ if ($modx->db->getRecordCount($rs)) {
 </script>
 
 <h1>
-    <i class="fa fa-sort-numeric-asc"></i><?= $_lang["template_tv_edit_title"] ?>
+    <i class="fa fa-sort-numeric-asc"></i><?= ($templatename ? $templatename . '<small>(' . $id . ')</small>' : $_lang['template_tv_edit_title']) ?>
 </h1>
 
 <?= $_style['actionbuttons']['dynamic']['save'] ?>

@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Überprüfe ob die Ordner <span class="m
 $_lang["checking_if_config_exist_and_writable"] = 'Überprüfe ob die Datei <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 $_lang["checking_if_export_exists"] = 'Überprüfe ob der Ordner <span class="mono">/assets/export</span> existiert: ';
 $_lang["checking_if_export_writable"] = 'Überprüfe ob der Ordner <span class="mono">assets/export</span> beschreibbar ist: ';
-$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
-$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
+$_lang["checking_if_images_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> existieren: ';
+$_lang["checking_if_images_writable"] = 'Überprüfe ob die Ordner <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span>, <span class="mono">/assets/.thumbs</span> beschreibbar sind: ';
 $_lang["checking_mysql_strict_mode"] = 'Überprüfe MySQL Strict-Mode: ';
 $_lang["checking_mysql_version"] = 'Überprüfe MySQL-Version: ';
 $_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';

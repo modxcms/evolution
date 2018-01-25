@@ -6,7 +6,7 @@
       <h2 class="tab" title="Templates">[+tabLabel_template+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTemp" ) );</script>
       [+templates+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <li><a href="index.php?a=19" target="main" title="[%new_template%]">[+tabLabel_create+]</a></li>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -18,7 +18,7 @@
       <h2 class="tab" title="Template Variables">[+tabLabel_tv+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabTV" ) );</script>
       [+tmplvars+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <li><a href="index.php?a=300" target="main" title="[%new_tmplvars%]">[+tabLabel_create+]</a></li>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -30,7 +30,7 @@
       <h2 class="tab" title="Chunks">[+tabLabel_chunk+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabCH" ) );</script>
       [+chunk+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <li><a href="index.php?a=77" target="main" title="[%new_htmlsnippet%]">[+tabLabel_create+]</a></li>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -42,7 +42,7 @@
       <h2 class="tab" title="Snippets">[+tabLabel_snippet+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabSN" ) );</script>
       [+snippet+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <li><a href="index.php?a=23" target="main" title="[%new_snippet%]">[+tabLabel_create+]</a></li>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -54,7 +54,7 @@
       <h2 class="tab" title="Plugins">[+tabLabel_plugin+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabPL" ) );</script>
       [+plugin+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <li><a href="index.php?a=101" target="main" title="[%new_plugin%]">[+tabLabel_create+]</a></li>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -66,7 +66,7 @@
       <h2 class="tab" title="Modules">[+tabLabel_module+]</h2>
       <script type="text/javascript">treePane.addTabPage( document.getElementById( "tabMD" ) );</script>
       [+module+]
-      <ul class="actionButtons actionButtons--eit">
+      <ul class="actionButtons--eit">
       <@IF:[!#hasPermission?permission=new_module!] ><li><a href="index.php?a=107" target="main" title="[%new_module%]">[+tabLabel_create+]</a></li><@ENDIF>
       <li><a href="javascript:reloadElementsInTree();" title="[+text_reload_title+]">[+tabLabel_refresh+]</a></li>
       </ul>
@@ -96,7 +96,7 @@
         });
         
         function eitAction(name, action, type, id) {
-            var actionIds, deleteMsg;
+            var actionsIds, deleteMsg;
             
             switch(type) {
                 case "site_templates" :
@@ -129,7 +129,7 @@
             }
             
             // Actions that need confirmation
-            var confirmMsg = false;
+            var confirmMsg = '';
             switch(action) {
                 case "create" : id = false; break;
                 case "edit" : break;
@@ -139,11 +139,14 @@
             
             if(confirmMsg) {
                 confirmMsg += " \n \n " + name + " ("+id+")";
-                var r = confirm(confirmMsg);
-                if (r != true) return;
+                if (confirm(confirmMsg) !== true) return;
             }
-            
-            top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+
+            if (typeof modx !== 'undefined' && modx.config.global_tabs) {
+              modx.tabs({url: modx.MODX_MANAGER_URL + '?a=' + actionsIds[action] + (id ? '&id=' + id : ''), title: name})
+            } else {
+              top.main.document.location.href="index.php?a="+actionsIds[action]+ (id ? "&id="+id : "");
+            }
         }
       </script>
 <@ENDIF>

@@ -34,10 +34,10 @@ if($modx->db->getRecordCount($rs) < 1) {
 
 	function deletegroup(groupid, type) {
 		if(confirm("<?= $_lang['confirm_delete_group']?>") === true) {
-			if(type == 'usergroup') {
+			if(type === 'usergroup') {
 				document.location.href = "index.php?a=92&usergroup=" + groupid + "&operation=delete_user_group";
 			}
-			else if(type == 'documentgroup') {
+			else if(type === 'documentgroup') {
 				document.location.href = "index.php?a=92&documentgroup=" + groupid + "&operation=delete_document_group";
 			}
 		}
@@ -185,7 +185,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 								<input class="form-control" type="text" name="newgroupname" value="<?= $modx->htmlspecialchars($row['name']) ?>" />
 								<div class="input-group-btn">
 									<input class="btn btn-secondary" type="submit" value="<?= $_lang['rename'] ?>" />
-									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'usergroup');" />
+									<input class="btn btn-danger" type="button" value="<?= $_lang['delete'] ?>" onclick="deletegroup(<?= $row['id'] ?>,'documentgroup');" />
 								</div>
 							</div>
 						</form>

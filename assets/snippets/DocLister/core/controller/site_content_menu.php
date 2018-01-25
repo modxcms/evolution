@@ -469,7 +469,7 @@ class site_content_menuDocLister extends site_contentDocLister
         }
         $classNames = implode(' ', array_filter(array_values($classes)));
         $classes['classNames'] = $classNames;
-        $classes['classes'] = " class=\"{$classNames}\"";
+        $classes['classes'] = $classNames ? " class=\"{$classNames}\"" : "";
 
         return $classes;
     }
@@ -482,25 +482,25 @@ class site_content_menuDocLister extends site_contentDocLister
     protected function getRowTemplate($data = array())
     {
         $tpl = $this->getCFGDef('rowTpl', '@CODE:<li[+classes+]><a href="[+url+]">[+title+]</a></li>');
-        if ($data['wrap']) {
+        if (!empty($data['wrap'])) {
             $tpl = $this->getCFGDef('parentRowTpl',
                 '@CODE:<li[+classes+]><a href="[+url+]">[+title+]</a>[+wrap+]</li>');
             if ((isset($data['template']) && !$data['template']) || (isset($data['link_attributes']) && strpos($data['link_attributes'],
                         'category') !== false)
             ) {
                 $tpl = $this->getCFGDef('categoryFolderTpl', $tpl);
-            } elseif ($data['here']) {
+            } elseif (isset($data['here'])) {
                 $tpl = $this->getCFGDef('parentRowHereTpl', $tpl);
-            } elseif ($data['active']) {
+            } elseif (isset($data['active'])) {
                 $tpl = $this->getCFGDef('parentRowActiveTpl', $tpl);
             }
         } elseif ($data['level'] > 1) {
             $tpl = $this->getCFGDef('innerRowTpl', $tpl);
-            if ($data['here']) {
+            if (isset($data['here'])) {
                 $tpl = $this->getCFGDef('innerRowHereTpl', $tpl);
             }
         } else {
-            if ($data['here']) {
+            if (isset($data['here'])) {
                 $tpl = $this->getCFGDef('rowHereTpl', $tpl);
             }
         }

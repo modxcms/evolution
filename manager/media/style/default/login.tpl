@@ -59,7 +59,7 @@
 	</div>
 	<div class="copyrights">
 		<p class="loginLicense"></p>
-		<div class="gpl">&copy; 2005-2017 by the <a href="http://evo.im/" target="_blank">EVO</a>. <strong>EVO</strong>&trade; is licensed under the GPL.</div>
+		<div class="gpl">&copy; 2005-2018 by the <a href="http://evo.im/" target="_blank">EVO</a>. <strong>EVO</strong>&trade; is licensed under the GPL.</div>
 	</div>
 </div>
 <div id="mainloader"></div>

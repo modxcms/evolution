@@ -136,7 +136,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         <input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
 
         <h1>
-            <i class="fa fa-th-large"></i><?= $_lang['htmlsnippet_title'] ?><i class="fa fa-question-circle help"></i>
+            <i class="fa fa-th-large"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_htmlsnippet']) ?><i class="fa fa-question-circle help"></i>
         </h1>
 
         <?= $_style['actionbuttons']['dynamic']['element'] ?>

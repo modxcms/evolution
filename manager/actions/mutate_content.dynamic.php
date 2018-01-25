@@ -197,13 +197,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		var allowLinkSelection = false;
 
 		function enableLinkSelection(b) {
-			parent.tree.ca = "link";
 			var llock = document.getElementById('llock');
 			if(b) {
+				parent.tree.ca = "link";
 				llock.className = "<?= $_style["actions_chain_broken"] ?>";
 				allowLinkSelection = true;
 			}
 			else {
+				parent.tree.ca = "open";
 				llock.className = "<?= $_style["actions_chain"] ?>";
 				allowLinkSelection = false;
 			}
@@ -220,13 +221,14 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		function enableParentSelection(b) {
-			parent.tree.ca = "parent";
 			var plock = document.getElementById('plock');
 			if(b) {
+				parent.tree.ca = "parent";
 				plock.className = "<?= $_style["actions_folder_open"] ?>";
 				allowParentSelection = true;
 			}
 			else {
+				parent.tree.ca = "open";
 				plock.className = "<?= $_style["actions_folder"] ?>";
 				allowParentSelection = false;
 			}
@@ -476,10 +478,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
-		function setLastClickedElement(type, id) {
-			localStorage.setItem('MODX_lastClickedElement', '[' + type + ',' + id + ']');
-		}
-
 		<?php if ($content['type'] == 'reference' || $modx->manager->action == '72') { // Web Link specific ?>
 		var lastImageCtrl;
 		var lastFileCtrl;
@@ -580,7 +578,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
 					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
-					echo $_lang['create_resource_title'];
+				    if ($modx->manager->action == '4') {
+                        echo $_lang['add_resource'];
+                    } else if ($modx->manager->action == '72') {
+                        echo $_lang['add_weblink'];
+                    } else {
+                        echo $_lang['create_resource_title'];
+                    }
 				} ?>
 			</h1>
 
@@ -626,7 +630,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				<div class="tab-pane" id="documentPane">
 					<script type="text/javascript">
-						tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
+						var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 					</script>
 
 					<!-- General -->
@@ -991,7 +995,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             if ($group_tvs == 1 || $group_tvs == 3) {
                                                 if ($i === 0) {
                                                     $templateVariables .= '
-                            <div class="tab-section">
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
                                 <div class="tab-header">' . $row['category'] . '</div>
                                 <div class="tab-body tmplvars">
                                     <table>' . "\n";
@@ -1001,7 +1005,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 </div>
                             </div>
                             
-                            <div class="tab-section">
+                            <div class="tab-section" id="tabTV_' . $row['category_id'] . '">
                                 <div class="tab-header">' . $row['category'] . '</div>
                                 <div class="tab-body tmplvars">
                                     <table>';
@@ -1156,7 +1160,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<td>
 										<input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ($content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
 										<a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-											<i class="<?= $_style["actions_calendar"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
+											<i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
 									</td>
 								</tr>
 								<tr>
@@ -1172,7 +1176,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<td>
 										<input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ($content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
 										<a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?= $_lang['remove_date'] ?>'; return true;" onmouseout="window.status=''; return true;">
-											<i class="<?= $_style["actions_calendar"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
+											<i class="<?= $_style["actions_calendar_delete"] ?>" title="<?= $_lang['remove_date'] ?>"></i></a>
 									</td>
 								</tr>
 								<tr>

@@ -1,4 +1,4 @@
-# Default modx exclusions
+# Default Evolution CMS exclusions
 User-agent: *
 Disallow: /assets/backup/
 Disallow: /assets/cache/

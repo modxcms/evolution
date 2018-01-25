@@ -142,7 +142,7 @@ switch($input['mode']) {
 		// put the user in the user_groups he/ she should be in
 		// first, check that up_perms are switched on!
 		if($use_udperms == 1) {
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
 					$f['user_group'] = intval($user_groups[$i]);
@@ -289,7 +289,7 @@ switch($input['mode']) {
 		if($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
 			$modx->db->delete($tbl_member_groups, "member='{$id}'");
-			if(count($user_groups) > 0) {
+			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
 					$field['user_group'] = intval($user_groups[$i]);

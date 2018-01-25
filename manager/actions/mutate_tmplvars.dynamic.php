@@ -291,7 +291,7 @@ if(is_array($evtOut)) {
 	<input type="hidden" name="params" value="<?= $modx->htmlspecialchars($content['display_params']) ?>">
 
 	<h1>
-		<i class="fa fa-list-alt"></i><?= $_lang['tmplvars_title'] ?><i class="fa fa-question-circle help"></i>
+		<i class="fa fa-list-alt"></i><?= ($content['name'] ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_tmplvars']) ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
 	<?= $_style['actionbuttons']['dynamic']['element'] ?>

@@ -112,7 +112,7 @@ abstract class Core
             $this->config->loadConfig($cfg['config']);
         }
         $this->config->setConfig($cfg);
-        if (isset($cfg['debug'])) {
+        if (isset($cfg['debug']) && $cfg['debug'] > 0) {
             $this->debug = new Debug($modx, array(
                 'caller' => 'FormLister\\\\' . $cfg['controller']
             ));
@@ -145,10 +145,12 @@ abstract class Core
     public function initForm()
     {
         $lexicon = $this->getCFGDef('lexicon');
+        $langDir = $this->getCFGDef('langDir', 'assets/snippets/FormLister/core/lang/');
+        $lang = $this->getCFGDef('lang', $this->modx->config['manager_language']);
         if ($lexicon) {
             $_lexicon = $this->config->loadArray($lexicon);
             if (isset($_lexicon[0])) {
-                $lang = $this->lexicon->loadLang($_lexicon);
+                $lang = $this->lexicon->loadLang($_lexicon, $lang, $langDir);
             } else {
                 $lang = $this->lexicon->fromArray($_lexicon);
             }
@@ -270,7 +272,7 @@ abstract class Core
                         $_source[0] = '\modResource';
                         if ($this->modx->documentIdentifier) {
                             if (isset($_source[1])) {
-                                $_source[2] = $source[1];
+                                $_source[2] = $_source[1];
                             }
                             $_source[1] = $this->modx->documentIdentifier;
                         } else {
@@ -677,6 +679,9 @@ abstract class Core
      */
     public function addError($field, $type, $message)
     {
+        if ($this->lexicon->isReady()) {
+            $message = $this->lexicon->parseLang($message);
+        }
         $this->formData['errors'][$field][$type] = $message;
 
         return $this;
@@ -690,6 +695,9 @@ abstract class Core
     public function addMessage($message = '')
     {
         if ($message) {
+            if ($this->lexicon->isReady()) {
+                $message = $this->lexicon->parseLang($message);
+            }
             $this->formData['messages'][] = $message;
         }
 
@@ -788,9 +796,16 @@ abstract class Core
     public function getValidationRules($param = 'rules')
     {
         $rules = $this->getCFGDef($param);
+        if (empty($rules)) {
+            $this->log('No validation rules defined');
+            return array();
+        }
         $rules = $this->config->loadArray($rules, '');
+        if (empty($rules)) {
+            $this->log('Validation rules failed to load');
+        }
 
-        return is_array($rules) ? $rules : array();
+        return $rules;
     }
 
     /**
@@ -982,9 +997,12 @@ abstract class Core
     {
         if (!empty($name)) {
             if ((is_object($name) && ($name instanceof \Closure)) || is_callable($name)) {
-                call_user_func_array($name, $params);
+                $result = call_user_func_array($name, $params);
             } else {
-                $this->modx->runSnippet($name, $params);
+                $result = $this->modx->runSnippet($name, $params);
+            }
+            if (is_array($result)) {
+                $this->setFields($result);
             }
         }
 

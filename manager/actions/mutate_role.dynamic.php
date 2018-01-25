@@ -81,7 +81,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 		<input type="hidden" name="id" value="<?= $_GET['id'] ?>">
 
-		<h1><?= $_lang['role_title'] ?></h1>
+		<h1>
+            <i class="fa fa-legal"></i><?= ($roledata['name'] ? $roledata['name'] . '<small>(' . $roledata['id'] . ')</small>' : $_lang['role_title']) ?>
+        </h1>
 
 		<?= $_style['actionbuttons']['dynamic']['savedelete'] ?>
 

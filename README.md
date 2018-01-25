@@ -1,8 +1,8 @@
 # Evolution CMS
 
-![PHP version](https://img.shields.io/badge/PHP->=v5.4-green.svg?php=5.4)    [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/)
+![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6)    [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/)
 
-Evolution CMS requires **PHP >= 5.4**, but snippet FormLister need **PHP >=5.6**
+Evolution CMS requires **PHP >= 5.6**
 
 
 ## What is EVO
@@ -34,11 +34,11 @@ Just use [Evo Installer](https://github.com/evolution-cms/installer)
 
 ### Screenshots
 
-![screenshot_1](https://cloud.githubusercontent.com/assets/523389/20504423/97db8bf8-b047-11e6-9eef-550c1c7d34f2.jpg)
+![screenshot_1](https://user-images.githubusercontent.com/7342798/30167975-5ec146c0-93e8-11e7-8cf8-b324c2b09477.jpg)
 
-![screenshot_2](https://cloud.githubusercontent.com/assets/523389/20504414/926ceec8-b047-11e6-8760-3d11d6610977.jpg)
+![screenshot_2](https://user-images.githubusercontent.com/7342798/30128635-b34fa2a4-9343-11e7-9d87-13d0e17fb69e.jpg)
 
-![screenshot_3](https://cloud.githubusercontent.com/assets/523389/20504420/956ef5d0-b047-11e6-9460-7c7a471bada6.jpg)
+![screenshot_3](https://user-images.githubusercontent.com/7342798/30128638-b5b2cdc8-9343-11e7-8c75-0864d00fe28a.jpg)
 
 ### References
 

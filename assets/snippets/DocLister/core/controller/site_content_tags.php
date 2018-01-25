@@ -1,8 +1,4 @@
 <?php
-if (!defined('MODX_BASE_PATH')) {
-    die('HACK???');
-}
-
 /**
  * site_content_tags controller with TagSaver plugin
  * @see http://modx.im/blog/addons/374.html

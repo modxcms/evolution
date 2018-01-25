@@ -43,10 +43,11 @@ function mm_renameField($fields, $newlabel, $roles = '', $templates = '', $newhe
 					$element = '$j("select[name*=\'metatags\']").siblings("span.warning")';
 				break;
 				
-				//case 'hidemenu':
-				//case 'show_in_menu':
-				//	$element = '$j("input[name=\'hidemenucheck\']").siblings("span.warning")';
-				//break;
+				case 'hidemenucheck':
+				case 'hidemenu':
+				case 'show_in_menu':
+					$element = '$j("input[name=\'hidemenucheck\']").parent().parent().find("span.warning")';
+				break;
 				
 				case 'which_editor':
 					$element = '$j("#which_editor").prev("span.warning")';

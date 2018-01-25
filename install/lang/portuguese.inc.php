@@ -41,8 +41,8 @@ $_lang["checking_if_cache_writable"] = 'Checando se o diretórios <span class=\"
 $_lang["checking_if_config_exist_and_writable"] = 'Checando se o arquivo <span class=\"mono\">manager/includes/config.inc.php</span> existe e está liberado pra escrita: ';
 $_lang["checking_if_export_exists"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checando se o diretório <span class=\"mono\">assets/export</span> está liberado pra escrita: ';
-$_lang["checking_if_images_exist"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> existir: ';
-$_lang["checking_if_images_writable"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> está liberado pra escrita: ';
+$_lang["checking_if_images_exist"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> existir: ';
+$_lang["checking_if_images_writable"] = 'Checando se o diretórios <span class=\"mono\">assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> e <span class="mono">/assets/.thumbs</span> está liberado pra escrita: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checando versão do PHP: ';

@@ -37,7 +37,7 @@ if (isset($_POST['listSubmitted'])) {
 $rs = $modx->db->select("name, caption, id, rank", $tbl_site_tmplvars, "", "rank ASC, id ASC");
 
 if ($modx->db->getRecordCount($rs)) {
-    $sortableList = '<div class="clearfix"><strong>' . $row['templatename'] . '</strong><ul id="sortlist" class="sortableList">';
+    $sortableList = '<div class="clearfix"><ul id="sortlist" class="sortableList">';
     while ($row = $modx->db->getRow($rs)) {
         $caption = $row['caption'] != '' ? $row['caption'] : $row['name'];
         $sortableList .= '<li id="item_' . $row['id'] . '"><i class="fa fa-list-alt"></i> ' . $caption . ' <small class="protectedNode" style="float:right">[*' . $row['name'] . '*]</small></li>';
