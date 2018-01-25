@@ -126,7 +126,7 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
             if (($role != 1) AND ($showButton == 'AdminOnly') OR ($showButton == 'hide') OR ($errors > 0)) {
                 $updateButton = '';
             } else {
-                $updateButton = '<a target="_parent" href="' . MODX_SITE_URL . $_SESSION['updatelink'] . '" class="btn btn-sm btn-danger">' . $_lang['updateButton_txt'] . ' ' . $git['version'] . '</a><br><br>';
+                $updateButton = '<a target="_parent" onclick="return confirm(\''.$_lang['are_you_sure_update'].'\')" href="' . MODX_SITE_URL . $_SESSION['updatelink'] . '" class="btn btn-sm btn-danger">' . $_lang['updateButton_txt'] . ' ' . $git['version'] . '</a><br><br>';
             }
 
             $output = '<div class="card-body">' . $_lang['cms_outdated_msg'] . ' <strong>' . $git['version'] . '</strong> <br><br>
