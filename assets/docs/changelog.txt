@@ -1,7 +1,7 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-Evolution CMS 1.4.0 (Jan 24, 2018)
+Evolution CMS 1.4.0 (Jan 25, 2018)
 * [GitHub:#b1fffc26] - fix for php 7.2 (dmi3yy)
 * [GitHub:#da5b0533] - [F] Moving which_editor with resource content for MM (Mr B)
 * [GitHub:#67209c9a] - fix for search by tv (dmi3yy)
