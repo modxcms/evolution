@@ -9,7 +9,7 @@
  * @package     evo
  * @author      Author: Nicola Lambathakis
  * @internal    @events OnManagerWelcomeHome
- * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;All &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &MtvVersion=Min multiTV version:;string;2.0.12
+ * @internal    @properties &wdgVisibility=Show widget for:;menu;All,AdminOnly,AdminExcluded,ThisRoleOnly,ThisUserOnly;All &ThisRole=Run only for this role:;string;;;(role id) &ThisUser=Run only for this user:;string;;;(username) &DittoVersion=Min Ditto version:;string;2.1.3 &EformVersion=Min eForm version:;string;1.4.9 &AjaxSearchVersion=Min AjaxSearch version:;string;1.11.0 &MtvVersion=Min multiTV version:;string;2.0.12 &badthemes=Outdated Manager Themes:;string;MODxRE2_DropdownMenu,MODxRE2,MODxRE,MODxCarbon,MODxFLAT,wMOD,ScienceStyle
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @internal    @disabled 0
@@ -64,6 +64,19 @@ $getExtra = $modx->db->select( "id, name", $modtable, "name='Extras'" );
 while( $row = $modx->db->getRow( $getExtra ) ) {
 $ExtrasID = $row['id'];
 }
+//check outdated files
+//ajax index
+$indexajax = "../index-ajax.php";
+if (file_exists($indexajax)){
+    $output .= '<div class="widget-wrapper alert alert-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>index-ajax.php</b> '.$_oec_lang['not_used'].' <b>Evolution '.$EVOversion.'</b>.  '.$_oec_lang['if_dont_use'].', '.$_oec_lang['please_delete'].'.</div>';
+}
+//check outdated default manager themes
+$oldthemes = explode(",","$badthemes");
+foreach ($oldthemes as $oldtheme){
+	if (file_exists('media/style/'.$oldtheme)){
+    $output .= '<div class="widget-wrapper alert alert-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>'.$oldtheme.'</b> '.$_lang["manager_theme"].',  '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>.   '.$_oec_lang['please_delete'].' '.$_oec_lang['from_folder'].' ' . MODX_MANAGER_PATH . 'media/style/.</div>';
+}
+}	
 //get site snippets table
 $table = $modx->getFullTableName('site_snippets');
 //check ditto
@@ -83,6 +96,40 @@ $output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-excl
 } 
 //end check ditto
 
+//check eform
+//get min version from config
+$minEformVersion = $EformVersion;
+//search the snippet by name
+$CheckEform = $modx->db->select( "id, name, description", $table, "name='eForm'" );
+if($CheckEform != ''){
+while( $row = $modx->db->getRow( $CheckEform ) ) {
+//extract snippet version from description <strong></strong> tags 
+$curr_Eform_version = getver($row['description'],"strong");
+//check snippet version and return an alert if outdated
+if ($curr_Eform_version < $minEformVersion){
+$output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>' . $row['name'] . '</b> '.$_lang["snippet"].' (version ' . $curr_Eform_version . ') '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>. '.$_oec_lang['please_update'].' <b>' . $row['name'] . '</b> '.$_oec_lang["to_latest"].' ('.$_oec_lang['min _required'].' '.$minEformVersion.') '.$_oec_lang['from'].' <a target="main" href="index.php?a=112&id='.$ExtrasID.'">'.$_oec_lang['extras_module'].'</a> '.$_oec_lang['or_move_to'].' <b>FormLister</b></div>';
+		}
+	}
+} 
+//end check eform
+	
+//check AjaxSearch
+//get min version from config
+$minAjaxSearchVersion = $AjaxSearchVersion;
+//search the snippet by name
+$CheckAjaxSearch = $modx->db->select( "id, name, description", $table, "name='AjaxSearch'" );
+if($CheckAjaxSearch != ''){
+while( $row = $modx->db->getRow( $CheckAjaxSearch ) ) {
+//extract snippet version from description <strong></strong> tags 
+$curr_AjaxSearch_version = getver($row['description'],"strong");
+//check snippet version and return an alert if outdated
+if ($curr_AjaxSearch_version < $minAjaxSearchVersion){
+$output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <b>' . $row['name'] . '</b> '.$_lang["snippet"].' (version ' . $curr_AjaxSearch_version . ') '.$_oec_lang['isoutdated'].' <b>Evolution '.$EVOversion.'</b>. '.$_oec_lang['please_update'].' <b>' . $row['name'] . '</b> '.$_oec_lang["to_latest"].' ('.$_oec_lang['min _required'].' '.$minAjaxSearchVersion.') '.$_oec_lang['from'].' <a target="main" href="index.php?a=112&id='.$ExtrasID.'">'.$_oec_lang['extras_module'].'</a>.</div>';
+		}
+	}
+} 
+//end check AjaxSearch	
+
 //check Multitv
 //get min version from config
 $minMtvVersion = $MtvVersion;
@@ -99,6 +146,7 @@ $output .= '<div class="widget-wrapper alert alert-warning"><i class="fa fa-excl
 	}
 } 
 //end check Multitv
+
 if($output != ''){
 if($e->name == 'OnManagerWelcomeHome') {
 $out = $output;
