@@ -1,44 +1,44 @@
 <?php
 /*
 *************************************************************************
-	MODX Content Management System and PHP Application Framework 
-	Managed and maintained by Raymond Irving, Ryan Thrash and the
-	MODX community
+	EVO Content Management System and PHP Application Framework ("EVO")
+	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
-	MODX is an opensource PHP/MySQL content management system and content
+	EVO is an opensource PHP/MySQL content management system and content
 	management framework that is flexible, adaptable, supports XHTML/CSS
-	layouts, and works with most web browsers, including Safari.
+	layouts, and works with most web browsers.
 
-	MODX is distributed under the GNU General Public License	
+	EVO is distributed under the GNU General Public License
 *************************************************************************
 
-	MODX CMS and Application Framework ("MODX")
-	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
-	All rights reserved.
+	This file and all related or dependant files distributed with this file
+	are considered as a whole to make up EVO.
 
-	This file and all related or dependant files distributed with this filie
-	are considered as a whole to make up MODX.
-
-	MODX is free software; you can redistribute it and/or modify
+	EVO is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	MODX is distributed in the hope that it will be useful,
+	EVO is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with MODX (located in "/assets/docs/"); if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+	along with EVO (located in "/assets/docs/"); if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
 
-	For more information on MODX please visit http://modx.com/
-	
+	For more information on EVO please visit https://evo.im/
+	Github: https://github.com/evolution-cms/evolution/
+
 **************************************************************************
-    Originally based on Etomite by Alex Butter
+	Based on MODX Evolution CMS and Application Framework
+	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
+	All rights reserved.
+
+	MODX Evolution is originally based on Etomite by Alex Butter
 **************************************************************************
-*/	
+*/
 
 /**
  * Initialize Document Parsing

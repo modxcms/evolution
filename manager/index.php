@@ -1,49 +1,48 @@
 <?php
 /*
 *************************************************************************
-	MODX Content Management System and PHP Application Framework
-	Managed and maintained by Raymond Irving, Ryan Thrash and the
-	MODX community
+	EVO Content Management System and PHP Application Framework ("EVO")
+	Managed and maintained by Dmytro Lukianenko and the	EVO community
 *************************************************************************
-	MODX is an opensource PHP/MySQL content management system and content
+	EVO is an opensource PHP/MySQL content management system and content
 	management framework that is flexible, adaptable, supports XHTML/CSS
-	layouts, and works with most web browsers, including Safari.
+	layouts, and works with most web browsers.
 
-	MODX is distributed under the GNU General Public License
+	EVO is distributed under the GNU General Public License
 *************************************************************************
 
-	MODX CMS and Application Framework ("MODX")
-	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
-	All rights reserved.
+	This file and all related or dependant files distributed with this file
+	are considered as a whole to make up EVO.
 
-	This file and all related or dependant files distributed with this filie
-	are considered as a whole to make up MODX.
-
-	MODX is free software; you can redistribute it and/or modify
+	EVO is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	MODX is distributed in the hope that it will be useful,
+	EVO is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with MODX (located in "/assets/docs/"); if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+	along with EVO (located in "/assets/docs/"); if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1335, USA
 
-	For more information on MODX please visit http://modx.com/
+	For more information on EVO please visit https://evo.im/
+	Github: https://github.com/evolution-cms/evolution/
 
 **************************************************************************
-	Originally based on Etomite by Alex Butter
+	Based on MODX Evolution CMS and Application Framework
+	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
+	All rights reserved.
+
+	MODX Evolution is originally based on Etomite by Alex Butter
 **************************************************************************
 */
 
-
 /**
  *  Filename: index.php
- *  Function: This file is the main root file for MODX. It is
+ *  Function: This file is the main root file for EVO. It is
  *          only file that will be directly requested, and
  *          depending on the request, will branch different
  *          content
@@ -100,7 +99,7 @@ header('X-XSS-Protection: 0');
 $_lang = array();
 include_once "includes/lang/english.inc.php";
 
-// check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
+// check PHP version. EVO is compatible with php 5 (5.0.0+)
 $php_ver_comp =  version_compare(phpversion(), "5.0.0");
 		// -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
@@ -170,7 +169,7 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 	include_once "lang/".$manager_language.".inc.php";
 }
 
-// allow custom language overrides not altered by future MODX-updates
+// allow custom language overrides not altered by future EVO-updates
 if(file_exists(MODX_MANAGER_PATH."includes/lang/override/".$manager_language.".inc.php")) {
 	include_once "lang/override/".$manager_language.".inc.php";
 }
