@@ -32,6 +32,9 @@
 $this->set('skin',                  'lightgray',                    'string' );     // Set default skin (setting param first time sets its value also as default val)
 $this->set('skin',                  $this->modxParams['skin'] );                    // Overwrite with Modx-setting (if empty, default is used))
 
+$this->set('theme',                 'modern',                       'string' );     // Set default skin (setting param first time sets its value also as default val)
+$this->set('theme',                 $this->modxParams['skintheme'] );               // Overwrite with Modx-setting (if empty, default is used))
+
 $this->set('width',                 $this->pluginParams['width'],   'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#width
 $this->set('height',                $this->pluginParams['height'],  'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#height
 
@@ -89,3 +92,10 @@ $this->set('forced_root_block', '',  'string'); // https://www.tinymce.com/docs/
 
 $this->set('setup', 'function(ed) { ed.on("change", function(e) { documentDirty=true; }); }',  'object');
 $this->set('save_onsavecallback', 'function () { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');
+
+// https://www.tinymce.com/docs/themes/mobile/
+$this->set('mobile', '{
+	theme: "mobile", 
+	plugins: [ "autosave", "lists", "autolink" ],
+	toolbar: [ "undo", "bold", "italic", "styleselect" ]
+}',	'json' );
