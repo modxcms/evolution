@@ -18,7 +18,7 @@ $modx->getSettings();
 startCMSSession();
 $modx->minParserPasses=2;
 $modx->invokeEvent('OnManagerPageInit');
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 
 $moduleurl = $modx->config['site_url'].'assets/modules/store/installer/index.php';
 $modulePath = MODX_BASE_PATH.'assets/modules/store/installer/';

@@ -6203,7 +6203,7 @@ class DocumentParser
 
         // Display error
         if (isset($_SESSION['mgrValidated'])) {
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>MODX Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
+            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>EVO Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                  <link rel="stylesheet" type="text/css" href="' . $this->config['site_manager_url'] . 'media/style/' . $this->config['manager_theme'] . '/style.css" />
                  <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
