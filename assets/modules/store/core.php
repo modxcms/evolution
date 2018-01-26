@@ -4,7 +4,7 @@
 
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 
-$version = "0.1.2";
+$version = "0.1.3";
 $Store = new Store;
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
@@ -18,27 +18,39 @@ case 'exituser':
 	break;
 	
 case 'install':
-	if (is_dir(MODX_BASE_PATH.'assets/cache/store/')) $Store->removeFolder(MODX_BASE_PATH.'assets/cache/store/');
-	$id = (int)$_REQUEST['cid'];
+case 'install_file':
+	if (is_dir(MODX_BASE_PATH . 'assets/cache/store/')) $Store->removeFolder(MODX_BASE_PATH . 'assets/cache/store/');
+	$id = (int) $_REQUEST['cid'];
 	@mkdir("../assets/cache/store", 0777);
 	@mkdir("../assets/cache/store/tmp_install", 0777);
 	@mkdir("../assets/cache/store/install", 0777);
 	
-	$file = $_POST['file']==''? $_GET['file'] : $_POST['file'];
-	if ($file!='%url%' && $file!='' && $file!=' '){
-		$url = $file;
+	if($action == 'install') {
+		$file = $_POST['file']==''? $_GET['file'] : $_POST['file'];
+		if ($file!='%url%' && $file!='' && $file!=' '){
+			$url = $file;
+		} else {
+			$url = "http://extras.evo.im/get.php?get=file&cid=".$id;
+		}
+	
+		if (!$Store->downloadFile($url ,MODX_BASE_PATH."assets/cache/store/temp.zip")){
+			$Store->quit();
+		}
 	} else {
-		$url = "http://extras.evo.im/get.php?get=file&cid=".$id;
-	}
-
-	if (!$Store->downloadFile($url ,MODX_BASE_PATH."assets/cache/store/temp.zip")){
-		$Store->quit();
+		$extension = pathinfo($_FILES['install_file']['name'], PATHINFO_EXTENSION);
+		if( !in_array($extension, array('zip'))) {
+			die('Only ZIP-Files allowed');
+		}
+		if (!move_uploaded_file($_FILES['install_file']['tmp_name'], MODX_BASE_PATH."assets/cache/store/temp.zip")) {
+			die('Uploaded File could not be moved to assets/cache/store/');
+		}
+		$msg = $Store->lang['install_file_success'];
 	}
 	
 	$zip = new ZipArchive;
 	$res = $zip->open(MODX_BASE_PATH."assets/cache/store/temp.zip");
 	if ($res === TRUE) {
-			echo 'Archive open';
+		// echo 'Archive open';
 		$zip->extractTo(MODX_BASE_PATH."assets/cache/store/tmp_install");
 		$zip->close();
 		$handle = opendir('../assets/cache/store/tmp_install');
@@ -71,7 +83,12 @@ case 'install':
 	}
 
 	$Store->removeFolder(MODX_BASE_PATH.'assets/cache/store/');
-	die('[{"result":"true"}]');
+	if($action == 'install') {
+		die('[{"result":"true"}]');
+	} else {
+		die($msg);
+	}
+	
 	break;
 
 default:

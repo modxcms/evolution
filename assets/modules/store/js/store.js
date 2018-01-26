@@ -106,8 +106,8 @@ store = {
 			$('[name=parent]').val(id);
 			store.update_list( store.category[id] );
 			
-			
-			if (data.version != $('.version').html()) {
+			var version = $('.version').html();
+			if (data.version != version && version != '0.1.3') {
 					$('.new_version').html(data.version);
 					$('#actions').show();
 			}
@@ -153,6 +153,48 @@ store = {
 			store.get_list({}, store.update_list );
 		});
 		
+		var file;
+		$('#install_file').on('change', function() {
+            file = this.files[0];
+		    console.log(file);
+        });
+        
+        $('#install_file_btn').on('click', function() {
+            if($.isEmptyObject( file )) return;
+            $('#install_file_resp').html('');
+            $('#install_file_prg').fadeIn();
+            $.ajax({
+                url: link()+'&method=fast',
+                type: 'POST',
+                data: new FormData($('#install_file_form')[0]),
+                cache: false, contentType: false, processData: false,
+
+                // Custom XMLHttpRequest
+                xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        // For handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                $('progress').attr({
+                                    value: e.loaded,
+                                    max: e.total,
+                                });
+                            }
+                        } , false);
+                    }
+                    return myXhr;
+                },
+            }).done(function(resp){
+                $('#install_file_resp').html(resp);
+                $('#install_file_prg').fadeOut();
+                console.log("Success: File sent!");
+            }).fail(function(resp){
+                $('#install_file_resp').html(resp);
+                $('#install_file_prg').fadeOut();
+                console.log("Error: File couldn't be sent!");
+            });
+        });
 	},
 	install:function(elm){
 			
