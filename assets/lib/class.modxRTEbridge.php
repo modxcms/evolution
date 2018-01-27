@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Deesen, yama / updated: 06.05.2016
+ * @author Deesen, yama / updated: 27.01.2018
  */
 if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
@@ -305,12 +305,14 @@ class modxRTEbridge
     /**
      * @return array
      */
-    public function prepareDefaultPlaceholders($selector='')
+    public function prepareDefaultPlaceholders($selector='', $render=true)
     {
         global $modx;
 
-        $ph['configString'] = $this->renderConfigString();
-        $ph['configRawString'] = $this->renderConfigRawString();
+        if($render) {
+            $ph['configString']    = $this->renderConfigString();
+            $ph['configRawString'] = $this->renderConfigRawString();
+        }
         $ph['editorKey'] = $this->editorKey;
         $ph['themeKey'] = $this->theme;
         $ph['selector'] = $selector;
@@ -374,8 +376,11 @@ class modxRTEbridge
     // Renders String for initialization via JS
     public function renderConfigString()
     {
+        global $modx;
+        
         $config = array();
-
+        $defaultPhs = $this->prepareDefaultPlaceholders('',false);
+        
         // Build config-string as per themeConfig
         $raw = '';
         foreach ($this->themeConfig as $key => $conf) {
@@ -384,6 +389,8 @@ class modxRTEbridge
             $value = $this->determineValue($key, $conf);
             if ($value === NULL) { continue; }; // Skip none-allowed empty settings
 
+            $value = is_string($value) ? $modx->parseText($value, $defaultPhs) : $value; // Allow default-placeholders like [+which_browser+] in theme-param-values
+        
             // Escape quotes
             if (!is_array($value) && strpos($value, "'") !== false && !in_array($conf['type'], array('raw','object','obj')) )
                 $value = str_replace("'", "\\'", $value);
