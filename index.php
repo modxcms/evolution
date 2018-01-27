@@ -104,8 +104,12 @@ if(!isset($database_user) || $database_user=="") {
 startCMSSession();
 
 // initiate a new document parser
-include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-$modx = new DocumentParser;
+if (isset($coreClass) && class_exists($coreClass) && $coreClass instanceof \DocumentParser) {
+	$modx = new $coreClass;
+} else {
+	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
+	$modx = new \DocumentParser;
+}
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes

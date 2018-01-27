@@ -14,6 +14,7 @@ $table_prefix      = '[+table_prefix+]';
 $lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
+$coreClass = '\DocumentParser';
 
 if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
 

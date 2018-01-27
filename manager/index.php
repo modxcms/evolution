@@ -138,8 +138,14 @@ if (!file_exists($config_filename)) {
 include_once "config.inc.php";
 
 // initiate the content manager class
-include_once "document.parser.class.inc.php";
-$modx = new DocumentParser;
+if (isset($coreClass) && class_exists($coreClass)) {
+	$modx = new $coreClass;
+} 	
+if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
+	$modx = new \DocumentParser;
+}
+
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $modx->tstart = $tstart;
