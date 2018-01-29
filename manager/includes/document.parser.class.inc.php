@@ -1452,9 +1452,9 @@ class DocumentParser
                 continue;
             }
 
+            $value = $this->parseText($value, $params); // parse local scope placeholers for ConditionalTags
+            $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
             if ($this->config['enable_at_syntax']) {
-                $value = $this->parseText($value, $params); // parse local scope placeholers for ConditionalTags
-                $value = $this->mergePlaceholderContent($value, $params);  // parse page global placeholers
                 $value = $this->mergeConditionalTagsContent($value);
             }
             $value = $this->mergeDocumentContent($value);
