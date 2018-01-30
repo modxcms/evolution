@@ -526,9 +526,10 @@ if ($modx->config['manager_theme'] == 'default') {
     ?>
 
     <script type="text/javascript">
-        <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
-        if (document.getElementById('treeMenu')) {
+      if (document.getElementById('treeMenu')) {
+        
+        <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
           document.getElementById('treeMenu_openelements').onclick = function(e) {
             e.preventDefault();
