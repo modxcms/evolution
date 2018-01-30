@@ -309,11 +309,12 @@ class synccache
             }
             $content .= '$p[\'' . $key . '\']=\'' . $this->escapeSingleQuotes($value) . '\';';
             if ($row['properties'] != '' || $row['sharedproperties'] != '') {
-                $properties = $this->escapeSingleQuotes(trim($row['properties'] . ' ' . $row['sharedproperties']));
-                if ($modx->config['minifyphp_incache']) {
-                    $properties = $this->php_strip_whitespace($properties);
+                $properties = $modx->parseProperties($row['properties']);
+                $sharedproperties = $modx->parseProperties($row['sharedproperties']);
+                $properties = array_merge($sharedproperties, $properties);
+                if (0 < count($properties)) {
+                    $content .= '$p[\'' . $key . 'Props\']=\'' . $this->escapeSingleQuotes(json_encode($properties)) . '\';';
                 }
-                $content .= '$p[\'' . $key . 'Props\']=\'' . $properties . '\';';
             }
         }
 
