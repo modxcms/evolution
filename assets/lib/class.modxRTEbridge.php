@@ -317,6 +317,8 @@ class modxRTEbridge
         $ph['themeKey'] = $this->theme;
         $ph['selector'] = $selector;
         $ph['documentIdentifier'] = $modx->documentIdentifier;
+        $ph['base_path'] = MODX_BASE_PATH;
+        $ph['base_url'] = MODX_BASE_URL;
         $ph['manager_path'] = MGR_DIR;
         $ph['site_manager_url'] = MODX_MANAGER_URL;
         $ph['which_browser'] = !empty($modx->config['which_browser']) ? $modx->config['which_browser'] : 'mcpuk';
