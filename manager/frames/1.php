@@ -273,7 +273,7 @@ if ($modx->config['manager_theme'] == 'default') {
                         </li>
                         <?php if ($modx->config['show_newresource_btn'] != "0") { ?>
                             <?php if ($modx->hasPermission('new_document')) { ?>
-                                <li class="dropdown newresource">
+                                <li id="newresource" class="dropdown newresource">
                                     <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="<?= $_lang['add_resource'] ?>"><?= $_style['menu_new_resource'] ?></a>
                                     <ul class="dropdown-menu">
                                         <?php if ($modx->hasPermission('new_document')) { ?>
@@ -306,13 +306,13 @@ if ($modx->config['manager_theme'] == 'default') {
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                        <li>
+                        <li id="preview">
                             <a href="../" target="_blank" title="<?= $_lang['preview'] ?>">
                                 <?= $_style['menu_preview_site'] ?>
                             </a>
                         </li>
                         <?php if ($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
-                            <li class="dropdown">
+                            <li id="system" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" title="<?= $_lang['system'] ?>" onclick="return false;"><?= $_style['menu_system'] ?></a>
                                 <ul class="dropdown-menu">
                                     <?php if ($modx->hasPermission('settings')) { ?>
@@ -358,7 +358,7 @@ if ($modx->config['manager_theme'] == 'default') {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <li class="dropdown account">
+                        <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
                                 <span class="username"><?= $user['username'] ?></span>
                                 <?php if ($user['photo']) { ?>
