@@ -23,7 +23,7 @@
 #qmEditor li:hover {background-color: rgba(255,255,255,.1);}
   
 
-#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
+.qmId, #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel
 {
   font-size: 13px;
   font-weight: 500;
