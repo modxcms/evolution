@@ -11,7 +11,7 @@ $ok = false;
 if ($rt = @ include_once('config.inc.php')) {
 // Keep it alive
   startCMSSession();
-  if($_GET['tok'] == md5(session_id())) {
+  if(isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
       $ok = true;
       define('IN_MANAGER_MODE','true');
       include_once(dirname(__FILE__).'/document.parser.class.inc.php');

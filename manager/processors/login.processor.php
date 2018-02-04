@@ -237,6 +237,8 @@ $rs = $modx->db->select('uga.documentgroup', $modx->getFullTableName('member_gro
 		INNER JOIN ' . $modx->getFullTableName('membergroup_access') . ' uga ON uga.membergroup=ug.user_group', "ug.member='{$internalKey}'");
 $_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
 
+$_SESSION['mgrToken'] = md5($currentsessionid);
+
 if($rememberme == '1') {
 	$_SESSION['modx.mgr.session.cookie.lifetime'] = intval($modx->config['session.cookie.lifetime']);
 

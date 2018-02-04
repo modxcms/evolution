@@ -251,7 +251,7 @@ if ($modx->config['manager_theme'] == 'default') {
     ?>
 </head>
 <body class="<?= $body_class ?>">
-<input type="hidden" name="sessToken" id="sessTokenInput" value="<?= md5(session_id()) ?>" />
+<input type="hidden" name="sessToken" id="sessTokenInput" value="<?= isset($_SESSION['mgrToken']) ? $_SESSION['mgrToken'] : '' ?>" />
 <div id="frameset">
     <div id="mainMenu" class="dropdown">
         <div class="container">
