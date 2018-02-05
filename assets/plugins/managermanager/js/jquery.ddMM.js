@@ -96,7 +96,7 @@ $.ddMM = {
 
 						$row.appendTo($target.find('> table:first')).after(ruleHtml);
 					}else{
-						$('#content_body').parents('tr').appendTo($target.find('> table tbody:last'));
+						$('#content_body').parents('tr').appendTo($target.find('> table:last'));
 						//hide tv separator if there
 						$('#content_body').parents('tr').prev('tr[style="height: 10px"]').hide();
 					}
