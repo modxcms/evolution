@@ -147,7 +147,7 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
         }
     }
 
-    if ($e->name == 'OnPageNotFound') {
+    if ($e->name == 'OnPageNotFound' && isset($_GET['q'])) {
         if (empty($_SESSION['mgrInternalKey']) || empty($_SESSION['updatelink']) ) {
             return;
         }
