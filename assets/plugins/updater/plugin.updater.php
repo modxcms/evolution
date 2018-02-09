@@ -124,7 +124,7 @@ if ($role != 1 && $wdgVisibility == 'AdminOnly') {
     
             $updateButton .= '</tbody></table></div>';
     
-            $output = '<div class="card-body">GitHub commits for <strong>(<a target="_blank" href="https://github.com/' . $branchPath . '">' . $branchPath . '</a>)</strong><br>
+            $output = '<div class="card-body">GitHub commits for <strong>(<a target="_blank" href="' . $branchPath . '">' . $branchPath . '</a>)</strong><br>
             <small style="color:red;font-size:10px"> ' . $_lang['bkp_before_msg'] . '</small><br>
             <small style="color:red;font-size:10px">' . $errorsMessage . '</small>
                     </div>' . $updateButton;
