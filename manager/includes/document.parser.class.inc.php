@@ -6596,16 +6596,17 @@ class DocumentParser
  */
 class SystemEvent
 {
-    public $name;
-    public $_propagate;
-    public $_output;
-    public $activated;
-    public $activePlugin;
+    public $name = '';
+    public $_propagate = true;
+    public $_output = '';
+    public $activated = false;
+    public $activePlugin = '';
+    public $params = array();
 
     /**
      * @param string $name Name of the event
      */
-    function __construct($name = "")
+    public function __construct($name = "")
     {
         $this->_resetEventObject();
         $this->name = $name;
@@ -6617,7 +6618,7 @@ class SystemEvent
      * @global array $SystemAlertMsgQueque
      * @param string $msg The message
      */
-    function alert($msg)
+    public function alert($msg)
     {
         global $SystemAlertMsgQueque;
         if ($msg == "") {
@@ -6637,7 +6638,7 @@ class SystemEvent
      *
      * @param string $msg
      */
-    function output($msg)
+    public function output($msg)
     {
         $this->_output .= $msg;
     }
@@ -6645,12 +6646,12 @@ class SystemEvent
     /**
      * Stop event propogation
      */
-    function stopPropagation()
+    public function stopPropagation()
     {
         $this->_propagate = false;
     }
 
-    function _resetEventObject()
+    public function _resetEventObject()
     {
         unset ($this->returnedValues);
         $this->name = "";
