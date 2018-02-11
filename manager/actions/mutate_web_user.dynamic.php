@@ -521,16 +521,16 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				}
 				?>
 			</div>
+			<?php
+			// invoke OnWUsrFormRender event
+			$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
+				"id" => $user
+			));
+			if(is_array($evtOut)) {
+				echo implode("", $evtOut);
+			}
+			?>
 		</div>
 	</div>
 	<input type="submit" name="save" style="display:none">
-	<?php
-	// invoke OnWUsrFormRender event
-	$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
-		"id" => $user
-	));
-	if(is_array($evtOut)) {
-		echo implode("", $evtOut);
-	}
-	?>
 </form>
