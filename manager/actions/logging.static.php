@@ -47,7 +47,7 @@ $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemnam
 $logs = $modx->db->makeArray($rs);
 ?>
     <h1>
-        <i class="fa fa-user-secret"></i><?= $_lang['mgrlog_view'] ?>
+        <?= $_style['page_manager_logs'] ?><?= $_lang['mgrlog_view'] ?>
     </h1>
 
     <div class="tab-page">

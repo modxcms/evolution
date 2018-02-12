@@ -6,7 +6,7 @@ $helpBasePath = "actions/help/";
 ?>
 
 <h1>
-	<i class="fa fa-question-circle"></i><?php echo $_lang['help']; ?>
+	<?php echo $_style['page_help'];  echo $_lang['help']; ?>
 </h1>
 
 <div class="sectionBody">
