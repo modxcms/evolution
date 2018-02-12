@@ -20,7 +20,7 @@ if(!$modx->hasPermission('change_password')) {
 	}
 </script>
 
-<h1><?php echo $_lang['change_password'] ?></h1>
+<h1><?php echo $_style['page_change_password']; echo $_lang['change_password'] ?></h1>
 
 <?php echo $_style['actionbuttons']['dynamic']['save'] ?>
 
