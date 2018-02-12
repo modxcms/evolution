@@ -99,7 +99,7 @@ echo $cm->render();
 	<input type="hidden" name="op" value="" />
 
 	<h1>
-		<i class="<?= $_style['actions_triangle'] ?>"></i><?= $_lang['eventlog_viewer'] ?><i class="fa fa-question-circle help"></i>
+		<?= $_style['page_eventlog'] ?> <?= $_lang['eventlog_viewer'] ?><?= $_style['icons_help'] ?>
 	</h1>
 
 	<div class="container element-edit-message">

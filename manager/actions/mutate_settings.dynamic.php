@@ -60,7 +60,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<form name="settings" action="index.php?a=30" method="post">
 
 		<h1>
-			<i class="fa fa-sliders"></i><?php echo $_lang['settings_title']; ?>
+			<?php echo $_style['page_settings']; echo $_lang['settings_title']; ?>
 		</h1>
 
 		<?= $_style['actionbuttons']['dynamic']['save'] ?>

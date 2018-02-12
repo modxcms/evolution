@@ -9,7 +9,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
 <h1>
-	<i class="fa fa-calendar"></i><?= $_lang['site_schedule'] ?>
+	<?= $_style['page_shedule'] ?><?= $_lang['site_schedule'] ?>
 </h1>
 
 <div class="tab-page">
