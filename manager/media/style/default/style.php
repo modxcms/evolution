@@ -31,6 +31,8 @@ $_style['menu_user']                = '<i class="fa fa-user-circle"></i>';
 // full screen
 $_style['menu_expand']              = 'fa-expand';
 $_style['menu_compress']            = 'fa-compress';
+//help toggle
+$_style['icons_help']               = '<i class="fa fa-question-circle help"></i>';
 //pages
 $_style['page_settings']            = '<i class="fa fa-sliders fw"></i>';
 $_style['page_shedule']             = '<i class="fa fa-calendar"></i>';
