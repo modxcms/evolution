@@ -3,27 +3,16 @@ if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	header('HTTP/1.0 404 Not Found');
 	exit('error');
 }
-include_once(dirname(__FILE__) . '/../../assets/cache/siteManager.php');
-require_once(strtr(realpath(dirname(__FILE__)), '\\', '/') . '/../includes/protect.inc.php');
-
-set_include_path(get_include_path() . PATH_SEPARATOR . '../includes/');
-
-define('IN_MANAGER_MODE', 'true');  // we use this to make sure files are accessed through
-// the manager instead of seperately.
-// include the database configuration file
-include_once('../includes/config.inc.php');
-$core_path = MODX_MANAGER_PATH . 'includes/';
-
-// start session
-startCMSSession();
-
-
-include_once("{$core_path}document.parser.class.inc.php");
-$modx = new DocumentParser;
+define('IN_MANAGER_MODE', true);  // we use this to make sure files are accessed through
+define('MODX_API_MODE', true);
+include_once(__DIR__ . '/../../index.php');
+$modx->db->connect();
+$modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
 $modx->loadExtension('ManagerAPI');
 $modx->loadExtension('phpass');
-$modx->getSettings();
 
+$core_path = MODX_MANAGER_PATH . 'includes/';
 // include_once the language file
 $_lang = array();
 include_once("{$core_path}lang/english.inc.php");
