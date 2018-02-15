@@ -82,9 +82,9 @@ ob_start();
  *	Function: This file loads and executes the parser. *
  */
 
-define("IN_PARSER_MODE", "true");
+define("IN_PARSER_MODE", true);
 if (!defined('IN_MANAGER_MODE')) {
-	define("IN_MANAGER_MODE", "false");
+	define("IN_MANAGER_MODE", false);
 }
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
