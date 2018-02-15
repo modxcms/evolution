@@ -53,13 +53,10 @@ $sqlParser = '';
 
 
 define('MODX_API_MODE', true);
-include_once MGR.'/includes/config.inc.php';
-include_once MGR.'/includes/document.parser.class.inc.php';
-$modx = new DocumentParser;
+include_once (MODX_BASE_PATH . 'index.php');
 $modx->db->connect();
 $modx->getSettings();
-startCMSSession();
-$modx->minParserPasses=2;
+
 $modx->invokeEvent('OnManagerPageInit');
 global $moduleName;
 global $moduleVersion;
