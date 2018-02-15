@@ -2,13 +2,7 @@
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 
 error_reporting(E_ALL & ~E_NOTICE);
-define('MODX_BASE_PATH',realpath('../../../../').'/');
-include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
 define('MGR',MODX_BASE_PATH.MGR_DIR);
-$autoloader = realpath(MODX_BASE_PATH .'vendor/autoload.php');
-if (file_exists($autoloader) && is_readable($autoloader)) {
-    include_once($autoloader);
-}
 $moduleurl = 'assets/modules/store/installer/index.php';
 $modulePath = dirname(__FILE__);
 $self = $modulePath.'/index.php';
@@ -17,14 +11,11 @@ require_once($modulePath."/functions.php");
 $_lang = array();
 $_params = array();
 require_once($modulePath."/lang/russian-UTF8.inc.php");
-include_once(MODX_BASE_PATH."assets/cache/siteManager.php");
-require_once(MGR.'/includes/version.inc.php');
 
 // start session
 //session_start();
 $_SESSION['test'] = 1;
 install_sessionCheck();
-
 $moduleName = "MODX";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
@@ -50,28 +41,6 @@ $isPostBack = (count($_POST));
 $_POST['installmode'] = 1;
 //$_POST['installdata'] = 0;
 $sqlParser = '';
-
-
-define('MODX_API_MODE', true);
-include_once (MODX_BASE_PATH . 'index.php');
-$modx->db->connect();
-$modx->getSettings();
-
-$modx->invokeEvent('OnManagerPageInit');
-global $moduleName;
-global $moduleVersion;
-global $moduleSQLBaseFile;
-global $moduleSQLDataFile;
-
-global $moduleChunks;
-global $moduleTemplates;
-global $moduleSnippets;
-global $modulePlugins;
-global $moduleModules;
-global $moduleTVs;
-
-global $errors;
-
 $create = false;
 
 // set timout limit
@@ -352,7 +321,6 @@ if (count($moduleModules )>0) {
 }
 
 // Install Plugins
-
 if (count($modulePlugins )>0) {
     echo "<h3>" . $_lang['plugins'] . ":</h3> ";
     $selPlugs = $_POST['plugin'];

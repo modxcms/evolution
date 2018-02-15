@@ -5,26 +5,6 @@ $_POST['installmode'] = 1;
 //$_POST['installdata'] = 0;
 $sqlParser = '';
 
-define('MODX_API_MODE', true);
-include_once (MODX_BASE_PATH . 'index.php');
-$modx->db->connect();
-$modx->getSettings();
-
-$modx->invokeEvent('OnManagerPageInit');
-global $moduleName;
-global $moduleVersion;
-global $moduleSQLBaseFile;
-global $moduleSQLDataFile;
-
-global $moduleChunks;
-global $moduleTemplates;
-global $moduleSnippets;
-global $modulePlugins;
-global $moduleModules;
-global $moduleTVs;
-
-global $errors;
-
 $create = false;
 
 // set timout limit
