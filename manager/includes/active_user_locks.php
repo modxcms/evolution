@@ -4,24 +4,17 @@
  *
  * This page is requested by several actions to keep elements/resources locked
  */
-include_once(dirname(__FILE__).'/../../assets/cache/siteManager.php');
-require_once(dirname(__FILE__).'/protect.inc.php');
-
+define('IN_MANAGER_MODE', true);
+define('MODX_API_MODE', true);
+include_once('/../../index.php');
+$modx->db->connect();
+$modx->getSettings();
+$modx->invokeEvent('OnManagerPageInit');
 $ok = false;
-if ($rt = @ include_once('config.inc.php')) {
-// Keep it alive
-  startCMSSession();
-  if(isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
-	define('IN_MANAGER_MODE','true');
-	include_once(dirname(__FILE__).'/document.parser.class.inc.php');
-	$modx = new DocumentParser;
-	$modx->db->connect();
-	
-	if($modx->elementIsLocked($_GET['type'], $_GET['id'], true)) {
-		$modx->lockElement($_GET['type'], $_GET['id'], true);
-		$ok = true;
-	}
-  }
+
+if($modx->elementIsLocked($_GET['type'], $_GET['id'], true)) {
+    $modx->lockElement($_GET['type'], $_GET['id'], true);
+    $ok = true;
 }
 
 header('Content-type: application/json');
