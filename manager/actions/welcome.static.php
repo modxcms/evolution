@@ -12,6 +12,8 @@ if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_v
 
 // set placeholders
 $ph = $_lang;
+$_SESSION['nrtotalmessages'] = 0;
+$_SESSION['nrnewmessages'] = 0;
 
 // setup message info
 if($modx->hasPermission('messages')) {
