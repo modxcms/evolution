@@ -26,11 +26,11 @@ function startCMSSession(){
     if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
         $cookieLifetime= intval($_SESSION[$key]);
         if($cookieLifetime) $cookieExpiration = $_SERVER['REQUEST_TIME']+$cookieLifetime;
+        setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
     }
     if (!isset($_SESSION['modx.session.created.time'])) {
         $_SESSION['modx.session.created.time'] = $_SERVER['REQUEST_TIME'];
     }
-    setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
 }
 
 function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
