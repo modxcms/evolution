@@ -14,8 +14,13 @@ $table_prefix      = '[+table_prefix+]';
 $lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
+$coreClass = '\DocumentParser';
+$session_cookie_path = '';
+$session_cookie_domain = '';
 
-if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
+if (!defined('MGR_DIR')) {
+    define('MGR_DIR', 'manager');
+}
 
 // automatically assign base_path and base_url
 if(empty($base_path)||empty($base_url)||$_REQUEST['base_path']||$_REQUEST['base_url']) {
