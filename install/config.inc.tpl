@@ -15,6 +15,8 @@ $lastInstallTime = '[+lastInstallTime+]';
 
 $https_port = '443';
 $coreClass = '\DocumentParser';
+$session_cookie_path = '';
+$session_cookie_domain = '';
 
 if(!defined('MGR_DIR')) define('MGR_DIR', 'manager');
 

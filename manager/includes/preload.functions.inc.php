@@ -11,21 +11,17 @@ function genEvoSessionName() {
 
 function startCMSSession(){
     
-    global $site_sessionname, $https_port;
+    global $site_sessionname, $https_port, $session_cookie_path, $session_cookie_domain;
     
     session_name($site_sessionname);
     removeInvalidCmsSessionIds($site_sessionname);
-    session_start();
     $cookieExpiration= 0;
     $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
-    
-    if    (isset($_SESSION['mgrValidated'])) $context = 'mgr';
-    elseif(isset($_SESSION['webValidated'])) $context = 'web';
-    else {
-        setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
-        return;
-    }
-    
+    $cookiePath = !empty($session_cookie_path) ? $session_cookie_path : MODX_BASE_URL;
+    $cookieDomain = !empty($session_cookie_domain) ? $session_cookie_domain : '';
+    session_set_cookie_params($cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
+    session_start();
+
     $key = "modx.{$context}.session.cookie.lifetime";
     if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
         $cookieLifetime= intval($_SESSION[$key]);
@@ -34,7 +30,7 @@ function startCMSSession(){
     if (!isset($_SESSION['modx.session.created.time'])) {
         $_SESSION['modx.session.created.time'] = $_SERVER['REQUEST_TIME'];
     }
-    setcookie($site_sessionname, session_id(), $cookieExpiration, MODX_BASE_URL, null, $secure, true);
+    setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
 }
 
 function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
