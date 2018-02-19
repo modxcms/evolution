@@ -151,6 +151,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
           layout: <?= (int)$manager_layout ?>,
           textdir: '<?= $modx_textdir ?>',
           global_tabs: <?= $modx->config['global_tabs'] ?>
+
         },
         lang: {
           already_deleted: "<?= $_lang['already_deleted'] ?>",
@@ -213,6 +214,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         plugins: {
           ElementsInTree: <?= isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
           EVOmodal: <?= isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
+
         },
         extend: function() {
           for (var i = 1; i < arguments.length; i++) {
@@ -530,7 +532,6 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
     <script type="text/javascript">
 
       if (document.getElementById('treeMenu')) {
-
           <?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
 
         document.getElementById('treeMenu_openelements').onclick = function(e) {
@@ -554,11 +555,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         document.getElementById('treeMenu_openimages').onclick = function(e) {
           e.preventDefault();
           if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>'browse.php ? filemanager = media / browser'<?= $which_browser ?>/browse.php&type=images', title
-          :
-            '<?= $_lang["images_management"] ?>';
-          })
-            ;
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=images' ?>', title: '<?= $_lang["images_management"] ?>'});
           } else {
             var randomNum = '<?= $_lang["files_files"] ?>';
             if (e.shiftKey) {
@@ -576,11 +573,7 @@ $modx->config['global_tabs'] = (int)($modx->config['global_tabs'] && ($user['rol
         document.getElementById('treeMenu_openfiles').onclick = function(e) {
           e.preventDefault();
           if (modx.config.global_tabs && !e.shiftKey) {
-            modx.tabs({url: '<?= MODX_MANAGER_URL ?>media/browser/<?= $which_browser ?>'browse.php ? filemanager = media / browser'<?= $which_browser ?>/browse.php&type=files', title
-          :
-            '<?= $_lang["files_files"] ?>';
-          })
-            ;
+            modx.tabs({url: '<?= MODX_MANAGER_URL . 'media/browser/' . $which_browser . '/browse.php?filemanager=media/browser/' . $which_browser . '/browse.php&type=files' ?>', title: '<?= $_lang["files_files"] ?>'});
           } else {
             var randomNum = '<?= $_lang["files_files"] ?>';
             if (e.shiftKey) {
