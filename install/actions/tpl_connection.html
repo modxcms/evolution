@@ -30,7 +30,7 @@
 
 <!-- connection test action/status message -->
   <div class="clickHere">
-	&rarr; <a id="servertest" href="javascript:void(0);">[%connection_screen_server_test_connection%]</a>
+  &rarr; <a id="servertest" href="javascript:void(0);">[%connection_screen_server_test_connection%]</a>
   </div>
   <div class="status" id="serverstatus"></div>
 <!-- end connection test action/status message -->
@@ -127,40 +127,43 @@ function testServer(){
 }
 
 function setDefaults(){
-	if($('database_pass') !== null && document.getElementById('AUH')) {
-		window.Slider2.slideIn();
-		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
-		Slider2FX.start({'opacity':[0,1]});
-		window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
-		Slider2Scroll = new Fx.Scroll(window);
-		Slider2Scroll.toElement('managerlanguage_select');
-	}
+  if($('database_pass') !== null && document.getElementById('AUH')) {
+    window.Slider2.slideIn();
+    var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
+    Slider2FX.start({'opacity':[0,1]});
+    window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
+    Slider2Scroll = new Fx.Scroll(window);
+    Slider2Scroll.toElement('managerlanguage_select');
+  }
 }
 
 function setColor(){
-	var col = $('database_collation');
+  var col = $('database_collation');
 
-	ss = document.getElementById('serverstatus');
-	ssv = ss.innerHTML;
-	if ($('server_pass') !== null) {
-		col.setStyle('background-color', '#9CCD00');
-		col.setStyle('border-width', '1px');
-		col.setStyle('font-weight','bold');
+  ss = document.getElementById('serverstatus');
+  ssv = ss.innerHTML;
+  if ($('server_pass') !== null) {
+    col.setStyle('background-color', '#9CCD00');
+    col.setStyle('border-width', '1px');
+    col.setStyle('font-weight','bold');
 
-		window.Slider1.slideIn(); //toggle the slider up and down.
-		var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
-		Slider1FX.start({'opacity':[0,1]});
-		window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
-		Slider1Scroll = new Fx.Scroll(window);
-		Slider1Scroll.toElement('databasestatus');
-		$('database_name').focus();
+    window.Slider1.slideIn(); //toggle the slider up and down.
+    var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
+    Slider1FX.start({'opacity':[0,1]});
+    window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
+    Slider1Scroll = new Fx.Scroll(window);
+    Slider1Scroll.toElement('databasestatus');
+    $('database_name').focus();
+    } else {
+      window.Slider1.slideOut(); //toggle the slider up and down.
+      $('collationMask').setStyle('opacity',0);
     }
 }
 
     var f = document.install;
     // get collation from the database server
     $('servertest').addEvent('click', function(e) {
-    
+        e = new Event(e).stop();
         if(f.databasehost.value=="") {
           alert("[%alert_enter_host%]");
           f.databasehost.focus();
@@ -172,23 +175,17 @@ function setColor(){
           return false;
         }
         
-        e = new Event(e).stop();
-
         var url = "connection.collation.php";
 
         host = $('databasehost').value;
         uid = $('databaseloginname').value;
         pwd = $('databaseloginpassword').value;
-        database_collation = $('database_collation').value;
-        database_connection_method = $('database_connection_method').value;
                 
         var pars = Object.toQueryString({
             q: url,
             host: host,
             uid: uid,
             pwd: pwd,
-            database_collation: database_collation,
-            database_connection_method: database_connection_method,
             language: language
         });
          
@@ -197,15 +194,13 @@ function setColor(){
 
     // database test
     $('databasetest').addEvent('click', function(e) {
-        
+        e = new Event(e).stop();
         if(f.database_name.value=="") {
           alert("[%alert_enter_database_name%]");
           f.database_name.focus();
           return false;
         }
         
-        e = new Event(e).stop();
-
         var url = "connection.databasetest.php";
 
         host = $('databasehost').value;
@@ -213,7 +208,7 @@ function setColor(){
         pwd  = $('databaseloginpassword').value;
         database_name = $('database_name').value;
         tableprefix   = $('tableprefix').value;
-        database_collation = $('database_collation').value;
+        database_collation = $('database_collation').getValue();
         database_connection_method = $('database_connection_method').value;
 
         var pars = Object.toQueryString({
@@ -233,22 +228,22 @@ function setColor(){
     });
 
    
-	Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
-	Slider1.hide();
-	$('setCollation').style.backgroundColor = '#ffff00';
-	$('setCollation').style.display = 'block';
-	if((installMode==0 || installMode==2) && document.getElementById('AUH')) {
-		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
-		Slider2.hide();
-		$('AUH').style.display = 'block';
-		$('AUH').style.backgroundColor = '#ffff00';
-	}
-	
+  Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
+  Slider1.hide();
+  $('setCollation').style.backgroundColor = '#ffff00';
+  $('setCollation').style.display = 'block';
+  if((installMode==0 || installMode==2) && document.getElementById('AUH')) {
+    Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
+    Slider2.hide();
+    $('AUH').style.display = 'block';
+    $('AUH').style.backgroundColor = '#ffff00';
+  }
+  
     $('prevlink').addEvent('click', function(e) {
         document.getElementById('install_form').action='index.php?action=mode';
         document.getElementById('install_form').submit();
     });
-	
+  
     $('nextlink').addEvent('click', function(e) {
         var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
@@ -281,7 +276,7 @@ function setColor(){
           f.cmspassword.focus();
           return false;
         }
-    	document.getElementById('install_form').action='index.php?action=options';
-    	document.getElementById('install_form').submit();
+      document.getElementById('install_form').action='index.php?action=options';
+      document.getElementById('install_form').submit();
     });
 </script>
