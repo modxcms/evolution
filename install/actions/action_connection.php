@@ -6,7 +6,7 @@ $upgradeable= 0;
 if ($installMode === 0) {
     $database_name= '';
     $database_server= 'localhost';
-    $table_prefix= 'evo_';
+    $table_prefix= substr(md5(time()), rand(0, 27), rand(3, 5))."_";
 } else {
     $database_name = '';
     if (!is_file($base_path.MGR_DIR.'/includes/config.inc.php')) $upgradeable = 0;
