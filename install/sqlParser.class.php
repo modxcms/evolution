@@ -4,13 +4,30 @@
 // SNUFFKIN/ Alex 2004
 
 class SqlParser {
-	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
-	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
-	var $mode, $fileManagerPath, $imgPath, $imgUrl;
-	var $dbMODx, $dbVersion;
-    var $connection_charset, $connection_method;
+	public $host;
+	public $dbname;
+	public $prefix;
+	public $user;
+	public $password;
+	public $mysqlErrors;
+	public $conn;
+	public $installFailed;
+	public $sitename;
+	public $adminname;
+	public $adminemail;
+	public $adminpass;
+	public $managerlanguage;
+	public $mode;
+	public $fileManagerPath;
+	public $imgPath;
+	public $imgUrl;
+	public $dbMODx;
+	public $dbVersion;
+    public $connection_charset;
+    public $connection_method;
+    public $ignoreDuplicateErrors;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
+	public function __construct($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -26,7 +43,7 @@ class SqlParser {
         $this->autoTemplateLogic = $auto_template_logic;
 	}
 
-	function connect() {
+	public function connect() {
 		$this->conn = mysqli_connect($this->host, $this->user, $this->password);
 		mysqli_select_db($this->conn, $this->dbname);
 		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
@@ -41,7 +58,7 @@ class SqlParser {
         mysqli_query($this->conn,"{$this->connection_method} {$this->connection_charset}");
 	}
 
-	function process($filename) {
+    public function process($filename) {
 	    global $custom_placeholders;
 
 		// check to make sure file exists
@@ -118,7 +135,7 @@ class SqlParser {
 		}
 	}
 
-	function close() {
+    public function close() {
 		mysqli_close($this->conn);
 	}
 }
