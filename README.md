@@ -1,6 +1,6 @@
 # Evolution CMS
 
-[![CMS Evolution](https://img.shields.io/badge/CMS-Evolution-brightgreen.svg)](https://github.com/evolution-cms/evolution) [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/releases) ![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6) [![Documentation](https://img.shields.io/badge/Documentation-processed-orange.svg)](https://github.com/evolution-cms/docs/) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/evolution-cms/evolution/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/evolution-cms/evolution/?branch=develop) 
+[![CMS Evolution](https://img.shields.io/badge/CMS-Evolution-brightgreen.svg)](https://github.com/evolution-cms/evolution) [![GitHub release](https://img.shields.io/github/release/evolution-cms/evolution.svg)](https://github.com/evolution-cms/evolution/releases) ![PHP version](https://img.shields.io/badge/PHP->=v5.6-green.svg?php=5.6) [![Issues](https://img.shields.io/github/issues-closed-raw/evolution-cms/evolution.svg?maxAge=2592000)](https://github.com/evolution-cms/evolution/issues) [![Code quality](https://img.shields.io/scrutinizer/g/evolution-cms/evolution.svg?maxAge=2592000&b=develop)](https://scrutinizer-ci.com/g/evolution-cms/evolution/?branch=develop) [![Documentation](https://img.shields.io/badge/Documentation-processed-orange.svg)](https://github.com/evolution-cms/docs/)
 
 Evolution CMS requires **PHP >= 5.6**
 
