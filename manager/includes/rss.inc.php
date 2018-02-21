@@ -86,4 +86,3 @@ foreach ($urls as $section=>$url) {
     $output .= '</ul>';
 	$feedData[$section] = $output;
 }
-?>

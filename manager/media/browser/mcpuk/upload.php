@@ -15,5 +15,3 @@
 require "core/autoload.php";
 $uploader = new uploader($modx);
 $uploader->upload();
-
-?>

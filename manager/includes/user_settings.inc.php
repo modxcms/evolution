@@ -23,4 +23,3 @@ if (!empty($user_id)) {
 	}
 	extract($settings, EXTR_OVERWRITE);
 }
-?>

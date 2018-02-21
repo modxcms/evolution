@@ -13,4 +13,3 @@ if (isset($_POST['updateMsgCount'])) {
 	print $nrnewmessages.','.$nrtotalmessages;
 	exit;
 }
-?>
