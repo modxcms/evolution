@@ -15,6 +15,3 @@ extract($settings, EXTR_OVERWRITE);
 
 // setup default site id - new installation should generate a unique id for the site.
 if(!isset($site_id)) $site_id = "MzGeQ2faT4Dw06+U49x3";
-
-
-?>

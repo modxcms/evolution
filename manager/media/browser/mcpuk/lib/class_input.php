@@ -40,5 +40,3 @@ class input {
         return property_exists($this, $property) ? $this->$property : null;
     }
 }
-
-?>

@@ -55,5 +55,3 @@ function deleteCategory($catId=0) {
         $modx->db->delete($catTable, "id='{$catId}'");
     }
 }
-
-?>

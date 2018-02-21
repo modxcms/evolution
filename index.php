@@ -100,13 +100,13 @@ if(!isset($database_user) || $database_user=="") {
 	}
 }
 
-// start session 
+// start session
 startCMSSession();
 
 // initiate a new document parser
 if (isset($coreClass) && class_exists($coreClass)) {
 	$modx = new $coreClass;
-} 	
+}
 if (!isset($modx) || !($modx instanceof \DocumentParser)) {
 	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
 	$modx = new \DocumentParser;
@@ -133,4 +133,3 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
 if (!MODX_API_MODE) {
     $modx->executeParser();
 }
-?>

@@ -140,5 +140,3 @@ class path {
         return $decoded;
     }
 }
-
-?>

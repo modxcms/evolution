@@ -37,4 +37,3 @@ else {
     }
 }
 echo $output;
-?>

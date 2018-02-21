@@ -5,7 +5,7 @@
  * support for pagination, sorting by any column, providing optional header arrays,
  * providing classes for styling the table, rows, and cells (including alternate
  * row styling), as well as adding form controls to each row.
- * 
+ *
  * @author Jason Coward <jason@opengeek.com> (MODX)
  */
 class MakeTable {
@@ -30,7 +30,7 @@ class MakeTable {
 	var $pageNav;
 	var $columnWidths;
 	var $selectedValues;
-	
+
 	function __construct() {
 		$this->fieldHeaders= array();
 		$this->excludeFields= array();
@@ -52,137 +52,137 @@ class MakeTable {
 		$this->selectedValues= array();
 		$this->extra= '';
 	}
-	
+
 	/**
 	 * Sets the default link href for all cells in the table.
-	 * 
+	 *
 	 * @param $value A URL to execute when table cells are clicked.
 	 */
 	function setCellAction($value) {
 		$this->cellAction= $this->prepareLink($value);
 	}
-	
+
 	/**
 	 * Sets the default link href for the text presented in a cell.
-	 * 
+	 *
 	 * @param $value A URL to execute when text within table cells are clicked.
 	 */
 	function setLinkAction($value) {
 		$this->linkAction= $this->prepareLink($value);
 	}
-	
+
 	/**
 	 * Sets the width attribute of the main HTML TABLE.
-	 * 
+	 *
 	 * @param $value A valid width attribute for the HTML TABLE tag
 	 */
 	function setTableWidth($value) {
 		$this->tableWidth= $value;
 	}
-	
+
 	/**
 	 * Sets the class attribute of the main HTML TABLE.
-	 * 
-	 * @param $value A class for the main HTML TABLE. 
+	 *
+	 * @param $value A class for the main HTML TABLE.
 	 */
 	function setTableClass($value) {
 		$this->tableClass= $value;
 	}
-	
+
 	/**
 	 * Sets the id attribute of the main HTML TABLE.
-	 * 
-	 * @param $value A class for the main HTML TABLE. 
+	 *
+	 * @param $value A class for the main HTML TABLE.
 	 */
 	function setTableID($value) {
 		$this->tableID= $value;
 	}
-	
+
 	/**
 	 * Sets the class attribute of the table header row.
-	 * 
+	 *
 	 * @param $value A class for the table header row.
 	 */
 	function setRowHeaderClass($value) {
 		$this->rowHeaderClass= $value;
 	}
-	
+
 		/**
 	 * Sets the class attribute of the table header row.
-	 * 
+	 *
 	 * @param $value A class for the table header row.
 	 */
 	function setThHeaderClass($value) {
 		$this->thClass= $value;
 	}
-	
+
 	/**
 	 * Sets the class attribute of the column header row.
-	 * 
+	 *
 	 * @param $value A class for the column header row.
 	 */
 	function setColumnHeaderClass($value) {
 		$this->columnHeaderClass= $value;
 	}
-	
+
 	/**
 	 * Sets the class attribute of regular table rows.
-	 * 
+	 *
 	 * @param $value A class for regular table rows.
 	 */
 	function setRowRegularClass($value) {
 		$this->rowRegularClass= $value;
 	}
-	
+
 	/**
 	 * Sets the class attribute of alternate table rows.
-	 * 
+	 *
 	 * @param $value A class for alternate table rows.
-	 */	
+	 */
 	function setRowAlternateClass($value) {
 		$this->rowAlternateClass= $value;
 	}
-	
+
 	/**
 	 * Sets the type of INPUT form element to be presented as the first column.
-	 * 
+	 *
 	 * @param $value Indicates the INPUT form element type attribute.
 	 */
 	function setFormElementType($value) {
 		$this->formElementType= $value;
 	}
-	
+
 	/**
 	 * Sets the name of the INPUT form element to be presented as the first column.
-	 * 
+	 *
 	 * @param $value Indicates the INPUT form element name attribute.
 	 */
 	function setFormElementName($value) {
 		$this->formElementName= $value;
 	}
-	
+
 	/**
-	 * Sets the name of the FORM to wrap the table in when a form element has 
+	 * Sets the name of the FORM to wrap the table in when a form element has
 	 * been indicated.
-	 * 
+	 *
 	 * @param $value Indicates the FORM name attribute.
 	 */
 	function setFormName($value) {
 		$this->formName= $value;
 	}
-	
+
 	/**
 	 * Sets the action of the FORM element.
-	 * 
+	 *
 	 * @param $value Indicates the FORM action attribute.
 	 */
 	function setFormAction($value) {
 		$this->formAction= $value;
 	}
-	
+
 	/**
 	 * Excludes fields from the table by array key.
-	 * 
+	 *
 	 * @param $value An Array of field keys to exclude from the table.
 	 */
 	function setExcludeFields($value) {
@@ -191,55 +191,55 @@ class MakeTable {
 
 	/**
 	 * Sets the table to provide alternate row colors using ODD or EVEN rows
-	 * 
+	 *
 	 * @param $value 'ODD' or 'EVEN' to indicate the alternate row scheme.
 	 */
 	function setRowAlternatingScheme($value) {
 		$this->rowAlternatingScheme= $value;
 	}
-	
+
 	/**
 	 * Sets the default field value to be used when appending query parameters
 	 * to link actions.
-	 * 
+	 *
 	 * @param $value The key of the field to add as a query string parameter.
 	 */
 	function setActionFieldName($value) {
 		$this->actionField= $value;
 	}
-	
+
 	/**
 	 * Sets the width attribute of each column in the array.
-	 * 
+	 *
 	 * @param $value An Array of column widths in the order of the keys in the
 	 * 			source table array.
 	 */
 	function setColumnWidths($widthArray) {
 		$this->columnWidths= $widthArray;
 	}
-	
+
 	/**
-	 * An optional array of values that can be preselected when using 
-	 * 
+	 * An optional array of values that can be preselected when using
+	 *
 	 * @param $value Indicates the INPUT form element type attribute.
 	 */
 	function setSelectedValues($valueArray) {
 		$this->selectedValues= $valueArray;
 	}
-	
+
 	/**
 	 * Sets extra content to be presented following the table (but within
 	 * the form, if a form is being rendered with the table).
-	 * 
+	 *
 	 * @param $value A string of additional content.
 	 */
 	function setExtra($value) {
 		$this->extra= $value;
 	}
-	
+
 	/**
 	 * Retrieves the width of a specific table column by index position.
-	 * 
+	 *
 	 * @param $columnPosition The index of the column to get the width for.
 	 */
 	function getColumnWidth($columnPosition) {
@@ -249,10 +249,10 @@ class MakeTable {
 		}
 		return $currentWidth;
 	}
-	
+
 	/**
 	 * Determines what class the current row should have applied.
-	 * 
+	 *
 	 * @param $value The position of the current row being rendered.
 	 */
 	function determineRowClass($position) {
@@ -271,11 +271,11 @@ class MakeTable {
 		}
 		return ' class="'.$currentClass.'"';
 	}
-	
+
 	/**
-	 * Generates an onclick action applied to the current cell, to execute 
+	 * Generates an onclick action applied to the current cell, to execute
 	 * any specified cell actions.
-	 * 
+	 *
 	 * @param $value Indicates the INPUT form element type attribute.
 	 */
 	function getCellAction($currentActionFieldValue) {
@@ -284,10 +284,10 @@ class MakeTable {
 		}
 		return $cellAction;
 	}
-	
+
 	/**
 	 * Generates the cell content, including any specified action fields values.
-	 * 
+	 *
 	 * @param $currentActionFieldValue The value to be applied to the link action.
 	 * @param $value The value of the cell.
 	 */
@@ -298,18 +298,18 @@ class MakeTable {
 		}
 		return $cell;
 	}
-	
+
 	/**
-	 * Sets an option to generate a check all link when checkbox is indicated 
+	 * Sets an option to generate a check all link when checkbox is indicated
 	 * as the table formElementType.
 	 */
 	function setAllOption() {
 		$this->allOption= 1;
 	}
-	
+
 	/**
 	 * Function to prepare a link generated in the table cell/link actions.
-	 * 
+	 *
 	 * @param $value Indicates the INPUT form element type attribute.
 	 */
 	function prepareLink($link) {
@@ -320,11 +320,11 @@ class MakeTable {
 		}
 		return $link.$end;
 	}
-	
+
 	/**
 	 * Generates the table content.
-	 * 
-	 * @param $fieldsArray The associative array representing the table rows 
+	 *
+	 * @param $fieldsArray The associative array representing the table rows
 	 * and columns.
 	 * @param $fieldHeadersArray An optional array of values for providing
 	 * alternative field headers; this is an associative arrays of keys from
@@ -376,7 +376,7 @@ class MakeTable {
 					$table .= MAX_DISPLAY_RECORDS_NUM == $pageSizes[$i] ? ' selected ' : '';
 					$table .= '>'.$pageSizes[$i].'</option>';
 				}
-				
+
 				$table .= '</select>'.$_lang["pagination_table_perpage"].'</div>';
 				*/
 				$table .= '<div id="pagination" class="paginate">'.$_lang["pagination_table_gotopage"].'<ul>'.$this->pageNav.'</ul></div>';
@@ -407,10 +407,10 @@ class MakeTable {
 			return $table;
 		}
 	}
-	
+
 	/**
 	 * Generates optional paging navigation controls for the table.
-	 * 
+	 *
 	 * @param $numRecords The number of records to show per page.
 	 * @param $qs An optional query string to be appended to the paging links
 	 */
@@ -445,10 +445,10 @@ class MakeTable {
 		}
 		$this->pageNav= ' '.$nav;
 	}
-	
+
 	/**
 	 * Creates an individual page link for the paging navigation.
-	 * 
+	 *
 	 * @param $link The link for the page, defaulted to the current document.
 	 * @param $pageNum The page number of the link.
 	 * @param $displayText The text of the link.
@@ -464,12 +464,12 @@ class MakeTable {
 		$nav .= '<li'.($currentPage? ' class="currentPage"': '').'><a'.($currentPage? ' class="currentPage"': '').' href="'.$link.'">'.$displayText.'</a></li>'."\n";
 		return $nav;
 	}
-	
+
 	/**
 	 * Adds an INPUT form element column to the table.
-	 * 
+	 *
 	 * @param $value The value attribute of the element.
-	 * @param $isChecked Indicates if the checked attribute should apply to the 
+	 * @param $isChecked Indicates if the checked attribute should apply to the
 	 * element.
 	 */
 	function addFormField($value, $isChecked) {
@@ -479,7 +479,7 @@ class MakeTable {
 		}
 		return $field;
 	}
-	
+
 	/**
 	 * Generates the proper LIMIT clause for queries to retrieve paged results in
 	 * a MakeTable $fieldsArray.
@@ -489,11 +489,11 @@ class MakeTable {
 		$limitClause= ' LIMIT '. ($offset * MAX_DISPLAY_RECORDS_NUM).', '.MAX_DISPLAY_RECORDS_NUM;
 		return $limitClause;
 	}
-	
+
 	/**
-	 * Generates the SORT BY clause for queries used to retrieve a MakeTable 
+	 * Generates the SORT BY clause for queries used to retrieve a MakeTable
 	 * $fieldsArray
-	 * 
+	 *
 	 * @param $natural_order If true, the results are returned in natural order.
 	 */
 	function handleSorting($natural_order=false) {
@@ -505,11 +505,11 @@ class MakeTable {
 		}
 		return $orderbyClause;
 	}
-	
+
 	/**
 	 * Generates a link to order by a specific $fieldsArray key; use to generate
 	 * sort by links in the MakeTable $fieldHeadingsArray values.
-	 * 
+	 *
 	 * @param $key The $fieldsArray key for the column to sort by.
 	 * @param $text The text for the link (e.g. table column header).
 	 * @param $qs An optional query string to append to the order by link.
@@ -522,10 +522,9 @@ class MakeTable {
 			$orderDir= '&orderdir=asc';
 		}
 		if (!empty($qs)) {
-			if (!strrpos($qs, '&')==strlen($qs)-1) $qs.= '&'; 
+			if (!strrpos($qs, '&')==strlen($qs)-1) $qs.= '&';
 		}
 		return '<a href="[~'.$modx->documentIdentifier.'~]?'.$qs.'orderby='.$key.$orderDir.'">'.$text.'</a>';
 	}
-	
+
 }
-?>
