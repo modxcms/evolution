@@ -591,13 +591,22 @@ if (!function_exists('array_change_key_case')) {
 	define('CASE_LOWER', 0);
 
 
-	function array_change_key_case($array,$case=CASE_LOWER) {
-       if ($case=CASE_LOWER) $cmd=strtolower;
-       elseif ($case=CASE_UPPER) $cmd=strtoupper;
-       foreach($array as $key=>$value) {
-               $output[$cmd($key)]=$value;
-       }
-       return $output;
+	function array_change_key_case($array, $case=CASE_LOWER) {
+        $output = array();
+        switch($case){
+           case CASE_LOWER:
+               $cmd='strtolower';
+               break;
+           case CASE_UPPER:
+               $cmd='strtoupper';
+               break;
+           default:
+               $cmd = '';
+        }
+        foreach($array as $key=>$value) {
+            $output[empty($cmd) ? $key : $cmd($key)] = $value;
+        }
+        return $output;
 	}
 
 }
