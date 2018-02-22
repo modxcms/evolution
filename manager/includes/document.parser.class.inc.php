@@ -1779,6 +1779,8 @@ class DocumentParser
             extract($params, EXTR_SKIP);
         }
         /* if uncomment incorrect work plugin, cant understend where use this code and for what?
+        // This code will avoid further execution of plugins in case they cause a fatal-error. clearCache() will delete those locks to allow execution of locked plugins again. 
+        // Related to https://github.com/modxcms/evolution/issues/1130
         $lock_file_path = MODX_BASE_PATH . 'assets/cache/lock_' . str_replace(' ','-',strtolower($this->event->activePlugin)) . '.pageCache.php';
         if($this->isBackend()) {
             if(is_file($lock_file_path)) {
@@ -1792,6 +1794,7 @@ class DocumentParser
         eval($pluginCode);
         $msg = ob_get_contents();
         ob_end_clean();
+        // When reached here, no fatal error occured so the lock should be removed.
         /*if(is_file($lock_file_path)) unlink($lock_file_path);*/
 
         if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
