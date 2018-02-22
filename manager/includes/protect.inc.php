@@ -24,16 +24,16 @@ if (!function_exists('modx_sanitize_gpc')) {
             }
         }
         else $values = getSanitizedValue($values);
-        
+
         return $values;
     }
 }
 
 function getSanitizedValue($value='') {
     global $sanitize_seed;
-    
+
     if(!$value) return $value;
-    
+
     $brackets = explode(' ', '[[ ]] [! !] [* *] [( )] {{ }} [+ +] [~ ~] [^ ^]');
     foreach($brackets as $bracket) {
         if(strpos($value,$bracket)===false) continue;
@@ -46,7 +46,7 @@ function getSanitizedValue($value='') {
 }
 
 modx_sanitize_gpc($_GET);
-if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE === 'false'))) {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     modx_sanitize_gpc($_POST);
 }
 modx_sanitize_gpc($_COOKIE);

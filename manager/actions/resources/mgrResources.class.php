@@ -1,12 +1,14 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 class mgrResources {
 	var $types = array();
 	var $items = array();
 	var $categories = array();
 	var $itemsPerCategory = array();
-	
+
 	function __construct() {
 		$this->setTypes();
 		$this->queryItemsFromDB();
@@ -47,7 +49,7 @@ class mgrResources {
 			'permissions'=>array('new_module','edit_module'),
 		);
 	}
-	
+
 	function queryItemsFromDB() {
 		foreach($this->types as $resourceTable=>$type) {
 			if($this->hasAnyPermissions($type['permissions'])) {
@@ -59,10 +61,10 @@ class mgrResources {
 
 	function hasAnyPermissions($permissions) {
 		global $modx;
-		
-		foreach($permissions as $p) 
+
+		foreach($permissions as $p)
 			if($modx->hasPermission($p)) return true;
-		
+
 		return false;
 	}
 
@@ -90,9 +92,9 @@ class mgrResources {
 			"category,name"
 		);
 		$limit = $modx->db->getRecordCount($rs);
-		
+
 		if($limit < 1) return false;
-		
+
 		$result = array();
 		while ($row = $modx->db->getRow($rs)) {
 			$result[] = $row;
@@ -105,15 +107,15 @@ class mgrResources {
 			foreach((array)$items as $item) {
 				$catid = $item['catid'] ? $item['catid'] : 0;
 				$this->categories[$catid] = $item['category'];
-				
+
 				$item['type'] = $type;
 				$this->itemsPerCategory[$catid][] = $item;
 			}
 		}
-		
+
 		// Sort categories by name
 		natcasesort($this->categories);
-		
+
 		// Now sort by name
 		foreach($this->itemsPerCategory as $catid=>$items) {
 			usort($this->itemsPerCategory[$catid], function ($a, $b) {

@@ -1,5 +1,5 @@
 <?php
-if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     exit();
 }
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
@@ -112,7 +112,7 @@ if (isset($_REQUEST['submitok'])) {
 
     // Handle Input "Search in main fields"
     if ($searchfields != '') {
-	
+
 		/*start search by TV. Added Rising13*/
 		$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
 		$articul_query = "SELECT `contentid` FROM {$tbl_site_tmplvar_contentvalues} WHERE `value` LIKE '%{$searchfields}%'";
@@ -127,13 +127,13 @@ if (isset($_REQUEST['submitok'])) {
 					$articul_id.=',';
 				}
 				$i++;
-			}  
+			}
 		$articul_id_query = " OR sc.id IN ({$articul_id})";
 		}else{
 			$articul_id_query = '';
 		}
 		/*end search by TV*/
-		
+
         if (ctype_digit($searchfields)) {
             $sqladd .= "sc.id='{$searchfields}'";
             if (strlen($searchfields) > 3) {
@@ -144,7 +144,7 @@ if (isset($_REQUEST['submitok'])) {
         if ($idFromAlias) {
             $sqladd .= $sqladd != '' ? ' OR ' : '';
             $sqladd .= "sc.id='{$idFromAlias}'";
-			
+
         }
 
         $sqladd = $sqladd ? "({$sqladd})" : $sqladd;

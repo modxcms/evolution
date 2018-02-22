@@ -278,7 +278,7 @@ if ($installMode == 0) {
     }
 }
 
-// Reset database for installation of demo-site 
+// Reset database for installation of demo-site
 if ($installData && $moduleSQLDataFile && $moduleSQLResetFile) {
 	echo "<p>" . $_lang['resetting_database'];
 	$sqlParser->process($moduleSQLResetFile);
@@ -794,43 +794,51 @@ function propUpdate($new,$old){
     return $return;
 }
 
-function parseProperties($propertyString, $json=false) {   
-    $propertyString = str_replace('{}', '', $propertyString ); 
+function parseProperties($propertyString, $json=false) {
+    $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
     if($propertyString=='{}' || $propertyString=='[]') return array();
-    
+
     $jsonFormat = isJson($propertyString, true);
     $property = array();
     // old format
     if ( $jsonFormat === false) {
         $props= explode('&', $propertyString);
-        $arr = array();
-        $key = array();
         foreach ($props as $prop) {
-            if ($prop != ''){
-                $arr = explode(';', $prop);
-                $key = explode('=', $arr['0']);
-                $property[$key['0']]['0']['label'] = trim($key['1']);
-                $property[$key['0']]['0']['type'] = trim($arr['1']);
-                switch ($arr['1']) {
-                    case 'list':
-                    case 'list-multi':
-                    case 'checkbox':
-                    case 'radio':
-                    case 'menu':
-                        $property[$key['0']]['0']['value'] = trim($arr['3']);
-                        $property[$key['0']]['0']['options'] = trim($arr['2']);
-                        $property[$key['0']]['0']['default'] = trim($arr['3']);
-                        break;
-                    default:
-                        $property[$key['0']]['0']['value'] = trim($arr['2']);
-                        $property[$key['0']]['0']['default'] = trim($arr['2']);
-                }
-                $property[$key['0']]['0']['desc'] = '';
+            $prop = trim($prop);
+            if($prop === '') {
+                continue;
             }
-            
+
+            $arr = explode(';', $prop);
+            if( ! is_array($arr)) {
+                $arr = array();
+            }
+            $key = explode('=', isset($arr[0]) ? $arr[0] : '');
+            if( ! is_array($key) || empty($key[0])) {
+                continue;
+            }
+
+            $property[$key[0]]['0']['label'] = isset($key[1]) ? trim($key[1]) : '';
+            $property[$key[0]]['0']['type'] = isset($arr[1]) ? trim($arr[1]) : '';
+            switch ($property[$key[0]]['0']['type']) {
+                case 'list':
+                case 'list-multi':
+                case 'checkbox':
+                case 'radio':
+                case 'menu':
+                    $property[$key[0]]['0']['value'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    $property[$key[0]]['0']['options'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[3]) ? trim($arr[3]) : '';
+                    break;
+                default:
+                    $property[$key[0]]['0']['value'] = isset($arr[2]) ? trim($arr[2]) : '';
+                    $property[$key[0]]['0']['default'] = isset($arr[2]) ? trim($arr[2]) : '';
+            }
+            $property[$key[0]]['0']['desc'] = '';
+
         }
     // new json-format
     } else if(!empty($jsonFormat)){
@@ -871,9 +879,9 @@ function getCreateDbCategory($category, $sqlParser) {
 
 // Remove installer Docblock only from components using plugin FileSource / fileBinding
 function removeDocblock($code, $type) {
-    
+
     $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);
-    
+
     // Procedure taken from plugin.filesource.php
     switch($type) {
         case 'snippet':
@@ -893,7 +901,7 @@ function removeDocblock($code, $type) {
     };
     if(substr(trim($cleaned),0,$count) == $include.' MODX_BASE_PATH.\'assets/'.$elm_name.'/')
         return $cleaned;
-    
+
     // fileBinding not found - return code incl docblock
     return $code;
 }
