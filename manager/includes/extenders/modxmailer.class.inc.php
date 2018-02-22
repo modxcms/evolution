@@ -141,7 +141,7 @@ class MODxMailer extends PHPMailer
     /**
      * @param string $header The message headers
      * @param string $body   The message body
-     * 
+     *
      * @return bool
      */
     public function MailSend($header, $body)
@@ -174,20 +174,24 @@ class MODxMailer extends PHPMailer
 
             return true;
         }
+
         switch ($mode) {
             case 'normal':
-                return parent::mailSend($header, $body);
+                $out = parent::mailSend($header, $body);
                 break;
             case 'mb':
-                return $this->mbMailSend($header, $body);
+                $out = $this->mbMailSend($header, $body);
                 break;
+            default:
+                $out = false;
         }
+        return $out;
     }
 
     /**
      * @param string $header The message headers
      * @param string $body   The message body
-     * 
+     *
      * @return bool
      */
     public function mbMailSend($header, $body)
@@ -256,7 +260,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param $address
-     * 
+     *
      * @return array
      */
     public function address_split($address)
@@ -289,7 +293,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $header
-     * 
+     *
      * @return $this
      */
     public function setMIMEHeader($header = '') {
@@ -300,7 +304,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $body
-     * 
+     *
      * @return $this
      */
     public function setMIMEBody($body = '') {
@@ -311,7 +315,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $header
-     * 
+     *
      * @return $this
      */
     public function setMailHeader($header = '') {

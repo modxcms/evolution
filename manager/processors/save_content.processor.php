@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if (!$modx->hasPermission('save_document')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -92,7 +94,7 @@ if ($friendly_urls) {
                     $cnt++;
                 }
                 $alias = $tempAlias;
-            }                       
+            }
         }
     }
 
@@ -130,7 +132,7 @@ if ($friendly_urls) {
                 $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid, $alias), "index.php?a=4");
             }
         }
-        //end webber        
+        //end webber
     }
 }
 elseif ($alias) {
@@ -248,7 +250,7 @@ if ($actionToTake != "new") {
     if (!$existingDocument) {
         $modx->webAlertAndQuit($_lang["error_no_results"]);
     }
-    
+
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
@@ -288,11 +290,11 @@ switch ($actionToTake) {
                 $rs = $modx->db->select('MAX(id)+1',$tbl_site_content);
                 $id = $modx->db->getValue($rs);
             break;
-            
+
             default:
                 $id = '';
         }
-        
+
         $modx->invokeEvent("OnBeforeDocFormSave", array (
             "mode" => "new",
             "id" => $id
@@ -414,7 +416,7 @@ switch ($actionToTake) {
 
         // Set the item name for logger
         $_SESSION['itemname'] = $no_esc_pagetitle;
-        
+
         if ($syncsite == 1) {
             // empty cache
             $modx->clearCache('full');
@@ -432,7 +434,7 @@ switch ($actionToTake) {
         } else {
             $header = "Location: index.php?a=3&id=$key&r=1";
         }
-        
+
         if (headers_sent()) {
             $header = str_replace('Location: ','',$header);
             echo "<script>document.location.href='$header';</script>\n";
@@ -466,7 +468,7 @@ switch ($actionToTake) {
         if (in_array($id, $parents)) {
             $modx->webAlertAndQuit("Document descendant can not be it's parent!");
         }
-        
+
         // check to see document is a folder
         $rs = $modx->db->select('count(id)', $tbl_site_content, "parent='{$id}'");
         $count = $modx->db->getValue($rs);
@@ -563,13 +565,13 @@ switch ($actionToTake) {
         if (!empty($tvDeletions)) {
             $modx->db->delete($tbl_site_tmplvar_contentvalues, 'id IN('.implode(',', $tvDeletions).')');
         }
-            
+
         if (!empty($tvAdded)) {
             foreach ($tvAdded as $tv) {
                 $modx->db->insert($tv, $tbl_site_tmplvar_contentvalues);
             }
         }
-        
+
         if (!empty($tvChanges)) {
             foreach ($tvChanges as $tv) {
                 $modx->db->update($tv[0], $tbl_site_tmplvar_contentvalues, "id='{$tv[1]['id']}'");
@@ -664,7 +666,7 @@ switch ($actionToTake) {
             if($flag==='full') $modx->clearCache('full');
             else               $modx->clearCache($id);
         }
-        
+
         if ($_POST['refresh_preview'] == '1')
             $header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
         else {

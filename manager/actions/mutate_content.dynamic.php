@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
@@ -1120,9 +1120,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                     $templateVariables .= '
                         <!-- end Template Variables -->' . "\n";
-                                } else {
-                                    // There aren't any Template Variables
-                                    //$templateVariables .= "\t<p>" . $_lang['tmplvars_novars'] . "</p>\n";
                                 }
                             }
 

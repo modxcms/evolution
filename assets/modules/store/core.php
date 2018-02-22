@@ -2,7 +2,9 @@
 //@ini_set("display_errors","0");
 //error_reporting(0);
 
-if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true || ! $modx->hasPermission('exec_module')) {
+    die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
+}
 
 $version = "0.1.3";
 $Store = new Store;
@@ -12,11 +14,11 @@ switch($action){
 case 'saveuser':
 	$_SESSION['STORE_USER'] = $modx->db->escape($_POST['res']);
 	break;
-	
+
 case 'exituser':
 	$_SESSION['STORE_USER'] = '';
 	break;
-	
+
 case 'install':
 case 'install_file':
 	if (is_dir(MODX_BASE_PATH . 'assets/cache/store/')) $Store->removeFolder(MODX_BASE_PATH . 'assets/cache/store/');
@@ -24,7 +26,7 @@ case 'install_file':
 	@mkdir("../assets/cache/store", 0777);
 	@mkdir("../assets/cache/store/tmp_install", 0777);
 	@mkdir("../assets/cache/store/install", 0777);
-	
+
 	if($action == 'install') {
 		$file = $_POST['file']==''? $_GET['file'] : $_POST['file'];
 		if ($file!='%url%' && $file!='' && $file!=' '){
@@ -32,7 +34,7 @@ case 'install_file':
 		} else {
 			$url = "http://extras.evo.im/get.php?get=file&cid=".$id;
 		}
-	
+
 		if (!$Store->downloadFile($url ,MODX_BASE_PATH."assets/cache/store/temp.zip")){
 			$Store->quit();
 		}
@@ -46,7 +48,7 @@ case 'install_file':
 		}
 		$msg = $Store->lang['install_file_success'];
 	}
-	
+
 	$zip = new ZipArchive;
 	$res = $zip->open(MODX_BASE_PATH."assets/cache/store/temp.zip");
 	if ($res === TRUE) {
@@ -61,13 +63,13 @@ case 'install_file':
 		$name = strtolower($name);
 		$Store->copyFolder('../assets/cache/store/tmp_install/'.$dir, '../assets/cache/store/install');
 		$Store->removeFolder('../assets/cache/store/tmp_install/install/');
-		
+
 		$Store->copyFolder('../assets/cache/store/tmp_install/'.$dir, '../');
 		$Store->removeFolder('../install/');
 		$Store->removeFolder('../assets/cache/store/tmp_install/');
-		
-		
-		
+
+
+
 		if ($_GET['method']!= 'fast'){
 			header("Location: ".$modx->config['site_url']."assets/modules/store/installer/index.php?action=options");
 			die();
@@ -77,9 +79,9 @@ case 'install_file':
 			require "instprocessor-fast.php";
 			$content = ob_get_contents();
 			ob_end_clean();
-		} 
+		}
 	} else {
-		
+
 	}
 
 	$Store->removeFolder(MODX_BASE_PATH.'assets/cache/store/');
@@ -88,13 +90,13 @@ case 'install_file':
 	} else {
 		die($msg);
 	}
-	
+
 	break;
 
 default:
 	//prepare list of snippets
 	$types = array('snippets','plugins','modules');
-	
+
 	foreach($types as $value){
 		$result=$modx->db->query('SELECT name,description FROM '.$modx->db->config['table_prefix'].'site_'.$value);
 		while($row = $modx->db->GetRow($result)) {
@@ -102,11 +104,11 @@ default:
 		}
 		$PACK[$value.'_writable']  = is_writable(MODX_BASE_PATH.'assets/'.$value);
 	}
-	
+
 	$Store->lang['user_email'] = $_SESSION['mgrEmail'];
 	$Store->lang['hash'] = isset($_SESSION['STORE_USER']) ? stripslashes( $_SESSION['STORE_USER'] ) : '';
-	$Store->lang['lang'] = $Store->language;	
-	$Store->lang['_type'] = json_encode($PACK);	
+	$Store->lang['lang'] = $Store->language;
+	$Store->lang['_type'] = json_encode($PACK);
 	$Store->lang['v'] = $version;
 	$tpl = Store::parse( $Store->tpl(dirname( __FILE__ ).'/template/main.html') ,$modx->config ) ;
 	$tpl = Store::parse( $tpl ,$Store->lang ) ;
@@ -118,7 +120,7 @@ default:
 class Store{
 	public $lang;
 	public $language;
-	
+
 	function __construct(){
 		global $modx;
 		$lang = $modx->config['manager_language'];
@@ -130,7 +132,7 @@ class Store{
 		$this->lang = $_Lang;
 		$this->language = substr($lang,0,2);
 	}
-	
+
 	function quit(){
 		die('[{"result":"false","error":"'.implode(' \r\n ', $this->errors ).'"}]');
 	}
@@ -138,7 +140,7 @@ class Store{
 		preg_match('/<strong>(.*)<\/strong>/s',$text, $match);
 		return isset($match[1]) ? $match[1] : '';
 	}
-	
+
 	static function parse($tpl,$field){
         global $modx;
 		foreach($field as $key=>$value)  $tpl = str_replace('[+'.$key.'+]',$value,$tpl);
@@ -151,12 +153,12 @@ class Store{
 		$lang = $this->lang;
 		ob_start();
 		include($file);
-		$tpl = ob_get_contents();  
-		ob_end_clean(); 
+		$tpl = ob_get_contents();
+		ob_end_clean();
 		return $tpl;
 	}
-	
-	
+
+
 	public function downloadFile ($url, $path) {
 		$newfname = $path;
 		try {
@@ -183,7 +185,7 @@ class Store{
 					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 					$content = curl_exec ($ch);
-					file_put_contents($newfname,$content);				
+					file_put_contents($newfname,$content);
 				return true;
 			} else {
 			  $this->errors[] = 'Error:Download: '.$e->getFile(). 'line '.$e->getLine().'): '.$e->getMessage();
@@ -194,9 +196,9 @@ class Store{
 				return false;
 			}
 	}
-	
-	
-	
+
+
+
 	public function removeFolder($path){
 		$dir = realpath($path);
 		if ( !is_dir($dir)) return;

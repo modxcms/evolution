@@ -1,6 +1,8 @@
-<?php 
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_document')) {	
+<?php
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+if(!$modx->hasPermission('delete_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
@@ -43,11 +45,11 @@ if(!$deltime) {
 $children = array();
 
 function getChildren($parent) {
-	
+
 	global $modx;
 	global $children;
 	global $deltime;
-	
+
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
 		// the document has children documents, we'll need to delete those too
 		while ($row=$modx->db->getRow($rs)) {

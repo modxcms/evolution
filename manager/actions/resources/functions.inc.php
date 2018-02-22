@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
@@ -29,9 +29,8 @@ function createResourceList($resourceTable, $resources) {
 	global $modx, $_lang, $_style, $modx_textdir, $tpl;
 
 	$items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
-	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
-	if(!$items) {
+	if( ! is_array($items) || empty($items)) {
 		return $_lang['no_results'];
 	}
 

@@ -1,7 +1,7 @@
 <?php
 $this->old = new OldFunctions();
 class OldFunctions {
-    
+
     function dbConnect()                 {global $modx;       $modx->db->connect();$modx->rs = $modx->db->conn;}
     function dbQuery($sql)               {global $modx;return $modx->db->query($sql);}
     function recordCount($rs)            {global $modx;return $modx->db->getRecordCount($rs);}
@@ -9,7 +9,7 @@ class OldFunctions {
     function affectedRows($rs)           {global $modx;return $modx->db->getAffectedRows($rs);}
     function insertId($rs)               {global $modx;return $modx->db->getInsertId($rs);}
     function dbClose()                   {global $modx;       $modx->db->disconnect();}
-    
+
     function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
         // first find out whether the value passed is an array
         if (!is_array($array)) {
@@ -36,18 +36,18 @@ class OldFunctions {
         return $listhtml;
     }
 
-    
+
     function getUserData() {
         $client['ip'] = $_SERVER['REMOTE_ADDR'];
         $client['ua'] = $_SERVER['HTTP_USER_AGENT'];
     	return $client;
     }
-    
+
     # Returns true, install or interact when inside manager
     // deprecated
     function insideManager() {
         $m= false;
-        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
+        if( defined('IN_MANAGER_MODE') && IN_MANAGER_MODE === true) {
             $m= true;
             if (defined('SNIPPET_INTERACTIVE_MODE') && SNIPPET_INTERACTIVE_MODE == 'true')
                 $m= "interact";
@@ -72,7 +72,7 @@ class OldFunctions {
     function changePassword($o, $n) {
         return changeWebUserPassword($o, $n);
     } // deprecated
-    
+
     function userLoggedIn() {
     	global $modx;
         $userdetails= array ();
@@ -95,7 +95,7 @@ class OldFunctions {
                 return false;
             }
     }
-    
+
     function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
         //  function to retrieve form results into an associative array
     	global $modx;

@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('import_static')) {
@@ -142,7 +142,7 @@ function run() {
 
 	// import files
 	if(0 < count($files)) {
-		$rs = $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+		$modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
 		importFiles($parent, $filedir, $files, 'root');
 	}
 
@@ -168,7 +168,6 @@ function importFiles($parent, $filedir, $files, $mode) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$tbl_system_settings = $modx->getFullTableName('system_settings');
 
-	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if(!is_array($files)) {
 		return;
