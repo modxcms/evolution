@@ -3514,11 +3514,7 @@ class DocumentParser
      */
     function isBackend()
     {
-        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
-            return true;
-        } else {
-            return false;
-        }
+        return (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE === true);
     }
 
     /**
@@ -3528,11 +3524,7 @@ class DocumentParser
      */
     function isFrontend()
     {
-        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
-            return false;
-        } else {
-            return true;
-        }
+        return ! $this->isBackend();
     }
 
     /**
@@ -4649,7 +4641,7 @@ class DocumentParser
             $result = $this->db->makeArray($rs);
 
             // get default/built-in template variables
-            if(is_array($docRow)){ 
+            if(is_array($docRow)){
                 ksort($docRow);
 
                 foreach ($docRow as $key => $value) {

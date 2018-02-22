@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 $logo= '<img src="media/style/default/images/misc/login-logo.png" height="54" width="358" border="0">';
 $downloadLinks = array(
 	0=>array('title'=>$_lang["information"],'link'=>'https://evo.im/'),

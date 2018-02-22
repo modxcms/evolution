@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE != 'true') {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 if (!$modx->hasPermission('save_plugin')) {
@@ -127,7 +127,7 @@ switch ($_POST['mode']) {
             }
         }
 
-        //do stuff to save the edited plugin    
+        //do stuff to save the edited plugin
         $modx->db->update(array(
             'name' => $name,
             'description' => $description,
@@ -191,23 +191,23 @@ function saveEventListeners($id, $sysevents, $mode)
         }
         $formEventList[] = array('pluginid' => $id, 'evtid' => $evtId, 'priority' => $priority);
     }
-    
+
     $evtids = array();
     foreach ($formEventList as $eventInfo) {
         $where = vsprintf("pluginid='%s' AND evtid='%s'", $eventInfo);
         $modx->db->save($eventInfo, '[+prefix+]site_plugin_events', $where);
         $evtids[] = $eventInfo['evtid'];
     }
-    
+
     $rs = $modx->db->select('*', '[+prefix+]site_plugin_events', sprintf("pluginid='%s'", $id));
     $dbEventList = array();
     $del = array();
     while($row = $modx->db->getRow($rs)) {
         if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
     }
-    
+
     if(!$del) return;
-    
+
     foreach($del as $delid) {
         $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));
     }
@@ -217,14 +217,14 @@ function getEventIdByName($name)
 {
     global $modx;
     static $eventIds=array();
-    
+
     if(isset($eventIds[$name])) return $eventIds[$name];
-    
+
     $rs = $modx->db->select('id, name', '[+prefix+]system_eventnames');
     while ($row = $modx->db->getRow($rs)) {
         $eventIds[$row['name']] = $row['id'];
     }
-    
+
     return $eventIds[$name];
 }
 

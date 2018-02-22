@@ -587,8 +587,8 @@ function map_attrs($k, $v) {
 // courtesy, Ryan Currie, ryan@digibliss.com
 
 if (!function_exists('array_change_key_case')) {
-	define("CASE_UPPER",1);
-	define("CASE_LOWER",0);
+	define('CASE_UPPER', 1);
+	define('CASE_LOWER', 0);
 
 
 	function array_change_key_case($array,$case=CASE_LOWER) {

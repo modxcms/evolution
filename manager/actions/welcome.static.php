@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.');
 }
 
@@ -320,7 +320,7 @@ $widgets['welcome'] = array(
 					</table>
 				</div>
 		',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['onlineinfo'] = array(
 	'menuindex' => '20',
@@ -329,7 +329,7 @@ $widgets['onlineinfo'] = array(
 	'icon' => 'fa-user',
 	'title' => '[%onlineusers_title%]',
 	'body' => '<div class="userstable">[+OnlineInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 $widgets['recentinfo'] = array(
 	'menuindex' => '30',
@@ -338,7 +338,7 @@ $widgets['recentinfo'] = array(
 	'icon' => 'fa-pencil-square-o',
 	'title' => '[%activity_title%]',
 	'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
-	'hide'=>'0'	
+	'hide'=>'0'
 );
 if ($modx->config['rss_url_news']) {
     $widgets['news'] = array(

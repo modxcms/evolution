@@ -1,10 +1,12 @@
 <?php
 /**
  * mutate_settings.ajax.php
- * 
+ *
  */
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
- 
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
+
 require_once(dirname(__FILE__) . '/protect.inc.php');
 
 $action = preg_replace('/[^A-Za-z0-9_\-\.\/]/', '', $_POST['action']);
