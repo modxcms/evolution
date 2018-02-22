@@ -172,6 +172,8 @@ echo '<p>'.$_lang['checking_if_config_exist_and_writable'];
 $tmp = "../".MGR_DIR."/includes/config.inc.php";
 if (!is_file($tmp)) {
     f_owc($tmp, "<?php //EVO configuration file ?>", 0666);
+} else {
+    @chmod($tmp, 0666);
 }
 $isWriteable = is_writable($tmp);
 if (!$isWriteable) {
