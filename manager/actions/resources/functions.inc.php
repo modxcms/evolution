@@ -29,9 +29,8 @@ function createResourceList($resourceTable, $resources) {
 	global $modx, $_lang, $_style, $modx_textdir, $tpl;
 
 	$items = isset($resources->items[$resourceTable]) ? $resources->items[$resourceTable] : false;
-	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
-	if(!$items) {
+	if( ! is_array($items) || empty($items)) {
 		return $_lang['no_results'];
 	}
 

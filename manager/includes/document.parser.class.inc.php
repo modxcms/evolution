@@ -902,7 +902,7 @@ class DocumentParser
         }
         if ($this->dumpPlugins) {
             $ps = "";
-            $tc = 0;
+            $tt = 0;
             foreach ($this->pluginsTime as $s => $t) {
                 $ps .= "$s (" . sprintf("%2.2f ms", $t * 1000) . ")<br>";
                 $tt += $t;
@@ -1638,7 +1638,6 @@ class DocumentParser
             $cmd = str_replace(array('[!', '!]'), array('[[', ']]'), $cmd);
         }
         $safe = 0;
-        $bt = '';
         while ($safe < 20) {
             $bt = md5($cmd);
             if (strpos($cmd, '[*') !== false) {
@@ -2039,7 +2038,11 @@ class DocumentParser
                 $_tmp = trim($_tmp);
                 $delim = substr($_tmp, 0, 1);
                 if (in_array($delim, array('"', "'", '`'))) {
+                    $null = null;
+                    //list(, $value, $_tmp)
                     list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
+                    unset($null);
+
                     if (substr(trim($_tmp), 0, 2) === '//') {
                         $_tmp = strstr(trim($_tmp), "\n");
                     }
@@ -2137,7 +2140,6 @@ class DocumentParser
         $maybePos = false;
         $inFilter = false;
         $total = strlen($str);
-        $i = 0;
         for ($i = 0; $i < $total; $i++) {
             $c = substr($str, $i, 1);
             $cc = substr($str, $i, 2);
@@ -2210,7 +2212,7 @@ class DocumentParser
         if (strpos($params, $spacer) !== false) {
             $params = str_replace("]{$spacer}]>", ']]>', $params);
         }
-        $snip['params'] = $params = ltrim($params, "?& \t\n");
+        $snip['params'] = ltrim($params, "?& \t\n");
 
         return $snip;
     }
@@ -2393,13 +2395,8 @@ class DocumentParser
 
         $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
         $len_base_url = strlen($this->config['base_url']);
-        if (strpos($_SERVER['REQUEST_URI'], '?')) {
-            list($url_path, $url_query_string) = explode('?', $_SERVER['REQUEST_URI'], 2);
-        } else {
-            $url_path = $_SERVER['REQUEST_URI'];
-        }
-        $url_path = $q;//LANG
 
+        $url_path = $q;//LANG
 
         if (substr($url_path, 0, $len_base_url) === $this->config['base_url']) {
             $url_path = substr($url_path, $len_base_url);
@@ -3978,8 +3975,7 @@ class DocumentParser
         }
 
         if ($id != $this->config['site_start']) {
-            if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
+            if ($this->config['friendly_urls'] == 1 && $alias == '') {
                 $alias = $id;
                 $alPath = '';
 
@@ -4464,9 +4460,7 @@ class DocumentParser
                 $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . join("','", $tvidnames) . "')";
             }
 
-            if ($docgrp = $this->getUserDocGroups()) {
-                $docgrp = join(',', $docgrp);
-            }
+            $this->getUserDocGroups();
 
             foreach ($docs as $doc) {
 
@@ -5040,6 +5034,7 @@ class DocumentParser
                 }
             }
         }
+        return $rt;
     }
 
     /**
@@ -6380,7 +6375,6 @@ class DocumentParser
      */
     function getIdFromAlias($alias)
     {
-        $children = array();
         if (isset($this->documentListing[$alias])) {
             return $this->documentListing[$alias];
         }
@@ -6472,12 +6466,13 @@ class DocumentParser
     /**
      * @param $str
      * @param int $flags
+     * @param string $encode
      * @return mixed
      */
-    function htmlspecialchars($str, $flags = ENT_COMPAT)
+    function htmlspecialchars($str, $flags = ENT_COMPAT, $encode = '')
     {
         $this->loadExtension('PHPCOMPAT');
-        return $this->phpcompat->htmlspecialchars($str, $flags);
+        return $this->phpcompat->htmlspecialchars($str, $flags, $encode);
     }
 
     /**

@@ -1120,9 +1120,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     }
                                     $templateVariables .= '
                         <!-- end Template Variables -->' . "\n";
-                                } else {
-                                    // There aren't any Template Variables
-                                    //$templateVariables .= "\t<p>" . $_lang['tmplvars_novars'] . "</p>\n";
                                 }
                             }
 

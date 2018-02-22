@@ -142,7 +142,7 @@ function run() {
 
 	// import files
 	if(0 < count($files)) {
-		$rs = $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+		$modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
 		importFiles($parent, $filedir, $files, 'root');
 	}
 
@@ -168,7 +168,6 @@ function importFiles($parent, $filedir, $files, $mode) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$tbl_system_settings = $modx->getFullTableName('system_settings');
 
-	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if(!is_array($files)) {
 		return;
