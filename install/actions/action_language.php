@@ -1,12 +1,4 @@
 <?php
-$content = file_get_contents('actions/tpl_language.html');
-$content = parse($content, array(
-    'langOptions' => getLangOptions($install_language))
-);
-$content = parse($content, $_lang,'[%','%]');
-
-echo $content;
-
 if( ! function_exists('getLangOptions')) {
     /**
      * @param string $install_language
@@ -35,3 +27,11 @@ if( ! function_exists('getLangOptions')) {
         return implode("\n", $_);
     }
 }
+
+$content = file_get_contents('actions/tpl_language.html');
+$content = parse($content, array(
+    'langOptions' => getLangOptions($install_language))
+);
+$content = parse($content, $_lang,'[%','%]');
+
+echo $content;
