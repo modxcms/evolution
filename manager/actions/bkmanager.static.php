@@ -54,7 +54,7 @@ if ($mode == 'restore1') {
      * Perform MySQLdumper data dump
      */
     @set_time_limit(120); // set timeout limit to 2 minutes
-    $dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
+    $dumper = new Mysqldumper($dbase);
     $dumper->setDBtables($tables);
     $dumper->setDroptables((isset($_POST['droptables']) ? true : false));
     $dumpfinished = $dumper->createDump('dumpSql');
@@ -80,16 +80,12 @@ if ($mode == 'restore1') {
     $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->db->escape($modx->db->config['table_prefix']) . "%'";
     $rs = $modx->db->query($sql);
     $tables = $modx->db->getColumn('Name', $rs);
-    //$today = $modx->toDateFormat(time());
-    //$today = str_replace(array('/',' '), '-', $today);
-    //$today = str_replace(':', '', $today);
-    //$today = strtolower($today);
     $today = date('Y-m-d_H-i-s');
     global $path;
     $path = "{$modx->config['snapshot_path']}{$today}.sql";
 
     @set_time_limit(120); // set timeout limit to 2 minutes
-    $dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
+    $dumper = new Mysqldumper($dbase);
     $dumper->setDBtables($tables);
     $dumper->setDroptables(true);
     $dumpfinished = $dumper->createDump('snapshot');
@@ -508,31 +504,30 @@ include_once "footer.inc.php"; // send footer
 
 class Mysqldumper
 {
-    var $_dbtables;
-    var $_isDroptables;
-    var $database_server;
-    var $dbname;
+    public $_dbtables;
+    public $_isDroptables;
+    public $dbname;
 
-    function __construct($database_server, $database_user, $database_password, $dbname)
+    public function __construct($dbname)
     {
         // Don't drop tables by default.
         $this->dbname = $dbname;
         $this->setDroptables(false);
     }
 
-    function setDroptables($state)
+    public function setDroptables($state)
     {
         $this->_isDroptables = $state;
     }
 
     // If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
 
-    function setDBtables($dbtables)
+    public function setDBtables($dbtables)
     {
         $this->_dbtables = $dbtables;
     }
 
-    function createDump($callBack)
+    public function createDump($callBack)
     {
         global $modx;
 
@@ -578,13 +573,6 @@ class Mysqldumper
                 }
             }
             if ($callBack === 'snapshot') {
-                /*
-                switch($tblval)
-                {
-                    case $modx->db->config['table_prefix'].'event_log':
-                    case $modx->db->config['table_prefix'].'manager_log':
-                        continue 2;
-                }*/
                 if (!preg_match('@^' . $modx->db->config['table_prefix'] . '@', $tblval)) {
                     continue;
                 }
@@ -646,7 +634,7 @@ class Mysqldumper
         return true;
     }
 
-    function result2Array($numinarray = 0, $resource)
+    public function result2Array($numinarray = 0, $resource)
     {
         global $modx;
         $array = array();
@@ -659,14 +647,14 @@ class Mysqldumper
 
     // Private function object2Array.
 
-    function isDroptables()
+    public function isDroptables()
     {
         return $this->_isDroptables;
     }
 
     // Private function loadObjectList.
 
-    function loadObjectList($key = '', $resource)
+    public function loadObjectList($key = '', $resource)
     {
         global $modx;
         $array = array();
@@ -683,7 +671,7 @@ class Mysqldumper
 
     // Private function result2Array.
 
-    function object2Array($obj)
+    public function object2Array($obj)
     {
         $array = null;
         if (is_object($obj)) {
