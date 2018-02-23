@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author Bjørn Erik Sandbakk (Sylvaticus)
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Norsk
  * @package modx
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'mislyktes!';
 $_lang["status_failed_could_not_create_database"] = 'mislyktes - kunne ikke opprette database';
 $_lang["status_failed_database_collation_does_not_match"] = 'mislyktes - database collation ulikhet; bruk SET NAMES eller velg %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'mislyktes - tabellprefixet er allerede i bruk!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'godkjent - databasen valgt';
 $_lang["status_passed_database_created"] = 'godkjent - database opprettet';
 $_lang["status_passed_server"] = 'godkjent - kollasjoneringer er n&aring; tilgjengelig';
