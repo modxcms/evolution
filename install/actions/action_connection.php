@@ -74,39 +74,3 @@ $content = file_get_contents('./actions/tpl_connection.html');
 $content = parse($content, $_lang, '[%','%]');
 $content = parse($content, $ph);
 echo $content;
-
-if( ! function_exists('getLangs')) {
-    /**
-     * @param $install_language
-     * @return string
-     */
-    function getLangs($install_language)
-    {
-        if ($install_language !== "english" && is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR, $install_language))) {
-            $manager_language = $install_language;
-        } else {
-            $manager_language = "english";
-        }
-
-        $langs = array();
-        if ($handle = opendir("../" . MGR_DIR . "/includes/lang")) {
-            while (false !== ($file = readdir($handle))) {
-                if (strpos($file, '.inc.') !== false) {
-                    $langs[] = $file;
-                }
-            }
-            closedir($handle);
-        }
-        sort($langs);
-
-        $_ = array();
-        foreach ($langs as $language) {
-            $abrv_language = explode('.', $language);
-            $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
-            $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected,
-                ucwords($abrv_language[0]));
-        }
-
-        return implode("\n", $_);
-    }
-}
