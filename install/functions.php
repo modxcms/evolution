@@ -111,6 +111,10 @@ function get_installmode()
 	return $installmode;
 }
 
+/**
+* @param $install_language
+* @return string
+*/
 function getLangs($install_language)
 {
     if ($install_language !== "english" && is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR, $install_language))) {
@@ -131,11 +135,11 @@ function getLangs($install_language)
     sort($langs);
 
     $_ = array();
-   foreach ($langs as $language) {
+    foreach ($langs as $language) {
         $abrv_language = explode('.', $language);
         $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
         $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected,
-            ucwords($abrv_language[0]));
+                       ucwords($abrv_language[0]));
     }
 
     return implode("\n", $_);
