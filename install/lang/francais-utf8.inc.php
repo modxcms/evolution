@@ -167,6 +167,7 @@ $_lang["status_failed"] = 'échec!';
 $_lang["status_failed_could_not_create_database"] = 'échec - impossible de créer la base de données';
 $_lang["status_failed_database_collation_does_not_match"] = 'échec - collation différente; utilisez SET NAMES ou choisir %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'échec - préfixe de table déjà utilisé!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'succès - base sélectionnée';
 $_lang["status_passed_database_created"] = 'succès - base créée';
 $_lang["status_passed_server"] = 'succès - collations maintenant disponibles';

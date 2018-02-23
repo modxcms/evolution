@@ -166,6 +166,7 @@ $_lang["status_failed"] = 'ناموفق!';
 $_lang["status_failed_could_not_create_database"] = 'ناموفق - قادر به ایجاد پایگاه داده نمی باشیم';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'ناموفق - پیشوند جدول هایی که انتخاب کردید پیش از این موجود می باشد';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'موفقیت آمیز - پایگاه دادهی انتخاب شد!';
 $_lang["status_passed_database_created"] = 'موفقیت آمیز - پایگاه داده ایجاد شد';
 $_lang["status_passed_server"] = 'موفقیت آمیز - تطبیق ها تهیه شد!';

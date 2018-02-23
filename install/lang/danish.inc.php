@@ -166,6 +166,7 @@ $_lang["status_failed"] = 'Fejlede!';
 $_lang["status_failed_could_not_create_database"] = 'fejlede - kunne ikke oprette databasen';
 $_lang["status_failed_database_collation_does_not_match"] = 'fejlede - databasens collation stemmer ikke overens; brug SET NAMES eller vælg %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fejlede - tabellernes præfiks eksisterer allerede!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'gennemført - databasen er valgt';
 $_lang["status_passed_database_created"] = 'gennemført - databasen er oprettet';
 $_lang["status_passed_server"] = 'gennemført - collations er nu tilgængelige';
