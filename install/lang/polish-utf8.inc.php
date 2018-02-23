@@ -170,6 +170,7 @@ $_lang["status_failed"] = 'BŁĄD!';
 $_lang["status_failed_could_not_create_database"] = 'BŁĄD! - nie można utworzyć bazy danych';
 $_lang["status_failed_database_collation_does_not_match"] = 'BŁĄD! - niezgodność systemów porównań; użyj SET NAMES lub wybierz %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'BŁĄD! - wybrany prefiks tabeli jest już wykorzystywany!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'OK - baza danych została wybrana';
 $_lang["status_passed_database_created"] = 'OK - baza danych utworzona';
 $_lang["status_passed_server"] = 'OK - system porównań dostępny';

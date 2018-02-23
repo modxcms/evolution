@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'נכשל!';
 $_lang["status_failed_could_not_create_database"] = 'נכשל - לא ניתן ליצור את מסד הנתונים';
 $_lang["status_failed_database_collation_does_not_match"] = 'נכשל - אוסף הנתונים לא תואם; השתמש ב SET NAMES או בחר %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'failed - table prefix already in use!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'עבר - מסד נתונים נבחר';
 $_lang["status_passed_database_created"] = 'עבר - יצירת מסד נתונים';
 $_lang["status_passed_server"] = 'עבר - אוסף נתונים זמין';

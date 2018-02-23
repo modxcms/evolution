@@ -170,6 +170,7 @@ $_lang["status_failed"] = 'mislukt!';
 $_lang["status_failed_could_not_create_database"] = 'mislukt - kan database niet aanmaken';
 $_lang["status_failed_database_collation_does_not_match"] = 'mislukt - database coalitie klopt niet; gebruik SET NAMES of kies% s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'mislukt - tabel prefix is al in gebruik!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'gelukt - database geselecteerd';
 $_lang["status_passed_database_created"] = 'gelukt - database is aangemaakt';
 $_lang["status_passed_server"] = 'gelukt - coalitie nu beschikbaar';

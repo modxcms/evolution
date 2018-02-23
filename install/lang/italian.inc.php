@@ -170,6 +170,7 @@ $_lang["status_failed"] = 'fallita!';
 $_lang["status_failed_could_not_create_database"] = 'fallita - impossibile creare il database';
 $_lang["status_failed_database_collation_does_not_match"] = 'fallita - problemi con la collation del database; usate SET NAMES o scegliete %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fallita - il prefisso scelto per le tabelle &eacute; gi&agrave; in uso!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'successo - il database &eacute; stato selezionato';
 $_lang["status_passed_database_created"] = 'successo - il database &eacute; stato creato';
 $_lang["status_passed_server"] = 'successo - la collation del database &eacute; disponibile';

@@ -14,8 +14,13 @@ if(!defined('MGR_DIR') && is_dir("{$base_path}manager")) {
 }
 require_once('lang.php');
 
-$conn = mysqli_connect($host, $uid, $pwd);
-if(!$conn) exit('can not connect');
+if(function_exists('mysqli_connect')) {  
+    $conn = mysqli_connect($host, $uid, $pwd);
+    if(!$conn) exit('can not connect');
+}
+else {
+    exit('undefined function mysqli_connect()');
+}
 
 // get collation
 $rs = mysqli_query($conn, "SHOW COLLATION");
