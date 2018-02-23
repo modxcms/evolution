@@ -6,7 +6,7 @@ $upgradeable= 0;
 if ($installMode === 0) {
     $database_name= '';
     $database_server= 'localhost';
-    $table_prefix= substr(md5(time()), rand(0, 27), rand(3, 5))."_";
+    $table_prefix = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), rand(0, 33), 3).'_';
 } else {
     $database_name = '';
     if (!is_file($base_path.MGR_DIR.'/includes/config.inc.php')) $upgradeable = 0;
