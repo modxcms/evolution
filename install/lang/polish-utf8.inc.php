@@ -2,8 +2,8 @@
 /**
  * EVO Installer language file
  *
- * @version 1.3.6
- * @date 2018/01/19
+ * @version 1.5.0
+ * @date 2018/02/23
  * @author EVO Project Team
  *
  * @language Polish

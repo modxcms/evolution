@@ -4,8 +4,8 @@
  *
  * @author Mohsen Zare (MotSmart), MotSmart@Gmail.com, www.modxcms.ir
  * @author AliAqua
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Persian
  * @package modx
