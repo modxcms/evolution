@@ -507,6 +507,7 @@ class Mysqldumper
     public $_dbtables;
     public $_isDroptables;
     public $dbname;
+    public $database_server;
 
     public function __construct($dbname)
     {
@@ -530,6 +531,7 @@ class Mysqldumper
     public function createDump($callBack)
     {
         global $modx;
+        $createtable = array();
 
         // Set line feed
         $lf = "\n";
@@ -595,6 +597,7 @@ class Mysqldumper
                 $insertdump = $lf;
                 $insertdump .= "INSERT INTO `{$tblval}` VALUES (";
                 $arr = $this->object2Array($row);
+                if( ! is_array($arr)) $arr = array();
                 foreach ($arr as $key => $value) {
                     if (is_null($value)) {
                         $value = 'NULL';
@@ -692,6 +695,7 @@ function import_sql($source, $result_code = 'import_ok')
 {
     global $modx, $e;
 
+    $rs = null;
     if ($modx->getLockedElements() !== array()) {
         $modx->webAlertAndQuit("At least one Resource is still locked or edited right now by any user. Remove locks or ask users to log out before proceeding.");
     }
@@ -717,8 +721,7 @@ function import_sql($source, $result_code = 'import_ok')
 
     $modx->clearCache();
 
-    $_SESSION['last_result'] = $modx->db->makeArray($rs);
-
+    $_SESSION['last_result'] = ($rs !== null) ? null : $modx->db->makeArray($rs);
     $_SESSION['result_msg'] = $result_code;
 }
 

@@ -4,9 +4,10 @@
  *
  * @author Pertsev Dmitriy
  * @author Safronovich Victor
+ * @author Rudnykh Vitalii
  * @author Russian EVO Community
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Russian
  * @package modx
@@ -168,6 +169,7 @@ $_lang["status_failed"] = 'ошибка!';
 $_lang["status_failed_could_not_create_database"] = 'ошибка - не удается создать базу данных';
 $_lang["status_failed_database_collation_does_not_match"] = 'ошибка - сопоставление базы данных не соответствует; используйте SET NAMES или выберите %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'ошибка - префикс таблицы уже используется!';
+$_lang['status_failed_mysqli'] = 'ошибка - расширение mysqli для php не установлено';
 $_lang["status_passed"] = 'успех - база данных выбрана';
 $_lang["status_passed_database_created"] = 'успех - база данных создана';
 $_lang["status_passed_server"] = 'успех - сопоставление базы данных доступно';
