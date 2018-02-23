@@ -4,7 +4,10 @@
  */
 class Categories
 {
-    public $db       = '';
+    /**
+     * @var DBAPI
+     */
+    public $db;
     public $db_tbl   = array();
     public $elements = array( 'templates', 'tmplvars', 'htmlsnippets', 'snippets', 'plugins', 'modules' );
 

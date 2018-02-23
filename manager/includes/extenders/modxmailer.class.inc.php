@@ -22,13 +22,15 @@ class MODxMailer extends PHPMailer
 {
     protected $mb_language = 'UNI';
     protected $encode_header_method = '';
-    /* var \DocumentParser $modx */
-    protected $modx = null;
+    /**
+     * @var DocumentParser $modx
+     */
+    protected $modx;
 
     /**
-     * @param \DocumentParser $modx
+     * @param DocumentParser $modx
      */
-    public function init(\DocumentParser $modx)
+    public function init(DocumentParser $modx)
     {
         $this->modx = $modx;
         $this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';

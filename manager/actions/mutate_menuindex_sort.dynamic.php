@@ -70,7 +70,7 @@ if ($id !== null) {
     }
 }
 
-$pagetitle = $id == 0 ? $site_name : $pagetitle;
+$pagetitle = empty($id) ? $site_name : $pagetitle;
 ?>
 
 <script type="text/javascript">
