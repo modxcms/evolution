@@ -11,7 +11,11 @@ if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
-// create globally unique identifiers (guid)
+/**
+ * create globally unique identifiers (guid)
+ *
+ * @return string
+ */
 function createGUID(){
 	srand((double)microtime()*1000000);
 	$r = rand() ;

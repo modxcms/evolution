@@ -213,6 +213,10 @@ function saveEventListeners($id, $sysevents, $mode)
     }
 }
 
+/**
+ * @param string $name
+ * @return string|int
+ */
 function getEventIdByName($name)
 {
     global $modx;

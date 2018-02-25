@@ -38,15 +38,18 @@ if ($use_udperms == 1) {
 	}
 }
 
+/**
+ * @param int $currDocID
+ * @return array
+ */
 function allChildren($currDocID) {
 	global $modx;
 	$children= array();
+	$currDocID = $modx->db->escape($currDocID);
 	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent = '{$currDocID}'");
 	while ($child= $modx->db->getRow($rs)) {
 		$children[]= $child['id'];
-		$nextgen= array();
-		$nextgen= allChildren($child['id']);
-		$children= array_merge($children, $nextgen);
+		$children= array_merge($children, allChildren($child['id']));
 	}
 	return $children;
 }

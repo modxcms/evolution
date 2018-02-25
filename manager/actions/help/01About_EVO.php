@@ -18,6 +18,11 @@ $translationLinks = array(
 	1=>array('title'=>$_lang["extras"],'link'=>'https://www.transifex.com/evolutioncms/extras/'),
 );
 
+/**
+ * @param string $sectionHeader
+ * @param array $linkArr
+ * @return string
+ */
 function createList($sectionHeader, $linkArr) {
 	$output = '<div class="sectionHeader">'.$sectionHeader.'</div><div class="sectionBody">'."\n";
 	$output .= '<table width="500"  border="0" cellspacing="0" cellpadding="0">'."\n";

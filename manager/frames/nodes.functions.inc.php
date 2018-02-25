@@ -4,11 +4,12 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 }
 
 /**
- * @param $indent
- * @param $parent
- * @param $expandAll
- * @param $theme
+ * @param int $indent
+ * @param int $parent
+ * @param int $expandAll
+ * @param string $theme Not needed???????????
  * @param string $hereid
+ * @return string
  */
 function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $modx;
@@ -450,6 +451,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	return $output;
 }
 
+/**
+ * @param array $_style
+ * @return array
+ */
 function getIconInfo($_style) {
 	if(!isset($_style['tree_page_gif'])) {
 		$_style['tree_page_gif'] = $_style['tree_page'];
@@ -477,6 +482,10 @@ function getIconInfo($_style) {
 	return $icons;
 }
 
+/**
+ * @param array $_style
+ * @return array
+ */
 function getPrivateIconInfo($_style) {
 	if(!isset($_style['tree_page_gif_secure'])) {
 		$_style['tree_page_gif_secure'] = $_style['tree_page_secure'];
@@ -504,6 +513,11 @@ function getPrivateIconInfo($_style) {
 	return $iconsPrivate;
 }
 
+/**
+ * @param string $nodeNameSource
+ * @param array $row
+ * @return string
+ */
 function getNodeTitle($nodeNameSource, $row) {
 	global $modx;
 
@@ -550,6 +564,10 @@ function getNodeTitle($nodeNameSource, $row) {
 	return $nodetitle;
 }
 
+/**
+ * @param string $nodeNameSource
+ * @return bool
+ */
 function isDateNode($nodeNameSource) {
 	switch($nodeNameSource) {
 		case 'createdon':
@@ -563,12 +581,21 @@ function isDateNode($nodeNameSource) {
 	}
 }
 
+/**
+ * @param int $parent
+ * @param int $isfolder
+ * @return int
+ */
 function checkIsFolder($parent = 0, $isfolder = 1) {
 	global $modx;
 
 	return (int) $modx->db->getValue($modx->db->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
 }
 
+/**
+ * @param mixed $array
+ * @return string
+ */
 function _htmlentities($array) {
 	global $modx;
 
@@ -578,6 +605,9 @@ function _htmlentities($array) {
 	return $array;
 }
 
+/**
+ * @return string
+ */
 function getTplSingleNode() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
@@ -602,6 +632,9 @@ function getTplSingleNode() {
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a></div>';
 }
 
+/**
+ * @return string
+ */
 function getTplFolderNode() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
@@ -638,6 +671,9 @@ function getTplFolderNode() {
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
 }
 
+/**
+ * @return string
+ */
 function getTplFolderNodeNotChildren() {
 	return '<div id="node[+id+]"><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+]);"
@@ -670,6 +706,10 @@ function getTplFolderNodeNotChildren() {
         title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</a><div>';
 }
 
+/**
+ * @param int|string|array $str
+ * @param bool $flag
+ */
 function dbug($str, $flag = false) {
 	print('<pre>');
 	print_r($str);

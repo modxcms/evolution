@@ -6,6 +6,11 @@ if (!$modx->hasPermission('logs')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+/**
+ * @param array $array
+ * @param string $checkKey
+ * @return array
+ */
 function array_unique_multi($array, $checkKey)
 {
     // Use the builtin if we're not a multi-dimensional array
@@ -26,6 +31,11 @@ function array_unique_multi($array, $checkKey)
     return $ret;
 }
 
+/**
+ * @param array $array
+ * @param string $key
+ * @return array
+ */
 function record_sort($array, $key)
 {
     $hash = array();

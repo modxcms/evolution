@@ -1532,9 +1532,13 @@ if(($content['richtext'] == 1 || $modx->manager->action == '4' || $modx->manager
 	}
 }
 
+/**
+ * @return string
+ */
 function getDefaultTemplate() {
 	global $modx;
 
+    $default_template = '';
 	switch($modx->config['auto_template_logic']) {
 		case 'sibling':
 			if(!isset($_GET['pid']) || empty($_GET['pid'])) {
@@ -1570,9 +1574,6 @@ function getDefaultTemplate() {
 		default: // default_template is already set
 			$default_template = $modx->config['default_template'];
 	}
-	if(!isset($default_template)) {
-		$default_template = $modx->config['default_template'];
-	} // default_template is already set
 
-	return $default_template;
+	return empty($default_template) ? $modx->config['default_template'] : $default_template;
 }

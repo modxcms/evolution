@@ -36,6 +36,12 @@ $_SESSION['itemname'] = $name;
 $header="Location: index.php?r=1&a=3&id=$id";
 header($header);
 
+/**
+ * @param int $docid
+ * @param null|int $parent
+ * @param int $_toplevel
+ * @return int
+ */
 function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	global $modx, $_lang;
 
@@ -136,25 +142,41 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	return $newparent;
 }
 
-// Duplicate Document TVs
-function duplicateTVs($oldid,$newid){
+/**
+ * Duplicate Document TVs
+ *
+ * @param int $oldid
+ * @param int $newid
+ */
+function duplicateTVs($oldid, $newid){
 	global $modx;
 
 	$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
 
-	$modx->db->insert(
+    $newid = (int)$newid;
+    $oldid = (int)$oldid;
+
+    $modx->db->insert(
 		array('contentid'=>'', 'tmplvarid'=>'', 'value'=>''), $tbltvc, // Insert into
 		"{$newid}, tmplvarid, value", $tbltvc, "contentid='{$oldid}'" // Copy from
 	);
 }
 
-// Duplicate Document Access Permissions
-function duplicateAccess($oldid,$newid){
+/**
+ * Duplicate Document Access Permissions
+ *
+ * @param int $oldid
+ * @param int $newid
+ */
+function duplicateAccess($oldid, $newid){
 	global $modx;
 
 	$tbldg = $modx->getFullTableName('document_groups');
 
-	$modx->db->insert(
+    $newid = (int)$newid;
+    $oldid = (int)$oldid;
+
+    $modx->db->insert(
 		array('document'=>'', 'document_group'=>''), $tbldg, // Insert into
 		"{$newid}, document_group", $tbldg, "document='{$oldid}'" // Copy from
 	);

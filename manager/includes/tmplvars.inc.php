@@ -1,5 +1,17 @@
 <?php
-// DISPLAY FORM ELEMENTS
+/**
+ * DISPLAY FORM ELEMENTS
+ *
+ * @param string $field_type
+ * @param string $field_id
+ * @param string $default_text
+ * @param string $field_elements
+ * @param string $field_value
+ * @param string $field_style
+ * @param array $row
+ * @param array $tvsArray
+ * @return string
+ */
 function renderFormElement($field_type, $field_id, $default_text = '', $field_elements = '', $field_value = '', $field_style = '', $row = array(), $tvsArray = array()) {
 	global $modx;
 	global $_style;
@@ -368,6 +380,10 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 	return $field_html;
 } // end renderFormElement function
 
+/**
+ * @param string|array|mysqli_result $v
+ * @return array
+ */
 function ParseIntputOptions($v) {
 	global $modx;
 	$a = array();

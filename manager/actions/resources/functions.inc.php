@@ -11,12 +11,21 @@ $tpl = array(
 	'elementsRow' => file_get_contents(MODX_MANAGER_PATH . 'actions/resources/tpl_elementsRow.tpl')
 );
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePh($tpl, $ph) {
 	global $modx, $_lang;
 	$tpl = $modx->parseText($tpl, $_lang, '[%', '%]');
 	return $modx->parseText($tpl, $ph);
 }
 
+/**
+ * @param string|int $cssId
+ * @return string
+ */
 function renderViewSwitchButtons($cssId) {
 	global $modx, $_lang, $tpl;
 
@@ -25,6 +34,11 @@ function renderViewSwitchButtons($cssId) {
 	));
 }
 
+/**
+ * @param string $resourceTable
+ * @param mgrResources $resources
+ * @return string
+ */
 function createResourceList($resourceTable, $resources) {
 	global $modx, $_lang, $_style, $modx_textdir, $tpl;
 
@@ -74,6 +88,10 @@ function createResourceList($resourceTable, $resources) {
 	));
 }
 
+/**
+ * @param mgrResources $resources
+ * @return string
+ */
 function createCombinedView($resources) {
 	global $modx, $_lang, $_style, $modx_textdir;
 
@@ -126,9 +144,9 @@ function createCombinedView($resources) {
 }
 
 /**
- * @param $row
- * @param $resourceTable
- * @param $resources
+ * @param array $row
+ * @param string $resourceTable
+ * @param mgrResources $resources
  * @return array
  */
 function prepareElementRowPh($row, $resourceTable, $resources) {
