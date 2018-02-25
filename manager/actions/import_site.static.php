@@ -124,7 +124,7 @@ function run() {
 		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
 	}
 
-	$parent = intval($_POST['parent']);
+	$parent = (int)$_POST['parent'];
 
 	if(is_dir(MODX_BASE_PATH . 'temp/import')) {
 		$filedir = MODX_BASE_PATH . 'temp/import/';

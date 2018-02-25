@@ -183,7 +183,7 @@ if(!isset($_SESSION['mgrValidated'])) {
 	$action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
 
 	if($action !== 1) {
-		if(!intval($itemid)) {
+		if((int)$itemid <= 0) {
 			$itemid = null;
 		}
 		$sql = sprintf("REPLACE INTO %s (sid, internalKey, username, lasthit, action, id) VALUES ('%s', %d, '%s', %d, '%s', %s)", $modx->getFullTableName('active_users') // Table

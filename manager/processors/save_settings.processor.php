@@ -66,7 +66,7 @@ if (isset($data) && count($data) > 0) {
 	}
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
-	$data['mail_check_timeperiod'] = intval($data['mail_check_timeperiod']) < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
+	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
 		switch ($k) {
             case 'settings_version':{
@@ -122,7 +122,7 @@ if (isset($data) && count($data) > 0) {
 				break;
 			case 'session_timeout':
 				$mail_check_timeperiod = $data['mail_check_timeperiod'];
-				$v = intval($v) < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
+				$v = (int)$v < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
 				break;
 			default:
 			break;
@@ -141,8 +141,8 @@ if (isset($data) && count($data) > 0) {
 
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
-		$newtemplate = intval($data['default_template']);
-		$oldtemplate = intval($data['old_template']);
+		$newtemplate = (int)$data['default_template'];
+		$oldtemplate = (int)$data['old_template'];
 		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
 		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");

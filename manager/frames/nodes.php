@@ -18,9 +18,9 @@ if (isset($_REQUEST['savestateonly'])) {
     exit('send some data');
 } //??
 
-$indent = intval($_REQUEST['indent']);
-$parent = intval($_REQUEST['parent']);
-$expandAll = intval($_REQUEST['expandAll']);
+$indent = (int)$_REQUEST['indent'];
+$parent = (int)$_REQUEST['parent'];
+$expandAll = (int)$_REQUEST['expandAll'];
 $output = '';
 $theme = $manager_theme . "/";
 $hereid = isset($_REQUEST['id']) && is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : '';

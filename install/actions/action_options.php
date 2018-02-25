@@ -26,7 +26,7 @@ if( ! function_exists('getTemplates')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%templates%]</h3>' . join("\n", $_);
+            return '<h3>[%templates%]</h3>' . implode("\n", $_);
         }
     }
 }
@@ -57,7 +57,7 @@ if( ! function_exists('getTVs')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%tvs%]</h3>' . join("\n", $_);
+            return '<h3>[%tvs%]</h3>' . implode("\n", $_);
         }
     }
 }
@@ -89,7 +89,7 @@ if( ! function_exists('getChunks')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%chunks%]</h3>' . join("\n", $_);
+            return '<h3>[%chunks%]</h3>' . implode("\n", $_);
         }
     }
 }
@@ -110,6 +110,7 @@ if( ! function_exists('getModules')) {
         $tpl = '<label><input type="checkbox" name="module[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -120,7 +121,7 @@ if( ! function_exists('getModules')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%modules%]</h3>' . join("\n", $_);
+            return '<h3>[%modules%]</h3>' . implode("\n", $_);
         }
     }
 }
@@ -141,6 +142,7 @@ if( ! function_exists('getPlugins')) {
         $tpl = '<label><input type="checkbox" name="plugin[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -155,7 +157,7 @@ if( ! function_exists('getPlugins')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%plugins%]</h3>' . join("\n", $_);
+            return '<h3>[%plugins%]</h3>' . implode("\n", $_);
         }
     }
 }
@@ -187,7 +189,7 @@ if( ! function_exists('getSnippets')) {
             $i++;
         }
         if (0 < count($_)) {
-            return '<h3>[%snippets%]</h3>' . join("\n", $_);
+            return '<h3>[%snippets%]</h3>' . implode("\n", $_);
         }
     }
 }

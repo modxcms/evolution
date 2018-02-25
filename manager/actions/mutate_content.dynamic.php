@@ -38,7 +38,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table names (alphabetical)
 $tbl_categories = $modx->getFullTableName('categories');
@@ -136,7 +136,7 @@ if(!isset ($_REQUEST['id'])) {
 		$modx->config['auto_menuindex'] = 1;
 	}
 	if($modx->config['auto_menuindex']) {
-		$pid = intval($_REQUEST['pid']);
+		$pid = (int)$_REQUEST['pid'];
 		$rs = $modx->db->select('count(*)', $tbl_site_content, "parent='{$pid}'");
 		$content['menuindex'] = $modx->db->getValue($rs);
 	} else {

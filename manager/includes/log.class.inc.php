@@ -41,7 +41,7 @@ class logHandler {
     function writeToLog() {
         global $modx;
         $tbl_manager_log = $modx->getFullTableName('manager_log');
-        
+
         if($this->entry['internalKey'] == "") {
             $modx->webAlertAndQuit("Logging error: internalKey not set.");
         }
@@ -67,8 +67,8 @@ class logHandler {
         if(!$insert_id) {
             $modx->messageQuit("Logging error: couldn't save log to table! Error code: ".$modx->db->getLastError());
         } else {
-            $limit = (isset($modx->config['manager_log_limit'])) ? intval($modx->config['manager_log_limit']) : 3000;
-            $trim  = (isset($modx->config['manager_log_trim']))  ? intval($modx->config['manager_log_trim']) : 100;
+            $limit = (isset($modx->config['manager_log_limit'])) ? (int)$modx->config['manager_log_limit'] : 3000;
+            $trim  = (isset($modx->config['manager_log_trim']))  ? (int)$modx->config['manager_log_trim'] : 100;
             if(($insert_id % $trim) === 0) {
                 $modx->rotate_log('manager_log',$limit,$trim);
             }

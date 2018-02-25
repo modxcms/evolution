@@ -18,7 +18,7 @@ switch((int) $modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$role = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_user_roles = $modx->getFullTableName('user_roles');
 

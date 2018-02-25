@@ -28,11 +28,11 @@ $unpub_date = $_POST['unpub_date'];
 $document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? array() : $_POST['docgroups'];
 $type = $_POST['type'];
 $contentType = $modx->db->escape($_POST['contentType']);
-$contentdispo = intval($_POST['content_dispo']);
+$contentdispo = (int)$_POST['content_dispo'];
 $longtitle = $modx->db->escape($_POST['longtitle']);
-$donthit = intval($_POST['donthit']);
+$donthit = (int)$_POST['donthit'];
 $menutitle = $modx->db->escape($_POST['menutitle']);
-$hidemenu = intval($_POST['hidemenu']);
+$hidemenu = (int)$_POST['hidemenu'];
 $aliasvisible = $_POST['alias_visible'];
 
 /************* webber ********/

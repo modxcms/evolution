@@ -167,6 +167,10 @@ class DocumentParser
     public $sid;
     private $q;
     public $decoded_request_uri;
+    /**
+     * @var OldFunctions
+     */
+    public $old;
 
     /**
      * Document constructor
@@ -1460,7 +1464,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($content, '[(', ')]');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -1512,7 +1516,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($content, '{{', '}}');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -1585,7 +1589,7 @@ class DocumentParser
         $content = $this->mergeDocumentContent($content);
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
         foreach ($matches[1] as $i => $key) {
@@ -1956,7 +1960,7 @@ class DocumentParser
 
         $matches = $this->getTagsFromContent($content, '[[', ']]');
 
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -2045,9 +2049,8 @@ class DocumentParser
             return '';
         }
 
-        if ($this->dumpSnippets) {
-            $eventtime = $this->getMicroTime();
-        }
+        $eventtime = $this->dumpSnippets ? $this->getMicroTime() : 0;
+
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
 
@@ -2317,7 +2320,7 @@ class DocumentParser
             }
         } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[trim($snip_name, '@')])) {
             $snippetObject['name'] = trim($snip_name, '@');
-            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(join("",$rs));', trim($snip_name, '@'));
+            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));', trim($snip_name, '@'));
             $snippetObject['properties'] = '';
         } else {
             $where = sprintf("name='%s' AND disabled=0", $this->db->escape($snip_name));
@@ -3168,8 +3171,8 @@ class DocumentParser
      */
     public function elementIsLocked($type, $id, $includeThisUser = false)
     {
-        $id = intval($id);
-        $type = intval($type);
+        $id = (int)$id;
+        $type = (int)$type;
         if (!$type || !$id) {
             return null;
         }
@@ -3219,7 +3222,7 @@ class DocumentParser
             return $lockedElements;
         }
 
-        $type = intval($type);
+        $type = (int)$type;
         if (isset($lockedElements[$type])) {
             return $lockedElements[$type];
         } else {
@@ -3259,7 +3262,7 @@ class DocumentParser
     public function cleanupExpiredLocks()
     {
         // Clean-up active_user_sessions first
-        $timeout = intval($this->config['session_timeout']) < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = (int)$this->config['session_timeout'] < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
@@ -3356,8 +3359,8 @@ class DocumentParser
     public function lockElement($type, $id)
     {
         $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        $type = intval($type);
-        $id = intval($id);
+        $type = (int)$type;
+        $id = (int)$id;
         if (!$type || !$id || !$userId) {
             return false;
         }
@@ -3378,8 +3381,8 @@ class DocumentParser
     public function unlockElement($type, $id, $includeAllUsers = false)
     {
         $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        $type = intval($type);
-        $id = intval($id);
+        $type = (int)$type;
+        $id = (int)$id;
         if (!$type || !$id) {
             return false;
         }
@@ -3446,8 +3449,8 @@ class DocumentParser
         }
 
         $usertype = $this->isFrontend() ? 1 : 0;
-        $evtid = intval($evtid);
-        $type = intval($type);
+        $evtid = (int)$evtid;
+        $type = (int)$type;
 
         // Types: 1 = information, 2 = warning, 3 = error
         if ($type < 1) {
@@ -4285,10 +4288,7 @@ class DocumentParser
      */
     public function parseText($tpl = '', $ph = array(), $left = '[+', $right = '+]', $execModifier = true)
     {
-        if (!$ph) {
-            return $tpl;
-        }
-        if (!$tpl) {
+        if (empty($ph) || empty($tpl)) {
             return $tpl;
         }
 
@@ -4299,7 +4299,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($tpl, $left, $right);
-        if (!$matches) {
+        if (empty($matches)) {
             return $tpl;
         }
 
@@ -4410,7 +4410,7 @@ class DocumentParser
         if ($mode !== 'formatOnly' && empty($timestamp)) {
             return '-';
         }
-        $timestamp = intval($timestamp);
+        $timestamp = (int)$timestamp;
 
         switch ($this->config['datetime_format']) {
             case 'YYYY/mm/dd':
@@ -4484,7 +4484,7 @@ class DocumentParser
             $S = 0;
         }
         $timeStamp = mktime($H, $M, $S, $m, $d, $Y);
-        $timeStamp = intval($timeStamp);
+        $timeStamp = (int)$timeStamp;
         return $timeStamp;
     }
 
@@ -4529,18 +4529,18 @@ class DocumentParser
                         $_[$i] = 'tv.' . $v;
                     }
                 }
-                $fields = join(',', $_);
+                $fields = implode(',', $_);
             } else {
                 $fields = "tv.*";
             }
 
             if ($tvsort != '') {
-                $tvsort = 'tv.' . join(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
+                $tvsort = 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
             }
             if ($tvidnames == "*") {
                 $query = "tv.id<>0";
             } else {
-                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . join("','", $tvidnames) . "')";
+                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
             }
 
             $this->getUserDocGroups();
@@ -4762,7 +4762,7 @@ class DocumentParser
             $output = array();
             $vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
 
-            $docid = intval($docid) ? intval($docid) : $this->documentIdentifier;
+            $docid = (int)$docid > 0 ? (int)$docid : $this->documentIdentifier;
             // remove sort for speed
             $result = $this->getTemplateVars($vars, '*', $docid, $published, '', '');
 

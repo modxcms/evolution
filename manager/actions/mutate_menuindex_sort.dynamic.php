@@ -6,7 +6,7 @@ if (!$modx->hasPermission('edit_document') || !$modx->hasPermission('save_docume
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 $items = isset($_POST['list']) ? $_POST['list'] : '';
 $ressourcelist = '';

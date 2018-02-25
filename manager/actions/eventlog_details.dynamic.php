@@ -7,7 +7,7 @@ if(!$modx->hasPermission('view_eventlog')) {
 }
 
 // get id
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $ds = $modx->db->select('el.*, IFNULL(wu.username,mu.username) as username', $modx->getFullTableName("event_log") . " el 
 		LEFT JOIN " . $modx->getFullTableName("manager_users") . " mu ON mu.id=el.user AND el.usertype=0

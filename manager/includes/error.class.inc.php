@@ -2,13 +2,23 @@
 // this is the old error handler. Here for legacy, until i replace all the old errors.
 class errorHandler{
 
-var $errorcode;
-var $errors = array();
+    /**
+     * @var int
+     */
+    public $errorcode;
+    /**
+     * @var array
+     */
+    public $errors = array();
+    /**
+     * @var string
+     */
+    public $errormessage;
 
-	function __construct() {
-		
+    public function __construct() {
+
 		$_lang = $this->include_lang('errormsg');
-		
+
 		$this->errors = array(
 		0	=>	$_lang["No errors occured."],
 		1	=>	$_lang["An error occured!"],
@@ -26,7 +36,7 @@ var $errors = array();
 		13	=>	$_lang["No user selected as recipient of this message!"],
 		14	=>	$_lang["No group selected as recipient of this message!"],
 		15	=>	$_lang["The document was not found!"],
-	
+
 		100 =>	$_lang["Double action (GET & POST) posted!"],
 		600 =>	$_lang["Document cannot be it's own parent!"],
 		601 =>	$_lang["Document's ID not passed in request!"],
@@ -43,10 +53,10 @@ var $errors = array();
 	function include_lang($context='common') {
 		global $modx;
 		$_lang = array();
-		
+
 		$context = trim($context,'/');
 		if(strpos($context,'..')!==false) return;
-		
+
 		if($context === 'common')
 			$lang_path = MODX_MANAGER_PATH . 'includes/lang/';
 		else
@@ -57,19 +67,19 @@ var $errors = array();
 			include_once("{$lang_path}{$manager_language}.inc.php");
 		return $_lang;
 	}
-	
+
 	function setError($errorcode, $custommessage=""){
 		$this->errorcode=$errorcode;
 		$this->errormessage=$this->errors[$errorcode];
 		if($custommessage!="") {
 			$this->errormessage=$custommessage;
 		}
-	}	
-	
+	}
+
 	function getError() {
 		return $this->errorcode;
 	}
-	
+
 	function dumpError(){
 ?>
 	<html>

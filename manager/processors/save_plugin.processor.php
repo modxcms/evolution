@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_plugin')) {
     $modx->webAlertAndQuit($_lang['error_no_privileges']);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked'] == 'on' ? '1' : '0';
@@ -20,7 +20,7 @@ $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
@@ -206,7 +206,7 @@ function saveEventListeners($id, $sysevents, $mode)
         if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
     }
 
-    if(!$del) return;
+    if(empty($del)) return;
 
     foreach($del as $delid) {
         $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));

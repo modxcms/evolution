@@ -134,7 +134,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 					$_[] = vsprintf($tpl, $param);
 					$i++;
 				}
-				$field_html = join("\n", $_);
+				$field_html = implode("\n", $_);
 				break;
 			case "option": // handles radio buttons
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));

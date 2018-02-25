@@ -1,49 +1,49 @@
 <?php
 class EXPORT_SITE
 {
-	var $targetDir;
-	var $generate_mode;
-	var $total;
-	var $count;
-	var $ignore_ids;
-	var $exportstart;
-	var $repl_before;
-	var $repl_after;
-	var $output = array();
-	
-	function __construct()
+	public $targetDir;
+    public $generate_mode;
+    public $total;
+    public $count;
+    public $ignore_ids;
+    public $exportstart;
+    public $repl_before;
+    public $repl_after;
+    public $output = array();
+    public $dirCheckCount = 0;
+
+    public function __construct()
 	{
 		global $modx;
-		
+
 		if(!defined('MODX_BASE_PATH'))  return false;
 		$this->exportstart = $this->get_mtime();
 		$this->count = 0;
 		$this->setUrlMode();
-		$this->dirCheckCount = 0;
 		$this->generate_mode = 'crawl';
 		$this->targetDir = $modx->config['base_path'] . 'temp/export';
 		if(!isset($this->total)) $this->getTotal();
 	}
-	
-	function setExportDir($dir)
+
+    public function setExportDir($dir)
 	{
 		$dir = str_replace('\\','/',$dir);
 		$dir = rtrim($dir, '/');
 		$this->targetDir = $dir;
 	}
-	
-	function get_mtime()
+
+    public function get_mtime()
 	{
 		$mtime = microtime();
 		$mtime = explode(' ', $mtime);
 		$mtime = $mtime[1] + $mtime[0];
 		return $mtime;
 	}
-	
-	function setUrlMode()
+
+    public function setUrlMode()
 	{
 		global $modx;
-		
+
 		if($modx->config['friendly_urls']==0)
 		{
 			$modx->config['friendly_urls']  = 1;
@@ -52,12 +52,12 @@ class EXPORT_SITE
 		}
 		$modx->config['make_folders'] = '1';
 	}
-	
-	function getTotal($ignore_ids='', $noncache='0')
+
+    public function getTotal($ignore_ids='', $noncache='0')
 	{
 		global $modx;
 		$tbl_site_content = $modx->getFullTableName('site_content');
-		
+
 		$ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
 		if(count($ignore_ids)>0)
 		{
@@ -65,26 +65,27 @@ class EXPORT_SITE
 		} else {
 			$ignore_ids = '';
 		}
-		
+
 		$this->ignore_ids = $ignore_ids;
-		
+
 		$noncache = ($noncache == 1) ? '' : 'AND cacheable=1';
 		$where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
 		$rs  = $modx->db->select('count(id)',$tbl_site_content,$where);
 		$this->total = $modx->db->getValue($rs);
 		return $this->total;
 	}
-	
-	function removeDirectoryAll($directory='')
+
+    public function removeDirectoryAll($directory='')
 	{
+	    $rs = false;
 		if(empty($directory)) $directory = $this->targetDir;
 		$directory = rtrim($directory,'/');
 		// if the path is not valid or is not a directory ...
 		if(empty($directory)) return false;
-		if(strpos($directory,MODX_BASE_PATH)===false) return FALSE;
-		
-		if(!is_dir($directory))          return FALSE;
-		elseif(!is_readable($directory)) return FALSE;
+		if(strpos($directory,MODX_BASE_PATH)===false) return $rs;
+
+		if(!is_dir($directory))          return $rs;
+		elseif(!is_readable($directory)) return $rs;
 		else
 		{
 			$files = glob($directory . '/*');
@@ -92,17 +93,16 @@ class EXPORT_SITE
 			{
     			foreach($files as $path)
     			{
-    				if(is_dir($path)) $this->removeDirectoryAll($path);
-    				else              $rs = unlink($path);
+                    $rs = is_dir($path) ? $this->removeDirectoryAll($path) : unlink($path);
     			}
 			}
 		}
 		if($directory !== $this->targetDir) $rs = rmdir($directory);
-		
+
 		return $rs;
 	}
 
-	function makeFile($docid, $filepath)
+    public function makeFile($docid, $filepath)
 	{
 		global  $modx,$_lang;
 		$file_permission = octdec($modx->config['new_file_permissions']);
@@ -110,28 +110,28 @@ class EXPORT_SITE
 		{
 			$back_lang = $_lang;
 			$src = $modx->executeParser($docid);
-			
+
 			$_lang = $back_lang;
 		}
 		else $src = $this->curl_get_contents(MODX_SITE_URL . "index.php?id={$docid}");
-		
-		
+
+
 		if($src !== false)
 		{
 			if($this->repl_before!==$this->repl_after) $src = str_replace($this->repl_before,$this->repl_after,$src);
 			$result = file_put_contents($filepath,$src);
 			if($result!==false) @chmod($filepath, $file_permission);
-			
+
 			if($result !== false) return 'success';
 			else                  return 'failed_no_write';
 		}
 		else                      return 'failed_no_retrieve';
 	}
 
-	function getFileName($docid, $alias='', $prefix, $suffix)
+    public function getFileName($docid, $alias='', $prefix, $suffix)
 	{
 		global $modx;
-		
+
 		if($alias==='') $filename = $prefix.$docid.$suffix;
 		else
 		{
@@ -144,56 +144,56 @@ class EXPORT_SITE
 		return $filename;
 	}
 
-	function run($parent=0)
+    public function run($parent=0)
 	{
 		global $_lang;
 		global $modx;
-		
+
 		$tbl_site_content = $modx->getFullTableName('site_content');
-		
+
 		$ignore_ids = $this->ignore_ids;
 		$dirpath = $this->targetDir . '/';
-		
+
 		$prefix = $modx->config['friendly_url_prefix'];
 		$suffix = $modx->config['friendly_url_suffix'];
-		
+
 		$tpl = ' <span class="[+status+]">[+msg1+]</span> [+msg2+]</span>';
 		$ph = array();
-		
+
 		$ph['status'] = 'fail';
 		$ph['msg1']   = $_lang['export_site_failed'];
 		$ph['msg2']   = $_lang["export_site_failed_no_write"] . ' - ' . $dirpath;
 		$msg_failed_no_write    = $this->parsePlaceholder($tpl,$ph);
-		
+
 		$ph['msg2']   = $_lang["export_site_failed_no_retrieve"];
 		$msg_failed_no_retrieve = $this->parsePlaceholder($tpl,$ph);
-		
+
 		$ph['status'] = 'success';
 		$ph['msg1']   = $_lang['export_site_success'];
 		$ph['msg2']   = '';
 		$msg_success            = $this->parsePlaceholder($tpl,$ph);
-		
+
 		$ph['msg2']   = $_lang['export_site_success_skip_doc'];
 		$msg_success_skip_doc = $this->parsePlaceholder($tpl,$ph);
-		
+
 		$ph['msg2']   = $_lang['export_site_success_skip_dir'];
 		$msg_success_skip_dir = $this->parsePlaceholder($tpl,$ph);
-		
+
 		$fields = "id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, published";
 		$noncache = $_POST['includenoncache']==1 ? '' : 'AND cacheable=1';
 		$where = "parent = '{$parent}' AND deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
 		$rs = $modx->db->select($fields,$tbl_site_content,$where);
-		
+
 		$ph = array();
 		$ph['total']     = $this->total;
 		$folder_permission = octdec($modx->config['new_folder_permissions']);
 		while($row = $modx->db->getRow($rs))
 		{
 			$this->count++;
-			
+            $filename = '';
 			$row['count']     = $this->count;
 			$row['url'] = $modx->makeUrl($row['id']);
-			
+
 			if (!$row['wasNull'])
 			{ // needs writing a document
 				$docname = $this->getFileName($row['id'], $row['alias'], $prefix, $suffix);
@@ -235,13 +235,13 @@ class EXPORT_SITE
 					if (is_file($dir_path)) @unlink($dir_path);
 					mkdir($dir_path);
 					@chmod($dir_path, $folder_permission);
-					
+
 				}
-				
-				
+
+
 				if($modx->config['make_folders']==='1' && $row['published']==='1')
 				{
-					if(is_file($filename)) rename($filename,$dir_path . '/index.html');
+					if( ! empty($filename) && is_file($filename)) rename($filename,$dir_path . '/index.html');
 				}
 				$this->targetDir = $dir_path;
 				$this->run($row['id']);
@@ -249,8 +249,8 @@ class EXPORT_SITE
 		}
 		return implode("\n", $this->output);
 	}
-	
-    function curl_get_contents($url, $timeout = 30 )
+
+    public function curl_get_contents($url, $timeout = 30 )
     {
     	if(!function_exists('curl_init')) return @file_get_contents($url);
 
@@ -267,7 +267,7 @@ class EXPORT_SITE
         return $result;
     }
 
-    function parsePlaceholder($tpl,$ph=array())
+    public function parsePlaceholder($tpl,$ph=array())
     {
     	foreach($ph as $k=>$v)
     	{

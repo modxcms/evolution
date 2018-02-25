@@ -14,7 +14,7 @@ $tbl_member_groups = $modx->getFullTableName('member_groups');
 
 $input = $_POST;
 
-$id = intval($input['id']);
+$id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $fullname = $input['fullname'];
@@ -145,7 +145,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
-					$f['user_group'] = intval($user_groups[$i]);
+					$f['user_group'] = (int)$user_groups[$i];
 					$f['member'] = $internalKey;
 					$modx->db->insert($f, $tbl_member_groups);
 				}
@@ -292,7 +292,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['user_group'] = intval($user_groups[$i]);
+					$field['user_group'] = (int)$user_groups[$i];
 					$field['member'] = $id;
 					$modx->db->insert($field, $tbl_member_groups);
 				}

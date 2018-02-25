@@ -40,11 +40,7 @@ class Categories
             )
         );
 
-        if( !empty( $categories ) )
-        {
-            return $categories;
-        }
-        return false;
+        return empty( $categories ) ? array() : $categories;
     }
 
     public function getCategory( $search, $where = 'category' )

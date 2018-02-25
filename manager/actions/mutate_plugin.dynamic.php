@@ -18,7 +18,7 @@ switch ($modx->manager->action) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_site_plugins = $modx->getFullTableName('site_plugins');
 $tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
     $content['properties'] = str_replace("&", "&amp;", $content['properties']);
 } else {
     $_SESSION['itemname'] = $_lang["new_plugin"];
-    $content['category'] = intval($_REQUEST['catid']);
+    $content['category'] = (int)$_REQUEST['catid'];
 }
 
 if ($modx->manager->hasFormValues()) {

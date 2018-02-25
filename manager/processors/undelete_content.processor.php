@@ -6,7 +6,7 @@ if(!$modx->hasPermission('delete_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id'])? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id'])? (int)$_REQUEST['id'] : 0;
 if($id==0) {
 	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }

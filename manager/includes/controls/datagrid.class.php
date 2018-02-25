@@ -1,7 +1,7 @@
 <?php
 #
 # DataGrid Class
-# Created By Raymond Irving 15-Feb,2004  
+# Created By Raymond Irving 15-Feb,2004
 # Based on CLASP 2.0 (www.claspdev.com)
 # -----------------------------------------
 # Licensed under the LGPL
@@ -12,67 +12,87 @@ $__DataGridCnt = 0;
 
 class DataGrid {
 
-	var $ds; // datasource
-	var $id;
-	var $pageSize;            // pager settings
-	var $pageNumber;
-	var $pager;
-	var $pagerLocation;        // top-right, top-left, bottom-left, bottom-right, both-left, both-right
+	public $ds; // datasource
+    public $id;
+    public $pageSize;            // pager settings
+    public $pageNumber;
+    public $pager;
+    public $pagerLocation;        // top-right, top-left, bottom-left, bottom-right, both-left, both-right
 
-	var $cssStyle;
-	var $cssClass;
+    public $cssStyle;
+    public $cssClass;
 
-	var $columnHeaderStyle;
-	var $columnHeaderClass;
-	var $itemStyle;
-	var $itemClass;
-	var $altItemStyle;
-	var $altItemClass;
+    public $columnHeaderStyle;
+    public $columnHeaderClass;
+    public $itemStyle;
+    public $itemClass;
+    public $altItemStyle;
+    public $altItemClass;
 
-	var $fields;
-	var $columns;
-	var $colWidths;
-	var $colAligns;
-	var $colWraps;
-	var $colColors;
-	var $colTypes;            // coltype1, coltype2, etc or coltype1:format1, e.g. date:%Y %m
+    public $fields;
+    public $columns;
+    public $colWidths;
+    public $colAligns;
+    public $colWraps;
+    public $colColors;
+    public $colTypes;            // coltype1, coltype2, etc or coltype1:format1, e.g. date:%Y %m
 	// data type: integer,float,currency,date
 
-	var $header;
-	var $footer;
-	var $cellPadding;
-	var $cellSpacing;
+    public $header;
+    public $footer;
+    public $cellPadding;
+    public $cellSpacing;
 
-	var $rowAlign;            // vertical alignment: top, middle, bottom
-	var $rowIdField;
+    public $rowAlign;            // vertical alignment: top, middle, bottom
+    public $rowIdField;
 
-	var $pagerStyle;
-	var $pagerClass;
-	var $pageClass;
-	var $selPageClass;
-	var $noRecordMsg = "No records found.";
+    public $pagerStyle;
+    public $pagerClass;
+    public $pageClass;
+    public $selPageClass;
+    public $noRecordMsg = "No records found.";
 
-	function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
+    public $_itemStyle;
+    public $_itemClass;
+    public $_altItemClass;
+    public $_altItemStyle;
+    public $_isDataset;
+    public $_colcount;
+    public $_colnames;
+    public $_colwidths;
+    public $_colaligns;
+    public $_colcolors;
+    public $_coltypes;
+    public $_colwraps;
+    public $_alt;
+    public $_total;
+    public $_fieldnames;
+    /**
+     * @see datagrid modifier in manager/includes/extenders/modifiers.class.inc.php
+     */
+    public $cdelim;
+
+    public function __construct($id, $ds, $pageSize = 20, $pageNumber = -1) {
 		global $__DataGridCnt;
 
 		// set id
 		$__DataGridCnt++;
-		$this->id = $this->id ? $id : "dg" . $__DataGridCnt;
+		$this->id = $this->id ? empty($id) : "dg" . $__DataGridCnt;
 
 		// set datasource
 		$this->ds = $ds;
 
 		// set pager
 		$this->pageSize = $pageSize;
-		$this->pageNumber = $pageNumber; // by setting pager to -1 will cause pager to load it's last page number 
+		$this->pageNumber = $pageNumber; // by setting pager to -1 will cause pager to load it's last page number
 		$this->pagerLocation = 'top-right';
 	}
 
-	function setDataSource($ds) {
+    public function setDataSource($ds) {
 		$this->ds = $ds;
 	}
 
-	function render() {
+    public function render() {
 		global $modx;
 		$columnHeaderStyle = ($this->columnHeaderStyle) ? "style='" . $this->columnHeaderStyle . "'" : '';
 		$columnHeaderClass = ($this->columnHeaderClass) ? "class='" . $this->columnHeaderClass . "'" : "";
@@ -187,7 +207,7 @@ class DataGrid {
 
 	// format column values
 
-	function RenderRowFnc($n, $row) {
+    public function RenderRowFnc($n, $row) {
 		if($this->_alt == 0) {
 			$Style = $this->_itemStyle;
 			$Class = $this->_itemClass;
@@ -217,7 +237,7 @@ class DataGrid {
 		return $o;
 	}
 
-	function formatColumnValue($row, $value, $type, &$align) {
+    public function formatColumnValue($row, $value, $type, &$align) {
 		if(strpos($type, ":") !== false) {
 			list($type, $type_format) = explode(":", $type, 2);
 		}

@@ -2,15 +2,15 @@
 $this->old = new OldFunctions();
 class OldFunctions {
 
-    function dbConnect()                 {global $modx;       $modx->db->connect();$modx->rs = $modx->db->conn;}
-    function dbQuery($sql)               {global $modx;return $modx->db->query($sql);}
-    function recordCount($rs)            {global $modx;return $modx->db->getRecordCount($rs);}
-    function fetchRow($rs,$mode='assoc') {global $modx;return $modx->db->getRow($rs, $mode);}
-    function affectedRows($rs)           {global $modx;return $modx->db->getAffectedRows($rs);}
-    function insertId($rs)               {global $modx;return $modx->db->getInsertId($rs);}
-    function dbClose()                   {global $modx;       $modx->db->disconnect();}
+    public function dbConnect()                 {global $modx;       $modx->db->connect();$modx->rs = $modx->db->conn;}
+    public function dbQuery($sql)               {global $modx;return $modx->db->query($sql);}
+    public function recordCount($rs)            {global $modx;return $modx->db->getRecordCount($rs);}
+    public function fetchRow($rs,$mode='assoc') {global $modx;return $modx->db->getRow($rs, $mode);}
+    public function affectedRows($rs)           {global $modx;return $modx->db->getAffectedRows($rs);}
+    public function insertId($rs)               {global $modx;return $modx->db->getInsertId($rs);}
+    public function dbClose()                   {global $modx;       $modx->db->disconnect();}
 
-    function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
+    public function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
         // first find out whether the value passed is an array
         if (!is_array($array)) {
             return "<ul><li>Bad list</li></ul>";
@@ -37,7 +37,7 @@ class OldFunctions {
     }
 
 
-    function getUserData() {
+    public function getUserData() {
         $client['ip'] = $_SERVER['REMOTE_ADDR'];
         $client['ua'] = $_SERVER['HTTP_USER_AGENT'];
     	return $client;
@@ -45,7 +45,7 @@ class OldFunctions {
 
     # Returns true, install or interact when inside manager
     // deprecated
-    function insideManager() {
+    public function insideManager() {
         $m= false;
         if( defined('IN_MANAGER_MODE') && IN_MANAGER_MODE === true) {
             $m= true;
@@ -59,21 +59,21 @@ class OldFunctions {
     }
 
     // deprecated
-    function putChunk($chunkName) { // alias name >.<
+    public function putChunk($chunkName) { // alias name >.<
     	global $modx;
         return $modx->getChunk($chunkName);
     }
 
-    function getDocGroups() {
+    public function getDocGroups() {
     	global $modx;
         return $modx->getUserDocGroups();
     } // deprecated
 
-    function changePassword($o, $n) {
+    public function changePassword($o, $n) {
         return changeWebUserPassword($o, $n);
     } // deprecated
 
-    function userLoggedIn() {
+    public function userLoggedIn() {
     	global $modx;
         $userdetails= array ();
         if ($modx->isFrontend() && isset ($_SESSION['webValidated'])) {
@@ -96,7 +96,7 @@ class OldFunctions {
             }
     }
 
-    function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
+    public function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
         //  function to retrieve form results into an associative array
     	global $modx;
         $results= array ();
@@ -129,7 +129,7 @@ class OldFunctions {
      * @param string $msg Message to show
      * @param string $url URL to redirect to
      */
-    function webAlert($msg, $url= "") {
+    public function webAlert($msg, $url= "") {
     	global $modx;
         $msg= addslashes($modx->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {

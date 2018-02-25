@@ -176,10 +176,10 @@ if (isset($_REQUEST['log_submit'])) {
     // get the selections the user made.
     $sqladd = array();
     if ($_REQUEST['searchuser'] != 0) {
-        $sqladd[] = "internalKey='" . intval($_REQUEST['searchuser']) . "'";
+        $sqladd[] = "internalKey='" . (int)$_REQUEST['searchuser'] . "'";
     }
     if ($_REQUEST['action'] != 0) {
-        $sqladd[] = "action=" . intval($_REQUEST['action']);
+        $sqladd[] = "action=" . (int)$_REQUEST['action'];
     }
     if ($_REQUEST['itemid'] != 0 || $_REQUEST['itemid'] == "-") {
         $sqladd[] = "itemid='" . $_REQUEST['itemid'] . "'";

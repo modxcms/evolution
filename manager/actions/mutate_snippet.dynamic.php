@@ -18,7 +18,7 @@ switch ($modx->manager->action) {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // Get table Names (alphabetical)
 $tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
@@ -50,7 +50,7 @@ if (isset($_GET['id'])) {
     $content['name'] = $_REQUEST['itemname'];
 } else {
     $_SESSION['itemname'] = $_lang["new_snippet"];
-    $content['category'] = intval($_REQUEST['catid']);
+    $content['category'] = (int)$_REQUEST['catid'];
 }
 
 if ($modx->manager->hasFormValues()) {

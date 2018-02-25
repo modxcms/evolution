@@ -31,7 +31,8 @@ require_once(MODX_MANAGER_PATH.'media/rss/rss_fetch.inc');
 // Convert relative path into absolute url
 function rel2abs( $rel, $base ) {
 	// parse base URL  and convert to local variables: $scheme, $host,  $path
-	extract( parse_url( $base ) );
+    $tmp = parse_url( $base );
+    extract( $tmp );
 	if ( strpos( $rel,"//" ) === 0 ) {
 		return $scheme . ':' . $rel;
 	}

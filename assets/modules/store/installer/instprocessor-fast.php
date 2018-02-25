@@ -49,7 +49,7 @@ $create = false;
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = 1;
 
 // set session name variable

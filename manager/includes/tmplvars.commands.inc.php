@@ -16,7 +16,7 @@ $BINDINGS = array (
 
 function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
-    $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
+    $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
         return $value;
@@ -78,8 +78,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
                     $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
 
                     // if an inherited value is found and if there is content following the @INHERIT binding
-                    // remove @INHERIT and output that following content. This content could contain other 
-                    // @ bindings, that are processed in the next step                    
+                    // remove @INHERIT and output that following content. This content could contain other
+                    // @ bindings, that are processed in the next step
                     if ((string) $tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
                         $output = trim(str_replace('@INHERIT', '', (string) $tv['value']));
                         break 2;

@@ -2,33 +2,34 @@
 
 class synccache
 {
-    var $cachePath;
-    var $showReport;
-    var $deletedfiles = array();
-    var $aliases = array();
-    var $parents = array();
-    var $aliasVisible = array();
-    var $request_time;
+    public $cachePath;
+    public $showReport;
+    public $deletedfiles = array();
+    public $aliases = array();
+    public $parents = array();
+    public $aliasVisible = array();
+    public $request_time;
+    public $cacheRefreshTime;
 
 
-    function __construct()
+    public function __construct()
     {
         global $modx;
 
         $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
     }
 
-    function setCachepath($path)
+    public function setCachepath($path)
     {
         $this->cachePath = $path;
     }
 
-    function setReport($bool)
+    public function setReport($bool)
     {
         $this->showReport = $bool;
     }
 
-    function escapeSingleQuotes($s)
+    public function escapeSingleQuotes($s)
     {
         if ($s == '') {
             return $s;
@@ -38,14 +39,14 @@ class synccache
         return str_replace($q1, $q2, $s);
     }
 
-    function escapeDoubleQuotes($s)
+    public function escapeDoubleQuotes($s)
     {
         $q1 = array("\\", "\"", "\r", "\n", "\$");
         $q2 = array("\\\\", "\\\"", "\\r", "\\n", "\\$");
         return str_replace($q1, $q2, $s);
     }
 
-    function getParents($id, $path = '')
+    public function getParents($id, $path = '')
     { // modx:returns child's parent
         global $modx;
         if (empty($this->aliases)) {
@@ -71,7 +72,7 @@ class synccache
         return $path;
     }
 
-    function emptyCache($modx = null)
+    public function emptyCache($modx = null)
     {
         if (is_a($modx, 'DocumentParser') === false || get_class($modx) !== 'DocumentParser') {
             $modx = $GLOBALS['modx'];
@@ -366,7 +367,7 @@ class synccache
     }
 
     // ref : http://php.net/manual/en/tokenizer.examples.php
-    function php_strip_whitespace($source)
+    public function php_strip_whitespace($source)
     {
 
         $source = trim($source);

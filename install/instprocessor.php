@@ -28,7 +28,7 @@ $create = false;
 
 echo "<p>{$_lang['setup_database']}</p>\n";
 
-$installMode= intval($_POST['installmode']);
+$installMode= (int)$_POST['installmode'];
 $installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 //if ($installMode == 1) {

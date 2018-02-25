@@ -9,7 +9,7 @@
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 require MODX_MANAGER_PATH . 'includes/controls/phpmailer/Exception.php';
 require MODX_MANAGER_PATH . 'includes/controls/phpmailer/PHPMailer.php';
@@ -22,6 +22,8 @@ class MODxMailer extends PHPMailer
 {
     protected $mb_language = 'UNI';
     protected $encode_header_method = '';
+    public $PluginDir;
+
     /**
      * @var DocumentParser $modx
      */
@@ -128,7 +130,7 @@ class MODxMailer extends PHPMailer
      * Create a message and send it.
      * Uses the sending method specified by $Mailer.
      *
-     * @throws Exception
+     * @throws PHPMailerException
      *
      * @return bool false on error - See the ErrorInfo property for details of the error
      */

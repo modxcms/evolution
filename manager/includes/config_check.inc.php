@@ -179,11 +179,11 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_sysfiles_mod']:
             $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
-			$warnings[$i][2] = '<ul><li>'. join('</li><li>', $sysfiles_check) .'</li></ul>';
+			$warnings[$i][2] = '<ul><li>'. implode('</li><li>', $sysfiles_check) .'</li></ul>';
 			if($modx->hasPermission('settings')) {
 				$warnings[$i][2] .= '<ul class="actionButtons" style="float:right"><li><a href="index.php?a=2&b=resetSysfilesChecksum" onclick="return confirm(\'' . $_lang["reset_sysfiles_checksum_alert"] . '\')">' . $_lang["reset_sysfiles_checksum_button"] . '</a></li></ul>';
 			}
-            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".join(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,3,$warnings[$i][1]." ".implode(', ',$sysfiles_check),$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];

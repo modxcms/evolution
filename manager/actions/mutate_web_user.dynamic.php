@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
 // check to see the snippet editor isn't locked
