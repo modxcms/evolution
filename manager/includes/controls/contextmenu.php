@@ -23,7 +23,7 @@ class ContextMenu {
 		$ContextMenuCnt++;
 		$this->html = "";
 		$this->visible = $visible ? $visible : false;
-		$this->width = is_numeric($width) ? intval($width) : 120;
+		$this->width = is_numeric($width) ? (int)$width : 120;
 		$this->id = $id ? $id : "cntxMnu" . $ContextMenuCnt;    // set id
 	}
 

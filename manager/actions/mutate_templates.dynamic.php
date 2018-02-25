@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
@@ -45,7 +45,7 @@ if(!empty($id)) {
 	}
 } else {
 	$_SESSION['itemname'] = $_lang["new_template"];
-	$content['category'] = intval($_REQUEST['catid']);
+	$content['category'] = (int)$_REQUEST['catid'];
 }
 
 if($modx->manager->hasFormValues()) {

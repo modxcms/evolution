@@ -16,7 +16,7 @@ switch($modx->manager->action) {
 	default:
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // Get table names (alphabetical)
 $tbl_membergroup_names = $modx->getFullTableName('membergroup_names');
 $tbl_site_content = $modx->getFullTableName('site_content');

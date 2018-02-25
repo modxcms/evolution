@@ -11,7 +11,7 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
     $o = '';
 
     // process any TV commands in value
-	$docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
+	$docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
 	$value = ProcessTVCommand($value, $name, $docid);
 
 	$params = array();

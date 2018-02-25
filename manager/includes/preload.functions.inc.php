@@ -10,9 +10,9 @@ function genEvoSessionName() {
 }
 
 function startCMSSession(){
-    
+
     global $site_sessionname, $https_port, $session_cookie_path, $session_cookie_domain;
-    
+
     session_name($site_sessionname);
     removeInvalidCmsSessionIds($site_sessionname);
     $cookieExpiration= 0;
@@ -24,7 +24,7 @@ function startCMSSession(){
 
     $key = "modx.{$context}.session.cookie.lifetime";
     if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
-        $cookieLifetime= intval($_SESSION[$key]);
+        $cookieLifetime= (int)$_SESSION[$key];
         if($cookieLifetime) $cookieExpiration = $_SERVER['REQUEST_TIME']+$cookieLifetime;
         setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
     }

@@ -7,7 +7,7 @@ if (!$modx->hasPermission('save_document')) {
 }
 
 if (isset($_REQUEST['id'])) {
-    $id = intval($_REQUEST['id']);
+    $id = (int)$_REQUEST['id'];
 } else {
     $modx->webAlertAndQuit($_lang["error_no_id"]);
 }

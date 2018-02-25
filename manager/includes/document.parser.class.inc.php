@@ -3171,8 +3171,8 @@ class DocumentParser
      */
     public function elementIsLocked($type, $id, $includeThisUser = false)
     {
-        $id = intval($id);
-        $type = intval($type);
+        $id = (int)$id;
+        $type = (int)$type;
         if (!$type || !$id) {
             return null;
         }
@@ -3222,7 +3222,7 @@ class DocumentParser
             return $lockedElements;
         }
 
-        $type = intval($type);
+        $type = (int)$type;
         if (isset($lockedElements[$type])) {
             return $lockedElements[$type];
         } else {
@@ -3262,7 +3262,7 @@ class DocumentParser
     public function cleanupExpiredLocks()
     {
         // Clean-up active_user_sessions first
-        $timeout = intval($this->config['session_timeout']) < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = (int)$this->config['session_timeout'] < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
@@ -3359,8 +3359,8 @@ class DocumentParser
     public function lockElement($type, $id)
     {
         $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        $type = intval($type);
-        $id = intval($id);
+        $type = (int)$type;
+        $id = (int)$id;
         if (!$type || !$id || !$userId) {
             return false;
         }
@@ -3381,8 +3381,8 @@ class DocumentParser
     public function unlockElement($type, $id, $includeAllUsers = false)
     {
         $userId = $this->isBackend() && $_SESSION['mgrInternalKey'] ? $_SESSION['mgrInternalKey'] : 0;
-        $type = intval($type);
-        $id = intval($id);
+        $type = (int)$type;
+        $id = (int)$id;
         if (!$type || !$id) {
             return false;
         }
@@ -3449,8 +3449,8 @@ class DocumentParser
         }
 
         $usertype = $this->isFrontend() ? 1 : 0;
-        $evtid = intval($evtid);
-        $type = intval($type);
+        $evtid = (int)$evtid;
+        $type = (int)$type;
 
         // Types: 1 = information, 2 = warning, 3 = error
         if ($type < 1) {
@@ -4410,7 +4410,7 @@ class DocumentParser
         if ($mode !== 'formatOnly' && empty($timestamp)) {
             return '-';
         }
-        $timestamp = intval($timestamp);
+        $timestamp = (int)$timestamp;
 
         switch ($this->config['datetime_format']) {
             case 'YYYY/mm/dd':
@@ -4484,7 +4484,7 @@ class DocumentParser
             $S = 0;
         }
         $timeStamp = mktime($H, $M, $S, $m, $d, $Y);
-        $timeStamp = intval($timeStamp);
+        $timeStamp = (int)$timeStamp;
         return $timeStamp;
     }
 
@@ -4762,7 +4762,7 @@ class DocumentParser
             $output = array();
             $vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
 
-            $docid = intval($docid) ? intval($docid) : $this->documentIdentifier;
+            $docid = (int)$docid > 0 ? (int)$docid : $this->documentIdentifier;
             // remove sort for speed
             $result = $this->getTemplateVars($vars, '*', $docid, $published, '', '');
 

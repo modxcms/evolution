@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_template')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $template = $modx->db->escape($_POST['post']);
 $templatename = $modx->db->escape(trim($_POST['templatename']));
 $description = $modx->db->escape($_POST['description']);
@@ -17,7 +17,7 @@ $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {

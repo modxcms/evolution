@@ -50,7 +50,7 @@ switch ($operation) {
 	break;
 	case "delete_user_group" :
 		$updategroupaccess = true;
-		$usergroup = intval($_REQUEST['usergroup']);
+		$usergroup = (int)$_REQUEST['usergroup'];
 		if(empty($usergroup)) {
 			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
@@ -62,7 +62,7 @@ switch ($operation) {
 		}
 	break;
 	case "delete_document_group" :
-		$group = intval($_REQUEST['documentgroup']);
+		$group = (int)$_REQUEST['documentgroup'];
 		if(empty($group)) {
 			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
@@ -78,7 +78,7 @@ switch ($operation) {
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
-		$groupid = intval($_REQUEST['groupid']);
+		$groupid = (int)$_REQUEST['groupid'];
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
@@ -90,7 +90,7 @@ switch ($operation) {
 		if(empty($newgroupname)) {
 			$modx->webAlertAndQuit("No group name specified.");
 		}
-		$groupid = intval($_REQUEST['groupid']);
+		$groupid = (int)$_REQUEST['groupid'];
 		if(empty($groupid)) {
 			$modx->webAlertAndQuit("No group id specified for rename.");
 		}
@@ -99,8 +99,8 @@ switch ($operation) {
 	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
-		$usergroup = intval($_REQUEST['usergroup']);
-		$docgroup = intval($_REQUEST['docgroup']);
+		$usergroup = (int)$_REQUEST['usergroup'];
+		$docgroup = (int)$_REQUEST['docgroup'];
 		$rs = $modx->db->select('COUNT(*)', $tbl_membergroup_access, "membergroup='{$usergroup}' AND documentgroup='{$docgroup}'");
 		$limit = $modx->db->getValue($rs);
 		if($limit<=0) {
@@ -111,7 +111,7 @@ switch ($operation) {
 	break;
 	case "remove_document_group_from_user_group" :
 		$updategroupaccess = true;
-		$coupling = intval($_REQUEST['coupling']);
+		$coupling = (int)$_REQUEST['coupling'];
 		$modx->db->delete($tbl_membergroup_access, "id='{$coupling}'");
 	break;
 	default :

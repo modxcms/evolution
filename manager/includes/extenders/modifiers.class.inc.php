@@ -263,56 +263,56 @@ class MODIFIERS {
             case 'eq':
             case 'is':
             case 'equals':
-                $this->condition[] = intval($value == $opt); break;
+                $this->condition[] = (int)($value == $opt); break;
             case 'neq':
             case 'ne':
             case 'notequals':
             case 'isnot':
             case 'isnt':
             case 'not':
-                $this->condition[] = intval($value != $opt);break;
+                $this->condition[] = (int)($value != $opt);break;
             case '%':
-                $this->condition[] = intval($value%$opt==0);break;
+                $this->condition[] = (int)($value%$opt==0);break;
             case 'isempty':
-                $this->condition[] = intval(empty($value)); break;
+                $this->condition[] = (int)(empty($value)); break;
             case 'isntempty':
             case 'isnotempty':
-                $this->condition[] = intval(!empty($value)); break;
+                $this->condition[] = (int)(!empty($value)); break;
             case '>=':
             case 'gte':
             case 'eg':
             case 'isgte':
-                $this->condition[] = intval($value >= $opt);break;
+                $this->condition[] = (int)($value >= $opt);break;
             case '<=':
             case 'lte':
             case 'el':
             case 'islte':
-                $this->condition[] = intval($value <= $opt);break;
+                $this->condition[] = (int)($value <= $opt);break;
             case '>':
             case 'gt':
             case 'greaterthan':
             case 'isgreaterthan':
             case 'isgt':
-                $this->condition[] = intval($value > $opt);break;
+                $this->condition[] = (int)($value > $opt);break;
             case '<':
             case 'lt':
             case 'lowerthan':
             case 'islowerthan':
             case 'islt':
-                $this->condition[] = intval($value < $opt);break;
+                $this->condition[] = (int)($value < $opt);break;
             case 'find':
-                $this->condition[] = intval(strpos($value, $opt)!==false);break;
+                $this->condition[] = (int)(strpos($value, $opt)!==false);break;
             case 'inarray':
             case 'in_array':
             case 'in':
                 $opt = explode(',', $opt);
-                $this->condition[] = intval(in_array($value, $opt)!==false);break;
+                $this->condition[] = (int)(in_array($value, $opt)!==false);break;
             case 'wildcard_match':
             case 'wcard_match':
             case 'wildcard':
             case 'wcard':
             case 'fnmatch':
-                $this->condition[] = intval(fnmatch($opt, $value)!==false);break;
+                $this->condition[] = (int)(fnmatch($opt, $value)!==false);break;
             case 'is_file':
             case 'is_dir':
             case 'file_exists':
@@ -322,18 +322,18 @@ class MODIFIERS {
                 else      $path = $opt;
                 if(strpos($path,MODX_MANAGER_PATH)!==false) exit('Can not read core path');
                 if(strpos($path,$modx->config['base_path'])===false) $path = ltrim($path,'/');
-                $this->condition[] = intval($cmd($path)!==false);break;
+                $this->condition[] = (int)($cmd($path)!==false);break;
             case 'is_image':
                 if(!$opt) $path = $value;
                 else      $path = $opt;
                 if(!is_file($path)) {$this->condition[]='0';break;}
                 $_ = getimagesize($path);
-                $this->condition[] = intval($_[0]);break;
+                $this->condition[] = (int)($_[0]);break;
             case 'regex':
             case 'preg':
             case 'preg_match':
-                $this->condition[] = intval(preg_match($opt,$value));break;
             case 'isinrole':
+            $this->condition[] = (int)(preg_match($opt,$value));break;
             case 'ir':
             case 'memberof':
             case 'mo':
@@ -347,17 +347,17 @@ class MODIFIERS {
             case 'show':
             case 'this':
                 $conditional = join(' ',$this->condition);
-                $isvalid = intval(eval("return ({$conditional});"));
+                $isvalid = (int)(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
                 return NULL;
             case 'then':
                 $conditional = join(' ',$this->condition);
-                $isvalid = intval(eval("return ({$conditional});"));
+                $isvalid = (int)eval("return ({$conditional});");
                 if ($isvalid)  return $opt;
                 return null;
             case 'else':
                 $conditional = join(' ',$this->condition);
-                $isvalid = intval(eval("return ({$conditional});"));
+                $isvalid = (int)eval("return ({$conditional});");
                 if (!$isvalid) return $opt;
                 break;
             case 'select':
@@ -489,7 +489,7 @@ class MODIFIERS {
                 return $this->strpos($value,$opt);
             case 'wordwrap':
                 // default: 70
-                  $wrapat = intval($opt) ? intval($opt) : 70;
+                  $wrapat = (int)$opt > 0 ? (int)$opt : 70;
                 if (version_compare(PHP_VERSION, '5.3.0') >= 0) return $this->includeMdfFile('wordwrap');
                 else return preg_replace("@(\b\w+\b)@e","wordwrap('\\1',\$wrapat,' ',1)",$value);
             case 'wrap_text':
@@ -639,7 +639,7 @@ class MODIFIERS {
                 return strtotime($value);
             #####  mathematical function
             case 'toint':
-                return intval($value);
+                return (int)$value;
             case 'tofloat':
                 return floatval($value);
             case 'round':

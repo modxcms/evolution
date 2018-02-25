@@ -18,7 +18,7 @@ foreach($input as $k => $v) {
 	$input[$k] = $v;
 }
 
-$id = intval($input['id']);
+$id = (int)$input['id'];
 $oldusername = $input['oldusername'];
 $newusername = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
 $esc_newusername = $modx->db->escape($newusername);
@@ -118,7 +118,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$f = array();
-					$f['webgroup'] = intval($user_groups[$i]);
+					$f['webgroup'] = (int)$user_groups[$i];
 					$f['webuser'] = $internalKey;
 					$modx->db->insert($f, $tbl_web_groups);
 				}
@@ -253,7 +253,7 @@ switch($input['mode']) {
 			if(!empty($user_groups)) {
 				for($i = 0; $i < count($user_groups); $i++) {
 					$field = array();
-					$field['webgroup'] = intval($user_groups[$i]);
+					$field['webgroup'] = (int)$user_groups[$i];
 					$field['webuser'] = $id;
 					$modx->db->insert($field, $tbl_web_groups);
 				}

@@ -229,9 +229,9 @@ $_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
 $_SESSION['mgrToken'] = md5($currentsessionid);
 
 if($rememberme == '1') {
-	$_SESSION['modx.mgr.session.cookie.lifetime'] = intval($modx->config['session.cookie.lifetime']);
+	$_SESSION['modx.mgr.session.cookie.lifetime'] = (int)$modx->config['session.cookie.lifetime'];
 
-	// Set a cookie separate from the session cookie with the username in it. 
+	// Set a cookie separate from the session cookie with the username in it.
 	// Are we using secure connection? If so, make sure the cookie is secure
 	global $https_port;
 
@@ -274,7 +274,7 @@ $modx->invokeEvent('OnManagerLogin', array(
 
 // check if we should redirect user to a web page
 $rs = $modx->db->select('setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_name='manager_login_startup'");
-$id = intval($modx->db->getValue($rs));
+$id = (int)$modx->db->getValue($rs);
 if($id > 0) {
 	$header = 'Location: ' . $modx->makeUrl($id, '', '', 'full');
 	if($_POST['ajax'] == 1) {

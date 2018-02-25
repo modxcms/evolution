@@ -13,8 +13,8 @@ if(!isset($_GET['id'])) {
 	header($header);
 } else {
 	// Remove single locks via AJAX / window.onbeforeunload
-	$type = intval($_GET['type']);
-	$id = intval($_GET['id']);
+	$type = (int)$_GET['type'];
+	$id = (int)$_GET['id'];
 	$includeAllUsers = $modx->hasPermission('remove_locks'); // Enables usage of "unlock"-ajax-button
 	if($type && $id) {
 		$modx->unlockElement($type, $id, $includeAllUsers);

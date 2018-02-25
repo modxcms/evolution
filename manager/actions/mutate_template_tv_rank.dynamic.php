@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_template')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 
 $tbl_site_templates = $modx->getFullTableName('site_templates');

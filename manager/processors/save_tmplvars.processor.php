@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_template')) {
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = intval($_POST['id']);
+$id = (int)$_POST['id'];
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $caption = $modx->db->escape($_POST['caption']);
@@ -17,13 +17,13 @@ $rank = isset ($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
 $display = $modx->db->escape($_POST['display']);
 $params = $modx->db->escape($_POST['params']);
 $locked = $_POST['locked'] == 'on' ? 1 : 0;
-$origin = isset($_REQUEST['or']) ? intval($_REQUEST['or']) : 76;
-$originId = isset($_REQUEST['oid']) ? intval($_REQUEST['oid']) : null;
+$origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
+$originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
 $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = intval($_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {

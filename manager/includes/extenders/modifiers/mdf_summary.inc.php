@@ -4,7 +4,7 @@ elseif(preg_match('/^[1-9][0-9]*$/',$opt)) {$limit=$opt;$delim='';}
 else {$limit=124;$delim='';}
 
 if($delim==='') $delim = $modx->config['manager_language']==='japanese-utf8' ? '。' : '.';
-$limit = intval($limit);
+$limit = (int)$limit;
 
 $content = $modx->filter->parseDocumentSource($value);
 

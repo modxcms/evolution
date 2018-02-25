@@ -41,7 +41,7 @@ if (isset($_REQUEST['searchid'])) {
                         <?php
                         $rs = $modx->db->select('*', $modx->getFullTableName('site_templates'));
                         $option[] = '<option value="">No selected</option>';
-                        $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? intval($_REQUEST['templateid']) : '';
+                        $templateid = (isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '') ? (int)$_REQUEST['templateid'] : '';
                         $selected = $templateid === 0 ? ' selected="selected"' : '';
                         $option[] = '<option value="0"' . $selected . '>(blank)</option>';
                         while ($row = $modx->db->getRow($rs)) {
@@ -86,7 +86,7 @@ if (isset($_REQUEST['submitok'])) {
     $searchfields = htmlentities(trim($_POST['searchfields']), ENT_QUOTES, $modx_manager_charset);
     $searchlongtitle = $modx->db->escape(trim($_REQUEST['searchfields']));
     $search_alias = $modx->db->escape(trim($_REQUEST['searchfields']));
-    $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? intval($_REQUEST['templateid']) : '';
+    $templateid = isset($_REQUEST['templateid']) && $_REQUEST['templateid'] !== '' ? (int)$_REQUEST['templateid'] : '';
     $searchcontent = $modx->db->escape($_REQUEST['content']);
 
     $fields = 'DISTINCT sc.id, contenttype, pagetitle, longtitle, description, introtext, menutitle, deleted, published, isfolder, type';

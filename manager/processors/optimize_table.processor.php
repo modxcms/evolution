@@ -32,6 +32,6 @@ if (isset($_REQUEST['t'])) {
 	$modx->webAlertAndQuit($_lang["error_no_optimise_tablename"]);
 }
 
-$mode = intval($_REQUEST['mode']);
+$mode = (int)$_REQUEST['mode'];
 $header="Location: index.php?a={$mode}&s=4";
 header($header);

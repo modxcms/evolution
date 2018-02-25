@@ -6,7 +6,7 @@ if (!$modx->hasPermission('save_plugin') && !$modx->hasPermission('save_snippet'
     $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_GET['catId'])? intval($_GET['catId']) : 0;
+$id = isset($_GET['catId'])? (int)$_GET['catId'] : 0;
 if ($id==0) {
     $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
