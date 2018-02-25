@@ -20,7 +20,7 @@ $currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = (int)$_POST['categoryid']);
+    $categoryid = (int)$_POST['categoryid'];
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
