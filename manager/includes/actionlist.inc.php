@@ -134,6 +134,11 @@ $GLOBALS['action_list'] = array(
 	'999'	=> 'Viewing test page',
 );
 
+/**
+ * @param string $actionId
+ * @param string $itemid
+ * @return string
+ */
 function getAction($actionId, $itemid='') {
 	global $action_list;
 

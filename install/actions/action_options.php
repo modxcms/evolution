@@ -8,7 +8,7 @@ if( ! function_exists('getTemplates')) {
      */
     function getTemplates($presets = array())
     {
-        if (!count($presets)) {
+        if (empty($presets)) {
             return '';
         }
         $selectedTemplates = isset ($_POST['template']) ? $_POST['template'] : array();
@@ -25,9 +25,7 @@ if( ! function_exists('getTemplates')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%templates%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%templates%]</h3>' . implode("\n", $_) : '';
     }
 }
 
@@ -38,7 +36,7 @@ if( ! function_exists('getTVs')) {
      */
     function getTVs($presets = array())
     {
-        if (!count($presets)) {
+        if (empty($presets)) {
             return '';
         }
         $selectedTvs = isset ($_POST['tv']) ? $_POST['tv'] : array();
@@ -56,9 +54,7 @@ if( ! function_exists('getTVs')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%tvs%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%tvs%]</h3>' . implode("\n", $_) : '';
     }
 }
 
@@ -71,7 +67,7 @@ if( ! function_exists('getChunks')) {
      */
     function getChunks($presets = array())
     {
-        if (!count($presets)) {
+        if (empty($presets)) {
             return '';
         }
         $selected = isset ($_POST['chunk']) ? $_POST['chunk'] : array();
@@ -88,9 +84,7 @@ if( ! function_exists('getChunks')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%chunks%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%chunks%]</h3>' . implode("\n", $_) : '';
     }
 }
 
@@ -103,7 +97,7 @@ if( ! function_exists('getModules')) {
      */
     function getModules($presets = array())
     {
-        if (!count($presets)) {
+        if (empty($presets)) {
             return '';
         }
         $selected = isset ($_POST['module']) ? $_POST['module'] : array();
@@ -120,9 +114,7 @@ if( ! function_exists('getModules')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%modules%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%modules%]</h3>' . implode("\n", $_) : '';
     }
 }
 
@@ -156,9 +148,7 @@ if( ! function_exists('getPlugins')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%plugins%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%plugins%]</h3>' . implode("\n", $_) : '';
     }
 }
 
@@ -188,9 +178,7 @@ if( ! function_exists('getSnippets')) {
             $_[] = parse($tpl, $ph);
             $i++;
         }
-        if (0 < count($_)) {
-            return '<h3>[%snippets%]</h3>' . implode("\n", $_);
-        }
+        return (0 < count($_)) ? '<h3>[%snippets%]</h3>' . implode("\n", $_) : '';
     }
 }
 

@@ -37,6 +37,9 @@ if (!$udperms->checkPermissions()) {
     $modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
+/**
+ * @param int $parent
+ */
 function getChildren($parent)
 {
     global $modx;
@@ -46,6 +49,7 @@ function getChildren($parent)
     global $error_page;
     global $unauthorized_page;
 
+    $parent = $modx->db->escape($parent);
     $rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent={$parent} AND deleted=0");
         // the document has children documents, we'll need to delete those too
         while ($childid=$modx->db->getValue($rs)) {

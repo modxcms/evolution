@@ -180,7 +180,9 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
-// saves module user group access
+/**
+ * saves module user group access
+ */
 function saveUserGroupAccessPermissons()
 {
     global $modx;

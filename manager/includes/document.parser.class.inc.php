@@ -299,7 +299,7 @@ class DocumentParser
      * @param int $count_attempts
      * @param string $type $type
      * @param string $responseCode
-     * @return bool
+     * @return bool|null
      * @global string $base_url
      * @global string $site_url
      */
@@ -493,6 +493,7 @@ class DocumentParser
 
     /**
      * Get user settings and merge into MODX configuration
+     * @return array
      */
     public function getUserSettings()
     {
@@ -1011,7 +1012,7 @@ class DocumentParser
 
     /**
      * @param string $tags
-     * @return array
+     * @return array[]
      */
     public function getTagsForEscape($tags = '{{,}},[[,]],[!,!],[*,*],[(,)],[+,+],[~,~],[^,^]')
     {
@@ -1326,7 +1327,7 @@ class DocumentParser
 
     /**
      * @param $key
-     * @param bool $parent
+     * @param bool|int $parent
      * @return bool|mixed|string
      */
     public function _contextValue($key, $parent = false)
@@ -1445,7 +1446,7 @@ class DocumentParser
      * Merge system settings
      *
      * @param $content
-     * @param bool $ph
+     * @param bool|array $ph
      * @return string
      * @internal param string $template
      */
@@ -1460,7 +1461,7 @@ class DocumentParser
             return $content;
         }
 
-        if (!$ph) {
+        if (empty($ph)) {
             $ph = $this->config;
         }
 
@@ -1495,7 +1496,7 @@ class DocumentParser
      * Merge chunks
      *
      * @param string $content
-     * @param bool $ph
+     * @param bool|array $ph
      * @return string
      */
     public function mergeChunkContent($content, $ph = false)
@@ -1512,7 +1513,7 @@ class DocumentParser
             return $content;
         }
 
-        if (!$ph) {
+        if (empty($ph)) {
             $ph = $this->chunkCache;
         }
 
@@ -1564,7 +1565,7 @@ class DocumentParser
      * Merge placeholder values
      *
      * @param string $content
-     * @param bool $ph
+     * @param bool|array $ph
      * @return string
      */
     public function mergePlaceholderContent($content, $ph = false)
@@ -1579,7 +1580,7 @@ class DocumentParser
             return $content;
         }
 
-        if (!$ph) {
+        if (empty($ph)) {
             $ph = $this->placeholders;
         }
 
@@ -3149,17 +3150,17 @@ class DocumentParser
     }
 
     /**
-     * Returns true if user has the currect permission
+     * Returns 1 if user has the currect permission
      *
      * @param string $pm Permission name
-     * @return int
+     * @return int Why not bool?
      */
     public function hasPermission($pm)
     {
-        $state = false;
+        $state = 0;
         $pms = $_SESSION['mgrPermissions'];
         if ($pms) {
-            $state = ($pms[$pm] == 1);
+            $state = ((bool)$pms[$pm] === true);
         }
         return (int)$state;
     }
@@ -4281,7 +4282,7 @@ class DocumentParser
      * @param string $left
      * @param string $right
      * @param bool $execModifier
-     * @return mixed|string {string} - Parsed text.
+     * @return string {string} - Parsed text.
      * - Parsed text.
      * @internal param $chunk {string} - String to parse. - String to parse. @required
      * @internal param $chunkArr {array} - Array of values. Key — placeholder name, value — value. - Array of values. Key — placeholder name, value — value. @required
@@ -5262,6 +5263,7 @@ class DocumentParser
         $this->loadedjscripts[$key]['version'] = $version;
         $this->loadedjscripts[$key]['startup'] = $startup;
         $this->loadedjscripts[$key]['pos'] = $pos;
+        return '';
     }
 
     /**
@@ -5271,7 +5273,7 @@ class DocumentParser
      */
     public function regClientStartupHTMLBlock($html)
     {
-        $this->regClientScript($html, true, true);
+        return $this->regClientScript($html, true, true);
     }
 
     /**
@@ -5281,7 +5283,7 @@ class DocumentParser
      */
     public function regClientHTMLBlock($html)
     {
-        $this->regClientScript($html, true);
+        return $this->regClientScript($html, true);
     }
 
     /**
@@ -5770,7 +5772,7 @@ class DocumentParser
 
     /**
      * @param string $string
-     * @return mixed|string
+     * @return string
      */
     public function removeSanitizeSeed($string = '')
     {
@@ -5785,7 +5787,7 @@ class DocumentParser
 
     /**
      * @param string $content
-     * @return mixed|string
+     * @return string
      */
     public function cleanUpMODXTags($content = '')
     {
@@ -5834,8 +5836,8 @@ class DocumentParser
     }
 
     /**
-     * @param $name
-     * @param $phpCode
+     * @param string $name
+     * @param string $phpCode
      */
     public function addSnippet($name, $phpCode)
     {
@@ -5843,8 +5845,8 @@ class DocumentParser
     }
 
     /**
-     * @param $name
-     * @param $text
+     * @param string $name
+     * @param string $text
      */
     public function addChunk($name, $text)
     {

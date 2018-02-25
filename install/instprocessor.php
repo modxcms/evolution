@@ -125,13 +125,19 @@ if ($installMode == 0) {
 }
 
 if(!function_exists('parseProperties')) {
-    // parses a resource property string and returns the result as an array
-    // duplicate of method in documentParser class
+    /**
+     * parses a resource property string and returns the result as an array
+     * duplicate of method in documentParser class
+     *
+     * @param string $propertyString
+     * @return array
+     */
     function parseProperties($propertyString) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
+            $countParams = count($tmpParams);
+            for ($x= 0; $x < $countParams; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
                     $pTmp= explode("=", $tmpParams[$x]);
                     $pvTmp= explode(";", trim($pTmp[1]));
@@ -779,7 +785,13 @@ if ($installMode == 0) {
     echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
 
-// Property Update function
+/**
+ * Property Update function
+ *
+ * @param string $new
+ * @param string $old
+ * @return string
+ */
 function propUpdate($new,$old){
     $newArr = parseProperties($new);
     $oldArr = parseProperties($old);
@@ -790,10 +802,15 @@ function propUpdate($new,$old){
     }
     $return = $oldArr + $newArr;
     $return = json_encode($return, JSON_UNESCAPED_UNICODE);
-    $return = ($return != '[]') ? $return : '';
+    $return = ($return !== '[]') ? $return : '';
     return $return;
 }
 
+/**
+ * @param string $propertyString
+ * @param bool|mixed $json
+ * @return string
+ */
 function parseProperties($propertyString, $json=false) {
     $propertyString = str_replace('{}', '', $propertyString );
     $propertyString = str_replace('} {', ',', $propertyString );
@@ -847,15 +864,25 @@ function parseProperties($propertyString, $json=false) {
     if ($json) {
         $property = json_encode($property, JSON_UNESCAPED_UNICODE);
     }
-    $property = ($property != '[]') ? $property : '';
+    $property = ($property !== '[]') ? $property : '';
     return $property;
 }
 
+/**
+ * @param string $string
+ * @param bool $returnData
+ * @return bool|mixed
+ */
 function isJson($string, $returnData=false) {
     $data = json_decode($string, true);
     return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
 }
 
+/**
+ * @param string|int $category
+ * @param SqlParser $sqlParser
+ * @return int
+ */
 function getCreateDbCategory($category, $sqlParser) {
     $dbase = $sqlParser->dbname;
     $dbase = '`' . trim($dbase,'`') . '`';
@@ -877,7 +904,13 @@ function getCreateDbCategory($category, $sqlParser) {
     return $category_id;
 }
 
-// Remove installer Docblock only from components using plugin FileSource / fileBinding
+/**
+ * Remove installer Docblock only from components using plugin FileSource / fileBinding
+ *
+ * @param string $code
+ * @param string $type
+ * @return string
+ */
 function removeDocblock($code, $type) {
 
     $cleaned = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $code, 1);

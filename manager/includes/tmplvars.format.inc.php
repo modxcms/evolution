@@ -5,6 +5,16 @@
  */
 
 // Added by Raymond 20-Jan-2005
+/**
+ * @param string $name
+ * @param string $value
+ * @param string $format
+ * @param string $paramstring
+ * @param string $tvtype
+ * @param string $docid
+ * @param string $sep
+ * @return mixed|string
+ */
 function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype = "", $docid = "", $sep = '') {
 
 	global $modx;
@@ -327,13 +337,24 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 	return $o;
 }
 
+/**
+ * @param string $s
+ * @return string
+ */
 function decodeParamValue($s) {
 	$s = str_replace("%3D", '=', $s); // =
-	$s = str_replace("%26", '&', $s); // &
-	return $s;
+	return str_replace("%26", '&', $s); // &
 }
 
-// returns an array if a delimiter is present. returns array is a recordset is present
+/**
+ * returns an array if a delimiter is present. returns array is a recordset is present
+ *
+ * @param $src
+ * @param string $delim
+ * @param string $type
+ * @param bool $columns
+ * @return array|string
+ */
 function parseInput($src, $delim = "||", $type = "string", $columns = true) { // type can be: string, array
 	global $modx;
 	if($modx->db->isResult($src)) {
@@ -351,6 +372,10 @@ function parseInput($src, $delim = "||", $type = "string", $columns = true) { //
 	}
 }
 
+/**
+ * @param string $value
+ * @return bool|false|int
+ */
 function getUnixtimeFromDateString($value) {
 	$timestamp = false;
 	// Check for MySQL or legacy style date

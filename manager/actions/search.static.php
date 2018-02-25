@@ -414,6 +414,11 @@ if (isset($_REQUEST['submitok'])) {
     <?php
 }
 
+/**
+ * @param string $text
+ * @param string $search
+ * @return string
+ */
 function highlightingCoincidence($text, $search)
 {
     $regexp = '!(' . str_replace(array(
@@ -426,6 +431,12 @@ function highlightingCoincidence($text, $search)
     return preg_replace($regexp, '<span class="text-danger">$1</span>', $text);
 }
 
+/**
+ * @param string $locked
+ * @param string $disabled
+ * @param string $deleted
+ * @return string
+ */
 function addClassForItemList($locked = '', $disabled = '', $deleted = '')
 {
     $class = '';

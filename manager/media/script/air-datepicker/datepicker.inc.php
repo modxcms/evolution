@@ -1,5 +1,8 @@
 <?php
 class DATEPICKER {
+    /**
+     * @return string
+     */
     public function getDP() {
         global $modx;
 
@@ -8,6 +11,10 @@ class DATEPICKER {
 		$modx->config['datetime_format_lc'] = isset($modx->config['datetime_format']) ? strtolower($modx->config['datetime_format']) : 'dd-mm-yyyy';
         return $modx->mergeSettingsContent($load_script);
     }
+
+    /**
+     * @return string
+     */
     public function getLangCode() {
         global $modx, $modx_lang_attribute;
 

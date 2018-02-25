@@ -293,6 +293,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	</form>
 
 <?php
+/**
+ * @param string $name
+ * @param string $label
+ * @param string $status
+ * @return string
+ */
 function render_form($name, $label, $status = '') {
 	global $modx, $roledata;
 
