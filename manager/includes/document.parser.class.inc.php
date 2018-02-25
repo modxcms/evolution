@@ -2320,7 +2320,7 @@ class DocumentParser
             }
         } elseif (substr($snip_name, 0, 1) === '@' && isset($this->pluginEvent[trim($snip_name, '@')])) {
             $snippetObject['name'] = trim($snip_name, '@');
-            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(join("",$rs));', trim($snip_name, '@'));
+            $snippetObject['content'] = sprintf('$rs=$this->invokeEvent("%s",$params);echo trim(implode("",$rs));', trim($snip_name, '@'));
             $snippetObject['properties'] = '';
         } else {
             $where = sprintf("name='%s' AND disabled=0", $this->db->escape($snip_name));
@@ -4529,18 +4529,18 @@ class DocumentParser
                         $_[$i] = 'tv.' . $v;
                     }
                 }
-                $fields = join(',', $_);
+                $fields = implode(',', $_);
             } else {
                 $fields = "tv.*";
             }
 
             if ($tvsort != '') {
-                $tvsort = 'tv.' . join(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
+                $tvsort = 'tv.' . implode(',tv.', array_filter(array_map('trim', explode(',', $tvsort))));
             }
             if ($tvidnames == "*") {
                 $query = "tv.id<>0";
             } else {
-                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . join("','", $tvidnames) . "')";
+                $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
             }
 
             $this->getUserDocGroups();

@@ -123,7 +123,7 @@ class DBAPI
         }
         $tstart = $modx->getMicroTime();
         if (is_array($sql)) {
-            $sql = join("\n", $sql);
+            $sql = implode("\n", $sql);
         }
         $this->lastQuery = $sql;
         if (!($result = $this->conn->query($sql))) {
@@ -214,7 +214,7 @@ class DBAPI
             $from = $this->_getFromStringFromArray($from);
         }
         if (is_array($where)) {
-            $where = join(' ', $where);
+            $where = implode(' ', $where);
         }
 
         if (!$from) {
@@ -565,7 +565,7 @@ class DBAPI
             }
         }
 
-        return join(',', $_);
+        return implode(',', $_);
     }
 
     public function _getFromStringFromArray($tables = array())
@@ -575,6 +575,6 @@ class DBAPI
             $_[] = $v;
         }
 
-        return join(' ', $_);
+        return implode(' ', $_);
     }
 }

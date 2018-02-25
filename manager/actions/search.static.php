@@ -49,7 +49,7 @@ if (isset($_REQUEST['searchid'])) {
                             $selected = $row['id'] == $templateid ? ' selected="selected"' : '';
                             $option[] = sprintf('<option value="%s"%s>%s(%s)</option>', $row['id'], $selected, $templatename, $row['id']);
                         }
-                        $tpls = sprintf('<select name="templateid">%s</select>', join("\n", $option));
+                        $tpls = sprintf('<select name="templateid">%s</select>', implode("\n", $option));
                         ?>
                         <?= $tpls ?>
                         <small class="form-text"><?= $_lang['search_criteria_template_id_msg'] ?></small>

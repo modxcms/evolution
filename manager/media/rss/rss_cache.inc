@@ -168,7 +168,7 @@ class RSSCache {
 \*=======================================================================*/
     function file_name ($url) {
         $filename = md5( $url );
-        return join( DIRECTORY_SEPARATOR, array( $this->BASE_CACHE, $filename ) );
+        return implode( DIRECTORY_SEPARATOR, array( $this->BASE_CACHE, $filename ) );
     }
 
 /*=======================================================================*\

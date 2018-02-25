@@ -214,7 +214,7 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	if($row['id'] == $modx->config['default_template'] && $resourceTable == 'site_templates') {
 		$tplInfo[] = $_lang['defaulttemplate_title'];
 	}
-	$marks = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
+	$marks = !empty($tplInfo) ? ' <em>(' . implode(', ', $tplInfo) . ')</em>' : '';
 
 	/* row buttons */
 	$buttons = '';

@@ -491,7 +491,7 @@ if(is_array($evtOut)) {
 					if($row['id'] == $modx->config['default_template']) {
 						$tplInfo[] = $_lang['defaulttemplate_title'];
 					}
-					$tplInfo = !empty($tplInfo) ? ' <em>(' . join(', ', $tplInfo) . ')</em>' : '';
+					$tplInfo = !empty($tplInfo) ? ' <em>(' . implode(', ', $tplInfo) . ')</em>' : '';
 
 					$tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;"> %s%s%s%s</label></li>', $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo);
 					$tplList .= '</li>';

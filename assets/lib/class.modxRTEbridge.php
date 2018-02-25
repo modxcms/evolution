@@ -812,14 +812,14 @@ class modxRTEbridge
     public function mergeParamArrays()
     {
         $p = array();
-        foreach($this->pluginParams as $param=>$value) { $p['pp.'.$param] = is_array($value) ? join(',',$value) : $value; };
-        foreach($this->modxParams   as $param=>$value) { $p['mp.'.$param] = is_array($value) ? join(',',$value) : $value; };
+        foreach($this->pluginParams as $param=>$value) { $p['pp.'.$param] = is_array($value) ? implode(',',$value) : $value; };
+        foreach($this->modxParams   as $param=>$value) { $p['mp.'.$param] = is_array($value) ? implode(',',$value) : $value; };
         foreach($this->themeConfig  as $param=>$arr) {
             if (isset($arr['force'])) $p['tc.' . $param] = $arr['force'];
             elseif (isset($arr['bridged'])) $p['tc.' . $param] = $arr['bridged'];
             else $p['tc.' . $param] = $arr['value'];
         };
-        foreach($this->gSettingsDefaultValues as $param=>$value) { $p['gd.'.$param] = is_array($value) ? join(',',$value) : $value; };
+        foreach($this->gSettingsDefaultValues as $param=>$value) { $p['gd.'.$param] = is_array($value) ? implode(',',$value) : $value; };
         foreach($this->langArr as $param=>$value)      { $p['l.'.$param] = $value; };
         return $p;
     }
@@ -941,7 +941,7 @@ class modxRTEbridge
         if($this->debug)
         {
             $output .= "<!-- ##### modxRTEbridge Debug Infos #########\n";
-            $output .= " - ". join("\n - ", $this->debugMessages);
+            $output .= " - ". implode("\n - ", $this->debugMessages);
 
             if($this->debug == 'full') {
                 $output .= "this->modxParams = ".print_r($this->modxParams, true)."\n";

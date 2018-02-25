@@ -346,17 +346,17 @@ class MODIFIERS {
                 $this->condition[] = '&&';break;
             case 'show':
             case 'this':
-                $conditional = join(' ',$this->condition);
+                $conditional = implode(' ',$this->condition);
                 $isvalid = (int)(eval("return ({$conditional});"));
                 if ($isvalid) return $this->srcValue;
                 return NULL;
             case 'then':
-                $conditional = join(' ',$this->condition);
+                $conditional = implode(' ',$this->condition);
                 $isvalid = (int)eval("return ({$conditional});");
                 if ($isvalid)  return $opt;
                 return null;
             case 'else':
-                $conditional = join(' ',$this->condition);
+                $conditional = implode(' ',$this->condition);
                 $isvalid = (int)eval("return ({$conditional});");
                 if (!$isvalid) return $opt;
                 break;
@@ -411,7 +411,7 @@ class MODIFIERS {
                         $v = trim($v,'</> ');
                         $param[] = "<{$v}>";
                     }
-                    $params = join(',',$param);
+                    $params = implode(',',$param);
                 }
                 else $params = '';
                 if(!strpos($params,'<br>')===false) {
@@ -455,7 +455,7 @@ class MODIFIERS {
                 {
                     $_[$i] = ucfirst($v);
                 }
-                return join(' ',$_);
+                return implode(' ',$_);
             case 'zenhan':
                 if(empty($opt)) $opt='VKas';
                 return mb_convert_kana($value,$opt,$modx->config['modx_charset']);
@@ -506,7 +506,7 @@ class MODIFIERS {
                         $chunk[] = $this->substr($value,0,$width);
                         $value = $this->substr($value,$width);
                     }
-                    return join("\n",$chunk);
+                    return implode("\n",$chunk);
                 }
                 else
                     return wordwrap($value,$width,"\n",true);
@@ -559,7 +559,7 @@ class MODIFIERS {
                 foreach($value as $v) {
                     $_[] = str_replace(array('[+value+]','[+output+]','{value}','%s'),$v,$opt);
                 }
-                return join("\n", $_);
+                return implode("\n", $_);
             case 'array_pop':
             case 'array_shift':
                 if(strpos($value,'||')!==false) $delim = '||';
@@ -673,7 +673,7 @@ class MODIFIERS {
                 if(!$opt) $opt = SORT_REGULAR;
                 else      $opt = constant($opt);
                 $cmd($swap,$opt);
-                return join($delim,$swap);
+                return implode($delim,$swap);
             #####  Resource fields
             case 'id':
                 if($opt) return $this->getDocumentObject($opt,$key);
@@ -747,13 +747,13 @@ class MODIFIERS {
                         case '!published':                             $published = 0; break;
                     }
                 }
-                $where = join(' AND ', $where);
+                $where = implode(' AND ', $where);
                 $children = $modx->getDocumentChildren($value, $published, '0', 'id', $where);
                 $result = array();
                 foreach((array)$children as $child){
                     $result[] = $child['id'];
                 }
-                return join(',', $result);
+                return implode(',', $result);
             case 'fullurl':
                 if(!is_numeric($value)) return $value;
                 return $modx->makeUrl($value);
@@ -1133,12 +1133,12 @@ class MODIFIERS {
     }
     public function strrev($str) {
         preg_match_all('/./us', $str, $ar);
-        return join(array_reverse($ar[0]));
+        return implode(array_reverse($ar[0]));
     }
     public function str_shuffle($str) {
         preg_match_all('/./us', $str, $ar);
         shuffle($ar[0]);
-        return join($ar[0]);
+        return implode($ar[0]);
     }
     public function str_word_count($str) {
         return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
