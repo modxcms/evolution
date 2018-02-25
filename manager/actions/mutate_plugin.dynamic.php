@@ -97,7 +97,7 @@ function showParameters(ctrl) {
 
     // check if codemirror is used
     var props = typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
-    
+
     // convert old schemed setup parameters
     if( !IsJsonString(props) ) {
         dp = (props) ? props.split("&") : "";
@@ -124,7 +124,7 @@ function showParameters(ctrl) {
 
             var events = getEventsList();
             var filebinding = f.filebinding !== undefined ? f.filebinding.value : '';
-            
+
             currentParams['pluginConfig'] = [];
             currentParams['pluginConfig'][0] = {"events":events, "filePath":filebinding};
         }
@@ -249,7 +249,7 @@ function showParameters(ctrl) {
     td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
     td.innerHTML = t;
     tr.style.display = '';
-
+    if(JSON.stringify(currentParams) === '{}')return;
     implodeParameters();
 }
 
@@ -480,7 +480,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                 <?php
                     $ds = $modx->db->select(
 						'sm.id,sm.name,sm.guid',
-						$modx->getFullTableName("site_modules")." sm 
+						$modx->getFullTableName("site_modules")." sm
 							INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30
 							INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource",
 						"smd.resource='{$id}' AND sm.enable_sharedparams='1'",
