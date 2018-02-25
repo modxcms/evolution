@@ -81,7 +81,7 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars);
 
         // save access permissions
-        saveTemplateAccess();
+        saveTemplateVarAccess();
         saveDocumentAccessPermissons();
 
         // invoke OnTVFormSave event
@@ -142,7 +142,7 @@ switch ($_POST['mode']) {
         ), $tbl_site_tmplvars, "id='{$id}'");
 
         // save access permissions
-        saveTemplateAccess();
+        saveTemplateVarAccess();
         saveDocumentAccessPermissons();
 
         // invoke OnTVFormSave event
@@ -164,7 +164,7 @@ switch ($_POST['mode']) {
             header($header);
         } else {
             $modx->unlockElement(2, $id);
-            $header = "Location: index.php?a=" . $origin . "&r=2" . ($originId != null ? '&id=' . $originId : '');
+            $header = "Location: index.php?a=" . $origin . "&r=2" . (empty($originId) ? '' : '&id=' . $originId);
             header($header);
         }
 
@@ -173,7 +173,7 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
-function saveTemplateAccess()
+function saveTemplateVarAccess()
 {
     global $id, $newid;
     global $modx;
