@@ -45,6 +45,7 @@ if( ! function_exists('getTVs')) {
         $tpl = '<label><input type="checkbox" name="tv[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+alterName+] <span class="description">([+desc+])</span></label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -77,6 +78,7 @@ if( ! function_exists('getChunks')) {
         $tpl = '<label><input type="checkbox" name="chunk[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -174,6 +176,7 @@ if( ! function_exists('getSnippets')) {
         $tpl = '<label><input type="checkbox" name="snippet[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];

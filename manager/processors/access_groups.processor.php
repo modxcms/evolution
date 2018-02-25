@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('access_permissions')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -53,9 +55,9 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No user group id specified for deletion.");
 		} else {
 			$modx->db->delete($tbl_membergroup_names, "id='{$usergroup}'");
-			
+
 			$modx->db->delete($tbl_membergroup_access, "membergroup='{$usergroup}'");
-			
+
 			$modx->db->delete($tbl_member_groups, "user_group='{$usergroup}'");
 		}
 	break;
@@ -65,9 +67,9 @@ switch ($operation) {
 			$modx->webAlertAndQuit("No document group id specified for deletion.");
 		} else {
 			$modx->db->delete($tbl_documentgroup_names, "id='{$group}'");
-			
+
 			$modx->db->delete($tbl_membergroup_access, "documentgroup='{$group}'");
-			
+
 			$modx->db->delete($tbl_document_groups, "document_group='{$group}'");
 		}
 	break;

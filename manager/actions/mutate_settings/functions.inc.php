@@ -1,21 +1,23 @@
 <?php
 /**
  * get_lang_keys
- * 
+ *
  * @return array of keys from a language file
  */
 function get_lang_keys($filename) {
     $file = MODX_MANAGER_PATH.'includes/lang' . DIRECTORY_SEPARATOR . $filename;
     if(is_file($file) && is_readable($file)) {
         include($file);
-        return array_keys($_lang);
+        $out = isset($_lang) ? array_keys($_lang) : array();
     } else {
-        return array();
+        $out = array();
     }
+
+    return $out;
 }
 /**
  * get_langs_by_key
- * 
+ *
  * @return array of languages that define the key in their file
  */
 function get_langs_by_key($key) {
@@ -33,15 +35,15 @@ function get_langs_by_key($key) {
  * get_lang_options
  *
  * returns html option list of languages
- * 
+ *
  * @param string $key specify language key to return options of langauges that override it, default return all languages
  * @param string $selected_lang specify language to select in option list, default none
- * @return html option list
+ * @return string html option list
  */
-function get_lang_options($key=null, $selected_lang=null) {
+function get_lang_options($key = '', $selected_lang=null) {
     global $lang_keys, $_lang;
     $lang_options = '';
-    if($key) {
+    if( ! empty($key)) {
         $languages = get_langs_by_key($key);
         sort($languages);
         $lang_options .= '<option value="">'.$_lang['language_title'].'</option>';
@@ -78,7 +80,7 @@ function wrap_label($str='',$object) {
 
 function parseText($tpl='', $ph=array()) {
     if(empty($ph) || empty($tpl)) return $tpl;
-    
+
     foreach($ph as $k=>$v)
     {
         $k = "[+{$k}+]";

@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author modxcms.cz
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Czech
  * @package modx
@@ -165,6 +165,7 @@ $_lang["status_failed"] = 'nezdařilo se!';
 $_lang["status_failed_could_not_create_database"] = 'nezdařilo se - nelze vytvořit databázi';
 $_lang["status_failed_database_collation_does_not_match"] = 'nezdařilo se - nesoulad porovnání databáze; použijte SET NAMES nebo vyberte %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'nezdařilo se - zvolený prefix tabulek se již používá!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'v pořádku - databáze vybrána';
 $_lang["status_passed_database_created"] = 'v pořádku - databáze vytvořena';
 $_lang["status_passed_server"] = 'v pořádku - porovnání je dostupné';

@@ -26,6 +26,7 @@ class SqlParser {
     public $connection_charset;
     public $connection_method;
     public $ignoreDuplicateErrors;
+    public $autoTemplateLogic;
 
 	public function __construct($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
 		$this->host = $host;
@@ -79,11 +80,13 @@ class SqlParser {
 		$idata = str_replace("\r", '', $idata);
 
 		// check if in upgrade mode
-		if ($this->mode=="upd") {
+		if ($this->mode === 'upd') {
 			// remove non-upgradeable parts
-			$s = strpos($idata,"non-upgrade-able[[");
-			$e = strpos($idata,"]]non-upgrade-able")+17;
-			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);
+			$s = strpos($idata,'non-upgrade-able[[');
+			$e = strpos($idata,']]non-upgrade-able') + 17;
+			if($s && $e) {
+			    $idata = str_replace(substr($idata, $s,$e-$s),' Removed non upgradeable items', $idata);
+            }
 		}
 
 		// replace {} tags

@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author MEGU, yamamoto, TxO
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Japanese
  * @package modx
@@ -167,6 +167,7 @@ $_lang["status_failed"] = '接続できません';
 $_lang["status_failed_could_not_create_database"] = 'データベースを作成できません';
 $_lang["status_failed_database_collation_does_not_match"] = '問題があります - データベース側の照合順序のデフォルト値が「%s」になっています。phpMyAdminが利用できる場合は、該当データベースの「操作」タブで照合順序のデフォルト値を変更してください。';
 $_lang["status_failed_table_prefix_already_in_use"] = '接続できません - このTableプリフィクスはすでに使われています。異なるTableプリフィクスを指定するか、phpMyAdminなどを利用し関連Tableを削除してください。';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = '問題ありません';
 $_lang["status_passed_database_created"] = 'データベースを作成できます';
 $_lang["status_passed_server"] = '接続できます';

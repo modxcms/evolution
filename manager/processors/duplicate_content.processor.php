@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('new_document') || !$modx->hasPermission('save_document')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -43,7 +45,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	));
 
 	// if( !in_array( 'false', array_values( $evtOut ) ) ){}
-	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication 
+	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication
 	// [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
 
 	$userID = $modx->getLoginUserID();
@@ -79,7 +81,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 		$count = $modx->db->getRecordCount($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "pagetitle LIKE '{$pagetitle} Duplicate%'"));
 		if($count>=1) $count = ' '.($count+1);
 		else $count = '';
-		
+
 		$content['pagetitle'] = $_lang['duplicated_el_suffix'].$count.' '.$content['pagetitle'];
 		$content['alias'] = null;
 	} elseif($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
@@ -117,7 +119,7 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	// duplicate document's TVs
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
-	
+
 	// invoke OnDocDuplicate event
 	$evtOut = $modx->invokeEvent('OnDocDuplicate', array(
 		'id' => $docid,

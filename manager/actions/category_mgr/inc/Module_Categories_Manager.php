@@ -12,19 +12,19 @@ require_once realpath( dirname(__FILE__) ) . DIRECTORY_SEPARATOR . 'Categories.p
 
 class Module_Categories_Manager extends Categories
 {
-    var $params           = array();
-    var $translations     = array();
-    var $new_translations = array();
+    public $params           = array();
+    public $translations     = array();
+    public $new_translations = array();
 
 
     /**
      * Set a paramter key and its value
-     * 
-     * @return null 
+     *
+     * @return null
      * @param string    $key    paramter key
      * @param mixed     $value  parameter value - could be mixed value-types
      */
-    function set($key, $value)
+    public function set($key, $value)
     {
         $this->params[$key] = $value;
         return null;
@@ -33,14 +33,14 @@ class Module_Categories_Manager extends Categories
 
     /**
      * Get a parameter value
-     * 
+     *
      * @return  mixed           return the parameter value if exists, otherwise false
      * @param   string  $key    Paramter-key
      */
-    function get( $key )
+    public function get( $key )
     {
         global $modx;
-        
+
         if( isset( $this->params[$key] ) )
         {
             return $this->params[$key];
@@ -56,14 +56,14 @@ class Module_Categories_Manager extends Categories
         return false;
     }
 
-    
-    function addMessage( $message, $namespace = 'default' )
+
+    public function addMessage( $message, $namespace = 'default' )
     {
-        $this->params['messages'][$namespace][] = $message;   
+        $this->params['messages'][$namespace][] = $message;
     }
 
 
-    function getMessages( $namespace = 'default' )
+    public function getMessages( $namespace = 'default' )
     {
         if( isset( $this->params['messages'][$namespace] ) )
         {
@@ -73,15 +73,15 @@ class Module_Categories_Manager extends Categories
     }
 
 
-    function renderView( $view_name, $data = array() )
+    public function renderView( $view_name, $data = array() )
     {
         global $_lang, $_style;
-    
+
         $filename = trim( $view_name ) . '.tpl.phtml';
         $file     = self::get('views_dir') . $filename;
         $view     = & $this;
 
-        if( is_file( $file ) 
+        if( is_file( $file )
             && is_readable( $file ) )
         {
             include $file;
@@ -90,15 +90,15 @@ class Module_Categories_Manager extends Categories
         {
             echo sprintf(
                 'View "%s<strong>%s</strong>" not found.',
-                self::get('views_dir'), 
+                self::get('views_dir'),
                 $filename
             );
         }
     }
 
-    function updateElement( $element, $element_id, $category_id )
+    public function updateElement( $element, $element_id, $category_id )
     {
- 
+
         $_update = array(
             'id'       => (int)$element_id,
             'category' => (int)$category_id
@@ -110,15 +110,11 @@ class Module_Categories_Manager extends Categories
             "`id` = '" . (int)$element_id . "'"
         );
 
-        if( $this->db->getAffectedRows() === 1 )
-        {
-            return true;
-        }
-        return false;
+        return $this->db->getAffectedRows() === 1;
     }
 
 
-    function txt( $txt )
+    public function txt( $txt )
     {
         global $_lang;
         if(isset($_lang[$txt])) return $_lang[$txt];

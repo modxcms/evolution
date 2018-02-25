@@ -6,7 +6,7 @@ $upgradeable= 0;
 if ($installMode === 0) {
     $database_name= '';
     $database_server= 'localhost';
-    $table_prefix= substr(md5(time()), rand(0, 27), rand(3, 5))."_";
+    $table_prefix = base_convert(rand(10, 20), 10, 36).substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), rand(0, 33), 3).'_';
 } else {
     $database_name = '';
     if (!is_file($base_path.MGR_DIR.'/includes/config.inc.php')) $upgradeable = 0;
@@ -15,13 +15,13 @@ if ($installMode === 0) {
         include($base_path.MGR_DIR.'/includes/config.inc.php');
         // We need to have all connection settings - but prefix may be empty so we have to ignore it
         if ($dbase) {
-          $database_name = trim($dbase, '`');
-          if (!$conn = mysqli_connect($database_server, $database_user, $database_password))
-              $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
-          elseif (! mysqli_select_db($conn, trim($dbase, '`')))
-              $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
-          else
-              $upgradeable = 1;
+            $database_name = trim($dbase, '`');
+            if (!$conn = mysqli_connect($database_server, $database_user, $database_password))
+                $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
+            elseif (! mysqli_select_db($conn, trim($dbase, '`')))
+                $upgradeable = (isset($_POST['installmode']) && $_POST['installmode']=='new') ? 0 : 2;
+            else
+                $upgradeable = 1;
         }
         else $upgradable= 2;
     }
@@ -74,39 +74,3 @@ $content = file_get_contents('./actions/tpl_connection.html');
 $content = parse($content, $_lang, '[%','%]');
 $content = parse($content, $ph);
 echo $content;
-
-if( ! function_exists('getLangs')) {
-    /**
-     * @param $install_language
-     * @return string
-     */
-    function getLangs($install_language)
-    {
-        if ($install_language !== "english" && is_file(sprintf("../%s/includes/lang/%s.inc.php", MGR_DIR, $install_language))) {
-            $manager_language = $install_language;
-        } else {
-            $manager_language = "english";
-        }
-
-        $langs = array();
-        if ($handle = opendir("../" . MGR_DIR . "/includes/lang")) {
-            while (false !== ($file = readdir($handle))) {
-                if (strpos($file, '.inc.') !== false) {
-                    $langs[] = $file;
-                }
-            }
-            closedir($handle);
-        }
-        sort($langs);
-
-        $_ = array();
-        foreach ($langs as $language) {
-            $abrv_language = explode('.', $language);
-            $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
-            $_[] = sprintf('<option value="%s" %s>%s</option>', $abrv_language[0], $selected,
-                ucwords($abrv_language[0]));
-        }
-
-        return implode("\n", $_);
-    }
-}

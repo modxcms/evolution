@@ -56,11 +56,11 @@ $base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
 if(is_file($base_path . 'assets/cache/siteManager.php'))
     include_once($base_path . 'assets/cache/siteManager.php');
 if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
-	define('MGR_DIR','manager');
+	define('MGR_DIR', 'manager');
 if(is_file($base_path . 'assets/cache/siteHostnames.php'))
     include_once($base_path . 'assets/cache/siteHostnames.php');
 if(!defined('MODX_SITE_HOSTNAMES'))
-	define('MODX_SITE_HOSTNAMES','');
+	define('MODX_SITE_HOSTNAMES', '');
 
 // get start time
 $mstart = memory_get_usage();
@@ -82,9 +82,9 @@ ob_start();
  *	Function: This file loads and executes the parser. *
  */
 
-define("IN_PARSER_MODE", true);
-if (!defined('IN_MANAGER_MODE')) {
-	define("IN_MANAGER_MODE", false);
+define('IN_PARSER_MODE', true);
+if ( ! defined('IN_MANAGER_MODE')) {
+	define('IN_MANAGER_MODE', false);
 }
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);

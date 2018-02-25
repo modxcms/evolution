@@ -9,7 +9,7 @@
             </td>
             <td>
                 <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options(null, $manager_language) ?>
+                    <?= get_lang_options('', $manager_language) ?>
                 </select>
             </td>
         </tr>
@@ -95,7 +95,7 @@
                 <div class="split"></div>
             </td>
         </tr>
-        
+
         <tr>
             <td nowrap class="warning"><?= $_lang['warning_visibility'] ?><br>
                 <small>[(warning_visibility)]</small>
@@ -501,7 +501,7 @@
             </td>
             <td>
                 <select name="fe_editor_lang" size="1" class="inputBox" onChange="documentDirty=true;">
-                    <?= get_lang_options(null, $fe_editor_lang) ?>
+                    <?= get_lang_options('', $fe_editor_lang) ?>
                 </select>
             </td>
         </tr>

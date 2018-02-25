@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 if(!$modx->hasPermission('import_static')) {
@@ -102,7 +102,7 @@ $allowedfiles = array(
 
 <?php
 function run() {
-	global $modx;
+	global $modx, $_lang;
 
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$output = '';
@@ -130,7 +130,9 @@ function run() {
 		$filedir = MODX_BASE_PATH . 'temp/import/';
 	} elseif(is_dir(MODX_BASE_PATH . 'assets/import')) {
 		$filedir = MODX_BASE_PATH . 'assets/import/';
-	}
+	} else {
+        $filedir = '';
+    }
 
 	$filesfound = 0;
 
@@ -142,7 +144,7 @@ function run() {
 
 	// import files
 	if(0 < count($files)) {
-		$rs = $modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
+		$modx->db->update(array('isfolder' => 1), $tbl_site_content, "id='{$parent}'");
 		importFiles($parent, $filedir, $files, 'root');
 	}
 
@@ -168,7 +170,6 @@ function importFiles($parent, $filedir, $files, $mode) {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$tbl_system_settings = $modx->getFullTableName('system_settings');
 
-	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if(!is_array($files)) {
 		return;
@@ -306,7 +307,7 @@ function getFiles($directory, $listing = array(), $count = 0) {
 	global $_lang;
 	global $filesfound;
 	$dummy = $count;
-	if($files = scandir($directory)) {
+	if( ! empty($directory) && $files = scandir($directory)) {
 		foreach($files as $file) {
 			if($file == '.' || $file == '..') {
 				continue;
@@ -399,6 +400,9 @@ function convertLink() {
 	$tbl_site_content = $modx->getFullTableName('site_content');
 
 	$rs = $modx->db->select('id,content', $tbl_site_content);
+	$p = array();
+    $target = array();
+	$dir = '';
 	while($row = $modx->db->getRow($rs)) {
 		$id = $row['id'];
 		$array = explode('<a href=', $row['content']);

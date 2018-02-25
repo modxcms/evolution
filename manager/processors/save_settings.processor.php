@@ -1,5 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
@@ -51,7 +53,7 @@ if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_them
 }
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
-$data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
+$data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']);
 
 if (isset($data) && count($data) > 0) {
 	if(isset($data['manager_language'])) {
@@ -80,7 +82,7 @@ if (isset($data) && count($data) > 0) {
 				$v = $data['site_start'];
 			}
 			break;
-	
+
 			case 'lst_custom_contenttype':
 			case 'txt_custom_contenttype':
 				// Skip these
@@ -126,17 +128,17 @@ if (isset($data) && count($data) > 0) {
 			break;
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
-		
+
 		$modx->config[$k] = $v;
-		
+
 		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
-	
+
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
 	$modx->db->query($sql);
-	
+
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
 		$newtemplate = intval($data['default_template']);
@@ -146,7 +148,7 @@ if (isset($data) && count($data) > 0) {
 		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
 		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
 	}
-	
+
 	// empty cache
 	$modx->clearCache('full');
 }

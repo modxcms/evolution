@@ -4,8 +4,8 @@
  *
  * @author Marc Hinse
  * @author Bogdan Günther
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language German
  * @package modx
@@ -169,6 +169,7 @@ $_lang["status_failed"] = 'fehlgeschlagen!';
 $_lang["status_failed_could_not_create_database"] = 'fehlgeschlagen – konnte Datenbank nicht erstellen';
 $_lang["status_failed_database_collation_does_not_match"] = 'fehlgeschlagen – Unterschied in der Datenbank-Kollation; benutzen Sie SET NAMES oder wählen Sie %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fehlgeschlagen – Tabellen-Präfix bereits verwendet!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'In Ordnung – Datenbank ausgewählt';
 $_lang["status_passed_database_created"] = 'In Ordnung – Datenbank erstellt';
 $_lang["status_passed_server"] = 'In Ordung – Kollationen sind nun auswählbar';

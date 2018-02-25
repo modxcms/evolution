@@ -3,8 +3,8 @@
  * MODX Installer language file
  *
  * @author MODX Team
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Spanish
  * @package modx
@@ -165,6 +165,7 @@ $_lang["status_failed"] = '¡falló!';
 $_lang["status_failed_could_not_create_database"] = 'falló - no se pudo crear la base de datos';
 $_lang["status_failed_database_collation_does_not_match"] = 'falló  - no coincide la compaginación de la base de datos; usa SET NAMES o elige %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'falló - el prefijo de tabla ya existe';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'pasó - base de datos seleccionada';
 $_lang["status_passed_database_created"] = 'pasó - base de datos creada';
 $_lang["status_passed_server"] = 'pasó - compaginaciones ahora disponibles';

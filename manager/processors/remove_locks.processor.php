@@ -1,9 +1,11 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
+}
 
 if(!isset($_GET['id'])) {
 	if(!$modx->hasPermission('remove_locks')) $modx->webAlertAndQuit($_lang["error_no_privileges"]);
-	
+
 	// Remove all locks
 	$modx->db->truncate($modx->getFullTableName('active_user_locks'));
 
