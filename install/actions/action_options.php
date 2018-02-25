@@ -110,6 +110,7 @@ if( ! function_exists('getModules')) {
         $tpl = '<label><input type="checkbox" name="module[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -141,6 +142,7 @@ if( ! function_exists('getPlugins')) {
         $tpl = '<label><input type="checkbox" name="plugin[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
         $_ = array();
         $i = 0;
+        $ph = array();
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];

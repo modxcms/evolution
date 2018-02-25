@@ -206,7 +206,7 @@ function saveEventListeners($id, $sysevents, $mode)
         if(!in_array($row['evtid'], $evtids)) $del[] = $row['evtid'];
     }
 
-    if(!$del) return;
+    if(empty($del)) return;
 
     foreach($del as $delid) {
         $modx->db->delete('[+prefix+]site_plugin_events', sprintf("evtid='%s' AND pluginid='%s'", $delid, $id));

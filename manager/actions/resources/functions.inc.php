@@ -125,43 +125,52 @@ function createCombinedView($resources) {
 	));
 }
 
+/**
+ * @param $row
+ * @param $resourceTable
+ * @param $resources
+ * @return array
+ */
 function prepareElementRowPh($row, $resourceTable, $resources) {
 	global $modx, $modx_textdir, $_style, $_lang;
 
 	$types = isset($resources->types[$resourceTable]) ? $resources->types[$resourceTable] : false;
 
-	$class = '';
 	$_lang["confirm_delete"] = $_lang["delete"];
 
-	if($resourceTable == 'site_templates') {
-		$class = $row['selectable'] ? '' : 'disabledPlugin';
-		$lockElementType = 1;
-		$_lang["confirm_delete"] = $_lang["confirm_delete_template"];
-	}
-	if($resourceTable == 'site_tmplvars') {
-		$class = $row['reltpl'] ? '' : 'disabledPlugin';
-		$lockElementType = 2;
-		$_lang["confirm_delete"] = $_lang["confirm_delete_tmplvars"];
-	}
-	if($resourceTable == 'site_htmlsnippets') {
-        $class = $row['disabled'] ? 'disabledPlugin' : '';
-		$lockElementType = 3;
-		$_lang["confirm_delete"] = $_lang["confirm_delete_htmlsnippet"];
-	}
-	if($resourceTable == 'site_snippets') {
-        $class = $row['disabled'] ? 'disabledPlugin' : '';
-		$lockElementType = 4;
-		$_lang["confirm_delete"] = $_lang["confirm_delete_snippet"];
-	}
-	if($resourceTable == 'site_plugins') {
-		$class = $row['disabled'] ? 'disabledPlugin' : '';
-		$lockElementType = 5;
-		$_lang["confirm_delete"] = $_lang["confirm_delete_plugin"];
-	}
-	if($resourceTable == 'site_modules') {
-        $class = $row['disabled'] ? '' : 'disabledPlugin';
-		$_lang["confirm_delete"] = $_lang["confirm_delete_module"];
-	}
+	switch($resourceTable){
+        case 'site_templates':
+            $class = $row['selectable'] ? '' : 'disabledPlugin';
+            $lockElementType = 1;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_template"];
+            break;
+        case 'site_tmplvars':
+            $class = $row['reltpl'] ? '' : 'disabledPlugin';
+            $lockElementType = 2;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_tmplvars"];
+            break;
+        case 'site_htmlsnippets':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 3;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_htmlsnippet"];
+            break;
+        case 'site_snippets':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 4;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_snippet"];
+            break;
+        case 'site_plugins':
+            $class = $row['disabled'] ? 'disabledPlugin' : '';
+            $lockElementType = 5;
+            $_lang["confirm_delete"] = $_lang["confirm_delete_plugin"];
+            break;
+        case 'site_modules':
+            $class = $row['disabled'] ? '' : 'disabledPlugin';
+            $_lang["confirm_delete"] = $_lang["confirm_delete_module"];
+            break;
+        default:
+            return array();
+    }
 
 	// Prepare displaying user-locks
 	$lockedByUser = '';

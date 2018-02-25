@@ -1,7 +1,7 @@
 <?php
 include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once('protect.inc.php');
-include_once('config.inc.php');
+require_once('config.inc.php');
 include_once('document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
@@ -46,14 +46,15 @@ $vword->destroy_image();
 class VeriWord {
 
     /* path to font directory*/
-    var $dir_font   = "ttf/";
+    public $dir_font   = "ttf/";
     /* path to background image directory*/
-    var $dir_noise  = "noises/";
-    var $word       = "";
-    var $im_width   = 0;
-    var $im_height  = 0;
+    public $dir_noise  = "noises/";
+    public $word       = "";
+    public $im_width   = 0;
+    public $im_height  = 0;
+    public $im;
 
-    function __construct($w=200, $h=80) {
+    public function __construct($w=200, $h=80) {
         /* create session to set word for verification */
         startCMSSession();
         $this->set_veriword();
@@ -62,21 +63,21 @@ class VeriWord {
         $this->im_height        = $h;
     }
 
-    function set_veriword() {
+    public function set_veriword() {
         /* create session variable for verification,
            you may change the session variable name */
         $this->word             = $this->pick_word();
         $_SESSION['veriword']   = $this->word;
     }
 
-    function output_image() {
+    public function output_image() {
         /* output the image as jpeg */
         $this->draw_image();
         header("Content-type: image/jpeg");
         imagejpeg($this->im);
     }
 
-    function pick_word() {
+    public function pick_word() {
         global $modx;
         // set default words
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
@@ -87,7 +88,7 @@ class VeriWord {
         return (string) $arr_words[array_rand($arr_words)].rand(10,999);
     }
 
-    function draw_text() {
+    public function draw_text() {
         $dir = dir($this->dir_font);
         $fontstmp = array();
         while (false !== ($file = $dir->read())) {
@@ -139,11 +140,10 @@ class VeriWord {
         /* remove background color */
         imagecolortransparent($im_text, $bg_color);
         return $im_text;
-        imagedestroy($im_text);
     }
 
 
-    function draw_image() {
+    public function draw_image() {
 
         /* pick one background image randomly from image directory */
         $img_file       = $this->dir_noise."noise".rand(1,4).".jpg";
@@ -174,7 +174,7 @@ class VeriWord {
         return $this->im;
     }
 
-    function destroy_image() {
+    public function destroy_image() {
 
         imagedestroy($this->im);
 

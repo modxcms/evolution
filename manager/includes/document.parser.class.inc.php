@@ -167,6 +167,10 @@ class DocumentParser
     public $sid;
     private $q;
     public $decoded_request_uri;
+    /**
+     * @var OldFunctions
+     */
+    public $old;
 
     /**
      * Document constructor
@@ -1460,7 +1464,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($content, '[(', ')]');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -1512,7 +1516,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($content, '{{', '}}');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -1585,7 +1589,7 @@ class DocumentParser
         $content = $this->mergeDocumentContent($content);
         $content = $this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content, '[+', '+]');
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
         foreach ($matches[1] as $i => $key) {
@@ -1956,7 +1960,7 @@ class DocumentParser
 
         $matches = $this->getTagsFromContent($content, '[[', ']]');
 
-        if (!$matches) {
+        if (empty($matches)) {
             return $content;
         }
 
@@ -2045,9 +2049,8 @@ class DocumentParser
             return '';
         }
 
-        if ($this->dumpSnippets) {
-            $eventtime = $this->getMicroTime();
-        }
+        $eventtime = $this->dumpSnippets ? $this->getMicroTime() : 0;
+
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
 
@@ -4285,10 +4288,7 @@ class DocumentParser
      */
     public function parseText($tpl = '', $ph = array(), $left = '[+', $right = '+]', $execModifier = true)
     {
-        if (!$ph) {
-            return $tpl;
-        }
-        if (!$tpl) {
+        if (empty($ph) || empty($tpl)) {
             return $tpl;
         }
 
@@ -4299,7 +4299,7 @@ class DocumentParser
         }
 
         $matches = $this->getTagsFromContent($tpl, $left, $right);
-        if (!$matches) {
+        if (empty($matches)) {
             return $tpl;
         }
 

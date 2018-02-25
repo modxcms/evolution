@@ -34,9 +34,7 @@ class udperms{
 		}
 
 		// get document groups for current user
-		if($_SESSION['mgrDocgroups']) {
-			$docgrp = implode(" || dg.document_group = ",$_SESSION['mgrDocgroups']);
-		}
+        $docgrp = empty($_SESSION['mgrDocgroups']) ? '' : implode(' || dg.document_group = ', $_SESSION['mgrDocgroups']);
 
 		/* Note:
 			A document is flagged as private whenever the document group that it
@@ -53,7 +51,7 @@ class udperms{
 			"{$tblsc} AS sc 
 				LEFT JOIN {$tbldg} AS dg on dg.document = sc.id 
 				LEFT JOIN {$tbldgn} dgn ON dgn.id = dg.document_group",
-			"sc.id='{$this->document}' AND (". ( (!$docgrp) ? null : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)"
+			"sc.id='{$this->document}' AND (". (empty($docgrp) ? '' : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)"
 			);
 		$limit = $modx->db->getValue($rs);
 		if($limit==1) $permissionsok = true;

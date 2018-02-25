@@ -8,8 +8,9 @@
 function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype = "", $docid = "", $sep = '') {
 
 	global $modx;
+    $o = '';
 
-	// process any TV commands in value
+    // process any TV commands in value
 	$docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
 	$value = ProcessTVCommand($value, $name, $docid);
 
@@ -29,7 +30,6 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 	switch($format) {
 		case 'image':
 			$images = parseInput($value, '||', 'array');
-			$o = '';
 			foreach($images as $image) {
 				if(!is_array($image)) {
 					$image = explode('==', $image);
@@ -99,7 +99,8 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 		case "hyperlink":
 			$value = parseInput($value, "||", "array");
 			$o = '';
-			for($i = 0; $i < count($value); $i++) {
+			$countValue = count($value);
+			for($i = 0; $i < $countValue; $i++) {
 				list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
 				if(!$url) {
 					$url = $name;
@@ -132,7 +133,8 @@ function getTVDisplayFormat($name, $value, $format, $paramstring = "", $tvtype =
 			$tagname = ($params['tagname']) ? $params['tagname'] : 'div';
 			$o = '';
 			// Loop through a list of tags
-			for($i = 0; $i < count($value); $i++) {
+            $countValue = count($value);
+			for($i = 0; $i < $countValue; $i++) {
 				$tagvalue = is_array($value[$i]) ? implode(' ', $value[$i]) : $value[$i];
 				if(!$tagvalue) {
 					continue;

@@ -6,11 +6,11 @@ menu->Build('id','parent','name','link','alt','onclick','permission','target','d
 
 class EVOmenu
 {
-    var $defaults = array();
-    var $menu;
-    var $output;
+    public $defaults = array();
+    public $menu;
+    public $output;
 
-    function Build($menu, $setting = array())
+    public function Build($menu, $setting = array())
     {
         $this->defaults['outerClass'] = 'nav';
         $this->defaults['parentClass'] = 'dropdown';
@@ -25,8 +25,9 @@ class EVOmenu
         echo $this->output;
     }
 
-    function Structurise($menu)
+    public function Structurise($menu)
     {
+        $new = array();
         foreach ($menu as $key => $row) {
             $data[$key] = $row[9];
         }
@@ -40,7 +41,7 @@ class EVOmenu
         $this->menu = $new;
     }
 
-    function DrawSub($parentid, $level)
+    public function DrawSub($parentid, $level)
     {
         global $modx;
 
@@ -48,6 +49,7 @@ class EVOmenu
 
         if (isset($this->menu[$parentid])) {
 
+            $ph = array();
             $countChild = 0;
             $itemTpl = '
 			<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]" onclick="[+onclick+]"[+a_class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
@@ -108,7 +110,7 @@ class EVOmenu
         return $output;
     }
 
-    function get_li_class($id)
+    public function get_li_class($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentClass'] . ' ';
@@ -117,7 +119,7 @@ class EVOmenu
         }
     }
 
-    function get_a_class($id)
+    public function get_a_class($id)
     {
         if (isset($this->menu[$id])) {
             return ' class="' . $this->defaults['parentLinkClass'] . '"';
@@ -126,7 +128,7 @@ class EVOmenu
         }
     }
 
-    function getLinkAttr($id)
+    public function getLinkAttr($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentLinkAttr'];
@@ -135,7 +137,7 @@ class EVOmenu
         }
     }
 
-    function getItemName($id)
+    public function getItemName($id)
     {
         if (isset($this->menu[$id])) {
             return $this->defaults['parentLinkIn'];
