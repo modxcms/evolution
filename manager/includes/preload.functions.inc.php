@@ -21,8 +21,7 @@ function startCMSSession(){
     $cookieDomain = !empty($session_cookie_domain) ? $session_cookie_domain : '';
     session_set_cookie_params($cookieExpiration, $cookiePath, $cookieDomain, $secure, true);
     session_start();
-
-    $key = "modx.session.cookie.lifetime";
+    $key = "modx.mgr.session.cookie.lifetime";
     if (isset($_SESSION[$key]) && is_numeric($_SESSION[$key])) {
         $cookieLifetime= intval($_SESSION[$key]);
         if($cookieLifetime) $cookieExpiration = $_SERVER['REQUEST_TIME']+$cookieLifetime;
