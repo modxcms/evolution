@@ -117,6 +117,9 @@ if ($modx->db->getValue($modx->db->select('privateweb', $modx->getFullTableName(
 }
 
 if (!function_exists('checkSiteCache')) {
+    /**
+     * @return bool
+     */
     function checkSiteCache() {
         global $modx;
         $checked= true;

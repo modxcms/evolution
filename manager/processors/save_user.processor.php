@@ -348,7 +348,14 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-// Send an email to the user
+/**
+ * Send an email to the user
+ *
+ * @param string $email
+ * @param string $uid
+ * @param string $pwd
+ * @param string $ufn
+ */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx, $_lang, $signupemail_message;
 	global $emailsubject, $emailsender;
@@ -377,7 +384,11 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	}
 }
 
-// Save User Settings
+/**
+ * Save User Settings
+ *
+ * @param int $id
+ */
 function saveUserSettings($id) {
 	global $modx;
 	$tbl_user_settings = $modx->getFullTableName('user_settings');
@@ -461,7 +472,11 @@ function saveUserSettings($id) {
 	}
 }
 
-// Web alert -  sends an alert to web browser
+/**
+ * Web alert -  sends an alert to web browser
+ *
+ * @param $msg
+ */
 function webAlertAndQuit($msg) {
 	global $id, $modx;
 	$mode = $_POST['mode'];
@@ -469,7 +484,12 @@ function webAlertAndQuit($msg) {
 	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ''));
 }
 
-// Generate password
+/**
+ * Generate password
+ *
+ * @param int $length
+ * @return string
+ */
 function generate_password($length = 10) {
 	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 	$ps_len = strlen($allowable_characters);

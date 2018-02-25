@@ -504,11 +504,27 @@ include_once "footer.inc.php"; // send footer
 
 class Mysqldumper
 {
+    /**
+     * @var array
+     */
     public $_dbtables;
+    /**
+     * @var bool
+     */
     public $_isDroptables;
+    /**
+     * @var string
+     */
     public $dbname;
+    /**
+     * @var string
+     */
     public $database_server;
 
+    /**
+     * Mysqldumper constructor.
+     * @param string $dbname
+     */
     public function __construct($dbname)
     {
         // Don't drop tables by default.
@@ -516,18 +532,28 @@ class Mysqldumper
         $this->setDroptables(false);
     }
 
+    /**
+     * If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
+     *
+     * @param bool $state
+     */
     public function setDroptables($state)
     {
         $this->_isDroptables = $state;
     }
 
-    // If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
-
+    /**
+     * @param array $dbtables
+     */
     public function setDBtables($dbtables)
     {
         $this->_dbtables = $dbtables;
     }
 
+    /**
+     * @param string $callBack
+     * @return bool
+     */
     public function createDump($callBack)
     {
         global $modx;
@@ -637,6 +663,11 @@ class Mysqldumper
         return true;
     }
 
+    /**
+     * @param int $numinarray
+     * @param mysqli_result $resource
+     * @return array
+     */
     public function result2Array($numinarray = 0, $resource)
     {
         global $modx;
@@ -648,15 +679,19 @@ class Mysqldumper
         return $array;
     }
 
-    // Private function object2Array.
-
+    /**
+     * @return bool
+     */
     public function isDroptables()
     {
         return $this->_isDroptables;
     }
 
-    // Private function loadObjectList.
-
+    /**
+     * @param string $key
+     * @param mysqli_result $resource
+     * @return array
+     */
     public function loadObjectList($key = '', $resource)
     {
         global $modx;
@@ -672,8 +707,10 @@ class Mysqldumper
         return $array;
     }
 
-    // Private function result2Array.
-
+    /**
+     * @param stdClass $obj
+     * @return array|null
+     */
     public function object2Array($obj)
     {
         $array = null;
@@ -691,6 +728,10 @@ class Mysqldumper
     }
 }
 
+/**
+ * @param string $source
+ * @param string $result_code
+ */
 function import_sql($source, $result_code = 'import_ok')
 {
     global $modx, $e;
@@ -725,6 +766,10 @@ function import_sql($source, $result_code = 'import_ok')
     $_SESSION['result_msg'] = $result_code;
 }
 
+/**
+ * @param string $dumpstring
+ * @return bool
+ */
 function dumpSql(&$dumpstring)
 {
     global $modx;
@@ -744,6 +789,10 @@ function dumpSql(&$dumpstring)
     return true;
 }
 
+/**
+ * @param string $dumpstring
+ * @return bool
+ */
 function snapshot(&$dumpstring)
 {
     global $path;
@@ -751,6 +800,9 @@ function snapshot(&$dumpstring)
     return true;
 }
 
+/**
+ * @return array
+ */
 function getSettings()
 {
     global $modx;
@@ -772,6 +824,9 @@ function getSettings()
     return $settings;
 }
 
+/**
+ * @param array $settings
+ */
 function restoreSettings($settings)
 {
     global $modx;
@@ -782,6 +837,11 @@ function restoreSettings($settings)
     }
 }
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePlaceholder($tpl = '', $ph = array())
 {
     if (empty($ph) || empty($tpl)) {

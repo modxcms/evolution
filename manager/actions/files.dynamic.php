@@ -75,6 +75,10 @@ $upload_flash = explode(',', $upload_flash);
 $uploadablefiles = array();
 $uploadablefiles = array_merge($upload_files, $upload_images, $upload_media, $upload_flash);
 $uploadablefiles = add_dot($uploadablefiles);
+/**
+ * @param array $array
+ * @return array
+ */
 function add_dot($array)
 {
     $count = count($array);
@@ -565,6 +569,12 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
 
 }
 
+/**
+ * @param string $file
+ * @param string $selFile
+ * @param string $mode
+ * @return string
+ */
 function determineIcon($file, $selFile, $mode)
 {
     $icons = array(
@@ -579,6 +589,12 @@ function determineIcon($file, $selFile, $mode)
     return '<i class="' . $icon . ' FilesPage"></i>';
 }
 
+/**
+ * @param string $file
+ * @param string $selFile
+ * @param string $mode
+ * @return string
+ */
 function markRow($file, $selFile, $mode)
 {
     $classNames = array(
@@ -593,6 +609,9 @@ function markRow($file, $selFile, $mode)
     return '';
 }
 
+/**
+ * @param string $curpath
+ */
 function ls($curpath)
 {
     global $_lang, $theme_image_path, $_style;
@@ -698,6 +717,10 @@ function ls($curpath)
     return;
 }
 
+/**
+ * @param string $string
+ * @return bool|string
+ */
 function removeLastPath($string)
 {
     $pos = strrpos($string, '/');
@@ -709,6 +732,10 @@ function removeLastPath($string)
     return $path;
 }
 
+/**
+ * @param string $string
+ * @return bool|string
+ */
 function getExtension($string)
 {
     $pos = strrpos($string, '.');
@@ -721,6 +748,10 @@ function getExtension($string)
     return $ext;
 }
 
+/**
+ * @param string $path
+ * @return bool
+ */
 function checkExtension($path = '')
 {
     global $uploadablefiles;
@@ -732,8 +763,15 @@ function checkExtension($path = '')
     }
 }
 
+/**
+ * recursive mkdir function
+ *
+ * @param string $strPath
+ * @param int $mode
+ * @return bool
+ */
 function mkdirs($strPath, $mode)
-{ // recursive mkdir function
+{
     if (is_dir($strPath)) {
         return true;
     }
@@ -744,6 +782,10 @@ function mkdirs($strPath, $mode)
     return @mkdir($strPath);
 }
 
+/**
+ * @param string $type
+ * @param string $filename
+ */
 function logFileChange($type, $filename)
 {
     //global $_lang;
@@ -775,7 +817,13 @@ function logFileChange($type, $filename)
     $action = 1;
 }
 
-// by patrick_allaert - php user notes
+/**
+ * by patrick_allaert - php user notes
+ *
+ * @param string $file
+ * @param string $path
+ * @return bool|int
+ */
 function unzip($file, $path)
 {
     global $newfolderaccessmode, $token_check;
@@ -821,6 +869,10 @@ function unzip($file, $path)
     zip_close($zip);
 }
 
+/**
+ * @param string $dir
+ * @return bool
+ */
 function rrmdir($dir)
 {
     foreach (glob($dir . '/*') as $file) {
@@ -833,6 +885,9 @@ function rrmdir($dir)
     return rmdir($dir);
 }
 
+/**
+ * @return string
+ */
 function fileupload()
 {
     global $modx, $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
@@ -918,6 +973,9 @@ function fileupload()
     return $msg . '<br/>';
 }
 
+/**
+ * @return string
+ */
 function textsave()
 {
     global $_lang;
@@ -938,6 +996,9 @@ function textsave()
     return $msg;
 }
 
+/**
+ * @return string
+ */
 function delete_file()
 {
     global $_lang, $token_check;
@@ -957,6 +1018,11 @@ function delete_file()
     return $msg;
 }
 
+/**
+ * @param string $tpl
+ * @param array $ph
+ * @return string
+ */
 function parsePlaceholder($tpl, $ph)
 {
     foreach ($ph as $k => $v) {
@@ -966,6 +1032,9 @@ function parsePlaceholder($tpl, $ph)
     return $tpl;
 }
 
+/**
+ * @return bool
+ */
 function checkToken()
 {
     if (isset($_POST['token']) && !empty($_POST['token'])) {
@@ -985,6 +1054,9 @@ function checkToken()
     return $rs;
 }
 
+/**
+ * @return string
+ */
 function makeToken()
 {
     $newToken = uniqid('');

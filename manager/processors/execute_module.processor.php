@@ -63,7 +63,13 @@ $output = evalModule($content["modulecode"],$parameter);
 echo $output;
 include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
 
-// evalModule
+/**
+ * evalModule
+ *
+ * @param string $moduleCode
+ * @param array $params
+ * @return string
+ */
 function evalModule($moduleCode,$params){
 	global $modx;
 	$modx->event->params = &$params; // store params inside event object

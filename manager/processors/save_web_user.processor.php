@@ -334,7 +334,12 @@ switch($input['mode']) {
 		webAlertAndQuit("No operation set in request.");
 }
 
-// in case any plugins include a quoted_printable function
+/**
+ * in case any plugins include a quoted_printable function
+ *
+ * @param string $string
+ * @return string
+ */
 function save_user_quoted_printable($string) {
 	$crlf = "\n";
 	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf;
@@ -346,7 +351,14 @@ function save_user_quoted_printable($string) {
 	return trim(wordwrap($string, 70, ' =' . $crlf));
 }
 
-// Send an email to the user
+/**
+ * Send an email to the user
+ *
+ * @param string $email
+ * @param string $uid
+ * @param string $pwd
+ * @param string $ufn
+ */
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx, $_lang, $websignupemail_message;
 	global $emailsubject, $emailsender;

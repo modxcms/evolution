@@ -33,6 +33,13 @@ if( ! function_exists('install_sessionCheck')) {
 }
 
 if( ! function_exists('parse')) {
+    /**
+     * @param string $src
+     * @param array $ph
+     * @param string $left
+     * @param string $right
+     * @return string
+     */
     function parse($src, $ph, $left = '[+', $right = '+]')
     {
         foreach ($ph as $k => $v) {
@@ -45,9 +52,13 @@ if( ! function_exists('parse')) {
 }
 
 if( ! function_exists('ph')) {
+    /**
+     * @return array
+     */
     function ph()
     {
         global $_lang, $moduleName, $moduleVersion, $modx_textdir, $modx_release_date;
+        $ph = array();
 
         if (isset($_SESSION['installmode'])) {
             $installmode = $_SESSION['installmode'];
@@ -69,6 +80,9 @@ if( ! function_exists('ph')) {
 }
 
 if( ! function_exists('get_installmode')) {
+    /**
+     * @return int
+     */
     function get_installmode()
     {
         global $base_path, $database_server, $database_user, $database_password, $dbase, $table_prefix;
@@ -129,7 +143,7 @@ if( ! function_exists('get_installmode')) {
 
 if( ! function_exists('getLangs')) {
     /**
-     * @param $install_language
+     * @param string $install_language
      * @return string
      */
     function getLangs($install_language)

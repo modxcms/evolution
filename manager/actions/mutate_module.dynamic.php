@@ -28,7 +28,11 @@ $tbl_site_plugins = $modx->getFullTableName('site_plugins');
 $tbl_site_snippets = $modx->getFullTableName('site_snippets');
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvars = $modx->getFullTableName('site_tmplvars');
-// create globally unique identifiers (guid)
+/**
+ * create globally unique identifiers (guid)
+ *
+ * @return string
+ */
 function createGUID() {
 	srand((double) microtime() * 1000000);
 	$r = rand();

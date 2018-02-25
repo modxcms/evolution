@@ -291,7 +291,11 @@ if($id > 0) {
 	}
 }
 
-// show javascript alert
+/**
+ * show javascript alert
+ *
+ * @param string $msg
+ */
 function jsAlert($msg) {
 	global $modx;
 	if($_POST['ajax'] != 1) {
@@ -301,11 +305,24 @@ function jsAlert($msg) {
 	}
 }
 
+/**
+ * @param string $username
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @return bool
+ */
 function login($username, $givenPassword, $dbasePassword) {
 	global $modx;
 	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
 }
 
+/**
+ * @param int $internalKey
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @param string $username
+ * @return bool
+ */
 function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
 	global $modx;
 
@@ -329,6 +346,13 @@ function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
 	return true;
 }
 
+/**
+ * @param int $internalKey
+ * @param string $givenPassword
+ * @param string $dbasePassword
+ * @param string $username
+ * @return bool
+ */
 function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
 	global $modx;
 
@@ -339,6 +363,10 @@ function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
 	return true;
 }
 
+/**
+ * @param string $username
+ * @param string $password
+ */
 function updateNewHash($username, $password) {
 	global $modx;
 
@@ -347,6 +375,12 @@ function updateNewHash($username, $password) {
 	$modx->db->update($field, '[+prefix+]manager_users', "username='{$username}'");
 }
 
+/**
+ * @param int $internalKey
+ * @param int $failedlogins
+ * @param int $failed_allowed
+ * @param int $blocked_minutes
+ */
 function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes) {
 	global $modx;
 

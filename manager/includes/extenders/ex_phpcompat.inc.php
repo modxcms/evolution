@@ -5,13 +5,14 @@
  * Time: 12:25
  */
 
-if (isset($this->phpcompat) && is_object($this->phpcompat)){
+if (isset($this->phpcompat) && is_object($this->phpcompat)) {
     return true;
 }
 
-if (!include_once(MODX_MANAGER_PATH . 'includes/extenders/phpcompat.class.inc.php')){
+if (!include_once(MODX_MANAGER_PATH . 'includes/extenders/phpcompat.class.inc.php')) {
     return false;
-}else{
+} else {
     $this->phpcompat = new PHPCOMPAT;
+
     return true;
 }

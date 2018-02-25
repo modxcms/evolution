@@ -3,18 +3,50 @@
 if(!defined('MODX_CORE_PATH')) define('MODX_CORE_PATH', MODX_MANAGER_PATH.'includes/');
 
 class MODIFIERS {
-
+    /**
+     * @var array
+     */
     public $placeholders = array();
+    /**
+     * @var array
+     */
     public $vars = array();
+    /**
+     * @var array
+     */
     public $tmpCache = array();
+    /**
+     * @var
+     */
     public $bt;
+    /**
+     * @var
+     */
     public $srcValue;
+    /**
+     * @var array
+     */
     public $condition = array();
+    /**
+     * @var string
+     */
     public $condModifiers;
 
+    /**
+     * @var
+     */
     public $key;
+    /**
+     * @var
+     */
     public $value;
+    /**
+     * @var
+     */
     public $opt;
+    /**
+     * @var
+     */
     public $elmName;
 
     /**
@@ -22,6 +54,9 @@ class MODIFIERS {
      */
     public $documentObject = array();
 
+    /**
+     * MODIFIERS constructor.
+     */
     public function __construct()
     {
         global $modx;
@@ -30,6 +65,12 @@ class MODIFIERS {
         $this->condModifiers = '=,is,eq,equals,ne,neq,notequals,isnot,isnt,not,%,isempty,isnotempty,isntempty,>=,gte,eg,gte,greaterthan,>,gt,isgreaterthan,isgt,lowerthan,<,lt,<=,lte,islte,islowerthan,islt,el,find,in,inarray,in_array,fnmatch,wcard,wcard_match,wildcard,wildcard_match,is_file,is_dir,file_exists,is_readable,is_writable,is_image,regex,preg,preg_match,memberof,mo,isinrole,ir';
     }
 
+    /**
+     * @param string $key
+     * @param string $value
+     * @param string $modifiers
+     * @return bool|mixed|string
+     */
     public function phxFilter($key,$value,$modifiers)
     {
         global $modx;
@@ -51,6 +92,11 @@ class MODIFIERS {
         return $value;
     }
 
+    /**
+     * @param string $mode
+     * @param string $modifiers
+     * @return bool|string
+     */
     public function _getDelim($mode,$modifiers) {
         $c = substr($modifiers,0,1);
         if(!in_array($c, array('"', "'", '`')) ) return false;
@@ -62,6 +108,12 @@ class MODIFIERS {
         return  $c;
     }
 
+    /**
+     * @param string $mode
+     * @param string $delim
+     * @param string $modifiers
+     * @return bool|string
+     */
     public function _getOpt($mode,$delim,$modifiers) {
         if($delim) {
             if($mode=='(') return substr($modifiers,1,strpos($modifiers, $delim . ')' )-1);

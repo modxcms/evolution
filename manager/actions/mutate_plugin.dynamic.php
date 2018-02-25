@@ -58,13 +58,13 @@ $lockElementId = $id;
 $lockElementType = 5;
 require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
+/**
+ * @param bool $cond
+ * @return string
+ */
 function bold($cond = false)
 {
-    if ($cond !== false) {
-        return ' style="background-color:#777;color:#fff;"';
-    } else {
-        return;
-    }
+    return ($cond !== false) ? ' style="background-color:#777;color:#fff;"' : '';
 }
 
 ?>

@@ -101,6 +101,9 @@ $allowedfiles = array(
 	</div>
 
 <?php
+/**
+ * @return string
+ */
 function run() {
 	global $modx, $_lang;
 
@@ -162,6 +165,12 @@ function run() {
 	return $output;
 }
 
+/**
+ * @param int $parent
+ * @param string $filedir
+ * @param array $files
+ * @param string $mode
+ */
 function importFiles($parent, $filedir, $files, $mode) {
 	global $modx;
 	global $_lang, $allowedfiles;
@@ -174,7 +183,7 @@ function importFiles($parent, $filedir, $files, $mode) {
 	if(!is_array($files)) {
 		return;
 	}
-	if($_POST['object'] == 'all') {
+	if($_POST['object'] === 'all') {
 		$modx->config['default_template'] = '0';
 		$richtext = '0';
 	} else {
@@ -303,6 +312,12 @@ function importFiles($parent, $filedir, $files, $mode) {
 	}
 }
 
+/**
+ * @param string $directory
+ * @param array $listing
+ * @param int $count
+ * @return array
+ */
 function getFiles($directory, $listing = array(), $count = 0) {
 	global $_lang;
 	global $filesfound;
@@ -327,6 +342,10 @@ function getFiles($directory, $listing = array(), $count = 0) {
 	return ($listing);
 }
 
+/**
+ * @param string $filepath
+ * @return bool|string
+ */
 function getFileContent($filepath) {
 	global $_lang;
 	// get the file
@@ -337,6 +356,10 @@ function getFileContent($filepath) {
 	}
 }
 
+/**
+ * @param array $array
+ * @return array
+ */
 function pop_index($array) {
 	$new_array = array();
 	foreach($array as $k => $v) {
@@ -354,6 +377,12 @@ function pop_index($array) {
 	return $new_array;
 }
 
+/**
+ * @param string $src
+ * @param string $filename
+ * @param string $alias
+ * @return array
+ */
 function treatContent($src, $filename, $alias) {
 	global $modx;
 
@@ -395,6 +424,9 @@ function treatContent($src, $filename, $alias) {
 	);
 }
 
+/**
+ * @return void
+ */
 function convertLink() {
 	global $modx;
 	$tbl_site_content = $modx->getFullTableName('site_content');

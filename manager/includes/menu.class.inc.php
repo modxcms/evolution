@@ -1,15 +1,27 @@
 <?php
 
-/*
-menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex')
-*/
-
+/**
+ * menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex')
+ */
 class EVOmenu
 {
+    /**
+     * @var array
+     */
     public $defaults = array();
+    /**
+     * @var
+     */
     public $menu;
+    /**
+     * @var
+     */
     public $output;
 
+    /**
+     * @param $menu
+     * @param array $setting
+     */
     public function Build($menu, $setting = array())
     {
         $this->defaults['outerClass'] = 'nav';
@@ -25,6 +37,9 @@ class EVOmenu
         echo $this->output;
     }
 
+    /**
+     * @param array $menu
+     */
     public function Structurise($menu)
     {
         $new = array();
@@ -41,6 +56,11 @@ class EVOmenu
         $this->menu = $new;
     }
 
+    /**
+     * @param int $parentid
+     * @param int $level
+     * @return string
+     */
     public function DrawSub($parentid, $level)
     {
         global $modx;
@@ -83,17 +103,21 @@ class EVOmenu
                     $ph['DrawSub'] = $this->DrawSub($id, $level);
                     $level--;
                     // Optional buttons
-                } else if (isset($value[11]) && !empty($value[11])) {
-                    $optionalButton = '';
-                    if (is_array($value[11])) {
-                        foreach ($value[11] as $opt) {
-                            $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                } else {
+                    if (isset($value[11]) && !empty($value[11])) {
+                        $optionalButton = '';
+                        if (is_array($value[11])) {
+                            foreach ($value[11] as $opt) {
+                                $optionalButton .= sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
+                                    $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                            }
+                        } else {
+                            $opt = $value[11];
+                            $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>',
+                                $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
                         }
-                    } else {
-                        $opt = $value[11];
-                        $optionalButton = sprintf('<%s href="%s" class="%s" onclick="%s" title="%s">%s</%s>', $opt[0], $opt[1], $opt[2], $opt[3], $opt[4], $opt[5], $opt[0]);
+                        $ph['DrawSub'] = $optionalButton;
                     }
-                    $ph['DrawSub'] = $optionalButton;
                 }
 
                 $output .= $modx->parseText($itemTpl, $ph);
@@ -107,9 +131,14 @@ class EVOmenu
                 $output = $modx->parseText($outerTpl, $ph);
             }
         }
+
         return $output;
     }
 
+    /**
+     * @param int $id
+     * @return string
+     */
     public function get_li_class($id)
     {
         if (isset($this->menu[$id])) {
@@ -119,6 +148,10 @@ class EVOmenu
         }
     }
 
+    /**
+     * @param int $id
+     * @return string
+     */
     public function get_a_class($id)
     {
         if (isset($this->menu[$id])) {
@@ -128,6 +161,10 @@ class EVOmenu
         }
     }
 
+    /**
+     * @param int $id
+     * @return string
+     */
     public function getLinkAttr($id)
     {
         if (isset($this->menu[$id])) {
@@ -137,6 +174,10 @@ class EVOmenu
         }
     }
 
+    /**
+     * @param int $id
+     * @return string
+     */
     public function getItemName($id)
     {
         if (isset($this->menu[$id])) {

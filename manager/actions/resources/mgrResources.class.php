@@ -4,18 +4,36 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 }
 
 class mgrResources {
-	var $types = array();
-	var $items = array();
-	var $categories = array();
-	var $itemsPerCategory = array();
+    /**
+     * @var array
+     */
+	public $types = array();
+    /**
+     * @var array
+     */
+    public $items = array();
+    /**
+     * @var array
+     */
+    public $categories = array();
+    /**
+     * @var array
+     */
+    public $itemsPerCategory = array();
 
-	function __construct() {
+    /**
+     * mgrResources constructor.
+     */
+    public function __construct() {
 		$this->setTypes();
 		$this->queryItemsFromDB();
 		$this->prepareCategoryArrays();
 	}
 
-	function setTypes() {
+    /**
+     * @return void
+     */
+    public function setTypes() {
 		global $_lang;
 		$this->types['site_templates']    = array(
 			'title'=>$_lang["manage_templates"],
@@ -50,7 +68,10 @@ class mgrResources {
 		);
 	}
 
-	function queryItemsFromDB() {
+    /**
+     * @return void
+     */
+    public function queryItemsFromDB() {
 		foreach($this->types as $resourceTable=>$type) {
 			if($this->hasAnyPermissions($type['permissions'])) {
 				$nameField = isset($type['name']) ? $type['name'] : 'name';
@@ -59,7 +80,11 @@ class mgrResources {
 		 }
 	}
 
-	function hasAnyPermissions($permissions) {
+    /**
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAnyPermissions($permissions) {
 		global $modx;
 
 		foreach($permissions as $p)
@@ -68,21 +93,32 @@ class mgrResources {
 		return false;
 	}
 
-	function queryResources($resourceTable, $nameField = 'name') {
+    /**
+     * @param string $resourceTable
+     * @param string $nameField
+     * @return array|bool
+     */
+    public function queryResources($resourceTable, $nameField = 'name') {
 		global $modx, $_lang;
 
-		$pluginsql = ($resourceTable == 'site_htmlsnippets' || $resourceTable == 'site_snippets' || $resourceTable == 'site_plugins' || $resourceTable == 'site_modules') ? $resourceTable . '.disabled, ' : '';
+        $allowed = array(
+            'site_htmlsnippets',
+            'site_snippets',
+            'site_plugins',
+            'site_modules'
+        );
+		$pluginsql = !empty($resourceTable) && in_array($resourceTable, $allowed) ? $resourceTable . '.disabled, ' : '';
 
 		$tvsql  = '';
 		$tvjoin = '';
-		if ($resourceTable == 'site_tmplvars') {
+		if ($resourceTable === 'site_tmplvars') {
 			$tvsql    = 'site_tmplvars.caption, ';
 			$tvjoin   = sprintf('LEFT JOIN %s AS stt ON site_tmplvars.id=stt.tmplvarid GROUP BY site_tmplvars.id,reltpl', $modx->getFullTableName('site_tmplvar_templates'));
 			$sttfield = 'IF(stt.templateid,1,0) AS reltpl,';
 		}
 		else $sttfield = '';
 
-		$selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
+		$selectableTemplates = $resourceTable === 'site_templates' ? "{$resourceTable}.selectable, " : "";
 
 		$rs = $modx->db->select(
 			"{$sttfield} {$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category, categories.id as catid",
@@ -102,7 +138,10 @@ class mgrResources {
 		return $result;
 	}
 
-	function prepareCategoryArrays() {
+    /**
+     * @return void
+     */
+    public function prepareCategoryArrays() {
 		foreach($this->items as $type=>$items) {
 			foreach((array)$items as $item) {
 				$catid = $item['catid'] ? $item['catid'] : 0;

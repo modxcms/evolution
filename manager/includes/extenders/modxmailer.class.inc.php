@@ -20,8 +20,19 @@ require MODX_MANAGER_PATH . 'includes/controls/phpmailer/SMTP.php';
  */
 class MODxMailer extends PHPMailer
 {
+    /**
+     * @var string
+     */
     protected $mb_language = 'UNI';
+
+    /**
+     * @var string
+     */
     protected $encode_header_method = '';
+
+    /**
+     * @var
+     */
     public $PluginDir;
 
     /**
@@ -110,7 +121,7 @@ class MODxMailer extends PHPMailer
      * Picks shortest of Q, B, or none. Result includes folding if needed.
      * See RFC822 definitions for phrase, comment and text positions.
      *
-     * @param string $str      The header value to encode
+     * @param string $str The header value to encode
      * @param string $position What context the string will be used in
      *
      * @return string
@@ -144,7 +155,7 @@ class MODxMailer extends PHPMailer
 
     /**
      * @param string $header The message headers
-     * @param string $body   The message body
+     * @param string $body The message body
      *
      * @return bool
      */
@@ -189,12 +200,13 @@ class MODxMailer extends PHPMailer
             default:
                 $out = false;
         }
+
         return $out;
     }
 
     /**
      * @param string $header The message headers
-     * @param string $body   The message body
+     * @param string $body The message body
      *
      * @return bool
      */
@@ -202,7 +214,8 @@ class MODxMailer extends PHPMailer
     {
         $rt = false;
         $to = '';
-        for ($i = 0; $i < count($this->to); $i++) {
+        $countTo = count($this->to);
+        for ($i = 0; $i < $countTo; $i++) {
             if ($i != 0) {
                 $to .= ', ';
             }
@@ -276,22 +289,22 @@ class MODxMailer extends PHPMailer
         } else {
             $name = '';
         }
-        $result = array($name, $address);
-
-        return $result;
+        return array($name, $address);
     }
 
     /**
      * @return string
      */
-    public function getMIMEHeader() {
+    public function getMIMEHeader()
+    {
         return $this->MIMEHeader;
     }
 
     /**
      * @return string
      */
-    public function getMIMEBody() {
+    public function getMIMEBody()
+    {
         return $this->MIMEBody;
     }
 
@@ -300,7 +313,8 @@ class MODxMailer extends PHPMailer
      *
      * @return $this
      */
-    public function setMIMEHeader($header = '') {
+    public function setMIMEHeader($header = '')
+    {
         $this->MIMEHeader = $header;
 
         return $this;
@@ -311,7 +325,8 @@ class MODxMailer extends PHPMailer
      *
      * @return $this
      */
-    public function setMIMEBody($body = '') {
+    public function setMIMEBody($body = '')
+    {
         $this->MIMEBody = $body;
 
         return $this;
@@ -322,7 +337,8 @@ class MODxMailer extends PHPMailer
      *
      * @return $this
      */
-    public function setMailHeader($header = '') {
+    public function setMailHeader($header = '')
+    {
         $this->mailHeader = $header;
 
         return $this;
@@ -331,7 +347,8 @@ class MODxMailer extends PHPMailer
     /**
      * @return string
      */
-    public function getMessageID() {
-        return trim($this->lastMessageID,'<>');
+    public function getMessageID()
+    {
+        return trim($this->lastMessageID, '<>');
     }
 }

@@ -14,6 +14,14 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
+/**
+ * @param string $value
+ * @param string $name
+ * @param string $docid
+ * @param string $src
+ * @param array $tvsArray
+ * @return string
+ */
 function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsArray = array()) {
     global $modx;
     $docid = (int)$docid > 0 ? (int)$docid : $modx->documentIdentifier;
@@ -117,14 +125,23 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
     }
 }
 
+/**
+ * @param $file
+ * @return string
+ */
 function ProcessFile($file) {
     // get the file
 	$buffer = @file_get_contents($file);
-	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
+	if ($buffer === false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 
-// ParseCommand - separate @ cmd from params
+/**
+ * ParseCommand - separate @ cmd from params
+ *
+ * @param string $binding_string
+ * @return array
+ */
 function ParseCommand($binding_string)
 {
     global $BINDINGS;
@@ -141,7 +158,13 @@ function ParseCommand($binding_string)
     return $binding_array;
 }
 
-// Parse MODX Template-Variables
+/**
+ * Parse MODX Template-Variables
+ *
+ * @param string $param
+ * @param array $tvsArray
+ * @return mixed
+ */
 function parseTvValues($param, $tvsArray)
 {
 	global $modx;

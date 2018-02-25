@@ -144,6 +144,9 @@ switch ($_POST['mode']) {
         $modx->webAlertAndQuit("No operation set in request.");
 }
 
+/**
+ * @param int $id
+ */
 function saveTemplateAccess($id)
 {
     global $modx;

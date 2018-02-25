@@ -44,13 +44,16 @@ if(!$deltime) {
 
 $children = array();
 
+/**
+ * @param int $parent
+ */
 function getChildren($parent) {
 
 	global $modx;
 	global $children;
 	global $deltime;
 
-	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='{$parent}' AND deleted=1 AND deletedon='{$deltime}'");
+	$rs = $modx->db->select('id', $modx->getFullTableName('site_content'), "parent='".(int)$parent."' AND deleted=1 AND deletedon='".(int)$deltime."'");
 		// the document has children documents, we'll need to delete those too
 		while ($row=$modx->db->getRow($rs)) {
 			$children[] = $row['id'];

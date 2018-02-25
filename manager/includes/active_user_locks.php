@@ -12,14 +12,10 @@ $modx->getSettings();
 $modx->invokeEvent('OnManagerPageInit');
 $ok = false;
 
-if($modx->elementIsLocked($_GET['type'], $_GET['id'], true)) {
-    $modx->lockElement($_GET['type'], $_GET['id'], true);
+if ($modx->elementIsLocked($_GET['type'], $_GET['id'], true)) {
+    $modx->lockElement($_GET['type'], $_GET['id']);
     $ok = true;
 }
 
 header('Content-type: application/json');
-if($ok) {
-    echo '{status:"ok"}';
-} else {
-  echo '{status:"null"}';
-}
+echo $ok ? '{status:"ok"}' : '{status:"null"}';
