@@ -10,8 +10,8 @@ function genEvoSessionName() {
 }
 
 function startCMSSession(){
-
     global $site_sessionname, $https_port, $session_cookie_path, $session_cookie_domain;
+    if(MODX_CLI) return;
 
     session_name($site_sessionname);
     removeInvalidCmsSessionIds($site_sessionname);
@@ -40,6 +40,7 @@ function removeInvalidCmsSessionFromStorage(&$storage, $session_name) {
 }
 
 function removeInvalidCmsSessionIds($session_name) {
+    if(MODX_CLI) return;
     // session ids is invalid iff it is empty string
     // storage priorioty can see in PHP source ext/session/session.c
     removeInvalidCmsSessionFromStorage($_COOKIE, $session_name);

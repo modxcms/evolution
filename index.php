@@ -129,6 +129,11 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
     @ini_set("display_errors","0");
 }
 
+if(MODX_CLI){
+    @set_time_limit(0);
+    @ini_set('max_execution_time',0);
+}
+
 // execute the parser if index.php was not included
 if (!MODX_API_MODE) {
     $modx->executeParser();

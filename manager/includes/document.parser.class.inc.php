@@ -356,7 +356,7 @@ class DocumentParser
     /**
      * Forward to another page
      *
-     * @param int $id
+     * @param int|string $id
      * @param string $responseCode
      */
     public function sendForward($id, $responseCode = '')
@@ -389,6 +389,7 @@ class DocumentParser
             $this->invokeEvent('OnPageNotFound');
         }
         $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
+
         $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         exit();
     }
@@ -607,7 +608,7 @@ class DocumentParser
             $_ = 'webValidated';
         }
 
-        if (isset($_SESSION[$_]) && !empty($_SESSION[$_])) {
+        if (MODX_CLI || (isset($_SESSION[$_]) && !empty($_SESSION[$_]))) {
             return true;
         } else {
             return false;
@@ -2699,13 +2700,15 @@ class DocumentParser
      */
     public function executeParser()
     {
+        if(MODX_CLI) {
+            throw new RuntimeException('Call DocumentParser::executeParser on CLI mode');
+        }
 
         //error_reporting(0);
         set_error_handler(array(
             & $this,
             "phpError"
         ), E_ALL);
-
         $this->db->connect();
 
         // get the settings
@@ -4549,7 +4552,7 @@ class DocumentParser
 
                 $docid = $doc['id'];
 
-                $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv 
+                $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
                         INNER JOIN [+prefix+]site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id
                         LEFT JOIN [+prefix+]site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid='{$docid}'", "{$query} AND tvtpl.templateid = '{$doc['template']}'", ($tvsort ? "{$tvsort} {$tvsortdir}" : ""));
                 $tvs = $this->db->makeArray($rs);
@@ -6430,10 +6433,10 @@ class DocumentParser
     public function getHiddenIdFromAlias($parentid, $alias)
     {
         $table = $this->getFullTableName('site_content');
-        $query = $this->db->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count 
-            FROM {$table} sc 
-            JOIN {$table} children ON children.parent = sc.id 
-            LEFT JOIN {$table} children2 ON children2.parent = children.id 
+        $query = $this->db->query("SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count
+            FROM {$table} sc
+            JOIN {$table} children ON children.parent = sc.id
+            LEFT JOIN {$table} children2 ON children2.parent = children.id
             WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;");
 
         while ($child = $this->db->getRow($query)) {
@@ -6619,7 +6622,7 @@ class DocumentParser
      */
     private static function _getCleanQueryString()
     {
-        $q = $_GET['q'];
+        $q = MODX_CLI ? null : $_GET['q'];
 
         //Return null if the query doesn't exist
         if (empty($q)) {
